@@ -1,6 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import CreatureTable from '@/views/CreatureTable';
+import CreatureTemplateDetail from '@/views/CreatureTemplateDetail';
 
 Vue.use(VueRouter);
 
@@ -23,7 +25,8 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue"),
   },
-  { path: "/creature", component: () => import("../views/CreatureTable.vue") },
+  { path: "/creature", component: CreatureTable },
+  { path: "/creature/:id", component: CreatureTemplateDetail },
 ];
 
 const router = new VueRouter({

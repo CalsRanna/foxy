@@ -18,7 +18,20 @@ import {
   TableColumn,
   Card,
   Input,
-  InputNumber
+  InputNumber,
+  Form,
+  FormItem,
+  Breadcrumb,
+  BreadcrumbItem,
+  Tabs,
+  TabPane,
+  Loading,
+  Pagination,
+  Tooltip,
+  Select,
+  Option,
+  Avatar,
+  Switch,
 } from "element-ui";
 
 Vue.use(Button);
@@ -40,3 +53,16 @@ Vue.use(TableColumn);
 Vue.use(Card);
 Vue.use(Input);
 Vue.use(InputNumber);
+Vue.use(Form);
+Vue.use(FormItem);
+Vue.use(Breadcrumb);
+Vue.use(BreadcrumbItem);
+Vue.use(Tabs);
+Vue.use(TabPane);
+Vue.use(Loading);
+Vue.use(Pagination);
+Vue.use(Tooltip);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(Avatar);
+Vue.use(Switch);
