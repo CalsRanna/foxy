@@ -1,8 +1,5 @@
-const Sequelize = require("sequelize");
-
-const sequelize = new Sequelize(
-  "mysql://root:password@10.0.0.13:3306/acore_world"
-);
+import Sequelize from "sequelize";
+import { sequelize } from "./sequelize.js";
 
 class CreatureTemplate extends Sequelize.Model {}
 
@@ -218,32 +215,229 @@ CreatureTemplateLocale.init(
   { sequelize, tableName: "creature_template_locale", timestamps: false }
 );
 
+class CreatureTemplateAddon extends Sequelize.Model {}
+
+CreatureTemplateAddon.init(
+  {
+    entry: {
+      type: Sequelize.MEDIUMINT,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: 0,
+    },
+    path_id: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+    mount: { type: Sequelize.MEDIUMINT, allowNull: false, defaultValue: 0 },
+    bytes1: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+    bytes2: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+    emote: { type: Sequelize.MEDIUMINT, allowNull: false, defaultValue: 0 },
+    isLarge: { type: Sequelize.TINYINT, allowNull: false, defaultValue: 0 },
+    auras: { type: Sequelize.STRING, defaultValue: "" },
+  },
+  { sequelize, tableName: "creature_template_addon", timestamps: false }
+);
+
+class CreatureLootTemplate extends Sequelize.Model {}
+
+CreatureLootTemplate.init(
+  {
+    Entry: {
+      type: Sequelize.MEDIUMINT,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: 0,
+    },
+    Item: {
+      type: Sequelize.MEDIUMINT,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: 0,
+    },
+    Reference: { type: Sequelize.MEDIUMINT, allowNull: false, defaultValue: 0 },
+    Chance: { type: Sequelize.FLOAT, allowNull: false, defaultValue: 100 },
+    QuestRequired: {
+      type: Sequelize.TINYINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    LootMode: { type: Sequelize.SMALLINT, allowNull: false, defaultValue: 1 },
+    GroupId: { type: Sequelize.TINYINT, allowNull: false, defaultValue: 1 },
+    MinCount: { type: Sequelize.TINYINT, allowNull: false, defaultValue: 1 },
+    MaxCount: { type: Sequelize.TINYINT, allowNull: false, defaultValue: 0 },
+    Comment: { type: Sequelize.MEDIUMINT, defaultValue: null },
+  },
+  { sequelize, tableName: "creature_loot_template", timestamps: false }
+);
+
+class CreatureOnKillReputation extends Sequelize.Model {}
+
+CreatureOnKillReputation.init(
+  {
+    creature_id: {
+      type: Sequelize.MEDIUMINT,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    RewOnKillRepFaction1: {
+      type: Sequelize.SMALLINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    RewOnKillRepFaction2: {
+      type: Sequelize.SMALLINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    RewOnKillRepValue1: {
+      type: Sequelize.TINYINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    RewOnKillRepValue2: {
+      type: Sequelize.TINYINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    MaxStanding1: {
+      type: Sequelize.MEDIUMINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    MaxStanding2: {
+      type: Sequelize.TINYINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    IsTeamAward1: {
+      type: Sequelize.TINYINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    IsTeamAward2: {
+      type: Sequelize.MEDIUMINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    TeamDependent: {
+      type: Sequelize.TINYINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+  },
+  { sequelize, tableName: "creature_onkill_reputation", timestamps: false }
+);
+
+class CreatureEquipTemplate extends Sequelize.Model {}
+
+CreatureEquipTemplate.init(
+  {
+    CreatureID: {
+      type: Sequelize.MEDIUMINT,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    ID: {
+      type: Sequelize.TINYINT,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 1,
+    },
+    ItemID1: { type: Sequelize.MEDIUMINT, allowNull: false, defaultValue: 0 },
+    ItemID2: { type: Sequelize.MEDIUMINT, allowNull: false, defaultValue: 0 },
+    ItemID3: { type: Sequelize.MEDIUMINT, allowNull: false, defaultValue: 0 },
+    VerifiedBuild: { type: Sequelize.SMALLINT, defaultValue: 0 },
+  },
+  { sequelize, tableName: "creature_equip_template", timestamps: false }
+);
+
+class CreatureQuestItem extends Sequelize.Model {}
+
+CreatureQuestItem.init(
+  {
+    CreatureEntry: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    Idx: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    ItemId: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+    VerifiedBuild: {
+      type: Sequelize.SMALLINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+  },
+  { sequelize, tableName: "creature_questitem", timestamps: false }
+);
+
 class NpcVendor extends Sequelize.Model {}
 
-NpcVendor.init({
-  entry: {
-    type: Sequelize.MEDIUMINT,
-    primaryKey: true,
-    allowNull: false,
-    defaultValue: 0,
+NpcVendor.init(
+  {
+    entry: {
+      type: Sequelize.MEDIUMINT,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    slot: { type: Sequelize.SMALLINT, allowNull: false, defaultValue: 0 },
+    item: {
+      type: Sequelize.MEDIUMINT,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    maxcount: { type: Sequelize.TINYINT, allowNull: false, defaultValue: 0 },
+    incrtime: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+    ExtendedCost: {
+      type: Sequelize.MEDIUMINT,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    VerifiedBuild: { type: Sequelize.SMALLINT, defaultValue: 0 },
   },
-  slot: { type: Sequelize.SMALLINT, allowNull: false, defaultValue: 0 },
-  item: {
-    type: Sequelize.MEDIUMINT,
-    primaryKey: true,
-    allowNull: false,
-    defaultValue: 0,
+  { sequelize, tableName: "npc_vendor", timestamps: false }
+);
+
+class NpcTrainer extends Sequelize.Model {}
+
+NpcTrainer.init(
+  {
+    ID: {
+      type: Sequelize.MEDIUMINT,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    SpellID: {
+      type: Sequelize.MEDIUMINT,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    MoneyCost: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+    ReqSkillLine: {
+      type: Sequelize.SMALLINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    ReqSkillRank: {
+      type: Sequelize.SMALLINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    ReqLevel: { type: Sequelize.TINYINT, allowNull: false, defaultValue: 0 },
   },
-  maxcount: { type: Sequelize.TINYINT, allowNull: false, defaultValue: 0 },
-  incrtime: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
-  ExtendedCost: {
-    type: Sequelize.MEDIUMINT,
-    primaryKey: true,
-    allowNull: false,
-    defaultValue: 0,
-  },
-  VerifiedBuild: { type: Sequelize.SMALLINT, defaultValue: 0 },
-});
+  { sequelize, tableName: "npc_trainer", timestamps: false }
+);
 
 CreatureTemplate.hasMany(CreatureTemplateLocale, {
   foreignKey: "entry",
@@ -254,4 +448,14 @@ CreatureTemplateLocale.belongsTo(CreatureTemplate, {
   targetKey: "entry",
 });
 
-export { CreatureTemplate, CreatureTemplateLocale, sequelize };
+export {
+  CreatureTemplate,
+  CreatureTemplateLocale,
+  CreatureTemplateAddon,
+  CreatureOnKillReputation,
+  CreatureEquipTemplate,
+  CreatureLootTemplate,
+  CreatureQuestItem,
+  NpcVendor,
+  NpcTrainer,
+};

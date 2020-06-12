@@ -32,6 +32,8 @@ import {
   Option,
   Avatar,
   Switch,
+  Tag,
+  // Notification
 } from "element-ui";
 
 Vue.use(Button);
@@ -66,3 +68,5 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(Avatar);
 Vue.use(Switch);
+Vue.use(Tag);
+// Vue.use(Notification);

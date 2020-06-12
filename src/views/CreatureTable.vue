@@ -8,26 +8,28 @@
       <h3 style="margin: 16px 0 0 0">生物模版列表</h3>
     </el-card>
     <el-card style="margin-top: 16px;">
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-input-number
-            v-model="entry"
-            controls-position="right"
-            placeholder="Entry"
-            style="width: 100%"
-          ></el-input-number>
-        </el-col>
-        <el-col :span="6">
-          <el-input v-model="name" placeholder="姓名"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-input v-model="subname" placeholder="称号"></el-input>
-        </el-col>
-        <el-col :span="6" style="text-align: right;">
-          <el-button type="primary" @click="search">查询</el-button>
-          <el-button @click="reset">重置</el-button>
-        </el-col>
-      </el-row>
+      <el-form>
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-input-number
+              v-model="entry"
+              controls-position="right"
+              placeholder="Entry"
+              style="width: 100%"
+            ></el-input-number>
+          </el-col>
+          <el-col :span="6">
+            <el-input v-model="name" placeholder="姓名"></el-input>
+          </el-col>
+          <el-col :span="6">
+            <el-input v-model="subname" placeholder="称号"></el-input>
+          </el-col>
+          <el-col :span="6" style="text-align: right;">
+            <el-button type="primary" @click="search">查询</el-button>
+            <el-button @click="reset">重置</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
     </el-card>
     <el-card v-loading="loading" style="margin-top: 16px;">
       <el-pagination
@@ -133,9 +135,23 @@ export default {
       this.$router.push(`/creature/${row.entry}`);
     },
     paginate(currentPage) {
-      this.page = currentPage;
       this.loading = true;
-      axios.get(`/creature-template?page=${currentPage}`).then((response) => {
+      this.page = currentPage;
+      let query = "";
+      if (this.entry !== undefined) {
+        query = `${query}&entry=${this.entry}`;
+      }
+      if (this.name !== "") {
+        query = `${query}&name=${this.name}`;
+      }
+      if (this.subname !== "") {
+        query = `${query}&subname=${this.subname}`;
+      }
+      query = `${query}&page=${this.page}`;
+      if (query !== "") {
+        query = `?${query.substr(1)}`;
+      }
+      axios.get(`/creature-template${query}`).then((response) => {
         this.loading = false;
         this.creatureTemplates = response.data;
       });
@@ -150,9 +166,13 @@ export default {
       axios.get(`/creature-template/quantity`).then((response) => {
         this.total = response.data.total;
       }),
-    ]).then(() => {
-      this.loading = false;
-    });
+    ])
+      .then(() => {
+        this.loading = false;
+      })
+      .catch(() => {
+        this.loading = false;
+      });
   },
 };
 </script>

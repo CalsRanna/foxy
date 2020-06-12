@@ -23,7 +23,11 @@
         </small>
       </h3>
     </el-card>
-    <el-tabs value="creature_template" style="margin-top: 16px">
+    <el-tabs
+      value="creature_template"
+      @tab-click="switchover"
+      style="margin-top: 16px"
+    >
       <el-tab-pane
         label="生物模版"
         name="creature_template"
@@ -849,78 +853,426 @@
           </el-card>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="模版补充" name="creature_template_addon">
-        <el-form label-position="right" label-width="120px">
+      <el-tab-pane
+        label="模版补充"
+        name="creature_template_addon"
+        lazy
+        v-loading="loading"
+      >
+        <el-form
+          :model="creatureTemplateAddon"
+          label-position="right"
+          label-width="120px"
+        >
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="ID">
-                  <el-input placeholder="entry"></el-input>
+                  <el-input
+                    v-model="creatureTemplateAddon.entry"
+                    placeholder="entry"
+                    disabled
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="path_id">
-                  <el-input placeholder="path_id"></el-input>
+                  <el-input
+                    v-model="creatureTemplateAddon.path_id"
+                    placeholder="path_id"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="mount">
-                  <el-input placeholder="mount"></el-input>
+                  <el-input
+                    v-model="creatureTemplateAddon.mount"
+                    placeholder="mount"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="bytes1">
-                  <el-input placeholder="bytes1"></el-input>
+                  <el-input
+                    v-model="creatureTemplateAddon.bytes1"
+                    placeholder="bytes1"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="bytes2">
-                  <el-input placeholder="bytes2"></el-input>
+                  <el-input
+                    v-model="creatureTemplateAddon.bytes2"
+                    placeholder="bytes2"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="表情">
-                  <el-input placeholder="emote"></el-input>
+                  <el-input
+                    v-model="creatureTemplateAddon.emote"
+                    placeholder="emote"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="isLarge">
-                  <el-input placeholder="isLarge"></el-input>
+                  <el-input
+                    v-model="creatureTemplateAddon.isLarge"
+                    placeholder="isLarge"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="光环列表">
-                  <el-input placeholder="auras"></el-input>
+                  <el-input
+                    v-model="creatureTemplateAddon.auras"
+                    placeholder="auras"
+                  ></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
           </el-card>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="击杀荣誉" name="creature_onkill_reputation"
-        >击杀荣誉</el-tab-pane
+      <el-tab-pane
+        label="击杀声望"
+        name="creature_onkill_reputation"
+        lazy
+        v-loading="loading"
       >
-      <el-tab-pane label="装备模板" name="creature_equip_template"
-        >装备模板</el-tab-pane
+        <el-card style="margin-top: 16px">
+          <el-form
+            :model="creatureOnKillReputation"
+            label-position="right"
+            label-width="120px"
+          >
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="生物ID">
+                  <el-input
+                    v-model="creatureOnKillReputation.creature_id"
+                    placeholder="creature_id"
+                    disabled
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="势力1">
+                  <el-input
+                    v-model="creatureOnKillReputation.RewOnKillRepFaction1"
+                    placeholder="RewOnKillRepFaction1"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="势力2">
+                  <el-input
+                    v-model="creatureOnKillReputation.RewOnKillRepFaction2"
+                    placeholder="RewOnKillRepFaction2"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="TeamDependent">
+                  <el-input
+                    v-model="creatureOnKillReputation.TeamDependent"
+                    placeholder="TeamDependent"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6" :offset="6">
+                <el-form-item label="声望值1">
+                  <el-input
+                    v-model="creatureOnKillReputation.RewOnKillRepValue1"
+                    placeholder="RewOnKillRepValue1"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="声望值2">
+                  <el-input
+                    v-model="creatureOnKillReputation.RewOnKillRepValue2"
+                    placeholder="RewOnKillRepValue2"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6" :offset="6">
+                <el-form-item label="最大声望1">
+                  <el-input
+                    v-model="creatureOnKillReputation.MaxStanding1"
+                    placeholder="MaxStanding1"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最大声望2">
+                  <el-input
+                    v-model="creatureOnKillReputation.MaxStanding2"
+                    placeholder="MaxStanding2"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6" :offset="6">
+                <el-form-item label="IsTeamAward1">
+                  <el-input
+                    v-model="creatureOnKillReputation.IsTeamAward1"
+                    placeholder="IsTeamAward1"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="IsTeamAward2">
+                  <el-input
+                    v-model="creatureOnKillReputation.IsTeamAward2"
+                    placeholder="IsTeamAward2"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane
+        label="装备模板"
+        name="creature_equip_template"
+        lazy
+        v-loading="loading"
       >
-      <el-tab-pane label="商人" name="npc_vendor">商人</el-tab-pane>
-      <el-tab-pane label="训练师" name="npc_trainer">训练师</el-tab-pane>
-      <el-tab-pane label="任务物品" name="creature_questitem"
-        >任务物品</el-tab-pane
+        <el-card style="margin-top: 16px">
+          <el-table :data="creatureEquipTemplates">
+            <el-table-column prop="ID" label="ID"></el-table-column>
+            <el-table-column label="物品1">
+              <template slot-scope="scope">
+                {{ scope.row.displayid1 }}
+                <template v-if="scope.row.Name1">{{
+                  scope.row.Name1
+                }}</template>
+                <template v-else>{{ scope.row.name1 }}</template>
+              </template>
+            </el-table-column>
+            <el-table-column label="物品2">
+              <template slot-scope="scope">
+                {{ scope.row.displayid2 }}
+                <template v-if="scope.row.Name2">{{
+                  scope.row.Name2
+                }}</template>
+                <template v-else>{{ scope.row.name2 }}</template>
+              </template>
+            </el-table-column>
+            <el-table-column label="物品3">
+              <template slot-scope="scope">
+                {{ scope.row.displayid3 }}
+                <template v-if="scope.row.Name3">{{
+                  scope.row.Name3
+                }}</template>
+                <template v-else>{{ scope.row.name3 }}</template>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="VerifiedBuild"
+              label="VerifiedBuild"
+            ></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="商人" name="npc_vendor" lazy v-loading="loading">
+        <el-card style="margin-top: 16px">
+          <el-table :data="npcVendors">
+            <el-table-column prop="displayid"></el-table-column>
+            <el-table-column
+              prop="slot"
+              label="插槽"
+              sortable
+            ></el-table-column>
+            <el-table-column prop="item" label="ID" sortable></el-table-column>
+            <el-table-column prop="name" label="名称" sortable>
+              <span slot-scope="scope">
+                <template v-if="scope.row.Name !== null">
+                  {{ scope.row.Name }}
+                </template>
+                <template v-else>{{ scope.row.name }}</template>
+              </span>
+            </el-table-column>
+            <el-table-column
+              prop="maxcount"
+              label="最大数量"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="incrtime"
+              label="补货时间"
+              sortable
+            ></el-table-column>
+            <el-table-column sortable>
+              <span slot="header">
+                <el-tooltip>
+                  <div slot="content" style="max-width: 400px">
+                    The value here corresponds to the ID in ItemExtendedCost.dbc
+                    and that ID controls the item's non monetary price, be it
+                    honor points, arena points, different types of badges or any
+                    combination of the above.
+                  </div>
+                  <i class="el-icon-info"></i>
+                </el-tooltip>
+                扩展价格
+              </span>
+              <span slot-scope="scope">{{ scope.row.ExtendedCost }}</span>
+            </el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="训练师" name="npc_trainer" lazy v-loading="loading">
+        <el-card style="margin-top: 16px">
+          <el-table :data="npcTrainers">
+            <el-table-column prop="SpellID" label="技能ID" sortable>
+              <span slot="header">
+                <el-tooltip>
+                  <i class="el-icon-info"></i>
+                  <div slot="content" style="max-width: 400px">
+                    The spell ID from Spell.dbc. If the ID is negative, it's
+                    pointing to a reference template.
+                  </div>
+                </el-tooltip>
+                技能ID
+              </span>
+            </el-table-column>
+            <el-table-column prop="MoneyCost" label="价格" sortable></el-table-column>
+            <el-table-column prop="ReqSkillLine" label="需要技能" sortable></el-table-column>
+            <el-table-column prop="ReqSkillRank" label="需要熟练度" sortable></el-table-column>
+            <el-table-column prop="ReqLevel" label="需要等级" sortable></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="任务物品" name="creature_questitem" lazy v-loading="loading"
+        >
+        <el-card style="margin-top: 16px">
+          <el-table :data="creatureQuestItems">
+            <el-table-column prop="displayid"></el-table-column>
+            <el-table-column prop="Idx" label="Index" sortable></el-table-column>
+            <el-table-column label="名称">
+              <span slot-scope="scope">
+                <template v-if="scope.row.Name">{{scope.row.Name}}</template>
+                <template v-else>{{scope.row.name}}</template>
+              </span>
+            </el-table-column>
+            <el-table-column prop="VerifiedBuild" label="VerifiedBuild" sortable></el-table-column>
+          </el-table>
+        </el-card>
+        </el-tab-pane
       >
-      <el-tab-pane label="掉落模板" name="creature_loot_template"
-        >掉落模板</el-tab-pane
+      <el-tab-pane
+        label="生物掉落"
+        name="creature_loot_template"
+        lazy
+        v-loading="loading"
       >
-      <el-tab-pane label="pickpocketloot" name="pickpocketloot"
-        >pickpocketloot</el-tab-pane
+        <el-card style="margin-top: 16px">
+          <el-table :data="creatureLootTemplates">
+            <el-table-column prop="displayid"></el-table-column>
+            <el-table-column prop="Item" label="物品" sortable>
+              <span slot-scope="scope">
+                <template v-if="scope.row.Name !== null">
+                  {{ scope.row.Name }}
+                </template>
+                <template v-else>{{ scope.row.name }}</template>
+              </span>
+            </el-table-column>
+            <el-table-column prop="Chance" label="几率" sortable>
+              <span slot-scope="scope">
+                {{ `${scope.row.Chance}%` }}
+              </span>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务" sortable>
+              <span slot-scope="scope">
+                <template v-if="scope.row.Title !== null">
+                  {{ scope.row.Title }}
+                </template>
+                <template v-else>{{ scope.row.LogTitle }}</template>
+              </span>
+            </el-table-column>
+            <el-table-column
+              prop="MinCount"
+              label="最小数量"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="MaxCount"
+              label="最大数量"
+              sortable
+            ></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="偷窃掉落" name="pickpocketing_loot_template" lazy v-loading="loading"
+        >
+        <el-card style="margin-top: 16px">
+          <el-table :data="pickpocketingLootTemplates">
+            <el-table-column prop="displayid"></el-table-column>
+            <el-table-column prop="Item" label="ID" sortable></el-table-column>
+            <el-table-column prop="Name" label="名称" sortable>
+              <template slot-scope="scope">
+                <template v-if="scope.row.Name !== null">{{scope.row.Name}}</template>
+                <template v-else>{{scope.row.name}}</template>
+              </template>
+            </el-table-column>
+            <el-table-column prop="Reference" label="关联" sortable></el-table-column>
+            <el-table-column prop="Chance" label="几率" sortable>
+              <template slot-scope="scope">
+                {{`${scope.row.Chance}%`}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务" sortable>
+              <template slot-scope="scope">
+                <template v-if="scope.row.Title !== null">{{scope.row.Title}}</template>
+                <template v-else>{{scope.row.LogTitle}}</template>
+              </template>
+            </el-table-column>
+            <el-table-column prop="LootMode" label="掉落模式" sortable></el-table-column>
+            <el-table-column prop="GroupId" label="组ID" sortable></el-table-column>
+            <el-table-column prop="MinCount" label="最小数量" sortable></el-table-column>
+            <el-table-column prop="MaxCount" label="最大数量" sortable></el-table-column>
+          </el-table>
+        </el-card>
+        </el-tab-pane
       >
-      <el-tab-pane label="skinloot" name="skinloot">skinloot</el-tab-pane>
+      <el-tab-pane label="剥皮掉落" name="skinning_loot_template">
+        <el-card style="margin-top: 16px">
+          <el-table :data="skinningLootTemplates">
+            <el-table-column prop="displayid"></el-table-column>
+            <el-table-column prop="Item" label="ID" sortable></el-table-column>
+            <el-table-column prop="Name" label="名称" sortable>
+              <template slot-scope="scope">
+                <template v-if="scope.row.Name !== null">{{scope.row.Name}}</template>
+                <template v-else>{{scope.row.name}}</template>
+              </template>
+            </el-table-column>
+            <el-table-column prop="Reference" label="关联" sortable></el-table-column>
+            <el-table-column prop="Chance" label="几率" sortable>
+              <template slot-scope="scope">
+                {{`${scope.row.Chance}%`}}
+              </template>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务" sortable>
+              <template slot-scope="scope">
+                <template v-if="scope.row.Title !== null">{{scope.row.Title}}</template>
+                <template v-else>{{scope.row.LogTitle}}</template>
+              </template>
+            </el-table-column>
+            <el-table-column prop="LootMode" label="掉落模式" sortable></el-table-column>
+            <el-table-column prop="GroupId" label="组ID" sortable></el-table-column>
+            <el-table-column prop="MinCount" label="最小数量" sortable></el-table-column>
+            <el-table-column prop="MaxCount" label="最大数量" sortable></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import { Notification } from "element-ui";
 export default {
   data() {
     return {
@@ -928,16 +1280,172 @@ export default {
       creatureTemplate: {
         CreatureTemplateLocales: [],
       },
+      creatureTemplateAddon: {},
+      creatureEquipTemplates: [],
+      creatureOnKillReputation: {},
+      creatureLootTemplates: [],
+      creatureQuestItems: [],
+      npcVendors: [],
+      npcTrainers: [],
+      pickpocketingLootTemplates: [],
+      skinningLootTemplates: [],
     };
+  },
+  methods: {
+    switchover(tab) {
+      if (
+        tab.name === "creature_template_addon" &&
+        JSON.stringify(this.creatureTemplateAddon) === "{}"
+      ) {
+        this.loading = true;
+        axios
+          .get(`/creature-template-addon/${this.creatureTemplate.entry}`)
+          .then((response) => {
+            if (response.data !== null) {
+              this.creatureTemplateAddon = response.data;
+            } else {
+              Notification.warning({
+                title: '提示',
+                message: "该生物模板没有设置模板补充。",
+                type: "warning",
+              });
+            }
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      }
+      if (
+        tab.name === "creature_onkill_reputation" &&
+        JSON.stringify(this.creatureOnKillReputation) === "{}"
+      ) {
+        this.loading = true;
+        axios
+          .get(
+            `/creature-template/${this.creatureTemplate.entry}/creature-onkill-reputation`
+          )
+          .then((response) => {
+            if (response.data !== null) {
+              this.creatureOnKillReputation = response.data;
+            } else {
+              Notification.warning({
+                title: '提示',
+                message: "该生物模板没有设置击杀声望。",
+                type: "warning",
+              });
+            }
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      }
+      if (
+        tab.name === "creature_equip_template" &&
+        this.creatureEquipTemplates.length === 0
+      ) {
+        this.loading = true;
+        axios
+          .get(
+            `/creature-template/${this.creatureTemplate.entry}/creature-equip-template`
+          )
+          .then((response) => {
+            this.creatureEquipTemplates = response.data;
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      }
+      if (
+        tab.name === "creature_loot_template" &&
+        this.creatureLootTemplates.length === 0
+      ) {
+        this.loading = true;
+        axios
+          .get(
+            `/creature-template/${this.creatureTemplate.entry}/creature-loot-template`
+          )
+          .then((response) => {
+            this.creatureLootTemplates = response.data;
+            this.loading = false;
+          });
+      }
+      if (tab.name === "creature_questitem" && this.creatureQuestItems.length === 0) {
+        this.loading = true;
+        axios
+          .get(`/creature-template/${this.creatureTemplate.entry}/creature-questitem`)
+          .then((response) => {
+            this.creatureQuestItems = response.data;
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      }
+      if (tab.name === "npc_vendor" && this.npcVendors.length === 0) {
+        this.loading = true;
+        axios
+          .get(`/npc-vendor/${this.creatureTemplate.entry}`)
+          .then((response) => {
+            this.npcVendors = response.data;
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      }
+      if (tab.name === "npc_trainer" && this.npcTrainers.length === 0) {
+        this.loading = true;
+        axios
+          .get(`/creature-template/${this.creatureTemplate.entry}/npc-trainer`)
+          .then((response) => {
+            this.npcTrainers = response.data;
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      }
+      if (tab.name === "pickpocketing_loot_template" && this.pickpocketingLootTemplates.length === 0) {
+        this.loading = true;
+        axios
+          .get(`/creature-template/${this.creatureTemplate.entry}/pickpocketing-loot-template`)
+          .then((response) => {
+            this.pickpocketingLootTemplates = response.data;
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      }
+      if (tab.name === "skinning_loot_template" && this.skinningLootTemplates.length === 0) {
+        this.loading = true;
+        axios
+          .get(`/creature-template/${this.creatureTemplate.entry}/skinning-loot-template`)
+          .then((response) => {
+            this.skinningLootTemplates = response.data;
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      }
+    },
   },
   created() {
     this.loading = true;
     let id = this.$route.params.id;
-    axios.get(`/creature-template/${id}`).then((response) => {
-      this.creatureTemplate = response.data;
-      this.loading = false;
-      console.log(this.creatureTemplate.CreatureTemplateLocales[0].Name);
-    });
+    axios
+      .get(`/creature-template/${id}`)
+      .then((response) => {
+        this.creatureTemplate = response.data;
+        this.loading = false;
+      })
+      .catch(() => {
+        this.loading = false;
+      });
   },
 };
 </script>
