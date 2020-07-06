@@ -20,7 +20,7 @@ export default (app, http) => {
   app.get("/creature-template", (req, res) => {
     let query = req.query;
     let sql =
-      "select ct.`entry`, ct.`name`,ct.`subname`,ct.`minlevel`,ct.`maxlevel`, ctl.`Name` as localeName,ctl.`Title` as localeTitle,ctl.`locale` from creature_template as ct left join creature_template_locale as ctl on ct.entry=ctl.`entry` and ctl.locale='zhCN'";
+      "select ct.entry, ct.name, ctl.Name as localeName, ct.subname, ctl.Title as localeTitle, ct.minlevel, ct.maxlevel from creature_template as ct left join creature_template_locale as ctl on ct.entry=ctl.entry and ctl.locale='zhCN'";
     let where = "where 1=1";
     if (query.entry) {
       where = `${where} and ct.entry like '%${query.entry}%'`;
@@ -47,7 +47,7 @@ export default (app, http) => {
   app.get("/creature-template/quantity", (req, res) => {
     let query = req.query;
     let sql =
-      "select count(*) as total from creature_template as ct left join creature_template_locale as ctl on ct.entry=ctl.`entry` and ctl.locale='zhCN'";
+      "select count(*) as total from creature_template as ct left join creature_template_locale as ctl on ct.entry=ctl.entry and ctl.locale='zhCN'";
     let where = "where 1=1";
     if (query.entry) {
       where = `${where} and ct.entry like '%${query.entry}%'`;
@@ -61,8 +61,16 @@ export default (app, http) => {
     sequelize
       .query(`${sql} ${where};`, { type: Sequelize.QueryTypes.SELECT })
       .then((values) => {
-        res.json({ total: values[0].total });
+        res.json(values[0].total);
       });
+  });
+
+  app.get("/creature-template/max-id", (request, response) => {
+    CreatureTemplate.findOne({
+      order: [["entry", "DESC"]],
+    }).then((creatureTemplate) => {
+      response.json(creatureTemplate.entry);
+    });
   });
 
   app.get("/creature-template/:id", (request, response) => {
@@ -257,7 +265,7 @@ export default (app, http) => {
     let id = request.params.id;
     ItemTemplate.findOne({
       where: {
-        entry: id
+        entry: id,
       },
       include: [
         {
@@ -270,6 +278,90 @@ export default (app, http) => {
       ],
     }).then((itemTemplate) => {
       response.json(itemTemplate);
-    })
+    });
+  });
+
+  app.get("/quest-template", (request, response) => {
+    let query = request.query;
+    let sql =
+      "select qt.*, qtl.Title, qtl.Details from quest_template as qt left join quest_template_locale as qtl on qt.ID=qtl.ID and qtl.`locale`='zhCN'";
+    let where = "where 1=1";
+    if (query.ID) {
+      where = `${where} and qt.ID = ${query.ID}`;
+    }
+    if (query.LogTitle) {
+      where = `${where} and (qt.LogTitle like '%${query.LogTitle}%' or qtl.Title like '%${query.LogTitle}%')`;
+    }
+    let page = query.page;
+    let offset = 0;
+    if (page !== undefined) {
+      offset = (page - 1) * 50;
+    }
+    let limit = `limit ${offset}, 50`;
+    sequelize
+      .query(`${sql} ${where} ${limit};`, { type: Sequelize.QueryTypes.SELECT })
+      .then((values) => {
+        response.json(values);
+      });
+  });
+
+  app.get("/quest-template/quantity", (request, response) => {
+    let query = request.query;
+    let sql =
+      "select count(*) as total from quest_template as qt left join quest_template_locale as qtl on qt.ID=qtl.ID and qtl.`locale`='zhCN'";
+    let where = "where 1=1";
+    if (query.ID) {
+      where = `${where} and qt.ID = ${query.ID}`;
+    }
+    if (query.LogTitle) {
+      where = `${where} and (qt.LogTitle like '%${query.LogTitle}%' or qtl.Title like '%${query.LogTitle}%')`;
+    }
+    sequelize
+      .query(`${sql} ${where};`, { type: Sequelize.QueryTypes.SELECT })
+      .then((values) => {
+        response.json({ total: values[0].total });
+      });
+  });
+
+  app.get("/game-object-template", (request, response) => {
+    let query = request.query;
+    let sql =
+      "select gt.entry,type,displayId,gt.name,size, gtl.name as localeName from gameobject_template as gt left join gameobject_template_locale as gtl on gt.entry=gtl.entry and gtl.locale='zhCN'";
+    let where = "where 1=1";
+    if (query.entry) {
+      where = `${where} and gt.entry = ${query.entry}`;
+    }
+    if (query.name) {
+      where = `${where} and (gt.name like '%${query.name}%' or gtl.name like '%${query.name}%')`;
+    }
+    let page = query.page;
+    let offset = 0;
+    if (page !== undefined) {
+      offset = (page - 1) * 50;
+    }
+    let limit = `limit ${offset}, 50`;
+    sequelize
+      .query(`${sql} ${where} ${limit};`, { type: Sequelize.QueryTypes.SELECT })
+      .then((values) => {
+        response.json(values);
+      });
+  });
+
+  app.get("/game-object-template/quantity", (request, response) => {
+    let query = request.query;
+    let sql =
+      "select count(*) as total from gameobject_template as gt left join gameobject_template_locale as gtl on gt.entry=gtl.entry and gtl.locale='zhCN'";
+    let where = "where 1=1";
+    if (query.entry) {
+      where = `${where} and gt.entry = ${query.entry}`;
+    }
+    if (query.name) {
+      where = `${where} and (gt.name like '%${query.name}%' or gtl.name like '%${query.name}%')`;
+    }
+    sequelize
+      .query(`${sql} ${where};`, { type: Sequelize.QueryTypes.SELECT })
+      .then((values) => {
+        response.json({ total: values[0].total });
+      });
   });
 };

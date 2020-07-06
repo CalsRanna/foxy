@@ -2,7 +2,9 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }"
+          >首页</el-breadcrumb-item
+        >
         <el-breadcrumb-item>生物管理</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">生物模版列表</h3>
@@ -24,12 +26,18 @@
           <el-col :span="6">
             <el-input v-model="subname" placeholder="称号"></el-input>
           </el-col>
-          <el-col :span="6" style="text-align: right;">
-            <el-button type="primary" @click="search">查询</el-button>
+          <el-col :span="6">
+            <el-button type="primary" @click="handleSearch">查询</el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
       </el-form>
+    </el-card>
+    <el-card v-loading="loading" style="margin-top: 16px;">
+      <el-button type="primary" @click="create">新增</el-button>
+      <el-button disabled>复制</el-button>
+      <el-button disabled>修改</el-button>
+      <el-button type="danger" disabled>删除</el-button>
     </el-card>
     <el-card v-loading="loading" style="margin-top: 16px;">
       <el-pagination
@@ -38,7 +46,7 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-bottom: 16px"
       ></el-pagination>
       <el-table :data="creatureTemplates" @row-dblclick="show">
@@ -76,7 +84,7 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -84,7 +92,12 @@
 </template>
 
 <script>
-import axios from "axios";
+import { createNamespacedHelpers } from "vuex";
+import * as types from "@/store/MUTATION_TYPES";
+
+const { mapState, mapActions, mapMutations } = createNamespacedHelpers(
+  "creatureTemplate"
+);
 
 export default {
   data() {
@@ -93,86 +106,59 @@ export default {
       entry: undefined,
       name: "",
       subname: "",
-      page: 1,
-      total: 0,
-      creatureTemplates: [],
     };
   },
+  computed: {
+    ...mapState({
+      page: (state) => state.page,
+      total: (state) => state.total,
+      creatureTemplates: (state) => state.creatureTemplates,
+    }),
+    payload() {
+      return {
+        entry: this.entry,
+        name: this.name,
+        subname: this.subname,
+        page: this.page,
+      };
+    },
+  },
   methods: {
-    search() {
+    ...mapActions(["search", "count"]),
+    ...mapMutations({ paginate: types.PAGINATE_CREATURE_TEMPLATES }),
+    async handleSearch() {
       this.loading = true;
-      this.currentPage = 1;
-      let query = "";
-      if (this.entry !== undefined) {
-        query = `${query}&entry=${this.entry}`;
-      }
-      if (this.name !== "") {
-        query = `${query}&name=${this.name}`;
-      }
-      if (this.subname !== "") {
-        query = `${query}&subname=${this.subname}`;
-      }
-      if (query !== "") {
-        query = `?${query.substr(1)}`;
-      }
-      Promise.all([
-        axios.get(`/creature-template${query}`).then((response) => {
-          this.creatureTemplates = response.data;
-        }),
-        axios.get(`/creature-template/quantity${query}`).then((response) => {
-          this.total = response.data.total;
-        }),
-      ]).then(() => {
-        this.loading = false;
-      });
+      this.paginate(1); //每次搜索时使分页器设为第一页
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
     },
     reset() {
       this.entry = undefined;
       this.name = "";
       this.subname = "";
     },
+    create(){
+      this.$router.push('/creature/create');
+    },
     show(row) {
       this.$router.push(`/creature/${row.entry}`);
     },
-    paginate(currentPage) {
+    async handlePaginate(page) {
       this.loading = true;
-      this.page = currentPage;
-      let query = "";
-      if (this.entry !== undefined) {
-        query = `${query}&entry=${this.entry}`;
-      }
-      if (this.name !== "") {
-        query = `${query}&name=${this.name}`;
-      }
-      if (this.subname !== "") {
-        query = `${query}&subname=${this.subname}`;
-      }
-      query = `${query}&page=${this.page}`;
-      if (query !== "") {
-        query = `?${query.substr(1)}`;
-      }
-      axios.get(`/creature-template${query}`).then((response) => {
-        this.loading = false;
-        this.creatureTemplates = response.data;
-      });
+      this.paginate(page)
+      await this.search(this.payload);
+      this.loading = false;
+    },
+    async init() {
+      this.loading = true;
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
     },
   },
   created() {
-    this.loading = true;
-    Promise.all([
-      axios.get(`/creature-template`).then((response) => {
-        this.creatureTemplates = response.data;
-      }),
-      axios.get(`/creature-template/quantity`).then((response) => {
-        this.total = response.data.total;
-      }),
-    ])
-      .then(() => {
-        this.loading = false;
-      })
-      .catch(() => {
-        this.loading = false;
-      });
+    if (this.creatureTemplates.length === 0) {
+      this.init();
+    }
   },
 };
 </script>

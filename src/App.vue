@@ -13,22 +13,22 @@
         >
       </div>
       <el-menu
-        default-active="dashboard"
-        :router="true"
+        :default-active="active"
+        @select="navigate"
         style="border-right: none"
       >
-        <el-menu-item index="/"> 主页 <small>DASHBOARD</small> </el-menu-item>
-        <el-menu-item index="/creature">
+        <el-menu-item index="dashboard">
+          首页 <small>DASHBOARD</small>
+        </el-menu-item>
+        <el-menu-item index="creature">
           生物 <small>CREATURE</small>
         </el-menu-item>
-        <el-menu-item index="/game-object">
+        <el-menu-item index="game-object">
           游戏对象 <small>GAME OBJECT</small>
         </el-menu-item>
-        <el-menu-item index="/item"> 物品 <small>ITEM</small> </el-menu-item>
-        <el-menu-item index="/quest"> 任务 <small>QUEST</small> </el-menu-item>
-        <el-menu-item index="/gossip">
-          对话 <small>GOSSIP</small>
-        </el-menu-item>
+        <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
+        <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
+        <el-menu-item index="test"> 测试 <small>TEST</small> </el-menu-item>
       </el-menu>
     </el-aside>
     <el-main style="margin-left: 200px">
@@ -38,17 +38,41 @@
 </template>
 
 <style>
-.el-aside {
-  color: #333;
-}
-
 .el-input-number .el-input__inner {
   text-align: left !important;
+}
+
+.el-input-number {
+  width: 100% !important;
+}
+
+.el-select {
+  width: 100%;
+}
+
+.clickable-icon {
+  cursor: pointer;
+}
+
+.flag-editor tbody tr {
+  cursor: pointer;
 }
 </style>
 
 <script>
 export default {
-  name: "app",
+  data() {
+    return {
+      active: "dashboard",
+    };
+  },
+  methods: {
+    navigate(index) {
+      this.$router.push(`/${index}`);
+    },
+  },
+  created() {
+    this.$router.push(this.active);
+  },
 };
 </script>

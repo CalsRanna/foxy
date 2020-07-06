@@ -2,7 +2,9 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }"
+          >首页</el-breadcrumb-item
+        >
         <el-breadcrumb-item :to="{ path: '/creature' }"
           >生物管理</el-breadcrumb-item
         >
@@ -42,18 +44,24 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="ID">
-                  <el-input
+                  <el-input-number
                     v-model="creatureTemplate.entry"
+                    :min="0"
+                    controls-position="right"
                     placeholder="entry"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="姓名">
-                  <el-input
-                    v-model="creatureTemplate.name"
-                    placeholder="name"
-                  ></el-input>
+                  <el-input v-model="creatureTemplate.name" placeholder="name">
+                    <i
+                      class="el-icon-s-operation clickable-icon"
+                      slot="suffix"
+                      style="margin-right: 8px"
+                      @click="showDialog"
+                    ></i>
+                  </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -61,7 +69,14 @@
                   <el-input
                     v-model="creatureTemplate.subname"
                     placeholder="subname"
-                  ></el-input>
+                  >
+                    <i
+                      class="el-icon-s-operation clickable-icon"
+                      slot="suffix"
+                      style="margin-right: 8px"
+                      @click="showDialog"
+                    ></i>
+                  </el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -79,7 +94,6 @@
                     :min="1"
                     controls-position="right"
                     placeholder="minlevel"
-                    style="width: 100%"
                   ></el-input-number>
                 </el-form-item>
               </el-col>
@@ -90,7 +104,6 @@
                     :min="1"
                     controls-position="right"
                     placeholder="maxlevel"
-                    style="width: 100%"
                   ></el-input-number>
                 </el-form-item>
               </el-col>
@@ -103,7 +116,7 @@
                       </div>
                       <i class="el-icon-info"></i>
                     </el-tooltip>
-                    生命值扩展
+                    属性扩展
                   </template>
                   <el-select v-model="creatureTemplate.exp" placeholder="exp">
                     <el-option label="经典旧世" :value="0"></el-option>
@@ -121,11 +134,29 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="标识">
-                  <el-input
-                    v-model="creatureTemplate.npcflag"
-                    placeholder="npcflag"
-                  ></el-input>
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        This is the creature's class, and it dictates levels of
+                        health and mana. Also note that health and mana will
+                        change according to exp, HealthModifier, and
+                        ManaModifier. Not setting this value will report a minor
+                        warning in the "DB_Errors.log".
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    职业
+                  </template>
+                  <el-select
+                    v-model="creatureTemplate.unit_class"
+                    placeholder="unit_class"
+                  >
+                    <el-option label="战士" :value="1"></el-option>
+                    <el-option label="圣骑士" :value="2"></el-option>
+                    <el-option label="盗贼" :value="4"></el-option>
+                    <el-option label="法师" :value="8"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -251,94 +282,136 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="类型标识">
-                  <el-input
-                    v-model="creatureTemplate.type_flags"
-                    placeholder="type_flags"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item>
+                <el-form-item label="Npc标识">
                   <template slot="label">
                     <el-tooltip>
                       <div slot="content" style="max-width: 400px">
-                        This is the creature's class, and it dictates levels of
-                        health and mana. Also note that health and mana will
-                        change according to exp, HealthModifier, and
-                        ManaModifier. Not setting this value will report a minor
-                        warning in the "DB_Errors.log".
+                        A bitmask that represents what NPC flags the creature
+                        has. Each bit controls a different flag and to combine
+                        flags, you can add each flag that you want, in effect
+                        activating the respective bits.
                       </div>
                       <i class="el-icon-info"></i>
                     </el-tooltip>
-                    职业
+                    Npc标识
                   </template>
-                  <el-select
-                    v-model="creatureTemplate.unit_class"
-                    placeholder="unit_class"
-                  >
-                    <el-option label="战士" :value="1"></el-option>
-                    <el-option label="圣骑士" :value="2"></el-option>
-                    <el-option label="盗贼" :value="4"></el-option>
-                    <el-option label="法师" :value="8"></el-option>
-                  </el-select>
+                  <flag-editor
+                    v-model="creatureTemplate.npcflag"
+                    :flags="npcFlags"
+                    title="Npc标识编辑器"
+                    placeholder="npcflag"
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="unit_flags">
-                  <el-input
+                <el-form-item label="类型标识">
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        This field can control whether a mob is minable or
+                        herbable or lootable by engineer. If it is either of
+                        those three, then the loot given when it is
+                        skinned/mined will be stored in the
+                        skinning_loot_template table. It also controls, whether
+                        this mob can be tamed by a hunter. Other fields have no
+                        special meaning on the serverside. The entire field will
+                        be send to the client in SMSG_CREATURE_QUERY_RESPONSE
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    类型标识
+                  </template>
+                  <flag-editor
+                    v-model="creatureTemplate.type_flags"
+                    :flags="typeFlags"
+                    title="类型标识编辑器"
+                    placeholder="type_flags"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="单位标识">
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        Allows the manual application of unit flags to
+                        creatures. Again this is a bitmask field and to apply
+                        more than one flag, just add the different numbers. Some
+                        possible flags are:
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    单位标识
+                  </template>
+                  <flag-editor
                     v-model="creatureTemplate.unit_flags"
+                    :flags="unitFlags"
+                    title="单位标识编辑器"
                     placeholder="unit_flags"
-                  ></el-input>
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="unit_flags2">
-                  <el-input
+                <el-form-item label="单位标识2">
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        Allows additional application of unit flags to
+                        creatures. Again, this is a bitmask field and to apply
+                        more than one flag, just add the different numbers. Some
+                        possible flags are:
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    单位标识2
+                  </template>
+                  <flag-editor
                     v-model="creatureTemplate.unit_flags2"
+                    :flags="unitFlags2"
+                    title="单位标识编辑器"
                     placeholder="unit_flags2"
-                  ></el-input>
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="dynamicflags">
-                  <el-input
+                <el-form-item label="动态标识">
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        Flags that control visual appearance of the creature. A
+                        few known flags and their use are:
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    动态标识
+                  </template>
+                  <flag-editor
                     v-model="creatureTemplate.dynamicflags"
+                    :flags="dynamicFlags"
+                    title="动态标识编辑器"
                     placeholder="dynamicflags"
-                  ></el-input>
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="回复生命">
-                  <el-switch
-                    v-model="creatureTemplate.RegenHealth"
-                    :active-value="1"
-                    :inactive-value="0"
-                  ></el-switch>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="mechanic_immune_mask">
-                  <el-input
-                    v-model="creatureTemplate.mechanic_immune_mask"
-                    placeholder="mechanic_immune_mask"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="flags_extra">
-                  <el-input
+                <el-form-item label="额外标识">
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        These flags control certain creature specific
+                        attributes. Flags can be added together to apply more
+                        than one.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    额外标识
+                  </template>
+                  <flag-editor
                     v-model="creatureTemplate.flags_extra"
+                    :flags="flagsExtra"
+                    title="额外标识编辑器"
                     placeholder="flags_extra"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="VehicleId">
-                  <el-input
-                    v-model="creatureTemplate.VehicleId"
-                    placeholder="VehicleId"
-                  ></el-input>
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -351,10 +424,68 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="PetSpellDataId">
+                <el-form-item label="回复生命">
+                  <el-switch
+                    v-model="creatureTemplate.RegenHealth"
+                    :active-value="1"
+                    :inactive-value="0"
+                  ></el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="免疫技能">
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        This makes the creature immune to specific spell
+                        natures. See Spell.dbc at row effect_X_mechanic_id. Uses
+                        references from SpellMechanic.dbc. To combine immunities
+                        just add values. Immune to everything corresponds to the
+                        value 2147483647 (0x3FFF FFFF).
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    免疫技能
+                  </template>
+                  <flag-editor
+                    v-model="creatureTemplate.mechanic_immune_mask"
+                    :flags="mechanicImmuneMasks"
+                    title="免疫技能编辑器"
+                    placeholder="mechanic_immune_mask"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="宠物技能">
                   <el-input
                     v-model="creatureTemplate.PetSpellDataId"
                     placeholder="PetSpellDataId"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="坐骑编号">
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        Entry of vehicle if creature is/has a vehicle entry.
+                        This field determines how the player appears on the
+                        vehicle, how the vehicle moves, and whether or not the
+                        vehicle action bar is shown. For example, a vehicleID of
+                        292 will make the player invisible, prevent the vehicle
+                        from strafing left/right (but will allow
+                        forwards/backwards), and will show the vehicle action
+                        bar spells (which are defined in spell1-8). An
+                        npc_spellclick_spells entry must be made for this
+                        creature entry in order for this to work.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    坐骑编号
+                  </template>
+                  <el-input
+                    v-model="creatureTemplate.VehicleId"
+                    placeholder="VehicleId"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -411,14 +542,43 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="训练师类型">
-                  <el-input
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        If the NPC is a trainer (has the trainer flag), then
+                        this field controls what kind of trainer it is. Both
+                        this field and the related field must be filled in for a
+                        trainer to work correctly.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    训练师类型
+                  </template>
+                  <el-select
                     v-model="creatureTemplate.trainer_type"
                     placeholder="trainer_type"
-                  ></el-input>
+                  >
+                    <el-option label="职业训练师" :value="0"></el-option>
+                    <el-option label="骑术训练师" :value="1"></el-option>
+                    <el-option label="专业训练师" :value="2"></el-option>
+                    <el-option label="宠物训练师" :value="3"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="trainer_spell">
+                <el-form-item label="训练师法术">
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        If the NPC is a trainer that teaches professions
+                        (trainer_type = 2), then the player must already know
+                        the spell ID specified here to be able to talk to this
+                        NPC.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    训练师法术
+                  </template>
                   <el-input
                     v-model="creatureTemplate.trainer_spell"
                     placeholder="trainer_spell"
@@ -427,18 +587,77 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="训练师职业">
-                  <el-input
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        If the NPC is a class trainer or a pet trainer
+                        (trainer_type = 0 or 3), then the player's class must be
+                        the same as the value specified here to talk to this
+                        trainer. For pet trainers, this value must be 3
+                        (hunter). See characters.class
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    训练师职业
+                  </template>
+                  <el-select
                     v-model="creatureTemplate.trainer_class"
                     placeholder="trainer_class"
-                  ></el-input>
+                  >
+                    <el-option label="战士" :value="1"></el-option>
+                    <el-option label="圣骑士" :value="2"></el-option>
+                    <el-option label="猎人" :value="3"></el-option>
+                    <el-option label="潜行者" :value="4"></el-option>
+                    <el-option label="牧师" :value="5"></el-option>
+                    <el-option label="死亡骑士" :value="6"></el-option>
+                    <el-option label="萨满祭司" :value="7"></el-option>
+                    <el-option label="法师" :value="8"></el-option>
+                    <el-option label="术士" :value="9"></el-option>
+                    <el-option label="德鲁伊" :value="11"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="训练师种族">
-                  <el-input
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width:400px">
+                        If the NPC is a mount trainer (trainer_type = 1), then
+                        the player's race must be the same as the value
+                        specified here to talk to this trainer. See
+                        characters.race
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    训练师种族
+                  </template>
+                  <el-select
                     v-model="creatureTemplate.trainer_race"
                     placeholder="trainer_race"
-                  ></el-input>
+                  >
+                  
+                    <el-option label="人类" :value="1"></el-option>
+                    <el-option label="兽人" :value="2"></el-option>
+                    <el-option label="矮人" :value="3"></el-option>
+                    <el-option label="暗夜精灵" :value="4"></el-option>
+                    <el-option label="亡灵" :value="5"></el-option>
+                    <el-option label="牛头人" :value="6"></el-option>
+                    <el-option label="侏儒" :value="7"></el-option>
+                    <el-option label="巨魔" :value="8"></el-option>
+                    <el-option label="地精" :value="9"></el-option>
+                    <el-option label="血精灵" :value="10"></el-option>
+                    <el-option label="德莱尼" :value="11"></el-option>
+                    <el-option label="邪兽人" :value="12"></el-option>
+                    <el-option label="娜迦" :value="13"></el-option>
+                    <el-option label="破碎者" :value="14"></el-option>
+                    <el-option label="骷髅" :value="15"></el-option>
+                    <el-option label="维库人" :value="16"></el-option>
+                    <el-option label="海象人" :value="17"></el-option>
+                    <el-option label="森林巨魔" :value="18"></el-option>
+                    <el-option label="牦牛人" :value="19"></el-option>
+                    <el-option label="诺森德骷髅" :value="20"></el-option>
+                    <el-option label="冰巨魔" :value="21"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -851,6 +1070,10 @@
               </el-col>
             </el-row>
           </el-card>
+          <el-card v-loading="loading" style="margin-top: 16px">
+            <el-button type="primary">保存</el-button>
+            <el-button>返回</el-button>
+          </el-card>
         </el-form>
       </el-tab-pane>
       <el-tab-pane
@@ -1137,30 +1360,57 @@
                 技能ID
               </span>
             </el-table-column>
-            <el-table-column prop="MoneyCost" label="价格" sortable></el-table-column>
-            <el-table-column prop="ReqSkillLine" label="需要技能" sortable></el-table-column>
-            <el-table-column prop="ReqSkillRank" label="需要熟练度" sortable></el-table-column>
-            <el-table-column prop="ReqLevel" label="需要等级" sortable></el-table-column>
+            <el-table-column
+              prop="MoneyCost"
+              label="价格"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="ReqSkillLine"
+              label="需要技能"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="ReqSkillRank"
+              label="需要熟练度"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="ReqLevel"
+              label="需要等级"
+              sortable
+            ></el-table-column>
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="任务物品" name="creature_questitem" lazy v-loading="loading"
-        >
+      <el-tab-pane
+        label="任务物品"
+        name="creature_questitem"
+        lazy
+        v-loading="loading"
+      >
         <el-card style="margin-top: 16px">
           <el-table :data="creatureQuestItems">
             <el-table-column prop="displayid"></el-table-column>
-            <el-table-column prop="Idx" label="Index" sortable></el-table-column>
+            <el-table-column
+              prop="Idx"
+              label="Index"
+              sortable
+            ></el-table-column>
             <el-table-column label="名称">
               <span slot-scope="scope">
-                <template v-if="scope.row.Name">{{scope.row.Name}}</template>
-                <template v-else>{{scope.row.name}}</template>
+                <template v-if="scope.row.Name">{{ scope.row.Name }}</template>
+                <template v-else>{{ scope.row.name }}</template>
               </span>
             </el-table-column>
-            <el-table-column prop="VerifiedBuild" label="VerifiedBuild" sortable></el-table-column>
+            <el-table-column
+              prop="VerifiedBuild"
+              label="VerifiedBuild"
+              sortable
+            ></el-table-column>
           </el-table>
         </el-card>
-        </el-tab-pane
-      >
+      </el-tab-pane>
       <el-tab-pane
         label="生物掉落"
         name="creature_loot_template"
@@ -1204,38 +1454,65 @@
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="偷窃掉落" name="pickpocketing_loot_template" lazy v-loading="loading"
-        >
+      <el-tab-pane
+        label="偷窃掉落"
+        name="pickpocketing_loot_template"
+        lazy
+        v-loading="loading"
+      >
         <el-card style="margin-top: 16px">
           <el-table :data="pickpocketingLootTemplates">
             <el-table-column prop="displayid"></el-table-column>
             <el-table-column prop="Item" label="ID" sortable></el-table-column>
             <el-table-column prop="Name" label="名称" sortable>
               <template slot-scope="scope">
-                <template v-if="scope.row.Name !== null">{{scope.row.Name}}</template>
-                <template v-else>{{scope.row.name}}</template>
+                <template v-if="scope.row.Name !== null">{{
+                  scope.row.Name
+                }}</template>
+                <template v-else>{{ scope.row.name }}</template>
               </template>
             </el-table-column>
-            <el-table-column prop="Reference" label="关联" sortable></el-table-column>
+            <el-table-column
+              prop="Reference"
+              label="关联"
+              sortable
+            ></el-table-column>
             <el-table-column prop="Chance" label="几率" sortable>
               <template slot-scope="scope">
-                {{`${scope.row.Chance}%`}}
+                {{ `${scope.row.Chance}%` }}
               </template>
             </el-table-column>
             <el-table-column prop="QuestRequired" label="需要任务" sortable>
               <template slot-scope="scope">
-                <template v-if="scope.row.Title !== null">{{scope.row.Title}}</template>
-                <template v-else>{{scope.row.LogTitle}}</template>
+                <template v-if="scope.row.Title !== null">{{
+                  scope.row.Title
+                }}</template>
+                <template v-else>{{ scope.row.LogTitle }}</template>
               </template>
             </el-table-column>
-            <el-table-column prop="LootMode" label="掉落模式" sortable></el-table-column>
-            <el-table-column prop="GroupId" label="组ID" sortable></el-table-column>
-            <el-table-column prop="MinCount" label="最小数量" sortable></el-table-column>
-            <el-table-column prop="MaxCount" label="最大数量" sortable></el-table-column>
+            <el-table-column
+              prop="LootMode"
+              label="掉落模式"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="GroupId"
+              label="组ID"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="MinCount"
+              label="最小数量"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="MaxCount"
+              label="最大数量"
+              sortable
+            ></el-table-column>
           </el-table>
         </el-card>
-        </el-tab-pane
-      >
+      </el-tab-pane>
       <el-tab-pane label="剥皮掉落" name="skinning_loot_template">
         <el-card style="margin-top: 16px">
           <el-table :data="skinningLootTemplates">
@@ -1243,41 +1520,224 @@
             <el-table-column prop="Item" label="ID" sortable></el-table-column>
             <el-table-column prop="Name" label="名称" sortable>
               <template slot-scope="scope">
-                <template v-if="scope.row.Name !== null">{{scope.row.Name}}</template>
-                <template v-else>{{scope.row.name}}</template>
+                <template v-if="scope.row.Name !== null">{{
+                  scope.row.Name
+                }}</template>
+                <template v-else>{{ scope.row.name }}</template>
               </template>
             </el-table-column>
-            <el-table-column prop="Reference" label="关联" sortable></el-table-column>
+            <el-table-column
+              prop="Reference"
+              label="关联"
+              sortable
+            ></el-table-column>
             <el-table-column prop="Chance" label="几率" sortable>
               <template slot-scope="scope">
-                {{`${scope.row.Chance}%`}}
+                {{ `${scope.row.Chance}%` }}
               </template>
             </el-table-column>
             <el-table-column prop="QuestRequired" label="需要任务" sortable>
               <template slot-scope="scope">
-                <template v-if="scope.row.Title !== null">{{scope.row.Title}}</template>
-                <template v-else>{{scope.row.LogTitle}}</template>
+                <template v-if="scope.row.Title !== null">{{
+                  scope.row.Title
+                }}</template>
+                <template v-else>{{ scope.row.LogTitle }}</template>
               </template>
             </el-table-column>
-            <el-table-column prop="LootMode" label="掉落模式" sortable></el-table-column>
-            <el-table-column prop="GroupId" label="组ID" sortable></el-table-column>
-            <el-table-column prop="MinCount" label="最小数量" sortable></el-table-column>
-            <el-table-column prop="MaxCount" label="最大数量" sortable></el-table-column>
+            <el-table-column
+              prop="LootMode"
+              label="掉落模式"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="GroupId"
+              label="组ID"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="MinCount"
+              label="最小数量"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              prop="MaxCount"
+              label="最大数量"
+              sortable
+            ></el-table-column>
           </el-table>
         </el-card>
       </el-tab-pane>
     </el-tabs>
+    <el-dialog
+      :visible.sync="localeDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+    >
+      <div slot="title">
+        <span style="font-size: 18px;color: #303133;margin-right:16px"
+          >名称/称号本地化</span
+        >
+        <el-button size="mini" @click="addCreatureTemplateLocale"
+          >新增</el-button
+        >
+      </div>
+      <el-table :data="creatureTemplate.CreatureTemplateLocales">
+        <el-table-column width="48">
+          <el-button
+            type="danger"
+            size="mini"
+            icon="el-icon-delete"
+            circle=""
+            slot-scope="scope"
+            @click="() => deleteCreatureTemplateLocale(scope.$index)"
+          ></el-button>
+        </el-table-column>
+        <el-table-column prop="entry" label="编号">
+          <template slot-scope="scope">
+            <el-input-number
+              v-model="scope.row.entry"
+              controls-position="right"
+              disabled
+            ></el-input-number>
+          </template>
+        </el-table-column>
+        <el-table-column prop="locale" label="语言">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.locale"
+              placeholder="locale"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Name" label="名称">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.Name" placeholder="Name"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Title" label="称号">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.Title" placeholder="Title"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="VerifiedBuild" label="VerifiedBuild">
+          <template slot-scope="scope">
+            <el-input-number
+              v-model="scope.row.VerifiedBuild"
+              :min="0"
+              controls-position="right"
+              placeholder="VerifiedBuild"
+            ></el-input-number>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer">
+        <el-button @click="closeDialog">取消</el-button>
+        <el-button type="primary" @click="storeCreatureTemplateLocales"
+          >保存</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import { Notification } from "element-ui";
+import FlagEditor from "@/components/FlagEditor";
+import {
+  npcFlags,
+  typeFlags,
+  unitFlags,
+  unitFlags2,
+  dynamicFlags,
+  flagsExtra,
+  mechanicImmuneMasks,
+} from "@/locales/creature";
+
 export default {
   data() {
     return {
       loading: false,
       creatureTemplate: {
+        entry: 0,
+        difficulty_entry_1: 0,
+        difficulty_entry_2: 0,
+        difficulty_entry_3: 0,
+        KillCredit1: 0,
+        KillCredit2: 0,
+        modelid1: 0,
+        modelid2: 0,
+        modelid3: 0,
+        modelid4: 0,
+        name: "",
+        subname: "",
+        IconName: "",
+        gossip_menu_id: 0,
+        minlevel: 1,
+        maxlevel: 1,
+        exp: 0,
+        faction: 0,
+        npcflag: 0,
+        speed_walk: 0,
+        speed_run: 1.14286,
+        scale: 1,
+        rank: 0,
+        mindmg: 0,
+        maxdmg: 0,
+        dmgschool: 0,
+        attackpower: 0,
+        DamageModifier: 1,
+        BaseAttackTime: 0,
+        RangeAttackTime: 0,
+        unit_class: 0,
+        unit_flags: 0,
+        unit_flags2: 0,
+        dynamicflags: 0,
+        family: 0,
+        trainer_type: 0,
+        trainer_spell: 0,
+        trainer_class: 0,
+        trainer_race: 0,
+        minrangedmg: 0,
+        maxrangedmg: 0,
+        rangedattackpower: 0,
+        type: 0,
+        type_flags: 0,
+        lootid: 0,
+        pickpocketloot: 0,
+        skinloot: 0,
+        resistance1: 0,
+        resistance2: 0,
+        resistance3: 0,
+        resistance4: 0,
+        resistance5: 0,
+        resistance6: 0,
+        spell1: 0,
+        spell2: 0,
+        spell3: 0,
+        spell4: 0,
+        spell5: 0,
+        spell6: 0,
+        spell7: 0,
+        spell8: 0,
+        PetSpellDataId: 0,
+        VehicleId: 0,
+        mingold: 0,
+        maxgold: 0,
+        AIName: "",
+        MovementType: 0,
+        InhabitType: 3,
+        HoverHeight: 1,
+        HealthModifier: 1,
+        ManaModifier: 1,
+        ArmorModifier: 1,
+        RacialLeader: 0,
+        movementId: 0,
+        RegenHealth: 1,
+        mechanic_immune_mask: 0,
+        flags_extra: 0,
+        ScriptName: "",
+        VerifiedBuild: 0,
         CreatureTemplateLocales: [],
       },
       creatureTemplateAddon: {},
@@ -1289,6 +1749,14 @@ export default {
       npcTrainers: [],
       pickpocketingLootTemplates: [],
       skinningLootTemplates: [],
+      localeDialogVisible: false,
+      npcFlags: npcFlags,
+      typeFlags: typeFlags,
+      unitFlags: unitFlags,
+      unitFlags2: unitFlags2,
+      dynamicFlags: dynamicFlags,
+      flagsExtra: flagsExtra,
+      mechanicImmuneMasks: mechanicImmuneMasks,
     };
   },
   methods: {
@@ -1305,7 +1773,7 @@ export default {
               this.creatureTemplateAddon = response.data;
             } else {
               Notification.warning({
-                title: '提示',
+                title: "提示",
                 message: "该生物模板没有设置模板补充。",
                 type: "warning",
               });
@@ -1330,7 +1798,7 @@ export default {
               this.creatureOnKillReputation = response.data;
             } else {
               Notification.warning({
-                title: '提示',
+                title: "提示",
                 message: "该生物模板没有设置击杀声望。",
                 type: "warning",
               });
@@ -1372,10 +1840,15 @@ export default {
             this.loading = false;
           });
       }
-      if (tab.name === "creature_questitem" && this.creatureQuestItems.length === 0) {
+      if (
+        tab.name === "creature_questitem" &&
+        this.creatureQuestItems.length === 0
+      ) {
         this.loading = true;
         axios
-          .get(`/creature-template/${this.creatureTemplate.entry}/creature-questitem`)
+          .get(
+            `/creature-template/${this.creatureTemplate.entry}/creature-questitem`
+          )
           .then((response) => {
             this.creatureQuestItems = response.data;
             this.loading = false;
@@ -1408,10 +1881,15 @@ export default {
             this.loading = false;
           });
       }
-      if (tab.name === "pickpocketing_loot_template" && this.pickpocketingLootTemplates.length === 0) {
+      if (
+        tab.name === "pickpocketing_loot_template" &&
+        this.pickpocketingLootTemplates.length === 0
+      ) {
         this.loading = true;
         axios
-          .get(`/creature-template/${this.creatureTemplate.entry}/pickpocketing-loot-template`)
+          .get(
+            `/creature-template/${this.creatureTemplate.entry}/pickpocketing-loot-template`
+          )
           .then((response) => {
             this.pickpocketingLootTemplates = response.data;
             this.loading = false;
@@ -1420,10 +1898,15 @@ export default {
             this.loading = false;
           });
       }
-      if (tab.name === "skinning_loot_template" && this.skinningLootTemplates.length === 0) {
+      if (
+        tab.name === "skinning_loot_template" &&
+        this.skinningLootTemplates.length === 0
+      ) {
         this.loading = true;
         axios
-          .get(`/creature-template/${this.creatureTemplate.entry}/skinning-loot-template`)
+          .get(
+            `/creature-template/${this.creatureTemplate.entry}/skinning-loot-template`
+          )
           .then((response) => {
             this.skinningLootTemplates = response.data;
             this.loading = false;
@@ -1433,19 +1916,134 @@ export default {
           });
       }
     },
+    showDialog() {
+      this.localeDialogVisible = true;
+    },
+    addCreatureTemplateLocale() {
+      this.creatureTemplate.CreatureTemplateLocales.push({
+        entry: this.creatureTemplate.entry,
+        VerifiedBuild: 0,
+      });
+    },
+    deleteCreatureTemplateLocale(index) {
+      this.creatureTemplate.CreatureTemplateLocales.splice(index, 1);
+    },
+    closeDialog() {
+      this.localeDialogVisible = false;
+    },
+    storeCreatureTemplateLocales() {
+      this.localeDialogVisible = false;
+    },
   },
   created() {
     this.loading = true;
     let id = this.$route.params.id;
-    axios
-      .get(`/creature-template/${id}`)
-      .then((response) => {
-        this.creatureTemplate = response.data;
-        this.loading = false;
-      })
-      .catch(() => {
-        this.loading = false;
-      });
+    if (id) {
+      axios
+        .get(`/creature-template/${id}`)
+        .then((response) => {
+          this.creatureTemplate = response.data;
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    } else {
+      axios
+        .get("/creature-template/max-id")
+        .then((response) => {
+          this.creatureTemplate.entry = response.data + 1;
+          // this.creatureTemplate = {
+          //   entry: response.data + 1,
+          //   difficulty_entry_1: 0,
+          //   difficulty_entry_2: 0,
+          //   difficulty_entry_3: 0,
+          //   KillCredit1: 0,
+          //   KillCredit2: 0,
+          //   modelid1: 0,
+          //   modelid2:0,
+          //   modelid3: 0,
+          //   modelid4: 0,
+          //   name: '',
+          //   subname: '',
+          //   IconName: '',
+          //   gossip_menu_id: 0,
+          //   minlevel: 1,
+          //   maxlevel: 1,
+          //   exp: 0,
+          //   faction: 0,
+          //   npcflag:0,
+          //   speed_walk: 0,
+          //   speed_run: 1.14286,
+          //   scale: 1,
+          //   rank: 0,
+          //   mindmg: 0,
+          //   maxdmg: 0,
+          //   dmgschool: 0,
+          //   attackpower: 0,
+          //   DamageModifier: 1,
+          //   BaseAttackTime: 0,
+          //   RangeAttackTime: 0,
+          //   unit_class: 0,
+          //   unit_flags: 0,
+          //   unit_flags2: 0,
+          //   dynamicflags: 0,
+          //   family: 0,
+          //   trainer_type: 0,
+          //   trainer_spell: 0,
+          //   trainer_class: 0,
+          //   trainer_race: 0,
+          //   minrangedmg: 0,
+          //   maxrangedmg: 0,
+          //   rangedattackpower: 0,
+          //   type: 0,
+          //   type_flags: 0,
+          //   lootid: 0,
+          //   pickpocketloot: 0,
+          //   skinloot: 0,
+          //   resistance1: 0,
+          //   resistance2: 0,
+          //   resistance3: 0,
+          //   resistance4: 0,
+          //   resistance5: 0,
+          //   resistance6: 0,
+          //   spell1: 0,
+          //   spell2: 0,
+          //   spell3: 0,
+          //   spell4: 0,
+          //   spell5: 0,
+          //   spell6: 0,
+          //   spell7: 0,
+          //   spell8: 0,
+          //   PetSpellDataId: 0,
+          //   VehicleId: 0,
+          //   mingold: 0,
+          //   maxgold: 0,
+          //   AIName: '',
+          //   MovementType: 0,
+          //   InhabitType: 3,
+          //   HoverHeight: 1,
+          //   HealthModifier: 1,
+          //   ManaModifier: 1,
+          //   ArmorModifier: 1,
+          //   RacialLeader: 0,
+          //   movementId: 0,
+          //   RegenHealth: 1,
+          //   mechanic_immune_mask: 0,
+          //   flags_extra: 0,
+          //   ScriptName: '',
+          //   VerifiedBuild: 0,
+          //   CreatureTemplateLocales: [],
+          // };
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    }
+  },
+  components: {
+    "flag-editor": FlagEditor,
   },
 };
 </script>
