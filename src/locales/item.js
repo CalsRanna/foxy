@@ -1,6 +1,6 @@
 const colors = [
   "grey",
-  "#000000",
+  "#606266",
   "green",
   "blue",
   "purple",

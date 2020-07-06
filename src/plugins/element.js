@@ -33,6 +33,9 @@ import {
   Avatar,
   Switch,
   Tag,
+  Dialog,
+  Checkbox,
+  Image,
   // Notification
 } from "element-ui";
 
@@ -69,4 +72,7 @@ Vue.use(Option);
 Vue.use(Avatar);
 Vue.use(Switch);
 Vue.use(Tag);
+Vue.use(Dialog);
+Vue.use(Checkbox);
+Vue.use(Image);
 // Vue.use(Notification);

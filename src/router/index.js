@@ -1,33 +1,30 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+
+import Login from "@/views/Login";
+import Dashboard from '@/views/Dashboard';
 import CreatureTable from "@/views/CreatureTable";
 import CreatureTemplateDetail from "@/views/CreatureTemplateDetail";
 import GameObjectTable from "@/views/GameObjectTable";
 import ItemTable from "@/views/ItemTable";
 import ItemTemplateDetail from "@/views/ItemTemplateDetail";
 import QuestTable from "@/views/QuestTable";
-import GossipTable from "@/views/GossipTable";
+import Test from "@/views/Test";
+
 
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/dashboard",
-    Component: Home,
-  },
+  { path: "/login", Component: Login },
+  { path: "/dashboard", Component: Dashboard },
   { path: "/creature", component: CreatureTable },
+  { path: "/creature/create", component: CreatureTemplateDetail },
   { path: "/creature/:id", component: CreatureTemplateDetail },
   { path: "/game-object", component: GameObjectTable },
   { path: "/item", component: ItemTable },
   { path: "/item/:id", component: ItemTemplateDetail },
   { path: "/quest", component: QuestTable },
-  { path: "/gossip", component: GossipTable },
+  { path: "/test", component: Test },
 ];
 
 const router = new VueRouter({

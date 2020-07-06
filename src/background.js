@@ -1,9 +1,9 @@
 "use strict";
 
-import { app, protocol, BrowserWindow } from "electron";
+import { app, protocol, BrowserWindow, Menu } from "electron";
 import {
   createProtocol,
-  installVueDevtools,
+  // installVueDevtools,
 } from "vue-cli-plugin-electron-builder/lib";
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -16,6 +16,103 @@ protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
 
+let menuTemplate = [
+  {
+    label: "文件",
+    submenu: [
+      {
+        label: "新建",
+        accelerator: "CmdOrCtrl+N",
+        role: "new",
+      },
+      {
+        label: "打开文件",
+        accelerator: "CmdOrCtrl+O",
+        role: "open",
+      },
+    ],
+  },
+  {
+    label: "窗口",
+    role: "window",
+    submenu: [
+      {
+        label: "重新加载",
+        accelerator: "CmdOrCtrl+R",
+        click: function(item, focusedWindow) {
+          if (focusedWindow) {
+            // on reload, start fresh and close any old
+            // open secondary windows
+            if (focusedWindow.id === 1) {
+              BrowserWindow.getAllWindows().forEach(function(win) {
+                if (win.id > 1) {
+                  win.close();
+                }
+              });
+            }
+            focusedWindow.reload();
+          }
+        },
+      },
+      {
+        label: "最小化",
+        role: "minimize",
+      },
+      {
+        label: "关闭",
+        role: "close",
+      },
+      {
+        label: "开发者工具",
+        accelerator: (function() {
+          if (process.platform === "darwin") {
+            return "Alt+Command+I";
+          } else {
+            return "F12";
+          }
+        })(),
+        click: function(item, focusedWindow) {
+          if (focusedWindow) {
+            focusedWindow.toggleDevTools();
+          }
+        },
+      },
+      {
+        type: "separator",
+      },
+    ],
+  },
+  {
+    label: "帮助",
+    role: "help",
+    submenu: [
+      {
+        label: "帮助中心",
+        click: function() {
+          shell.openExternal("https://forum.iptchain.net");
+        },
+      },
+      {
+        label: "报告问题",
+        click: function() {
+          electron.shell.openExternal("https://forum.iptchain.net");
+        },
+      },
+      {
+        label: "关于Foxy",
+        click: function() {
+          electron.shell.openExternal("https://forum.iptchain.net");
+        },
+      },
+    ],
+  },
+];
+
+function createMenu() {
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
+}
+
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
@@ -26,7 +123,12 @@ function createWindow() {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
     },
+    show: false,
+    title: "Foxy",
   });
+
+  win.maximize();
+  win.show();
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -77,6 +179,7 @@ app.on("ready", async () => {
     //   console.error('Vue Devtools failed to install:', e.toString())
     // }
   }
+  createMenu();
   createWindow();
 });
 
@@ -94,4 +197,3 @@ if (isDevelopment) {
     });
   }
 }
-

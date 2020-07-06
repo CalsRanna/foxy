@@ -2,7 +2,9 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }"
+          >首页</el-breadcrumb-item
+        >
         <el-breadcrumb-item>物品管理</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">物品模版列表</h3>
@@ -99,7 +101,7 @@
         <el-col :span="6">
           <el-input v-model="name" placeholder="名称"></el-input>
         </el-col>
-        <el-col :span="6" :offset="6" style="text-align: right;">
+        <el-col :span="6">
           <el-button type="primary" @click="search">查询</el-button>
           <el-button @click="reset">重置</el-button>
         </el-col>
@@ -116,8 +118,21 @@
         style="margin-bottom: 16px"
       ></el-pagination>
       <el-table :data="itemTemplates" @row-dblclick="show">
-        <el-table-column prop="displayid"></el-table-column>
         <el-table-column prop="entry" label="ID" sortable></el-table-column>
+        <el-table-column width="43px" class-name="icon-height">
+          <template slot-scope="scope">
+            <el-image
+              :src="`/icons/${icons[scope.row.displayid]}`"
+              style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
+            >
+              <el-image
+                src="/icons/INV_Misc_QuestionMark.png"
+                style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
+                slot="error"
+              ></el-image>
+            </el-image>
+          </template>
+        </el-table-column>
         <el-table-column label="名称" sortable>
           <span
             slot-scope="scope"
@@ -168,8 +183,16 @@
   </div>
 </template>
 
+<style>
+.icon-height .cell {
+  height: 23px !important;
+}
+</style>
+
 <script>
 import axios from "axios";
+import icons from "@/libs/icons";
+
 import {
   colors,
   localeClasses,
@@ -194,6 +217,7 @@ export default {
       page: 1,
       total: 0,
       itemTemplates: [],
+      icons: icons,
     };
   },
   methods: {
