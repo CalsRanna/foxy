@@ -28,7 +28,6 @@
         </el-menu-item>
         <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
         <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
-        <el-menu-item index="test"> 测试 <small>TEST</small> </el-menu-item>
       </el-menu>
     </el-aside>
     <el-main style="margin-left: 200px">

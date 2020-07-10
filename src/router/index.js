@@ -9,7 +9,6 @@ import GameObjectTable from "@/views/GameObjectTable";
 import ItemTable from "@/views/ItemTable";
 import ItemTemplateDetail from "@/views/ItemTemplateDetail";
 import QuestTable from "@/views/QuestTable";
-import Test from "@/views/Test";
 
 
 Vue.use(VueRouter);
@@ -24,7 +23,6 @@ const routes = [
   { path: "/item", component: ItemTable },
   { path: "/item/:id", component: ItemTemplateDetail },
   { path: "/quest", component: QuestTable },
-  { path: "/test", component: Test },
 ];
 
 const router = new VueRouter({
