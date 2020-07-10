@@ -490,10 +490,10 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="VerifiedBuild">
+                <el-form-item label="对话菜单">
                   <el-input
-                    v-model="creatureTemplate.VerifiedBuild"
-                    placeholder="VerifiedBuild"
+                    v-model="creatureTemplate.gossip_menu_id"
+                    placeholder="gossip_menu_id"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -533,6 +533,264 @@
                   <el-input
                     v-model="creatureTemplate.modelid4"
                     placeholder="modelid4"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+          <el-card style="margin-top: 16px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="伤害类型">
+                  <el-input
+                    v-model="creatureTemplate.dmgschool"
+                    placeholder="dmgschool"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="最小近战伤害">
+                  <el-input
+                    v-model="creatureTemplate.mindmg"
+                    placeholder="mindmg"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最大近战伤害">
+                  <el-input
+                    v-model="creatureTemplate.maxdmg"
+                    placeholder="maxdmg"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="近战攻击强度">
+                  <el-input
+                    v-model="creatureTemplate.attackpower"
+                    placeholder="attackpower"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="近战攻击间隔">
+                  <el-input
+                    v-model="creatureTemplate.BaseAttackTime"
+                    placeholder="BaseAttackTime"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最小远程伤害">
+                  <el-input
+                    v-model="creatureTemplate.minrangedmg"
+                    placeholder="minrangedmg"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最大远程伤害">
+                  <el-input
+                    v-model="creatureTemplate.maxrangedmg"
+                    placeholder="maxrangedmg"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="远程攻击强度">
+                  <el-input
+                    v-model="creatureTemplate.rangedattackpower"
+                    placeholder="rangedattackpower"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="远程攻击间隔">
+                  <el-input
+                    v-model="creatureTemplate.RangeAttackTime"
+                    placeholder="RangeAttackTime"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+          <el-card style="margin-top: 16px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="缩放系数">
+                  <el-input
+                    v-model="creatureTemplate.scale"
+                    placeholder="scale"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="伤害系数">
+                  <el-input
+                    v-model="creatureTemplate.DamageModifier"
+                    placeholder="DamageModifier"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="生命值系数">
+                  <el-input
+                    v-model="creatureTemplate.HealthModifier"
+                    placeholder="HealthModifier"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="法力值系数">
+                  <el-input
+                    v-model="creatureTemplate.ManaModifier"
+                    placeholder="ManaModifier"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="护甲系数">
+                  <el-input
+                    v-model="creatureTemplate.ArmorModifier"
+                    placeholder="ArmorModifier"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="行走速度">
+                  <el-input
+                    v-model="creatureTemplate.speed_walk"
+                    placeholder="speed_walk"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="奔跑速度">
+                  <el-input
+                    v-model="creatureTemplate.speed_run"
+                    placeholder="speed_run"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+          <el-card style="margin-top: 16px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="神圣抗性">
+                  <el-input
+                    v-model="creatureTemplate.resistance1"
+                    placeholder="resistance1"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="火焰抗性">
+                  <el-input
+                    v-model="creatureTemplate.resistance2"
+                    placeholder="resistance2"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="自然抗性">
+                  <el-input
+                    v-model="creatureTemplate.resistance3"
+                    placeholder="resistance3"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="冰霜抗性">
+                  <el-input
+                    v-model="creatureTemplate.resistance4"
+                    placeholder="resistance4"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="暗影抗性">
+                  <el-input
+                    v-model="creatureTemplate.resistance5"
+                    placeholder="resistance5"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="奥术抗性">
+                  <el-input
+                    v-model="creatureTemplate.resistance6"
+                    placeholder="resistance6"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+          <el-card style="margin-top: 16px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="技能1">
+                  <el-input
+                    v-model="creatureTemplate.spell1"
+                    placeholder="spell1"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能2">
+                  <el-input
+                    v-model="creatureTemplate.spell2"
+                    placeholder="spell2"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能3">
+                  <el-input
+                    v-model="creatureTemplate.spell3"
+                    placeholder="spell3"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能4">
+                  <el-input
+                    v-model="creatureTemplate.spell4"
+                    placeholder="spell4"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能5">
+                  <el-input
+                    v-model="creatureTemplate.spell5"
+                    placeholder="spell5"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能6">
+                  <el-input
+                    v-model="creatureTemplate.spell6"
+                    placeholder="spell6"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能7">
+                  <el-input
+                    v-model="creatureTemplate.spell7"
+                    placeholder="spell7"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能8">
+                  <el-input
+                    v-model="creatureTemplate.spell8"
+                    placeholder="spell8"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -757,82 +1015,6 @@
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="最小近战伤害">
-                  <el-input
-                    v-model="creatureTemplate.mindmg"
-                    placeholder="mindmg"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="最大近战伤害">
-                  <el-input
-                    v-model="creatureTemplate.maxdmg"
-                    placeholder="maxdmg"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="伤害类型">
-                  <el-input
-                    v-model="creatureTemplate.dmgschool"
-                    placeholder="dmgschool"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="近战攻击强度">
-                  <el-input
-                    v-model="creatureTemplate.attackpower"
-                    placeholder="attackpower"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="近战攻击间隔">
-                  <el-input
-                    v-model="creatureTemplate.BaseAttackTime"
-                    placeholder="BaseAttackTime"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="远程攻击间隔">
-                  <el-input
-                    v-model="creatureTemplate.RangeAttackTime"
-                    placeholder="RangeAttackTime"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="最小远程伤害">
-                  <el-input
-                    v-model="creatureTemplate.minrangedmg"
-                    placeholder="minrangedmg"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="最大远程伤害">
-                  <el-input
-                    v-model="creatureTemplate.maxrangedmg"
-                    placeholder="maxrangedmg"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="远程攻击强度">
-                  <el-input
-                    v-model="creatureTemplate.rangedattackpower"
-                    placeholder="rangedattackpower"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-card>
-          <el-card style="margin-top: 16px">
-            <el-row :gutter="16">
-              <el-col :span="6">
                 <el-form-item label="AI名称">
                   <el-input
                     v-model="creatureTemplate.AIName"
@@ -845,14 +1027,6 @@
                   <el-input
                     v-model="creatureTemplate.ScriptName"
                     placeholder="ScriptName"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="对话菜单">
-                  <el-input
-                    v-model="creatureTemplate.gossip_menu_id"
-                    placeholder="gossip_menu_id"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -888,183 +1062,11 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
-            </el-row>
-          </el-card>
-          <el-card style="margin-top: 16px">
-            <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="缩放系数">
+                <el-form-item label="VerifiedBuild">
                   <el-input
-                    v-model="creatureTemplate.scale"
-                    placeholder="scale"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="伤害系数">
-                  <el-input
-                    v-model="creatureTemplate.DamageModifier"
-                    placeholder="DamageModifier"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="生命值系数">
-                  <el-input
-                    v-model="creatureTemplate.HealthModifier"
-                    placeholder="HealthModifier"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="法力值系数">
-                  <el-input
-                    v-model="creatureTemplate.ManaModifier"
-                    placeholder="ManaModifier"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="护甲系数">
-                  <el-input
-                    v-model="creatureTemplate.ArmorModifier"
-                    placeholder="ArmorModifier"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="行走速度">
-                  <el-input
-                    v-model="creatureTemplate.speed_walk"
-                    placeholder="speed_walk"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="奔跑速度">
-                  <el-input
-                    v-model="creatureTemplate.speed_run"
-                    placeholder="speed_run"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-card>
-          <el-card style="margin-top: 16px">
-            <el-row :gutter="16">
-              <el-col :span="6">
-                <el-form-item label="神圣抗性">
-                  <el-input
-                    v-model="creatureTemplate.resistance1"
-                    placeholder="resistance1"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="火焰抗性">
-                  <el-input
-                    v-model="creatureTemplate.resistance2"
-                    placeholder="resistance2"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="自然抗性">
-                  <el-input
-                    v-model="creatureTemplate.resistance3"
-                    placeholder="resistance3"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="冰霜抗性">
-                  <el-input
-                    v-model="creatureTemplate.resistance4"
-                    placeholder="resistance4"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="暗影抗性">
-                  <el-input
-                    v-model="creatureTemplate.resistance5"
-                    placeholder="resistance5"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="奥术抗性">
-                  <el-input
-                    v-model="creatureTemplate.resistance6"
-                    placeholder="resistance6"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-card>
-          <el-card style="margin-top: 16px">
-            <el-row :gutter="16">
-              <el-col :span="6">
-                <el-form-item label="技能1">
-                  <el-input
-                    v-model="creatureTemplate.spell1"
-                    placeholder="spell1"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="技能2">
-                  <el-input
-                    v-model="creatureTemplate.spell2"
-                    placeholder="spell2"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="技能3">
-                  <el-input
-                    v-model="creatureTemplate.spell3"
-                    placeholder="spell3"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="技能4">
-                  <el-input
-                    v-model="creatureTemplate.spell4"
-                    placeholder="spell4"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="技能5">
-                  <el-input
-                    v-model="creatureTemplate.spell5"
-                    placeholder="spell5"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="技能6">
-                  <el-input
-                    v-model="creatureTemplate.spell6"
-                    placeholder="spell6"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="技能7">
-                  <el-input
-                    v-model="creatureTemplate.spell7"
-                    placeholder="spell7"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="技能8">
-                  <el-input
-                    v-model="creatureTemplate.spell8"
-                    placeholder="spell8"
+                    v-model="creatureTemplate.VerifiedBuild"
+                    placeholder="VerifiedBuild"
                   ></el-input>
                 </el-form-item>
               </el-col>
