@@ -3,7 +3,7 @@ import {
   COUNT_CREATURE_TEMPLATES,
   PAGINATE_CREATURE_TEMPLATES,
 } from "./MUTATION_TYPES";
-import api from "@/api";
+const ipcRenderer = window.require("electron").ipcRenderer;
 
 const creatureTemplate = {
   namespaced: true,
@@ -17,12 +17,16 @@ const creatureTemplate = {
   }),
   actions: {
     async search({ commit }, payload) {
-      let response = await api.creature.creatureTemplate.search(payload);
-      commit(SEARCH_CREATURE_TEMPLATES, response.data);
+      ipcRenderer.on("SEARCH_CREATURE_TEMPLATES_REPLY", (event, response) => {
+        commit(SEARCH_CREATURE_TEMPLATES, response);
+      });
+      ipcRenderer.send("SEARCH_CREATURE_TEMPLATES", payload);
     },
     async count({ commit }, payload) {
-      let response = await api.creature.creatureTemplate.count(payload);
-      commit(COUNT_CREATURE_TEMPLATES, response.data);
+      ipcRenderer.on("COUNT_CREATURE_TEMPLATES_REPLY", (event, response) => {
+        commit(COUNT_CREATURE_TEMPLATES, response);
+      });
+      ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
     },
   },
   mutations: {

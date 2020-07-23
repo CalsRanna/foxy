@@ -104,8 +104,6 @@
 </template>
 
 <script>
-import api from "@/api";
-
 export default {
   data() {
     return {
@@ -121,25 +119,6 @@ export default {
     search() {
       this.loading = true;
       this.page = 1;
-      let payload = {
-        ID: this.ID,
-        LogTitle: this.LogTitle,
-        page: this.page,
-      };
-      Promise.all([
-        api.quest.questTemplate.search(payload).then((response) => {
-          this.questTemplates = response.data;
-        }),
-        api.quest.questTemplate.count(payload).then((response) => {
-          this.total = response.data.total;
-        }),
-      ])
-        .then(() => {
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
     },
     reset() {
       this.ID = undefined;
@@ -148,40 +127,10 @@ export default {
     paginate(current) {
       this.loading = true;
       this.page = current;
-      let payload = {
-        ID: this.ID,
-        LogTitle: this.LogTitle,
-        page: this.page,
-      };
-      api.quest.questTemplate
-        .search(payload)
-        .then((response) => {
-          this.questTemplates = response.data;
-        })
-        .then(() => {
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
     },
   },
   created() {
     this.loading = true;
-    Promise.all([
-      api.quest.questTemplate.search({}).then((response) => {
-        this.questTemplates = response.data;
-      }),
-      api.quest.questTemplate.count({}).then((response) => {
-        this.total = response.data.total;
-      }),
-    ])
-      .then(() => {
-        this.loading = false;
-      })
-      .catch(() => {
-        this.loading = false;
-      });
   },
 };
 </script>

@@ -1643,8 +1643,6 @@
 </template>
 
 <script>
-import axios from "axios";
-import { Notification } from "element-ui";
 import FlagEditor from "@/components/FlagEditor";
 import {
   npcFlags,
@@ -1768,154 +1766,48 @@ export default {
         JSON.stringify(this.creatureTemplateAddon) === "{}"
       ) {
         this.loading = true;
-        axios
-          .get(`/creature-template-addon/${this.creatureTemplate.entry}`)
-          .then((response) => {
-            if (response.data !== null) {
-              this.creatureTemplateAddon = response.data;
-            } else {
-              Notification.warning({
-                title: "提示",
-                message: "该生物模板没有设置模板补充。",
-                type: "warning",
-              });
-            }
-            this.loading = false;
-          })
-          .catch(() => {
-            this.loading = false;
-          });
       }
       if (
         tab.name === "creature_onkill_reputation" &&
         JSON.stringify(this.creatureOnKillReputation) === "{}"
       ) {
         this.loading = true;
-        axios
-          .get(
-            `/creature-template/${this.creatureTemplate.entry}/creature-onkill-reputation`
-          )
-          .then((response) => {
-            if (response.data !== null) {
-              this.creatureOnKillReputation = response.data;
-            } else {
-              Notification.warning({
-                title: "提示",
-                message: "该生物模板没有设置击杀声望。",
-                type: "warning",
-              });
-            }
-            this.loading = false;
-          })
-          .catch(() => {
-            this.loading = false;
-          });
       }
       if (
         tab.name === "creature_equip_template" &&
         this.creatureEquipTemplates.length === 0
       ) {
         this.loading = true;
-        axios
-          .get(
-            `/creature-template/${this.creatureTemplate.entry}/creature-equip-template`
-          )
-          .then((response) => {
-            this.creatureEquipTemplates = response.data;
-            this.loading = false;
-          })
-          .catch(() => {
-            this.loading = false;
-          });
       }
       if (
         tab.name === "creature_loot_template" &&
         this.creatureLootTemplates.length === 0
       ) {
         this.loading = true;
-        axios
-          .get(
-            `/creature-template/${this.creatureTemplate.entry}/creature-loot-template`
-          )
-          .then((response) => {
-            this.creatureLootTemplates = response.data;
-            this.loading = false;
-          });
       }
       if (
         tab.name === "creature_questitem" &&
         this.creatureQuestItems.length === 0
       ) {
         this.loading = true;
-        axios
-          .get(
-            `/creature-template/${this.creatureTemplate.entry}/creature-questitem`
-          )
-          .then((response) => {
-            this.creatureQuestItems = response.data;
-            this.loading = false;
-          })
-          .catch(() => {
-            this.loading = false;
-          });
       }
       if (tab.name === "npc_vendor" && this.npcVendors.length === 0) {
         this.loading = true;
-        axios
-          .get(`/npc-vendor/${this.creatureTemplate.entry}`)
-          .then((response) => {
-            this.npcVendors = response.data;
-            this.loading = false;
-          })
-          .catch(() => {
-            this.loading = false;
-          });
       }
       if (tab.name === "npc_trainer" && this.npcTrainers.length === 0) {
         this.loading = true;
-        axios
-          .get(`/creature-template/${this.creatureTemplate.entry}/npc-trainer`)
-          .then((response) => {
-            this.npcTrainers = response.data;
-            this.loading = false;
-          })
-          .catch(() => {
-            this.loading = false;
-          });
       }
       if (
         tab.name === "pickpocketing_loot_template" &&
         this.pickpocketingLootTemplates.length === 0
       ) {
         this.loading = true;
-        axios
-          .get(
-            `/creature-template/${this.creatureTemplate.entry}/pickpocketing-loot-template`
-          )
-          .then((response) => {
-            this.pickpocketingLootTemplates = response.data;
-            this.loading = false;
-          })
-          .catch(() => {
-            this.loading = false;
-          });
       }
       if (
         tab.name === "skinning_loot_template" &&
         this.skinningLootTemplates.length === 0
       ) {
         this.loading = true;
-        axios
-          .get(
-            `/creature-template/${this.creatureTemplate.entry}/skinning-loot-template`
-          )
-          .then((response) => {
-            this.skinningLootTemplates = response.data;
-            this.loading = false;
-          })
-          .catch(() => {
-            this.loading = false;
-          });
       }
     },
     showDialog() {
@@ -1939,110 +1831,6 @@ export default {
   },
   created() {
     this.loading = true;
-    let id = this.$route.params.id;
-    if (id) {
-      axios
-        .get(`/creature-template/${id}`)
-        .then((response) => {
-          this.creatureTemplate = response.data;
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-    } else {
-      axios
-        .get("/creature-template/max-id")
-        .then((response) => {
-          this.creatureTemplate.entry = response.data + 1;
-          // this.creatureTemplate = {
-          //   entry: response.data + 1,
-          //   difficulty_entry_1: 0,
-          //   difficulty_entry_2: 0,
-          //   difficulty_entry_3: 0,
-          //   KillCredit1: 0,
-          //   KillCredit2: 0,
-          //   modelid1: 0,
-          //   modelid2:0,
-          //   modelid3: 0,
-          //   modelid4: 0,
-          //   name: '',
-          //   subname: '',
-          //   IconName: '',
-          //   gossip_menu_id: 0,
-          //   minlevel: 1,
-          //   maxlevel: 1,
-          //   exp: 0,
-          //   faction: 0,
-          //   npcflag:0,
-          //   speed_walk: 0,
-          //   speed_run: 1.14286,
-          //   scale: 1,
-          //   rank: 0,
-          //   mindmg: 0,
-          //   maxdmg: 0,
-          //   dmgschool: 0,
-          //   attackpower: 0,
-          //   DamageModifier: 1,
-          //   BaseAttackTime: 0,
-          //   RangeAttackTime: 0,
-          //   unit_class: 0,
-          //   unit_flags: 0,
-          //   unit_flags2: 0,
-          //   dynamicflags: 0,
-          //   family: 0,
-          //   trainer_type: 0,
-          //   trainer_spell: 0,
-          //   trainer_class: 0,
-          //   trainer_race: 0,
-          //   minrangedmg: 0,
-          //   maxrangedmg: 0,
-          //   rangedattackpower: 0,
-          //   type: 0,
-          //   type_flags: 0,
-          //   lootid: 0,
-          //   pickpocketloot: 0,
-          //   skinloot: 0,
-          //   resistance1: 0,
-          //   resistance2: 0,
-          //   resistance3: 0,
-          //   resistance4: 0,
-          //   resistance5: 0,
-          //   resistance6: 0,
-          //   spell1: 0,
-          //   spell2: 0,
-          //   spell3: 0,
-          //   spell4: 0,
-          //   spell5: 0,
-          //   spell6: 0,
-          //   spell7: 0,
-          //   spell8: 0,
-          //   PetSpellDataId: 0,
-          //   VehicleId: 0,
-          //   mingold: 0,
-          //   maxgold: 0,
-          //   AIName: '',
-          //   MovementType: 0,
-          //   InhabitType: 3,
-          //   HoverHeight: 1,
-          //   HealthModifier: 1,
-          //   ManaModifier: 1,
-          //   ArmorModifier: 1,
-          //   RacialLeader: 0,
-          //   movementId: 0,
-          //   RegenHealth: 1,
-          //   mechanic_immune_mask: 0,
-          //   flags_extra: 0,
-          //   ScriptName: '',
-          //   VerifiedBuild: 0,
-          //   CreatureTemplateLocales: [],
-          // };
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-    }
   },
   components: {
     "flag-editor": FlagEditor,

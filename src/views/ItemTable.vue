@@ -196,7 +196,6 @@
 </style>
 
 <script>
-import axios from "axios";
 import icons from "@/libs/icons";
 
 import {
@@ -269,16 +268,6 @@ export default {
       if (query !== "") {
         query = `?${query.substr(1)}`;
       }
-      Promise.all([
-        axios.get(`/item-template${query}`).then((response) => {
-          this.itemTemplates = response.data;
-        }),
-        axios.get(`/item-template/quantity${query}`).then((response) => {
-          this.total = response.data.total;
-        }),
-      ]).then(() => {
-        this.loading = false;
-      });
     },
     search() {
       this.loading = true;
@@ -296,16 +285,6 @@ export default {
       if (query !== "") {
         query = `?${query.substr(1)}`;
       }
-      Promise.all([
-        axios.get(`/item-template${query}`).then((response) => {
-          this.itemTemplates = response.data;
-        }),
-        axios.get(`/item-template/quantity${query}`).then((response) => {
-          this.total = response.data.total;
-        }),
-      ]).then(() => {
-        this.loading = false;
-      });
     },
     reset() {
       this.entry = undefined;
@@ -343,28 +322,10 @@ export default {
       if (query !== "") {
         query = `?${query.substr(1)}`;
       }
-      axios.get(`/item-template${query}`).then((response) => {
-        this.loading = false;
-        this.itemTemplates = response.data;
-      });
     },
   },
   created() {
     this.loading = true;
-    Promise.all([
-      axios.get(`/item-template`).then((response) => {
-        this.itemTemplates = response.data;
-      }),
-      axios.get(`/item-template/quantity`).then((response) => {
-        this.total = response.data.total;
-      }),
-    ])
-      .then(() => {
-        this.loading = false;
-      })
-      .catch(() => {
-        this.loading = false;
-      });
   },
 };
 </script>
