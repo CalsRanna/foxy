@@ -2,6 +2,9 @@
 
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
+
+import {searchCreatureTempaltes, countCreatureTemplates} from './background/creature.js';
+
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 let win;
@@ -12,16 +15,17 @@ protocol.registerSchemesAsPrivileged([
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 400,
-    height: 300,
+    width: 800,
+    height: 600,
     webPreferences: {
       // nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       nodeIntegration: true,
     },
     show: false,
     title: "Foxy",
-    frame: false,
+    frame: true,
     maximizable: false,
+    fullscreen: true,
   });
 
   win.show();
@@ -82,7 +86,7 @@ ipcMain.on("OPEN_SETTING_VIEW", (event) => {
     window = null;
   });
   if (process.env.WEBPACK_DEV_SERVER_URL) {
-    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
+    win.loadURL(`${process.env.WEBPACK_DEV_SERVER_URL}/setting.html`);
   } else {
     createProtocol("app");
     win.loadURL("app://./setting.html");

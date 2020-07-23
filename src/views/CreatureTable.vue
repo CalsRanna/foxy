@@ -44,7 +44,7 @@
         layout="prev, pager, next"
         :current-page="page"
         :total="total"
-        :page-size="50"
+        :page-size="pageSize"
         hide-on-single-page
         @current-change="handlePaginate"
         style="margin-bottom: 16px"
@@ -82,7 +82,7 @@
         layout="prev, pager, next"
         :current-page="page"
         :total="total"
-        :page-size="50"
+        :page-size="pageSize"
         hide-on-single-page
         @current-change="handlePaginate"
         style="margin-top: 16px"
@@ -106,6 +106,7 @@ export default {
       entry: undefined,
       name: "",
       subname: "",
+      pageSize: 50,
     };
   },
   computed: {
@@ -137,15 +138,15 @@ export default {
       this.name = "";
       this.subname = "";
     },
-    create(){
-      this.$router.push('/creature/create');
+    create() {
+      this.$router.push("/creature/create");
     },
     show(row) {
       this.$router.push(`/creature/${row.entry}`);
     },
     async handlePaginate(page) {
       this.loading = true;
-      this.paginate(page)
+      this.paginate(page);
       await this.search(this.payload);
       this.loading = false;
     },

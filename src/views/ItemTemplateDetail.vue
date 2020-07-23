@@ -1089,7 +1089,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import { bondings } from "@/locales/item.js";
 export default {
   data() {
@@ -1102,17 +1101,7 @@ export default {
     };
   },
   created() {
-    let id = this.$route.params.id;
     this.loading = true;
-    axios
-      .get(`/item-template/${id}`)
-      .then((response) => {
-        this.itemTemplate = response.data;
-        this.loading = false;
-      })
-      .catch(() => {
-        this.loading = false;
-      });
   },
 };
 </script>

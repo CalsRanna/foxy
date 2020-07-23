@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import api from "@/api";
 import icons from '@/libs/icons';
 
 export default {
@@ -109,25 +108,6 @@ export default {
   methods: {
     search() {
       this.loading = true;
-      let payload = {
-        entry: this.entry,
-        name: this.name,
-        page: this.page,
-      };
-      Promise.all([
-        api.gameObject.gameObjectTemplate.search(payload).then((response) => {
-          this.gameObejctTemplates = response.data;
-        }),
-        api.gameObject.gameObjectTemplate.count(payload).then((response) => {
-          this.total = response.data.total;
-        }),
-      ])
-        .then(() => {
-          this.loading = false;
-        })
-        .catch(() => {
-          this.laoding = false;
-        });
     },
     reset() {
       this.entry = undefined;
@@ -136,20 +116,6 @@ export default {
     paginate(current) {
       this.loading = true;
       this.page = current;
-      let payload = {
-        entry: this.entry,
-        name: this.name,
-        page: this.page,
-      };
-      api.gameObject.gameObejctTemplate
-        .search(payload)
-        .then((response) => {
-          this.gameObejctTemplates = response.data;
-          this.loading = false;
-        })
-        .catch(() => {
-          this.laoding = false;
-        });
     },
   },
   created() {
