@@ -893,7 +893,6 @@
                     v-model="creatureTemplate.trainer_race"
                     placeholder="trainer_race"
                   >
-                  
                     <el-option label="人类" :value="1"></el-option>
                     <el-option label="兽人" :value="2"></el-option>
                     <el-option label="矮人" :value="3"></el-option>
@@ -1654,6 +1653,9 @@ import {
   mechanicImmuneMasks,
 } from "@/locales/creature";
 
+import { createNamespacedHelpers } from "vuex";
+const { mapActions } = createNamespacedHelpers("creatureTemplate");
+
 export default {
   data() {
     return {
@@ -1760,6 +1762,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["find"]),
     switchover(tab) {
       if (
         tab.name === "creature_template_addon" &&
@@ -1831,6 +1834,7 @@ export default {
   },
   created() {
     this.loading = true;
+    this.creatureTemplate = this.find({ entry: this.$route.params.id });
   },
   components: {
     "flag-editor": FlagEditor,

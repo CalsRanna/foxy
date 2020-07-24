@@ -72,39 +72,37 @@ let countCreatureTemplates = ipcMain.on(
   }
 );
 
-ipcMain.on("CREATURE_TEMPLATE_MAX_ID", (event, payload) => {
-  let sql = "select entry from creature_template order by 'entry' desc";
-  const promise = new Promise((resolve, reject) => {
-    connection.connect();
-    connection.query(sql, (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-    connection.end();
+let findCreatureTemplate = ipcMain.on("FIND_CREATURE_TEMPLATE", (event, payload) => {
+  let sql = `select * from creature_template where entry = ${payload.entry}`;
+  let connection = createConnection();
+  connection.connect();
+  connection.query(sql, (error, results) => {
+    if (error) {
+      console.log(error);
+    } else {
+      event.reply("FIND_CREATURE_TEMPLATE_REPLY", results[0]);
+    }
   });
-  event.reply("CREATURE_TEMPLATE_MAX_ID_REPLY", promise);
+  connection.end();
 });
 
-ipcMain.on("FIND_CREATURE_TEMPLATE", (event, payload) => {
-  let sql = `select * from creature_template where entry = ${payload.id}`;
-  const promise = new Promise((resolve, reject) => {
-    connection.connect();
-    connection.query(sql, (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-    connection.end();
+let maxIdOfCreatureTemplate = ipcMain.on("CREATURE_TEMPLATE_MAX_ID", (event, payload) => {
+  let sql = "select entry from creature_template order by 'entry' desc";
+  let connection = createConnection();
+  connection.connect();
+  connection.query(sql, (error, results) => {
+    if (error) {
+      console.log(error);
+    } else {
+      event.reply("CREATURE_TEMPLATE_MAX_ID_REPLY", results[0].entry);
+    }
   });
-  event.reply("FIND_CREATURE_TEMPLATE_REPLY", promise);
+  connection.end();
 });
 
 export default {
   searchCreatureTemplates,
   countCreatureTemplates,
+  findCreatureTemplate,
+  maxIdOfCreatureTemplate,
 };

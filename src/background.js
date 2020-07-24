@@ -3,7 +3,7 @@
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
-import {searchCreatureTempaltes, countCreatureTemplates} from './background/creature.js';
+import creature from "./background/creature.js";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -24,8 +24,8 @@ function createWindow() {
     show: false,
     title: "Foxy",
     frame: true,
-    maximizable: false,
-    fullscreen: true,
+    // maximizable: false,
+    // fullscreen: true,
   });
 
   win.show();

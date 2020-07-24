@@ -33,7 +33,7 @@
         </el-row>
       </el-form>
     </el-card>
-    <el-card v-loading="loading" style="margin-top: 16px;">
+    <el-card style="margin-top: 16px;">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button disabled>复制</el-button>
       <el-button disabled>修改</el-button>
