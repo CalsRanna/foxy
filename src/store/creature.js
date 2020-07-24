@@ -28,6 +28,15 @@ const creatureTemplate = {
       });
       ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
     },
+    find(context,payload) {
+      ipcRenderer.on("FIND_CREATURE_TEMPLATE_REPLY", (event, response) => {
+        console.log(response);
+        // commit('');
+        return response;
+      });
+      console.log(payload);
+      ipcRenderer.send("FIND_CREATURE_TEMPLATE", payload);
+    }
   },
   mutations: {
     [SEARCH_CREATURE_TEMPLATES](state, creatureTemplates) {
