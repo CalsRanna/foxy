@@ -4,6 +4,7 @@ import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
 import creature from "./background/creature.js";
+import item from "./background/item.js";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -28,6 +29,7 @@ function createWindow() {
     // fullscreen: true,
   });
 
+  win.maximize();
   win.show();
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {

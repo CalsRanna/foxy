@@ -12,12 +12,14 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">
         {{
+          creatureTemplate.CreatureTemplateLocales &&
           creatureTemplate.CreatureTemplateLocales.length > 0
             ? creatureTemplate.CreatureTemplateLocales[0].Name
             : creatureTemplate.name
         }}
         <small>
           {{
+            creatureTemplate.CreatureTemplateLocales &&
             creatureTemplate.CreatureTemplateLocales.length > 0
               ? creatureTemplate.CreatureTemplateLocales[0].Title
               : creatureTemplate.subname
@@ -1654,94 +1656,94 @@ import {
 } from "@/locales/creature";
 
 import { createNamespacedHelpers } from "vuex";
-const { mapActions } = createNamespacedHelpers("creatureTemplate");
+const { mapState, mapActions } = createNamespacedHelpers("creatureTemplate");
 
 export default {
   data() {
     return {
       loading: false,
-      creatureTemplate: {
-        entry: 0,
-        difficulty_entry_1: 0,
-        difficulty_entry_2: 0,
-        difficulty_entry_3: 0,
-        KillCredit1: 0,
-        KillCredit2: 0,
-        modelid1: 0,
-        modelid2: 0,
-        modelid3: 0,
-        modelid4: 0,
-        name: "",
-        subname: "",
-        IconName: "",
-        gossip_menu_id: 0,
-        minlevel: 1,
-        maxlevel: 1,
-        exp: 0,
-        faction: 0,
-        npcflag: 0,
-        speed_walk: 0,
-        speed_run: 1.14286,
-        scale: 1,
-        rank: 0,
-        mindmg: 0,
-        maxdmg: 0,
-        dmgschool: 0,
-        attackpower: 0,
-        DamageModifier: 1,
-        BaseAttackTime: 0,
-        RangeAttackTime: 0,
-        unit_class: 0,
-        unit_flags: 0,
-        unit_flags2: 0,
-        dynamicflags: 0,
-        family: 0,
-        trainer_type: 0,
-        trainer_spell: 0,
-        trainer_class: 0,
-        trainer_race: 0,
-        minrangedmg: 0,
-        maxrangedmg: 0,
-        rangedattackpower: 0,
-        type: 0,
-        type_flags: 0,
-        lootid: 0,
-        pickpocketloot: 0,
-        skinloot: 0,
-        resistance1: 0,
-        resistance2: 0,
-        resistance3: 0,
-        resistance4: 0,
-        resistance5: 0,
-        resistance6: 0,
-        spell1: 0,
-        spell2: 0,
-        spell3: 0,
-        spell4: 0,
-        spell5: 0,
-        spell6: 0,
-        spell7: 0,
-        spell8: 0,
-        PetSpellDataId: 0,
-        VehicleId: 0,
-        mingold: 0,
-        maxgold: 0,
-        AIName: "",
-        MovementType: 0,
-        InhabitType: 3,
-        HoverHeight: 1,
-        HealthModifier: 1,
-        ManaModifier: 1,
-        ArmorModifier: 1,
-        RacialLeader: 0,
-        movementId: 0,
-        RegenHealth: 1,
-        mechanic_immune_mask: 0,
-        flags_extra: 0,
-        ScriptName: "",
-        VerifiedBuild: 0,
-        CreatureTemplateLocales: [],
-      },
+      // creatureTemplate: {
+      //   entry: 0,
+      //   difficulty_entry_1: 0,
+      //   difficulty_entry_2: 0,
+      //   difficulty_entry_3: 0,
+      //   KillCredit1: 0,
+      //   KillCredit2: 0,
+      //   modelid1: 0,
+      //   modelid2: 0,
+      //   modelid3: 0,
+      //   modelid4: 0,
+      //   name: "",
+      //   subname: "",
+      //   IconName: "",
+      //   gossip_menu_id: 0,
+      //   minlevel: 1,
+      //   maxlevel: 1,
+      //   exp: 0,
+      //   faction: 0,
+      //   npcflag: 0,
+      //   speed_walk: 0,
+      //   speed_run: 1.14286,
+      //   scale: 1,
+      //   rank: 0,
+      //   mindmg: 0,
+      //   maxdmg: 0,
+      //   dmgschool: 0,
+      //   attackpower: 0,
+      //   DamageModifier: 1,
+      //   BaseAttackTime: 0,
+      //   RangeAttackTime: 0,
+      //   unit_class: 0,
+      //   unit_flags: 0,
+      //   unit_flags2: 0,
+      //   dynamicflags: 0,
+      //   family: 0,
+      //   trainer_type: 0,
+      //   trainer_spell: 0,
+      //   trainer_class: 0,
+      //   trainer_race: 0,
+      //   minrangedmg: 0,
+      //   maxrangedmg: 0,
+      //   rangedattackpower: 0,
+      //   type: 0,
+      //   type_flags: 0,
+      //   lootid: 0,
+      //   pickpocketloot: 0,
+      //   skinloot: 0,
+      //   resistance1: 0,
+      //   resistance2: 0,
+      //   resistance3: 0,
+      //   resistance4: 0,
+      //   resistance5: 0,
+      //   resistance6: 0,
+      //   spell1: 0,
+      //   spell2: 0,
+      //   spell3: 0,
+      //   spell4: 0,
+      //   spell5: 0,
+      //   spell6: 0,
+      //   spell7: 0,
+      //   spell8: 0,
+      //   PetSpellDataId: 0,
+      //   VehicleId: 0,
+      //   mingold: 0,
+      //   maxgold: 0,
+      //   AIName: "",
+      //   MovementType: 0,
+      //   InhabitType: 3,
+      //   HoverHeight: 1,
+      //   HealthModifier: 1,
+      //   ManaModifier: 1,
+      //   ArmorModifier: 1,
+      //   RacialLeader: 0,
+      //   movementId: 0,
+      //   RegenHealth: 1,
+      //   mechanic_immune_mask: 0,
+      //   flags_extra: 0,
+      //   ScriptName: "",
+      //   VerifiedBuild: 0,
+      //   CreatureTemplateLocales: [],
+      // },
       creatureTemplateAddon: {},
       creatureEquipTemplates: [],
       creatureOnKillReputation: {},
@@ -1760,6 +1762,11 @@ export default {
       flagsExtra: flagsExtra,
       mechanicImmuneMasks: mechanicImmuneMasks,
     };
+  },
+  computed: {
+    ...mapState({
+      creatureTemplate: (state) => state.creatureTemplate,
+    }),
   },
   methods: {
     ...mapActions(["find"]),
@@ -1831,10 +1838,14 @@ export default {
     storeCreatureTemplateLocales() {
       this.localeDialogVisible = false;
     },
+    async init() {
+      this.loading = true;
+      await this.find({ entry: this.$route.params.id });
+      this.loading = false;
+    },
   },
   created() {
-    this.loading = true;
-    this.creatureTemplate = this.find({ entry: this.$route.params.id });
+    this.init();
   },
   components: {
     "flag-editor": FlagEditor,

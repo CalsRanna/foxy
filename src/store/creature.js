@@ -2,6 +2,7 @@ import {
   SEARCH_CREATURE_TEMPLATES,
   COUNT_CREATURE_TEMPLATES,
   PAGINATE_CREATURE_TEMPLATES,
+  FIND_ITEM_TEMPLATE,
 } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
@@ -14,6 +15,7 @@ const creatureTemplate = {
     page: 1,
     total: 0,
     creatureTemplates: [],
+    creatureTemplate: undefined,
   }),
   actions: {
     async search({ commit }, payload) {
@@ -28,15 +30,12 @@ const creatureTemplate = {
       });
       ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
     },
-    find(context,payload) {
+    find({commit}, payload) {
       ipcRenderer.on("FIND_CREATURE_TEMPLATE_REPLY", (event, response) => {
-        console.log(response);
-        // commit('');
-        return response;
+        commit(FIND_ITEM_TEMPLATE, response);
       });
-      console.log(payload);
       ipcRenderer.send("FIND_CREATURE_TEMPLATE", payload);
-    }
+    },
   },
   mutations: {
     [SEARCH_CREATURE_TEMPLATES](state, creatureTemplates) {
@@ -48,6 +47,9 @@ const creatureTemplate = {
     [PAGINATE_CREATURE_TEMPLATES](state, page) {
       state.page = page;
     },
+    [FIND_ITEM_TEMPLATE](state, creatureTemplate) {
+      state.creatureTemplate = creatureTemplate;
+    }
   },
 };
 

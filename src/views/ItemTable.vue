@@ -27,20 +27,38 @@
       </div>
       <div v-if="filter.class !== undefined">
         <span style="font-size: 14px">子类别：</span>
-        <el-button
-          type="text"
-          size="small"
-          v-for="(localeSubclass, index) in localeSubclasses[filter.class]"
-          :key="`subclass-${index}`"
-          @click="
-            () => {
-              filtrate('subclass', index);
-            }
-          "
-          >{{ localeSubclass }}</el-button
-        >
+        <template v-if="filter.class !== 16">
+          <el-button
+            type="text"
+            size="small"
+            v-for="(localeSubclass, index) in localeSubclasses[filter.class]"
+            :key="`subclass-${index}`"
+            @click="
+              () => {
+                filtrate('subclass', index);
+              }
+            "
+            >{{ localeSubclass }}</el-button
+          >
+        </template>
+        <!-- index in [1, 2, 3, 4, 5, 6, 7, 8, 9, 11]，不取值0和10，隐藏雕文职业本地化数组中的空字符 -->
+        <template v-else>
+          <el-button
+            type="text"
+            size="small"
+            v-for="index in [1, 2, 3, 4, 5, 6, 7, 8, 9, 11]"
+            :key="`subclass-${index}`"
+            @click="
+              () => {
+                filtrate('subclass', index);
+              }
+            "
+            >{{ localeSubclasses[filter.class][index] }}</el-button
+          >
+        </template>
       </div>
-      <div v-if="[2, 4, 6, 11].indexOf(filter.class) >= 0">
+      <!-- [2, 4, 6, 11]分别为武器，护甲，弹药，箭袋 -->
+      <div v-if="[2, 4].indexOf(filter.class) >= 0">
         <span style="font-size: 14px">佩戴位置：</span>
         <el-button
           type="text"
@@ -49,7 +67,7 @@
           :key="`localeInventoryType-${index}`"
           @click="
             () => {
-              filtrate('inventoryType', index);
+              filtrate('InventoryType', index);
             }
           "
           >{{ localeInventoryType }}</el-button
@@ -59,7 +77,7 @@
         v-if="
           filter.class !== undefined ||
             filter.subclass !== undefined ||
-            filter.inventoryType !== undefined
+            filter.InventoryType !== undefined
         "
         style="margin-top: 16px"
       >
@@ -83,8 +101,8 @@
           size="small"
           closable
           @close="() => filtrate('closeInventoryType', undefined)"
-          v-if="filter.inventoryType !== undefined"
-          >{{ localeInventoryTypes[filter.inventoryType] }}</el-tag
+          v-if="filter.InventoryType !== undefined"
+          >{{ localeInventoryTypes[filter.InventoryType] }}</el-tag
         >
       </div>
     </el-card>
@@ -102,13 +120,13 @@
           <el-input v-model="name" placeholder="名称"></el-input>
         </el-col>
         <el-col :span="6">
-          <el-button type="primary" @click="search">查询</el-button>
+          <el-button type="primary" @click="handleSearch">查询</el-button>
           <el-button @click="reset">重置</el-button>
         </el-col>
       </el-row>
     </el-card>
-    <el-card v-loading="loading" style="margin-top: 16px;">
-      <el-button type="primary">新增</el-button>
+    <el-card style="margin-top: 16px;">
+      <el-button type="primary" @click="create">新增</el-button>
       <el-button disabled>复制</el-button>
       <el-button disabled>修改</el-button>
       <el-button type="danger" disabled>删除</el-button>
@@ -118,9 +136,9 @@
         layout="prev, pager, next"
         :current-page="page"
         :total="total"
-        :page-size="50"
+        :page-size="pageSize"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-bottom: 16px"
       ></el-pagination>
       <el-table :data="itemTemplates" @row-dblclick="show">
@@ -180,9 +198,9 @@
         layout="prev, pager, next"
         :current-page="page"
         :total="total"
-        :page-size="50"
+        :page-size="pageSize"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -204,9 +222,17 @@ import {
   localeSubclasses,
   localeInventoryTypes,
 } from "../locales/item.js";
+
+import { createNamespacedHelpers } from "vuex";
+import * as types from "@/store/MUTATION_TYPES";
+
+const { mapState, mapActions, mapMutations } = createNamespacedHelpers(
+  "itemTemplate"
+);
 export default {
   data() {
     return {
+      icons: icons,
       colors: colors,
       localeClasses: localeClasses,
       localeSubclasses: localeSubclasses,
@@ -214,118 +240,98 @@ export default {
       filter: {
         class: undefined,
         subclass: undefined,
-        inventoryType: undefined,
+        InventoryType: undefined,
       },
       loading: false,
       entry: undefined,
-      name: "",
-      page: 1,
-      total: 0,
-      itemTemplates: [],
-      icons: icons,
+      name: undefined,
+      pageSize: 50,
     };
   },
+  computed: {
+    ...mapState({
+      page: (state) => state.page,
+      total: (state) => state.total,
+      itemTemplates: (state) => state.itemTemplates,
+    }),
+    payload() {
+      return {
+        class: this.filter.class,
+        subclass: this.filter.subclass,
+        InventoryType: this.filter.InventoryType,
+        entry: this.entry,
+        name: this.name,
+        page: this.page,
+      };
+    },
+  },
   methods: {
-    filtrate(field, index) {
+    ...mapActions(["search", "count"]),
+    ...mapMutations({ paginate: types.PAGINATE_ITEM_TEMPLATES }),
+    async filtrate(field, index) {
       if (field === "class") {
         this.filter.class = index;
         this.filter.subclass = undefined;
-        this.filter.inventoryType = undefined;
+        this.filter.InventoryType = undefined;
       }
       if (field === "subclass") {
         this.filter.subclass = index;
-        this.filter.inventoryType = undefined;
+        this.filter.InventoryType = undefined;
       }
-      if (field === "inventoryType") {
-        this.filter.inventoryType = index;
+      if (field === "InventoryType") {
+        this.filter.InventoryType = index;
       }
       if (field === "closeClass") {
         this.filter.class = undefined;
         this.filter.subclass = undefined;
-        this.filter.inventoryType = undefined;
+        this.filter.InventoryType = undefined;
       }
       if (field === "closeSubclass") {
         this.filter.subclass = undefined;
-        this.filter.inventoryType = undefined;
+        this.filter.InventoryType = undefined;
       }
       if (field === "closeInventoryType") {
-        this.filter.inventoryType = undefined;
+        this.filter.InventoryType = undefined;
       }
-      this.loading = true;
       this.entry = undefined;
-      this.name = "";
-      this.page = 1;
-      let query = "";
-      if (this.filter.class !== undefined) {
-        query = `${query}&class=${this.filter.class}`;
-      }
-      if (this.filter.subclass !== undefined) {
-        query = `${query}&subclass=${this.filter.subclass}`;
-      }
-      if (this.filter.inventoryType !== undefined) {
-        query = `${query}&inventoryType=${this.filter.inventoryType}`;
-      }
-      if (query !== "") {
-        query = `?${query.substr(1)}`;
-      }
-    },
-    search() {
+      this.name = undefined;
+      this.paginate(1);
       this.loading = true;
-      this.page = 1;
-      let query = "";
-      if (this.entry !== undefined) {
-        query = `${query}&entry=${this.entry}`;
-      }
-      if (this.name !== "") {
-        query = `${query}&name=${this.name}`;
-      }
-      if (this.subname !== "") {
-        query = `${query}&subname=${this.subname}`;
-      }
-      if (query !== "") {
-        query = `?${query.substr(1)}`;
-      }
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
+    },
+    async handleSearch() {
+      this.loading = true;
+      this.paginate(1); //每次搜索时使分页器设为第一页
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
     },
     reset() {
       this.entry = undefined;
-      this.name = "";
+      this.name = undefined;
+    },
+    create() {
+      this.$router.push("/item/create");
     },
     show(row) {
       this.$router.push(`/item/${row.entry}`);
     },
-    paginate(currentPage) {
-      this.page = currentPage;
+    async handlePaginate(page) {
       this.loading = true;
-      let query = "";
-      if (this.filter.class !== undefined) {
-        query = `${query}&class=${this.filter.class}`;
-      }
-      if (this.filter.subclass !== undefined) {
-        query = `${query}&subclass=${this.filter.subclass}`;
-      }
-      if (this.filter.inventoryType !== undefined) {
-        query = `${query}&inventoryType=${this.filter.inventoryType}`;
-      }
-      if (query !== "") {
-        query = `?${query.substr(1)}`;
-      }
-      if (this.entry !== undefined) {
-        query = `${query}&entry=${this.entry}`;
-      }
-      if (this.name !== "") {
-        query = `${query}&name=${this.name}`;
-      }
-      if (this.subname !== "") {
-        query = `${query}&subname=${this.subname}`;
-      }
-      query = `${query}&page=${this.page}`;
-      if (query !== "") {
-        query = `?${query.substr(1)}`;
-      }
+      this.paginate(page);
+      await this.search(this.payload);
+      this.loading = false;
+    },
+    async init() {
+      this.loading = true;
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
     },
   },
   created() {
-    this.loading = true;
+    if (this.itemTemplates.length === 0) {
+      this.init();
+    }
   },
 };
 </script>
