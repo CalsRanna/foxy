@@ -20,14 +20,16 @@
         <el-menu-item index="dashboard">
           首页 <small>DASHBOARD</small>
         </el-menu-item>
+        <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
         <el-menu-item index="creature">
           生物 <small>CREATURE</small>
         </el-menu-item>
         <el-menu-item index="game-object">
           游戏对象 <small>GAME OBJECT</small>
         </el-menu-item>
-        <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
         <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
+        <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
+        <el-menu-item index="smart-at"> 内建脚本 <small>SMART SCRIPT</small> </el-menu-item>
       </el-menu>
     </el-aside>
     <el-main style="margin-left: 200px">

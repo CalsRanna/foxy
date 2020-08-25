@@ -4,9 +4,9 @@ const mysql = require("mysql2");
 
 let createConnection = () =>
   mysql.createConnection({
-    host: "10.0.0.13",
-    user: "root",
-    password: "password",
+    host: "127.0.0.1",
+    user: "acore",
+    password: "acore",
     database: "acore_world",
   });
 

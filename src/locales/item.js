@@ -8,6 +8,16 @@ const colors = [
   "red",
   "gold",
 ];
+const localeQualities = [
+  "粗糙",
+  "普通",
+  "优秀",
+  "精良",
+  "史诗",
+  "传说",
+  "神器",
+  "传家宝",
+];
 const localeClasses = [
   "消耗品",
   "容器",
@@ -129,6 +139,7 @@ const localeSubclasses = [
   ["永久的（弃用）"],
   ["垃圾", "施法材料", "伙伴", "节日", "其他", "坐骑"],
   [
+    "",
     "战士",
     "圣骑士",
     "猎人",
@@ -138,6 +149,7 @@ const localeSubclasses = [
     "萨满",
     "法师",
     "术士",
+    "",
     "德鲁伊",
   ],
 ];
@@ -175,4 +187,4 @@ const localeInventoryTypes = [
 
 const bondings = ['不绑定', '拾取时绑定', '装备后绑定', '使用后绑定', '任务物品', '任务物品1'];
 
-export { colors, localeClasses, localeSubclasses, localeInventoryTypes, bondings };
+export { colors, localeQualities, localeClasses, localeSubclasses, localeInventoryTypes, bondings };

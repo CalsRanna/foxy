@@ -2,7 +2,9 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }"
+          >首页</el-breadcrumb-item
+        >
         <el-breadcrumb-item :to="{ path: '/item' }"
           >物品管理</el-breadcrumb-item
         >
@@ -10,12 +12,14 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">
         {{
+          itemTemplate.ItemTemplateLocales &&
           itemTemplate.ItemTemplateLocales.length > 0
             ? itemTemplate.ItemTemplateLocales[0].Name
             : itemTemplate.name
         }}
         <small>
           {{
+            itemTemplate.ItemTemplateLocales &&
             itemTemplate.ItemTemplateLocales.length > 0
               ? itemTemplate.ItemTemplateLocales[0].Description
               : itemTemplate.description
@@ -60,22 +64,44 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="类别">
-              <el-input
-                v-model="itemTemplate.class"
-                placeholder="class"
-              ></el-input>
+              <el-select v-model="itemTemplate.class" placeholder="class">
+                <el-option
+                  v-for="(localeClass, index) in localeClasses"
+                  :key="`localeClass-${index}`"
+                  :label="localeClass"
+                  :value="index"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="子类别">
-              <el-input
-                v-model="itemTemplate.subclass"
-                placeholder="subclass"
-              ></el-input>
+              <el-select v-model="itemTemplate.subclass" placeholder="subclass">
+                <el-option
+                  v-for="(localeSubclass, index) in localeSubclasses[
+                    itemTemplate.class
+                  ]"
+                  :key="`localeSubclass-${index}`"
+                  :label="localeSubclass"
+                  :value="index"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="声音覆盖">
+            <el-form-item>
+              <template slot="label">
+                <el-tooltip>
+                  <div slot="content" style="max-width: 400px">
+                    Weapons have special sounds on impact. This column is used
+                    to override these sounds by specifying another subclass. For
+                    example an item with misc subclass can sound like a stave on
+                    impact by overriding the subclass here.
+                  </div>
+                  <i class="el-icon-info"></i>
+                </el-tooltip>
+                声音覆盖
+              </template>
               <el-input
                 v-model="itemTemplate.SoundOverrideSubclass"
                 placeholder="SoundOverrideSubclass"
@@ -92,10 +118,14 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="品质">
-              <el-input
-                v-model="itemTemplate.Quality"
-                placeholder="Quality"
-              ></el-input>
+              <el-select v-model="itemTemplate.Quality" placeholder="Quality">
+                <el-option
+                  v-for="(localeQuality, index) in localeQualities"
+                  :key="`localeQuality-${index}`"
+                  :label="localeQuality"
+                  :value="index"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -1089,19 +1119,52 @@
 </template>
 
 <script>
-import { bondings } from "@/locales/item.js";
+// import icons from "@/libs/icons";
+
+import {
+  // colors,
+  localeClasses,
+  localeSubclasses,
+  localeInventoryTypes,
+  localeQualities,
+  bondings,
+} from "../locales/item.js";
+
+import { createNamespacedHelpers } from "vuex";
+// import * as types from "@/store/MUTATION_TYPES";
+
+const { mapState, mapActions } = createNamespacedHelpers("itemTemplate");
 export default {
   data() {
     return {
       loading: false,
-      itemTemplate: {
-        ItemTemplateLocales: [],
-      },
+      // itemTemplate: {
+      //   ItemTemplateLocales: [],
+      // },
+      localeClasses: localeClasses,
+      localeSubclasses: localeSubclasses,
+      localeInventoryTypes: localeInventoryTypes,
+      localeQualities: localeQualities,
       bondings: bondings,
     };
   },
+  computed: {
+    ...mapState({
+      itemTemplate: (state) => state.itemTemplate,
+    }),
+  },
+  methods: {
+    ...mapActions(["find"]),
+    async init() {
+      console.log(this.$route);
+      this.loading = true;
+      await this.find({ entry: this.$route.params["id"] });
+      this.loading = false;
+      console.log(this.itemTemplate);
+    },
+  },
   created() {
-    this.loading = true;
+    this.init();
   },
 };
 </script>
