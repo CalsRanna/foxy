@@ -4,7 +4,10 @@ import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
 import creature from "./background/creature.js";
+import gameObject from "./background/gameObject.js";
 import item from "./background/item.js";
+import quest from "./background/quest.js";
+import smartScript from "./background/smartScript";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 

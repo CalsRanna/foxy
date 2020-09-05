@@ -9,7 +9,7 @@ import {
 } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
-const creatureTemplate = {
+export default {
   namespaced: true,
   state: () => ({
     entry: undefined,
@@ -64,5 +64,3 @@ const creatureTemplate = {
     }
   }
 };
-
-export default creatureTemplate;

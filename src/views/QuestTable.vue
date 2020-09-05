@@ -2,9 +2,7 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }"
-          >首页</el-breadcrumb-item
-        >
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>任务</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">任务列表</h3>
@@ -42,53 +40,22 @@
         style="margin-top: 16px"
       ></el-pagination>
       <el-table :data="questTemplates">
-        <el-table-column
-          prop="ID"
-          label="ID"
-          sortable
-          min-width="100px"
-        ></el-table-column>
-        <el-table-column
-          prop="LogTitle"
-          label="标题"
-          min-width="100px"
-          sortable
-        >
+        <el-table-column prop="ID" label="ID" sortable></el-table-column>
+        <el-table-column prop="LogTitle" label="标题" min-width="100px" sortable>
           <template slot-scope="scope">
-            <template v-if="scope.row.Title !== null">{{
-              scope.row.Title
-            }}</template>
+            <template v-if="scope.row.Title !== null">{{ scope.row.Title }}</template>
             <template v-else>{{ scope.row.LogTitle }}</template>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="QuestDescription"
-          label="描述"
-          sortable
-          min-width="500px"
-        >
+        <el-table-column prop="QuestDescription" label="描述" sortable min-width="500px">
           <template slot-scope="scope">
-            <template v-if="scope.row.Details !== null">{{
-              scope.row.Details
-            }}</template>
+            <template v-if="scope.row.Details !== null">{{ scope.row.Details }}</template>
             <template v-else>{{ scope.row.LogDescription }}</template>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="QuestType"
-          label="类型"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="QuestLevel"
-          label="等级"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="MinLevel"
-          label="所需最小等级"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="QuestType" label="类型" sortable></el-table-column>
+        <el-table-column prop="QuestLevel" label="等级" sortable></el-table-column>
+        <el-table-column prop="MinLevel" label="所需最小等级" sortable></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"
@@ -104,22 +71,34 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
 export default {
   data() {
     return {
       loading: false,
       ID: undefined,
       LogTitle: undefined,
-      questTemplates: [],
-      page: 1,
-      total: 0,
+      // questTemplates: [],
+      // page: 1,
+      // total: 0
     };
   },
+  computed: {
+    ...mapState("quest", ["questTemplates", "page", "total"]),
+    payload() {
+      return {
+        id: this.ID,
+        title: this.LogTitle
+      };
+    }
+  },
   methods: {
-    search() {
-      this.loading = true;
-      this.page = 1;
-    },
+    ...mapActions("quest", ["search"]),
+    // search() {
+    //   this.loading = true;
+    //   this.page = 1;
+    // },
     reset() {
       this.ID = undefined;
       this.LogTitle = "";
@@ -127,10 +106,11 @@ export default {
     paginate(current) {
       this.loading = true;
       this.page = current;
-    },
+    }
   },
   created() {
     // this.loading = true;
-  },
+    this.search(this.payload);
+  }
 };
 </script>

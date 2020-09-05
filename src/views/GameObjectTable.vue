@@ -2,9 +2,7 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }"
-          >首页</el-breadcrumb-item
-        >
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>游戏对象</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">游戏对象列表</h3>
@@ -13,11 +11,7 @@
       <el-form>
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-input-number
-              controls-position="right"
-              v-model="entry"
-              placeholder="entry"
-            ></el-input-number>
+            <el-input-number controls-position="right" v-model="entry" placeholder="entry"></el-input-number>
           </el-col>
           <el-col :span="6">
             <el-input v-model="name" placeholder="名称"></el-input>
@@ -45,17 +39,13 @@
         @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="gameObejctTemplates">
-        <el-table-column prop="entry" label="entry" sortable></el-table-column>
-        <el-table-column
-          prop="displayId"
-          label="Display ID"
-          sortable
-        ></el-table-column>
+      <el-table :data="gameObjectTemplates">
+        <el-table-column prop="entry" label="编号" sortable></el-table-column>
+        <el-table-column prop="displayId" label="Display ID" sortable></el-table-column>
         <el-table-column width="43px" class-name="icon-height">
           <template slot-scope="scope">
             <el-image
-              :src="`/icons/${icons[scope.row.displayid]}`"
+              :src="`/icons/${icons[scope.row.displayId]}`"
               style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
             >
               <el-image
@@ -68,9 +58,7 @@
         </el-table-column>
         <el-table-column prop="name" label="名称" sortable>
           <template slot-scope="scope">
-            <template v-if="scope.row.localeName !== null">{{
-              scope.row.localeName
-            }}</template>
+            <template v-if="scope.row.localeName !== null">{{ scope.row.localeName }}</template>
             <template v-else>{{ scope.row.name }}</template>
           </template>
         </el-table-column>
@@ -91,7 +79,9 @@
 </template>
 
 <script>
-import icons from '@/libs/icons';
+import icons from "@/libs/icons";
+
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -99,16 +89,20 @@ export default {
       loading: false,
       entry: undefined,
       name: undefined,
-      gameObejctTemplates: [],
-      page: 1,
-      total: 0,
-      icons:icons,
+      icons: icons
     };
   },
+  computed: {
+    ...mapState("gameObject", ["gameObjectTemplates", "page", "total"]),
+    payload() {
+      return { entry: this.entry, name: this.name };
+    }
+  },
   methods: {
-    search() {
-      // this.loading = true;
-    },
+    ...mapActions("gameObject", ["search"]),
+    // search() {
+    //   // this.loading = true;
+    // },
     reset() {
       this.entry = undefined;
       this.name = undefined;
@@ -116,10 +110,10 @@ export default {
     paginate(current) {
       this.loading = true;
       this.page = current;
-    },
+    }
   },
   created() {
-    this.search();
-  },
+    this.search(this.payload);
+  }
 };
 </script>

@@ -2,9 +2,7 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }"
-          >首页</el-breadcrumb-item
-        >
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>物品管理</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">物品模版列表</h3>
@@ -74,11 +72,7 @@
         >
       </div>
       <div
-        v-if="
-          filter.class !== undefined ||
-            filter.subclass !== undefined ||
-            filter.InventoryType !== undefined
-        "
+        v-if="filter.class !== undefined || filter.subclass !== undefined || filter.InventoryType !== undefined"
         style="margin-top: 16px"
       >
         <el-tag
@@ -158,13 +152,8 @@
           </template>
         </el-table-column>
         <el-table-column label="名称" sortable>
-          <span
-            slot-scope="scope"
-            :style="{ color: colors[scope.row.Quality] }"
-          >
-            <template v-if="scope.row.localeName !== null">{{
-              scope.row.localeName
-            }}</template>
+          <span slot-scope="scope" :style="{ color: colors[scope.row.Quality] }">
+            <template v-if="scope.row.localeName !== null">{{ scope.row.localeName }}</template>
             <template v-else>{{ scope.row.name }}</template>
           </span>
         </el-table-column>
@@ -183,16 +172,8 @@
             {{ localeInventoryTypes[scope.row.InventoryType] }}
           </span></el-table-column
         >
-        <el-table-column
-          prop="ItemLevel"
-          label="物品等级"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="RequiredLevel"
-          label="需求等级"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="ItemLevel" label="物品等级" sortable></el-table-column>
+        <el-table-column prop="RequiredLevel" label="需求等级" sortable></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"
@@ -216,19 +197,11 @@
 <script>
 import icons from "@/libs/icons";
 
-import {
-  colors,
-  localeClasses,
-  localeSubclasses,
-  localeInventoryTypes,
-} from "../locales/item.js";
+import { colors, localeClasses, localeSubclasses, localeInventoryTypes } from "../locales/item.js";
 
-import { createNamespacedHelpers } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import * as types from "@/store/MUTATION_TYPES";
 
-const { mapState, mapActions, mapMutations } = createNamespacedHelpers(
-  "itemTemplate"
-);
 export default {
   data() {
     return {
@@ -240,19 +213,19 @@ export default {
       filter: {
         class: undefined,
         subclass: undefined,
-        InventoryType: undefined,
+        InventoryType: undefined
       },
       loading: false,
       entry: undefined,
       name: undefined,
-      pageSize: 50,
+      pageSize: 50
     };
   },
   computed: {
-    ...mapState({
-      page: (state) => state.page,
-      total: (state) => state.total,
-      itemTemplates: (state) => state.itemTemplates,
+    ...mapState("item", {
+      page: state => state.page,
+      total: state => state.total,
+      itemTemplates: state => state.itemTemplates
     }),
     payload() {
       return {
@@ -261,13 +234,13 @@ export default {
         InventoryType: this.filter.InventoryType,
         entry: this.entry,
         name: this.name,
-        page: this.page,
+        page: this.page
       };
-    },
+    }
   },
   methods: {
-    ...mapActions(["search", "count"]),
-    ...mapMutations({ paginate: types.PAGINATE_ITEM_TEMPLATES }),
+    ...mapActions("item", ["search", "count"]),
+    ...mapMutations("item", { paginate: types.PAGINATE_ITEM_TEMPLATES }),
     async filtrate(field, index) {
       if (field === "class") {
         this.filter.class = index;
@@ -326,13 +299,13 @@ export default {
       this.loading = true;
       await Promise.all([this.search(this.payload), this.count(this.payload)]);
       this.loading = false;
-    },
+    }
   },
   created() {
     if (this.itemTemplates.length === 0) {
       this.init();
     }
-  },
+  }
 };
 </script>
 

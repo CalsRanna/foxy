@@ -37,12 +37,12 @@ let searchItemTemplates = ipcMain.on("SEARCH_ITEM_TEMPLATES", (event, payload) =
   let limit = `limit ${offset}, 50`;
   let connection = createConnection();
   connection.connect();
-  console.log(`${sql} ${where} ${limit}`);
   connection.query(`${sql} ${where} ${limit}`, (error, results) => {
     if (error) {
-      console.log(error);
+      event.reply("UPDATE_MESSAGE_REPLY", error);
     } else {
       event.reply("SEARCH_ITEM_TEMPLATES_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where} ${limit}`);
     }
   });
   connection.end();

@@ -7,6 +7,7 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">控制面板</h3>
     </el-card>
+    123456
   </div>
 </template>
 
