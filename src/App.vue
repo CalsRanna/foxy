@@ -1,7 +1,7 @@
 <template>
   <el-container>
-    <el-aside width="200px" style="position: fixed; min-height: 100vh;border-right: solid 1px #E6E6E6">
-      <div style="padding: 16px;text-align: center;background-color: #F2F6FC">
+    <el-aside width="200px" class="left-menu">
+      <div class="logo">
         <h3 style="margin: 0; padding: 0">FOXY</h3>
         <p style="font-size: 12px; color: #C0C4CC">
           魔兽世界
@@ -31,39 +31,60 @@
 
 <script>
 const ipcRenderer = window.require("electron").ipcRenderer;
-// import
+import { mapState, mapMutations } from "vuex";
+import * as types from "@/store/MUTATION_TYPES";
 
 export default {
-  data() {
-    return {
-      active: "dashboard"
-    };
+  computed: {
+    ...mapState("global", ["debug", "active"])
   },
   methods: {
+    ...mapMutations("global", {
+      setActive: types.SET_ACTIVE
+    }),
     navigate(index) {
-      this.$router.push(`/${index}`);
+      this.$message({
+        message: index
+      });
+      this.$router.push(`/${index}`).catch(error => error);
+      this.setActive(index);
     }
   },
   created() {
-    ipcRenderer.on("UPDATE_MESSAGE_REPLY", (event, response) => {
-      console.log(response);
-    });
-    this.$router.push(this.active);
+    if (this.debug) {
+      ipcRenderer.on("UPDATE_MESSAGE_REPLY", (event, response) => {
+        this.$message({
+          message: response
+        });
+      });
+    }
   }
 };
 </script>
 
 <style>
-.el-input-number .el-input__inner {
-  text-align: left !important;
-}
-
 .el-input-number {
   width: 100% !important;
 }
 
+.el-input-number .el-input__inner {
+  text-align: left !important;
+}
+
 .el-select {
   width: 100%;
+}
+
+.left-menu {
+  position: fixed;
+  min-height: 100vh;
+  border-right: solid 1px #e6e6e6;
+}
+
+.logo {
+  padding: 16px;
+  text-align: center;
+  background-color: #f2f6fc;
 }
 
 .clickable-icon {

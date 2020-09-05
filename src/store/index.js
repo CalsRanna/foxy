@@ -1,26 +1,22 @@
 import Vue from "vue";
 import Vuex from "vuex";
+
 import global from "./global";
-import creatureTemplate from "./creature";
-import itemTemplate from "./item";
+import creature from "./creature";
+import gameObject from "./gameObject";
+import item from "./item";
+import quest from "./quest";
+import smartScript from "./smartScript";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    isAuth: false,
-    message: {
-      count: 0,
-      type: "info",
-      title: "",
-      content: ""
-    }
-  },
-  mutations: {},
-  actions: {},
   modules: {
     global,
-    creatureTemplate,
-    itemTemplate
+    creature,
+    gameObject,
+    item,
+    quest,
+    smartScript
   }
 });

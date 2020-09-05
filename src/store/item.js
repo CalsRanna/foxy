@@ -10,7 +10,7 @@ import {
 // import item from "../background/item";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
-const itemTemplate = {
+export default {
   namespaced: true,
   state: () => ({
     entry: undefined,
@@ -65,5 +65,3 @@ const itemTemplate = {
     }
   }
 };
-
-export default itemTemplate;

@@ -36,7 +36,7 @@ let searchCreatureTemplates = ipcMain.on("SEARCH_CREATURE_TEMPLATES", (event, pa
       event.reply("UPDATE_MESSAGE_REPLY", error);
     } else {
       event.reply("SEARCH_CREATURE_TEMPLATES_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", sql);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where} ${limit}`);
     }
   });
   connection.end();
