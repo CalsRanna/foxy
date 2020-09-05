@@ -11,19 +11,9 @@
         <el-breadcrumb-item>物品详情</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">
-        {{
-          itemTemplate.ItemTemplateLocales &&
-          itemTemplate.ItemTemplateLocales.length > 0
-            ? itemTemplate.ItemTemplateLocales[0].Name
-            : itemTemplate.name
-        }}
+        {{ localeName }}
         <small>
-          {{
-            itemTemplate.ItemTemplateLocales &&
-            itemTemplate.ItemTemplateLocales.length > 0
-              ? itemTemplate.ItemTemplateLocales[0].Description
-              : itemTemplate.description
-          }}
+          {{ localeDescription }}
         </small>
       </h3>
     </el-card>
@@ -35,14 +25,19 @@
               <el-input
                 v-model="itemTemplate.entry"
                 placeholder="entry"
+                disabled
               ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="名称">
-              <el-input
-                v-model="itemTemplate.name"
-                placeholder="name"
+              <el-input v-model="itemTemplate.name" placeholder="name">
+                <i
+                  class="el-icon-s-operation clickable-icon"
+                  slot="suffix"
+                  style="margin-right: 8px"
+                  @click="showDialog"
+                ></i
               ></el-input>
             </el-form-item>
           </el-col>
@@ -51,6 +46,13 @@
               <el-input
                 v-model="itemTemplate.description"
                 placeholder="description"
+              >
+                <i
+                  class="el-icon-s-operation clickable-icon"
+                  slot="suffix"
+                  style="margin-right: 8px"
+                  @click="showDialog"
+                ></i
               ></el-input>
             </el-form-item>
           </el-col>
@@ -154,10 +156,17 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="佩戴位置">
-              <el-input
+              <el-select
                 v-model="itemTemplate.InventoryType"
                 placeholder="InventoryType"
-              ></el-input>
+              >
+                <el-option
+                  v-for="(localeInventoryType, index) in localeInventoryTypes"
+                  :key="`localeInventoryType-${index}`"
+                  :label="localeInventoryType"
+                  :value="index"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -185,11 +194,31 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="材质">
-              <el-input
+            <el-form-item>
+              <template slot="label">
+                <el-tooltip>
+                  <div slot="content" style="max-width: 400px">
+                    The material that the item is made of. The value here
+                    affects the sound that the item makes when moved. Use -1 for
+                    consumable items like food, reagents, etc.
+                  </div>
+                  <i class="el-icon-info"></i>
+                </el-tooltip>
+                材质
+              </template>
+              <el-select v-model="itemTemplate.Material" placeholder="Material">
+                <el-option label="消耗品" :value="-1"></el-option>
+                <el-option
+                  v-for="(localeMaterial, index) in localeMaterials"
+                  :key="`localeMaterial-${index}`"
+                  :label="localeMaterial"
+                  :value="index"
+                ></el-option>
+              </el-select>
+              <!-- <el-input
                 v-model="itemTemplate.Material"
                 placeholder="Material"
-              ></el-input>
+              ></el-input> -->
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -201,7 +230,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="随机前缀">
+            <el-form-item label="随机后缀">
               <el-input
                 v-model="itemTemplate.RandomSuffix"
                 placeholder="RandomSuffix"
@@ -1115,6 +1144,76 @@
         </div>
       </el-card>
     </el-form>
+    <el-dialog
+      :visible.sync="localeDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+    >
+      <div slot="title">
+        <span style="font-size: 18px;color: #303133;margin-right:16px"
+          >名称/描述本地化</span
+        >
+        <el-button size="mini" @click="addItemTemplateLocale">新增</el-button>
+      </div>
+      <el-table :data="itemTemplateLocales">
+        <el-table-column width="48">
+          <el-button
+            type="danger"
+            size="mini"
+            icon="el-icon-delete"
+            circle=""
+            slot-scope="scope"
+            @click="() => deleteItemTemplateLocale(scope.$index)"
+          ></el-button>
+        </el-table-column>
+        <el-table-column prop="ID" label="编号">
+          <template slot-scope="scope">
+            <el-input-number
+              v-model="scope.row.ID"
+              controls-position="right"
+              disabled
+            ></el-input-number>
+          </template>
+        </el-table-column>
+        <el-table-column prop="locale" label="语言">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.locale"
+              placeholder="locale"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Name" label="名称">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.Name" placeholder="Name"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Description" label="称号">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.Description"
+              placeholder="Description"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="VerifiedBuild" label="VerifiedBuild">
+          <template slot-scope="scope">
+            <el-input-number
+              v-model="scope.row.VerifiedBuild"
+              :min="0"
+              controls-position="right"
+              placeholder="VerifiedBuild"
+            ></el-input-number>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer">
+        <el-button @click="closeDialog">取消</el-button>
+        <el-button type="primary" @click="submitItemTemplateLocales"
+          >保存</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -1127,6 +1226,7 @@ import {
   localeSubclasses,
   localeInventoryTypes,
   localeQualities,
+  localeMaterials,
   bondings,
 } from "../locales/item.js";
 
@@ -1138,29 +1238,66 @@ export default {
   data() {
     return {
       loading: false,
-      // itemTemplate: {
-      //   ItemTemplateLocales: [],
-      // },
       localeClasses: localeClasses,
       localeSubclasses: localeSubclasses,
       localeInventoryTypes: localeInventoryTypes,
       localeQualities: localeQualities,
+      localeMaterials: localeMaterials,
       bondings: bondings,
+      localeDialogVisible: false,
     };
   },
   computed: {
     ...mapState({
       itemTemplate: (state) => state.itemTemplate,
+      itemTemplateLocales: (state) => state.itemTemplateLocales,
     }),
+    localeName() {
+      if (this.itemTemplateLocales.length > 0) {
+        let name = undefined;
+        for (let itemTemplateLocale of this.itemTemplateLocales) {
+          if (itemTemplateLocale.locale === "zhCN") {
+            name = itemTemplateLocale.Name;
+          }
+        }
+        return name !== undefined ? name : this.itemTemplate.name;
+      } else {
+        return this.itemTemplate.name;
+      }
+    },
+    localeDescription() {
+      if (this.itemTemplateLocales.length > 0) {
+        let description = undefined;
+        for (let itemTemplateLocale of this.itemTemplateLocales) {
+          if (itemTemplateLocale.locale === "zhCN") {
+            description = itemTemplateLocale.Description;
+          }
+        }
+        return description !== undefined
+          ? description
+          : this.itemTemplate.description;
+      } else {
+        return this.itemTemplate.description;
+      }
+    },
   },
   methods: {
-    ...mapActions(["find"]),
+    ...mapActions(["find", "searchItemTemplateLocales"]),
+    showDialog() {
+      this.localeDialogVisible = true;
+    },
+    closeDialog() {
+      this.localeDialogVisible = false;
+    },
+    addItemTemplateLocale() {},
+    deleteItemTemplateLocale() {},
+    submitItemTemplateLocales() {},
     async init() {
-      console.log(this.$route);
       this.loading = true;
-      await this.find({ entry: this.$route.params["id"] });
+      let id = this.$route.params.id;
+      await this.find({ entry: id });
+      await this.searchItemTemplateLocales({ ID: id });
       this.loading = false;
-      console.log(this.itemTemplate);
     },
   },
   created() {

@@ -1,8 +1,11 @@
 import {
+  UPDATE_CREATURE_TEMPLATE_CREDENTIAL_ENTRY,
+  UPDATE_CREATURE_TEMPLATE_CREDENTIAL_NAME,
+  UPDATE_CREATURE_TEMPLATE_CREDENTIAL_SUBNAME,
   SEARCH_CREATURE_TEMPLATES,
   COUNT_CREATURE_TEMPLATES,
   PAGINATE_CREATURE_TEMPLATES,
-  FIND_ITEM_TEMPLATE,
+  FIND_ITEM_TEMPLATE
 } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
@@ -15,7 +18,7 @@ const creatureTemplate = {
     page: 1,
     total: 0,
     creatureTemplates: [],
-    creatureTemplate: undefined,
+    creatureTemplate: undefined
   }),
   actions: {
     async search({ commit }, payload) {
@@ -30,14 +33,23 @@ const creatureTemplate = {
       });
       ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
     },
-    find({commit}, payload) {
+    find({ commit }, payload) {
       ipcRenderer.on("FIND_CREATURE_TEMPLATE_REPLY", (event, response) => {
         commit(FIND_ITEM_TEMPLATE, response);
       });
       ipcRenderer.send("FIND_CREATURE_TEMPLATE", payload);
-    },
+    }
   },
   mutations: {
+    [UPDATE_CREATURE_TEMPLATE_CREDENTIAL_ENTRY](state, entry) {
+      state.entry = entry;
+    },
+    [UPDATE_CREATURE_TEMPLATE_CREDENTIAL_NAME](state, name) {
+      state.name = name;
+    },
+    [UPDATE_CREATURE_TEMPLATE_CREDENTIAL_SUBNAME](state, subname) {
+      state.subname = subname;
+    },
     [SEARCH_CREATURE_TEMPLATES](state, creatureTemplates) {
       state.creatureTemplates = creatureTemplates;
     },
@@ -50,7 +62,7 @@ const creatureTemplate = {
     [FIND_ITEM_TEMPLATE](state, creatureTemplate) {
       state.creatureTemplate = creatureTemplate;
     }
-  },
+  }
 };
 
 export default creatureTemplate;

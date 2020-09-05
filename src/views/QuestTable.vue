@@ -130,7 +130,7 @@ export default {
     },
   },
   created() {
-    this.loading = true;
+    // this.loading = true;
   },
 };
 </script>
