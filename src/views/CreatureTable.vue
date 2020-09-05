@@ -103,13 +103,47 @@ export default {
   data() {
     return {
       loading: false,
-      entry: undefined,
-      name: "",
-      subname: "",
+      // entry: undefined,
+      // name: "",
+      // subname: "",
       pageSize: 50,
     };
   },
   computed: {
+    entry: {
+      get() {
+        return this.$store.state.creatureTemplate.entry;
+      },
+      set(value) {
+        console.log(this.$store)
+        this.$store.commit(
+          types.UPDATE_CREATURE_TEMPLATE_CREDENTIAL_ENTRY,
+          value
+        );
+      },
+    },
+    name: {
+      get() {
+        return this.$store.state.creatureTemplate.name;
+      },
+      set(value) {
+        this.$store.commit(
+          types.UPDATE_CREATURE_TEMPLATE_CREDENTIAL_NAME,
+          value
+        );
+      },
+    },
+    subname: {
+      get() {
+        return this.$store.state.creatureTemplate.subname;
+      },
+      set(value) {
+        this.$store.commit(
+          types.UPDATE_CREATURE_TEMPLATE_CREDENTIAL_SUBNAME,
+          value
+        );
+      },
+    },
     ...mapState({
       page: (state) => state.page,
       total: (state) => state.total,

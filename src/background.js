@@ -10,9 +10,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 let win;
 
-protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } },
-]);
+protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
 function createWindow() {
   win = new BrowserWindow({
@@ -20,11 +18,11 @@ function createWindow() {
     height: 600,
     webPreferences: {
       // nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      nodeIntegration: true,
+      nodeIntegration: true
     },
     show: false,
     title: "Foxy",
-    frame: true,
+    frame: true
     // maximizable: false,
     // fullscreen: true,
   });
@@ -62,7 +60,7 @@ app.on("ready", async () => {
 
 if (isDevelopment) {
   if (process.platform === "win32") {
-    process.on("message", (data) => {
+    process.on("message", data => {
       if (data === "graceful-exit") {
         app.quit();
       }
@@ -74,15 +72,15 @@ if (isDevelopment) {
   }
 }
 
-ipcMain.on("OPEN_SETTING_VIEW", (event) => {
+ipcMain.on("OPEN_SETTING_VIEW", event => {
   let window = new BrowserWindow({
     width: 800,
     height: 600,
     frame: false,
     parent: win,
     webPreferences: {
-      nodeIntegration: true,
-    },
+      nodeIntegration: true
+    }
   });
   window.on("closed", () => {
     window = null;
@@ -95,10 +93,10 @@ ipcMain.on("OPEN_SETTING_VIEW", (event) => {
   }
 });
 
-ipcMain.on("LOAD_ICONS", (event) => {
+ipcMain.on("LOAD_ICONS", event => {
   event.reply("LOAD_ICONS_REPLY", 123);
 });
 
-ipcMain.on("LOAD_SPELLS", (event) => {
+ipcMain.on("LOAD_SPELLS", event => {
   event.returnValue = "加载技能中……";
 });

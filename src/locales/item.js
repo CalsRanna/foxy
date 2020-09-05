@@ -29,7 +29,7 @@ const localeClasses = [
   "贸易品",
   "通用（弃用）",
   "配方",
-  "货币（弃用）",
+  "货币",
   "箭袋",
   "任务",
   "钥匙",
@@ -132,7 +132,7 @@ const localeSubclasses = [
     "钓鱼",
     "珠宝加工",
   ],
-  ["货币（弃用）"],
+  ["货币"],
   ["箭袋（弃用）", "弹药袋（弃用）", "箭袋", "弹药袋"],
   ["任务"],
   ["钥匙", "开锁工具"],
@@ -185,6 +185,33 @@ const localeInventoryTypes = [
   "圣物",
 ];
 
-const bondings = ['不绑定', '拾取时绑定', '装备后绑定', '使用后绑定', '任务物品', '任务物品1'];
+const localeMaterials = [
+  "未定义",
+  "金属",
+  "木制品",
+  "液体",
+  "珠宝",
+  "锁甲",
+  "板甲",
+  "布甲",
+  "皮甲",
+]; //-1 消耗品（食物，试剂等）
 
-export { colors, localeQualities, localeClasses, localeSubclasses, localeInventoryTypes, bondings };
+const bondings = [
+  "不绑定",
+  "拾取时绑定",
+  "装备后绑定",
+  "使用后绑定",
+  "任务物品",
+  "任务物品1",
+];
+
+export {
+  colors,
+  localeQualities,
+  localeClasses,
+  localeSubclasses,
+  localeInventoryTypes,
+  localeMaterials,
+  bondings,
+};

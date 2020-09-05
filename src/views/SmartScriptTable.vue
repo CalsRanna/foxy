@@ -2,22 +2,16 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }"
-          >首页</el-breadcrumb-item
-        >
-        <el-breadcrumb-item>游戏对象</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>内建脚本</el-breadcrumb-item>
       </el-breadcrumb>
-      <h3 style="margin: 16px 0 0 0">游戏对象列表</h3>
+      <h3 style="margin: 16px 0 0 0">内建列表</h3>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-form>
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-input-number
-              controls-position="right"
-              v-model="entry"
-              placeholder="entry"
-            ></el-input-number>
+            <el-input v-model="ID" placeholder="ID"></el-input>
           </el-col>
           <el-col :span="6">
             <el-input v-model="name" placeholder="名称"></el-input>
@@ -45,37 +39,21 @@
         @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="gameObejctTemplates">
-        <el-table-column prop="entry" label="entry" sortable></el-table-column>
-        <el-table-column
-          prop="displayId"
-          label="Display ID"
-          sortable
-        ></el-table-column>
-        <el-table-column width="43px" class-name="icon-height">
+      <el-table :data="questTemplates">
+        <el-table-column prop="ID" label="ID" sortable min-width="100px"></el-table-column>
+        <el-table-column prop="LogTitle" label="名称" min-width="100px" sortable>
           <template slot-scope="scope">
-            <el-image
-              :src="`/icons/${icons[scope.row.displayid]}`"
-              style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
-            >
-              <el-image
-                src="/icons/INV_Misc_QuestionMark.png"
-                style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
-                slot="error"
-              ></el-image>
-            </el-image>
+            <template v-if="scope.row.Title !== null">{{ scope.row.Title }}</template>
+            <template v-else>{{ scope.row.LogTitle }}</template>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="名称" sortable>
+        <el-table-column prop="QuestLevel" label="等级" sortable></el-table-column>
+        <el-table-column prop="QuestDescription" label="描述" sortable min-width="500px">
           <template slot-scope="scope">
-            <template v-if="scope.row.localeName !== null">{{
-              scope.row.localeName
-            }}</template>
-            <template v-else>{{ scope.row.name }}</template>
+            <template v-if="scope.row.Details !== null">{{ scope.row.Details }}</template>
+            <template v-else>{{ scope.row.LogDescription }}</template>
           </template>
         </el-table-column>
-        <el-table-column prop="type" label="类型" sortable></el-table-column>
-        <el-table-column prop="size" label="尺寸" sortable></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"
@@ -91,35 +69,33 @@
 </template>
 
 <script>
-import icons from '@/libs/icons';
-
 export default {
   data() {
     return {
       loading: false,
-      entry: undefined,
-      name: undefined,
-      gameObejctTemplates: [],
+      ID: undefined,
+      LogTitle: undefined,
+      questTemplates: [],
       page: 1,
-      total: 0,
-      icons:icons,
+      total: 0
     };
   },
   methods: {
     search() {
-      // this.loading = true;
+      this.loading = true;
+      this.page = 1;
     },
     reset() {
-      this.entry = undefined;
-      this.name = undefined;
+      this.ID = undefined;
+      this.LogTitle = "";
     },
     paginate(current) {
       this.loading = true;
       this.page = current;
-    },
+    }
   },
   created() {
-    this.search();
-  },
+    // this.loading = true;
+  }
 };
 </script>

@@ -57985,7 +57985,7 @@ const icons = {
   68109: "inv_misc_rubysanctum4.png",
   68328: "inv_sigil_thorim.png",
   68742: "t_roboticon.png",
-  6150201: "achievement_character_human_female.png",
+  6150201: "achievement_character_human_female.png"
 };
 
 export default icons;
