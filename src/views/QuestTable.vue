@@ -17,7 +17,7 @@
             <el-input v-model="LogTitle" placeholder="标题"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" @click="search">查询</el-button>
+            <el-button type="primary" @click="handleSearch">查询</el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
@@ -36,7 +36,7 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
       <el-table :data="questTemplates">
@@ -63,7 +63,7 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -71,17 +71,15 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
+import * as TYPES from "@/store/MUTATION_TYPES";
 
 export default {
   data() {
     return {
       loading: false,
       ID: undefined,
-      LogTitle: undefined,
-      // questTemplates: [],
-      // page: 1,
-      // total: 0
+      LogTitle: undefined
     };
   },
   computed: {
@@ -89,28 +87,40 @@ export default {
     payload() {
       return {
         id: this.ID,
-        title: this.LogTitle
+        title: this.LogTitle,
+        page: this.page
       };
     }
   },
   methods: {
-    ...mapActions("quest", ["search"]),
-    // search() {
-    //   this.loading = true;
-    //   this.page = 1;
-    // },
+    ...mapActions("quest", ["search", "count"]),
+    ...mapMutations("quest", { paginate: TYPES.PAGINATE_QUEST_TEMPLATES }),
+    async handleSearch() {
+      this.loading = true;
+      this.paginate(1); //每次搜索时使分页器设为第一页
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
+    },
     reset() {
       this.ID = undefined;
       this.LogTitle = "";
     },
-    paginate(current) {
+    async handlePaginate(page) {
       this.loading = true;
-      this.page = current;
+      this.paginate(page);
+      await this.search(this.payload);
+      this.loading = false;
+    },
+    async init() {
+      this.loading = true;
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
     }
   },
   created() {
-    // this.loading = true;
-    this.search(this.payload);
+    if (this.questTemplates.length === 0) {
+      this.init();
+    }
   }
 };
 </script>

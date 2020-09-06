@@ -17,7 +17,7 @@
             <el-input v-model="name" placeholder="名称"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" @click="search">查询</el-button>
+            <el-button type="primary" @click="handleSearch">查询</el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
@@ -36,7 +36,7 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
       <el-table :data="gameObjectTemplates">
@@ -71,7 +71,7 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -81,39 +81,53 @@
 <script>
 import icons from "@/libs/icons";
 
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
+import * as TYPES from "@/store/MUTATION_TYPES";
 
 export default {
   data() {
     return {
+      icons: icons,
       loading: false,
       entry: undefined,
-      name: undefined,
-      icons: icons
+      name: undefined
     };
   },
   computed: {
     ...mapState("gameObject", ["gameObjectTemplates", "page", "total"]),
     payload() {
-      return { entry: this.entry, name: this.name };
+      return { entry: this.entry, name: this.name, page: this.page };
     }
   },
   methods: {
-    ...mapActions("gameObject", ["search"]),
-    // search() {
-    //   // this.loading = true;
-    // },
+    ...mapActions("gameObject", ["search", "count"]),
+    ...mapMutations("gameObject", {paginate: TYPES.PAGINATE_GAME_OBJECT_TEMPLATES}),
+    async handleSearch() {
+      this.loading = true;
+      this.paginate(1); //每次搜索时使分页器设为第一页
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
+    },
     reset() {
       this.entry = undefined;
       this.name = undefined;
     },
-    paginate(current) {
+    async handlePaginate(page) {
       this.loading = true;
-      this.page = current;
+      this.paginate(page);
+      await this.search(this.payload);
+      this.loading = false;
+    },
+    async init() {
+      this.loading = true;
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
     }
   },
   created() {
-    this.search(this.payload);
+    if (this.gameObjectTemplates.length === 0) {
+      this.init();
+    }
   }
 };
 </script>

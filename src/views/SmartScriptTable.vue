@@ -17,7 +17,7 @@
             <el-input v-model="comment" placeholder="备注"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" @click="search">查询</el-button>
+            <el-button type="primary" @click="handleSearch">查询</el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
@@ -36,7 +36,7 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
       <el-table :data="smartScripts">
@@ -54,7 +54,7 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -62,7 +62,8 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
+import * as TYPES from "@/store/MUTATION_TYPES";
 
 export default {
   data() {
@@ -70,9 +71,6 @@ export default {
       loading: false,
       entryorguid: undefined,
       comment: undefined
-      // questTemplates: [],
-      // page: 1,
-      // total: 0
     };
   },
   computed: {
@@ -80,28 +78,40 @@ export default {
     payload() {
       return {
         entryorguid: this.entryorguid,
-        comment: this.comment
+        comment: this.comment,
+        page: this.page
       };
     }
   },
   methods: {
-    ...mapActions("smartScript", ["search"]),
-    // search() {
-    //   this.loading = true;
-    //   this.page = 1;
-    // },
-    reset() {
-      this.ID = undefined;
-      this.LogTitle = "";
-    },
-    paginate(current) {
+    ...mapActions("smartScript", ["search", "count"]),
+    ...mapMutations("smartScript", { paginate: TYPES.PAGINATE_SMART_SCRIPTS }),
+    async handleSearch() {
       this.loading = true;
-      this.page = current;
+      this.paginate(1); //每次搜索时使分页器设为第一页
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
+    },
+    reset() {
+      this.entryorguid = undefined;
+      this.comment = "";
+    },
+    async handlePaginate(page) {
+      this.loading = true;
+      this.paginate(page);
+      await this.search(this.payload);
+      this.loading = false;
+    },
+    async init() {
+      this.loading = true;
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
     }
   },
   created() {
-    // this.loading = true;
-    this.search(this.payload);
+    if (this.smartScripts.length === 0) {
+      this.init();
+    }
   }
 };
 </script>

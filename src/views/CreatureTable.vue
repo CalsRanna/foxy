@@ -117,8 +117,8 @@ export default {
     },
     reset() {
       this.entry = undefined;
-      this.name = "";
-      this.subname = "";
+      this.name = undefined;
+      this.subname = undefined;
     },
     create() {
       this.$router.push("/creature/create");

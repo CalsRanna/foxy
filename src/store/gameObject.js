@@ -1,4 +1,8 @@
-import { SEARCH_GAME_OBJECT_TEMPLATES } from "./MUTATION_TYPES";
+import {
+  SEARCH_GAME_OBJECT_TEMPLATES,
+  COUNT_GAME_OBJECT_TEMPLATES,
+  PAGINATE_GAME_OBJECT_TEMPLATES
+} from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
@@ -16,11 +20,23 @@ export default {
         commit(SEARCH_GAME_OBJECT_TEMPLATES, response);
       });
       ipcRenderer.send("SEARCH_GAME_OBJECT_TEMPLATES", payload);
+    },
+    count({commit}, payload) {
+      ipcRenderer.on("COUNT_GAME_OBJECT_TEMPLATES_REPLY", (event, response) => {
+        commit(COUNT_GAME_OBJECT_TEMPLATES, response);
+      });
+      ipcRenderer.send("COUNT_GAME_OBJECT_TEMPLATES", payload);
     }
   },
   mutations: {
     [SEARCH_GAME_OBJECT_TEMPLATES](state, gameObjectTemplates) {
       state.gameObjectTemplates = gameObjectTemplates;
+    },
+    [COUNT_GAME_OBJECT_TEMPLATES](state, total) {
+      state.total = total;
+    },
+    [PAGINATE_GAME_OBJECT_TEMPLATES](state, page) {
+      state.page = page;
     }
   }
 };
