@@ -1101,4 +1101,35 @@ const mechanicImmuneMasks = [
   }
 ];
 
-export { npcFlags, typeFlags, unitFlags, unitFlags2, dynamicFlags, flagsExtra, mechanicImmuneMasks };
+const dmgSchools = [
+  {
+    label: "物理伤害",
+    value: 0
+  },
+  {
+    label: "神圣伤害",
+    value: 1
+  },
+  {
+    label: "暗影伤害",
+    value: 5
+  },
+  {
+    label: "火焰伤害",
+    value: 2
+  },
+  {
+    label: "冰霜伤害",
+    value: 4
+  },
+  {
+    label: "自然伤害",
+    value: 3
+  },
+  {
+    label: "奥术伤害",
+    value: 6
+  }
+];
+
+export { npcFlags, typeFlags, unitFlags, unitFlags2, dynamicFlags, flagsExtra, mechanicImmuneMasks, dmgSchools };
