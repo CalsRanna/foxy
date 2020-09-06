@@ -38,3 +38,26 @@ let searchGameObjectTemplates = ipcMain.on("SEARCH_GAME_OBJECT_TEMPLATES", (even
   });
   connection.end();
 });
+
+let countGameObjectTemplates = ipcMain.on("COUNT_GAME_OBJECT_TEMPLATES", (event, payload) => {
+  let sql =
+    "select count(*) as total from gameobject_template as gt left join gameobject_template_locale as gtl on gt.entry=gtl.entry and gtl.locale='zhCN'";
+  let where = "where 1=1";
+  if (payload.entry) {
+    where = `${where} and gt.entry like '%${payload.entry}%'`;
+  }
+  if (payload.name) {
+    where = `${where} and (gt.name like '%${payload.name}%' or gtl.name like '%${payload.name}%')`;
+  }
+  let connection = createConnection();
+  connection.connect();
+  connection.query(`${sql} ${where}`, (error, results) => {
+    if (error) {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    } else {
+      event.reply("COUNT_GAME_OBJECT_TEMPLATES_REPLY", results[0].total);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where}`);
+    }
+  });
+  connection.end();
+});
