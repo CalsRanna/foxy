@@ -5,7 +5,13 @@ import {
   SEARCH_CREATURE_TEMPLATES,
   COUNT_CREATURE_TEMPLATES,
   PAGINATE_CREATURE_TEMPLATES,
-  FIND_ITEM_TEMPLATE
+  FIND_CREATURE_TEMPLATE,
+  SEARCH_CREATURE_TEMPLATE_LOCALES,
+  FIND_CREATURE_TEMPLATE_ADDON,
+  FIND_CREATURE_ONKILL_REPUTATION,
+  SEARCH_CREATURE_EQUIP_TEMPLATES,
+  SEARCH_NPC_VENDORS,
+  SEARCH_NPC_TRAINERS
 } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
@@ -18,16 +24,22 @@ export default {
     page: 1,
     total: 0,
     creatureTemplates: [],
-    creatureTemplate: undefined
+    creatureTemplate: {},
+    creatureTemplateLocales: [],
+    creatureTemplateAddon: {},
+    creatureOnKillReputation: {},
+    creatureEquipTemplates: [],
+    npcVendors: [],
+    npcTrainers: []
   }),
   actions: {
-    async search({ commit }, payload) {
+    search({ commit }, payload) {
       ipcRenderer.on("SEARCH_CREATURE_TEMPLATES_REPLY", (event, response) => {
         commit(SEARCH_CREATURE_TEMPLATES, response);
       });
       ipcRenderer.send("SEARCH_CREATURE_TEMPLATES", payload);
     },
-    async count({ commit }, payload) {
+    count({ commit }, payload) {
       ipcRenderer.on("COUNT_CREATURE_TEMPLATES_REPLY", (event, response) => {
         commit(COUNT_CREATURE_TEMPLATES, response);
       });
@@ -35,9 +47,45 @@ export default {
     },
     find({ commit }, payload) {
       ipcRenderer.on("FIND_CREATURE_TEMPLATE_REPLY", (event, response) => {
-        commit(FIND_ITEM_TEMPLATE, response);
+        commit(FIND_CREATURE_TEMPLATE, response);
       });
       ipcRenderer.send("FIND_CREATURE_TEMPLATE", payload);
+    },
+    searchCreatureTemplateLocales({ commit }, payload) {
+      ipcRenderer.on("SEARCH_CREATURE_TEMPLATE_LOCALES_REPLY", (event, response) => {
+        commit(SEARCH_CREATURE_TEMPLATE_LOCALES, response);
+      });
+      ipcRenderer.send("SEARCH_CREATURE_TEMPLATE_LOCALES", payload);
+    },
+    findCreatureTemplateAddon({commit}, payload) {
+      ipcRenderer.on("FIND_CREATURE_TEMPLATE_ADDON_REPLY", (event, response) => {
+        commit(FIND_CREATURE_TEMPLATE_ADDON, response);
+      });
+      ipcRenderer.send("FIND_CREATURE_TEMPLATE_ADDON", payload);
+    },
+    findCreatureOnKillReputation({commit}, payload) {
+      ipcRenderer.on("FIND_CREATURE_ONKILL_REPUTATION_REPLY", (event, response) => {
+        commit(FIND_CREATURE_ONKILL_REPUTATION, response);
+      });
+      ipcRenderer.send("FIND_CREATURE_ONKILL_REPUTATION", payload);
+    },
+    searchCreatureEquipTemplates({commit}, payload) {
+      ipcRenderer.on("SEARCH_CREATURE_EQUIP_TEMPLATES_REPLY", (event, response) => {
+        commit(SEARCH_CREATURE_EQUIP_TEMPLATES, response);
+      });
+      ipcRenderer.send("SEARCH_CREATURE_EQUIP_TEMPLATES", payload);
+    },
+    searchNpcVendors({commit}, payload) {
+      ipcRenderer.on("SEARCH_NPC_VENDORS_REPLY", (event, response) => {
+        commit(SEARCH_NPC_VENDORS, response);
+      });
+      ipcRenderer.send("SEARCH_NPC_VENDORS", payload);
+    },
+    searchNpcTrainers({commit}, payload) {
+      ipcRenderer.on("SEARCH_NPC_TRAINERS_REPLY", (event, response) => {
+        commit(SEARCH_NPC_TRAINERS, response);
+      });
+      ipcRenderer.send("SEARCH_NPC_TRAINERS", payload);
     }
   },
   mutations: {
@@ -59,8 +107,26 @@ export default {
     [PAGINATE_CREATURE_TEMPLATES](state, page) {
       state.page = page;
     },
-    [FIND_ITEM_TEMPLATE](state, creatureTemplate) {
+    [FIND_CREATURE_TEMPLATE](state, creatureTemplate) {
       state.creatureTemplate = creatureTemplate;
+    },
+    [SEARCH_CREATURE_TEMPLATE_LOCALES](state, creatureTemplateLocales) {
+      state.creatureTemplateLocales = creatureTemplateLocales;
+    },
+    [FIND_CREATURE_TEMPLATE_ADDON](state, creatureTemplateAddon) {
+      state.creatureTemplateAddon = creatureTemplateAddon;
+    },
+    [FIND_CREATURE_ONKILL_REPUTATION](state, creatureOnKillReputation) {
+      state.creatureOnKillReputation = creatureOnKillReputation;
+    },
+    [SEARCH_CREATURE_EQUIP_TEMPLATES](state, creatureEquipTemplates) {
+      state.creatureEquipTemplates = creatureEquipTemplates;
+    },
+    [SEARCH_NPC_VENDORS](state, npcVendors) {
+      state.npcVendors = npcVendors;
+    },
+    [SEARCH_NPC_TRAINERS](state, npcTrainers) {
+      state.npcTrainers = npcTrainers;
     }
   }
 };

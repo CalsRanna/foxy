@@ -59,9 +59,10 @@ let countCreatureTemplates = ipcMain.on("COUNT_CREATURE_TEMPLATES", (event, payl
   connection.connect();
   connection.query(`${sql} ${where}`, (error, results) => {
     if (error) {
-      console.log(error);
+      event.reply("UPDATE_MESSAGE_REPLY", error);
     } else {
       event.reply("COUNT_CREATURE_TEMPLATES_REPLY", results[0].total);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where}`);
     }
   });
   connection.end();
@@ -73,9 +74,112 @@ let findCreatureTemplate = ipcMain.on("FIND_CREATURE_TEMPLATE", (event, payload)
   connection.connect();
   connection.query(sql, (error, results) => {
     if (error) {
-      console.log(error);
+      event.reply("UPDATE_MESSAGE_REPLY", error);
     } else {
-      event.reply("FIND_CREATURE_TEMPLATE_REPLY", results[0]);
+      if (results.length > 0) {
+        event.reply("FIND_CREATURE_TEMPLATE_REPLY", results[0]);
+      } else {
+        event.reply("FIND_CREATURE_TEMPLATE_REPLY", {});
+      }
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    }
+  });
+  connection.end();
+});
+
+let searchCreatureTemplateLocales = ipcMain.on("SEARCH_CREATURE_TEMPLATE_LOCALES", (event, payload) => {
+  let sql = `select * from creature_template_locale where entry = ${payload.entry}`;
+  let connection = createConnection();
+  connection.connect();
+  connection.query(sql, (error, results) => {
+    if (error) {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    } else {
+      event.reply("SEARCH_CREATURE_TEMPLATE_LOCALES_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    }
+  });
+  connection.end();
+});
+
+let findCreatureTemplateAddon = ipcMain.on("FIND_CREATURE_TEMPLATE_ADDON", (event, payload) => {
+  let sql = `select * from creature_template_addon where entry = ${payload.entry}`;
+  let connection = createConnection();
+  connection.connect();
+  connection.query(sql, (error, results) => {
+    if (error) {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    } else {
+      if (results.length > 0) {
+        event.reply("FIND_CREATURE_TEMPLATE_ADDON_REPLY", results[0]);
+      } else {
+        event.reply("FIND_CREATURE_TEMPLATE_ADDON_REPLY", {});
+      }
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    }
+  });
+  connection.end();
+});
+
+let findCreatureOnKillReputation = ipcMain.on("FIND_CREATURE_ONKILL_REPUTATION", (event, payload) => {
+  let sql = `select * from creature_onkill_reputation where creature_id = ${payload.creatureId}`;
+  let connection = createConnection();
+  connection.connect();
+  connection.query(sql, (error, results) => {
+    if (error) {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    } else {
+      if (results.length > 0) {
+        event.reply("FIND_CREATURE_ONKILL_REPUTATION_REPLY", results[0]);
+      } else {
+        event.reply("FIND_CREATURE_ONKILL_REPUTATION_REPLY", {});
+      }
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    }
+  });
+  connection.end();
+});
+
+let searchCreatureEquipTemplates = ipcMain.on("SEARCH_CREATURE_EQUIP_TEMPLATES", (event, payload) => {
+  let sql = `select cet.*, it1.displayid as displayid1, it1.name as name1, itl1.Name as Name1, it2.displayid as displayid2, it2.name as name2, itl2.Name as Name2, it3.displayid as displayid3, it3.name as name3, itl3.Name as Name3 from creature_equip_template as cet left join item_template as it1 on cet.ItemID1 = it1.entry left join item_template_locale as itl1 on cet.ItemID1 = itl1.ID and itl1.locale = 'zhCN' left join item_template as it2 on cet.ItemID2 = it2.entry left join item_template_locale as itl2 on cet.ItemID2 = itl2.ID and itl2.locale = 'zhCN' left join item_template as it3 on cet.ItemID3 = it3.entry left join item_template_locale as itl3 on cet.ItemID3 = itl3.ID and itl3.locale = 'zhCN' where cet.CreatureID = ${payload.creatureId}`;
+  let connection = createConnection();
+  connection.connect();
+  connection.query(sql, (error, results) => {
+    if (error) {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    } else {
+      event.reply("SEARCH_CREATURE_EQUIP_TEMPLATES_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    }
+  });
+  connection.end();
+});
+
+let searchNpcVendors = ipcMain.on("SEARCH_NPC_VENDORS", (event, payload) => {
+  let sql = `select nv.*, it.displayid, it.name, itl.Name from npc_vendor as nv left join item_template as it on nv.item = it.entry left join item_template_locale as itl on nv.item = itl.ID and itl.locale='zhCN' where nv.entry = ${payload.entry}`;
+  let connection = createConnection();
+  connection.connect();
+  connection.query(sql, (error, results) => {
+    if (error) {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    } else {
+      event.reply("SEARCH_NPC_VENDORS_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    }
+  });
+  connection.end();
+});
+
+let searchNpcTrainers = ipcMain.on("SEARCH_NPC_TRAINERS", (event, payload) => {
+  let sql = `select * from npc_trainer where ID = ${payload.id}`;
+  let connection = createConnection();
+  connection.connect();
+  connection.query(sql, (error, results) => {
+    if (error) {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    } else {
+      event.reply("SEARCH_NPC_TRAINERS_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
     }
   });
   connection.end();
@@ -87,9 +191,10 @@ let maxIdOfCreatureTemplate = ipcMain.on("CREATURE_TEMPLATE_MAX_ID", (event, pay
   connection.connect();
   connection.query(sql, (error, results) => {
     if (error) {
-      console.log(error);
+      event.reply("UPDATE_MESSAGE_REPLY", error);
     } else {
       event.reply("CREATURE_TEMPLATE_MAX_ID_REPLY", results[0].entry);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
     }
   });
   connection.end();
