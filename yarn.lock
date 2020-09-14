@@ -9667,6 +9667,11 @@ vuex@^3.4.0:
   resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.5.1.tgz?cache=0&sync_timestamp=1593472529168&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-3.5.1.tgz#f1b8dcea649bc25254cf4f4358081dbf5da18b3d"
   integrity sha1-8bjc6mSbwlJUz09DWAgdv12hiz0=
 
+warcrafty@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/warcrafty/-/warcrafty-1.0.0.tgz#8e402034731129452ce071cfa8a7aa90ddc407f2"
+  integrity sha512-O+L3hWGDkjkg1P73CGLY8K4h9b5JmOdvAGi4T3mgTg3tDxvPlF8ovRS38Ovs7zXuPqEWX55dLsbHELVXzBTgVw==
+
 watchpack-chokidar2@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/watchpack-chokidar2/download/watchpack-chokidar2-2.0.0.tgz#9948a1866cbbd6cb824dea13a7ed691f6c8ddff0"

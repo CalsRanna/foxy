@@ -31,14 +31,16 @@
 
 <script>
 const ipcRenderer = window.require("electron").ipcRenderer;
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import * as types from "@/store/MUTATION_TYPES";
 
 export default {
   computed: {
-    ...mapState("global", ["debug", "active"])
+    ...mapState("global", ["debug", "active"]),
+    ...mapState("dbc", ["factions", "factionTemplates", "itemDisplayInfos"])
   },
   methods: {
+    ...mapActions("dbc", ["searchDbcFactions", "searchDbcFactionTemplates", "searchDbcItemDisplayInfos"]),
     ...mapMutations("global", {
       setActive: types.SET_ACTIVE
     }),
@@ -58,6 +60,9 @@ export default {
         });
       });
     }
+    this.searchDbcFactions();
+    this.searchDbcFactionTemplates();
+    this.searchDbcItemDisplayInfos();
   }
 };
 </script>

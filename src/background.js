@@ -3,6 +3,7 @@
 import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
+import dbc from "./background/dbc.js";
 import creature from "./background/creature.js";
 import gameObject from "./background/gameObject.js";
 import item from "./background/item.js";
