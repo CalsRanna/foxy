@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import global from "./global";
+import dbc from "./dbc";
 import creature from "./creature";
 import gameObject from "./gameObject";
 import item from "./item";
@@ -13,6 +14,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     global,
+    dbc,
     creature,
     gameObject,
     item,

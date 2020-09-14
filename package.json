@@ -18,7 +18,8 @@
     "mysql2": "^2.1.0",
     "vue": "^2.6.12",
     "vue-router": "^3.4.3",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "warcrafty": "^1.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.4",
