@@ -1,4 +1,5 @@
 import { ipcMain } from "electron";
+
 // import { mysql } from "mysql2";
 const mysql = require("mysql2");
 
@@ -9,6 +10,46 @@ let createConnection = () =>
     password: "acore",
     database: "acore_world"
   });
+
+let find = entry => {
+  return new Promise((resolve, reject) => {
+    let sql = `select * from creature_template where entry = ${entry}`;
+    let connection = createConnection();
+    connection.connect();
+    connection.query(sql, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        let creatureTemplate = {};
+        if (results.length > 0) {
+          creatureTemplate = results[0];
+        }
+        resolve(creatureTemplate, sql);
+      }
+    });
+    connection.end();
+  });
+};
+
+let maxEntry = () => {
+  return new Promise((resolve, reject) => {
+    let sql = "select entry from creature_template order by entry desc";
+    let connection = createConnection();
+    connection.connect();
+    connection.query(sql, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        let entry = 0;
+        if (results.length > 0) {
+          entry = results[0].entry;
+        }
+        resolve(entry, sql);
+      }
+    });
+    connection.end();
+  });
+};
 
 let searchCreatureTemplates = ipcMain.on("SEARCH_CREATURE_TEMPLATES", (event, payload) => {
   let sql =
@@ -85,6 +126,80 @@ let findCreatureTemplate = ipcMain.on("FIND_CREATURE_TEMPLATE", (event, payload)
     }
   });
   connection.end();
+});
+
+let destroyCreatureTemplate = ipcMain.on("DESTROY_CREATURE_TEMPLATE", (event, payload) => {
+  let sql = `delete from creature_template where entry = ${payload.entry}`;
+  let connection = createConnection();
+  connection.connect();
+  connection.query(sql, (error, results) => {
+    if (error) {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    } else {
+      event.reply("DESTROY_CREATURE_TEMPLATE_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", {
+        category: "notification",
+        title: "成功",
+        message: `删除成功。`,
+        type: "success"
+      });
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    }
+  });
+  connection.end();
+});
+
+let copyCreatureTemplate = ipcMain.on("COPY_CREATURE_TEMPLATE", (event, payload) => {
+  let entry = 1;
+  let origin = {};
+  Promise.all([
+    maxEntry()
+      .then((id, sql) => {
+        entry = id + 1;
+      })
+      .catch(error => {}),
+    find(payload.entry)
+      .then((creatureTemplate, sql) => {
+        origin = creatureTemplate;
+      })
+      .catch(error => {})
+  ]).then(() => {
+    origin.entry = entry;
+    let values = Object.values(origin);
+    let string = "";
+    for (let value of values) {
+      if (value === null) {
+        string = `${string},null`;
+      } else {
+        if (typeof value === "string") {
+          string = `${string},"${value}"`;
+        } else {
+          string = `${string},${value}`;
+        }
+      }
+    }
+    string = string.substring(1, string.length);
+    let sql = `insert into creature_template values (${string})`;
+
+    let connection = createConnection();
+    connection.connect();
+    connection.query(sql, (error, results) => {
+      if (error) {
+        console.log(sql);
+        event.reply("UPDATE_MESSAGE_REPLY", error);
+      } else {
+        event.reply("COPY_CREATURE_TEMPLATE_REPLY", results);
+        event.reply("UPDATE_MESSAGE_REPLY", {
+          category: "notification",
+          title: "成功",
+          message: `复制成功，新生物模板 entry 为 ${entry}`,
+          type: "success"
+        });
+        event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      }
+    });
+    connection.end();
+  });
 });
 
 let searchCreatureTemplateLocales = ipcMain.on("SEARCH_CREATURE_TEMPLATE_LOCALES", (event, payload) => {
@@ -204,5 +319,7 @@ export default {
   searchCreatureTemplates,
   countCreatureTemplates,
   findCreatureTemplate,
+  destroyCreatureTemplate,
+  copyCreatureTemplate,
   maxIdOfCreatureTemplate
 };

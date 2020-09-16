@@ -413,9 +413,6 @@
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <h1>Model</h1>
-              </el-col>
-              <el-col :span="6">
                 <el-form-item label="模型1">
                   <el-input v-model="creatureTemplate.modelid1" placeholder="modelid1"></el-input>
                 </el-form-item>
@@ -868,6 +865,10 @@
               </el-col>
             </el-row>
           </el-card>
+          <el-card v-loading="loading" style="margin-top: 16px">
+            <el-button type="primary" @click="storeCreatureTemplate">保存</el-button>
+            <el-button>返回</el-button>
+          </el-card>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="击杀声望" name="creature_onkill_reputation" lazy v-loading="loading">
@@ -943,8 +944,18 @@
             </el-row>
           </el-form>
         </el-card>
+        <el-card v-loading="loading" style="margin-top: 16px">
+          <el-button type="primary" @click="storeCreatureTemplate">保存</el-button>
+          <el-button>返回</el-button>
+        </el-card>
       </el-tab-pane>
       <el-tab-pane label="装备模板" name="creature_equip_template" lazy v-loading="loading">
+        <el-card style="margin-top: 16px;">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button disabled>修改</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="creatureEquipTemplates">
             <el-table-column prop="ID" label="ID"></el-table-column>
@@ -1013,6 +1024,12 @@
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="商人" name="npc_vendor" lazy v-loading="loading">
+        <el-card style="margin-top: 16px;">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button disabled>修改</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="npcVendors">
             <el-table-column prop="slot" label="插槽" sortable></el-table-column>
@@ -1059,6 +1076,12 @@
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="训练师" name="npc_trainer" lazy v-loading="loading">
+        <el-card style="margin-top: 16px;">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button disabled>修改</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="npcTrainers">
             <el-table-column prop="SpellID" label="技能ID" sortable>
@@ -1080,6 +1103,12 @@
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="任务物品" name="creature_questitem" lazy v-loading="loading">
+        <el-card style="margin-top: 16px;">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button disabled>修改</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="creatureQuestItems">
             <el-table-column prop="displayid"></el-table-column>
@@ -1095,6 +1124,12 @@
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="生物掉落" name="creature_loot_template" lazy v-loading="loading">
+        <el-card style="margin-top: 16px;">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button disabled>修改</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="creatureLootTemplates">
             <el-table-column prop="displayid"></el-table-column>
@@ -1125,6 +1160,12 @@
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="偷窃掉落" name="pickpocketing_loot_template" lazy v-loading="loading">
+        <el-card style="margin-top: 16px;">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button disabled>修改</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="pickpocketingLootTemplates">
             <el-table-column prop="displayid"></el-table-column>
@@ -1155,6 +1196,12 @@
         </el-card>
       </el-tab-pane>
       <el-tab-pane label="剥皮掉落" name="skinning_loot_template">
+        <el-card style="margin-top: 16px;">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button disabled>修改</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="skinningLootTemplates">
             <el-table-column prop="displayid"></el-table-column>
@@ -1284,7 +1331,7 @@ export default {
       "creatureOnKillReputation",
       "creatureEquipTemplates",
       "npcVendors",
-      'npcTrainers'
+      "npcTrainers"
     ]),
     localeName() {
       if (this.creatureTemplateLocales.length > 0) {
@@ -1315,7 +1362,7 @@ export default {
   },
   methods: {
     ...mapActions("creature", [
-      "find",
+      "findCreatureTemplate",
       "searchCreatureTemplateLocales",
       "findCreatureTemplateAddon",
       "findCreatureOnKillReputation",
@@ -1390,7 +1437,7 @@ export default {
     async init() {
       this.loading = true;
       let id = this.$route.params.id;
-      await Promise.all([this.find({ entry: id }), this.searchCreatureTemplateLocales({ entry: id })]);
+      await Promise.all([this.findCreatureTemplate({ entry: id }), this.searchCreatureTemplateLocales({ entry: id })]);
       this.loading = false;
     }
   },
