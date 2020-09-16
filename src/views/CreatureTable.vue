@@ -33,21 +33,26 @@
     </el-card>
     <el-card style="margin-top: 16px;">
       <el-button type="primary" @click="create">新增</el-button>
-      <el-button disabled>复制</el-button>
-      <el-button disabled>修改</el-button>
-      <el-button type="danger" disabled>删除</el-button>
+      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
     </el-card>
     <el-card v-loading="loading" style="margin-top: 16px;">
       <el-pagination
         layout="prev, pager, next"
         :current-page="page"
         :total="total"
-        :page-size="pageSize"
+        :page-size="size"
         hide-on-single-page
         @current-change="handlePaginate"
         style="margin-bottom: 16px"
       ></el-pagination>
-      <el-table :data="creatureTemplates" @row-dblclick="show">
+      <el-table
+        ref="creatureTable"
+        :data="creatureTemplates"
+        highlight-current-row
+        @current-change="select"
+        @row-dblclick="show"
+      >
         <el-table-column prop="entry" label="ID" sortable></el-table-column>
         <el-table-column label="姓名" sortable>
           <template slot-scope="scope">
@@ -68,7 +73,7 @@
         layout="prev, pager, next"
         :current-page="page"
         :total="total"
-        :page-size="pageSize"
+        :page-size="size"
         hide-on-single-page
         @current-change="handlePaginate"
         style="margin-top: 16px"
@@ -88,15 +93,11 @@ export default {
       entry: undefined,
       name: "",
       subname: "",
-      pageSize: 50
+      currentRow: undefined
     };
   },
   computed: {
-    ...mapState("creature", {
-      page: "page",
-      total: "total",
-      creatureTemplates: "creatureTemplates"
-    }),
+    ...mapState("creature", ["page", "total", "size", "creatureTemplates"]),
     payload() {
       return {
         entry: this.entry,
@@ -104,10 +105,18 @@ export default {
         subname: this.subname,
         page: this.page
       };
+    },
+    disabled() {
+      return this.currentRow === undefined || this.currentRow === null ? true : false;
     }
   },
   methods: {
-    ...mapActions("creature", ["search", "count"]),
+    ...mapActions("creature", {
+      search: "searchCreatureTemplates",
+      count: "countCreatureTemplates",
+      copy: "copyCreatureTemplate",
+      destroy: "destroyCreatureTemplate"
+    }),
     ...mapMutations("creature", { paginate: types.PAGINATE_CREATURE_TEMPLATES }),
     async handleSearch() {
       this.loading = true;
@@ -122,6 +131,46 @@ export default {
     },
     create() {
       this.$router.push("/creature/create");
+    },
+    handleCopy() {
+      this.$confirm("是否复制关联表数据？", "提示", {
+        confirmButtonText: "是",
+        cancelButtonText: "否",
+        type: "info"
+      })
+        .then(() => {
+          this.$notify({
+            title: "警告",
+            message: "暂未实现相关代码",
+            type: "warning"
+          });
+        })
+        .catch(async () => {
+          this.copy({ entry: this.currentRow.entry }).then(() => {
+            Promise.all([this.search(this.payload), this.count(this.payload)]);
+          });
+        });
+    },
+    handleDestroy() {
+      this.$confirm(
+        "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "error",
+          dangerouslyUseHTMLString: true
+        }
+      )
+        .then(() => {
+          this.destroy({ entry: this.currentRow.entry }).then(() => {
+            Promise.all([this.search(this.payload), this.count(this.payload)]);
+          });
+        })
+        .catch(() => {});
+    },
+    select(currentRow) {
+      this.currentRow = currentRow;
     },
     show(row) {
       this.$router.push(`/creature/${row.entry}`);

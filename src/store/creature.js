@@ -23,6 +23,7 @@ export default {
     subname: undefined,
     page: 1,
     total: 0,
+    size: 50,
     creatureTemplates: [],
     creatureTemplate: {},
     creatureTemplateLocales: [],
@@ -33,23 +34,39 @@ export default {
     npcTrainers: []
   }),
   actions: {
-    search({ commit }, payload) {
+    searchCreatureTemplates({ commit }, payload) {
       ipcRenderer.on("SEARCH_CREATURE_TEMPLATES_REPLY", (event, response) => {
         commit(SEARCH_CREATURE_TEMPLATES, response);
       });
       ipcRenderer.send("SEARCH_CREATURE_TEMPLATES", payload);
     },
-    count({ commit }, payload) {
+    countCreatureTemplates({ commit }, payload) {
       ipcRenderer.on("COUNT_CREATURE_TEMPLATES_REPLY", (event, response) => {
         commit(COUNT_CREATURE_TEMPLATES, response);
       });
       ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
     },
-    find({ commit }, payload) {
+    findCreatureTemplate({ commit }, payload) {
       ipcRenderer.on("FIND_CREATURE_TEMPLATE_REPLY", (event, response) => {
         commit(FIND_CREATURE_TEMPLATE, response);
       });
       ipcRenderer.send("FIND_CREATURE_TEMPLATE", payload);
+    },
+    destroyCreatureTemplate(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.on("DESTROY_CREATURE_TEMPLATE_REPLY", (event, response) => {
+          resolve(response);
+        });
+        ipcRenderer.send("DESTROY_CREATURE_TEMPLATE", payload);
+      });
+    },
+    copyCreatureTemplate(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.on("COPY_CREATURE_TEMPLATE_REPLY", (event, response) => {
+          resolve(response);
+        });
+        ipcRenderer.send("COPY_CREATURE_TEMPLATE", payload);
+      });
     },
     searchCreatureTemplateLocales({ commit }, payload) {
       ipcRenderer.on("SEARCH_CREATURE_TEMPLATE_LOCALES_REPLY", (event, response) => {
@@ -57,31 +74,31 @@ export default {
       });
       ipcRenderer.send("SEARCH_CREATURE_TEMPLATE_LOCALES", payload);
     },
-    findCreatureTemplateAddon({commit}, payload) {
+    findCreatureTemplateAddon({ commit }, payload) {
       ipcRenderer.on("FIND_CREATURE_TEMPLATE_ADDON_REPLY", (event, response) => {
         commit(FIND_CREATURE_TEMPLATE_ADDON, response);
       });
       ipcRenderer.send("FIND_CREATURE_TEMPLATE_ADDON", payload);
     },
-    findCreatureOnKillReputation({commit}, payload) {
+    findCreatureOnKillReputation({ commit }, payload) {
       ipcRenderer.on("FIND_CREATURE_ONKILL_REPUTATION_REPLY", (event, response) => {
         commit(FIND_CREATURE_ONKILL_REPUTATION, response);
       });
       ipcRenderer.send("FIND_CREATURE_ONKILL_REPUTATION", payload);
     },
-    searchCreatureEquipTemplates({commit}, payload) {
+    searchCreatureEquipTemplates({ commit }, payload) {
       ipcRenderer.on("SEARCH_CREATURE_EQUIP_TEMPLATES_REPLY", (event, response) => {
         commit(SEARCH_CREATURE_EQUIP_TEMPLATES, response);
       });
       ipcRenderer.send("SEARCH_CREATURE_EQUIP_TEMPLATES", payload);
     },
-    searchNpcVendors({commit}, payload) {
+    searchNpcVendors({ commit }, payload) {
       ipcRenderer.on("SEARCH_NPC_VENDORS_REPLY", (event, response) => {
         commit(SEARCH_NPC_VENDORS, response);
       });
       ipcRenderer.send("SEARCH_NPC_VENDORS", payload);
     },
-    searchNpcTrainers({commit}, payload) {
+    searchNpcTrainers({ commit }, payload) {
       ipcRenderer.on("SEARCH_NPC_TRAINERS_REPLY", (event, response) => {
         commit(SEARCH_NPC_TRAINERS, response);
       });

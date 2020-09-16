@@ -25,7 +25,6 @@
     <el-main style="margin-left: 200px">
       <router-view></router-view>
     </el-main>
-    <el-backtop target=".el-container"></el-backtop>
   </el-container>
 </template>
 
@@ -45,24 +44,30 @@ export default {
       setActive: types.SET_ACTIVE
     }),
     navigate(index) {
-      this.$message({
-        message: index
-      });
       this.$router.push(`/${index}`).catch(error => error);
       this.setActive(index);
     }
   },
   created() {
-    if (this.debug) {
-      ipcRenderer.on("UPDATE_MESSAGE_REPLY", (event, response) => {
-        this.$message({
-          message: response
+    ipcRenderer.on("UPDATE_MESSAGE_REPLY", (event, response) => {
+      if (response.category === "notification") {
+        this.$notify({
+          title: response.title,
+          message: response.message,
+          type: response.type
         });
-      });
-    }
+      } else {
+        if (this.debug) {
+          this.$message({
+            message: response
+          });
+        }
+      }
+    });
+
     this.searchDbcFactions();
     this.searchDbcFactionTemplates();
-    this.searchDbcItemDisplayInfos();
+    // this.searchDbcItemDisplayInfos();
   }
 };
 </script>

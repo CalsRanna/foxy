@@ -5440,6 +5440,11 @@ ipaddr.js@1.9.1, ipaddr.js@^1.9.0:
   resolved "https://registry.npm.taobao.org/ipaddr.js/download/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha1-v/OFQ+64mEglB5/zoqjmy9RngbM=
 
+ipc2promise@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ipc2promise/-/ipc2promise-1.1.0.tgz#b9a40e4e12dd41c58168cebd9c6b6266e1970828"
+  integrity sha512-LES5r/4zZ3ECtk2CmNbSkZcHYLs+vE3aq9R7hLFkFNvJop0fZsFFHqAUUW2+GVZWvSlb97ewzyji8rkKsS9qKw==
+
 is-absolute-url@^2.0.0:
   version "2.1.0"
   resolved "https://registry.npm.taobao.org/is-absolute-url/download/is-absolute-url-2.1.0.tgz#50530dfb84fcc9aa7dbe7852e83a37b93b9f2aa6"
