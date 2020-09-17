@@ -8,6 +8,15 @@ export default {
     factionTemplates: [],
     itemDisplayInfos: []
   }),
+  getters: {
+    itemIcons: state => {
+      let icons = {};
+      for (let record of state.itemDisplayInfos.records) {
+        icons[record["id"]] = record["inventoryIcon1"];
+      }
+      return icons;
+    }
+  },
   actions: {
     searchDbcFactions({ commit }) {
       ipcRenderer.on("SEARCH_DBC_FACTIONS_REPLY", (event, response) => {

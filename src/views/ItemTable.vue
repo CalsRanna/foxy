@@ -140,7 +140,7 @@
         <el-table-column width="43px" class-name="icon-height">
           <template slot-scope="scope">
             <el-image
-              :src="`/icons/${icons[scope.row.displayid]}`"
+              :src="`/icons/${icons[scope.row.displayid]}.png`"
               style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
             >
               <el-image
@@ -195,17 +195,14 @@
 </style>
 
 <script>
-import icons from "@/libs/icons";
-
 import { colors, localeClasses, localeSubclasses, localeInventoryTypes } from "../locales/item.js";
 
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import * as types from "@/store/MUTATION_TYPES";
 
 export default {
   data() {
     return {
-      icons: icons,
       colors: colors,
       localeClasses: localeClasses,
       localeSubclasses: localeSubclasses,
@@ -227,6 +224,7 @@ export default {
       total: state => state.total,
       itemTemplates: state => state.itemTemplates
     }),
+    ...mapGetters("dbc", { icons: "itemIcons" }),
     payload() {
       return {
         class: this.filter.class,

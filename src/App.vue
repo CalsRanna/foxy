@@ -20,6 +20,7 @@
         <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
         <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
         <el-menu-item index="smart-script"> 内建脚本 <small>SMART SCRIPT</small> </el-menu-item>
+        <el-menu-item index="setting"> 设置 <small>SETTING</small> </el-menu-item>
       </el-menu>
     </el-aside>
     <el-main style="margin-left: 200px">
@@ -35,7 +36,7 @@ import * as types from "@/store/MUTATION_TYPES";
 
 export default {
   computed: {
-    ...mapState("global", ["debug", "active"]),
+    ...mapState("global", ["active", "mysqlConfig", "developerConfig"]),
     ...mapState("dbc", ["factions", "factionTemplates", "itemDisplayInfos"])
   },
   methods: {
@@ -44,8 +45,8 @@ export default {
       setActive: types.SET_ACTIVE
     }),
     navigate(index) {
-      this.$router.push(`/${index}`).catch(error => error);
       this.setActive(index);
+      this.$router.push(`/${index}`).catch(error => error);
     }
   },
   created() {
@@ -57,17 +58,18 @@ export default {
           type: response.type
         });
       } else {
-        if (this.debug) {
+        if (this.developerConfig.debug) {
           this.$message({
             message: response
           });
         }
       }
     });
+    ipcRenderer.send("INIT_DATABASE_POOL", this.mysqlConfig);
 
     this.searchDbcFactions();
     this.searchDbcFactionTemplates();
-    // this.searchDbcItemDisplayInfos();
+    this.searchDbcItemDisplayInfos();
   }
 };
 </script>

@@ -25,6 +25,7 @@
                     :min="0"
                     controls-position="right"
                     placeholder="entry"
+                    :disabled="disabled"
                   ></el-input-number>
                 </el-form-item>
               </el-col>
@@ -152,9 +153,9 @@
                   <el-select v-model="creatureTemplate.rank" placeholder="rank">
                     <el-option label="普通" :value="0"></el-option>
                     <el-option label="精英" :value="1"></el-option>
+                    <el-option label="稀有" :value="4"></el-option>
                     <el-option label="稀有精英" :value="2"></el-option>
                     <el-option label="BOSS" :value="3"></el-option>
-                    <el-option label="稀有" :value="4"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -1037,7 +1038,7 @@
             <el-table-column width="43px" class-name="icon-height">
               <template slot-scope="scope">
                 <el-image
-                  :src="`/icons/${icons[scope.row.displayid]}`"
+                  :src="`/icons/${icons[scope.row.displayid]}.png`"
                   style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
                 >
                   <el-image
@@ -1288,7 +1289,6 @@
 </template>
 
 <script>
-import icons from "@/libs/icons";
 import FlagEditor from "@/components/FlagEditor";
 import {
   npcFlags,
@@ -1301,18 +1301,18 @@ import {
   dmgSchools
 } from "@/locales/creature";
 
-import { mapState, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
   data() {
     return {
       loading: false,
+      isCreating: true,
       creatureLootTemplates: [],
       creatureQuestItems: [],
       pickpocketingLootTemplates: [],
       skinningLootTemplates: [],
       localeDialogVisible: false,
-      icons: icons,
       npcFlags: npcFlags,
       typeFlags: typeFlags,
       unitFlags: unitFlags,
@@ -1333,6 +1333,7 @@ export default {
       "npcVendors",
       "npcTrainers"
     ]),
+    ...mapGetters("dbc", { icons: "itemIcons" }),
     localeName() {
       if (this.creatureTemplateLocales.length > 0) {
         let name = undefined;
@@ -1358,6 +1359,9 @@ export default {
       } else {
         return this.creatureTemplate.subname;
       }
+    },
+    disabled() {
+      return !this.isCreating;
     }
   },
   methods: {
@@ -1437,7 +1441,13 @@ export default {
     async init() {
       this.loading = true;
       let id = this.$route.params.id;
-      await Promise.all([this.findCreatureTemplate({ entry: id }), this.searchCreatureTemplateLocales({ entry: id })]);
+      if (id !== null || id !== undefined) {
+        this.isCreating = false;
+        await Promise.all([
+          this.findCreatureTemplate({ entry: id }),
+          this.searchCreatureTemplateLocales({ entry: id })
+        ]);
+      }
       this.loading = false;
     }
   },
