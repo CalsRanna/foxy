@@ -165,32 +165,40 @@ ipcMain.on("COPY_CREATURE_TEMPLATE", (event, payload) => {
       .then((id, sql) => {
         entry = id + 1;
       })
-      .catch(error => {}),
+      .catch(error => {
+        event.reply("UPDATE_MESSAGE_REPLY", error);
+      }),
     find(payload)
       .then((creatureTemplate, sql) => {
         origin = creatureTemplate;
       })
-      .catch(error => {})
-  ]).then(() => {
-    origin.entry = entry;
-    let sql = `insert into creature_template values (${objectToSql(origin)})`;
-
-    connection
-      .query(`${sql}`)
-      .then(results => {
-        event.reply("COPY_CREATURE_TEMPLATE_REPLY", results);
-        event.reply("UPDATE_MESSAGE_REPLY", {
-          category: "notification",
-          title: "成功",
-          message: `复制成功，新的生物模板 entry 为 ${entry}`,
-          type: "success"
-        });
-        event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
-      })
       .catch(error => {
         event.reply("UPDATE_MESSAGE_REPLY", error);
-      });
-  });
+      })
+  ])
+    .then(() => {
+      origin.entry = entry;
+      let sql = `insert into creature_template values (${objectToSql(origin)})`;
+
+      connection
+        .query(`${sql}`)
+        .then(results => {
+          event.reply("COPY_CREATURE_TEMPLATE_REPLY", results);
+          event.reply("UPDATE_MESSAGE_REPLY", {
+            category: "notification",
+            title: "成功",
+            message: `复制成功，新的生物模板 entry 为 ${entry}`,
+            type: "success"
+          });
+          event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+        })
+        .catch(error => {
+          event.reply("UPDATE_MESSAGE_REPLY", error);
+        });
+    })
+    .catch(error => {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    });
 });
 
 // 搜索满足条件的本地化生物模板

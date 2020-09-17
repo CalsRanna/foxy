@@ -79,15 +79,12 @@
 </template>
 
 <script>
-import icons from "@/libs/icons";
-
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import * as TYPES from "@/store/MUTATION_TYPES";
 
 export default {
   data() {
     return {
-      icons: icons,
       loading: false,
       entry: undefined,
       name: undefined
@@ -95,13 +92,14 @@ export default {
   },
   computed: {
     ...mapState("gameObject", ["gameObjectTemplates", "page", "total"]),
+    ...mapGetters("dbc", { icons: "itemIcons" }),
     payload() {
       return { entry: this.entry, name: this.name, page: this.page };
     }
   },
   methods: {
     ...mapActions("gameObject", ["search", "count"]),
-    ...mapMutations("gameObject", {paginate: TYPES.PAGINATE_GAME_OBJECT_TEMPLATES}),
+    ...mapMutations("gameObject", { paginate: TYPES.PAGINATE_GAME_OBJECT_TEMPLATES }),
     async handleSearch() {
       this.loading = true;
       this.paginate(1); //每次搜索时使分页器设为第一页
