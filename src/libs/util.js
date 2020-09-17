@@ -1,5 +1,5 @@
 exports.objectToSql = object => {
-  let values = Object.values(payload);
+  let values = Object.values(object);
   let sql = "";
   for (let value of values) {
     if (value === null) {

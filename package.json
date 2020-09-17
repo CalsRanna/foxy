@@ -55,13 +55,5 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "build": {
-    "appId": "xyz.calsranna.foxy",
-    "win": {
-      "target": [
-        "portable"
-      ]
-    }
-  }
+  ]
 }
