@@ -23,6 +23,10 @@
 </template>
 
 <style scoped>
+.flag-editor {
+  max-height: 50vh;
+  overflow: auto;
+}
 .flag-editor tbody tr {
   cursor: pointer;
 }
