@@ -1,14 +1,15 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, ipcMain } from "electron";
+import { app, protocol, BrowserWindow, ipcMain, dialog } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
-import dbc from "./background/dbc.js";
-import creature from "./background/creature.js";
-import gameObject from "./background/gameObject.js";
-import item from "./background/item.js";
-import quest from "./background/quest.js";
-import smartScript from "./background/smartScript";
+import "./background/dbc.js";
+import "./background/creature.js";
+import "./background/gameObject.js";
+import "./background/item.js";
+import "./background/quest.js";
+import "./background/smartScript";
+import "./background/database";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -76,25 +77,10 @@ if (isDevelopment) {
   }
 }
 
-ipcMain.on("OPEN_SETTING_VIEW", event => {
-  let window = new BrowserWindow({
-    width: 800,
-    height: 600,
-    frame: false,
-    parent: win,
-    webPreferences: {
-      nodeIntegration: true
-    }
+ipcMain.on("SELECT_DBC_PATH", event => {
+  dialog.showOpenDialog({ properties: ["openDirectory"] }).then(payload => {
+    event.reply("SELECT_DBC_PATH_REPLY", payload.filePaths[0]);
   });
-  window.on("closed", () => {
-    window = null;
-  });
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    win.loadURL(`${process.env.WEBPACK_DEV_SERVER_URL}/setting.html`);
-  } else {
-    createProtocol("app");
-    win.loadURL("app://./setting.html");
-  }
 });
 
 ipcMain.on("LOAD_ICONS", event => {
