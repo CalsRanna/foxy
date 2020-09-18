@@ -8,7 +8,7 @@
       <h3 style="margin: 16px 0 0 0">控制面板</h3>
     </el-card>
     <el-alert title="欢迎使用 Foxy ，一款开发中的魔兽世界编辑器。" type="info" style="margin-top: 16px;"> </el-alert>
-    <el-row :gutter="24" style="margin-top: 16px;">
+    <el-row :gutter="24" style="margin-top: 16px;" :loading="loading">
       <el-col :span="16">
         <el-row>
           <el-col :span="8">
@@ -144,6 +144,7 @@ import Chart from "@/components/Chart";
 export default {
   data() {
     return {
+      loading: false,
       labels: ["生物", "游戏对象", "物品", "任务", "内建脚本", "技能"]
     };
   },
@@ -175,11 +176,13 @@ export default {
       shell.openExternal(url);
     },
     async init() {
+      this.loading = true;
       await this.countCreatureTemplates({});
       await this.countGameObjectTemplates({});
       await this.countItemTemplates({});
       await this.countQuestTemplates({});
       await this.countSmartScript({});
+      this.loading = false;
     }
   },
   components: {

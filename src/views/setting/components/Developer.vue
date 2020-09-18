@@ -22,6 +22,11 @@ export default {
     ...mapMutations("global", { storeConfig: UPDATE_DEVELOPER_CONFIG }),
     store() {
       this.storeConfig(this.config);
+      this.$notify({
+        type: "success",
+        title: "成功",
+        message: "修改设置成功。"
+      });
     }
   }
 };

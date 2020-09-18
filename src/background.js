@@ -77,9 +77,24 @@ if (isDevelopment) {
   }
 }
 
+process.on("uncaughtException", error => {
+  win.webContents.send("UPDATE_MESSAGE_REPLY", {
+    category: "alert",
+    title: "未知错误",
+    message: `${error.stack}`,
+    type: "error"
+  });
+});
+
 ipcMain.on("SELECT_DBC_PATH", event => {
   dialog.showOpenDialog({ properties: ["openDirectory"] }).then(payload => {
     event.reply("SELECT_DBC_PATH_REPLY", payload.filePaths[0]);
+  });
+});
+
+ipcMain.on("SELECT_CONFIG_PATH", event => {
+  dialog.showOpenDialog({ properties: ["openDirectory"] }).then(payload => {
+    event.reply("SELECT_CONFIG_PATH_REPLY", payload.filePaths[0]);
   });
 });
 

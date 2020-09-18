@@ -8,6 +8,7 @@ import gameObject from "./gameObject";
 import item from "./item";
 import quest from "./quest";
 import smartScript from "./smartScript";
+import setting from "./setting";
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     gameObject,
     item,
     quest,
-    smartScript
+    smartScript,
+    setting
   }
 });
