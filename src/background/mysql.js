@@ -1,4 +1,4 @@
-let mysql = require("mysql2");
+let mysql = require("mysql");
 
 let pool;
 
@@ -34,9 +34,7 @@ exports.query = sql =>
         }
       });
       connection.release(error => {
-        if (error) {
-          console.log(error); //不再reject是因为查询已经结束
-        }
+        reject(error);
       });
     });
   });

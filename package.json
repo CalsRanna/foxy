@@ -1,5 +1,7 @@
 {
   "name": "foxy",
+  "description": "A wow editor useful and easy to use.",
+  "author": "Cals Ranna",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -16,7 +18,9 @@
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
+    "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
+    "terser-webpack-plugin": "^4.2.1",
     "vue": "^2.6.12",
     "vue-router": "^3.4.3",
     "vuex": "^3.4.0",

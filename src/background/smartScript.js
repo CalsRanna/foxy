@@ -1,6 +1,6 @@
-import {ipcMain} from 'electron';
+import { ipcMain } from "electron";
 
-const mysql = require("mysql2");
+const mysql = require("mysql");
 
 let createConnection = () =>
   mysql.createConnection({
@@ -40,8 +40,7 @@ let searchSmartScripts = ipcMain.on("SEARCH_SMART_SCRIPTS", (event, payload) => 
 });
 
 let countSmartScripts = ipcMain.on("COUNT_SMART_SCRIPTS", (event, payload) => {
-  let sql =
-    "select count(*) as total from smart_scripts as ss";
+  let sql = "select count(*) as total from smart_scripts as ss";
   let where = "where 1=1";
   if (payload.entryorguid) {
     where = `${where} and ss.entryorguid like '%${payload.entryorguid}%'`;

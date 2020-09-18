@@ -1,6 +1,7 @@
 import {
   UPDATE_MYSQL_CONFIG,
   UPDATE_DBC_CONFIG,
+  UPDATE_CONFIG_CONFIG,
   UPDATE_DEVELOPER_CONFIG,
   UPDATE_MESSAGE,
   SET_ACTIVE
@@ -15,14 +16,17 @@ export default {
     active: "dashboard",
     isAuth: false,
     mysqlConfig: {
-      host: "127.0.0.1",
-      port: 3306,
-      username: "acore",
-      password: "acore",
-      database: "acore_world",
+      host: "",
+      port: "",
+      username: "",
+      password: "",
+      database: "",
       limit: 10
     },
     dbcConfig: {
+      path: ""
+    },
+    configConfig: {
       path: ""
     },
     developerConfig: {
@@ -37,7 +41,7 @@ export default {
   }),
   mutations: {
     [UPDATE_MYSQL_CONFIG](state, config) {
-      this.mysqlConfig = config;
+      state.mysqlConfig = config;
 
       localStorage.setItem("host", config.host);
       localStorage.setItem("port", config.port);
@@ -49,12 +53,17 @@ export default {
       ipcRenderer.send("INIT_DATABASE_POOL", config);
     },
     [UPDATE_DBC_CONFIG](state, config) {
-      this.dbcConfig = config;
+      state.dbcConfig = config;
 
       localStorage.setItem("dbcPath", config.path);
     },
+    [UPDATE_CONFIG_CONFIG](state, config) {
+      state.configConfig = config;
+
+      localStorage.setItem("configPath", config.path);
+    },
     [UPDATE_DEVELOPER_CONFIG](state, config) {
-      this.developerConfig = config;
+      state.developerConfig = config;
 
       localStorage.setItem("debug", config.debug);
     },

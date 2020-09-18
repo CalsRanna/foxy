@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
 // import { mysql } from "mysql2";
-const mysql = require("mysql2");
+const mysql = require("mysql");
 
 let createConnection = () =>
   mysql.createConnection({

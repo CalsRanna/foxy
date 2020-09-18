@@ -1,7 +1,7 @@
 <template>
   <el-card>
     <el-form :model="config" label-width="160px" style="width: 50%">
-      <el-form-item label="Dbc 文件路径">
+      <el-form-item label="dbc 文件路径">
         <el-input v-model="config.path">
           <el-button slot="append" @click="selectPath">选择路径</el-button>
         </el-input>
@@ -32,7 +32,20 @@ export default {
       });
     },
     store() {
-      this.storeConfig(this.config);
+      if (this.config.path === "") {
+        this.$notify({
+          type: "error",
+          title: "失败",
+          message: "dbc 文件路径不能为空。"
+        });
+      } else {
+        this.storeConfig(this.config);
+        this.$notify({
+          type: "success",
+          title: "成功",
+          message: "修改设置成功。"
+        });
+      }
     }
   }
 };
