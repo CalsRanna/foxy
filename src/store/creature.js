@@ -11,7 +11,8 @@ import {
   FIND_CREATURE_ONKILL_REPUTATION,
   SEARCH_CREATURE_EQUIP_TEMPLATES,
   SEARCH_NPC_VENDORS,
-  SEARCH_NPC_TRAINERS
+  SEARCH_NPC_TRAINERS,
+  UPDATE_CREATURE_TEMPLATE
 } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
@@ -46,11 +47,36 @@ export default {
       });
       ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
     },
+    getMaxEntryOfCreatureTemplate() {
+      return new Promise(resolve => {
+        ipcRenderer.send("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE");
+        ipcRenderer.on("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE_REPLY", (event, response) => {
+          resolve(response);
+        });
+      });
+    },
+    storeCreatureTemplate(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send("STORE_CREATURE_TEMPLATE", payload);
+        ipcRenderer.on("STORE_CREATURE_TEMPLATE_REPLY", () => {
+          resolve();
+        });
+      });
+    },
     findCreatureTemplate({ commit }, payload) {
       ipcRenderer.on("FIND_CREATURE_TEMPLATE_REPLY", (event, response) => {
         commit(FIND_CREATURE_TEMPLATE, response);
       });
       ipcRenderer.send("FIND_CREATURE_TEMPLATE", payload);
+    },
+    updateCreatureTemplate({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send("UPDATE_CREATURE_TEMPLATE", payload);
+        ipcRenderer.on("UPDATE_CREATURE_TEMPLATE_REPLY", (event, response) => {
+          commit(UPDATE_CREATURE_TEMPLATE, response);
+          resolve();
+        });
+      });
     },
     destroyCreatureTemplate(context, payload) {
       return new Promise(resolve => {
@@ -125,6 +151,9 @@ export default {
       state.page = page;
     },
     [FIND_CREATURE_TEMPLATE](state, creatureTemplate) {
+      state.creatureTemplate = creatureTemplate;
+    },
+    [UPDATE_CREATURE_TEMPLATE](state, creatureTemplate) {
       state.creatureTemplate = creatureTemplate;
     },
     [SEARCH_CREATURE_TEMPLATE_LOCALES](state, creatureTemplateLocales) {

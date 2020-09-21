@@ -1289,7 +1289,6 @@
 </template>
 
 <script>
-import FlagEditor from "@/components/FlagEditor";
 import {
   npcFlags,
   typeFlags,
@@ -1302,6 +1301,8 @@ import {
 } from "@/locales/creature";
 
 import { mapState, mapGetters, mapActions } from "vuex";
+
+import FlagEditor from "@/components/FlagEditor";
 
 export default {
   data() {
@@ -1367,6 +1368,9 @@ export default {
   methods: {
     ...mapActions("creature", [
       "findCreatureTemplate",
+      "getMaxEntryOfCreatureTemplate",
+      "storeCreatureTemplate",
+      "updateCreatureTemplate",
       "searchCreatureTemplateLocales",
       "findCreatureTemplateAddon",
       "findCreatureOnKillReputation",
@@ -1441,7 +1445,12 @@ export default {
     async init() {
       this.loading = true;
       let id = this.$route.params.id;
-      if (id !== null || id !== undefined) {
+      let path = this.$route.path;
+      if (path === "/creature/create") {
+        this.findCreatureTemplate({ entry: 0 });
+        let maxEntry = await this.getMaxEntryOfCreatureTemplate();
+        this.creatureTemplate.entry = maxEntry + 1;
+      } else {
         this.isCreating = false;
         await Promise.all([
           this.findCreatureTemplate({ entry: id }),

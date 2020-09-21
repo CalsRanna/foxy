@@ -24,6 +24,7 @@ const routes = [
   { path: "/login", component: Login },
   { path: "/dashboard", component: Dashboard },
   { path: "/creature", component: CreatureTable },
+  { path: "/creature/create", component: CreatureTemplateDetail },
   { path: "/creature/:id", component: CreatureTemplateDetail },
   { path: "/game-object", component: GameObjectTable },
   { path: "/item", component: ItemTable },
