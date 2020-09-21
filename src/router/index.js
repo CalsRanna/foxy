@@ -1,16 +1,18 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import Login from "@/views/Login";
 import Dashboard from "@/views/Dashboard";
 import CreatureTable from "@/views/CreatureTable";
 import CreatureTemplateDetail from "@/views/CreatureTemplateDetail";
 import GameObjectTable from "@/views/GameObjectTable";
+import GameObjectDetail from "@/views/GameObjectDetail";
 import ItemTable from "@/views/ItemTable";
 import ItemTemplateDetail from "@/views/ItemTemplateDetail";
 import QuestTable from "@/views/QuestTable";
+import QuestDetail from "@/views/QuestDetail";
 import SpellTable from "@/views/SpellTable";
 import SmartScriptTable from "@/views/SmartScriptTable";
+import SmartScriptDetail from "@/views/SmartScriptDetail";
 import Setting from "@/views/setting/Setting";
 import Mysql from "@/views/setting/components/Mysql";
 import Dbc from "@/views/setting/components/Dbc";
@@ -21,17 +23,19 @@ Vue.use(VueRouter);
 
 const routes = [
   { path: "/", redirect: "/dashboard" },
-  { path: "/login", component: Login },
   { path: "/dashboard", component: Dashboard },
   { path: "/creature", component: CreatureTable },
   { path: "/creature/create", component: CreatureTemplateDetail },
   { path: "/creature/:id", component: CreatureTemplateDetail },
   { path: "/game-object", component: GameObjectTable },
+  { path: "/game-object/:id", component: GameObjectDetail },
   { path: "/item", component: ItemTable },
   { path: "/item/:id", component: ItemTemplateDetail },
   { path: "/quest", component: QuestTable },
+  { path: "/quest/:id", component: QuestDetail },
   { path: "/spell", component: SpellTable },
   { path: "/smart-script", component: SmartScriptTable },
+  { path: "/smart-script/:id", component: SmartScriptDetail },
   {
     path: "/setting",
     component: Setting,

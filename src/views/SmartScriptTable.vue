@@ -38,7 +38,7 @@
         @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="smartScripts">
+      <el-table :data="smartScripts" @row-dblclick="show">
         <el-table-column prop="entryorguid" label="Entry Or GUID" sortable></el-table-column>
         <el-table-column prop="source_type" label="类型" sortable></el-table-column>
         <el-table-column prop="id" label="编号" sortable></el-table-column>
@@ -100,6 +100,9 @@ export default {
       this.paginate(page);
       await this.search(this.payload);
       this.loading = false;
+    },
+    show(row) {
+      this.$router.push(`/smart-script/${row.entryorguid}`);
     },
     async init() {
       this.loading = true;
