@@ -12,6 +12,10 @@ import {
   SEARCH_CREATURE_EQUIP_TEMPLATES,
   SEARCH_NPC_VENDORS,
   SEARCH_NPC_TRAINERS,
+  SEARCH_CREATURE_QUEST_ITEMS,
+  SEARCH_CREATURE_LOOT_TEMPLATES,
+  SEARCH_PICKPOCKETING_LOOT_TEMPLATES,
+  SEARCH_SKINNING_LOOT_TEMPLATES,
   UPDATE_CREATURE_TEMPLATE
 } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
@@ -32,7 +36,11 @@ export default {
     creatureOnKillReputation: {},
     creatureEquipTemplates: [],
     npcVendors: [],
-    npcTrainers: []
+    npcTrainers: [],
+    creatureQuestItems: [],
+    creatureLootTemplates: [],
+    pickpocketingLootTemplates: [],
+    skinningLootTemplates: []
   }),
   actions: {
     searchCreatureTemplates({ commit }, payload) {
@@ -64,10 +72,10 @@ export default {
       });
     },
     findCreatureTemplate({ commit }, payload) {
+      ipcRenderer.send("FIND_CREATURE_TEMPLATE", payload);
       ipcRenderer.on("FIND_CREATURE_TEMPLATE_REPLY", (event, response) => {
         commit(FIND_CREATURE_TEMPLATE, response);
       });
-      ipcRenderer.send("FIND_CREATURE_TEMPLATE", payload);
     },
     updateCreatureTemplate({ commit }, payload) {
       return new Promise(resolve => {
@@ -95,10 +103,10 @@ export default {
       });
     },
     searchCreatureTemplateLocales({ commit }, payload) {
+      ipcRenderer.send("SEARCH_CREATURE_TEMPLATE_LOCALES", payload);
       ipcRenderer.on("SEARCH_CREATURE_TEMPLATE_LOCALES_REPLY", (event, response) => {
         commit(SEARCH_CREATURE_TEMPLATE_LOCALES, response);
       });
-      ipcRenderer.send("SEARCH_CREATURE_TEMPLATE_LOCALES", payload);
     },
     findCreatureTemplateAddon({ commit }, payload) {
       ipcRenderer.on("FIND_CREATURE_TEMPLATE_ADDON_REPLY", (event, response) => {
@@ -129,6 +137,30 @@ export default {
         commit(SEARCH_NPC_TRAINERS, response);
       });
       ipcRenderer.send("SEARCH_NPC_TRAINERS", payload);
+    },
+    searchCreatureQuestItems({ commit }, payload) {
+      ipcRenderer.send("SEARCH_CREATURE_QUEST_ITEMS", payload);
+      ipcRenderer.on("SEARCH_CREATURE_QUEST_ITEMS_REPLY", (event, response) => {
+        commit(SEARCH_CREATURE_QUEST_ITEMS, response);
+      });
+    },
+    searchCreatureLootTemplates({ commit }, payload) {
+      ipcRenderer.send("SEARCH_CREATURE_LOOT_TEMPLATES", payload);
+      ipcRenderer.on("SEARCH_CREATURE_LOOT_TEMPLATES_REPLY", (event, response) => {
+        commit(SEARCH_CREATURE_LOOT_TEMPLATES, response);
+      });
+    },
+    searchPickpocketingLootTemplates({ commit }, payload) {
+      ipcRenderer.send("SEARCH_PICKPOCKETING_LOOT_TEMPLATES", payload);
+      ipcRenderer.on("SEARCH_PICKPOCKETING_LOOT_TEMPLATES_REPLY", (event, response) => {
+        commit(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, response);
+      });
+    },
+    searchSkinningLootTemplates({ commit }, payload) {
+      ipcRenderer.send("SEARCH_SKINNING_LOOT_TEMPLATES", payload);
+      ipcRenderer.on("SEARCH_SKINNING_LOOT_TEMPLATES_REPLY", (event, response) => {
+        commit(SEARCH_SKINNING_LOOT_TEMPLATES, response);
+      });
     }
   },
   mutations: {
@@ -151,6 +183,9 @@ export default {
       state.page = page;
     },
     [FIND_CREATURE_TEMPLATE](state, creatureTemplate) {
+      if (creatureTemplate === undefined) {
+        creatureTemplate = {};
+      }
       state.creatureTemplate = creatureTemplate;
     },
     [UPDATE_CREATURE_TEMPLATE](state, creatureTemplate) {
@@ -160,9 +195,15 @@ export default {
       state.creatureTemplateLocales = creatureTemplateLocales;
     },
     [FIND_CREATURE_TEMPLATE_ADDON](state, creatureTemplateAddon) {
+      if (creatureTemplateAddon === undefined) {
+        creatureTemplateAddon = {};
+      }
       state.creatureTemplateAddon = creatureTemplateAddon;
     },
     [FIND_CREATURE_ONKILL_REPUTATION](state, creatureOnKillReputation) {
+      if (creatureOnKillReputation === undefined) {
+        creatureOnKillReputation = {};
+      }
       state.creatureOnKillReputation = creatureOnKillReputation;
     },
     [SEARCH_CREATURE_EQUIP_TEMPLATES](state, creatureEquipTemplates) {
@@ -173,6 +214,18 @@ export default {
     },
     [SEARCH_NPC_TRAINERS](state, npcTrainers) {
       state.npcTrainers = npcTrainers;
+    },
+    [SEARCH_CREATURE_QUEST_ITEMS](state, creatureQuestItems) {
+      state.creatureQuestItems = creatureQuestItems;
+    },
+    [SEARCH_CREATURE_LOOT_TEMPLATES](state, creatureLootTemplates) {
+      state.creatureLootTemplates = creatureLootTemplates;
+    },
+    [SEARCH_PICKPOCKETING_LOOT_TEMPLATES](state, pickpocketingLootTemplates) {
+      state.pickpocketingLootTemplates = pickpocketingLootTemplates;
+    },
+    [SEARCH_SKINNING_LOOT_TEMPLATES](state, skinningLootTemplates) {
+      state.skinningLootTemplates = skinningLootTemplates;
     }
   }
 };

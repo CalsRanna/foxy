@@ -834,10 +834,9 @@ import {
   bondings
 } from "../locales/item.js";
 
-import { createNamespacedHelpers } from "vuex";
+import { mapState, mapActions } from "vuex";
 // import * as types from "@/store/MUTATION_TYPES";
 
-const { mapState, mapActions } = createNamespacedHelpers("itemTemplate");
 export default {
   data() {
     return {
@@ -852,10 +851,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      itemTemplate: state => state.itemTemplate,
-      itemTemplateLocales: state => state.itemTemplateLocales
-    }),
+    ...mapState("item", ["itemTemplate", "itemTemplateLocales"]),
     localeName() {
       if (this.itemTemplateLocales.length > 0) {
         let name = undefined;
@@ -884,7 +880,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["find", "searchItemTemplateLocales"]),
+    ...mapActions("item", ["find", "searchItemTemplateLocales"]),
     showDialog() {
       this.localeDialogVisible = true;
     },

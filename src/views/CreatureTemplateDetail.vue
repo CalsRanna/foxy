@@ -954,7 +954,6 @@
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
-          <el-button disabled>修改</el-button>
           <el-button type="danger" disabled>删除</el-button>
         </el-card>
         <el-card style="margin-top: 16px">
@@ -1028,7 +1027,6 @@
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
-          <el-button disabled>修改</el-button>
           <el-button type="danger" disabled>删除</el-button>
         </el-card>
         <el-card style="margin-top: 16px">
@@ -1080,7 +1078,6 @@
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
-          <el-button disabled>修改</el-button>
           <el-button type="danger" disabled>删除</el-button>
         </el-card>
         <el-card style="margin-top: 16px">
@@ -1107,7 +1104,6 @@
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
-          <el-button disabled>修改</el-button>
           <el-button type="danger" disabled>删除</el-button>
         </el-card>
         <el-card style="margin-top: 16px">
@@ -1124,11 +1120,10 @@
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="生物掉落" name="creature_loot_template" lazy v-loading="loading">
+      <el-tab-pane label="击杀掉落" name="creature_loot_template" lazy v-loading="loading">
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
-          <el-button disabled>修改</el-button>
           <el-button type="danger" disabled>删除</el-button>
         </el-card>
         <el-card style="margin-top: 16px">
@@ -1164,7 +1159,6 @@
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
-          <el-button disabled>修改</el-button>
           <el-button type="danger" disabled>删除</el-button>
         </el-card>
         <el-card style="margin-top: 16px">
@@ -1200,7 +1194,6 @@
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
-          <el-button disabled>修改</el-button>
           <el-button type="danger" disabled>删除</el-button>
         </el-card>
         <el-card style="margin-top: 16px">
@@ -1309,10 +1302,6 @@ export default {
     return {
       loading: false,
       isCreating: true,
-      creatureLootTemplates: [],
-      creatureQuestItems: [],
-      pickpocketingLootTemplates: [],
-      skinningLootTemplates: [],
       localeDialogVisible: false,
       npcFlags: npcFlags,
       typeFlags: typeFlags,
@@ -1332,7 +1321,11 @@ export default {
       "creatureOnKillReputation",
       "creatureEquipTemplates",
       "npcVendors",
-      "npcTrainers"
+      "npcTrainers",
+      "creatureQuestItems",
+      "creatureLootTemplates",
+      "pickpocketingLootTemplates",
+      "skinningLootTemplates"
     ]),
     ...mapGetters("dbc", { icons: "itemIcons" }),
     localeName() {
@@ -1376,10 +1369,14 @@ export default {
       "findCreatureOnKillReputation",
       "searchCreatureEquipTemplates",
       "searchNpcVendors",
-      "searchNpcTrainers"
+      "searchNpcTrainers",
+      "searchCreatureQuestItems",
+      "searchCreatureLootTemplates",
+      "searchPickpocketingLootTemplates",
+      "searchSkinningLootTemplates"
     ]),
     async switchover(tab) {
-      let id = this.$route.params.id;
+      let id = this.creatureTemplate.entry;
       if (tab.name === "creature_template_addon") {
         this.loading = true;
         await this.findCreatureTemplateAddon({ entry: id });
@@ -1405,16 +1402,20 @@ export default {
         await this.searchNpcTrainers({ id: id });
         this.loading = false;
       }
-      if (tab.name === "creature_loot_template") {
+      if (tab.name === "creature_questitem") {
+        await this.searchCreatureQuestItems({ creatureEntry: id });
         this.loading = true;
       }
-      if (tab.name === "creature_questitem") {
+      if (tab.name === "creature_loot_template") {
+        await this.searchCreatureLootTemplates({ entry: id });
         this.loading = true;
       }
       if (tab.name === "pickpocketing_loot_template") {
+        await this.searchPickpocketingLootTemplates({ entry: id });
         this.loading = true;
       }
       if (tab.name === "skinning_loot_template") {
+        await this.searchSkinningLootTemplates({ entry: id });
         this.loading = true;
       }
       this.loading = false;
@@ -1423,13 +1424,13 @@ export default {
       this.localeDialogVisible = true;
     },
     addCreatureTemplateLocale() {
-      this.creatureTemplate.CreatureTemplateLocales.push({
+      this.creatureTemplateLocales.push({
         entry: this.creatureTemplate.entry,
         VerifiedBuild: 0
       });
     },
     deleteCreatureTemplateLocale(index) {
-      this.creatureTemplate.CreatureTemplateLocales.splice(index, 1);
+      this.creatureTemplateLocales.splice(index, 1);
     },
     closeDialog() {
       this.localeDialogVisible = false;

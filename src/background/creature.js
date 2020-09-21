@@ -11,7 +11,7 @@ let find = payload => {
     connection
       .query(`${sql}`)
       .then(results => {
-        resolve(results[0], sql);
+        resolve({ creatureTemplate: results[0], sql });
       })
       .catch(error => {
         reject(error);
@@ -26,7 +26,7 @@ let maxEntry = () => {
     connection
       .query(`${sql}`)
       .then(results => {
-        resolve(results[0].entry, sql);
+        resolve({ entry: results[0].entry, sql });
       })
       .catch(error => {
         reject(error);
@@ -94,8 +94,7 @@ ipcMain.on("COUNT_CREATURE_TEMPLATES", (event, payload) => {
 
 // 获得数据库中已保存生物模板的最大 entry
 ipcMain.on("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE", event => {
-  maxEntry().then((entry, sql) => {
-    console.log(sql);
+  maxEntry().then(({ entry }) => {
     event.reply("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE_REPLY", entry);
   });
 });
@@ -124,7 +123,7 @@ ipcMain.on("STORE_CREATURE_TEMPLATE", (event, payload) => {
 // 根据条件得到指定的生物模板
 ipcMain.on("FIND_CREATURE_TEMPLATE", (event, payload) => {
   find(payload)
-    .then((creatureTemplate, sql) => {
+    .then(({ creatureTemplate, sql }) => {
       event.reply("FIND_CREATURE_TEMPLATE_REPLY", creatureTemplate);
       event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
     })
@@ -156,27 +155,27 @@ ipcMain.on("DESTROY_CREATURE_TEMPLATE", (event, payload) => {
 
 // 复制满足条件的生物模板
 ipcMain.on("COPY_CREATURE_TEMPLATE", (event, payload) => {
-  let entry = 1;
-  let origin = {};
+  let newEntry = 1;
+  let newCreatureTemplate = {};
   Promise.all([
     maxEntry()
-      .then((id, sql) => {
-        entry = id + 1;
+      .then(({ entry }) => {
+        newEntry = entry + 1;
       })
       .catch(error => {
         event.reply("UPDATE_MESSAGE_REPLY", error);
       }),
     find(payload)
-      .then((creatureTemplate, sql) => {
-        origin = creatureTemplate;
+      .then(({ creatureTemplate }) => {
+        newCreatureTemplate = creatureTemplate;
       })
       .catch(error => {
         event.reply("UPDATE_MESSAGE_REPLY", error);
       })
   ])
     .then(() => {
-      origin.entry = entry;
-      let sql = `insert into creature_template values (${objectToSql(origin)})`;
+      newCreatureTemplate.entry = newEntry;
+      let sql = `insert into creature_template values (${objectToSql(newCreatureTemplate)})`;
 
       connection
         .query(`${sql}`)
@@ -282,6 +281,66 @@ ipcMain.on("SEARCH_NPC_TRAINERS", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("SEARCH_NPC_TRAINERS_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    })
+    .catch(error => {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    });
+});
+
+// 搜索满足条件的生物任务物品掉落
+ipcMain.on("SEARCH_CREATURE_QUEST_ITEMS", (event, payload) => {
+  let sql = `select * from creature_questitem where CreatureEntry = ${payload.creatureEntry}`;
+
+  connection
+    .query(sql)
+    .then(results => {
+      event.reply("SEARCH_CREATURE_QUEST_ITEMS_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    })
+    .catch(error => {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    });
+});
+
+// 搜索满足条件的生物击杀物品掉落
+ipcMain.on("SEARCH_CREATURE_LOOT_TEMPLATES", (event, payload) => {
+  let sql = `select * from creature_loot_template where Entry = ${payload.entry}`;
+
+  connection
+    .query(sql)
+    .then(results => {
+      event.reply("SEARCH_CREATURE_LOOT_TEMPLATES_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    })
+    .catch(error => {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    });
+});
+
+// 搜索满足条件的生物偷窃物品掉落
+ipcMain.on("SEARCH_PICKPOCKETING_LOOT_TEMPLATES", (event, payload) => {
+  let sql = `select * from pickpocketing_loot_template where Entry = ${payload.entry}`;
+
+  connection
+    .query(sql)
+    .then(results => {
+      event.reply("SEARCH_PICKPOCKETING_LOOT_TEMPLATES_REPLY", results);
+      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+    })
+    .catch(error => {
+      event.reply("UPDATE_MESSAGE_REPLY", error);
+    });
+});
+
+// 搜索满足条件的生物剥皮物品掉落
+ipcMain.on("SEARCH_SKINNING_LOOT_TEMPLATES", (event, payload) => {
+  let sql = `select * from skinning_loot_template where Entry = ${payload.entry}`;
+
+  connection
+    .query(sql)
+    .then(results => {
+      event.reply("SEARCH_SKINNING_LOOT_TEMPLATES_REPLY", results);
       event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
     })
     .catch(error => {
