@@ -22,3 +22,8 @@ ipcMain.on("SEARCH_DBC_ITEM_DISPLAY_INFOS", event => {
   let dbc = DBC.read(`${path}/ItemDisplayInfo.dbc`);
   event.reply("SEARCH_DBC_ITEM_DISPLAY_INFOS_REPLY", dbc);
 });
+
+ipcMain.on("SEARCH_DBC_SPELLS", event => {
+  let dbc = DBC.read(`${path}/Spell.dbc`);
+  event.reply("SEARCH_DBC_SPELLS_REPLY", dbc);
+});

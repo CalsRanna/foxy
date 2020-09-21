@@ -38,23 +38,15 @@
         @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="gameObjectTemplates">
+      <el-table
+        ref="gameObjectTable"
+        :data="gameObjectTemplates"
+        highlight-current-row
+        @current-change="select"
+        @row-dblclick="show"
+      >
         <el-table-column prop="entry" label="编号" sortable></el-table-column>
         <el-table-column prop="displayId" label="Display ID" sortable></el-table-column>
-        <!-- <el-table-column width="43px" class-name="icon-height">
-          <template slot-scope="scope">
-            <el-image
-              :src="`/icons/${icons[scope.row.displayId]}`"
-              style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
-            >
-              <el-image
-                src="/icons/INV_Misc_QuestionMark.png"
-                style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
-                slot="error"
-              ></el-image>
-            </el-image>
-          </template>
-        </el-table-column> -->
         <el-table-column prop="name" label="名称" sortable>
           <template slot-scope="scope">
             <template v-if="scope.row.localeName !== null">{{ scope.row.localeName }}</template>
@@ -114,6 +106,9 @@ export default {
       this.paginate(page);
       await this.search(this.payload);
       this.loading = false;
+    },
+    show(row) {
+      this.$router.push(`/game-object/${row.entry}`);
     },
     async init() {
       this.loading = true;

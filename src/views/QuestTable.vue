@@ -38,7 +38,13 @@
         @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="questTemplates">
+      <el-table
+        ref="questTable"
+        :data="questTemplates"
+        highlight-current-row
+        @current-change="select"
+        @row-dblclick="show"
+      >
         <el-table-column prop="ID" label="ID" sortable></el-table-column>
         <el-table-column prop="LogTitle" label="标题" min-width="100px" sortable>
           <template slot-scope="scope">
@@ -109,6 +115,9 @@ export default {
       this.paginate(page);
       await this.search(this.payload);
       this.loading = false;
+    },
+    show(row) {
+      this.$router.push(`/quest/${row.entry}`);
     },
     async init() {
       this.loading = true;

@@ -44,10 +44,15 @@ import {
 export default {
   computed: {
     ...mapState("global", ["mysqlConfig", "dbcConfig", "configConfig", "developerConfig", "active"]),
-    ...mapState("dbc", ["factions", "factionTemplates", "itemDisplayInfos"])
+    ...mapState("dbc", ["factions", "factionTemplates", "itemDisplayInfos", "spells"])
   },
   methods: {
-    ...mapActions("dbc", ["searchDbcFactions", "searchDbcFactionTemplates", "searchDbcItemDisplayInfos"]),
+    ...mapActions("dbc", [
+      "searchDbcFactions",
+      "searchDbcFactionTemplates",
+      "searchDbcItemDisplayInfos",
+      "searchDbcSpells"
+    ]),
     ...mapMutations("global", {
       updateMysqlConfig: UPDATE_MYSQL_CONFIG,
       updateDbcConfig: UPDATE_DBC_CONFIG,
@@ -125,6 +130,7 @@ export default {
       this.searchDbcFactions();
       this.searchDbcFactionTemplates();
       this.searchDbcItemDisplayInfos();
+      // this.searchDbcSpells();
     }
   },
   created() {

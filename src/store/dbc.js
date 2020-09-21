@@ -1,4 +1,9 @@
-import { SEARCH_DBC_FACTIONS, SEARCH_DBC_FACTION_TEMPLATES, SEARCH_DBC_ITEM_DISPLAY_INFOS } from "./MUTATION_TYPES";
+import {
+  SEARCH_DBC_FACTIONS,
+  SEARCH_DBC_FACTION_TEMPLATES,
+  SEARCH_DBC_ITEM_DISPLAY_INFOS,
+  SEARCH_DBC_SPELLS
+} from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
@@ -6,7 +11,8 @@ export default {
   state: () => ({
     factions: [],
     factionTemplates: [],
-    itemDisplayInfos: []
+    itemDisplayInfos: [],
+    spells: []
   }),
   getters: {
     itemIcons: state => {
@@ -19,22 +25,28 @@ export default {
   },
   actions: {
     searchDbcFactions({ commit }) {
+      ipcRenderer.send("SEARCH_DBC_FACTIONS");
       ipcRenderer.on("SEARCH_DBC_FACTIONS_REPLY", (event, response) => {
         commit(SEARCH_DBC_FACTIONS, response);
       });
-      ipcRenderer.send("SEARCH_DBC_FACTIONS");
     },
     searchDbcFactionTemplates({ commit }) {
+      ipcRenderer.send("SEARCH_DBC_FACTION_TEMPLATES");
       ipcRenderer.on("SEARCH_DBC_FACTION_TEMPLATES_REPLY", (event, response) => {
         commit(SEARCH_DBC_FACTION_TEMPLATES, response);
       });
-      ipcRenderer.send("SEARCH_DBC_FACTION_TEMPLATES");
     },
     searchDbcItemDisplayInfos({ commit }) {
+      ipcRenderer.send("SEARCH_DBC_ITEM_DISPLAY_INFOS");
       ipcRenderer.on("SEARCH_DBC_ITEM_DISPLAY_INFOS_REPLY", (event, response) => {
         commit(SEARCH_DBC_ITEM_DISPLAY_INFOS, response);
       });
-      ipcRenderer.send("SEARCH_DBC_ITEM_DISPLAY_INFOS");
+    },
+    searchDbcSpells({ commit }) {
+      ipcRenderer.send("SEARCH_DBC_SPELLS");
+      ipcRenderer.on("SEARCH_DBC_SPELLS_REPLY", (event, response) => {
+        commit(SEARCH_DBC_SPELLS, response);
+      });
     }
   },
   mutations: {
@@ -46,6 +58,9 @@ export default {
     },
     [SEARCH_DBC_ITEM_DISPLAY_INFOS](state, itemDisplayInfos) {
       state.itemDisplayInfos = itemDisplayInfos;
+    },
+    [SEARCH_DBC_SPELLS](state, spells) {
+      state.spells = spells;
     }
   }
 };
