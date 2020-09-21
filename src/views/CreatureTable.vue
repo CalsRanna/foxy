@@ -133,23 +133,18 @@ export default {
       this.$router.push("/creature/create");
     },
     handleCopy() {
-      this.$confirm("是否复制关联表数据？", "提示", {
-        confirmButtonText: "是",
-        cancelButtonText: "否",
-        type: "info"
+      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "info",
+        dangerouslyUseHTMLString: true
       })
         .then(() => {
-          this.$notify({
-            title: "警告",
-            message: "暂未实现相关代码",
-            type: "warning"
-          });
-        })
-        .catch(async () => {
           this.copy({ entry: this.currentRow.entry }).then(() => {
             Promise.all([this.search(this.payload), this.count(this.payload)]);
           });
-        });
+        })
+        .catch(async () => {});
     },
     handleDestroy() {
       this.$confirm(

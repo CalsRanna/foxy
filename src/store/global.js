@@ -56,6 +56,8 @@ export default {
       state.dbcConfig = config;
 
       localStorage.setItem("dbcPath", config.path);
+
+      ipcRenderer.send("INIT_DBC_CONFIG", config);
     },
     [UPDATE_CONFIG_CONFIG](state, config) {
       state.configConfig = config;

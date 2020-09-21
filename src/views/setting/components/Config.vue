@@ -28,7 +28,6 @@ export default {
 
       ipcRenderer.send("SELECT_CONFIG_PATH");
       ipcRenderer.on("SELECT_CONFIG_PATH_REPLY", (event, path) => {
-        console.log(path);
         this.config.path = path;
       });
     },

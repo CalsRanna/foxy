@@ -26,7 +26,6 @@
     <el-card v-loading="loading" style="margin-top: 16px;">
       <el-button type="primary">新增</el-button>
       <el-button disabled>复制</el-button>
-      <el-button disabled>修改</el-button>
       <el-button type="danger" disabled>删除</el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
@@ -42,7 +41,7 @@
       <el-table :data="gameObjectTemplates">
         <el-table-column prop="entry" label="编号" sortable></el-table-column>
         <el-table-column prop="displayId" label="Display ID" sortable></el-table-column>
-        <el-table-column width="43px" class-name="icon-height">
+        <!-- <el-table-column width="43px" class-name="icon-height">
           <template slot-scope="scope">
             <el-image
               :src="`/icons/${icons[scope.row.displayId]}`"
@@ -55,7 +54,7 @@
               ></el-image>
             </el-image>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="name" label="名称" sortable>
           <template slot-scope="scope">
             <template v-if="scope.row.localeName !== null">{{ scope.row.localeName }}</template>
