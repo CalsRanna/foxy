@@ -13,78 +13,48 @@
         <el-row>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p style="font-size: 20px;font-weight: 600; color: #303133">
-                生物模板
-                <span style="font-size: 16px; color: #909399; margin-left: 8px;">
-                  Creature Template
-                </span>
-              </p>
-              <p style="font-size: 24px; font-weight: 900; color: #606266">
+              <p class="summary-title">生物模板<span>Creature Template</span></p>
+              <p class="summary-content">
                 {{ parseFloat(this.quantityOfCreatureTemplate).toLocaleString() }}
               </p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p style="font-size: 20px;font-weight: 600; color: #303133">
-                游戏对象模板
-                <span style="font-size: 16px; color: #909399; margin-left: 8px;">
-                  Game Object Template
-                </span>
-              </p>
-              <p style="font-size: 24px; font-weight: 900; color: #606266">
+              <p class="summary-title">游戏对象模板<span>Game Object Template</span></p>
+              <p class="summary-content">
                 {{ parseFloat(this.quantityOfGameObjectTemplate).toLocaleString() }}
               </p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p style="font-size: 20px;font-weight: 600; color: #303133">
-                物品模板
-                <span style="font-size: 16px; color: #909399; margin-left: 8px;">
-                  Item Template
-                </span>
-              </p>
-              <p style="font-size: 24px; font-weight: 900; color: #606266">
+              <p class="summary-title">物品模板<span>Item Template</span></p>
+              <p class="summary-content">
                 {{ parseFloat(this.quantityOfItemTemplate).toLocaleString() }}
               </p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p style="font-size: 20px;font-weight: 600; color: #303133">
-                任务模板
-                <span style="font-size: 16px; color: #909399; margin-left: 8px;">
-                  Quest Template
-                </span>
-              </p>
-              <p style="font-size: 24px; font-weight: 900; color: #606266">
+              <p class="summary-title">任务模板<span>Quest Template</span></p>
+              <p class="summary-content">
                 {{ parseFloat(this.quantityOfQuestTemplate).toLocaleString() }}
               </p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p style="font-size: 20px;font-weight: 600; color: #303133">
-                内建脚本
-                <span style="font-size: 16px; color: #909399; margin-left: 8px;">
-                  Smart Script
-                </span>
-              </p>
-              <p style="font-size: 24px; font-weight: 900; color: #606266">
+              <p class="summary-title">内建脚本<span>Smart Script</span></p>
+              <p class="summary-content">
                 {{ parseFloat(this.quantityOfSmartScript).toLocaleString() }}
               </p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p style="font-size: 20px;font-weight: 600; color: #303133">
-                技能
-                <span style="font-size: 16px; color: #909399; margin-left: 8px;">
-                  Spell
-                </span>
-              </p>
-              <p style="font-size: 24px; font-weight: 900; color: #606266">15,235</p>
+              <p class="summary-title">技能<span>Spell</span></p>
+              <p class="summary-content">15,235</p>
             </el-card>
           </el-col>
         </el-row>
@@ -193,3 +163,26 @@ export default {
   }
 };
 </script>
+
+<style>
+.summary-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #303133;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.summary-title span {
+  font-size: 16px;
+  color: #909399;
+  margin-left: 8px;
+}
+
+.summary-content {
+  font-size: 24px;
+  font-weight: 900;
+  color: #606266;
+}
+</style>

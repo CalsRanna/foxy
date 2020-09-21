@@ -1,18 +1,8 @@
 import { ipcMain } from "electron";
 
-// import { mysql } from "mysql2";
 const mysql = require("mysql");
-
 const connection = require("./mysql");
-let { objectToSql } = require("../libs/util");
-
-let createConnection = () =>
-  mysql.createConnection({
-    host: "127.0.0.1",
-    user: "acore",
-    password: "acore",
-    database: "acore_world"
-  });
+const { objectToSql } = require("../libs/util");
 
 let find = payload => {
   return new Promise((resolve, reject) => {
@@ -100,6 +90,14 @@ ipcMain.on("COUNT_CREATURE_TEMPLATES", (event, payload) => {
     .catch(error => {
       event.reply("UPDATE_MESSAGE_REPLY", error);
     });
+});
+
+// 获得数据库中已保存生物模板的最大 entry
+ipcMain.on("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE", event => {
+  maxEntry().then((entry, sql) => {
+    console.log(sql);
+    event.reply("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE_REPLY", entry);
+  });
 });
 
 // 保存生物模板
