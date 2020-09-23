@@ -12,7 +12,7 @@ export default {
     factions: [],
     factionTemplates: [],
     itemDisplayInfos: [],
-    spells: []
+    spells: {}
   }),
   getters: {
     itemIcons: state => {
@@ -60,7 +60,12 @@ export default {
       state.itemDisplayInfos = itemDisplayInfos;
     },
     [SEARCH_DBC_SPELLS](state, spells) {
-      state.spells = spells;
+      console.log(spells);
+      if (Object.keys(state.spells).length === 0) {
+        state.spells = spells;
+      } else {
+        state.spells.records = state.spells.records.concat(spells.records);
+      }
     }
   }
 };
