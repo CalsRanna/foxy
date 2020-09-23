@@ -130,7 +130,7 @@ export default {
       this.searchDbcFactions();
       this.searchDbcFactionTemplates();
       this.searchDbcItemDisplayInfos();
-      // this.searchDbcSpells();
+      this.searchDbcSpells();
     }
   },
   created() {
