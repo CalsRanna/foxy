@@ -54,7 +54,9 @@
           <el-col :span="8">
             <el-card shadow="hover">
               <p class="summary-title">技能<span>Spell</span></p>
-              <p class="summary-content">15,235</p>
+              <p class="summary-content">
+                {{ parseFloat(this.quantityOfSpell).toLocaleString() }}
+              </p>
             </el-card>
           </el-col>
         </el-row>
@@ -123,6 +125,7 @@ export default {
     ...mapState("gameObject", { quantityOfGameObjectTemplate: "total" }),
     ...mapState("item", { quantityOfItemTemplate: "total" }),
     ...mapState("quest", { quantityOfQuestTemplate: "total" }),
+    ...mapState("spell", { quantityOfSpell: "total" }),
     ...mapState("smartScript", { quantityOfSmartScript: "total" }),
     data() {
       return [
@@ -131,7 +134,7 @@ export default {
         this.quantityOfItemTemplate,
         this.quantityOfQuestTemplate,
         this.quantityOfSmartScript,
-        15235
+        this.quantityOfSpell
       ];
     }
   },
@@ -140,6 +143,7 @@ export default {
     ...mapActions("gameObject", { countGameObjectTemplates: "count" }),
     ...mapActions("item", { countItemTemplates: "count" }),
     ...mapActions("quest", { countQuestTemplates: "count" }),
+    ...mapActions("spell", { countSpells: "count" }),
     ...mapActions("smartScript", { countSmartScript: "count" }),
     openBrowser(url) {
       const { shell } = window.require("electron");
@@ -151,6 +155,7 @@ export default {
       await this.countGameObjectTemplates({});
       await this.countItemTemplates({});
       await this.countQuestTemplates({});
+      await this.countSpells({});
       await this.countSmartScript({});
       this.loading = false;
     }

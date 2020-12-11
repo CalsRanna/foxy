@@ -290,7 +290,7 @@ ipcMain.on("SEARCH_NPC_TRAINERS", (event, payload) => {
 
 // 搜索满足条件的生物任务物品掉落
 ipcMain.on("SEARCH_CREATURE_QUEST_ITEMS", (event, payload) => {
-  let sql = `select * from creature_questitem where CreatureEntry = ${payload.creatureEntry}`;
+  let sql = `select cq.*, it.name, itl.Name as localeName from creature_questitem as cq left join item_template as it on cq.ItemId = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where cq.CreatureEntry = ${payload.creatureEntry}`;
 
   connection
     .query(sql)
@@ -305,7 +305,7 @@ ipcMain.on("SEARCH_CREATURE_QUEST_ITEMS", (event, payload) => {
 
 // 搜索满足条件的生物击杀物品掉落
 ipcMain.on("SEARCH_CREATURE_LOOT_TEMPLATES", (event, payload) => {
-  let sql = `select * from creature_loot_template where Entry = ${payload.entry}`;
+  let sql = `select clt.*, it.name, itl.Name as localeName from creature_loot_template as clt left join item_template as it on clt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where clt.Entry = ${payload.entry}`;
 
   connection
     .query(sql)
@@ -320,7 +320,7 @@ ipcMain.on("SEARCH_CREATURE_LOOT_TEMPLATES", (event, payload) => {
 
 // 搜索满足条件的生物偷窃物品掉落
 ipcMain.on("SEARCH_PICKPOCKETING_LOOT_TEMPLATES", (event, payload) => {
-  let sql = `select * from pickpocketing_loot_template where Entry = ${payload.entry}`;
+  let sql = `select plt.*, it.name, itl.Name as localeName from pickpocketing_loot_template as plt left join item_template as it on plt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where plt.Entry = ${payload.entry}`;
 
   connection
     .query(sql)
@@ -335,7 +335,7 @@ ipcMain.on("SEARCH_PICKPOCKETING_LOOT_TEMPLATES", (event, payload) => {
 
 // 搜索满足条件的生物剥皮物品掉落
 ipcMain.on("SEARCH_SKINNING_LOOT_TEMPLATES", (event, payload) => {
-  let sql = `select * from skinning_loot_template where Entry = ${payload.entry}`;
+  let sql = `select slt.*, it.name, itl.Name as localeName from skinning_loot_template as slt left join item_template as it on slt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where slt.Entry = ${payload.entry}`;
 
   connection
     .query(sql)

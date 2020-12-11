@@ -11,13 +11,13 @@
       <el-form>
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-input v-model="ID" placeholder="ID"></el-input>
+            <el-input v-model="id" placeholder="ID"></el-input>
           </el-col>
           <el-col :span="6">
             <el-input v-model="name" placeholder="名称"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" @click="search">查询</el-button>
+            <el-button type="primary" @click="handleSearch">查询</el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
@@ -35,22 +35,21 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="questTemplates">
-        <el-table-column prop="ID" label="ID" sortable min-width="100px"></el-table-column>
-        <el-table-column prop="LogTitle" label="名称" min-width="100px" sortable>
+      <el-table :data="spells" @row-dblclick="show">
+        <el-table-column prop="id" label="ID" sortable width="64px"></el-table-column>
+        <el-table-column prop="nameLangZhCN" label="名称" width="256px" sortable> </el-table-column>
+        <el-table-column prop="rankLangZhCN" label="等级" sortable width="128px"></el-table-column>
+        <el-table-column prop="descriptionLangZhCN" label="描述" sortable>
           <template slot-scope="scope">
-            <template v-if="scope.row.Title !== null">{{ scope.row.Title }}</template>
-            <template v-else>{{ scope.row.LogTitle }}</template>
+            <spell-description :spell="scope.row" field="descriptionLangZhCN"></spell-description>
           </template>
         </el-table-column>
-        <el-table-column prop="QuestLevel" label="等级" sortable></el-table-column>
-        <el-table-column prop="QuestDescription" label="描述" sortable min-width="500px">
+        <el-table-column prop="auraDescriptionLangZhCN" label="Buff 描述" sortable>
           <template slot-scope="scope">
-            <template v-if="scope.row.Details !== null">{{ scope.row.Details }}</template>
-            <template v-else>{{ scope.row.LogDescription }}</template>
+            <spell-description :spell="scope.row" field="auraDescriptionLangZhCN"></spell-description>
           </template>
         </el-table-column>
       </el-table>
@@ -60,7 +59,7 @@
         :total="total"
         :page-size="50"
         hide-on-single-page
-        @current-change="paginate"
+        @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -68,33 +67,64 @@
 </template>
 
 <script>
+import { mapState, mapActions, mapMutations } from "vuex";
+import { PAGINATE_SPELLS } from "@/store/MUTATION_TYPES";
+import SpellDescription from "@/components/SpellDescription";
+
 export default {
   data() {
     return {
       loading: false,
-      ID: undefined,
-      LogTitle: undefined,
-      questTemplates: [],
-      page: 1,
-      total: 0
+      id: undefined,
+      name: undefined
     };
   },
+  computed: {
+    ...mapState("spell", ["spells", "total", "page"]),
+    ...mapState("dbc", ["spellDurations"]),
+    payload() {
+      return {
+        id: this.id,
+        name: this.name,
+        page: this.page
+      };
+    }
+  },
   methods: {
-    search() {
+    ...mapActions("spell", ["search", "count"]),
+    ...mapMutations("spell", {
+      paginate: PAGINATE_SPELLS
+    }),
+    async handleSearch() {
       this.loading = true;
-      this.page = 1;
+      this.paginate(1); //每次搜索时使分页器设为第一页
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
     },
     reset() {
-      this.ID = undefined;
-      this.LogTitle = "";
+      this.id = undefined;
+      this.name = undefined;
     },
-    paginate(current) {
+    show(row) {
+      this.$router.push(`/spell/${row.id}`);
+    },
+    async handlePaginate(page) {
       this.loading = true;
-      this.page = current;
+      this.paginate(page);
+      await this.search(this.payload);
+      this.loading = false;
+    },
+    async init() {
+      this.loading = true;
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.loading = false;
     }
   },
   created() {
-    // this.loading = true;
+    this.init();
+  },
+  components: {
+    "spell-description": SpellDescription
   }
 };
 </script>

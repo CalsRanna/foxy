@@ -2,17 +2,19 @@ import {
   SEARCH_DBC_FACTIONS,
   SEARCH_DBC_FACTION_TEMPLATES,
   SEARCH_DBC_ITEM_DISPLAY_INFOS,
-  SEARCH_DBC_SPELLS
+  SEARCH_DBC_SPELLS,
+  SEARCH_DBC_SPELL_DURATIONS
 } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
   namespaced: true,
   state: () => ({
-    factions: [],
-    factionTemplates: [],
-    itemDisplayInfos: [],
-    spells: {}
+    factions: {},
+    factionTemplates: {},
+    itemDisplayInfos: {},
+    spells: {},
+    spellDurations: {}
   }),
   getters: {
     itemIcons: state => {
@@ -47,6 +49,12 @@ export default {
       ipcRenderer.on("SEARCH_DBC_SPELLS_REPLY", (event, response) => {
         commit(SEARCH_DBC_SPELLS, response);
       });
+    },
+    searchDbcSpellDurations({ commit }) {
+      ipcRenderer.send("SEARCH_DBC_SPELL_DURATIONS");
+      ipcRenderer.on("SEARCH_DBC_SPELL_DURATIONS_REPLY", (event, response) => {
+        commit(SEARCH_DBC_SPELL_DURATIONS, response);
+      });
     }
   },
   mutations: {
@@ -60,12 +68,14 @@ export default {
       state.itemDisplayInfos = itemDisplayInfos;
     },
     [SEARCH_DBC_SPELLS](state, spells) {
-      console.log(spells);
       if (Object.keys(state.spells).length === 0) {
         state.spells = spells;
       } else {
         state.spells.records = state.spells.records.concat(spells.records);
       }
+    },
+    [SEARCH_DBC_SPELL_DURATIONS](state, spellDurations) {
+      state.spellDurations = spellDurations;
     }
   }
 };

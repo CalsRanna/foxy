@@ -46,7 +46,6 @@
         @row-dblclick="show"
       >
         <el-table-column prop="entry" label="编号" sortable></el-table-column>
-        <el-table-column prop="displayId" label="Display ID" sortable></el-table-column>
         <el-table-column prop="name" label="名称" sortable>
           <template slot-scope="scope">
             <template v-if="scope.row.localeName !== null">{{ scope.row.localeName }}</template>

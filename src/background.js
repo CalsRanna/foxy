@@ -10,6 +10,7 @@ import "./background/item.js";
 import "./background/quest.js";
 import "./background/smartScript";
 import "./background/database";
+import "./background/gossipMenu";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
