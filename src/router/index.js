@@ -11,6 +11,7 @@ import ItemTemplateDetail from "@/views/ItemTemplateDetail";
 import QuestTable from "@/views/QuestTable";
 import QuestDetail from "@/views/QuestDetail";
 import SpellTable from "@/views/SpellTable";
+import SpellDetail from "@/views/SpellDetail";
 import SmartScriptTable from "@/views/SmartScriptTable";
 import SmartScriptDetail from "@/views/SmartScriptDetail";
 import Setting from "@/views/setting/Setting";
@@ -34,6 +35,7 @@ const routes = [
   { path: "/quest", component: QuestTable },
   { path: "/quest/:id", component: QuestDetail },
   { path: "/spell", component: SpellTable },
+  { path: "/spell/:id", component: SpellDetail },
   { path: "/smart-script", component: SmartScriptTable },
   { path: "/smart-script/:id", component: SmartScriptDetail },
   {

@@ -7,8 +7,10 @@ import creature from "./creature";
 import gameObject from "./gameObject";
 import item from "./item";
 import quest from "./quest";
+import spell from "./spell";
 import smartScript from "./smartScript";
 import setting from "./setting";
+import gossipMenu from "./gossipMenu";
 
 Vue.use(Vuex);
 
@@ -20,7 +22,9 @@ export default new Vuex.Store({
     gameObject,
     item,
     quest,
+    spell,
     smartScript,
-    setting
+    setting,
+    gossipMenu
   }
 });

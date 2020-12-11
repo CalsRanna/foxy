@@ -406,7 +406,11 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="对话菜单">
-                  <el-input v-model="creatureTemplate.gossip_menu_id" placeholder="gossip_menu_id"></el-input>
+                  <gossip-menu-editor
+                    v-model="creatureTemplate.gossip_menu_id"
+                    placeholder="npcflag"
+                  ></gossip-menu-editor>
+                  <!-- <el-input v-model="creatureTemplate.gossip_menu_id" placeholder="gossip_menu_id"></el-input> -->
                 </el-form-item>
               </el-col>
             </el-row>
@@ -816,7 +820,7 @@
           </el-card>
           <el-card v-loading="loading" style="margin-top: 16px">
             <el-button type="primary" @click="storeCreatureTemplate">保存</el-button>
-            <el-button>返回</el-button>
+            <el-button @click="cancel">返回</el-button>
           </el-card>
         </el-form>
       </el-tab-pane>
@@ -1112,7 +1116,9 @@
             <el-table-column prop="Idx" label="Index" sortable></el-table-column>
             <el-table-column label="名称">
               <span slot-scope="scope">
-                <template v-if="scope.row.Name">{{ scope.row.Name }}</template>
+                <template v-if="scope.row.localeName !== null">
+                  {{ scope.row.localeName }}
+                </template>
                 <template v-else>{{ scope.row.name }}</template>
               </span>
             </el-table-column>
@@ -1129,14 +1135,15 @@
         <el-card style="margin-top: 16px">
           <el-table :data="creatureLootTemplates">
             <el-table-column prop="displayid"></el-table-column>
-            <el-table-column prop="Item" label="物品" sortable>
+            <el-table-column label="名称" sortable>
               <span slot-scope="scope">
-                <template v-if="scope.row.Name !== null">
-                  {{ scope.row.Name }}
+                <template v-if="scope.row.localeName !== null">
+                  {{ scope.row.localeName }}
                 </template>
                 <template v-else>{{ scope.row.name }}</template>
               </span>
             </el-table-column>
+            <el-table-column prop="Reference" label="关联" sortable></el-table-column>
             <el-table-column prop="Chance" label="几率" sortable>
               <span slot-scope="scope">
                 {{ `${scope.row.Chance}%` }}
@@ -1144,10 +1151,10 @@
             </el-table-column>
             <el-table-column prop="QuestRequired" label="需要任务" sortable>
               <span slot-scope="scope">
-                <template v-if="scope.row.Title !== null">
-                  {{ scope.row.Title }}
-                </template>
-                <template v-else>{{ scope.row.LogTitle }}</template>
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
               </span>
             </el-table-column>
             <el-table-column prop="MinCount" label="最小数量" sortable></el-table-column>
@@ -1165,11 +1172,13 @@
           <el-table :data="pickpocketingLootTemplates">
             <el-table-column prop="displayid"></el-table-column>
             <el-table-column prop="Item" label="ID" sortable></el-table-column>
-            <el-table-column prop="Name" label="名称" sortable>
-              <template slot-scope="scope">
-                <template v-if="scope.row.Name !== null">{{ scope.row.Name }}</template>
+            <el-table-column label="名称">
+              <span slot-scope="scope">
+                <template v-if="scope.row.localeName !== null">
+                  {{ scope.row.localeName }}
+                </template>
                 <template v-else>{{ scope.row.name }}</template>
-              </template>
+              </span>
             </el-table-column>
             <el-table-column prop="Reference" label="关联" sortable></el-table-column>
             <el-table-column prop="Chance" label="几率" sortable>
@@ -1178,10 +1187,12 @@
               </template>
             </el-table-column>
             <el-table-column prop="QuestRequired" label="需要任务" sortable>
-              <template slot-scope="scope">
-                <template v-if="scope.row.Title !== null">{{ scope.row.Title }}</template>
-                <template v-else>{{ scope.row.LogTitle }}</template>
-              </template>
+              <span slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
+              </span>
             </el-table-column>
             <el-table-column prop="LootMode" label="掉落模式" sortable></el-table-column>
             <el-table-column prop="GroupId" label="组ID" sortable></el-table-column>
@@ -1200,11 +1211,13 @@
           <el-table :data="skinningLootTemplates">
             <el-table-column prop="displayid"></el-table-column>
             <el-table-column prop="Item" label="ID" sortable></el-table-column>
-            <el-table-column prop="Name" label="名称" sortable>
-              <template slot-scope="scope">
-                <template v-if="scope.row.Name !== null">{{ scope.row.Name }}</template>
+            <el-table-column label="名称">
+              <span slot-scope="scope">
+                <template v-if="scope.row.localeName !== null">
+                  {{ scope.row.localeName }}
+                </template>
                 <template v-else>{{ scope.row.name }}</template>
-              </template>
+              </span>
             </el-table-column>
             <el-table-column prop="Reference" label="关联" sortable></el-table-column>
             <el-table-column prop="Chance" label="几率" sortable>
@@ -1213,10 +1226,12 @@
               </template>
             </el-table-column>
             <el-table-column prop="QuestRequired" label="需要任务" sortable>
-              <template slot-scope="scope">
-                <template v-if="scope.row.Title !== null">{{ scope.row.Title }}</template>
-                <template v-else>{{ scope.row.LogTitle }}</template>
-              </template>
+              <span slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
+              </span>
             </el-table-column>
             <el-table-column prop="LootMode" label="掉落模式" sortable></el-table-column>
             <el-table-column prop="GroupId" label="组ID" sortable></el-table-column>
@@ -1296,6 +1311,7 @@ import {
 import { mapState, mapGetters, mapActions } from "vuex";
 
 import FlagEditor from "@/components/FlagEditor";
+import GossipMenuEditor from "@/components/GossipMenuEditor";
 
 export default {
   data() {
@@ -1443,6 +1459,9 @@ export default {
         message: this.creatureTemplate
       });
     },
+    cancel() {
+      this.$router.go(-1);
+    },
     async init() {
       this.loading = true;
       let id = this.$route.params.id;
@@ -1465,7 +1484,8 @@ export default {
     this.init();
   },
   components: {
-    "flag-editor": FlagEditor
+    "flag-editor": FlagEditor,
+    "gossip-menu-editor": GossipMenuEditor
   }
 };
 </script>
