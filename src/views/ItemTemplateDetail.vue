@@ -418,7 +418,7 @@
               </el-col>
             </el-row>
           </el-card>
-          <!-- 属性相关 -->
+          <!-- 传家宝相关 -->
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
@@ -434,6 +434,11 @@
                   <el-input v-model="itemTemplate.ScalingStatValue" placeholder="ScalingStatValue"></el-input>
                 </el-form-item>
               </el-col>
+            </el-row>
+          </el-card>
+          <!-- 属性相关 -->
+          <el-card style="margin-top: 16px">
+            <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="属性数量">
                   <el-input v-model="itemTemplate.StatsCount" placeholder="StatsCount"></el-input>
@@ -625,7 +630,7 @@
             <div style="width: 100%;">
               <div style="width: 20%; float: left">
                 <el-form-item label="技能1">
-                  <el-input v-model="itemTemplate.spellid_1" placeholder="spellid_1"></el-input>
+                  <spell-selector v-model="itemTemplate.spellid_1" placeholder="spellid_1"></spell-selector>
                 </el-form-item>
                 <el-form-item label="触发方式">
                   <el-select v-model="itemTemplate.spelltrigger_1" placeholder="spelltrigger_1">
@@ -658,7 +663,7 @@
               </div>
               <div style="width: 20%; float: left">
                 <el-form-item label="技能2">
-                  <el-input v-model="itemTemplate.spellid_2" placeholder="spellid_2"></el-input>
+                  <spell-selector v-model="itemTemplate.spellid_2" placeholder="spellid_2"></spell-selector>
                 </el-form-item>
                 <el-form-item label="触发方式">
                   <el-select v-model="itemTemplate.spelltrigger_2" placeholder="spelltrigger_2">
@@ -691,7 +696,7 @@
               </div>
               <div style="width: 20%; float: left">
                 <el-form-item label="技能3">
-                  <el-input v-model="itemTemplate.spellid_3" placeholder="spellid_3"></el-input>
+                  <spell-selector v-model="itemTemplate.spellid_3" placeholder="spellid_3"></spell-selector>
                 </el-form-item>
                 <el-form-item label="触发方式">
                   <el-select v-model="itemTemplate.spelltrigger_3" placeholder="spelltrigger_3">
@@ -724,7 +729,7 @@
               </div>
               <div style="width: 20%; float: left">
                 <el-form-item label="技能4">
-                  <el-input v-model="itemTemplate.spellid_4" placeholder="spellid_4"></el-input>
+                  <spell-selector v-model="itemTemplate.spellid_4" placeholder="spellid_4"></spell-selector>
                 </el-form-item>
                 <el-form-item label="触发方式">
                   <el-select v-model="itemTemplate.spelltrigger_4" placeholder="spelltrigger_4">
@@ -757,7 +762,7 @@
               </div>
               <div style="width: 20%; float: left">
                 <el-form-item label="技能5">
-                  <el-input v-model="itemTemplate.spellid_5" placeholder="spellid_5"></el-input>
+                  <spell-selector v-model="itemTemplate.spellid_5" placeholder="spellid_5"></spell-selector>
                 </el-form-item>
                 <el-form-item label="触发方式">
                   <el-select v-model="itemTemplate.spelltrigger_5" placeholder="spelltrigger_5">
@@ -870,6 +875,8 @@ import {
 import { mapState, mapActions } from "vuex";
 // import * as types from "@/store/MUTATION_TYPES";
 
+import SpellSelector from "@/components/SpellSelector";
+
 export default {
   data() {
     return {
@@ -932,6 +939,9 @@ export default {
   },
   created() {
     this.init();
+  },
+  components: {
+    "spell-selector": SpellSelector
   }
 };
 </script>

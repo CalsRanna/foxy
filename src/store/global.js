@@ -39,6 +39,16 @@ export default {
       content: undefined
     }
   }),
+  actions: {
+    testMysqlConfig(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send("INIT_DATABASE_POOL", payload);
+        ipcRenderer.on("INIT_DATABASE_POOL", (event, response) => {
+          resolve(response);
+        });
+      });
+    }
+  },
   mutations: {
     [UPDATE_MYSQL_CONFIG](state, config) {
       state.mysqlConfig = config;

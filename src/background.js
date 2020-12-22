@@ -79,7 +79,7 @@ if (isDevelopment) {
 }
 
 process.on("uncaughtException", error => {
-  win.webContents.send("UPDATE_MESSAGE_REPLY", {
+  win.webContents.send("GLOBAL_MESSAGE", {
     category: "alert",
     title: "未知错误",
     message: `${error.stack}`,

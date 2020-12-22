@@ -26,10 +26,10 @@ ipcMain.on("SEARCH_GOSSIP_MENUS", (event, payload) => {
     .query(`${sql} ${where} ${limit}`)
     .then(results => {
       event.reply("SEARCH_GOSSIP_MENUS_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where} ${limit}`);
+      event.reply("GLOBAL_MESSAGE", `${sql} ${where} ${limit}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -49,9 +49,9 @@ ipcMain.on("COUNT_GOSSIP_MENUS", (event, payload) => {
     .query(`${sql} ${where}`)
     .then(results => {
       event.reply("COUNT_GOSSIP_MENUS_REPLY", results[0].total);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where}`);
+      event.reply("GLOBAL_MESSAGE", `${sql} ${where}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });

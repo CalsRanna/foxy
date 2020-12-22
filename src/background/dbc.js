@@ -48,6 +48,5 @@ ipcMain.on("SEARCH_DBC_SPELLS", event => {
 
 ipcMain.on("SEARCH_DBC_SPELL_DURATIONS", event => {
   let dbc = DBC.read(`${path}/SpellDuration.dbc`);
-  console.log(dbc);
   event.reply("SEARCH_DBC_SPELL_DURATIONS_REPLY", dbc);
 });

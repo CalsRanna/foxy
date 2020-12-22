@@ -18,6 +18,7 @@ import {
   SEARCH_SKINNING_LOOT_TEMPLATES,
   UPDATE_CREATURE_TEMPLATE
 } from "./MUTATION_TYPES";
+
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {

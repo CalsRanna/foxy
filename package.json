@@ -17,7 +17,7 @@
   "main": "background.js",
   "dependencies": {
     "chart.js": "^2.9.4",
-    "core-js": "^3.8.0",
+    "core-js": "^3.8.1",
     "element-ui": "^2.14.1",
     "mysql": "^2.18.1",
     "vue": "^2.6.12",
@@ -32,7 +32,7 @@
     "@vue/cli-plugin-vuex": "^4.5.9",
     "@vue/cli-service": "^4.5.9",
     "babel-eslint": "^10.1.0",
-    "electron": "^11.0.3",
+    "electron": "^11.1.0",
     "electron-devtools-installer": "^3.1.1",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",

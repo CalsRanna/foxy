@@ -307,17 +307,17 @@
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="effect_1">
+                <el-form-item label="效果">
                   <el-input v-model="spell.effect_1" placeholder="effect_1"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="effectBasePoints_1">
+                <el-form-item label="基础值">
                   <el-input v-model="spell.effectBasePoints_1" placeholder="effectBasePoints_1"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="effectDieSides_1">
+                <el-form-item label="浮动值">
                   <el-input v-model="spell.effectDieSides_1" placeholder="effectDieSides_1"></el-input>
                 </el-form-item>
               </el-col>

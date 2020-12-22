@@ -18,22 +18,37 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="store">保存</el-button>
+        <el-button @click="test" :loading="loading">测试</el-button>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import { UPDATE_MYSQL_CONFIG } from "@/store/MUTATION_TYPES";
+
 export default {
+  data() {
+    return {
+      loading: false
+    };
+  },
   computed: {
     ...mapState("global", { config: "mysqlConfig" })
   },
   methods: {
+    ...mapActions("global", ["testMysqlConfig"]),
     ...mapMutations("global", { storeConfig: UPDATE_MYSQL_CONFIG }),
-    store() {
-      this.storeConfig(this.config);
+    async store() {
+      this.loading = true;
+      await this.storeConfig(this.config);
+      this.loading = false;
+    },
+    async test() {
+      this.loading = true;
+      await this.testMysqlConfig(this.config);
+      this.loading = false;
     }
   }
 };
