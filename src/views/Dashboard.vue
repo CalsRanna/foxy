@@ -75,7 +75,7 @@
             文件的修改，服务端及第三方模块配置文件的修改等等，甚至自动对客户端追加补丁等功能都在尝试编码的路上了。
           </p>
           <p style="text-indent:2em;">
-            业余时间开发，进度随缘， Feature 也随缘， Bug 请到
+            闲余时间开发，进度随缘， Feature 也随缘， Bug 请到
 
             <span
               style="color: #409EFF; cursor: pointer"

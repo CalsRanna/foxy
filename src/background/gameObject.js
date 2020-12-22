@@ -1,16 +1,10 @@
 import { ipcMain } from "electron";
 
 const mysql = require("mysql");
+const connection = require("./mysql");
+const { objectToSql } = require("../libs/util");
 
-let createConnection = () =>
-  mysql.createConnection({
-    host: "127.0.0.1",
-    user: "acore",
-    password: "acore",
-    database: "acore_world"
-  });
-
-let searchGameObjectTemplates = ipcMain.on("SEARCH_GAME_OBJECT_TEMPLATES", (event, payload) => {
+ipcMain.on("SEARCH_GAME_OBJECT_TEMPLATES", (event, payload) => {
   let sql =
     "select gt.entry, gt.displayId, gt.name, gtl.name as localeName, gt.type, gt.size from gameobject_template as gt left join gameobject_template_locale as gtl on gt.entry=gtl.entry and gtl.locale='zhCN'";
   let where = "where 1=1";
@@ -26,20 +20,18 @@ let searchGameObjectTemplates = ipcMain.on("SEARCH_GAME_OBJECT_TEMPLATES", (even
     offset = (page - 1) * 50;
   }
   let limit = `limit ${offset}, 50`;
-  let connection = createConnection();
-  connection.connect();
-  connection.query(`${sql} ${where} ${limit}`, (error, results) => {
-    if (error) {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
-    } else {
+  connection
+    .query(`${sql} ${where} ${limit}`)
+    .then(results => {
       event.reply("SEARCH_GAME_OBJECT_TEMPLATES_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where} ${limit}`);
-    }
-  });
-  connection.end();
+      event.reply("GLOBAL_MESSAGE", `${sql} ${where} ${limit}`);
+    })
+    .catch(error => {
+      event.reply("GLOBAL_MESSAGE", error);
+    });
 });
 
-let countGameObjectTemplates = ipcMain.on("COUNT_GAME_OBJECT_TEMPLATES", (event, payload) => {
+ipcMain.on("COUNT_GAME_OBJECT_TEMPLATES", (event, payload) => {
   let sql =
     "select count(*) as total from gameobject_template as gt left join gameobject_template_locale as gtl on gt.entry=gtl.entry and gtl.locale='zhCN'";
   let where = "where 1=1";
@@ -49,15 +41,13 @@ let countGameObjectTemplates = ipcMain.on("COUNT_GAME_OBJECT_TEMPLATES", (event,
   if (payload.name) {
     where = `${where} and (gt.name like '%${payload.name}%' or gtl.name like '%${payload.name}%')`;
   }
-  let connection = createConnection();
-  connection.connect();
-  connection.query(`${sql} ${where}`, (error, results) => {
-    if (error) {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
-    } else {
+  connection
+    .query(`${sql} ${where}`)
+    .then(results => {
       event.reply("COUNT_GAME_OBJECT_TEMPLATES_REPLY", results[0].total);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where}`);
-    }
-  });
-  connection.end();
+      event.reply("GLOBAL_MESSAGE", `${sql} ${where}`);
+    })
+    .catch(error => {
+      event.reply("GLOBAL_MESSAGE", error);
+    });
 });

@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 
 const mysql = require("mysql");
 const connection = require("./mysql");
-const { objectToSql } = require("../libs/util");
+const { objectToSql, payloadToInsertSql } = require("../libs/util");
 
 let find = payload => {
   return new Promise((resolve, reject) => {
@@ -59,10 +59,10 @@ ipcMain.on("SEARCH_CREATURE_TEMPLATES", (event, payload) => {
     .query(`${sql} ${where} ${limit}`)
     .then(results => {
       event.reply("SEARCH_CREATURE_TEMPLATES_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where} ${limit}`);
+      event.reply("GLOBAL_MESSAGE", `${sql} ${where} ${limit}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -85,10 +85,10 @@ ipcMain.on("COUNT_CREATURE_TEMPLATES", (event, payload) => {
     .query(`${sql} ${where}`)
     .then(results => {
       event.reply("COUNT_CREATURE_TEMPLATES_REPLY", results[0].total);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql} ${where}`);
+      event.reply("GLOBAL_MESSAGE", `${sql} ${where}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -101,22 +101,24 @@ ipcMain.on("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE", event => {
 
 // 保存生物模板
 ipcMain.on("STORE_CREATURE_TEMPLATE", (event, payload) => {
-  let sql = `insert into creature_template values (${objectToSql(payload)})`;
+  // let sql = `insert into creature_template values (${objectToSql(payload)})`;
 
+  let sql = payloadToInsertSql("creature_template", payload);
   connection
     .query(`${sql}`)
     .then(results => {
       event.reply("COPY_CREATURE_TEMPLATE_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", {
+      event.reply("GLOBAL_MESSAGE", {
         category: "notification",
         title: "成功",
         message: `新建成功。`,
         type: "success"
       });
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -125,10 +127,10 @@ ipcMain.on("FIND_CREATURE_TEMPLATE", (event, payload) => {
   find(payload)
     .then(({ creatureTemplate, sql }) => {
       event.reply("FIND_CREATURE_TEMPLATE_REPLY", creatureTemplate);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -140,16 +142,16 @@ ipcMain.on("DESTROY_CREATURE_TEMPLATE", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("DESTROY_CREATURE_TEMPLATE_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", {
+      event.reply("GLOBAL_MESSAGE", {
         category: "notification",
         title: "成功",
         message: `删除成功。`,
         type: "success"
       });
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -163,14 +165,14 @@ ipcMain.on("COPY_CREATURE_TEMPLATE", (event, payload) => {
         newEntry = entry + 1;
       })
       .catch(error => {
-        event.reply("UPDATE_MESSAGE_REPLY", error);
+        event.reply("GLOBAL_MESSAGE", error);
       }),
     find(payload)
       .then(({ creatureTemplate }) => {
         newCreatureTemplate = creatureTemplate;
       })
       .catch(error => {
-        event.reply("UPDATE_MESSAGE_REPLY", error);
+        event.reply("GLOBAL_MESSAGE", error);
       })
   ])
     .then(() => {
@@ -181,20 +183,20 @@ ipcMain.on("COPY_CREATURE_TEMPLATE", (event, payload) => {
         .query(`${sql}`)
         .then(results => {
           event.reply("COPY_CREATURE_TEMPLATE_REPLY", results);
-          event.reply("UPDATE_MESSAGE_REPLY", {
+          event.reply("GLOBAL_MESSAGE", {
             category: "notification",
             title: "成功",
             message: `复制成功，新的生物模板 entry 为 ${entry}`,
             type: "success"
           });
-          event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+          event.reply("GLOBAL_MESSAGE", `${sql}`);
         })
         .catch(error => {
-          event.reply("UPDATE_MESSAGE_REPLY", error);
+          event.reply("GLOBAL_MESSAGE", error);
         });
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -206,10 +208,10 @@ ipcMain.on("SEARCH_CREATURE_TEMPLATE_LOCALES", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("SEARCH_CREATURE_TEMPLATE_LOCALES_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -221,10 +223,10 @@ ipcMain.on("FIND_CREATURE_TEMPLATE_ADDON", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("FIND_CREATURE_TEMPLATE_ADDON_REPLY", results[0]);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -236,10 +238,10 @@ ipcMain.on("FIND_CREATURE_ONKILL_REPUTATION", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("FIND_CREATURE_ONKILL_REPUTATION_REPLY", results[0]);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -251,10 +253,10 @@ ipcMain.on("SEARCH_CREATURE_EQUIP_TEMPLATES", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("SEARCH_CREATURE_EQUIP_TEMPLATES_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -266,10 +268,10 @@ ipcMain.on("SEARCH_NPC_VENDORS", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("SEARCH_NPC_VENDORS_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -281,10 +283,10 @@ ipcMain.on("SEARCH_NPC_TRAINERS", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("SEARCH_NPC_TRAINERS_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -296,10 +298,10 @@ ipcMain.on("SEARCH_CREATURE_QUEST_ITEMS", (event, payload) => {
     .query(sql)
     .then(results => {
       event.reply("SEARCH_CREATURE_QUEST_ITEMS_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -311,10 +313,10 @@ ipcMain.on("SEARCH_CREATURE_LOOT_TEMPLATES", (event, payload) => {
     .query(sql)
     .then(results => {
       event.reply("SEARCH_CREATURE_LOOT_TEMPLATES_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -326,10 +328,10 @@ ipcMain.on("SEARCH_PICKPOCKETING_LOOT_TEMPLATES", (event, payload) => {
     .query(sql)
     .then(results => {
       event.reply("SEARCH_PICKPOCKETING_LOOT_TEMPLATES_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -341,10 +343,10 @@ ipcMain.on("SEARCH_SKINNING_LOOT_TEMPLATES", (event, payload) => {
     .query(sql)
     .then(results => {
       event.reply("SEARCH_SKINNING_LOOT_TEMPLATES_REPLY", results);
-      event.reply("UPDATE_MESSAGE_REPLY", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });
 
@@ -355,6 +357,6 @@ ipcMain.on("CREATURE_TEMPLATE_MAX_ID", (event, payload) => {
       event.reply("CREATURE_TEMPLATE_MAX_ID_REPLY", id);
     })
     .catch(error => {
-      event.reply("UPDATE_MESSAGE_REPLY", error);
+      event.reply("GLOBAL_MESSAGE", error);
     });
 });

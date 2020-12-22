@@ -5,6 +5,7 @@ import {
   SEARCH_DBC_SPELLS,
   SEARCH_DBC_SPELL_DURATIONS
 } from "./MUTATION_TYPES";
+
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {

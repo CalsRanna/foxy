@@ -819,7 +819,7 @@
             </el-row>
           </el-card>
           <el-card v-loading="loading" style="margin-top: 16px">
-            <el-button type="primary" @click="storeCreatureTemplate">保存</el-button>
+            <el-button type="primary" @click="() => store('creature_template')">保存</el-button>
             <el-button @click="cancel">返回</el-button>
           </el-card>
         </el-form>
@@ -871,7 +871,7 @@
             </el-row>
           </el-card>
           <el-card v-loading="loading" style="margin-top: 16px">
-            <el-button type="primary" @click="storeCreatureTemplate">保存</el-button>
+            <el-button type="primary" @click="() => store('creature_template_addon')">保存</el-button>
             <el-button>返回</el-button>
           </el-card>
         </el-form>
@@ -950,7 +950,7 @@
           </el-form>
         </el-card>
         <el-card v-loading="loading" style="margin-top: 16px">
-          <el-button type="primary" @click="storeCreatureTemplate">保存</el-button>
+          <el-button type="primary" @click="() => store('creature_onkill_reputation')">保存</el-button>
           <el-button>返回</el-button>
         </el-card>
       </el-tab-pane>
@@ -1290,7 +1290,7 @@
       </el-table>
       <div slot="footer">
         <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="storeCreatureTemplateLocales">保存</el-button>
+        <el-button type="primary" @click="() => store('creature_template_locale')">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -1454,10 +1454,14 @@ export default {
     storeCreatureTemplateLocales() {
       this.localeDialogVisible = false;
     },
-    storeCreatureTemplate() {
-      this.$notify({
-        message: this.creatureTemplate
-      });
+    store(module) {
+      switch (module) {
+        case "creature_template":
+          this.storeCreatureTemplate(this.creatureTemplate).then(() => {});
+          break;
+        default:
+          break;
+      }
     },
     cancel() {
       this.$router.go(-1);
@@ -1470,6 +1474,7 @@ export default {
         this.findCreatureTemplate({ entry: 0 });
         let maxEntry = await this.getMaxEntryOfCreatureTemplate();
         this.creatureTemplate.entry = maxEntry + 1;
+        this.searchCreatureTemplateLocales({ entry: maxEntry + 1 });
       } else {
         this.isCreating = false;
         await Promise.all([

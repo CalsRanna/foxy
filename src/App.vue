@@ -122,7 +122,7 @@ export default {
         debug: debug === "true" ? true : false
       });
     },
-    init() {
+    async init() {
       this.initMysqlConfig();
       this.initDbcConfig();
       this.initConfigConfig();
@@ -138,7 +138,7 @@ export default {
   created() {
     this.init();
 
-    ipcRenderer.on("UPDATE_MESSAGE_REPLY", (event, response) => {
+    ipcRenderer.on("GLOBAL_MESSAGE", (event, response) => {
       if (response.category === "notification") {
         this.$notify({
           title: response.title,
