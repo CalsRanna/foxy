@@ -45,16 +45,23 @@ export default {
   }),
   actions: {
     searchCreatureTemplates({ commit }, payload) {
-      ipcRenderer.on("SEARCH_CREATURE_TEMPLATES_REPLY", (event, response) => {
-        commit(SEARCH_CREATURE_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_CREATURE_TEMPLATES", payload);
+        ipcRenderer.on("SEARCH_CREATURE_TEMPLATES_REPLY", (event, response) => {
+          commit(SEARCH_CREATURE_TEMPLATES, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("SEARCH_CREATURE_TEMPLATES", payload);
     },
     countCreatureTemplates({ commit }, payload) {
-      ipcRenderer.on("COUNT_CREATURE_TEMPLATES_REPLY", (event, response) => {
-        commit(COUNT_CREATURE_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
+        ipcRenderer.on("COUNT_CREATURE_TEMPLATES_REPLY", (event, response) => {
+          commit(COUNT_CREATURE_TEMPLATES, response);
+          resolve();
+        });
+        ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
       });
-      ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
     },
     getMaxEntryOfCreatureTemplate() {
       return new Promise(resolve => {
@@ -81,8 +88,8 @@ export default {
     updateCreatureTemplate({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send("UPDATE_CREATURE_TEMPLATE", payload);
-        ipcRenderer.on("UPDATE_CREATURE_TEMPLATE_REPLY", (event, response) => {
-          commit(UPDATE_CREATURE_TEMPLATE, response);
+        ipcRenderer.on("UPDATE_CREATURE_TEMPLATE", () => {
+          commit(UPDATE_CREATURE_TEMPLATE, payload);
           resolve();
         });
       });

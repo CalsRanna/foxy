@@ -7,8 +7,8 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">技能列表</h3>
     </el-card>
-    <el-card style="margin-top: 16px" v-loading="loading">
-      <el-form>
+    <el-card style="margin-top: 16px">
+      <el-form @submit.native.prevent="handleSearch">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-input v-model="id" placeholder="ID"></el-input>
@@ -17,16 +17,16 @@
             <el-input v-model="name" placeholder="名称"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" @click="handleSearch">查询</el-button>
+            <el-button type="primary" native-type="submit" :loading="loading" @click="handleSearch">查询</el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
       </el-form>
     </el-card>
-    <el-card v-loading="loading" style="margin-top: 16px;">
-      <el-button type="primary">新增</el-button>
-      <el-button disabled>复制</el-button>
-      <el-button type="danger" disabled>删除</el-button>
+    <el-card style="margin-top: 16px;">
+      <el-button type="primary" @click="create">新增</el-button>
+      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-pagination
@@ -38,7 +38,7 @@
         @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="spells" @row-dblclick="show">
+      <el-table :data="spells" highlight-current-row @current-change="select" @row-dblclick="show">
         <el-table-column prop="id" label="ID" sortable width="64px"></el-table-column>
         <el-table-column prop="nameLangZhCN" label="名称" width="256px" sortable> </el-table-column>
         <el-table-column prop="rankLangZhCN" label="等级" sortable width="128px"></el-table-column>
@@ -76,7 +76,8 @@ export default {
     return {
       loading: false,
       id: undefined,
-      name: undefined
+      name: undefined,
+      currentRow: undefined
     };
   },
   computed: {
@@ -88,6 +89,9 @@ export default {
         name: this.name,
         page: this.page
       };
+    },
+    disabled() {
+      return this.currentRow === undefined || this.currentRow === null ? true : false;
     }
   },
   methods: {
@@ -105,14 +109,52 @@ export default {
       this.id = undefined;
       this.name = undefined;
     },
-    show(row) {
-      this.$router.push(`/spell/${row.id}`);
+    create() {
+      this.$router.push("/spell/create");
+    },
+    handleCopy() {
+      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "info",
+        dangerouslyUseHTMLString: true
+      })
+        .then(() => {
+          // this.copy({ entry: this.currentRow.entry }).then(() => {
+          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
+          // });
+        })
+        .catch(async () => {});
+    },
+    handleDestroy() {
+      this.$confirm(
+        "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "error",
+          dangerouslyUseHTMLString: true
+        }
+      )
+        .then(() => {
+          // this.destroy({ entry: this.currentRow.entry }).then(() => {
+          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
+          // });
+        })
+        .catch(() => {});
+    },
+    select(currentRow) {
+      this.currentRow = currentRow;
     },
     async handlePaginate(page) {
       this.loading = true;
       this.paginate(page);
       await this.search(this.payload);
       this.loading = false;
+    },
+    show(row) {
+      this.$router.push(`/spell/${row.id}`);
     },
     async init() {
       this.loading = true;

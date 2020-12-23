@@ -8,7 +8,7 @@
       <h3 style="margin: 16px 0 0 0">生物模版列表</h3>
     </el-card>
     <el-card style="margin-top: 16px;">
-      <el-form>
+      <el-form @submit.native.prevent="handleSearch">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-input-number
@@ -25,7 +25,7 @@
             <el-input v-model="subname" placeholder="称号"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" @click="handleSearch">查询</el-button>
+            <el-button type="primary" native-type="submit" :loading="loading" @click="handleSearch">查询</el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
@@ -167,14 +167,14 @@ export default {
     select(currentRow) {
       this.currentRow = currentRow;
     },
-    show(row) {
-      this.$router.push(`/creature/${row.entry}`);
-    },
     async handlePaginate(page) {
       this.loading = true;
       this.paginate(page);
       await this.search(this.payload);
       this.loading = false;
+    },
+    show(row) {
+      this.$router.push(`/creature/${row.entry}`);
     },
     async init() {
       this.loading = true;

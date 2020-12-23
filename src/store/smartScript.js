@@ -12,16 +12,22 @@ export default {
   },
   actions: {
     search({ commit }, payload) {
-      ipcRenderer.on("SEARCH_SMART_SCRIPTS_REPLY", (event, response) => {
-        commit(SEARCH_SMART_SCRIPTS, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_SMART_SCRIPTS", payload);
+        ipcRenderer.on("SEARCH_SMART_SCRIPTS_REPLY", (event, response) => {
+          commit(SEARCH_SMART_SCRIPTS, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("SEARCH_SMART_SCRIPTS", payload);
     },
     count({ commit }, payload) {
-      ipcRenderer.on("COUNT_SMART_SCRIPTS_REPLY", (event, response) => {
-        commit(COUNT_SMART_SCRIPTS, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("COUNT_SMART_SCRIPTS", payload);
+        ipcRenderer.on("COUNT_SMART_SCRIPTS_REPLY", (event, response) => {
+          commit(COUNT_SMART_SCRIPTS, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("COUNT_SMART_SCRIPTS", payload);
     }
   },
   mutations: {

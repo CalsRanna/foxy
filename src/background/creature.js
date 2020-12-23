@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 
 const mysql = require("mysql");
 const connection = require("./mysql");
-const { objectToSql, payloadToInsertSql } = require("../libs/util");
+const { objectToSql, payloadToInsertSql, payloadToUpdateSql } = require("../libs/util");
 
 let find = payload => {
   return new Promise((resolve, reject) => {
@@ -101,8 +101,6 @@ ipcMain.on("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE", event => {
 
 // 保存生物模板
 ipcMain.on("STORE_CREATURE_TEMPLATE", (event, payload) => {
-  // let sql = `insert into creature_template values (${objectToSql(payload)})`;
-
   let sql = payloadToInsertSql("creature_template", payload);
   connection
     .query(`${sql}`)
@@ -112,6 +110,27 @@ ipcMain.on("STORE_CREATURE_TEMPLATE", (event, payload) => {
         category: "notification",
         title: "成功",
         message: `新建成功。`,
+        type: "success"
+      });
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
+    })
+    .catch(error => {
+      event.reply("GLOBAL_MESSAGE", `${sql}`);
+      event.reply("GLOBAL_MESSAGE", error);
+    });
+});
+
+// 修改生物模板
+ipcMain.on("UPDATE_CREATURE_TEMPLATE", (event, payload) => {
+  let sql = payloadToUpdateSql("creature_template", payload, "entry");
+  connection
+    .query(sql)
+    .then(results => {
+      event.reply("UPDATE_CREATURE_TEMPLATE", results);
+      event.reply("GLOBAL_MESSAGE", {
+        category: "notification",
+        title: "成功",
+        message: `修改成功。`,
         type: "success"
       });
       event.reply("GLOBAL_MESSAGE", `${sql}`);
@@ -165,14 +184,24 @@ ipcMain.on("COPY_CREATURE_TEMPLATE", (event, payload) => {
         newEntry = entry + 1;
       })
       .catch(error => {
-        event.reply("GLOBAL_MESSAGE", error);
+        event.reply("GLOBAL_MESSAGE", {
+          category: "alert",
+          title: "ERROR",
+          message: `${error.stack}`,
+          type: "error"
+        });
       }),
     find(payload)
       .then(({ creatureTemplate }) => {
         newCreatureTemplate = creatureTemplate;
       })
       .catch(error => {
-        event.reply("GLOBAL_MESSAGE", error);
+        event.reply("GLOBAL_MESSAGE", {
+          category: "alert",
+          title: "ERROR",
+          message: `${error.stack}`,
+          type: "error"
+        });
       })
   ])
     .then(() => {
@@ -186,17 +215,27 @@ ipcMain.on("COPY_CREATURE_TEMPLATE", (event, payload) => {
           event.reply("GLOBAL_MESSAGE", {
             category: "notification",
             title: "成功",
-            message: `复制成功，新的生物模板 entry 为 ${entry}`,
+            message: `复制成功，新的生物模板 entry 为 ${newEntry}`,
             type: "success"
           });
           event.reply("GLOBAL_MESSAGE", `${sql}`);
         })
         .catch(error => {
-          event.reply("GLOBAL_MESSAGE", error);
+          event.reply("GLOBAL_MESSAGE", {
+            category: "alert",
+            title: "ERROR",
+            message: `${error.stack}`,
+            type: "error"
+          });
         });
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_MESSAGE", {
+        category: "alert",
+        title: "ERROR",
+        message: `${error.stack}`,
+        type: "error"
+      });
     });
 });
 

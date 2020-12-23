@@ -82,7 +82,8 @@ export default {
       nameLangZhCN: undefined,
       visible: false,
       size: 50,
-      currentRow: undefined
+      currentRow: undefined,
+      innerVisible: false
     };
   },
   props: {

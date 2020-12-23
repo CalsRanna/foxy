@@ -14,7 +14,7 @@
       </h3>
     </el-card>
     <el-tabs value="creature_template" @tab-click="switchover" style="margin-top: 16px">
-      <el-tab-pane label="生物模版" name="creature_template" v-loading="loading">
+      <el-tab-pane label="生物模版" name="creature_template">
         <el-form :model="creatureTemplate" label-position="right" label-width="120px">
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
@@ -22,10 +22,13 @@
                 <el-form-item label="ID">
                   <el-input-number
                     v-model="creatureTemplate.entry"
-                    :min="0"
+                    :min="min"
                     controls-position="right"
                     placeholder="entry"
                     :disabled="disabled"
+                    v-loading="loading"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
                   ></el-input-number>
                 </el-form-item>
               </el-col>
@@ -628,8 +631,15 @@
                     </el-tooltip>
                     训练师类型
                   </template>
-                  <el-select v-model="creatureTemplate.trainer_type" placeholder="trainer_type">
-                    <el-option label="职业训练师" :value="0"></el-option>
+                  <el-select
+                    v-model="creatureTemplate.trainer_type"
+                    placeholder="trainer_type"
+                    :disabled="(creatureTemplate.npcflag & 4194416) == 0"
+                  >
+                    <el-option
+                      :label="(creatureTemplate.npcflag & 4194416) == 0 ? 0 : '职业训练师'"
+                      :value="0"
+                    ></el-option>
                     <el-option label="骑术训练师" :value="1"></el-option>
                     <el-option label="专业训练师" :value="2"></el-option>
                     <el-option label="宠物训练师" :value="3"></el-option>
@@ -648,7 +658,11 @@
                     </el-tooltip>
                     训练师法术
                   </template>
-                  <el-input v-model="creatureTemplate.trainer_spell" placeholder="trainer_spell"></el-input>
+                  <el-input
+                    v-model="creatureTemplate.trainer_spell"
+                    placeholder="trainer_spell"
+                    :disabled="(creatureTemplate.npcflag & 4194416) == 0"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -664,7 +678,11 @@
                     </el-tooltip>
                     训练师职业
                   </template>
-                  <el-select v-model="creatureTemplate.trainer_class" placeholder="trainer_class">
+                  <el-select
+                    v-model="creatureTemplate.trainer_class"
+                    placeholder="trainer_class"
+                    :disabled="(creatureTemplate.npcflag & 4194416) == 0"
+                  >
                     <el-option label="战士" :value="1"></el-option>
                     <el-option label="圣骑士" :value="2"></el-option>
                     <el-option label="猎人" :value="3"></el-option>
@@ -690,7 +708,11 @@
                     </el-tooltip>
                     训练师种族
                   </template>
-                  <el-select v-model="creatureTemplate.trainer_race" placeholder="trainer_race">
+                  <el-select
+                    v-model="creatureTemplate.trainer_race"
+                    placeholder="trainer_race"
+                    :disabled="(creatureTemplate.npcflag & 4194416) == 0"
+                  >
                     <el-option label="人类" :value="1"></el-option>
                     <el-option label="兽人" :value="2"></el-option>
                     <el-option label="矮人" :value="3"></el-option>
@@ -1027,7 +1049,13 @@
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="商人" name="npc_vendor" lazy v-loading="loading">
+      <el-tab-pane
+        label="商人"
+        name="npc_vendor"
+        lazy
+        v-loading="loading"
+        :disabled="(creatureTemplate.npcflag & 3968) == 0"
+      >
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -1078,7 +1106,13 @@
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="训练师" name="npc_trainer" lazy v-loading="loading">
+      <el-tab-pane
+        label="训练师"
+        name="npc_trainer"
+        lazy
+        v-loading="loading"
+        :disabled="(creatureTemplate.npcflag & 4194416) == 0"
+      >
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -1317,6 +1351,7 @@ export default {
   data() {
     return {
       loading: false,
+      min: 0,
       isCreating: true,
       localeDialogVisible: false,
       npcFlags: npcFlags,
@@ -1457,7 +1492,11 @@ export default {
     store(module) {
       switch (module) {
         case "creature_template":
-          this.storeCreatureTemplate(this.creatureTemplate).then(() => {});
+          if (this.isCreating) {
+            this.storeCreatureTemplate(this.creatureTemplate).then(() => {});
+          } else {
+            this.updateCreatureTemplate(this.creatureTemplate).then(() => {});
+          }
           break;
         default:
           break;
@@ -1475,6 +1514,7 @@ export default {
         let maxEntry = await this.getMaxEntryOfCreatureTemplate();
         this.creatureTemplate.entry = maxEntry + 1;
         this.searchCreatureTemplateLocales({ entry: maxEntry + 1 });
+        this.min = maxEntry + 1;
       } else {
         this.isCreating = false;
         await Promise.all([

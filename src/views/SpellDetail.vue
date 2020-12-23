@@ -13,7 +13,7 @@
         </small>
       </h3>
     </el-card>
-    <el-tabs value="basic" @tab-click="switchover" style="margin-top: 16px">
+    <el-tabs value="basic" style="margin-top: 16px">
       <el-tab-pane label="基本信息" name="basic">
         <el-form :model="spell" label-position="right" label-width="120px">
           <el-card style="margin-top: 16px">
@@ -955,9 +955,6 @@
           </el-card>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="效果" name="effect"></el-tab-pane>
-      <el-tab-pane label="标识" name="flag"></el-tab-pane>
-      <el-tab-pane label="物品" name="item"></el-tab-pane>
     </el-tabs>
   </div>
 </template>

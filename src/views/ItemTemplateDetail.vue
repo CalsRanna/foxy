@@ -799,9 +799,9 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="附魔模版" name="enchantment_template"></el-tab-pane>
-      <el-tab-pane label="Item Loot" name="item_loot"></el-tab-pane>
+      <el-tab-pane label="物品掉落" name="item_loot"></el-tab-pane>
       <el-tab-pane label="分解模版" name="disenchant_loot"></el-tab-pane>
-      <el-tab-pane label="Prospecting Loot" name="prospecting_loot"></el-tab-pane>
+      <el-tab-pane label="挖矿掉落 Loot" name="prospecting_loot"></el-tab-pane>
       <el-tab-pane label="Milling Loot" name="milling_loot"></el-tab-pane>
     </el-tabs>
     <el-dialog :visible.sync="localeDialogVisible" :show-close="false" :close-on-click-modal="false">
@@ -921,6 +921,52 @@ export default {
   },
   methods: {
     ...mapActions("item", ["find", "searchItemTemplateLocales"]),
+    async switchover(tab) {
+      let id = this.itemTemplate.entry;
+      if (tab.name === "enchantment_template") {
+        this.loading = true;
+        // await this.findCreatureTemplateAddon({ entry: id });
+        console.log(id);
+        this.loading = false;
+      }
+      // if (tab.name === "creature_onkill_reputation") {
+      //   this.loading = true;
+      //   await this.findCreatureOnKillReputation({ creatureId: id });
+      //   this.loading = false;
+      // }
+      // if (tab.name === "creature_equip_template") {
+      //   this.loading = true;
+      //   await this.searchCreatureEquipTemplates({ creatureId: id });
+      //   this.loading = false;
+      // }
+      // if (tab.name === "npc_vendor") {
+      //   this.loading = true;
+      //   await this.searchNpcVendors({ entry: id });
+      //   this.loading = false;
+      // }
+      // if (tab.name === "npc_trainer") {
+      //   this.loading = true;
+      //   await this.searchNpcTrainers({ id: id });
+      //   this.loading = false;
+      // }
+      // if (tab.name === "creature_questitem") {
+      //   await this.searchCreatureQuestItems({ creatureEntry: id });
+      //   this.loading = true;
+      // }
+      // if (tab.name === "creature_loot_template") {
+      //   await this.searchCreatureLootTemplates({ entry: id });
+      //   this.loading = true;
+      // }
+      // if (tab.name === "pickpocketing_loot_template") {
+      //   await this.searchPickpocketingLootTemplates({ entry: id });
+      //   this.loading = true;
+      // }
+      // if (tab.name === "skinning_loot_template") {
+      //   await this.searchSkinningLootTemplates({ entry: id });
+      //   this.loading = true;
+      // }
+      // this.loading = false;
+    },
     showDialog() {
       this.localeDialogVisible = true;
     },
