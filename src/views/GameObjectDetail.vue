@@ -14,7 +14,7 @@
       </h3>
     </el-card>
     <el-card style="margin-top: 16px;">
-      <el-tabs value="game_object_template" @tab-click="switchover" style="margin-top: 16px">
+      <el-tabs value="game_object_template" style="margin-top: 16px">
         <el-tab-pane label="游戏对象模版" name="game_object_template"> </el-tab-pane>
         <el-tab-pane label="模版补充" name="template_addon"></el-tab-pane>
         <el-tab-pane label="任务物品" name="quest_item"></el-tab-pane>
@@ -25,5 +25,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    localeName() {
+      return null;
+    },
+    localeDescription() {
+      return null;
+    }
+  }
+};
 </script>

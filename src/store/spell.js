@@ -13,36 +13,42 @@ export default {
   },
   actions: {
     search({ commit, rootState }, payload) {
-      let spells = [];
-      for (let spell of rootState.dbc.spells.records) {
-        if (payload.id !== undefined || payload.name !== undefined) {
-          if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
+      return new Promise(resolve => {
+        let spells = [];
+        for (let spell of rootState.dbc.spells.records) {
+          if (payload.id !== undefined || payload.name !== undefined) {
+            if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
+              spells.push(spell);
+            }
+          } else {
             spells.push(spell);
           }
-        } else {
-          spells.push(spell);
         }
-      }
-      let start = (payload.page - 1) * 50;
-      let end = payload.page * 50;
-      if (end < spells.length) {
-        commit(SEARCH_SPELLS, spells.slice(start, end));
-      } else {
-        commit(SEARCH_SPELLS, spells.slice(start));
-      }
+        let start = (payload.page - 1) * 50;
+        let end = payload.page * 50;
+        if (end < spells.length) {
+          commit(SEARCH_SPELLS, spells.slice(start, end));
+        } else {
+          commit(SEARCH_SPELLS, spells.slice(start));
+        }
+        resolve();
+      });
     },
     count({ commit, rootState }, payload) {
-      let spells = [];
-      for (let spell of rootState.dbc.spells.records) {
-        if (payload.id !== undefined || payload.name !== undefined) {
-          if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
+      return new Promise(resolve => {
+        let spells = [];
+        for (let spell of rootState.dbc.spells.records) {
+          if (payload.id !== undefined || payload.name !== undefined) {
+            if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
+              spells.push(spell);
+            }
+          } else {
             spells.push(spell);
           }
-        } else {
-          spells.push(spell);
         }
-      }
-      commit(COUNT_SPELLS, spells.length);
+        commit(COUNT_SPELLS, spells.length);
+        resolve();
+      });
     },
     find({ commit, rootState }, payload) {
       for (let spell of rootState.dbc.spells.records) {

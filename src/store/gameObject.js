@@ -16,16 +16,22 @@ export default {
   },
   actions: {
     search({ commit }, payload) {
-      ipcRenderer.on("SEARCH_GAME_OBJECT_TEMPLATES_REPLY", (event, response) => {
-        commit(SEARCH_GAME_OBJECT_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_GAME_OBJECT_TEMPLATES", payload);
+        ipcRenderer.on("SEARCH_GAME_OBJECT_TEMPLATES_REPLY", (event, response) => {
+          commit(SEARCH_GAME_OBJECT_TEMPLATES, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("SEARCH_GAME_OBJECT_TEMPLATES", payload);
     },
-    count({commit}, payload) {
-      ipcRenderer.on("COUNT_GAME_OBJECT_TEMPLATES_REPLY", (event, response) => {
-        commit(COUNT_GAME_OBJECT_TEMPLATES, response);
+    count({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send("COUNT_GAME_OBJECT_TEMPLATES", payload);
+        ipcRenderer.on("COUNT_GAME_OBJECT_TEMPLATES_REPLY", (event, response) => {
+          commit(COUNT_GAME_OBJECT_TEMPLATES, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("COUNT_GAME_OBJECT_TEMPLATES", payload);
     }
   },
   mutations: {

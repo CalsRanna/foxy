@@ -7,8 +7,8 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">内建脚本列表</h3>
     </el-card>
-    <el-card style="margin-top: 16px" v-loading="loading">
-      <el-form>
+    <el-card style="margin-top: 16px">
+      <el-form @submit.native.prevent="handleSearch">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-input v-model="entryorguid" placeholder="Entry Or GUID"></el-input>
@@ -17,16 +17,16 @@
             <el-input v-model="comment" placeholder="备注"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" @click="handleSearch">查询</el-button>
+            <el-button type="primary" native-type="submit" :loading="loading" @click="handleSearch">查询</el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
       </el-form>
     </el-card>
-    <el-card v-loading="loading" style="margin-top: 16px;">
-      <el-button type="primary">新增</el-button>
-      <el-button disabled>复制</el-button>
-      <el-button type="danger" disabled>删除</el-button>
+    <el-card style="margin-top: 16px;">
+      <el-button type="primary" @click="create">新增</el-button>
+      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-pagination
@@ -38,7 +38,7 @@
         @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="smartScripts" @row-dblclick="show">
+      <el-table :data="smartScripts" highlight-current-row @current-change="select" @row-dblclick="show">
         <el-table-column prop="entryorguid" label="Entry Or GUID" sortable></el-table-column>
         <el-table-column prop="source_type" label="类型" sortable></el-table-column>
         <el-table-column prop="id" label="编号" sortable></el-table-column>
@@ -69,7 +69,8 @@ export default {
     return {
       loading: false,
       entryorguid: undefined,
-      comment: undefined
+      comment: undefined,
+      currentRow: undefined
     };
   },
   computed: {
@@ -80,6 +81,9 @@ export default {
         comment: this.comment,
         page: this.page
       };
+    },
+    disabled() {
+      return this.currentRow === undefined || this.currentRow === null ? true : false;
     }
   },
   methods: {
@@ -94,6 +98,44 @@ export default {
     reset() {
       this.entryorguid = undefined;
       this.comment = "";
+    },
+    create() {
+      this.$router.push("/smart-script/create");
+    },
+    handleCopy() {
+      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "info",
+        dangerouslyUseHTMLString: true
+      })
+        .then(() => {
+          // this.copy({ entry: this.currentRow.entry }).then(() => {
+          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
+          // });
+        })
+        .catch(async () => {});
+    },
+    handleDestroy() {
+      this.$confirm(
+        "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "error",
+          dangerouslyUseHTMLString: true
+        }
+      )
+        .then(() => {
+          // this.destroy({ entry: this.currentRow.entry }).then(() => {
+          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
+          // });
+        })
+        .catch(() => {});
+    },
+    select(currentRow) {
+      this.currentRow = currentRow;
     },
     async handlePaginate(page) {
       this.loading = true;

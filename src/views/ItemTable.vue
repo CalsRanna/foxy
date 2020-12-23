@@ -7,7 +7,7 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">物品模版列表</h3>
     </el-card>
-    <el-card style="margin-top: 16px;" v-loading="loading">
+    <el-card style="margin-top: 16px;">
       <div>
         <span style="font-size: 14px">类别：</span>
         <el-button
@@ -101,28 +101,30 @@
       </div>
     </el-card>
     <el-card style="margin-top: 16px;">
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-input-number
-            v-model="entry"
-            controls-position="right"
-            placeholder="Entry"
-            style="width: 100%"
-          ></el-input-number>
-        </el-col>
-        <el-col :span="6">
-          <el-input v-model="name" placeholder="名称"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-button type="primary" @click="handleSearch">查询</el-button>
-          <el-button @click="reset">重置</el-button>
-        </el-col>
-      </el-row>
+      <el-form @submit.native.prevent="handleSearch">
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-input-number
+              v-model="entry"
+              controls-position="right"
+              placeholder="Entry"
+              style="width: 100%"
+            ></el-input-number>
+          </el-col>
+          <el-col :span="6">
+            <el-input v-model="name" placeholder="名称"></el-input>
+          </el-col>
+          <el-col :span="6">
+            <el-button type="primary" native-type="submit" :loading="loading" @click="handleSearch">查询</el-button>
+            <el-button @click="reset">重置</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
     </el-card>
     <el-card style="margin-top: 16px;">
       <el-button type="primary" @click="create">新增</el-button>
-      <el-button disabled>复制</el-button>
-      <el-button type="danger" disabled>删除</el-button>
+      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
     </el-card>
     <el-card v-loading="loading" style="margin-top: 16px;">
       <el-pagination
@@ -134,27 +136,10 @@
         @current-change="handlePaginate"
         style="margin-bottom: 16px"
       ></el-pagination>
-      <el-table :data="itemTemplates" @row-dblclick="show">
+      <el-table :data="itemTemplates" highlight-current-row @current-change="select" @row-dblclick="show">
         <el-table-column prop="entry" label="ID" sortable></el-table-column>
-        <el-table-column width="43px" class-name="icon-height">
-          <template slot-scope="scope">
-            <el-image
-              :src="`/icons/${icons[scope.row.displayid]}.png`"
-              style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
-            >
-              <el-image
-                src="/icons/INV_Misc_QuestionMark.png"
-                style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
-                slot="error"
-              ></el-image>
-            </el-image>
-          </template>
-        </el-table-column>
         <el-table-column label="名称" sortable>
-          <span slot-scope="scope" :style="{ color: colors[scope.row.Quality] }">
-            <template v-if="scope.row.localeName !== null">{{ scope.row.localeName }}</template>
-            <template v-else>{{ scope.row.name }}</template>
-          </span>
+          <item-template-name slot-scope="scope" :itemTemplate="scope.row"></item-template-name>
         </el-table-column>
         <el-table-column prop="class" label="类别" sortable>
           <span slot-scope="scope">
@@ -196,6 +181,8 @@
 <script>
 import { colors, localeClasses, localeSubclasses, localeInventoryTypes } from "../locales/item.js";
 
+import ItemTemplateName from "@/components/ItemTemplateName";
+
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import * as types from "@/store/MUTATION_TYPES";
 
@@ -214,7 +201,8 @@ export default {
       loading: false,
       entry: undefined,
       name: undefined,
-      pageSize: 50
+      pageSize: 50,
+      currentRow: undefined
     };
   },
   computed: {
@@ -233,6 +221,9 @@ export default {
         name: this.name,
         page: this.page
       };
+    },
+    disabled() {
+      return this.currentRow === undefined || this.currentRow === null ? true : false;
     }
   },
   methods: {
@@ -283,14 +274,49 @@ export default {
     create() {
       this.$router.push("/item/create");
     },
-    show(row) {
-      this.$router.push(`/item/${row.entry}`);
+    handleCopy() {
+      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "info",
+        dangerouslyUseHTMLString: true
+      })
+        .then(() => {
+          // this.copy({ entry: this.currentRow.entry }).then(() => {
+          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
+          // });
+        })
+        .catch(async () => {});
+    },
+    handleDestroy() {
+      this.$confirm(
+        "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "error",
+          dangerouslyUseHTMLString: true
+        }
+      )
+        .then(() => {
+          // this.destroy({ entry: this.currentRow.entry }).then(() => {
+          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
+          // });
+        })
+        .catch(() => {});
+    },
+    select(currentRow) {
+      this.currentRow = currentRow;
     },
     async handlePaginate(page) {
       this.loading = true;
       this.paginate(page);
       await this.search(this.payload);
       this.loading = false;
+    },
+    show(row) {
+      this.$router.push(`/item/${row.entry}`);
     },
     async init() {
       this.loading = true;
@@ -302,6 +328,9 @@ export default {
     if (this.itemTemplates.length === 0) {
       this.init();
     }
+  },
+  components: {
+    "item-template-name": ItemTemplateName
   }
 };
 </script>

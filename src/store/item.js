@@ -18,21 +18,27 @@ export default {
     page: 1,
     total: 0,
     itemTemplates: [],
-    itemTemplate: undefined,
+    itemTemplate: {},
     itemTemplateLocales: []
   }),
   actions: {
-    async search({ commit }, payload) {
-      ipcRenderer.on("SEARCH_ITEM_TEMPLATES_REPLY", (event, response) => {
-        commit(SEARCH_ITEM_TEMPLATES, response);
+    search({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_ITEM_TEMPLATES", payload);
+        ipcRenderer.on("SEARCH_ITEM_TEMPLATES_REPLY", (event, response) => {
+          commit(SEARCH_ITEM_TEMPLATES, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("SEARCH_ITEM_TEMPLATES", payload);
     },
-    async count({ commit }, payload) {
-      ipcRenderer.on("COUNT_ITEM_TEMPLATES_REPLY", (event, response) => {
-        commit(COUNT_ITEM_TEMPLATES, response);
+    count({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send("COUNT_ITEM_TEMPLATES", payload);
+        ipcRenderer.on("COUNT_ITEM_TEMPLATES_REPLY", (event, response) => {
+          commit(COUNT_ITEM_TEMPLATES, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("COUNT_ITEM_TEMPLATES", payload);
     },
     find({ commit }, payload) {
       ipcRenderer.on("FIND_ITEM_TEMPLATE_REPLY", (event, response) => {

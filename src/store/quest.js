@@ -12,16 +12,22 @@ export default {
   },
   actions: {
     search({ commit }, payload) {
-      ipcRenderer.on("SEARCH_QUEST_TEMPLATES_REPLY", (event, response) => {
-        commit(SEARCH_QUEST_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_QUEST_TEMPLATES", payload);
+        ipcRenderer.on("SEARCH_QUEST_TEMPLATES_REPLY", (event, response) => {
+          commit(SEARCH_QUEST_TEMPLATES, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("SEARCH_QUEST_TEMPLATES", payload);
     },
     count({ commit }, payload) {
-      ipcRenderer.on("COUNT_QUEST_TEMPLATES_REPLY", (event, response) => {
-        commit(COUNT_QUEST_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("COUNT_QUEST_TEMPLATES", payload);
+        ipcRenderer.on("COUNT_QUEST_TEMPLATES_REPLY", (event, response) => {
+          commit(COUNT_QUEST_TEMPLATES, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("COUNT_QUEST_TEMPLATES", payload);
     }
   },
   mutations: {
