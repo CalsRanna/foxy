@@ -159,7 +159,7 @@ export default {
       this.loading = false;
     },
     show(row) {
-      this.$router.push(`/quest/${row.entry}`);
+      this.$router.push(`/quest/${row.ID}`);
     },
     async init() {
       this.loading = true;
