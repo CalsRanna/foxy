@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import {
   COPY_CREATURE_TEMPLATE,
-  COUNT_ITEM_TEMPLATES,
+  COUNT_CREATURE_TEMPLATES,
   DESTROY_CREATURE_TEMPLATE,
   FIND_CREATURE_TEMPLATE,
   GET_MAX_ENTRY_OF_CREATURE_TEMPLATE,
@@ -68,7 +68,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
 });
 
 // 计算满足条件的生物模板数量
-ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
+ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
   let select =
     "select count(*) as total from creature_template as ct left join creature_template_locale as ctl on ct.entry=ctl.entry and ctl.locale='zhCN'";
 
@@ -87,7 +87,7 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
   let sql = `${select}${where}`;
 
   connection.query(sql).then(results => {
-    event.reply(COUNT_ITEM_TEMPLATES, results[0].total);
+    event.reply(COUNT_CREATURE_TEMPLATES, results[0].total);
   });
 });
 
