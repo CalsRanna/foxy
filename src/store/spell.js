@@ -15,21 +15,25 @@ export default {
     search({ commit, rootState }, payload) {
       return new Promise(resolve => {
         let spells = [];
-        for (let spell of rootState.dbc.spells.records) {
-          if (payload.id !== undefined || payload.name !== undefined) {
-            if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
+        if (rootState.dbc.spells == {}) {
+          commit(SEARCH_SPELLS, spells);
+        } else {
+          for (let spell of rootState.dbc.spells.records) {
+            if (payload.id !== undefined || payload.name !== undefined) {
+              if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
+                spells.push(spell);
+              }
+            } else {
               spells.push(spell);
             }
-          } else {
-            spells.push(spell);
           }
-        }
-        let start = (payload.page - 1) * 50;
-        let end = payload.page * 50;
-        if (end < spells.length) {
-          commit(SEARCH_SPELLS, spells.slice(start, end));
-        } else {
-          commit(SEARCH_SPELLS, spells.slice(start));
+          let start = (payload.page - 1) * 50;
+          let end = payload.page * 50;
+          if (end < spells.length) {
+            commit(SEARCH_SPELLS, spells.slice(start, end));
+          } else {
+            commit(SEARCH_SPELLS, spells.slice(start));
+          }
         }
         resolve();
       });
@@ -37,13 +41,15 @@ export default {
     count({ commit, rootState }, payload) {
       return new Promise(resolve => {
         let spells = [];
-        for (let spell of rootState.dbc.spells.records) {
-          if (payload.id !== undefined || payload.name !== undefined) {
-            if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
+        if (rootState.dbc.spells != {}) {
+          for (let spell of rootState.dbc.spells.records) {
+            if (payload.id !== undefined || payload.name !== undefined) {
+              if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
+                spells.push(spell);
+              }
+            } else {
               spells.push(spell);
             }
-          } else {
-            spells.push(spell);
           }
         }
         commit(COUNT_SPELLS, spells.length);

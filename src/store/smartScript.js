@@ -1,4 +1,4 @@
-import { SEARCH_SMART_SCRIPTS, COUNT_SMART_SCRIPTS, PAGINATE_SMART_SCRIPTS } from "./MUTATION_TYPES";
+import { SEARCH_SMART_SCRIPTS, COUNT_SMART_SCRIPTS, PAGINATE_SMART_SCRIPTS, FIND_SMART_SCRIPT } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
@@ -7,7 +7,8 @@ export default {
     return {
       page: 1,
       total: 0,
-      smartScripts: []
+      smartScripts: [],
+      smartScript: {}
     };
   },
   actions: {
@@ -28,6 +29,15 @@ export default {
           resolve();
         });
       });
+    },
+    find({commit}, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(FIND_SMART_SCRIPT, payload);
+        ipcRenderer.on(FIND_SMART_SCRIPT, (event, response) => {
+          commit(FIND_SMART_SCRIPT, response);
+          resolve();
+        })
+      })
     }
   },
   mutations: {
@@ -39,6 +49,9 @@ export default {
     },
     [PAGINATE_SMART_SCRIPTS](state, page) {
       state.page = page;
+    },
+    [FIND_SMART_SCRIPT](state, smartScript) {
+      state.smartScript = smartScript
     }
   }
 };

@@ -796,13 +796,110 @@
               <div style="clear:both"></div>
             </div>
           </el-card>
+          <el-card style="margin-top: 16px">
+            <el-button type="primary">保存</el-button>
+            <el-button>返回</el-button>
+          </el-card>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="附魔模版" name="enchantment_template"></el-tab-pane>
-      <el-tab-pane label="物品掉落" name="item_loot"></el-tab-pane>
-      <el-tab-pane label="分解模版" name="disenchant_loot"></el-tab-pane>
-      <el-tab-pane label="挖矿掉落 Loot" name="prospecting_loot"></el-tab-pane>
-      <el-tab-pane label="Milling Loot" name="milling_loot"></el-tab-pane>
+      <el-tab-pane label="附魔模版" name="item_enchantment_template">
+        <el-card style="margin-top: 16px">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
+        <el-card style="margin-top: 16px">
+          <el-table :data="itemEnchantmentTemplates">
+            <el-table-column prop="entry" label="ID"></el-table-column>
+            <el-table-column prop="ench" label="附魔"></el-table-column>
+            <el-table-column prop="Chance" label="几率"></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="物品掉落" name="item_loot_template">
+        <el-card style="margin-top: 16px">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
+        <el-card style="margin-top: 16px">
+          <el-table :data="itemLootTemplates">
+            <el-table-column prop="Entry" label="ID"></el-table-column>
+            <el-table-column prop="Item" label="物品"></el-table-column>
+            <el-table-column prop="Reference" label="关联"></el-table-column>
+            <el-table-column prop="Chance" label="几率"></el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务"></el-table-column>
+            <el-table-column prop="LootMode" label="掉落模式"></el-table-column>
+            <el-table-column prop="GroupId" label="组"></el-table-column>
+            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
+            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
+            <el-table-column prop="Comment" label="Comment"></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="分解掉落" name="disenchant_loot_template">
+        <el-card style="margin-top: 16px">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
+        <el-card style="margin-top: 16px">
+          <el-table :data="disenchantLootTemplates">
+            <el-table-column prop="Entry" label="ID"></el-table-column>
+            <el-table-column prop="Item" label="物品"></el-table-column>
+            <el-table-column prop="Reference" label="关联"></el-table-column>
+            <el-table-column prop="Chance" label="几率"></el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务"></el-table-column>
+            <el-table-column prop="LootMode" label="掉落模式"></el-table-column>
+            <el-table-column prop="GroupId" label="组"></el-table-column>
+            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
+            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
+            <el-table-column prop="Comment" label="Comment"></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="挖矿掉落" name="prospecting_loot_template">
+        <el-card style="margin-top: 16px">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
+        <el-card style="margin-top: 16px">
+          <el-table :data="prospectingLootTemplates">
+            <el-table-column prop="Entry" label="ID"></el-table-column>
+            <el-table-column prop="Item" label="物品"></el-table-column>
+            <el-table-column prop="Reference" label="关联"></el-table-column>
+            <el-table-column prop="Chance" label="几率"></el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务"></el-table-column>
+            <el-table-column prop="LootMode" label="掉落模式"></el-table-column>
+            <el-table-column prop="GroupId" label="组"></el-table-column>
+            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
+            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
+            <el-table-column prop="Comment" label="Comment"></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
+      <el-tab-pane label="铭文掉落" name="milling_loot_template">
+        <el-card style="margin-top: 16px">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
+        <el-card style="margin-top: 16px">
+          <el-table :data="millingLootTemplates">
+            <el-table-column prop="Entry" label="ID"></el-table-column>
+            <el-table-column prop="Item" label="物品"></el-table-column>
+            <el-table-column prop="Reference" label="关联"></el-table-column>
+            <el-table-column prop="Chance" label="几率"></el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务"></el-table-column>
+            <el-table-column prop="LootMode" label="掉落模式"></el-table-column>
+            <el-table-column prop="GroupId" label="组"></el-table-column>
+            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
+            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
+            <el-table-column prop="Comment" label="Comment"></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
     </el-tabs>
     <el-dialog :visible.sync="localeDialogVisible" :show-close="false" :close-on-click-modal="false">
       <div slot="title">
@@ -891,7 +988,15 @@ export default {
     };
   },
   computed: {
-    ...mapState("item", ["itemTemplate", "itemTemplateLocales"]),
+    ...mapState("item", [
+      "itemTemplate",
+      "itemTemplateLocales",
+      "itemEnchantmentTemplates",
+      "itemLootTemplates",
+      "disenchantLootTemplates",
+      "prospectingLootTemplates",
+      "millingLootTemplates"
+    ]),
     localeName() {
       if (this.itemTemplateLocales.length > 0) {
         let name = undefined;

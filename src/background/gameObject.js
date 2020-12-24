@@ -51,3 +51,19 @@ ipcMain.on("COUNT_GAME_OBJECT_TEMPLATES", (event, payload) => {
       event.reply("GLOBAL_MESSAGE", error);
     });
 });
+
+ipcMain.on("FIND_GAME_OBJECT_TEMPLATE", (event, payload) => {
+  let sql = `select * from gameobject_template where entry=${payload.entry}`;
+  connection.query(sql).then((results) => {
+    event.reply('FIND_GAME_OBJECT_TEMPLATE', results[0]);
+    event.reply("GLOBAL_MESSAGE", sql);
+  })
+})
+
+ipcMain.on('GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE', (event, payload) => {
+  let sql = 'select entry from gameobject_template order by entry desc';
+  connection.query(sql).then((results) => {
+    event.reply('GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE', results[0].entry);
+    event.reply("GLOBAL_MESSAGE", sql);
+  })
+})

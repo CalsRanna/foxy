@@ -7,7 +7,15 @@ export default {
     return {
       page: 1,
       total: 0,
-      questTemplates: []
+      questTemplates: [],
+      questTemplate: {},
+      questTemplateAddon: {},
+      questOfferReward: {},
+      questRequestItems: {},
+      creatureQuestStarters: [],
+      creatureQuestEnders: [],
+      gameObjectQuestStarters: [],
+      gameObjectQuestEnders: []
     };
   },
   actions: {
