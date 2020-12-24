@@ -766,17 +766,17 @@
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="lootid">
+                <el-form-item label="击杀掉落ID">
                   <el-input v-model="creatureTemplate.lootid" placeholder="lootid"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="pickpocketloot">
+                <el-form-item label="偷窃掉落ID">
                   <el-input v-model="creatureTemplate.pickpocketloot" placeholder="pickpocketloot"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="skinloot">
+                <el-form-item label="剥皮掉落ID">
                   <el-input v-model="creatureTemplate.skinloot" placeholder="skinloot"></el-input>
                 </el-form-item>
               </el-col>
@@ -1160,7 +1160,13 @@
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="击杀掉落" name="creature_loot_template" lazy v-loading="loading">
+      <el-tab-pane
+        label="击杀掉落"
+        name="creature_loot_template"
+        lazy
+        v-loading="loading"
+        :disabled="creatureTemplate.lootid == 0 || creatureTemplate.lootid == null"
+      >
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -1196,7 +1202,13 @@
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="偷窃掉落" name="pickpocketing_loot_template" lazy v-loading="loading">
+      <el-tab-pane
+        label="偷窃掉落"
+        name="pickpocketing_loot_template"
+        lazy
+        v-loading="loading"
+        :disabled="creatureTemplate.pickpocketloot == 0 || creatureTemplate.pickpocketloot == null"
+      >
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -1235,7 +1247,11 @@
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="剥皮掉落" name="skinning_loot_template">
+      <el-tab-pane
+        label="剥皮掉落"
+        name="skinning_loot_template"
+        :disabled="creatureTemplate.skinloot == 0 || creatureTemplate.skinloot == null"
+      >
         <el-card style="margin-top: 16px;">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
