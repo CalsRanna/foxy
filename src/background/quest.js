@@ -51,3 +51,11 @@ ipcMain.on("COUNT_QUEST_TEMPLATES", (event, payload) => {
       event.reply("GLOBAL_MESSAGE", error);
     });
 });
+
+ipcMain.on('FIND_QUEST_TEMPLATE', (event, payload) => {
+  let sql = `select * from quest_template where ID=${payload.id}`;
+  connection.query(sql).then(results => {
+    event.reply('FIND_QUEST_TEMPLATE', results[0]);
+    event.reply('GLOBAL_MESSAGE', sql);
+  })
+})

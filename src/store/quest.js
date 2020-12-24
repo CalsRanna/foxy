@@ -1,4 +1,4 @@
-import { SEARCH_QUEST_TEMPLATES, COUNT_QUEST_TEMPLATES, PAGINATE_QUEST_TEMPLATES } from "./MUTATION_TYPES";
+import { SEARCH_QUEST_TEMPLATES, COUNT_QUEST_TEMPLATES, PAGINATE_QUEST_TEMPLATES, FIND_QUEST_TEMPLATE } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
@@ -36,6 +36,15 @@ export default {
           resolve();
         });
       });
+    },
+    find({commit}, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(FIND_QUEST_TEMPLATE, payload);
+        ipcRenderer.on(FIND_QUEST_TEMPLATE, (event, response) => {
+          commit(FIND_QUEST_TEMPLATE, response);
+          resolve();
+        })
+      })
     }
   },
   mutations: {
@@ -47,6 +56,9 @@ export default {
     },
     [PAGINATE_QUEST_TEMPLATES](state, page) {
       state.page = page;
+    },
+    [FIND_QUEST_TEMPLATE](state, questTemplate) {
+      state.questTemplate = questTemplate;
     }
   }
 };

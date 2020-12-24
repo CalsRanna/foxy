@@ -217,9 +217,10 @@ export default {
     }),
     async init() {
       this.loading = true;
-      let id = this.$route.params.id;
-      console.log(id);
-      console.log(this.$route);
+      let payload = this.$route.query;
+      payload.id = this.$route.params.id;
+      await this.findSmartScript(payload);
+      this.loading = false;
     }
   },
   created() {
