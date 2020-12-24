@@ -56,8 +56,8 @@ export default {
     },
     countCreatureTemplates({ commit }, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send(COUNT_ITEM_TEMPLATES, payload);
-        ipcRenderer.on(COUNT_ITEM_TEMPLATES, (event, response) => {
+        ipcRenderer.send(COUNT_CREATURE_TEMPLATES, payload);
+        ipcRenderer.on(COUNT_CREATURE_TEMPLATES, (event, response) => {
           commit(COUNT_CREATURE_TEMPLATES, response);
           resolve();
         });
