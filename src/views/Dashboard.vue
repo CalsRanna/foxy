@@ -151,12 +151,14 @@ export default {
     },
     async init() {
       this.loading = true;
-      await this.countCreatureTemplates({});
-      await this.countGameObjectTemplates({});
-      await this.countItemTemplates({});
-      await this.countQuestTemplates({});
-      await this.countSpells({});
-      await this.countSmartScript({});
+      await Promise.all([
+        this.countCreatureTemplates({}),
+        this.countGameObjectTemplates({}),
+        this.countItemTemplates({}),
+        this.countQuestTemplates({}),
+        this.countSmartScript({}),
+        this.countSpells({})
+      ]);
       this.loading = false;
     }
   },

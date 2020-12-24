@@ -42,6 +42,7 @@
         <el-table-column prop="entryorguid" label="Entry Or GUID" sortable></el-table-column>
         <el-table-column prop="source_type" label="类型" sortable></el-table-column>
         <el-table-column prop="id" label="编号" sortable></el-table-column>
+        <el-table-column prop="link" label="链接" sortable></el-table-column>
         <el-table-column prop="event_type" label="事件类型" sortable> </el-table-column>
         <el-table-column prop="action_type" label="动作类型" sortable> </el-table-column>
         <el-table-column prop="target_type" label="目标类型" sortable> </el-table-column>
@@ -144,7 +145,9 @@ export default {
       this.loading = false;
     },
     show(row) {
-      this.$router.push(`/smart-script/${row.entryorguid}`);
+      this.$router.push(
+        `/smart-script/${row.id}?entryorguid=${row.entryorguid}&sourceType=${row.source_type}&link=${row.link}`
+      );
     },
     async init() {
       this.loading = true;

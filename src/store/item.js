@@ -19,7 +19,12 @@ export default {
     total: 0,
     itemTemplates: [],
     itemTemplate: {},
-    itemTemplateLocales: []
+    itemTemplateLocales: [],
+    itemEnchantmentTemplates: [],
+    itemLootTemplates: [],
+    disenchantLootTemplates: [],
+    prospectingLootTemplates: [],
+    millingLootTemplates: []
   }),
   actions: {
     search({ commit }, payload) {

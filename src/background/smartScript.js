@@ -6,7 +6,7 @@ const { objectToSql } = require("../libs/util");
 
 ipcMain.on("SEARCH_SMART_SCRIPTS", (event, payload) => {
   let sql =
-    "select ss.entryorguid, ss.source_type, ss.id, ss.event_type, ss.action_type, ss.target_type,ss.comment from smart_scripts as ss";
+    "select ss.entryorguid, ss.source_type, ss.id, ss.link, ss.event_type, ss.action_type, ss.target_type,ss.comment from smart_scripts as ss";
   let where = "where 1=1";
   if (payload.entryorguid) {
     where = `${where} and ss.entryorguid like '%${payload.entryorguid}%'`;
@@ -50,3 +50,11 @@ ipcMain.on("COUNT_SMART_SCRIPTS", (event, payload) => {
       event.reply("GLOBAL_MESSAGE", error);
     });
 });
+
+ipcMain.on('FIND_SMART_SCRIPT', (event, payload) => {
+  let sql = `select * from smart_scripts where entryorguid=${payload.entryorguid} and source_type=${payload.sourceType} and id=${payload.id} and link=${payload.link}`;
+  connection.query(sql).then((results) => {
+    event.reply('FIND_SMART_SCRIPT', results[0]);
+    event.reply("GLOBAL_MESSAGE", sql);
+  })
+})
