@@ -138,25 +138,31 @@ export default {
   created() {
     this.init();
 
-    ipcRenderer.on("GLOBAL_MESSAGE", (event, response) => {
-      if (response.category === "notification") {
-        this.$notify({
-          title: response.title,
-          message: response.message,
-          type: response.type
-        });
-      } else if (response.category === "alert" && this.developerConfig.debug) {
-        this.$alert(response.message.replace(/at/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at"), response.title, {
-          type: response.type,
-          dangerouslyUseHTMLString: true,
-          customClass: "wider-message-box"
-        });
-      } else {
-        if (this.developerConfig.debug) {
-          this.$message({
-            message: response
+    ipcRenderer.on("GLOBAL_NOTICE", (event, response) => {
+      switch (response.category) {
+        case "message":
+          if (this.developerConfig.debug) {
+            this.$message({
+              message: response.message
+            });
+          }
+          break;
+        case "notification":
+          this.$notify({
+            type: response.type,
+            title: response.title,
+            message: response.message
           });
-        }
+          break;
+        case "alert":
+          this.$alert(response.message.replace(/at/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at"), response.title, {
+            type: response.type,
+            dangerouslyUseHTMLString: true,
+            customClass: "wider-message-box"
+          });
+          break;
+        default:
+          break;
       }
     });
   }

@@ -16,7 +16,7 @@ exports.createPool = config => {
 
 exports.release = connection => {
   connection.end(error => {
-    console.log(error);
+    throw new Error(error);
   });
 };
 
@@ -25,16 +25,22 @@ exports.query = sql =>
     pool.getConnection((error, connection) => {
       if (error) {
         reject(error);
+        throw new Error(error);
       }
       connection.query(sql, (error, results) => {
         if (error) {
           reject(error);
+          throw new Error(error);
         } else {
           resolve(results);
         }
+        let packagedError = new Error(sql);
+        packagedError.code = "MSG_SQL";
+        throw packagedError;
       });
       connection.release(error => {
         reject(error);
+        throw new Error(error);
       });
     });
   });

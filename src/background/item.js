@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 
 const mysql = require("mysql");
-const connection = require("./mysql");
+const connection = require("../libs/mysql");
 const { objectToSql } = require("../libs/util");
 
 ipcMain.on("SEARCH_ITEM_TEMPLATES", (event, payload) => {
@@ -33,10 +33,10 @@ ipcMain.on("SEARCH_ITEM_TEMPLATES", (event, payload) => {
     .query(`${sql} ${where} ${limit}`)
     .then(results => {
       event.reply("SEARCH_ITEM_TEMPLATES_REPLY", results);
-      event.reply("GLOBAL_MESSAGE", `${sql} ${where} ${limit}`);
+      event.reply("GLOBAL_NOTICE", `${sql} ${where} ${limit}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
 
@@ -63,10 +63,10 @@ ipcMain.on("COUNT_ITEM_TEMPLATES", (event, payload) => {
     .query(`${sql} ${where}`)
     .then(results => {
       event.reply("COUNT_ITEM_TEMPLATES_REPLY", results[0].total);
-      event.reply("GLOBAL_MESSAGE", `${sql} ${where}`);
+      event.reply("GLOBAL_NOTICE", `${sql} ${where}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
 
@@ -76,10 +76,10 @@ ipcMain.on("FIND_ITEM_TEMPLATE", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("FIND_ITEM_TEMPLATE_REPLY", results[0]);
-      event.reply("GLOBAL_MESSAGE", `${sql}`);
+      event.reply("GLOBAL_NOTICE", `${sql}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
 
@@ -89,10 +89,10 @@ ipcMain.on("ITEM_TEMPLATE_MAX_ID", event => {
     .query(`${sql}`)
     .then(results => {
       event.reply("ITEM_TEMPLATE_MAX_ID_REPLY", results[0].entry);
-      event.reply("GLOBAL_MESSAGE", `${sql}`);
+      event.reply("GLOBAL_NOTICE", `${sql}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
 
@@ -102,9 +102,9 @@ ipcMain.on("SEARCH_ITEM_TEMPLATE_LOCALES", (event, payload) => {
     .query(`${sql}`)
     .then(results => {
       event.reply("SEARCH_ITEM_TEMPLATE_LOCALES_REPLY", results);
-      event.reply("GLOBAL_MESSAGE", `${sql}`);
+      event.reply("GLOBAL_NOTICE", `${sql}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });

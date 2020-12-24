@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 
 const mysql = require("mysql");
-const connection = require("./mysql");
+const connection = require("../libs/mysql");
 const { objectToSql } = require("../libs/util");
 
 ipcMain.on("SEARCH_GAME_OBJECT_TEMPLATES", (event, payload) => {
@@ -24,10 +24,10 @@ ipcMain.on("SEARCH_GAME_OBJECT_TEMPLATES", (event, payload) => {
     .query(`${sql} ${where} ${limit}`)
     .then(results => {
       event.reply("SEARCH_GAME_OBJECT_TEMPLATES_REPLY", results);
-      event.reply("GLOBAL_MESSAGE", `${sql} ${where} ${limit}`);
+      event.reply("GLOBAL_NOTICE", `${sql} ${where} ${limit}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
 
@@ -45,25 +45,25 @@ ipcMain.on("COUNT_GAME_OBJECT_TEMPLATES", (event, payload) => {
     .query(`${sql} ${where}`)
     .then(results => {
       event.reply("COUNT_GAME_OBJECT_TEMPLATES_REPLY", results[0].total);
-      event.reply("GLOBAL_MESSAGE", `${sql} ${where}`);
+      event.reply("GLOBAL_NOTICE", `${sql} ${where}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
 
 ipcMain.on("FIND_GAME_OBJECT_TEMPLATE", (event, payload) => {
   let sql = `select * from gameobject_template where entry=${payload.entry}`;
-  connection.query(sql).then((results) => {
-    event.reply('FIND_GAME_OBJECT_TEMPLATE', results[0]);
-    event.reply("GLOBAL_MESSAGE", sql);
-  })
-})
+  connection.query(sql).then(results => {
+    event.reply("FIND_GAME_OBJECT_TEMPLATE", results[0]);
+    event.reply("GLOBAL_NOTICE", sql);
+  });
+});
 
-ipcMain.on('GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE', (event, payload) => {
-  let sql = 'select entry from gameobject_template order by entry desc';
-  connection.query(sql).then((results) => {
-    event.reply('GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE', results[0].entry);
-    event.reply("GLOBAL_MESSAGE", sql);
-  })
-})
+ipcMain.on("GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE", (event, payload) => {
+  let sql = "select entry from gameobject_template order by entry desc";
+  connection.query(sql).then(results => {
+    event.reply("GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE", results[0].entry);
+    event.reply("GLOBAL_NOTICE", sql);
+  });
+});

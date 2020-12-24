@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 
 const mysql = require("mysql");
-const connection = require("./mysql");
+const connection = require("../libs/mysql");
 const { objectToSql } = require("../libs/util");
 
 // 搜索满足条件的生物模板
@@ -26,10 +26,10 @@ ipcMain.on("SEARCH_GOSSIP_MENUS", (event, payload) => {
     .query(`${sql} ${where} ${limit}`)
     .then(results => {
       event.reply("SEARCH_GOSSIP_MENUS_REPLY", results);
-      event.reply("GLOBAL_MESSAGE", `${sql} ${where} ${limit}`);
+      event.reply("GLOBAL_NOTICE", `${sql} ${where} ${limit}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
 
@@ -49,9 +49,9 @@ ipcMain.on("COUNT_GOSSIP_MENUS", (event, payload) => {
     .query(`${sql} ${where}`)
     .then(results => {
       event.reply("COUNT_GOSSIP_MENUS_REPLY", results[0].total);
-      event.reply("GLOBAL_MESSAGE", `${sql} ${where}`);
+      event.reply("GLOBAL_NOTICE", `${sql} ${where}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
