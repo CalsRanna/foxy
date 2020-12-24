@@ -79,12 +79,19 @@ if (isDevelopment) {
 }
 
 process.on("uncaughtException", error => {
-  win.webContents.send("GLOBAL_MESSAGE", {
-    category: "alert",
-    title: "未知错误",
-    message: `${error.stack}`,
-    type: "error"
-  });
+  if (error.code == "MSG_SQL") {
+    win.webContents.send("GLOBAL_NOTICE", {
+      category: "message",
+      message: error.message
+    });
+  } else {
+    win.webContents.send("GLOBAL_NOTICE", {
+      category: "alert",
+      type: "error",
+      title: `${error.code}`,
+      message: `${error.message}<br>${error.stack}`
+    });
+  }
 });
 
 ipcMain.on("SELECT_DBC_PATH", event => {

@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 
 const mysql = require("mysql");
-const connection = require("./mysql");
+const connection = require("../libs/mysql");
 const { objectToSql } = require("../libs/util");
 
 ipcMain.on("SEARCH_SMART_SCRIPTS", (event, payload) => {
@@ -24,10 +24,10 @@ ipcMain.on("SEARCH_SMART_SCRIPTS", (event, payload) => {
     .query(`${sql} ${where} ${limit}`)
     .then(results => {
       event.reply("SEARCH_SMART_SCRIPTS_REPLY", results);
-      event.reply("GLOBAL_MESSAGE", `${sql} ${where} ${limit}`);
+      event.reply("GLOBAL_NOTICE", `${sql} ${where} ${limit}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
 
@@ -44,17 +44,17 @@ ipcMain.on("COUNT_SMART_SCRIPTS", (event, payload) => {
     .query(`${sql} ${where}`)
     .then(results => {
       event.reply("COUNT_SMART_SCRIPTS_REPLY", results[0].total);
-      event.reply("GLOBAL_MESSAGE", `${sql} ${where}`);
+      event.reply("GLOBAL_NOTICE", `${sql} ${where}`);
     })
     .catch(error => {
-      event.reply("GLOBAL_MESSAGE", error);
+      event.reply("GLOBAL_NOTICE", error);
     });
 });
 
-ipcMain.on('FIND_SMART_SCRIPT', (event, payload) => {
+ipcMain.on("FIND_SMART_SCRIPT", (event, payload) => {
   let sql = `select * from smart_scripts where entryorguid=${payload.entryorguid} and source_type=${payload.sourceType} and id=${payload.id} and link=${payload.link}`;
-  connection.query(sql).then((results) => {
-    event.reply('FIND_SMART_SCRIPT', results[0]);
-    event.reply("GLOBAL_MESSAGE", sql);
-  })
-})
+  connection.query(sql).then(results => {
+    event.reply("FIND_SMART_SCRIPT", results[0]);
+    event.reply("GLOBAL_NOTICE", sql);
+  });
+});

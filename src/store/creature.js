@@ -16,7 +16,8 @@ import {
   SEARCH_CREATURE_LOOT_TEMPLATES,
   SEARCH_PICKPOCKETING_LOOT_TEMPLATES,
   SEARCH_SKINNING_LOOT_TEMPLATES,
-  UPDATE_CREATURE_TEMPLATE
+  UPDATE_CREATURE_TEMPLATE,
+  GET_MAX_ENTRY_OF_CREATURE_TEMPLATE
 } from "./MUTATION_TYPES";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
@@ -46,8 +47,8 @@ export default {
   actions: {
     searchCreatureTemplates({ commit }, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send("SEARCH_CREATURE_TEMPLATES", payload);
-        ipcRenderer.on("SEARCH_CREATURE_TEMPLATES_REPLY", (event, response) => {
+        ipcRenderer.send(SEARCH_CREATURE_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_CREATURE_TEMPLATES, (event, response) => {
           commit(SEARCH_CREATURE_TEMPLATES, response);
           resolve();
         });
@@ -55,18 +56,17 @@ export default {
     },
     countCreatureTemplates({ commit }, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
-        ipcRenderer.on("COUNT_CREATURE_TEMPLATES_REPLY", (event, response) => {
+        ipcRenderer.send(COUNT_ITEM_TEMPLATES, payload);
+        ipcRenderer.on(COUNT_ITEM_TEMPLATES, (event, response) => {
           commit(COUNT_CREATURE_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.send("COUNT_CREATURE_TEMPLATES", payload);
       });
     },
     getMaxEntryOfCreatureTemplate() {
       return new Promise(resolve => {
-        ipcRenderer.send("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE");
-        ipcRenderer.on("GET_MAX_ENTRY_OF_CREATURE_TEMPLATE_REPLY", (event, response) => {
+        ipcRenderer.send(GET_MAX_ENTRY_OF_CREATURE_TEMPLATE);
+        ipcRenderer.on(GET_MAX_ENTRY_OF_CREATURE_TEMPLATE, (event, response) => {
           resolve(response);
         });
       });

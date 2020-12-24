@@ -1,4 +1,4 @@
-let mysql = require("./mysql");
+let mysql = require("../libs/mysql");
 
 const { ipcMain } = require("electron");
 
@@ -9,7 +9,7 @@ ipcMain.on("INIT_DATABASE_POOL", (event, payload) => {
     mysql
       .query("select guid from creature")
       .then(() => {
-        event.reply("GLOBAL_MESSAGE", {
+        event.reply("GLOBAL_NOTICE", {
           category: "notification",
           title: "成功",
           message: `数据库配置检验成功，已更新并保存。`,
@@ -18,7 +18,7 @@ ipcMain.on("INIT_DATABASE_POOL", (event, payload) => {
         event.reply("INIT_DATABASE_POOL");
       })
       .catch(error => {
-        event.reply("GLOBAL_MESSAGE", {
+        event.reply("GLOBAL_NOTICE", {
           category: "notification",
           title: "失败",
           message: `数据库配置检验失败: ${error}`,
@@ -27,7 +27,7 @@ ipcMain.on("INIT_DATABASE_POOL", (event, payload) => {
         event.reply("INIT_DATABASE_POOL");
       });
   } catch (error) {
-    event.reply("GLOBAL_MESSAGE", {
+    event.reply("GLOBAL_NOTICE", {
       category: "notification",
       title: "失败",
       message: `数据库连接失败，请检查配置信息。`,
