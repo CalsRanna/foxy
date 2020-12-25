@@ -1,20 +1,30 @@
 import { ipcMain } from "electron";
+
 import {
   COPY_CREATURE_TEMPLATE,
   COUNT_CREATURE_TEMPLATES,
   DESTROY_CREATURE_TEMPLATE,
+  FIND_CREATURE_ONKILL_REPUTATION,
   FIND_CREATURE_TEMPLATE,
+  FIND_CREATURE_TEMPLATE_ADDON,
   GET_MAX_ENTRY_OF_CREATURE_TEMPLATE,
   GLOBAL_NOTICE,
+  SEARCH_CREATURE_EQUIP_TEMPLATES,
+  SEARCH_CREATURE_LOOT_TEMPLATES,
+  SEARCH_CREATURE_QUEST_ITEMS,
   SEARCH_CREATURE_TEMPLATES,
   SEARCH_CREATURE_TEMPLATE_LOCALES,
+  SEARCH_NPC_TRAINERS,
+  SEARCH_NPC_VENDORS,
+  SEARCH_PICKPOCKETING_LOOT_TEMPLATES,
+  SEARCH_SKINNING_LOOT_TEMPLATES,
   STORE_CREATURE_TEMPLATE,
+  STORE_CREATURE_TEMPLATE_LOCALES,
   UPDATE_CREATURE_TEMPLATE
 } from "../constants";
 
-const mysql = require("mysql");
 const connection = require("../libs/mysql");
-const { objectToSql, payloadToInsertSql, payloadToUpdateSql } = require("../libs/util");
+const { payloadToInsertSql, payloadToUpdateSql, payloadToBatchInsertSql, payloadToDeleteSql } = require("../libs/util");
 
 let find = payload => {
   return new Promise((resolve, reject) => {
@@ -139,7 +149,7 @@ ipcMain.on(FIND_CREATURE_TEMPLATE, (event, payload) => {
 ipcMain.on(DESTROY_CREATURE_TEMPLATE, (event, payload) => {
   let sql = `delete from creature_template where entry=${payload.entry}`;
 
-  connection.query(`${sql}`).then(results => {
+  connection.query(sql).then(results => {
     event.reply(DESTROY_CREATURE_TEMPLATE, results);
     event.reply("GLOBAL_NOTICE", {
       category: "notification",
@@ -171,7 +181,7 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
         type: "success",
         category: "notification",
         title: "成功",
-        message: `复制成功，新的生物模板 entry 为 ${newEntry}`
+        message: `复制成功，新的生物模板 entry 为 ${newEntry}。`
       });
     });
   });
@@ -186,148 +196,101 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
   });
 });
 
-// 根据条件得到指定的生物模板补充信息
-ipcMain.on("FIND_CREATURE_TEMPLATE_ADDON", (event, payload) => {
-  let sql = `select * from creature_template_addon where entry = ${payload.entry}`;
+// 保存本地化生物模板，批量保存
+ipcMain.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
+  let deleteSql = payloadToDeleteSql("creature_template_locale", payload);
+  let sql = payloadToBatchInsertSql("creature_template_locale", payload);
 
-  connection
-    .query(`${sql}`)
-    .then(results => {
-      event.reply("FIND_CREATURE_TEMPLATE_ADDON_REPLY", results[0]);
-      event.reply("GLOBAL_NOTICE", `${sql}`);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
+  connection.query(deleteSql).then(() => {
+    connection.query(sql).then(() => {
+      event.reply(STORE_CREATURE_TEMPLATE_LOCALES, payload);
+      event.reply(GLOBAL_NOTICE, {
+        type: "success",
+        category: "notification",
+        title: "成功",
+        message: `保存成功。`
+      });
     });
+  });
+});
+
+// 根据条件得到指定的生物模板补充信息
+ipcMain.on(FIND_CREATURE_TEMPLATE_ADDON, (event, payload) => {
+  let sql = `select * from creature_template_addon where entry=${payload.entry}`;
+
+  connection.query(sql).then(results => {
+    event.reply(FIND_CREATURE_TEMPLATE_ADDON, results[0]);
+  });
 });
 
 // 根据条件得到指定的生物击杀声望奖励
-ipcMain.on("FIND_CREATURE_ONKILL_REPUTATION", (event, payload) => {
-  let sql = `select * from creature_onkill_reputation where creature_id = ${payload.creatureId}`;
+ipcMain.on(FIND_CREATURE_ONKILL_REPUTATION, (event, payload) => {
+  let sql = `select * from creature_onkill_reputation where creature_id=${payload.creatureId}`;
 
-  connection
-    .query(`${sql}`)
-    .then(results => {
-      event.reply("FIND_CREATURE_ONKILL_REPUTATION_REPLY", results[0]);
-      event.reply("GLOBAL_NOTICE", `${sql}`);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
-    });
+  connection.query(sql).then(results => {
+    event.reply(FIND_CREATURE_ONKILL_REPUTATION, results[0]);
+  });
 });
 
 // 搜索满足条件的生物装备模板
-ipcMain.on("SEARCH_CREATURE_EQUIP_TEMPLATES", (event, payload) => {
-  let sql = `select cet.*, it1.displayid as displayid1, it1.name as name1, itl1.Name as Name1, it2.displayid as displayid2, it2.name as name2, itl2.Name as Name2, it3.displayid as displayid3, it3.name as name3, itl3.Name as Name3 from creature_equip_template as cet left join item_template as it1 on cet.ItemID1 = it1.entry left join item_template_locale as itl1 on cet.ItemID1 = itl1.ID and itl1.locale = 'zhCN' left join item_template as it2 on cet.ItemID2 = it2.entry left join item_template_locale as itl2 on cet.ItemID2 = itl2.ID and itl2.locale = 'zhCN' left join item_template as it3 on cet.ItemID3 = it3.entry left join item_template_locale as itl3 on cet.ItemID3 = itl3.ID and itl3.locale = 'zhCN' where cet.CreatureID = ${payload.creatureId}`;
+ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
+  let sql = `select cet.*, it1.displayid as displayid1, it1.name as name1, itl1.Name as Name1, it2.displayid as displayid2, it2.name as name2, itl2.Name as Name2, it3.displayid as displayid3, it3.name as name3, itl3.Name as Name3 from creature_equip_template as cet left join item_template as it1 on cet.ItemID1 = it1.entry left join item_template_locale as itl1 on cet.ItemID1 = itl1.ID and itl1.locale = 'zhCN' left join item_template as it2 on cet.ItemID2 = it2.entry left join item_template_locale as itl2 on cet.ItemID2 = itl2.ID and itl2.locale = 'zhCN' left join item_template as it3 on cet.ItemID3 = it3.entry left join item_template_locale as itl3 on cet.ItemID3 = itl3.ID and itl3.locale = 'zhCN' where cet.CreatureID=${payload.creatureId}`;
 
-  connection
-    .query(`${sql}`)
-    .then(results => {
-      event.reply("SEARCH_CREATURE_EQUIP_TEMPLATES_REPLY", results);
-      event.reply("GLOBAL_NOTICE", `${sql}`);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
-    });
+  connection.query(sql).then(results => {
+    event.reply(SEARCH_CREATURE_EQUIP_TEMPLATES, results);
+  });
 });
 
 // 搜索满足条件的商人信息
-ipcMain.on("SEARCH_NPC_VENDORS", (event, payload) => {
-  let sql = `select nv.*, it.displayid, it.name, itl.Name from npc_vendor as nv left join item_template as it on nv.item = it.entry left join item_template_locale as itl on nv.item = itl.ID and itl.locale='zhCN' where nv.entry = ${payload.entry}`;
+ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
+  let sql = `select nv.*, it.displayid, it.name, itl.Name from npc_vendor as nv left join item_template as it on nv.item = it.entry left join item_template_locale as itl on nv.item = itl.ID and itl.locale='zhCN' where nv.entry=${payload.entry}`;
 
-  connection
-    .query(`${sql}`)
-    .then(results => {
-      event.reply("SEARCH_NPC_VENDORS_REPLY", results);
-      event.reply("GLOBAL_NOTICE", `${sql}`);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
-    });
+  connection.query(sql).then(results => {
+    event.reply(SEARCH_NPC_VENDORS, results);
+  });
 });
 
 // 搜索满足条件的训练师信息
-ipcMain.on("SEARCH_NPC_TRAINERS", (event, payload) => {
-  let sql = `select * from npc_trainer where ID = ${payload.id}`;
+ipcMain.on(SEARCH_NPC_TRAINERS, (event, payload) => {
+  let sql = `select * from npc_trainer where ID=${payload.id}`;
 
-  connection
-    .query(`${sql}`)
-    .then(results => {
-      event.reply("SEARCH_NPC_TRAINERS_REPLY", results);
-      event.reply("GLOBAL_NOTICE", `${sql}`);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
-    });
+  connection.query(`${sql}`).then(results => {
+    event.reply(SEARCH_NPC_TRAINERS, results);
+  });
 });
 
 // 搜索满足条件的生物任务物品掉落
-ipcMain.on("SEARCH_CREATURE_QUEST_ITEMS", (event, payload) => {
-  let sql = `select cq.*, it.name, itl.Name as localeName from creature_questitem as cq left join item_template as it on cq.ItemId = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where cq.CreatureEntry = ${payload.creatureEntry}`;
+ipcMain.on(SEARCH_CREATURE_QUEST_ITEMS, (event, payload) => {
+  let sql = `select cq.*, it.name, itl.Name as localeName from creature_questitem as cq left join item_template as it on cq.ItemId = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where cq.CreatureEntry=${payload.creatureEntry}`;
 
-  connection
-    .query(sql)
-    .then(results => {
-      event.reply("SEARCH_CREATURE_QUEST_ITEMS_REPLY", results);
-      event.reply("GLOBAL_NOTICE", `${sql}`);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
-    });
+  connection.query(sql).then(results => {
+    event.reply(SEARCH_CREATURE_QUEST_ITEMS, results);
+  });
 });
 
 // 搜索满足条件的生物击杀物品掉落
-ipcMain.on("SEARCH_CREATURE_LOOT_TEMPLATES", (event, payload) => {
-  let sql = `select clt.*, it.name, itl.Name as localeName from creature_loot_template as clt left join item_template as it on clt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where clt.Entry = ${payload.entry}`;
+ipcMain.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, payload) => {
+  let sql = `select clt.*, it.name, itl.Name as localeName from creature_loot_template as clt left join item_template as it on clt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where clt.Entry=${payload.entry}`;
 
-  connection
-    .query(sql)
-    .then(results => {
-      event.reply("SEARCH_CREATURE_LOOT_TEMPLATES_REPLY", results);
-      event.reply("GLOBAL_NOTICE", `${sql}`);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
-    });
+  connection.query(sql).then(results => {
+    event.reply(SEARCH_CREATURE_LOOT_TEMPLATES, results);
+  });
 });
 
 // 搜索满足条件的生物偷窃物品掉落
-ipcMain.on("SEARCH_PICKPOCKETING_LOOT_TEMPLATES", (event, payload) => {
-  let sql = `select plt.*, it.name, itl.Name as localeName from pickpocketing_loot_template as plt left join item_template as it on plt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where plt.Entry = ${payload.entry}`;
+ipcMain.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, payload) => {
+  let sql = `select plt.*, it.name, itl.Name as localeName from pickpocketing_loot_template as plt left join item_template as it on plt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where plt.Entry=${payload.entry}`;
 
-  connection
-    .query(sql)
-    .then(results => {
-      event.reply("SEARCH_PICKPOCKETING_LOOT_TEMPLATES_REPLY", results);
-      event.reply("GLOBAL_NOTICE", `${sql}`);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
-    });
+  connection.query(sql).then(results => {
+    event.reply(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, results);
+  });
 });
 
 // 搜索满足条件的生物剥皮物品掉落
-ipcMain.on("SEARCH_SKINNING_LOOT_TEMPLATES", (event, payload) => {
-  let sql = `select slt.*, it.name, itl.Name as localeName from skinning_loot_template as slt left join item_template as it on slt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where slt.Entry = ${payload.entry}`;
+ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
+  let sql = `select slt.*, it.name, itl.Name as localeName from skinning_loot_template as slt left join item_template as it on slt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where slt.Entry=${payload.entry}`;
 
-  connection
-    .query(sql)
-    .then(results => {
-      event.reply("SEARCH_SKINNING_LOOT_TEMPLATES_REPLY", results);
-      event.reply("GLOBAL_NOTICE", `${sql}`);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
-    });
-});
-
-// 获得当前生物模板中最大的ID
-ipcMain.on("CREATURE_TEMPLATE_MAX_ID", (event, payload) => {
-  maxEntry()
-    .then(id => {
-      event.reply("CREATURE_TEMPLATE_MAX_ID_REPLY", id);
-    })
-    .catch(error => {
-      event.reply("GLOBAL_NOTICE", error);
-    });
+  connection.query(sql).then(results => {
+    event.reply(SEARCH_SKINNING_LOOT_TEMPLATES, results);
+  });
 });

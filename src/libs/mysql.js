@@ -21,15 +21,13 @@ exports.release = connection => {
 };
 
 exports.query = sql =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     pool.getConnection((error, connection) => {
       if (error) {
-        reject(error);
         throw new Error(error);
       }
       connection.query(sql, (error, results) => {
         if (error) {
-          reject(error);
           throw new Error(error);
         } else {
           resolve(results);
@@ -39,7 +37,6 @@ exports.query = sql =>
         throw packagedError;
       });
       connection.release(error => {
-        reject(error);
         throw new Error(error);
       });
     });

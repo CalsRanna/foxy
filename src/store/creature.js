@@ -17,8 +17,12 @@ import {
   SEARCH_PICKPOCKETING_LOOT_TEMPLATES,
   SEARCH_SKINNING_LOOT_TEMPLATES,
   UPDATE_CREATURE_TEMPLATE,
-  GET_MAX_ENTRY_OF_CREATURE_TEMPLATE
-} from "./MUTATION_TYPES";
+  GET_MAX_ENTRY_OF_CREATURE_TEMPLATE,
+  STORE_CREATURE_TEMPLATE,
+  STORE_CREATURE_TEMPLATE_LOCALES,
+  DESTROY_CREATURE_TEMPLATE,
+  COPY_CREATURE_TEMPLATE
+} from "../constants";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
 
@@ -73,22 +77,22 @@ export default {
     },
     storeCreatureTemplate(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send("STORE_CREATURE_TEMPLATE", payload);
-        ipcRenderer.on("STORE_CREATURE_TEMPLATE_REPLY", () => {
+        ipcRenderer.send(STORE_CREATURE_TEMPLATE, payload);
+        ipcRenderer.on(STORE_CREATURE_TEMPLATE, () => {
           resolve();
         });
       });
     },
     findCreatureTemplate({ commit }, payload) {
-      ipcRenderer.send("FIND_CREATURE_TEMPLATE", payload);
-      ipcRenderer.on("FIND_CREATURE_TEMPLATE_REPLY", (event, response) => {
+      ipcRenderer.send(FIND_CREATURE_TEMPLATE, payload);
+      ipcRenderer.on(FIND_CREATURE_TEMPLATE, (event, response) => {
         commit(FIND_CREATURE_TEMPLATE, response);
       });
     },
     updateCreatureTemplate({ commit }, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send("UPDATE_CREATURE_TEMPLATE", payload);
-        ipcRenderer.on("UPDATE_CREATURE_TEMPLATE", () => {
+        ipcRenderer.send(UPDATE_CREATURE_TEMPLATE, payload);
+        ipcRenderer.on(UPDATE_CREATURE_TEMPLATE, () => {
           commit(UPDATE_CREATURE_TEMPLATE, payload);
           resolve();
         });
@@ -96,77 +100,83 @@ export default {
     },
     destroyCreatureTemplate(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.on("DESTROY_CREATURE_TEMPLATE_REPLY", (event, response) => {
+        ipcRenderer.on(DESTROY_CREATURE_TEMPLATE, (event, response) => {
           resolve(response);
         });
-        ipcRenderer.send("DESTROY_CREATURE_TEMPLATE", payload);
+        ipcRenderer.send(DESTROY_CREATURE_TEMPLATE, payload);
       });
     },
     copyCreatureTemplate(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.on("COPY_CREATURE_TEMPLATE_REPLY", (event, response) => {
+        ipcRenderer.on(COPY_CREATURE_TEMPLATE, (event, response) => {
           resolve(response);
         });
-        ipcRenderer.send("COPY_CREATURE_TEMPLATE", payload);
+        ipcRenderer.send(COPY_CREATURE_TEMPLATE, payload);
       });
     },
     searchCreatureTemplateLocales({ commit }, payload) {
-      ipcRenderer.send("SEARCH_CREATURE_TEMPLATE_LOCALES", payload);
-      ipcRenderer.on("SEARCH_CREATURE_TEMPLATE_LOCALES_REPLY", (event, response) => {
+      ipcRenderer.send(SEARCH_CREATURE_TEMPLATE_LOCALES, payload);
+      ipcRenderer.on(SEARCH_CREATURE_TEMPLATE_LOCALES, (event, response) => {
         commit(SEARCH_CREATURE_TEMPLATE_LOCALES, response);
       });
     },
+    storeCreatureTemplateLocales({ commit }, payload) {
+      ipcRenderer.send(STORE_CREATURE_TEMPLATE_LOCALES, payload);
+      ipcRenderer.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, response) => {
+        commit(STORE_CREATURE_TEMPLATE_LOCALES, response);
+      });
+    },
     findCreatureTemplateAddon({ commit }, payload) {
-      ipcRenderer.on("FIND_CREATURE_TEMPLATE_ADDON_REPLY", (event, response) => {
+      ipcRenderer.on(FIND_CREATURE_TEMPLATE_ADDON, (event, response) => {
         commit(FIND_CREATURE_TEMPLATE_ADDON, response);
       });
-      ipcRenderer.send("FIND_CREATURE_TEMPLATE_ADDON", payload);
+      ipcRenderer.send(FIND_CREATURE_TEMPLATE_ADDON, payload);
     },
     findCreatureOnKillReputation({ commit }, payload) {
-      ipcRenderer.on("FIND_CREATURE_ONKILL_REPUTATION_REPLY", (event, response) => {
+      ipcRenderer.on(FIND_CREATURE_ONKILL_REPUTATION, (event, response) => {
         commit(FIND_CREATURE_ONKILL_REPUTATION, response);
       });
-      ipcRenderer.send("FIND_CREATURE_ONKILL_REPUTATION", payload);
+      ipcRenderer.send(FIND_CREATURE_ONKILL_REPUTATION, payload);
     },
     searchCreatureEquipTemplates({ commit }, payload) {
-      ipcRenderer.on("SEARCH_CREATURE_EQUIP_TEMPLATES_REPLY", (event, response) => {
+      ipcRenderer.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, response) => {
         commit(SEARCH_CREATURE_EQUIP_TEMPLATES, response);
       });
-      ipcRenderer.send("SEARCH_CREATURE_EQUIP_TEMPLATES", payload);
+      ipcRenderer.send(SEARCH_CREATURE_EQUIP_TEMPLATES, payload);
     },
     searchNpcVendors({ commit }, payload) {
-      ipcRenderer.on("SEARCH_NPC_VENDORS_REPLY", (event, response) => {
+      ipcRenderer.on(SEARCH_NPC_VENDORS, (event, response) => {
         commit(SEARCH_NPC_VENDORS, response);
       });
-      ipcRenderer.send("SEARCH_NPC_VENDORS", payload);
+      ipcRenderer.send(SEARCH_NPC_VENDORS, payload);
     },
     searchNpcTrainers({ commit }, payload) {
-      ipcRenderer.on("SEARCH_NPC_TRAINERS_REPLY", (event, response) => {
+      ipcRenderer.on(SEARCH_NPC_TRAINERS, (event, response) => {
         commit(SEARCH_NPC_TRAINERS, response);
       });
-      ipcRenderer.send("SEARCH_NPC_TRAINERS", payload);
+      ipcRenderer.send(SEARCH_NPC_TRAINERS, payload);
     },
     searchCreatureQuestItems({ commit }, payload) {
-      ipcRenderer.send("SEARCH_CREATURE_QUEST_ITEMS", payload);
-      ipcRenderer.on("SEARCH_CREATURE_QUEST_ITEMS_REPLY", (event, response) => {
+      ipcRenderer.send(SEARCH_CREATURE_QUEST_ITEMS, payload);
+      ipcRenderer.on(SEARCH_CREATURE_QUEST_ITEMS, (event, response) => {
         commit(SEARCH_CREATURE_QUEST_ITEMS, response);
       });
     },
     searchCreatureLootTemplates({ commit }, payload) {
-      ipcRenderer.send("SEARCH_CREATURE_LOOT_TEMPLATES", payload);
-      ipcRenderer.on("SEARCH_CREATURE_LOOT_TEMPLATES_REPLY", (event, response) => {
+      ipcRenderer.send(SEARCH_CREATURE_LOOT_TEMPLATES, payload);
+      ipcRenderer.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, response) => {
         commit(SEARCH_CREATURE_LOOT_TEMPLATES, response);
       });
     },
     searchPickpocketingLootTemplates({ commit }, payload) {
-      ipcRenderer.send("SEARCH_PICKPOCKETING_LOOT_TEMPLATES", payload);
-      ipcRenderer.on("SEARCH_PICKPOCKETING_LOOT_TEMPLATES_REPLY", (event, response) => {
+      ipcRenderer.send(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, payload);
+      ipcRenderer.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, response) => {
         commit(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, response);
       });
     },
     searchSkinningLootTemplates({ commit }, payload) {
-      ipcRenderer.send("SEARCH_SKINNING_LOOT_TEMPLATES", payload);
-      ipcRenderer.on("SEARCH_SKINNING_LOOT_TEMPLATES_REPLY", (event, response) => {
+      ipcRenderer.send(SEARCH_SKINNING_LOOT_TEMPLATES, payload);
+      ipcRenderer.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, response) => {
         commit(SEARCH_SKINNING_LOOT_TEMPLATES, response);
       });
     }
@@ -200,6 +210,9 @@ export default {
       state.creatureTemplate = creatureTemplate;
     },
     [SEARCH_CREATURE_TEMPLATE_LOCALES](state, creatureTemplateLocales) {
+      state.creatureTemplateLocales = creatureTemplateLocales;
+    },
+    [STORE_CREATURE_TEMPLATE_LOCALES](state, creatureTemplateLocales) {
       state.creatureTemplateLocales = creatureTemplateLocales;
     },
     [FIND_CREATURE_TEMPLATE_ADDON](state, creatureTemplateAddon) {

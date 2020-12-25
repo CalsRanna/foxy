@@ -40,6 +40,36 @@ exports.payloadToInsertSql = (table, payload) => {
   return `insert into ${table} (${keySql}) values (${valueSql})`;
 };
 
+exports.payloadToBatchInsertSql = (table, payload) => {
+  let keys = Object.keys(payload[0]);
+  let keySql = "";
+  for (let key of keys) {
+    keySql = `${keySql},${key}`;
+  }
+  keySql = keySql.substring(1, keySql.length);
+
+  let valuesSql = "";
+  for (let item of payload) {
+    let values = Object.values(item);
+    let valueSql = "";
+    for (let value of values) {
+      if (value === null) {
+        valueSql = `${valueSql},null`;
+      } else {
+        if (typeof value === "string") {
+          valueSql = `${valueSql},"${value}"`;
+        } else {
+          valueSql = `${valueSql},${value}`;
+        }
+      }
+    }
+    valuesSql = `${valuesSql},(${valueSql.substring(1)})`;
+  }
+
+  valuesSql = valuesSql.substring(1);
+  return `insert into ${table} (${keySql}) values ${valuesSql}`;
+};
+
 exports.payloadToUpdateSql = (table, payload, primaryKey) => {
   let sql = `update ${table} set `;
   let keys = Object.keys(payload);
@@ -58,4 +88,12 @@ exports.payloadToUpdateSql = (table, payload, primaryKey) => {
   }
   setSql = setSql.substring(1, setSql.length);
   return `update ${table} set ${setSql} where ${primaryKey}=${payload[primaryKey]}`;
+};
+
+exports.payloadToDeleteSql = (table, payload) => {
+  let values = "";
+  for (let item of payload) {
+    values = `${values}, ${item["entry"]}`;
+  }
+  return `delete from ${table} where entry in (${values.substring(2)})`;
 };

@@ -326,7 +326,6 @@ export default {
       } else {
         this.isCreating = false;
         await Promise.all([this.findGameObjectTemplate({ entry: id })]);
-        console.log(this.gameObjectTemplate);
       }
       this.loading = false;
     }
