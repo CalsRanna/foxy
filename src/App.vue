@@ -137,6 +137,7 @@ export default {
   },
   created() {
     this.init();
+    console.log('Initing……');
 
     ipcRenderer.on("GLOBAL_NOTICE", (event, response) => {
       switch (response.category) {

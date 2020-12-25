@@ -1340,7 +1340,7 @@
       </el-table>
       <div slot="footer">
         <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="() => store('creature_template_locale')">保存</el-button>
+        <el-button type="primary" @click="() => store('creature_template_locales')">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -1432,6 +1432,7 @@ export default {
       "storeCreatureTemplate",
       "updateCreatureTemplate",
       "searchCreatureTemplateLocales",
+      "storeCreatureTemplateLocales",
       "findCreatureTemplateAddon",
       "findCreatureOnKillReputation",
       "searchCreatureEquipTemplates",
@@ -1502,9 +1503,6 @@ export default {
     closeDialog() {
       this.localeDialogVisible = false;
     },
-    storeCreatureTemplateLocales() {
-      this.localeDialogVisible = false;
-    },
     store(module) {
       switch (module) {
         case "creature_template":
@@ -1513,6 +1511,11 @@ export default {
           } else {
             this.updateCreatureTemplate(this.creatureTemplate).then(() => {});
           }
+          break;
+        case "creature_template_locales":
+          this.storeCreatureTemplateLocales(this.creatureTemplateLocales).then(() => {
+            this.localeDialogVisible = false;
+          });
           break;
         default:
           break;
