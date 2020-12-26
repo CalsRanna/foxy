@@ -930,8 +930,8 @@
             </div>
           </el-card>
           <el-card style="margin-top: 16px">
-            <el-button type="primary">保存</el-button>
-            <el-button>返回</el-button>
+            <el-button type="primary" @click="() => store('item_template')">保存</el-button>
+            <el-button @click="cancle">返回</el-button>
           </el-card>
         </el-form>
       </el-tab-pane>
@@ -1111,6 +1111,7 @@ import SpellSelector from "@/components/SpellSelector";
 export default {
   data() {
     return {
+      isCreating: false,
       loading: false,
       localeClasses: localeClasses,
       localeSubclasses: localeSubclasses,
@@ -1160,7 +1161,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions("item", ["find", "searchItemTemplateLocales"]),
+    ...mapActions("item", {
+      storeItemTemplate: "store",
+      findItemTemplate: "find",
+      updateItemTemplate: "update",
+      searchItemTemplateLocales: "searchItemTemplateLocales"
+    }),
     async switchover(tab) {
       let id = this.itemTemplate.entry;
       if (tab.name === "enchantment_template") {
@@ -1216,10 +1222,37 @@ export default {
     addItemTemplateLocale() {},
     deleteItemTemplateLocale() {},
     submitItemTemplateLocales() {},
+    store(module) {
+      this.loading = true;
+      switch (module) {
+        case "item_template":
+          if (this.isCreating) {
+            this.storeItemTemplate(this.itemTemplate);
+          } else {
+            this.updateItemTemplate(this.itemTemplate);
+          }
+          break;
+        default:
+          break;
+      }
+      this.loading = false;
+    },
+    cancle() {
+      this.$router.go(-1);
+    },
     async init() {
       this.loading = true;
       let id = this.$route.params.id;
-      await Promise.all([this.find({ entry: id }), this.searchItemTemplateLocales({ ID: id })]);
+      let path = this.$route.path;
+      if (path === "/item-template/create") {
+        this.findItemTemplate({ entry: 0 });
+        let maxEntry = await this.getMaxEntryOfItemTemplate();
+        this.itemTemplate.ID = maxEntry + 1;
+        this.min = maxEntry + 1;
+      } else {
+        this.isCreating = false;
+        await Promise.all([this.findItemTemplate({ entry: id }), this.searchItemTemplateLocales({ ID: id })]);
+      }
       this.loading = false;
     }
   },

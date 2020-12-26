@@ -1,8 +1,9 @@
 import { ipcMain } from "electron";
 
-const mysql = require("mysql");
+import { STORE_QUEST_TEMPLATE } from "../constants";
+
 const connection = require("../libs/mysql");
-const { objectToSql } = require("../libs/util");
+const { objectToSql, payloadToInsertSql } = require("../libs/util");
 
 ipcMain.on("SEARCH_QUEST_TEMPLATES", (event, payload) => {
   let sql =
@@ -50,6 +51,14 @@ ipcMain.on("COUNT_QUEST_TEMPLATES", (event, payload) => {
     .catch(error => {
       event.reply("GLOBAL_NOTICE", error);
     });
+});
+
+ipcMain.on(STORE_QUEST_TEMPLATE, (event, payload) => {
+  let sql = payloadToInsertSql("quest_template", payload);
+
+  connection.query(sql).then(results => {
+    event.reply(STORE_QUEST_TEMPLATE, results);
+  });
 });
 
 ipcMain.on("FIND_QUEST_TEMPLATE", (event, payload) => {

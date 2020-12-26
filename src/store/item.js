@@ -3,10 +3,12 @@ import {
   COUNT_ITEM_TEMPLATES,
   PAGINATE_ITEM_TEMPLATES,
   FIND_ITEM_TEMPLATE,
-  SEARCH_ITEM_TEMPLATE_LOCALES
+  SEARCH_ITEM_TEMPLATE_LOCALES,
+  STORE_ITEM_TEMPLATE,
+  UPDATE_ITEM_TEMPLATE
   // STORE_ITEM_TEMPLATE_LOCALE,
   // DESTROY_ITEM_TEMPLATE_LOCALE,
-} from "./MUTATION_TYPES";
+} from "../constants";
 // import item from "../background/item";
 const ipcRenderer = window.require("electron").ipcRenderer;
 
@@ -45,11 +47,29 @@ export default {
         });
       });
     },
+    store({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(STORE_ITEM_TEMPLATE, payload);
+        ipcRenderer.on(STORE_ITEM_TEMPLATE, (event, response) => {
+          commit(STORE_ITEM_TEMPLATE, response);
+          resolve();
+        });
+      });
+    },
     find({ commit }, payload) {
       ipcRenderer.on("FIND_ITEM_TEMPLATE_REPLY", (event, response) => {
         commit(FIND_ITEM_TEMPLATE, response);
       });
       ipcRenderer.send("FIND_ITEM_TEMPLATE", payload);
+    },
+    update({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(UPDATE_ITEM_TEMPLATE, payload);
+        ipcRenderer.on(UPDATE_ITEM_TEMPLATE, (event, response) => {
+          commit(UPDATE_ITEM_TEMPLATE, response);
+          resolve();
+        });
+      });
     },
     searchItemTemplateLocales({ commit }, payload) {
       ipcRenderer.on("SEARCH_ITEM_TEMPLATE_LOCALES_REPLY", (event, response) => {
@@ -68,7 +88,13 @@ export default {
     [PAGINATE_ITEM_TEMPLATES](state, page) {
       state.page = page;
     },
+    [STORE_ITEM_TEMPLATE](state, itemTemplate) {
+      state.itemTemplate = itemTemplate;
+    },
     [FIND_ITEM_TEMPLATE](state, itemTemplate) {
+      state.itemTemplate = itemTemplate;
+    },
+    [UPDATE_ITEM_TEMPLATE](state, itemTemplate) {
       state.itemTemplate = itemTemplate;
     },
     [SEARCH_ITEM_TEMPLATE_LOCALES](state, itemTemplateLocales) {

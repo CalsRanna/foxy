@@ -2,8 +2,11 @@ import {
   SEARCH_GAME_OBJECT_TEMPLATES,
   COUNT_GAME_OBJECT_TEMPLATES,
   PAGINATE_GAME_OBJECT_TEMPLATES,
-  FIND_GAME_OBJECT_TEMPLATE
-} from "./MUTATION_TYPES";
+  FIND_GAME_OBJECT_TEMPLATE,
+  STORE_GAME_OBJECT_TEMPLATE,
+  UPDATE_GAME_OBJECT_TEMPLATE
+} from "../constants";
+
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
@@ -39,14 +42,32 @@ export default {
         });
       });
     },
-    find({commit}, payload) {
-      return new Promise((resolve) => {
+    store({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(STORE_GAME_OBJECT_TEMPLATE, payload);
+        ipcRenderer.on(STORE_GAME_OBJECT_TEMPLATE, (event, response) => {
+          commit(STORE_GAME_OBJECT_TEMPLATE, response);
+          resolve();
+        });
+      });
+    },
+    find({ commit }, payload) {
+      return new Promise(resolve => {
         ipcRenderer.send(FIND_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_GAME_OBJECT_TEMPLATE, (event, response) =>{
+        ipcRenderer.on(FIND_GAME_OBJECT_TEMPLATE, (event, response) => {
           commit(FIND_GAME_OBJECT_TEMPLATE, response);
           resolve();
-        })
-      })
+        });
+      });
+    },
+    update({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(UPDATE_GAME_OBJECT_TEMPLATE, payload);
+        ipcRenderer.on(UPDATE_GAME_OBJECT_TEMPLATE, (event, response) => {
+          commit(UPDATE_GAME_OBJECT_TEMPLATE, response);
+          resolve();
+        });
+      });
     },
     maxEntry() {
       return new Promise(resolve => {
@@ -67,8 +88,14 @@ export default {
     [PAGINATE_GAME_OBJECT_TEMPLATES](state, page) {
       state.page = page;
     },
+    [STORE_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
+      stat.gameObjectTemplate = gameObjectTemplate;
+    },
     [FIND_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
-      state.gameObjectTemplate = gameObjectTemplate
+      state.gameObjectTemplate = gameObjectTemplate;
+    },
+    [UPDATE_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
+      state.gameObjectTemplate = gameObjectTemplate;
     }
   }
 };
