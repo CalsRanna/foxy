@@ -201,8 +201,8 @@
               </el-row>
             </el-card>
             <el-card style="margin-top: 16px">
-              <el-button type="primary">保存</el-button>
-              <el-button>返回</el-button>
+              <el-button type="primary" @click="() => store('game_object_template')">保存</el-button>
+              <el-button @click="cancle">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -238,8 +238,8 @@
               </el-row>
             </el-card>
             <el-card style="margin-top: 16px">
-              <el-button type="primary">保存</el-button>
-              <el-button>返回</el-button>
+              <el-button type="primary" @click="() => store('game_object_template_addon')">保存</el-button>
+              <el-button @click="cancle">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -310,9 +310,29 @@ export default {
   },
   methods: {
     ...mapActions("gameObject", {
+      storeGameObjectTemplate: "store",
       findGameObjectTemplate: "find",
+      updateGameObjectTemplate: "update",
       getMaxEntryOfGameObjectTemplate: "maxEntry"
     }),
+    store(module){
+      switch(module) {
+        case 'game_object_template':
+          this.loading = true;
+          if (this.isCreating) {
+            await this.storeGameObjectTemplate(this.gameObjectTemplate);
+          } else {
+            await this.updateGameObjectTemplate(this.gameObjectTemplate)
+          }
+          this.loading = false;
+          break;
+        default:
+          break;
+      }
+    },
+    cancle(){
+      this.$router.go(-1);
+    },
     async init() {
       this.loading = true;
       let id = this.$route.params.id;
