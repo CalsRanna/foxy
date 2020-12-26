@@ -274,17 +274,35 @@
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="PageText">
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        Page text.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    页面ID
+                  </template>
                   <el-input v-model="itemTemplate.PageText" placeholder="PageText"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="PageMaterial">
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        Page material.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    页面材料
+                  </template>
                   <el-input v-model="itemTemplate.PageMaterial" placeholder="PageMaterial"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="LanguageID">
+                <el-form-item label="语言ID">
                   <el-input v-model="itemTemplate.LanguageID" placeholder="LanguageID"></el-input>
                 </el-form-item>
               </el-col>
@@ -333,7 +351,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="RequiredCityRank">
+                <el-form-item label="需要城市等级">
                   <el-input v-model="itemTemplate.RequiredCityRank" placeholder="RequiredCityRank"></el-input>
                 </el-form-item>
               </el-col>
@@ -372,12 +390,12 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="HolidayId">
+                <el-form-item label="节日ID">
                   <el-input v-model="itemTemplate.HolidayId" placeholder="HolidayId"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="lockid">
+                <el-form-item label="锁ID">
                   <el-input v-model="itemTemplate.lockid" placeholder="lockid"></el-input>
                 </el-form-item>
               </el-col>
@@ -397,7 +415,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="冰爽抗性">
+                <el-form-item label="冰霜抗性">
                   <el-input v-model="itemTemplate.frost_res" placeholder="frost_res"></el-input>
                 </el-form-item>
               </el-col>
@@ -430,7 +448,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="传家宝属性">
+                <el-form-item label="传家宝属性标识">
                   <el-input v-model="itemTemplate.ScalingStatValue" placeholder="ScalingStatValue"></el-input>
                 </el-form-item>
               </el-col>
@@ -441,109 +459,224 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="属性数量">
-                  <el-input v-model="itemTemplate.StatsCount" placeholder="StatsCount"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.StatsCount"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="StatsCount"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="属性类型1">
-                  <el-input v-model="itemTemplate.stat_type1" placeholder="stat_type1"></el-input>
+                  <el-select v-model="itemTemplate.stat_type1" placeholder="stat_type1">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值1">
-                  <el-input v-model="itemTemplate.stat_value1" placeholder="stat_value1"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value1"
+                    controls-position="right"
+                    placeholder="stat_value1"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性类型2">
-                  <el-input v-model="itemTemplate.stat_type2" placeholder="stat_type2"></el-input>
+                  <el-select v-model="itemTemplate.stat_type2" placeholder="stat_type2">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值2">
-                  <el-input v-model="itemTemplate.stat_value2" placeholder="stat_value2"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value2"
+                    controls-position="right"
+                    placeholder="stat_value2"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性类型3">
-                  <el-input v-model="itemTemplate.stat_type3" placeholder="stat_type3"></el-input>
+                  <el-select v-model="itemTemplate.stat_type3" placeholder="stat_type3">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值3">
-                  <el-input v-model="itemTemplate.stat_value3" placeholder="stat_value3"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value3"
+                    controls-position="right"
+                    placeholder="stat_value3"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性类型4">
-                  <el-input v-model="itemTemplate.stat_type4" placeholder="stat_type4"></el-input>
+                  <el-select v-model="itemTemplate.stat_type4" placeholder="stat_type4">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值4">
-                  <el-input v-model="itemTemplate.stat_value4" placeholder="stat_value4"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value4"
+                    controls-position="right"
+                    placeholder="stat_value4"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性类型5">
-                  <el-input v-model="itemTemplate.stat_type5" placeholder="stat_type5"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="属性类型6">
-                  <el-input v-model="itemTemplate.stat_type6" placeholder="stat_type6"></el-input>
+                  <el-select v-model="itemTemplate.stat_type5" placeholder="stat_type5">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值5">
-                  <el-input v-model="itemTemplate.stat_value5" placeholder="stat_value5"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value5"
+                    controls-position="right"
+                    placeholder="stat_value5"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="属性类型6">
+                  <el-select v-model="itemTemplate.stat_type6" placeholder="stat_type6">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值6">
-                  <el-input v-model="itemTemplate.stat_value6" placeholder="stat_value6"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value6"
+                    controls-position="right"
+                    placeholder="stat_value6"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性类型7">
-                  <el-input v-model="itemTemplate.stat_type7" placeholder="stat_type7"></el-input>
+                  <el-select v-model="itemTemplate.stat_type7" placeholder="stat_type7">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值7">
-                  <el-input v-model="itemTemplate.stat_value7" placeholder="stat_value7"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value7"
+                    controls-position="right"
+                    placeholder="stat_value7"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性类型8">
-                  <el-input v-model="itemTemplate.stat_type8" placeholder="stat_type8"></el-input>
+                  <el-select v-model="itemTemplate.stat_type8" placeholder="stat_type8">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值8">
-                  <el-input v-model="itemTemplate.stat_value8" placeholder="stat_value8"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value8"
+                    controls-position="right"
+                    placeholder="stat_value8"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性类型9">
-                  <el-input v-model="itemTemplate.stat_type9" placeholder="stat_type9"></el-input>
+                  <el-select v-model="itemTemplate.stat_type9" placeholder="stat_type9">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值9">
-                  <el-input v-model="itemTemplate.stat_value9" placeholder="stat_value9"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value9"
+                    controls-position="right"
+                    placeholder="stat_value9"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性类型10">
-                  <el-input v-model="itemTemplate.stat_type10" placeholder="stat_type10"></el-input>
+                  <el-select v-model="itemTemplate.stat_type10" placeholder="stat_type10">
+                    <el-option
+                      v-for="(localeStatType, index) in localeStatTypes"
+                      :key="`localeStatType-${index}`"
+                      :label="localeStatType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性值10">
-                  <el-input v-model="itemTemplate.stat_value10" placeholder="stat_value10"></el-input>
+                  <el-input-number
+                    v-model="itemTemplate.stat_value10"
+                    controls-position="right"
+                    placeholder="stat_value10"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -966,6 +1099,7 @@ import {
   localeInventoryTypes,
   localeQualities,
   localeMaterials,
+  localeStatTypes,
   bondings
 } from "../locales/item.js";
 
@@ -983,6 +1117,7 @@ export default {
       localeInventoryTypes: localeInventoryTypes,
       localeQualities: localeQualities,
       localeMaterials: localeMaterials,
+      localeStatTypes: localeStatTypes,
       bondings: bondings,
       localeDialogVisible: false
     };

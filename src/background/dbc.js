@@ -1,5 +1,7 @@
 import { ipcMain } from "electron";
 
+import { SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, SEARCH_DBC_SCALING_STAT_VALUES } from "../constants";
+
 const DBC = require("warcrafty");
 
 let path;
@@ -49,4 +51,14 @@ ipcMain.on("SEARCH_DBC_SPELLS", event => {
 ipcMain.on("SEARCH_DBC_SPELL_DURATIONS", event => {
   let dbc = DBC.read(`${path}/SpellDuration.dbc`);
   event.reply("SEARCH_DBC_SPELL_DURATIONS_REPLY", dbc);
+});
+
+ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, event => {
+  let dbc = DBC.read(`${path}/ScalingStatDistribution.dbc`);
+  event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, dbc);
+});
+
+ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, event => {
+  let dbc = DBC.read(`${path}/ScalingStatValues.dbc`);
+  event.reply(SEARCH_DBC_SCALING_STAT_VALUES, dbc);
 });

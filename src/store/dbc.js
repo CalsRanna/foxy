@@ -3,8 +3,10 @@ import {
   SEARCH_DBC_FACTION_TEMPLATES,
   SEARCH_DBC_ITEM_DISPLAY_INFOS,
   SEARCH_DBC_SPELLS,
-  SEARCH_DBC_SPELL_DURATIONS
-} from "./MUTATION_TYPES";
+  SEARCH_DBC_SPELL_DURATIONS,
+  SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
+  SEARCH_DBC_SCALING_STAT_VALUES
+} from "../constants";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
 
@@ -15,7 +17,9 @@ export default {
     factionTemplates: {},
     itemDisplayInfos: {},
     spells: {},
-    spellDurations: {}
+    spellDurations: {},
+    scalingStatDistributions: {},
+    scalingStatValues: {}
   }),
   getters: {
     itemIcons: state => {
@@ -28,33 +32,66 @@ export default {
   },
   actions: {
     searchDbcFactions({ commit }) {
-      ipcRenderer.send("SEARCH_DBC_FACTIONS");
-      ipcRenderer.on("SEARCH_DBC_FACTIONS_REPLY", (event, response) => {
-        commit(SEARCH_DBC_FACTIONS, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_DBC_FACTIONS");
+        ipcRenderer.on("SEARCH_DBC_FACTIONS_REPLY", (event, response) => {
+          commit(SEARCH_DBC_FACTIONS, response);
+          resolve();
+        });
       });
     },
     searchDbcFactionTemplates({ commit }) {
-      ipcRenderer.send("SEARCH_DBC_FACTION_TEMPLATES");
-      ipcRenderer.on("SEARCH_DBC_FACTION_TEMPLATES_REPLY", (event, response) => {
-        commit(SEARCH_DBC_FACTION_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_DBC_FACTION_TEMPLATES");
+        ipcRenderer.on("SEARCH_DBC_FACTION_TEMPLATES_REPLY", (event, response) => {
+          commit(SEARCH_DBC_FACTION_TEMPLATES, response);
+          resolve();
+        });
       });
     },
     searchDbcItemDisplayInfos({ commit }) {
-      ipcRenderer.send("SEARCH_DBC_ITEM_DISPLAY_INFOS");
-      ipcRenderer.on("SEARCH_DBC_ITEM_DISPLAY_INFOS_REPLY", (event, response) => {
-        commit(SEARCH_DBC_ITEM_DISPLAY_INFOS, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_DBC_ITEM_DISPLAY_INFOS");
+        ipcRenderer.on("SEARCH_DBC_ITEM_DISPLAY_INFOS_REPLY", (event, response) => {
+          commit(SEARCH_DBC_ITEM_DISPLAY_INFOS, response);
+          resolve();
+        });
       });
     },
     searchDbcSpells({ commit }) {
-      ipcRenderer.send("SEARCH_DBC_SPELLS");
-      ipcRenderer.on("SEARCH_DBC_SPELLS_REPLY", (event, response) => {
-        commit(SEARCH_DBC_SPELLS, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_DBC_SPELLS");
+        ipcRenderer.on("SEARCH_DBC_SPELLS_REPLY", (event, response) => {
+          commit(SEARCH_DBC_SPELLS, response);
+          resolve();
+        });
       });
     },
     searchDbcSpellDurations({ commit }) {
-      ipcRenderer.send("SEARCH_DBC_SPELL_DURATIONS");
-      ipcRenderer.on("SEARCH_DBC_SPELL_DURATIONS_REPLY", (event, response) => {
-        commit(SEARCH_DBC_SPELL_DURATIONS, response);
+      return new Promise(resolve => {
+        ipcRenderer.send("SEARCH_DBC_SPELL_DURATIONS");
+        ipcRenderer.on("SEARCH_DBC_SPELL_DURATIONS_REPLY", (event, response) => {
+          commit(SEARCH_DBC_SPELL_DURATIONS, response);
+          resolve();
+        });
+      });
+    },
+    searchDbcScalingStatDistributions({ commit }) {
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
+        ipcRenderer.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event, response) => {
+          commit(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, response);
+          resolve();
+        });
+      });
+    },
+    searchDbcScalingStatValues({ commit }) {
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_DBC_SCALING_STAT_VALUES);
+        ipcRenderer.on(SEARCH_DBC_SCALING_STAT_VALUES, (event, response) => {
+          commit(SEARCH_DBC_SCALING_STAT_VALUES, response);
+          resolve();
+        });
       });
     }
   },
@@ -77,6 +114,12 @@ export default {
     },
     [SEARCH_DBC_SPELL_DURATIONS](state, spellDurations) {
       state.spellDurations = spellDurations;
+    },
+    [SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS](state, scalingStatDistributions) {
+      state.scalingStatDistributions = scalingStatDistributions;
+    },
+    [SEARCH_DBC_SCALING_STAT_VALUES](state, scalingStatValues) {
+      state.scalingStatValues = scalingStatValues;
     }
   }
 };
