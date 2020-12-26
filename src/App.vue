@@ -44,7 +44,15 @@ import {
 export default {
   computed: {
     ...mapState("global", ["mysqlConfig", "dbcConfig", "configConfig", "developerConfig", "active"]),
-    ...mapState("dbc", ["factions", "factionTemplates", "itemDisplayInfos", "spells", "spellDurations"])
+    ...mapState("dbc", [
+      "factions",
+      "factionTemplates",
+      "itemDisplayInfos",
+      "scalingStatDistributions",
+      "scalingStatValues",
+      "spells",
+      "spellDurations"
+    ])
   },
   methods: {
     ...mapActions("dbc", [
@@ -52,7 +60,9 @@ export default {
       "searchDbcFactionTemplates",
       "searchDbcItemDisplayInfos",
       "searchDbcSpells",
-      "searchDbcSpellDurations"
+      "searchDbcSpellDurations",
+      "searchDbcScalingStatDistributions",
+      "searchDbcScalingStatValues"
     ]),
     ...mapMutations("global", {
       updateMysqlConfig: UPDATE_MYSQL_CONFIG,
@@ -133,11 +143,13 @@ export default {
       this.searchDbcItemDisplayInfos();
       this.searchDbcSpells();
       this.searchDbcSpellDurations();
+      this.searchDbcScalingStatDistributions();
+      this.searchDbcScalingStatValues();
     }
   },
   created() {
+    console.log("Initing……");
     this.init();
-    console.log('Initing……');
 
     ipcRenderer.on("GLOBAL_NOTICE", (event, response) => {
       switch (response.category) {
