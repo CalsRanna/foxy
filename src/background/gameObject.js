@@ -15,24 +15,24 @@ import { payloadToDeleteSql, payloadToInsertSql, payloadToUpdateSql } from "../l
 const connection = require("../libs/mysql");
 
 let find = payload => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     let sql = `select * from gameobject_template where entry=${payload.entry}`;
 
-    connection.query(sql).then((results) => {
-      resolve(results[0])
-    })
-  })
-}
+    connection.query(sql).then(results => {
+      resolve(results[0]);
+    });
+  });
+};
 
 let maxEntry = () => {
-  return new Promise.then((resolve) => {
-    let sql = 'select entry from gameobject_template order by entry desc';
+  return new Promise.then(resolve => {
+    let sql = "select entry from gameobject_template order by entry desc";
 
-    connection.query(sql).then((results) => {
-      resolve(results[0].entry)
-    })
-  })
-}
+    connection.query(sql).then(results => {
+      resolve(results[0].entry);
+    });
+  });
+};
 
 ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATES, (event, payload) => {
   let sql =
@@ -73,21 +73,22 @@ ipcMain.on(COUNT_GAME_OBJECT_TEMPLATES, (event, payload) => {
 ipcMain.on(COPY_GAME_OBJECT_TEMPLATE, (event, payload) => {
   let newEntry = 1;
   let newGameobjectTemplate = {};
-  await Promise.all([
-    maxEntry().then((entry) => {
-      newEntry = entry + 1
+  Promise.all([
+    maxEntry().then(entry => {
+      newEntry = entry + 1;
     }),
-    find(payload).then((gameObjectTemplate) => {
+    find(payload).then(gameObjectTemplate => {
       newGameobjectTemplate = gameObjectTemplate;
       newGameobjectTemplate.entry = newEntry;
     })
-  ]);
-  let sql = payloadToInsertSql("gameobject_template", newGameobjectTemplate);
+  ]).then(() => {
+    let sql = payloadToInsertSql("gameobject_template", newGameobjectTemplate);
 
-  connection.query(sql).then(results => {
-    event.reply(STORE_GAME_OBJECT_TEMPLATE, results);
+    connection.query(sql).then(results => {
+      event.reply(STORE_GAME_OBJECT_TEMPLATE, results);
+    });
   });
-})
+});
 
 ipcMain.on(STORE_GAME_OBJECT_TEMPLATE, (event, payload) => {
   let sql = payloadToInsertSql("gameobject_template", payload);
@@ -113,12 +114,12 @@ ipcMain.on(UPDATE_GAME_OBJECT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_GAME_OBJECT_TEMPLATE, (event, payload) => {
-  let sql = payloadToDeleteSql('gameobject_template', payload);
+  let sql = payloadToDeleteSql("gameobject_template", payload);
 
-  connection.query(sql).then((results) => {
+  connection.query(sql).then(results => {
     event.reply(DESTROY_GAME_OBJECT_TEMPLATE, results);
-  })
-})
+  });
+});
 
 ipcMain.on(GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE, (event, payload) => {
   let sql = "select entry from gameobject_template order by entry desc";

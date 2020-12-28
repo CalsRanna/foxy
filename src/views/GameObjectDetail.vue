@@ -315,14 +315,14 @@ export default {
       updateGameObjectTemplate: "update",
       getMaxEntryOfGameObjectTemplate: "maxEntry"
     }),
-    store(module){
-      switch(module) {
-        case 'game_object_template':
+    store(module) {
+      switch (module) {
+        case "game_object_template":
           this.loading = true;
           if (this.isCreating) {
-            await this.storeGameObjectTemplate(this.gameObjectTemplate);
+            this.storeGameObjectTemplate(this.gameObjectTemplate);
           } else {
-            await this.updateGameObjectTemplate(this.gameObjectTemplate)
+            this.updateGameObjectTemplate(this.gameObjectTemplate);
           }
           this.loading = false;
           break;
@@ -330,7 +330,7 @@ export default {
           break;
       }
     },
-    cancle(){
+    cancle() {
       this.$router.go(-1);
     },
     async init() {
