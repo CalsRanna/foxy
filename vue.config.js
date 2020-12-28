@@ -21,7 +21,8 @@ module.exports = {
             }
           ]
         }
-      }
+      },
+      externals: ["knex"]
     }
   }
 };

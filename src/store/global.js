@@ -54,7 +54,7 @@ export default {
 
       localStorage.setItem("host", config.host);
       localStorage.setItem("port", config.port);
-      localStorage.setItem("username", config.username);
+      localStorage.setItem("user", config.user);
       localStorage.setItem("password", config.password);
       localStorage.setItem("database", config.database);
       localStorage.setItem("limit", config.limit);
