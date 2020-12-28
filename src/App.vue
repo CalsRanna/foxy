@@ -78,20 +78,18 @@ export default {
     },
     initMysqlConfig() {
       let host = localStorage.getItem("host");
-      let port = localStorage.getItem("port");
-      let username = localStorage.getItem("username");
+      // let port = localStorage.getItem("port");
+      let user = localStorage.getItem("user");
       let password = localStorage.getItem("password");
       let database = localStorage.getItem("database");
-      let limit = localStorage.getItem("limit");
+      // let limit = localStorage.getItem("limit");
 
-      if (host && username && password && database) {
+      if (host && user && password && database) {
         this.updateMysqlConfig({
           host: host,
-          port: port,
-          username: username,
+          user: user,
           password: password,
-          database: database,
-          limit: limit
+          database: database
         });
       } else {
         this.setActive("setting");
