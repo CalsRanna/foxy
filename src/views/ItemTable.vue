@@ -183,8 +183,7 @@ import { colors, localeClasses, localeSubclasses, localeInventoryTypes } from ".
 
 import ItemTemplateName from "@/components/ItemTemplateName";
 
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
-import * as types from "@/store/MUTATION_TYPES";
+import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
   data() {
@@ -227,8 +226,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions("item", ["search", "count"]),
-    ...mapMutations("item", { paginate: types.PAGINATE_ITEM_TEMPLATES }),
+    ...mapActions("item", {
+      searchItemTemplates: 'countItemTemplates',
+      countItemTemplates: 'countItemTemplates',
+      paginateItemTemplates: 'paginateItemTemplates',
+      destroyItemTemplate: 'destroyItemTemplate',
+      copyItemTemplate: 'copyItemTemplate'
+    }),
     async filtrate(field, index) {
       if (field === "class") {
         this.filter.class = index;
@@ -256,15 +260,15 @@ export default {
       }
       this.entry = undefined;
       this.name = undefined;
-      this.paginate(1);
+      this.paginateItemTemplates(1);
       this.loading = true;
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
       this.loading = false;
     },
     async handleSearch() {
       this.loading = true;
-      this.paginate(1); //每次搜索时使分页器设为第一页
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.paginateItemTemplates(1); //每次搜索时使分页器设为第一页
+      await Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
       this.loading = false;
     },
     reset() {
@@ -282,9 +286,9 @@ export default {
         dangerouslyUseHTMLString: true
       })
         .then(() => {
-          // this.copy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
+          this.copyItemTemplate({ entry: this.currentRow.entry }).then(() => {
+            Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
+          });
         })
         .catch(async () => {});
     },
@@ -300,9 +304,9 @@ export default {
         }
       )
         .then(() => {
-          // this.destroy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
+          this.destroyItemTemplate({ entry: this.currentRow.entry }).then(() => {
+            Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
+          });
         })
         .catch(() => {});
     },
@@ -311,8 +315,8 @@ export default {
     },
     async handlePaginate(page) {
       this.loading = true;
-      this.paginate(page);
-      await this.search(this.payload);
+      this.paginateItemTemplates(page);
+      await this.searchItemTemplates(this.payload);
       this.loading = false;
     },
     show(row) {
@@ -320,7 +324,7 @@ export default {
     },
     async init() {
       this.loading = true;
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
       this.loading = false;
     }
   },

@@ -69,8 +69,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
-import * as TYPES from "@/store/MUTATION_TYPES";
+import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
   data() {
@@ -92,8 +91,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions("gameObject", ["search", "count"]),
-    ...mapMutations("gameObject", { paginate: TYPES.PAGINATE_GAME_OBJECT_TEMPLATES }),
+    ...mapActions("gameObject", {
+      search: 'searchGameObjectTemplates',
+      count: 'countGameObjectTemplates',
+      paginate: 'paginateGameObjectTemplates',
+      destroy: 'destroyGameObjectTemplate',
+      copy:'copyGameObjectTemplate'
+    }),
     async handleSearch() {
       this.loading = true;
       this.paginate(1); //每次搜索时使分页器设为第一页
@@ -115,9 +119,9 @@ export default {
         dangerouslyUseHTMLString: true
       })
         .then(() => {
-          // this.copy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
+          this.copy({ entry: this.currentRow.entry }).then(() => {
+            Promise.all([this.search(this.payload), this.count(this.payload)]);
+          });
         })
         .catch(async () => {});
     },
@@ -133,9 +137,9 @@ export default {
         }
       )
         .then(() => {
-          // this.destroy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
+          this.destroy({ entry: this.currentRow.entry }).then(() => {
+            Promise.all([this.search(this.payload), this.count(this.payload)]);
+          });
         })
         .catch(() => {});
     },

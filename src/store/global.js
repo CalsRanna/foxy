@@ -3,7 +3,6 @@ import {
   UPDATE_DBC_CONFIG,
   UPDATE_CONFIG_CONFIG,
   UPDATE_DEVELOPER_CONFIG,
-  UPDATE_MESSAGE,
   SET_ACTIVE
 } from "./MUTATION_TYPES";
 
@@ -78,14 +77,6 @@ export default {
       state.developerConfig = config;
 
       localStorage.setItem("debug", config.debug);
-    },
-    [UPDATE_MESSAGE](state, message) {
-      state.message = {
-        count: this.message.count + 1,
-        type: message.type,
-        title: message.title,
-        content: message.contet
-      };
     },
     [SET_ACTIVE](state, active) {
       state.active = active;

@@ -1162,9 +1162,9 @@ export default {
   },
   methods: {
     ...mapActions("item", {
-      storeItemTemplate: "store",
-      findItemTemplate: "find",
-      updateItemTemplate: "update",
+      storeItemTemplate: "storeItemTemplate",
+      findItemTemplate: "findItemTemplate",
+      updateItemTemplate: "updateItemTemplate",
       searchItemTemplateLocales: "searchItemTemplateLocales"
     }),
     async switchover(tab) {

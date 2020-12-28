@@ -1,15 +1,16 @@
 import {
-  SEARCH_ITEM_TEMPLATES,
+  COPY_ITEM_TEMPLATE,
   COUNT_ITEM_TEMPLATES,
-  PAGINATE_ITEM_TEMPLATES,
+  CREATE_ITEM_TEMPLATE,
+  DESTROY_ITEM_TEMPLATE,
   FIND_ITEM_TEMPLATE,
+  PAGINATE_ITEM_TEMPLATES,
+  SEARCH_ITEM_TEMPLATES,
   SEARCH_ITEM_TEMPLATE_LOCALES,
   STORE_ITEM_TEMPLATE,
-  UPDATE_ITEM_TEMPLATE
-  // STORE_ITEM_TEMPLATE_LOCALE,
-  // DESTROY_ITEM_TEMPLATE_LOCALE,
+  UPDATE_ITEM_TEMPLATE,
 } from "../constants";
-// import item from "../background/item";
+
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
@@ -26,11 +27,11 @@ export default {
     itemLootTemplates: [],
     disenchantLootTemplates: [],
     prospectingLootTemplates: [],
-    millingLootTemplates: []
+    millingLootTemplates: [],
   }),
   actions: {
-    search({ commit }, payload) {
-      return new Promise(resolve => {
+    searchItemTemplates({ commit }, payload) {
+      return new Promise((resolve) => {
         ipcRenderer.send("SEARCH_ITEM_TEMPLATES", payload);
         ipcRenderer.on("SEARCH_ITEM_TEMPLATES_REPLY", (event, response) => {
           commit(SEARCH_ITEM_TEMPLATES, response);
@@ -38,17 +39,23 @@ export default {
         });
       });
     },
-    count({ commit }, payload) {
-      return new Promise(resolve => {
-        ipcRenderer.send("COUNT_ITEM_TEMPLATES", payload);
-        ipcRenderer.on("COUNT_ITEM_TEMPLATES_REPLY", (event, response) => {
+    countItemTemplates({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(COUNT_ITEM_TEMPLATES, payload);
+        ipcRenderer.on(COUNT_ITEM_TEMPLATES, (event, response) => {
           commit(COUNT_ITEM_TEMPLATES, response);
           resolve();
         });
       });
     },
-    store({ commit }, payload) {
-      return new Promise(resolve => {
+    paginateItemTemplates({ commit }, payload) {
+      return new Promise((resolve) => {
+        commit(PAGINATE_ITEM_TEMPLATES, payload.page);
+        resolve();
+      });
+    },
+    storeItemTemplate({ commit }, payload) {
+      return new Promise((resolve) => {
         ipcRenderer.send(STORE_ITEM_TEMPLATE, payload);
         ipcRenderer.on(STORE_ITEM_TEMPLATE, (event, response) => {
           commit(STORE_ITEM_TEMPLATE, response);
@@ -56,14 +63,14 @@ export default {
         });
       });
     },
-    find({ commit }, payload) {
+    findItemTemplate({ commit }, payload) {
       ipcRenderer.on("FIND_ITEM_TEMPLATE_REPLY", (event, response) => {
         commit(FIND_ITEM_TEMPLATE, response);
       });
       ipcRenderer.send("FIND_ITEM_TEMPLATE", payload);
     },
-    update({ commit }, payload) {
-      return new Promise(resolve => {
+    updateItemTemplate({ commit }, payload) {
+      return new Promise((resolve) => {
         ipcRenderer.send(UPDATE_ITEM_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_ITEM_TEMPLATE, (event, response) => {
           commit(UPDATE_ITEM_TEMPLATE, response);
@@ -71,12 +78,40 @@ export default {
         });
       });
     },
-    searchItemTemplateLocales({ commit }, payload) {
-      ipcRenderer.on("SEARCH_ITEM_TEMPLATE_LOCALES_REPLY", (event, response) => {
-        commit(SEARCH_ITEM_TEMPLATE_LOCALES, response);
+    destroyItemTemplate(context, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(DESTROY_ITEM_TEMPLATE, payload);
+        ipcRenderer.on(DESTROY_ITEM_TEMPLATE, (event, response) => {
+          resolve();
+        });
       });
-      ipcRenderer.send("SEARCH_ITEM_TEMPLATE_LOCALES", payload);
-    }
+    },
+    createItemTemplate({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(CREATE_ITEM_TEMPLATE, payload);
+        ipcRenderer.on(CREATE_ITEM_TEMPLATE, (event, response) => {
+          commit(CREATE_ITEM_TEMPLATE, response);
+          resolve();
+        });
+      });
+    },
+    copyItemTemplate(context, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(COPY_ITEM_TEMPLATE, payload);
+        ipcRenderer.on(COPY_ITEM_TEMPLATE, (event, response) => {
+          resolve();
+        });
+      });
+    },
+    searchItemTemplateLocales({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(SEARCH_ITEM_TEMPLATE_LOCALES, payload);
+        ipcRenderer.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, response) => {
+          commit(SEARCH_ITEM_TEMPLATE_LOCALES, response);
+          resolve();
+        });
+      });
+    },
   },
   mutations: {
     [SEARCH_ITEM_TEMPLATES](state, itemTemplates) {
@@ -97,8 +132,11 @@ export default {
     [UPDATE_ITEM_TEMPLATE](state, itemTemplate) {
       state.itemTemplate = itemTemplate;
     },
+    [CREATE_ITEM_TEMPLATE](state, itemTemplate) {
+      state.itemTemplate = itemTemplate;
+    },
     [SEARCH_ITEM_TEMPLATE_LOCALES](state, itemTemplateLocales) {
       state.itemTemplateLocales = itemTemplateLocales;
-    }
-  }
+    },
+  },
 };
