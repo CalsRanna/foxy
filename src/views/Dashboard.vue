@@ -125,8 +125,8 @@ export default {
     ...mapState("gameObject", { quantityOfGameObjectTemplate: "total" }),
     ...mapState("item", { quantityOfItemTemplate: "total" }),
     ...mapState("quest", { quantityOfQuestTemplate: "total" }),
-    ...mapState("spell", { quantityOfSpell: "total" }),
     ...mapState("smartScript", { quantityOfSmartScript: "total" }),
+    ...mapState("spell", { quantityOfSpell: "total" }),
     data() {
       return [
         this.quantityOfCreatureTemplate,
@@ -140,11 +140,11 @@ export default {
   },
   methods: {
     ...mapActions("creature", ["countCreatureTemplates"]),
-    ...mapActions("gameObject", { countGameObjectTemplates: "count" }),
-    ...mapActions("item", { countItemTemplates: "count" }),
-    ...mapActions("quest", { countQuestTemplates: "count" }),
+    ...mapActions("gameObject", ["countGameObjectTemplates"]),
+    ...mapActions("item", ["countItemTemplates"]),
+    ...mapActions("quest", ["countQuestTemplates"]),
+    ...mapActions("smartScript", ["countSmartScript"]),
     ...mapActions("spell", { countSpells: "count" }),
-    ...mapActions("smartScript", { countSmartScript: "count" }),
     openBrowser(url) {
       const { shell } = window.require("electron");
       shell.openExternal(url);

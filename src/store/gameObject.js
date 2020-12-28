@@ -45,19 +45,11 @@ export default {
         });
       });
     },
-    paginateGameObjectTemplates({commit}, payload) {
+    paginateGameObjectTemplates({ commit }, payload) {
       return new Promise(resolve => {
         commit(PAGINATE_GAME_OBJECT_TEMPLATES, payload.page);
-        resolve();
-      })
-    },
-    copyGameObjectTemplate(context, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(COPY_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_GAME_OBJECT_TEMPLATE, (event, response) => {
-          resolve()
-        })
-      })
+        resolve(payload);
+      });
     },
     storGameObjectTemplate({ commit }, payload) {
       return new Promise(resolve => {
@@ -86,19 +78,27 @@ export default {
         });
       });
     },
-    destroyGameObjectTemplate(context, payload){
-      return new Promise((resolve) => {
+    destroyGameObjectTemplate(context, payload) {
+      return new Promise(resolve => {
         ipcRenderer.send(DESTROY_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_GAME_OBJECT_TEMPLATE, (event, response) => {
+        ipcRenderer.on(DESTROY_GAME_OBJECT_TEMPLATE, () => {
           resolve();
-        })
-      })
+        });
+      });
+    },
+    copyGameObjectTemplate(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(COPY_GAME_OBJECT_TEMPLATE, payload);
+        ipcRenderer.on(COPY_GAME_OBJECT_TEMPLATE, () => {
+          resolve();
+        });
+      });
     },
     maxEntry() {
       return new Promise(resolve => {
         ipcRenderer.send(GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE);
-        ipcRenderer.on(GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE, (event, response) => {
-          resolve(response);
+        ipcRenderer.on(GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE, () => {
+          resolve();
         });
       });
     }
@@ -114,7 +114,7 @@ export default {
       state.page = page;
     },
     [STORE_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
-      stat.gameObjectTemplate = gameObjectTemplate;
+      state.gameObjectTemplate = gameObjectTemplate;
     },
     [FIND_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
       state.gameObjectTemplate = gameObjectTemplate;

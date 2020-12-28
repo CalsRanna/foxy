@@ -8,7 +8,7 @@ import {
   SEARCH_ITEM_TEMPLATES,
   SEARCH_ITEM_TEMPLATE_LOCALES,
   STORE_ITEM_TEMPLATE,
-  UPDATE_ITEM_TEMPLATE,
+  UPDATE_ITEM_TEMPLATE
 } from "../constants";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
@@ -27,11 +27,11 @@ export default {
     itemLootTemplates: [],
     disenchantLootTemplates: [],
     prospectingLootTemplates: [],
-    millingLootTemplates: [],
+    millingLootTemplates: []
   }),
   actions: {
     searchItemTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send("SEARCH_ITEM_TEMPLATES", payload);
         ipcRenderer.on("SEARCH_ITEM_TEMPLATES_REPLY", (event, response) => {
           commit(SEARCH_ITEM_TEMPLATES, response);
@@ -40,7 +40,7 @@ export default {
       });
     },
     countItemTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(COUNT_ITEM_TEMPLATES, payload);
         ipcRenderer.on(COUNT_ITEM_TEMPLATES, (event, response) => {
           commit(COUNT_ITEM_TEMPLATES, response);
@@ -49,13 +49,13 @@ export default {
       });
     },
     paginateItemTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         commit(PAGINATE_ITEM_TEMPLATES, payload.page);
         resolve();
       });
     },
     storeItemTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(STORE_ITEM_TEMPLATE, payload);
         ipcRenderer.on(STORE_ITEM_TEMPLATE, (event, response) => {
           commit(STORE_ITEM_TEMPLATE, response);
@@ -70,7 +70,7 @@ export default {
       ipcRenderer.send("FIND_ITEM_TEMPLATE", payload);
     },
     updateItemTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(UPDATE_ITEM_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_ITEM_TEMPLATE, (event, response) => {
           commit(UPDATE_ITEM_TEMPLATE, response);
@@ -79,15 +79,15 @@ export default {
       });
     },
     destroyItemTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(DESTROY_ITEM_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_ITEM_TEMPLATE, (event, response) => {
+        ipcRenderer.on(DESTROY_ITEM_TEMPLATE, () => {
           resolve();
         });
       });
     },
     createItemTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(CREATE_ITEM_TEMPLATE, payload);
         ipcRenderer.on(CREATE_ITEM_TEMPLATE, (event, response) => {
           commit(CREATE_ITEM_TEMPLATE, response);
@@ -96,22 +96,22 @@ export default {
       });
     },
     copyItemTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(COPY_ITEM_TEMPLATE, payload);
-        ipcRenderer.on(COPY_ITEM_TEMPLATE, (event, response) => {
+        ipcRenderer.on(COPY_ITEM_TEMPLATE, () => {
           resolve();
         });
       });
     },
     searchItemTemplateLocales({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_ITEM_TEMPLATE_LOCALES, payload);
         ipcRenderer.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, response) => {
           commit(SEARCH_ITEM_TEMPLATE_LOCALES, response);
           resolve();
         });
       });
-    },
+    }
   },
   mutations: {
     [SEARCH_ITEM_TEMPLATES](state, itemTemplates) {
@@ -137,6 +137,6 @@ export default {
     },
     [SEARCH_ITEM_TEMPLATE_LOCALES](state, itemTemplateLocales) {
       state.itemTemplateLocales = itemTemplateLocales;
-    },
-  },
+    }
+  }
 };
