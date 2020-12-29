@@ -2,11 +2,11 @@ import { ipcMain } from "electron";
 import {
   COPY_CREATURE_TEMPLATE,
   COUNT_CREATURE_TEMPLATES,
+  CREATE_CREATURE_TEMPLATE,
   DESTROY_CREATURE_TEMPLATE,
   FIND_CREATURE_ONKILL_REPUTATION,
   FIND_CREATURE_TEMPLATE,
   FIND_CREATURE_TEMPLATE_ADDON,
-  GET_MAX_ENTRY_OF_CREATURE_TEMPLATE,
   GLOBAL_NOTICE,
   SEARCH_CREATURE_EQUIP_TEMPLATES,
   SEARCH_CREATURE_LOOT_TEMPLATES,
@@ -22,29 +22,7 @@ import {
   UPDATE_CREATURE_TEMPLATE
 } from "../constants";
 
-const { payloadToInsertSql, payloadToUpdateSql, payloadToBatchInsertSql, payloadToDeleteSql } = require("../libs/util");
-const connection = require("../libs/mysql");
 const { knex } = require("../libs/mysql");
-
-let find = payload => {
-  return new Promise((resolve, reject) => {
-    let sql = `select * from creature_template where entry=${payload.entry}`;
-
-    connection.query(sql).then(results => {
-      resolve({ creatureTemplate: results[0], sql });
-    });
-  });
-};
-
-let maxEntry = () => {
-  return new Promise((resolve, reject) => {
-    let sql = "select entry from creature_template order by entry desc";
-
-    connection.query(sql).then(results => {
-      resolve({ entry: results[0].entry, sql });
-    });
-  });
-};
 
 // 搜索满足条件的生物模板
 ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
@@ -79,7 +57,6 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_TEMPLATES, rows);
-    console.log(queryBuilder.toQuery());
   });
 });
 
@@ -106,23 +83,17 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
   }
   queryBuilder.then(rows => {
     event.reply(COUNT_CREATURE_TEMPLATES, rows[0].total);
-    console.log(queryBuilder.toQuery());
-  });
-});
-
-// 获得数据库中已保存生物模板的最大 entry
-ipcMain.on(GET_MAX_ENTRY_OF_CREATURE_TEMPLATE, event => {
-  maxEntry().then(({ entry }) => {
-    event.reply(GET_MAX_ENTRY_OF_CREATURE_TEMPLATE, entry);
   });
 });
 
 // 保存生物模板
 ipcMain.on(STORE_CREATURE_TEMPLATE, (event, payload) => {
-  let sql = payloadToInsertSql("creature_template", payload);
+  let queryBuilder = knex()
+    .insert(payload)
+    .into("creature_template");
 
-  connection.query(sql).then(results => {
-    event.reply(STORE_CREATURE_TEMPLATE, results);
+  queryBuilder.then(rows => {
+    event.reply(STORE_CREATURE_TEMPLATE, rows);
     event.reply(GLOBAL_NOTICE, {
       category: "notification",
       title: "成功",
@@ -132,12 +103,26 @@ ipcMain.on(STORE_CREATURE_TEMPLATE, (event, payload) => {
   });
 });
 
+// 根据条件得到指定的生物模板
+ipcMain.on(FIND_CREATURE_TEMPLATE, (event, payload) => {
+  let queryBuilder = knex()
+    .select()
+    .from("creature_template")
+    .where(payload);
+  queryBuilder.then(rows => {
+    event.reply(FIND_CREATURE_TEMPLATE, rows.length > 0 ? rows[0] : {});
+  });
+});
+
 // 修改生物模板
 ipcMain.on(UPDATE_CREATURE_TEMPLATE, (event, payload) => {
-  let sql = payloadToUpdateSql("creature_template", payload, "entry");
+  let queryBuilder = knex()
+    .table("creature_template")
+    .where("entry", payload.entry)
+    .update(payload);
 
-  connection.query(sql).then(results => {
-    event.reply(UPDATE_CREATURE_TEMPLATE, results);
+  queryBuilder.then(rows => {
+    event.reply(UPDATE_CREATURE_TEMPLATE, rows);
     event.reply(GLOBAL_NOTICE, {
       category: "notification",
       title: "成功",
@@ -147,19 +132,15 @@ ipcMain.on(UPDATE_CREATURE_TEMPLATE, (event, payload) => {
   });
 });
 
-// 根据条件得到指定的生物模板
-ipcMain.on(FIND_CREATURE_TEMPLATE, (event, payload) => {
-  find(payload).then(({ creatureTemplate, sql }) => {
-    event.reply(FIND_CREATURE_TEMPLATE, creatureTemplate);
-  });
-});
-
 // 删除满足条件生物模板
 ipcMain.on(DESTROY_CREATURE_TEMPLATE, (event, payload) => {
-  let sql = `delete from creature_template where entry=${payload.entry}`;
+  let queryBuilder = knex()
+    .table("creature_template")
+    .where(payload)
+    .delete();
 
-  connection.query(sql).then(results => {
-    event.reply(DESTROY_CREATURE_TEMPLATE, results);
+  queryBuilder.then(rows => {
+    event.reply(DESTROY_CREATURE_TEMPLATE, rows);
     event.reply("GLOBAL_NOTICE", {
       category: "notification",
       title: "成功",
@@ -169,28 +150,51 @@ ipcMain.on(DESTROY_CREATURE_TEMPLATE, (event, payload) => {
   });
 });
 
+// 新建空的生物模板，entry自动生成
+ipcMain.on(CREATE_CREATURE_TEMPLATE, (event, payload) => {
+  let queryBuilder = knex()
+    .select("entry")
+    .from("creature_template")
+    .orderBy("entry", "desc");
+  queryBuilder.then(rows => {
+    event.reply(CREATE_CREATURE_TEMPLATE, {
+      entry: rows[0].entry + 1
+    });
+  });
+});
+
 // 复制满足条件的生物模板
 ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
-  let newEntry = 1;
-  let newCreatureTemplate = {};
+  let entry = undefined;
+  let creatureTemplate = undefined;
+
+  let entryQueryBuilder = knex()
+    .select("entry")
+    .from("creature_template")
+    .orderBy("entry", "desc");
+  let findTemplateQueryBuilder = knex()
+    .select()
+    .from("creature_template")
+    .where(payload);
   Promise.all([
-    maxEntry().then(({ entry }) => {
-      newEntry = entry + 1;
+    entryQueryBuilder.then(rows => {
+      entry = rows[0].entry;
     }),
-    find(payload).then(({ creatureTemplate }) => {
-      newCreatureTemplate = creatureTemplate;
+    findTemplateQueryBuilder.then(rows => {
+      creatureTemplate = rows.length > 0 ? rows[0] : {};
     })
   ]).then(() => {
-    newCreatureTemplate.entry = newEntry;
-    let sql = payloadToInsertSql("creature_template", newCreatureTemplate);
-
-    connection.query(sql).then(results => {
-      event.reply(COPY_CREATURE_TEMPLATE, results);
+    creatureTemplate.entry = entry + 1;
+    let queryBuilder = knex()
+      .insert(creatureTemplate)
+      .into("creature_template");
+    queryBuilder.then(rows => {
+      event.reply(COPY_CREATURE_TEMPLATE, rows);
       event.reply(GLOBAL_NOTICE, {
         type: "success",
         category: "notification",
         title: "成功",
-        message: `复制成功，新的生物模板 entry 为 ${newEntry}。`
+        message: `复制成功，新的生物模板 entry 为 ${entry + 1}。`
       });
     });
   });
@@ -198,21 +202,28 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
 
 // 搜索满足条件的本地化生物模板
 ipcMain.on(SEARCH_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
-  let sql = `select * from creature_template_locale where entry=${payload.entry}`;
+  let queryBuilder = knex()
+    .select()
+    .from("creature_template_locale")
+    .where(payload);
 
-  connection.query(sql).then(results => {
-    event.reply(SEARCH_CREATURE_TEMPLATE_LOCALES, results);
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_CREATURE_TEMPLATE_LOCALES, rows);
   });
 });
 
 // 保存本地化生物模板，批量保存
 ipcMain.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
-  let deleteSql = payloadToDeleteSql("creature_template_locale", payload);
-  let sql = payloadToBatchInsertSql("creature_template_locale", payload);
+  let deleteQueryBuilder = knex()
+    .where("entry", payload[0].entry)
+    .delete();
+  let insertQueryBuilder = knex()
+    .insert(payload)
+    .into("creature_template_locale");
 
-  connection.query(deleteSql).then(() => {
-    connection.query(sql).then(() => {
-      event.reply(STORE_CREATURE_TEMPLATE_LOCALES, payload);
+  deleteQueryBuilder.then(rows => {
+    insertQueryBuilder.then(rows => {
+      event.reply(STORE_CREATURE_TEMPLATE_LOCALES, rows);
       event.reply(GLOBAL_NOTICE, {
         type: "success",
         category: "notification",
@@ -225,81 +236,149 @@ ipcMain.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
 
 // 根据条件得到指定的生物模板补充信息
 ipcMain.on(FIND_CREATURE_TEMPLATE_ADDON, (event, payload) => {
-  let sql = `select * from creature_template_addon where entry=${payload.entry}`;
+  let queryBuilder = knex()
+    .select()
+    .from("creature_template_addon")
+    .where(payload);
 
-  connection.query(sql).then(results => {
-    event.reply(FIND_CREATURE_TEMPLATE_ADDON, results[0]);
+  queryBuilder.then(rows => {
+    event.reply(FIND_CREATURE_TEMPLATE_ADDON, rows.length > 0 ? rows[0] : {});
   });
 });
 
 // 根据条件得到指定的生物击杀声望奖励
 ipcMain.on(FIND_CREATURE_ONKILL_REPUTATION, (event, payload) => {
-  let sql = `select * from creature_onkill_reputation where creature_id=${payload.creatureId}`;
+  let queryBuilder = knex()
+    .select()
+    .from("creature_onkill_reputation")
+    .where("creature_id", payload.creatureId);
 
-  connection.query(sql).then(results => {
-    event.reply(FIND_CREATURE_ONKILL_REPUTATION, results[0]);
+  queryBuilder.then(rows => {
+    event.reply(FIND_CREATURE_ONKILL_REPUTATION, rows.length > 0 ? rows[0] : {});
   });
 });
 
 // 搜索满足条件的生物装备模板
 ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
-  let sql = `select cet.*, it1.displayid as displayid1, it1.name as name1, itl1.Name as Name1, it2.displayid as displayid2, it2.name as name2, itl2.Name as Name2, it3.displayid as displayid3, it3.name as name3, itl3.Name as Name3 from creature_equip_template as cet left join item_template as it1 on cet.ItemID1 = it1.entry left join item_template_locale as itl1 on cet.ItemID1 = itl1.ID and itl1.locale = 'zhCN' left join item_template as it2 on cet.ItemID2 = it2.entry left join item_template_locale as itl2 on cet.ItemID2 = itl2.ID and itl2.locale = 'zhCN' left join item_template as it3 on cet.ItemID3 = it3.entry left join item_template_locale as itl3 on cet.ItemID3 = itl3.ID and itl3.locale = 'zhCN' where cet.CreatureID=${payload.creatureId}`;
-
-  connection.query(sql).then(results => {
-    event.reply(SEARCH_CREATURE_EQUIP_TEMPLATES, results);
+  let queryBuilder = knex()
+    .select([
+      "cet.*",
+      "it1.displayid as displayid1",
+      "it1.name as name1",
+      "itl1.Name as Name1",
+      "it2.displayid as displayid2",
+      "it2.name as name2",
+      "itl2.Name as Name2",
+      "it3.displayid as displayid3",
+      "it3.name as name3",
+      "itl3.Name as Name3"
+    ])
+    .from("creature_equip_template as cet")
+    .leftJoin("item_template as it1", "cet.ItemID1", "it1.entry")
+    .leftJoin("item_template_locale as itl1", function() {
+      this.on("cet.ItemID1", "=", "itl1.ID").andOn("itl1.locale", "=", knex().raw("?", "zhCN"));
+    })
+    .leftJoin("item_template as it2", "cet.ItemID2", "it2.entry")
+    .leftJoin("item_template_locale as itl2", function() {
+      this.on("cet.ItemID2", "=", "itl2.ID").andOn("itl2.locale", "=", knex().raw("?", "zhCN"));
+    })
+    .leftJoin("item_template as it3", "cet.ItemID3", "it3.entry")
+    .leftJoin("item_template_locale as itl3", function() {
+      this.on("cet.ItemID3", "=", "itl3.ID").andOn("itl3.locale", "=", knex().raw("?", "zhCN"));
+    })
+    .where("cet.CreatureID", payload.creatureId);
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_CREATURE_EQUIP_TEMPLATES, rows);
   });
 });
 
 // 搜索满足条件的商人信息
 ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
-  let sql = `select nv.*, it.displayid, it.name, itl.Name from npc_vendor as nv left join item_template as it on nv.item = it.entry left join item_template_locale as itl on nv.item = itl.ID and itl.locale='zhCN' where nv.entry=${payload.entry}`;
-
-  connection.query(sql).then(results => {
-    event.reply(SEARCH_NPC_VENDORS, results);
+  let queryBuilder = knex()
+    .select(["nv.*", "it.displayid", "it.name", "itl.Name"])
+    .from("npc_vendor as nv")
+    .leftJoin("item_template as it", "nv.item", "it.entry")
+    .leftJoin("item_template_locale as itl", function() {
+      this.on("nv.item", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+    })
+    .where("nv.entry", payload.entry);
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_NPC_VENDORS, rows);
   });
 });
 
 // 搜索满足条件的训练师信息
 ipcMain.on(SEARCH_NPC_TRAINERS, (event, payload) => {
-  let sql = `select * from npc_trainer where ID=${payload.id}`;
+  let queryBuilder = knex()
+    .select()
+    .from("npc_trainer")
+    .where("ID", payload.id);
 
-  connection.query(`${sql}`).then(results => {
-    event.reply(SEARCH_NPC_TRAINERS, results);
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_NPC_TRAINERS, rows);
   });
 });
 
 // 搜索满足条件的生物任务物品掉落
 ipcMain.on(SEARCH_CREATURE_QUEST_ITEMS, (event, payload) => {
-  let sql = `select cq.*, it.name, itl.Name as localeName from creature_questitem as cq left join item_template as it on cq.ItemId = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where cq.CreatureEntry=${payload.creatureEntry}`;
+  let queryBuilder = knex()
+    .select(["cq.*", "it.name", "itl.Name as localeName"])
+    .from("creature_questitem as cq")
+    .leftJoin("item_template as it", "cq.ItemId", "it.entry")
+    .leftJoin("item_template_locale as itl", function() {
+      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+    })
+    .where("cq.CreatureEntry", payload.creatureEntry);
 
-  connection.query(sql).then(results => {
-    event.reply(SEARCH_CREATURE_QUEST_ITEMS, results);
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_CREATURE_QUEST_ITEMS, rows);
   });
 });
 
 // 搜索满足条件的生物击杀物品掉落
 ipcMain.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, payload) => {
-  let sql = `select clt.*, it.name, itl.Name as localeName from creature_loot_template as clt left join item_template as it on clt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where clt.Entry=${payload.entry}`;
+  let queryBuilder = knex()
+    .select(["clt.*", "it.name", "itl.Name as localeName"])
+    .from("creature_loot_template as clt")
+    .leftJoin("item_template as it", "clt.Item", "it.entry")
+    .leftJoin("item_template_locale as itl", function() {
+      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+    })
+    .where("clt.Entry", payload.entry);
 
-  connection.query(sql).then(results => {
-    event.reply(SEARCH_CREATURE_LOOT_TEMPLATES, results);
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_CREATURE_LOOT_TEMPLATES, rows);
   });
 });
 
 // 搜索满足条件的生物偷窃物品掉落
 ipcMain.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, payload) => {
-  let sql = `select plt.*, it.name, itl.Name as localeName from pickpocketing_loot_template as plt left join item_template as it on plt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where plt.Entry=${payload.entry}`;
+  let queryBuilder = knex()
+    .select(["plt.*", "it.name", "itl.Name as localeName"])
+    .from("pickpocketing_loot_template as plt")
+    .leftJoin("item_template as it", "plt.Item", "it.entry")
+    .leftJoin("item_template_locale as itl", function() {
+      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+    })
+    .where("plt.Entry", payload.entry);
 
-  connection.query(sql).then(results => {
-    event.reply(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, results);
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, rows);
   });
 });
 
 // 搜索满足条件的生物剥皮物品掉落
 ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
-  let sql = `select slt.*, it.name, itl.Name as localeName from skinning_loot_template as slt left join item_template as it on slt.Item = it.entry left join item_template_locale as itl on it.entry = itl.ID and itl.locale='zhCN' where slt.Entry=${payload.entry}`;
+  let queryBuilder = knex()
+    .select(["slt.*", "it.name", "itl.Name as localeName"])
+    .from("skinning_loot_template as slt")
+    .leftJoin("item_template as it", "slt.Item", "it.entry")
+    .leftJoin("item_template_locale as itl", function() {
+      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+    })
+    .where("plt.Entry", payload.entry);
 
-  connection.query(sql).then(results => {
-    event.reply(SEARCH_SKINNING_LOOT_TEMPLATES, results);
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_SKINNING_LOOT_TEMPLATES, rows);
   });
 });

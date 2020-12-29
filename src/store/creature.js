@@ -1,11 +1,13 @@
+const ipcRenderer = window.require("electron").ipcRenderer;
+
 import {
   COPY_CREATURE_TEMPLATE,
   COUNT_CREATURE_TEMPLATES,
+  CREATE_CREATURE_TEMPLATE,
   DESTROY_CREATURE_TEMPLATE,
   FIND_CREATURE_ONKILL_REPUTATION,
   FIND_CREATURE_TEMPLATE,
   FIND_CREATURE_TEMPLATE_ADDON,
-  GET_MAX_ENTRY_OF_CREATURE_TEMPLATE,
   PAGINATE_CREATURE_TEMPLATES,
   SEARCH_CREATURE_EQUIP_TEMPLATES,
   SEARCH_CREATURE_LOOT_TEMPLATES,
@@ -23,8 +25,6 @@ import {
   UPDATE_CREATURE_TEMPLATE_CREDENTIAL_NAME,
   UPDATE_CREATURE_TEMPLATE_CREDENTIAL_SUBNAME
 } from "../constants";
-
-const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
   namespaced: true,
@@ -67,12 +67,10 @@ export default {
         });
       });
     },
-    getMaxEntryOfCreatureTemplate() {
+    paginateCreatureTemplates({ commit }, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send(GET_MAX_ENTRY_OF_CREATURE_TEMPLATE);
-        ipcRenderer.on(GET_MAX_ENTRY_OF_CREATURE_TEMPLATE, (event, response) => {
-          resolve(response);
-        });
+        commit(PAGINATE_CREATURE_TEMPLATES, payload.page);
+        resolve();
       });
     },
     storeCreatureTemplate(context, payload) {
@@ -84,9 +82,12 @@ export default {
       });
     },
     findCreatureTemplate({ commit }, payload) {
-      ipcRenderer.send(FIND_CREATURE_TEMPLATE, payload);
-      ipcRenderer.on(FIND_CREATURE_TEMPLATE, (event, response) => {
-        commit(FIND_CREATURE_TEMPLATE, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(FIND_CREATURE_TEMPLATE, payload);
+        ipcRenderer.on(FIND_CREATURE_TEMPLATE, (event, response) => {
+          commit(FIND_CREATURE_TEMPLATE, response);
+          resolve();
+        });
       });
     },
     updateCreatureTemplate({ commit }, payload) {
@@ -100,84 +101,126 @@ export default {
     },
     destroyCreatureTemplate(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.on(DESTROY_CREATURE_TEMPLATE, (event, response) => {
-          resolve(response);
-        });
         ipcRenderer.send(DESTROY_CREATURE_TEMPLATE, payload);
+        ipcRenderer.on(DESTROY_CREATURE_TEMPLATE, () => {
+          resolve();
+        });
+      });
+    },
+    createCreatureTemplate({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(CREATE_CREATURE_TEMPLATE, payload);
+        ipcRenderer.on(CREATE_CREATURE_TEMPLATE, (event, response) => {
+          commit(CREATE_CREATURE_TEMPLATE, response);
+          resolve();
+        });
       });
     },
     copyCreatureTemplate(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.on(COPY_CREATURE_TEMPLATE, (event, response) => {
-          resolve(response);
-        });
         ipcRenderer.send(COPY_CREATURE_TEMPLATE, payload);
+        ipcRenderer.on(COPY_CREATURE_TEMPLATE, () => {
+          resolve();
+        });
       });
     },
     searchCreatureTemplateLocales({ commit }, payload) {
-      ipcRenderer.send(SEARCH_CREATURE_TEMPLATE_LOCALES, payload);
-      ipcRenderer.on(SEARCH_CREATURE_TEMPLATE_LOCALES, (event, response) => {
-        commit(SEARCH_CREATURE_TEMPLATE_LOCALES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_CREATURE_TEMPLATE_LOCALES, payload);
+        ipcRenderer.on(SEARCH_CREATURE_TEMPLATE_LOCALES, (event, response) => {
+          commit(SEARCH_CREATURE_TEMPLATE_LOCALES, response);
+          resolve();
+        });
       });
     },
     storeCreatureTemplateLocales({ commit }, payload) {
-      ipcRenderer.send(STORE_CREATURE_TEMPLATE_LOCALES, payload);
-      ipcRenderer.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, response) => {
-        commit(STORE_CREATURE_TEMPLATE_LOCALES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(STORE_CREATURE_TEMPLATE_LOCALES, payload);
+        ipcRenderer.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, response) => {
+          commit(STORE_CREATURE_TEMPLATE_LOCALES, response);
+          resolve();
+        });
       });
     },
     findCreatureTemplateAddon({ commit }, payload) {
-      ipcRenderer.on(FIND_CREATURE_TEMPLATE_ADDON, (event, response) => {
-        commit(FIND_CREATURE_TEMPLATE_ADDON, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(FIND_CREATURE_TEMPLATE_ADDON, payload);
+        ipcRenderer.on(FIND_CREATURE_TEMPLATE_ADDON, (event, response) => {
+          commit(FIND_CREATURE_TEMPLATE_ADDON, response);
+          resolve();
+        });
       });
-      ipcRenderer.send(FIND_CREATURE_TEMPLATE_ADDON, payload);
     },
     findCreatureOnKillReputation({ commit }, payload) {
-      ipcRenderer.on(FIND_CREATURE_ONKILL_REPUTATION, (event, response) => {
-        commit(FIND_CREATURE_ONKILL_REPUTATION, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(FIND_CREATURE_ONKILL_REPUTATION, payload);
+        ipcRenderer.on(FIND_CREATURE_ONKILL_REPUTATION, (event, response) => {
+          commit(FIND_CREATURE_ONKILL_REPUTATION, response);
+          resolve();
+        });
       });
-      ipcRenderer.send(FIND_CREATURE_ONKILL_REPUTATION, payload);
     },
     searchCreatureEquipTemplates({ commit }, payload) {
-      ipcRenderer.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, response) => {
-        commit(SEARCH_CREATURE_EQUIP_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_CREATURE_EQUIP_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, response) => {
+          commit(SEARCH_CREATURE_EQUIP_TEMPLATES, response);
+          resolve();
+        });
       });
-      ipcRenderer.send(SEARCH_CREATURE_EQUIP_TEMPLATES, payload);
     },
     searchNpcVendors({ commit }, payload) {
-      ipcRenderer.on(SEARCH_NPC_VENDORS, (event, response) => {
-        commit(SEARCH_NPC_VENDORS, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_NPC_VENDORS, payload);
+        ipcRenderer.on(SEARCH_NPC_VENDORS, (event, response) => {
+          commit(SEARCH_NPC_VENDORS, response);
+          resolve();
+        });
       });
-      ipcRenderer.send(SEARCH_NPC_VENDORS, payload);
     },
     searchNpcTrainers({ commit }, payload) {
-      ipcRenderer.on(SEARCH_NPC_TRAINERS, (event, response) => {
-        commit(SEARCH_NPC_TRAINERS, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_NPC_TRAINERS, payload);
+        ipcRenderer.on(SEARCH_NPC_TRAINERS, (event, response) => {
+          commit(SEARCH_NPC_TRAINERS, response);
+          resolve();
+        });
       });
-      ipcRenderer.send(SEARCH_NPC_TRAINERS, payload);
     },
     searchCreatureQuestItems({ commit }, payload) {
-      ipcRenderer.send(SEARCH_CREATURE_QUEST_ITEMS, payload);
-      ipcRenderer.on(SEARCH_CREATURE_QUEST_ITEMS, (event, response) => {
-        commit(SEARCH_CREATURE_QUEST_ITEMS, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_CREATURE_QUEST_ITEMS, payload);
+        ipcRenderer.on(SEARCH_CREATURE_QUEST_ITEMS, (event, response) => {
+          commit(SEARCH_CREATURE_QUEST_ITEMS, response);
+          resolve();
+        });
       });
     },
     searchCreatureLootTemplates({ commit }, payload) {
-      ipcRenderer.send(SEARCH_CREATURE_LOOT_TEMPLATES, payload);
-      ipcRenderer.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, response) => {
-        commit(SEARCH_CREATURE_LOOT_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_CREATURE_LOOT_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, response) => {
+          commit(SEARCH_CREATURE_LOOT_TEMPLATES, response);
+          resolve();
+        });
       });
     },
     searchPickpocketingLootTemplates({ commit }, payload) {
-      ipcRenderer.send(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, payload);
-      ipcRenderer.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, response) => {
-        commit(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, response) => {
+          commit(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, response);
+          resolve();
+        });
       });
     },
     searchSkinningLootTemplates({ commit }, payload) {
-      ipcRenderer.send(SEARCH_SKINNING_LOOT_TEMPLATES, payload);
-      ipcRenderer.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, response) => {
-        commit(SEARCH_SKINNING_LOOT_TEMPLATES, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_SKINNING_LOOT_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, response) => {
+          commit(SEARCH_SKINNING_LOOT_TEMPLATES, response);
+          resolve();
+        });
       });
     }
   },
@@ -201,12 +244,12 @@ export default {
       state.page = page;
     },
     [FIND_CREATURE_TEMPLATE](state, creatureTemplate) {
-      if (creatureTemplate === undefined) {
-        creatureTemplate = {};
-      }
       state.creatureTemplate = creatureTemplate;
     },
     [UPDATE_CREATURE_TEMPLATE](state, creatureTemplate) {
+      state.creatureTemplate = creatureTemplate;
+    },
+    [CREATE_CREATURE_TEMPLATE](state, creatureTemplate) {
       state.creatureTemplate = creatureTemplate;
     },
     [SEARCH_CREATURE_TEMPLATE_LOCALES](state, creatureTemplateLocales) {
@@ -216,15 +259,9 @@ export default {
       state.creatureTemplateLocales = creatureTemplateLocales;
     },
     [FIND_CREATURE_TEMPLATE_ADDON](state, creatureTemplateAddon) {
-      if (creatureTemplateAddon === undefined) {
-        creatureTemplateAddon = {};
-      }
       state.creatureTemplateAddon = creatureTemplateAddon;
     },
     [FIND_CREATURE_ONKILL_REPUTATION](state, creatureOnKillReputation) {
-      if (creatureOnKillReputation === undefined) {
-        creatureOnKillReputation = {};
-      }
       state.creatureOnKillReputation = creatureOnKillReputation;
     },
     [SEARCH_CREATURE_EQUIP_TEMPLATES](state, creatureEquipTemplates) {

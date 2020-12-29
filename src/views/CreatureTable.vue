@@ -83,8 +83,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-import * as types from "@/store/MUTATION_TYPES";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -114,13 +113,14 @@ export default {
     ...mapActions("creature", {
       search: "searchCreatureTemplates",
       count: "countCreatureTemplates",
-      copy: "copyCreatureTemplate",
-      destroy: "destroyCreatureTemplate"
+      paginate: "paginateCreatureTemplates",
+      create: "copyCreatureTemplate",
+      destroy: "destroyCreatureTemplate",
+      copy: "copyCreatureTemplate"
     }),
-    ...mapMutations("creature", { paginate: types.PAGINATE_CREATURE_TEMPLATES }),
     async handleSearch() {
       this.loading = true;
-      this.paginate(1); //每次搜索时使分页器设为第一页
+      await this.paginate({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([this.search(this.payload), this.count(this.payload)]);
       this.loading = false;
     },
@@ -137,14 +137,23 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info",
-        dangerouslyUseHTMLString: true
-      })
-        .then(() => {
-          this.copy({ entry: this.currentRow.entry }).then(() => {
-            Promise.all([this.search(this.payload), this.count(this.payload)]);
-          });
-        })
-        .catch(async () => {});
+        dangerouslyUseHTMLString: true,
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            this.copy({ entry: this.currentRow.entry })
+              .then(() => {
+                Promise.all([this.search(this.payload), this.count(this.payload)]);
+              })
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              });
+          } else {
+            done();
+          }
+        }
+      });
     },
     handleDestroy() {
       this.$confirm(
@@ -154,22 +163,31 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
+          beforeClose: (action, instance, done) => {
+            if (action === "confirm") {
+              instance.confirmButtonLoading = true;
+
+              this.destroy({ entry: this.currentRow.entry })
+                .then(() => {
+                  Promise.all([this.search(this.payload), this.count(this.payload)]);
+                })
+                .then(() => {
+                  done();
+                });
+            } else {
+              done();
+            }
+          }
         }
-      )
-        .then(() => {
-          this.destroy({ entry: this.currentRow.entry }).then(() => {
-            Promise.all([this.search(this.payload), this.count(this.payload)]);
-          });
-        })
-        .catch(() => {});
+      );
     },
     select(currentRow) {
       this.currentRow = currentRow;
     },
     async handlePaginate(page) {
       this.loading = true;
-      this.paginate(page);
+      await this.paginate({ page: page });
       await this.search(this.payload);
       this.loading = false;
     },
