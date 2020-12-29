@@ -1,26 +1,25 @@
-import {
-  UPDATE_MYSQL_CONFIG,
-  UPDATE_DBC_CONFIG,
-  UPDATE_CONFIG_CONFIG,
-  UPDATE_DEVELOPER_CONFIG,
-  SET_ACTIVE
-} from "./MUTATION_TYPES";
-
 const ipcRenderer = window.require("electron").ipcRenderer;
+
+import {
+  INIT_MYSQL_CONNECTION,
+  SET_ACTIVE,
+  STORE_MYSQL_CONFIG,
+  STORE_DBC_CONFIG,
+  STORE_CONFIG_CONFIG,
+  STORE_DEVELOPER_CONFIG,
+  TEST_MYSQL_CONNECTION
+} from "../constants";
 
 export default {
   namespaced: true,
   state: () => ({
-    debug: true,
+    debug: false,
     active: "dashboard",
-    isAuth: false,
     mysqlConfig: {
-      host: "",
-      port: "",
-      username: "",
-      password: "",
-      database: "",
-      limit: 10
+      host: "127.0.0.1",
+      user: "root",
+      password: "password",
+      database: "acore_world"
     },
     dbcConfig: {
       path: ""
@@ -30,56 +29,78 @@ export default {
     },
     developerConfig: {
       debug: false
-    },
-    message: {
-      count: 0,
-      type: undefined,
-      title: undefined,
-      content: undefined
     }
   }),
   actions: {
+    setActive({ commit }, payload) {
+      return new Promise(resolve => {
+        commit(SET_ACTIVE, payload);
+        resolve();
+      });
+    },
+    storeMysqlConfig({ commit }, payload) {
+      return new Promise(resolve => {
+        localStorage.setItem("host", payload.host);
+        localStorage.setItem("user", payload.user);
+        localStorage.setItem("password", payload.password);
+        localStorage.setItem("database", payload.database);
+        commit(STORE_MYSQL_CONFIG, payload);
+        resolve();
+      });
+    },
     testMysqlConfig(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send("INIT_DATABASE_POOL", payload);
-        ipcRenderer.on("INIT_DATABASE_POOL", (event, response) => {
+        ipcRenderer.send(TEST_MYSQL_CONNECTION, payload);
+        ipcRenderer.on("TEST_MYSQL_CONNECTION", (event, response) => {
           resolve(response);
+        });
+      });
+    },
+    storeDbcConfig({ commit }, payload) {
+      return new Promise(resolve => {
+        localStorage.setItem("dbcPath", payload.path);
+        commit(STORE_DBC_CONFIG, payload);
+        resolve();
+      });
+    },
+    storeConfigConfig({ commit }, payload) {
+      return new Promise(resolve => {
+        localStorage.setItem("configPath", payload.path);
+        commit(STORE_CONFIG_CONFIG, payload);
+        resolve();
+      });
+    },
+    storeDeveloperConfig({ commit }, payload) {
+      return new Promise(resolve => {
+        localStorage.setItem("debug", payload.debug);
+        commit(STORE_DEVELOPER_CONFIG, payload);
+        resolve();
+      });
+    },
+    initMysqlConnection(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(INIT_MYSQL_CONNECTION, payload);
+        ipcRenderer.on(INIT_MYSQL_CONNECTION, () => {
+          resolve();
         });
       });
     }
   },
   mutations: {
-    [UPDATE_MYSQL_CONFIG](state, config) {
-      state.mysqlConfig = config;
-
-      localStorage.setItem("host", config.host);
-      localStorage.setItem("port", config.port);
-      localStorage.setItem("user", config.user);
-      localStorage.setItem("password", config.password);
-      localStorage.setItem("database", config.database);
-      localStorage.setItem("limit", config.limit);
-
-      ipcRenderer.send("INIT_DATABASE_POOL", config);
-    },
-    [UPDATE_DBC_CONFIG](state, config) {
-      state.dbcConfig = config;
-
-      localStorage.setItem("dbcPath", config.path);
-
-      ipcRenderer.send("INIT_DBC_CONFIG", config);
-    },
-    [UPDATE_CONFIG_CONFIG](state, config) {
-      state.configConfig = config;
-
-      localStorage.setItem("configPath", config.path);
-    },
-    [UPDATE_DEVELOPER_CONFIG](state, config) {
-      state.developerConfig = config;
-
-      localStorage.setItem("debug", config.debug);
-    },
     [SET_ACTIVE](state, active) {
       state.active = active;
+    },
+    [STORE_MYSQL_CONFIG](state, config) {
+      state.mysqlConfig = config;
+    },
+    [STORE_DBC_CONFIG](state, config) {
+      state.dbcConfig = config;
+    },
+    [STORE_CONFIG_CONFIG](state, config) {
+      state.configConfig = config;
+    },
+    [STORE_DEVELOPER_CONFIG](state, config) {
+      state.developerConfig = config;
     }
   }
 };

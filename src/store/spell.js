@@ -15,7 +15,7 @@ export default {
     search({ commit, rootState }, payload) {
       return new Promise(resolve => {
         let spells = [];
-        if (rootState.dbc.spells == {}) {
+        if (rootState.dbc.spells == {} || rootState.dbc.spells.records == undefined) {
           commit(SEARCH_SPELLS, spells);
         } else {
           for (let spell of rootState.dbc.spells.records) {
