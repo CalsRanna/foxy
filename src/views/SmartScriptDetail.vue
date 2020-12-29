@@ -213,7 +213,7 @@ export default {
   },
   methods: {
     ...mapActions("smartScript", {
-      findSmartScript: "find"
+      findSmartScript: "findSmartScript"
     }),
     async init() {
       this.loading = true;

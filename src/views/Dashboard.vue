@@ -143,7 +143,7 @@ export default {
     ...mapActions("gameObject", ["countGameObjectTemplates"]),
     ...mapActions("item", ["countItemTemplates"]),
     ...mapActions("quest", ["countQuestTemplates"]),
-    ...mapActions("smartScript", ["countSmartScript"]),
+    ...mapActions("smartScript", ["countSmartScripts"]),
     ...mapActions("spell", { countSpells: "count" }),
     openBrowser(url) {
       const { shell } = window.require("electron");
@@ -156,7 +156,7 @@ export default {
         this.countGameObjectTemplates({}),
         this.countItemTemplates({}),
         this.countQuestTemplates({}),
-        this.countSmartScript({}),
+        this.countSmartScripts({}),
         this.countSpells({})
       ]);
       this.loading = false;

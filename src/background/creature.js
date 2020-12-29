@@ -48,33 +48,6 @@ let maxEntry = () => {
 
 // 搜索满足条件的生物模板
 ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
-  // let select =
-  //   "select ct.entry, ct.name, ctl.Name as localeName, ct.subname, ctl.Title as localeTitle, ct.minlevel, ct.maxlevel from creature_template as ct left join creature_template_locale as ctl on ct.entry=ctl.entry and ctl.locale='zhCN'";
-
-  // let where = "";
-  // if (payload.entry) {
-  //   where = `${where} and ct.entry like '%${payload.entry}%'`;
-  // }
-  // if (payload.name) {
-  //   where = `${where} and (ct.name like '%${payload.name}%' or ctl.Name like '%${payload.name}%')`;
-  // }
-  // if (payload.subname) {
-  //   where = `${where} and (ct.subname like '%${payload.subname}%' or ctl.Title like '%${payload.subname}%')`;
-  // }
-  // where = where.length >= 5 ? ` where ${where.substring(5)}` : " ";
-
-  // let page = payload.page;
-  // let offset = 0;
-  // if (page !== undefined) {
-  //   offset = (page - 1) * 50;
-  // }
-  // let limit = `limit ${offset}, 50`;
-
-  // let sql = `${select}${where}${limit}`;
-
-  // connection.query(sql).then(results => {
-  //   event.reply(SEARCH_CREATURE_TEMPLATES, results);
-  // });
   let queryBuilder = knex()
     .select([
       "ct.entry",
@@ -88,36 +61,22 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
     .from("creature_template as ct")
     .leftJoin("creature_template_locale as ctl", function() {
       this.on("ct.entry", "=", "ctl.entry").andOn("ctl.locale", "=", knex().raw("?", "zhCN"));
-    })
-    // payload.entry 不能为 undefined
-    .where("ct.entry", "like", knex().raw("%?%", payload.entry))
-    .where(builder =>
+    });
+  if (payload.entry) {
+    queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
+  }
+  if (payload.name) {
+    queryBuilder = queryBuilder.where(builder =>
       builder.where("ct.name", "like", `%${payload.name}%`).orWhere("ctl.Name", "like", `%${payload.name}%`)
-    )
-    .where(builder =>
+    );
+  }
+  if (payload.subname) {
+    queryBuilder = queryBuilder.where(builder =>
       builder.where("ct.subname", "like", `%${payload.subname}%`).orWhere("ctl.Title", "like", `%${payload.subname}%`)
-    )
-    .limit(50)
-    .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
-  // if (payload.entry) {
-  //   queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
-  // }
-  // if (payload.name) {
-  //   queryBuilder.where(builder =>
-  //     builder.where("ct.name", "like", `%${payload.name}%`).orWhere("ctl.Name", "like", `%${payload.name}%`)
-  //   );
-  // }
-  // if (payload.subname) {
-  //   queryBuilder.where(builder =>
-  //     builder.where("ct.subname", "like", `%${payload.subname}%`).orWhere("ctl.Title", "like", `%${payload.subname}%`)
-  //   );
-  // }
-  // let page = payload.page;
-  // let offset = 0;
-  // if (page !== undefined) {
-  //   offset = (page - 1) * 50;
-  // }
-  queryBuilder.limit(50).offset(offset);
+    );
+  }
+  queryBuilder = queryBuilder.limit(50).offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_TEMPLATES, rows);
     console.log(queryBuilder.toQuery());
@@ -131,14 +90,20 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
     .from("creature_template as ct")
     .leftJoin("creature_template_locale as ctl", function() {
       this.on("ct.entry", "=", "ctl.entry").andOn("ctl.locale", "=", knex().raw("?", "zhCN"));
-    })
-    .where("ct.entry", "like", `%${payload.entry}%`)
-    .where(builder =>
+    });
+  if (payload.entry) {
+    queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
+  }
+  if (payload.name) {
+    queryBuilder = queryBuilder.where(builder =>
       builder.where("ct.name", "like", `%${payload.name}%`).orWhere("ctl.Name", "like", `%${payload.name}%`)
-    )
-    .where(builder =>
+    );
+  }
+  if (payload.subname) {
+    queryBuilder = queryBuilder.where(builder =>
       builder.where("ct.subname", "like", `%${payload.subname}%`).orWhere("ctl.Title", "like", `%${payload.subname}%`)
     );
+  }
   queryBuilder.then(rows => {
     event.reply(COUNT_CREATURE_TEMPLATES, rows[0].total);
     console.log(queryBuilder.toQuery());

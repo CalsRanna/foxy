@@ -14,15 +14,14 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import { UPDATE_DBC_CONFIG } from "@/store/MUTATION_TYPES";
+import { mapState, mapActions } from "vuex";
 
 export default {
   computed: {
     ...mapState("global", { config: "dbcConfig" })
   },
   methods: {
-    ...mapMutations("global", { storeConfig: UPDATE_DBC_CONFIG }),
+    ...mapActions("global", ["storeDbcConfig"]),
     selectPath() {
       const { ipcRenderer } = window.require("electron");
 
@@ -39,7 +38,7 @@ export default {
           message: "dbc 文件路径不能为空。"
         });
       } else {
-        this.storeConfig(this.config);
+        this.storeDbcConfig(this.config);
         this.$notify({
           type: "success",
           title: "成功",

@@ -3,11 +3,9 @@
     <el-aside width="200px" class="left-menu">
       <div class="logo">
         <h3 style="margin: 0; padding: 0">FOXY</h3>
-        <p style="font-size: 12px; color: #C0C4CC">
+        <p style="font-size: 12px; color: #c0c4cc">
           魔兽世界
-          <span style="font-size: 10px;text-decoration:line-through">
-            编辑
-          </span>
+          <span style="font-size: 10px; text-decoration: line-through"> 编辑 </span>
           <span style="font-size: 14px">查看</span>
           器
         </p>
@@ -31,15 +29,8 @@
 
 <script>
 const ipcRenderer = window.require("electron").ipcRenderer;
-import { mapState, mapActions, mapMutations } from "vuex";
-import {
-  UPDATE_MYSQL_CONFIG,
-  UPDATE_DBC_CONFIG,
-  UPDATE_CONFIG_CONFIG,
-  UPDATE_DEVELOPER_CONFIG,
-  SET_ACTIVE,
-  SET_SETTING_ACTIVE
-} from "@/store/MUTATION_TYPES";
+import { mapState, mapActions } from "vuex";
+import { GLOBAL_NOTICE } from "./constants";
 
 export default {
   computed: {
@@ -64,32 +55,33 @@ export default {
       "searchDbcScalingStatDistributions",
       "searchDbcScalingStatValues"
     ]),
-    ...mapMutations("global", {
-      updateMysqlConfig: UPDATE_MYSQL_CONFIG,
-      updateDbcConfig: UPDATE_DBC_CONFIG,
-      updateConfigConfig: UPDATE_CONFIG_CONFIG,
-      updateDeveloperConfig: UPDATE_DEVELOPER_CONFIG,
-      setActive: SET_ACTIVE
-    }),
-    ...mapMutations("setting", { setSettingActive: SET_SETTING_ACTIVE }),
+    ...mapActions("global", [
+      "storeMysqlConfig",
+      "storeDbcConfig",
+      "storeConfigConfig",
+      "storeDeveloperConfig",
+      "setActive",
+      "initMysqlConnection"
+    ]),
+    ...mapActions("setting", ["setSettingActive"]),
     navigate(index) {
       this.setActive(index);
       this.$router.push(`/${index}`).catch(error => error);
     },
     initMysqlConfig() {
       let host = localStorage.getItem("host");
-      // let port = localStorage.getItem("port");
       let user = localStorage.getItem("user");
       let password = localStorage.getItem("password");
       let database = localStorage.getItem("database");
-      // let limit = localStorage.getItem("limit");
 
       if (host && user && password && database) {
-        this.updateMysqlConfig({
+        this.storeMysqlConfig({
           host: host,
           user: user,
           password: password,
           database: database
+        }).then(() => {
+          this.initMysqlConnection(this.mysqlConfig);
         });
       } else {
         this.setActive("setting");
@@ -101,7 +93,7 @@ export default {
       let path = localStorage.getItem("dbcPath");
 
       if (path) {
-        this.updateDbcConfig({
+        this.storeDbcConfig({
           path: path
         });
       } else {
@@ -114,7 +106,7 @@ export default {
       let path = localStorage.getItem("configPath");
 
       if (path) {
-        this.updateConfigConfig({
+        this.storeConfigConfig({
           path: path
         });
       } else {
@@ -126,7 +118,7 @@ export default {
     initDeveloperConfig() {
       let debug = localStorage.getItem("debug");
 
-      this.updateDeveloperConfig({
+      this.storeDeveloperConfig({
         debug: debug === "true" ? true : false
       });
     },
@@ -135,21 +127,22 @@ export default {
       this.initDbcConfig();
       this.initConfigConfig();
       this.initDeveloperConfig();
-
-      this.searchDbcFactions();
-      this.searchDbcFactionTemplates();
-      this.searchDbcItemDisplayInfos();
-      this.searchDbcSpells();
-      this.searchDbcSpellDurations();
-      this.searchDbcScalingStatDistributions();
-      this.searchDbcScalingStatValues();
+      if (this.dbcConfig.path !== "") {
+        this.searchDbcFactions();
+        this.searchDbcFactionTemplates();
+        this.searchDbcItemDisplayInfos();
+        this.searchDbcSpells();
+        this.searchDbcSpellDurations();
+        this.searchDbcScalingStatDistributions();
+        this.searchDbcScalingStatValues();
+      }
     }
   },
   created() {
     console.log("Initing……");
     this.init();
 
-    ipcRenderer.on("GLOBAL_NOTICE", (event, response) => {
+    ipcRenderer.on(GLOBAL_NOTICE, (event, response) => {
       switch (response.category) {
         case "message":
           if (this.developerConfig.debug) {

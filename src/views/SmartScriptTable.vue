@@ -88,12 +88,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions("smartScript", ["search", "count"]),
+    ...mapActions("smartScript", ["searchSmartScripts", "countSmartScripts"]),
     ...mapMutations("smartScript", { paginate: TYPES.PAGINATE_SMART_SCRIPTS }),
     async handleSearch() {
       this.loading = true;
       this.paginate(1); //每次搜索时使分页器设为第一页
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await Promise.all([this.searchSmartScripts(this.payload), this.countSmartScripts(this.payload)]);
       this.loading = false;
     },
     reset() {
@@ -141,7 +141,7 @@ export default {
     async handlePaginate(page) {
       this.loading = true;
       this.paginate(page);
-      await this.search(this.payload);
+      await this.searchSmartScripts(this.payload);
       this.loading = false;
     },
     show(row) {
@@ -151,7 +151,7 @@ export default {
     },
     async init() {
       this.loading = true;
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await Promise.all([this.searchSmartScripts(this.payload), this.countSmartScripts(this.payload)]);
       this.loading = false;
     }
   },

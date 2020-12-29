@@ -1,4 +1,4 @@
-import { SET_SETTING_ACTIVE } from "./MUTATION_TYPES";
+import { SET_SETTING_ACTIVE } from "../constants";
 
 export default {
   namespaced: true,
@@ -6,6 +6,14 @@ export default {
     return {
       active: "mysql"
     };
+  },
+  actions: {
+    setSettingActive({commit}, payload) {
+      return new Promise(resolve => {
+        commit(SET_SETTING_ACTIVE, payload);
+        resolve();
+      })
+    }
   },
   mutations: {
     [SET_SETTING_ACTIVE](state, active) {

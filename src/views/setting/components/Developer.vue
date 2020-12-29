@@ -9,16 +9,15 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import { UPDATE_DEVELOPER_CONFIG } from "@/store/MUTATION_TYPES";
+import { mapState, mapActions } from "vuex";
 export default {
   computed: {
     ...mapState("global", { config: "developerConfig" })
   },
   methods: {
-    ...mapMutations("global", { storeConfig: UPDATE_DEVELOPER_CONFIG }),
+    ...mapActions("global", ["storeDeveloperConfig"]),
     handleChange(value) {
-      this.storeConfig({ debug: value });
+      this.storeDeveloperConfig({ debug: value });
       this.$notify({
         type: "success",
         title: "成功",
