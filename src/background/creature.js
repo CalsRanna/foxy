@@ -81,6 +81,7 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
       builder.where("ct.subname", "like", `%${payload.subname}%`).orWhere("ctl.Title", "like", `%${payload.subname}%`)
     );
   }
+
   queryBuilder.then(rows => {
     event.reply(COUNT_CREATURE_TEMPLATES, rows[0].total);
   });
@@ -109,6 +110,7 @@ ipcMain.on(FIND_CREATURE_TEMPLATE, (event, payload) => {
     .select()
     .from("creature_template")
     .where(payload);
+
   queryBuilder.then(rows => {
     event.reply(FIND_CREATURE_TEMPLATE, rows.length > 0 ? rows[0] : {});
   });
@@ -156,6 +158,7 @@ ipcMain.on(CREATE_CREATURE_TEMPLATE, (event, payload) => {
     .select("entry")
     .from("creature_template")
     .orderBy("entry", "desc");
+
   queryBuilder.then(rows => {
     event.reply(CREATE_CREATURE_TEMPLATE, {
       entry: rows[0].entry + 1
@@ -172,7 +175,7 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
     .select("entry")
     .from("creature_template")
     .orderBy("entry", "desc");
-  let findTemplateQueryBuilder = knex()
+  let findCreatureTemplateQueryBuilder = knex()
     .select()
     .from("creature_template")
     .where(payload);
@@ -180,7 +183,7 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
     entryQueryBuilder.then(rows => {
       entry = rows[0].entry;
     }),
-    findTemplateQueryBuilder.then(rows => {
+    findCreatureTemplateQueryBuilder.then(rows => {
       creatureTemplate = rows.length > 0 ? rows[0] : {};
     })
   ]).then(() => {
@@ -287,6 +290,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
       this.on("cet.ItemID3", "=", "itl3.ID").andOn("itl3.locale", "=", knex().raw("?", "zhCN"));
     })
     .where("cet.CreatureID", payload.creatureId);
+
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_EQUIP_TEMPLATES, rows);
   });
@@ -302,6 +306,7 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
       this.on("nv.item", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
     })
     .where("nv.entry", payload.entry);
+
   queryBuilder.then(rows => {
     event.reply(SEARCH_NPC_VENDORS, rows);
   });
