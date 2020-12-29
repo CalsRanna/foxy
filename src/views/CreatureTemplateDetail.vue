@@ -1065,7 +1065,7 @@
           <el-table :data="npcVendors">
             <el-table-column prop="slot" label="插槽" sortable></el-table-column>
             <el-table-column prop="item" label="ID" sortable></el-table-column>
-            <el-table-column width="43px" class-name="icon-height">
+            <!-- <el-table-column width="43px" class-name="icon-height">
               <template slot-scope="scope">
                 <el-image
                   :src="`/icons/${icons[scope.row.displayid]}.png`"
@@ -1078,7 +1078,7 @@
                   ></el-image>
                 </el-image>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="name" label="名称" sortable>
               <span slot-scope="scope">
                 <template v-if="scope.row.Name !== null">
@@ -1427,10 +1427,10 @@ export default {
   },
   methods: {
     ...mapActions("creature", [
-      "findCreatureTemplate",
-      "getMaxEntryOfCreatureTemplate",
       "storeCreatureTemplate",
+      "findCreatureTemplate",
       "updateCreatureTemplate",
+      "createCreatureTemplate",
       "searchCreatureTemplateLocales",
       "storeCreatureTemplateLocales",
       "findCreatureTemplateAddon",
@@ -1529,11 +1529,7 @@ export default {
       let id = this.$route.params.id;
       let path = this.$route.path;
       if (path === "/creature/create") {
-        this.findCreatureTemplate({ entry: 0 });
-        let maxEntry = await this.getMaxEntryOfCreatureTemplate();
-        this.creatureTemplate.entry = maxEntry + 1;
-        this.searchCreatureTemplateLocales({ entry: maxEntry + 1 });
-        this.min = maxEntry + 1;
+        await this.createCreatureTemplate();
       } else {
         this.isCreating = false;
         await Promise.all([
