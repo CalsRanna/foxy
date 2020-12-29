@@ -13,26 +13,6 @@ import {
 
 const { knex } = require("../libs/mysql");
 
-let find = payload => {
-  return new Promise(resolve => {
-    let sql = `select * from gameobject_template where entry=${payload.entry}`;
-
-    connection.query(sql).then(results => {
-      resolve(results[0]);
-    });
-  });
-};
-
-let maxEntry = () => {
-  return new Promise.then(resolve => {
-    let sql = "select entry from gameobject_template order by entry desc";
-
-    connection.query(sql).then(results => {
-      resolve(results[0].entry);
-    });
-  });
-};
-
 ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATES, (event, payload) => {
   let queryBuilder = knex()
     .select(["gt.entry", "gt.displayId", "gt.name", "gtl.name as localeName", "gt.type", "gt.size"])
@@ -41,11 +21,11 @@ ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATES, (event, payload) => {
       this.on("gt.entry", "=", "gtl.entry").andOn("gtl.locale", "=", knex().raw("?", "zhCN"));
     });
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("gt.entry", "like", `%${payload.entry}%`);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where(builder =>
-      builder.where("ct.name", "like", `%${payload.name}%`).orWhere("ctl.Name", "like", `%${payload.name}%`)
+      builder.where("gt.name", "like", `%${payload.name}%`).orWhere("gtl.name", "like", `%${payload.name}%`)
     );
   }
   queryBuilder = queryBuilder.limit(50).offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
@@ -63,11 +43,11 @@ ipcMain.on(COUNT_GAME_OBJECT_TEMPLATES, (event, payload) => {
       this.on("gt.entry", "=", "gtl.entry").andOn("gtl.locale", "=", knex().raw("?", "zhCN"));
     });
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("gt.entry", "like", `%${payload.entry}%`);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where(builder =>
-      builder.where("ct.name", "like", `%${payload.name}%`).orWhere("ctl.Name", "like", `%${payload.name}%`)
+      builder.where("gt.name", "like", `%${payload.name}%`).orWhere("gtl.name", "like", `%${payload.name}%`)
     );
   }
 

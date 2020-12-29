@@ -101,7 +101,7 @@ export default {
     ]),
     async handleSearch() {
       this.loading = true;
-      this.paginateGameObjectTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
+      await this.paginateGameObjectTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([this.searchGameObjectTemplates(this.payload), this.countGameObjectTemplates(this.payload)]);
       this.loading = false;
     },
@@ -158,6 +158,7 @@ export default {
                   ]);
                 })
                 .then(() => {
+                  instance.confirmButtonLoading = false;
                   done();
                 });
             } else {
@@ -172,7 +173,7 @@ export default {
     },
     async handlePaginate(page) {
       this.loading = true;
-      this.paginateGameObjectTemplates({ page: page });
+      await this.paginateGameObjectTemplates({ page: page });
       await this.searchGameObjectTemplates(this.payload);
       this.loading = false;
     },

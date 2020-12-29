@@ -32,8 +32,8 @@ export default {
   actions: {
     searchItemTemplates({ commit }, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send("SEARCH_ITEM_TEMPLATES", payload);
-        ipcRenderer.on("SEARCH_ITEM_TEMPLATES_REPLY", (event, response) => {
+        ipcRenderer.send(SEARCH_ITEM_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_ITEM_TEMPLATES, (event, response) => {
           commit(SEARCH_ITEM_TEMPLATES, response);
           resolve();
         });
@@ -54,26 +54,28 @@ export default {
         resolve();
       });
     },
-    storeItemTemplate({ commit }, payload) {
+    storeItemTemplate(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(STORE_ITEM_TEMPLATE, payload);
-        ipcRenderer.on(STORE_ITEM_TEMPLATE, (event, response) => {
-          commit(STORE_ITEM_TEMPLATE, response);
+        ipcRenderer.on(STORE_ITEM_TEMPLATE, () => {
           resolve();
         });
       });
     },
     findItemTemplate({ commit }, payload) {
-      ipcRenderer.on("FIND_ITEM_TEMPLATE_REPLY", (event, response) => {
-        commit(FIND_ITEM_TEMPLATE, response);
+      return new Promise(resolve => {
+        ipcRenderer.send(FIND_ITEM_TEMPLATE, payload);
+        ipcRenderer.on(FIND_ITEM_TEMPLATE, (event, response) => {
+          commit(FIND_ITEM_TEMPLATE, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("FIND_ITEM_TEMPLATE", payload);
     },
     updateItemTemplate({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(UPDATE_ITEM_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_ITEM_TEMPLATE, (event, response) => {
-          commit(UPDATE_ITEM_TEMPLATE, response);
+        ipcRenderer.on(UPDATE_ITEM_TEMPLATE, () => {
+          commit(UPDATE_ITEM_TEMPLATE, payload);
           resolve();
         });
       });
