@@ -91,17 +91,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions("gameObject", {
-      search: 'searchGameObjectTemplates',
-      count: 'countGameObjectTemplates',
-      paginate: 'paginateGameObjectTemplates',
-      destroy: 'destroyGameObjectTemplate',
-      copy:'copyGameObjectTemplate'
-    }),
+    ...mapActions("gameObject", [
+      "searchGameObjectTemplates",
+      "countGameObjectTemplates",
+      "paginateGameObjectTemplates",
+      "destroyGameObjectTemplate",
+      "createGameObjectTemplate",
+      "copyGameObjectTemplate"
+    ]),
     async handleSearch() {
       this.loading = true;
-      this.paginate(1); //每次搜索时使分页器设为第一页
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.paginateGameObjectTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
+      await Promise.all([this.searchGameObjectTemplates(this.payload), this.countGameObjectTemplates(this.payload)]);
       this.loading = false;
     },
     reset() {
@@ -116,14 +117,26 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info",
-        dangerouslyUseHTMLString: true
-      })
-        .then(() => {
-          this.copy({ entry: this.currentRow.entry }).then(() => {
-            Promise.all([this.search(this.payload), this.count(this.payload)]);
-          });
-        })
-        .catch(async () => {});
+        dangerouslyUseHTMLString: true,
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            this.copyGameObjectTemplate({ entry: this.currentRow.entry })
+              .then(() => {
+                Promise.all([
+                  this.searchGameObjectTemplates(this.payload),
+                  this.countGameObjectTemplates(this.payload)
+                ]);
+              })
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              });
+          } else {
+            done();
+          }
+        }
+      });
     },
     handleDestroy() {
       this.$confirm(
@@ -133,23 +146,34 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
+          beforeClose: (action, instance, done) => {
+            if (action === "confirm") {
+              instance.confirmButtonLoading = true;
+              this.destroyGameObjectTemplate({ entry: this.currentRow.entry })
+                .then(() => {
+                  Promise.all([
+                    this.searchGameObjectTemplates(this.payload),
+                    this.countGameObjectTemplates(this.payload)
+                  ]);
+                })
+                .then(() => {
+                  done();
+                });
+            } else {
+              done();
+            }
+          }
         }
-      )
-        .then(() => {
-          this.destroy({ entry: this.currentRow.entry }).then(() => {
-            Promise.all([this.search(this.payload), this.count(this.payload)]);
-          });
-        })
-        .catch(() => {});
+      );
     },
     select(currentRow) {
       this.currentRow = currentRow;
     },
     async handlePaginate(page) {
       this.loading = true;
-      this.paginate(page);
-      await this.search(this.payload);
+      this.paginateGameObjectTemplates({ page: page });
+      await this.searchGameObjectTemplates(this.payload);
       this.loading = false;
     },
     show(row) {
@@ -157,7 +181,7 @@ export default {
     },
     async init() {
       this.loading = true;
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await Promise.all([this.searchGameObjectTemplates(this.payload), this.countGameObjectTemplates(this.payload)]);
       this.loading = false;
     }
   },

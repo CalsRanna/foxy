@@ -1,13 +1,13 @@
 import {
   COPY_GAME_OBJECT_TEMPLATE,
   COUNT_GAME_OBJECT_TEMPLATES,
-  GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE,
   PAGINATE_GAME_OBJECT_TEMPLATES,
   FIND_GAME_OBJECT_TEMPLATE,
   SEARCH_GAME_OBJECT_TEMPLATES,
   STORE_GAME_OBJECT_TEMPLATE,
   UPDATE_GAME_OBJECT_TEMPLATE,
-  DESTROY_GAME_OBJECT_TEMPLATE
+  DESTROY_GAME_OBJECT_TEMPLATE,
+  CREATE_GAME_OBJECT_TEMPLATE
 } from "../constants";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
@@ -48,14 +48,13 @@ export default {
     paginateGameObjectTemplates({ commit }, payload) {
       return new Promise(resolve => {
         commit(PAGINATE_GAME_OBJECT_TEMPLATES, payload.page);
-        resolve(payload);
+        resolve();
       });
     },
-    storGameObjectTemplate({ commit }, payload) {
+    storeGameObjectTemplate(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(STORE_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_GAME_OBJECT_TEMPLATE, (event, response) => {
-          commit(STORE_GAME_OBJECT_TEMPLATE, response);
+        ipcRenderer.on(STORE_GAME_OBJECT_TEMPLATE, () => {
           resolve();
         });
       });
@@ -72,8 +71,8 @@ export default {
     updateGameObjectTemplate({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(UPDATE_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_GAME_OBJECT_TEMPLATE, (event, response) => {
-          commit(UPDATE_GAME_OBJECT_TEMPLATE, response);
+        ipcRenderer.on(UPDATE_GAME_OBJECT_TEMPLATE, () => {
+          commit(UPDATE_GAME_OBJECT_TEMPLATE, payload);
           resolve();
         });
       });
@@ -86,18 +85,19 @@ export default {
         });
       });
     },
-    copyGameObjectTemplate(context, payload) {
+    createGameObjectTemplate({ commit }, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send(COPY_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_GAME_OBJECT_TEMPLATE, () => {
+        ipcRenderer.send(CREATE_GAME_OBJECT_TEMPLATE, payload);
+        ipcRenderer.on(CREATE_GAME_OBJECT_TEMPLATE, (event, response) => {
+          commit(CREATE_GAME_OBJECT_TEMPLATE, response);
           resolve();
         });
       });
     },
-    maxEntry() {
+    copyGameObjectTemplate(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send(GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE);
-        ipcRenderer.on(GET_MAX_ENTRY_OF_GAME_OBJECT_TEMPLATE, () => {
+        ipcRenderer.send(COPY_GAME_OBJECT_TEMPLATE, payload);
+        ipcRenderer.on(COPY_GAME_OBJECT_TEMPLATE, () => {
           resolve();
         });
       });
@@ -113,13 +113,13 @@ export default {
     [PAGINATE_GAME_OBJECT_TEMPLATES](state, page) {
       state.page = page;
     },
-    [STORE_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
-      state.gameObjectTemplate = gameObjectTemplate;
-    },
     [FIND_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
       state.gameObjectTemplate = gameObjectTemplate;
     },
     [UPDATE_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
+      state.gameObjectTemplate = gameObjectTemplate;
+    },
+    [CREATE_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
       state.gameObjectTemplate = gameObjectTemplate;
     }
   }

@@ -21,7 +21,16 @@
               <el-row :gutter="24">
                 <el-col :span="6">
                   <el-form-item label="ID">
-                    <el-input v-model="gameObjectTemplate.entry" placeholder="entry"></el-input>
+                    <el-input-number
+                      v-model="gameObjectTemplate.entry"
+                      :min="min"
+                      controls-position="right"
+                      placeholder="entry"
+                      :disabled="disabled"
+                      v-loading="loading"
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(255, 255, 255, 0.5)"
+                    ></el-input-number>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -291,7 +300,8 @@ export default {
   data() {
     return {
       loading: false,
-      min: 0
+      min: 0,
+      isCreating: true
     };
   },
   computed: {
@@ -306,15 +316,18 @@ export default {
     },
     localeDescription() {
       return null;
+    },
+    disabled() {
+      return !this.isCreating;
     }
   },
   methods: {
-    ...mapActions("gameObject", {
-      storeGameObjectTemplate: "store",
-      findGameObjectTemplate: "find",
-      updateGameObjectTemplate: "update",
-      getMaxEntryOfGameObjectTemplate: "maxEntry"
-    }),
+    ...mapActions("gameObject", [
+      "storeGameObjectTemplate",
+      "findGameObjectTemplate",
+      "updateGameObjectTemplate",
+      "createGameObjectTemplate"
+    ]),
     store(module) {
       switch (module) {
         case "game_object_template":
@@ -338,11 +351,7 @@ export default {
       let id = this.$route.params.id;
       let path = this.$route.path;
       if (path === "/game-object/create") {
-        this.findGameObjectTemplate({ entry: 0 });
-        let maxEntry = await this.getMaxEntryOfGameObjectTemplate();
-        this.creatureTemplate.entry = maxEntry + 1;
-        // this.searchCreatureTemplateLocales({ entry: maxEntry + 1 });
-        this.min = maxEntry + 1;
+        await this.createGameObjectTemplate();
       } else {
         this.isCreating = false;
         await Promise.all([this.findGameObjectTemplate({ entry: id })]);
