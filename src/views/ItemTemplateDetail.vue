@@ -1111,7 +1111,7 @@ import SpellSelector from "@/components/SpellSelector";
 export default {
   data() {
     return {
-      isCreating: false,
+      isCreating: true,
       loading: false,
       localeClasses: localeClasses,
       localeSubclasses: localeSubclasses,
@@ -1161,12 +1161,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions("item", {
-      storeItemTemplate: "storeItemTemplate",
-      findItemTemplate: "findItemTemplate",
-      updateItemTemplate: "updateItemTemplate",
-      searchItemTemplateLocales: "searchItemTemplateLocales"
-    }),
+    ...mapActions("item", [
+      "storeItemTemplate",
+      "findItemTemplate",
+      "updateItemTemplate",
+      "createItemTemplate",
+      "searchItemTemplateLocales"
+    ]),
     async switchover(tab) {
       let id = this.itemTemplate.entry;
       if (tab.name === "enchantment_template") {
@@ -1242,16 +1243,13 @@ export default {
     },
     async init() {
       this.loading = true;
-      let id = this.$route.params.id;
       let path = this.$route.path;
-      if (path === "/item-template/create") {
-        this.findItemTemplate({ entry: 0 });
-        let maxEntry = await this.getMaxEntryOfItemTemplate();
-        this.itemTemplate.ID = maxEntry + 1;
-        this.min = maxEntry + 1;
+      if (path === "/item/create") {
+        await this.createItemTemplate();
       } else {
         this.isCreating = false;
-        await Promise.all([this.findItemTemplate({ entry: id }), this.searchItemTemplateLocales({ ID: id })]);
+        let id = this.$route.params.id;
+        await Promise.all([this.findItemTemplate({ entry: id }), this.searchItemTemplateLocales({ id: id })]);
       }
       this.loading = false;
     }

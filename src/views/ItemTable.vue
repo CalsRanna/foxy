@@ -226,13 +226,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions("item", {
-      searchItemTemplates: 'countItemTemplates',
-      countItemTemplates: 'countItemTemplates',
-      paginateItemTemplates: 'paginateItemTemplates',
-      destroyItemTemplate: 'destroyItemTemplate',
-      copyItemTemplate: 'copyItemTemplate'
-    }),
+    ...mapActions("item", [
+      "searchItemTemplates",
+      "countItemTemplates",
+      "paginateItemTemplates",
+      "destroyItemTemplate",
+      "createItemTemplate",
+      "copyItemTemplate"
+    ]),
     async filtrate(field, index) {
       if (field === "class") {
         this.filter.class = index;
@@ -260,14 +261,14 @@ export default {
       }
       this.entry = undefined;
       this.name = undefined;
-      this.paginateItemTemplates(1);
+      await this.paginateItemTemplates({ page: 1 });
       this.loading = true;
       await Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
       this.loading = false;
     },
     async handleSearch() {
       this.loading = true;
-      this.paginateItemTemplates(1); //每次搜索时使分页器设为第一页
+      await this.paginateItemTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
       this.loading = false;
     },
@@ -283,14 +284,23 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info",
-        dangerouslyUseHTMLString: true
-      })
-        .then(() => {
-          this.copyItemTemplate({ entry: this.currentRow.entry }).then(() => {
-            Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
-          });
-        })
-        .catch(async () => {});
+        dangerouslyUseHTMLString: true,
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            this.copyItemTemplate({ entry: this.currentRow.entry })
+              .then(() => {
+                Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
+              })
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              });
+          } else {
+            done();
+          }
+        }
+      });
     },
     handleDestroy() {
       this.$confirm(
@@ -300,22 +310,31 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
+          beforeClose: (action, instance, done) => {
+            if (action === "confirm") {
+              instance.confirmButtonLoading = true;
+              this.destroyItemTemplate({ entry: this.currentRow.entry })
+                .then(() => {
+                  Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
+                })
+                .then(() => {
+                  instance.confirmButtonLoading = false;
+                  done();
+                });
+            } else {
+              done();
+            }
+          }
         }
-      )
-        .then(() => {
-          this.destroyItemTemplate({ entry: this.currentRow.entry }).then(() => {
-            Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
-          });
-        })
-        .catch(() => {});
+      );
     },
     select(currentRow) {
       this.currentRow = currentRow;
     },
     async handlePaginate(page) {
       this.loading = true;
-      this.paginateItemTemplates(page);
+      await this.paginateItemTemplates({ page: page });
       await this.searchItemTemplates(this.payload);
       this.loading = false;
     },

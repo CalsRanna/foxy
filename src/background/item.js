@@ -1,153 +1,209 @@
 import { ipcMain } from "electron";
-
 import {
   COPY_ITEM_TEMPLATE,
   COUNT_ITEM_TEMPLATES,
+  CREATE_ITEM_TEMPLATE,
   DESTROY_ITEM_TEMPLATE,
   FIND_ITEM_TEMPLATE,
-  GET_MAX_ENTRY_OF_ITEM_TEMPLATE,
+  GLOBAL_NOTICE,
   SEARCH_ITEM_TEMPLATES,
   SEARCH_ITEM_TEMPLATE_LOCALES,
   STORE_ITEM_TEMPLATE,
-  UPDATE_ITEM_TEMPLATE,
+  UPDATE_ITEM_TEMPLATE
 } from "../constants";
-import { payloadToDeleteSql, payloadToInsertSql, payloadToUpdateSql } from "../libs/util";
 
-const connection = require("../libs/mysql");
-
-let find = (payload) => {
-  return new Promise((resolve) => {
-    let sql = `select * from item_template where entry=${payload.entry}`;
-
-    connection.query(sql).then((results) => {
-      resolve(results[0]);
-    });
-  });
-};
-
-let MaxEntry = () => {
-  let sql = "select entry from item_template order by entry desc";
-
-  connection.query(sql).then((results) => {
-    resolve(results[0].entry);
-  });
-};
+const { knex } = require("../libs/mysql");
 
 ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
-  let sql =
-    "select it.entry, it.name, itl.Name as localeName, it.Quality, it.displayid, it.class, it.subclass, it.InventoryType, it.ItemLevel, it.RequiredLevel from item_template as it left join item_template_locale as itl on it.entry=itl.ID and itl.locale='zhCN'";
-  let where = "where 1=1";
-  if (payload.entry !== undefined) {
-    where = `${where} and it.entry like '%${payload.entry}%'`;
+  let queryBuilder = knex()
+    .select([
+      "it.entry",
+      "it.name",
+      "itl.Name as localeName",
+      "it.Quality",
+      "it.displayid",
+      "it.class",
+      "it.subclass",
+      "it.InventoryType",
+      "it.ItemLevel",
+      "it.RequiredLevel"
+    ])
+    .from("item_template as it")
+    .leftJoin("item_template_locale as itl", function() {
+      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+    });
+  if (payload.entry) {
+    queryBuilder = queryBuilder.where("it.entry", "like", `%${payload.entry}%`);
   }
-  if (payload.name !== undefined) {
-    where = `${where} and (it.name like '%${payload.name}%' or itl.Name like '%${payload.name}%')`;
+  if (payload.name) {
+    queryBuilder = queryBuilder.where(builder =>
+      builder.where("it.name", "like", `%${payload.name}%`).orWhere("itl.Name", "like", `%${payload.name}%`)
+    );
   }
-  if (payload.class !== undefined) {
-    where = `${where} and (it.class = ${payload.class})`;
+  if (payload.class) {
+    queryBuilder = queryBuilder.where("it.class", "like", `%${payload.class}%`);
   }
-  if (payload.subclass !== undefined) {
-    where = `${where} and (it.subclass = ${payload.subclass})`;
+  if (payload.subclass) {
+    queryBuilder = queryBuilder.where("it.subclass", "like", `%${payload.subclass}%`);
   }
-  if (payload.InventoryType !== undefined) {
-    where = `${where} and (it.InventoryType = ${payload.InventoryType})`;
+  if (payload.InventoryType) {
+    queryBuilder = queryBuilder.where("it.InventoryType", "like", `%${payload.InventoryType}%`);
   }
-  let page = payload.page;
-  let offset = 0;
-  if (page !== undefined) {
-    offset = (page - 1) * 50;
-  }
-  let limit = `limit ${offset}, 50`;
-  connection.query(`${sql} ${where} ${limit}`).then((results) => {
-    event.reply("SEARCH_ITEM_TEMPLATES_REPLY", results);
+  queryBuilder = queryBuilder.limit(50).offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_ITEM_TEMPLATES, rows);
   });
 });
 
 ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
-  let sql =
-    "select count(*) as total from item_template as it left join item_template_locale as itl on it.entry=itl.ID and itl.locale='zhCN'";
-  let where = "where 1=1";
-  if (payload.entry !== undefined) {
-    where = `${where} and it.entry like '%${payload.entry}%'`;
-  }
-  if (payload.name !== undefined) {
-    where = `${where} and (it.name like '%${payload.name}%' or itl.Name like '%${payload.name}%')`;
-  }
-  if (payload.class !== undefined) {
-    where = `${where} and (it.class = ${payload.class})`;
-  }
-  if (payload.subclass !== undefined) {
-    where = `${where} and (it.subclass = ${payload.subclass})`;
-  }
-  if (payload.InventoryType !== undefined) {
-    where = `${where} and (it.InventoryType = ${payload.InventoryType})`;
-  }
-  connection.query(`${sql} ${where}`).then((results) => {
-    event.reply("COUNT_ITEM_TEMPLATES_REPLY", results[0].total);
-  });
-});
-
-ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
-  let newItemTemplate = {};
-
-  Promise.all([
-    find(payload).then((itemTemplate) => {
-      newItemTemplate = itemTemplate;
-    }),
-    MaxEntry().then((entry) => {
-      newItemTemplate.entry = entry + 1;
-    }),
-  ]).then(() => {
-    let sql = payloadToInsertSql("item_template", newItemTemplate);
-
-    connection.query(sql).then((results) => {
-      event.reply(COPY_ITEM_TEMPLATE, results);
+  let queryBuilder = knex()
+    .count("* as total")
+    .from("item_template as it")
+    .leftJoin("item_template_locale as itl", function() {
+      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
     });
+  if (payload.entry) {
+    queryBuilder = queryBuilder.where("it.entry", "like", `%${payload.entry}%`);
+  }
+  if (payload.name) {
+    queryBuilder = queryBuilder.where(builder =>
+      builder.where("it.name", "like", `%${payload.name}%`).orWhere("itl.Name", "like", `%${payload.name}%`)
+    );
+  }
+  if (payload.class) {
+    queryBuilder = queryBuilder.where("it.class", "like", `%${payload.class}%`);
+  }
+  if (payload.subclass) {
+    queryBuilder = queryBuilder.where("it.subclass", "like", `%${payload.subclass}%`);
+  }
+  if (payload.InventoryType) {
+    queryBuilder = queryBuilder.where("it.InventoryType", "like", `%${payload.InventoryType}%`);
+  }
+
+  queryBuilder.then(rows => {
+    event.reply(COUNT_ITEM_TEMPLATES, rows[0].total);
   });
 });
 
 ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
-  let sql = payloadToInsertSql("item_template", payload);
+  let queryBuilder = knex()
+    .insert(payload)
+    .into("item_template");
 
-  connection.query(sql).then((results) => {
-    event.reply(STORE_ITEM_TEMPLATE, results);
+  queryBuilder.then(rows => {
+    event.reply(STORE_ITEM_TEMPLATE, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "notification",
+      title: "成功",
+      message: "新建成功。",
+      type: "success"
+    });
   });
 });
 
 ipcMain.on(FIND_ITEM_TEMPLATE, (event, payload) => {
-  let sql = `select * from item_template where entry = ${payload.entry}`;
+  let queryBuilder = knex()
+    .select()
+    .from("item_template")
+    .where(payload);
 
-  connection.query(`${sql}`).then((results) => {
-    event.reply("FIND_ITEM_TEMPLATE_REPLY", results[0]);
+  queryBuilder.then(rows => {
+    event.reply(FIND_ITEM_TEMPLATE, rows.length > 0 ? rows[0] : {});
   });
 });
 
 ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
-  let sql = payloadToUpdateSql("item_template", payload, "entry");
+  let queryBuilder = knex()
+    .table("item_template")
+    .where("entry", payload.entry)
+    .update(payload);
 
-  connection.query(sql).then((results) => {
-    event.reply(UPDATE_ITEM_TEMPLATE, results);
+  queryBuilder.then(rows => {
+    event.reply(UPDATE_ITEM_TEMPLATE, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "notification",
+      title: "成功",
+      message: "修改成功。",
+      type: "success"
+    });
   });
 });
 
 ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
-  let sql = payloadToDeleteSql("item_template", payload);
+  let queryBuilder = knex()
+    .table("item_template")
+    .where(payload)
+    .delete();
 
-  connection.query(sql).then((results) => {
-    event.reply(DESTROY_ITEM_TEMPLATE, results);
+  queryBuilder.then(rows => {
+    event.reply(DESTROY_ITEM_TEMPLATE, rows);
+    event.reply("GLOBAL_NOTICE", {
+      category: "notification",
+      title: "成功",
+      message: "删除成功。",
+      type: "success"
+    });
   });
 });
 
-ipcMain.on(GET_MAX_ENTRY_OF_ITEM_TEMPLATE, (event) => {
-  let sql = "select entry from item_template order by 'entry' desc";
-  connection.query(sql).then((results) => {
-    event.reply(GET_MAX_ENTRY_OF_ITEM_TEMPLATE, results[0].entry);
+// 新建空的物品模板，entry自动生成
+ipcMain.on(CREATE_ITEM_TEMPLATE, (event, payload) => {
+  let queryBuilder = knex()
+    .select("entry")
+    .from("item_template")
+    .orderBy("entry", "desc");
+
+  queryBuilder.then(rows => {
+    event.reply(CREATE_ITEM_TEMPLATE, {
+      entry: rows[0].entry + 1
+    });
+  });
+});
+
+ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
+  let entry = undefined;
+  let gameObjectTemplate = undefined;
+
+  let entryQueryBuilder = knex()
+    .select("entry")
+    .from("item_template")
+    .orderBy("entry", "desc");
+  let findGameObjectTemplateQueryBuilder = knex()
+    .select()
+    .from("item_template")
+    .where(payload);
+  Promise.all([
+    entryQueryBuilder.then(rows => {
+      entry = rows[0].entry;
+    }),
+    findGameObjectTemplateQueryBuilder.then(rows => {
+      gameObjectTemplate = rows.length > 0 ? rows[0] : {};
+    })
+  ]).then(() => {
+    gameObjectTemplate.entry = entry + 1;
+    let queryBuilder = knex()
+      .insert(gameObjectTemplate)
+      .into("item_template");
+    queryBuilder.then(rows => {
+      event.reply(COPY_ITEM_TEMPLATE, rows);
+      event.reply(GLOBAL_NOTICE, {
+        type: "success",
+        category: "notification",
+        title: "成功",
+        message: `复制成功，新的游戏对象模板 entry 为 ${entry + 1}。`
+      });
+    });
   });
 });
 
 ipcMain.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, payload) => {
-  let sql = `select * from item_template_locale where ID = ${payload.ID}`;
-  connection.query(`${sql}`).then((results) => {
-    event.reply("SEARCH_ITEM_TEMPLATE_LOCALES_REPLY", results);
+  let queryBuilder = knex()
+    .select()
+    .from("item_template_locale")
+    .where("ID", payload.id);
+
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_ITEM_TEMPLATE_LOCALES, rows);
   });
 });

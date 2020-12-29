@@ -173,6 +173,7 @@ export default {
                   Promise.all([this.search(this.payload), this.count(this.payload)]);
                 })
                 .then(() => {
+                  instance.confirmButtonLoading = false;
                   done();
                 });
             } else {
