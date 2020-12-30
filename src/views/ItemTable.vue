@@ -7,7 +7,7 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">物品模版列表</h3>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <div>
         <span style="font-size: 14px">类别：</span>
         <el-button
@@ -100,7 +100,7 @@
         >
       </div>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-form @submit.native.prevent="handleSearch">
         <el-row :gutter="16">
           <el-col :span="6">
@@ -121,12 +121,12 @@
         </el-row>
       </el-form>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
       <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
     </el-card>
-    <el-card v-loading="loading" style="margin-top: 16px;">
+    <el-card v-loading="loading" style="margin-top: 16px">
       <el-pagination
         layout="prev, pager, next"
         :current-page="page"
@@ -195,20 +195,20 @@ export default {
       filter: {
         class: undefined,
         subclass: undefined,
-        InventoryType: undefined
+        InventoryType: undefined,
       },
       loading: false,
       entry: undefined,
       name: undefined,
       pageSize: 50,
-      currentRow: undefined
+      currentRow: undefined,
     };
   },
   computed: {
     ...mapState("item", {
-      page: state => state.page,
-      total: state => state.total,
-      itemTemplates: state => state.itemTemplates
+      page: (state) => state.page,
+      total: (state) => state.total,
+      itemTemplates: (state) => state.itemTemplates,
     }),
     ...mapGetters("dbc", { icons: "itemIcons" }),
     payload() {
@@ -218,12 +218,12 @@ export default {
         InventoryType: this.filter.InventoryType,
         entry: this.entry,
         name: this.name,
-        page: this.page
+        page: this.page,
       };
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null ? true : false;
-    }
+    },
   },
   methods: {
     ...mapActions("item", [
@@ -232,7 +232,7 @@ export default {
       "paginateItemTemplates",
       "destroyItemTemplate",
       "createItemTemplate",
-      "copyItemTemplate"
+      "copyItemTemplate",
     ]),
     async filtrate(field, index) {
       if (field === "class") {
@@ -299,7 +299,7 @@ export default {
           } else {
             done();
           }
-        }
+        },
       });
     },
     handleDestroy() {
@@ -325,7 +325,7 @@ export default {
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -345,7 +345,7 @@ export default {
       this.loading = true;
       await Promise.all([this.searchItemTemplates(this.payload), this.countItemTemplates(this.payload)]);
       this.loading = false;
-    }
+    },
   },
   created() {
     if (this.itemTemplates.length === 0) {
@@ -353,8 +353,8 @@ export default {
     }
   },
   components: {
-    "item-template-name": ItemTemplateName
-  }
+    "item-template-name": ItemTemplateName,
+  },
 };
 </script>
 

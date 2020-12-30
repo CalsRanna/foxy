@@ -8,12 +8,12 @@ export default {
       page: 1,
       total: 0,
       spells: [],
-      spell: {}
+      spell: {},
     };
   },
   actions: {
     search({ commit, rootState }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         let spells = [];
         if (rootState.dbc.spells == {} || rootState.dbc.spells.records == undefined) {
           commit(SEARCH_SPELLS, spells);
@@ -39,7 +39,7 @@ export default {
       });
     },
     count({ commit, rootState }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         let spells = [];
         if (rootState.dbc.spells != {}) {
           for (let spell of rootState.dbc.spells.records) {
@@ -62,7 +62,7 @@ export default {
           commit(FIND_SPELL, spell);
         }
       }
-    }
+    },
   },
   mutations: {
     [SEARCH_SPELLS](state, spells) {
@@ -76,6 +76,6 @@ export default {
     },
     [FIND_SPELL](state, spell) {
       state.spell = spell;
-    }
-  }
+    },
+  },
 };

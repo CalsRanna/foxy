@@ -23,7 +23,7 @@
         </el-row>
       </el-form>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
       <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
@@ -85,7 +85,7 @@ export default {
       loading: false,
       ID: undefined,
       LogTitle: undefined,
-      currentRow: undefined
+      currentRow: undefined,
     };
   },
   computed: {
@@ -94,12 +94,12 @@ export default {
       return {
         id: this.ID,
         title: this.LogTitle,
-        page: this.page
+        page: this.page,
       };
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null ? true : false;
-    }
+    },
   },
   methods: {
     ...mapActions("quest", ["search", "count"]),
@@ -122,7 +122,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info",
-        dangerouslyUseHTMLString: true
+        dangerouslyUseHTMLString: true,
       })
         .then(() => {
           // this.copy({ entry: this.currentRow.entry }).then(() => {
@@ -139,7 +139,7 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         }
       )
         .then(() => {
@@ -165,12 +165,12 @@ export default {
       this.loading = true;
       await Promise.all([this.search(this.payload), this.count(this.payload)]);
       this.loading = false;
-    }
+    },
   },
   created() {
     if (this.questTemplates.length === 0) {
       this.init();
     }
-  }
+  },
 };
 </script>

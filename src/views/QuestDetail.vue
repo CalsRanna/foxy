@@ -13,7 +13,7 @@
         </small>
       </h3>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-tabs value="quest_template" style="margin-top: 16px">
         <el-tab-pane label="任务模版" name="quest_template">
           <el-form :model="questTemplate" label-position="right" label-width="120px">
@@ -934,7 +934,7 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
-      loading: false
+      loading: false,
     };
   },
   computed: {
@@ -946,28 +946,28 @@ export default {
       "creatureQuestStarters",
       "creatureQuestEnders",
       "gameObjectQuestStarters",
-      "gameObjectQuestEnders"
+      "gameObjectQuestEnders",
     ]),
     localeName() {
       return this.questTemplate.LogTitle;
     },
     localeDescription() {
       return null;
-    }
+    },
   },
   methods: {
     ...mapActions("quest", {
-      findQuestTemplate: "find"
+      findQuestTemplate: "find",
     }),
     async init() {
       this.loading = true;
       let id = this.$route.params.id;
       await this.findQuestTemplate({ id: id });
       this.loading = false;
-    }
+    },
   },
   created() {
     this.init();
-  }
+  },
 };
 </script>

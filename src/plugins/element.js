@@ -35,7 +35,7 @@ import {
   Tag,
   Dialog,
   Checkbox,
-  Image
+  Image,
   // Notification
 } from "element-ui";
 

@@ -277,9 +277,7 @@
                 <el-form-item>
                   <template slot="label">
                     <el-tooltip>
-                      <div slot="content" style="max-width: 400px">
-                        Page text.
-                      </div>
+                      <div slot="content" style="max-width: 400px">Page text.</div>
                       <i class="el-icon-info"></i>
                     </el-tooltip>
                     页面ID
@@ -291,9 +289,7 @@
                 <el-form-item>
                   <template slot="label">
                     <el-tooltip>
-                      <div slot="content" style="max-width: 400px">
-                        Page material.
-                      </div>
+                      <div slot="content" style="max-width: 400px">Page material.</div>
                       <i class="el-icon-info"></i>
                     </el-tooltip>
                     页面材料
@@ -760,7 +756,7 @@
           </el-card>
           <!-- 技能相关 -->
           <el-card style="margin-top: 16px">
-            <div style="width: 100%;">
+            <div style="width: 100%">
               <div style="width: 20%; float: left">
                 <el-form-item label="技能1">
                   <spell-selector v-model="itemTemplate.spellid_1" placeholder="spellid_1"></spell-selector>
@@ -926,7 +922,7 @@
                   ></el-input>
                 </el-form-item>
               </div>
-              <div style="clear:both"></div>
+              <div style="clear: both"></div>
             </div>
           </el-card>
           <el-card style="margin-top: 16px">
@@ -1036,7 +1032,7 @@
     </el-tabs>
     <el-dialog :visible.sync="localeDialogVisible" :show-close="false" :close-on-click-modal="false">
       <div slot="title">
-        <span style="font-size: 18px;color: #303133;margin-right:16px">名称/描述本地化</span>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px">名称/描述本地化</span>
         <el-button size="mini" @click="addItemTemplateLocale">新增</el-button>
       </div>
       <el-table :data="itemTemplateLocales">
@@ -1100,7 +1096,7 @@ import {
   localeQualities,
   localeMaterials,
   localeStatTypes,
-  bondings
+  bondings,
 } from "../locales/item.js";
 
 import { mapState, mapActions } from "vuex";
@@ -1120,7 +1116,7 @@ export default {
       localeMaterials: localeMaterials,
       localeStatTypes: localeStatTypes,
       bondings: bondings,
-      localeDialogVisible: false
+      localeDialogVisible: false,
     };
   },
   computed: {
@@ -1131,7 +1127,7 @@ export default {
       "itemLootTemplates",
       "disenchantLootTemplates",
       "prospectingLootTemplates",
-      "millingLootTemplates"
+      "millingLootTemplates",
     ]),
     localeName() {
       if (this.itemTemplateLocales.length > 0) {
@@ -1158,7 +1154,7 @@ export default {
       } else {
         return this.itemTemplate.description;
       }
-    }
+    },
   },
   methods: {
     ...mapActions("item", [
@@ -1166,7 +1162,7 @@ export default {
       "findItemTemplate",
       "updateItemTemplate",
       "createItemTemplate",
-      "searchItemTemplateLocales"
+      "searchItemTemplateLocales",
     ]),
     async switchover(tab) {
       let id = this.itemTemplate.entry;
@@ -1252,13 +1248,13 @@ export default {
         await Promise.all([this.findItemTemplate({ entry: id }), this.searchItemTemplateLocales({ id: id })]);
       }
       this.loading = false;
-    }
+    },
   },
   created() {
     this.init();
   },
   components: {
-    "spell-selector": SpellSelector
-  }
+    "spell-selector": SpellSelector,
+  },
 };
 </script>

@@ -5,10 +5,10 @@
     </el-input>
     <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" fullscreen @opened="init">
       <div slot="title">
-        <span style="font-size: 18px;color: #303133;margin-right:16px">对话选项编辑器</span>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px">对话选项编辑器</span>
         <el-button size="mini" @click="addGossipMenu">新增</el-button>
       </div>
-      <el-card style="margin-top: 16px;">
+      <el-card style="margin-top: 16px">
         <el-form>
           <el-row :gutter="16">
             <el-col :span="6">
@@ -87,17 +87,17 @@ export default {
       visible: false,
       size: 50,
       currentRow: undefined,
-      innerVisible: false
+      innerVisible: false,
     };
   },
   props: {
     value: [Number, String],
-    placeholder: String
+    placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.gossipMenuId = newValue;
-    }
+    },
   },
   computed: {
     ...mapState("gossipMenu", ["page", "total", "gossipMenus"]),
@@ -105,9 +105,9 @@ export default {
       return {
         menuId: this.gossipMenuId,
         text: this.text,
-        page: this.page
+        page: this.page,
       };
-    }
+    },
   },
   methods: {
     ...mapActions("gossipMenu", ["search", "count"]),
@@ -153,10 +153,10 @@ export default {
     store() {
       this.$emit("input", this.gossipMenuId);
       this.visible = false;
-    }
+    },
   },
   created() {
     this.gossipMenuId = this.value;
-  }
+  },
 };
 </script>

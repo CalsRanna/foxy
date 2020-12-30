@@ -13,7 +13,7 @@
         </small>
       </h3>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-tabs value="game_object_template" style="margin-top: 16px">
         <el-tab-pane label="游戏对象模版" name="game_object_template">
           <el-form :model="gameObjectTemplate" label-position="right" label-width="120px">
@@ -301,7 +301,7 @@ export default {
     return {
       loading: false,
       min: 0,
-      isCreating: true
+      isCreating: true,
     };
   },
   computed: {
@@ -309,7 +309,7 @@ export default {
       "gameObjectTemplate",
       "gameObjectTemplateAddon",
       "gameObjectQuestItems",
-      "gameObjectLootTemplates"
+      "gameObjectLootTemplates",
     ]),
     localeName() {
       return this.gameObjectTemplate.name;
@@ -319,14 +319,14 @@ export default {
     },
     disabled() {
       return !this.isCreating;
-    }
+    },
   },
   methods: {
     ...mapActions("gameObject", [
       "storeGameObjectTemplate",
       "findGameObjectTemplate",
       "updateGameObjectTemplate",
-      "createGameObjectTemplate"
+      "createGameObjectTemplate",
     ]),
     store(module) {
       switch (module) {
@@ -357,10 +357,10 @@ export default {
         await Promise.all([this.findGameObjectTemplate({ entry: id })]);
       }
       this.loading = false;
-    }
+    },
   },
   created() {
     this.init();
-  }
+  },
 };
 </script>

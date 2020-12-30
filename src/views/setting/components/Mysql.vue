@@ -27,11 +27,11 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      loading: false
+      loading: false,
     };
   },
   computed: {
-    ...mapState("global", { config: "mysqlConfig" })
+    ...mapState("global", { config: "mysqlConfig" }),
   },
   methods: {
     ...mapActions("global", ["testMysqlConfig", "storeMysqlConfig"]),
@@ -44,7 +44,7 @@ export default {
       this.loading = true;
       await this.testMysqlConfig(this.config);
       this.loading = false;
-    }
-  }
+    },
+  },
 };
 </script>

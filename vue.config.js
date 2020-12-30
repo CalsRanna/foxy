@@ -2,8 +2,8 @@
 module.exports = {
   configureWebpack: {
     optimization: {
-      minimize: false
-    }
+      minimize: false,
+    },
   },
   pluginOptions: {
     electronBuilder: {
@@ -11,18 +11,18 @@ module.exports = {
         appId: "xyz.calsranna.foxy",
         productName: "Foxy",
         directories: {
-          output: "./dist_electron"
+          output: "./dist_electron",
         },
         win: {
           target: [
             {
               target: "portable",
-              arch: ["x64"]
-            }
-          ]
-        }
+              arch: ["x64"],
+            },
+          ],
+        },
       },
-      externals: ["knex"]
-    }
-  }
+      externals: ["knex"],
+    },
+  },
 };

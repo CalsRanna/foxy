@@ -963,7 +963,7 @@
 import { mapState, mapActions } from "vuex";
 export default {
   computed: {
-    ...mapState("spell", ["spell"])
+    ...mapState("spell", ["spell"]),
   },
   methods: {
     ...mapActions("spell", ["find"]),
@@ -971,10 +971,10 @@ export default {
       this.loading = true;
       await this.find({ id: this.$route.params.id });
       this.loading = false;
-    }
+    },
   },
   created() {
     this.init();
-  }
+  },
 };
 </script>

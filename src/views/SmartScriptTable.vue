@@ -23,7 +23,7 @@
         </el-row>
       </el-form>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
       <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
@@ -71,7 +71,7 @@ export default {
       loading: false,
       entryorguid: undefined,
       comment: undefined,
-      currentRow: undefined
+      currentRow: undefined,
     };
   },
   computed: {
@@ -80,12 +80,12 @@ export default {
       return {
         entryorguid: this.entryorguid,
         comment: this.comment,
-        page: this.page
+        page: this.page,
       };
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null ? true : false;
-    }
+    },
   },
   methods: {
     ...mapActions("smartScript", ["searchSmartScripts", "countSmartScripts"]),
@@ -108,7 +108,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info",
-        dangerouslyUseHTMLString: true
+        dangerouslyUseHTMLString: true,
       })
         .then(() => {
           // this.copy({ entry: this.currentRow.entry }).then(() => {
@@ -125,7 +125,7 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         }
       )
         .then(() => {
@@ -153,12 +153,12 @@ export default {
       this.loading = true;
       await Promise.all([this.searchSmartScripts(this.payload), this.countSmartScripts(this.payload)]);
       this.loading = false;
-    }
+    },
   },
   created() {
     if (this.smartScripts.length === 0) {
       this.init();
     }
-  }
+  },
 };
 </script>

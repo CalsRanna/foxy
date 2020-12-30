@@ -7,7 +7,7 @@ import { mapState } from "vuex";
 export default {
   props: {
     spell: Object,
-    field: String
+    field: String,
   },
   computed: {
     ...mapState("dbc", ["spellDurations"]),
@@ -28,7 +28,7 @@ export default {
         .replace("$t3", this.spell.effectAuraPeriod_3 / 1000)
         .replace("$n", this.spell.procCharges)
         .replace("$d", `${duration}秒`);
-    }
-  }
+    },
+  },
 };
 </script>

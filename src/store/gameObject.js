@@ -7,7 +7,7 @@ import {
   STORE_GAME_OBJECT_TEMPLATE,
   UPDATE_GAME_OBJECT_TEMPLATE,
   DESTROY_GAME_OBJECT_TEMPLATE,
-  CREATE_GAME_OBJECT_TEMPLATE
+  CREATE_GAME_OBJECT_TEMPLATE,
 } from "../constants";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
@@ -23,12 +23,12 @@ export default {
       gameObjectTemplateLocales: [],
       gameObjectTemplateAddon: {},
       gameObjectQuestItems: [],
-      gameObjectLootTemplates: []
+      gameObjectLootTemplates: [],
     };
   },
   actions: {
     searchGameObjectTemplates({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(SEARCH_GAME_OBJECT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_GAME_OBJECT_TEMPLATES, (event, response) => {
           commit(SEARCH_GAME_OBJECT_TEMPLATES, response);
@@ -37,7 +37,7 @@ export default {
       });
     },
     countGameObjectTemplates({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(COUNT_GAME_OBJECT_TEMPLATES, payload);
         ipcRenderer.on(COUNT_GAME_OBJECT_TEMPLATES, (event, response) => {
           commit(COUNT_GAME_OBJECT_TEMPLATES, response);
@@ -46,13 +46,13 @@ export default {
       });
     },
     paginateGameObjectTemplates({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         commit(PAGINATE_GAME_OBJECT_TEMPLATES, payload.page);
         resolve();
       });
     },
     storeGameObjectTemplate(context, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(STORE_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(STORE_GAME_OBJECT_TEMPLATE, () => {
           resolve();
@@ -60,7 +60,7 @@ export default {
       });
     },
     findGameObjectTemplate({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(FIND_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(FIND_GAME_OBJECT_TEMPLATE, (event, response) => {
           commit(FIND_GAME_OBJECT_TEMPLATE, response);
@@ -69,7 +69,7 @@ export default {
       });
     },
     updateGameObjectTemplate({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(UPDATE_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_GAME_OBJECT_TEMPLATE, () => {
           commit(UPDATE_GAME_OBJECT_TEMPLATE, payload);
@@ -78,7 +78,7 @@ export default {
       });
     },
     destroyGameObjectTemplate(context, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(DESTROY_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_GAME_OBJECT_TEMPLATE, () => {
           resolve();
@@ -86,7 +86,7 @@ export default {
       });
     },
     createGameObjectTemplate({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(CREATE_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(CREATE_GAME_OBJECT_TEMPLATE, (event, response) => {
           commit(CREATE_GAME_OBJECT_TEMPLATE, response);
@@ -95,13 +95,13 @@ export default {
       });
     },
     copyGameObjectTemplate(context, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(COPY_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(COPY_GAME_OBJECT_TEMPLATE, () => {
           resolve();
         });
       });
-    }
+    },
   },
   mutations: {
     [SEARCH_GAME_OBJECT_TEMPLATES](state, gameObjectTemplates) {
@@ -121,6 +121,6 @@ export default {
     },
     [CREATE_GAME_OBJECT_TEMPLATE](state, gameObjectTemplate) {
       state.gameObjectTemplate = gameObjectTemplate;
-    }
-  }
+    },
+  },
 };

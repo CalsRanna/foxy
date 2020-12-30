@@ -5,7 +5,7 @@ import {
   SEARCH_DBC_SPELLS,
   SEARCH_DBC_SPELL_DURATIONS,
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
-  SEARCH_DBC_SCALING_STAT_VALUES
+  SEARCH_DBC_SCALING_STAT_VALUES,
 } from "../constants";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
@@ -19,20 +19,20 @@ export default {
     spells: {},
     spellDurations: {},
     scalingStatDistributions: {},
-    scalingStatValues: {}
+    scalingStatValues: {},
   }),
   getters: {
-    itemIcons: state => {
+    itemIcons: (state) => {
       let icons = {};
       for (let record of state.itemDisplayInfos.records) {
         icons[record["id"]] = record["inventoryIcon1"];
       }
       return icons;
-    }
+    },
   },
   actions: {
     searchDbcFactions({ commit }) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send("SEARCH_DBC_FACTIONS");
         ipcRenderer.on("SEARCH_DBC_FACTIONS_REPLY", (event, response) => {
           commit(SEARCH_DBC_FACTIONS, response);
@@ -41,7 +41,7 @@ export default {
       });
     },
     searchDbcFactionTemplates({ commit }) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send("SEARCH_DBC_FACTION_TEMPLATES");
         ipcRenderer.on("SEARCH_DBC_FACTION_TEMPLATES_REPLY", (event, response) => {
           commit(SEARCH_DBC_FACTION_TEMPLATES, response);
@@ -50,7 +50,7 @@ export default {
       });
     },
     searchDbcItemDisplayInfos({ commit }) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send("SEARCH_DBC_ITEM_DISPLAY_INFOS");
         ipcRenderer.on("SEARCH_DBC_ITEM_DISPLAY_INFOS_REPLY", (event, response) => {
           commit(SEARCH_DBC_ITEM_DISPLAY_INFOS, response);
@@ -59,7 +59,7 @@ export default {
       });
     },
     searchDbcSpells({ commit }) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send("SEARCH_DBC_SPELLS");
         ipcRenderer.on("SEARCH_DBC_SPELLS_REPLY", (event, response) => {
           commit(SEARCH_DBC_SPELLS, response);
@@ -68,7 +68,7 @@ export default {
       });
     },
     searchDbcSpellDurations({ commit }) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send("SEARCH_DBC_SPELL_DURATIONS");
         ipcRenderer.on("SEARCH_DBC_SPELL_DURATIONS_REPLY", (event, response) => {
           commit(SEARCH_DBC_SPELL_DURATIONS, response);
@@ -77,7 +77,7 @@ export default {
       });
     },
     searchDbcScalingStatDistributions({ commit }) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
         ipcRenderer.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event, response) => {
           commit(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, response);
@@ -86,14 +86,14 @@ export default {
       });
     },
     searchDbcScalingStatValues({ commit }) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(SEARCH_DBC_SCALING_STAT_VALUES);
         ipcRenderer.on(SEARCH_DBC_SCALING_STAT_VALUES, (event, response) => {
           commit(SEARCH_DBC_SCALING_STAT_VALUES, response);
           resolve();
         });
       });
-    }
+    },
   },
   mutations: {
     [SEARCH_DBC_FACTIONS](state, factions) {
@@ -120,6 +120,6 @@ export default {
     },
     [SEARCH_DBC_SCALING_STAT_VALUES](state, scalingStatValues) {
       state.scalingStatValues = scalingStatValues;
-    }
-  }
+    },
+  },
 };

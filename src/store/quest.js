@@ -7,7 +7,7 @@ import {
   PAGINATE_QUEST_TEMPLATES,
   SEARCH_QUEST_TEMPLATES,
   STORE_QUEST_TEMPLATE,
-  UPDATE_QUEST_TEMPLATE
+  UPDATE_QUEST_TEMPLATE,
 } from "./../constants";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
@@ -26,12 +26,12 @@ export default {
       creatureQuestStarters: [],
       creatureQuestEnders: [],
       gameObjectQuestStarters: [],
-      gameObjectQuestEnders: []
+      gameObjectQuestEnders: [],
     };
   },
   actions: {
     searchQuestTemplates({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(SEARCH_QUEST_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_QUEST_TEMPLATES, (event, response) => {
           commit(SEARCH_QUEST_TEMPLATES, response);
@@ -40,7 +40,7 @@ export default {
       });
     },
     countQuestTemplates({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(COUNT_QUEST_TEMPLATES, payload);
         ipcRenderer.on(COUNT_QUEST_TEMPLATES, (event, response) => {
           commit(COUNT_QUEST_TEMPLATES, response);
@@ -49,13 +49,13 @@ export default {
       });
     },
     paginateQuestTemplates({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         commit(PAGINATE_QUEST_TEMPLATES, payload.page);
         resolve();
       });
     },
     storeQuestTemplate({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(STORE_QUEST_TEMPLATE, payload);
         ipcRenderer.on(STORE_QUEST_TEMPLATE, (event, response) => {
           commit(STORE_QUEST_TEMPLATE, response);
@@ -64,7 +64,7 @@ export default {
       });
     },
     findQuestTemplate({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(FIND_QUEST_TEMPLATE, payload);
         ipcRenderer.on(FIND_QUEST_TEMPLATE, (event, response) => {
           commit(FIND_QUEST_TEMPLATE, response);
@@ -73,7 +73,7 @@ export default {
       });
     },
     updateQuestTemplate({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(UPDATE_QUEST_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_QUEST_TEMPLATE, (event, response) => {
           commit(UPDATE_QUEST_TEMPLATE, response);
@@ -82,7 +82,7 @@ export default {
       });
     },
     destroyQuestTemplate(context, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(DESTROY_QUEST_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_QUEST_TEMPLATE, () => {
           resolve();
@@ -90,7 +90,7 @@ export default {
       });
     },
     createQuestTempalte({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(CREATE_QUEST_TEMPLATE, payload);
         ipcRenderer.on(CREATE_QUEST_TEMPLATE, (event, response) => {
           commit(CREATE_QUEST_TEMPLATE, response);
@@ -99,13 +99,13 @@ export default {
       });
     },
     copyQuestTempalte(context, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(COPY_QUEST_TEMPLATE, payload);
         ipcRenderer.on(COPY_QUEST_TEMPLATE, () => {
           resolve();
         });
       });
-    }
+    },
   },
   mutations: {
     [SEARCH_QUEST_TEMPLATES](state, questTemplates) {
@@ -128,6 +128,6 @@ export default {
     },
     [CREATE_QUEST_TEMPLATE](state, questTemplate) {
       state.questTemplate = questTemplate;
-    }
-  }
+    },
+  },
 };
