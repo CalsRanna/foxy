@@ -62,8 +62,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-import * as TYPES from "@/store/MUTATION_TYPES";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -88,11 +87,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions("smartScript", ["searchSmartScripts", "countSmartScripts"]),
-    ...mapMutations("smartScript", { paginate: TYPES.PAGINATE_SMART_SCRIPTS }),
+    ...mapActions("smartScript", [
+      "searchSmartScripts",
+      "countSmartScripts",
+      "paginateSmartScripts",
+      "destroySmartScript",
+      "copySmartScript",
+    ]),
     async handleSearch() {
       this.loading = true;
-      this.paginate(1); //每次搜索时使分页器设为第一页
+      this.paginateSmartScripts({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([this.searchSmartScripts(this.payload), this.countSmartScripts(this.payload)]);
       this.loading = false;
     },
@@ -109,13 +113,27 @@ export default {
         cancelButtonText: "取消",
         type: "info",
         dangerouslyUseHTMLString: true,
-      })
-        .then(() => {
-          // this.copy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
-        })
-        .catch(async () => {});
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            this.copySmartScript({
+              entryorguid: this.currentRow.entryorguid,
+              source_type: this.currentRow.source_type,
+              id: this.currentRow.id,
+              link: this.currentRow.link,
+            })
+              .then(() => {
+                Promise.all([this.searchSmartScripts(this.payload), this.countSmartScripts(this.payload)]);
+              })
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              });
+          } else {
+            done();
+          }
+        },
+      });
     },
     handleDestroy() {
       this.$confirm(
@@ -126,27 +144,41 @@ export default {
           cancelButtonText: "取消",
           type: "error",
           dangerouslyUseHTMLString: true,
+          beforeClose: (action, instance, done) => {
+            if (action === "confirm") {
+              instance.confirmButtonLoading = true;
+              this.destroySmartScript({
+                entryorguid: this.currentRow.entryorguid,
+                source_type: this.currentRow.source_type,
+                id: this.currentRow.id,
+                link: this.currentRow.link,
+              })
+                .then(() => {
+                  Promise.all([this.searchSmartScripts(this.payload), this.countSmartScripts(this.payload)]);
+                })
+                .then(() => {
+                  instance.confirmButtonLoading = false;
+                  done();
+                });
+            } else {
+              done();
+            }
+          },
         }
-      )
-        .then(() => {
-          // this.destroy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
-        })
-        .catch(() => {});
+      );
     },
     select(currentRow) {
       this.currentRow = currentRow;
     },
     async handlePaginate(page) {
       this.loading = true;
-      this.paginate(page);
+      this.paginateSmartScripts({ page: page });
       await this.searchSmartScripts(this.payload);
       this.loading = false;
     },
     show(row) {
       this.$router.push(
-        `/smart-script/${row.id}?entryorguid=${row.entryorguid}&sourceType=${row.source_type}&link=${row.link}`
+        `/smart-script/${row.id}?entryorguid=${row.entryorguid}&source_type=${row.source_type}&link=${row.link}`
       );
     },
     async init() {
