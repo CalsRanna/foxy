@@ -76,8 +76,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-import * as TYPES from "@/store/MUTATION_TYPES";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -102,12 +101,17 @@ export default {
     },
   },
   methods: {
-    ...mapActions("quest", ["search", "count"]),
-    ...mapMutations("quest", { paginate: TYPES.PAGINATE_QUEST_TEMPLATES }),
+    ...mapActions("quest", [
+      "searchQuestTemplates",
+      "countQuestTemplates",
+      "paginateQuestTemplates",
+      "destroyQuestTemplate",
+      "copyQuestTemplate",
+    ]),
     async handleSearch() {
       this.loading = true;
-      this.paginate(1); //每次搜索时使分页器设为第一页
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await this.paginateQuestTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
+      await Promise.all([this.searchQuestTemplates(this.payload), this.countQuestTemplates(this.payload)]);
       this.loading = false;
     },
     reset() {
@@ -123,13 +127,22 @@ export default {
         cancelButtonText: "取消",
         type: "info",
         dangerouslyUseHTMLString: true,
-      })
-        .then(() => {
-          // this.copy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
-        })
-        .catch(async () => {});
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            this.copyQuestTemplate({ ID: this.currentRow.ID })
+              .then(() => {
+                Promise.all([this.searchQuestTemplates(this.payload), this.countQuestTemplates(this.payload)]);
+              })
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              });
+          } else {
+            done();
+          }
+        },
+      });
     },
     handleDestroy() {
       this.$confirm(
@@ -140,22 +153,31 @@ export default {
           cancelButtonText: "取消",
           type: "error",
           dangerouslyUseHTMLString: true,
+          beforeClose: (action, instance, done) => {
+            if (action === "confirm") {
+              instance.confirmButtonLoading = true;
+              this.destroyQuestTemplate({ ID: this.currentRow.ID })
+                .then(() => {
+                  Promise.all([this.searchQuestTemplates(this.payload), this.countQuestTemplates(this.payload)]);
+                })
+                .then(() => {
+                  instance.confirmButtonLoading = false;
+                  done();
+                });
+            } else {
+              done();
+            }
+          },
         }
-      )
-        .then(() => {
-          // this.destroy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
-        })
-        .catch(() => {});
+      );
     },
     select(currentRow) {
       this.currentRow = currentRow;
     },
     async handlePaginate(page) {
       this.loading = true;
-      this.paginate(page);
-      await this.search(this.payload);
+      await this.paginateQuestTemplates({ page: page }); //每次搜索时使分页器设为第一页
+      await this.searchQuestTemplates(this.payload);
       this.loading = false;
     },
     show(row) {
@@ -163,7 +185,7 @@ export default {
     },
     async init() {
       this.loading = true;
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await Promise.all([this.searchQuestTemplates(this.payload), this.countQuestTemplates(this.payload)]);
       this.loading = false;
     },
   },

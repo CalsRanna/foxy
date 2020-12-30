@@ -1,3 +1,5 @@
+const ipcRenderer = window.require("electron").ipcRenderer;
+
 import {
   COPY_QUEST_TEMPLATE,
   COUNT_QUEST_TEMPLATES,
@@ -9,8 +11,6 @@ import {
   STORE_QUEST_TEMPLATE,
   UPDATE_QUEST_TEMPLATE,
 } from "./../constants";
-
-const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
   namespaced: true,
@@ -54,11 +54,10 @@ export default {
         resolve();
       });
     },
-    storeQuestTemplate({ commit }, payload) {
+    storeQuestTemplate(context, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(STORE_QUEST_TEMPLATE, payload);
-        ipcRenderer.on(STORE_QUEST_TEMPLATE, (event, response) => {
-          commit(STORE_QUEST_TEMPLATE, response);
+        ipcRenderer.on(STORE_QUEST_TEMPLATE, () => {
           resolve();
         });
       });
@@ -75,8 +74,8 @@ export default {
     updateQuestTemplate({ commit }, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(UPDATE_QUEST_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_QUEST_TEMPLATE, (event, response) => {
-          commit(UPDATE_QUEST_TEMPLATE, response);
+        ipcRenderer.on(UPDATE_QUEST_TEMPLATE, () => {
+          commit(UPDATE_QUEST_TEMPLATE, payload);
           resolve();
         });
       });
@@ -89,7 +88,7 @@ export default {
         });
       });
     },
-    createQuestTempalte({ commit }, payload) {
+    createQuestTemplate({ commit }, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(CREATE_QUEST_TEMPLATE, payload);
         ipcRenderer.on(CREATE_QUEST_TEMPLATE, (event, response) => {
@@ -98,7 +97,7 @@ export default {
         });
       });
     },
-    copyQuestTempalte(context, payload) {
+    copyQuestTemplate(context, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(COPY_QUEST_TEMPLATE, payload);
         ipcRenderer.on(COPY_QUEST_TEMPLATE, () => {
@@ -116,9 +115,6 @@ export default {
     },
     [PAGINATE_QUEST_TEMPLATES](state, page) {
       state.page = page;
-    },
-    [STORE_QUEST_TEMPLATE](state, questTemplate) {
-      state.questTemplate = questTemplate;
     },
     [FIND_QUEST_TEMPLATE](state, questTemplate) {
       state.questTemplate = questTemplate;

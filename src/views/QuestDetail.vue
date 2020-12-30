@@ -21,7 +21,16 @@
               <el-row :gutter="24">
                 <el-col :span="6">
                   <el-form-item label="ID">
-                    <el-input v-model="questTemplate.ID" placeholder="ID"></el-input>
+                    <el-input-number
+                      v-model="questTemplate.ID"
+                      :min="min"
+                      controls-position="right"
+                      placeholder="ID"
+                      :disabled="disabled"
+                      v-loading="loading"
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(255, 255, 255, 0.5)"
+                    ></el-input-number>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -647,8 +656,8 @@
               </el-row>
             </el-card>
             <el-card style="margin-top: 16px">
-              <el-button type="primary">保存</el-button>
-              <el-button>返回</el-button>
+              <el-button type="primary" @click="() => store('quest_template')">保存</el-button>
+              <el-button @click="cancle">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -762,8 +771,8 @@
               </el-row>
             </el-card>
             <el-card style="margin-top: 16px">
-              <el-button type="primary">保存</el-button>
-              <el-button>返回</el-button>
+              <el-button type="primary" @click="() => store('quest_template_addon')">保存</el-button>
+              <el-button @click="cancle">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -829,8 +838,8 @@
               </el-row>
             </el-card>
             <el-card style="margin-top: 16px">
-              <el-button type="primary">保存</el-button>
-              <el-button>返回</el-button>
+              <el-button type="primary" @click="() => store('quest_offer_reward')">保存</el-button>
+              <el-button @click="cancle">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -866,8 +875,8 @@
               </el-row>
             </el-card>
             <el-card style="margin-top: 16px">
-              <el-button type="primary">保存</el-button>
-              <el-button>返回</el-button>
+              <el-button type="primary" @click="() => store('quest_request_items')">保存</el-button>
+              <el-button @click="cancle">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -934,7 +943,9 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
+      isCreating: true,
       loading: false,
+      min: 0,
     };
   },
   computed: {
@@ -954,15 +965,40 @@ export default {
     localeDescription() {
       return null;
     },
+    disabled() {
+      return !this.isCreating;
+    },
   },
   methods: {
-    ...mapActions("quest", {
-      findQuestTemplate: "find",
-    }),
+    ...mapActions("quest", ["storeQuestTemplate", "findQuestTemplate", "updateQuestTemplate", "createQuestTemplate"]),
+    store(module) {
+      switch (module) {
+        case "quest_template":
+          this.loading = true;
+          if (this.isCreating) {
+            this.storeQuestTemplate(this.questTemplate);
+          } else {
+            this.updateQuestTemplate(this.questTemplate);
+          }
+          this.loading = false;
+          break;
+        default:
+          break;
+      }
+    },
+    cancle() {
+      this.$router.go(-1);
+    },
     async init() {
       this.loading = true;
       let id = this.$route.params.id;
-      await this.findQuestTemplate({ id: id });
+      let path = this.$route.path;
+      if (path === "/quest/create") {
+        await this.createQuestTemplate();
+      } else {
+        this.isCreating = false;
+        await Promise.all([this.findQuestTemplate({ ID: id })]);
+      }
       this.loading = false;
     },
   },

@@ -1,16 +1,16 @@
+const ipcRenderer = window.require("electron").ipcRenderer;
+
 import {
   COPY_GAME_OBJECT_TEMPLATE,
   COUNT_GAME_OBJECT_TEMPLATES,
-  PAGINATE_GAME_OBJECT_TEMPLATES,
+  CREATE_GAME_OBJECT_TEMPLATE,
+  DESTROY_GAME_OBJECT_TEMPLATE,
   FIND_GAME_OBJECT_TEMPLATE,
+  PAGINATE_GAME_OBJECT_TEMPLATES,
   SEARCH_GAME_OBJECT_TEMPLATES,
   STORE_GAME_OBJECT_TEMPLATE,
   UPDATE_GAME_OBJECT_TEMPLATE,
-  DESTROY_GAME_OBJECT_TEMPLATE,
-  CREATE_GAME_OBJECT_TEMPLATE,
 } from "../constants";
-
-const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
   namespaced: true,
