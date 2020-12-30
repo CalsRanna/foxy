@@ -1159,6 +1159,41 @@ const inhabitTypes = [
   }
 ];
 
+const maxStandings = [
+  {
+    label: "仇恨",
+    value: 0
+  },
+  {
+    label: "敌对",
+    value: 1
+  },
+  {
+    label: "冷淡",
+    value: 2
+  },
+  {
+    label: "中立",
+    value: 3
+  },
+  {
+    label: "友善",
+    value: 4
+  },
+  {
+    label: "尊敬",
+    value: 5
+  },
+  {
+    label: "崇敬",
+    value: 6
+  },
+  {
+    label: "崇拜",
+    value: 7
+  }
+];
+
 export {
   npcFlags,
   typeFlags,
@@ -1168,5 +1203,6 @@ export {
   flagsExtra,
   mechanicImmuneMasks,
   dmgSchools,
-  inhabitTypes
+  inhabitTypes,
+  maxStandings
 };
