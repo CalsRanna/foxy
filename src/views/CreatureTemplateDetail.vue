@@ -151,7 +151,7 @@
                       </div>
                       <i class="el-icon-info"></i>
                     </el-tooltip>
-                    Rank
+                    排行
                   </template>
                   <el-select v-model="creatureTemplate.rank" placeholder="rank">
                     <el-option label="普通" :value="0"></el-option>
@@ -460,42 +460,82 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="最小近战伤害">
-                  <el-input v-model="creatureTemplate.mindmg" placeholder="mindmg"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.mindmg"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="mindmg"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="最大近战伤害">
-                  <el-input v-model="creatureTemplate.maxdmg" placeholder="maxdmg"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.maxdmg"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="maxdmg"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="近战攻击强度">
-                  <el-input v-model="creatureTemplate.attackpower" placeholder="attackpower"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.attackpower"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="attackpower"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="近战攻击间隔">
-                  <el-input v-model="creatureTemplate.BaseAttackTime" placeholder="BaseAttackTime"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.BaseAttackTime"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="BaseAttackTime"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="最小远程伤害">
-                  <el-input v-model="creatureTemplate.minrangedmg" placeholder="minrangedmg"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.minrangedmg"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="minrangedmg"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="最大远程伤害">
-                  <el-input v-model="creatureTemplate.maxrangedmg" placeholder="maxrangedmg"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.maxrangedmg"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="maxrangedmg"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="远程攻击强度">
-                  <el-input v-model="creatureTemplate.rangedattackpower" placeholder="rangedattackpower"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.rangedattackpower"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="rangedattackpower"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="远程攻击间隔">
-                  <el-input v-model="creatureTemplate.RangeAttackTime" placeholder="RangeAttackTime"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.RangeAttackTime"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="RangeAttackTime"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -503,38 +543,73 @@
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="缩放系数">
-                  <el-input v-model="creatureTemplate.scale" placeholder="scale"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
                 <el-form-item label="伤害系数">
-                  <el-input v-model="creatureTemplate.DamageModifier" placeholder="DamageModifier"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="生命值系数">
-                  <el-input v-model="creatureTemplate.HealthModifier" placeholder="HealthModifier"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="法力值系数">
-                  <el-input v-model="creatureTemplate.ManaModifier" placeholder="ManaModifier"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.DamageModifier"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="DamageModifier"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="护甲系数">
-                  <el-input v-model="creatureTemplate.ArmorModifier" placeholder="ArmorModifier"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.ArmorModifier"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="ArmorModifier"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="生命值系数">
+                  <el-input-number
+                    v-model="creatureTemplate.HealthModifier"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="HealthModifier"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="法力值系数">
+                  <el-input-number
+                    v-model="creatureTemplate.ManaModifier"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="ManaModifier"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="缩放系数">
+                  <el-input-number
+                    v-model="creatureTemplate.scale"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="scale"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="行走速度">
-                  <el-input v-model="creatureTemplate.speed_walk" placeholder="speed_walk"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.speed_walk"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="speed_walk"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="奔跑速度">
-                  <el-input v-model="creatureTemplate.speed_run" placeholder="speed_run"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.speed_run"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="speed_run"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -543,32 +618,64 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="神圣抗性">
-                  <el-input v-model="creatureTemplate.resistance1" placeholder="resistance1"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.resistance1"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="resistance1"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="火焰抗性">
-                  <el-input v-model="creatureTemplate.resistance2" placeholder="resistance2"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.resistance2"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="resistance2"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="自然抗性">
-                  <el-input v-model="creatureTemplate.resistance3" placeholder="resistance3"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.resistance3"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="resistance3"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="暗影抗性">
+                  <el-input-number
+                    v-model="creatureTemplate.resistance5"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="resistance5"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="冰霜抗性">
-                  <el-input v-model="creatureTemplate.resistance4" placeholder="resistance4"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="暗影抗性">
-                  <el-input v-model="creatureTemplate.resistance5" placeholder="resistance5"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.resistance4"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="resistance4"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="奥术抗性">
-                  <el-input v-model="creatureTemplate.resistance6" placeholder="resistance6"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.resistance6"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="resistance6"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -577,42 +684,42 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="技能1">
-                  <el-input v-model="creatureTemplate.spell1" placeholder="spell1"></el-input>
+                  <spell-selector v-model="creatureTemplate.spell1" placeholder="spell1"></spell-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="技能2">
-                  <el-input v-model="creatureTemplate.spell2" placeholder="spell2"></el-input>
+                  <spell-selector v-model="creatureTemplate.spell2" placeholder="spell2"></spell-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="技能3">
-                  <el-input v-model="creatureTemplate.spell3" placeholder="spell3"></el-input>
+                  <spell-selector v-model="creatureTemplate.spell3" placeholder="spell3"></spell-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="技能4">
-                  <el-input v-model="creatureTemplate.spell4" placeholder="spell4"></el-input>
+                  <spell-selector v-model="creatureTemplate.spell4" placeholder="spell4"></spell-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="技能5">
-                  <el-input v-model="creatureTemplate.spell5" placeholder="spell5"></el-input>
+                  <spell-selector v-model="creatureTemplate.spell5" placeholder="spell5"></spell-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="技能6">
-                  <el-input v-model="creatureTemplate.spell6" placeholder="spell6"></el-input>
+                  <spell-selector v-model="creatureTemplate.spell6" placeholder="spell6"></spell-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="技能7">
-                  <el-input v-model="creatureTemplate.spell7" placeholder="spell7"></el-input>
+                  <spell-selector v-model="creatureTemplate.spell7" placeholder="spell7"></spell-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="技能8">
-                  <el-input v-model="creatureTemplate.spell8" placeholder="spell8"></el-input>
+                  <spell-selector v-model="creatureTemplate.spell8" placeholder="spell8"></spell-selector>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -742,16 +849,6 @@
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="KillCredit1">
-                  <el-input v-model="creatureTemplate.KillCredit1" placeholder="KillCredit1"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="KillCredit2">
-                  <el-input v-model="creatureTemplate.KillCredit2" placeholder="KillCredit2"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
                 <el-form-item label="最小金钱掉落">
                   <el-input v-model="creatureTemplate.mingold" placeholder="mingold"></el-input>
                 </el-form-item>
@@ -759,6 +856,39 @@
               <el-col :span="6">
                 <el-form-item label="最大金钱掉落">
                   <el-input v-model="creatureTemplate.maxgold" placeholder="maxgold"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        If this is a kill credit template -- one that is a dummy template that is used when more than
+                        one creature can count as a kill in a quest, then this is a link to the first entry of the
+                        creature that could be killed to give quest credit.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    击杀关联1
+                  </template>
+                  <el-input v-model="creatureTemplate.KillCredit1" placeholder="KillCredit1"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        If this is a kill credit template -- one that is a dummy template that is used when more than
+                        one creature can count as a kill in a quest, then this is a link to the second entry of the
+                        creature that could be killed to give quest credit. If more than two creatures can be killed and
+                        count toward a single objective, an smart or C++ script will be required.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    击杀关联2
+                  </template>
+                  <el-input v-model="creatureTemplate.KillCredit2" placeholder="KillCredit2"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -785,17 +915,113 @@
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="difficulty_entry_1">
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 600px">
+                        <table>
+                          <thead>
+                            <tr>
+                              <td>name</td>
+                              <td>entry</td>
+                              <td>difficulty_entry_1</td>
+                              <td>difficulty_entry_2</td>
+                              <td>difficulty_entry_3</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Anomalus</td>
+                              <td>26763</td>
+                              <td>30529</td>
+                              <td>0</td>
+                              <td>0</td>
+                            </tr>
+                            <tr>
+                              <td>Sindragosa</td>
+                              <td>36853</td>
+                              <td>38265</td>
+                              <td>38266</td>
+                              <td>38267</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <br /><br />
+                        Anomalus is a 5 man boss located in The Nexus. You can fight him on two types of difficulties
+                        (normal dungeon and heroic dungeon). Depending on the type of difficulty, bosses have different
+                        statistics like health and damage. In case of Anomalus information from entry 26763 is used when
+                        you fight him at normal difficulty and entry 30529 is used when you fight him at heroic
+                        difficulty. <br /><br />Sindragosa, a raid boss encounter located in the Icecrown Citadel can be
+                        fought on 4 different difficulties due to the introduction of heroic raid modes in Patch 3.2
+                        (10man normal/heroic, 25man normal/heroic). Depending on the type of difficulty, she must have
+                        different statistics. So if you see her in 10man normal raid she will use information from entry
+                        36853, in a 25man normal raid entry 38265 will be used and so on. This is in stark contrast to
+                        raid bosses such as Patchwerk and XT-002 Deconstructor, located in Naxxramas and Ulduar
+                        respectively, who only have two different raid modes (10-man 'normal'/25-man 'normal').
+                        Hardmodes within the Ulduar raid do not have their own template, due to game mechanics engaging
+                        the harder difficulty during the encounter itself. <br /><br />Here is a special case with the
+                        Alterac Valley battleground. There are 4 level brackets where the NPCs are made easier or
+                        harder, depending on your level bracket (Added in WoW patch 3.2.2 when level 80 characters
+                        received their own bracket for this battleground and all brackets below level 80 received their
+                        own level of difficulty). The same concept applies to the Isle of Conquest battleground, with
+                        only two brackets. <br /><br />If you look at the database you will notice a very characteristic
+                        pattern which is summarized in table below:<br /><br />
+                        <table>
+                          <thead>
+                            <tr>
+                              <td>name</td>
+                              <td>entry</td>
+                              <td>difficulty_entry_1</td>
+                              <td>difficulty_entry_2</td>
+                              <td>difficulty_entry_3</td>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Normal Creature</td>
+                              <td>Different than 0</td>
+                              <td>0</td>
+                              <td>0</td>
+                              <td>0</td>
+                            </tr>
+                            <tr>
+                              <td>Dungeon Creature</td>
+                              <td>Normal Dungeon</td>
+                              <td>Heroic Dungeon</td>
+                              <td>0</td>
+                              <td>0</td>
+                            </tr>
+                            <tr>
+                              <td>Raid Creature</td>
+                              <td>10man Normal Raid</td>
+                              <td>25man Normal Raid</td>
+                              <td>10man Heroic Raid</td>
+                              <td>25man Heroic Raid</td>
+                            </tr>
+                            <tr>
+                              <td>Battleground</td>
+                              <td>51- 59</td>
+                              <td>60-69</td>
+                              <td>70-79</td>
+                              <td>80</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    难度1
+                  </template>
                   <el-input v-model="creatureTemplate.difficulty_entry_1" placeholder="difficulty_entry_1"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="difficulty_entry_2">
+                <el-form-item label="难度2">
                   <el-input v-model="creatureTemplate.difficulty_entry_2" placeholder="difficulty_entry_2"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="difficulty_entry_3">
+                <el-form-item label="难度3">
                   <el-input v-model="creatureTemplate.difficulty_entry_3" placeholder="difficulty_entry_3"></el-input>
                 </el-form-item>
               </el-col>
@@ -809,27 +1035,71 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="Script名称">
+                <el-form-item label="脚本名称">
                   <el-input v-model="creatureTemplate.ScriptName" placeholder="ScriptName"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="MovementType">
-                  <el-input v-model="creatureTemplate.MovementType" placeholder="MovementType"></el-input>
+                <el-form-item label="移动类型">
+                  <el-select v-model="creatureTemplate.MovementType" placeholder="MovementType">
+                    <el-option label="空闲" :value="0"></el-option>
+                    <el-option label="巡逻" :value="1"></el-option>
+                    <el-option label="路径" :value="2"></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="movementId">
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        We have no idea what this field does. It is passed directly to the client.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    移动ID
+                  </template>
                   <el-input v-model="creatureTemplate.movementId" placeholder="movementId"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="InhabitType">
-                  <el-input v-model="creatureTemplate.InhabitType" placeholder="InhabitType"></el-input>
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        Controls where the creature can move and attack.
+                        <br />
+                        This is a bitmask. You can add values together: 1+4=5 would make the creature walk on ground and
+                        fly.
+                        <br />
+                        Note: If your vehicle is a flying vehicle then your accessory MUST have it's InhabitType set to
+                        (4 - Flying). This being if you set it for both ground and flying it will spawn on the ground if
+                        the vehicle is initially spawned on the ground.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    栖息类型
+                  </template>
+                  <flag-editor
+                    v-model="creatureTemplate.InhabitType"
+                    :flags="inhabitTypes"
+                    title="栖息类型编辑器"
+                    placeholder="InhabitType"
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="HoverHeight">
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        Distance above the ground that the creature will hover if it has MOVEMENTFLAG_DISABLE_GRAVITY
+                        enabled. Value taken from sniffs.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    盘旋高度
+                  </template>
                   <el-input v-model="creatureTemplate.HoverHeight" placeholder="HoverHeight"></el-input>
                 </el-form-item>
               </el-col>
@@ -1355,13 +1625,15 @@ import {
   dynamicFlags,
   flagsExtra,
   mechanicImmuneMasks,
-  dmgSchools
+  dmgSchools,
+  inhabitTypes
 } from "@/locales/creature";
 
 import { mapState, mapGetters, mapActions } from "vuex";
 
 import FlagEditor from "@/components/FlagEditor";
 import GossipMenuEditor from "@/components/GossipMenuEditor";
+import SpellSelector from "@/components/SpellSelector";
 
 export default {
   data() {
@@ -1377,7 +1649,8 @@ export default {
       dynamicFlags: dynamicFlags,
       flagsExtra: flagsExtra,
       mechanicImmuneMasks: mechanicImmuneMasks,
-      dmgSchools: dmgSchools
+      dmgSchools: dmgSchools,
+      inhabitTypes
     };
   },
   computed: {
@@ -1545,7 +1818,8 @@ export default {
   },
   components: {
     "flag-editor": FlagEditor,
-    "gossip-menu-editor": GossipMenuEditor
+    "gossip-menu-editor": GossipMenuEditor,
+    "spell-selector": SpellSelector
   }
 };
 </script>
