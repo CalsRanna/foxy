@@ -1,78 +1,150 @@
 import { ipcMain } from "electron";
 import {
+  COPY_SMART_SCRIPT,
   COUNT_SMART_SCRIPTS,
+  CREATE_SMART_SCRIPT,
   DESTROY_SMART_SCRIPT,
   FIND_SMART_SCRIPT,
+  GLOBAL_NOTICE,
   SEARCH_SMART_SCRIPTS,
   STORE_SMART_SCRIPT,
   UPDATE_SMART_SCRIPT,
 } from "../constants";
-import { payloadToDeleteSql, payloadToInsertSql, payloadToUpdateSql } from "../libs/util";
 
-const connection = require("../libs/mysql");
+const { knex } = require("../libs/mysql");
 
 ipcMain.on(SEARCH_SMART_SCRIPTS, (event, payload) => {
-  let sql =
-    "select ss.entryorguid, ss.source_type, ss.id, ss.link, ss.event_type, ss.action_type, ss.target_type,ss.comment from smart_scripts as ss";
-  let where = "where 1=1";
+  let queryBuilder = knex()
+    .select([
+      "ss.entryorguid",
+      "ss.source_type",
+      "ss.id",
+      "ss.link",
+      "ss.event_type",
+      "ss.action_type",
+      "ss.target_type",
+      "ss.comment",
+    ])
+    .from("smart_scripts as ss");
   if (payload.entryorguid) {
-    where = `${where} and ss.entryorguid like '%${payload.entryorguid}%'`;
+    queryBuilder = queryBuilder.where("ss.entryorguid", "like", `%${payload.entryorguid}%`);
   }
   if (payload.comment) {
-    where = `${where} and ss.comment like '%${payload.comment}%'`;
+    queryBuilder = queryBuilder.where("ss.comment", "like", `%${payload.comment}%`);
   }
-  let page = payload.page;
-  let offset = 0;
-  if (page !== undefined) {
-    offset = (page - 1) * 50;
-  }
-  let limit = `limit ${offset}, 50`;
-  connection.query(`${sql} ${where} ${limit}`).then((results) => {
-    event.reply(SEARCH_SMART_SCRIPTS, results);
+  queryBuilder = queryBuilder.limit(50).offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+
+  queryBuilder.then((rows) => {
+    event.reply(SEARCH_SMART_SCRIPTS, rows);
   });
 });
 
 ipcMain.on(COUNT_SMART_SCRIPTS, (event, payload) => {
-  let sql = "select count(*) as total from smart_scripts as ss";
-  let where = "where 1=1";
+  let queryBuilder = knex().count("* as total").from("smart_scripts as ss");
   if (payload.entryorguid) {
-    where = `${where} and ss.entryorguid like '%${payload.entryorguid}%'`;
+    queryBuilder = queryBuilder.where("ss.entryorguid", "like", `%${payload.entryorguid}%`);
   }
   if (payload.comment) {
-    where = `${where} and ss.comment like '%${payload.comment}%'`;
+    queryBuilder = queryBuilder.where("ss.comment", "like", `%${payload.comment}%`);
   }
-  connection.query(`${sql} ${where}`).then((results) => {
-    event.reply(COUNT_SMART_SCRIPTS, results[0].total);
+
+  queryBuilder.then((rows) => {
+    event.reply(COUNT_SMART_SCRIPTS, rows[0].total);
   });
 });
 
 ipcMain.on(STORE_SMART_SCRIPT, (event, payload) => {
-  let sql = payloadToInsertSql(payload);
+  let queryBuilder = knex().insert(payload).into("smart_scripts");
 
-  connection.query(sql).then((results) => {
-    event.reply(STORE_SMART_SCRIPT, results);
+  queryBuilder.then((rows) => {
+    event.reply(STORE_SMART_SCRIPT, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "notification",
+      title: "成功",
+      message: "新建成功。",
+      type: "success",
+    });
   });
 });
 
 ipcMain.on(FIND_SMART_SCRIPT, (event, payload) => {
-  let sql = `select * from smart_scripts where entryorguid=${payload.entryorguid} and source_type=${payload.sourceType} and id=${payload.id} and link=${payload.link}`;
-  connection.query(sql).then((results) => {
-    event.reply(FIND_SMART_SCRIPT, results[0]);
+  let queryBuilder = knex().select().from("smart_scripts").where(payload);
+
+  queryBuilder.then((rows) => {
+    event.reply(FIND_SMART_SCRIPT, rows.length > 0 ? rows[0] : {});
   });
 });
 
 ipcMain.on(UPDATE_SMART_SCRIPT, (event, payload) => {
-  let sql = payloadToUpdateSql(payload);
+  let queryBuilder = knex()
+    .table("smart_scripts")
+    .where("entryorguid", payload.credential.entryorguid)
+    .where("source_type", payload.credential.source_type)
+    .where("id", payload.credential.id)
+    .where("link", payload.credential.link)
+    .update(payload.smartScript);
 
-  connection.query(sql).then((results) => {
-    event.reply(UPDATE_SMART_SCRIPT, results);
+  queryBuilder.then((rows) => {
+    event.reply(UPDATE_SMART_SCRIPT, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "notification",
+      title: "成功",
+      message: "修改成功。",
+      type: "success",
+    });
   });
 });
 
 ipcMain.on(DESTROY_SMART_SCRIPT, (event, payload) => {
-  let sql = payloadToDeleteSql(payload);
+  let queryBuilder = knex().table("smart_scripts").where(payload).delete();
 
-  connection.query(sql).then((results) => {
-    event.reply(DESTROY_SMART_SCRIPT, results);
+  queryBuilder.then((rows) => {
+    event.reply(DESTROY_SMART_SCRIPT, rows);
+    event.reply("GLOBAL_NOTICE", {
+      category: "notification",
+      title: "成功",
+      message: "删除成功。",
+      type: "success",
+    });
+  });
+});
+
+// 新建空的物品模板，entry自动生成
+ipcMain.on(CREATE_SMART_SCRIPT, (event, payload) => {
+  let queryBuilder = knex().select("entryorguid").from("smart_scripts").orderBy("entryorguid", "desc");
+
+  queryBuilder.then((rows) => {
+    event.reply(CREATE_SMART_SCRIPT, {
+      entryorguid: rows[0].entryorguid + 1,
+      comment: "New - Smart Script",
+    });
+  });
+});
+
+ipcMain.on(COPY_SMART_SCRIPT, (event, payload) => {
+  let entryorguid = undefined;
+  let smartScript = undefined;
+
+  let entryOrGuidQueryBuilder = knex().select("entryorguid").from("smart_scripts").orderBy("entryorguid", "desc");
+  let findSmartScriptQueryBuilder = knex().select().from("smart_scripts").where(payload);
+  Promise.all([
+    entryOrGuidQueryBuilder.then((rows) => {
+      entryorguid = rows[0].entryorguid;
+    }),
+    findSmartScriptQueryBuilder.then((rows) => {
+      smartScript = rows.length > 0 ? rows[0] : {};
+    }),
+  ]).then(() => {
+    smartScript.entryorguid = entryorguid + 1;
+    let queryBuilder = knex().insert(smartScript).into("smart_scripts");
+    queryBuilder.then((rows) => {
+      event.reply(COPY_SMART_SCRIPT, rows);
+      event.reply(GLOBAL_NOTICE, {
+        type: "success",
+        category: "notification",
+        title: "成功",
+        message: `复制成功，新的游戏对象模板 entryorguid 为 ${entryorguid + 1}。`,
+      });
+    });
   });
 });

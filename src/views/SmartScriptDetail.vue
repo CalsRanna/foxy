@@ -183,8 +183,8 @@
               </el-row>
             </el-card>
             <el-card style="margin-top: 16px">
-              <el-button type="primary">保存</el-button>
-              <el-button>返回</el-button>
+              <el-button type="primary" @click="() => store('smart_script')">保存</el-button>
+              <el-button @click="cancle">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -199,27 +199,54 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
+      isCreating: true,
       loading: false,
+      credential: {},
     };
   },
   computed: {
     ...mapState("smartScript", ["smartScript"]),
     localeName() {
-      return null;
+      return this.smartScript.comment;
     },
     localeDescription() {
       return null;
     },
   },
   methods: {
-    ...mapActions("smartScript", {
-      findSmartScript: "findSmartScript",
-    }),
+    ...mapActions("smartScript", ["storeSmartScript", "findSmartScript", "updateSmartScript", "createSmartScript"]),
+    store(module) {
+      switch (module) {
+        case "smart_script":
+          this.loading = true;
+          if (this.isCreating) {
+            this.storeSmartScript(this.smartScript);
+          } else {
+            this.updateSmartScript({
+              credential: this.credential,
+              smartScript: this.smartScript,
+            });
+          }
+          this.loading = false;
+          break;
+        default:
+          break;
+      }
+    },
+    cancle() {
+      this.$router.go(-1);
+    },
     async init() {
       this.loading = true;
-      let payload = this.$route.query;
-      payload.id = this.$route.params.id;
-      await this.findSmartScript(payload);
+      let path = this.$route.path;
+      if (path === "/smart-script/create") {
+        await this.createSmartScript();
+      } else {
+        this.isCreating = false;
+        this.credential = this.$route.query;
+        this.credential.id = this.$route.params.id;
+        await Promise.all([this.findSmartScript(this.credential)]);
+      }
       this.loading = false;
     },
   },
