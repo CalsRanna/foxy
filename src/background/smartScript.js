@@ -75,6 +75,7 @@ ipcMain.on(FIND_SMART_SCRIPT, (event, payload) => {
   });
 });
 
+// payload包含修改后的smartScript和credential, 单主键时默认为主键
 ipcMain.on(UPDATE_SMART_SCRIPT, (event, payload) => {
   let queryBuilder = knex()
     .table("smart_scripts")
