@@ -1126,23 +1126,13 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="path_id">
+                <el-form-item label="路径ID">
                   <el-input v-model="creatureTemplateAddon.path_id" placeholder="path_id"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="mount">
+                <el-form-item label="坐骑模型">
                   <el-input v-model="creatureTemplateAddon.mount" placeholder="mount"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="bytes1">
-                  <el-input v-model="creatureTemplateAddon.bytes1" placeholder="bytes1"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="bytes2">
-                  <el-input v-model="creatureTemplateAddon.bytes2" placeholder="bytes2"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1151,13 +1141,23 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="isLarge">
-                  <el-input v-model="creatureTemplateAddon.isLarge" placeholder="isLarge"></el-input>
+                <el-form-item label="覆盖标识1">
+                  <el-input v-model="creatureTemplateAddon.bytes1" placeholder="bytes1"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="覆盖标识2">
+                  <el-input v-model="creatureTemplateAddon.bytes2" placeholder="bytes2"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="光环列表">
                   <el-input v-model="creatureTemplateAddon.auras" placeholder="auras"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="更大可视范围">
+                  <el-switch v-model="creatureTemplateAddon.isLarge" :active-value="1" :inactive-value="0"></el-switch>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -1173,7 +1173,7 @@
           <el-form :model="creatureOnKillReputation" label-position="right" label-width="120px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="生物ID">
+                <el-form-item label="ID">
                   <el-input
                     v-model="creatureOnKillReputation.creature_id"
                     placeholder="creature_id"
@@ -1198,8 +1198,12 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="TeamDependent">
-                  <el-input v-model="creatureOnKillReputation.TeamDependent" placeholder="TeamDependent"></el-input>
+                <el-form-item label="区分阵营">
+                  <el-switch
+                    v-model="creatureOnKillReputation.TeamDependent"
+                    :active-value="1"
+                    :inactive-value="0"
+                  ></el-switch>
                 </el-form-item>
               </el-col>
               <el-col :span="6" :offset="6">
@@ -1219,23 +1223,45 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6" :offset="6">
-                <el-form-item label="最大声望1">
-                  <el-input v-model="creatureOnKillReputation.MaxStanding1" placeholder="MaxStanding1"></el-input>
+                <el-form-item label="最高声望等级1">
+                  <el-select v-model="creatureOnKillReputation.MaxStanding1" placeholder="MaxStanding1">
+                    <el-option
+                      v-for="maxStanding in maxStandings"
+                      :key="`maxStanding1-${maxStanding.value}`"
+                      :value="maxStanding.value"
+                      :label="maxStanding.label"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="最大声望2">
-                  <el-input v-model="creatureOnKillReputation.MaxStanding2" placeholder="MaxStanding2"></el-input>
+                <el-form-item label="最高声望等级2">
+                  <el-select v-model="creatureOnKillReputation.MaxStanding2" placeholder="MaxStanding2">
+                    <el-option
+                      v-for="maxStanding in maxStandings"
+                      :key="`maxStanding2-${maxStanding.value}`"
+                      :value="maxStanding.value"
+                      :label="maxStanding.label"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6" :offset="6">
-                <el-form-item label="IsTeamAward1">
-                  <el-input v-model="creatureOnKillReputation.IsTeamAward1" placeholder="IsTeamAward1"></el-input>
+                <el-form-item label="包括声望组1">
+                  <el-switch
+                    v-model="creatureOnKillReputation.IsTeamAward1"
+                    :active-value="1"
+                    :inactive-value="0"
+                  ></el-switch>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="IsTeamAward2">
-                  <el-input v-model="creatureOnKillReputation.IsTeamAward2" placeholder="IsTeamAward2"></el-input>
+                <el-form-item label="包括声望组2">
+                  <el-switch
+                    v-model="creatureOnKillReputation.IsTeamAward2"
+                    :active-value="1"
+                    :inactive-value="0"
+                  ></el-switch>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -1626,7 +1652,8 @@ import {
   flagsExtra,
   mechanicImmuneMasks,
   dmgSchools,
-  inhabitTypes
+  inhabitTypes,
+  maxStandings
 } from "@/locales/creature";
 
 import { mapState, mapGetters, mapActions } from "vuex";
@@ -1650,7 +1677,8 @@ export default {
       flagsExtra: flagsExtra,
       mechanicImmuneMasks: mechanicImmuneMasks,
       dmgSchools: dmgSchools,
-      inhabitTypes
+      inhabitTypes: inhabitTypes,
+      maxStandings: maxStandings
     };
   },
   computed: {
@@ -1706,8 +1734,12 @@ export default {
       "createCreatureTemplate",
       "searchCreatureTemplateLocales",
       "storeCreatureTemplateLocales",
+      "storeCreatureTemplateAddon",
       "findCreatureTemplateAddon",
+      "updateCreatureTemplateAddon",
+      "storeCreatureOnKillReputation",
       "findCreatureOnKillReputation",
+      "updateCreatureOnKillReputation",
       "searchCreatureEquipTemplates",
       "searchNpcVendors",
       "searchNpcTrainers",
@@ -1725,7 +1757,7 @@ export default {
       }
       if (tab.name === "creature_onkill_reputation") {
         this.loading = true;
-        await this.findCreatureOnKillReputation({ creatureId: id });
+        await this.findCreatureOnKillReputation({ creature_id: id });
         this.loading = false;
       }
       if (tab.name === "creature_equip_template") {
@@ -1789,6 +1821,22 @@ export default {
           this.storeCreatureTemplateLocales(this.creatureTemplateLocales).then(() => {
             this.localeDialogVisible = false;
           });
+          break;
+        case "creature_template_addon":
+          if (this.creatureTemplateAddon.entry == undefined) {
+            this.creatureTemplateAddon.entry = this.creatureTemplate.entry;
+            this.storeCreatureTemplateAddon(this.creatureTemplateAddon).then(() => {});
+          } else {
+            this.updateCreatureTemplateAddon(this.creatureTemplateAddon).then(() => {});
+          }
+          break;
+        case "creature_onkill_reputation":
+          if (this.creatureOnKillReputation.creature_id == undefined) {
+            this.creatureOnKillReputation.creature_id = this.creatureTemplate.entry;
+            this.storeCreatureOnKillReputation(this.creatureOnKillReputation).then(() => {});
+          } else {
+            this.updateCreatureOnKillReputation(this.creatureOnKillReputation).then(() => {});
+          }
           break;
         default:
           break;

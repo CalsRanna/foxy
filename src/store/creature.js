@@ -18,12 +18,16 @@ import {
   SEARCH_NPC_VENDORS,
   SEARCH_PICKPOCKETING_LOOT_TEMPLATES,
   SEARCH_SKINNING_LOOT_TEMPLATES,
+  STORE_CREATURE_ONKILL_REPUTATION,
   STORE_CREATURE_TEMPLATE,
+  STORE_CREATURE_TEMPLATE_ADDON,
   STORE_CREATURE_TEMPLATE_LOCALES,
+  UPDATE_CREATURE_ONKILL_REPUTATION,
   UPDATE_CREATURE_TEMPLATE,
+  UPDATE_CREATURE_TEMPLATE_ADDON,
   UPDATE_CREATURE_TEMPLATE_CREDENTIAL_ENTRY,
   UPDATE_CREATURE_TEMPLATE_CREDENTIAL_NAME,
-  UPDATE_CREATURE_TEMPLATE_CREDENTIAL_SUBNAME,
+  UPDATE_CREATURE_TEMPLATE_CREDENTIAL_SUBNAME
 } from "../constants";
 
 export default {
@@ -46,11 +50,11 @@ export default {
     creatureQuestItems: [],
     creatureLootTemplates: [],
     pickpocketingLootTemplates: [],
-    skinningLootTemplates: [],
+    skinningLootTemplates: []
   }),
   actions: {
     searchCreatureTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_CREATURE_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_CREATURE_TEMPLATES, (event, response) => {
           commit(SEARCH_CREATURE_TEMPLATES, response);
@@ -59,7 +63,7 @@ export default {
       });
     },
     countCreatureTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(COUNT_CREATURE_TEMPLATES, payload);
         ipcRenderer.on(COUNT_CREATURE_TEMPLATES, (event, response) => {
           commit(COUNT_CREATURE_TEMPLATES, response);
@@ -68,13 +72,13 @@ export default {
       });
     },
     paginateCreatureTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         commit(PAGINATE_CREATURE_TEMPLATES, payload.page);
         resolve();
       });
     },
     storeCreatureTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(STORE_CREATURE_TEMPLATE, payload);
         ipcRenderer.on(STORE_CREATURE_TEMPLATE, () => {
           resolve();
@@ -82,7 +86,7 @@ export default {
       });
     },
     findCreatureTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(FIND_CREATURE_TEMPLATE, payload);
         ipcRenderer.on(FIND_CREATURE_TEMPLATE, (event, response) => {
           commit(FIND_CREATURE_TEMPLATE, response);
@@ -91,7 +95,7 @@ export default {
       });
     },
     updateCreatureTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(UPDATE_CREATURE_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_CREATURE_TEMPLATE, () => {
           commit(UPDATE_CREATURE_TEMPLATE, payload);
@@ -100,7 +104,7 @@ export default {
       });
     },
     destroyCreatureTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(DESTROY_CREATURE_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_CREATURE_TEMPLATE, () => {
           resolve();
@@ -108,7 +112,7 @@ export default {
       });
     },
     createCreatureTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(CREATE_CREATURE_TEMPLATE, payload);
         ipcRenderer.on(CREATE_CREATURE_TEMPLATE, (event, response) => {
           commit(CREATE_CREATURE_TEMPLATE, response);
@@ -117,7 +121,7 @@ export default {
       });
     },
     copyCreatureTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(COPY_CREATURE_TEMPLATE, payload);
         ipcRenderer.on(COPY_CREATURE_TEMPLATE, () => {
           resolve();
@@ -125,7 +129,7 @@ export default {
       });
     },
     searchCreatureTemplateLocales({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_CREATURE_TEMPLATE_LOCALES, payload);
         ipcRenderer.on(SEARCH_CREATURE_TEMPLATE_LOCALES, (event, response) => {
           commit(SEARCH_CREATURE_TEMPLATE_LOCALES, response);
@@ -134,7 +138,7 @@ export default {
       });
     },
     storeCreatureTemplateLocales({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(STORE_CREATURE_TEMPLATE_LOCALES, payload);
         ipcRenderer.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, response) => {
           commit(STORE_CREATURE_TEMPLATE_LOCALES, response);
@@ -142,8 +146,16 @@ export default {
         });
       });
     },
+    storeCreatureTemplateAddon(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(STORE_CREATURE_TEMPLATE_ADDON, payload);
+        ipcRenderer.on(STORE_CREATURE_TEMPLATE_ADDON, () => {
+          resolve();
+        });
+      });
+    },
     findCreatureTemplateAddon({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(FIND_CREATURE_TEMPLATE_ADDON, payload);
         ipcRenderer.on(FIND_CREATURE_TEMPLATE_ADDON, (event, response) => {
           commit(FIND_CREATURE_TEMPLATE_ADDON, response);
@@ -151,8 +163,24 @@ export default {
         });
       });
     },
+    updateCreatureTemplateAddon(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(UPDATE_CREATURE_TEMPLATE_ADDON, payload);
+        ipcRenderer.on(UPDATE_CREATURE_TEMPLATE_ADDON, () => {
+          resolve();
+        });
+      });
+    },
+    storeCreatureOnKillReputation(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(STORE_CREATURE_ONKILL_REPUTATION, payload);
+        ipcRenderer.on(STORE_CREATURE_ONKILL_REPUTATION, () => {
+          resolve();
+        });
+      });
+    },
     findCreatureOnKillReputation({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(FIND_CREATURE_ONKILL_REPUTATION, payload);
         ipcRenderer.on(FIND_CREATURE_ONKILL_REPUTATION, (event, response) => {
           commit(FIND_CREATURE_ONKILL_REPUTATION, response);
@@ -160,8 +188,16 @@ export default {
         });
       });
     },
+    updateCreatureOnKillReputation(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(UPDATE_CREATURE_ONKILL_REPUTATION, payload);
+        ipcRenderer.on(UPDATE_CREATURE_ONKILL_REPUTATION, () => {
+          resolve();
+        });
+      });
+    },
     searchCreatureEquipTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_CREATURE_EQUIP_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, response) => {
           commit(SEARCH_CREATURE_EQUIP_TEMPLATES, response);
@@ -170,7 +206,7 @@ export default {
       });
     },
     searchNpcVendors({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_NPC_VENDORS, payload);
         ipcRenderer.on(SEARCH_NPC_VENDORS, (event, response) => {
           commit(SEARCH_NPC_VENDORS, response);
@@ -179,7 +215,7 @@ export default {
       });
     },
     searchNpcTrainers({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_NPC_TRAINERS, payload);
         ipcRenderer.on(SEARCH_NPC_TRAINERS, (event, response) => {
           commit(SEARCH_NPC_TRAINERS, response);
@@ -188,7 +224,7 @@ export default {
       });
     },
     searchCreatureQuestItems({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_CREATURE_QUEST_ITEMS, payload);
         ipcRenderer.on(SEARCH_CREATURE_QUEST_ITEMS, (event, response) => {
           commit(SEARCH_CREATURE_QUEST_ITEMS, response);
@@ -197,7 +233,7 @@ export default {
       });
     },
     searchCreatureLootTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_CREATURE_LOOT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_CREATURE_LOOT_TEMPLATES, response);
@@ -206,7 +242,7 @@ export default {
       });
     },
     searchPickpocketingLootTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, response);
@@ -215,14 +251,14 @@ export default {
       });
     },
     searchSkinningLootTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_SKINNING_LOOT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_SKINNING_LOOT_TEMPLATES, response);
           resolve();
         });
       });
-    },
+    }
   },
   mutations: {
     [UPDATE_CREATURE_TEMPLATE_CREDENTIAL_ENTRY](state, entry) {
@@ -284,6 +320,6 @@ export default {
     },
     [SEARCH_SKINNING_LOOT_TEMPLATES](state, skinningLootTemplates) {
       state.skinningLootTemplates = skinningLootTemplates;
-    },
-  },
+    }
+  }
 };
