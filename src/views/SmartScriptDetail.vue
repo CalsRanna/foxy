@@ -13,7 +13,7 @@
         </small>
       </h3>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-tabs value="smart_script" style="margin-top: 16px">
         <el-tab-pane label="脚本模板" name="smart_script">
           <el-form :model="smartScript" label-position="right" label-width="120px">
@@ -182,7 +182,7 @@
                 </el-col>
               </el-row>
             </el-card>
-            <el-card style="margin-top:16px">
+            <el-card style="margin-top: 16px">
               <el-button type="primary">保存</el-button>
               <el-button>返回</el-button>
             </el-card>
@@ -199,7 +199,7 @@ import { mapActions, mapState } from "vuex";
 export default {
   data() {
     return {
-      loading: false
+      loading: false,
     };
   },
   computed: {
@@ -209,11 +209,11 @@ export default {
     },
     localeDescription() {
       return null;
-    }
+    },
   },
   methods: {
     ...mapActions("smartScript", {
-      findSmartScript: "findSmartScript"
+      findSmartScript: "findSmartScript",
     }),
     async init() {
       this.loading = true;
@@ -221,10 +221,10 @@ export default {
       payload.id = this.$route.params.id;
       await this.findSmartScript(payload);
       this.loading = false;
-    }
+    },
   },
   created() {
     this.init();
-  }
+  },
 };
 </script>

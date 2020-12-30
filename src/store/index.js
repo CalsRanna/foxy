@@ -25,6 +25,6 @@ export default new Vuex.Store({
     spell,
     smartScript,
     setting,
-    gossipMenu
-  }
+    gossipMenu,
+  },
 });

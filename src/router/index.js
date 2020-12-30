@@ -51,13 +51,13 @@ const routes = [
       { path: "mysql", component: Mysql },
       { path: "dbc", component: Dbc },
       { path: "config", component: Config },
-      { path: "developer", component: Developer }
-    ]
-  }
+      { path: "developer", component: Developer },
+    ],
+  },
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
 });
 
 export default router;

@@ -23,7 +23,7 @@
         </el-row>
       </el-form>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
       <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
@@ -77,7 +77,7 @@ export default {
       loading: false,
       entry: undefined,
       name: undefined,
-      currentRow: undefined
+      currentRow: undefined,
     };
   },
   computed: {
@@ -88,7 +88,7 @@ export default {
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null ? true : false;
-    }
+    },
   },
   methods: {
     ...mapActions("gameObject", [
@@ -97,7 +97,7 @@ export default {
       "paginateGameObjectTemplates",
       "destroyGameObjectTemplate",
       "createGameObjectTemplate",
-      "copyGameObjectTemplate"
+      "copyGameObjectTemplate",
     ]),
     async handleSearch() {
       this.loading = true;
@@ -125,7 +125,7 @@ export default {
               .then(() => {
                 Promise.all([
                   this.searchGameObjectTemplates(this.payload),
-                  this.countGameObjectTemplates(this.payload)
+                  this.countGameObjectTemplates(this.payload),
                 ]);
               })
               .then(() => {
@@ -135,7 +135,7 @@ export default {
           } else {
             done();
           }
-        }
+        },
       });
     },
     handleDestroy() {
@@ -154,7 +154,7 @@ export default {
                 .then(() => {
                   Promise.all([
                     this.searchGameObjectTemplates(this.payload),
-                    this.countGameObjectTemplates(this.payload)
+                    this.countGameObjectTemplates(this.payload),
                   ]);
                 })
                 .then(() => {
@@ -164,7 +164,7 @@ export default {
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -184,12 +184,12 @@ export default {
       this.loading = true;
       await Promise.all([this.searchGameObjectTemplates(this.payload), this.countGameObjectTemplates(this.payload)]);
       this.loading = false;
-    }
+    },
   },
   created() {
     if (this.gameObjectTemplates.length === 0) {
       this.init();
     }
-  }
+  },
 };
 </script>

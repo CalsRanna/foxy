@@ -7,7 +7,7 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">生物模版列表</h3>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-form @submit.native.prevent="handleSearch">
         <el-row :gutter="16">
           <el-col :span="6">
@@ -31,12 +31,12 @@
         </el-row>
       </el-form>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
       <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
     </el-card>
-    <el-card v-loading="loading" style="margin-top: 16px;">
+    <el-card v-loading="loading" style="margin-top: 16px">
       <el-pagination
         layout="prev, pager, next"
         :current-page="page"
@@ -92,7 +92,7 @@ export default {
       entry: undefined,
       name: "",
       subname: "",
-      currentRow: undefined
+      currentRow: undefined,
     };
   },
   computed: {
@@ -102,12 +102,12 @@ export default {
         entry: this.entry,
         name: this.name,
         subname: this.subname,
-        page: this.page
+        page: this.page,
       };
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null ? true : false;
-    }
+    },
   },
   methods: {
     ...mapActions("creature", {
@@ -116,7 +116,7 @@ export default {
       paginate: "paginateCreatureTemplates",
       create: "copyCreatureTemplate",
       destroy: "destroyCreatureTemplate",
-      copy: "copyCreatureTemplate"
+      copy: "copyCreatureTemplate",
     }),
     async handleSearch() {
       this.loading = true;
@@ -152,7 +152,7 @@ export default {
           } else {
             done();
           }
-        }
+        },
       });
     },
     handleDestroy() {
@@ -179,7 +179,7 @@ export default {
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -199,13 +199,13 @@ export default {
       this.loading = true;
       await Promise.all([this.search(this.payload), this.count(this.payload)]);
       this.loading = false;
-    }
+    },
   },
   created() {
     if (this.creatureTemplates.length === 0) {
       this.init();
     }
-  }
+  },
 };
 </script>
 

@@ -12,7 +12,7 @@
 import { mapState, mapActions } from "vuex";
 export default {
   computed: {
-    ...mapState("global", { config: "developerConfig" })
+    ...mapState("global", { config: "developerConfig" }),
   },
   methods: {
     ...mapActions("global", ["storeDeveloperConfig"]),
@@ -21,9 +21,9 @@ export default {
       this.$notify({
         type: "success",
         title: "成功",
-        message: "修改设置成功。"
+        message: "修改设置成功。",
       });
-    }
-  }
+    },
+  },
 };
 </script>

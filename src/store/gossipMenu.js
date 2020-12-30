@@ -7,7 +7,7 @@ export default {
     return {
       page: 1,
       total: 0,
-      gossipMenus: []
+      gossipMenus: [],
     };
   },
   actions: {
@@ -22,7 +22,7 @@ export default {
         commit(COUNT_GOSSIP_MENUS, response);
       });
       ipcRenderer.send("COUNT_GOSSIP_MENUS", payload);
-    }
+    },
   },
   mutations: {
     [SEARCH_GOSSIP_MENUS](state, gossipMenus) {
@@ -33,6 +33,6 @@ export default {
     },
     [PAGINATE_GOSSIP_MENUS](state, page) {
       state.page = page;
-    }
-  }
+    },
+  },
 };

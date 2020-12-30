@@ -42,8 +42,8 @@ export default {
       "scalingStatDistributions",
       "scalingStatValues",
       "spells",
-      "spellDurations"
-    ])
+      "spellDurations",
+    ]),
   },
   methods: {
     ...mapActions("dbc", [
@@ -53,7 +53,7 @@ export default {
       "searchDbcSpells",
       "searchDbcSpellDurations",
       "searchDbcScalingStatDistributions",
-      "searchDbcScalingStatValues"
+      "searchDbcScalingStatValues",
     ]),
     ...mapActions("global", [
       "storeMysqlConfig",
@@ -61,12 +61,12 @@ export default {
       "storeConfigConfig",
       "storeDeveloperConfig",
       "setActive",
-      "initMysqlConnection"
+      "initMysqlConnection",
     ]),
     ...mapActions("setting", ["setSettingActive"]),
     navigate(index) {
       this.setActive(index);
-      this.$router.push(`/${index}`).catch(error => error);
+      this.$router.push(`/${index}`).catch((error) => error);
     },
     initMysqlConfig() {
       let host = localStorage.getItem("host");
@@ -79,14 +79,14 @@ export default {
           host: host,
           user: user,
           password: password,
-          database: database
+          database: database,
         }).then(() => {
           this.initMysqlConnection(this.mysqlConfig);
         });
       } else {
         this.setActive("setting");
         this.setSettingActive("mysql");
-        this.$router.push("/setting/mysql").catch(error => error);
+        this.$router.push("/setting/mysql").catch((error) => error);
       }
     },
     initDbcConfig() {
@@ -94,12 +94,12 @@ export default {
 
       if (path) {
         this.storeDbcConfig({
-          path: path
+          path: path,
         });
       } else {
         this.setActive("setting");
         this.setSettingActive("dbc");
-        this.$router.push("/setting/dbc").catch(error => error);
+        this.$router.push("/setting/dbc").catch((error) => error);
       }
     },
     initConfigConfig() {
@@ -107,19 +107,19 @@ export default {
 
       if (path) {
         this.storeConfigConfig({
-          path: path
+          path: path,
         });
       } else {
         this.setActive("setting");
         this.setSettingActive("config");
-        this.$router.push("/setting/config").catch(error => error);
+        this.$router.push("/setting/config").catch((error) => error);
       }
     },
     initDeveloperConfig() {
       let debug = localStorage.getItem("debug");
 
       this.storeDeveloperConfig({
-        debug: debug === "true" ? true : false
+        debug: debug === "true" ? true : false,
       });
     },
     async init() {
@@ -136,7 +136,7 @@ export default {
         this.searchDbcScalingStatDistributions();
         this.searchDbcScalingStatValues();
       }
-    }
+    },
   },
   created() {
     console.log("Initing……");
@@ -147,7 +147,7 @@ export default {
         case "message":
           if (this.developerConfig.debug) {
             this.$message({
-              message: response.message
+              message: response.message,
             });
           }
           break;
@@ -155,21 +155,21 @@ export default {
           this.$notify({
             type: response.type,
             title: response.title,
-            message: response.message
+            message: response.message,
           });
           break;
         case "alert":
           this.$alert(response.message.replace(/at/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at"), response.title, {
             type: response.type,
             dangerouslyUseHTMLString: true,
-            customClass: "wider-message-box"
+            customClass: "wider-message-box",
           });
           break;
         default:
           break;
       }
     });
-  }
+  },
 };
 </script>
 

@@ -7,8 +7,8 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">控制面板</h3>
     </el-card>
-    <el-alert title="欢迎使用 Foxy ，一款开发中的魔兽世界编辑器。" type="info" style="margin-top: 16px;"> </el-alert>
-    <el-row :gutter="24" style="margin-top: 16px;" :loading="loading">
+    <el-alert title="欢迎使用 Foxy ，一款开发中的魔兽世界编辑器。" type="info" style="margin-top: 16px"> </el-alert>
+    <el-row :gutter="24" style="margin-top: 16px" :loading="loading">
       <el-col :span="16">
         <el-row>
           <el-col :span="8">
@@ -65,37 +65,37 @@
         <el-card>
           <Chart :labels="labels" :data="data"></Chart>
         </el-card>
-        <el-card style="margin-top:16px; font-size:14px;">
+        <el-card style="margin-top: 16px; font-size: 14px">
           <div slot="header">
             <span>Foxy</span>
           </div>
-          <p style="text-indent:2em;">
+          <p style="text-indent: 2em">
             目前存在的编辑器都不是很能满足我对一个好用的编辑器的期望：简单，易用，美观，因此我提交了 Foxy
             这个开源项目。Foxy 计划中的功能很多，有且不仅有数据库的编辑，还有服务端 dbc
             文件的修改，服务端及第三方模块配置文件的修改等等，甚至自动对客户端追加补丁等功能都在尝试编码的路上了。
           </p>
-          <p style="text-indent:2em;">
+          <p style="text-indent: 2em">
             闲余时间开发，进度随缘， Feature 也随缘， Bug 请到
 
             <span
-              style="color: #409EFF; cursor: pointer"
+              style="color: #409eff; cursor: pointer"
               @click="() => openBrowser('https://github.com/CalsRanna/foxy/issues')"
             >
               Github
             </span>
             上面提交 issue 。
           </p>
-          <p style="text-indent:2em;">
+          <p style="text-indent: 2em">
             如果你希望得到最新版本的 Foxy ，请访问
             <span
-              style="color: #409EFF; cursor: pointer"
+              style="color: #409eff; cursor: pointer"
               @click="() => openBrowser('https://github.com/CalsRanna/foxy/release')"
             >
               下载页面
             </span>
             或者
             <span
-              style="color: #409EFF; cursor: pointer"
+              style="color: #409eff; cursor: pointer"
               @click="() => openBrowser('https://github.com/CalsRanna/foxy')"
             >
               Clone
@@ -117,7 +117,7 @@ export default {
   data() {
     return {
       loading: false,
-      labels: ["生物", "游戏对象", "物品", "任务", "内建脚本", "技能"]
+      labels: ["生物", "游戏对象", "物品", "任务", "内建脚本", "技能"],
     };
   },
   computed: {
@@ -134,9 +134,9 @@ export default {
         this.quantityOfItemTemplate,
         this.quantityOfQuestTemplate,
         this.quantityOfSmartScript,
-        this.quantityOfSpell
+        this.quantityOfSpell,
       ];
-    }
+    },
   },
   methods: {
     ...mapActions("creature", ["countCreatureTemplates"]),
@@ -157,17 +157,17 @@ export default {
         this.countItemTemplates({}),
         this.countQuestTemplates({}),
         this.countSmartScripts({}),
-        this.countSpells({})
+        this.countSpells({}),
       ]);
       this.loading = false;
-    }
+    },
   },
   components: {
-    Chart
+    Chart,
   },
   created() {
     this.init();
-  }
+  },
 };
 </script>
 

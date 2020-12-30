@@ -8,12 +8,12 @@ export default {
       page: 1,
       total: 0,
       smartScripts: [],
-      smartScript: {}
+      smartScript: {},
     };
   },
   actions: {
     searchSmartScripts({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send("SEARCH_SMART_SCRIPTS", payload);
         ipcRenderer.on("SEARCH_SMART_SCRIPTS_REPLY", (event, response) => {
           commit(SEARCH_SMART_SCRIPTS, response);
@@ -22,7 +22,7 @@ export default {
       });
     },
     countSmartScripts({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send("COUNT_SMART_SCRIPTS", payload);
         ipcRenderer.on("COUNT_SMART_SCRIPTS_REPLY", (event, response) => {
           commit(COUNT_SMART_SCRIPTS, response);
@@ -31,14 +31,14 @@ export default {
       });
     },
     findSmartScript({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(FIND_SMART_SCRIPT, payload);
         ipcRenderer.on(FIND_SMART_SCRIPT, (event, response) => {
           commit(FIND_SMART_SCRIPT, response);
           resolve();
         });
       });
-    }
+    },
   },
   mutations: {
     [SEARCH_SMART_SCRIPTS](state, smartScripts) {
@@ -52,6 +52,6 @@ export default {
     },
     [FIND_SMART_SCRIPT](state, smartScript) {
       state.smartScript = smartScript;
-    }
-  }
+    },
+  },
 };

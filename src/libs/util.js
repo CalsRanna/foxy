@@ -1,4 +1,4 @@
-exports.objectToSql = object => {
+exports.objectToSql = (object) => {
   let values = Object.values(object);
   let sql = "";
   for (let value of values) {

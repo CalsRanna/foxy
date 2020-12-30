@@ -30,14 +30,14 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      colors: colors
+      colors: colors,
     };
   },
   props: {
-    itemTemplate: Object
+    itemTemplate: Object,
   },
   computed: {
-    ...mapGetters("dbc", { icons: "itemIcons" })
-  }
+    ...mapGetters("dbc", { icons: "itemIcons" }),
+  },
 };
 </script>

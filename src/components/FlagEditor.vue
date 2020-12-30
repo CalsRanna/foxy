@@ -5,7 +5,7 @@
     </el-input>
     <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" @opened="init">
       <div slot="title">
-        <span style="font-size: 18px;color: #303133;margin-right:16px">{{ title }}</span>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px">{{ title }}</span>
       </div>
       <el-table :data="flags" @selection-change="change" @row-click="select" class="flag-editor">
         <el-table-column type="selection" width="48"></el-table-column>
@@ -14,7 +14,7 @@
         <el-table-column prop="comment" label="描述" min-width="400"></el-table-column>
       </el-table>
       <div slot="footer">
-        <span style="color: #606266; margin-right:8px">合计值：{{ selectedFlag }}</span>
+        <span style="color: #606266; margin-right: 8px">合计值：{{ selectedFlag }}</span>
         <el-button @click="closeDialog">取消</el-button>
         <el-button type="primary" @click="store">保存</el-button>
       </div>
@@ -38,28 +38,28 @@ export default {
     return {
       flag: undefined,
       selection: [],
-      visible: false
+      visible: false,
     };
   },
   props: {
     value: [Number, String],
     title: String,
     placeholder: String,
-    flags: Array
+    flags: Array,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.flag = newValue;
-    }
+    },
   },
   computed: {
     selectedFlag() {
       let flag = 0;
-      this.selection.forEach(row => {
+      this.selection.forEach((row) => {
         flag = flag + row.flag;
       });
       return flag;
-    }
+    },
   },
   methods: {
     input(flag) {
@@ -77,7 +77,7 @@ export default {
     },
     init() {
       let selections = [];
-      this.flags.forEach(flag => {
+      this.flags.forEach((flag) => {
         let bit = this.flag & flag.flag;
         if (bit !== 0) {
           selections.push(true);
@@ -102,10 +102,10 @@ export default {
       this.flag = this.selectedFlag;
       this.$emit("input", this.flag);
       this.visible = false;
-    }
+    },
   },
   created() {
     this.flag = this.value;
-  }
+  },
 };
 </script>

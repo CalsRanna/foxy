@@ -23,7 +23,7 @@
         </el-row>
       </el-form>
     </el-card>
-    <el-card style="margin-top: 16px;">
+    <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
       <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
@@ -77,7 +77,7 @@ export default {
       loading: false,
       id: undefined,
       name: undefined,
-      currentRow: undefined
+      currentRow: undefined,
     };
   },
   computed: {
@@ -87,17 +87,17 @@ export default {
       return {
         id: this.id,
         name: this.name,
-        page: this.page
+        page: this.page,
       };
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null ? true : false;
-    }
+    },
   },
   methods: {
     ...mapActions("spell", ["search", "count"]),
     ...mapMutations("spell", {
-      paginate: PAGINATE_SPELLS
+      paginate: PAGINATE_SPELLS,
     }),
     async handleSearch() {
       this.loading = true;
@@ -117,7 +117,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info",
-        dangerouslyUseHTMLString: true
+        dangerouslyUseHTMLString: true,
       })
         .then(() => {
           // this.copy({ entry: this.currentRow.entry }).then(() => {
@@ -134,7 +134,7 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         }
       )
         .then(() => {
@@ -160,13 +160,13 @@ export default {
       this.loading = true;
       await Promise.all([this.search(this.payload), this.count(this.payload)]);
       this.loading = false;
-    }
+    },
   },
   created() {
     this.init();
   },
   components: {
-    "spell-description": SpellDescription
-  }
+    "spell-description": SpellDescription,
+  },
 };
 </script>
