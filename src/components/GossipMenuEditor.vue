@@ -76,8 +76,7 @@
 </style>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-import { PAGINATE_GOSSIP_MENUS } from "@/store/MUTATION_TYPES";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -87,17 +86,17 @@ export default {
       visible: false,
       size: 50,
       currentRow: undefined,
-      innerVisible: false,
+      innerVisible: false
     };
   },
   props: {
     value: [Number, String],
-    placeholder: String,
+    placeholder: String
   },
   watch: {
-    value: function (newValue) {
+    value: function(newValue) {
       this.gossipMenuId = newValue;
-    },
+    }
   },
   computed: {
     ...mapState("gossipMenu", ["page", "total", "gossipMenus"]),
@@ -105,13 +104,12 @@ export default {
       return {
         menuId: this.gossipMenuId,
         text: this.text,
-        page: this.page,
+        page: this.page
       };
-    },
+    }
   },
   methods: {
-    ...mapActions("gossipMenu", ["search", "count"]),
-    ...mapMutations("gossipMenu", { paginate: PAGINATE_GOSSIP_MENUS }),
+    ...mapActions("gossipMenu", ["searchGossipMenus", "countGossipMenus", "paginateGossipMenus"]),
     input(gossipMenuId) {
       this.$emit("input", gossipMenuId);
     },
@@ -125,21 +123,18 @@ export default {
     showDialog() {
       this.visible = true;
     },
-    async init() {
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
-    },
     addGossipMenu() {},
     async handleSearch() {
-      this.paginate(1); //每次搜索时使分页器设为第一页
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.paginateGossipMenus({ page: 1 }); //每次搜索时使分页器设为第一页
+      await Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
     },
     reset() {
       this.gossipMenuId = undefined;
       this.text = undefined;
     },
     async handlePaginate(page) {
-      this.paginate(page);
-      await this.search(this.payload);
+      await this.paginateGossipMenus({ page: page });
+      await this.searchGossipMenus(this.payload);
     },
     select(currentRow) {
       this.currentRow = currentRow;
@@ -154,9 +149,12 @@ export default {
       this.$emit("input", this.gossipMenuId);
       this.visible = false;
     },
+    async init() {
+      await Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
+    }
   },
   created() {
     this.gossipMenuId = this.value;
-  },
+  }
 };
 </script>

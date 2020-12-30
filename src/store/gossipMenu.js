@@ -1,5 +1,6 @@
-import { SEARCH_GOSSIP_MENUS, COUNT_GOSSIP_MENUS, PAGINATE_GOSSIP_MENUS } from "./MUTATION_TYPES";
 const ipcRenderer = window.require("electron").ipcRenderer;
+
+import { SEARCH_GOSSIP_MENUS, COUNT_GOSSIP_MENUS, PAGINATE_GOSSIP_MENUS } from "../constants";
 
 export default {
   namespaced: true,
@@ -7,22 +8,34 @@ export default {
     return {
       page: 1,
       total: 0,
-      gossipMenus: [],
+      gossipMenus: []
     };
   },
   actions: {
-    search({ commit }, payload) {
-      ipcRenderer.on("SEARCH_GOSSIP_MENUS_REPLY", (event, response) => {
-        commit(SEARCH_GOSSIP_MENUS, response);
+    searchGossipMenus({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_GOSSIP_MENUS, payload);
+        ipcRenderer.on(SEARCH_GOSSIP_MENUS, (event, response) => {
+          commit(SEARCH_GOSSIP_MENUS, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("SEARCH_GOSSIP_MENUS", payload);
     },
-    count({ commit }, payload) {
-      ipcRenderer.on("COUNT_GOSSIP_MENUS_REPLY", (event, response) => {
-        commit(COUNT_GOSSIP_MENUS, response);
+    countGossipMenus({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(COUNT_GOSSIP_MENUS, payload);
+        ipcRenderer.on(COUNT_GOSSIP_MENUS, (event, response) => {
+          commit(COUNT_GOSSIP_MENUS, response);
+          resolve();
+        });
       });
-      ipcRenderer.send("COUNT_GOSSIP_MENUS", payload);
     },
+    paginateGossipMenus({ commit }, payload) {
+      return new Promise(resolve => {
+        commit(PAGINATE_GOSSIP_MENUS, payload.page);
+        resolve();
+      });
+    }
   },
   mutations: {
     [SEARCH_GOSSIP_MENUS](state, gossipMenus) {
@@ -33,6 +46,6 @@ export default {
     },
     [PAGINATE_GOSSIP_MENUS](state, page) {
       state.page = page;
-    },
-  },
+    }
+  }
 };
