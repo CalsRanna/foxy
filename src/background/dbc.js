@@ -8,24 +8,25 @@ let path;
 
 ipcMain.on("INIT_DBC_CONFIG", (event, payload) => {
   path = payload.path;
+  event.reply("INIT_DBC_CONFIG");
 });
 
-ipcMain.on("SEARCH_DBC_FACTIONS", (event) => {
+ipcMain.on("SEARCH_DBC_FACTIONS", event => {
   let dbc = DBC.read(`${path}/Faction.dbc`);
   event.reply("SEARCH_DBC_FACTIONS_REPLY", dbc);
 });
 
-ipcMain.on("SEARCH_DBC_FACTION_TEMPLATES", (event) => {
+ipcMain.on("SEARCH_DBC_FACTION_TEMPLATES", event => {
   let dbc = DBC.read(`${path}/FactionTemplate.dbc`);
   event.reply("SEARCH_DBC_FACTION_TEMPLATES_REPLY", dbc);
 });
 
-ipcMain.on("SEARCH_DBC_ITEM_DISPLAY_INFOS", (event) => {
+ipcMain.on("SEARCH_DBC_ITEM_DISPLAY_INFOS", event => {
   let dbc = DBC.read(`${path}/ItemDisplayInfo.dbc`);
   event.reply("SEARCH_DBC_ITEM_DISPLAY_INFOS_REPLY", dbc);
 });
 
-ipcMain.on("SEARCH_DBC_SPELLS", (event) => {
+ipcMain.on("SEARCH_DBC_SPELLS", event => {
   let dbc = DBC.read(`${path}/Spell.dbc`);
   // 一次性传递所有技能，占用内存太大，会导致GC失败，分多次传递数据
   for (let i = 0; i < dbc.recordCount; i = i + 100) {
@@ -36,7 +37,7 @@ ipcMain.on("SEARCH_DBC_SPELLS", (event) => {
       recordSize: dbc.recordSize,
       stringBlockSize: dbc.stringBlockSize,
       stringBlockOffset: dbc.stringBlockOffset,
-      records: [],
+      records: []
     };
     let end = i + 100;
     if (end < dbc.recordCount) {
@@ -48,17 +49,17 @@ ipcMain.on("SEARCH_DBC_SPELLS", (event) => {
   }
 });
 
-ipcMain.on("SEARCH_DBC_SPELL_DURATIONS", (event) => {
+ipcMain.on("SEARCH_DBC_SPELL_DURATIONS", event => {
   let dbc = DBC.read(`${path}/SpellDuration.dbc`);
   event.reply("SEARCH_DBC_SPELL_DURATIONS_REPLY", dbc);
 });
 
-ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
+ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, event => {
   let dbc = DBC.read(`${path}/ScalingStatDistribution.dbc`);
   event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, dbc);
 });
 
-ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
+ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, event => {
   let dbc = DBC.read(`${path}/ScalingStatValues.dbc`);
   event.reply(SEARCH_DBC_SCALING_STAT_VALUES, dbc);
 });

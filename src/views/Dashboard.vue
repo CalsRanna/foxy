@@ -117,7 +117,7 @@ export default {
   data() {
     return {
       loading: false,
-      labels: ["生物", "游戏对象", "物品", "任务", "内建脚本", "技能"],
+      labels: ["生物", "游戏对象", "物品", "任务", "内建脚本", "技能"]
     };
   },
   computed: {
@@ -134,9 +134,9 @@ export default {
         this.quantityOfItemTemplate,
         this.quantityOfQuestTemplate,
         this.quantityOfSmartScript,
-        this.quantityOfSpell,
+        this.quantityOfSpell
       ];
-    },
+    }
   },
   methods: {
     ...mapActions("creature", ["countCreatureTemplates"]),
@@ -157,17 +157,17 @@ export default {
         this.countItemTemplates({}),
         this.countQuestTemplates({}),
         this.countSmartScripts({}),
-        this.countSpells({}),
+        this.countSpells({})
       ]);
       this.loading = false;
-    },
+    }
   },
   components: {
-    Chart,
+    Chart
   },
-  created() {
+  mounted() {
     this.init();
-  },
+  }
 };
 </script>
 
