@@ -45,6 +45,7 @@ export default {
     creatureTemplateAddon: {},
     creatureOnKillReputation: {},
     creatureEquipTemplates: [],
+    creatureEquipTemplate: {},
     npcVendors: [],
     npcTrainers: [],
     creatureQuestItems: [],

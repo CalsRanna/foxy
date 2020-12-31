@@ -389,7 +389,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="坐骑编号">
+                <el-form-item>
                   <template slot="label">
                     <el-tooltip>
                       <div slot="content" style="max-width: 400px">
@@ -402,7 +402,7 @@
                       </div>
                       <i class="el-icon-info"></i>
                     </el-tooltip>
-                    坐骑编号
+                    载具编号
                   </template>
                   <el-input v-model="creatureTemplate.VehicleId" placeholder="VehicleId"></el-input>
                 </el-form-item>
@@ -850,12 +850,22 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="最小金钱掉落">
-                  <el-input v-model="creatureTemplate.mingold" placeholder="mingold"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.mingold"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="mingold"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="最大金钱掉落">
-                  <el-input v-model="creatureTemplate.maxgold" placeholder="maxgold"></el-input>
+                  <el-input-number
+                    v-model="creatureTemplate.maxgold"
+                    :min="0"
+                    controls-position="right"
+                    placeholder="maxgold"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1110,8 +1120,8 @@
               </el-col>
             </el-row>
           </el-card>
-          <el-card v-loading="loading" style="margin-top: 16px">
-            <el-button type="primary" @click="() => store('creature_template')">保存</el-button>
+          <el-card style="margin-top: 16px">
+            <el-button type="primary" :loading="loading" @click="() => store('creature_template')">保存</el-button>
             <el-button @click="cancel">返回</el-button>
           </el-card>
         </el-form>
@@ -1122,7 +1132,16 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="ID">
-                  <el-input v-model="creatureTemplateAddon.entry" placeholder="entry" disabled></el-input>
+                  <el-input-number
+                    v-model="creatureTemplateAddon.entry"
+                    :min="min"
+                    controls-position="right"
+                    placeholder="entry"
+                    :disabled="disabled"
+                    v-loading="loading"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1162,8 +1181,8 @@
               </el-col>
             </el-row>
           </el-card>
-          <el-card v-loading="loading" style="margin-top: 16px">
-            <el-button type="primary" @click="() => store('creature_template_addon')">保存</el-button>
+          <el-card style="margin-top: 16px">
+            <el-button type="primary" :loading="loading" @click="() => store('creature_template_addon')">保存</el-button>
             <el-button>返回</el-button>
           </el-card>
         </el-form>
@@ -1174,11 +1193,16 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="ID">
-                  <el-input
+                  <el-input-number
                     v-model="creatureOnKillReputation.creature_id"
+                    :min="min"
+                    controls-position="right"
                     placeholder="creature_id"
-                    disabled
-                  ></el-input>
+                    :disabled="disabled"
+                    v-loading="loading"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1208,18 +1232,20 @@
               </el-col>
               <el-col :span="6" :offset="6">
                 <el-form-item label="声望值1">
-                  <el-input
+                  <el-input-number
                     v-model="creatureOnKillReputation.RewOnKillRepValue1"
+                    controls-position="right"
                     placeholder="RewOnKillRepValue1"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="声望值2">
-                  <el-input
+                  <el-input-number
                     v-model="creatureOnKillReputation.RewOnKillRepValue2"
+                    controls-position="right"
                     placeholder="RewOnKillRepValue2"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6" :offset="6">
@@ -1267,8 +1293,8 @@
             </el-row>
           </el-form>
         </el-card>
-        <el-card v-loading="loading" style="margin-top: 16px">
-          <el-button type="primary" @click="() => store('creature_onkill_reputation')">保存</el-button>
+        <el-card style="margin-top: 16px">
+          <el-button type="primary" :loading="loading" @click="() => store('creature_onkill_reputation')">保存</el-button>
           <el-button>返回</el-button>
         </el-card>
       </el-tab-pane>
@@ -1687,6 +1713,7 @@ export default {
       "creatureTemplateLocales",
       "creatureTemplateAddon",
       "creatureOnKillReputation",
+      "creatureEquipTemplate",
       "creatureEquipTemplates",
       "npcVendors",
       "npcTrainers",
