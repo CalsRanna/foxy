@@ -1307,7 +1307,7 @@
         <el-card style="margin-top: 16px">
           <el-table :data="creatureEquipTemplates">
             <el-table-column prop="ID" label="ID"></el-table-column>
-            <el-table-column width="43px" class-name="icon-height">
+            <!-- <el-table-column width="43px" class-name="icon-height">
               <template slot-scope="scope" v-if="scope.row.ItemID1 !== 0">
                 <el-image
                   :src="`/icons/${icons[scope.row.displayid1]}`"
@@ -1320,7 +1320,7 @@
                   ></el-image>
                 </el-image>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="物品1">
               <template slot-scope="scope">
                 <template v-if="scope.row.Name1">{{ scope.row.Name1 }}</template>
