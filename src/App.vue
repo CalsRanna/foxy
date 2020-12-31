@@ -4,10 +4,7 @@
       <div class="logo">
         <h3 style="margin: 0; padding: 0">FOXY</h3>
         <p style="font-size: 12px; color: #c0c4cc">
-          魔兽世界
-          <span style="font-size: 10px; text-decoration: line-through"> 编辑 </span>
-          <span style="font-size: 14px">查看</span>
-          器
+          魔兽世界编辑器
         </p>
       </div>
       <el-menu :default-active="active" @select="navigate" style="border-right: none">
@@ -16,8 +13,8 @@
         <el-menu-item index="game-object"> 游戏对象 <small>GAME OBJECT</small> </el-menu-item>
         <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
         <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
-        <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
         <el-menu-item index="smart-script"> 内建脚本 <small>SMART SCRIPT</small> </el-menu-item>
+        <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
         <el-menu-item index="setting"> 设置 <small>SETTING</small> </el-menu-item>
       </el-menu>
     </el-aside>

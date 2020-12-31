@@ -5,9 +5,15 @@ import {
   DESTROY_ITEM_TEMPLATE,
   FIND_ITEM_TEMPLATE,
   PAGINATE_ITEM_TEMPLATES,
+  SEARCH_DISENCHANT_LOOT_TEMPLATES,
+  SEARCH_ITEM_ENCHANTMENT_TEMPLATES,
+  SEARCH_ITEM_LOOT_TEMPLATES,
   SEARCH_ITEM_TEMPLATES,
   SEARCH_ITEM_TEMPLATE_LOCALES,
+  SEARCH_MILLING_LOOT_TEMPLATES,
+  SEARCH_PROSPECTING_LOOT_TEMPLATES,
   STORE_ITEM_TEMPLATE,
+  STORE_ITEM_TEMPLATE_LOCALES,
   UPDATE_ITEM_TEMPLATE,
 } from "../constants";
 
@@ -114,6 +120,59 @@ export default {
         });
       });
     },
+    storeItemTemplateLocales(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(STORE_ITEM_TEMPLATE_LOCALES, payload);
+        ipcRenderer.on(STORE_ITEM_TEMPLATE_LOCALES, () => {
+          resolve();
+        });
+      });
+    },
+    searchItemEnchantmentTemplates({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, response) => {
+          commit(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, response);
+          resolve();
+        });
+      });
+    },
+    searchItemLootTemplates({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(SEARCH_ITEM_LOOT_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_ITEM_LOOT_TEMPLATES, (event, response) => {
+          commit(SEARCH_ITEM_LOOT_TEMPLATES, response);
+          resolve();
+        });
+      });
+    },
+    searchDisenchantTemplates({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(SEARCH_DISENCHANT_LOOT_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, response) => {
+          commit(SEARCH_DISENCHANT_LOOT_TEMPLATES, response);
+          resolve();
+        });
+      });
+    },
+    searchProspectingTemplates({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(SEARCH_PROSPECTING_LOOT_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_PROSPECTING_LOOT_TEMPLATES, (event, response) => {
+          commit(SEARCH_PROSPECTING_LOOT_TEMPLATES, response);
+          resolve();
+        });
+      });
+    },
+    searchMillingLootTemplates({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(SEARCH_MILLING_LOOT_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, response) => {
+          commit(SEARCH_MILLING_LOOT_TEMPLATES, response);
+          resolve();
+        });
+      });
+    },
   },
   mutations: {
     [SEARCH_ITEM_TEMPLATES](state, itemTemplates) {
@@ -140,5 +199,20 @@ export default {
     [SEARCH_ITEM_TEMPLATE_LOCALES](state, itemTemplateLocales) {
       state.itemTemplateLocales = itemTemplateLocales;
     },
+    [SEARCH_ITEM_ENCHANTMENT_TEMPLATES](state, itemEnchantmentTemplates) {
+      state.itemEnchantmentTemplates = itemEnchantmentTemplates;
+    },
+    [SEARCH_ITEM_LOOT_TEMPLATES](state, itemLootTemplates) {
+      state.itemLootTemplates = itemLootTemplates
+    },
+    [SEARCH_DISENCHANT_LOOT_TEMPLATES](state, disenchantLootTemplates) {
+      state.disenchantLootTemplates = disenchantLootTemplates
+    },
+    [SEARCH_PROSPECTING_LOOT_TEMPLATES](state, prospectingLootTemplates) {
+      state.prospectingLootTemplates = prospectingLootTemplates
+    },
+    [SEARCH_MILLING_LOOT_TEMPLATES](state, millingLootTemplates) {
+      state.millingLootTemplates = millingLootTemplates
+    }
   },
 };

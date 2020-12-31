@@ -48,8 +48,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="脚本">
-                  <el-input v-model="itemTemplate.ScriptName" placeholder="ScriptName"></el-input>
+                <el-form-item label="套装">
+                  <el-input v-model="itemTemplate.itemset" placeholder="itemset"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -77,24 +77,15 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item>
-                  <template slot="label">
-                    <el-tooltip>
-                      <div slot="content" style="max-width: 400px">
-                        Weapons have special sounds on impact. This column is used to override these sounds by
-                        specifying another subclass. For example an item with misc subclass can sound like a stave on
-                        impact by overriding the subclass here.
-                      </div>
-                      <i class="el-icon-info"></i>
-                    </el-tooltip>
-                    声音覆盖
-                  </template>
-                  <el-input v-model="itemTemplate.SoundOverrideSubclass" placeholder="SoundOverrideSubclass"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="图标">
-                  <el-input v-model="itemTemplate.displayid" placeholder="displayid"></el-input>
+                <el-form-item label="佩戴位置">
+                  <el-select v-model="itemTemplate.InventoryType" placeholder="InventoryType">
+                    <el-option
+                      v-for="(localeInventoryType, index) in localeInventoryTypes"
+                      :key="`localeInventoryType-${index}`"
+                      :label="localeInventoryType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -110,45 +101,24 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="购买数量">
-                  <el-input v-model="itemTemplate.BuyCount" placeholder="BuyCount"></el-input>
+                <el-form-item label="外观">
+                  <el-input v-model="itemTemplate.displayid" placeholder="displayid"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="购买价格">
-                  <el-input v-model="itemTemplate.BuyPrice" placeholder="BuyPrice"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="出售价格">
-                  <el-input v-model="itemTemplate.SellPrice" placeholder="SellPrice"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="佩戴位置">
-                  <el-select v-model="itemTemplate.InventoryType" placeholder="InventoryType">
-                    <el-option
-                      v-for="(localeInventoryType, index) in localeInventoryTypes"
-                      :key="`localeInventoryType-${index}`"
-                      :label="localeInventoryType"
-                      :value="index"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="最大数量">
-                  <el-input v-model="itemTemplate.maxcount" placeholder="maxcount"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="堆叠数量">
-                  <el-input v-model="itemTemplate.stackable" placeholder="stackable"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="开始任务">
-                  <el-input v-model="itemTemplate.startquest" placeholder="startquest"></el-input>
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">
+                        Weapons have special sounds on impact. This column is used to override these sounds by
+                        specifying another subclass. For example an item with misc subclass can sound like a stave on
+                        impact by overriding the subclass here.
+                      </div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    声音覆盖
+                  </template>
+                  <el-input v-model="itemTemplate.SoundOverrideSubclass" placeholder="SoundOverrideSubclass"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -172,10 +142,36 @@
                       :value="index"
                     ></el-option>
                   </el-select>
-                  <!-- <el-input
-                v-model="itemTemplate.Material"
-                placeholder="Material"
-              ></el-input> -->
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="购买数量">
+                  <el-input v-model="itemTemplate.BuyCount" placeholder="BuyCount"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="购买价格">
+                  <el-input v-model="itemTemplate.BuyPrice" placeholder="BuyPrice"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="出售价格">
+                  <el-input v-model="itemTemplate.SellPrice" placeholder="SellPrice"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最大数量">
+                  <el-input v-model="itemTemplate.maxcount" placeholder="maxcount"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="堆叠数量">
+                  <el-input v-model="itemTemplate.stackable" placeholder="stackable"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="开始任务">
+                  <el-input v-model="itemTemplate.startquest" placeholder="startquest"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -234,11 +230,6 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="套装">
-                  <el-input v-model="itemTemplate.itemset" placeholder="itemset"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
                 <el-form-item label="绑定">
                   <el-select v-model="itemTemplate.bonding" placeholder="bonding">
                     <el-option
@@ -267,39 +258,6 @@
               <el-col :span="6">
                 <el-form-item label="自定义标识">
                   <el-input v-model="itemTemplate.flagsCustom" placeholder="flagsCustom"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-card>
-          <el-card style="margin-top: 16px">
-            <el-row :gutter="16">
-              <el-col :span="6">
-                <el-form-item>
-                  <template slot="label">
-                    <el-tooltip>
-                      <div slot="content" style="max-width: 400px">Page text.</div>
-                      <i class="el-icon-info"></i>
-                    </el-tooltip>
-                    页面ID
-                  </template>
-                  <el-input v-model="itemTemplate.PageText" placeholder="PageText"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item>
-                  <template slot="label">
-                    <el-tooltip>
-                      <div slot="content" style="max-width: 400px">Page material.</div>
-                      <i class="el-icon-info"></i>
-                    </el-tooltip>
-                    页面材料
-                  </template>
-                  <el-input v-model="itemTemplate.PageMaterial" placeholder="PageMaterial"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="语言ID">
-                  <el-input v-model="itemTemplate.LanguageID" placeholder="LanguageID"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -397,37 +355,83 @@
               </el-col>
             </el-row>
           </el-card>
-          <!-- 抗性相关 -->
+          <!-- 战斗相关 -->
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="神圣抗性">
-                  <el-input v-model="itemTemplate.holy_res" placeholder="holy_res"></el-input>
+                <el-form-item label="攻击间隔">
+                  <el-input v-model="itemTemplate.delay" placeholder="delay"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="伤害类型1">
+                  <el-input v-model="itemTemplate.dmg_type1" placeholder="dmg_type1"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="暗影抗性">
-                  <el-input v-model="itemTemplate.shadow_res" placeholder="shadow_res"></el-input>
+                <el-form-item label="最小伤害1">
+                  <el-input v-model="itemTemplate.dmg_min1" placeholder="dmg_min1"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="冰霜抗性">
-                  <el-input v-model="itemTemplate.frost_res" placeholder="frost_res"></el-input>
+                <el-form-item label="最大伤害1">
+                  <el-input v-model="itemTemplate.dmg_max1" placeholder="dmg_max1"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="伤害类型2">
+                  <el-input v-model="itemTemplate.dmg_type2" placeholder="dmg_type2"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="火焰抗性">
-                  <el-input v-model="itemTemplate.fire_res" placeholder="fire_res"></el-input>
+                <el-form-item label="最小伤害2">
+                  <el-input v-model="itemTemplate.dmg_min2" placeholder="dmg_min2"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="自然抗性">
-                  <el-input v-model="itemTemplate.nature_res" placeholder="nature_res"></el-input>
+                <el-form-item label="最大伤害2">
+                  <el-input v-model="itemTemplate.dmg_max2" placeholder="dmg_max2"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="护甲类型">
+                  <el-input v-model="itemTemplate.ammo_type" placeholder="ammo_type"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="奥术抗性">
-                  <el-input v-model="itemTemplate.arcane_res" placeholder="arcane_res"></el-input>
+                <el-form-item label="护甲">
+                  <el-input v-model="itemTemplate.armor" placeholder="armor"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="格挡几率">
+                  <el-input v-model="itemTemplate.block" placeholder="block"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="护甲伤害系数">
+                  <el-input v-model="itemTemplate.ArmorDamageModifier" placeholder="ArmorDamageModifier"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="攻击距离系数">
+                  <el-input v-model="itemTemplate.RangedModRange" placeholder="RangedModRange"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最大持续时间">
+                  <el-input v-model="itemTemplate.MaxDurability" placeholder="MaxDurability"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="鞘">
+                  <el-input v-model="itemTemplate.sheath" placeholder="sheath"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -677,79 +681,39 @@
               </el-col>
             </el-row>
           </el-card>
-          <!-- 战斗相关 -->
+          <!-- 抗性相关 -->
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="护甲">
-                  <el-input v-model="itemTemplate.armor" placeholder="armor"></el-input>
+                <el-form-item label="神圣抗性">
+                  <el-input v-model="itemTemplate.holy_res" placeholder="holy_res"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="护甲伤害系数">
-                  <el-input v-model="itemTemplate.ArmorDamageModifier" placeholder="ArmorDamageModifier"></el-input>
+                <el-form-item label="火焰抗性">
+                  <el-input v-model="itemTemplate.fire_res" placeholder="fire_res"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="攻击间隔">
-                  <el-input v-model="itemTemplate.delay" placeholder="delay"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="护甲类型">
-                  <el-input v-model="itemTemplate.ammo_type" placeholder="ammo_type"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="攻击距离系数">
-                  <el-input v-model="itemTemplate.RangedModRange" placeholder="RangedModRange"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="格挡几率">
-                  <el-input v-model="itemTemplate.block" placeholder="block"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="最大持续时间">
-                  <el-input v-model="itemTemplate.MaxDurability" placeholder="MaxDurability"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="鞘">
-                  <el-input v-model="itemTemplate.sheath" placeholder="sheath"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="伤害类型1">
-                  <el-input v-model="itemTemplate.dmg_type1" placeholder="dmg_type1"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="最小伤害1">
-                  <el-input v-model="itemTemplate.dmg_min1" placeholder="dmg_min1"></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="最大伤害1">
-                  <el-input v-model="itemTemplate.dmg_max1" placeholder="dmg_max1"></el-input>
+                <el-form-item label="自然抗性">
+                  <el-input v-model="itemTemplate.nature_res" placeholder="nature_res"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="伤害类型2">
-                  <el-input v-model="itemTemplate.dmg_type2" placeholder="dmg_type2"></el-input>
+                <el-form-item label="暗影抗性">
+                  <el-input v-model="itemTemplate.shadow_res" placeholder="shadow_res"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="最小伤害2">
-                  <el-input v-model="itemTemplate.dmg_min2" placeholder="dmg_min2"></el-input>
+                <el-form-item label="冰霜抗性">
+                  <el-input v-model="itemTemplate.frost_res" placeholder="frost_res"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="最大伤害2">
-                  <el-input v-model="itemTemplate.dmg_max2" placeholder="dmg_max2"></el-input>
+                <el-form-item label="奥术抗性">
+                  <el-input v-model="itemTemplate.arcane_res" placeholder="arcane_res"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -926,12 +890,56 @@
             </div>
           </el-card>
           <el-card style="margin-top: 16px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">Page text.</div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    页面ID
+                  </template>
+                  <el-input v-model="itemTemplate.PageText" placeholder="PageText"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item>
+                  <template slot="label">
+                    <el-tooltip>
+                      <div slot="content" style="max-width: 400px">Page material.</div>
+                      <i class="el-icon-info"></i>
+                    </el-tooltip>
+                    页面材料
+                  </template>
+                  <el-input v-model="itemTemplate.PageMaterial" placeholder="PageMaterial"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="语言ID">
+                  <el-input v-model="itemTemplate.LanguageID" placeholder="LanguageID"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="脚本">
+                  <el-input v-model="itemTemplate.ScriptName" placeholder="ScriptName"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="VerifiedBuild">
+                  <el-input v-model="itemTemplate.VerifiedBuild" placeholder="VerifiedBuild"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+          <el-card style="margin-top: 16px">
             <el-button type="primary" @click="() => store('item_template')">保存</el-button>
             <el-button @click="cancle">返回</el-button>
           </el-card>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="附魔模版" name="item_enchantment_template">
+      <el-tab-pane label="附魔模版" name="item_enchantment_template"
+        :disabled="!(itemTemplate.RandomProperty != 0 || itemTemplate.RandomSuffix != 0)">
         <el-card style="margin-top: 16px">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -939,9 +947,12 @@
         </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="itemEnchantmentTemplates">
-            <el-table-column prop="entry" label="ID"></el-table-column>
             <el-table-column prop="ench" label="附魔"></el-table-column>
-            <el-table-column prop="Chance" label="几率"></el-table-column>
+            <el-table-column prop="chance" label="几率">
+              <span slot-scope="scope">
+                {{ `${scope.row.chance}%` }}
+              </span>
+            </el-table-column>
           </el-table>
         </el-card>
       </el-tab-pane>
@@ -953,20 +964,35 @@
         </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="itemLootTemplates">
-            <el-table-column prop="Entry" label="ID"></el-table-column>
-            <el-table-column prop="Item" label="物品"></el-table-column>
+            <el-table-column prop="Item" label="物品">
+              <span slot-scope="scope">
+                <template v-if="scope.row.localeName !== null">
+                  {{ scope.row.localeName }}
+                </template>
+                <template v-else>{{ scope.row.name }}</template>
+              </span>
+            </el-table-column>
             <el-table-column prop="Reference" label="关联"></el-table-column>
-            <el-table-column prop="Chance" label="几率"></el-table-column>
-            <el-table-column prop="QuestRequired" label="需要任务"></el-table-column>
-            <el-table-column prop="LootMode" label="掉落模式"></el-table-column>
-            <el-table-column prop="GroupId" label="组"></el-table-column>
+            <el-table-column prop="Chance" label="几率">
+              <span slot-scope="scope">
+                {{ `${scope.row.Chance}%` }}
+              </span>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务">
+              <span slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
+              </span>
+            </el-table-column>
             <el-table-column prop="MinCount" label="最小数量"></el-table-column>
             <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-            <el-table-column prop="Comment" label="Comment"></el-table-column>
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="分解掉落" name="disenchant_loot_template">
+      <el-tab-pane label="分解掉落" name="disenchant_loot_template"
+        :disabled="itemTemplate.DisenchantID == 0">
         <el-card style="margin-top: 16px">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -974,20 +1000,34 @@
         </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="disenchantLootTemplates">
-            <el-table-column prop="Entry" label="ID"></el-table-column>
-            <el-table-column prop="Item" label="物品"></el-table-column>
+            <el-table-column prop="Item" label="物品">
+              <span slot-scope="scope">
+                <template v-if="scope.row.localeName !== null">
+                  {{ scope.row.localeName }}
+                </template>
+                <template v-else>{{ scope.row.name }}</template>
+              </span>
+            </el-table-column>
             <el-table-column prop="Reference" label="关联"></el-table-column>
-            <el-table-column prop="Chance" label="几率"></el-table-column>
-            <el-table-column prop="QuestRequired" label="需要任务"></el-table-column>
-            <el-table-column prop="LootMode" label="掉落模式"></el-table-column>
-            <el-table-column prop="GroupId" label="组"></el-table-column>
+            <el-table-column prop="Chance" label="几率">
+              <span slot-scope="scope">
+                {{ `${scope.row.Chance}%` }}
+              </span>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务">
+              <span slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
+              </span>
+            </el-table-column>
             <el-table-column prop="MinCount" label="最小数量"></el-table-column>
             <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-            <el-table-column prop="Comment" label="Comment"></el-table-column>
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="挖矿掉落" name="prospecting_loot_template">
+      <el-tab-pane label="选矿掉落" name="prospecting_loot_template">
         <el-card style="margin-top: 16px">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -995,20 +1035,34 @@
         </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="prospectingLootTemplates">
-            <el-table-column prop="Entry" label="ID"></el-table-column>
-            <el-table-column prop="Item" label="物品"></el-table-column>
+            <el-table-column prop="Item" label="物品">
+              <span slot-scope="scope">
+                <template v-if="scope.row.localeName !== null">
+                  {{ scope.row.localeName }}
+                </template>
+                <template v-else>{{ scope.row.name }}</template>
+              </span>
+            </el-table-column>
             <el-table-column prop="Reference" label="关联"></el-table-column>
-            <el-table-column prop="Chance" label="几率"></el-table-column>
-            <el-table-column prop="QuestRequired" label="需要任务"></el-table-column>
-            <el-table-column prop="LootMode" label="掉落模式"></el-table-column>
-            <el-table-column prop="GroupId" label="组"></el-table-column>
+            <el-table-column prop="Chance" label="几率">
+              <span slot-scope="scope">
+                {{ `${scope.row.Chance}%` }}
+              </span>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务">
+              <span slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
+              </span>
+            </el-table-column>
             <el-table-column prop="MinCount" label="最小数量"></el-table-column>
             <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-            <el-table-column prop="Comment" label="Comment"></el-table-column>
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="铭文掉落" name="milling_loot_template">
+      <el-tab-pane label="研磨掉落" name="milling_loot_template">
         <el-card style="margin-top: 16px">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -1016,16 +1070,30 @@
         </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="millingLootTemplates">
-            <el-table-column prop="Entry" label="ID"></el-table-column>
-            <el-table-column prop="Item" label="物品"></el-table-column>
+            <el-table-column prop="Item" label="物品">
+              <span slot-scope="scope">
+                <template v-if="scope.row.localeName !== null">
+                  {{ scope.row.localeName }}
+                </template>
+                <template v-else>{{ scope.row.name }}</template>
+              </span>
+            </el-table-column>
             <el-table-column prop="Reference" label="关联"></el-table-column>
-            <el-table-column prop="Chance" label="几率"></el-table-column>
-            <el-table-column prop="QuestRequired" label="需要任务"></el-table-column>
-            <el-table-column prop="LootMode" label="掉落模式"></el-table-column>
-            <el-table-column prop="GroupId" label="组"></el-table-column>
+            <el-table-column prop="Chance" label="几率">
+              <span slot-scope="scope">
+                {{ `${scope.row.Chance}%` }}
+              </span>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务">
+              <span slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
+              </span>
+            </el-table-column>
             <el-table-column prop="MinCount" label="最小数量"></el-table-column>
             <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-            <el-table-column prop="Comment" label="Comment"></el-table-column>
           </el-table>
         </el-card>
       </el-tab-pane>
@@ -1079,7 +1147,7 @@
       </el-table>
       <div slot="footer">
         <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="submitItemTemplateLocales">保存</el-button>
+        <el-button type="primary" @click="() => store('item_template_locales')">保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -1163,52 +1231,39 @@ export default {
       "updateItemTemplate",
       "createItemTemplate",
       "searchItemTemplateLocales",
+      "storeItemTemplateLocales",
+      "searchItemEnchantmentTemplates",
+      "searchItemLootTemplates",
+      "searchDisenchantTemplates",
+      "searchProspectingTemplates",
+      "searchMillingLootTemplates",
     ]),
     async switchover(tab) {
-      let id = this.itemTemplate.entry;
-      if (tab.name === "enchantment_template") {
-        this.loading = true;
-        // await this.findCreatureTemplateAddon({ entry: id });
-        console.log(id);
-        this.loading = false;
+      this.loading = true;
+      switch(tab.name) {
+        case 'item_enchantment_template':
+          if ( this.itemTemplate.RandomProperty != 0) {
+            await this.searchItemEnchantmentTemplates({entry: this.itemTemplate.RandomProperty});
+          } else if (this.itemTemplate.RandomSuffix != 0) {
+            await this.searchItemEnchantmentTemplates({entry: this.itemTemplate.RandomSuffix});
+          }
+          break;
+        case 'item_loot_template':
+          await this.searchItemLootTemplates({Entry: this.itemTemplate.entry});
+          break;
+        case 'disenchant_loot_template':
+          await this.searchDisenchantTemplates({Entry: this.itemTemplate.DisenchantID});
+          break;
+        case 'prospecting_loot_template':
+          await this.searchProspectingTemplates({Entry: this.itemTemplate.entry});
+          break;
+        case 'milling_loot_template':
+          await this.searchMillingLootTemplates({Entry: this.itemTemplate.entry});
+          break;
+        default:
+          break;
       }
-      // if (tab.name === "creature_onkill_reputation") {
-      //   this.loading = true;
-      //   await this.findCreatureOnKillReputation({ creatureId: id });
-      //   this.loading = false;
-      // }
-      // if (tab.name === "creature_equip_template") {
-      //   this.loading = true;
-      //   await this.searchCreatureEquipTemplates({ creatureId: id });
-      //   this.loading = false;
-      // }
-      // if (tab.name === "npc_vendor") {
-      //   this.loading = true;
-      //   await this.searchNpcVendors({ entry: id });
-      //   this.loading = false;
-      // }
-      // if (tab.name === "npc_trainer") {
-      //   this.loading = true;
-      //   await this.searchNpcTrainers({ id: id });
-      //   this.loading = false;
-      // }
-      // if (tab.name === "creature_questitem") {
-      //   await this.searchCreatureQuestItems({ creatureEntry: id });
-      //   this.loading = true;
-      // }
-      // if (tab.name === "creature_loot_template") {
-      //   await this.searchCreatureLootTemplates({ entry: id });
-      //   this.loading = true;
-      // }
-      // if (tab.name === "pickpocketing_loot_template") {
-      //   await this.searchPickpocketingLootTemplates({ entry: id });
-      //   this.loading = true;
-      // }
-      // if (tab.name === "skinning_loot_template") {
-      //   await this.searchSkinningLootTemplates({ entry: id });
-      //   this.loading = true;
-      // }
-      // this.loading = false;
+      this.loading = false;
     },
     showDialog() {
       this.localeDialogVisible = true;
@@ -1218,7 +1273,6 @@ export default {
     },
     addItemTemplateLocale() {},
     deleteItemTemplateLocale() {},
-    submitItemTemplateLocales() {},
     store(module) {
       this.loading = true;
       switch (module) {
@@ -1228,6 +1282,11 @@ export default {
           } else {
             this.updateItemTemplate(this.itemTemplate);
           }
+          break;
+        case "item_template_locales":
+          this.storeItemTemplateLocales(this.itemTemplateLocales).then(() => {
+            this.localeDialogVisible = false;
+          });
           break;
         default:
           break;

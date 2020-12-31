@@ -138,11 +138,10 @@ export default {
         });
       });
     },
-    storeCreatureTemplateLocales({ commit }, payload) {
+    storeCreatureTemplateLocales(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(STORE_CREATURE_TEMPLATE_LOCALES, payload);
-        ipcRenderer.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, response) => {
-          commit(STORE_CREATURE_TEMPLATE_LOCALES, response);
+        ipcRenderer.on(STORE_CREATURE_TEMPLATE_LOCALES, () => {
           resolve();
         });
       });
@@ -290,9 +289,6 @@ export default {
       state.creatureTemplate = creatureTemplate;
     },
     [SEARCH_CREATURE_TEMPLATE_LOCALES](state, creatureTemplateLocales) {
-      state.creatureTemplateLocales = creatureTemplateLocales;
-    },
-    [STORE_CREATURE_TEMPLATE_LOCALES](state, creatureTemplateLocales) {
       state.creatureTemplateLocales = creatureTemplateLocales;
     },
     [FIND_CREATURE_TEMPLATE_ADDON](state, creatureTemplateAddon) {
