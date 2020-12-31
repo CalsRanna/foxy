@@ -6,9 +6,15 @@ import {
   DESTROY_ITEM_TEMPLATE,
   FIND_ITEM_TEMPLATE,
   GLOBAL_NOTICE,
+  SEARCH_DISENCHANT_LOOT_TEMPLATES,
+  SEARCH_ITEM_ENCHANTMENT_TEMPLATES,
+  SEARCH_ITEM_LOOT_TEMPLATES,
   SEARCH_ITEM_TEMPLATES,
   SEARCH_ITEM_TEMPLATE_LOCALES,
+  SEARCH_MILLING_LOOT_TEMPLATES,
+  SEARCH_PROSPECTING_LOOT_TEMPLATES,
   STORE_ITEM_TEMPLATE,
+  STORE_ITEM_TEMPLATE_LOCALES,
   UPDATE_ITEM_TEMPLATE,
 } from "../constants";
 
@@ -180,5 +186,91 @@ ipcMain.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, payload) => {
 
   queryBuilder.then((rows) => {
     event.reply(SEARCH_ITEM_TEMPLATE_LOCALES, rows);
+  });
+});
+
+ipcMain.on(STORE_ITEM_TEMPLATE_LOCALES, (event, payload) => {
+  let deleteQueryBuilder = knex()
+    .table("item_template_locale")
+    .where("ID", payload[0].ID)
+    .delete();
+  let insertQueryBuilder = knex()
+    .insert(payload)
+    .into("item_template_locale");
+
+  deleteQueryBuilder.then(rows => {
+    insertQueryBuilder.then(rows => {
+      event.reply(STORE_ITEM_TEMPLATE_LOCALES, rows);
+      event.reply(GLOBAL_NOTICE, {
+        type: "success",
+        category: "notification",
+        title: "成功",
+        message: `保存成功。`
+      });
+    });
+  });
+});
+
+ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
+  let queryBuilder = knex().select().from("item_enchantment_template").where(payload);
+
+  queryBuilder.then((rows) => {
+    event.reply(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, rows);
+  });
+});
+
+ipcMain.on(SEARCH_ITEM_LOOT_TEMPLATES, (event, payload) => {
+  let queryBuilder = knex()
+  .select(["ilt.*", "it.name", "itl.Name as localeName"])
+  .from("item_loot_template as ilt")
+  .leftJoin("item_template as it", "ilt.Item", "it.entry")
+  .leftJoin("item_template_locale as itl", function() {
+    this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+  }).where('ilt.Entry', payload.Entry);
+
+  queryBuilder.then((rows) => {
+    event.reply(SEARCH_ITEM_LOOT_TEMPLATES, rows);
+  });
+});
+
+ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
+  let queryBuilder = knex()
+  .select(["dlt.*", "it.name", "itl.Name as localeName"])
+  .from("disenchant_loot_template as dlt")
+  .leftJoin("item_template as it", "dlt.Item", "it.entry")
+  .leftJoin("item_template_locale as itl", function() {
+    this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+  }).where('dlt.Entry', payload.Entry);
+
+  queryBuilder.then((rows) => {
+    event.reply(SEARCH_DISENCHANT_LOOT_TEMPLATES, rows);
+  });
+});
+
+ipcMain.on(SEARCH_PROSPECTING_LOOT_TEMPLATES, (event, payload) => {
+  let queryBuilder = knex()
+  .select(["plt.*", "it.name", "itl.Name as localeName"])
+  .from("prospecting_loot_template as plt")
+  .leftJoin("item_template as it", "plt.Item", "it.entry")
+  .leftJoin("item_template_locale as itl", function() {
+    this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+  }).where('plt.Entry', payload.Entry);
+
+  queryBuilder.then((rows) => {
+    event.reply(SEARCH_PROSPECTING_LOOT_TEMPLATES, rows);
+  });
+});
+
+ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
+  let queryBuilder = knex()
+  .select(["mlt.*", "it.name", "itl.Name as localeName"])
+  .from("milling_loot_template as mlt")
+  .leftJoin("item_template as it", "mlt.Item", "it.entry")
+  .leftJoin("item_template_locale as itl", function() {
+    this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+  }).where('mlt.Entry', payload.Entry);
+
+  queryBuilder.then((rows) => {
+    event.reply(SEARCH_MILLING_LOOT_TEMPLATES, rows);
   });
 });
