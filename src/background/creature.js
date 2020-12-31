@@ -456,7 +456,7 @@ ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
     .leftJoin("item_template_locale as itl", function() {
       this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
     })
-    .where("plt.Entry", payload.entry);
+    .where("slt.Entry", payload.entry);
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_SKINNING_LOOT_TEMPLATES, rows);

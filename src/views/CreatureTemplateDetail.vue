@@ -1182,7 +1182,9 @@
             </el-row>
           </el-card>
           <el-card style="margin-top: 16px">
-            <el-button type="primary" :loading="loading" @click="() => store('creature_template_addon')">保存</el-button>
+            <el-button type="primary" :loading="loading" @click="() => store('creature_template_addon')"
+              >保存</el-button
+            >
             <el-button>返回</el-button>
           </el-card>
         </el-form>
@@ -1294,7 +1296,9 @@
           </el-form>
         </el-card>
         <el-card style="margin-top: 16px">
-          <el-button type="primary" :loading="loading" @click="() => store('creature_onkill_reputation')">保存</el-button>
+          <el-button type="primary" :loading="loading" @click="() => store('creature_onkill_reputation')"
+            >保存</el-button
+          >
           <el-button>返回</el-button>
         </el-card>
       </el-tab-pane>
@@ -1468,8 +1472,6 @@
         </el-card>
         <el-card style="margin-top: 16px">
           <el-table :data="creatureQuestItems">
-            <el-table-column prop="displayid"></el-table-column>
-            <el-table-column prop="Idx" label="Index" sortable></el-table-column>
             <el-table-column label="名称">
               <span slot-scope="scope">
                 <template v-if="scope.row.localeName !== null">

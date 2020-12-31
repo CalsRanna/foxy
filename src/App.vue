@@ -156,7 +156,7 @@ export default {
           });
           break;
         case "alert":
-          this.$alert(response.message.replace(/at/g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at"), response.title, {
+          this.$alert(response.message.replace(/at /g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "), response.title, {
             type: response.type,
             dangerouslyUseHTMLString: true,
             customClass: "wider-message-box"
