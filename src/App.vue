@@ -88,19 +88,23 @@ export default {
       }
     },
     initDbcConfig() {
-      let path = localStorage.getItem("dbcPath");
+      return new Promise(resolve => {
+        let path = localStorage.getItem("dbcPath");
 
-      if (path) {
-        this.storeDbcConfig({
-          path: path
-        }).then(() => {
-          this.initDbcConnection(this.dbcConfig);
-        });
-      } else {
-        this.setActive("setting");
-        this.setSettingActive("dbc");
-        this.$router.push("/setting/dbc").catch(error => error);
-      }
+        if (path) {
+          this.storeDbcConfig({
+            path: path
+          }).then(() => {
+            this.initDbcConnection(this.dbcConfig).then(() => {
+              resolve();
+            });
+          });
+        } else {
+          this.setActive("setting");
+          this.setSettingActive("dbc");
+          this.$router.push("/setting/dbc").catch(error => error);
+        }
+      });
     },
     initConfigConfig() {
       let path = localStorage.getItem("configPath");
@@ -125,8 +129,7 @@ export default {
     async init() {
       this.initDeveloperConfig();
       this.initConfigConfig();
-      await this.initDbcConfig();
-      if (this.dbcConfig.path != "") {
+      this.initDbcConfig().then(() => {
         this.searchDbcFactions();
         this.searchDbcFactionTemplates();
         this.searchDbcItemDisplayInfos();
@@ -134,8 +137,8 @@ export default {
         this.searchDbcSpellDurations();
         this.searchDbcScalingStatDistributions();
         this.searchDbcScalingStatValues();
-      }
-      await this.initMysqlConfig();
+      });
+      this.initMysqlConfig();
     }
   },
   created() {
