@@ -1,5 +1,4 @@
 import { SEARCH_SPELLS, COUNT_SPELLS, PAGINATE_SPELLS, FIND_SPELL } from "./MUTATION_TYPES";
-// const ipcRenderer = window.require("electron").ipcRenderer;
 
 export default {
   namespaced: true,
@@ -8,16 +7,17 @@ export default {
       page: 1,
       total: 0,
       spells: [],
-      spell: {},
+      spell: {}
     };
   },
   actions: {
     search({ commit, rootState }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         let spells = [];
         if (rootState.dbc.spells == {} || rootState.dbc.spells.records == undefined) {
           commit(SEARCH_SPELLS, spells);
         } else {
+          console.log(rootState);
           for (let spell of rootState.dbc.spells.records) {
             if (payload.id !== undefined || payload.name !== undefined) {
               if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
@@ -39,7 +39,7 @@ export default {
       });
     },
     count({ commit, rootState }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         let spells = [];
         if (rootState.dbc.spells != {}) {
           for (let spell of rootState.dbc.spells.records) {
@@ -62,7 +62,7 @@ export default {
           commit(FIND_SPELL, spell);
         }
       }
-    },
+    }
   },
   mutations: {
     [SEARCH_SPELLS](state, spells) {
@@ -76,6 +76,6 @@ export default {
     },
     [FIND_SPELL](state, spell) {
       state.spell = spell;
-    },
-  },
+    }
+  }
 };

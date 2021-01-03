@@ -1,34 +1,42 @@
 import { ipcMain } from "electron";
-
-import { SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, SEARCH_DBC_SCALING_STAT_VALUES } from "../constants";
+import {
+  INIT_DBC_CONFIG,
+  SEARCH_DBC_FACTIONS,
+  SEARCH_DBC_FACTION_TEMPLATES,
+  SEARCH_DBC_ITEM_DISPLAY_INFOS,
+  SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
+  SEARCH_DBC_SCALING_STAT_VALUES,
+  SEARCH_DBC_SPELLS,
+  SEARCH_DBC_SPELL_DURATIONS
+} from "../constants";
 
 const DBC = require("warcrafty");
 
 let path;
 
-ipcMain.on("INIT_DBC_CONFIG", (event, payload) => {
+ipcMain.on(INIT_DBC_CONFIG, (event, payload) => {
   path = payload.path;
-  event.reply("INIT_DBC_CONFIG");
+  event.reply(INIT_DBC_CONFIG);
 });
 
-ipcMain.on("SEARCH_DBC_FACTIONS", event => {
+ipcMain.on(SEARCH_DBC_FACTIONS, event => {
   let dbc = DBC.read(`${path}/Faction.dbc`);
-  event.reply("SEARCH_DBC_FACTIONS_REPLY", dbc);
+  event.reply(SEARCH_DBC_FACTIONS, dbc);
 });
 
-ipcMain.on("SEARCH_DBC_FACTION_TEMPLATES", event => {
+ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, event => {
   let dbc = DBC.read(`${path}/FactionTemplate.dbc`);
-  event.reply("SEARCH_DBC_FACTION_TEMPLATES_REPLY", dbc);
+  event.reply(SEARCH_DBC_FACTION_TEMPLATES, dbc);
 });
 
-ipcMain.on("SEARCH_DBC_ITEM_DISPLAY_INFOS", event => {
+ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, event => {
   let dbc = DBC.read(`${path}/ItemDisplayInfo.dbc`);
-  event.reply("SEARCH_DBC_ITEM_DISPLAY_INFOS_REPLY", dbc);
+  event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS, dbc);
 });
 
-ipcMain.on("SEARCH_DBC_SPELLS", event => {
+ipcMain.on(SEARCH_DBC_SPELLS, event => {
   let dbc = DBC.read(`${path}/Spell.dbc`);
-  // 一次性传递所有技能，占用内存太大，会导致GC失败，分多次传递数据
+  // 一次性传递所有技能，占用内存太大，会导致GC失败，分多次传递数据, 已证明无效
   for (let i = 0; i < dbc.recordCount; i = i + 100) {
     let chunk = {
       signature: dbc.signature,
@@ -45,13 +53,13 @@ ipcMain.on("SEARCH_DBC_SPELLS", event => {
     } else {
       chunk.records = dbc.records.slice(i);
     }
-    event.reply("SEARCH_DBC_SPELLS_REPLY", chunk);
+    event.reply(SEARCH_DBC_SPELLS, chunk);
   }
 });
 
-ipcMain.on("SEARCH_DBC_SPELL_DURATIONS", event => {
+ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, event => {
   let dbc = DBC.read(`${path}/SpellDuration.dbc`);
-  event.reply("SEARCH_DBC_SPELL_DURATIONS_REPLY", dbc);
+  event.reply(SEARCH_DBC_SPELL_DURATIONS, dbc);
 });
 
 ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, event => {

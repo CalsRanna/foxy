@@ -58,7 +58,8 @@ export default {
       "storeConfigConfig",
       "storeDeveloperConfig",
       "setActive",
-      "initMysqlConnection"
+      "initMysqlConnection",
+      "initDbcConnection"
     ]),
     ...mapActions("setting", ["setSettingActive"]),
     navigate(index) {
@@ -92,6 +93,8 @@ export default {
       if (path) {
         this.storeDbcConfig({
           path: path
+        }).then(() => {
+          this.initDbcConnection(this.dbcConfig);
         });
       } else {
         this.setActive("setting");
@@ -120,11 +123,10 @@ export default {
       });
     },
     async init() {
-      this.initMysqlConfig();
-      this.initDbcConfig();
-      this.initConfigConfig();
       this.initDeveloperConfig();
-      if (this.dbcConfig.path !== "") {
+      this.initConfigConfig();
+      await this.initDbcConfig();
+      if (this.dbcConfig.path != "") {
         this.searchDbcFactions();
         this.searchDbcFactionTemplates();
         this.searchDbcItemDisplayInfos();
@@ -133,6 +135,7 @@ export default {
         this.searchDbcScalingStatDistributions();
         this.searchDbcScalingStatValues();
       }
+      await this.initMysqlConfig();
     }
   },
   created() {
