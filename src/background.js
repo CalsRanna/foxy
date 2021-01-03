@@ -24,11 +24,11 @@ function createWindow() {
     height: 600,
     webPreferences: {
       // nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      nodeIntegration: true,
+      nodeIntegration: true
     },
     show: false,
     title: "Foxy",
-    frame: true,
+    frame: true
     // maximizable: false,
     // fullscreen: true,
   });
@@ -66,7 +66,7 @@ app.on("ready", async () => {
 
 if (isDevelopment) {
   if (process.platform === "win32") {
-    process.on("message", (data) => {
+    process.on("message", data => {
       if (data === "graceful-exit") {
         app.quit();
       }
@@ -78,47 +78,38 @@ if (isDevelopment) {
   }
 }
 
-process.on("uncaughtException", (error) => {
+process.on("uncaughtException", error => {
   if (error.code == "MSG_SQL") {
     win.webContents.send("GLOBAL_NOTICE", {
       category: "message",
-      message: error.message,
+      message: error.message
     });
   } else {
     win.webContents.send("GLOBAL_NOTICE", {
       category: "alert",
       type: "error",
       title: `${error.code}`,
-      message: `${error.message}<br>${error.stack}`,
+      message: `${error.message}<br>${error.stack}`
     });
   }
 });
 
-process.on("unhandledRejection", (error) => {
-  win.webContents.send("GLOBAL_NOTICE", {
-    category: "alert",
-    type: "error",
-    title: `${error.code}`,
-    message: `${error.message}<br>${error.stack}`,
-  });
-});
-
-ipcMain.on("SELECT_DBC_PATH", (event) => {
-  dialog.showOpenDialog({ properties: ["openDirectory"] }).then((payload) => {
+ipcMain.on("SELECT_DBC_PATH", event => {
+  dialog.showOpenDialog({ properties: ["openDirectory"] }).then(payload => {
     event.reply("SELECT_DBC_PATH_REPLY", payload.filePaths[0]);
   });
 });
 
-ipcMain.on("SELECT_CONFIG_PATH", (event) => {
-  dialog.showOpenDialog({ properties: ["openDirectory"] }).then((payload) => {
+ipcMain.on("SELECT_CONFIG_PATH", event => {
+  dialog.showOpenDialog({ properties: ["openDirectory"] }).then(payload => {
     event.reply("SELECT_CONFIG_PATH_REPLY", payload.filePaths[0]);
   });
 });
 
-ipcMain.on("LOAD_ICONS", (event) => {
+ipcMain.on("LOAD_ICONS", event => {
   event.reply("LOAD_ICONS_REPLY", 123);
 });
 
-ipcMain.on("LOAD_SPELLS", (event) => {
+ipcMain.on("LOAD_SPELLS", event => {
   event.returnValue = "加载技能中……";
 });
