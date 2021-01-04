@@ -1273,7 +1273,7 @@ export default {
     },
     addItemTemplateLocale() {
       this.itemTemplateLocales.push({
-        ID: this.itemTemplate.ID,
+        ID: this.itemTemplate.entry,
         VerifiedBuild: 0
       });
     },
