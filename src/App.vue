@@ -13,6 +13,7 @@
         <el-menu-item index="game-object"> 游戏对象 <small>GAME OBJECT</small> </el-menu-item>
         <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
         <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
+        <el-menu-item index="gossip-menu"> 对话 <small>GOSSIP MENU</small> </el-menu-item>
         <el-menu-item index="smart-script"> 内建脚本 <small>SMART SCRIPT</small> </el-menu-item>
         <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
         <el-menu-item index="setting"> 设置 <small>SETTING</small> </el-menu-item>
