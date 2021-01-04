@@ -8,6 +8,7 @@ export default {
     return {
       page: 1,
       total: 0,
+      size: 50,
       gossipMenus: []
     };
   },

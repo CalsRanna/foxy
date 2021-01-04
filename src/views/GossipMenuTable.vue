@@ -1,0 +1,201 @@
+<template>
+  <div>
+    <el-card>
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>对话管理</el-breadcrumb-item>
+      </el-breadcrumb>
+      <h3 style="margin: 16px 0 0 0">对话列表</h3>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-form @submit.native.prevent="handleSearch">
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-input-number
+              v-model="MenuID"
+              controls-position="right"
+              placeholder="MenuID"
+              style="width: 100%"
+            ></el-input-number>
+          </el-col>
+          <el-col :span="6">
+            <el-input v-model="Text" placeholder="文本"></el-input>
+          </el-col>
+          <el-col :span="6">
+            <el-button type="primary" native-type="submit" :loading="loading" @click="handleSearch">查询</el-button>
+            <el-button @click="reset">重置</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-button type="primary" @click="create">新增</el-button>
+      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
+    </el-card>
+    <el-card v-loading="loading" style="margin-top: 16px">
+      <el-pagination
+        layout="prev, pager, next"
+        :current-page="page"
+        :total="total"
+        :page-size="size"
+        hide-on-single-page
+        @current-change="handlePaginate"
+        style="margin-bottom: 16px"
+      ></el-pagination>
+      <el-table
+        ref="creatureTable"
+        :data="gossipMenus"
+        highlight-current-row
+        @current-change="select"
+        @row-dblclick="show"
+      >
+        <el-table-column prop="MenuID" label="对话ID" width="160" sortable></el-table-column>
+        <el-table-column prop="TextID" label="文本ID" width="160" sortable></el-table-column>
+        <el-table-column label="文本" sortable>
+          <template slot-scope="scope">
+            <span v-if="scope.row.Text0_0 != '' && scope.row.Text0_0 != null">{{ scope.row.Text0_0 }}</span>
+            <span v-else-if="scope.row.Text0_1 != '' && scope.row.Text0_1 != null">{{ scope.row.Text0_1 }}</span>
+            <span v-else-if="scope.row.text0_0 != '' && scope.row.text0_0 != null">{{ scope.row.text0_0 }}</span>
+            <span v-else>{{ scope.row.text0_1 }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        layout="prev, pager, next"
+        :current-page="page"
+        :total="total"
+        :page-size="size"
+        hide-on-single-page
+        @current-change="handlePaginate"
+        style="margin-top: 16px"
+      ></el-pagination>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+
+export default {
+  data() {
+    return {
+      loading: false,
+      MenuID: undefined,
+      Text: "",
+      currentRow: undefined
+    };
+  },
+  computed: {
+    ...mapState("gossipMenu", ["page", "total", "size", "gossipMenus"]),
+    payload() {
+      return {
+        MenuID: this.MenuID,
+        Text: this.Text,
+        page: this.page
+      };
+    },
+    disabled() {
+      return this.currentRow === undefined || this.currentRow === null ? true : false;
+    }
+  },
+  methods: {
+    ...mapActions("gossipMenu", {
+      searchGossipMenus: "searchGossipMenus",
+      countGossipMenus: "countGossipMenus",
+      paginateGossipMenus: "paginateGossipMenus",
+      createGossipMenu: "createGossipMenu",
+      destroyGossipMenu: "destroyGossipMenu",
+      copyGossipMenu: "copyGossipMenu"
+    }),
+    async handleSearch() {
+      this.loading = true;
+      await this.paginateGossipMenus({ page: 1 }); //每次搜索时使分页器设为第一页
+      await Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
+      this.loading = false;
+    },
+    reset() {
+      this.MenuID = undefined;
+      this.Text = undefined;
+    },
+    create() {
+      this.$router.push("/gossip-menu/create");
+    },
+    handleCopy() {
+      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "info",
+        dangerouslyUseHTMLString: true,
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            this.copyGossipMenu({ MenuID: this.currentRow.MenuID })
+              .then(() => {
+                Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
+              })
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              });
+          } else {
+            done();
+          }
+        }
+      });
+    },
+    handleDestroy() {
+      this.$confirm(
+        "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "error",
+          dangerouslyUseHTMLString: true,
+          beforeClose: (action, instance, done) => {
+            if (action === "confirm") {
+              instance.confirmButtonLoading = true;
+
+              this.destroyGossipMenu({ MenuID: this.currentRow.MenuID })
+                .then(() => {
+                  Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
+                })
+                .then(() => {
+                  instance.confirmButtonLoading = false;
+                  done();
+                });
+            } else {
+              done();
+            }
+          }
+        }
+      );
+    },
+    select(currentRow) {
+      this.currentRow = currentRow;
+    },
+    async handlePaginate(page) {
+      this.loading = true;
+      await this.paginateGossipMenus({ page: page });
+      await this.searchGossipMenus(this.payload);
+      this.loading = false;
+    },
+    show(row) {
+      this.$router.push(`/gossip-menu/${row.entry}`);
+    },
+    async init() {
+      this.loading = true;
+      await Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
+      this.loading = false;
+    }
+  },
+  created() {
+    if (this.gossipMenus.length === 0) {
+      this.init();
+    }
+  }
+};
+</script>
+
+<style></style>

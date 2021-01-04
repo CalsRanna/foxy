@@ -10,6 +10,8 @@ import ItemTable from "@/views/ItemTable";
 import ItemTemplateDetail from "@/views/ItemTemplateDetail";
 import QuestTable from "@/views/QuestTable";
 import QuestDetail from "@/views/QuestDetail";
+import GossipMenuTable from "@/views/GossipMenuTable";
+import GossipMenuDetail from "@/views/GossipMenuDetail";
 import SpellTable from "@/views/SpellTable";
 import SpellDetail from "@/views/SpellDetail";
 import SmartScriptTable from "@/views/SmartScriptTable";
@@ -37,6 +39,9 @@ const routes = [
   { path: "/quest", component: QuestTable },
   { path: "/quest/create", component: QuestDetail },
   { path: "/quest/:id", component: QuestDetail },
+  { path: "/gossip-menu", component: GossipMenuTable },
+  { path: "/gossip-menu/create", component: GossipMenuDetail },
+  { path: "/gossip-menu/:id", component: GossipMenuDetail },
   { path: "/spell", component: SpellTable },
   { path: "/spell/create", component: SpellDetail },
   { path: "/spell/:id", component: SpellDetail },
@@ -51,13 +56,13 @@ const routes = [
       { path: "mysql", component: Mysql },
       { path: "dbc", component: Dbc },
       { path: "config", component: Config },
-      { path: "developer", component: Developer },
-    ],
-  },
+      { path: "developer", component: Developer }
+    ]
+  }
 ];
 
 const router = new VueRouter({
-  routes,
+  routes
 });
 
 export default router;

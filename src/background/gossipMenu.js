@@ -12,11 +12,17 @@ ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
     .leftJoin("npc_text_locale as ntl", function() {
       this.on("gm.TextID", "=", "ntl.ID").andOn("ntl.locale", "=", knex().raw("?", "zhCN"));
     });
-  if (payload.menuId) {
-    queryBuilder = queryBuilder.where("gm.menuId", "like", `%${payload.menuId}%`);
+  if (payload.MenuID) {
+    queryBuilder = queryBuilder.where("gm.MenuID", "like", `%${payload.MenuID}%`);
   }
-  if (payload.text) {
-    queryBuilder = queryBuilder.where("gm.text", "like", `%${payload.text}%`);
+  if (payload.Text) {
+    queryBuilder = queryBuilder.where(builder =>
+      builder
+        .where("nt.text0_0", "like", `%${payload.Text}%`)
+        .orWhere("ntl.Text0_0", "like", `%${payload.Text}%`)
+        .orwhere("nt.text0_1", "like", `%${payload.Text}%`)
+        .orWhere("ntl.Text0_1", "like", `%${payload.Text}%`)
+    );
   }
   queryBuilder = queryBuilder.limit(50).offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
 
@@ -34,11 +40,17 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
     .leftJoin("npc_text_locale as ntl", function() {
       this.on("gm.TextID", "=", "ntl.ID").andOn("ntl.locale", "=", knex().raw("?", "zhCN"));
     });
-  if (payload.menuId) {
-    queryBuilder = queryBuilder.where("gm.menuId", "like", `%${payload.menuId}%`);
+  if (payload.MenuID) {
+    queryBuilder = queryBuilder.where("gm.MenuID", "like", `%${payload.MenuID}%`);
   }
-  if (payload.text) {
-    queryBuilder = queryBuilder.where("gm.text", "like", `%${payload.text}%`);
+  if (payload.Text) {
+    queryBuilder = queryBuilder.where(builder =>
+      builder
+        .where("nt.text0_0", "like", `%${payload.Text}%`)
+        .orWhere("ntl.Text0_0", "like", `%${payload.Text}%`)
+        .orwhere("nt.text0_1", "like", `%${payload.Text}%`)
+        .orWhere("ntl.Text0_1", "like", `%${payload.Text}%`)
+    );
   }
 
   queryBuilder.then(rows => {

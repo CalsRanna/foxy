@@ -45,6 +45,14 @@
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
+              <p class="summary-title">对话<span>Gossip Menu</span></p>
+              <p class="summary-content">
+                {{ parseFloat(this.quantityOfGossipMenu).toLocaleString() }}
+              </p>
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="hover">
               <p class="summary-title">内建脚本<span>Smart Script</span></p>
               <p class="summary-content">
                 {{ parseFloat(this.quantityOfSmartScript).toLocaleString() }}
@@ -117,7 +125,7 @@ export default {
   data() {
     return {
       loading: false,
-      labels: ["生物", "游戏对象", "物品", "任务", "内建脚本", "技能"]
+      labels: ["生物", "游戏对象", "物品", "任务", "对话", "内建脚本", "技能"]
     };
   },
   computed: {
@@ -125,6 +133,7 @@ export default {
     ...mapState("gameObject", { quantityOfGameObjectTemplate: "total" }),
     ...mapState("item", { quantityOfItemTemplate: "total" }),
     ...mapState("quest", { quantityOfQuestTemplate: "total" }),
+    ...mapState("gossipMenu", { quantityOfGossipMenu: "total" }),
     ...mapState("smartScript", { quantityOfSmartScript: "total" }),
     ...mapState("spell", { quantityOfSpell: "total" }),
     data() {
@@ -133,6 +142,7 @@ export default {
         this.quantityOfGameObjectTemplate,
         this.quantityOfItemTemplate,
         this.quantityOfQuestTemplate,
+        this.quantityOfGossipMenu,
         this.quantityOfSmartScript,
         this.quantityOfSpell
       ];
@@ -143,6 +153,7 @@ export default {
     ...mapActions("gameObject", ["countGameObjectTemplates"]),
     ...mapActions("item", ["countItemTemplates"]),
     ...mapActions("quest", ["countQuestTemplates"]),
+    ...mapActions("gossipMenu", ["countGossipMenus"]),
     ...mapActions("smartScript", ["countSmartScripts"]),
     ...mapActions("spell", { countSpells: "count" }),
     openBrowser(url) {
@@ -156,6 +167,7 @@ export default {
         this.countGameObjectTemplates({}),
         this.countItemTemplates({}),
         this.countQuestTemplates({}),
+        this.countGossipMenus({}),
         this.countSmartScripts({}),
         this.countSpells({})
       ]);
