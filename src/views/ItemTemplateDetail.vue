@@ -1277,7 +1277,7 @@ export default {
         VerifiedBuild: 0
       });
     },
-    deleteItemTemplateLocale() {
+    deleteItemTemplateLocale(index) {
       this.itemTemplateLocales.splice(index, 1);
     },
     store(module) {
