@@ -16,7 +16,7 @@
   "main": "background.js",
   "dependencies": {
     "chart.js": "^2.9.4",
-    "core-js": "^3.8.1",
+    "core-js": "^3.8.2",
     "element-ui": "^2.14.1",
     "knex": "^0.21.15",
     "mysql": "^2.18.1",
