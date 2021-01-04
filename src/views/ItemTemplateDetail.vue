@@ -1271,8 +1271,15 @@ export default {
     closeDialog() {
       this.localeDialogVisible = false;
     },
-    addItemTemplateLocale() {},
-    deleteItemTemplateLocale() {},
+    addItemTemplateLocale() {
+      this.itemTemplateLocales.push({
+        entry: this.itemTemplate.entry,
+        VerifiedBuild: 0
+      });
+    },
+    deleteItemTemplateLocale() {
+      this.itemTemplateLocales.splice(index, 1);
+    },
     store(module) {
       this.loading = true;
       switch (module) {
