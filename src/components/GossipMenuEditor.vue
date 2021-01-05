@@ -3,7 +3,7 @@
     <el-input v-model="gossipMenuId" :placeholder="placeholder" @input="input" @change="blur">
       <i class="el-icon-s-operation clickable-icon" slot="suffix" style="margin-right: 8px" @click="showDialog"></i>
     </el-input>
-    <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" fullscreen @opened="init">
+    <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" @opened="init">
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">对话选项编辑器</span>
         <el-button size="mini" @click="addGossipMenu">新增</el-button>
@@ -38,7 +38,13 @@
         @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="gossipMenus" highlight-current-row @current-change="select" @row-dblclick="show">
+      <el-table
+        :data="gossipMenus"
+        highlight-current-row
+        @current-change="select"
+        @row-dblclick="handleDoubleClick"
+        class="gossip-menu-editor"
+      >
         <el-table-column prop="MenuID" label="编号" width="80px"> </el-table-column>
         <el-table-column label="文本">
           <template slot-scope="scope">
@@ -67,7 +73,7 @@
 
 <style scoped>
 .gossip-menu-editor {
-  max-height: 50vh;
+  max-height: 40vh;
   overflow: auto;
 }
 .gossip-menu-editor tbody tr {
@@ -139,14 +145,15 @@ export default {
     select(currentRow) {
       this.currentRow = currentRow;
     },
-    show(row) {
-      this.$router.push(`/creature/${row.entry}`);
+    handleDoubleClick(row) {
+      this.$emit("input", row.MenuID);
+      this.visible = false;
     },
     closeDialog() {
       this.visible = false;
     },
     store() {
-      this.$emit("input", this.gossipMenuId);
+      this.$emit("input", this.currentRow.MenuID);
       this.visible = false;
     },
     async init() {

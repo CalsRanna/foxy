@@ -657,7 +657,7 @@
             </el-card>
             <el-card style="margin-top: 16px">
               <el-button type="primary" @click="() => store('quest_template')">保存</el-button>
-              <el-button @click="cancle">返回</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -772,7 +772,7 @@
             </el-card>
             <el-card style="margin-top: 16px">
               <el-button type="primary" @click="() => store('quest_template_addon')">保存</el-button>
-              <el-button @click="cancle">返回</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -839,7 +839,7 @@
             </el-card>
             <el-card style="margin-top: 16px">
               <el-button type="primary" @click="() => store('quest_offer_reward')">保存</el-button>
-              <el-button @click="cancle">返回</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -876,7 +876,7 @@
             </el-card>
             <el-card style="margin-top: 16px">
               <el-button type="primary" @click="() => store('quest_request_items')">保存</el-button>
-              <el-button @click="cancle">返回</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -945,7 +945,7 @@ export default {
     return {
       isCreating: true,
       loading: false,
-      min: 0,
+      min: 0
     };
   },
   computed: {
@@ -957,7 +957,7 @@ export default {
       "creatureQuestStarters",
       "creatureQuestEnders",
       "gameObjectQuestStarters",
-      "gameObjectQuestEnders",
+      "gameObjectQuestEnders"
     ]),
     localeName() {
       return this.questTemplate.LogTitle;
@@ -967,7 +967,7 @@ export default {
     },
     disabled() {
       return !this.isCreating;
-    },
+    }
   },
   methods: {
     ...mapActions("quest", ["storeQuestTemplate", "findQuestTemplate", "updateQuestTemplate", "createQuestTemplate"]),
@@ -986,7 +986,7 @@ export default {
           break;
       }
     },
-    cancle() {
+    cancel() {
       this.$router.go(-1);
     },
     async init() {
@@ -1000,10 +1000,10 @@ export default {
         await Promise.all([this.findQuestTemplate({ ID: id })]);
       }
       this.loading = false;
-    },
+    }
   },
   created() {
     this.init();
-  },
+  }
 };
 </script>

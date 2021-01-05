@@ -1,27 +1,42 @@
 <template>
   <el-container>
-    <el-aside width="200px" class="left-menu">
-      <div class="logo">
-        <h3 style="margin: 0; padding: 0">FOXY</h3>
-        <p style="font-size: 12px; color: #c0c4cc">
-          魔兽世界编辑器
-        </p>
+    <template v-if="!initializing">
+      <el-aside width="200px" class="left-menu">
+        <div class="logo">
+          <h3 style="margin: 0; padding: 0">FOXY</h3>
+          <p style="font-size: 12px; color: #c0c4cc">
+            魔兽世界编辑器
+          </p>
+        </div>
+        <el-menu :default-active="active" @select="navigate" style="border-right: none">
+          <el-menu-item index="dashboard"> 首页 <small>DASHBOARD</small> </el-menu-item>
+          <el-menu-item index="creature"> 生物 <small>CREATURE</small> </el-menu-item>
+          <el-menu-item index="game-object"> 游戏对象 <small>GAME OBJECT</small> </el-menu-item>
+          <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
+          <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
+          <el-menu-item index="gossip-menu"> 对话 <small>GOSSIP MENU</small> </el-menu-item>
+          <el-menu-item index="smart-script"> 内建脚本 <small>SMART SCRIPT</small> </el-menu-item>
+          <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
+          <el-menu-item index="setting"> 设置 <small>SETTING</small> </el-menu-item>
+        </el-menu>
+      </el-aside>
+      <el-main style="margin-left: 200px">
+        <router-view></router-view>
+      </el-main>
+    </template>
+    <el-dialog
+      :visible.sync="initializing"
+      width="30%"
+      top="40vh"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :modal="false"
+    >
+      <div style="text-align:center; margin-bottom: 24px; font-size: 20px;">
+        <i class="el-icon-loading" v-show="initializingText.indexOf(['加载完成', '加载失败']) == -1"></i>
+        {{ initializingText }}
       </div>
-      <el-menu :default-active="active" @select="navigate" style="border-right: none">
-        <el-menu-item index="dashboard"> 首页 <small>DASHBOARD</small> </el-menu-item>
-        <el-menu-item index="creature"> 生物 <small>CREATURE</small> </el-menu-item>
-        <el-menu-item index="game-object"> 游戏对象 <small>GAME OBJECT</small> </el-menu-item>
-        <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
-        <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
-        <el-menu-item index="gossip-menu"> 对话 <small>GOSSIP MENU</small> </el-menu-item>
-        <el-menu-item index="smart-script"> 内建脚本 <small>SMART SCRIPT</small> </el-menu-item>
-        <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
-        <el-menu-item index="setting"> 设置 <small>SETTING</small> </el-menu-item>
-      </el-menu>
-    </el-aside>
-    <el-main style="margin-left: 200px">
-      <router-view></router-view>
-    </el-main>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -31,6 +46,12 @@ import { mapState, mapActions } from "vuex";
 import { GLOBAL_NOTICE } from "./constants";
 
 export default {
+  data() {
+    return {
+      initializing: true,
+      initializingText: "正在初始化"
+    };
+  },
   computed: {
     ...mapState("global", ["mysqlConfig", "dbcConfig", "configConfig", "developerConfig", "active"]),
     ...mapState("dbc", [
@@ -68,28 +89,32 @@ export default {
       this.$router.push(`/${index}`).catch(error => error);
     },
     initMysqlConfig() {
-      let host = localStorage.getItem("host");
-      let user = localStorage.getItem("user");
-      let password = localStorage.getItem("password");
-      let database = localStorage.getItem("database");
+      return new Promise((resolve, reject) => {
+        let host = localStorage.getItem("host");
+        let user = localStorage.getItem("user");
+        let password = localStorage.getItem("password");
+        let database = localStorage.getItem("database");
 
-      if (host && user && password && database) {
-        this.storeMysqlConfig({
-          host: host,
-          user: user,
-          password: password,
-          database: database
-        }).then(() => {
-          this.initMysqlConnection(this.mysqlConfig);
-        });
-      } else {
-        this.setActive("setting");
-        this.setSettingActive("mysql");
-        this.$router.push("/setting/mysql").catch(error => error);
-      }
+        if (host && user && password && database) {
+          this.storeMysqlConfig({
+            host: host,
+            user: user,
+            password: password,
+            database: database
+          }).then(() => {
+            this.initMysqlConnection(this.mysqlConfig);
+            resolve();
+          });
+        } else {
+          this.setActive("setting");
+          this.setSettingActive("mysql");
+          this.$router.push("/setting/mysql").catch(error => error);
+          reject();
+        }
+      });
     },
     initDbcConfig() {
-      return new Promise(resolve => {
+      return new Promise((resolve, reject) => {
         let path = localStorage.getItem("dbcPath");
 
         if (path) {
@@ -104,46 +129,76 @@ export default {
           this.setActive("setting");
           this.setSettingActive("dbc");
           this.$router.push("/setting/dbc").catch(error => error);
+          reject();
         }
       });
     },
     initConfigConfig() {
-      let path = localStorage.getItem("configPath");
+      return new Promise((resolve, reject) => {
+        let path = localStorage.getItem("configPath");
 
-      if (path) {
-        this.storeConfigConfig({
-          path: path
-        });
-      } else {
-        this.setActive("setting");
-        this.setSettingActive("config");
-        this.$router.push("/setting/config").catch(error => error);
-      }
+        if (path) {
+          this.storeConfigConfig({
+            path: path
+          }).then(() => {
+            resolve();
+          });
+        } else {
+          this.setActive("setting");
+          this.setSettingActive("config");
+          this.$router.push("/setting/config").catch(error => error);
+          reject();
+        }
+      });
     },
     initDeveloperConfig() {
-      let debug = localStorage.getItem("debug");
+      return new Promise(resolve => {
+        let debug = localStorage.getItem("debug");
 
-      this.storeDeveloperConfig({
-        debug: debug === "true" ? true : false
+        this.storeDeveloperConfig({
+          debug: debug === "true" ? true : false
+        }).then(() => {
+          resolve();
+        });
       });
     },
     async init() {
-      this.initDeveloperConfig();
-      this.initConfigConfig();
-      this.initDbcConfig().then(() => {
-        this.searchDbcFactions();
-        this.searchDbcFactionTemplates();
-        this.searchDbcItemDisplayInfos();
-        this.searchDbcSpells();
-        this.searchDbcSpellDurations();
-        this.searchDbcScalingStatDistributions();
-        this.searchDbcScalingStatValues();
-      });
-      this.initMysqlConfig();
+      try {
+        this.initializingText = "加载开发者配置";
+        await this.initDeveloperConfig();
+        this.initializingText = "加载服务端配置";
+        await this.initConfigConfig();
+        this.initializingText = "加载DBC配置";
+        await this.initDbcConfig();
+        this.initializingText = "加载Faction";
+        await this.searchDbcFactions();
+        this.initializingText = "加载Faction Template";
+        await this.searchDbcFactionTemplates();
+        this.initializingText = "加载Item Display Info";
+        await this.searchDbcItemDisplayInfos();
+        this.initializingText = "加载Spell";
+        await this.searchDbcSpells();
+        this.initializingText = "加载Spell Duration";
+        await this.searchDbcSpellDurations();
+        this.initializingText = "加载Scaling Stat Distribution";
+        await this.searchDbcScalingStatDistributions();
+        this.initializingText = "加载Stat Value";
+        await this.searchDbcScalingStatValues();
+        this.initializingText = "加载数据库配置";
+        await this.initMysqlConfig();
+        this.initializingText = "加载完成";
+        setTimeout(() => {
+          this.initializing = false;
+        }, 500);
+      } catch (error) {
+        this.initializingText = "加载失败";
+        setTimeout(() => {
+          this.initializing = false;
+        }, 500);
+      }
     }
   },
-  created() {
-    console.log("Initing……");
+  mounted() {
     this.init();
 
     ipcRenderer.on(GLOBAL_NOTICE, (event, response) => {

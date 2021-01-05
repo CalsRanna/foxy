@@ -14,10 +14,9 @@ export default {
     search({ commit, rootState }, payload) {
       return new Promise(resolve => {
         let spells = [];
-        if (rootState.dbc.spells == {} || rootState.dbc.spells.records == undefined) {
+        if (rootState.dbc.spells == {}) {
           commit(SEARCH_SPELLS, spells);
         } else {
-          console.log(rootState);
           for (let spell of rootState.dbc.spells.records) {
             if (payload.id !== undefined || payload.name !== undefined) {
               if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {

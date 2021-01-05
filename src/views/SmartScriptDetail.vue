@@ -184,7 +184,7 @@
             </el-card>
             <el-card style="margin-top: 16px">
               <el-button type="primary" @click="() => store('smart_script')">保存</el-button>
-              <el-button @click="cancle">返回</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -201,7 +201,7 @@ export default {
     return {
       isCreating: true,
       loading: false,
-      credential: {},
+      credential: {}
     };
   },
   computed: {
@@ -211,7 +211,7 @@ export default {
     },
     localeDescription() {
       return null;
-    },
+    }
   },
   methods: {
     ...mapActions("smartScript", ["storeSmartScript", "findSmartScript", "updateSmartScript", "createSmartScript"]),
@@ -224,7 +224,7 @@ export default {
           } else {
             this.updateSmartScript({
               credential: this.credential,
-              smartScript: this.smartScript,
+              smartScript: this.smartScript
             });
           }
           this.loading = false;
@@ -233,7 +233,7 @@ export default {
           break;
       }
     },
-    cancle() {
+    cancel() {
       this.$router.go(-1);
     },
     async init() {
@@ -248,10 +248,10 @@ export default {
         await Promise.all([this.findSmartScript(this.credential)]);
       }
       this.loading = false;
-    },
+    }
   },
   created() {
     this.init();
-  },
+  }
 };
 </script>
