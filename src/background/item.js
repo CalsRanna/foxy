@@ -59,6 +59,10 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_ITEM_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -89,6 +93,10 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(COUNT_ITEM_TEMPLATES, rows[0].total);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -105,6 +113,10 @@ ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
       message: "新建成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -116,6 +128,10 @@ ipcMain.on(FIND_ITEM_TEMPLATE, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(FIND_ITEM_TEMPLATE, rows.length > 0 ? rows[0] : {});
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -132,6 +148,10 @@ ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
       title: "成功",
       message: "修改成功。",
       type: "success"
+    });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
     });
   });
 });
@@ -150,6 +170,10 @@ ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
       message: "删除成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -163,6 +187,10 @@ ipcMain.on(CREATE_ITEM_TEMPLATE, (event, payload) => {
   queryBuilder.then(rows => {
     event.reply(CREATE_ITEM_TEMPLATE, {
       entry: rows[0].entry + 1
+    });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
     });
   });
 });
@@ -199,6 +227,10 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
         title: "成功",
         message: `复制成功，新的游戏对象模板 entry 为 ${entry + 1}。`
       });
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString()
+      });
     });
   });
 });
@@ -211,6 +243,10 @@ ipcMain.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_ITEM_TEMPLATE_LOCALES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -232,6 +268,10 @@ ipcMain.on(STORE_ITEM_TEMPLATE_LOCALES, (event, payload) => {
         title: "成功",
         message: `保存成功。`
       });
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString()
+      });
     });
   });
 });
@@ -244,6 +284,10 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -259,6 +303,10 @@ ipcMain.on(SEARCH_ITEM_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_ITEM_LOOT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -274,6 +322,10 @@ ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_DISENCHANT_LOOT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -289,6 +341,10 @@ ipcMain.on(SEARCH_PROSPECTING_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_PROSPECTING_LOOT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -304,5 +360,9 @@ ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_MILLING_LOOT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });

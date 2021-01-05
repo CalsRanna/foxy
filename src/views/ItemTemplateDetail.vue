@@ -934,12 +934,15 @@
           </el-card>
           <el-card style="margin-top: 16px">
             <el-button type="primary" @click="() => store('item_template')">保存</el-button>
-            <el-button @click="cancle">返回</el-button>
+            <el-button @click="cancel">返回</el-button>
           </el-card>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="附魔模版" name="item_enchantment_template"
-        :disabled="!(itemTemplate.RandomProperty != 0 || itemTemplate.RandomSuffix != 0)">
+      <el-tab-pane
+        label="附魔模版"
+        name="item_enchantment_template"
+        :disabled="!(itemTemplate.RandomProperty != 0 || itemTemplate.RandomSuffix != 0)"
+      >
         <el-card style="margin-top: 16px">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -991,8 +994,7 @@
           </el-table>
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="分解掉落" name="disenchant_loot_template"
-        :disabled="itemTemplate.DisenchantID == 0">
+      <el-tab-pane label="分解掉落" name="disenchant_loot_template" :disabled="itemTemplate.DisenchantID == 0">
         <el-card style="margin-top: 16px">
           <el-button type="primary">新增</el-button>
           <el-button disabled>复制</el-button>
@@ -1164,7 +1166,7 @@ import {
   localeQualities,
   localeMaterials,
   localeStatTypes,
-  bondings,
+  bondings
 } from "../locales/item.js";
 
 import { mapState, mapActions } from "vuex";
@@ -1184,7 +1186,7 @@ export default {
       localeMaterials: localeMaterials,
       localeStatTypes: localeStatTypes,
       bondings: bondings,
-      localeDialogVisible: false,
+      localeDialogVisible: false
     };
   },
   computed: {
@@ -1195,7 +1197,7 @@ export default {
       "itemLootTemplates",
       "disenchantLootTemplates",
       "prospectingLootTemplates",
-      "millingLootTemplates",
+      "millingLootTemplates"
     ]),
     localeName() {
       if (this.itemTemplateLocales.length > 0) {
@@ -1222,7 +1224,7 @@ export default {
       } else {
         return this.itemTemplate.description;
       }
-    },
+    }
   },
   methods: {
     ...mapActions("item", [
@@ -1236,29 +1238,29 @@ export default {
       "searchItemLootTemplates",
       "searchDisenchantTemplates",
       "searchProspectingTemplates",
-      "searchMillingLootTemplates",
+      "searchMillingLootTemplates"
     ]),
     async switchover(tab) {
       this.loading = true;
-      switch(tab.name) {
-        case 'item_enchantment_template':
-          if ( this.itemTemplate.RandomProperty != 0) {
-            await this.searchItemEnchantmentTemplates({entry: this.itemTemplate.RandomProperty});
+      switch (tab.name) {
+        case "item_enchantment_template":
+          if (this.itemTemplate.RandomProperty != 0) {
+            await this.searchItemEnchantmentTemplates({ entry: this.itemTemplate.RandomProperty });
           } else if (this.itemTemplate.RandomSuffix != 0) {
-            await this.searchItemEnchantmentTemplates({entry: this.itemTemplate.RandomSuffix});
+            await this.searchItemEnchantmentTemplates({ entry: this.itemTemplate.RandomSuffix });
           }
           break;
-        case 'item_loot_template':
-          await this.searchItemLootTemplates({Entry: this.itemTemplate.entry});
+        case "item_loot_template":
+          await this.searchItemLootTemplates({ Entry: this.itemTemplate.entry });
           break;
-        case 'disenchant_loot_template':
-          await this.searchDisenchantTemplates({Entry: this.itemTemplate.DisenchantID});
+        case "disenchant_loot_template":
+          await this.searchDisenchantTemplates({ Entry: this.itemTemplate.DisenchantID });
           break;
-        case 'prospecting_loot_template':
-          await this.searchProspectingTemplates({Entry: this.itemTemplate.entry});
+        case "prospecting_loot_template":
+          await this.searchProspectingTemplates({ Entry: this.itemTemplate.entry });
           break;
-        case 'milling_loot_template':
-          await this.searchMillingLootTemplates({Entry: this.itemTemplate.entry});
+        case "milling_loot_template":
+          await this.searchMillingLootTemplates({ Entry: this.itemTemplate.entry });
           break;
         default:
           break;
@@ -1300,7 +1302,7 @@ export default {
       }
       this.loading = false;
     },
-    cancle() {
+    cancel() {
       this.$router.go(-1);
     },
     async init() {
@@ -1314,13 +1316,13 @@ export default {
         await Promise.all([this.findItemTemplate({ entry: id }), this.searchItemTemplateLocales({ id: id })]);
       }
       this.loading = false;
-    },
+    }
   },
   created() {
     this.init();
   },
   components: {
-    "spell-selector": SpellSelector,
-  },
+    "spell-selector": SpellSelector
+  }
 };
 </script>

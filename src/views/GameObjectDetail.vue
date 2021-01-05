@@ -229,7 +229,7 @@
             </el-card>
             <el-card style="margin-top: 16px">
               <el-button type="primary" @click="() => store('game_object_template')">保存</el-button>
-              <el-button @click="cancle">返回</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -282,7 +282,7 @@
             </el-card>
             <el-card style="margin-top: 16px">
               <el-button type="primary" @click="() => store('game_object_template_addon')">保存</el-button>
-              <el-button @click="cancle">返回</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-card>
           </el-form>
         </el-tab-pane>
@@ -518,7 +518,7 @@ export default {
           break;
       }
     },
-    cancle() {
+    cancel() {
       this.$router.go(-1);
     },
     async init() {

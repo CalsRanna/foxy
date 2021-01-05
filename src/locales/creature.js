@@ -916,26 +916,26 @@ const mechanicImmuneMasks = [
   {
     index: 0,
     flag: 1,
-    name: "CHARM",
-    comment: ""
+    name: "魅惑",
+    comment: "Charm"
   },
   {
     index: 1,
     flag: 2,
-    name: "DISORIENTED",
-    comment: ""
+    name: "迷惑",
+    comment: "Disoriented"
   },
   {
     index: 2,
     flag: 4,
-    name: "DISARM",
-    comment: ""
+    name: "缴械",
+    comment: "Disarm"
   },
   {
     index: 3,
     flag: 8,
-    name: "DISTRACT",
-    comment: ""
+    name: "吸引",
+    comment: "Distract"
   },
   {
     index: 4,
@@ -964,32 +964,32 @@ const mechanicImmuneMasks = [
   {
     index: 8,
     flag: 256,
-    name: "SILENCE",
-    comment: ""
+    name: "沉默",
+    comment: "SILENCE"
   },
   {
     index: 9,
     flag: 512,
-    name: "SLEEP",
-    comment: ""
+    name: "沉睡",
+    comment: "SLEEP"
   },
   {
     index: 10,
     flag: 1024,
-    name: "SNARE",
-    comment: ""
+    name: "诱捕",
+    comment: "SNARE"
   },
   {
     index: 11,
     flag: 2048,
-    name: "STUN",
-    comment: ""
+    name: "昏迷",
+    comment: "STUN"
   },
   {
     index: 12,
     flag: 4096,
-    name: "FREEZE",
-    comment: ""
+    name: "冻结",
+    comment: "FREEZE"
   },
   {
     index: 13,

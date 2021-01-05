@@ -18,7 +18,7 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   computed: {
-    ...mapState("global", { config: "configConfig" }),
+    ...mapState("global", { config: "configConfig" })
   },
   methods: {
     ...mapActions("global", ["storeConfigConfig"]),
@@ -35,17 +35,17 @@ export default {
         this.$notify({
           type: "error",
           title: "失败",
-          message: "dbc 文件路径不能为空。",
+          message: "dbc 文件路径不能为空。"
         });
       } else {
         this.storeConfigConfig(this.config);
         this.$notify({
           type: "success",
           title: "成功",
-          message: "修改设置成功。",
+          message: "修改设置成功，请按F5或者Ctrl+R重新加载程序。"
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>

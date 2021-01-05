@@ -61,6 +61,10 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -88,6 +92,10 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(COUNT_CREATURE_TEMPLATES, rows[0].total);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -105,6 +113,10 @@ ipcMain.on(STORE_CREATURE_TEMPLATE, (event, payload) => {
       message: "新建成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -117,6 +129,10 @@ ipcMain.on(FIND_CREATURE_TEMPLATE, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(FIND_CREATURE_TEMPLATE, rows.length > 0 ? rows[0] : {});
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -134,6 +150,10 @@ ipcMain.on(UPDATE_CREATURE_TEMPLATE, (event, payload) => {
       title: "成功",
       message: "修改成功。",
       type: "success"
+    });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
     });
   });
 });
@@ -153,6 +173,10 @@ ipcMain.on(DESTROY_CREATURE_TEMPLATE, (event, payload) => {
       message: "删除成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -166,6 +190,10 @@ ipcMain.on(CREATE_CREATURE_TEMPLATE, (event, payload) => {
   queryBuilder.then(rows => {
     event.reply(CREATE_CREATURE_TEMPLATE, {
       entry: rows[0].entry + 1
+    });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
     });
   });
 });
@@ -203,6 +231,10 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
         title: "成功",
         message: `复制成功，新的生物模板 entry 为 ${entry + 1}。`
       });
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString()
+      });
     });
   });
 });
@@ -216,6 +248,10 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_TEMPLATE_LOCALES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -238,6 +274,10 @@ ipcMain.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
         title: "成功",
         message: `保存成功。`
       });
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString()
+      });
     });
   });
 });
@@ -256,6 +296,10 @@ ipcMain.on(STORE_CREATURE_TEMPLATE_ADDON, (event, payload) => {
       message: "新建成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -268,6 +312,10 @@ ipcMain.on(FIND_CREATURE_TEMPLATE_ADDON, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(FIND_CREATURE_TEMPLATE_ADDON, rows.length > 0 ? rows[0] : {});
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -286,6 +334,10 @@ ipcMain.on(UPDATE_CREATURE_TEMPLATE_ADDON, (event, payload) => {
       message: "修改成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -303,6 +355,10 @@ ipcMain.on(STORE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
       message: "新建成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -315,6 +371,10 @@ ipcMain.on(FIND_CREATURE_ONKILL_REPUTATION, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(FIND_CREATURE_ONKILL_REPUTATION, rows.length > 0 ? rows[0] : {});
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -332,6 +392,10 @@ ipcMain.on(UPDATE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
       title: "成功",
       message: "修改成功。",
       type: "success"
+    });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
     });
   });
 });
@@ -368,6 +432,10 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_EQUIP_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -384,6 +452,10 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_NPC_VENDORS, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -396,6 +468,10 @@ ipcMain.on(SEARCH_NPC_TRAINERS, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_NPC_TRAINERS, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -412,6 +488,10 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ITEMS, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_QUEST_ITEMS, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -428,6 +508,10 @@ ipcMain.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_LOOT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -444,6 +528,10 @@ ipcMain.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -460,5 +548,9 @@ ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_SKINNING_LOOT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });

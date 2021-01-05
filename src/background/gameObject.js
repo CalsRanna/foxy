@@ -39,6 +39,10 @@ ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_GAME_OBJECT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -60,6 +64,10 @@ ipcMain.on(COUNT_GAME_OBJECT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(COUNT_GAME_OBJECT_TEMPLATES, rows[0].total);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -76,6 +84,10 @@ ipcMain.on(STORE_GAME_OBJECT_TEMPLATE, (event, payload) => {
       message: "新建成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -87,6 +99,10 @@ ipcMain.on(FIND_GAME_OBJECT_TEMPLATE, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(FIND_GAME_OBJECT_TEMPLATE, rows.length > 0 ? rows[0] : {});
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -103,6 +119,10 @@ ipcMain.on(UPDATE_GAME_OBJECT_TEMPLATE, (event, payload) => {
       title: "成功",
       message: "修改成功。",
       type: "success"
+    });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
     });
   });
 });
@@ -121,6 +141,10 @@ ipcMain.on(DESTROY_GAME_OBJECT_TEMPLATE, (event, payload) => {
       message: "删除成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -134,6 +158,10 @@ ipcMain.on(CREATE_GAME_OBJECT_TEMPLATE, (event, payload) => {
   queryBuilder.then(rows => {
     event.reply(CREATE_GAME_OBJECT_TEMPLATE, {
       entry: rows[0].entry + 1
+    });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
     });
   });
 });
@@ -170,6 +198,10 @@ ipcMain.on(COPY_GAME_OBJECT_TEMPLATE, (event, payload) => {
         title: "成功",
         message: `复制成功，新的游戏对象模板 entry 为 ${entry + 1}。`
       });
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString()
+      });
     });
   });
 });
@@ -182,6 +214,10 @@ ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_GAME_OBJECT_TEMPLATE_LOCALES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -203,6 +239,10 @@ ipcMain.on(STORE_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
         title: "成功",
         message: `保存成功。`
       });
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString()
+      });
     });
   });
 });
@@ -220,6 +260,10 @@ ipcMain.on(STORE_GAME_OBJECT_TEMPLATE_ADDON, (event, payload) => {
       message: "新建成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -231,6 +275,10 @@ ipcMain.on(FIND_GAME_OBJECT_TEMPLATE_ADDON, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(FIND_GAME_OBJECT_TEMPLATE_ADDON, rows.length > 0 ? rows[0] : {});
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -248,6 +296,10 @@ ipcMain.on(UPDATE_GAME_OBJECT_TEMPLATE_ADDON, (event, payload) => {
       message: "修改成功。",
       type: "success"
     });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -263,6 +315,10 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ITEMS, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_GAME_OBJECT_QUEST_ITEMS, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });
 
@@ -278,5 +334,9 @@ ipcMain.on(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
   });
 });

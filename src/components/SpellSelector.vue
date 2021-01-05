@@ -3,7 +3,7 @@
     <el-input v-model="id" :placeholder="placeholder" @input="input" @change="blur">
       <i class="el-icon-s-operation clickable-icon" slot="suffix" style="margin-right: 8px" @click="showDialog"></i>
     </el-input>
-    <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" fullscreen @opened="init">
+    <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" @opened="init">
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">技能选择器</span>
         <el-button size="mini" @click="addSpell">新增</el-button>
@@ -38,7 +38,13 @@
         @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="spells" highlight-current-row @current-change="select" @row-dblclick="show">
+      <el-table
+        :data="spells"
+        highlight-current-row
+        @current-change="select"
+        @row-dblclick="handleDoubleClick"
+        class="spell-editor"
+      >
         <el-table-column prop="id" label="ID" width="80px"> </el-table-column>
         <el-table-column prop="nameLangZhCN" label="名称"> </el-table-column>
         <el-table-column prop="descriptionLangZhCN" label="描述"> </el-table-column>
@@ -62,11 +68,11 @@
 </template>
 
 <style scoped>
-.gossip-menu-editor {
-  max-height: 50vh;
+.spell-editor {
+  max-height: 40vh;
   overflow: auto;
 }
-.gossip-menu-editor tbody tr {
+.spell-editor tbody tr {
   cursor: pointer;
 }
 </style>
@@ -83,17 +89,17 @@ export default {
       visible: false,
       size: 50,
       currentRow: undefined,
-      innerVisible: false,
+      innerVisible: false
     };
   },
   props: {
     value: [Number, String],
-    placeholder: String,
+    placeholder: String
   },
   watch: {
-    value: function (newValue) {
+    value: function(newValue) {
       this.id = newValue;
-    },
+    }
   },
   computed: {
     ...mapState("spell", ["spells", "page", "total"]),
@@ -101,9 +107,9 @@ export default {
       return {
         id: this.id != 0 ? this.id : "",
         name: this.nameLangZhCN,
-        page: this.page,
+        page: this.page
       };
-    },
+    }
   },
   methods: {
     ...mapActions("spell", ["search", "count"]),
@@ -121,9 +127,6 @@ export default {
     showDialog() {
       this.visible = true;
     },
-    async init() {
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
-    },
     addSpell() {},
     async handleSearch() {
       this.paginate(1); //每次搜索时使分页器设为第一页
@@ -140,19 +143,23 @@ export default {
     select(currentRow) {
       this.currentRow = currentRow;
     },
-    show(row) {
-      this.$router.push(`/creature/${row.entry}`);
+    handleDoubleClick(row) {
+      this.$emit("input", row.id);
+      this.visible = false;
     },
     closeDialog() {
       this.visible = false;
     },
     store() {
-      this.$emit("input", this.id);
+      this.$emit("input", this.currentRow.id);
       this.visible = false;
     },
+    async init() {
+      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+    }
   },
   created() {
     this.id = this.value;
-  },
+  }
 };
 </script>
