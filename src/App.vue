@@ -17,6 +17,9 @@
           <el-menu-item index="gossip-menu"> 对话 <small>GOSSIP MENU</small> </el-menu-item>
           <el-menu-item index="smart-script"> 内建脚本 <small>SMART SCRIPT</small> </el-menu-item>
           <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
+          <el-menu-item index="developer" v-show="developerConfig.debug">
+            开发者 <small>DEVELOPER</small>
+          </el-menu-item>
           <el-menu-item index="setting"> 设置 <small>SETTING</small> </el-menu-item>
         </el-menu>
       </el-aside>
