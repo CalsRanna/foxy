@@ -48,6 +48,7 @@ const routes = [
   { path: "/smart-script", component: SmartScriptTable },
   { path: "/smart-script/create", component: SmartScriptDetail },
   { path: "/smart-script/:id", component: SmartScriptDetail },
+  { path: "/developer", component: () => import('@/views/DeveloperTable') },
   {
     path: "/setting",
     component: Setting,
