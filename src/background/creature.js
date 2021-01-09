@@ -11,6 +11,7 @@ import {
   SEARCH_CREATURE_EQUIP_TEMPLATES,
   SEARCH_CREATURE_LOOT_TEMPLATES,
   SEARCH_CREATURE_QUEST_ITEMS,
+  SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES,
   SEARCH_CREATURE_TEMPLATES,
   SEARCH_CREATURE_TEMPLATE_LOCALES,
   SEARCH_NPC_TRAINERS,
@@ -508,6 +509,27 @@ ipcMain.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_LOOT_TEMPLATES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString()
+    });
+  });
+});
+
+ipcMain.on(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, (event, payload) => {
+  console.log("event");
+  let queryBuilder = knex()
+    .select(["rlt.*", "it.name", "itl.Name as localeName"])
+    .from("reference_loot_template as rlt")
+    .leftJoin("item_template as it", "rlt.Item", "it.entry")
+    .leftJoin("item_template_locale as itl", function() {
+      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+    })
+    .whereIn("rlt.Entry", payload.entries);
+
+  queryBuilder.then(rows => {
+    event.reply(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, rows);
+    console.log("event");
     event.reply(GLOBAL_NOTICE, {
       category: "message",
       message: queryBuilder.toString()
