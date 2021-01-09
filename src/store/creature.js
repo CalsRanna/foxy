@@ -12,6 +12,7 @@ import {
   SEARCH_CREATURE_EQUIP_TEMPLATES,
   SEARCH_CREATURE_LOOT_TEMPLATES,
   SEARCH_CREATURE_QUEST_ITEMS,
+  SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES,
   SEARCH_CREATURE_TEMPLATES,
   SEARCH_CREATURE_TEMPLATE_LOCALES,
   SEARCH_NPC_TRAINERS,
@@ -50,6 +51,7 @@ export default {
     npcTrainers: [],
     creatureQuestItems: [],
     creatureLootTemplates: [],
+    creatureReferenceLootTemplates: [],
     pickpocketingLootTemplates: [],
     skinningLootTemplates: []
   }),
@@ -241,6 +243,15 @@ export default {
         });
       });
     },
+    searchCreatureReferenceLootTemplates({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, payload);
+        ipcRenderer.on(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, (event, response) => {
+          commit(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, response);
+          resolve();
+        });
+      });
+    },
     searchPickpocketingLootTemplates({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, payload);
@@ -311,6 +322,9 @@ export default {
     },
     [SEARCH_CREATURE_LOOT_TEMPLATES](state, creatureLootTemplates) {
       state.creatureLootTemplates = creatureLootTemplates;
+    },
+    [SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES](state, creatureReferenceLootTemplates) {
+      state.creatureReferenceLootTemplates = creatureReferenceLootTemplates;
     },
     [SEARCH_PICKPOCKETING_LOOT_TEMPLATES](state, pickpocketingLootTemplates) {
       state.pickpocketingLootTemplates = pickpocketingLootTemplates;

@@ -1501,10 +1501,48 @@
             <el-table-column prop="displayid"></el-table-column>
             <el-table-column label="名称" sortable>
               <span slot-scope="scope">
-                <template v-if="scope.row.localeName !== null">
-                  {{ scope.row.localeName }}
+                <template v-if="scope.row.Reference == 0">
+                  <template v-if="scope.row.localeName !== null">
+                    {{ scope.row.localeName }}
+                  </template>
+                  <template v-else>{{ scope.row.name }}</template>
                 </template>
-                <template v-else>{{ scope.row.name }}</template>
+              </span>
+            </el-table-column>
+            <el-table-column prop="Reference" label="关联" sortable></el-table-column>
+            <el-table-column prop="Chance" label="几率" sortable>
+              <span slot-scope="scope">
+                {{ `${scope.row.Chance}%` }}
+              </span>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务" sortable>
+              <span slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
+              </span>
+            </el-table-column>
+            <el-table-column prop="MinCount" label="最小数量" sortable></el-table-column>
+            <el-table-column prop="MaxCount" label="最大数量" sortable></el-table-column>
+          </el-table>
+        </el-card>
+        <el-card
+          v-for="(creatureReferenceLootTemplates, index) in groupedCreatureReferenceLootTemplates"
+          :key="`creatureReferenceLootTemplates-${index}`"
+          :header="`关联掉落${creatureReferenceLootTemplates[0].Entry}`"
+          style="margin-top: 16px"
+        >
+          <el-table :data="creatureReferenceLootTemplates">
+            <el-table-column prop="displayid"></el-table-column>
+            <el-table-column label="名称" sortable>
+              <span slot-scope="scope">
+                <template v-if="scope.row.Reference == 0">
+                  <template v-if="scope.row.localeName !== null">
+                    {{ scope.row.localeName }}
+                  </template>
+                  <template v-else>{{ scope.row.name }}</template>
+                </template>
               </span>
             </el-table-column>
             <el-table-column prop="Reference" label="关联" sortable></el-table-column>
@@ -1721,6 +1759,7 @@ export default {
       "npcTrainers",
       "creatureQuestItems",
       "creatureLootTemplates",
+      "creatureReferenceLootTemplates",
       "pickpocketingLootTemplates",
       "skinningLootTemplates"
     ]),
@@ -1753,6 +1792,24 @@ export default {
     },
     disabled() {
       return !this.isCreating;
+    },
+    creatureReferenceLootTemplateEntries() {
+      let entries = [];
+      for (let creatureLootTemplate of this.creatureLootTemplates) {
+        if (creatureLootTemplate.Reference != 0) {
+          entries.push(creatureLootTemplate.Reference);
+        }
+      }
+      return entries;
+    },
+    groupedCreatureReferenceLootTemplates() {
+      let groups = {};
+      this.creatureReferenceLootTemplates.forEach(creatureReferenceLootTemplate => {
+        const key = creatureReferenceLootTemplate.Entry;
+        groups[key] = groups[key] || [];
+        groups[key].push(creatureReferenceLootTemplate);
+      });
+      return Object.keys(groups).map(group => groups[group]);
     }
   },
   methods: {
@@ -1774,6 +1831,7 @@ export default {
       "searchNpcTrainers",
       "searchCreatureQuestItems",
       "searchCreatureLootTemplates",
+      "searchCreatureReferenceLootTemplates",
       "searchPickpocketingLootTemplates",
       "searchSkinningLootTemplates"
     ]),
@@ -1805,20 +1863,24 @@ export default {
         this.loading = false;
       }
       if (tab.name === "creature_questitem") {
-        await this.searchCreatureQuestItems({ creatureEntry: id });
         this.loading = true;
+        await this.searchCreatureQuestItems({ creatureEntry: id });
+        this.loading = false;
       }
       if (tab.name === "creature_loot_template") {
-        await this.searchCreatureLootTemplates({ entry: id });
         this.loading = true;
+        await this.searchCreatureLootTemplates({ entry: id });
+        this.searchCreatureReferenceLootTemplates({ entries: this.creatureReferenceLootTemplateEntries });
+        this.loading = false;
       }
       if (tab.name === "pickpocketing_loot_template") {
-        await this.searchPickpocketingLootTemplates({ entry: id });
         this.loading = true;
+        await this.searchPickpocketingLootTemplates({ entry: id });
+        this.loading = false;
       }
       if (tab.name === "skinning_loot_template") {
         await this.searchSkinningLootTemplates({ entry: id });
-        this.loading = true;
+        this.loading = false;
       }
       this.loading = false;
     },
