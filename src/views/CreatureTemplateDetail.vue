@@ -1507,6 +1507,9 @@
                   </template>
                   <template v-else>{{ scope.row.name }}</template>
                 </template>
+                <template v-else>
+                  关联掉落
+                </template>
               </span>
             </el-table-column>
             <el-table-column prop="Reference" label="关联" sortable></el-table-column>
@@ -1542,6 +1545,9 @@
                     {{ scope.row.localeName }}
                   </template>
                   <template v-else>{{ scope.row.name }}</template>
+                </template>
+                <template v-else>
+                  关联掉落
                 </template>
               </span>
             </el-table-column>

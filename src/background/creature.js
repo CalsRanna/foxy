@@ -517,7 +517,6 @@ ipcMain.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, (event, payload) => {
-  console.log("event");
   let queryBuilder = knex()
     .select(["rlt.*", "it.name", "itl.Name as localeName"])
     .from("reference_loot_template as rlt")
@@ -529,7 +528,6 @@ ipcMain.on(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, (event, payload) => {
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, rows);
-    console.log("event");
     event.reply(GLOBAL_NOTICE, {
       category: "message",
       message: queryBuilder.toString()
