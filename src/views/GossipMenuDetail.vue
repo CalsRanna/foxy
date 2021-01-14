@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -76,11 +76,27 @@ export default {
     }
   },
   methods: {
+    ...mapActions("gossipMenu", ["storeGossipMenu", "findGossipMenu", "updateGossipMenu", "createGossipMenu"]),
     async switchover(tab) {
       console.log(tab.name);
     },
     store(module) {
-      console.log(module);
+      switch (module) {
+        case "gossip_menu":
+          this.loading = true;
+          if (this.isCreating) {
+            this.storeGossipMenu(this.gossipMenu);
+          } else {
+            this.updateGossipMenu({
+              credential: this.credential,
+              gossipMenu: this.gossipMenu
+            });
+          }
+          this.loading = false;
+          break;
+        default:
+          break;
+      }
     },
     cancel() {
       this.$router.go(-1);
@@ -89,12 +105,12 @@ export default {
       this.loading = true;
       let path = this.$route.path;
       if (path === "/gossip-menu/create") {
-        // await this.createSmartScript();
+        await this.createGossipMenu();
       } else {
         this.isCreating = false;
         this.credential = this.$route.query;
         this.credential.MenuID = this.$route.params.id;
-        // await Promise.all([this.findSmartScript(this.credential)]);
+        await Promise.all([this.findGossipMenu(this.credential)]);
       }
       this.loading = false;
     }
