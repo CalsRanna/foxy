@@ -182,7 +182,7 @@ export default {
       this.loading = false;
     },
     show(row) {
-      this.$router.push(`/gossip-menu/${row.entry}`);
+      this.$router.push(`/gossip-menu/${row.MenuID}`);
     },
     async init() {
       this.loading = true;
