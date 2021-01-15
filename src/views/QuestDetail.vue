@@ -906,7 +906,7 @@
             </el-table>
           </el-card>
         </el-tab-pane>
-        <el-tab-pane label="任务开始游戏对象" name="game_object_quest_starter">
+        <el-tab-pane label="任务开始物体" name="game_object_quest_starter">
           <el-card style="margin-top: 16px">
             <el-button type="primary">新增</el-button>
             <el-button disabled>复制</el-button>
@@ -919,7 +919,7 @@
             </el-table>
           </el-card>
         </el-tab-pane>
-        <el-tab-pane label="任务结束游戏对象" name="game_object_quest_ender">
+        <el-tab-pane label="任务结束物体" name="game_object_quest_ender">
           <el-card style="margin-top: 16px">
             <el-button type="primary">新增</el-button>
             <el-button disabled>复制</el-button>

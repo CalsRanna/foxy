@@ -174,7 +174,7 @@ ipcMain.on(COPY_SMART_SCRIPT, (event, payload) => {
         type: "success",
         category: "notification",
         title: "成功",
-        message: `复制成功，新的游戏对象模板 id 为 ${id + 1}。`
+        message: `复制成功，新的物体模板 id 为 ${id + 1}。`
       });
       event.reply(GLOBAL_NOTICE, {
         category: "message",

@@ -3,8 +3,8 @@
     <el-card>
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/game-object' }">游戏对象管理</el-breadcrumb-item>
-        <el-breadcrumb-item>游戏对象详情</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/game-object' }">物体管理</el-breadcrumb-item>
+        <el-breadcrumb-item>物体详情</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">
         {{ localeName }}
@@ -15,7 +15,7 @@
     </el-card>
     <el-card style="margin-top: 16px">
       <el-tabs value="game_object_template" style="margin-top: 16px" @tab-click="switchover">
-        <el-tab-pane label="游戏对象模版" name="game_object_template">
+        <el-tab-pane label="物体模版" name="game_object_template">
           <el-form :model="gameObjectTemplate" label-position="right" label-width="120px">
             <el-card style="margin-top: 16px">
               <el-row :gutter="24">

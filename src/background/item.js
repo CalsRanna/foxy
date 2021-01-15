@@ -225,7 +225,7 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
         type: "success",
         category: "notification",
         title: "成功",
-        message: `复制成功，新的游戏对象模板 entry 为 ${entry + 1}。`
+        message: `复制成功，新的物体模板 entry 为 ${entry + 1}。`
       });
       event.reply(GLOBAL_NOTICE, {
         category: "message",
