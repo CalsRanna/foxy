@@ -36,9 +36,9 @@
                   <el-form-item label="source_type">
                     <el-select v-model="smartScript.source_type" filterable placeholder="source_type">
                       <el-option
-                        v-for="(sourceType, index) in sourceTypes"
+                        v-for="index in [0, 1, 2, 9]"
                         :key="`sourceType-${index}`"
-                        :label="sourceType"
+                        :label="sourceTypes[index]"
                         :value="index"
                       ></el-option>
                     </el-select>
