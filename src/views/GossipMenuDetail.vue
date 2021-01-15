@@ -588,33 +588,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="选项" name="gossip_menu_option" lazy v-loading="loading">
-        <el-card style="margin-top: 16px">
-          <el-button type="primary">新增</el-button>
-          <el-button disabled>复制</el-button>
-          <el-button type="danger" disabled>删除</el-button>
-        </el-card>
-        <el-card style="margin-top: 16px">
-          <el-table :data="gossipMenuOptions">
-            <el-table-column prop="OptionID" label="编号" sortable></el-table-column>
-            <el-table-column prop="OptionIcon" label="图标" sortable>
-              <span slot-scope="scope">{{ icons[scope.row.OptionIcon] }}</span>
-            </el-table-column>
-            <el-table-column label="文本" min-width="400" sortable>
-              <span slot-scope="scope">
-                <template v-if="scope.row.localeOptionText !== null">
-                  {{ scope.row.localeOptionText }}
-                </template>
-                <template v-else>{{ scope.row.OptionText }}</template>
-              </span>
-            </el-table-column>
-            <el-table-column prop="OptionType" label="类型" sortable>
-              <span slot-scope="scope">{{ types[scope.row.OptionType] }}</span>
-            </el-table-column>
-            <el-table-column prop="OptionNpcFlag" label="Npc标识" sortable></el-table-column>
-            <el-table-column prop="OptionBroadcastTextID" label="广播文本ID" sortable></el-table-column>
-            <el-table-column prop="ActionMenuID" label="子选项" sortable></el-table-column>
-          </el-table>
-        </el-card>
+        <gossip-menu-option-tab-pane></gossip-menu-option-tab-pane>
       </el-tab-pane>
     </el-tabs>
     <el-dialog :visible.sync="localeDialogVisible" :show-close="false" :close-on-click-modal="false">
@@ -734,6 +708,7 @@
 
 <script>
 import { icons, types } from "@/locales/gossipMenuOption";
+import GossipMenuOptionTabPane from "@/views/GossipMenu/components/GossipMenuOptionTabPane";
 
 import { mapState, mapActions } from "vuex";
 
@@ -788,7 +763,7 @@ export default {
           }
           break;
         case "gossip_menu_option":
-          await this.searchGossipMenuOptions({ MenuID: this.gossipMenu.MenuID });
+          // await this.searchGossipMenuOptions({ MenuID: this.gossipMenu.MenuID });
           break;
         default:
           break;
@@ -863,6 +838,9 @@ export default {
   },
   created() {
     this.init();
+  },
+  components: {
+    "gossip-menu-option-tab-pane": GossipMenuOptionTabPane,
   },
 };
 </script>

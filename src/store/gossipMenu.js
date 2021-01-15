@@ -2,19 +2,25 @@ const ipcRenderer = window.require("electron").ipcRenderer;
 
 import {
   COPY_GOSSIP_MENU,
+  COPY_GOSSIP_MENU_OPTION,
   COUNT_GOSSIP_MENUS,
   CREATE_GOSSIP_MENU,
+  CREATE_GOSSIP_MENU_OPTION,
   DESTROY_GOSSIP_MENU,
+  DESTROY_GOSSIP_MENU_OPTION,
   FIND_GOSSIP_MENU,
+  FIND_GOSSIP_MENU_OPTION,
   FIND_NPC_TEXT,
   PAGINATE_GOSSIP_MENUS,
   SEARCH_GOSSIP_MENUS,
   SEARCH_GOSSIP_MENU_OPTIONS,
   SEARCH_NPC_TEXT_LOCALES,
   STORE_GOSSIP_MENU,
+  STORE_GOSSIP_MENU_OPTION,
   STORE_NPC_TEXT,
   STORE_NPC_TEXT_LOCALES,
   UPDATE_GOSSIP_MENU,
+  UPDATE_GOSSIP_MENU_OPTION,
   UPDATE_NPC_TEXT,
 } from "../constants";
 
@@ -30,6 +36,7 @@ export default {
       npcText: {},
       npcTextLocales: [],
       gossipMenuOptions: [],
+      gossipMenuOption: {},
     };
   },
   actions: {
@@ -160,6 +167,57 @@ export default {
         });
       });
     },
+    storeGossipMenuOption(context, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(STORE_GOSSIP_MENU_OPTION, payload);
+        ipcRenderer.on(STORE_GOSSIP_MENU_OPTION, () => {
+          resolve();
+        });
+      });
+    },
+    findGossipMenuOption({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(FIND_GOSSIP_MENU_OPTION, payload);
+        ipcRenderer.on(FIND_GOSSIP_MENU_OPTION, (event, response) => {
+          commit(FIND_GOSSIP_MENU_OPTION, response);
+          resolve();
+        });
+      });
+    },
+    updateGossipMenuOption({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(UPDATE_GOSSIP_MENU_OPTION, payload);
+        ipcRenderer.on(UPDATE_GOSSIP_MENU_OPTION, () => {
+          commit(UPDATE_GOSSIP_MENU_OPTION, payload.gossipMenuOption);
+          resolve();
+        });
+      });
+    },
+    destroyGossipMenuOption(context, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(DESTROY_GOSSIP_MENU_OPTION, payload);
+        ipcRenderer.on(DESTROY_GOSSIP_MENU_OPTION, () => {
+          resolve();
+        });
+      });
+    },
+    createGossipMenuOption({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(CREATE_GOSSIP_MENU_OPTION, payload);
+        ipcRenderer.on(CREATE_GOSSIP_MENU_OPTION, (event, response) => {
+          commit(CREATE_GOSSIP_MENU_OPTION, response);
+          resolve();
+        });
+      });
+    },
+    copyGossipMenuOption(context, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(COPY_GOSSIP_MENU_OPTION, payload);
+        ipcRenderer.on(COPY_GOSSIP_MENU_OPTION, () => {
+          resolve();
+        });
+      });
+    },
   },
   mutations: {
     [SEARCH_GOSSIP_MENUS](state, gossipMenus) {
@@ -191,6 +249,15 @@ export default {
     },
     [SEARCH_GOSSIP_MENU_OPTIONS](state, gossipMenuOptions) {
       state.gossipMenuOptions = gossipMenuOptions;
+    },
+    [FIND_GOSSIP_MENU_OPTION](state, gossipMenuOption) {
+      state.gossipMenuOption = gossipMenuOption;
+    },
+    [UPDATE_GOSSIP_MENU_OPTION](state, gossipMenuOption) {
+      state.gossipMenuOption = gossipMenuOption;
+    },
+    [CREATE_GOSSIP_MENU_OPTION](state, gossipMenuOption) {
+      state.gossipMenuOption = gossipMenuOption;
     },
   },
 };
