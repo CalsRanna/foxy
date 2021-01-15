@@ -40,12 +40,20 @@
       ></el-pagination>
       <el-table :data="smartScripts" highlight-current-row @current-change="select" @row-dblclick="show">
         <el-table-column prop="entryorguid" label="Entry Or GUID" sortable></el-table-column>
-        <el-table-column prop="source_type" label="类型" sortable></el-table-column>
+        <el-table-column prop="source_type" label="类型" sortable>
+          <template slot-scope="scope">{{ sourceTypes[scope.row.source_type] }}</template>
+        </el-table-column>
         <el-table-column prop="id" label="编号" sortable></el-table-column>
         <el-table-column prop="link" label="链接" sortable></el-table-column>
-        <el-table-column prop="event_type" label="事件类型" sortable> </el-table-column>
-        <el-table-column prop="action_type" label="动作类型" sortable> </el-table-column>
-        <el-table-column prop="target_type" label="目标类型" sortable> </el-table-column>
+        <el-table-column prop="event_type" label="事件类型" sortable>
+          <template slot-scope="scope">{{ eventTypes[scope.row.event_type] }}</template>
+        </el-table-column>
+        <el-table-column prop="action_type" label="动作类型" sortable>
+          <template slot-scope="scope">{{ actionTypes[scope.row.action_type] }}</template>
+        </el-table-column>
+        <el-table-column prop="target_type" label="目标类型" sortable>
+          <template slot-scope="scope">{{ targetTypes[scope.row.target_type] }}</template>
+        </el-table-column>
         <el-table-column prop="comment" label="备注" sortable min-width="200px"> </el-table-column>
       </el-table>
       <el-pagination
@@ -62,6 +70,8 @@
 </template>
 
 <script>
+import { sourceTypes, eventTypes, actionTypes, targetTypes } from "@/locales/smartScript";
+
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -71,6 +81,10 @@ export default {
       entryorguid: undefined,
       comment: undefined,
       currentRow: undefined,
+      sourceTypes: sourceTypes,
+      eventTypes: eventTypes,
+      actionTypes: actionTypes,
+      targetTypes: targetTypes
     };
   },
   computed: {
@@ -79,12 +93,12 @@ export default {
       return {
         entryorguid: this.entryorguid,
         comment: this.comment,
-        page: this.page,
+        page: this.page
       };
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null ? true : false;
-    },
+    }
   },
   methods: {
     ...mapActions("smartScript", [
@@ -92,7 +106,7 @@ export default {
       "countSmartScripts",
       "paginateSmartScripts",
       "destroySmartScript",
-      "copySmartScript",
+      "copySmartScript"
     ]),
     async handleSearch() {
       this.loading = true;
@@ -120,7 +134,7 @@ export default {
               entryorguid: this.currentRow.entryorguid,
               source_type: this.currentRow.source_type,
               id: this.currentRow.id,
-              link: this.currentRow.link,
+              link: this.currentRow.link
             })
               .then(() => {
                 Promise.all([this.searchSmartScripts(this.payload), this.countSmartScripts(this.payload)]);
@@ -132,7 +146,7 @@ export default {
           } else {
             done();
           }
-        },
+        }
       });
     },
     handleDestroy() {
@@ -151,7 +165,7 @@ export default {
                 entryorguid: this.currentRow.entryorguid,
                 source_type: this.currentRow.source_type,
                 id: this.currentRow.id,
-                link: this.currentRow.link,
+                link: this.currentRow.link
               })
                 .then(() => {
                   Promise.all([this.searchSmartScripts(this.payload), this.countSmartScripts(this.payload)]);
@@ -163,7 +177,7 @@ export default {
             } else {
               done();
             }
-          },
+          }
         }
       );
     },
@@ -185,12 +199,12 @@ export default {
       this.loading = true;
       await Promise.all([this.searchSmartScripts(this.payload), this.countSmartScripts(this.payload)]);
       this.loading = false;
-    },
+    }
   },
   created() {
     if (this.smartScripts.length === 0) {
       this.init();
     }
-  },
+  }
 };
 </script>

@@ -596,6 +596,9 @@
         <el-card style="margin-top: 16px">
           <el-table :data="gossipMenuOptions">
             <el-table-column prop="OptionID" label="编号" sortable></el-table-column>
+            <el-table-column prop="OptionIcon" label="图标" sortable>
+              <span slot-scope="scope">{{ icons[scope.row.OptionIcon] }}</span>
+            </el-table-column>
             <el-table-column label="文本" min-width="400" sortable>
               <span slot-scope="scope">
                 <template v-if="scope.row.localeOptionText !== null">
@@ -604,14 +607,11 @@
                 <template v-else>{{ scope.row.OptionText }}</template>
               </span>
             </el-table-column>
-            <el-table-column prop="OptionIcon" label="图标" sortable>
-              <span slot-scope="scope">{{ icons[scope.row.OptionIcon] }}</span>
-            </el-table-column>
-            <el-table-column prop="OptionBroadcastTextID" label="广播文本ID" sortable></el-table-column>
             <el-table-column prop="OptionType" label="类型" sortable>
               <span slot-scope="scope">{{ types[scope.row.OptionType] }}</span>
             </el-table-column>
             <el-table-column prop="OptionNpcFlag" label="Npc标识" sortable></el-table-column>
+            <el-table-column prop="OptionBroadcastTextID" label="广播文本ID" sortable></el-table-column>
             <el-table-column prop="ActionMenuID" label="子选项" sortable></el-table-column>
           </el-table>
         </el-card>
