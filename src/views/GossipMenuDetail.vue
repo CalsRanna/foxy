@@ -604,9 +604,13 @@
                 <template v-else>{{ scope.row.OptionText }}</template>
               </span>
             </el-table-column>
-            <el-table-column prop="OptionIcon" label="图标" sortable></el-table-column>
+            <el-table-column prop="OptionIcon" label="图标" sortable>
+              <span slot-scope="scope">{{ icons[scope.row.OptionIcon] }}</span>
+            </el-table-column>
             <el-table-column prop="OptionBroadcastTextID" label="广播文本ID" sortable></el-table-column>
-            <el-table-column prop="OptionType" label="类型" sortable></el-table-column>
+            <el-table-column prop="OptionType" label="类型" sortable>
+              <span slot-scope="scope">{{ types[scope.row.OptionType] }}</span>
+            </el-table-column>
             <el-table-column prop="OptionNpcFlag" label="Npc标识" sortable></el-table-column>
             <el-table-column prop="ActionMenuID" label="子选项" sortable></el-table-column>
           </el-table>
@@ -729,6 +733,8 @@
 </template>
 
 <script>
+import { icons, types } from "@/locales/gossipMenuOption";
+
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -740,6 +746,8 @@ export default {
       credential: {},
       isCreatingNpcText: false,
       localeDialogVisible: false,
+      icons: icons,
+      types: types,
     };
   },
   computed: {
