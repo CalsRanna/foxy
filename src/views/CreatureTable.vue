@@ -62,7 +62,7 @@
         </el-table-column>
         <el-table-column label="称号" sortable>
           <template slot-scope="scope">
-            <span v-if="scope.row.localeTitle != null || scope.row.localeTitle != ''">{{ scope.row.localeTitle }}</span>
+            <span v-if="scope.row.localeTitle != null">{{ scope.row.localeTitle }}</span>
             <span v-else>{{ scope.row.subname }}</span>
           </template>
         </el-table-column>
