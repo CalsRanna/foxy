@@ -5,10 +5,15 @@ import {
   CREATE_GOSSIP_MENU,
   DESTROY_GOSSIP_MENU,
   FIND_GOSSIP_MENU,
+  FIND_NPC_TEXT,
   GLOBAL_NOTICE,
   SEARCH_GOSSIP_MENUS,
+  SEARCH_NPC_TEXT_LOCALES,
   STORE_GOSSIP_MENU,
+  STORE_NPC_TEXT,
+  STORE_NPC_TEXT_LOCALES,
   UPDATE_GOSSIP_MENU,
+  UPDATE_NPC_TEXT,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -72,7 +77,7 @@ ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
   let queryBuilder = knex().insert(payload).into("gossip_menu");
 
   queryBuilder.then((rows) => {
-    event.reply(COUNT_GOSSIP_MENUS, rows);
+    event.reply(STORE_GOSSIP_MENU, rows);
     event.reply(GLOBAL_NOTICE, {
       category: "notification",
       title: "成功",
@@ -105,55 +110,49 @@ ipcMain.on(UPDATE_GOSSIP_MENU, (event, payload) => {
     .where("TextID", payload.credential.TextID)
     .update(payload.gossipMenu);
 
-  queryBuilder.then(rows => {
+  queryBuilder.then((rows) => {
     event.reply(UPDATE_GOSSIP_MENU, rows);
     event.reply(GLOBAL_NOTICE, {
       category: "notification",
       title: "成功",
       message: "修改成功。",
-      type: "success"
+      type: "success",
     });
     event.reply(GLOBAL_NOTICE, {
       category: "message",
-      message: queryBuilder.toString()
+      message: queryBuilder.toString(),
     });
   });
 });
 
 ipcMain.on(DESTROY_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex()
-    .table("gossip_menu")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("gossip_menu").where(payload).delete();
 
-  queryBuilder.then(rows => {
+  queryBuilder.then((rows) => {
     event.reply(DESTROY_GOSSIP_MENU, rows);
     event.reply("GLOBAL_NOTICE", {
       category: "notification",
       title: "成功",
       message: "删除成功。",
-      type: "success"
+      type: "success",
     });
     event.reply(GLOBAL_NOTICE, {
       category: "message",
-      message: queryBuilder.toString()
+      message: queryBuilder.toString(),
     });
   });
 });
 
 ipcMain.on(CREATE_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex()
-    .select("MenuID")
-    .from("gossip_menu")
-    .orderBy("MenuID", "desc");
+  let queryBuilder = knex().select("MenuID").from("gossip_menu").orderBy("MenuID", "desc");
 
-  queryBuilder.then(rows => {
+  queryBuilder.then((rows) => {
     event.reply(CREATE_GOSSIP_MENU, {
-      MenuID: rows[0].MenuID + 1
+      MenuID: rows[0].MenuID + 1,
     });
     event.reply(GLOBAL_NOTICE, {
       category: "message",
-      message: queryBuilder.toString()
+      message: queryBuilder.toString(),
     });
   });
 });
@@ -162,37 +161,110 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
   let MenuID = undefined;
   let gossipMenu = undefined;
 
-  let menuIdQueryBuilder = knex()
-    .select("MenuID")
-    .from("gossip_menu")
-    .orderBy("MenuID", "desc");
-  let findGossipMenuQueryBuilder = knex()
-    .select()
-    .from("gossip_menu")
-    .where(payload);
+  let menuIdQueryBuilder = knex().select("MenuID").from("gossip_menu").orderBy("MenuID", "desc");
+  let findGossipMenuQueryBuilder = knex().select().from("gossip_menu").where(payload);
   Promise.all([
-    menuIdQueryBuilder.then(rows => {
+    menuIdQueryBuilder.then((rows) => {
       MenuID = rows[0].MenuID;
     }),
-    findGossipMenuQueryBuilder.then(rows => {
+    findGossipMenuQueryBuilder.then((rows) => {
       gossipMenu = rows.length > 0 ? rows[0] : {};
-    })
+    }),
   ]).then(() => {
     gossipMenu.MenuID = MenuID + 1;
-    let queryBuilder = knex()
-      .insert(gossipMenu)
-      .into("gossip_menu");
-    queryBuilder.then(rows => {
+    let queryBuilder = knex().insert(gossipMenu).into("gossip_menu");
+    queryBuilder.then((rows) => {
       event.reply(COPY_GOSSIP_MENU, rows);
       event.reply(GLOBAL_NOTICE, {
         type: "success",
         category: "notification",
         title: "成功",
-        message: `复制成功，新的对话 MenuID 为 ${MenuID + 1}。`
+        message: `复制成功，新的对话 MenuID 为 ${MenuID + 1}。`,
       });
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
+      });
+    });
+  });
+});
+
+ipcMain.on(STORE_NPC_TEXT, (event, payload) => {
+  let queryBuilder = knex().insert(payload).into("npc_text");
+
+  queryBuilder.then((rows) => {
+    event.reply(STORE_NPC_TEXT, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "notification",
+      title: "成功",
+      message: "新建成功。",
+      type: "success",
+    });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString(),
+    });
+  });
+});
+
+ipcMain.on(FIND_NPC_TEXT, (event, payload) => {
+  let queryBuilder = knex().select().from("npc_text").where(payload);
+
+  queryBuilder.then((rows) => {
+    event.reply(FIND_NPC_TEXT, rows.length > 0 ? rows[0] : {});
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString(),
+    });
+  });
+});
+
+ipcMain.on(UPDATE_NPC_TEXT, (event, payload) => {
+  let queryBuilder = knex().table("npc_text").where("ID", payload.credential.ID).update(payload.npcText);
+
+  queryBuilder.then((rows) => {
+    event.reply(UPDATE_NPC_TEXT, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "notification",
+      title: "成功",
+      message: "修改成功。",
+      type: "success",
+    });
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString(),
+    });
+  });
+});
+
+ipcMain.on(SEARCH_NPC_TEXT_LOCALES, (event, payload) => {
+  let queryBuilder = knex().select().from("npc_text_locale").where(payload);
+
+  queryBuilder.then((rows) => {
+    event.reply(SEARCH_NPC_TEXT_LOCALES, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString(),
+    });
+  });
+});
+
+ipcMain.on(STORE_NPC_TEXT_LOCALES, (event, payload) => {
+  let deleteQueryBuilder = knex().table("npc_text_locale").where("ID", payload[0].ID).delete();
+  let insertQueryBuilder = knex().insert(payload).into("npc_text_locale");
+
+  deleteQueryBuilder.then(() => {
+    insertQueryBuilder.then((rows) => {
+      event.reply(STORE_NPC_TEXT_LOCALES, rows);
+      event.reply(GLOBAL_NOTICE, {
+        type: "success",
+        category: "notification",
+        title: "成功",
+        message: `保存成功。`,
+      });
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
       });
     });
   });

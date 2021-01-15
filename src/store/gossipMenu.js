@@ -6,10 +6,15 @@ import {
   CREATE_GOSSIP_MENU,
   DESTROY_GOSSIP_MENU,
   FIND_GOSSIP_MENU,
+  FIND_NPC_TEXT,
   PAGINATE_GOSSIP_MENUS,
   SEARCH_GOSSIP_MENUS,
+  SEARCH_NPC_TEXT_LOCALES,
   STORE_GOSSIP_MENU,
+  STORE_NPC_TEXT,
+  STORE_NPC_TEXT_LOCALES,
   UPDATE_GOSSIP_MENU,
+  UPDATE_NPC_TEXT,
 } from "../constants";
 
 export default {
@@ -20,7 +25,9 @@ export default {
       total: 0,
       size: 50,
       gossipMenus: [],
-      gossipMenu: {}
+      gossipMenu: {},
+      npcText: {},
+      npcTextLocales: []
     };
   },
   actions: {
@@ -99,6 +106,49 @@ export default {
         });
       });
     },
+    storeNpcText(context, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(STORE_NPC_TEXT, payload);
+        ipcRenderer.on(STORE_NPC_TEXT, () => {
+          resolve();
+        });
+      });
+    },
+    findNpcText({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(FIND_NPC_TEXT, payload);
+        ipcRenderer.on(FIND_NPC_TEXT, (event, response) => {
+          commit(FIND_NPC_TEXT, response);
+          resolve();
+        });
+      });
+    },
+    updateNpcText({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(UPDATE_NPC_TEXT, payload);
+        ipcRenderer.on(UPDATE_NPC_TEXT, () => {
+          commit(UPDATE_NPC_TEXT, payload.npcText);
+          resolve();
+        });
+      });
+    },
+    searchNpcTextLocales({ commit }, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(SEARCH_NPC_TEXT_LOCALES, payload);
+        ipcRenderer.on(SEARCH_NPC_TEXT_LOCALES, (event, response) => {
+          commit(SEARCH_NPC_TEXT_LOCALES, response);
+          resolve();
+        });
+      });
+    },
+    storeNpcTextLocales(context, payload) {
+      return new Promise(resolve => {
+        ipcRenderer.send(STORE_NPC_TEXT_LOCALES, payload);
+        ipcRenderer.on(STORE_NPC_TEXT_LOCALES, () => {
+          resolve();
+        });
+      });
+    },
   },
   mutations: {
     [SEARCH_GOSSIP_MENUS](state, gossipMenus) {
@@ -118,6 +168,15 @@ export default {
     },
     [CREATE_GOSSIP_MENU](state, gossipMenu) {
       state.gossipMenu = gossipMenu;
+    },
+    [FIND_NPC_TEXT](state, npcText) {
+      state.npcText = npcText;
+    },
+    [UPDATE_NPC_TEXT](state, npcText) {
+      state.npcText = npcText;
+    },
+    [SEARCH_NPC_TEXT_LOCALES](state, npcTextLocales) {
+      state.npcTextLocales = npcTextLocales;
     },
   }
 };
