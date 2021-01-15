@@ -11,7 +11,7 @@
         <el-menu :default-active="active" @select="navigate" style="border-right: none">
           <el-menu-item index="dashboard"> 首页 <small>DASHBOARD</small> </el-menu-item>
           <el-menu-item index="creature"> 生物 <small>CREATURE</small> </el-menu-item>
-          <el-menu-item index="game-object"> 游戏对象 <small>GAME OBJECT</small> </el-menu-item>
+          <el-menu-item index="game-object"> 物体 <small>GAME OBJECT</small> </el-menu-item>
           <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
           <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
           <el-menu-item index="gossip-menu"> 对话 <small>GOSSIP MENU</small> </el-menu-item>

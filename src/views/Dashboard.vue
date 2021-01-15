@@ -21,7 +21,7 @@
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p class="summary-title">游戏对象模板<span>Game Object Template</span></p>
+              <p class="summary-title">物体模板<span>Game Object Template</span></p>
               <p class="summary-content">
                 {{ parseFloat(this.quantityOfGameObjectTemplate).toLocaleString() }}
               </p>
@@ -125,7 +125,7 @@ export default {
   data() {
     return {
       loading: false,
-      labels: ["生物", "游戏对象", "物品", "任务", "对话", "内建脚本", "技能"]
+      labels: ["生物", "物体", "物品", "任务", "对话", "内建脚本", "技能"]
     };
   },
   computed: {

@@ -3,9 +3,9 @@
     <el-card>
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>游戏对象</el-breadcrumb-item>
+        <el-breadcrumb-item>物体</el-breadcrumb-item>
       </el-breadcrumb>
-      <h3 style="margin: 16px 0 0 0">游戏对象列表</h3>
+      <h3 style="margin: 16px 0 0 0">物体列表</h3>
     </el-card>
     <el-card style="margin-top: 16px">
       <el-form @submit.native.prevent="handleSearch">
