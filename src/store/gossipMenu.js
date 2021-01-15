@@ -9,6 +9,7 @@ import {
   FIND_NPC_TEXT,
   PAGINATE_GOSSIP_MENUS,
   SEARCH_GOSSIP_MENUS,
+  SEARCH_GOSSIP_MENU_OPTIONS,
   SEARCH_NPC_TEXT_LOCALES,
   STORE_GOSSIP_MENU,
   STORE_NPC_TEXT,
@@ -27,12 +28,13 @@ export default {
       gossipMenus: [],
       gossipMenu: {},
       npcText: {},
-      npcTextLocales: []
+      npcTextLocales: [],
+      gossipMenuOptions: [],
     };
   },
   actions: {
     searchGossipMenus({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(SEARCH_GOSSIP_MENUS, payload);
         ipcRenderer.on(SEARCH_GOSSIP_MENUS, (event, response) => {
           commit(SEARCH_GOSSIP_MENUS, response);
@@ -41,7 +43,7 @@ export default {
       });
     },
     countGossipMenus({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(COUNT_GOSSIP_MENUS, payload);
         ipcRenderer.on(COUNT_GOSSIP_MENUS, (event, response) => {
           commit(COUNT_GOSSIP_MENUS, response);
@@ -50,7 +52,7 @@ export default {
       });
     },
     paginateGossipMenus({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         commit(PAGINATE_GOSSIP_MENUS, payload.page);
         resolve();
       });
@@ -133,7 +135,7 @@ export default {
       });
     },
     searchNpcTextLocales({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(SEARCH_NPC_TEXT_LOCALES, payload);
         ipcRenderer.on(SEARCH_NPC_TEXT_LOCALES, (event, response) => {
           commit(SEARCH_NPC_TEXT_LOCALES, response);
@@ -142,9 +144,18 @@ export default {
       });
     },
     storeNpcTextLocales(context, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(STORE_NPC_TEXT_LOCALES, payload);
         ipcRenderer.on(STORE_NPC_TEXT_LOCALES, () => {
+          resolve();
+        });
+      });
+    },
+    searchGossipMenuOptions({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(SEARCH_GOSSIP_MENU_OPTIONS, payload);
+        ipcRenderer.on(SEARCH_GOSSIP_MENU_OPTIONS, (event, response) => {
+          commit(SEARCH_GOSSIP_MENU_OPTIONS, response);
           resolve();
         });
       });
@@ -178,5 +189,8 @@ export default {
     [SEARCH_NPC_TEXT_LOCALES](state, npcTextLocales) {
       state.npcTextLocales = npcTextLocales;
     },
-  }
+    [SEARCH_GOSSIP_MENU_OPTIONS](state, gossipMenuOptions) {
+      state.gossipMenuOptions = gossipMenuOptions;
+    },
+  },
 };
