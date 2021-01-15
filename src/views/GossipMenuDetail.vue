@@ -582,18 +582,40 @@
             </el-row>
           </el-card>
           <el-card style="margin-top: 16px">
-            <el-button type="primary" :loading="loading" @click="() => store('npc_text')"
-              >保存</el-button
-            >
+            <el-button type="primary" :loading="loading" @click="() => store('npc_text')">保存</el-button>
             <el-button @click="cancel">返回</el-button>
           </el-card>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="选项" name="gossip_menu_option" lazy v-loading="loading"></el-tab-pane>
+      <el-tab-pane label="选项" name="gossip_menu_option" lazy v-loading="loading">
+        <el-card style="margin-top: 16px">
+          <el-button type="primary">新增</el-button>
+          <el-button disabled>复制</el-button>
+          <el-button type="danger" disabled>删除</el-button>
+        </el-card>
+        <el-card style="margin-top: 16px">
+          <el-table :data="gossipMenuOptions">
+            <el-table-column prop="OptionID" label="编号" sortable></el-table-column>
+            <el-table-column label="文本" min-width="400" sortable>
+              <span slot-scope="scope">
+                <template v-if="scope.row.localeOptionText !== null">
+                  {{ scope.row.localeOptionText }}
+                </template>
+                <template v-else>{{ scope.row.OptionText }}</template>
+              </span>
+            </el-table-column>
+            <el-table-column prop="OptionIcon" label="图标" sortable></el-table-column>
+            <el-table-column prop="OptionBroadcastTextID" label="广播文本ID" sortable></el-table-column>
+            <el-table-column prop="OptionType" label="类型" sortable></el-table-column>
+            <el-table-column prop="OptionNpcFlag" label="Npc标识" sortable></el-table-column>
+            <el-table-column prop="ActionMenuID" label="子选项" sortable></el-table-column>
+          </el-table>
+        </el-card>
+      </el-tab-pane>
     </el-tabs>
     <el-dialog :visible.sync="localeDialogVisible" :show-close="false" :close-on-click-modal="false">
       <div slot="title">
-        <span style="font-size: 18px;color: #303133;margin-right:16px">文本本地化</span>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px">文本本地化</span>
         <el-button size="mini" @click="addNpcTextLocale">新增</el-button>
       </div>
       <el-table :data="npcTextLocales">
@@ -721,7 +743,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("gossipMenu", ["gossipMenu", "npcText", "npcTextLocales"]),
+    ...mapState("gossipMenu", ["gossipMenu", "npcText", "npcTextLocales", "gossipMenuOptions"]),
     localeName() {
       return null;
     },
@@ -743,6 +765,7 @@ export default {
       "updateNpcText",
       "searchNpcTextLocales",
       "storeNpcTextLocales",
+      "searchGossipMenuOptions",
     ]),
     async switchover(tab) {
       this.loading = true;
@@ -757,7 +780,7 @@ export default {
           }
           break;
         case "gossip_menu_option":
-          // await this.searchGameObjectQuestItems({ GameObjectEntry: this.gameObjectTemplate.entry });
+          await this.searchGossipMenuOptions({ MenuID: this.gossipMenu.MenuID });
           break;
         default:
           break;
@@ -769,7 +792,7 @@ export default {
     },
     addNpcTextLocale() {
       this.npcTextLocales.push({
-        ID: this.npcText.ID
+        ID: this.npcText.ID,
       });
     },
     deleteNpcTextLocale(index) {
@@ -798,7 +821,7 @@ export default {
             this.storeNpcText(this.npcText);
           } else {
             this.updateNpcText({
-              credential: {ID: this.npcText.ID},
+              credential: { ID: this.npcText.ID },
               npcText: this.npcText,
             });
           }

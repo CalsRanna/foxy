@@ -8,6 +8,7 @@ import {
   FIND_NPC_TEXT,
   GLOBAL_NOTICE,
   SEARCH_GOSSIP_MENUS,
+  SEARCH_GOSSIP_MENU_OPTIONS,
   SEARCH_NPC_TEXT_LOCALES,
   STORE_GOSSIP_MENU,
   STORE_NPC_TEXT,
@@ -266,6 +267,26 @@ ipcMain.on(STORE_NPC_TEXT_LOCALES, (event, payload) => {
         category: "message",
         message: queryBuilder.toString(),
       });
+    });
+  });
+});
+
+ipcMain.on(SEARCH_GOSSIP_MENU_OPTIONS, (event, payload) => {
+  let queryBuilder = knex()
+    .select(["gmo.*", "gmol.OptionText as localeOptionText"])
+    .from("gossip_menu_option as gmo")
+    .leftJoin("gossip_menu_option_locale as gmol", function () {
+      this.on("gmo.MenuID", "=", "gmol.MenuID")
+        .andOn("gmo.OptionID", "=", "gmol.OptionID")
+        .andOn("gmol.Locale", "=", knex().raw("?", "zhCN"));
+    })
+    .where("gmo.MenuID", payload.MenuID);
+
+  queryBuilder.then((rows) => {
+    event.reply(SEARCH_GOSSIP_MENU_OPTIONS, rows);
+    event.reply(GLOBAL_NOTICE, {
+      category: "message",
+      message: queryBuilder.toString(),
     });
   });
 });
