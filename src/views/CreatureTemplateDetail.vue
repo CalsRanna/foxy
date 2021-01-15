@@ -409,10 +409,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="对话菜单">
-                  <gossip-menu-editor
+                  <gossip-menu-selector
                     v-model="creatureTemplate.gossip_menu_id"
                     placeholder="npcflag"
-                  ></gossip-menu-editor>
+                  ></gossip-menu-selector>
                   <!-- <el-input v-model="creatureTemplate.gossip_menu_id" placeholder="gossip_menu_id"></el-input> -->
                 </el-form-item>
               </el-col>
@@ -1731,7 +1731,7 @@ import {
 import { mapState, mapGetters, mapActions } from "vuex";
 
 import FlagEditor from "@/components/FlagEditor";
-import GossipMenuEditor from "@/components/GossipMenuEditor";
+import GossipMenuSelector from "@/components/GossipMenuSelector";
 import SpellSelector from "@/components/SpellSelector";
 
 export default {
@@ -1963,7 +1963,7 @@ export default {
   },
   components: {
     "flag-editor": FlagEditor,
-    "gossip-menu-editor": GossipMenuEditor,
+    "gossip-menu-selector": GossipMenuSelector,
     "spell-selector": SpellSelector
   }
 };

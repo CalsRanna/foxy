@@ -6,7 +6,6 @@
     <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" @opened="init">
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">技能选择器</span>
-        <el-button size="mini" @click="addSpell">新增</el-button>
       </div>
       <el-card style="margin-top: 16px">
         <el-form>
@@ -127,7 +126,6 @@ export default {
     showDialog() {
       this.visible = true;
     },
-    addSpell() {},
     async handleSearch() {
       this.paginate(1); //每次搜索时使分页器设为第一页
       await Promise.all([this.search(this.payload), this.count(this.payload)]);
