@@ -21,12 +21,27 @@
               <el-row :gutter="24">
                 <el-col :span="6">
                   <el-form-item label="entryorguid">
-                    <el-input v-model="smartScript.entryorguid" placeholder="entryorguid"></el-input>
+                    <el-input-number
+                      v-model="smartScript.entryorguid"
+                      controls-position="right"
+                      placeholder="entryorguid"
+                      :disabled="disabled"
+                      v-loading="loading"
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(255, 255, 255, 0.5)"
+                    ></el-input-number>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="source_type">
-                    <el-input v-model="smartScript.source_type" placeholder="source_type"></el-input>
+                    <el-select v-model="smartScript.source_type" filterable placeholder="source_type">
+                      <el-option
+                        v-for="(sourceType, index) in sourceTypes"
+                        :key="`sourceType-${index}`"
+                        :label="sourceType"
+                        :value="index"
+                      ></el-option>
+                    </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -50,7 +65,14 @@
               <el-row :gutter="24">
                 <el-col :span="6">
                   <el-form-item label="事件">
-                    <el-input v-model="smartScript.event_type" placeholder="event_type"></el-input>
+                    <el-select v-model="smartScript.event_type" filterable placeholder="event_type">
+                      <el-option
+                        v-for="(eventType, index) in eventTypes"
+                        :key="`eventType-${index}`"
+                        :label="eventType"
+                        :value="index"
+                      ></el-option>
+                    </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -98,8 +120,15 @@
             <el-card style="margin-top: 16px">
               <el-row :gutter="24">
                 <el-col :span="6">
-                  <el-form-item label="行动">
-                    <el-input v-model="smartScript.action_type" placeholder="action_type"></el-input>
+                  <el-form-item label="动作">
+                    <el-select v-model="smartScript.action_type" filterable placeholder="action_type">
+                      <el-option
+                        v-for="(actionType, index) in actionTypes"
+                        :key="`actionType-${index}`"
+                        :label="actionType"
+                        :value="index"
+                      ></el-option>
+                    </el-select>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -135,7 +164,14 @@
               <el-row :gutter="24">
                 <el-col :span="6">
                   <el-form-item label="目标">
-                    <el-input v-model="smartScript.target_type" placeholder="target_type"></el-input>
+                    <el-select v-model="smartScript.target_type" filterable placeholder="target_type">
+                      <el-option
+                        v-for="(targetType, index) in targetTypes"
+                        :key="`targetType-${index}`"
+                        :label="targetType"
+                        :value="index"
+                      ></el-option>
+                    </el-select>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -194,6 +230,8 @@
 </template>
 
 <script>
+import { sourceTypes, eventTypes, actionTypes, targetTypes } from "@/locales/smartScript";
+
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -201,7 +239,11 @@ export default {
     return {
       isCreating: true,
       loading: false,
-      credential: {}
+      credential: {},
+      sourceTypes: sourceTypes,
+      eventTypes: eventTypes,
+      actionTypes: actionTypes,
+      targetTypes: targetTypes
     };
   },
   computed: {
@@ -211,6 +253,9 @@ export default {
     },
     localeDescription() {
       return null;
+    },
+    disabled() {
+      return !this.isCreating;
     }
   },
   methods: {

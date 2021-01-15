@@ -2,7 +2,6 @@ import { ipcMain } from "electron";
 import {
   COPY_SMART_SCRIPT,
   COUNT_SMART_SCRIPTS,
-  CREATE_SMART_SCRIPT,
   DESTROY_SMART_SCRIPT,
   FIND_SMART_SCRIPT,
   GLOBAL_NOTICE,
@@ -144,46 +143,28 @@ ipcMain.on(DESTROY_SMART_SCRIPT, (event, payload) => {
   });
 });
 
-// 新建空的物品模板，entry自动生成
-ipcMain.on(CREATE_SMART_SCRIPT, (event, payload) => {
-  let queryBuilder = knex()
-    .select("entryorguid")
-    .from("smart_scripts")
-    .orderBy("entryorguid", "desc");
-
-  queryBuilder.then(rows => {
-    event.reply(CREATE_SMART_SCRIPT, {
-      entryorguid: rows[0].entryorguid + 1,
-      comment: "New - Smart Script"
-    });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString()
-    });
-  });
-});
-
 ipcMain.on(COPY_SMART_SCRIPT, (event, payload) => {
-  let entryorguid = undefined;
+  let id = undefined;
   let smartScript = undefined;
 
-  let entryOrGuidQueryBuilder = knex()
-    .select("entryorguid")
+  let idQueryBuilder = knex()
+    .select("id")
     .from("smart_scripts")
-    .orderBy("entryorguid", "desc");
+    .where(payload)
+    .orderBy("id", "desc");
   let findSmartScriptQueryBuilder = knex()
     .select()
     .from("smart_scripts")
     .where(payload);
   Promise.all([
-    entryOrGuidQueryBuilder.then(rows => {
-      entryorguid = rows[0].entryorguid;
+    idQueryBuilder.then(rows => {
+      id = rows[0].id;
     }),
     findSmartScriptQueryBuilder.then(rows => {
       smartScript = rows.length > 0 ? rows[0] : {};
     })
   ]).then(() => {
-    smartScript.entryorguid = entryorguid + 1;
+    smartScript.id = id + 1;
     let queryBuilder = knex()
       .insert(smartScript)
       .into("smart_scripts");
@@ -193,7 +174,7 @@ ipcMain.on(COPY_SMART_SCRIPT, (event, payload) => {
         type: "success",
         category: "notification",
         title: "成功",
-        message: `复制成功，新的游戏对象模板 entryorguid 为 ${entryorguid + 1}。`
+        message: `复制成功，新的游戏对象模板 id 为 ${id + 1}。`
       });
       event.reply(GLOBAL_NOTICE, {
         category: "message",
