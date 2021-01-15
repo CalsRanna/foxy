@@ -130,7 +130,7 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyGossipMenu({ MenuID: this.currentRow.MenuID })
+            this.copyGossipMenu({ MenuID: this.currentRow.MenuID, TextID: this.currentRow.TextID })
               .then(() => {
                 Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
               })
@@ -157,7 +157,7 @@ export default {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
 
-              this.destroyGossipMenu({ MenuID: this.currentRow.MenuID })
+              this.destroyGossipMenu({ MenuID: this.currentRow.MenuID, TextID: this.currentRow.TextID })
                 .then(() => {
                   Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
                 })
@@ -182,7 +182,7 @@ export default {
       this.loading = false;
     },
     show(row) {
-      this.$router.push(`/gossip-menu/${row.MenuID}`);
+      this.$router.push(`/gossip-menu/${row.MenuID}?TextID=${row.TextID}`);
     },
     async init() {
       this.loading = true;

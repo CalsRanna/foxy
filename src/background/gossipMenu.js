@@ -102,6 +102,7 @@ ipcMain.on(UPDATE_GOSSIP_MENU, (event, payload) => {
   let queryBuilder = knex()
     .table("gossip_menu")
     .where("MenuID", payload.credential.MenuID)
+    .where("TextID", payload.credential.TextID)
     .update(payload.gossipMenu);
 
   queryBuilder.then(rows => {
