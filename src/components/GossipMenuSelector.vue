@@ -5,8 +5,7 @@
     </el-input>
     <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" @opened="init">
       <div slot="title">
-        <span style="font-size: 18px; color: #303133; margin-right: 16px">对话选项编辑器</span>
-        <el-button size="mini" @click="addGossipMenu">新增</el-button>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px">对话选项选择器</span>
       </div>
       <el-card style="margin-top: 16px">
         <el-form>
@@ -43,7 +42,7 @@
         highlight-current-row
         @current-change="select"
         @row-dblclick="handleDoubleClick"
-        class="gossip-menu-editor"
+        class="gossip-menu-selector"
       >
         <el-table-column prop="MenuID" label="编号" width="80px"> </el-table-column>
         <el-table-column label="文本">
@@ -72,11 +71,11 @@
 </template>
 
 <style scoped>
-.gossip-menu-editor {
+.gossip-menu-selector {
   max-height: 40vh;
   overflow: auto;
 }
-.gossip-menu-editor tbody tr {
+.gossip-menu-selector tbody tr {
   cursor: pointer;
 }
 </style>
@@ -129,7 +128,6 @@ export default {
     showDialog() {
       this.visible = true;
     },
-    addGossipMenu() {},
     async handleSearch() {
       this.paginateGossipMenus({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);

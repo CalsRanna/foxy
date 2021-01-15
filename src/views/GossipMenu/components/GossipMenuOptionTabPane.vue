@@ -25,7 +25,7 @@
           </el-table-column>
           <el-table-column prop="OptionNpcFlag" label="Npc标识" sortable></el-table-column>
           <el-table-column prop="OptionBroadcastTextID" label="广播文本ID" sortable></el-table-column>
-          <el-table-column prop="ActionMenuID" label="子选项" sortable></el-table-column>
+          <el-table-column prop="ActionMenuID" label="子选项编号" sortable></el-table-column>
         </el-table>
       </el-card>
     </div>
