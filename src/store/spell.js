@@ -14,7 +14,7 @@ export default {
     search({ commit, rootState }, payload) {
       return new Promise(resolve => {
         let spells = [];
-        if (rootState.dbc.spells == {}) {
+        if (rootState.dbc.spells.records == undefined) {
           commit(SEARCH_SPELLS, spells);
         } else {
           for (let spell of rootState.dbc.spells.records) {
@@ -40,7 +40,7 @@ export default {
     count({ commit, rootState }, payload) {
       return new Promise(resolve => {
         let spells = [];
-        if (rootState.dbc.spells != {}) {
+        if (rootState.dbc.spells.records != undefined) {
           for (let spell of rootState.dbc.spells.records) {
             if (payload.id !== undefined || payload.name !== undefined) {
               if (payload.id == spell.id || spell.nameLangZhCN.indexOf(payload.name) > -1) {
