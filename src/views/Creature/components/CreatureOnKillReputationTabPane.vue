@@ -130,15 +130,14 @@ export default {
   data() {
     return {
       maxStandings: maxStandings,
+      credential: {},
       initing: false,
+      creating: false,
       loading: false
     };
   },
   computed: {
-    ...mapState("creature", ["creatureOnKillReputation"]),
-    creating() {
-      return this.$route.path == "/creature/create" ? true : false;
-    }
+    ...mapState("creature", ["creatureOnKillReputation"])
   },
   methods: {
     ...mapActions("creature", [
@@ -152,9 +151,10 @@ export default {
       if (this.creating) {
         await this.storeCreatureOnKillReputation(this.creatureOnKillReputation);
       } else {
-        await this.updateCreatureOnKillReputation(
-          this.creatureOnKillReputation
-        );
+        await this.updateCreatureOnKillReputation({
+          credential: this.credential,
+          creatureOnKillReputation: this.creatureOnKillReputation
+        });
       }
       this.loading = false;
     },
@@ -163,11 +163,11 @@ export default {
     },
     async init() {
       this.initing = true;
-      if (this.creating) {
-        await this.createCreatureOnKillReputation();
-      } else {
-        let id = this.$route.params.id;
-        await this.findCreatureOnKillReputation({ creature_id: id });
+      this.credential.creature_id = this.$route.params.id;
+      await this.findCreatureOnKillReputation(this.credential);
+      if (this.creatureOnKillReputation.creature_id == undefined) {
+        this.creating = true;
+        await this.createCreatureOnKillReputation(this.credential);
       }
       this.initing = false;
     }

@@ -3,6 +3,7 @@ const ipcRenderer = window.require("electron").ipcRenderer;
 import {
   COPY_CREATURE_TEMPLATE,
   COUNT_CREATURE_TEMPLATES,
+  CREATE_CREATURE_ONKILL_REPUTATION,
   CREATE_CREATURE_TEMPLATE,
   DESTROY_CREATURE_TEMPLATE,
   FIND_CREATURE_ONKILL_REPUTATION,
@@ -198,6 +199,15 @@ export default {
         });
       });
     },
+    createCreatureOnKillReputation({ commit }, payload) {
+      return new Promise(resolve => {
+        let response = {
+          creature_id: payload.creature_id
+        };
+        commit(CREATE_CREATURE_ONKILL_REPUTATION, response);
+        resolve();
+      });
+    },
     searchCreatureEquipTemplates({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(SEARCH_CREATURE_EQUIP_TEMPLATES, payload);
@@ -246,19 +256,25 @@ export default {
     searchCreatureReferenceLootTemplates({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, (event, response) => {
-          commit(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, response);
-          resolve();
-        });
+        ipcRenderer.on(
+          SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES,
+          (event, response) => {
+            commit(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, response);
+            resolve();
+          }
+        );
       });
     },
     searchPickpocketingLootTemplates({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, response) => {
-          commit(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, response);
-          resolve();
-        });
+        ipcRenderer.on(
+          SEARCH_PICKPOCKETING_LOOT_TEMPLATES,
+          (event, response) => {
+            commit(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, response);
+            resolve();
+          }
+        );
       });
     },
     searchSkinningLootTemplates({ commit }, payload) {
@@ -308,6 +324,9 @@ export default {
     [FIND_CREATURE_ONKILL_REPUTATION](state, creatureOnKillReputation) {
       state.creatureOnKillReputation = creatureOnKillReputation;
     },
+    [CREATE_CREATURE_ONKILL_REPUTATION](state, creatureOnKillReputation) {
+      state.creatureOnKillReputation = creatureOnKillReputation;
+    },
     [SEARCH_CREATURE_EQUIP_TEMPLATES](state, creatureEquipTemplates) {
       state.creatureEquipTemplates = creatureEquipTemplates;
     },
@@ -323,7 +342,10 @@ export default {
     [SEARCH_CREATURE_LOOT_TEMPLATES](state, creatureLootTemplates) {
       state.creatureLootTemplates = creatureLootTemplates;
     },
-    [SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES](state, creatureReferenceLootTemplates) {
+    [SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES](
+      state,
+      creatureReferenceLootTemplates
+    ) {
       state.creatureReferenceLootTemplates = creatureReferenceLootTemplates;
     },
     [SEARCH_PICKPOCKETING_LOOT_TEMPLATES](state, pickpocketingLootTemplates) {
