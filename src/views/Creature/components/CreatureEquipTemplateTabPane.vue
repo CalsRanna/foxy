@@ -4,12 +4,17 @@
       <el-card style="margin-top: 16px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
-        <el-button type="danger" @click="destroy" :disabled="disabled"
-          >删除</el-button
-        >
+        <el-button type="danger" @click="destroy" :disabled="disabled">
+          删除
+        </el-button>
       </el-card>
       <el-card style="margin-top: 16px">
-        <el-table :data="creatureEquipTemplates">
+        <el-table
+          :data="creatureEquipTemplates"
+          highlight-current-row
+          @current-change="select"
+          @row-dblclick="show"
+        >
           <el-table-column prop="ID" label="编号"></el-table-column>
           <el-table-column label="物品1">
             <template slot-scope="scope">
