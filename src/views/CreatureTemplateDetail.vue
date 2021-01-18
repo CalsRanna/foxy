@@ -631,21 +631,6 @@ export default {
     ]),
     async switchover(tab) {
       let id = this.creatureTemplate.entry;
-      if (tab.name === "creature_template_addon") {
-        this.loading = true;
-        await this.findCreatureTemplateAddon({ entry: id });
-        this.loading = false;
-      }
-      if (tab.name === "creature_onkill_reputation") {
-        this.loading = true;
-        await this.findCreatureOnKillReputation({ creature_id: id });
-        this.loading = false;
-      }
-      if (tab.name === "creature_equip_template") {
-        this.loading = true;
-        await this.searchCreatureEquipTemplates({ creatureId: id });
-        this.loading = false;
-      }
       if (tab.name === "npc_vendor") {
         this.loading = true;
         await this.searchNpcVendors({ entry: id });
@@ -741,25 +726,7 @@ export default {
     },
     cancel() {
       this.$router.go(-1);
-    },
-    async init() {
-      this.loading = true;
-      let id = this.$route.params.id;
-      let path = this.$route.path;
-      if (path === "/creature/create") {
-        await this.createCreatureTemplate();
-      } else {
-        this.isCreating = false;
-        await Promise.all([
-          this.findCreatureTemplate({ entry: id }),
-          this.searchCreatureTemplateLocales({ entry: id })
-        ]);
-      }
-      this.loading = false;
     }
-  },
-  mounted() {
-    this.init();
   },
   components: {
     "creature-template-tab-pane": CreatureTemplateTabPane,

@@ -2,6 +2,7 @@ import { ipcMain } from "electron";
 import {
   COPY_CREATURE_TEMPLATE,
   COUNT_CREATURE_TEMPLATES,
+  CREATE_CREATURE_ONKILL_REPUTATION,
   CREATE_CREATURE_TEMPLATE,
   DESTROY_CREATURE_TEMPLATE,
   FIND_CREATURE_ONKILL_REPUTATION,
@@ -43,22 +44,32 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
     ])
     .from("creature_template as ct")
     .leftJoin("creature_template_locale as ctl", function() {
-      this.on("ct.entry", "=", "ctl.entry").andOn("ctl.locale", "=", knex().raw("?", "zhCN"));
+      this.on("ct.entry", "=", "ctl.entry").andOn(
+        "ctl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     });
   if (payload.entry) {
     queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where(builder =>
-      builder.where("ct.name", "like", `%${payload.name}%`).orWhere("ctl.Name", "like", `%${payload.name}%`)
+      builder
+        .where("ct.name", "like", `%${payload.name}%`)
+        .orWhere("ctl.Name", "like", `%${payload.name}%`)
     );
   }
   if (payload.subname) {
     queryBuilder = queryBuilder.where(builder =>
-      builder.where("ct.subname", "like", `%${payload.subname}%`).orWhere("ctl.Title", "like", `%${payload.subname}%`)
+      builder
+        .where("ct.subname", "like", `%${payload.subname}%`)
+        .orWhere("ctl.Title", "like", `%${payload.subname}%`)
     );
   }
-  queryBuilder = queryBuilder.limit(50).offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+  queryBuilder = queryBuilder
+    .limit(50)
+    .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
 
   queryBuilder.then(rows => {
     event.reply(SEARCH_CREATURE_TEMPLATES, rows);
@@ -75,19 +86,27 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
     .count("* as total")
     .from("creature_template as ct")
     .leftJoin("creature_template_locale as ctl", function() {
-      this.on("ct.entry", "=", "ctl.entry").andOn("ctl.locale", "=", knex().raw("?", "zhCN"));
+      this.on("ct.entry", "=", "ctl.entry").andOn(
+        "ctl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     });
   if (payload.entry) {
     queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where(builder =>
-      builder.where("ct.name", "like", `%${payload.name}%`).orWhere("ctl.Name", "like", `%${payload.name}%`)
+      builder
+        .where("ct.name", "like", `%${payload.name}%`)
+        .orWhere("ctl.Name", "like", `%${payload.name}%`)
     );
   }
   if (payload.subname) {
     queryBuilder = queryBuilder.where(builder =>
-      builder.where("ct.subname", "like", `%${payload.subname}%`).orWhere("ctl.Title", "like", `%${payload.subname}%`)
+      builder
+        .where("ct.subname", "like", `%${payload.subname}%`)
+        .orWhere("ctl.Title", "like", `%${payload.subname}%`)
     );
   }
 
@@ -371,7 +390,10 @@ ipcMain.on(FIND_CREATURE_ONKILL_REPUTATION, (event, payload) => {
     .where(payload);
 
   queryBuilder.then(rows => {
-    event.reply(FIND_CREATURE_ONKILL_REPUTATION, rows.length > 0 ? rows[0] : {});
+    event.reply(
+      FIND_CREATURE_ONKILL_REPUTATION,
+      rows.length > 0 ? rows[0] : {}
+    );
     event.reply(GLOBAL_NOTICE, {
       category: "message",
       message: queryBuilder.toString()
@@ -383,8 +405,8 @@ ipcMain.on(FIND_CREATURE_ONKILL_REPUTATION, (event, payload) => {
 ipcMain.on(UPDATE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
   let queryBuilder = knex()
     .table("creature_onkill_reputation")
-    .where("creature_id", payload.creature_id)
-    .update(payload);
+    .where(payload.credential)
+    .update(payload.creatureOnKillReputation);
 
   queryBuilder.then(rows => {
     event.reply(UPDATE_CREATURE_ONKILL_REPUTATION, rows);
@@ -419,15 +441,27 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
     .from("creature_equip_template as cet")
     .leftJoin("item_template as it1", "cet.ItemID1", "it1.entry")
     .leftJoin("item_template_locale as itl1", function() {
-      this.on("cet.ItemID1", "=", "itl1.ID").andOn("itl1.locale", "=", knex().raw("?", "zhCN"));
+      this.on("cet.ItemID1", "=", "itl1.ID").andOn(
+        "itl1.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     })
     .leftJoin("item_template as it2", "cet.ItemID2", "it2.entry")
     .leftJoin("item_template_locale as itl2", function() {
-      this.on("cet.ItemID2", "=", "itl2.ID").andOn("itl2.locale", "=", knex().raw("?", "zhCN"));
+      this.on("cet.ItemID2", "=", "itl2.ID").andOn(
+        "itl2.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     })
     .leftJoin("item_template as it3", "cet.ItemID3", "it3.entry")
     .leftJoin("item_template_locale as itl3", function() {
-      this.on("cet.ItemID3", "=", "itl3.ID").andOn("itl3.locale", "=", knex().raw("?", "zhCN"));
+      this.on("cet.ItemID3", "=", "itl3.ID").andOn(
+        "itl3.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     })
     .where("cet.CreatureID", payload.creatureId);
 
@@ -447,7 +481,11 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
     .from("npc_vendor as nv")
     .leftJoin("item_template as it", "nv.item", "it.entry")
     .leftJoin("item_template_locale as itl", function() {
-      this.on("nv.item", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+      this.on("nv.item", "=", "itl.ID").andOn(
+        "itl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     })
     .where("nv.entry", payload.entry);
 
@@ -483,7 +521,11 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ITEMS, (event, payload) => {
     .from("creature_questitem as cq")
     .leftJoin("item_template as it", "cq.ItemId", "it.entry")
     .leftJoin("item_template_locale as itl", function() {
-      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+      this.on("it.entry", "=", "itl.ID").andOn(
+        "itl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     })
     .where("cq.CreatureEntry", payload.creatureEntry);
 
@@ -503,7 +545,11 @@ ipcMain.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, payload) => {
     .from("creature_loot_template as clt")
     .leftJoin("item_template as it", "clt.Item", "it.entry")
     .leftJoin("item_template_locale as itl", function() {
-      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+      this.on("it.entry", "=", "itl.ID").andOn(
+        "itl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     })
     .where("clt.Entry", payload.entry);
 
@@ -522,7 +568,11 @@ ipcMain.on(SEARCH_CREATURE_REFERENCE_LOOT_TEMPLATES, (event, payload) => {
     .from("reference_loot_template as rlt")
     .leftJoin("item_template as it", "rlt.Item", "it.entry")
     .leftJoin("item_template_locale as itl", function() {
-      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+      this.on("it.entry", "=", "itl.ID").andOn(
+        "itl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     })
     .whereIn("rlt.Entry", payload.entries);
 
@@ -542,7 +592,11 @@ ipcMain.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, payload) => {
     .from("pickpocketing_loot_template as plt")
     .leftJoin("item_template as it", "plt.Item", "it.entry")
     .leftJoin("item_template_locale as itl", function() {
-      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+      this.on("it.entry", "=", "itl.ID").andOn(
+        "itl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     })
     .where("plt.Entry", payload.entry);
 
@@ -562,7 +616,11 @@ ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
     .from("skinning_loot_template as slt")
     .leftJoin("item_template as it", "slt.Item", "it.entry")
     .leftJoin("item_template_locale as itl", function() {
-      this.on("it.entry", "=", "itl.ID").andOn("itl.locale", "=", knex().raw("?", "zhCN"));
+      this.on("it.entry", "=", "itl.ID").andOn(
+        "itl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     })
     .where("slt.Entry", payload.entry);
 
