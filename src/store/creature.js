@@ -49,12 +49,20 @@ export default {
     creatureEquipTemplates: [],
     creatureEquipTemplate: {},
     npcVendors: [],
+    npcVendor: {},
     npcTrainers: [],
+    npcTrainer: {},
     creatureQuestItems: [],
+    creatureQuestItem: {},
     creatureLootTemplates: [],
+    creatureLootTemplate: {},
     creatureReferenceLootTemplates: [],
     pickpocketingLootTemplates: [],
-    skinningLootTemplates: []
+    pickpocketingLootTemplate: {},
+    pickpocketingReferenceLootTemplates: [],
+    skinningLootTemplates: [],
+    skinningLootTemplate: {},
+    skinningReferenceLootTemplates: []
   }),
   actions: {
     searchCreatureTemplates({ commit }, payload) {
