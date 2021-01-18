@@ -30,6 +30,9 @@
       <el-tab-pane label="装备模板" name="creature_equip_template" lazy>
         <creature-equip-template-tab-pane></creature-equip-template-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="任务物品" name="creature_questitem" lazy>
+        <creature-quest-item-tab-pane></creature-quest-item-tab-pane>
+      </el-tab-pane>
       <el-tab-pane
         label="商人"
         name="npc_vendor"
@@ -45,9 +48,6 @@
         :disabled="(creatureTemplate.npcflag & 4194416) == 0"
       >
         <npc-trainer-tab-pane></npc-trainer-tab-pane>
-      </el-tab-pane>
-      <el-tab-pane label="任务物品" name="creature_questitem" lazy>
-        <creature-quest-item-tab-pane></creature-quest-item-tab-pane>
       </el-tab-pane>
       <el-tab-pane
         label="击杀掉落"
