@@ -241,9 +241,8 @@
           </el-table>
         </el-card>
         <el-card
-          v-for="(
-            creatureReferenceLootTemplates, index
-          ) in groupedCreatureReferenceLootTemplates"
+          v-for="(creatureReferenceLootTemplates,
+          index) in groupedCreatureReferenceLootTemplates"
           :key="`creatureReferenceLootTemplates-${index}`"
           :header="`关联掉落${creatureReferenceLootTemplates[0].Entry}`"
           style="margin-top: 16px"
@@ -299,7 +298,7 @@
         v-loading="loading"
         :disabled="
           creatureTemplate.pickpocketloot == 0 ||
-          creatureTemplate.pickpocketloot == null
+            creatureTemplate.pickpocketloot == null
         "
       >
         <el-card style="margin-top: 16px">
@@ -511,14 +510,11 @@ import {
   mechanicImmuneMasks,
   dmgSchools,
   inhabitTypes,
-  maxStandings,
+  maxStandings
 } from "@/locales/creature";
 
 import { mapState, mapGetters, mapActions } from "vuex";
 
-import FlagEditor from "@/components/FlagEditor";
-import GossipMenuSelector from "@/components/GossipMenuSelector";
-import SpellSelector from "@/components/SpellSelector";
 import CreatureTemplateTabPane from "@/views/Creature/components/CreatureTemplateTabPane";
 import CreatureTemplateAddonTabPane from "@/views/Creature/components/CreatureTemplateAddonTabPane";
 import CreatureOnKillReputationTabPane from "@/views/Creature/components/CreatureOnKillReputationTabPane.vue";
@@ -540,7 +536,7 @@ export default {
       mechanicImmuneMasks: mechanicImmuneMasks,
       dmgSchools: dmgSchools,
       inhabitTypes: inhabitTypes,
-      maxStandings: maxStandings,
+      maxStandings: maxStandings
     };
   },
   computed: {
@@ -557,7 +553,7 @@ export default {
       "creatureLootTemplates",
       "creatureReferenceLootTemplates",
       "pickpocketingLootTemplates",
-      "skinningLootTemplates",
+      "skinningLootTemplates"
     ]),
     ...mapGetters("dbc", { icons: "itemIcons" }),
     localeName() {
@@ -601,14 +597,14 @@ export default {
     groupedCreatureReferenceLootTemplates() {
       let groups = {};
       this.creatureReferenceLootTemplates.forEach(
-        (creatureReferenceLootTemplate) => {
+        creatureReferenceLootTemplate => {
           const key = creatureReferenceLootTemplate.Entry;
           groups[key] = groups[key] || [];
           groups[key].push(creatureReferenceLootTemplate);
         }
       );
-      return Object.keys(groups).map((group) => groups[group]);
-    },
+      return Object.keys(groups).map(group => groups[group]);
+    }
   },
   methods: {
     ...mapActions("creature", [
@@ -631,7 +627,7 @@ export default {
       "searchCreatureLootTemplates",
       "searchCreatureReferenceLootTemplates",
       "searchPickpocketingLootTemplates",
-      "searchSkinningLootTemplates",
+      "searchSkinningLootTemplates"
     ]),
     async switchover(tab) {
       let id = this.creatureTemplate.entry;
@@ -669,7 +665,7 @@ export default {
         this.loading = true;
         await this.searchCreatureLootTemplates({ entry: id });
         this.searchCreatureReferenceLootTemplates({
-          entries: this.creatureReferenceLootTemplateEntries,
+          entries: this.creatureReferenceLootTemplateEntries
         });
         this.loading = false;
       }
@@ -690,7 +686,7 @@ export default {
     addCreatureTemplateLocale() {
       this.creatureTemplateLocales.push({
         entry: this.creatureTemplate.entry,
-        VerifiedBuild: 0,
+        VerifiedBuild: 0
       });
     },
     deleteCreatureTemplateLocale(index) {
@@ -756,23 +752,20 @@ export default {
         this.isCreating = false;
         await Promise.all([
           this.findCreatureTemplate({ entry: id }),
-          this.searchCreatureTemplateLocales({ entry: id }),
+          this.searchCreatureTemplateLocales({ entry: id })
         ]);
       }
       this.loading = false;
-    },
+    }
   },
-  created() {
+  mounted() {
     this.init();
   },
   components: {
-    "flag-editor": FlagEditor,
-    "gossip-menu-selector": GossipMenuSelector,
-    "spell-selector": SpellSelector,
     "creature-template-tab-pane": CreatureTemplateTabPane,
-    "creature-template-addon-tab-pane": CreatureTemplateTabAddonPane,
+    "creature-template-addon-tab-pane": CreatureTemplateAddonTabPane,
     "creature-on-kill-reputation-tab-pane": CreatureOnKillReputationTabPane,
-    CreatureEquipTemplateTabPane,
-  },
+    CreatureEquipTemplateTabPane
+  }
 };
 </script>

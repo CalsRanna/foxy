@@ -73,14 +73,14 @@ export default {
       creating: false,
       editing: false,
       currentRow: undefined,
-      loading: false,
+      loading: false
     };
   },
   computed: {
-    ...mapState("creatureTemplate", [
+    ...mapState("creature", [
       "creatureTemplate",
       "creatureEquipTemplates",
-      "creatureEquipTemplate",
+      "creatureEquipTemplate"
     ]),
     disabled() {
       return this.currentRow == undefined;
@@ -88,23 +88,23 @@ export default {
     credential() {
       return {
         creatureId:
-          this.currentRow != undefined ? this.currentRow.creatureId : undefined,
+          this.currentRow != undefined ? this.currentRow.creatureId : undefined
       };
-    },
+    }
   },
   methods: {
-    ...mapActions("creatureTemplate", [
+    ...mapActions("creature", [
       "searchCreatureEquipTemplates",
       "storeCreatureEquipTemplate",
       "findCreatureEquipTemplate",
       "updateCreatureEquipTemplate",
       "destroyCreatureEquipTemplate",
       "createCreatureEquipTemplate",
-      "copyCreatureEquipTemplate",
+      "copyCreatureEquipTemplate"
     ]),
     async create() {
       await this.createCreatureEquipTemplate({
-        creatureId: this.creatureTemplate.creatureId,
+        creatureId: this.creatureTemplate.creatureId
       });
       this.creating = true;
     },
@@ -114,11 +114,11 @@ export default {
       } else {
         await this.updateCreatureEquipTemplate({
           credential: this.credential,
-          creatureEquipTemplate: this.creatureEquipTemplate,
+          creatureEquipTemplate: this.creatureEquipTemplate
         });
       }
       await this.searchCreatureEquipTemplates({
-        creatureId: this.creatureTemplate.creatureId,
+        creatureId: this.creatureTemplate.creatureId
       });
       this.creating = false;
     },
@@ -135,11 +135,11 @@ export default {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
             this.copyCreatureEquipTemplate({
-              creatureId: this.currentRow.creatureId,
+              creatureId: this.currentRow.creatureId
             })
               .then(() => {
                 this.searchCreatureEquipTemplates({
-                  creatureId: this.creatureTemplate.creatureId,
+                  creatureId: this.creatureTemplate.creatureId
                 });
               })
               .then(() => {
@@ -149,7 +149,7 @@ export default {
           } else {
             done();
           }
-        },
+        }
       });
     },
     destroy() {
@@ -165,11 +165,11 @@ export default {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
               this.destroyCreatureEquipTemplate({
-                creatureId: this.currentRow.creatureId,
+                creatureId: this.currentRow.creatureId
               })
                 .then(() => {
                   this.searchCreatureEquipTemplates({
-                    creatureId: this.creatureTemplate.creatureId,
+                    creatureId: this.creatureTemplate.creatureId
                   });
                 })
                 .then(() => {
@@ -179,7 +179,7 @@ export default {
             } else {
               done();
             }
-          },
+          }
         }
       );
     },
@@ -188,7 +188,7 @@ export default {
     },
     async show(row) {
       await this.findCreatureEquipTemplate({
-        creatureId: row.creatureId,
+        creatureId: row.creatureId
       });
       this.creating = true;
       this.editing = true;
@@ -198,10 +198,10 @@ export default {
       let id = this.$route.params.id;
       await this.searchCreatureEquipTemplates({ creatureId: id });
       this.loading = false;
-    },
+    }
   },
   mounted() {
     this.init();
-  },
+  }
 };
 </script>

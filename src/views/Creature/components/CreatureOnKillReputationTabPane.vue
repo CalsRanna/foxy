@@ -129,22 +129,23 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
+      maxStandings: maxStandings,
       initing: false,
-      loading: false,
+      loading: false
     };
   },
   computed: {
     ...mapState("creature", ["creatureOnKillReputation"]),
     creating() {
       return this.$route.path == "/creature/create" ? true : false;
-    },
+    }
   },
   methods: {
     ...mapActions("creature", [
       "storeCreatureOnKillReputation",
       "findCreatureOnKillReputation",
       "updateCreatureOnKillReputation",
-      "createCreatureOnKillReputation",
+      "createCreatureOnKillReputation"
     ]),
     async store() {
       this.loading = true;
@@ -169,10 +170,10 @@ export default {
         await this.findCreatureOnKillReputation({ creature_id: id });
       }
       this.initing = false;
-    },
+    }
   },
   mounted() {
     this.init();
-  },
+  }
 };
 </script>
