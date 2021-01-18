@@ -761,7 +761,7 @@
           <el-form-item>
             <hint-label
               label="击杀关联1"
-              :tooltip="KillCredit1Tooltip"
+              :tooltip="killCredit1Tooltip"
               slot="label"
             ></hint-label>
             <el-input
@@ -774,7 +774,7 @@
           <el-form-item>
             <hint-label
               label="击杀关联2"
-              :tooltip="KillCredit2Tooltip"
+              :tooltip="killCredit2Tooltip"
               slot="label"
             ></hint-label>
             <el-input
@@ -979,10 +979,10 @@ import {
   movementIdTooltip,
   inhabitTypeTooltip,
   inhabitTypes,
-  hoverHeightTooltip,
+  hoverHeightTooltip
 } from "@/locales/creature";
 
-import CreatureTemplateLocalizer from "@/components/CreatureTemplateLocalizer";
+import CreatureTemplateLocalizer from "@/views/Creature/components/CreatureTemplateLocalizer";
 import FlagEditor from "@/components/FlagEditor";
 import GossipMenuSelector from "@/components/GossipMenuSelector";
 import HintLabel from "@/components/HintLabel";
@@ -1033,14 +1033,14 @@ export default {
       inhabitTypes: inhabitTypes,
       hoverHeightTooltip: hoverHeightTooltip,
       initing: false,
-      loading: false,
+      loading: false
     };
   },
   computed: {
     ...mapState("creature", ["creatureTemplate", "creatureTemplateLocales"]),
     creating() {
       return this.$route.path == "/creature/create" ? true : false;
-    },
+    }
   },
   methods: {
     ...mapActions("creature", [
@@ -1049,7 +1049,7 @@ export default {
       "updateCreatureTemplate",
       "createCreatureTemplate",
       "searchCreatureTemplateLocales",
-      "storeCreatureTemplateLocales",
+      "storeCreatureTemplateLocales"
     ]),
     async store() {
       this.loading = true;
@@ -1071,11 +1071,11 @@ export default {
         let id = this.$route.params.id;
         await Promise.all([
           this.findCreatureTemplate({ entry: id }),
-          this.searchCreatureTemplateLocales({ entry: id }),
+          this.searchCreatureTemplateLocales({ entry: id })
         ]);
       }
       this.initing = false;
-    },
+    }
   },
   mounted() {
     this.init();
@@ -1083,9 +1083,9 @@ export default {
   components: {
     "flag-editor": FlagEditor,
     "gossip-menu-selector": GossipMenuSelector,
-    "hint-lable": HintLabel,
+    "hint-label": HintLabel,
     "spell-selector": SpellSelector,
-    "creature-template-localizer": CreatureTemplateLocalizer,
-  },
+    "creature-template-localizer": CreatureTemplateLocalizer
+  }
 };
 </script>
