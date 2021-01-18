@@ -91,20 +91,20 @@ export default {
     return {
       text: undefined,
       visible: false,
-      loading: false,
+      loading: false
     };
   },
   props: {
     value: String,
-    placeholder: String,
+    placeholder: String
   },
   watch: {
-    value: function (newValue) {
-      this.flag = newValue;
-    },
+    value: function(newValue) {
+      this.text = newValue;
+    }
   },
   computed: {
-    ...mapState("creature", ["creatureTemplateLocales"]),
+    ...mapState("creature", ["creatureTemplateLocales"])
   },
   methods: {
     ...mapActions("creature", ["storeCreatureTemplateLocales"]),
@@ -120,7 +120,7 @@ export default {
     create() {
       this.creatureTemplateLocales.push({
         entry: this.creatureTemplate.entry,
-        VerifiedBuild: 0,
+        VerifiedBuild: 0
       });
     },
     destroy(index) {
@@ -134,10 +134,10 @@ export default {
     },
     cancel() {
       this.visible = false;
-    },
+    }
   },
   created() {
     this.text = this.value;
-  },
+  }
 };
 </script>
