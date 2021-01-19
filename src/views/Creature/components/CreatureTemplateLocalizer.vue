@@ -104,6 +104,7 @@ export default {
     }
   },
   computed: {
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"])
   },
   methods: {
