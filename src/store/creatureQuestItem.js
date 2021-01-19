@@ -17,7 +17,7 @@ export default {
     creatureQuestItem: {}
   }),
   actions: {
-    searchCreatureEquipTemplates({ commit }, payload) {
+    searchCreatureQuestItems({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(SEARCH_CREATURE_QUEST_ITEMS, payload);
         ipcRenderer.on(SEARCH_CREATURE_QUEST_ITEMS, (event, response) => {
@@ -26,15 +26,15 @@ export default {
         });
       });
     },
-    storeCreatureEquipTemplate(context, payload) {
+    storeCreatureQuestItem(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(STORE_CREATURE_QUEST_ITEM, payload);
-        ipcRenderer.on(STORE_CREATURE_QUEST_ITEM, (event, response) => {
+        ipcRenderer.on(STORE_CREATURE_QUEST_ITEM, () => {
           resolve();
         });
       });
     },
-    findCreatureEquipTemplate({ commit }, payload) {
+    findCreatureQuestItem({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(FIND_CREATURE_QUEST_ITEM, payload);
         ipcRenderer.on(FIND_CREATURE_QUEST_ITEM, (event, response) => {
@@ -43,23 +43,23 @@ export default {
         });
       });
     },
-    updateCreatureEquipTemplate(context, payload) {
+    updateCreatureQuestItem(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(UPDATE_CREATURE_QUEST_ITEM, payload);
-        ipcRenderer.on(UPDATE_CREATURE_QUEST_ITEM, (event, response) => {
+        ipcRenderer.on(UPDATE_CREATURE_QUEST_ITEM, () => {
           resolve();
         });
       });
     },
-    destroyCreatureEquipTemplate(context, payload) {
+    destroyCreatureQuestItem(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(DESTROY_CREATURE_QUEST_ITEM, payload);
-        ipcRenderer.on(DESTROY_CREATURE_QUEST_ITEM, (event, response) => {
+        ipcRenderer.on(DESTROY_CREATURE_QUEST_ITEM, () => {
           resolve();
         });
       });
     },
-    createCreatureEquipTemplate({ commit }, payload) {
+    createCreatureQuestItem({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(CREATE_CREATURE_QUEST_ITEM, payload);
         ipcRenderer.on(CREATE_CREATURE_QUEST_ITEM, (event, response) => {
@@ -68,10 +68,10 @@ export default {
         });
       });
     },
-    copyCreatureEquipTemplate(context, payload) {
+    copyCreatureQuestItem(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(COPY_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(COPY_CREATURE_EQUIP_TEMPLATE, (event, response) => {
+        ipcRenderer.on(COPY_CREATURE_EQUIP_TEMPLATE, () => {
           resolve();
         });
       });
@@ -79,13 +79,13 @@ export default {
   },
   mutations: {
     [SEARCH_CREATURE_QUEST_ITEMS](state, creatureQuestItems) {
-      state.creatureEquipTemplates = creatureQuestItems;
+      state.creatureQuestItems = creatureQuestItems;
     },
     [FIND_CREATURE_QUEST_ITEM](state, creatureQuestItem) {
-      state.creatureEquipTemplate = creatureQuestItem;
+      state.creatureQuestItem = creatureQuestItem;
     },
     [CREATE_CREATURE_QUEST_ITEM](state, creatureQuestItem) {
-      state.creatureEquipTemplate = creatureQuestItem;
+      state.creatureQuestItem = creatureQuestItem;
     }
   }
 };

@@ -103,7 +103,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", ["creatureTemplate"]),
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureQuestItem", [
       "creatureQuestItems",
       "creatureQuestItem"
@@ -114,9 +114,7 @@ export default {
     credential() {
       return {
         CreatureEntry:
-          this.currentRow != undefined
-            ? this.currentRow.CreatureEntry
-            : undefined,
+          this.currentRow != undefined ? this.currentRow.entry : undefined,
         Idx: this.currentRow != undefined ? this.currentRow.Idx : undefined
       };
     }
@@ -148,7 +146,7 @@ export default {
         });
       }
       await this.searchCreatureQuestItems({
-        creatureEntry: this.creatureTemplate.CreatureEntry
+        creatureEntry: this.creatureTemplate.entry
       });
       this.creating = false;
       this.editing = false;

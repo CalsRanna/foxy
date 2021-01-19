@@ -63,11 +63,10 @@ export default {
         });
       });
     },
-    updateCreatureTemplate({ commit }, payload) {
+    updateCreatureTemplate(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(UPDATE_CREATURE_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_CREATURE_TEMPLATE, () => {
-          commit(UPDATE_CREATURE_TEMPLATE, payload);
           resolve();
         });
       });
@@ -109,9 +108,6 @@ export default {
       state.page = page;
     },
     [FIND_CREATURE_TEMPLATE](state, creatureTemplate) {
-      state.creatureTemplate = creatureTemplate;
-    },
-    [UPDATE_CREATURE_TEMPLATE](state, creatureTemplate) {
       state.creatureTemplate = creatureTemplate;
     },
     [CREATE_CREATURE_TEMPLATE](state, creatureTemplate) {

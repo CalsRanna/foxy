@@ -4,13 +4,14 @@ import { app, protocol, BrowserWindow, ipcMain, dialog } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
 import "./background/dbc.js";
-import "./background/creature.js";
+// import "./background/creature.js";
 import "./background/creatureTemplate.js";
 import "./background/creatureTemplateLocale.js";
 import "./background/creatureTemplateAddon.js";
 import "./background/creatureOnKillReputation.js";
 import "./background/creatureEquipTemplate.js";
 import "./background/creatureQuestItem.js";
+import "./background/npcVendor.js";
 import "./background/gameObject.js";
 import "./background/item.js";
 import "./background/quest.js";

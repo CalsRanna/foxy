@@ -173,7 +173,7 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            thiscopyCreatureTemplate({ entry: this.currentRow.entry })
+            this.copyCreatureTemplate({ entry: this.currentRow.entry })
               .then(() => {
                 Promise.all([
                   this.searchCreatureTemplates(this.payload),

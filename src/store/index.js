@@ -3,7 +3,14 @@ import Vuex from "vuex";
 
 import global from "./global";
 import dbc from "./dbc";
-import creature from "./creature";
+// import creature from "./creature";
+import creatureTemplate from "./creatureTemplate";
+import creatureTemplateLocale from "./creatureTemplateLocale";
+import creatureTemplateAddon from "./creatureTemplateAddon";
+import creatureOnKillReputation from "./creatureOnKillReputation";
+import creatureEquipTemplate from "./creatureEquipTemplate";
+import creatureQuestItem from "./creatureQuestItem";
+import npcVendor from "./npcVendor";
 import gameObject from "./gameObject";
 import item from "./item";
 import quest from "./quest";
@@ -18,13 +25,20 @@ export default new Vuex.Store({
   modules: {
     global,
     dbc,
-    creature,
+    // creature,
+    creatureTemplate,
+    creatureTemplateLocale,
+    creatureTemplateAddon,
+    creatureOnKillReputation,
+    creatureEquipTemplate,
+    creatureQuestItem,
+    npcVendor,
     gameObject,
     item,
     quest,
     spell,
     smartScript,
     setting,
-    gossipMenu,
-  },
+    gossipMenu
+  }
 });

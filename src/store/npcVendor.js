@@ -17,7 +17,7 @@ export default {
     npcVendor: {}
   }),
   actions: {
-    searchCreatureEquipTemplates({ commit }, payload) {
+    searchNpcVendors({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(SEARCH_NPC_VENDORS, payload);
         ipcRenderer.on(SEARCH_NPC_VENDORS, (event, response) => {
@@ -26,15 +26,15 @@ export default {
         });
       });
     },
-    storeCreatureEquipTemplate(context, payload) {
+    storeNpcVendor(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(STORE_NPC_VENDOR, payload);
-        ipcRenderer.on(STORE_NPC_VENDOR, (event, response) => {
+        ipcRenderer.on(STORE_NPC_VENDOR, () => {
           resolve();
         });
       });
     },
-    findCreatureEquipTemplate({ commit }, payload) {
+    findNpcVendor({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(FIND_NPC_VENDOR, payload);
         ipcRenderer.on(FIND_NPC_VENDOR, (event, response) => {
@@ -43,32 +43,32 @@ export default {
         });
       });
     },
-    updateCreatureEquipTemplate(context, payload) {
+    updateNpcVendor(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(UPDATE_NPC_VENDOR, payload);
-        ipcRenderer.on(UPDATE_NPC_VENDOR, (event, response) => {
+        ipcRenderer.on(UPDATE_NPC_VENDOR, () => {
           resolve();
         });
       });
     },
-    destroyCreatureEquipTemplate(context, payload) {
+    destroyNpcVendor(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(DESTROY_NPC_VENDOR, payload);
-        ipcRenderer.on(DESTROY_NPC_VENDOR, (event, response) => {
+        ipcRenderer.on(DESTROY_NPC_VENDOR, () => {
           resolve();
         });
       });
     },
-    createCreatureEquipTemplate({ commit }, payload) {
+    createNpcVendor({ commit }, payload) {
       return new Promise(resolve => {
         commit(CREATE_NPC_VENDOR, payload);
         resolve();
       });
     },
-    copyCreatureEquipTemplate(context, payload) {
+    copyNpcVendor(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(COPY_NPC_VENDOR, payload);
-        ipcRenderer.on(COPY_NPC_VENDOR, (event, response) => {
+        ipcRenderer.on(COPY_NPC_VENDOR, () => {
           resolve();
         });
       });

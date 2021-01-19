@@ -29,7 +29,7 @@ export default {
     storeCreatureEquipTemplate(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(STORE_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(STORE_CREATURE_EQUIP_TEMPLATE, (event, response) => {
+        ipcRenderer.on(STORE_CREATURE_EQUIP_TEMPLATE, () => {
           resolve();
         });
       });
@@ -46,7 +46,7 @@ export default {
     updateCreatureEquipTemplate(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(UPDATE_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_CREATURE_EQUIP_TEMPLATE, (event, response) => {
+        ipcRenderer.on(UPDATE_CREATURE_EQUIP_TEMPLATE, () => {
           resolve();
         });
       });
@@ -54,21 +54,24 @@ export default {
     destroyCreatureEquipTemplate(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(DESTROY_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_CREATURE_EQUIP_TEMPLATE, (event, response) => {
+        ipcRenderer.on(DESTROY_CREATURE_EQUIP_TEMPLATE, () => {
           resolve();
         });
       });
     },
     createCreatureEquipTemplate({ commit }, payload) {
       return new Promise(resolve => {
-        commit(CREATE_CREATURE_EQUIP_TEMPLATE, payload);
-        resolve();
+        ipcRenderer.send(CREATE_CREATURE_EQUIP_TEMPLATE, payload);
+        ipcRenderer.on(CREATE_CREATURE_EQUIP_TEMPLATE, (event, response) => {
+          commit(CREATE_CREATURE_EQUIP_TEMPLATE, response);
+          resolve();
+        });
       });
     },
     copyCreatureEquipTemplate(context, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(COPY_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(COPY_CREATURE_EQUIP_TEMPLATE, (event, response) => {
+        ipcRenderer.on(COPY_CREATURE_EQUIP_TEMPLATE, () => {
           resolve();
         });
       });
