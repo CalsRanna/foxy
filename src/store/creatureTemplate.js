@@ -15,9 +15,17 @@ import {
 export default {
   namespaced: true,
   state: () => ({
-    page: 1,
-    total: 0,
-    size: 50,
+    refresh: true,
+    credential: {
+      entry: undefined,
+      name: undefined,
+      subname: undefined
+    },
+    pagination: {
+      page: 1,
+      size: 50,
+      total: 0
+    },
     creatureTemplates: [],
     creatureTemplate: {}
   }),
@@ -46,10 +54,11 @@ export default {
         resolve();
       });
     },
-    storeCreatureTemplate(context, payload) {
+    storeCreatureTemplate({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(STORE_CREATURE_TEMPLATE, payload);
         ipcRenderer.on(STORE_CREATURE_TEMPLATE, () => {
+          commit("UPDATE_REFRESH_OF_CREATURE_TEMPLATE", true);
           resolve();
         });
       });
@@ -63,10 +72,11 @@ export default {
         });
       });
     },
-    updateCreatureTemplate(context, payload) {
+    updateCreatureTemplate({ commit }, payload) {
       return new Promise(resolve => {
         ipcRenderer.send(UPDATE_CREATURE_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_CREATURE_TEMPLATE, () => {
+          commit("UPDATE_REFRESH_OF_CREATURE_TEMPLATE", true);
           resolve();
         });
       });
@@ -95,23 +105,40 @@ export default {
           resolve();
         });
       });
+    },
+    resetCredential({ commit }) {
+      return new Promise(resolve => {
+        commit("RESET_CREDENTIAL_OF_CREATURE_TEMPLATE");
+        resolve();
+      });
     }
   },
   mutations: {
     [SEARCH_CREATURE_TEMPLATES](state, creatureTemplates) {
       state.creatureTemplates = creatureTemplates;
+      state.refresh = false;
     },
     [COUNT_CREATURE_TEMPLATES](state, total) {
-      state.total = total;
+      state.pagination.total = total;
     },
     [PAGINATE_CREATURE_TEMPLATES](state, page) {
-      state.page = page;
+      state.pagination.page = page;
     },
     [FIND_CREATURE_TEMPLATE](state, creatureTemplate) {
       state.creatureTemplate = creatureTemplate;
     },
     [CREATE_CREATURE_TEMPLATE](state, creatureTemplate) {
       state.creatureTemplate = creatureTemplate;
+    },
+    UPDATE_REFRESH_OF_CREATURE_TEMPLATE(state, refresh) {
+      state.refresh = refresh;
+    },
+    RESET_CREDENTIAL_OF_CREATURE_TEMPLATE(state) {
+      state.credential = {
+        entry: undefined,
+        name: undefined,
+        subname: undefined
+      };
     }
   }
 };
