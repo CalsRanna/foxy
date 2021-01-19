@@ -24,57 +24,9 @@
                 </template>
                 <template v-else>{{ scope.row.name }}</template>
               </template>
-              <template v-else> 关联掉落 </template>
-            </span>
-          </el-table-column>
-          <el-table-column
-            prop="Reference"
-            label="关联"
-            sortable
-          ></el-table-column>
-          <el-table-column prop="Chance" label="几率" sortable>
-            <span slot-scope="scope">
-              {{ `${scope.row.Chance}%` }}
-            </span>
-          </el-table-column>
-          <el-table-column prop="QuestRequired" label="需要任务" sortable>
-            <span slot-scope="scope">
-              <el-tag type="success" v-if="scope.row.QuestRequired">
-                需要
-              </el-tag>
-              <el-tag v-else>不需要</el-tag>
-            </span>
-          </el-table-column>
-          <el-table-column
-            prop="MinCount"
-            label="最小数量"
-            sortable
-          ></el-table-column>
-          <el-table-column
-            prop="MaxCount"
-            label="最大数量"
-            sortable
-          ></el-table-column>
-        </el-table>
-      </el-card>
-      <el-card
-        v-for="(pickpocketingReferenceLootTemplates,
-        index) in groupedPickpocketingReferenceLootTemplates"
-        :key="`pickpocketingReferenceLootTemplates-${index}`"
-        :header="`关联掉落${pickpocketingReferenceLootTemplates[0].Entry}`"
-        style="margin-top: 16px"
-      >
-        <el-table :data="pickpocketingReferenceLootTemplates">
-          <el-table-column prop="displayid"></el-table-column>
-          <el-table-column label="名称" sortable>
-            <span slot-scope="scope">
-              <template v-if="scope.row.Reference == 0">
-                <template v-if="scope.row.localeName !== null">
-                  {{ scope.row.localeName }}
-                </template>
-                <template v-else>{{ scope.row.name }}</template>
+              <template v-else>
+                <el-tag>关联掉落</el-tag>
               </template>
-              <template v-else> 关联掉落 </template>
             </span>
           </el-table-column>
           <el-table-column
@@ -119,20 +71,104 @@
             <el-col :span="6">
               <el-form-item label="编号">
                 <el-input-number
-                  v-model="pickpocketingLootTemplate.Idx"
+                  v-model="pickpocketingLootTemplate.Entry"
                   controls-position="right"
-                  v-loading="loading"
-                  disabled
-                  placeholder="Idx"
+                  v-loading="initing"
+                  placeholder="Entry"
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(255, 255, 255, 0.5)"
                 ></el-input-number>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="物品">
+                <el-input-number
+                  v-model="pickpocketingLootTemplate.Item"
+                  controls-position="right"
+                  v-loading="initing"
+                  placeholder="Item"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(255, 255, 255, 0.5)"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="关联">
+                <el-input-number
+                  v-model="pickpocketingLootTemplate.Reference"
+                  controls-position="right"
+                  placeholder="Reference"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="几率">
+                <el-input-number
+                  v-model="pickpocketingLootTemplate.Chance"
+                  controls-position="right"
+                  placeholder="Chance"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="需要任务">
+                <el-switch
+                  v-model="pickpocketingLootTemplate.QuestRequired"
+                  :active-value="1"
+                  :inactive-value="0"
+                ></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="掉落模式">
+                <el-input-number
+                  v-model="pickpocketingLootTemplate.LootMode"
+                  controls-position="right"
+                  placeholder="LootMode"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="组ID">
+                <el-input-number
+                  v-model="pickpocketingLootTemplate.GroudId"
+                  controls-position="right"
+                  placeholder="GroudId"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="最小数量">
+                <el-input-number
+                  v-model="pickpocketingLootTemplate.MinCount"
+                  controls-position="right"
+                  placeholder="MinCount"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="最大数量">
+                <el-input-number
+                  v-model="pickpocketingLootTemplate.MaxCount"
+                  controls-position="right"
+                  placeholder="MaxCount"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="注解">
+                <el-input
+                  v-model="pickpocketingLootTemplate.Comment"
+                  placeholder="Comment"
+                ></el-input>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-card>
         <el-card style="margin-top: 16px">
-          <el-button type="primary" @click="store">保存</el-button>
+          <el-button type="primary" :loading="loading" @click="store"
+            >保存</el-button
+          >
           <el-button @click="cancel">返回</el-button>
         </el-card>
       </el-form>
@@ -146,6 +182,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
+      initing: false,
       creating: false,
       editing: false,
       currentRow: undefined,
@@ -153,57 +190,37 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", [
-      "creatureTemplate",
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
+    ...mapState("pickpocketingLootTemplate", [
       "pickpocketingLootTemplates",
-      "pickpocketingLootTemplate",
-      "pickpocketingReferenceLootTemplates"
+      "pickpocketingLootTemplate"
     ]),
     disabled() {
       return this.currentRow == undefined;
     },
     credential() {
       return {
-        entry: this.currentRow != undefined ? this.currentRow.Entry : undefined
+        Entry: this.currentRow != undefined ? this.currentRow.Entry : undefined,
+        Item: this.currentRow != undefined ? this.currentRow.Item : undefined
       };
-    },
-    pickpocketingReferenceLootTemplateEntries() {
-      let entries = [];
-      for (let pickpocketingLootTemplate of this.pickpocketingLootTemplates) {
-        if (pickpocketingLootTemplate.Reference != 0) {
-          entries.push(pickpocketingLootTemplate.Reference);
-        }
-      }
-      return entries;
-    },
-    groupedPickpocketingReferenceLootTemplates() {
-      let groups = {};
-      this.pickpocketingReferenceLootTemplates.forEach(
-        creatureReferenceLootTemplate => {
-          const key = creatureReferenceLootTemplate.Entry;
-          groups[key] = groups[key] || [];
-          groups[key].push(creatureReferenceLootTemplate);
-        }
-      );
-      return Object.keys(groups).map(group => groups[group]);
     }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("pickpocketingLootTemplate", [
       "searchPickpocketingLootTemplates",
       "storePickpocketingLootTemplate",
       "findPickpocketingLootTemplate",
       "updatePickpocketingLootTemplate",
       "destroyPickpocketingLootTemplate",
       "createPickpocketingLootTemplate",
-      "copyPickpocketingLootTemplate",
-      "searchPickpocketingReferenceLootTemplates"
+      "copyPickpocketingLootTemplate"
     ]),
     async create() {
-      await this.createPickpocketingLootTemplate({
-        entry: this.creatureTemplate.lootid
-      });
       this.creating = true;
+      this.editing = false;
+      await this.createPickpocketingLootTemplate({
+        Entry: this.creatureTemplate.pickpocketloot
+      });
     },
     async store() {
       if (!this.editing) {
@@ -217,12 +234,10 @@ export default {
         });
       }
       await this.searchPickpocketingLootTemplates({
-        entry: this.creatureTemplate.Entry
-      });
-      await this.searchPickpocketingReferenceLootTemplates({
-        entries: this.pickpocketingReferenceLootTemplateEntries
+        Entry: this.creatureTemplate.pickpocketloot
       });
       this.creating = false;
+      this.editing = false;
     },
     cancel() {
       this.creating = false;
@@ -236,15 +251,10 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyPickpocketingLootTemplate({
-              entry: this.currentRow.Entry
-            })
+            this.copyPickpocketingLootTemplate(this.credential)
               .then(() => {
                 this.searchPickpocketingLootTemplates({
-                  entry: this.creatureTemplate.Entry
-                });
-                this.searchPickpocketingReferenceLootTemplates({
-                  entries: this.pickpocketingReferenceLootTemplateEntries
+                  Entry: this.creatureTemplate.pickpocketloot
                 });
               })
               .then(() => {
@@ -269,15 +279,10 @@ export default {
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
-              this.destroyPickpocketingLootTemplate({
-                entry: this.currentRow.Entry
-              })
+              this.destroyPickpocketingLootTemplate(this.credential)
                 .then(() => {
                   this.searchPickpocketingLootTemplates({
-                    entry: this.creatureTemplate.Entry
-                  });
-                  this.searchPickpocketingReferenceLootTemplates({
-                    entries: this.pickpocketingReferenceLootTemplateEntries
+                    Entry: this.creatureTemplate.pickpocketloot
                   });
                 })
                 .then(() => {
@@ -295,21 +300,19 @@ export default {
       this.currentRow = row;
     },
     async show(row) {
-      await this.findPickpocketingLootTemplate({
-        entry: row.Entry
-      });
       this.creating = true;
       this.editing = true;
+      await this.findPickpocketingLootTemplate({
+        Entry: row.Entry,
+        Item: row.Item
+      });
     },
     async init() {
-      this.loading = true;
+      this.initing = true;
       await this.searchPickpocketingLootTemplates({
-        entry: this.creatureTemplate.lootid
+        Entry: this.creatureTemplate.pickpocketloot
       });
-      await this.searchPickpocketingReferenceLootTemplates({
-        entries: this.pickpocketingReferenceLootTemplateEntries
-      });
-      this.loading = false;
+      this.initing = false;
     }
   },
   mounted() {

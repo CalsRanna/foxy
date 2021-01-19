@@ -166,7 +166,9 @@
           </el-row>
         </el-card>
         <el-card style="margin-top: 16px">
-          <el-button type="primary" @click="store">保存</el-button>
+          <el-button type="primary" :loading="loading" @click="store"
+            >保存</el-button
+          >
           <el-button @click="cancel">返回</el-button>
         </el-card>
       </el-form>
