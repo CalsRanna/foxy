@@ -9,6 +9,8 @@ import "./background/creatureTemplate.js";
 import "./background/creatureTemplateLocale.js";
 import "./background/creatureTemplateAddon.js";
 import "./background/creatureOnKillReputation.js";
+import "./background/creatureEquipTemplate.js";
+import "./background/creatureQuestItem.js";
 import "./background/gameObject.js";
 import "./background/item.js";
 import "./background/quest.js";

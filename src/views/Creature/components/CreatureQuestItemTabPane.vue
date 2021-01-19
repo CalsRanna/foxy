@@ -36,22 +36,52 @@
         <el-card style="margin-top: 16px">
           <el-row :gutter="24">
             <el-col :span="6">
+              <el-form-item label="生物ID">
+                <el-input-number
+                  v-model="creatureQuestItem.CreatureEntry"
+                  controls-position="right"
+                  v-loading="initing"
+                  placeholder="CreatureEntry"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(255, 255, 255, 0.5)"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
               <el-form-item label="编号">
                 <el-input-number
                   v-model="creatureQuestItem.Idx"
                   controls-position="right"
-                  v-loading="loading"
-                  disabled
+                  v-loading="initing"
                   placeholder="Idx"
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(255, 255, 255, 0.5)"
                 ></el-input-number>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="物品">
+                <el-input-number
+                  v-model="creatureQuestItem.ItemId"
+                  controls-position="right"
+                  placeholder="ItemId"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="VerifiedBuild">
+                <el-input-number
+                  v-model="creatureQuestItem.VerifiedBuild"
+                  placeholder="VerifiedBuild"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-card>
         <el-card style="margin-top: 16px">
-          <el-button type="primary" @click="store">保存</el-button>
+          <el-button type="primary" :loading="loading" @click="store">
+            保存
+          </el-button>
           <el-button @click="cancel">返回</el-button>
         </el-card>
       </el-form>
@@ -65,6 +95,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
+      initing: false,
       creating: false,
       editing: false,
       currentRow: undefined,
@@ -72,8 +103,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", [
-      "creatureTemplate",
+    ...mapState("creature", ["creatureTemplate"]),
+    ...mapState("creatureQuestItem", [
       "creatureQuestItems",
       "creatureQuestItem"
     ]),
@@ -82,15 +113,16 @@ export default {
     },
     credential() {
       return {
-        creatureEntry:
+        CreatureEntry:
           this.currentRow != undefined
             ? this.currentRow.CreatureEntry
-            : undefined
+            : undefined,
+        Idx: this.currentRow != undefined ? this.currentRow.Idx : undefined
       };
     }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("creatureQuestItem", [
       "searchCreatureQuestItems",
       "storeCreatureQuestItem",
       "findCreatureQuestItem",
@@ -100,10 +132,11 @@ export default {
       "copyCreatureQuestItem"
     ]),
     async create() {
-      await this.createCreatureQuestItem({
-        creatureEntry: this.creatureTemplate.CreatureEntry
-      });
       this.creating = true;
+      this.editing = false;
+      await this.createCreatureQuestItem({
+        CreatureEntry: this.creatureTemplate.entry
+      });
     },
     async store() {
       if (!this.editing) {
@@ -118,6 +151,7 @@ export default {
         creatureEntry: this.creatureTemplate.CreatureEntry
       });
       this.creating = false;
+      this.editing = false;
     },
     cancel() {
       this.creating = false;
@@ -131,12 +165,10 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyCreatureQuestItem({
-              creatureEntry: this.currentRow.CreatureEntry
-            })
+            this.copyCreatureQuestItem(this.credential)
               .then(() => {
                 this.searchCreatureQuestItems({
-                  creatureEntry: this.creatureTemplate.CreatureEntry
+                  CreatureEntry: this.creatureTemplate.entry
                 });
               })
               .then(() => {
@@ -161,12 +193,10 @@ export default {
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
-              this.destroyCreatureQuestItem({
-                creatureEntry: this.currentRow.CreatureEntry
-              })
+              this.destroyCreatureQuestItem(this.credential)
                 .then(() => {
                   this.searchCreatureQuestItems({
-                    creatureEntry: this.creatureTemplate.CreatureEntry
+                    CreatureEntry: this.creatureTemplate.entry
                   });
                 })
                 .then(() => {
@@ -184,17 +214,19 @@ export default {
       this.currentRow = row;
     },
     async show(row) {
-      await this.findCreatureQuestItem({
-        creatureEntry: row.CreatureEntry
-      });
       this.creating = true;
       this.editing = true;
+      await this.findCreatureQuestItem({
+        CreatureEntry: row.CreatureEntry,
+        Idx: row.Idx
+      });
     },
     async init() {
-      this.loading = true;
-      let id = this.$route.params.id;
-      await this.searchCreatureQuestItems({ creatureEntry: id });
-      this.loading = false;
+      this.initing = true;
+      await this.searchCreatureQuestItems({
+        CreatureEntry: this.creatureTemplate.entry
+      });
+      this.initing = false;
     }
   },
   mounted() {

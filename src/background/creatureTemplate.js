@@ -269,7 +269,7 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
             type: "success",
             category: "notification",
             title: "成功",
-            message: `复制成功，新的生物模板 entry 为 ${entry + 1}。`
+            message: `复制成功，新的生物模板entry为${entry + 1}。`
           });
         })
         .catch(error => {
