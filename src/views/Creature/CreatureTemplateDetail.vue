@@ -96,8 +96,8 @@ import CreatureQuestItemTabPane from "@/views/Creature/components/CreatureQuestI
 import NpcVendorTabPane from "@/views/Creature/components/NpcVendorTabPane";
 import NpcTrainerTabPane from "@/views/Creature/components/NpcTrainerTabPane";
 import CreatureLootTemplateTabPane from "@/views/Creature/components/CreatureLootTemplateTabPane";
-import PickpocketingLootTemplateTabPane from "./Creature/components/PickpocketingLootTemplateTabPane";
-import SkinningLootTemplateTabPane from "./Creature/components/SkinningLootTemplateTabPane";
+import PickpocketingLootTemplateTabPane from "@/views/Creature/components/PickpocketingLootTemplateTabPane";
+import SkinningLootTemplateTabPane from "@/views/Creature/components/SkinningLootTemplateTabPane";
 
 export default {
   computed: {

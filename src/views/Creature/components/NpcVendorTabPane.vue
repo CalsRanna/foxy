@@ -157,7 +157,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", ["creatureTemplate"]),
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("npcVendor", ["npcVendors", "npcVendor"]),
     disabled() {
       return this.currentRow == undefined;

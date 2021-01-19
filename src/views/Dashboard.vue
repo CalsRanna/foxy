@@ -2,28 +2,43 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">
+          首页
+        </el-breadcrumb-item>
         <el-breadcrumb-item>控制面板</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">控制面板</h3>
     </el-card>
-    <el-alert title="欢迎使用 Foxy ，一款开发中的魔兽世界编辑器。" type="info" style="margin-top: 16px"> </el-alert>
+    <el-alert
+      title="欢迎使用 Foxy ，一款开发中的魔兽世界编辑器。"
+      type="info"
+      style="margin-top: 16px"
+    >
+    </el-alert>
     <el-row :gutter="24" style="margin-top: 16px" :loading="loading">
       <el-col :span="16">
         <el-row>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p class="summary-title">生物模板<span>Creature Template</span></p>
+              <p class="summary-title">
+                生物模板<span>Creature Template</span>
+              </p>
               <p class="summary-content">
-                {{ parseFloat(this.quantityOfCreatureTemplate).toLocaleString() }}
+                {{
+                  parseFloat(this.quantityOfCreatureTemplate).toLocaleString()
+                }}
               </p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p class="summary-title">物体模板<span>Game Object Template</span></p>
+              <p class="summary-title">
+                物体模板<span>Game Object Template</span>
+              </p>
               <p class="summary-content">
-                {{ parseFloat(this.quantityOfGameObjectTemplate).toLocaleString() }}
+                {{
+                  parseFloat(this.quantityOfGameObjectTemplate).toLocaleString()
+                }}
               </p>
             </el-card>
           </el-col>
@@ -78,8 +93,9 @@
             <span>Foxy</span>
           </div>
           <p style="text-indent: 2em">
-            目前存在的编辑器都不是很能满足我对一个好用的编辑器的期望：简单，易用，美观，因此我提交了 Foxy
-            这个开源项目。Foxy 计划中的功能很多，有且不仅有数据库的编辑，还有服务端 dbc
+            目前存在的编辑器都不是很能满足我对一个好用的编辑器的期望：简单，易用，美观，因此我提交了
+            Foxy 这个开源项目。Foxy
+            计划中的功能很多，有且不仅有数据库的编辑，还有服务端 dbc
             文件的修改，服务端及第三方模块配置文件的修改等等，甚至自动对客户端追加补丁等功能都在尝试编码的路上了。
           </p>
           <p style="text-indent: 2em">
@@ -87,7 +103,9 @@
 
             <span
               style="color: #409eff; cursor: pointer"
-              @click="() => openBrowser('https://github.com/CalsRanna/foxy/issues')"
+              @click="
+                () => openBrowser('https://github.com/CalsRanna/foxy/issues')
+              "
             >
               Github
             </span>
@@ -97,7 +115,9 @@
             如果你希望得到最新版本的 Foxy ，请访问
             <span
               style="color: #409eff; cursor: pointer"
-              @click="() => openBrowser('https://github.com/CalsRanna/foxy/release')"
+              @click="
+                () => openBrowser('https://github.com/CalsRanna/foxy/release')
+              "
             >
               下载页面
             </span>
@@ -129,7 +149,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", { quantityOfCreatureTemplate: "total" }),
+    ...mapState("creatureTemplate", { quantityOfCreatureTemplate: "total" }),
     ...mapState("gameObject", { quantityOfGameObjectTemplate: "total" }),
     ...mapState("item", { quantityOfItemTemplate: "total" }),
     ...mapState("quest", { quantityOfQuestTemplate: "total" }),
@@ -149,7 +169,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("creature", ["countCreatureTemplates"]),
+    ...mapActions("creatureTemplate", ["countCreatureTemplates"]),
     ...mapActions("gameObject", ["countGameObjectTemplates"]),
     ...mapActions("item", ["countItemTemplates"]),
     ...mapActions("quest", ["countQuestTemplates"]),

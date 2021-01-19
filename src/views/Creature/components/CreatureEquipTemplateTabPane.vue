@@ -78,8 +78,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-        </el-card>
-        <el-card style="margin-top: 16px">
           <el-row :gutter="24">
             <el-col :span="6">
               <el-form-item label="物品1">
@@ -135,7 +133,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", ["creatureTemplate"]),
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureEquipTemplate", [
       "creatureEquipTemplates",
       "creatureEquipTemplate"

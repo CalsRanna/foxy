@@ -41,6 +41,7 @@ export default {
     createCreatureTemplateAddon({ commit }, payload) {
       return new Promise(resolve => {
         commit(CREATE_CREATURE_TEMPLATE_ADDON, payload);
+        resolve();
       });
     }
   },

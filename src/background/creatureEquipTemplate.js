@@ -52,7 +52,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
         knex().raw("?", "zhCN")
       );
     })
-    .where("cet.CreatureID", payload.creatureId);
+    .where(payload);
 
   queryBuilder
     .then(rows => {
@@ -181,7 +181,7 @@ ipcMain.on(CREATE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
     .then(rows => {
       event.reply(CREATE_CREATURE_EQUIP_TEMPLATE, {
         CreatureID: payload.CreatureID,
-        ID: rows.length > 0 ? rows[0].entry + 1 : 1
+        ID: rows.length > 0 ? rows[0].ID + 1 : 1
       });
     })
     .catch(error => {
