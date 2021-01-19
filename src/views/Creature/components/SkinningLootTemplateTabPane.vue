@@ -24,57 +24,9 @@
                 </template>
                 <template v-else>{{ scope.row.name }}</template>
               </template>
-              <template v-else> 关联掉落 </template>
-            </span>
-          </el-table-column>
-          <el-table-column
-            prop="Reference"
-            label="关联"
-            sortable
-          ></el-table-column>
-          <el-table-column prop="Chance" label="几率" sortable>
-            <span slot-scope="scope">
-              {{ `${scope.row.Chance}%` }}
-            </span>
-          </el-table-column>
-          <el-table-column prop="QuestRequired" label="需要任务" sortable>
-            <span slot-scope="scope">
-              <el-tag type="success" v-if="scope.row.QuestRequired">
-                需要
-              </el-tag>
-              <el-tag v-else>不需要</el-tag>
-            </span>
-          </el-table-column>
-          <el-table-column
-            prop="MinCount"
-            label="最小数量"
-            sortable
-          ></el-table-column>
-          <el-table-column
-            prop="MaxCount"
-            label="最大数量"
-            sortable
-          ></el-table-column>
-        </el-table>
-      </el-card>
-      <el-card
-        v-for="(skinningReferenceLootTemplates,
-        index) in groupedSkinningReferenceLootTemplates"
-        :key="`skinningReferenceLootTemplates-${index}`"
-        :header="`关联掉落${skinningReferenceLootTemplates[0].Entry}`"
-        style="margin-top: 16px"
-      >
-        <el-table :data="skinningReferenceLootTemplates">
-          <el-table-column prop="displayid"></el-table-column>
-          <el-table-column label="名称" sortable>
-            <span slot-scope="scope">
-              <template v-if="scope.row.Reference == 0">
-                <template v-if="scope.row.localeName !== null">
-                  {{ scope.row.localeName }}
-                </template>
-                <template v-else>{{ scope.row.name }}</template>
+              <template v-else>
+                <el-tag>关联掉落</el-tag>
               </template>
-              <template v-else> 关联掉落 </template>
             </span>
           </el-table-column>
           <el-table-column
@@ -119,20 +71,104 @@
             <el-col :span="6">
               <el-form-item label="编号">
                 <el-input-number
-                  v-model="skinningLootTemplate.Idx"
+                  v-model="skinningLootTemplate.Entry"
                   controls-position="right"
-                  v-loading="loading"
-                  disabled
-                  placeholder="Idx"
+                  v-loading="initing"
+                  placeholder="Entry"
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(255, 255, 255, 0.5)"
                 ></el-input-number>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="物品">
+                <el-input-number
+                  v-model="skinningLootTemplate.Item"
+                  controls-position="right"
+                  v-loading="initing"
+                  placeholder="Item"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(255, 255, 255, 0.5)"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="关联">
+                <el-input-number
+                  v-model="skinningLootTemplate.Reference"
+                  controls-position="right"
+                  placeholder="Reference"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="几率">
+                <el-input-number
+                  v-model="skinningLootTemplate.Chance"
+                  controls-position="right"
+                  placeholder="Chance"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="需要任务">
+                <el-switch
+                  v-model="skinningLootTemplate.QuestRequired"
+                  :active-value="1"
+                  :inactive-value="0"
+                ></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="掉落模式">
+                <el-input-number
+                  v-model="skinningLootTemplate.LootMode"
+                  controls-position="right"
+                  placeholder="LootMode"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="组ID">
+                <el-input-number
+                  v-model="skinningLootTemplate.GroudId"
+                  controls-position="right"
+                  placeholder="GroudId"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="最小数量">
+                <el-input-number
+                  v-model="skinningLootTemplate.MinCount"
+                  controls-position="right"
+                  placeholder="MinCount"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="最大数量">
+                <el-input-number
+                  v-model="skinningLootTemplate.MaxCount"
+                  controls-position="right"
+                  placeholder="MaxCount"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="注解">
+                <el-input
+                  v-model="skinningLootTemplate.Comment"
+                  placeholder="Comment"
+                ></el-input>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-card>
         <el-card style="margin-top: 16px">
-          <el-button type="primary" @click="store">保存</el-button>
+          <el-button type="primary" :loading="loading" @click="store"
+            >保存</el-button
+          >
           <el-button @click="cancel">返回</el-button>
         </el-card>
       </el-form>
@@ -146,6 +182,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
+      initing: false,
       creating: false,
       editing: false,
       currentRow: undefined,
@@ -153,57 +190,37 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", [
-      "creatureTemplate",
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
+    ...mapState("skinningLootTemplate", [
       "skinningLootTemplates",
-      "skinningLootTemplate",
-      "skinningReferenceLootTemplates"
+      "skinningLootTemplate"
     ]),
     disabled() {
       return this.currentRow == undefined;
     },
     credential() {
       return {
-        entry: this.currentRow != undefined ? this.currentRow.Entry : undefined
+        Entry: this.currentRow != undefined ? this.currentRow.Entry : undefined,
+        Item: this.currentRow != undefined ? this.currentRow.Item : undefined
       };
-    },
-    skinningReferenceLootTemplateEntries() {
-      let entries = [];
-      for (let skinningLootTemplate of this.skinningLootTemplates) {
-        if (skinningLootTemplate.Reference != 0) {
-          entries.push(skinningLootTemplate.Reference);
-        }
-      }
-      return entries;
-    },
-    groupedSkinningReferenceLootTemplates() {
-      let groups = {};
-      this.skinningReferenceLootTemplates.forEach(
-        creatureReferenceLootTemplate => {
-          const key = creatureReferenceLootTemplate.Entry;
-          groups[key] = groups[key] || [];
-          groups[key].push(creatureReferenceLootTemplate);
-        }
-      );
-      return Object.keys(groups).map(group => groups[group]);
     }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("skinningLootTemplate", [
       "searchSkinningLootTemplates",
       "storeSkinningLootTemplate",
       "findSkinningLootTemplate",
       "updateSkinningLootTemplate",
       "destroySkinningLootTemplate",
       "createSkinningLootTemplate",
-      "copySkinningLootTemplate",
-      "searchSkinningReferenceLootTemplates"
+      "copySkinningLootTemplate"
     ]),
     async create() {
-      await this.createSkinningLootTemplate({
-        entry: this.creatureTemplate.lootid
-      });
       this.creating = true;
+      this.editing = false;
+      await this.createSkinningLootTemplate({
+        Entry: this.creatureTemplate.skinloot
+      });
     },
     async store() {
       if (!this.editing) {
@@ -215,12 +232,10 @@ export default {
         });
       }
       await this.searchSkinningLootTemplates({
-        entry: this.creatureTemplate.Entry
-      });
-      await this.searchSkinningReferenceLootTemplates({
-        entries: this.skinningReferenceLootTemplateEntries
+        Entry: this.creatureTemplate.skinloot
       });
       this.creating = false;
+      this.editing = false;
     },
     cancel() {
       this.creating = false;
@@ -234,15 +249,10 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copySkinningLootTemplate({
-              entry: this.currentRow.Entry
-            })
+            this.copySkinningLootTemplate(this.credential)
               .then(() => {
                 this.searchSkinningLootTemplates({
-                  entry: this.creatureTemplate.Entry
-                });
-                this.searchSkinningReferenceLootTemplates({
-                  entries: this.skinningReferenceLootTemplateEntries
+                  Entry: this.creatureTemplate.skinloot
                 });
               })
               .then(() => {
@@ -267,15 +277,10 @@ export default {
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
-              this.destroySkinningLootTemplate({
-                entry: this.currentRow.Entry
-              })
+              this.destroySkinningLootTemplate(this.credential)
                 .then(() => {
                   this.searchSkinningLootTemplates({
-                    entry: this.creatureTemplate.Entry
-                  });
-                  this.searchSkinningReferenceLootTemplates({
-                    entries: this.skinningReferenceLootTemplateEntries
+                    Entry: this.creatureTemplate.skinloot
                   });
                 })
                 .then(() => {
@@ -293,21 +298,19 @@ export default {
       this.currentRow = row;
     },
     async show(row) {
-      await this.findSkinningLootTemplate({
-        entry: row.Entry
-      });
       this.creating = true;
       this.editing = true;
+      await this.findSkinningLootTemplate({
+        Entry: row.Entry,
+        Item: row.Item
+      });
     },
     async init() {
-      this.loading = true;
+      this.initing = true;
       await this.searchSkinningLootTemplates({
-        entry: this.creatureTemplate.lootid
+        Entry: this.creatureTemplate.skinloot
       });
-      await this.searchSkinningReferenceLootTemplates({
-        entries: this.skinningReferenceLootTemplateEntries
-      });
-      this.loading = false;
+      this.initing = false;
     }
   },
   mounted() {
