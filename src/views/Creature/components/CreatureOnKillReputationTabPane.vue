@@ -140,7 +140,7 @@ export default {
     ...mapState("creatureOnKillReputation", ["creatureOnKillReputation"]),
     credential() {
       return {
-        entry: this.creatureTemplate.entry
+        creature_id: this.creatureTemplate.entry
       };
     }
   },

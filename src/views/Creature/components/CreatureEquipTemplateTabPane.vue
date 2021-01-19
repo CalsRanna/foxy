@@ -46,22 +46,74 @@
         <el-card style="margin-top: 16px">
           <el-row :gutter="24">
             <el-col :span="6">
-              <el-form-item label="编号">
+              <el-form-item label="生物ID">
                 <el-input-number
-                  v-model="creatureEquipTemplate.creatureId"
+                  v-model="creatureEquipTemplate.CreatureID"
                   controls-position="right"
-                  v-loading="loading"
-                  disabled
-                  placeholder="creatureId"
+                  v-loading="initing"
+                  placeholder="CreatureID"
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(255, 255, 255, 0.5)"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="编号">
+                <el-input-number
+                  v-model="creatureEquipTemplate.ID"
+                  controls-position="right"
+                  v-loading="initing"
+                  placeholder="ID"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(255, 255, 255, 0.5)"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="VerifiedBuild">
+                <el-input
+                  v-model="creatureEquipTemplate.VerifiedBuild"
+                  placeholder="VerifiedBuild"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-card>
+        <el-card style="margin-top: 16px">
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-form-item label="物品1">
+                <el-input-number
+                  v-model="creatureEquipTemplate.ItemID1"
+                  controls-position="right"
+                  placeholder="ItemID1"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="物品2">
+                <el-input-number
+                  v-model="creatureEquipTemplate.ItemID2"
+                  controls-position="right"
+                  placeholder="ItemID2"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="物品3">
+                <el-input-number
+                  v-model="creatureEquipTemplate.ItemID3"
+                  controls-position="right"
+                  placeholder="ItemID3"
                 ></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
         </el-card>
         <el-card style="margin-top: 16px">
-          <el-button type="primary" @click="store">保存</el-button>
+          <el-button type="primary" :loading="loading" @click="store">
+            保存
+          </el-button>
           <el-button @click="cancel">返回</el-button>
         </el-card>
       </el-form>
@@ -75,6 +127,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
+      initing: false,
       creating: false,
       editing: false,
       currentRow: undefined,
@@ -82,8 +135,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", [
-      "creatureTemplate",
+    ...mapState("creature", ["creatureTemplate"]),
+    ...mapState("creatureEquipTemplate", [
       "creatureEquipTemplates",
       "creatureEquipTemplate"
     ]),
@@ -92,13 +145,14 @@ export default {
     },
     credential() {
       return {
-        creatureId:
-          this.currentRow != undefined ? this.currentRow.creatureId : undefined
+        CreatureID:
+          this.currentRow != undefined ? this.currentRow.CreatureID : undefined,
+        ID: this.currentRow != undefined ? this.currentRow.ID : undefined
       };
     }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("creatureEquipTemplate", [
       "searchCreatureEquipTemplates",
       "storeCreatureEquipTemplate",
       "findCreatureEquipTemplate",
@@ -108,10 +162,11 @@ export default {
       "copyCreatureEquipTemplate"
     ]),
     async create() {
-      await this.createCreatureEquipTemplate({
-        creatureId: this.creatureTemplate.creatureId
-      });
       this.creating = true;
+      this.editing = false;
+      await this.createCreatureEquipTemplate({
+        CreatureID: this.creatureTemplate.entry
+      });
     },
     async store() {
       if (!this.editing) {
@@ -123,9 +178,10 @@ export default {
         });
       }
       await this.searchCreatureEquipTemplates({
-        creatureId: this.creatureTemplate.creatureId
+        CreatureID: this.creatureTemplate.entry
       });
       this.creating = false;
+      this.editing = false;
     },
     cancel() {
       this.creating = false;
@@ -139,12 +195,10 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyCreatureEquipTemplate({
-              creatureId: this.currentRow.creatureId
-            })
+            this.copyCreatureEquipTemplate(this.credential)
               .then(() => {
                 this.searchCreatureEquipTemplates({
-                  creatureId: this.creatureTemplate.creatureId
+                  CreatureID: this.creatureTemplate.entry
                 });
               })
               .then(() => {
@@ -169,12 +223,10 @@ export default {
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
-              this.destroyCreatureEquipTemplate({
-                creatureId: this.currentRow.creatureId
-              })
+              this.destroyCreatureEquipTemplate(this.credential)
                 .then(() => {
                   this.searchCreatureEquipTemplates({
-                    creatureId: this.creatureTemplate.creatureId
+                    CreatureID: this.creatureTemplate.entry
                   });
                 })
                 .then(() => {
@@ -192,17 +244,19 @@ export default {
       this.currentRow = row;
     },
     async show(row) {
-      await this.findCreatureEquipTemplate({
-        creatureId: row.creatureId
-      });
       this.creating = true;
       this.editing = true;
+      await this.findCreatureEquipTemplate({
+        CreatureID: row.CreatureID,
+        ID: row.ID
+      });
     },
     async init() {
-      this.loading = true;
-      let id = this.$route.params.id;
-      await this.searchCreatureEquipTemplates({ creatureId: id });
-      this.loading = false;
+      this.initing = true;
+      await this.searchCreatureEquipTemplates({
+        CreatureID: this.creatureTemplate.entry
+      });
+      this.initing = false;
     }
   },
   mounted() {

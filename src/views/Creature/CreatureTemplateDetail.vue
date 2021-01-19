@@ -92,9 +92,9 @@ import CreatureTemplateTabPane from "@/views/Creature/components/CreatureTemplat
 import CreatureTemplateAddonTabPane from "@/views/Creature/components/CreatureTemplateAddonTabPane";
 import CreatureOnKillReputationTabPane from "@/views/Creature/components/CreatureOnKillReputationTabPane";
 import CreatureEquipTemplateTabPane from "@/views/Creature/components/CreatureEquipTemplateTabPane";
+import CreatureQuestItemTabPane from "@/views/Creature/components/CreatureQuestItemTabPane";
 import NpcVendorTabPane from "@/views/Creature/components/NpcVendorTabPane";
 import NpcTrainerTabPane from "@/views/Creature/components/NpcTrainerTabPane";
-import CreatureQuestItemTabPane from "@/views/Creature/components/CreatureQuestItemTabPane";
 import CreatureLootTemplateTabPane from "@/views/Creature/components/CreatureLootTemplateTabPane";
 import PickpocketingLootTemplateTabPane from "./Creature/components/PickpocketingLootTemplateTabPane";
 import SkinningLootTemplateTabPane from "./Creature/components/SkinningLootTemplateTabPane";
@@ -135,9 +135,9 @@ export default {
     CreatureTemplateAddonTabPane,
     CreatureOnKillReputationTabPane,
     CreatureEquipTemplateTabPane,
+    CreatureQuestItemTabPane,
     NpcVendorTabPane,
     NpcTrainerTabPane,
-    CreatureQuestItemTabPane,
     CreatureLootTemplateTabPane,
     PickpocketingLootTemplateTabPane,
     SkinningLootTemplateTabPane
