@@ -10,21 +10,24 @@
       <h3 style="margin: 16px 0 0 0">生物模版列表</h3>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-form @submit.native.prevent="search">
+      <el-form :model="credential" @submit.native.prevent="search">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-input-number
-              v-model="entry"
+              v-model="credential.entry"
               controls-position="right"
               placeholder="Entry"
               style="width: 100%"
             ></el-input-number>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="name" placeholder="姓名"></el-input>
+            <el-input v-model="credential.name" placeholder="姓名"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="subname" placeholder="称号"></el-input>
+            <el-input
+              v-model="credential.subname"
+              placeholder="称号"
+            ></el-input>
           </el-col>
           <el-col :span="6">
             <el-button
@@ -50,11 +53,11 @@
     <el-card v-loading="loading" style="margin-top: 16px">
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="size"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-bottom: 16px"
       ></el-pagination>
       <el-table
@@ -94,11 +97,11 @@
       </el-table>
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="size"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -112,31 +115,29 @@ export default {
   data() {
     return {
       loading: false,
-      entry: undefined,
-      name: "",
-      subname: "",
+      // entry: undefined,
+      // name: "",
+      // subname: "",
       currentRow: undefined
     };
   },
   computed: {
     ...mapState("creatureTemplate", [
-      "page",
-      "total",
-      "size",
+      "refresh",
+      "credential",
+      "pagination",
       "creatureTemplates"
     ]),
     payload() {
       return {
-        entry: this.entry,
-        name: this.name,
-        subname: this.subname,
-        page: this.page
+        entry: this.credential.entry,
+        name: this.credential.name,
+        subname: this.credential.subname,
+        page: this.pagination.page
       };
     },
     disabled() {
-      return this.currentRow === undefined || this.currentRow === null
-        ? true
-        : false;
+      return this.currentRow == undefined ? true : false;
     }
   },
   methods: {
@@ -145,7 +146,8 @@ export default {
       "countCreatureTemplates",
       "paginateCreatureTemplates",
       "destroyCreatureTemplate",
-      "copyCreatureTemplate"
+      "copyCreatureTemplate",
+      "resetCredential"
     ]),
     async search() {
       this.loading = true;
@@ -157,9 +159,7 @@ export default {
       this.loading = false;
     },
     reset() {
-      this.entry = undefined;
-      this.name = undefined;
-      this.subname = undefined;
+      this.resetCredential();
     },
     create() {
       this.$router.push("/creature/create");
@@ -224,7 +224,7 @@ export default {
     select(currentRow) {
       this.currentRow = currentRow;
     },
-    async handlePaginate(page) {
+    async paginate(page) {
       this.loading = true;
       await this.paginateCreatureTemplates({ page: page });
       await this.searchCreatureTemplates(this.payload);
@@ -242,8 +242,8 @@ export default {
       this.loading = false;
     }
   },
-  created() {
-    if (this.creatureTemplates.length === 0) {
+  mounted() {
+    if (this.refresh) {
       this.init();
     }
   }
