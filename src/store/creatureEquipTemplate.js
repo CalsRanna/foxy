@@ -7,7 +7,7 @@ import {
   UPDATE_CREATURE_EQUIP_TEMPLATE,
   DESTROY_CREATURE_EQUIP_TEMPLATE,
   CREATE_CREATURE_EQUIP_TEMPLATE,
-  COPY_CREATUREEQUIP__TEMPLATE
+  COPY_CREATURE_EQUIP_TEMPLATE
 } from "../constants";
 
 export default {
@@ -67,8 +67,8 @@ export default {
     },
     copyCreatureEquipTemplate(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send(COPY_CREATUREEQUIP__TEMPLATE, payload);
-        ipcRenderer.on(COPY_CREATUREEQUIP__TEMPLATE, (event, response) => {
+        ipcRenderer.send(COPY_CREATURE_EQUIP_TEMPLATE, payload);
+        ipcRenderer.on(COPY_CREATURE_EQUIP_TEMPLATE, (event, response) => {
           resolve();
         });
       });
