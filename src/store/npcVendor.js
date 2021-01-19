@@ -61,8 +61,11 @@ export default {
     },
     createNpcVendor({ commit }, payload) {
       return new Promise(resolve => {
-        commit(CREATE_NPC_VENDOR, payload);
-        resolve();
+        ipcRenderer.send(CREATE_NPC_VENDOR, payload);
+        ipcRenderer.on(CREATE_NPC_VENDOR, (event, response) => {
+          commit(CREATE_NPC_VENDOR, response);
+          resolve();
+        });
       });
     },
     copyNpcVendor(context, payload) {

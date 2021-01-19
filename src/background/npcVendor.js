@@ -143,10 +143,41 @@ ipcMain.on(DESTROY_NPC_VENDOR, (event, payload) => {
     });
 });
 
+ipcMain.on(CREATE_NPC_VENDOR, (event, payload) => {
+  let queryBuilder = knex()
+    .select("slot")
+    .from("npc_vendor")
+    .where(payload)
+    .orderBy("slot", "desc");
+
+  queryBuilder
+    .then(rows => {
+      event.reply(CREATE_CREATURE_EQUIP_TEMPLATE, {
+        entry: payload.entry,
+        slot: rows.length > 0 ? rows[0].slot + 1 : 0
+      });
+    })
+    .catch(error => {
+      throw error;
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString()
+      });
+    });
+});
+
 ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
+  let slot = undefined;
   let extendedCost = undefined;
   let npcVendor = undefined;
 
+  let slotQueryBuilder = knex()
+    .select("slot")
+    .from("npc_vendor")
+    .where("entry", payload.entry)
+    .orderBy("slot", "desc");
   let extendedCostQueryBuilder = knex()
     .select("ExtendedCost")
     .from("npc_vendor")
@@ -157,14 +188,18 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
     .from("npc_vendor")
     .where(payload);
   Promise.all([
+    slotQueryBuilder.then(rows => {
+      slot = rows.length > 0 ? rows[0].slot : 0;
+    }),
     extendedCostQueryBuilder.then(rows => {
-      extendedCost = rows.length > 0 ? rows[0].ExtendedCost : 1;
+      extendedCost = rows.length > 0 ? rows[0].ExtendedCost : 0;
     }),
     findNpcVendorQueryBuilder.then(rows => {
       npcVendor = rows.length > 0 ? rows[0] : {};
     })
   ])
     .then(() => {
+      npcVendor.slot = slot + 1;
       npcVendor.ExtendedCost = extendedCost + 1;
       let queryBuilder = knex()
         .insert(npcVendor)

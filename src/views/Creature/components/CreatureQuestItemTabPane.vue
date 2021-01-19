@@ -114,7 +114,9 @@ export default {
     credential() {
       return {
         CreatureEntry:
-          this.currentRow != undefined ? this.currentRow.entry : undefined,
+          this.currentRow != undefined
+            ? this.currentRow.CreatureEntry
+            : undefined,
         Idx: this.currentRow != undefined ? this.currentRow.Idx : undefined
       };
     }

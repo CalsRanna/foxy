@@ -55,18 +55,66 @@
                 <el-input-number
                   v-model="npcTrainer.ID"
                   controls-position="right"
-                  v-loading="loading"
-                  disabled
+                  v-loading="initing"
                   placeholder="ID"
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(255, 255, 255, 0.5)"
                 ></el-input-number>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="技能">
+                <el-input-number
+                  v-model="npcTrainer.SpellID"
+                  controls-position="right"
+                  placeholder="SpellID"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-form-item label="价格">
+                <el-input-number
+                  v-model="npcTrainer.MoneyCost"
+                  controls-position="right"
+                  placeholder="MoneyCost"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="需要技能">
+                <el-input-number
+                  v-model="npcTrainer.ReqSkillLine"
+                  controls-position="right"
+                  placeholder="ReqSkillLine"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="需要熟练度">
+                <el-input-number
+                  v-model="npcTrainer.ReqSkillRank"
+                  controls-position="right"
+                  placeholder="ReqSkillRank"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="需要等级">
+                <el-input-number
+                  v-model="npcTrainer.ReqLevel"
+                  controls-position="right"
+                  placeholder="ReqLevel"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-card>
         <el-card style="margin-top: 16px">
-          <el-button type="primary" @click="store">保存</el-button>
+          <el-button type="primary" :loading="loading" @click="store">
+            保存
+          </el-button>
           <el-button @click="cancel">返回</el-button>
         </el-card>
       </el-form>
@@ -84,6 +132,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
+      initing: false,
       creating: false,
       editing: false,
       currentRow: undefined,
@@ -92,18 +141,21 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", ["creatureTemplate", "npcTrainers", "npcTrainer"]),
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
+    ...mapState("npcTrainer", ["npcTrainers", "npcTrainer"]),
     disabled() {
       return this.currentRow == undefined;
     },
     credential() {
       return {
-        ID: this.currentRow != undefined ? this.currentRow.ID : undefined
+        ID: this.currentRow != undefined ? this.currentRow.ID : undefined,
+        SpellID:
+          this.currentRow != undefined ? this.currentRow.SpellID : undefined
       };
     }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("npcTrainer", [
       "searchNpcTrainers",
       "storeNpcTrainer",
       "findNpcTrainer",
@@ -113,10 +165,11 @@ export default {
       "copyNpcTrainer"
     ]),
     async create() {
-      await this.createNpcTrainer({
-        ID: this.creatureTemplate.ID
-      });
       this.creating = true;
+      this.editing = false;
+      await this.createNpcTrainer({
+        ID: this.creatureTemplate.entry
+      });
     },
     async store() {
       if (!this.editing) {
@@ -128,9 +181,10 @@ export default {
         });
       }
       await this.searchNpcTrainers({
-        ID: this.creatureTemplate.ID
+        ID: this.creatureTemplate.entry
       });
       this.creating = false;
+      this.editing = false;
     },
     cancel() {
       this.creating = false;
@@ -144,12 +198,10 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyNpcTrainer({
-              ID: this.currentRow.ID
-            })
+            this.copyNpcTrainer(this.credential)
               .then(() => {
                 this.searchNpcTrainers({
-                  ID: this.creatureTemplate.ID
+                  ID: this.creatureTemplate.entry
                 });
               })
               .then(() => {
@@ -174,12 +226,10 @@ export default {
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
-              this.destroyNpcTrainer({
-                ID: this.currentRow.ID
-              })
+              this.destroyNpcTrainer(this.credential)
                 .then(() => {
                   this.searchNpcTrainers({
-                    ID: this.creatureTemplate.ID
+                    ID: this.creatureTemplate.entry
                   });
                 })
                 .then(() => {
@@ -197,17 +247,17 @@ export default {
       this.currentRow = row;
     },
     async show(row) {
-      await this.findNpcTrainer({
-        ID: row.ID
-      });
       this.creating = true;
       this.editing = true;
+      await this.findNpcTrainer({
+        ID: row.ID,
+        SpellID: row.SpellID
+      });
     },
     async init() {
-      this.loading = true;
-      let id = this.$route.params.id;
-      await this.searchNpcTrainers({ ID: id });
-      this.loading = false;
+      this.initing = true;
+      await this.searchNpcTrainers({ ID: this.creatureTemplate.entry });
+      this.initing = false;
     }
   },
   mounted() {
