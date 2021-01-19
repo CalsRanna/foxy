@@ -101,7 +101,8 @@ import SkinningLootTemplateTabPane from "./Creature/components/SkinningLootTempl
 
 export default {
   computed: {
-    ...mapState("creature", ["creatureTemplate", "creatureTemplateLocales"]),
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
+    ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"]),
     localeName() {
       if (this.creatureTemplateLocales.length > 0) {
         let name = undefined;

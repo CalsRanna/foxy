@@ -129,18 +129,23 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      maxStandings: maxStandings,
-      credential: {},
       initing: false,
+      loading: false,
       creating: false,
-      loading: false
+      maxStandings: maxStandings
     };
   },
   computed: {
-    ...mapState("creature", ["creatureOnKillReputation"])
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
+    ...mapState("creatureOnKillReputation", ["creatureOnKillReputation"]),
+    credential() {
+      return {
+        entry: this.creatureTemplate.entry
+      };
+    }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("creatureOnKillReputation", [
       "storeCreatureOnKillReputation",
       "findCreatureOnKillReputation",
       "updateCreatureOnKillReputation",
@@ -150,6 +155,7 @@ export default {
       this.loading = true;
       if (this.creating) {
         await this.storeCreatureOnKillReputation(this.creatureOnKillReputation);
+        this.creating = false;
       } else {
         await this.updateCreatureOnKillReputation({
           credential: this.credential,
@@ -163,7 +169,6 @@ export default {
     },
     async init() {
       this.initing = true;
-      this.credential.creature_id = this.$route.params.id;
       await this.findCreatureOnKillReputation(this.credential);
       if (this.creatureOnKillReputation.creature_id == undefined) {
         this.creating = true;

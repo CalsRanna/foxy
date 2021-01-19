@@ -1,4 +1,5 @@
 import { ipcMain } from "electron";
+
 import {
   COPY_CREATURE_TEMPLATE,
   COUNT_CREATURE_TEMPLATES,

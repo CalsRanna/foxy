@@ -5,6 +5,10 @@ import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
 import "./background/dbc.js";
 import "./background/creature.js";
+import "./background/creatureTemplate.js";
+import "./background/creatureTemplateLocale.js";
+import "./background/creatureTemplateAddon.js";
+import "./background/creatureOnKillReputation.js";
 import "./background/gameObject.js";
 import "./background/item.js";
 import "./background/quest.js";
@@ -16,7 +20,9 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 let win;
 
-protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
+protocol.registerSchemesAsPrivileged([
+  { scheme: "app", privileges: { secure: true, standard: true } }
+]);
 
 function createWindow() {
   win = new BrowserWindow({
@@ -79,19 +85,12 @@ if (isDevelopment) {
 }
 
 process.on("uncaughtException", error => {
-  if (error.code == "MSG_SQL") {
-    win.webContents.send("GLOBAL_NOTICE", {
-      category: "message",
-      message: error.message
-    });
-  } else {
-    win.webContents.send("GLOBAL_NOTICE", {
-      category: "alert",
-      type: "error",
-      title: `${error.code}`,
-      message: `${error.message}<br>${error.stack}`
-    });
-  }
+  win.webContents.send("GLOBAL_NOTICE", {
+    category: "alert",
+    type: "error",
+    title: `${error.code}`,
+    message: `${error.message}<br>${error.stack}`
+  });
 });
 
 ipcMain.on("SELECT_DBC_PATH", event => {
@@ -104,12 +103,4 @@ ipcMain.on("SELECT_CONFIG_PATH", event => {
   dialog.showOpenDialog({ properties: ["openDirectory"] }).then(payload => {
     event.reply("SELECT_CONFIG_PATH_REPLY", payload.filePaths[0]);
   });
-});
-
-ipcMain.on("LOAD_ICONS", event => {
-  event.reply("LOAD_ICONS_REPLY", 123);
-});
-
-ipcMain.on("LOAD_SPELLS", event => {
-  event.returnValue = "加载技能中……";
 });

@@ -2,13 +2,15 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">
+          首页
+        </el-breadcrumb-item>
         <el-breadcrumb-item>生物管理</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">生物模版列表</h3>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-form @submit.native.prevent="handleSearch">
+      <el-form @submit.native.prevent="search">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-input-number
@@ -25,7 +27,14 @@
             <el-input v-model="subname" placeholder="称号"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" native-type="submit" :loading="loading" @click="handleSearch">查询</el-button>
+            <el-button
+              type="primary"
+              native-type="submit"
+              :loading="loading"
+              @click="search"
+            >
+              查询
+            </el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
@@ -33,8 +42,10 @@
     </el-card>
     <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
-      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
-      <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
+      <el-button :disabled="disabled" @click="copy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="destroy">
+        删除
+      </el-button>
     </el-card>
     <el-card v-loading="loading" style="margin-top: 16px">
       <el-pagination
@@ -56,18 +67,30 @@
         <el-table-column prop="entry" label="ID" sortable></el-table-column>
         <el-table-column label="姓名" sortable>
           <template slot-scope="scope">
-            <span v-if="scope.row.localeName !== null">{{ scope.row.localeName }}</span>
+            <span v-if="scope.row.localeName !== null">
+              {{ scope.row.localeName }}
+            </span>
             <span v-else>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="称号" sortable>
           <template slot-scope="scope">
-            <span v-if="scope.row.localeTitle != null">{{ scope.row.localeTitle }}</span>
+            <span v-if="scope.row.localeTitle != null">
+              {{ scope.row.localeTitle }}
+            </span>
             <span v-else>{{ scope.row.subname }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="minlevel" label="最小等级" sortable></el-table-column>
-        <el-table-column prop="maxlevel" label="最大等级" sortable></el-table-column>
+        <el-table-column
+          prop="minlevel"
+          label="最小等级"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="maxlevel"
+          label="最大等级"
+          sortable
+        ></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"
@@ -96,7 +119,12 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", ["page", "total", "size", "creatureTemplates"]),
+    ...mapState("creatureTemplate", [
+      "page",
+      "total",
+      "size",
+      "creatureTemplates"
+    ]),
     payload() {
       return {
         entry: this.entry,
@@ -106,22 +134,26 @@ export default {
       };
     },
     disabled() {
-      return this.currentRow === undefined || this.currentRow === null ? true : false;
+      return this.currentRow === undefined || this.currentRow === null
+        ? true
+        : false;
     }
   },
   methods: {
-    ...mapActions("creature", {
-      search: "searchCreatureTemplates",
-      count: "countCreatureTemplates",
-      paginate: "paginateCreatureTemplates",
-      create: "copyCreatureTemplate",
-      destroy: "destroyCreatureTemplate",
-      copy: "copyCreatureTemplate"
-    }),
-    async handleSearch() {
+    ...mapActions("creatureTemplate", [
+      "searchCreatureTemplates",
+      "countCreatureTemplates",
+      "paginateCreatureTemplates",
+      "destroyCreatureTemplate",
+      "copyCreatureTemplate"
+    ]),
+    async search() {
       this.loading = true;
-      await this.paginate({ page: 1 }); //每次搜索时使分页器设为第一页
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await this.paginateCreatureTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
+      await Promise.all([
+        this.searchCreatureTemplates(this.payload),
+        this.countCreatureTemplates(this.payload)
+      ]);
       this.loading = false;
     },
     reset() {
@@ -132,7 +164,7 @@ export default {
     create() {
       this.$router.push("/creature/create");
     },
-    handleCopy() {
+    copy() {
       this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -141,9 +173,12 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copy({ entry: this.currentRow.entry })
+            thiscopyCreatureTemplate({ entry: this.currentRow.entry })
               .then(() => {
-                Promise.all([this.search(this.payload), this.count(this.payload)]);
+                Promise.all([
+                  this.searchCreatureTemplates(this.payload),
+                  this.countCreatureTemplates(this.payload)
+                ]);
               })
               .then(() => {
                 instance.confirmButtonLoading = false;
@@ -155,7 +190,7 @@ export default {
         }
       });
     },
-    handleDestroy() {
+    destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
         "提示",
@@ -168,9 +203,12 @@ export default {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
 
-              this.destroy({ entry: this.currentRow.entry })
+              this.destroyCreatureTemplate({ entry: this.currentRow.entry })
                 .then(() => {
-                  Promise.all([this.search(this.payload), this.count(this.payload)]);
+                  Promise.all([
+                    this.searchCreatureTemplates(this.payload),
+                    this.countCreatureTemplates(this.payload)
+                  ]);
                 })
                 .then(() => {
                   instance.confirmButtonLoading = false;
@@ -188,8 +226,8 @@ export default {
     },
     async handlePaginate(page) {
       this.loading = true;
-      await this.paginate({ page: page });
-      await this.search(this.payload);
+      await this.paginateCreatureTemplates({ page: page });
+      await this.searchCreatureTemplates(this.payload);
       this.loading = false;
     },
     show(row) {
@@ -197,7 +235,10 @@ export default {
     },
     async init() {
       this.loading = true;
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await Promise.all([
+        this.searchCreatureTemplates(this.payload),
+        this.countCreatureTemplates(this.payload)
+      ]);
       this.loading = false;
     }
   },

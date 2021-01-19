@@ -104,10 +104,10 @@ export default {
     }
   },
   computed: {
-    ...mapState("creature", ["creatureTemplateLocales"])
+    ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"])
   },
   methods: {
-    ...mapActions("creature", ["storeCreatureTemplateLocales"]),
+    ...mapActions("creatureTemplateLocale", ["storeCreatureTemplateLocales"]),
     input(text) {
       this.$emit("input", text);
     },

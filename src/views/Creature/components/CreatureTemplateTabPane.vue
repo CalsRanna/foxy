@@ -1033,30 +1033,39 @@ export default {
       inhabitTypes: inhabitTypes,
       hoverHeightTooltip: hoverHeightTooltip,
       initing: false,
-      loading: false
+      loading: false,
+      creating: false
     };
   },
   computed: {
-    ...mapState("creature", ["creatureTemplate", "creatureTemplateLocales"]),
-    creating() {
-      return this.$route.path == "/creature/create" ? true : false;
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
+    ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"]),
+    credential(){
+      return {
+        entry: this.$route.params.id
+      };
     }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("creatureTemplate", [
       "storeCreatureTemplate",
       "findCreatureTemplate",
       "updateCreatureTemplate",
-      "createCreatureTemplate",
-      "searchCreatureTemplateLocales",
-      "storeCreatureTemplateLocales"
+      "createCreatureTemplate"
+    ]),
+    ...mapActions("creatureTemplateLocale", [
+      "searchCreatureTemplateLocales"
     ]),
     async store() {
       this.loading = true;
       if (this.creating) {
         await this.storeCreatureTemplate(this.creatureTemplate);
+        this.creating = false;
       } else {
-        await this.updateCreatureTemplate(this.creatureTemplate);
+        await this.updateCreatureTemplate({
+          credential: this.credential,
+          creatureTemplate:this.creatureTemplate
+        });
       }
       this.loading = false;
     },
@@ -1065,13 +1074,13 @@ export default {
     },
     async init() {
       this.initing = true;
-      if (this.creating) {
+      if (this.$route.path == "/creature/create") {
+        this.creating = true;
         await this.createCreatureTemplate();
       } else {
-        let id = this.$route.params.id;
         await Promise.all([
-          this.findCreatureTemplate({ entry: id }),
-          this.searchCreatureTemplateLocales({ entry: id })
+          this.findCreatureTemplate(this.credential),
+          this.searchCreatureTemplateLocales(this.credential)
         ]);
       }
       this.initing = false;
@@ -1081,11 +1090,11 @@ export default {
     this.init();
   },
   components: {
-    "flag-editor": FlagEditor,
-    "gossip-menu-selector": GossipMenuSelector,
-    "hint-label": HintLabel,
-    "spell-selector": SpellSelector,
-    "creature-template-localizer": CreatureTemplateLocalizer
+    FlagEditor,
+    GossipMenuSelector,
+    HintLabel,
+    SpellSelector,
+    CreatureTemplateLocalizer
   }
 };
 </script>
