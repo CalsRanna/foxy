@@ -24,57 +24,9 @@
                 </template>
                 <template v-else>{{ scope.row.name }}</template>
               </template>
-              <template v-else> 关联掉落 </template>
-            </span>
-          </el-table-column>
-          <el-table-column
-            prop="Reference"
-            label="关联"
-            sortable
-          ></el-table-column>
-          <el-table-column prop="Chance" label="几率" sortable>
-            <span slot-scope="scope">
-              {{ `${scope.row.Chance}%` }}
-            </span>
-          </el-table-column>
-          <el-table-column prop="QuestRequired" label="需要任务" sortable>
-            <span slot-scope="scope">
-              <el-tag type="success" v-if="scope.row.QuestRequired">
-                需要
-              </el-tag>
-              <el-tag v-else>不需要</el-tag>
-            </span>
-          </el-table-column>
-          <el-table-column
-            prop="MinCount"
-            label="最小数量"
-            sortable
-          ></el-table-column>
-          <el-table-column
-            prop="MaxCount"
-            label="最大数量"
-            sortable
-          ></el-table-column>
-        </el-table>
-      </el-card>
-      <el-card
-        v-for="(creatureReferenceLootTemplates,
-        index) in groupedCreatureReferenceLootTemplates"
-        :key="`creatureReferenceLootTemplates-${index}`"
-        :header="`关联掉落${creatureReferenceLootTemplates[0].Entry}`"
-        style="margin-top: 16px"
-      >
-        <el-table :data="creatureReferenceLootTemplates">
-          <el-table-column prop="displayid"></el-table-column>
-          <el-table-column label="名称" sortable>
-            <span slot-scope="scope">
-              <template v-if="scope.row.Reference == 0">
-                <template v-if="scope.row.localeName !== null">
-                  {{ scope.row.localeName }}
-                </template>
-                <template v-else>{{ scope.row.name }}</template>
+              <template v-else>
+                <el-tag>关联掉落</el-tag>
               </template>
-              <template v-else> 关联掉落 </template>
             </span>
           </el-table-column>
           <el-table-column
@@ -119,14 +71,96 @@
             <el-col :span="6">
               <el-form-item label="编号">
                 <el-input-number
-                  v-model="creatureLootTemplate.Idx"
+                  v-model="creatureLootTemplate.Entry"
                   controls-position="right"
-                  v-loading="loading"
-                  disabled
-                  placeholder="Idx"
+                  v-loading="initing"
+                  placeholder="Entry"
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(255, 255, 255, 0.5)"
                 ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="物品">
+                <el-input-number
+                  v-model="creatureLootTemplate.Item"
+                  controls-position="right"
+                  v-loading="initing"
+                  placeholder="Item"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(255, 255, 255, 0.5)"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="关联">
+                <el-input-number
+                  v-model="creatureLootTemplate.Reference"
+                  controls-position="right"
+                  placeholder="Reference"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="几率">
+                <el-input-number
+                  v-model="creatureLootTemplate.Chance"
+                  controls-position="right"
+                  placeholder="Chance"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="需要任务">
+                <el-switch
+                  v-model="creatureLootTemplate.QuestRequired"
+                  :active-value="1"
+                  :inactive-value="0"
+                ></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="掉落模式">
+                <el-input-number
+                  v-model="creatureLootTemplate.LootMode"
+                  controls-position="right"
+                  placeholder="LootMode"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="组ID">
+                <el-input-number
+                  v-model="creatureLootTemplate.GroudId"
+                  controls-position="right"
+                  placeholder="GroudId"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="最小数量">
+                <el-input-number
+                  v-model="creatureLootTemplate.MinCount"
+                  controls-position="right"
+                  placeholder="MinCount"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="最大数量">
+                <el-input-number
+                  v-model="creatureLootTemplate.MaxCount"
+                  controls-position="right"
+                  placeholder="MaxCount"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="注解">
+                <el-input
+                  v-model="creatureLootTemplate.Comment"
+                  placeholder="Comment"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -146,6 +180,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
+      initing: false,
       creating: false,
       editing: false,
       currentRow: undefined,
@@ -153,57 +188,37 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", [
-      "creatureTemplate",
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
+    ...mapState("creatureLootTemplate", [
       "creatureLootTemplates",
-      "creatureLootTemplate",
-      "creatureReferenceLootTemplates"
+      "creatureLootTemplate"
     ]),
     disabled() {
       return this.currentRow == undefined;
     },
     credential() {
       return {
-        entry: this.currentRow != undefined ? this.currentRow.Entry : undefined
+        Entry: this.currentRow != undefined ? this.currentRow.Entry : undefined,
+        Item: this.currentRow != undefined ? this.currentRow.Item : undefined
       };
-    },
-    creatureReferenceLootTemplateEntries() {
-      let entries = [];
-      for (let creatureLootTemplate of this.creatureLootTemplates) {
-        if (creatureLootTemplate.Reference != 0) {
-          entries.push(creatureLootTemplate.Reference);
-        }
-      }
-      return entries;
-    },
-    groupedCreatureReferenceLootTemplates() {
-      let groups = {};
-      this.creatureReferenceLootTemplates.forEach(
-        creatureReferenceLootTemplate => {
-          const key = creatureReferenceLootTemplate.Entry;
-          groups[key] = groups[key] || [];
-          groups[key].push(creatureReferenceLootTemplate);
-        }
-      );
-      return Object.keys(groups).map(group => groups[group]);
     }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("creatureLootTemplate", [
       "searchCreatureLootTemplates",
       "storeCreatureLootTemplate",
       "findCreatureLootTemplate",
       "updateCreatureLootTemplate",
       "destroyCreatureLootTemplate",
       "createCreatureLootTemplate",
-      "copyCreatureLootTemplate",
-      "searchCreatureReferenceLootTemplates"
+      "copyCreatureLootTemplate"
     ]),
     async create() {
-      await this.createCreatureLootTemplate({
-        entry: this.creatureTemplate.lootid
-      });
       this.creating = true;
+      this.editing = false;
+      await this.createCreatureLootTemplate({
+        Entry: this.creatureTemplate.lootid
+      });
     },
     async store() {
       if (!this.editing) {
@@ -215,12 +230,10 @@ export default {
         });
       }
       await this.searchCreatureLootTemplates({
-        entry: this.creatureTemplate.Entry
-      });
-      await this.searchCreatureReferenceLootTemplates({
-        entries: this.creatureReferenceLootTemplateEntries
+        Entry: this.creatureTemplate.lootid
       });
       this.creating = false;
+      this.editing = false;
     },
     cancel() {
       this.creating = false;
@@ -234,15 +247,10 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyCreatureLootTemplate({
-              entry: this.currentRow.Entry
-            })
+            this.copyCreatureLootTemplate(this.credential)
               .then(() => {
                 this.searchCreatureLootTemplates({
-                  entry: this.creatureTemplate.Entry
-                });
-                this.searchCreatureReferenceLootTemplates({
-                  entries: this.creatureReferenceLootTemplateEntries
+                  Entry: this.creatureTemplate.lootid
                 });
               })
               .then(() => {
@@ -267,15 +275,10 @@ export default {
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
-              this.destroyCreatureLootTemplate({
-                entry: this.currentRow.Entry
-              })
+              this.destroyCreatureLootTemplate(this.credential)
                 .then(() => {
                   this.searchCreatureLootTemplates({
-                    entry: this.creatureTemplate.Entry
-                  });
-                  this.searchCreatureReferenceLootTemplates({
-                    entries: this.creatureReferenceLootTemplateEntries
+                    Entry: this.creatureTemplate.lootid
                   });
                 })
                 .then(() => {
@@ -293,21 +296,19 @@ export default {
       this.currentRow = row;
     },
     async show(row) {
-      await this.findCreatureLootTemplate({
-        entry: row.Entry
-      });
       this.creating = true;
       this.editing = true;
+      await this.findCreatureLootTemplate({
+        Entry: row.Entry,
+        Item: row.Item
+      });
     },
     async init() {
-      this.loading = true;
+      this.initing = true;
       await this.searchCreatureLootTemplates({
-        entry: this.creatureTemplate.lootid
+        Entry: this.creatureTemplate.lootid
       });
-      await this.searchCreatureReferenceLootTemplates({
-        entries: this.creatureReferenceLootTemplateEntries
-      });
-      this.loading = false;
+      this.initing = false;
     }
   },
   mounted() {
