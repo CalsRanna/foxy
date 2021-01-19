@@ -12,6 +12,7 @@ import "./background/creatureOnKillReputation.js";
 import "./background/creatureEquipTemplate.js";
 import "./background/creatureQuestItem.js";
 import "./background/npcVendor.js";
+import "./background/npcTrainer.js";
 import "./background/gameObject.js";
 import "./background/item.js";
 import "./background/quest.js";

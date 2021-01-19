@@ -7,7 +7,7 @@ import {
   UPDATE_CREATURE_QUEST_ITEM,
   DESTROY_CREATURE_QUEST_ITEM,
   CREATE_CREATURE_QUEST_ITEM,
-  COPY_CREATURE_EQUIP_TEMPLATE
+  COPY_CREATURE_QUEST_ITEM
 } from "../constants";
 
 export default {
@@ -70,8 +70,8 @@ export default {
     },
     copyCreatureQuestItem(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send(COPY_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(COPY_CREATURE_EQUIP_TEMPLATE, () => {
+        ipcRenderer.send(COPY_CREATURE_QUEST_ITEM, payload);
+        ipcRenderer.on(COPY_CREATURE_QUEST_ITEM, () => {
           resolve();
         });
       });

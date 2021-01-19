@@ -11,6 +11,7 @@ import creatureOnKillReputation from "./creatureOnKillReputation";
 import creatureEquipTemplate from "./creatureEquipTemplate";
 import creatureQuestItem from "./creatureQuestItem";
 import npcVendor from "./npcVendor";
+import npcTrainer from "./npcTrainer";
 import gameObject from "./gameObject";
 import item from "./item";
 import quest from "./quest";
@@ -33,6 +34,7 @@ export default new Vuex.Store({
     creatureEquipTemplate,
     creatureQuestItem,
     npcVendor,
+    npcTrainer,
     gameObject,
     item,
     quest,
