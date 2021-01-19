@@ -2,8 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import Dashboard from "@/views/Dashboard";
-import CreatureTable from "@/views/CreatureTable";
-import CreatureTemplateDetail from "@/views/CreatureTemplateDetail";
 import GameObjectTable from "@/views/GameObjectTable";
 import GameObjectDetail from "@/views/GameObjectDetail";
 import ItemTable from "@/views/ItemTable";
@@ -27,9 +25,18 @@ Vue.use(VueRouter);
 const routes = [
   { path: "/", redirect: "/dashboard" },
   { path: "/dashboard", component: Dashboard },
-  { path: "/creature", component: CreatureTable },
-  { path: "/creature/create", component: CreatureTemplateDetail },
-  { path: "/creature/:id", component: CreatureTemplateDetail },
+  {
+    path: "/creature",
+    component: () => import("@/views/Creature/CreatureTable")
+  },
+  {
+    path: "/creature/create",
+    component: () => import("@/views/Creature/CreatureTemplateDetail")
+  },
+  {
+    path: "/creature/:id",
+    component: () => import("@/views/Creature/CreatureTemplateDetail")
+  },
   { path: "/game-object", component: GameObjectTable },
   { path: "/game-object/create", component: GameObjectDetail },
   { path: "/game-object/:id", component: GameObjectDetail },
@@ -48,7 +55,7 @@ const routes = [
   { path: "/smart-script", component: SmartScriptTable },
   { path: "/smart-script/create", component: SmartScriptDetail },
   { path: "/smart-script/:id", component: SmartScriptDetail },
-  { path: "/developer", component: () => import('@/views/DeveloperTable') },
+  { path: "/developer", component: () => import("@/views/DeveloperTable") },
   {
     path: "/setting",
     component: Setting,

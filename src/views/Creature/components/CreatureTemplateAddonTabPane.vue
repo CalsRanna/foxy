@@ -95,16 +95,20 @@ export default {
     return {
       initing: false,
       loading: false,
+      creating: false
     };
   },
   computed: {
-    ...mapState("creature", ["creatureTemplateAddon"]),
-    creating() {
-      return this.$route.path == "/creature/create" ? true : false;
-    },
+    ...mapState("creatureTemplate", ["creatureTemplate"]),
+    ...mapState("creatureTemplateAddon", ["creatureTemplateAddon"]),
+    credential() {
+      return {
+        entry:this.creatureTemplate.entry
+      }
+    }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("creatureTemplateAddon", [
       "storeCreatureTemplateAddon",
       "findCreatureTemplateAddon",
       "updateCreatureTemplateAddon",
@@ -114,8 +118,12 @@ export default {
       this.loading = true;
       if (this.creating) {
         await this.storeCreatureTemplateAddon(this.creatureTemplateAddon);
+        this.creating = false;
       } else {
-        await this.updateCreatureTemplateAddon(this.creatureTemplateAddon);
+        await this.updateCreatureTemplateAddon({
+          credential: this.credential,
+          creatureTemplateAddon: this.creatureTemplateAddon
+        });
       }
       this.loading = false;
     },
@@ -124,11 +132,10 @@ export default {
     },
     async init() {
       this.initing = true;
-      if (this.creating) {
-        await this.createCreatureTemplateAddon();
-      } else {
-        let id = this.$route.params.id;
-        await this.findCreatureTemplateAddon({ entry: id });
+      await this.findCreatureTemplateAddon({ entry: this.creatureTemplate.entry });
+      if (this.creatureTemplateAddon.entry == undefined) {
+        this.creating = true;
+        await this.createCreatureTemplateAddon({ entry: this.creatureTemplate.entry });
       }
       this.initing = false;
     },
