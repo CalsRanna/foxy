@@ -1040,7 +1040,7 @@ export default {
   computed: {
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"]),
-    credential(){
+    credential() {
       return {
         entry: this.$route.params.id
       };
@@ -1053,9 +1053,7 @@ export default {
       "updateCreatureTemplate",
       "createCreatureTemplate"
     ]),
-    ...mapActions("creatureTemplateLocale", [
-      "searchCreatureTemplateLocales"
-    ]),
+    ...mapActions("creatureTemplateLocale", ["searchCreatureTemplateLocales"]),
     async store() {
       this.loading = true;
       if (this.creating) {
@@ -1064,7 +1062,7 @@ export default {
       } else {
         await this.updateCreatureTemplate({
           credential: this.credential,
-          creatureTemplate:this.creatureTemplate
+          creatureTemplate: this.creatureTemplate
         });
       }
       this.loading = false;
@@ -1076,7 +1074,10 @@ export default {
       this.initing = true;
       if (this.$route.path == "/creature/create") {
         this.creating = true;
-        await this.createCreatureTemplate();
+        await Promise.all([
+          this.createCreatureTemplate(),
+          this.searchCreatureTemplateLocales({ entry: 0 })
+        ]);
       } else {
         await Promise.all([
           this.findCreatureTemplate(this.credential),
