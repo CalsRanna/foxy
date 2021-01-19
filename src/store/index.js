@@ -13,6 +13,7 @@ import creatureQuestItem from "./creatureQuestItem";
 import npcVendor from "./npcVendor";
 import npcTrainer from "./npcTrainer";
 import creatureLootTemplate from "./creatureLootTemplate";
+import pickpocketingLootTemplate from "./pickpocketingLootTemplate";
 import gameObject from "./gameObject";
 import item from "./item";
 import quest from "./quest";
@@ -37,6 +38,7 @@ export default new Vuex.Store({
     npcVendor,
     npcTrainer,
     creatureLootTemplate,
+    pickpocketingLootTemplate,
     gameObject,
     item,
     quest,
