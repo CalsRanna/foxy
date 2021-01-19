@@ -70,10 +70,10 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="VerifiedBuild">
-                <el-input-number
+                <el-input
                   v-model="creatureQuestItem.VerifiedBuild"
                   placeholder="VerifiedBuild"
-                ></el-input-number>
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>

@@ -7,7 +7,7 @@ import {
   UPDATE_CREATURE_QUEST_ITEM,
   DESTROY_CREATURE_QUEST_ITEM,
   CREATE_CREATURE_QUEST_ITEM,
-  COPY_CREATUREEQUIP__TEMPLATE
+  COPY_CREATURE_EQUIP_TEMPLATE
 } from "../constants";
 
 export default {
@@ -61,14 +61,17 @@ export default {
     },
     createCreatureEquipTemplate({ commit }, payload) {
       return new Promise(resolve => {
-        commit(CREATE_CREATURE_QUEST_ITEM, payload);
-        resolve();
+        ipcRenderer.send(CREATE_CREATURE_QUEST_ITEM, payload);
+        ipcRenderer.on(CREATE_CREATURE_QUEST_ITEM, (event, response) => {
+          commit(CREATE_CREATURE_QUEST_ITEM, response);
+          resolve();
+        });
       });
     },
     copyCreatureEquipTemplate(context, payload) {
       return new Promise(resolve => {
-        ipcRenderer.send(COPY_CREATUREEQUIP__TEMPLATE, payload);
-        ipcRenderer.on(COPY_CREATUREEQUIP__TEMPLATE, (event, response) => {
+        ipcRenderer.send(COPY_CREATURE_EQUIP_TEMPLATE, payload);
+        ipcRenderer.on(COPY_CREATURE_EQUIP_TEMPLATE, (event, response) => {
           resolve();
         });
       });

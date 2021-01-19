@@ -55,18 +55,82 @@
                 <el-input-number
                   v-model="npcVendor.entry"
                   controls-position="right"
-                  v-loading="loading"
-                  disabled
+                  v-loading="initing"
                   placeholder="entry"
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(255, 255, 255, 0.5)"
                 ></el-input-number>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="插槽">
+                <el-input-number
+                  v-model="npcVendor.slot"
+                  controls-position="right"
+                  v-loading="initing"
+                  placeholder="slot"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(255, 255, 255, 0.5)"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="VerifiedBuild">
+                <el-input
+                  v-model="npcVendor.VerifiedBuild"
+                  placeholder="VerifiedBuild"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-form-item label="物品">
+                <el-input-number
+                  v-model="npcVendor.item"
+                  controls-position="right"
+                  placeholder="item"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="最大数量">
+                <el-input-number
+                  v-model="npcVendor.maxcount"
+                  controls-position="right"
+                  placeholder="maxcount"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="补货时间">
+                <el-input-number
+                  v-model="npcVendor.incrtime"
+                  controls-position="right"
+                  placeholder="incrtime"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item>
+                <hint-label
+                  label="扩展价格"
+                  :tooltip="extendedCostTooltip"
+                  slot="label"
+                ></hint-label>
+                <el-input-number
+                  v-model="npcVendor.ExtendedCost"
+                  controls-position="right"
+                  placeholder="ExtendedCost"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-card>
         <el-card style="margin-top: 16px">
-          <el-button type="primary" @click="store">保存</el-button>
+          <el-button type="primary" :loading="loading" @click="store"
+            >保存</el-button
+          >
           <el-button @click="cancel">返回</el-button>
         </el-card>
       </el-form>
@@ -84,6 +148,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
+      initing: false,
       creating: false,
       editing: false,
       currentRow: undefined,
@@ -92,18 +157,24 @@ export default {
     };
   },
   computed: {
-    ...mapState("creature", ["creatureTemplate", "npcVendors", "npcVendor"]),
+    ...mapState("creature", ["creatureTemplate"]),
+    ...mapState("npcVendor", ["npcVendors", "npcVendor"]),
     disabled() {
       return this.currentRow == undefined;
     },
     credential() {
       return {
-        entry: this.currentRow != undefined ? this.currentRow.entry : undefined
+        entry: this.currentRow != undefined ? this.currentRow.entry : undefined,
+        item: this.currentRow != undefined ? this.currentRow.item : undefined,
+        ExtendedCost:
+          this.currentRow != undefined
+            ? this.currentRow.ExtendedCost
+            : undefined
       };
     }
   },
   methods: {
-    ...mapActions("creature", [
+    ...mapActions("npcVendor", [
       "searchNpcVendors",
       "storeNpcVendor",
       "findNpcVendor",
@@ -113,10 +184,11 @@ export default {
       "copyNpcVendor"
     ]),
     async create() {
+      this.creating = true;
+      this.editing = false;
       await this.createNpcVendor({
         entry: this.creatureTemplate.entry
       });
-      this.creating = true;
     },
     async store() {
       if (!this.editing) {
@@ -131,6 +203,7 @@ export default {
         entry: this.creatureTemplate.entry
       });
       this.creating = false;
+      this.editing = false;
     },
     cancel() {
       this.creating = false;
@@ -144,9 +217,7 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyNpcVendor({
-              entry: this.currentRow.entry
-            })
+            this.copyNpcVendor(this.credential)
               .then(() => {
                 this.searchNpcVendors({
                   entry: this.creatureTemplate.entry
@@ -174,9 +245,7 @@ export default {
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
-              this.destroyNpcVendor({
-                entry: this.currentRow.entry
-              })
+              this.destroyNpcVendor(this.credential)
                 .then(() => {
                   this.searchNpcVendors({
                     entry: this.creatureTemplate.entry
@@ -197,17 +266,20 @@ export default {
       this.currentRow = row;
     },
     async show(row) {
-      await this.findNpcVendor({
-        entry: row.entry
-      });
       this.creating = true;
       this.editing = true;
+      await this.findNpcVendor({
+        entry: row.entry,
+        item: row.item,
+        ExtendedCost: row.ExtendedCost
+      });
     },
     async init() {
-      this.loading = true;
-      let id = this.$route.params.id;
-      await this.searchNpcVendors({ entry: id });
-      this.loading = false;
+      this.initing = true;
+      await this.searchNpcVendors({
+        entry: this.creatureTemplate.entry
+      });
+      this.initing = false;
     }
   },
   mounted() {
