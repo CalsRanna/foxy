@@ -186,14 +186,14 @@ export default {
       creating: false,
       editing: false,
       currentRow: undefined,
-      loading: false,
+      loading: false
     };
   },
   computed: {
     ...mapState("itemTemplate", ["itemTemplate"]),
     ...mapState("disenchantLootTemplate", [
       "disenchantLootTemplates",
-      "disenchantLootTemplate",
+      "disenchantLootTemplate"
     ]),
     disabled() {
       return this.currentRow == undefined;
@@ -201,9 +201,9 @@ export default {
     credential() {
       return {
         Entry: this.currentRow != undefined ? this.currentRow.Entry : undefined,
-        Item: this.currentRow != undefined ? this.currentRow.Item : undefined,
+        Item: this.currentRow != undefined ? this.currentRow.Item : undefined
       };
-    },
+    }
   },
   methods: {
     ...mapActions("disenchantLootTemplate", [
@@ -213,13 +213,13 @@ export default {
       "updateDisenchantLootTemplate",
       "destroyDisenchantLootTemplate",
       "createDisenchantLootTemplate",
-      "copyDisenchantLootTemplate",
+      "copyDisenchantLootTemplate"
     ]),
     async create() {
       this.creating = true;
       this.editing = false;
       await this.createDisenchantLootTemplate({
-        Entry: this.itemTemplate.entry,
+        Entry: this.itemTemplate.DisenchantID
       });
     },
     async store() {
@@ -228,11 +228,11 @@ export default {
       } else {
         await this.updateDisenchantLootTemplate({
           credential: this.credential,
-          disenchantLootTemplate: this.disenchantLootTemplate,
+          disenchantLootTemplate: this.disenchantLootTemplate
         });
       }
       await this.searchDisenchantLootTemplates({
-        Entry: this.itemTemplate.entry,
+        Entry: this.itemTemplate.DisenchantID
       });
       this.creating = false;
       this.editing = false;
@@ -252,7 +252,7 @@ export default {
             this.copyDisenchantLootTemplate(this.credential)
               .then(() => {
                 this.searchDisenchantLootTemplates({
-                  Entry: this.itemTemplate.entry,
+                  Entry: this.itemTemplate.DisenchantID
                 });
               })
               .then(() => {
@@ -262,7 +262,7 @@ export default {
           } else {
             done();
           }
-        },
+        }
       });
     },
     destroy() {
@@ -280,7 +280,7 @@ export default {
               this.destroyDisenchantLootTemplate(this.credential)
                 .then(() => {
                   this.searchDisenchantLootTemplates({
-                    Entry: this.itemTemplate.entry,
+                    Entry: this.itemTemplate.DisenchantID
                   });
                 })
                 .then(() => {
@@ -290,7 +290,7 @@ export default {
             } else {
               done();
             }
-          },
+          }
         }
       );
     },
@@ -302,19 +302,19 @@ export default {
       this.editing = true;
       await this.findDisenchantLootTemplate({
         Entry: row.Entry,
-        Item: row.Item,
+        Item: row.Item
       });
     },
     async init() {
       this.initing = true;
       await this.searchDisenchantLootTemplates({
-        Entry: this.itemTemplate.entry,
+        Entry: this.itemTemplate.DisenchantID
       });
       this.initing = false;
-    },
+    }
   },
   mounted() {
     this.init();
-  },
+  }
 };
 </script>

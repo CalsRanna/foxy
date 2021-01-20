@@ -26,12 +26,17 @@
         name="item_enchantment_template"
         lazy
         :disabled="
-          !(itemTemplate.RandomProperty != 0 || itemTemplate.RandomSuffix != 0)
+          itemTemplate.RandomProperty == 0 && itemTemplate.RandomSuffix == 0
         "
       >
         <item-enchantment-template-tab-pane></item-enchantment-template-tab-pane>
       </el-tab-pane>
-      <el-tab-pane label="物品掉落" name="item_loot_template" lazy>
+      <el-tab-pane
+        label="物品掉落"
+        name="item_loot_template"
+        lazy
+        :disabled="(itemTemplate.Flags & 4) == 0"
+      >
         <item-loot-template-tab-pane></item-loot-template-tab-pane>
       </el-tab-pane>
       <el-tab-pane
@@ -42,10 +47,20 @@
       >
         <disenchant-loot-template-tab-pane></disenchant-loot-template-tab-pane>
       </el-tab-pane>
-      <el-tab-pane label="选矿掉落" name="prospecting_loot_template" lazy>
+      <el-tab-pane
+        label="选矿掉落"
+        name="prospecting_loot_template"
+        lazy
+        :disabled="(itemTemplate.Flags & 262144) == 0"
+      >
         <prospecting-loot-template-tab-pane></prospecting-loot-template-tab-pane>
       </el-tab-pane>
-      <el-tab-pane label="研磨掉落" name="milling_loot_template" lazy>
+      <el-tab-pane
+        label="研磨掉落"
+        name="milling_loot_template"
+        lazy
+        :disabled="(itemTemplate.Flags & 536870912) == 0"
+      >
         <milling-loot-template-tab-pane></milling-loot-template-tab-pane>
       </el-tab-pane>
     </el-tabs>
@@ -65,8 +80,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      isCreating: true,
-      loading: false,
+      loading: false
     };
   },
   computed: {
@@ -99,7 +113,7 @@ export default {
       } else {
         return this.itemTemplate.description;
       }
-    },
+    }
   },
   components: {
     ItemTemplateTabPane,
@@ -107,7 +121,7 @@ export default {
     ItemLootTemplateTabPane,
     DisenchantLootTemplateTabPane,
     ProspectingLootTemplateTabPane,
-    MillingLootTemplateTabPane,
-  },
+    MillingLootTemplateTabPane
+  }
 };
 </script>

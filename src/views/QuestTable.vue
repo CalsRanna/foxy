@@ -2,8 +2,10 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>任务</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">
+          首页
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>任务管理</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">任务列表</h3>
     </el-card>
@@ -17,7 +19,14 @@
             <el-input v-model="LogTitle" placeholder="标题"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" native-type="submit" :loading="loading" @click="handleSearch">查询</el-button>
+            <el-button
+              type="primary"
+              native-type="submit"
+              :loading="loading"
+              @click="handleSearch"
+            >
+              查询
+            </el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
@@ -26,7 +35,9 @@
     <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
-      <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
+      <el-button type="danger" :disabled="disabled" @click="handleDestroy">
+        删除
+      </el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-pagination
@@ -46,21 +57,47 @@
         @row-dblclick="show"
       >
         <el-table-column prop="ID" label="ID" sortable></el-table-column>
-        <el-table-column prop="LogTitle" label="标题" min-width="100px" sortable>
+        <el-table-column
+          prop="LogTitle"
+          label="标题"
+          min-width="100px"
+          sortable
+        >
           <template slot-scope="scope">
-            <template v-if="scope.row.Title !== null">{{ scope.row.Title }}</template>
+            <template v-if="scope.row.Title !== null">{{
+              scope.row.Title
+            }}</template>
             <template v-else>{{ scope.row.LogTitle }}</template>
           </template>
         </el-table-column>
-        <el-table-column prop="QuestDescription" label="描述" sortable min-width="500px">
+        <el-table-column
+          prop="QuestDescription"
+          label="描述"
+          sortable
+          min-width="500px"
+        >
           <template slot-scope="scope">
-            <template v-if="scope.row.Details !== null">{{ scope.row.Details }}</template>
+            <template v-if="scope.row.Details !== null">{{
+              scope.row.Details
+            }}</template>
             <template v-else>{{ scope.row.LogDescription }}</template>
           </template>
         </el-table-column>
-        <el-table-column prop="QuestType" label="类型" sortable></el-table-column>
-        <el-table-column prop="QuestLevel" label="等级" sortable></el-table-column>
-        <el-table-column prop="MinLevel" label="所需最小等级" sortable></el-table-column>
+        <el-table-column
+          prop="QuestType"
+          label="类型"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="QuestLevel"
+          label="等级"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="MinLevel"
+          label="所需最小等级"
+          sortable
+        ></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"
@@ -84,7 +121,7 @@ export default {
       loading: false,
       ID: undefined,
       LogTitle: undefined,
-      currentRow: undefined,
+      currentRow: undefined
     };
   },
   computed: {
@@ -93,12 +130,14 @@ export default {
       return {
         id: this.ID,
         title: this.LogTitle,
-        page: this.page,
+        page: this.page
       };
     },
     disabled() {
-      return this.currentRow === undefined || this.currentRow === null ? true : false;
-    },
+      return this.currentRow === undefined || this.currentRow === null
+        ? true
+        : false;
+    }
   },
   methods: {
     ...mapActions("quest", [
@@ -106,12 +145,15 @@ export default {
       "countQuestTemplates",
       "paginateQuestTemplates",
       "destroyQuestTemplate",
-      "copyQuestTemplate",
+      "copyQuestTemplate"
     ]),
     async handleSearch() {
       this.loading = true;
       await this.paginateQuestTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
-      await Promise.all([this.searchQuestTemplates(this.payload), this.countQuestTemplates(this.payload)]);
+      await Promise.all([
+        this.searchQuestTemplates(this.payload),
+        this.countQuestTemplates(this.payload)
+      ]);
       this.loading = false;
     },
     reset() {
@@ -132,7 +174,10 @@ export default {
             instance.confirmButtonLoading = true;
             this.copyQuestTemplate({ ID: this.currentRow.ID })
               .then(() => {
-                Promise.all([this.searchQuestTemplates(this.payload), this.countQuestTemplates(this.payload)]);
+                Promise.all([
+                  this.searchQuestTemplates(this.payload),
+                  this.countQuestTemplates(this.payload)
+                ]);
               })
               .then(() => {
                 instance.confirmButtonLoading = false;
@@ -141,7 +186,7 @@ export default {
           } else {
             done();
           }
-        },
+        }
       });
     },
     handleDestroy() {
@@ -158,7 +203,10 @@ export default {
               instance.confirmButtonLoading = true;
               this.destroyQuestTemplate({ ID: this.currentRow.ID })
                 .then(() => {
-                  Promise.all([this.searchQuestTemplates(this.payload), this.countQuestTemplates(this.payload)]);
+                  Promise.all([
+                    this.searchQuestTemplates(this.payload),
+                    this.countQuestTemplates(this.payload)
+                  ]);
                 })
                 .then(() => {
                   instance.confirmButtonLoading = false;
@@ -167,7 +215,7 @@ export default {
             } else {
               done();
             }
-          },
+          }
         }
       );
     },
@@ -185,14 +233,17 @@ export default {
     },
     async init() {
       this.loading = true;
-      await Promise.all([this.searchQuestTemplates(this.payload), this.countQuestTemplates(this.payload)]);
+      await Promise.all([
+        this.searchQuestTemplates(this.payload),
+        this.countQuestTemplates(this.payload)
+      ]);
       this.loading = false;
-    },
+    }
   },
   created() {
     if (this.questTemplates.length === 0) {
       this.init();
     }
-  },
+  }
 };
 </script>

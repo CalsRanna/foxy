@@ -9,7 +9,12 @@
         </el-button>
       </el-card>
       <el-card style="margin-top: 16px">
-        <el-table :data="itemEnchantmentTemplates">
+        <el-table
+          :data="itemEnchantmentTemplates"
+          highlight-current-row
+          @current-change="select"
+          @row-dblclick="show"
+        >
           <el-table-column prop="ench" label="附魔"></el-table-column>
           <el-table-column prop="chance" label="几率">
             <span slot-scope="scope">
@@ -79,14 +84,14 @@ export default {
       creating: false,
       editing: false,
       currentRow: undefined,
-      loading: false,
+      loading: false
     };
   },
   computed: {
     ...mapState("itemTemplate", ["itemTemplate"]),
     ...mapState("itemEnchantmentTemplate", [
       "itemEnchantmentTemplates",
-      "itemEnchantmentTemplate",
+      "itemEnchantmentTemplate"
     ]),
     disabled() {
       return this.currentRow == undefined;
@@ -94,9 +99,9 @@ export default {
     credential() {
       return {
         entry: this.currentRow != undefined ? this.currentRow.entry : undefined,
-        ench: this.currentRow != undefined ? this.currentRow.ench : undefined,
+        ench: this.currentRow != undefined ? this.currentRow.ench : undefined
       };
-    },
+    }
   },
   methods: {
     ...mapActions("itemEnchantmentTemplate", [
@@ -106,13 +111,16 @@ export default {
       "updateItemEnchantmentTemplate",
       "destroyItemEnchantmentTemplate",
       "createItemEnchantmentTemplate",
-      "copyItemEnchantmentTemplate",
+      "copyItemEnchantmentTemplate"
     ]),
     async create() {
       this.creating = true;
       this.editing = false;
       await this.createItemEnchantmentTemplate({
-        entry: this.itemTemplate.entry,
+        entry:
+          this.itemTemplate.RandomProperty != 0
+            ? this.itemTemplate.RandomProperty
+            : this.itemTemplate.RandomSuffix
       });
     },
     async store() {
@@ -121,11 +129,14 @@ export default {
       } else {
         await this.updateItemEnchantmentTemplate({
           credential: this.credential,
-          itemEnchantmentTemplate: this.itemEnchantmentTemplate,
+          itemEnchantmentTemplate: this.itemEnchantmentTemplate
         });
       }
       await this.searchItemEnchantmentTemplates({
-        entry: this.itemTemplate.entry,
+        entry:
+          this.itemTemplate.RandomProperty != 0
+            ? this.itemTemplate.RandomProperty
+            : this.itemTemplate.RandomSuffix
       });
       this.creating = false;
       this.editing = false;
@@ -145,7 +156,10 @@ export default {
             this.copyItemEnchantmentTemplate(this.credential)
               .then(() => {
                 this.searchItemEnchantmentTemplates({
-                  entry: this.itemTemplate.entry,
+                  entry:
+                    this.itemTemplate.RandomProperty != 0
+                      ? this.itemTemplate.RandomProperty
+                      : this.itemTemplate.RandomSuffix
                 });
               })
               .then(() => {
@@ -155,7 +169,7 @@ export default {
           } else {
             done();
           }
-        },
+        }
       });
     },
     destroy() {
@@ -173,7 +187,10 @@ export default {
               this.destroyItemEnchantmentTemplate(this.credential)
                 .then(() => {
                   this.searchItemEnchantmentTemplates({
-                    entry: this.itemTemplate.entry,
+                    entry:
+                      this.itemTemplate.RandomProperty != 0
+                        ? this.itemTemplate.RandomProperty
+                        : this.itemTemplate.RandomSuffix
                   });
                 })
                 .then(() => {
@@ -183,7 +200,7 @@ export default {
             } else {
               done();
             }
-          },
+          }
         }
       );
     },
@@ -195,19 +212,22 @@ export default {
       this.editing = true;
       await this.findItemEnchantmentTemplate({
         entry: row.entry,
-        ench: row.ench,
+        ench: row.ench
       });
     },
     async init() {
       this.initing = true;
       await this.searchItemEnchantmentTemplates({
-        entry: this.itemTemplate.entry,
+        entry:
+          this.itemTemplate.RandomProperty != 0
+            ? this.itemTemplate.RandomProperty
+            : this.itemTemplate.RandomSuffix
       });
       this.initing = false;
-    },
+    }
   },
   mounted() {
     this.init();
-  },
+  }
 };
 </script>

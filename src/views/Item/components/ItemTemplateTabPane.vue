@@ -32,11 +32,15 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="套装">
-            <el-input
-              v-model="itemTemplate.itemset"
-              placeholder="itemset"
-            ></el-input>
+          <el-form-item label="品质">
+            <el-select v-model="itemTemplate.Quality" placeholder="Quality">
+              <el-option
+                v-for="(localeQuality, index) in localeQualities"
+                :key="`localeQuality-${index}`"
+                :label="localeQuality"
+                :value="index"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -63,41 +67,6 @@
                 :value="index"
               ></el-option>
             </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="佩戴位置">
-            <el-select
-              v-model="itemTemplate.InventoryType"
-              placeholder="InventoryType"
-            >
-              <el-option
-                v-for="(localeInventoryType, index) in localeInventoryTypes"
-                :key="`localeInventoryType-${index}`"
-                :label="localeInventoryType"
-                :value="index"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="品质">
-            <el-select v-model="itemTemplate.Quality" placeholder="Quality">
-              <el-option
-                v-for="(localeQuality, index) in localeQualities"
-                :key="`localeQuality-${index}`"
-                :label="localeQuality"
-                :value="index"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="外观">
-            <el-input
-              v-model="itemTemplate.displayid"
-              placeholder="displayid"
-            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -132,139 +101,38 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="购买数量">
+          <el-form-item label="外观">
             <el-input
-              v-model="itemTemplate.BuyCount"
-              placeholder="BuyCount"
+              v-model="itemTemplate.displayid"
+              placeholder="displayid"
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="购买价格">
-            <el-input
-              v-model="itemTemplate.BuyPrice"
-              placeholder="BuyPrice"
-            ></el-input>
+          <el-form-item label="佩戴位置">
+            <el-select
+              v-model="itemTemplate.InventoryType"
+              placeholder="InventoryType"
+            >
+              <el-option
+                v-for="(localeInventoryType, index) in localeInventoryTypes"
+                :key="`localeInventoryType-${index}`"
+                :label="localeInventoryType"
+                :value="index"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="出售价格">
-            <el-input
-              v-model="itemTemplate.SellPrice"
-              placeholder="SellPrice"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="最大数量">
-            <el-input
-              v-model="itemTemplate.maxcount"
-              placeholder="maxcount"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="堆叠数量">
-            <el-input
-              v-model="itemTemplate.stackable"
-              placeholder="stackable"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="开始任务">
-            <el-input
-              v-model="itemTemplate.startquest"
-              placeholder="startquest"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="随机属性">
-            <el-input
-              v-model="itemTemplate.RandomProperty"
-              placeholder="RandomProperty"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="随机后缀">
-            <el-input
-              v-model="itemTemplate.RandomSuffix"
-              placeholder="RandomSuffix"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="背包类别">
-            <el-input
-              v-model="itemTemplate.BagFamily"
-              placeholder="BagFamily"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="背包容量">
-            <el-input
-              v-model="itemTemplate.ContainerSlots"
-              placeholder="ContainerSlots"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="图腾类别">
-            <el-input
-              v-model="itemTemplate.TotemCategory"
-              placeholder="TotemCategory"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="持续时间">
-            <el-input
-              v-model="itemTemplate.duration"
-              placeholder="duration"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="ItemLimitCategory">
-            <el-input
-              v-model="itemTemplate.ItemLimitCategory"
-              placeholder="ItemLimitCategory"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="分解掉落">
-            <el-input
-              v-model="itemTemplate.DisenchantID"
-              placeholder="DisenchantID"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="食物类型">
-            <el-input
-              v-model="itemTemplate.FoodType"
-              placeholder="FoodType"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="最小金钱">
-            <el-input
-              v-model="itemTemplate.minMoneyLoot"
-              placeholder="minMoneyLoot"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="最大金钱">
-            <el-input
-              v-model="itemTemplate.maxMoneyLoot"
-              placeholder="maxMoneyLoot"
-            ></el-input>
+          <el-form-item label="武器位置">
+            <el-select v-model="itemTemplate.sheath" placeholder="sheath">
+              <el-option
+                v-for="(sheath, index) in sheaths"
+                :key="`sheath-${index}`"
+                :label="sheath"
+                :value="index"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -284,169 +152,250 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="标识">
+          <el-form-item label="套装">
             <el-input
-              v-model="itemTemplate.Flags"
-              placeholder="Flags"
+              v-model="itemTemplate.itemset"
+              placeholder="itemset"
             ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="随机属性">
+            <el-input
+              v-model="itemTemplate.RandomProperty"
+              controls-position="right"
+              placeholder="RandomProperty"
+              :disabled="
+                !Boolean(itemTemplate.RandomProperty) &&
+                  Boolean(itemTemplate.RandomSuffix)
+              "
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="随机后缀">
+            <el-input
+              v-model="itemTemplate.RandomSuffix"
+              controls-position="right"
+              placeholder="RandomSuffix"
+              :disabled="
+                !Boolean(itemTemplate.RandomSuffix) &&
+                  Boolean(itemTemplate.RandomProperty)
+              "
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="耐久度">
+            <el-input-number
+              v-model="itemTemplate.MaxDurability"
+              controls-position="right"
+              placeholder="MaxDurability"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="购买价格">
+            <el-input-number
+              v-model="itemTemplate.BuyPrice"
+              controls-position="right"
+              placeholder="BuyPrice"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="出售价格">
+            <el-input-number
+              v-model="itemTemplate.SellPrice"
+              controls-position="right"
+              placeholder="SellPrice"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="购买数量">
+            <el-input-number
+              v-model="itemTemplate.BuyCount"
+              controls-position="right"
+              placeholder="BuyCount"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="持有数量">
+            <el-input-number
+              v-model="itemTemplate.maxcount"
+              controls-position="right"
+              placeholder="maxcount"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="堆叠数量">
+            <el-input-number
+              v-model="itemTemplate.stackable"
+              controls-position="right"
+              placeholder="stackable"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="图腾类别">
+            <el-input
+              v-model="itemTemplate.TotemCategory"
+              placeholder="TotemCategory"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="食物类型">
+            <el-select v-model="itemTemplate.FoodType" placeholder="FoodType">
+              <el-option
+                v-for="(foodType, index) in foodTypes"
+                :key="`foodType-${index}`"
+                :label="foodType"
+                :value="index"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="背包类别">
+            <flag-editor
+              v-model="itemTemplate.BagFamily"
+              title="背包类别编辑器"
+              :flags="bagFamilies"
+              placeholder="BagFamily"
+            ></flag-editor>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="背包容量">
+            <el-input-number
+              v-model="itemTemplate.ContainerSlots"
+              controls-position="right"
+              placeholder="ContainerSlots"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="限制分类">
+            <el-input
+              v-model="itemTemplate.ItemLimitCategory"
+              placeholder="ItemLimitCategory"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="开始任务">
+            <el-input
+              v-model="itemTemplate.startquest"
+              placeholder="startquest"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="持续时间">
+            <el-input-number
+              v-model="itemTemplate.duration"
+              controls-position="right"
+              placeholder="duration"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="分解掉落">
+            <el-input
+              v-model="itemTemplate.DisenchantID"
+              placeholder="DisenchantID"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="最小金钱">
+            <el-input-number
+              v-model="itemTemplate.minMoneyLoot"
+              controls-position="right"
+              placeholder="minMoneyLoot"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="最大金钱">
+            <el-input-number
+              v-model="itemTemplate.maxMoneyLoot"
+              controls-position="right"
+              placeholder="maxMoneyLoot"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="标识">
+            <flag-editor
+              v-model="itemTemplate.Flags"
+              title="标识编辑器"
+              :flags="flags"
+              placeholder="Flags"
+            ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="额外标识">
-            <el-input
+            <flag-editor
               v-model="itemTemplate.FlagsExtra"
+              title="额外标识编辑器"
+              :flags="flagsExtra"
               placeholder="FlagsExtra"
-            ></el-input>
+            ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="自定义标识">
-            <el-input
+            <flag-editor
               v-model="itemTemplate.flagsCustom"
+              title="自定义标识编辑器"
+              :flags="flagsCustom"
               placeholder="flagsCustom"
-            ></el-input>
+            ></flag-editor>
           </el-form-item>
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="需要职业">
-            <el-input
-              v-model="itemTemplate.AllowableClass"
-              placeholder="AllowableClass"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要种族">
-            <el-input
-              v-model="itemTemplate.AllowableRace"
-              placeholder="AllowableRace"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="物品等级">
-            <el-input
-              v-model="itemTemplate.ItemLevel"
-              placeholder="ItemLevel"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要等级">
-            <el-input
-              v-model="itemTemplate.RequiredLevel"
-              placeholder="RequiredLevel"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要技能">
-            <el-input
-              v-model="itemTemplate.RequiredSkill"
-              placeholder="RequiredSkill"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要技能等级">
-            <el-input
-              v-model="itemTemplate.RequiredSkillRank"
-              placeholder="RequiredSkillRank"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要法术">
-            <el-input
-              v-model="itemTemplate.requiredspell"
-              placeholder="requiredspell"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要荣誉等级">
-            <el-input
-              v-model="itemTemplate.requiredhonorrank"
-              placeholder="requiredhonorrank"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要城市等级">
-            <el-input
-              v-model="itemTemplate.RequiredCityRank"
-              placeholder="RequiredCityRank"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要势力声望">
-            <el-input
-              v-model="itemTemplate.RequiredReputationFaction"
-              placeholder="RequiredReputationFaction"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要声望等级">
-            <el-input
-              v-model="itemTemplate.RequiredReputationRank"
-              placeholder="RequiredReputationRank"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要分解熟练度">
-            <el-input
-              v-model="itemTemplate.RequiredDisenchantSkill"
-              placeholder="RequiredDisenchantSkill"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="可用地图">
-            <el-input
-              v-model="itemTemplate.Map"
-              placeholder="PageText"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="可用区域">
-            <el-input v-model="itemTemplate.area" placeholder="area"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="节日ID">
-            <el-input
-              v-model="itemTemplate.HolidayId"
-              placeholder="HolidayId"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="锁ID">
-            <el-input
-              v-model="itemTemplate.lockid"
-              placeholder="lockid"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <!-- 战斗相关 -->
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="攻击间隔">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.delay"
+              controls-position="right"
               placeholder="delay"
-            ></el-input>
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="攻击距离系数">
+            <el-input-number
+              v-model="itemTemplate.RangedModRange"
+              controls-position="right"
+              placeholder="RangedModRange"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="护甲伤害系数">
+            <el-input-number
+              v-model="itemTemplate.ArmorDamageModifier"
+              controls-position="right"
+              placeholder="ArmorDamageModifier"
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -461,18 +410,20 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="最小伤害1">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.dmg_min1"
+              controls-position="right"
               placeholder="dmg_min1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最大伤害1">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.dmg_max1"
+              controls-position="right"
               placeholder="dmg_max1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -487,18 +438,20 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="最小伤害2">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.dmg_min2"
+              controls-position="right"
               placeholder="dmg_min2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最大伤害2">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.dmg_max2"
+              controls-position="right"
               placeholder="dmg_max2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -513,59 +466,28 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="护甲">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.armor"
+              controls-position="right"
               placeholder="armor"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="格挡几率">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.block"
+              controls-position="right"
               placeholder="block"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="护甲伤害系数">
-            <el-input
-              v-model="itemTemplate.ArmorDamageModifier"
-              placeholder="ArmorDamageModifier"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="攻击距离系数">
-            <el-input
-              v-model="itemTemplate.RangedModRange"
-              placeholder="RangedModRange"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="最大持续时间">
-            <el-input
-              v-model="itemTemplate.MaxDurability"
-              placeholder="MaxDurability"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="鞘">
-            <el-input
-              v-model="itemTemplate.sheath"
-              placeholder="sheath"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
     </el-card>
-    <!-- 传家宝相关 -->
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="传家宝属性分配">
+          <el-form-item label="缩放属性分配">
             <el-input
               v-model="itemTemplate.ScalingStatDistribution"
               placeholder="ScalingStatDistribution"
@@ -573,7 +495,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="传家宝属性标识">
+          <el-form-item label="缩放属性标识">
             <el-input
               v-model="itemTemplate.ScalingStatValue"
               placeholder="ScalingStatValue"
@@ -582,7 +504,6 @@
         </el-col>
       </el-row>
     </el-card>
-    <!-- 属性相关 -->
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
@@ -839,62 +760,66 @@
         </el-col>
       </el-row>
     </el-card>
-    <!-- 抗性相关 -->
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="神圣抗性">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.holy_res"
+              controls-position="right"
               placeholder="holy_res"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="火焰抗性">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.fire_res"
+              controls-position="right"
               placeholder="fire_res"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="自然抗性">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.nature_res"
+              controls-position="right"
               placeholder="nature_res"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="暗影抗性">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.shadow_res"
+              controls-position="right"
               placeholder="shadow_res"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="冰霜抗性">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.frost_res"
+              controls-position="right"
               placeholder="frost_res"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="奥术抗性">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.arcane_res"
+              controls-position="right"
               placeholder="arcane_res"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
     </el-card>
-    <!-- 技能相关 -->
     <el-card style="margin-top: 16px">
       <div style="width: 100%">
         <div style="width: 20%; float: left">
@@ -1158,6 +1083,135 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
+          <el-form-item label="需要职业">
+            <el-input
+              v-model="itemTemplate.AllowableClass"
+              placeholder="AllowableClass"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要种族">
+            <el-input
+              v-model="itemTemplate.AllowableRace"
+              placeholder="AllowableRace"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="物品等级">
+            <el-input
+              v-model="itemTemplate.ItemLevel"
+              placeholder="ItemLevel"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要等级">
+            <el-input
+              v-model="itemTemplate.RequiredLevel"
+              placeholder="RequiredLevel"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要技能">
+            <el-input
+              v-model="itemTemplate.RequiredSkill"
+              placeholder="RequiredSkill"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要技能等级">
+            <el-input
+              v-model="itemTemplate.RequiredSkillRank"
+              placeholder="RequiredSkillRank"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要法术">
+            <el-input
+              v-model="itemTemplate.requiredspell"
+              placeholder="requiredspell"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要荣誉等级">
+            <el-input
+              v-model="itemTemplate.requiredhonorrank"
+              placeholder="requiredhonorrank"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要城市等级">
+            <el-input
+              v-model="itemTemplate.RequiredCityRank"
+              placeholder="RequiredCityRank"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要势力声望">
+            <el-input
+              v-model="itemTemplate.RequiredReputationFaction"
+              placeholder="RequiredReputationFaction"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要声望等级">
+            <el-input
+              v-model="itemTemplate.RequiredReputationRank"
+              placeholder="RequiredReputationRank"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要分解熟练度">
+            <el-input
+              v-model="itemTemplate.RequiredDisenchantSkill"
+              placeholder="RequiredDisenchantSkill"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="可用地图">
+            <el-input
+              v-model="itemTemplate.Map"
+              placeholder="PageText"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="可用区域">
+            <el-input v-model="itemTemplate.area" placeholder="area"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="节日ID">
+            <el-input
+              v-model="itemTemplate.HolidayId"
+              placeholder="HolidayId"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="锁ID">
+            <el-input
+              v-model="itemTemplate.lockid"
+              placeholder="lockid"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
+        <el-col :span="6">
           <el-form-item label="页面ID">
             <el-input
               v-model="itemTemplate.PageText"
@@ -1219,9 +1273,16 @@ import {
   localeMaterials,
   localeStatTypes,
   bondings,
+  foodTypes,
+  bagFamilies,
+  sheaths,
+  flags,
+  flagsExtra,
+  flagsCustom
 } from "@/locales/item.js";
 
 import ItemTemplateLocalizer from "@/views/Item/components/ItemTemplateLocalizer";
+import FlagEditor from "@/components/FlagEditor";
 import HintLabel from "@/components/HintLabel";
 import SpellSelector from "@/components/SpellSelector";
 
@@ -1242,6 +1303,12 @@ export default {
       localeMaterials: localeMaterials,
       localeStatTypes: localeStatTypes,
       bondings: bondings,
+      foodTypes: foodTypes,
+      bagFamilies: bagFamilies,
+      sheaths: sheaths,
+      flags: flags,
+      flagsExtra: flagsExtra,
+      flagsCustom: flagsCustom
     };
   },
   computed: {
@@ -1249,16 +1316,16 @@ export default {
     ...mapState("itemTemplateLocale", ["itemTemplateLocales"]),
     credential() {
       return {
-        entry: this.$route.params.id,
+        entry: this.$route.params.id
       };
-    },
+    }
   },
   methods: {
     ...mapActions("itemTemplate", [
       "storeItemTemplate",
       "findItemTemplate",
       "updateItemTemplate",
-      "createItemTemplate",
+      "createItemTemplate"
     ]),
     ...mapActions("itemTemplateLocale", ["searchItemTemplateLocales"]),
     async store() {
@@ -1269,7 +1336,7 @@ export default {
       } else {
         await this.updateItemTemplate({
           credential: this.credential,
-          creatureTemplate: this.itemTemplate,
+          itemTemplate: this.itemTemplate
         });
       }
       this.loading = false;
@@ -1283,22 +1350,23 @@ export default {
         this.creating = true;
         await Promise.all([
           this.createItemTemplate(),
-          this.searchItemTemplateLocales({ ID: 0 }),
+          this.searchItemTemplateLocales({ ID: 0 })
         ]);
       } else {
         await this.findItemTemplate(this.credential);
         await this.searchItemTemplateLocales({ ID: this.itemTemplate.entry });
       }
       this.initing = false;
-    },
+    }
   },
   created() {
     this.init();
   },
   components: {
     ItemTemplateLocalizer,
+    FlagEditor,
     HintLabel,
-    SpellSelector,
-  },
+    SpellSelector
+  }
 };
 </script>

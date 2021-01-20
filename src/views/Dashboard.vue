@@ -25,7 +25,9 @@
               </p>
               <p class="summary-content">
                 {{
-                  parseFloat(this.quantityOfCreatureTemplate).toLocaleString()
+                  parseFloat(
+                    this.quantityOfCreatureTemplate.total
+                  ).toLocaleString()
                 }}
               </p>
             </el-card>
@@ -46,7 +48,9 @@
             <el-card shadow="hover">
               <p class="summary-title">物品模板<span>Item Template</span></p>
               <p class="summary-content">
-                {{ parseFloat(this.quantityOfItemTemplate).toLocaleString() }}
+                {{
+                  parseFloat(this.quantityOfItemTemplate.total).toLocaleString()
+                }}
               </p>
             </el-card>
           </el-col>
@@ -93,13 +97,16 @@
             <span>Foxy</span>
           </div>
           <p style="text-indent: 2em">
-            目前存在的编辑器都不是很能满足我对一个好用的编辑器的期望：简单，易用，美观，因此我提交了
-            Foxy 这个开源项目。Foxy
-            计划中的功能很多，有且不仅有数据库的编辑，还有服务端 dbc
-            文件的修改，服务端及第三方模块配置文件的修改等等，甚至自动对客户端追加补丁等功能都在尝试编码的路上了。
+            目前存在的编辑器都不是很能满足我对一个好用的编辑器的期望：简单，易用，美观，因此我提交了Foxy
+            这个开源项目。
           </p>
           <p style="text-indent: 2em">
-            闲余时间开发，进度随缘， Feature 也随缘， Bug 请到
+            一旦涉及自定义配置项，软件很难做到简单易用，因此目前暂不支持对数据库表的定义，
+            所有编辑项全部写死在代码里（基于AzerothCore），后期考虑改为可配置，以便适配其他服务端，
+            提高软件复用效率。
+          </p>
+          <p style="text-indent: 2em">
+            闲余时间开发，进度随缘， Feature也随缘， Bug请到
 
             <span
               style="color: #409eff; cursor: pointer"
@@ -112,7 +119,7 @@
             上面提交 issue 。
           </p>
           <p style="text-indent: 2em">
-            如果你希望得到最新版本的 Foxy ，请访问
+            如果你希望得到最新版本的Foxy，请访问
             <span
               style="color: #409eff; cursor: pointer"
               @click="
@@ -149,9 +156,11 @@ export default {
     };
   },
   computed: {
-    ...mapState("creatureTemplate", { quantityOfCreatureTemplate: "total" }),
+    ...mapState("creatureTemplate", {
+      quantityOfCreatureTemplate: "pagination"
+    }),
     ...mapState("gameObject", { quantityOfGameObjectTemplate: "total" }),
-    ...mapState("itemTemplate", { quantityOfItemTemplate: "total" }),
+    ...mapState("itemTemplate", { quantityOfItemTemplate: "pagination" }),
     ...mapState("quest", { quantityOfQuestTemplate: "total" }),
     ...mapState("gossipMenu", { quantityOfGossipMenu: "total" }),
     ...mapState("smartScript", { quantityOfSmartScript: "total" }),
