@@ -17,29 +17,18 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="名称">
-            <el-input v-model="itemTemplate.name" placeholder="name">
-              <i
-                class="el-icon-s-operation clickable-icon"
-                slot="suffix"
-                style="margin-right: 8px"
-                @click="showDialog"
-              ></i
-            ></el-input>
+            <item-template-localizer
+              v-model="itemTemplate.name"
+              placeholder="name"
+            ></item-template-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="描述">
-            <el-input
+            <item-template-localizer
               v-model="itemTemplate.description"
               placeholder="description"
-            >
-              <i
-                class="el-icon-s-operation clickable-icon"
-                slot="suffix"
-                style="margin-right: 8px"
-                @click="showDialog"
-              ></i
-            ></el-input>
+            ></item-template-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1232,6 +1221,7 @@ import {
   bondings,
 } from "@/locales/item.js";
 
+import ItemTemplateLocalizer from "@views/Item/components/ItemTemplateLocalizer";
 import HintLabel from "@/components/HintLabel";
 import SpellSelector from "@/components/SpellSelector";
 
@@ -1307,6 +1297,7 @@ export default {
     this.init();
   },
   components: {
+    ItemTemplateLocalizer,
     HintLabel,
     SpellSelector,
   },
