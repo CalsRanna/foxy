@@ -32,21 +32,7 @@
           !(itemTemplate.RandomProperty != 0 || itemTemplate.RandomSuffix != 0)
         "
       >
-        <el-card style="margin-top: 16px">
-          <el-button type="primary">新增</el-button>
-          <el-button disabled>复制</el-button>
-          <el-button type="danger" disabled>删除</el-button>
-        </el-card>
-        <el-card style="margin-top: 16px">
-          <el-table :data="itemEnchantmentTemplates">
-            <el-table-column prop="ench" label="附魔"></el-table-column>
-            <el-table-column prop="chance" label="几率">
-              <span slot-scope="scope">
-                {{ `${scope.row.chance}%` }}
-              </span>
-            </el-table-column>
-          </el-table>
-        </el-card>
+        <item-enchantment-template-tab-pane></item-enchantment-template-tab-pane>
       </el-tab-pane>
       <el-tab-pane label="物品掉落" name="item_loot_template">
         <el-card style="margin-top: 16px">
