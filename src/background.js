@@ -106,6 +106,15 @@ process.on("uncaughtException", error => {
   });
 });
 
+process.on("unhandledRejection", error => {
+  win.webContents.send("GLOBAL_NOTICE", {
+    category: "alert",
+    type: "error",
+    title: `${error.code}`,
+    message: `${error.message}<br>${error.stack}`
+  });
+});
+
 ipcMain.on("SELECT_DBC_PATH", event => {
   dialog.showOpenDialog({ properties: ["openDirectory"] }).then(payload => {
     event.reply("SELECT_DBC_PATH_REPLY", payload.filePaths[0]);
