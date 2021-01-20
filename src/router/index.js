@@ -4,8 +4,6 @@ import VueRouter from "vue-router";
 import Dashboard from "@/views/Dashboard";
 import GameObjectTable from "@/views/GameObjectTable";
 import GameObjectDetail from "@/views/GameObjectDetail";
-import ItemTable from "@/views/ItemTable";
-import ItemTemplateDetail from "@/views/ItemTemplateDetail";
 import QuestTable from "@/views/QuestTable";
 import QuestDetail from "@/views/QuestDetail";
 import GossipMenuTable from "@/views/GossipMenuTable";
@@ -27,22 +25,22 @@ const routes = [
   { path: "/dashboard", component: Dashboard },
   {
     path: "/creature",
-    component: () => import("@/views/Creature/CreatureTable")
+    component: () => import("@/views/Creature/CreatureTable"),
   },
   {
     path: "/creature/create",
-    component: () => import("@/views/Creature/CreatureTemplateDetail")
+    component: () => import("@/views/Creature/CreatureTemplateDetail"),
   },
   {
     path: "/creature/:id",
-    component: () => import("@/views/Creature/CreatureTemplateDetail")
+    component: () => import("@/views/Creature/CreatureTemplateDetail"),
   },
+  { path: "/item", component: () => import("@/views/Item/ItemTable") },
+  { path: "/item/create", component: () => import("@/views/Item/ItemDetail") },
+  { path: "/item/:id", component: () => import("@/views/Item/ItemDetail") },
   { path: "/game-object", component: GameObjectTable },
   { path: "/game-object/create", component: GameObjectDetail },
   { path: "/game-object/:id", component: GameObjectDetail },
-  { path: "/item", component: ItemTable },
-  { path: "/item/create", component: ItemTemplateDetail },
-  { path: "/item/:id", component: ItemTemplateDetail },
   { path: "/quest", component: QuestTable },
   { path: "/quest/create", component: QuestDetail },
   { path: "/quest/:id", component: QuestDetail },
@@ -64,13 +62,13 @@ const routes = [
       { path: "mysql", component: Mysql },
       { path: "dbc", component: Dbc },
       { path: "config", component: Config },
-      { path: "developer", component: Developer }
-    ]
-  }
+      { path: "developer", component: Developer },
+    ],
+  },
 ];
 
 const router = new VueRouter({
-  routes
+  routes,
 });
 
 export default router;
