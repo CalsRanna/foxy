@@ -15,8 +15,14 @@ import npcTrainer from "./npcTrainer";
 import creatureLootTemplate from "./creatureLootTemplate";
 import pickpocketingLootTemplate from "./pickpocketingLootTemplate";
 import skinningLootTemplate from "./skinningLootTemplate";
+import itemTemplate from "./itemTemplate";
+import itemTemplateLocale from "./itemTemplateLocale";
+import itemEnchantmentTemplate from "./itemEnchantmentTemplate";
+import itemLootTemplate from "./itemLootTemplate";
+import disenchantLootTemplate from "./disenchantLootTemplate";
+import prospectingLootTemplate from "./prospectingLootTemplate";
+import millingLootTemplate from "./millingLootTemplate";
 import gameObject from "./gameObject";
-import item from "./item";
 import quest from "./quest";
 import spell from "./spell";
 import smartScript from "./smartScript";
@@ -29,7 +35,6 @@ export default new Vuex.Store({
   modules: {
     global,
     dbc,
-    // creature,
     creatureTemplate,
     creatureTemplateLocale,
     creatureTemplateAddon,
@@ -41,8 +46,14 @@ export default new Vuex.Store({
     creatureLootTemplate,
     pickpocketingLootTemplate,
     skinningLootTemplate,
+    itemTemplate,
+    itemTemplateLocale,
+    itemEnchantmentTemplate,
+    itemLootTemplate,
+    disenchantLootTemplate,
+    prospectingLootTemplate,
+    millingLootTemplate,
     gameObject,
-    item,
     quest,
     spell,
     smartScript,

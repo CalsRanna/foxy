@@ -151,7 +151,7 @@ export default {
   computed: {
     ...mapState("creatureTemplate", { quantityOfCreatureTemplate: "total" }),
     ...mapState("gameObject", { quantityOfGameObjectTemplate: "total" }),
-    ...mapState("item", { quantityOfItemTemplate: "total" }),
+    ...mapState("itemTemplate", { quantityOfItemTemplate: "total" }),
     ...mapState("quest", { quantityOfQuestTemplate: "total" }),
     ...mapState("gossipMenu", { quantityOfGossipMenu: "total" }),
     ...mapState("smartScript", { quantityOfSmartScript: "total" }),
@@ -171,7 +171,7 @@ export default {
   methods: {
     ...mapActions("creatureTemplate", ["countCreatureTemplates"]),
     ...mapActions("gameObject", ["countGameObjectTemplates"]),
-    ...mapActions("item", ["countItemTemplates"]),
+    ...mapActions("itemTemplate", ["countItemTemplates"]),
     ...mapActions("quest", ["countQuestTemplates"]),
     ...mapActions("gossipMenu", ["countGossipMenus"]),
     ...mapActions("smartScript", ["countSmartScripts"]),

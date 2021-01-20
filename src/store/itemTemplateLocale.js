@@ -11,7 +11,7 @@ export default {
     itemTemplateLocales: [],
   }),
   actions: {
-    searchCreatureTemplateLocales({ commit }, payload) {
+    searchItemTemplateLocales({ commit }, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(SEARCH_ITEM_TEMPLATE_LOCALES, payload);
         ipcRenderer.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, response) => {
@@ -20,7 +20,7 @@ export default {
         });
       });
     },
-    storeCreatureTemplateLocales(context, payload) {
+    storeItemTemplateLocales(context, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(STORE_ITEM_TEMPLATE_LOCALES, payload);
         ipcRenderer.on(STORE_ITEM_TEMPLATE_LOCALES, () => {

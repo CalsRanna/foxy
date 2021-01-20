@@ -53,7 +53,7 @@
         删除
       </el-button>
     </el-card>
-    <el-card v-loading="loading" style="margin-top: 16px">
+    <el-card style="margin-top: 16px">
       <el-pagination
         layout="prev, pager, next"
         :current-page="pagination.page"
@@ -127,7 +127,7 @@ import {
   localeClasses,
   localeSubclasses,
   localeInventoryTypes,
-} from "../locales/item.js";
+} from "@/locales/item.js";
 
 import ItemTemplateFilter from "@/views/Item/components/ItemTemplateFilter";
 import ItemTemplateName from "@/components/ItemTemplateName";
@@ -151,6 +151,7 @@ export default {
       "filter",
       "credential",
       "pagination",
+      "itemTemplates",
     ]),
     payload() {
       return {
@@ -175,7 +176,7 @@ export default {
       "copyItemTemplate",
       "resetCredential",
     ]),
-    async filtrate(field, index) {
+    async filtrate() {
       this.loading = true;
       await this.paginateItemTemplates({ page: 1 });
       await Promise.all([

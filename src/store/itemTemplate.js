@@ -128,10 +128,10 @@ export default {
       state.itemTemplates = itemTemplates;
     },
     [COUNT_ITEM_TEMPLATES](state, total) {
-      state.total = total;
+      state.pagination.total = total;
     },
     [PAGINATE_ITEM_TEMPLATES](state, page) {
-      state.page = page;
+      state.pagination.page = page;
     },
     [STORE_ITEM_TEMPLATE](state, itemTemplate) {
       state.itemTemplate = itemTemplate;

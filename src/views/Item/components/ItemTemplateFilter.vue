@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { localeClasses, localeSubclasses } from "../locales/item.js";
+import { localeClasses, localeSubclasses } from "@/locales/item.js";
 
 import { mapState, mapActions } from "vuex";
 
