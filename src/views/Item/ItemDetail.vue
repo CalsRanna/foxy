@@ -35,220 +35,22 @@
         <item-enchantment-template-tab-pane></item-enchantment-template-tab-pane>
       </el-tab-pane>
       <el-tab-pane label="物品掉落" name="item_loot_template">
-        <el-card style="margin-top: 16px">
-          <el-button type="primary">新增</el-button>
-          <el-button disabled>复制</el-button>
-          <el-button type="danger" disabled>删除</el-button>
-        </el-card>
-        <el-card style="margin-top: 16px">
-          <el-table :data="itemLootTemplates">
-            <el-table-column prop="Item" label="物品">
-              <span slot-scope="scope">
-                <template v-if="scope.row.localeName !== null">
-                  {{ scope.row.localeName }}
-                </template>
-                <template v-else>{{ scope.row.name }}</template>
-              </span>
-            </el-table-column>
-            <el-table-column prop="Reference" label="关联"></el-table-column>
-            <el-table-column prop="Chance" label="几率">
-              <span slot-scope="scope">
-                {{ `${scope.row.Chance}%` }}
-              </span>
-            </el-table-column>
-            <el-table-column prop="QuestRequired" label="需要任务">
-              <span slot-scope="scope">
-                <el-tag type="success" v-if="scope.row.QuestRequired">
-                  需要
-                </el-tag>
-                <el-tag v-else>不需要</el-tag>
-              </span>
-            </el-table-column>
-            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
-            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-          </el-table>
-        </el-card>
+        <item-loot-template-tab-pane></item-loot-template-tab-pane>
       </el-tab-pane>
       <el-tab-pane
         label="分解掉落"
         name="disenchant_loot_template"
         :disabled="itemTemplate.DisenchantID == 0"
       >
-        <el-card style="margin-top: 16px">
-          <el-button type="primary">新增</el-button>
-          <el-button disabled>复制</el-button>
-          <el-button type="danger" disabled>删除</el-button>
-        </el-card>
-        <el-card style="margin-top: 16px">
-          <el-table :data="disenchantLootTemplates">
-            <el-table-column prop="Item" label="物品">
-              <span slot-scope="scope">
-                <template v-if="scope.row.localeName !== null">
-                  {{ scope.row.localeName }}
-                </template>
-                <template v-else>{{ scope.row.name }}</template>
-              </span>
-            </el-table-column>
-            <el-table-column prop="Reference" label="关联"></el-table-column>
-            <el-table-column prop="Chance" label="几率">
-              <span slot-scope="scope">
-                {{ `${scope.row.Chance}%` }}
-              </span>
-            </el-table-column>
-            <el-table-column prop="QuestRequired" label="需要任务">
-              <span slot-scope="scope">
-                <el-tag type="success" v-if="scope.row.QuestRequired">
-                  需要
-                </el-tag>
-                <el-tag v-else>不需要</el-tag>
-              </span>
-            </el-table-column>
-            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
-            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-          </el-table>
-        </el-card>
+        <disenchant-loot-template-tab-pane></disenchant-loot-template-tab-pane>
       </el-tab-pane>
       <el-tab-pane label="选矿掉落" name="prospecting_loot_template">
-        <el-card style="margin-top: 16px">
-          <el-button type="primary">新增</el-button>
-          <el-button disabled>复制</el-button>
-          <el-button type="danger" disabled>删除</el-button>
-        </el-card>
-        <el-card style="margin-top: 16px">
-          <el-table :data="prospectingLootTemplates">
-            <el-table-column prop="Item" label="物品">
-              <span slot-scope="scope">
-                <template v-if="scope.row.localeName !== null">
-                  {{ scope.row.localeName }}
-                </template>
-                <template v-else>{{ scope.row.name }}</template>
-              </span>
-            </el-table-column>
-            <el-table-column prop="Reference" label="关联"></el-table-column>
-            <el-table-column prop="Chance" label="几率">
-              <span slot-scope="scope">
-                {{ `${scope.row.Chance}%` }}
-              </span>
-            </el-table-column>
-            <el-table-column prop="QuestRequired" label="需要任务">
-              <span slot-scope="scope">
-                <el-tag type="success" v-if="scope.row.QuestRequired">
-                  需要
-                </el-tag>
-                <el-tag v-else>不需要</el-tag>
-              </span>
-            </el-table-column>
-            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
-            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-          </el-table>
-        </el-card>
+        <prospecting-loot-template-tab-pane></prospecting-loot-template-tab-pane>
       </el-tab-pane>
       <el-tab-pane label="研磨掉落" name="milling_loot_template">
-        <el-card style="margin-top: 16px">
-          <el-button type="primary">新增</el-button>
-          <el-button disabled>复制</el-button>
-          <el-button type="danger" disabled>删除</el-button>
-        </el-card>
-        <el-card style="margin-top: 16px">
-          <el-table :data="millingLootTemplates">
-            <el-table-column prop="Item" label="物品">
-              <span slot-scope="scope">
-                <template v-if="scope.row.localeName !== null">
-                  {{ scope.row.localeName }}
-                </template>
-                <template v-else>{{ scope.row.name }}</template>
-              </span>
-            </el-table-column>
-            <el-table-column prop="Reference" label="关联"></el-table-column>
-            <el-table-column prop="Chance" label="几率">
-              <span slot-scope="scope">
-                {{ `${scope.row.Chance}%` }}
-              </span>
-            </el-table-column>
-            <el-table-column prop="QuestRequired" label="需要任务">
-              <span slot-scope="scope">
-                <el-tag type="success" v-if="scope.row.QuestRequired">
-                  需要
-                </el-tag>
-                <el-tag v-else>不需要</el-tag>
-              </span>
-            </el-table-column>
-            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
-            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-          </el-table>
-        </el-card>
+        <milling-loot-template-tab-pane></milling-loot-template-tab-pane>
       </el-tab-pane>
     </el-tabs>
-    <el-dialog
-      :visible.sync="localeDialogVisible"
-      :show-close="false"
-      :close-on-click-modal="false"
-    >
-      <div slot="title">
-        <span style="font-size: 18px; color: #303133; margin-right: 16px"
-          >名称/描述本地化</span
-        >
-        <el-button size="mini" @click="addItemTemplateLocale">新增</el-button>
-      </div>
-      <el-table :data="itemTemplateLocales">
-        <el-table-column width="48">
-          <el-button
-            type="danger"
-            size="mini"
-            icon="el-icon-delete"
-            circle=""
-            slot-scope="scope"
-            @click="() => deleteItemTemplateLocale(scope.$index)"
-          ></el-button>
-        </el-table-column>
-        <el-table-column prop="ID" label="编号">
-          <template slot-scope="scope">
-            <el-input-number
-              v-model="scope.row.ID"
-              controls-position="right"
-              disabled
-            ></el-input-number>
-          </template>
-        </el-table-column>
-        <el-table-column prop="locale" label="语言">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.locale"
-              placeholder="locale"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="Name" label="名称">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.Name" placeholder="Name"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="Description" label="称号">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.Description"
-              placeholder="Description"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="VerifiedBuild" label="VerifiedBuild">
-          <template slot-scope="scope">
-            <el-input-number
-              v-model="scope.row.VerifiedBuild"
-              :min="0"
-              controls-position="right"
-              placeholder="VerifiedBuild"
-            ></el-input-number>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div slot="footer">
-        <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="() => store('item_template_locales')"
-          >保存</el-button
-        >
-      </div>
-    </el-dialog>
   </div>
 </template>
 
