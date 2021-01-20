@@ -17,7 +17,7 @@ export default {
     itemEnchantmentTemplate: {},
   }),
   actions: {
-    searchCreatureEquipTemplates({ commit }, payload) {
+    searchItemEnchantmentTemplates({ commit }, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, response) => {
@@ -26,7 +26,7 @@ export default {
         });
       });
     },
-    storeCreatureEquipTemplate(context, payload) {
+    storeItemEnchantmentTemplate(context, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(STORE_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(STORE_ITEM_ENCHANTMENT_TEMPLATE, () => {
@@ -34,7 +34,7 @@ export default {
         });
       });
     },
-    findCreatureEquipTemplate({ commit }, payload) {
+    findItemEnchantmentTemplate({ commit }, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(FIND_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(FIND_ITEM_ENCHANTMENT_TEMPLATE, (event, response) => {
@@ -43,7 +43,7 @@ export default {
         });
       });
     },
-    updateCreatureEquipTemplate(context, payload) {
+    updateItemEnchantmentTemplate(context, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(UPDATE_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_ITEM_ENCHANTMENT_TEMPLATE, () => {
@@ -51,7 +51,7 @@ export default {
         });
       });
     },
-    destroyCreatureEquipTemplate(context, payload) {
+    destroyItemEnchantmentTemplate(context, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(DESTROY_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_ITEM_ENCHANTMENT_TEMPLATE, () => {
@@ -59,7 +59,7 @@ export default {
         });
       });
     },
-    createCreatureEquipTemplate({ commit }, payload) {
+    createItemEnchantmentTemplate({ commit }, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(CREATE_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(CREATE_ITEM_ENCHANTMENT_TEMPLATE, (event, response) => {
@@ -68,7 +68,7 @@ export default {
         });
       });
     },
-    copyCreatureEquipTemplate(context, payload) {
+    copyItemEnchantmentTemplate(context, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(COPY_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(COPY_ITEM_ENCHANTMENT_TEMPLATE, () => {

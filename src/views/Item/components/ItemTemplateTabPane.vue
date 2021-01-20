@@ -1221,12 +1221,11 @@ import {
   bondings,
 } from "@/locales/item.js";
 
-import ItemTemplateLocalizer from "@views/Item/components/ItemTemplateLocalizer";
+import ItemTemplateLocalizer from "@/views/Item/components/ItemTemplateLocalizer";
 import HintLabel from "@/components/HintLabel";
 import SpellSelector from "@/components/SpellSelector";
 
 import { mapState, mapActions } from "vuex";
-import { materialTooltip } from "../../../locales/item";
 
 export default {
   data() {
@@ -1238,6 +1237,8 @@ export default {
       localeSubclasses: localeSubclasses,
       localeInventoryTypes: localeInventoryTypes,
       localeQualities: localeQualities,
+      soundOverrideSubclassTooltip: soundOverrideSubclassTooltip,
+      materialTooltip: materialTooltip,
       localeMaterials: localeMaterials,
       localeStatTypes: localeStatTypes,
       bondings: bondings,
@@ -1282,13 +1283,11 @@ export default {
         this.creating = true;
         await Promise.all([
           this.createItemTemplate(),
-          this.searchItemTemplateLocales({ entry: 0 }),
+          this.searchItemTemplateLocales({ ID: 0 }),
         ]);
       } else {
-        await Promise.all([
-          this.findItemTemplate(this.credential),
-          this.searchItemTemplateLocales(this.credential),
-        ]);
+        await this.findItemTemplate(this.credential);
+        await this.searchItemTemplateLocales({ ID: this.itemTemplate.entry });
       }
       this.initing = false;
     },
