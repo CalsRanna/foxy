@@ -2,8 +2,10 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>技能</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">
+          首页
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>技能管理</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">技能列表</h3>
     </el-card>
@@ -17,7 +19,14 @@
             <el-input v-model="name" placeholder="名称"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" native-type="submit" :loading="loading" @click="handleSearch">查询</el-button>
+            <el-button
+              type="primary"
+              native-type="submit"
+              :loading="loading"
+              @click="handleSearch"
+            >
+              查询
+            </el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
@@ -26,7 +35,9 @@
     <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
-      <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
+      <el-button type="danger" :disabled="disabled" @click="handleDestroy">
+        删除
+      </el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-pagination
@@ -38,18 +49,49 @@
         @current-change="handlePaginate"
         style="margin-top: 16px"
       ></el-pagination>
-      <el-table :data="spells" highlight-current-row @current-change="select" @row-dblclick="show">
-        <el-table-column prop="id" label="ID" sortable width="64px"></el-table-column>
-        <el-table-column prop="nameLangZhCN" label="名称" width="256px" sortable> </el-table-column>
-        <el-table-column prop="rankLangZhCN" label="等级" sortable width="128px"></el-table-column>
+      <el-table
+        :data="spells"
+        highlight-current-row
+        @current-change="select"
+        @row-dblclick="show"
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          sortable
+          width="64px"
+        ></el-table-column>
+        <el-table-column
+          prop="nameLangZhCN"
+          label="名称"
+          width="256px"
+          sortable
+        >
+        </el-table-column>
+        <el-table-column
+          prop="rankLangZhCN"
+          label="等级"
+          sortable
+          width="128px"
+        ></el-table-column>
         <el-table-column prop="descriptionLangZhCN" label="描述" sortable>
           <template slot-scope="scope">
-            <spell-description :spell="scope.row" field="descriptionLangZhCN"></spell-description>
+            <spell-description
+              :spell="scope.row"
+              field="descriptionLangZhCN"
+            ></spell-description>
           </template>
         </el-table-column>
-        <el-table-column prop="auraDescriptionLangZhCN" label="Buff 描述" sortable>
+        <el-table-column
+          prop="auraDescriptionLangZhCN"
+          label="Buff 描述"
+          sortable
+        >
           <template slot-scope="scope">
-            <spell-description :spell="scope.row" field="auraDescriptionLangZhCN"></spell-description>
+            <spell-description
+              :spell="scope.row"
+              field="auraDescriptionLangZhCN"
+            ></spell-description>
           </template>
         </el-table-column>
       </el-table>
@@ -77,7 +119,7 @@ export default {
       loading: false,
       id: undefined,
       name: undefined,
-      currentRow: undefined,
+      currentRow: undefined
     };
   },
   computed: {
@@ -87,17 +129,19 @@ export default {
       return {
         id: this.id,
         name: this.name,
-        page: this.page,
+        page: this.page
       };
     },
     disabled() {
-      return this.currentRow === undefined || this.currentRow === null ? true : false;
-    },
+      return this.currentRow === undefined || this.currentRow === null
+        ? true
+        : false;
+    }
   },
   methods: {
     ...mapActions("spell", ["search", "count"]),
     ...mapMutations("spell", {
-      paginate: PAGINATE_SPELLS,
+      paginate: PAGINATE_SPELLS
     }),
     async handleSearch() {
       this.loading = true;
@@ -117,7 +161,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info",
-        dangerouslyUseHTMLString: true,
+        dangerouslyUseHTMLString: true
       })
         .then(() => {
           // this.copy({ entry: this.currentRow.entry }).then(() => {
@@ -134,7 +178,7 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         }
       )
         .then(() => {
@@ -160,13 +204,13 @@ export default {
       this.loading = true;
       await Promise.all([this.search(this.payload), this.count(this.payload)]);
       this.loading = false;
-    },
+    }
   },
   created() {
     this.init();
   },
   components: {
-    "spell-description": SpellDescription,
-  },
+    "spell-description": SpellDescription
+  }
 };
 </script>

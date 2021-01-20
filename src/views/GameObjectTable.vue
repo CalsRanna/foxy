@@ -2,8 +2,10 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>物体</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">
+          首页
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>物体管理</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">物体列表</h3>
     </el-card>
@@ -11,13 +13,24 @@
       <el-form @submit.native.prevent="handleSearch">
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-input-number controls-position="right" v-model="entry" placeholder="entry"></el-input-number>
+            <el-input-number
+              controls-position="right"
+              v-model="entry"
+              placeholder="entry"
+            ></el-input-number>
           </el-col>
           <el-col :span="6">
             <el-input v-model="name" placeholder="名称"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" native-type="submit" :loading="loading" @click="handleSearch">查询</el-button>
+            <el-button
+              type="primary"
+              native-type="submit"
+              :loading="loading"
+              @click="handleSearch"
+            >
+              查询
+            </el-button>
             <el-button @click="reset">重置</el-button>
           </el-col>
         </el-row>
@@ -26,7 +39,9 @@
     <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
       <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
-      <el-button type="danger" :disabled="disabled" @click="handleDestroy">删除</el-button>
+      <el-button type="danger" :disabled="disabled" @click="handleDestroy">
+        删除
+      </el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-pagination
@@ -48,7 +63,9 @@
         <el-table-column prop="entry" label="编号" sortable></el-table-column>
         <el-table-column prop="name" label="名称" sortable>
           <template slot-scope="scope">
-            <template v-if="scope.row.localeName !== null">{{ scope.row.localeName }}</template>
+            <template v-if="scope.row.localeName !== null">{{
+              scope.row.localeName
+            }}</template>
             <template v-else>{{ scope.row.name }}</template>
           </template>
         </el-table-column>
@@ -77,7 +94,7 @@ export default {
       loading: false,
       entry: undefined,
       name: undefined,
-      currentRow: undefined,
+      currentRow: undefined
     };
   },
   computed: {
@@ -87,8 +104,10 @@ export default {
       return { entry: this.entry, name: this.name, page: this.page };
     },
     disabled() {
-      return this.currentRow === undefined || this.currentRow === null ? true : false;
-    },
+      return this.currentRow === undefined || this.currentRow === null
+        ? true
+        : false;
+    }
   },
   methods: {
     ...mapActions("gameObject", [
@@ -97,12 +116,15 @@ export default {
       "paginateGameObjectTemplates",
       "destroyGameObjectTemplate",
       "createGameObjectTemplate",
-      "copyGameObjectTemplate",
+      "copyGameObjectTemplate"
     ]),
     async handleSearch() {
       this.loading = true;
       await this.paginateGameObjectTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
-      await Promise.all([this.searchGameObjectTemplates(this.payload), this.countGameObjectTemplates(this.payload)]);
+      await Promise.all([
+        this.searchGameObjectTemplates(this.payload),
+        this.countGameObjectTemplates(this.payload)
+      ]);
       this.loading = false;
     },
     reset() {
@@ -125,7 +147,7 @@ export default {
               .then(() => {
                 Promise.all([
                   this.searchGameObjectTemplates(this.payload),
-                  this.countGameObjectTemplates(this.payload),
+                  this.countGameObjectTemplates(this.payload)
                 ]);
               })
               .then(() => {
@@ -135,7 +157,7 @@ export default {
           } else {
             done();
           }
-        },
+        }
       });
     },
     handleDestroy() {
@@ -154,7 +176,7 @@ export default {
                 .then(() => {
                   Promise.all([
                     this.searchGameObjectTemplates(this.payload),
-                    this.countGameObjectTemplates(this.payload),
+                    this.countGameObjectTemplates(this.payload)
                   ]);
                 })
                 .then(() => {
@@ -164,7 +186,7 @@ export default {
             } else {
               done();
             }
-          },
+          }
         }
       );
     },
@@ -182,14 +204,17 @@ export default {
     },
     async init() {
       this.loading = true;
-      await Promise.all([this.searchGameObjectTemplates(this.payload), this.countGameObjectTemplates(this.payload)]);
+      await Promise.all([
+        this.searchGameObjectTemplates(this.payload),
+        this.countGameObjectTemplates(this.payload)
+      ]);
       this.loading = false;
-    },
+    }
   },
   created() {
     if (this.gameObjectTemplates.length === 0) {
       this.init();
     }
-  },
+  }
 };
 </script>

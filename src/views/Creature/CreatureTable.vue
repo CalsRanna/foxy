@@ -7,7 +7,7 @@
         </el-breadcrumb-item>
         <el-breadcrumb-item>生物管理</el-breadcrumb-item>
       </el-breadcrumb>
-      <h3 style="margin: 16px 0 0 0">生物模版列表</h3>
+      <h3 style="margin: 16px 0 0 0">生物列表</h3>
     </el-card>
     <el-card style="margin-top: 16px">
       <el-form :model="credential" @submit.native.prevent="search">
@@ -118,7 +118,7 @@ export default {
       // entry: undefined,
       // name: "",
       // subname: "",
-      currentRow: undefined,
+      currentRow: undefined
     };
   },
   computed: {
@@ -126,19 +126,19 @@ export default {
       "refresh",
       "credential",
       "pagination",
-      "creatureTemplates",
+      "creatureTemplates"
     ]),
     payload() {
       return {
         entry: this.credential.entry,
         name: this.credential.name,
         subname: this.credential.subname,
-        page: this.pagination.page,
+        page: this.pagination.page
       };
     },
     disabled() {
       return this.currentRow == undefined ? true : false;
-    },
+    }
   },
   methods: {
     ...mapActions("creatureTemplate", [
@@ -147,14 +147,14 @@ export default {
       "paginateCreatureTemplates",
       "destroyCreatureTemplate",
       "copyCreatureTemplate",
-      "resetCredential",
+      "resetCredential"
     ]),
     async search() {
       this.loading = true;
       await this.paginateCreatureTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([
         this.searchCreatureTemplates(this.payload),
-        this.countCreatureTemplates(this.payload),
+        this.countCreatureTemplates(this.payload)
       ]);
       this.loading = false;
     },
@@ -177,7 +177,7 @@ export default {
               .then(() => {
                 Promise.all([
                   this.searchCreatureTemplates(this.payload),
-                  this.countCreatureTemplates(this.payload),
+                  this.countCreatureTemplates(this.payload)
                 ]);
               })
               .then(() => {
@@ -187,7 +187,7 @@ export default {
           } else {
             done();
           }
-        },
+        }
       });
     },
     destroy() {
@@ -207,7 +207,7 @@ export default {
                 .then(() => {
                   Promise.all([
                     this.searchCreatureTemplates(this.payload),
-                    this.countCreatureTemplates(this.payload),
+                    this.countCreatureTemplates(this.payload)
                   ]);
                 })
                 .then(() => {
@@ -217,7 +217,7 @@ export default {
             } else {
               done();
             }
-          },
+          }
         }
       );
     },
@@ -237,15 +237,15 @@ export default {
       this.loading = true;
       await Promise.all([
         this.searchCreatureTemplates(this.payload),
-        this.countCreatureTemplates(this.payload),
+        this.countCreatureTemplates(this.payload)
       ]);
       this.loading = false;
-    },
+    }
   },
   mounted() {
     if (this.refresh) {
       this.init();
     }
-  },
+  }
 };
 </script>

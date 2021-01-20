@@ -7,7 +7,7 @@
         >
         <el-breadcrumb-item>物品管理</el-breadcrumb-item>
       </el-breadcrumb>
-      <h3 style="margin: 16px 0 0 0">物品模版列表</h3>
+      <h3 style="margin: 16px 0 0 0">物品列表</h3>
     </el-card>
     <item-template-filter
       @filtrate="filtrate"
@@ -126,7 +126,7 @@ import {
   colors,
   localeClasses,
   localeSubclasses,
-  localeInventoryTypes,
+  localeInventoryTypes
 } from "@/locales/item.js";
 
 import ItemTemplateFilter from "@/views/Item/components/ItemTemplateFilter";
@@ -142,7 +142,7 @@ export default {
       colors: colors,
       localeClasses: localeClasses,
       localeSubclasses: localeSubclasses,
-      localeInventoryTypes: localeInventoryTypes,
+      localeInventoryTypes: localeInventoryTypes
     };
   },
   computed: {
@@ -151,7 +151,7 @@ export default {
       "filter",
       "credential",
       "pagination",
-      "itemTemplates",
+      "itemTemplates"
     ]),
     payload() {
       return {
@@ -159,12 +159,13 @@ export default {
         subclass: this.filter.subclass,
         entry: this.credential.entry,
         name: this.credential.name,
-        page: this.pagination.page,
+        description: this.credential.description,
+        page: this.pagination.page
       };
     },
     disabled() {
       return this.currentRow === undefined ? true : false;
-    },
+    }
   },
   methods: {
     ...mapActions("itemTemplate", [
@@ -174,14 +175,14 @@ export default {
       "destroyItemTemplate",
       "createItemTemplate",
       "copyItemTemplate",
-      "resetCredential",
+      "resetCredential"
     ]),
     async filtrate() {
       this.loading = true;
       await this.paginateItemTemplates({ page: 1 });
       await Promise.all([
         this.searchItemTemplates(this.payload),
-        this.countItemTemplates(this.payload),
+        this.countItemTemplates(this.payload)
       ]);
       this.loading = false;
     },
@@ -190,7 +191,7 @@ export default {
       await this.paginateItemTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([
         this.searchItemTemplates(this.payload),
-        this.countItemTemplates(this.payload),
+        this.countItemTemplates(this.payload)
       ]);
       this.loading = false;
     },
@@ -213,7 +214,7 @@ export default {
               .then(() => {
                 Promise.all([
                   this.searchItemTemplates(this.payload),
-                  this.countItemTemplates(this.payload),
+                  this.countItemTemplates(this.payload)
                 ]);
               })
               .then(() => {
@@ -223,7 +224,7 @@ export default {
           } else {
             done();
           }
-        },
+        }
       });
     },
     destroy() {
@@ -242,7 +243,7 @@ export default {
                 .then(() => {
                   Promise.all([
                     this.searchItemTemplates(this.payload),
-                    this.countItemTemplates(this.payload),
+                    this.countItemTemplates(this.payload)
                   ]);
                 })
                 .then(() => {
@@ -252,7 +253,7 @@ export default {
             } else {
               done();
             }
-          },
+          }
         }
       );
     },
@@ -272,10 +273,10 @@ export default {
       this.loading = true;
       await Promise.all([
         this.searchItemTemplates(this.payload),
-        this.countItemTemplates(this.payload),
+        this.countItemTemplates(this.payload)
       ]);
       this.loading = false;
-    },
+    }
   },
   created() {
     if (this.refresh) {
@@ -284,7 +285,7 @@ export default {
   },
   components: {
     ItemTemplateFilter,
-    ItemTemplateName,
-  },
+    ItemTemplateName
+  }
 };
 </script>

@@ -2,7 +2,7 @@
   <div>
     <el-input
       v-model="text"
-      placeholder="placeholder"
+      :placeholder="placeholder"
       @input="input"
       @change="blur"
     >

@@ -3,7 +3,7 @@ import { ipcMain } from "electron";
 import {
   SEARCH_ITEM_TEMPLATE_LOCALES,
   STORE_ITEM_TEMPLATE_LOCALES,
-  GLOBAL_NOTICE,
+  GLOBAL_NOTICE
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -15,16 +15,16 @@ ipcMain.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then((rows) => {
+    .then(rows => {
       event.reply(SEARCH_ITEM_TEMPLATE_LOCALES, rows);
     })
-    .catch((error) => {
+    .catch(error => {
       throw error;
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString(),
+        message: queryBuilder.toString()
       });
     });
 });
@@ -32,33 +32,35 @@ ipcMain.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, payload) => {
 ipcMain.on(STORE_ITEM_TEMPLATE_LOCALES, (event, payload) => {
   let deleteQueryBuilder = knex()
     .table("item_template_locale")
-    .where("entry", payload[0].entry)
+    .where("ID", payload[0].ID)
     .delete();
-  let insertQueryBuilder = knex().insert(payload).into("item_template_locale");
+  let insertQueryBuilder = knex()
+    .insert(payload)
+    .into("item_template_locale");
 
   deleteQueryBuilder
-    .then((rows) => {
+    .then(rows => {
       insertQueryBuilder
-        .then((rows) => {
+        .then(rows => {
           event.reply(STORE_ITEM_TEMPLATE_LOCALES, rows);
           event.reply(GLOBAL_NOTICE, {
             type: "success",
             category: "notification",
             title: "成功",
-            message: `保存成功。`,
+            message: `保存成功。`
           });
         })
-        .catch((error) => {
+        .catch(error => {
           throw error;
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
             category: "message",
-            message: insertQueryBuilder.toString(),
+            message: insertQueryBuilder.toString()
           });
         });
     })
-    .catch((error) => {
+    .catch(error => {
       throw error;
     });
 });

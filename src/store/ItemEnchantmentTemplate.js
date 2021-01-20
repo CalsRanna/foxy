@@ -7,18 +7,18 @@ import {
   UPDATE_ITEM_ENCHANTMENT_TEMPLATE,
   DESTROY_ITEM_ENCHANTMENT_TEMPLATE,
   CREATE_ITEM_ENCHANTMENT_TEMPLATE,
-  COPY_ITEM_ENCHANTMENT_TEMPLATE,
+  COPY_ITEM_ENCHANTMENT_TEMPLATE
 } from "../constants";
 
 export default {
   namespaced: true,
   state: () => ({
     itemEnchantmentTemplates: [],
-    itemEnchantmentTemplate: {},
+    itemEnchantmentTemplate: {}
   }),
   actions: {
     searchItemEnchantmentTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, response) => {
           commit(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, response);
@@ -27,7 +27,7 @@ export default {
       });
     },
     storeItemEnchantmentTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(STORE_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(STORE_ITEM_ENCHANTMENT_TEMPLATE, () => {
           resolve();
@@ -35,7 +35,7 @@ export default {
       });
     },
     findItemEnchantmentTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(FIND_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(FIND_ITEM_ENCHANTMENT_TEMPLATE, (event, response) => {
           commit(FIND_ITEM_ENCHANTMENT_TEMPLATE, response);
@@ -44,7 +44,7 @@ export default {
       });
     },
     updateItemEnchantmentTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(UPDATE_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_ITEM_ENCHANTMENT_TEMPLATE, () => {
           resolve();
@@ -52,7 +52,7 @@ export default {
       });
     },
     destroyItemEnchantmentTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(DESTROY_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_ITEM_ENCHANTMENT_TEMPLATE, () => {
           resolve();
@@ -60,22 +60,19 @@ export default {
       });
     },
     createItemEnchantmentTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(CREATE_ITEM_ENCHANTMENT_TEMPLATE, payload);
-        ipcRenderer.on(CREATE_ITEM_ENCHANTMENT_TEMPLATE, (event, response) => {
-          commit(CREATE_ITEM_ENCHANTMENT_TEMPLATE, response);
-          resolve();
-        });
+      return new Promise(resolve => {
+        commit(CREATE_ITEM_ENCHANTMENT_TEMPLATE, payload);
+        resolve();
       });
     },
     copyItemEnchantmentTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         ipcRenderer.send(COPY_ITEM_ENCHANTMENT_TEMPLATE, payload);
         ipcRenderer.on(COPY_ITEM_ENCHANTMENT_TEMPLATE, () => {
           resolve();
         });
       });
-    },
+    }
   },
   mutations: {
     [SEARCH_ITEM_ENCHANTMENT_TEMPLATES](state, itemEnchantmentTemplates) {
@@ -86,6 +83,6 @@ export default {
     },
     [CREATE_ITEM_ENCHANTMENT_TEMPLATE](state, itemEnchantmentTemplate) {
       state.itemEnchantmentTemplate = itemEnchantmentTemplate;
-    },
-  },
+    }
+  }
 };
