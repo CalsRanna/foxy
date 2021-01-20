@@ -1,5 +1,23 @@
-const colors = ["grey", "#606266", "green", "blue", "purple", "orange", "red", "gold"];
-const localeQualities = ["粗糙", "普通", "优秀", "精良", "史诗", "传说", "神器", "传家宝"];
+const colors = [
+  "grey",
+  "#606266",
+  "green",
+  "blue",
+  "purple",
+  "orange",
+  "red",
+  "gold",
+];
+const localeQualities = [
+  "粗糙",
+  "普通",
+  "优秀",
+  "精良",
+  "史诗",
+  "传说",
+  "神器",
+  "传家宝",
+];
 const localeClasses = [
   "消耗品",
   "容器",
@@ -21,8 +39,28 @@ const localeClasses = [
 ];
 
 const localeSubclasses = [
-  ["消耗品", "药水", "药剂", "合剂", "卷轴", "食物和饮料", "物品强化", "绷带", "其他"],
-  ["背包", "灵魂袋", "草药包", "附魔材料包", "工程学材料包", "宝石袋", "矿物袋", "制皮材料包", "铭文包"],
+  [
+    "消耗品",
+    "药水",
+    "药剂",
+    "合剂",
+    "卷轴",
+    "食物和饮料",
+    "物品强化",
+    "绷带",
+    "其他",
+  ],
+  [
+    "背包",
+    "灵魂袋",
+    "草药包",
+    "附魔材料包",
+    "工程学材料包",
+    "宝石袋",
+    "矿物袋",
+    "制皮材料包",
+    "铭文包",
+  ],
   [
     "单手斧",
     "双手斧",
@@ -47,7 +85,19 @@ const localeSubclasses = [
     "钓鱼竿",
   ],
   ["红色", "蓝色", "黄色", "紫色", "绿色", "橙色", "多彩", "简单", "棱彩"],
-  ["杂项", "布甲", "皮甲", "锁甲", "板甲", "小圆盾（弃用）", "盾", "圣契", "神像", "图腾", "魔印"],
+  [
+    "杂项",
+    "布甲",
+    "皮甲",
+    "锁甲",
+    "板甲",
+    "小圆盾（弃用）",
+    "盾",
+    "圣契",
+    "神像",
+    "图腾",
+    "魔印",
+  ],
   ["药剂"],
   ["魔杖（弃用）", "闪电（弃用）", "箭", "子弹", "投掷（弃用）"],
   [
@@ -69,14 +119,39 @@ const localeSubclasses = [
     "武器附魔",
   ],
   ["通用（弃用）"],
-  ["书籍", "制皮", "裁缝", "工程学", "锻造", "烹饪", "炼金术", "急救", "附魔", "钓鱼", "珠宝加工"],
+  [
+    "书籍",
+    "制皮",
+    "裁缝",
+    "工程学",
+    "锻造",
+    "烹饪",
+    "炼金术",
+    "急救",
+    "附魔",
+    "钓鱼",
+    "珠宝加工",
+  ],
   ["货币"],
   ["箭袋（弃用）", "弹药袋（弃用）", "箭袋", "弹药袋"],
   ["任务"],
   ["钥匙", "开锁工具"],
   ["永久的（弃用）"],
   ["垃圾", "施法材料", "伙伴", "节日", "其他", "坐骑"],
-  ["", "战士", "圣骑士", "猎人", "盗贼", "牧师", "死亡骑士", "萨满", "法师", "术士", "", "德鲁伊"],
+  [
+    "",
+    "战士",
+    "圣骑士",
+    "猎人",
+    "盗贼",
+    "牧师",
+    "死亡骑士",
+    "萨满",
+    "法师",
+    "术士",
+    "",
+    "德鲁伊",
+  ],
 ];
 const localeInventoryTypes = [
   "其他",
@@ -110,7 +185,30 @@ const localeInventoryTypes = [
   "圣物",
 ];
 
-const localeMaterials = ["未定义", "金属", "木制品", "液体", "珠宝", "锁甲", "板甲", "布甲", "皮甲"]; //-1 消耗品（食物，试剂等）
+const soundOverrideSubclassTooltip = `
+  Weapons have special sounds on impact. This column is used to
+  override these sounds by specifying another subclass. For
+  example an item with misc subclass can sound like a stave on
+  impact by overriding the subclass here.
+`;
+
+const materialTooltip = `
+  The material that the item is made of. The value here affects
+  the sound that the item makes when moved. Use -1 for
+  consumable items like food, reagents, etc.
+`;
+
+const localeMaterials = [
+  "未定义",
+  "金属",
+  "木制品",
+  "液体",
+  "珠宝",
+  "锁甲",
+  "板甲",
+  "布甲",
+  "皮甲",
+]; //-1 消耗品（食物，试剂等）
 
 const localeStatTypes = [
   "无",
@@ -164,7 +262,14 @@ const localeStatTypes = [
   "格挡值",
 ];
 
-const bondings = ["不绑定", "拾取时绑定", "装备后绑定", "使用后绑定", "任务物品", "任务物品1"];
+const bondings = [
+  "不绑定",
+  "拾取时绑定",
+  "装备后绑定",
+  "使用后绑定",
+  "任务物品",
+  "任务物品1",
+];
 
 export {
   colors,
@@ -172,6 +277,8 @@ export {
   localeClasses,
   localeSubclasses,
   localeInventoryTypes,
+  soundOverrideSubclassTooltip,
+  materialTooltip,
   localeMaterials,
   localeStatTypes,
   bondings,

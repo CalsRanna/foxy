@@ -2,13 +2,17 @@
   <div>
     <el-card>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/dashboard' }">
-          首页
-        </el-breadcrumb-item>
-        <el-breadcrumb-item>生物管理</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dashboard' }"
+          >首页</el-breadcrumb-item
+        >
+        <el-breadcrumb-item>物品管理</el-breadcrumb-item>
       </el-breadcrumb>
-      <h3 style="margin: 16px 0 0 0">生物模版列表</h3>
+      <h3 style="margin: 16px 0 0 0">物品模版列表</h3>
     </el-card>
+    <item-template-filter
+      @filtrate="filtrate"
+      style="margin-top: 16px"
+    ></item-template-filter>
     <el-card style="margin-top: 16px">
       <el-form :model="credential" @submit.native.prevent="search">
         <el-row :gutter="16">
@@ -17,16 +21,15 @@
               v-model="credential.entry"
               controls-position="right"
               placeholder="Entry"
-              style="width: 100%"
             ></el-input-number>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="credential.name" placeholder="姓名"></el-input>
+            <el-input v-model="credential.name" placeholder="名称"></el-input>
           </el-col>
           <el-col :span="6">
             <el-input
-              v-model="credential.subname"
-              placeholder="称号"
+              v-model="credential.description"
+              placeholder="描述"
             ></el-input>
           </el-col>
           <el-col :span="6">
@@ -61,37 +64,41 @@
         style="margin-bottom: 16px"
       ></el-pagination>
       <el-table
-        ref="creatureTable"
-        :data="creatureTemplates"
+        :data="itemTemplates"
         highlight-current-row
         @current-change="select"
         @row-dblclick="show"
       >
         <el-table-column prop="entry" label="ID" sortable></el-table-column>
-        <el-table-column label="姓名" sortable>
-          <template slot-scope="scope">
-            <span v-if="scope.row.localeName !== null">
-              {{ scope.row.localeName }}
-            </span>
-            <span v-else>{{ scope.row.name }}</span>
-          </template>
+        <el-table-column label="名称" sortable>
+          <item-template-name
+            slot-scope="scope"
+            :itemTemplate="scope.row"
+          ></item-template-name>
         </el-table-column>
-        <el-table-column label="称号" sortable>
-          <template slot-scope="scope">
-            <span v-if="scope.row.localeTitle != null">
-              {{ scope.row.localeTitle }}
-            </span>
-            <span v-else>{{ scope.row.subname }}</span>
-          </template>
+        <el-table-column prop="class" label="类别" sortable>
+          <span slot-scope="scope">
+            {{ localeClasses[scope.row.class] }}
+          </span>
         </el-table-column>
+        <el-table-column prop="subclass" label="子类别" sortable>
+          <span slot-scope="scope">
+            {{ localeSubclasses[scope.row.class][scope.row.subclass] }}
+          </span></el-table-column
+        >
+        <el-table-column prop="InventoryType" label="佩戴位置" sortable>
+          <span slot-scope="scope">
+            {{ localeInventoryTypes[scope.row.InventoryType] }}
+          </span></el-table-column
+        >
         <el-table-column
-          prop="minlevel"
-          label="最小等级"
+          prop="ItemLevel"
+          label="物品等级"
           sortable
         ></el-table-column>
         <el-table-column
-          prop="maxlevel"
-          label="最大等级"
+          prop="RequiredLevel"
+          label="需求等级"
           sortable
         ></el-table-column>
       </el-table>
@@ -108,53 +115,81 @@
   </div>
 </template>
 
+<style>
+.icon-height .cell {
+  height: 23px !important;
+}
+</style>
+
 <script>
+import {
+  colors,
+  localeClasses,
+  localeSubclasses,
+  localeInventoryTypes,
+} from "../locales/item.js";
+
+import ItemTemplateFilter from "@/views/Item/components/ItemTemplateFilter";
+import ItemTemplateName from "@/components/ItemTemplateName";
+
 import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
     return {
       loading: false,
-      // entry: undefined,
-      // name: "",
-      // subname: "",
       currentRow: undefined,
+      colors: colors,
+      localeClasses: localeClasses,
+      localeSubclasses: localeSubclasses,
+      localeInventoryTypes: localeInventoryTypes,
     };
   },
   computed: {
-    ...mapState("creatureTemplate", [
+    ...mapState("itemTemplate", [
       "refresh",
+      "filter",
       "credential",
       "pagination",
-      "creatureTemplates",
     ]),
     payload() {
       return {
+        class: this.filter.class,
+        subclass: this.filter.subclass,
         entry: this.credential.entry,
         name: this.credential.name,
-        subname: this.credential.subname,
         page: this.pagination.page,
       };
     },
     disabled() {
-      return this.currentRow == undefined ? true : false;
+      return this.currentRow === undefined ? true : false;
     },
   },
   methods: {
-    ...mapActions("creatureTemplate", [
-      "searchCreatureTemplates",
-      "countCreatureTemplates",
-      "paginateCreatureTemplates",
-      "destroyCreatureTemplate",
-      "copyCreatureTemplate",
+    ...mapActions("itemTemplate", [
+      "searchItemTemplates",
+      "countItemTemplates",
+      "paginateItemTemplates",
+      "destroyItemTemplate",
+      "createItemTemplate",
+      "copyItemTemplate",
       "resetCredential",
     ]),
+    async filtrate(field, index) {
+      this.loading = true;
+      await this.paginateItemTemplates({ page: 1 });
+      await Promise.all([
+        this.searchItemTemplates(this.payload),
+        this.countItemTemplates(this.payload),
+      ]);
+      this.loading = false;
+    },
     async search() {
       this.loading = true;
-      await this.paginateCreatureTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
+      await this.paginateItemTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([
-        this.searchCreatureTemplates(this.payload),
-        this.countCreatureTemplates(this.payload),
+        this.searchItemTemplates(this.payload),
+        this.countItemTemplates(this.payload),
       ]);
       this.loading = false;
     },
@@ -162,7 +197,7 @@ export default {
       this.resetCredential();
     },
     create() {
-      this.$router.push("/creature/create");
+      this.$router.push("/item/create");
     },
     copy() {
       this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
@@ -173,11 +208,11 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyCreatureTemplate({ entry: this.currentRow.entry })
+            this.copyItemTemplate({ entry: this.currentRow.entry })
               .then(() => {
                 Promise.all([
-                  this.searchCreatureTemplates(this.payload),
-                  this.countCreatureTemplates(this.payload),
+                  this.searchItemTemplates(this.payload),
+                  this.countItemTemplates(this.payload),
                 ]);
               })
               .then(() => {
@@ -202,12 +237,11 @@ export default {
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
-
-              this.destroyCreatureTemplate({ entry: this.currentRow.entry })
+              this.destroyItemTemplate({ entry: this.currentRow.entry })
                 .then(() => {
                   Promise.all([
-                    this.searchCreatureTemplates(this.payload),
-                    this.countCreatureTemplates(this.payload),
+                    this.searchItemTemplates(this.payload),
+                    this.countItemTemplates(this.payload),
                   ]);
                 })
                 .then(() => {
@@ -226,26 +260,30 @@ export default {
     },
     async paginate(page) {
       this.loading = true;
-      await this.paginateCreatureTemplates({ page: page });
-      await this.searchCreatureTemplates(this.payload);
+      await this.paginateItemTemplates({ page: page });
+      await this.searchItemTemplates(this.payload);
       this.loading = false;
     },
     show(row) {
-      this.$router.push(`/creature/${row.entry}`);
+      this.$router.push(`/item/${row.entry}`);
     },
     async init() {
       this.loading = true;
       await Promise.all([
-        this.searchCreatureTemplates(this.payload),
-        this.countCreatureTemplates(this.payload),
+        this.searchItemTemplates(this.payload),
+        this.countItemTemplates(this.payload),
       ]);
       this.loading = false;
     },
   },
-  mounted() {
+  created() {
     if (this.refresh) {
       this.init();
     }
+  },
+  components: {
+    ItemTemplateFilter,
+    ItemTemplateName,
   },
 };
 </script>
