@@ -1,11 +1,28 @@
 <template>
   <div>
-    <el-input v-model="id" :placeholder="placeholder" @input="input" @change="blur">
-      <i class="el-icon-s-operation clickable-icon" slot="suffix" style="margin-right: 8px" @click="showDialog"></i>
+    <el-input
+      v-model="id"
+      :placeholder="placeholder"
+      @input="input"
+      @change="blur"
+    >
+      <i
+        class="el-icon-s-operation clickable-icon"
+        slot="suffix"
+        style="margin-right: 8px"
+        @click="showDialog"
+      ></i>
     </el-input>
-    <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" @opened="init">
+    <el-dialog
+      :visible.sync="visible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      @opened="init"
+    >
       <div slot="title">
-        <span style="font-size: 18px; color: #303133; margin-right: 16px">技能选择器</span>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px"
+          >技能选择器</span
+        >
       </div>
       <el-card style="margin-top: 16px">
         <el-form>
@@ -15,7 +32,6 @@
                 v-model="id"
                 controls-position="right"
                 placeholder="ID"
-                style="width: 100%"
               ></el-input-number>
             </el-col>
             <el-col :span="6">
@@ -46,7 +62,8 @@
       >
         <el-table-column prop="id" label="ID" width="80px"> </el-table-column>
         <el-table-column prop="nameLangZhCN" label="名称"> </el-table-column>
-        <el-table-column prop="descriptionLangZhCN" label="描述"> </el-table-column>
+        <el-table-column prop="descriptionLangZhCN" label="描述">
+        </el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"
@@ -61,7 +78,13 @@
         <el-button @click="closeDialog">取消</el-button>
         <el-button type="primary" @click="store">保存</el-button>
       </div>
-      <el-dialog width="30%" title="内层 Dialog" :visible.sync="innerVisible" append-to-body> </el-dialog>
+      <el-dialog
+        width="30%"
+        title="内层 Dialog"
+        :visible.sync="innerVisible"
+        append-to-body
+      >
+      </el-dialog>
     </el-dialog>
   </div>
 </template>
@@ -78,7 +101,7 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-import { PAGINATE_SPELLS } from "@/store/MUTATION_TYPES";
+import { PAGINATE_SPELLS } from "@/constants";
 
 export default {
   data() {
@@ -88,17 +111,17 @@ export default {
       visible: false,
       size: 50,
       currentRow: undefined,
-      innerVisible: false
+      innerVisible: false,
     };
   },
   props: {
     value: [Number, String],
-    placeholder: String
+    placeholder: String,
   },
   watch: {
     value: function(newValue) {
       this.id = newValue;
-    }
+    },
   },
   computed: {
     ...mapState("spell", ["spells", "page", "total"]),
@@ -106,9 +129,9 @@ export default {
       return {
         id: this.id != 0 ? this.id : "",
         name: this.nameLangZhCN,
-        page: this.page
+        page: this.page,
       };
-    }
+    },
   },
   methods: {
     ...mapActions("spell", ["search", "count"]),
@@ -154,10 +177,10 @@ export default {
     },
     async init() {
       await Promise.all([this.search(this.payload), this.count(this.payload)]);
-    }
+    },
   },
   created() {
     this.id = this.value;
-  }
+  },
 };
 </script>

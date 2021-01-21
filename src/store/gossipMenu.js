@@ -16,7 +16,7 @@ export default {
   namespaced: true,
   state() {
     return {
-      refresh: false,
+      refresh: true,
       credential: {
         MenuID: undefined,
         Text: undefined,
@@ -55,7 +55,7 @@ export default {
         resolve();
       });
     },
-    storeGossipMenu(context, payload) {
+    storeGossipMenu({ commit }, payload) {
       return new Promise((resolve) => {
         ipcRenderer.send(STORE_GOSSIP_MENU, payload);
         ipcRenderer.on(STORE_GOSSIP_MENU, () => {

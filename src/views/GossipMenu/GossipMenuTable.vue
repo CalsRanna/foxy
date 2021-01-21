@@ -20,7 +20,7 @@
             ></el-input-number>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="credential.Text" placeholder="文本"></el-input>
+            <el-input v-model="credential.Text" placeholder="Text"></el-input>
           </el-col>
           <el-col :span="6">
             <el-button
@@ -239,7 +239,7 @@ export default {
       this.loading = false;
     },
   },
-  created() {
+  mounted() {
     if (this.refresh) {
       this.init();
     }
