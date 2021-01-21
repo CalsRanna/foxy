@@ -3,7 +3,6 @@ import Vuex from "vuex";
 
 import global from "./global";
 import dbc from "./dbc";
-// import creature from "./creature";
 import creatureTemplate from "./creatureTemplate";
 import creatureTemplateLocale from "./creatureTemplateLocale";
 import creatureTemplateAddon from "./creatureTemplateAddon";
@@ -24,10 +23,13 @@ import prospectingLootTemplate from "./prospectingLootTemplate";
 import millingLootTemplate from "./millingLootTemplate";
 import gameObject from "./gameObject";
 import quest from "./quest";
-import spell from "./spell";
-import smartScript from "./smartScript";
-import setting from "./setting";
 import gossipMenu from "./gossipMenu";
+import npcText from "./npcText";
+import npcTextLocale from "./npcTextLocale";
+import gossipMenuOption from "./gossipMenuOption";
+import smartScript from "./smartScript";
+import spell from "./spell";
+import setting from "./setting";
 
 Vue.use(Vuex);
 
@@ -55,9 +57,12 @@ export default new Vuex.Store({
     millingLootTemplate,
     gameObject,
     quest,
-    spell,
+    gossipMenu,
+    npcText,
+    npcTextLocale,
+    gossipMenuOption,
     smartScript,
+    spell,
     setting,
-    gossipMenu
-  }
+  },
 });
