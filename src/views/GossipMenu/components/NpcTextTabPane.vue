@@ -634,6 +634,8 @@
 </template>
 
 <script>
+import NpcTextLocalizer from "@/views/GossipMenu/components/NpcTextLocalizer";
+
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -678,16 +680,19 @@ export default {
     },
     async init() {
       this.initing = true;
-      await this.findNpcText({ ID: this.npcText.TextID });
+      await this.findNpcText({ ID: this.gossipMenu.TextID });
       if (this.npcText.ID == undefined) {
         this.creating = true;
-        await this.createNpcText({ ID: this.npcText.TextID });
+        await this.createNpcText({ ID: this.gossipMenu.TextID });
       }
       this.initing = false;
     },
   },
-  created() {
+  mounted() {
     this.init();
+  },
+  components: {
+    NpcTextLocalizer,
   },
 };
 </script>

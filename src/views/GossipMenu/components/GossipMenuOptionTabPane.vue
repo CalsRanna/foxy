@@ -4,11 +4,22 @@
       <el-card style="margin-top: 16px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
-        <el-button type="danger" @click="destroy" :disabled="disabled">删除</el-button>
+        <el-button type="danger" @click="destroy" :disabled="disabled"
+          >删除</el-button
+        >
       </el-card>
       <el-card style="margin-top: 16px">
-        <el-table :data="gossipMenuOptions" highlight-current-row @current-change="select" @row-dblclick="show">
-          <el-table-column prop="OptionID" label="编号" sortable></el-table-column>
+        <el-table
+          :data="gossipMenuOptions"
+          highlight-current-row
+          @current-change="select"
+          @row-dblclick="show"
+        >
+          <el-table-column
+            prop="OptionID"
+            label="编号"
+            sortable
+          ></el-table-column>
           <el-table-column prop="OptionIcon" label="图标" sortable>
             <span slot-scope="scope">{{ icons[scope.row.OptionIcon] }}</span>
           </el-table-column>
@@ -23,24 +34,38 @@
           <el-table-column prop="OptionType" label="类型" sortable>
             <span slot-scope="scope">{{ types[scope.row.OptionType] }}</span>
           </el-table-column>
-          <el-table-column prop="OptionNpcFlag" label="Npc标识" sortable></el-table-column>
-          <el-table-column prop="OptionBroadcastTextID" label="广播文本ID" sortable></el-table-column>
-          <el-table-column prop="ActionMenuID" label="子选项编号" sortable></el-table-column>
+          <el-table-column
+            prop="OptionNpcFlag"
+            label="Npc标识"
+            sortable
+          ></el-table-column>
+          <el-table-column
+            prop="OptionBroadcastTextID"
+            label="广播文本ID"
+            sortable
+          ></el-table-column>
+          <el-table-column
+            prop="ActionMenuID"
+            label="子选项编号"
+            sortable
+          ></el-table-column>
         </el-table>
       </el-card>
     </div>
     <div v-show="creating">
-      <el-form :model="gossipMenuOption" label-position="right" label-width="120px">
+      <el-form
+        :model="gossipMenuOption"
+        label-position="right"
+        label-width="120px"
+      >
         <el-card style="margin-top: 16px">
           <el-row :gutter="24">
             <el-col :span="6">
               <el-form-item label="对话ID">
                 <el-input-number
                   v-model="gossipMenuOption.MenuID"
-                  :min="0"
                   controls-position="right"
                   v-loading="loading"
-                  disabled
                   placeholder="MenuID"
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(255, 255, 255, 0.5)"
@@ -49,12 +74,18 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="编号">
-                <el-input v-model="gossipMenuOption.OptionID" placeholder="OptionID"></el-input>
+                <el-input
+                  v-model="gossipMenuOption.OptionID"
+                  placeholder="OptionID"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="图标">
-                <el-select v-model="gossipMenuOption.OptionIcon" placeholder="rank">
+                <el-select
+                  v-model="gossipMenuOption.OptionIcon"
+                  placeholder="rank"
+                >
                   <el-option
                     v-for="(icon, index) in icons"
                     :key="`icon-${index}`"
@@ -66,12 +97,18 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="文本">
-                <el-input v-model="gossipMenuOption.OptionText" placeholder="OptionText"></el-input>
+                <el-input
+                  v-model="gossipMenuOption.OptionText"
+                  placeholder="OptionText"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="类型">
-                <el-select v-model="gossipMenuOption.OptionType" placeholder="rank">
+                <el-select
+                  v-model="gossipMenuOption.OptionType"
+                  placeholder="rank"
+                >
                   <el-option
                     v-for="(type, index) in types"
                     :key="`type-${index}`"
@@ -93,7 +130,10 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="子选项编号">
-                <el-input v-model="gossipMenuOption.ActionMenuID" placeholder="ActionMenuID"></el-input>
+                <el-input
+                  v-model="gossipMenuOption.ActionMenuID"
+                  placeholder="ActionMenuID"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -106,32 +146,50 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="ActionPoiID">
-                <el-input v-model="gossipMenuOption.ActionPoiID" placeholder="ActionPoiID"></el-input>
+                <el-input
+                  v-model="gossipMenuOption.ActionPoiID"
+                  placeholder="ActionPoiID"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="BoxCoded">
-                <el-input v-model="gossipMenuOption.BoxCoded" placeholder="BoxCoded"></el-input>
+                <el-input
+                  v-model="gossipMenuOption.BoxCoded"
+                  placeholder="BoxCoded"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="BoxMoney">
-                <el-input v-model="gossipMenuOption.BoxMoney" placeholder="BoxMoney"></el-input>
+                <el-input
+                  v-model="gossipMenuOption.BoxMoney"
+                  placeholder="BoxMoney"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="BoxText">
-                <el-input v-model="gossipMenuOption.BoxText" placeholder="BoxText"></el-input>
+                <el-input
+                  v-model="gossipMenuOption.BoxText"
+                  placeholder="BoxText"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="BoxBroadcastTextID">
-                <el-input v-model="gossipMenuOption.BoxBroadcastTextID" placeholder="BoxBroadcastTextID"></el-input>
+                <el-input
+                  v-model="gossipMenuOption.BoxBroadcastTextID"
+                  placeholder="BoxBroadcastTextID"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="VerifiedBuild">
-                <el-input v-model="gossipMenuOption.VerifiedBuild" placeholder="VerifiedBuild"></el-input>
+                <el-input
+                  v-model="gossipMenuOption.VerifiedBuild"
+                  placeholder="VerifiedBuild"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -161,30 +219,33 @@ export default {
       loading: false,
       icons: icons,
       types: types,
-      npcFlags: npcFlags
+      npcFlags: npcFlags,
     };
   },
   computed: {
-    ...mapState("gossipMenu", ["gossipMenu", "gossipMenuOptions", "gossipMenuOption"]),
+    ...mapState("gossipMenu", ["gossipMenu"]),
+    ...mapState("gossipMenuOption", ["gossipMenuOptions", "gossipMenuOption"]),
     disabled() {
       return this.currentRow == undefined;
     },
     credential() {
       return {
-        MenuID: this.currentRow != undefined ? this.currentRow.MenuID : undefined,
-        OptionID: this.currentRow != undefined ? this.currentRow.OptionID : undefined
+        MenuID:
+          this.currentRow != undefined ? this.currentRow.MenuID : undefined,
+        OptionID:
+          this.currentRow != undefined ? this.currentRow.OptionID : undefined,
       };
-    }
+    },
   },
   methods: {
-    ...mapActions("gossipMenu", [
+    ...mapActions("gossipMenuOption", [
       "searchGossipMenuOptions",
       "storeGossipMenuOption",
       "findGossipMenuOption",
       "updateGossipMenuOption",
       "destroyGossipMenuOption",
       "createGossipMenuOption",
-      "copyGossipMenuOption"
+      "copyGossipMenuOption",
     ]),
     async create() {
       await this.createGossipMenuOption({ MenuID: this.gossipMenu.MenuID });
@@ -196,7 +257,7 @@ export default {
       } else {
         await this.updateGossipMenuOption({
           credential: this.credential,
-          gossipMenuOption: this.gossipMenuOption
+          gossipMenuOption: this.gossipMenuOption,
         });
       }
       await this.searchGossipMenuOptions({ MenuID: this.gossipMenu.MenuID });
@@ -214,9 +275,14 @@ export default {
         beforeClose: (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyGossipMenuOption({ MenuID: this.currentRow.MenuID, OptionID: this.currentRow.OptionID })
+            this.copyGossipMenuOption({
+              MenuID: this.currentRow.MenuID,
+              OptionID: this.currentRow.OptionID,
+            })
               .then(() => {
-                this.searchGossipMenuOptions({ MenuID: this.gossipMenu.MenuID });
+                this.searchGossipMenuOptions({
+                  MenuID: this.gossipMenu.MenuID,
+                });
               })
               .then(() => {
                 instance.confirmButtonLoading = false;
@@ -225,7 +291,7 @@ export default {
           } else {
             done();
           }
-        }
+        },
       });
     },
     destroy() {
@@ -240,9 +306,14 @@ export default {
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
               instance.confirmButtonLoading = true;
-              this.destroyGossipMenuOption({ MenuID: this.currentRow.MenuID, OptionID: this.currentRow.OptionID })
+              this.destroyGossipMenuOption({
+                MenuID: this.currentRow.MenuID,
+                OptionID: this.currentRow.OptionID,
+              })
                 .then(() => {
-                  this.searchGossipMenuOptions({ MenuID: this.gossipMenu.MenuID });
+                  this.searchGossipMenuOptions({
+                    MenuID: this.gossipMenu.MenuID,
+                  });
                 })
                 .then(() => {
                   instance.confirmButtonLoading = false;
@@ -251,7 +322,7 @@ export default {
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -259,7 +330,10 @@ export default {
       this.currentRow = row;
     },
     async show(row) {
-      await this.findGossipMenuOption({ MenuID: row.MenuID, OptionID: row.OptionID });
+      await this.findGossipMenuOption({
+        MenuID: row.MenuID,
+        OptionID: row.OptionID,
+      });
       this.creating = true;
       this.editing = true;
     },
@@ -267,13 +341,13 @@ export default {
       this.loading = true;
       await this.searchGossipMenuOptions({ MenuID: this.gossipMenu.MenuID });
       this.loading = false;
-    }
+    },
   },
   mounted() {
     this.init();
   },
   components: {
-    "flag-editor": FlagEditor
-  }
+    FlagEditor,
+  },
 };
 </script>

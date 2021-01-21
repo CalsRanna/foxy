@@ -87,7 +87,7 @@ export default {
       this.initing = false;
     },
   },
-  created() {
+  mounted() {
     this.init();
   },
 };

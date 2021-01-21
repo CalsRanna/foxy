@@ -1,11 +1,28 @@
 <template>
   <div>
-    <el-input v-model="gossipMenuId" :placeholder="placeholder" @input="input" @change="blur">
-      <i class="el-icon-s-operation clickable-icon" slot="suffix" style="margin-right: 8px" @click="showDialog"></i>
+    <el-input
+      v-model="gossipMenuId"
+      :placeholder="placeholder"
+      @input="input"
+      @change="blur"
+    >
+      <i
+        class="el-icon-s-operation clickable-icon"
+        slot="suffix"
+        style="margin-right: 8px"
+        @click="showDialog"
+      ></i>
     </el-input>
-    <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" @opened="init">
+    <el-dialog
+      :visible.sync="visible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      @opened="init"
+    >
       <div slot="title">
-        <span style="font-size: 18px; color: #303133; margin-right: 16px">对话选项选择器</span>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px"
+          >对话选项选择器</span
+        >
       </div>
       <el-card style="margin-top: 16px">
         <el-form>
@@ -15,7 +32,6 @@
                 v-model="gossipMenuId"
                 controls-position="right"
                 placeholder="ID"
-                style="width: 100%"
               ></el-input-number>
             </el-col>
             <el-col :span="6">
@@ -44,10 +60,13 @@
         @row-dblclick="handleDoubleClick"
         class="gossip-menu-selector"
       >
-        <el-table-column prop="MenuID" label="编号" width="80px"> </el-table-column>
+        <el-table-column prop="MenuID" label="编号" width="80px">
+        </el-table-column>
         <el-table-column label="文本">
           <template slot-scope="scope">
-            <span v-if="scope.row.Text0_0 !== null">{{ scope.row.Text0_0 }}</span>
+            <span v-if="scope.row.Text0_0 !== null">{{
+              scope.row.Text0_0
+            }}</span>
             <span v-else>{{ scope.row.text0_0 }}</span>
           </template>
         </el-table-column>
@@ -65,7 +84,13 @@
         <el-button @click="closeDialog">取消</el-button>
         <el-button type="primary" @click="store">保存</el-button>
       </div>
-      <el-dialog width="30%" title="内层 Dialog" :visible.sync="innerVisible" append-to-body> </el-dialog>
+      <el-dialog
+        width="30%"
+        title="内层 Dialog"
+        :visible.sync="innerVisible"
+        append-to-body
+      >
+      </el-dialog>
     </el-dialog>
   </div>
 </template>
@@ -91,17 +116,17 @@ export default {
       visible: false,
       size: 50,
       currentRow: undefined,
-      innerVisible: false
+      innerVisible: false,
     };
   },
   props: {
     value: [Number, String],
-    placeholder: String
+    placeholder: String,
   },
   watch: {
     value: function(newValue) {
       this.gossipMenuId = newValue;
-    }
+    },
   },
   computed: {
     ...mapState("gossipMenu", ["page", "total", "gossipMenus"]),
@@ -109,12 +134,16 @@ export default {
       return {
         menuId: this.gossipMenuId,
         text: this.text,
-        page: this.page
+        page: this.page,
       };
-    }
+    },
   },
   methods: {
-    ...mapActions("gossipMenu", ["searchGossipMenus", "countGossipMenus", "paginateGossipMenus"]),
+    ...mapActions("gossipMenu", [
+      "searchGossipMenus",
+      "countGossipMenus",
+      "paginateGossipMenus",
+    ]),
     input(gossipMenuId) {
       this.$emit("input", gossipMenuId);
     },
@@ -130,7 +159,10 @@ export default {
     },
     async handleSearch() {
       this.paginateGossipMenus({ page: 1 }); //每次搜索时使分页器设为第一页
-      await Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
+      await Promise.all([
+        this.searchGossipMenus(this.payload),
+        this.countGossipMenus(this.payload),
+      ]);
     },
     reset() {
       this.gossipMenuId = undefined;
@@ -155,11 +187,14 @@ export default {
       this.visible = false;
     },
     async init() {
-      await Promise.all([this.searchGossipMenus(this.payload), this.countGossipMenus(this.payload)]);
-    }
+      await Promise.all([
+        this.searchGossipMenus(this.payload),
+        this.countGossipMenus(this.payload),
+      ]);
+    },
   },
   created() {
     this.gossipMenuId = this.value;
-  }
+  },
 };
 </script>

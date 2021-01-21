@@ -121,7 +121,7 @@ export default {
       loading: false,
       ID: undefined,
       LogTitle: undefined,
-      currentRow: undefined
+      currentRow: undefined,
     };
   },
   computed: {
@@ -130,14 +130,14 @@ export default {
       return {
         id: this.ID,
         title: this.LogTitle,
-        page: this.page
+        page: this.page,
       };
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null
         ? true
         : false;
-    }
+    },
   },
   methods: {
     ...mapActions("quest", [
@@ -145,14 +145,14 @@ export default {
       "countQuestTemplates",
       "paginateQuestTemplates",
       "destroyQuestTemplate",
-      "copyQuestTemplate"
+      "copyQuestTemplate",
     ]),
     async handleSearch() {
       this.loading = true;
       await this.paginateQuestTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([
         this.searchQuestTemplates(this.payload),
-        this.countQuestTemplates(this.payload)
+        this.countQuestTemplates(this.payload),
       ]);
       this.loading = false;
     },
@@ -176,7 +176,7 @@ export default {
               .then(() => {
                 Promise.all([
                   this.searchQuestTemplates(this.payload),
-                  this.countQuestTemplates(this.payload)
+                  this.countQuestTemplates(this.payload),
                 ]);
               })
               .then(() => {
@@ -186,7 +186,7 @@ export default {
           } else {
             done();
           }
-        }
+        },
       });
     },
     handleDestroy() {
@@ -205,7 +205,7 @@ export default {
                 .then(() => {
                   Promise.all([
                     this.searchQuestTemplates(this.payload),
-                    this.countQuestTemplates(this.payload)
+                    this.countQuestTemplates(this.payload),
                   ]);
                 })
                 .then(() => {
@@ -215,7 +215,7 @@ export default {
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -235,15 +235,15 @@ export default {
       this.loading = true;
       await Promise.all([
         this.searchQuestTemplates(this.payload),
-        this.countQuestTemplates(this.payload)
+        this.countQuestTemplates(this.payload),
       ]);
       this.loading = false;
-    }
+    },
   },
-  created() {
+  mounted() {
     if (this.questTemplates.length === 0) {
       this.init();
     }
-  }
+  },
 };
 </script>

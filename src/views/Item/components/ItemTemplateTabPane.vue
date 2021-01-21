@@ -1278,7 +1278,7 @@ import {
   sheaths,
   flags,
   flagsExtra,
-  flagsCustom
+  flagsCustom,
 } from "@/locales/item.js";
 
 import ItemTemplateLocalizer from "@/views/Item/components/ItemTemplateLocalizer";
@@ -1308,7 +1308,7 @@ export default {
       sheaths: sheaths,
       flags: flags,
       flagsExtra: flagsExtra,
-      flagsCustom: flagsCustom
+      flagsCustom: flagsCustom,
     };
   },
   computed: {
@@ -1316,16 +1316,16 @@ export default {
     ...mapState("itemTemplateLocale", ["itemTemplateLocales"]),
     credential() {
       return {
-        entry: this.$route.params.id
+        entry: this.$route.params.id,
       };
-    }
+    },
   },
   methods: {
     ...mapActions("itemTemplate", [
       "storeItemTemplate",
       "findItemTemplate",
       "updateItemTemplate",
-      "createItemTemplate"
+      "createItemTemplate",
     ]),
     ...mapActions("itemTemplateLocale", ["searchItemTemplateLocales"]),
     async store() {
@@ -1336,7 +1336,7 @@ export default {
       } else {
         await this.updateItemTemplate({
           credential: this.credential,
-          itemTemplate: this.itemTemplate
+          itemTemplate: this.itemTemplate,
         });
       }
       this.loading = false;
@@ -1350,23 +1350,23 @@ export default {
         this.creating = true;
         await Promise.all([
           this.createItemTemplate(),
-          this.searchItemTemplateLocales({ ID: 0 })
+          this.searchItemTemplateLocales({ ID: 0 }),
         ]);
       } else {
         await this.findItemTemplate(this.credential);
         await this.searchItemTemplateLocales({ ID: this.itemTemplate.entry });
       }
       this.initing = false;
-    }
+    },
   },
-  created() {
+  mounted() {
     this.init();
   },
   components: {
     ItemTemplateLocalizer,
     FlagEditor,
     HintLabel,
-    SpellSelector
-  }
+    SpellSelector,
+  },
 };
 </script>

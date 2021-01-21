@@ -973,7 +973,7 @@ export default {
       this.loading = false;
     },
   },
-  created() {
+  mounted() {
     this.init();
   },
 };

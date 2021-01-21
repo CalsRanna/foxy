@@ -106,7 +106,7 @@ import {
   sourceTypes,
   eventTypes,
   actionTypes,
-  targetTypes
+  targetTypes,
 } from "@/locales/smartScript";
 
 import { mapState, mapActions } from "vuex";
@@ -121,7 +121,7 @@ export default {
       sourceTypes: sourceTypes,
       eventTypes: eventTypes,
       actionTypes: actionTypes,
-      targetTypes: targetTypes
+      targetTypes: targetTypes,
     };
   },
   computed: {
@@ -130,14 +130,14 @@ export default {
       return {
         entryorguid: this.entryorguid,
         comment: this.comment,
-        page: this.page
+        page: this.page,
       };
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null
         ? true
         : false;
-    }
+    },
   },
   methods: {
     ...mapActions("smartScript", [
@@ -145,14 +145,14 @@ export default {
       "countSmartScripts",
       "paginateSmartScripts",
       "destroySmartScript",
-      "copySmartScript"
+      "copySmartScript",
     ]),
     async handleSearch() {
       this.loading = true;
       this.paginateSmartScripts({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([
         this.searchSmartScripts(this.payload),
-        this.countSmartScripts(this.payload)
+        this.countSmartScripts(this.payload),
       ]);
       this.loading = false;
     },
@@ -176,12 +176,12 @@ export default {
               entryorguid: this.currentRow.entryorguid,
               source_type: this.currentRow.source_type,
               id: this.currentRow.id,
-              link: this.currentRow.link
+              link: this.currentRow.link,
             })
               .then(() => {
                 Promise.all([
                   this.searchSmartScripts(this.payload),
-                  this.countSmartScripts(this.payload)
+                  this.countSmartScripts(this.payload),
                 ]);
               })
               .then(() => {
@@ -191,7 +191,7 @@ export default {
           } else {
             done();
           }
-        }
+        },
       });
     },
     handleDestroy() {
@@ -210,12 +210,12 @@ export default {
                 entryorguid: this.currentRow.entryorguid,
                 source_type: this.currentRow.source_type,
                 id: this.currentRow.id,
-                link: this.currentRow.link
+                link: this.currentRow.link,
               })
                 .then(() => {
                   Promise.all([
                     this.searchSmartScripts(this.payload),
-                    this.countSmartScripts(this.payload)
+                    this.countSmartScripts(this.payload),
                   ]);
                 })
                 .then(() => {
@@ -225,7 +225,7 @@ export default {
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -247,15 +247,15 @@ export default {
       this.loading = true;
       await Promise.all([
         this.searchSmartScripts(this.payload),
-        this.countSmartScripts(this.payload)
+        this.countSmartScripts(this.payload),
       ]);
       this.loading = false;
-    }
+    },
   },
-  created() {
+  mounted() {
     if (this.smartScripts.length === 0) {
       this.init();
     }
-  }
+  },
 };
 </script>

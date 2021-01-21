@@ -101,7 +101,7 @@ process.on("uncaughtException", (error) => {
     category: "alert",
     type: "error",
     title: `${error.code}`,
-    message: `${error.message}<br>${error.stack}`,
+    message: `${error.stack}`,
   });
 });
 
@@ -110,7 +110,7 @@ process.on("unhandledRejection", (error) => {
     category: "alert",
     type: "error",
     title: `${error.code}`,
-    message: `${error.message}<br>${error.stack}`,
+    message: `${error.stack}`,
   });
 });
 

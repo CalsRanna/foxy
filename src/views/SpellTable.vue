@@ -110,7 +110,7 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-import { PAGINATE_SPELLS } from "@/store/MUTATION_TYPES";
+import { PAGINATE_SPELLS } from "@/constants";
 import SpellDescription from "@/components/SpellDescription";
 
 export default {
@@ -119,7 +119,7 @@ export default {
       loading: false,
       id: undefined,
       name: undefined,
-      currentRow: undefined
+      currentRow: undefined,
     };
   },
   computed: {
@@ -129,19 +129,19 @@ export default {
       return {
         id: this.id,
         name: this.name,
-        page: this.page
+        page: this.page,
       };
     },
     disabled() {
       return this.currentRow === undefined || this.currentRow === null
         ? true
         : false;
-    }
+    },
   },
   methods: {
     ...mapActions("spell", ["search", "count"]),
     ...mapMutations("spell", {
-      paginate: PAGINATE_SPELLS
+      paginate: PAGINATE_SPELLS,
     }),
     async handleSearch() {
       this.loading = true;
@@ -161,7 +161,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "info",
-        dangerouslyUseHTMLString: true
+        dangerouslyUseHTMLString: true,
       })
         .then(() => {
           // this.copy({ entry: this.currentRow.entry }).then(() => {
@@ -178,7 +178,7 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         }
       )
         .then(() => {
@@ -204,13 +204,13 @@ export default {
       this.loading = true;
       await Promise.all([this.search(this.payload), this.count(this.payload)]);
       this.loading = false;
-    }
+    },
   },
-  created() {
+  mounted() {
     this.init();
   },
   components: {
-    "spell-description": SpellDescription
-  }
+    "spell-description": SpellDescription,
+  },
 };
 </script>

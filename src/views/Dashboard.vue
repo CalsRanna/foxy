@@ -66,7 +66,9 @@
             <el-card shadow="hover">
               <p class="summary-title">对话<span>Gossip Menu</span></p>
               <p class="summary-content">
-                {{ parseFloat(this.quantityOfGossipMenu).toLocaleString() }}
+                {{
+                  parseFloat(this.quantityOfGossipMenu.total).toLocaleString()
+                }}
               </p>
             </el-card>
           </el-col>
@@ -152,17 +154,17 @@ export default {
   data() {
     return {
       loading: false,
-      labels: ["生物", "物体", "物品", "任务", "对话", "内建脚本", "技能"]
+      labels: ["生物", "物体", "物品", "任务", "对话", "内建脚本", "技能"],
     };
   },
   computed: {
     ...mapState("creatureTemplate", {
-      quantityOfCreatureTemplate: "pagination"
+      quantityOfCreatureTemplate: "pagination",
     }),
     ...mapState("gameObject", { quantityOfGameObjectTemplate: "total" }),
     ...mapState("itemTemplate", { quantityOfItemTemplate: "pagination" }),
     ...mapState("quest", { quantityOfQuestTemplate: "total" }),
-    ...mapState("gossipMenu", { quantityOfGossipMenu: "total" }),
+    ...mapState("gossipMenu", { quantityOfGossipMenu: "pagination" }),
     ...mapState("smartScript", { quantityOfSmartScript: "total" }),
     ...mapState("spell", { quantityOfSpell: "total" }),
     data() {
@@ -173,9 +175,9 @@ export default {
         this.quantityOfQuestTemplate,
         this.quantityOfGossipMenu,
         this.quantityOfSmartScript,
-        this.quantityOfSpell
+        this.quantityOfSpell,
       ];
-    }
+    },
   },
   methods: {
     ...mapActions("creatureTemplate", ["countCreatureTemplates"]),
@@ -198,17 +200,17 @@ export default {
         this.countQuestTemplates({}),
         this.countGossipMenus({}),
         this.countSmartScripts({}),
-        this.countSpells({})
+        this.countSpells({}),
       ]);
       this.loading = false;
-    }
+    },
   },
   components: {
-    Chart
+    Chart,
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 
