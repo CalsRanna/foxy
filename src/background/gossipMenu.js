@@ -1,26 +1,14 @@
 import { ipcMain } from "electron";
 import {
-  COPY_GOSSIP_MENU,
-  COPY_GOSSIP_MENU_OPTION,
-  COUNT_GOSSIP_MENUS,
-  CREATE_GOSSIP_MENU,
-  CREATE_GOSSIP_MENU_OPTION,
-  DESTROY_GOSSIP_MENU,
-  DESTROY_GOSSIP_MENU_OPTION,
-  FIND_GOSSIP_MENU,
-  FIND_GOSSIP_MENU_OPTION,
-  FIND_NPC_TEXT,
-  GLOBAL_NOTICE,
   SEARCH_GOSSIP_MENUS,
-  SEARCH_GOSSIP_MENU_OPTIONS,
-  SEARCH_NPC_TEXT_LOCALES,
+  COUNT_GOSSIP_MENUS,
   STORE_GOSSIP_MENU,
-  STORE_GOSSIP_MENU_OPTION,
-  STORE_NPC_TEXT,
-  STORE_NPC_TEXT_LOCALES,
+  FIND_GOSSIP_MENU,
   UPDATE_GOSSIP_MENU,
-  UPDATE_GOSSIP_MENU_OPTION,
-  UPDATE_NPC_TEXT,
+  DESTROY_GOSSIP_MENU,
+  CREATE_GOSSIP_MENU,
+  COPY_GOSSIP_MENU,
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -30,11 +18,19 @@ ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
     .select(["gm.*", "nt.text0_0", "nt.text0_1", "ntl.Text0_0", "ntl.Text0_1"])
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
-    .leftJoin("npc_text_locale as ntl", function () {
-      this.on("gm.TextID", "=", "ntl.ID").andOn("ntl.Locale", "=", knex().raw("?", "zhCN"));
+    .leftJoin("npc_text_locale as ntl", function() {
+      this.on("gm.TextID", "=", "ntl.ID").andOn(
+        "ntl.Locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     });
   if (payload.MenuID) {
-    queryBuilder = queryBuilder.where("gm.MenuID", "like", `%${payload.MenuID}%`);
+    queryBuilder = queryBuilder.where(
+      "gm.MenuID",
+      "like",
+      `%${payload.MenuID}%`
+    );
   }
   if (payload.Text) {
     queryBuilder = queryBuilder.whereRaw(
@@ -42,7 +38,9 @@ ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
       [`%${payload.Text}%`]
     );
   }
-  queryBuilder = queryBuilder.limit(50).offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+  queryBuilder = queryBuilder
+    .limit(50)
+    .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
 
   queryBuilder.then((rows) => {
     event.reply(SEARCH_GOSSIP_MENUS, rows);
@@ -58,11 +56,19 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
     .count("* as total")
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
-    .leftJoin("npc_text_locale as ntl", function () {
-      this.on("gm.TextID", "=", "ntl.ID").andOn("ntl.Locale", "=", knex().raw("?", "zhCN"));
+    .leftJoin("npc_text_locale as ntl", function() {
+      this.on("gm.TextID", "=", "ntl.ID").andOn(
+        "ntl.Locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     });
   if (payload.MenuID) {
-    queryBuilder = queryBuilder.where("gm.MenuID", "like", `%${payload.MenuID}%`);
+    queryBuilder = queryBuilder.where(
+      "gm.MenuID",
+      "like",
+      `%${payload.MenuID}%`
+    );
   }
   if (payload.Text) {
     queryBuilder = queryBuilder.whereRaw(
@@ -81,7 +87,9 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
 });
 
 ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("gossip_menu");
+  let queryBuilder = knex()
+    .insert(payload)
+    .into("gossip_menu");
 
   queryBuilder.then((rows) => {
     event.reply(STORE_GOSSIP_MENU, rows);
@@ -99,7 +107,10 @@ ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
 });
 
 ipcMain.on(FIND_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex().select().from("gossip_menu").where(payload);
+  let queryBuilder = knex()
+    .select()
+    .from("gossip_menu")
+    .where(payload);
 
   queryBuilder.then((rows) => {
     event.reply(FIND_GOSSIP_MENU, rows.length > 0 ? rows[0] : {});
@@ -133,7 +144,10 @@ ipcMain.on(UPDATE_GOSSIP_MENU, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex().table("gossip_menu").where(payload).delete();
+  let queryBuilder = knex()
+    .table("gossip_menu")
+    .where(payload)
+    .delete();
 
   queryBuilder.then((rows) => {
     event.reply(DESTROY_GOSSIP_MENU, rows);
@@ -151,7 +165,10 @@ ipcMain.on(DESTROY_GOSSIP_MENU, (event, payload) => {
 });
 
 ipcMain.on(CREATE_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex().select("MenuID").from("gossip_menu").orderBy("MenuID", "desc");
+  let queryBuilder = knex()
+    .select("MenuID")
+    .from("gossip_menu")
+    .orderBy("MenuID", "desc");
 
   queryBuilder.then((rows) => {
     event.reply(CREATE_GOSSIP_MENU, {
@@ -168,8 +185,14 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
   let MenuID = undefined;
   let gossipMenu = undefined;
 
-  let menuIdQueryBuilder = knex().select("MenuID").from("gossip_menu").orderBy("MenuID", "desc");
-  let findGossipMenuQueryBuilder = knex().select().from("gossip_menu").where(payload);
+  let menuIdQueryBuilder = knex()
+    .select("MenuID")
+    .from("gossip_menu")
+    .orderBy("MenuID", "desc");
+  let findGossipMenuQueryBuilder = knex()
+    .select()
+    .from("gossip_menu")
+    .where(payload);
   Promise.all([
     menuIdQueryBuilder.then((rows) => {
       MenuID = rows[0].MenuID;
@@ -179,7 +202,9 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
     }),
   ]).then(() => {
     gossipMenu.MenuID = MenuID + 1;
-    let queryBuilder = knex().insert(gossipMenu).into("gossip_menu");
+    let queryBuilder = knex()
+      .insert(gossipMenu)
+      .into("gossip_menu");
     queryBuilder.then((rows) => {
       event.reply(COPY_GOSSIP_MENU, rows);
       event.reply(GLOBAL_NOTICE, {
@@ -187,228 +212,6 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
         category: "notification",
         title: "成功",
         message: `复制成功，新的对话 MenuID 为 ${MenuID + 1}。`,
-      });
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
-    });
-  });
-});
-
-ipcMain.on(STORE_NPC_TEXT, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("npc_text");
-
-  queryBuilder.then((rows) => {
-    event.reply(STORE_NPC_TEXT, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "新建成功。",
-      type: "success",
-    });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(FIND_NPC_TEXT, (event, payload) => {
-  let queryBuilder = knex().select().from("npc_text").where(payload);
-
-  queryBuilder.then((rows) => {
-    event.reply(FIND_NPC_TEXT, rows.length > 0 ? rows[0] : {});
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(UPDATE_NPC_TEXT, (event, payload) => {
-  let queryBuilder = knex().table("npc_text").where("ID", payload.credential.ID).update(payload.npcText);
-
-  queryBuilder.then((rows) => {
-    event.reply(UPDATE_NPC_TEXT, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "修改成功。",
-      type: "success",
-    });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(SEARCH_NPC_TEXT_LOCALES, (event, payload) => {
-  let queryBuilder = knex().select().from("npc_text_locale").where(payload);
-
-  queryBuilder.then((rows) => {
-    event.reply(SEARCH_NPC_TEXT_LOCALES, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(STORE_NPC_TEXT_LOCALES, (event, payload) => {
-  let deleteQueryBuilder = knex().table("npc_text_locale").where("ID", payload[0].ID).delete();
-  let insertQueryBuilder = knex().insert(payload).into("npc_text_locale");
-
-  deleteQueryBuilder.then(() => {
-    insertQueryBuilder.then((rows) => {
-      event.reply(STORE_NPC_TEXT_LOCALES, rows);
-      event.reply(GLOBAL_NOTICE, {
-        type: "success",
-        category: "notification",
-        title: "成功",
-        message: `保存成功。`,
-      });
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
-    });
-  });
-});
-
-ipcMain.on(SEARCH_GOSSIP_MENU_OPTIONS, (event, payload) => {
-  let queryBuilder = knex()
-    .select(["gmo.*", "gmol.OptionText as localeOptionText"])
-    .from("gossip_menu_option as gmo")
-    .leftJoin("gossip_menu_option_locale as gmol", function () {
-      this.on("gmo.MenuID", "=", "gmol.MenuID")
-        .andOn("gmo.OptionID", "=", "gmol.OptionID")
-        .andOn("gmol.Locale", "=", knex().raw("?", "zhCN"));
-    })
-    .where("gmo.MenuID", payload.MenuID);
-
-  queryBuilder.then((rows) => {
-    event.reply(SEARCH_GOSSIP_MENU_OPTIONS, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(STORE_GOSSIP_MENU_OPTION, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("gossip_menu_option");
-
-  queryBuilder.then((rows) => {
-    event.reply(STORE_GOSSIP_MENU_OPTION, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "新建成功。",
-      type: "success",
-    });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(FIND_GOSSIP_MENU_OPTION, (event, payload) => {
-  let queryBuilder = knex().select().from("gossip_menu_option").where(payload);
-
-  queryBuilder.then((rows) => {
-    event.reply(FIND_GOSSIP_MENU_OPTION, rows.length > 0 ? rows[0] : {});
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(UPDATE_GOSSIP_MENU_OPTION, (event, payload) => {
-  let queryBuilder = knex()
-    .table("gossip_menu_option")
-    .where("MenuID", payload.credential.MenuID)
-    .where("OptionID", payload.credential.OptionID)
-    .update(payload.gossipMenuOption);
-
-  queryBuilder.then((rows) => {
-    event.reply(UPDATE_GOSSIP_MENU_OPTION, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "修改成功。",
-      type: "success",
-    });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(DESTROY_GOSSIP_MENU_OPTION, (event, payload) => {
-  let queryBuilder = knex().table("gossip_menu_option").where(payload).delete();
-
-  queryBuilder.then((rows) => {
-    event.reply(DESTROY_GOSSIP_MENU_OPTION, rows);
-    event.reply("GLOBAL_NOTICE", {
-      category: "notification",
-      title: "成功",
-      message: "删除成功。",
-      type: "success",
-    });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(CREATE_GOSSIP_MENU_OPTION, (event, payload) => {
-  let queryBuilder = knex().select("OptionID").from("gossip_menu_option").where(payload).orderBy("OptionID", "desc");
-
-  queryBuilder.then((rows) => {
-    event.reply(CREATE_GOSSIP_MENU_OPTION, {
-      MenuID: payload.MenuID,
-      OptionID: rows.length > 0 ? rows[0].OptionID + 1 : 0,
-    });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
-});
-
-ipcMain.on(COPY_GOSSIP_MENU_OPTION, (event, payload) => {
-  let OptionID = undefined;
-  let gossipMenuOption = undefined;
-
-  let optionIdQueryBuilder = knex()
-    .select("OptionID")
-    .from("gossip_menu_option")
-    .where("MenuID", payload.MenuID)
-    .orderBy("OptionID", "desc");
-  let findGossipMenuOptionQueryBuilder = knex().select().from("gossip_menu_option").where(payload);
-  Promise.all([
-    optionIdQueryBuilder.then((rows) => {
-      OptionID = rows[0].OptionID;
-    }),
-    findGossipMenuOptionQueryBuilder.then((rows) => {
-      gossipMenuOption = rows.length > 0 ? rows[0] : {};
-    }),
-  ]).then(() => {
-    gossipMenuOption.OptionID = OptionID + 1;
-    let queryBuilder = knex().insert(gossipMenuOption).into("gossip_menu_option");
-    queryBuilder.then((rows) => {
-      event.reply(COPY_GOSSIP_MENU_OPTION, rows);
-      event.reply(GLOBAL_NOTICE, {
-        type: "success",
-        category: "notification",
-        title: "成功",
-        message: `复制成功，新的对话选项 OptionID 为 ${OptionID + 1}。`,
       });
       event.reply(GLOBAL_NOTICE, {
         category: "message",

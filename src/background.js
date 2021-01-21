@@ -4,7 +4,7 @@ import { app, protocol, BrowserWindow, ipcMain, dialog } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
 import "./background/dbc";
-// import "./background/creature";
+import "./background/database";
 import "./background/creatureTemplate";
 import "./background/creatureTemplateLocale";
 import "./background/creatureTemplateAddon";
@@ -25,31 +25,30 @@ import "./background/prospectingLootTemplate";
 import "./background/millingLootTemplate";
 import "./background/gameObject";
 import "./background/quest";
-import "./background/smartScript";
-import "./background/database";
 import "./background/gossipMenu";
+import "./background/npcText";
+import "./background/npcTextLocale";
+import "./background/gossipMenuOption";
+import "./background/smartScript";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 let win;
 
 protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } }
+  { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      // nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      nodeIntegration: true
-    },
-    show: false,
     title: "Foxy",
-    frame: true
-    // maximizable: false,
-    // fullscreen: true,
+    width: 1440,
+    height: 900,
+    show: false,
+    frame: true,
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
 
   win.maximize();
@@ -85,7 +84,7 @@ app.on("ready", async () => {
 
 if (isDevelopment) {
   if (process.platform === "win32") {
-    process.on("message", data => {
+    process.on("message", (data) => {
       if (data === "graceful-exit") {
         app.quit();
       }
@@ -97,32 +96,32 @@ if (isDevelopment) {
   }
 }
 
-process.on("uncaughtException", error => {
+process.on("uncaughtException", (error) => {
   win.webContents.send("GLOBAL_NOTICE", {
     category: "alert",
     type: "error",
     title: `${error.code}`,
-    message: `${error.message}<br>${error.stack}`
+    message: `${error.message}<br>${error.stack}`,
   });
 });
 
-process.on("unhandledRejection", error => {
+process.on("unhandledRejection", (error) => {
   win.webContents.send("GLOBAL_NOTICE", {
     category: "alert",
     type: "error",
     title: `${error.code}`,
-    message: `${error.message}<br>${error.stack}`
+    message: `${error.message}<br>${error.stack}`,
   });
 });
 
-ipcMain.on("SELECT_DBC_PATH", event => {
-  dialog.showOpenDialog({ properties: ["openDirectory"] }).then(payload => {
+ipcMain.on("SELECT_DBC_PATH", (event) => {
+  dialog.showOpenDialog({ properties: ["openDirectory"] }).then((payload) => {
     event.reply("SELECT_DBC_PATH_REPLY", payload.filePaths[0]);
   });
 });
 
-ipcMain.on("SELECT_CONFIG_PATH", event => {
-  dialog.showOpenDialog({ properties: ["openDirectory"] }).then(payload => {
+ipcMain.on("SELECT_CONFIG_PATH", (event) => {
+  dialog.showOpenDialog({ properties: ["openDirectory"] }).then((payload) => {
     event.reply("SELECT_CONFIG_PATH_REPLY", payload.filePaths[0]);
   });
 });

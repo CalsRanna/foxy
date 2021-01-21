@@ -6,8 +6,6 @@ import GameObjectTable from "@/views/GameObjectTable";
 import GameObjectDetail from "@/views/GameObjectDetail";
 import QuestTable from "@/views/QuestTable";
 import QuestDetail from "@/views/QuestDetail";
-import GossipMenuTable from "@/views/GossipMenuTable";
-import GossipMenuDetail from "@/views/GossipMenuDetail";
 import SpellTable from "@/views/SpellTable";
 import SpellDetail from "@/views/SpellDetail";
 import SmartScriptTable from "@/views/SmartScriptTable";
@@ -44,9 +42,18 @@ const routes = [
   { path: "/quest", component: QuestTable },
   { path: "/quest/create", component: QuestDetail },
   { path: "/quest/:id", component: QuestDetail },
-  { path: "/gossip-menu", component: GossipMenuTable },
-  { path: "/gossip-menu/create", component: GossipMenuDetail },
-  { path: "/gossip-menu/:id", component: GossipMenuDetail },
+  {
+    path: "/gossip-menu",
+    component: () => import("@/views/GossipMenu/GossipMenuTable"),
+  },
+  {
+    path: "/gossip-menu/create",
+    component: () => import("@/views/GossipMenu/GossipMenuDetail"),
+  },
+  {
+    path: "/gossip-menu/:id",
+    component: () => import("@/views/GossipMenu/GossipMenuDetail"),
+  },
   { path: "/spell", component: SpellTable },
   { path: "/spell/create", component: SpellDetail },
   { path: "/spell/:id", component: SpellDetail },

@@ -1,42 +1,33 @@
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 import {
-  COPY_GOSSIP_MENU,
-  COPY_GOSSIP_MENU_OPTION,
-  COUNT_GOSSIP_MENUS,
-  CREATE_GOSSIP_MENU,
-  CREATE_GOSSIP_MENU_OPTION,
-  DESTROY_GOSSIP_MENU,
-  DESTROY_GOSSIP_MENU_OPTION,
-  FIND_GOSSIP_MENU,
-  FIND_GOSSIP_MENU_OPTION,
-  FIND_NPC_TEXT,
-  PAGINATE_GOSSIP_MENUS,
   SEARCH_GOSSIP_MENUS,
-  SEARCH_GOSSIP_MENU_OPTIONS,
-  SEARCH_NPC_TEXT_LOCALES,
+  COUNT_GOSSIP_MENUS,
+  PAGINATE_GOSSIP_MENUS,
   STORE_GOSSIP_MENU,
-  STORE_GOSSIP_MENU_OPTION,
-  STORE_NPC_TEXT,
-  STORE_NPC_TEXT_LOCALES,
+  FIND_GOSSIP_MENU,
   UPDATE_GOSSIP_MENU,
-  UPDATE_GOSSIP_MENU_OPTION,
-  UPDATE_NPC_TEXT,
+  DESTROY_GOSSIP_MENU,
+  CREATE_GOSSIP_MENU,
+  COPY_GOSSIP_MENU,
 } from "../constants";
 
 export default {
   namespaced: true,
   state() {
     return {
-      page: 1,
-      total: 0,
-      size: 50,
+      refresh: false,
+      credential: {
+        MenuID: undefined,
+        Text: undefined,
+      },
+      pagination: {
+        page: 1,
+        size: 50,
+        total: 0,
+      },
       gossipMenus: [],
       gossipMenu: {},
-      npcText: {},
-      npcTextLocales: [],
-      gossipMenuOptions: [],
-      gossipMenuOption: {},
     };
   },
   actions: {
@@ -68,6 +59,7 @@ export default {
       return new Promise((resolve) => {
         ipcRenderer.send(STORE_GOSSIP_MENU, payload);
         ipcRenderer.on(STORE_GOSSIP_MENU, () => {
+          commit("UPDATE_REFRESH_OF_GOSSIP_MENU", true);
           resolve();
         });
       });
@@ -85,7 +77,7 @@ export default {
       return new Promise((resolve) => {
         ipcRenderer.send(UPDATE_GOSSIP_MENU, payload);
         ipcRenderer.on(UPDATE_GOSSIP_MENU, () => {
-          commit(UPDATE_GOSSIP_MENU, payload.gossipMenu);
+          commit("UPDATE_REFRESH_OF_GOSSIP_MENU", true);
           resolve();
         });
       });
@@ -115,107 +107,10 @@ export default {
         });
       });
     },
-    storeNpcText(context, payload) {
+    resetCredential({ commit }) {
       return new Promise((resolve) => {
-        ipcRenderer.send(STORE_NPC_TEXT, payload);
-        ipcRenderer.on(STORE_NPC_TEXT, () => {
-          resolve();
-        });
-      });
-    },
-    findNpcText({ commit }, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(FIND_NPC_TEXT, payload);
-        ipcRenderer.on(FIND_NPC_TEXT, (event, response) => {
-          commit(FIND_NPC_TEXT, response);
-          resolve();
-        });
-      });
-    },
-    updateNpcText({ commit }, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(UPDATE_NPC_TEXT, payload);
-        ipcRenderer.on(UPDATE_NPC_TEXT, () => {
-          commit(UPDATE_NPC_TEXT, payload.npcText);
-          resolve();
-        });
-      });
-    },
-    searchNpcTextLocales({ commit }, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(SEARCH_NPC_TEXT_LOCALES, payload);
-        ipcRenderer.on(SEARCH_NPC_TEXT_LOCALES, (event, response) => {
-          commit(SEARCH_NPC_TEXT_LOCALES, response);
-          resolve();
-        });
-      });
-    },
-    storeNpcTextLocales(context, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(STORE_NPC_TEXT_LOCALES, payload);
-        ipcRenderer.on(STORE_NPC_TEXT_LOCALES, () => {
-          resolve();
-        });
-      });
-    },
-    searchGossipMenuOptions({ commit }, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(SEARCH_GOSSIP_MENU_OPTIONS, payload);
-        ipcRenderer.on(SEARCH_GOSSIP_MENU_OPTIONS, (event, response) => {
-          commit(SEARCH_GOSSIP_MENU_OPTIONS, response);
-          resolve();
-        });
-      });
-    },
-    storeGossipMenuOption(context, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(STORE_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(STORE_GOSSIP_MENU_OPTION, () => {
-          resolve();
-        });
-      });
-    },
-    findGossipMenuOption({ commit }, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(FIND_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(FIND_GOSSIP_MENU_OPTION, (event, response) => {
-          commit(FIND_GOSSIP_MENU_OPTION, response);
-          resolve();
-        });
-      });
-    },
-    updateGossipMenuOption({ commit }, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(UPDATE_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(UPDATE_GOSSIP_MENU_OPTION, () => {
-          commit(UPDATE_GOSSIP_MENU_OPTION, payload.gossipMenuOption);
-          resolve();
-        });
-      });
-    },
-    destroyGossipMenuOption(context, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(DESTROY_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(DESTROY_GOSSIP_MENU_OPTION, () => {
-          resolve();
-        });
-      });
-    },
-    createGossipMenuOption({ commit }, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(CREATE_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(CREATE_GOSSIP_MENU_OPTION, (event, response) => {
-          commit(CREATE_GOSSIP_MENU_OPTION, response);
-          resolve();
-        });
-      });
-    },
-    copyGossipMenuOption(context, payload) {
-      return new Promise((resolve) => {
-        ipcRenderer.send(COPY_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(COPY_GOSSIP_MENU_OPTION, () => {
-          resolve();
-        });
+        commit("RESET_CREDENTIAL_OF_GOSSIP_MENU");
+        resolve();
       });
     },
   },
@@ -224,10 +119,10 @@ export default {
       state.gossipMenus = gossipMenus;
     },
     [COUNT_GOSSIP_MENUS](state, total) {
-      state.total = total;
+      state.pagination.total = total;
     },
     [PAGINATE_GOSSIP_MENUS](state, page) {
-      state.page = page;
+      state.pagination.page = page;
     },
     [FIND_GOSSIP_MENU](state, gossipMenu) {
       state.gossipMenu = gossipMenu;
@@ -238,26 +133,14 @@ export default {
     [CREATE_GOSSIP_MENU](state, gossipMenu) {
       state.gossipMenu = gossipMenu;
     },
-    [FIND_NPC_TEXT](state, npcText) {
-      state.npcText = npcText;
+    UPDATE_REFRESH_OF_GOSSIP_MENU(state, refresh) {
+      state.refresh = refresh;
     },
-    [UPDATE_NPC_TEXT](state, npcText) {
-      state.npcText = npcText;
-    },
-    [SEARCH_NPC_TEXT_LOCALES](state, npcTextLocales) {
-      state.npcTextLocales = npcTextLocales;
-    },
-    [SEARCH_GOSSIP_MENU_OPTIONS](state, gossipMenuOptions) {
-      state.gossipMenuOptions = gossipMenuOptions;
-    },
-    [FIND_GOSSIP_MENU_OPTION](state, gossipMenuOption) {
-      state.gossipMenuOption = gossipMenuOption;
-    },
-    [UPDATE_GOSSIP_MENU_OPTION](state, gossipMenuOption) {
-      state.gossipMenuOption = gossipMenuOption;
-    },
-    [CREATE_GOSSIP_MENU_OPTION](state, gossipMenuOption) {
-      state.gossipMenuOption = gossipMenuOption;
+    RESET_CREDENTIAL_OF_GOSSIP_MENU(state) {
+      state.credential = {
+        MenuID: undefined,
+        Text: undefined,
+      };
     },
   },
 };
