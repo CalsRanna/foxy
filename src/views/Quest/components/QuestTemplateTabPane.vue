@@ -175,18 +175,18 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="24">
         <el-col :span="6">
-          <el-form-item label="LogDescription">
+          <el-form-item label="任务详情">
             <el-input
-              v-model="questTemplate.LogDescription"
-              placeholder="LogDescription"
+              v-model="questTemplate.QuestDescription"
+              placeholder="QuestDescription"
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="QuestDescription">
+          <el-form-item label="任务日志描述">
             <el-input
-              v-model="questTemplate.QuestDescription"
-              placeholder="QuestDescription"
+              v-model="questTemplate.LogDescription"
+              placeholder="LogDescription"
             ></el-input>
           </el-form-item>
         </el-col>
