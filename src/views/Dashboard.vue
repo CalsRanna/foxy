@@ -173,11 +173,11 @@ export default {
     ...mapState("spell", { quantityOfSpell: "total" }),
     data() {
       return [
-        this.quantityOfCreatureTemplate,
+        this.quantityOfCreatureTemplate.total,
         this.quantityOfGameObjectTemplate,
-        this.quantityOfItemTemplate,
-        this.quantityOfQuestTemplate,
-        this.quantityOfGossipMenu,
+        this.quantityOfItemTemplate.total,
+        this.quantityOfQuestTemplate.total,
+        this.quantityOfGossipMenu.total,
         this.quantityOfSmartScript,
         this.quantityOfSpell,
       ];
