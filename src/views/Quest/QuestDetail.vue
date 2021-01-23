@@ -25,19 +25,23 @@
         <el-tab-pane label="模版补充" name="quest_template_addon" lazy>
           <quest-template-addon-tab-pane></quest-template-addon-tab-pane>
         </el-tab-pane>
-        <el-tab-pane label="任务奖励" name="quest_offer_reward" lazy>
+        <el-tab-pane label="发放奖励" name="quest_offer_reward" lazy>
           <quest-offer-reward-tab-pane></quest-offer-reward-tab-pane>
         </el-tab-pane>
-        <el-tab-pane label="任务需要物品" name="quest_request_items" lazy>
+        <el-tab-pane label="提交物品" name="quest_request_items" lazy>
           <quest-request-items-tab-pane></quest-request-items-tab-pane>
         </el-tab-pane>
-        <el-tab-pane label="任务开始生物" name="creature_quest_starter" lazy>
+        <el-tab-pane label="开始生物" name="creature_quest_starter" lazy>
+          <creature-quest-starter></creature-quest-starter>
         </el-tab-pane>
-        <el-tab-pane label="任务结束生物" name="creature_quest_ender" lazy>
+        <el-tab-pane label="结束生物" name="creature_quest_ender" lazy>
+          <creature-quest-ender></creature-quest-ender>
         </el-tab-pane>
-        <el-tab-pane label="任务开始物体" name="game_object_quest_starter" lazy>
+        <el-tab-pane label="开始物体" name="game_object_quest_starter" lazy>
+          <game-object-quest-starter></game-object-quest-starter>
         </el-tab-pane>
-        <el-tab-pane label="任务结束物体" name="game_object_quest_ender" lazy>
+        <el-tab-pane label="结束物体" name="game_object_quest_ender" lazy>
+          <game-object-quest-ender></game-object-quest-ender>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -49,6 +53,10 @@ import QuestTemplateTabPane from "@/views/Quest/components/QuestTemplateTabPane"
 import QuestTemplateAddonTabPane from "@/views/Quest/components/QuestTemplateAddonTabPane";
 import QuestOfferRewardTabPane from "@/views/Quest/components/QuestOfferRewardTabPane";
 import QuestRequestItemsTabPane from "@/views/Quest/components/QuestRequestItemsTabPane";
+import CreatureQuestStarter from "./components/CreatureQuestStarter";
+import CreatureQuestEnder from "./components/CreatureQuestEnder";
+import GameObjectQuestStarter from "./components/GameObjectQuestStarter";
+import GameObjectQuestEnder from "./components/GameObjectQuestEnder";
 
 export default {
   computed: {
@@ -64,6 +72,10 @@ export default {
     QuestTemplateAddonTabPane,
     QuestOfferRewardTabPane,
     QuestRequestItemsTabPane,
+    CreatureQuestStarter,
+    CreatureQuestEnder,
+    GameObjectQuestStarter,
+    GameObjectQuestEnder,
   },
 };
 </script>

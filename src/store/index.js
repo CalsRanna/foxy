@@ -26,6 +26,10 @@ import questTemplate from "./questTemplate";
 import questTemplateAddon from "./questTemplateAddon";
 import questOfferReward from "./questOfferReward";
 import questRequestItems from "./questRequestItems";
+import creatureQuestStarter from "./creatureQuestStarter";
+import creatureQuestEnder from "./creatureQuestEnder";
+import gameObjectQuestStarter from "./gameObjectQuestStarter";
+import gameObjectQuestEnder from "./gameObjectQuestEnder";
 import gossipMenu from "./gossipMenu";
 import npcText from "./npcText";
 import npcTextLocale from "./npcTextLocale";
@@ -63,6 +67,10 @@ export default new Vuex.Store({
     questTemplateAddon,
     questOfferReward,
     questRequestItems,
+    creatureQuestStarter,
+    creatureQuestEnder,
+    gameObjectQuestStarter,
+    gameObjectQuestEnder,
     gossipMenu,
     npcText,
     npcTextLocale,
