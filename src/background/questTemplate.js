@@ -126,8 +126,8 @@ ipcMain.on(FIND_QUEST_TEMPLATE, (event, payload) => {
 ipcMain.on(UPDATE_QUEST_TEMPLATE, (event, payload) => {
   let queryBuilder = knex()
     .table("quest_template")
-    .where("ID", payload.ID)
-    .update(payload);
+    .where(payload.credential)
+    .update(payload.questTemplate);
 
   queryBuilder.then((rows) => {
     event.reply(UPDATE_QUEST_TEMPLATE, rows);
@@ -165,7 +165,6 @@ ipcMain.on(DESTROY_QUEST_TEMPLATE, (event, payload) => {
   });
 });
 
-// 新建空的物品模板，entry自动生成
 ipcMain.on(CREATE_QUEST_TEMPLATE, (event, payload) => {
   let queryBuilder = knex()
     .select("ID")
@@ -213,27 +212,12 @@ ipcMain.on(COPY_QUEST_TEMPLATE, (event, payload) => {
         type: "success",
         category: "notification",
         title: "成功",
-        message: `复制成功，新的物体模板 ID 为 ${ID + 1}。`,
+        message: `复制成功，新的任务模板ID为${ID + 1}。`,
       });
       event.reply(GLOBAL_NOTICE, {
         category: "message",
         message: queryBuilder.toString(),
       });
-    });
-  });
-});
-
-ipcMain.on(SEARCH_QUEST_TEMPLATE_LOCALES, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("quest_template_locale")
-    .where("ID", payload.id);
-
-  queryBuilder.then((rows) => {
-    event.reply(SEARCH_QUEST_TEMPLATE_LOCALES, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
     });
   });
 });

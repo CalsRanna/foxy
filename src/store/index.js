@@ -22,7 +22,10 @@ import disenchantLootTemplate from "./disenchantLootTemplate";
 import prospectingLootTemplate from "./prospectingLootTemplate";
 import millingLootTemplate from "./millingLootTemplate";
 import gameObject from "./gameObject";
-import quest from "./quest";
+import questTemplate from "./questTemplate";
+import questTemplateAddon from "./questTemplateAddon";
+import questOfferReward from "./questOfferReward";
+import questRequestItems from "./questRequestItems";
 import gossipMenu from "./gossipMenu";
 import npcText from "./npcText";
 import npcTextLocale from "./npcTextLocale";
@@ -56,7 +59,10 @@ export default new Vuex.Store({
     prospectingLootTemplate,
     millingLootTemplate,
     gameObject,
-    quest,
+    questTemplate,
+    questTemplateAddon,
+    questOfferReward,
+    questRequestItems,
     gossipMenu,
     npcText,
     npcTextLocale,

@@ -4,8 +4,6 @@ import VueRouter from "vue-router";
 import Dashboard from "@/views/Dashboard";
 import GameObjectTable from "@/views/GameObjectTable";
 import GameObjectDetail from "@/views/GameObjectDetail";
-import QuestTable from "@/views/QuestTable";
-import QuestDetail from "@/views/QuestDetail";
 import SpellTable from "@/views/SpellTable";
 import SpellDetail from "@/views/SpellDetail";
 import SmartScriptTable from "@/views/SmartScriptTable";
@@ -39,9 +37,12 @@ const routes = [
   { path: "/game-object", component: GameObjectTable },
   { path: "/game-object/create", component: GameObjectDetail },
   { path: "/game-object/:id", component: GameObjectDetail },
-  { path: "/quest", component: QuestTable },
-  { path: "/quest/create", component: QuestDetail },
-  { path: "/quest/:id", component: QuestDetail },
+  { path: "/quest", component: () => import("@/views/Quest/QuestTable") },
+  {
+    path: "/quest/create",
+    component: () => import("@/views/Quest/QuestDetail"),
+  },
+  { path: "/quest/:id", component: () => import("@/views/Quest/QuestDetail") },
   {
     path: "/gossip-menu",
     component: () => import("@/views/GossipMenu/GossipMenuTable"),
