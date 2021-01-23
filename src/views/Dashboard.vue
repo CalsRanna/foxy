@@ -58,7 +58,11 @@
             <el-card shadow="hover">
               <p class="summary-title">任务模板<span>Quest Template</span></p>
               <p class="summary-content">
-                {{ parseFloat(this.quantityOfQuestTemplate).toLocaleString() }}
+                {{
+                  parseFloat(
+                    this.quantityOfQuestTemplate.total
+                  ).toLocaleString()
+                }}
               </p>
             </el-card>
           </el-col>
@@ -163,7 +167,7 @@ export default {
     }),
     ...mapState("gameObject", { quantityOfGameObjectTemplate: "total" }),
     ...mapState("itemTemplate", { quantityOfItemTemplate: "pagination" }),
-    ...mapState("quest", { quantityOfQuestTemplate: "total" }),
+    ...mapState("questTemplate", { quantityOfQuestTemplate: "pagination" }),
     ...mapState("gossipMenu", { quantityOfGossipMenu: "pagination" }),
     ...mapState("smartScript", { quantityOfSmartScript: "total" }),
     ...mapState("spell", { quantityOfSpell: "total" }),
@@ -183,7 +187,7 @@ export default {
     ...mapActions("creatureTemplate", ["countCreatureTemplates"]),
     ...mapActions("gameObject", ["countGameObjectTemplates"]),
     ...mapActions("itemTemplate", ["countItemTemplates"]),
-    ...mapActions("quest", ["countQuestTemplates"]),
+    ...mapActions("questTemplate", ["countQuestTemplates"]),
     ...mapActions("gossipMenu", ["countGossipMenus"]),
     ...mapActions("smartScript", ["countSmartScripts"]),
     ...mapActions("spell", { countSpells: "count" }),

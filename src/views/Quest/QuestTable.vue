@@ -10,20 +10,23 @@
       <h3 style="margin: 16px 0 0 0">任务列表</h3>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-form @submit.native.prevent="handleSearch">
+      <el-form :model="credential" @submit.native.prevent="search">
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-input v-model="ID" placeholder="ID"></el-input>
+            <el-input v-model="credential.ID" placeholder="ID"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="LogTitle" placeholder="标题"></el-input>
+            <el-input
+              v-model="credential.LogTitle"
+              placeholder="标题"
+            ></el-input>
           </el-col>
           <el-col :span="6">
             <el-button
               type="primary"
               native-type="submit"
               :loading="loading"
-              @click="handleSearch"
+              @click="search"
             >
               查询
             </el-button>
@@ -34,19 +37,19 @@
     </el-card>
     <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
-      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
-      <el-button type="danger" :disabled="disabled" @click="handleDestroy">
+      <el-button :disabled="disabled" @click="copy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="destroy">
         删除
       </el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="50"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
       <el-table
@@ -101,11 +104,11 @@
       </el-table>
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="50"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -119,35 +122,37 @@ export default {
   data() {
     return {
       loading: false,
-      ID: undefined,
-      LogTitle: undefined,
       currentRow: undefined,
     };
   },
   computed: {
-    ...mapState("quest", ["questTemplates", "page", "total"]),
+    ...mapState("questTemplate", [
+      "refresh",
+      "credential",
+      "pagination",
+      "questTemplates",
+    ]),
     payload() {
       return {
-        id: this.ID,
-        title: this.LogTitle,
-        page: this.page,
+        id: this.credential.ID,
+        title: this.credential.LogTitle,
+        page: this.pagination.page,
       };
     },
     disabled() {
-      return this.currentRow === undefined || this.currentRow === null
-        ? true
-        : false;
+      return this.currentRow == undefined ? true : false;
     },
   },
   methods: {
-    ...mapActions("quest", [
+    ...mapActions("questTemplate", [
       "searchQuestTemplates",
       "countQuestTemplates",
       "paginateQuestTemplates",
       "destroyQuestTemplate",
       "copyQuestTemplate",
+      "resetCredential",
     ]),
-    async handleSearch() {
+    async search() {
       this.loading = true;
       await this.paginateQuestTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([
@@ -157,13 +162,12 @@ export default {
       this.loading = false;
     },
     reset() {
-      this.ID = undefined;
-      this.LogTitle = "";
+      this.resetCredential();
     },
     create() {
       this.$router.push("/quest/create");
     },
-    handleCopy() {
+    copy() {
       this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -189,7 +193,7 @@ export default {
         },
       });
     },
-    handleDestroy() {
+    destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
         "提示",
@@ -222,7 +226,7 @@ export default {
     select(currentRow) {
       this.currentRow = currentRow;
     },
-    async handlePaginate(page) {
+    async paginate(page) {
       this.loading = true;
       await this.paginateQuestTemplates({ page: page }); //每次搜索时使分页器设为第一页
       await this.searchQuestTemplates(this.payload);
@@ -241,7 +245,7 @@ export default {
     },
   },
   mounted() {
-    if (this.questTemplates.length === 0) {
+    if (this.refresh) {
       this.init();
     }
   },
