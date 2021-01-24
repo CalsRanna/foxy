@@ -10,24 +10,24 @@
       <h3 style="margin: 16px 0 0 0">物体列表</h3>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-form @submit.native.prevent="handleSearch">
+      <el-form :model="credential" @submit.native.prevent="search">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-input-number
               controls-position="right"
-              v-model="entry"
+              v-model="credential.entry"
               placeholder="entry"
             ></el-input-number>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="name" placeholder="名称"></el-input>
+            <el-input v-model="credential.name" placeholder="名称"></el-input>
           </el-col>
           <el-col :span="6">
             <el-button
               type="primary"
               native-type="submit"
               :loading="loading"
-              @click="handleSearch"
+              @click="search"
             >
               查询
             </el-button>
@@ -38,19 +38,19 @@
     </el-card>
     <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
-      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
-      <el-button type="danger" :disabled="disabled" @click="handleDestroy">
+      <el-button :disabled="disabled" @click="copy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="destroy">
         删除
       </el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="50"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
       <el-table
@@ -74,11 +74,11 @@
       </el-table>
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="50"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -86,39 +86,44 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
     return {
       loading: false,
-      entry: undefined,
-      name: undefined,
       currentRow: undefined,
     };
   },
   computed: {
-    ...mapState("gameObject", ["gameObjectTemplates", "page", "total"]),
-    ...mapGetters("dbc", { icons: "itemIcons" }),
+    ...mapState("gameObjectTemplate", [
+      "refresh",
+      "credential",
+      "pagination",
+      "gameObjectTemplates",
+    ]),
     payload() {
-      return { entry: this.entry, name: this.name, page: this.page };
+      return {
+        entry: this.credential.entry,
+        name: this.credential.name,
+        page: this.pagination.page,
+      };
     },
     disabled() {
-      return this.currentRow === undefined || this.currentRow === null
-        ? true
-        : false;
+      return this.currentRow === undefined ? true : false;
     },
   },
   methods: {
-    ...mapActions("gameObject", [
+    ...mapActions("gameObjectTemplate", [
       "searchGameObjectTemplates",
       "countGameObjectTemplates",
       "paginateGameObjectTemplates",
       "destroyGameObjectTemplate",
       "createGameObjectTemplate",
       "copyGameObjectTemplate",
+      "resetCredential",
     ]),
-    async handleSearch() {
+    async search() {
       this.loading = true;
       await this.paginateGameObjectTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([
@@ -128,13 +133,12 @@ export default {
       this.loading = false;
     },
     reset() {
-      this.entry = undefined;
-      this.name = undefined;
+      this.resetCredential();
     },
     create() {
       this.$router.push("/game-object/create");
     },
-    handleCopy() {
+    copy() {
       this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -160,7 +164,7 @@ export default {
         },
       });
     },
-    handleDestroy() {
+    destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
         "提示",
@@ -193,7 +197,7 @@ export default {
     select(currentRow) {
       this.currentRow = currentRow;
     },
-    async handlePaginate(page) {
+    async paginate(page) {
       this.loading = true;
       await this.paginateGameObjectTemplates({ page: page });
       await this.searchGameObjectTemplates(this.payload);
@@ -212,7 +216,7 @@ export default {
     },
   },
   mounted() {
-    if (this.gameObjectTemplates.length === 0) {
+    if (this.refresh) {
       this.init();
     }
   },

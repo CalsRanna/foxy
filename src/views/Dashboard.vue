@@ -34,22 +34,24 @@
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p class="summary-title">
-                物体模板<span>Game Object Template</span>
-              </p>
+              <p class="summary-title">物品模板<span>Item Template</span></p>
               <p class="summary-content">
                 {{
-                  parseFloat(this.quantityOfGameObjectTemplate).toLocaleString()
+                  parseFloat(this.quantityOfItemTemplate.total).toLocaleString()
                 }}
               </p>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <p class="summary-title">物品模板<span>Item Template</span></p>
+              <p class="summary-title">
+                物体模板<span>Game Object Template</span>
+              </p>
               <p class="summary-content">
                 {{
-                  parseFloat(this.quantityOfItemTemplate.total).toLocaleString()
+                  parseFloat(
+                    this.quantityOfGameObjectTemplate.total
+                  ).toLocaleString()
                 }}
               </p>
             </el-card>
@@ -158,15 +160,17 @@ export default {
   data() {
     return {
       loading: false,
-      labels: ["生物", "物体", "物品", "任务", "对话", "内建脚本", "技能"],
+      labels: ["生物", "物品", "物体", "任务", "对话", "内建脚本", "技能"],
     };
   },
   computed: {
     ...mapState("creatureTemplate", {
       quantityOfCreatureTemplate: "pagination",
     }),
-    ...mapState("gameObject", { quantityOfGameObjectTemplate: "total" }),
     ...mapState("itemTemplate", { quantityOfItemTemplate: "pagination" }),
+    ...mapState("gameObjectTemplate", {
+      quantityOfGameObjectTemplate: "pagination",
+    }),
     ...mapState("questTemplate", { quantityOfQuestTemplate: "pagination" }),
     ...mapState("gossipMenu", { quantityOfGossipMenu: "pagination" }),
     ...mapState("smartScript", { quantityOfSmartScript: "total" }),
@@ -174,8 +178,8 @@ export default {
     data() {
       return [
         this.quantityOfCreatureTemplate.total,
-        this.quantityOfGameObjectTemplate,
         this.quantityOfItemTemplate.total,
+        this.quantityOfGameObjectTemplate.total,
         this.quantityOfQuestTemplate.total,
         this.quantityOfGossipMenu.total,
         this.quantityOfSmartScript,
@@ -185,8 +189,8 @@ export default {
   },
   methods: {
     ...mapActions("creatureTemplate", ["countCreatureTemplates"]),
-    ...mapActions("gameObject", ["countGameObjectTemplates"]),
     ...mapActions("itemTemplate", ["countItemTemplates"]),
+    ...mapActions("gameObject", ["countGameObjectTemplates"]),
     ...mapActions("questTemplate", ["countQuestTemplates"]),
     ...mapActions("gossipMenu", ["countGossipMenus"]),
     ...mapActions("smartScript", ["countSmartScripts"]),

@@ -1,9 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import Dashboard from "@/views/Dashboard";
-import GameObjectTable from "@/views/GameObjectTable";
-import GameObjectDetail from "@/views/GameObjectDetail";
 import SpellTable from "@/views/SpellTable";
 import SpellDetail from "@/views/SpellDetail";
 import SmartScriptTable from "@/views/SmartScriptTable";
@@ -18,25 +15,34 @@ Vue.use(VueRouter);
 
 const routes = [
   { path: "/", redirect: "/dashboard" },
-  { path: "/dashboard", component: Dashboard },
+  { path: "/dashboard", component: () => import("@/views/Dashboard") },
   {
     path: "/creature",
     component: () => import("@/views/Creature/CreatureTable"),
   },
   {
     path: "/creature/create",
-    component: () => import("@/views/Creature/CreatureTemplateDetail"),
+    component: () => import("@/views/Creature/CreatureDetail"),
   },
   {
     path: "/creature/:id",
-    component: () => import("@/views/Creature/CreatureTemplateDetail"),
+    component: () => import("@/views/Creature/CreatureDetail"),
   },
   { path: "/item", component: () => import("@/views/Item/ItemTable") },
   { path: "/item/create", component: () => import("@/views/Item/ItemDetail") },
   { path: "/item/:id", component: () => import("@/views/Item/ItemDetail") },
-  { path: "/game-object", component: GameObjectTable },
-  { path: "/game-object/create", component: GameObjectDetail },
-  { path: "/game-object/:id", component: GameObjectDetail },
+  {
+    path: "/game-object",
+    component: () => import("@/views/GameObject/GameObjectTable"),
+  },
+  {
+    path: "/game-object/create",
+    component: () => import("@/views/GameObject/GameObjectDetail"),
+  },
+  {
+    path: "/game-object/:id",
+    component: () => import("@/views/GameObject/GameObjectDetail"),
+  },
   { path: "/quest", component: () => import("@/views/Quest/QuestTable") },
   {
     path: "/quest/create",
