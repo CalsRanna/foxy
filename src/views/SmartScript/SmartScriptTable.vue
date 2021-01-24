@@ -10,23 +10,26 @@
       <h3 style="margin: 16px 0 0 0">内建脚本列表</h3>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-form @submit.native.prevent="handleSearch">
+      <el-form :model="credential" @submit.native.prevent="search">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-input
-              v-model="entryorguid"
+              v-model="credential.entryorguid"
               placeholder="Entry Or GUID"
             ></el-input>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="comment" placeholder="备注"></el-input>
+            <el-input
+              v-model="credential.comment"
+              placeholder="备注"
+            ></el-input>
           </el-col>
           <el-col :span="6">
             <el-button
               type="primary"
               native-type="submit"
               :loading="loading"
-              @click="handleSearch"
+              @click="search"
             >
               查询
             </el-button>
@@ -37,19 +40,19 @@
     </el-card>
     <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
-      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
-      <el-button type="danger" :disabled="disabled" @click="handleDestroy">
+      <el-button :disabled="disabled" @click="copy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="destroy">
         删除
       </el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="50"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
       <el-table
@@ -90,11 +93,11 @@
       </el-table>
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="50"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -115,8 +118,6 @@ export default {
   data() {
     return {
       loading: false,
-      entryorguid: undefined,
-      comment: undefined,
       currentRow: undefined,
       sourceTypes: sourceTypes,
       eventTypes: eventTypes,
@@ -125,18 +126,21 @@ export default {
     };
   },
   computed: {
-    ...mapState("smartScript", ["smartScripts", "page", "total"]),
+    ...mapState("smartScript", [
+      "refresh",
+      "credential",
+      "pagination",
+      "smartScripts",
+    ]),
     payload() {
       return {
-        entryorguid: this.entryorguid,
-        comment: this.comment,
-        page: this.page,
+        entryorguid: this.credential.entryorguid,
+        comment: this.credential.comment,
+        page: this.pagination.page,
       };
     },
     disabled() {
-      return this.currentRow === undefined || this.currentRow === null
-        ? true
-        : false;
+      return this.currentRow === undefined ? true : false;
     },
   },
   methods: {
@@ -146,8 +150,9 @@ export default {
       "paginateSmartScripts",
       "destroySmartScript",
       "copySmartScript",
+      "resetCredential",
     ]),
-    async handleSearch() {
+    async search() {
       this.loading = true;
       this.paginateSmartScripts({ page: 1 }); //每次搜索时使分页器设为第一页
       await Promise.all([
@@ -157,13 +162,12 @@ export default {
       this.loading = false;
     },
     reset() {
-      this.entryorguid = undefined;
-      this.comment = "";
+      this.resetCredential();
     },
     create() {
       this.$router.push("/smart-script/create");
     },
-    handleCopy() {
+    copy() {
       this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -194,7 +198,7 @@ export default {
         },
       });
     },
-    handleDestroy() {
+    destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
         "提示",
@@ -232,7 +236,7 @@ export default {
     select(currentRow) {
       this.currentRow = currentRow;
     },
-    async handlePaginate(page) {
+    async paginate(page) {
       this.loading = true;
       this.paginateSmartScripts({ page: page });
       await this.searchSmartScripts(this.payload);
@@ -253,7 +257,7 @@ export default {
     },
   },
   mounted() {
-    if (this.smartScripts.length === 0) {
+    if (this.refresh) {
       this.init();
     }
   },

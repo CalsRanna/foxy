@@ -1,13 +1,13 @@
 import { ipcMain } from "electron";
 import {
-  COPY_SMART_SCRIPT,
-  COUNT_SMART_SCRIPTS,
-  DESTROY_SMART_SCRIPT,
-  FIND_SMART_SCRIPT,
-  GLOBAL_NOTICE,
   SEARCH_SMART_SCRIPTS,
+  COUNT_SMART_SCRIPTS,
   STORE_SMART_SCRIPT,
-  UPDATE_SMART_SCRIPT
+  FIND_SMART_SCRIPT,
+  UPDATE_SMART_SCRIPT,
+  DESTROY_SMART_SCRIPT,
+  COPY_SMART_SCRIPT,
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -22,22 +22,32 @@ ipcMain.on(SEARCH_SMART_SCRIPTS, (event, payload) => {
       "ss.event_type",
       "ss.action_type",
       "ss.target_type",
-      "ss.comment"
+      "ss.comment",
     ])
     .from("smart_scripts as ss");
   if (payload.entryorguid) {
-    queryBuilder = queryBuilder.where("ss.entryorguid", "like", `%${payload.entryorguid}%`);
+    queryBuilder = queryBuilder.where(
+      "ss.entryorguid",
+      "like",
+      `%${payload.entryorguid}%`
+    );
   }
   if (payload.comment) {
-    queryBuilder = queryBuilder.where("ss.comment", "like", `%${payload.comment}%`);
+    queryBuilder = queryBuilder.where(
+      "ss.comment",
+      "like",
+      `%${payload.comment}%`
+    );
   }
-  queryBuilder = queryBuilder.limit(50).offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+  queryBuilder = queryBuilder
+    .limit(50)
+    .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
 
-  queryBuilder.then(rows => {
+  queryBuilder.then((rows) => {
     event.reply(SEARCH_SMART_SCRIPTS, rows);
     event.reply(GLOBAL_NOTICE, {
       category: "message",
-      message: queryBuilder.toString()
+      message: queryBuilder.toString(),
     });
   });
 });
@@ -47,17 +57,25 @@ ipcMain.on(COUNT_SMART_SCRIPTS, (event, payload) => {
     .count("* as total")
     .from("smart_scripts as ss");
   if (payload.entryorguid) {
-    queryBuilder = queryBuilder.where("ss.entryorguid", "like", `%${payload.entryorguid}%`);
+    queryBuilder = queryBuilder.where(
+      "ss.entryorguid",
+      "like",
+      `%${payload.entryorguid}%`
+    );
   }
   if (payload.comment) {
-    queryBuilder = queryBuilder.where("ss.comment", "like", `%${payload.comment}%`);
+    queryBuilder = queryBuilder.where(
+      "ss.comment",
+      "like",
+      `%${payload.comment}%`
+    );
   }
 
-  queryBuilder.then(rows => {
+  queryBuilder.then((rows) => {
     event.reply(COUNT_SMART_SCRIPTS, rows[0].total);
     event.reply(GLOBAL_NOTICE, {
       category: "message",
-      message: queryBuilder.toString()
+      message: queryBuilder.toString(),
     });
   });
 });
@@ -67,17 +85,17 @@ ipcMain.on(STORE_SMART_SCRIPT, (event, payload) => {
     .insert(payload)
     .into("smart_scripts");
 
-  queryBuilder.then(rows => {
+  queryBuilder.then((rows) => {
     event.reply(STORE_SMART_SCRIPT, rows);
     event.reply(GLOBAL_NOTICE, {
       category: "notification",
       title: "成功",
       message: "新建成功。",
-      type: "success"
+      type: "success",
     });
     event.reply(GLOBAL_NOTICE, {
       category: "message",
-      message: queryBuilder.toString()
+      message: queryBuilder.toString(),
     });
   });
 });
@@ -88,11 +106,11 @@ ipcMain.on(FIND_SMART_SCRIPT, (event, payload) => {
     .from("smart_scripts")
     .where(payload);
 
-  queryBuilder.then(rows => {
+  queryBuilder.then((rows) => {
     event.reply(FIND_SMART_SCRIPT, rows.length > 0 ? rows[0] : {});
     event.reply(GLOBAL_NOTICE, {
       category: "message",
-      message: queryBuilder.toString()
+      message: queryBuilder.toString(),
     });
   });
 });
@@ -101,23 +119,20 @@ ipcMain.on(FIND_SMART_SCRIPT, (event, payload) => {
 ipcMain.on(UPDATE_SMART_SCRIPT, (event, payload) => {
   let queryBuilder = knex()
     .table("smart_scripts")
-    .where("entryorguid", payload.credential.entryorguid)
-    .where("source_type", payload.credential.source_type)
-    .where("id", payload.credential.id)
-    .where("link", payload.credential.link)
+    .where(payload.credential)
     .update(payload.smartScript);
 
-  queryBuilder.then(rows => {
+  queryBuilder.then((rows) => {
     event.reply(UPDATE_SMART_SCRIPT, rows);
     event.reply(GLOBAL_NOTICE, {
       category: "notification",
       title: "成功",
       message: "修改成功。",
-      type: "success"
+      type: "success",
     });
     event.reply(GLOBAL_NOTICE, {
       category: "message",
-      message: queryBuilder.toString()
+      message: queryBuilder.toString(),
     });
   });
 });
@@ -128,17 +143,17 @@ ipcMain.on(DESTROY_SMART_SCRIPT, (event, payload) => {
     .where(payload)
     .delete();
 
-  queryBuilder.then(rows => {
+  queryBuilder.then((rows) => {
     event.reply(DESTROY_SMART_SCRIPT, rows);
     event.reply("GLOBAL_NOTICE", {
       category: "notification",
       title: "成功",
       message: "删除成功。",
-      type: "success"
+      type: "success",
     });
     event.reply(GLOBAL_NOTICE, {
       category: "message",
-      message: queryBuilder.toString()
+      message: queryBuilder.toString(),
     });
   });
 });
@@ -157,28 +172,28 @@ ipcMain.on(COPY_SMART_SCRIPT, (event, payload) => {
     .from("smart_scripts")
     .where(payload);
   Promise.all([
-    idQueryBuilder.then(rows => {
+    idQueryBuilder.then((rows) => {
       id = rows[0].id;
     }),
-    findSmartScriptQueryBuilder.then(rows => {
+    findSmartScriptQueryBuilder.then((rows) => {
       smartScript = rows.length > 0 ? rows[0] : {};
-    })
+    }),
   ]).then(() => {
     smartScript.id = id + 1;
     let queryBuilder = knex()
       .insert(smartScript)
       .into("smart_scripts");
-    queryBuilder.then(rows => {
+    queryBuilder.then((rows) => {
       event.reply(COPY_SMART_SCRIPT, rows);
       event.reply(GLOBAL_NOTICE, {
         type: "success",
         category: "notification",
         title: "成功",
-        message: `复制成功，新的物体模板 id 为 ${id + 1}。`
+        message: `复制成功，新的物体模板 id 为 ${id + 1}。`,
       });
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
   });
