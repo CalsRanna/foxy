@@ -3,8 +3,6 @@ import VueRouter from "vue-router";
 
 import SpellTable from "@/views/SpellTable";
 import SpellDetail from "@/views/SpellDetail";
-import SmartScriptTable from "@/views/SmartScriptTable";
-import SmartScriptDetail from "@/views/SmartScriptDetail";
 import Setting from "@/views/setting/Setting";
 import Mysql from "@/views/setting/components/Mysql";
 import Dbc from "@/views/setting/components/Dbc";
@@ -61,12 +59,21 @@ const routes = [
     path: "/gossip-menu/:id",
     component: () => import("@/views/GossipMenu/GossipMenuDetail"),
   },
+  {
+    path: "/smart-script",
+    component: () => import("@/views/SmartScript/SmartScriptTable"),
+  },
+  {
+    path: "/smart-script/create",
+    component: () => import("@/views/SmartScript/SmartScriptDetail"),
+  },
+  {
+    path: "/smart-script/:id",
+    component: () => import("@/views/SmartScript/SmartScriptDetail"),
+  },
   { path: "/spell", component: SpellTable },
   { path: "/spell/create", component: SpellDetail },
   { path: "/spell/:id", component: SpellDetail },
-  { path: "/smart-script", component: SmartScriptTable },
-  { path: "/smart-script/create", component: SmartScriptDetail },
-  { path: "/smart-script/:id", component: SmartScriptDetail },
   { path: "/developer", component: () => import("@/views/DeveloperTable") },
   {
     path: "/setting",

@@ -82,7 +82,9 @@
             <el-card shadow="hover">
               <p class="summary-title">内建脚本<span>Smart Script</span></p>
               <p class="summary-content">
-                {{ parseFloat(this.quantityOfSmartScript).toLocaleString() }}
+                {{
+                  parseFloat(this.quantityOfSmartScript.total).toLocaleString()
+                }}
               </p>
             </el-card>
           </el-col>
@@ -173,7 +175,7 @@ export default {
     }),
     ...mapState("questTemplate", { quantityOfQuestTemplate: "pagination" }),
     ...mapState("gossipMenu", { quantityOfGossipMenu: "pagination" }),
-    ...mapState("smartScript", { quantityOfSmartScript: "total" }),
+    ...mapState("smartScript", { quantityOfSmartScript: "pagination" }),
     ...mapState("spell", { quantityOfSpell: "total" }),
     data() {
       return [
@@ -182,7 +184,7 @@ export default {
         this.quantityOfGameObjectTemplate.total,
         this.quantityOfQuestTemplate.total,
         this.quantityOfGossipMenu.total,
-        this.quantityOfSmartScript,
+        this.quantityOfSmartScript.total,
         this.quantityOfSpell,
       ];
     },
