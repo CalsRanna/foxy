@@ -192,7 +192,7 @@ export default {
   methods: {
     ...mapActions("creatureTemplate", ["countCreatureTemplates"]),
     ...mapActions("itemTemplate", ["countItemTemplates"]),
-    ...mapActions("gameObject", ["countGameObjectTemplates"]),
+    ...mapActions("gameObjectTemplate", ["countGameObjectTemplates"]),
     ...mapActions("questTemplate", ["countQuestTemplates"]),
     ...mapActions("gossipMenu", ["countGossipMenus"]),
     ...mapActions("smartScript", ["countSmartScripts"]),
