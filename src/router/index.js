@@ -1,14 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import SpellTable from "@/views/SpellTable";
-import SpellDetail from "@/views/SpellDetail";
-import Setting from "@/views/setting/Setting";
-import Mysql from "@/views/setting/components/Mysql";
-import Dbc from "@/views/setting/components/Dbc";
-import Config from "@/views/setting/components/Config";
-import Developer from "@/views/setting/components/Developer";
-
 Vue.use(VueRouter);
 
 const routes = [
@@ -71,19 +63,34 @@ const routes = [
     path: "/smart-script/:id",
     component: () => import("@/views/SmartScript/SmartScriptDetail"),
   },
-  { path: "/spell", component: SpellTable },
-  { path: "/spell/create", component: SpellDetail },
-  { path: "/spell/:id", component: SpellDetail },
+  { path: "/spell", component: () => import("@/views/Spell/SpellTable") },
+  {
+    path: "/spell/create",
+    component: () => import("@/views/Spell/SpellDetail"),
+  },
+  { path: "/spell/:id", component: () => import("@/views/Spell/SpellDetail") },
   { path: "/developer", component: () => import("@/views/DeveloperTable") },
   {
     path: "/setting",
-    component: Setting,
+    component: () => import("@/views/Setting/Setting"),
     redirect: "/setting/mysql",
     children: [
-      { path: "mysql", component: Mysql },
-      { path: "dbc", component: Dbc },
-      { path: "config", component: Config },
-      { path: "developer", component: Developer },
+      {
+        path: "mysql",
+        component: () => import("@/views/Setting/components/Mysql"),
+      },
+      {
+        path: "dbc",
+        component: () => import("@/views/Setting/components/Dbc"),
+      },
+      {
+        path: "config",
+        component: () => import("@/views/Setting/components/Config"),
+      },
+      {
+        path: "developer",
+        component: () => import("@/views/Setting/components/Developer"),
+      },
     ],
   },
 ];
