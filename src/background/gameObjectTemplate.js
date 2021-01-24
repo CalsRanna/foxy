@@ -123,8 +123,8 @@ ipcMain.on(FIND_GAME_OBJECT_TEMPLATE, (event, payload) => {
 ipcMain.on(UPDATE_GAME_OBJECT_TEMPLATE, (event, payload) => {
   let queryBuilder = knex()
     .table("gameobject_template")
-    .where("entry", payload.entry)
-    .update(payload);
+    .where(payload.credential)
+    .update(payload.gameObjectTemplate);
 
   queryBuilder.then((rows) => {
     event.reply(UPDATE_GAME_OBJECT_TEMPLATE, rows);

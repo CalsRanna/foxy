@@ -1,6 +1,11 @@
 const ipcRenderer = window.require("electron").ipcRenderer;
 
-import { STORE_NPC_TEXT, FIND_NPC_TEXT, UPDATE_NPC_TEXT } from "../constants";
+import {
+  STORE_NPC_TEXT,
+  FIND_NPC_TEXT,
+  UPDATE_NPC_TEXT,
+  CREATE_NPC_TEXT,
+} from "../constants";
 
 export default {
   namespaced: true,
@@ -36,12 +41,21 @@ export default {
         });
       });
     },
+    createNpcText({ commit }, payload) {
+      return new Promise((resolve) => {
+        commit(CREATE_NPC_TEXT, payload);
+        resolve();
+      });
+    },
   },
   mutations: {
     [FIND_NPC_TEXT](state, npcText) {
       state.npcText = npcText;
     },
     [UPDATE_NPC_TEXT](state, npcText) {
+      state.npcText = npcText;
+    },
+    [CREATE_NPC_TEXT](state, npcText) {
       state.npcText = npcText;
     },
   },
