@@ -21,7 +21,11 @@ import itemLootTemplate from "./itemLootTemplate";
 import disenchantLootTemplate from "./disenchantLootTemplate";
 import prospectingLootTemplate from "./prospectingLootTemplate";
 import millingLootTemplate from "./millingLootTemplate";
-import gameObject from "./gameObject";
+import gameObjectTemplate from "./gameObjectTemplate";
+import gameObjectTemplateLocale from "./gameObjectTemplateLocale";
+import gameObjectTemplateAddon from "./gameObjectTemplateAddon";
+import gameObjectQuestItem from "./gameObjectQuestItem";
+import gameObjectLootTemplate from "./gameObjectLootTemplate";
 import questTemplate from "./questTemplate";
 import questTemplateAddon from "./questTemplateAddon";
 import questOfferReward from "./questOfferReward";
@@ -62,7 +66,11 @@ export default new Vuex.Store({
     disenchantLootTemplate,
     prospectingLootTemplate,
     millingLootTemplate,
-    gameObject,
+    gameObjectTemplate,
+    gameObjectTemplateLocale,
+    gameObjectTemplateAddon,
+    gameObjectQuestItem,
+    gameObjectLootTemplate,
     questTemplate,
     questTemplateAddon,
     questOfferReward,
