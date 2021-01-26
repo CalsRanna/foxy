@@ -1,9 +1,9 @@
 let knex;
 
-exports.init = config => {
+exports.init = (config) => {
   knex = require("knex")({
     client: "mysql",
-    connection: config
+    connection: config,
   });
 };
 
