@@ -4,10 +4,11 @@ import {
   SEARCH_DBC_FACTIONS,
   SEARCH_DBC_FACTION_TEMPLATES,
   SEARCH_DBC_ITEM_DISPLAY_INFOS,
+  SEARCH_DBC_ITEMS,
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
   SEARCH_DBC_SCALING_STAT_VALUES,
   SEARCH_DBC_SPELLS,
-  SEARCH_DBC_SPELL_DURATIONS
+  SEARCH_DBC_SPELL_DURATIONS,
 } from "../constants";
 
 const DBC = require("warcrafty");
@@ -19,22 +20,27 @@ ipcMain.on(INIT_DBC_CONFIG, (event, payload) => {
   event.reply(INIT_DBC_CONFIG);
 });
 
-ipcMain.on(SEARCH_DBC_FACTIONS, event => {
+ipcMain.on(SEARCH_DBC_FACTIONS, (event) => {
   let dbc = DBC.read(`${path}/Faction.dbc`);
   event.reply(SEARCH_DBC_FACTIONS, dbc);
 });
 
-ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, event => {
+ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, (event) => {
   let dbc = DBC.read(`${path}/FactionTemplate.dbc`);
   event.reply(SEARCH_DBC_FACTION_TEMPLATES, dbc);
 });
 
-ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, event => {
+ipcMain.on(SEARCH_DBC_ITEMS, (event) => {
+  let dbc = DBC.read(`${path}/Item.dbc`);
+  event.reply(SEARCH_DBC_ITEMS, dbc);
+});
+
+ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
   let dbc = DBC.read(`${path}/ItemDisplayInfo.dbc`);
   event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS, dbc);
 });
 
-ipcMain.on(SEARCH_DBC_SPELLS, event => {
+ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
   const os = require("os");
   const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -49,7 +55,7 @@ ipcMain.on(SEARCH_DBC_SPELLS, event => {
         recordSize: dbc.recordSize,
         stringBlockSize: dbc.stringBlockSize,
         stringBlockOffset: dbc.stringBlockOffset,
-        records: []
+        records: [],
       };
       let end = i + 100;
       if (end < dbc.recordCount) {
@@ -62,17 +68,17 @@ ipcMain.on(SEARCH_DBC_SPELLS, event => {
   }
 });
 
-ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, event => {
+ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
   let dbc = DBC.read(`${path}/SpellDuration.dbc`);
   event.reply(SEARCH_DBC_SPELL_DURATIONS, dbc);
 });
 
-ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, event => {
+ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
   let dbc = DBC.read(`${path}/ScalingStatDistribution.dbc`);
   event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, dbc);
 });
 
-ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, event => {
+ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
   let dbc = DBC.read(`${path}/ScalingStatValues.dbc`);
   event.reply(SEARCH_DBC_SCALING_STAT_VALUES, dbc);
 });
