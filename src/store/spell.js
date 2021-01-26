@@ -9,14 +9,22 @@ export default {
   namespaced: true,
   state() {
     return {
-      page: 1,
-      total: 0,
+      refresh: true,
+      credential: {
+        id: undefined,
+        name: undefined,
+      },
+      pagination: {
+        page: 1,
+        size: 50,
+        total: 0,
+      },
       spells: [],
       spell: {},
     };
   },
   actions: {
-    search({ commit, rootState }, payload) {
+    searchSpells({ commit, rootState }, payload) {
       return new Promise((resolve) => {
         let spells = [];
         if (rootState.dbc.spells.records == undefined) {
@@ -45,7 +53,7 @@ export default {
         resolve();
       });
     },
-    count({ commit, rootState }, payload) {
+    countSpells({ commit, rootState }, payload) {
       return new Promise((resolve) => {
         let spells = [];
         if (rootState.dbc.spells.records != undefined) {
@@ -66,12 +74,39 @@ export default {
         resolve();
       });
     },
-    find({ commit, rootState }, payload) {
+    paginateSpells({ commit }, payload) {
+      return new Promise((resolve) => {
+        commit(PAGINATE_SPELLS, payload.page);
+        resolve();
+      });
+    },
+    storeSpell() {
+      return new Promise((resolve) => {
+        resolve();
+      });
+    },
+    findSpell({ commit, rootState }, payload) {
       for (let spell of rootState.dbc.spells.records) {
         if (payload.id == spell.id) {
           commit(FIND_SPELL, spell);
         }
       }
+    },
+    updateSpell() {
+      return new Promise((resolve) => {
+        resolve();
+      });
+    },
+    createSpell() {
+      return new Promise((resolve) => {
+        resolve();
+      });
+    },
+    resetCredential({ commit }) {
+      return new Promise((resolve) => {
+        commit("RESET_CREDENTIAL_OF_SPELL");
+        resolve();
+      });
     },
   },
   mutations: {
@@ -79,13 +114,19 @@ export default {
       state.spells = spells;
     },
     [COUNT_SPELLS](state, total) {
-      state.total = total;
+      state.pagination.total = total;
     },
     [PAGINATE_SPELLS](state, page) {
-      state.page = page;
+      state.pagination.page = page;
     },
     [FIND_SPELL](state, spell) {
       state.spell = spell;
+    },
+    RESET_CREDENTIAL_OF_SPELL(state) {
+      state.credential = {
+        id: undefined,
+        name: undefined,
+      };
     },
   },
 };

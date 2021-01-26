@@ -92,7 +92,7 @@
             <el-card shadow="hover">
               <p class="summary-title">技能<span>Spell</span></p>
               <p class="summary-content">
-                {{ parseFloat(this.quantityOfSpell).toLocaleString() }}
+                {{ parseFloat(this.quantityOfSpell.total).toLocaleString() }}
               </p>
             </el-card>
           </el-col>
@@ -176,7 +176,7 @@ export default {
     ...mapState("questTemplate", { quantityOfQuestTemplate: "pagination" }),
     ...mapState("gossipMenu", { quantityOfGossipMenu: "pagination" }),
     ...mapState("smartScript", { quantityOfSmartScript: "pagination" }),
-    ...mapState("spell", { quantityOfSpell: "total" }),
+    ...mapState("spell", { quantityOfSpell: "pagination" }),
     data() {
       return [
         this.quantityOfCreatureTemplate.total,
@@ -185,7 +185,7 @@ export default {
         this.quantityOfQuestTemplate.total,
         this.quantityOfGossipMenu.total,
         this.quantityOfSmartScript.total,
-        this.quantityOfSpell,
+        this.quantityOfSpell.total,
       ];
     },
   },
@@ -196,7 +196,7 @@ export default {
     ...mapActions("questTemplate", ["countQuestTemplates"]),
     ...mapActions("gossipMenu", ["countGossipMenus"]),
     ...mapActions("smartScript", ["countSmartScripts"]),
-    ...mapActions("spell", { countSpells: "count" }),
+    ...mapActions("spell", { countSpells: "countSpells" }),
     openBrowser(url) {
       const { shell } = window.require("electron");
       shell.openExternal(url);
