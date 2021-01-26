@@ -10,20 +10,20 @@
       <h3 style="margin: 16px 0 0 0">技能列表</h3>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-form @submit.native.prevent="handleSearch">
+      <el-form :model="credential" @submit.native.prevent="search">
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-input v-model="id" placeholder="ID"></el-input>
+            <el-input v-model="credential.id" placeholder="ID"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="name" placeholder="名称"></el-input>
+            <el-input v-model="credential.name" placeholder="名称"></el-input>
           </el-col>
           <el-col :span="6">
             <el-button
               type="primary"
               native-type="submit"
               :loading="loading"
-              @click="handleSearch"
+              @click="search"
             >
               查询
             </el-button>
@@ -34,19 +34,19 @@
     </el-card>
     <el-card style="margin-top: 16px">
       <el-button type="primary" @click="create">新增</el-button>
-      <el-button :disabled="disabled" @click="handleCopy">复制</el-button>
-      <el-button type="danger" :disabled="disabled" @click="handleDestroy">
+      <el-button :disabled="disabled" @click="copy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="destroy">
         删除
       </el-button>
     </el-card>
     <el-card style="margin-top: 16px" v-loading="loading">
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="50"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
       <el-table
@@ -97,11 +97,11 @@
       </el-table>
       <el-pagination
         layout="prev, pager, next"
-        :current-page="page"
-        :total="total"
-        :page-size="50"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
         hide-on-single-page
-        @current-change="handlePaginate"
+        @current-change="paginate"
         style="margin-top: 16px"
       ></el-pagination>
     </el-card>
@@ -109,54 +109,54 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
-import { PAGINATE_SPELLS } from "@/constants";
+import { mapState, mapActions } from "vuex";
+
 import SpellDescription from "@/components/SpellDescription";
 
 export default {
   data() {
     return {
       loading: false,
-      id: undefined,
-      name: undefined,
       currentRow: undefined,
     };
   },
   computed: {
-    ...mapState("spell", ["spells", "total", "page"]),
+    ...mapState("spell", ["refresh", "credential", "pagination", "spells"]),
     ...mapState("dbc", ["spellDurations"]),
     payload() {
       return {
-        id: this.id,
-        name: this.name,
-        page: this.page,
+        id: this.credential.id,
+        name: this.credential.name,
+        page: this.pagination.page,
       };
     },
     disabled() {
-      return this.currentRow === undefined || this.currentRow === null
-        ? true
-        : false;
+      return this.currentRow == undefined ? true : false;
     },
   },
   methods: {
-    ...mapActions("spell", ["search", "count"]),
-    ...mapMutations("spell", {
-      paginate: PAGINATE_SPELLS,
-    }),
-    async handleSearch() {
+    ...mapActions("spell", [
+      "searchSpells",
+      "countSpells",
+      "paginateSpells",
+      "resetCredential",
+    ]),
+    async search() {
       this.loading = true;
-      this.paginate(1); //每次搜索时使分页器设为第一页
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      this.paginateSpells({ page: 1 }); //每次搜索时使分页器设为第一页
+      await Promise.all([
+        this.searchSpells(this.payload),
+        this.countSpells(this.payload),
+      ]);
       this.loading = false;
     },
-    reset() {
-      this.id = undefined;
-      this.name = undefined;
+    async reset() {
+      await this.resetCredential();
     },
     create() {
       this.$router.push("/spell/create");
     },
-    handleCopy() {
+    copy() {
       this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -170,7 +170,7 @@ export default {
         })
         .catch(async () => {});
     },
-    handleDestroy() {
+    destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
         "提示",
@@ -191,10 +191,10 @@ export default {
     select(currentRow) {
       this.currentRow = currentRow;
     },
-    async handlePaginate(page) {
+    async paginate(page) {
       this.loading = true;
-      this.paginate(page);
-      await this.search(this.payload);
+      this.paginateSpells({ page: page });
+      await this.searchSpells(this.payload);
       this.loading = false;
     },
     show(row) {
@@ -202,15 +202,20 @@ export default {
     },
     async init() {
       this.loading = true;
-      await Promise.all([this.search(this.payload), this.count(this.payload)]);
+      await Promise.all([
+        this.searchSpells(this.payload),
+        this.countSpells(this.payload),
+      ]);
       this.loading = false;
     },
   },
   mounted() {
-    this.init();
+    if (this.refresh) {
+      this.init();
+    }
   },
   components: {
-    "spell-description": SpellDescription,
+    SpellDescription,
   },
 };
 </script>
