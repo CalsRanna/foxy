@@ -1,8 +1,11 @@
+const ipcRenderer = window.require("electron").ipcRenderer;
+
 import {
   SEARCH_SPELLS,
   COUNT_SPELLS,
   PAGINATE_SPELLS,
   FIND_SPELL,
+  UPDATE_SPELL,
 } from "@/constants";
 
 export default {
@@ -92,9 +95,23 @@ export default {
         }
       }
     },
-    updateSpell() {
+    updateSpell({ commit, rootState }, payload) {
       return new Promise((resolve) => {
-        resolve();
+        let index = undefined;
+        for (let key in rootState.dbc.spells.records) {
+          if (rootState.dbc.spells.records[key].id == payload.credential.id) {
+            index = key;
+            break;
+          }
+        }
+        rootState.dbc.spells.records.splice(index, 1, payload.spell);
+        ipcRenderer.send(UPDATE_SPELL, {
+          dbc: rootState.dbc.spells,
+        });
+        ipcRenderer.on(UPDATE_SPELL, () => {
+          commit("UPDATE_REFRESH_OF_SPELL", true);
+          resolve();
+        });
       });
     },
     createSpell() {
@@ -121,6 +138,9 @@ export default {
     },
     [FIND_SPELL](state, spell) {
       state.spell = spell;
+    },
+    UPDATE_REFRESH_OF_SPELL(state, refresh) {
+      state.refresh = refresh;
     },
     RESET_CREDENTIAL_OF_SPELL(state) {
       state.credential = {
