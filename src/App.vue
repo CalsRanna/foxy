@@ -217,6 +217,7 @@ export default {
         }, 500);
       } catch (error) {
         this.initializingText = "加载中止";
+        this.initializing = false;
       }
     },
   },
