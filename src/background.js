@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, ipcMain, dialog } from "electron";
+import { app, protocol, BrowserWindow, ipcMain, dialog, Menu } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
 import "./background/dbc";
@@ -61,6 +61,53 @@ function createWindow() {
       nodeIntegration: true,
     },
   });
+
+  const appMenuTemplate = [
+    {
+      label: "文件",
+      submenu: [{ label: "退出", accelerator: "CmdOrCtrl+Q", role: "quit" }],
+    },
+    {
+      label: "页面",
+      submenu: [
+        {
+          label: "刷新",
+          accelerator: "CmdOrCtrl+R",
+          role: "forceReload",
+        },
+        {
+          label: "控制台",
+          role: "toggleDevTools",
+        },
+      ],
+    },
+    {
+      label: "导出",
+      submenu: [{ label: "导出", accelerator: "CmdOrCtrl+S" }],
+    },
+    {
+      label: "关于",
+      submenu: [{ label: "帮助" }],
+    },
+  ];
+
+  if (process.platform === "darwin") {
+    appMenuTemplate.unshift({
+      label: app.getName(),
+      submenu: [
+        {
+          label: "退出",
+          acclerator: "CmdOrCtrl+Q",
+          click() {
+            app.quit();
+          },
+        },
+      ],
+    });
+  }
+
+  const appMenu = Menu.buildFromTemplate(appMenuTemplate);
+  Menu.setApplicationMenu(appMenu);
 
   win.maximize();
   win.show();

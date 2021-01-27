@@ -54,7 +54,7 @@
       <div style="text-align:center; margin-bottom: 24px; font-size: 20px;">
         <i
           class="el-icon-loading"
-          v-show="initializingText.indexOf(['加载完成', '加载失败']) == -1"
+          v-show="initializingText.indexOf(['加载完成', '加载中止']) == -1"
         ></i>
         {{ initializingText }}
       </div>
@@ -71,7 +71,7 @@ export default {
   data() {
     return {
       initializing: true,
-      initializingText: "正在初始化",
+      initializingText: "加载开始",
     };
   },
   computed: {
@@ -155,9 +155,6 @@ export default {
             });
           });
         } else {
-          // this.setActive("setting");
-          // this.setSettingActive("dbc");
-          // this.$router.push("/setting/dbc").catch(error => error);
           reject();
         }
       });
@@ -173,9 +170,6 @@ export default {
             resolve();
           });
         } else {
-          // this.setActive("setting");
-          // this.setSettingActive("config");
-          // this.$router.push("/setting/config").catch(error => error);
           reject();
         }
       });
@@ -199,33 +193,30 @@ export default {
         await this.initMysqlConfig();
         this.initializingText = "加载DBC配置";
         await this.initDbcConfig();
-        this.initializingText = "加载服务端配置";
-        await this.initConfigConfig();
         this.initializingText = "加载Faction.dbc";
         await this.searchDbcFactions();
         this.initializingText = "加载FactionTemplate.dbc";
         await this.searchDbcFactionTemplates();
-        this.initializingText = "加载ItemDisplayInfo.dbc";
-        await this.searchDbcItemDisplayInfos();
         this.initializingText = "加载Item.dbc";
         await this.searchDbcItems();
+        this.initializingText = "加载ItemDisplayInfo.dbc";
+        await this.searchDbcItemDisplayInfos();
         this.initializingText = "加载ScalingStatDistribution.dbc";
         await this.searchDbcScalingStatDistributions();
         this.initializingText = "加载ScalingStatValues.dbc";
         await this.searchDbcScalingStatValues();
-        this.initializingText = "加载SpellDuration.dbc";
-        await this.searchDbcSpellDurations();
         this.initializingText = "加载Spell.dbc";
         await this.searchDbcSpells();
+        this.initializingText = "加载SpellDuration.dbc";
+        await this.searchDbcSpellDurations();
+        this.initializingText = "加载服务端配置";
+        await this.initConfigConfig();
         this.initializingText = "加载完成";
         setTimeout(() => {
           this.initializing = false;
         }, 500);
       } catch (error) {
-        this.initializingText = "加载失败";
-        setTimeout(() => {
-          this.initializing = false;
-        }, 500);
+        this.initializingText = "加载中止";
       }
     },
   },

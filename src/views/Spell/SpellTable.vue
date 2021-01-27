@@ -70,7 +70,7 @@
         </el-table-column>
         <el-table-column
           prop="rankLangZhCN"
-          label="等级"
+          label="子名称"
           sortable
           width="128px"
         ></el-table-column>

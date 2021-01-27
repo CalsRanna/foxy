@@ -8,7 +8,9 @@ import {
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
   SEARCH_DBC_SCALING_STAT_VALUES,
   SEARCH_DBC_SPELLS,
+  UPDATE_SPELL,
   SEARCH_DBC_SPELL_DURATIONS,
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const DBC = require("warcrafty");
@@ -66,6 +68,17 @@ ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
       event.reply(SEARCH_DBC_SPELLS, chunk);
     }
   }
+});
+
+ipcMain.on(UPDATE_SPELL, (event, payload) => {
+  DBC.write(`${path}/Spell.dbc`, payload.dbc);
+  event.reply(UPDATE_SPELL);
+  event.reply(GLOBAL_NOTICE, {
+    category: "notification",
+    title: "成功",
+    message: "修改成功。",
+    type: "success",
+  });
 });
 
 ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
