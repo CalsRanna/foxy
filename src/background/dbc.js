@@ -1,4 +1,5 @@
 import { ipcMain } from "electron";
+
 import {
   INIT_DBC_CONFIG,
   SEARCH_DBC_FACTIONS,
@@ -8,12 +9,13 @@ import {
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
   SEARCH_DBC_SCALING_STAT_VALUES,
   SEARCH_DBC_SPELLS,
-  UPDATE_SPELL,
+  EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
   GLOBAL_NOTICE,
 } from "../constants";
 
 const DBC = require("warcrafty");
+const { foxyKnex } = require("../libs/mysql");
 
 let path;
 
@@ -43,42 +45,84 @@ ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
-  const os = require("os");
-  const isDevelopment = process.env.NODE_ENV !== "production";
+  // const os = require("os");
+  // const isDevelopment = process.env.NODE_ENV !== "production";
 
-  if (!(isDevelopment && os < 8568436736)) {
-    let dbc = DBC.read(`${path}/Spell.dbc`);
-    // 一次性传递所有技能，占用内存太大，会导致GC失败，分多次传递数据, 已证明无效
-    for (let i = 0; i < dbc.recordCount; i = i + 100) {
-      let chunk = {
-        signature: dbc.signature,
-        recordCount: dbc.recordCount,
-        fieldCount: dbc.fieldCount,
-        recordSize: dbc.recordSize,
-        stringBlockSize: dbc.stringBlockSize,
-        stringBlockOffset: dbc.stringBlockOffset,
-        records: [],
-      };
-      let end = i + 100;
-      if (end < dbc.recordCount) {
-        chunk.records = dbc.records.slice(i, end);
+  foxyKnex()
+    .raw("select count(*) as total from `foxy`.`dbc_spell`")
+    .then((rows) => {
+      if (rows[0][0].total == 0) {
+        let dbc = DBC.read(`${path}/Spell.dbc`);
+        for (let i = 0; i < dbc.recordCount; i = i + 1000) {
+          let chunk = [];
+          let end = i + 1000;
+          if (end < dbc.recordCount) {
+            chunk = dbc.records.slice(i, end);
+          } else {
+            chunk = dbc.records.slice(i);
+          }
+          foxyKnex()
+            .insert(chunk)
+            .into("dbc_spell")
+            .then(() => {});
+        }
+        event.reply(SEARCH_DBC_SPELLS);
       } else {
-        chunk.records = dbc.records.slice(i);
+        event.reply(SEARCH_DBC_SPELLS);
       }
-      event.reply(SEARCH_DBC_SPELLS, chunk);
-    }
-  }
+    });
+
+  // if (!(isDevelopment && os.totalmem() < 8568436736)) {
+  //   let dbc = DBC.read(`${path}/Spell.dbc`);
+  //   // 一次性传递所有技能，占用内存太大，会导致GC失败，分多次传递数据, 已证明无效
+  //   for (let i = 0; i < dbc.recordCount; i = i + 100) {
+  //     let chunk = {
+  //       signature: dbc.signature,
+  //       recordCount: dbc.recordCount,
+  //       fieldCount: dbc.fieldCount,
+  //       recordSize: dbc.recordSize,
+  //       stringBlockSize: dbc.stringBlockSize,
+  //       stringBlockOffset: dbc.stringBlockOffset,
+  //       records: [],
+  //     };
+  //     let end = i + 100;
+  //     if (end < dbc.recordCount) {
+  //       chunk.records = dbc.records.slice(i, end);
+  //     } else {
+  //       chunk.records = dbc.records.slice(i);
+  //     }
+  //     event.reply(SEARCH_DBC_SPELLS, chunk);
+  //   }
+  // }
 });
 
-ipcMain.on(UPDATE_SPELL, (event, payload) => {
-  DBC.write(`${path}/Spell.dbc`, payload.dbc);
-  event.reply(UPDATE_SPELL);
-  event.reply(GLOBAL_NOTICE, {
-    category: "notification",
-    title: "成功",
-    message: "修改成功。",
-    type: "success",
-  });
+ipcMain.on(EXPORT_SPELL_DBC, (event) => {
+  foxyKnex()
+    .select()
+    .from("dbc_spell")
+    // .raw("select * from `foxy`.`dbc_spell`")
+    .then((rows) => {
+      try {
+        DBC.write(`${path}/Spell.dbc`, rows);
+        event.reply(EXPORT_SPELL_DBC);
+      } catch (error) {
+        event.reply(`${EXPORT_SPELL_DBC}_REJECT`);
+        event.reply(GLOBAL_NOTICE, {
+          category: "alert",
+          type: "error",
+          title: `${error.code}`,
+          message: `${error.stack}`,
+        });
+      }
+    })
+    .catch((error) => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "alert",
+        type: "error",
+        title: `${error.code}`,
+        message: `${error.stack}`,
+      });
+    });
 });
 
 ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {

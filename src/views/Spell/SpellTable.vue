@@ -13,10 +13,10 @@
       <el-form :model="credential" @submit.native.prevent="search">
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-input v-model="credential.id" placeholder="ID"></el-input>
+            <el-input v-model="credential.ID" placeholder="ID"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="credential.name" placeholder="名称"></el-input>
+            <el-input v-model="credential.Name" placeholder="名称"></el-input>
           </el-col>
           <el-col :span="6">
             <el-button
@@ -56,20 +56,20 @@
         @row-dblclick="show"
       >
         <el-table-column
-          prop="id"
+          prop="ID"
           label="ID"
           sortable
           width="64px"
         ></el-table-column>
         <el-table-column
-          prop="nameLangZhCN"
+          prop="Name_Lang_zhCN"
           label="名称"
           width="256px"
           sortable
         >
         </el-table-column>
         <el-table-column
-          prop="rankLangZhCN"
+          prop="NameSubtext_Lang_zhCN"
           label="子名称"
           sortable
           width="128px"
@@ -78,19 +78,19 @@
           <template slot-scope="scope">
             <spell-description
               :spell="scope.row"
-              field="descriptionLangZhCN"
+              field="Description_Lang_zhCN"
             ></spell-description>
           </template>
         </el-table-column>
         <el-table-column
-          prop="auraDescriptionLangZhCN"
+          prop="AuraDescription_Lang_zhCN"
           label="Buff 描述"
           sortable
         >
           <template slot-scope="scope">
             <spell-description
               :spell="scope.row"
-              field="auraDescriptionLangZhCN"
+              field="AuraDescription_Lang_zhCN"
             ></spell-description>
           </template>
         </el-table-column>
@@ -125,8 +125,8 @@ export default {
     ...mapState("dbc", ["spellDurations"]),
     payload() {
       return {
-        id: this.credential.id,
-        name: this.credential.name,
+        ID: this.credential.ID,
+        Name: this.credential.Name,
         page: this.pagination.page,
       };
     },
@@ -139,6 +139,8 @@ export default {
       "searchSpells",
       "countSpells",
       "paginateSpells",
+      "copySpell",
+      "destroySpell",
       "resetCredential",
     ]),
     async search() {
@@ -162,13 +164,25 @@ export default {
         cancelButtonText: "取消",
         type: "info",
         dangerouslyUseHTMLString: true,
-      })
-        .then(() => {
-          // this.copy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
-        })
-        .catch(async () => {});
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            this.copySpell({ ID: this.currentRow.ID })
+              .then(() => {
+                Promise.all([
+                  this.searchSpells(this.payload),
+                  this.countSpells(this.payload),
+                ]);
+              })
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              });
+          } else {
+            done();
+          }
+        },
+      });
     },
     destroy() {
       this.$confirm(
@@ -179,14 +193,26 @@ export default {
           cancelButtonText: "取消",
           type: "error",
           dangerouslyUseHTMLString: true,
+          beforeClose: (action, instance, done) => {
+            if (action === "confirm") {
+              instance.confirmButtonLoading = true;
+              this.destroySpell({ ID: this.currentRow.ID })
+                .then(() => {
+                  Promise.all([
+                    this.searchSpells(this.payload),
+                    this.countSpells(this.payload),
+                  ]);
+                })
+                .then(() => {
+                  instance.confirmButtonLoading = false;
+                  done();
+                });
+            } else {
+              done();
+            }
+          },
         }
-      )
-        .then(() => {
-          // this.destroy({ entry: this.currentRow.entry }).then(() => {
-          //   Promise.all([this.search(this.payload), this.count(this.payload)]);
-          // });
-        })
-        .catch(() => {});
+      );
     },
     select(currentRow) {
       this.currentRow = currentRow;
@@ -198,7 +224,7 @@ export default {
       this.loading = false;
     },
     show(row) {
-      this.$router.push(`/spell/${row.id}`);
+      this.$router.push(`/spell/${row.ID}`);
     },
     async init() {
       this.loading = true;

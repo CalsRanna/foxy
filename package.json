@@ -23,7 +23,7 @@
     "vue": "^2.6.12",
     "vue-router": "^3.4.9",
     "vuex": "^3.6.0",
-    "warcrafty": "^1.0.4"
+    "warcrafty": "^1.0.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.10",
