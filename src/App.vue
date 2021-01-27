@@ -49,13 +49,10 @@
       top="40vh"
       :show-close="false"
       :close-on-click-modal="false"
-      :modal="false"
+      :modal="modal"
     >
       <div style="text-align:center; margin-bottom: 24px; font-size: 20px;">
-        <i
-          class="el-icon-loading"
-          v-show="initializingText.indexOf(['加载完成', '加载中止']) == -1"
-        ></i>
+        <i class="el-icon-loading"></i>
         {{ initializingText }}
       </div>
     </el-dialog>
@@ -65,12 +62,13 @@
 <script>
 const ipcRenderer = window.require("electron").ipcRenderer;
 import { mapState, mapActions } from "vuex";
-import { GLOBAL_NOTICE } from "./constants";
+import { GLOBAL_NOTICE, START_EXPORT } from "./constants";
 
 export default {
   data() {
     return {
       initializing: true,
+      modal: false,
       initializingText: "加载开始",
     };
   },
@@ -102,12 +100,13 @@ export default {
       "searchDbcScalingStatValues",
       "searchDbcSpellDurations",
       "searchDbcSpells",
+      "exportSpellDbc",
     ]),
     ...mapActions("global", [
+      "storeDeveloperConfig",
       "storeMysqlConfig",
       "storeDbcConfig",
       "storeConfigConfig",
-      "storeDeveloperConfig",
       "setActive",
       "initMysqlConnection",
       "initDbcConnection",
@@ -116,6 +115,17 @@ export default {
     navigate(index) {
       this.setActive(index);
       this.$router.push(`/${index}`).catch((error) => error);
+    },
+    initDeveloperConfig() {
+      return new Promise((resolve) => {
+        let debug = localStorage.getItem("debug");
+
+        this.storeDeveloperConfig({
+          debug: debug === "true" ? true : false,
+        }).then(() => {
+          resolve();
+        });
+      });
     },
     initMysqlConfig() {
       return new Promise((resolve, reject) => {
@@ -174,17 +184,6 @@ export default {
         }
       });
     },
-    initDeveloperConfig() {
-      return new Promise((resolve) => {
-        let debug = localStorage.getItem("debug");
-
-        this.storeDeveloperConfig({
-          debug: debug === "true" ? true : false,
-        }).then(() => {
-          resolve();
-        });
-      });
-    },
     async init() {
       try {
         this.initializingText = "加载开发者配置";
@@ -217,7 +216,9 @@ export default {
         }, 500);
       } catch (error) {
         this.initializingText = "加载中止";
-        this.initializing = false;
+        setTimeout(() => {
+          this.initializing = false;
+        }, 500);
       }
     },
   },
@@ -254,6 +255,23 @@ export default {
         default:
           break;
       }
+    });
+
+    ipcRenderer.on(START_EXPORT, () => {
+      this.initializing = true;
+      this.modal = true;
+      this.initializingText = "正在导出，请稍后";
+      this.exportSpellDbc()
+        .then(() => {
+          this.initializing = false;
+          this.modal = false;
+          this.initializingText = "导出成功";
+        })
+        .catch(() => {
+          this.initializing = false;
+          this.modal = false;
+          this.initializingText = "导出失败";
+        });
     });
   },
 };

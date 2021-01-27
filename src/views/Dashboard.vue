@@ -196,7 +196,7 @@ export default {
     ...mapActions("questTemplate", ["countQuestTemplates"]),
     ...mapActions("gossipMenu", ["countGossipMenus"]),
     ...mapActions("smartScript", ["countSmartScripts"]),
-    ...mapActions("spell", { countSpells: "countSpells" }),
+    ...mapActions("spell", ["countSpells"]),
     openBrowser(url) {
       const { shell } = window.require("electron");
       shell.openExternal(url);

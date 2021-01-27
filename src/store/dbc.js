@@ -8,6 +8,7 @@ import {
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
   SEARCH_DBC_SCALING_STAT_VALUES,
   SEARCH_DBC_SPELLS,
+  EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
 } from "../constants";
 
@@ -72,8 +73,12 @@ export default {
     searchDbcSpells({ commit }) {
       return new Promise((resolve) => {
         ipcRenderer.send(SEARCH_DBC_SPELLS);
-        ipcRenderer.on(SEARCH_DBC_SPELLS, (event, response) => {
-          commit(SEARCH_DBC_SPELLS, response);
+        // ipcRenderer.on(SEARCH_DBC_SPELLS, (event, response) => {
+        //   commit(SEARCH_DBC_SPELLS, response);
+        //   resolve();
+        // });
+        ipcRenderer.on(SEARCH_DBC_SPELLS, () => {
+          commit(SEARCH_DBC_SPELLS, {});
           resolve();
         });
       });
@@ -105,6 +110,17 @@ export default {
         ipcRenderer.on(SEARCH_DBC_SCALING_STAT_VALUES, (event, response) => {
           commit(SEARCH_DBC_SCALING_STAT_VALUES, response);
           resolve();
+        });
+      });
+    },
+    exportSpellDbc() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(EXPORT_SPELL_DBC);
+        ipcRenderer.on(EXPORT_SPELL_DBC, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${EXPORT_SPELL_DBC}_REJECT`, () => {
+          reject();
         });
       });
     },

@@ -41,6 +41,7 @@ import "./background/npcText";
 import "./background/npcTextLocale";
 import "./background/gossipMenuOption";
 import "./background/smartScript";
+import "./background/spell";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -68,6 +69,22 @@ function createWindow() {
       submenu: [{ label: "退出", accelerator: "CmdOrCtrl+Q", role: "quit" }],
     },
     {
+      label: "工具",
+      submenu: [
+        {
+          label: "导入",
+          accelerator: "CmdOrCtrl+O",
+        },
+        {
+          label: "导出",
+          accelerator: "CmdOrCtrl+S",
+          click() {
+            win.webContents.send("START_EXPORT");
+          },
+        },
+      ],
+    },
+    {
       label: "页面",
       submenu: [
         {
@@ -80,10 +97,6 @@ function createWindow() {
           role: "toggleDevTools",
         },
       ],
-    },
-    {
-      label: "导出",
-      submenu: [{ label: "导出", accelerator: "CmdOrCtrl+S" }],
     },
     {
       label: "关于",

@@ -8,7 +8,7 @@ import {
   STORE_CONFIG_CONFIG,
   STORE_DEVELOPER_CONFIG,
   TEST_MYSQL_CONNECTION,
-  INIT_DBC_CONFIG
+  INIT_DBC_CONFIG,
 } from "../constants";
 
 export default {
@@ -20,64 +20,34 @@ export default {
       host: "127.0.0.1",
       user: "root",
       password: "password",
-      database: "acore_world"
+      database: "acore_world",
     },
     dbcConfig: {
-      path: ""
+      path: "",
     },
     configConfig: {
-      path: ""
+      path: "",
     },
     developerConfig: {
-      debug: false
-    }
+      debug: false,
+    },
   }),
   actions: {
     setActive({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         commit(SET_ACTIVE, payload);
         resolve();
       });
     },
     storeDeveloperConfig({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         localStorage.setItem("debug", payload.debug);
         commit(STORE_DEVELOPER_CONFIG, payload);
         resolve();
       });
     },
-    storeConfigConfig({ commit }, payload) {
-      return new Promise(resolve => {
-        localStorage.setItem("configPath", payload.path);
-        commit(STORE_CONFIG_CONFIG, payload);
-        resolve();
-      });
-    },
-    storeDbcConfig({ commit }, payload) {
-      return new Promise(resolve => {
-        localStorage.setItem("dbcPath", payload.path);
-        commit(STORE_DBC_CONFIG, payload);
-        resolve();
-      });
-    },
-    initMysqlConnection(context, payload) {
-      return new Promise(resolve => {
-        ipcRenderer.send(INIT_MYSQL_CONNECTION, payload);
-        ipcRenderer.on(INIT_MYSQL_CONNECTION, () => {
-          resolve();
-        });
-      });
-    },
-    initDbcConnection(context, payload) {
-      return new Promise(resolve => {
-        ipcRenderer.send(INIT_DBC_CONFIG, payload);
-        ipcRenderer.on(INIT_DBC_CONFIG, () => {
-          resolve();
-        });
-      });
-    },
     storeMysqlConfig({ commit }, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         localStorage.setItem("host", payload.host);
         localStorage.setItem("user", payload.user);
         localStorage.setItem("password", payload.password);
@@ -86,14 +56,44 @@ export default {
         resolve();
       });
     },
+    storeDbcConfig({ commit }, payload) {
+      return new Promise((resolve) => {
+        localStorage.setItem("dbcPath", payload.path);
+        commit(STORE_DBC_CONFIG, payload);
+        resolve();
+      });
+    },
+    storeConfigConfig({ commit }, payload) {
+      return new Promise((resolve) => {
+        localStorage.setItem("configPath", payload.path);
+        commit(STORE_CONFIG_CONFIG, payload);
+        resolve();
+      });
+    },
+    initMysqlConnection(context, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(INIT_MYSQL_CONNECTION, payload);
+        ipcRenderer.on(INIT_MYSQL_CONNECTION, () => {
+          resolve();
+        });
+      });
+    },
+    initDbcConnection(context, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(INIT_DBC_CONFIG, payload);
+        ipcRenderer.on(INIT_DBC_CONFIG, () => {
+          resolve();
+        });
+      });
+    },
     testMysqlConfig(context, payload) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         ipcRenderer.send(TEST_MYSQL_CONNECTION, payload);
         ipcRenderer.on("TEST_MYSQL_CONNECTION", (event, response) => {
           resolve(response);
         });
       });
-    }
+    },
   },
   mutations: {
     [SET_ACTIVE](state, active) {
@@ -110,6 +110,6 @@ export default {
     },
     [STORE_MYSQL_CONFIG](state, config) {
       state.mysqlConfig = config;
-    }
-  }
+    },
+  },
 };

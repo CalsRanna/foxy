@@ -4,77 +4,47 @@ import {
   SEARCH_SPELLS,
   COUNT_SPELLS,
   PAGINATE_SPELLS,
+  STORE_SPELL,
   FIND_SPELL,
   UPDATE_SPELL,
-} from "@/constants";
+  DESTROY_SPELL,
+  CREATE_SPELL,
+  COPY_SPELL,
+} from "../constants";
 
 export default {
   namespaced: true,
-  state() {
-    return {
-      refresh: true,
-      credential: {
-        id: undefined,
-        name: undefined,
-      },
-      pagination: {
-        page: 1,
-        size: 50,
-        total: 0,
-      },
-      spells: [],
-      spell: {},
-    };
-  },
+  state: () => ({
+    refresh: true,
+    credential: {
+      ID: undefined,
+      Name: undefined,
+    },
+    pagination: {
+      page: 1,
+      size: 50,
+      total: 0,
+    },
+    spells: [],
+    spell: {},
+  }),
   actions: {
-    searchSpells({ commit, rootState }, payload) {
+    searchSpells({ commit }, payload) {
       return new Promise((resolve) => {
-        let spells = [];
-        if (rootState.dbc.spells.records == undefined) {
-          commit(SEARCH_SPELLS, spells);
-        } else {
-          for (let spell of rootState.dbc.spells.records) {
-            if (payload.id !== undefined || payload.name !== undefined) {
-              if (
-                payload.id == spell.id ||
-                spell.nameLangZhCN.indexOf(payload.name) > -1
-              ) {
-                spells.push(spell);
-              }
-            } else {
-              spells.push(spell);
-            }
-          }
-          let start = (payload.page - 1) * 50;
-          let end = payload.page * 50;
-          if (end < spells.length) {
-            commit(SEARCH_SPELLS, spells.slice(start, end));
-          } else {
-            commit(SEARCH_SPELLS, spells.slice(start));
-          }
-        }
-        resolve();
+        ipcRenderer.send(SEARCH_SPELLS, payload);
+        ipcRenderer.on(SEARCH_SPELLS, (event, response) => {
+          commit(SEARCH_SPELLS, response);
+          resolve();
+        });
       });
     },
-    countSpells({ commit, rootState }, payload) {
+    countSpells({ commit }, payload) {
       return new Promise((resolve) => {
-        let spells = [];
-        if (rootState.dbc.spells.records != undefined) {
-          for (let spell of rootState.dbc.spells.records) {
-            if (payload.id !== undefined || payload.name !== undefined) {
-              if (
-                payload.id == spell.id ||
-                spell.nameLangZhCN.indexOf(payload.name) > -1
-              ) {
-                spells.push(spell);
-              }
-            } else {
-              spells.push(spell);
-            }
-          }
-        }
-        commit(COUNT_SPELLS, spells.length);
-        resolve();
+        ipcRenderer.send(COUNT_SPELLS, payload);
+        ipcRenderer.on(COUNT_SPELLS, (event, response) => {
+          commit(COUNT_SPELLS, response);
+          resolve();
+        });
       });
     },
     paginateSpells({ commit }, payload) {
@@ -83,39 +53,61 @@ export default {
         resolve();
       });
     },
-    storeSpell() {
+    storeSpell({ commit }, payload) {
       return new Promise((resolve) => {
-        resolve();
+        ipcRenderer.send(STORE_SPELL, payload);
+        ipcRenderer.on(STORE_SPELL, () => {
+          commit("UPDATE_REFRESH_OF_SPELL", true);
+          resolve();
+        });
       });
     },
-    findSpell({ commit, rootState }, payload) {
-      for (let spell of rootState.dbc.spells.records) {
-        if (payload.id == spell.id) {
-          commit(FIND_SPELL, spell);
-        }
-      }
-    },
-    updateSpell({ commit, rootState }, payload) {
+    findSpell({ commit }, payload) {
       return new Promise((resolve) => {
-        let index = undefined;
-        for (let key in rootState.dbc.spells.records) {
-          if (rootState.dbc.spells.records[key].id == payload.credential.id) {
-            index = key;
-            break;
-          }
-        }
-        rootState.dbc.spells.records.splice(index, 1, payload.spell);
-        ipcRenderer.send(UPDATE_SPELL, {
-          dbc: rootState.dbc.spells,
+        ipcRenderer.send(FIND_SPELL, payload);
+        ipcRenderer.on(FIND_SPELL, (event, response) => {
+          commit(FIND_SPELL, response);
+          resolve();
         });
+      });
+    },
+    updateSpell({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(UPDATE_SPELL, payload);
         ipcRenderer.on(UPDATE_SPELL, () => {
           commit("UPDATE_REFRESH_OF_SPELL", true);
           resolve();
         });
       });
     },
-    createSpell() {
+    destroySpell(context, payload) {
       return new Promise((resolve) => {
+        ipcRenderer.send(DESTROY_SPELL, payload);
+        ipcRenderer.on(DESTROY_SPELL, () => {
+          resolve();
+        });
+      });
+    },
+    createSpell({ commit }, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(CREATE_SPELL, payload);
+        ipcRenderer.on(CREATE_SPELL, (event, response) => {
+          commit(CREATE_SPELL, response);
+          resolve();
+        });
+      });
+    },
+    copySpell(context, payload) {
+      return new Promise((resolve) => {
+        ipcRenderer.send(COPY_SPELL, payload);
+        ipcRenderer.on(COPY_SPELL, () => {
+          resolve();
+        });
+      });
+    },
+    updateFilter({ commit }, payload) {
+      return new Promise((resolve) => {
+        commit("UPDATE_FILTER_OF_SPELL", payload);
         resolve();
       });
     },
@@ -136,16 +128,28 @@ export default {
     [PAGINATE_SPELLS](state, page) {
       state.pagination.page = page;
     },
+    [STORE_SPELL](state, spell) {
+      state.spell = spell;
+    },
     [FIND_SPELL](state, spell) {
       state.spell = spell;
+    },
+    [UPDATE_SPELL](state, spell) {
+      state.spell = spell;
+    },
+    [CREATE_SPELL](state, spell) {
+      state.spell = spell;
+    },
+    UPDATE_FILTER_OF_SPELL(state, filter) {
+      state.filter = filter;
     },
     UPDATE_REFRESH_OF_SPELL(state, refresh) {
       state.refresh = refresh;
     },
     RESET_CREDENTIAL_OF_SPELL(state) {
       state.credential = {
-        id: undefined,
-        name: undefined,
+        ID: undefined,
+        Name: undefined,
       };
     },
   },
