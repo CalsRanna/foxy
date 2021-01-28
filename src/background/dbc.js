@@ -71,36 +71,12 @@ ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
         event.reply(SEARCH_DBC_SPELLS);
       }
     });
-
-  // if (!(isDevelopment && os.totalmem() < 8568436736)) {
-  //   let dbc = DBC.read(`${path}/Spell.dbc`);
-  //   // 一次性传递所有技能，占用内存太大，会导致GC失败，分多次传递数据, 已证明无效
-  //   for (let i = 0; i < dbc.recordCount; i = i + 100) {
-  //     let chunk = {
-  //       signature: dbc.signature,
-  //       recordCount: dbc.recordCount,
-  //       fieldCount: dbc.fieldCount,
-  //       recordSize: dbc.recordSize,
-  //       stringBlockSize: dbc.stringBlockSize,
-  //       stringBlockOffset: dbc.stringBlockOffset,
-  //       records: [],
-  //     };
-  //     let end = i + 100;
-  //     if (end < dbc.recordCount) {
-  //       chunk.records = dbc.records.slice(i, end);
-  //     } else {
-  //       chunk.records = dbc.records.slice(i);
-  //     }
-  //     event.reply(SEARCH_DBC_SPELLS, chunk);
-  //   }
-  // }
 });
 
 ipcMain.on(EXPORT_SPELL_DBC, (event) => {
   foxyKnex()
     .select()
     .from("dbc_spell")
-    // .raw("select * from `foxy`.`dbc_spell`")
     .then((rows) => {
       try {
         DBC.write(`${path}/Spell.dbc`, rows);
