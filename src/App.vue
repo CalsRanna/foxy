@@ -44,7 +44,7 @@
       </el-main>
     </template>
     <el-dialog
-      :visible.sync="initializing"
+      :visible.sync="visible"
       width="30%"
       top="40vh"
       :show-close="false"
@@ -68,6 +68,7 @@ export default {
   data() {
     return {
       initializing: true,
+      visible: false,
       modal: false,
       initializingText: "加载开始",
     };
@@ -186,6 +187,7 @@ export default {
     },
     async init() {
       try {
+        this.visible = true;
         this.initializingText = "加载开发者配置";
         await this.initDeveloperConfig();
         this.initializingText = "加载数据库配置";
@@ -213,11 +215,13 @@ export default {
         this.initializingText = "加载完成";
         setTimeout(() => {
           this.initializing = false;
+          this.visible = false;
         }, 500);
       } catch (error) {
         this.initializingText = "加载中止";
         setTimeout(() => {
           this.initializing = false;
+          this.visible = false;
         }, 500);
       }
     },
@@ -258,19 +262,26 @@ export default {
     });
 
     ipcRenderer.on(START_EXPORT, () => {
-      this.initializing = true;
+      this.visible = true;
       this.modal = true;
       this.initializingText = "正在导出，请稍后";
+      let seconds = 1;
+      let timer = setInterval(() => {
+        this.initializingText = `正在导出，请稍后：${seconds}s`;
+        seconds++;
+      }, 1000);
       this.exportSpellDbc()
         .then(() => {
-          this.initializing = false;
-          this.modal = false;
+          clearInterval(timer);
           this.initializingText = "导出成功";
+          this.visible = false;
+          this.modal = false;
         })
         .catch(() => {
-          this.initializing = false;
-          this.modal = false;
+          clearInterval(timer);
           this.initializingText = "导出失败";
+          this.visible = false;
+          this.modal = false;
         });
     });
   },

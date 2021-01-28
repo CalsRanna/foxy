@@ -114,10 +114,12 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="属性类型">
-                  <el-input
+                  <flag-editor
                     v-model="spell.SchoolMask"
+                    title="属性类型编辑器"
+                    :flags="schoolMasks"
                     placeholder="SchoolMask"
-                  ></el-input>
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -435,27 +437,139 @@
           <el-card style="margin-top: 16px">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="触发标识">
+                <el-form-item label="打断标识">
                   <el-input
-                    v-model="spell.ProcTypeMask"
-                    placeholder="ProcTypeMask"
+                    v-model="spell.InterruptFlags"
+                    placeholder="InterruptFlags"
                   ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="光环打断标识">
+                  <el-input
+                    v-model="spell.AuraInterruptFlags"
+                    placeholder="AuraInterruptFlags"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="引导打断标识">
+                  <el-input
+                    v-model="spell.ChannelInterruptFlags"
+                    placeholder="ChannelInterruptFlags"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="属性">
+                  <flag-editor
+                    v-model="spell.Attributes"
+                    title="属性编辑器"
+                    :flags="attributes"
+                    placeholder="Attributes"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="额外属性1">
+                  <flag-editor
+                    v-model="spell.AttributesEx"
+                    title="额外属性1编辑器"
+                    :flags="attributesEx"
+                    placeholder="AttributesEx"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="额外属性2">
+                  <flag-editor
+                    v-model="spell.AttributesExB"
+                    title="额外属性2编辑器"
+                    :flags="attributesExB"
+                    placeholder="AttributesExB"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="额外属性3">
+                  <flag-editor
+                    v-model="spell.AttributesExC"
+                    title="额外属性3编辑器"
+                    :flags="attributesExC"
+                    placeholder="AttributesExC"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="额外属性4">
+                  <flag-editor
+                    v-model="spell.AttributesExD"
+                    title="额外属性4编辑器"
+                    :flags="attributesExD"
+                    placeholder="AttributesExD"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="额外属性5">
+                  <flag-editor
+                    v-model="spell.AttributesExE"
+                    title="额外属性5编辑器"
+                    :flags="attributesExE"
+                    placeholder="AttributesExE"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="额外属性6">
+                  <flag-editor
+                    v-model="spell.AttributesExF"
+                    title="额外属性6编辑器"
+                    :flags="attributesExF"
+                    placeholder="AttributesExF"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="额外属性7">
+                  <flag-editor
+                    v-model="spell.AttributesExG"
+                    title="额外属性7编辑器"
+                    :flags="attributesExG"
+                    placeholder="AttributesExG"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+          <el-card style="margin-top: 16px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="触发标识">
+                  <flag-editor
+                    v-model="spell.ProcTypeMask"
+                    title="触发标识编辑器"
+                    :flags="procTypeMasks"
+                    placeholder="ProcTypeMask"
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="触发几率">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ProcChance"
+                    controls-position="right"
                     placeholder="ProcChance"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="触发充能">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ProcCharges"
+                    controls-position="right"
                     placeholder="ProcCharges"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -504,38 +618,49 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="效果">
-                  <el-input
+                  <el-select
                     v-model="spell.Effect_1"
+                    filterable
                     placeholder="Effect_1"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(effect, index) in effects"
+                      :key="`effect_1-${index}`"
+                      :label="effect"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="基础值">
-                  <el-input
+                  <el-input-number
                     v-model="spell.EffectBasePoints_1"
+                    controls-position="right"
                     placeholder="EffectBasePoints_1"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="浮动值">
-                  <el-input
+                  <el-input-number
                     v-model="spell.EffectDieSides_1"
+                    controls-position="right"
                     placeholder="EffectDieSides_1"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="每级真实值">
-                  <el-input
+                  <el-input-number
                     v-model="spell.EffectRealPointsPerLevel_1"
+                    controls-position="right"
                     placeholder="EffectRealPointsPerLevel_1"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="machanic">
+                <el-form-item label="Mechanic">
                   <el-input
                     v-model="spell.EffectMechanic_1"
                     placeholder="EffectMechanic_1"
@@ -552,10 +677,18 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="光环效果">
-                  <el-input
+                  <el-select
                     v-model="spell.EffectAura_1"
+                    filterable
                     placeholder="EffectAura_1"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(aura, index) in auras"
+                      :key="`effectAura_1-${index}`"
+                      :label="aura"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -568,18 +701,34 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="目标A">
-                  <el-input
+                  <el-select
                     v-model="spell.ImplicitTargetA_1"
+                    filterable
                     placeholder="ImplicitTargetA_1"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(implicitTarget, index) in implicitTargets"
+                      :key="`implicitTargetA_1-${index}`"
+                      :label="implicitTarget"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="目标B">
-                  <el-input
+                  <el-select
                     v-model="spell.ImplicitTargetB_1"
+                    filterable
                     placeholder="ImplicitTargetB_1"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(implicitTarget, index) in implicitTargets"
+                      :key="`implicitTargetB_1-${index}`"
+                      :label="implicitTarget"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -688,38 +837,49 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="效果">
-                  <el-input
+                  <el-select
                     v-model="spell.Effect_2"
+                    filterable
                     placeholder="Effect_2"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(effect, index) in effects"
+                      :key="`effect_2-${index}`"
+                      :label="effect"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="基础值">
-                  <el-input
+                  <el-input-number
                     v-model="spell.EffectBasePoints_2"
+                    controls-position="right"
                     placeholder="EffectBasePoints_2"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="浮动值">
-                  <el-input
+                  <el-input-number
                     v-model="spell.EffectDieSides_2"
+                    controls-position="right"
                     placeholder="EffectDieSides_2"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="每级真实值">
-                  <el-input
+                  <el-input-number
                     v-model="spell.EffectRealPointsPerLevel_2"
+                    controls-position="right"
                     placeholder="EffectRealPointsPerLevel_2"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="machanic">
+                <el-form-item label="Mechanic">
                   <el-input
                     v-model="spell.EffectMechanic_2"
                     placeholder="EffectMechanic_2"
@@ -736,10 +896,18 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="光环效果">
-                  <el-input
+                  <el-select
                     v-model="spell.EffectAura_2"
+                    filterable
                     placeholder="EffectAura_2"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(aura, index) in auras"
+                      :key="`effectAura_2-${index}`"
+                      :label="aura"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -752,18 +920,34 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="目标A">
-                  <el-input
+                  <el-select
                     v-model="spell.ImplicitTargetA_2"
+                    filterable
                     placeholder="ImplicitTargetA_2"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(implicitTarget, index) in implicitTargets"
+                      :key="`implicitTargetA_2-${index}`"
+                      :label="implicitTarget"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="目标B">
-                  <el-input
+                  <el-select
                     v-model="spell.ImplicitTargetB_2"
+                    filterable
                     placeholder="ImplicitTargetB_2"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(implicitTarget, index) in implicitTargets"
+                      :key="`implicitTargetB_2-${index}`"
+                      :label="implicitTarget"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -872,38 +1056,49 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="效果">
-                  <el-input
+                  <el-select
                     v-model="spell.Effect_3"
+                    filterable
                     placeholder="Effect_3"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(effect, index) in effects"
+                      :key="`effect_3-${index}`"
+                      :label="effect"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="基础值">
-                  <el-input
+                  <el-input-number
                     v-model="spell.EffectBasePoints_3"
+                    controls-position="right"
                     placeholder="EffectBasePoints_3"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="浮动值">
-                  <el-input
+                  <el-input-number
                     v-model="spell.EffectDieSides_3"
+                    controls-position="right"
                     placeholder="EffectDieSides_3"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="每级真实值">
-                  <el-input
+                  <el-input-number
                     v-model="spell.EffectRealPointsPerLevel_3"
+                    controls-position="right"
                     placeholder="EffectRealPointsPerLevel_3"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="machanic">
+                <el-form-item label="Mechanic">
                   <el-input
                     v-model="spell.EffectMechanic_3"
                     placeholder="EffectMechanic_3"
@@ -920,10 +1115,18 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="光环效果">
-                  <el-input
+                  <el-select
                     v-model="spell.EffectAura_3"
+                    filterable
                     placeholder="EffectAura_3"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(aura, index) in auras"
+                      :key="`effectAura_3-${index}`"
+                      :label="aura"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -932,6 +1135,38 @@
                     v-model="spell.EffectAuraPeriod_3"
                     placeholder="EffectAuraPeriod_3"
                   ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="目标A">
+                  <el-select
+                    v-model="spell.ImplicitTargetA_3"
+                    filterable
+                    placeholder="ImplicitTargetA_3"
+                  >
+                    <el-option
+                      v-for="(implicitTarget, index) in implicitTargets"
+                      :key="`implicitTargetA_3-${index}`"
+                      :label="implicitTarget"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="目标B">
+                  <el-select
+                    v-model="spell.ImplicitTargetB_3"
+                    filterable
+                    placeholder="ImplicitTargetB_3"
+                  >
+                    <el-option
+                      v-for="(implicitTarget, index) in implicitTargets"
+                      :key="`implicitTargetB_3-${index}`"
+                      :label="implicitTarget"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -947,22 +1182,6 @@
                   <el-input
                     v-model="spell.EffectMiscValueB_3"
                     placeholder="EffectMiscValueB_3"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="目标A">
-                  <el-input
-                    v-model="spell.ImplicitTargetA_3"
-                    placeholder="ImplicitTargetA_3"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="目标B">
-                  <el-input
-                    v-model="spell.ImplicitTargetB_3"
-                    placeholder="ImplicitTargetB_3"
                   ></el-input>
                 </el-form-item>
               </el-col>
@@ -1110,10 +1329,11 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗数量">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ReagentCount_1"
+                    controls-position="right"
                     placeholder="ReagentCount_1"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1126,10 +1346,11 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗数量">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ReagentCount_2"
+                    controls-position="right"
                     placeholder="ReagentCount_2"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1142,10 +1363,11 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗数量">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ReagentCount_3"
+                    controls-position="right"
                     placeholder="ReagentCount_3"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1158,10 +1380,11 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗数量">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ReagentCount_4"
+                    controls-position="right"
                     placeholder="ReagentCount_4"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1174,10 +1397,11 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗数量">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ReagentCount_5"
+                    controls-position="right"
                     placeholder="ReagentCount_5"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1190,10 +1414,11 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗数量">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ReagentCount_6"
+                    controls-position="right"
                     placeholder="ReagentCount_6"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1206,10 +1431,11 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗数量">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ReagentCount_7"
+                    controls-position="right"
                     placeholder="ReagentCount_7"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1222,102 +1448,11 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗数量">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ReagentCount_8"
+                    controls-position="right"
                     placeholder="ReagentCount_8"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-card>
-          <el-card style="margin-top: 16px">
-            <el-row :gutter="16">
-              <el-col :span="6">
-                <el-form-item label="打断标识">
-                  <el-input
-                    v-model="spell.InterruptFlags"
-                    placeholder="InterruptFlags"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="光环打断标识">
-                  <el-input
-                    v-model="spell.AuraInterruptFlags"
-                    placeholder="AuraInterruptFlags"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="引导打断标识">
-                  <el-input
-                    v-model="spell.ChannelInterruptFlags"
-                    placeholder="ChannelInterruptFlags"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="属性">
-                  <el-input
-                    v-model="spell.Attributes"
-                    placeholder="Attributes"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="额外属性1">
-                  <el-input
-                    v-model="spell.AttributesEx"
-                    placeholder="AttributesEx"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="额外属性2">
-                  <el-input
-                    v-model="spell.AttributesExB"
-                    placeholder="AttributesExB"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="额外属性3">
-                  <el-input
-                    v-model="spell.AttributesExC"
-                    placeholder="AttributesExC"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="额外属性4">
-                  <el-input
-                    v-model="spell.AttributesExD"
-                    placeholder="AttributesExD"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="额外属性5">
-                  <el-input
-                    v-model="spell.AttributesExE"
-                    placeholder="AttributesExE"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="额外属性6">
-                  <el-input
-                    v-model="spell.AttributesExF"
-                    placeholder="AttributesExF"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="额外属性7">
-                  <el-input
-                    v-model="spell.AttributesExG"
-                    placeholder="AttributesExG"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -1515,13 +1650,45 @@
 </template>
 
 <script>
+import {
+  effects,
+  auras,
+  attributes,
+  attributesEx,
+  attributesExB,
+  attributesExC,
+  attributesExD,
+  attributesExE,
+  attributesExF,
+  attributesExG,
+  procTypeMasks,
+  implicitTargets,
+  schoolMasks,
+} from "@/locales/spell";
+
+import FlagEditor from "@/components/FlagEditor";
+
 import { mapState, mapActions } from "vuex";
+
 export default {
   data() {
     return {
       initing: false,
       loading: false,
       creating: false,
+      effects: effects,
+      auras: auras,
+      attributes: attributes,
+      attributesEx: attributesEx,
+      attributesExB: attributesExB,
+      attributesExC: attributesExC,
+      attributesExD: attributesExD,
+      attributesExE: attributesExE,
+      attributesExF: attributesExF,
+      attributesExG: attributesExG,
+      procTypeMasks: procTypeMasks,
+      implicitTargets: implicitTargets,
+      schoolMasks: schoolMasks,
     };
   },
   computed: {
@@ -1568,6 +1735,9 @@ export default {
   },
   mounted() {
     this.init();
+  },
+  components: {
+    FlagEditor,
   },
 };
 </script>
