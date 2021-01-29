@@ -117,6 +117,7 @@ export default {
   mutations: {
     [SEARCH_GAME_OBJECT_TEMPLATES](state, gameObjectTemplates) {
       state.gameObjectTemplates = gameObjectTemplates;
+      state.refresh = false;
     },
     [COUNT_GAME_OBJECT_TEMPLATES](state, total) {
       state.pagination.total = total;

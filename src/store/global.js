@@ -87,10 +87,13 @@ export default {
       });
     },
     testMysqlConfig(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(TEST_MYSQL_CONNECTION, payload);
-        ipcRenderer.on("TEST_MYSQL_CONNECTION", (event, response) => {
+        ipcRenderer.on(TEST_MYSQL_CONNECTION, (event, response) => {
           resolve(response);
+        });
+        ipcRenderer.on(`${TEST_MYSQL_CONNECTION}_REJECT`, (event, error) => {
+          reject(error);
         });
       });
     },

@@ -36,7 +36,7 @@ ipcMain.on(SEARCH_SPELLS, (event, payload) => {
       "dsd.Duration as Duration",
     ])
     .from("foxy.dbc_spell as ds")
-    .leftJoin("dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID");
+    .leftJoin("foxy.dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ds.ID", "like", `%${payload.ID}%`);
   }
@@ -70,7 +70,7 @@ ipcMain.on(COUNT_SPELLS, (event, payload) => {
   let queryBuilder = knex()
     .count("* as total")
     .from("foxy.dbc_spell as ds")
-    .leftJoin("dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID");
+    .leftJoin("foxy.dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ds.ID", "like", `%${payload.ID}%`);
   }
@@ -100,7 +100,7 @@ ipcMain.on(COUNT_SPELLS, (event, payload) => {
 ipcMain.on(STORE_SPELL, (event, payload) => {
   let queryBuilder = knex()
     .insert(payload)
-    .into("dbc_spell");
+    .into("foxy.dbc_spell");
 
   queryBuilder
     .then((rows) => {
@@ -146,7 +146,7 @@ ipcMain.on(FIND_SPELL, (event, payload) => {
 
 ipcMain.on(UPDATE_SPELL, (event, payload) => {
   let queryBuilder = knex()
-    .table("dbc_spell")
+    .table("foxy.dbc_spell")
     .where(payload.credential)
     .update(payload.spell);
 
@@ -173,7 +173,7 @@ ipcMain.on(UPDATE_SPELL, (event, payload) => {
 
 ipcMain.on(DESTROY_SPELL, (event, payload) => {
   let queryBuilder = knex()
-    .table("dbc_spell")
+    .table("foxy.dbc_spell")
     .where(payload)
     .delete();
 
@@ -244,7 +244,7 @@ ipcMain.on(COPY_SPELL, (event, payload) => {
     spell.ID = ID + 1;
     let queryBuilder = knex()
       .insert(spell)
-      .into("dbc_spell");
+      .into("foxy.dbc_spell");
     queryBuilder
       .then((rows) => {
         event.reply(COPY_SPELL, rows);
