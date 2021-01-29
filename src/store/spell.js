@@ -121,6 +121,7 @@ export default {
   mutations: {
     [SEARCH_SPELLS](state, spells) {
       state.spells = spells;
+      state.refresh = false;
     },
     [COUNT_SPELLS](state, total) {
       state.pagination.total = total;

@@ -114,6 +114,7 @@ export default {
   mutations: {
     [SEARCH_SMART_SCRIPTS](state, smartScripts) {
       state.smartScripts = smartScripts;
+      state.refresh = false;
     },
     [COUNT_SMART_SCRIPTS](state, total) {
       state.pagination.total = total;

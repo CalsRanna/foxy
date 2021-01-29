@@ -64,26 +64,26 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
 ipcMain.on(TEST_MYSQL_CONNECTION, (event, payload) => {
   init(payload);
   // 尝试连接数据库，校验配置是否正确
-  try {
-    knex()
-      .select("guid")
-      .from("creature")
-      .first()
-      .then((rows) => {
-        event.reply("GLOBAL_NOTICE", {
-          category: "notification",
-          title: "成功",
-          message: `数据库配置检验成功。`,
-          type: "success",
-        });
-        event.reply(TEST_MYSQL_CONNECTION);
+  knex()
+    .select("guid")
+    .from("creature")
+    .first()
+    .then((rows) => {
+      event.reply("GLOBAL_NOTICE", {
+        category: "notification",
+        title: "成功",
+        message: `数据库配置检验成功。`,
+        type: "success",
       });
-  } catch (error) {
-    event.reply("GLOBAL_NOTICE", {
-      category: "alert",
-      title: "发生未知错误",
-      message: error.statck,
-      type: "success",
+      event.reply(TEST_MYSQL_CONNECTION);
+    })
+    .catch((error) => {
+      event.reply("GLOBAL_NOTICE", {
+        category: "alert",
+        type: "error",
+        title: `${error.code}`,
+        message: `${error.stack}`,
+      });
+      event.reply(`${TEST_MYSQL_CONNECTION}_REJECT`, error);
     });
-  }
 });

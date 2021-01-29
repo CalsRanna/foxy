@@ -14,7 +14,9 @@
         <el-input v-model="config.database"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="store" :loading="loading">保存</el-button>
+        <el-button type="primary" @click="store" :loading="loading"
+          >保存</el-button
+        >
         <el-button @click="test" :loading="loading">测试</el-button>
       </el-form-item>
     </el-form>
@@ -27,11 +29,11 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      loading: false
+      loading: false,
     };
   },
   computed: {
-    ...mapState("global", { config: "mysqlConfig" })
+    ...mapState("global", { config: "mysqlConfig" }),
   },
   methods: {
     ...mapActions("global", ["testMysqlConfig", "storeMysqlConfig"]),
@@ -41,15 +43,20 @@ export default {
       this.$notify({
         type: "success",
         title: "成功",
-        message: "修改设置成功。"
+        message: "修改设置成功。",
       });
       this.loading = false;
     },
     async test() {
       this.loading = true;
-      await this.testMysqlConfig(this.config);
-      this.loading = false;
-    }
-  }
+      this.testMysqlConfig(this.config)
+        .then(() => {
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+  },
 };
 </script>

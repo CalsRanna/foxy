@@ -117,6 +117,7 @@ export default {
   mutations: {
     [SEARCH_QUEST_TEMPLATES](state, questTemplates) {
       state.questTemplates = questTemplates;
+      state.refresh = false;
     },
     [COUNT_QUEST_TEMPLATES](state, total) {
       state.pagination.total = total;

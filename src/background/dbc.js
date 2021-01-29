@@ -35,7 +35,7 @@ ipcMain.on(SEARCH_DBC_FACTIONS, (event) => {
         try {
           let dbc = DBC.read(`${path}/Faction.dbc`);
           knex()
-            .batchInsert("dbc_faction", dbc.records)
+            .batchInsert("foxy.dbc_faction", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_FACTIONS);
             })
@@ -65,7 +65,7 @@ ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, (event) => {
         try {
           let dbc = DBC.read(`${path}/FactionTemplate.dbc`);
           knex()
-            .batchInsert("dbc_faction_template", dbc.records)
+            .batchInsert("foxy.dbc_faction_template", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_FACTION_TEMPLATES);
             })
@@ -95,7 +95,7 @@ ipcMain.on(SEARCH_DBC_ITEMS, (event) => {
         try {
           let dbc = DBC.read(`${path}/Item.dbc`);
           knex()
-            .batchInsert("dbc_item", dbc.records)
+            .batchInsert("foxy.dbc_item", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_ITEMS);
             })
@@ -125,7 +125,7 @@ ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
         try {
           let dbc = DBC.read(`${path}/ItemDisplayInfo.dbc`);
           knex()
-            .batchInsert("dbc_item_display_info", dbc.records)
+            .batchInsert("foxy.dbc_item_display_info", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS);
             })
@@ -155,7 +155,7 @@ ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
         try {
           let dbc = DBC.read(`${path}/Spell.dbc`);
           knex()
-            .batchInsert("dbc_spell", dbc.records)
+            .batchInsert("foxy.dbc_spell", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_SPELLS);
             })
@@ -185,7 +185,7 @@ ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
         try {
           let dbc = DBC.read(`${path}/SpellDuration.dbc`);
           knex()
-            .batchInsert("dbc_spell_duration", dbc.records)
+            .batchInsert("foxy.dbc_spell_duration", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_SPELL_DURATIONS);
             })
@@ -215,7 +215,7 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
         try {
           let dbc = DBC.read(`${path}/ScalingStatDistribution.dbc`);
           knex()
-            .batchInsert("dbc_scaling_stat_distribution", dbc.records)
+            .batchInsert("foxy.dbc_scaling_stat_distribution", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
             })
@@ -248,7 +248,7 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
         try {
           let dbc = DBC.read(`${path}/ScalingStatValues.dbc`);
           knex()
-            .batchInsert("dbc_scaling_stat_values", dbc.records)
+            .batchInsert("foxy.dbc_scaling_stat_values", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_SCALING_STAT_VALUES);
             })

@@ -126,6 +126,7 @@ export default {
   mutations: {
     [SEARCH_ITEM_TEMPLATES](state, itemTemplates) {
       state.itemTemplates = itemTemplates;
+      state.refresh = false;
     },
     [COUNT_ITEM_TEMPLATES](state, total) {
       state.pagination.total = total;
