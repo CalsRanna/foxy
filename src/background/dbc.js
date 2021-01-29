@@ -25,93 +25,263 @@ ipcMain.on(INIT_DBC_CONFIG, (event, payload) => {
 });
 
 ipcMain.on(SEARCH_DBC_FACTIONS, (event) => {
-  let dbc = DBC.read(`${path}/Faction.dbc`);
-  event.reply(SEARCH_DBC_FACTIONS, dbc);
+  let queryBuilder = foxyKnex()
+    .count("* as total")
+    .from("dbc_faction");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        try {
+          let dbc = DBC.read(`${path}/Faction.dbc`);
+          foxyKnex()
+            .batchInsert("dbc_faction", dbc.records)
+            .then(() => {
+              event.reply(SEARCH_DBC_FACTIONS);
+            })
+            .catch((error) => {
+              event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
+            });
+        } catch (error) {
+          event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
+        }
+      } else {
+        event.reply(SEARCH_DBC_FACTIONS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
+    });
 });
 
 ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, (event) => {
-  let dbc = DBC.read(`${path}/FactionTemplate.dbc`);
-  event.reply(SEARCH_DBC_FACTION_TEMPLATES, dbc);
+  let queryBuilder = foxyKnex()
+    .count("* as total")
+    .from("dbc_faction_template");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        try {
+          let dbc = DBC.read(`${path}/FactionTemplate.dbc`);
+          foxyKnex()
+            .batchInsert("dbc_faction_template", dbc.records)
+            .then(() => {
+              event.reply(SEARCH_DBC_FACTION_TEMPLATES);
+            })
+            .catch((error) => {
+              event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
+            });
+        } catch (error) {
+          event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
+        }
+      } else {
+        event.reply(SEARCH_DBC_FACTION_TEMPLATES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
+    });
 });
 
 ipcMain.on(SEARCH_DBC_ITEMS, (event) => {
-  let dbc = DBC.read(`${path}/Item.dbc`);
-  event.reply(SEARCH_DBC_ITEMS, dbc);
+  let queryBuilder = foxyKnex()
+    .count("* as total")
+    .from("dbc_item");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        try {
+          let dbc = DBC.read(`${path}/Item.dbc`);
+          foxyKnex()
+            .batchInsert("dbc_item", dbc.records)
+            .then(() => {
+              event.reply(SEARCH_DBC_ITEMS);
+            })
+            .catch((error) => {
+              event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
+            });
+        } catch (error) {
+          event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
+        }
+      } else {
+        event.reply(SEARCH_DBC_ITEMS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
+    });
 });
 
 ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
-  let dbc = DBC.read(`${path}/ItemDisplayInfo.dbc`);
-  event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS, dbc);
+  let queryBuilder = foxyKnex()
+    .count("* as total")
+    .from("dbc_item_display_info");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        try {
+          let dbc = DBC.read(`${path}/ItemDisplayInfo.dbc`);
+          foxyKnex()
+            .batchInsert("dbc_item_display_info", dbc.records)
+            .then(() => {
+              event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS);
+            })
+            .catch((error) => {
+              event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
+            });
+        } catch (error) {
+          event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
+        }
+      } else {
+        event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
+    });
 });
 
 ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
-  // const os = require("os");
-  // const isDevelopment = process.env.NODE_ENV !== "production";
+  let queryBuilder = foxyKnex()
+    .count("* as total")
+    .from("dbc_spell");
 
-  foxyKnex()
-    .raw("select count(*) as total from `foxy`.`dbc_spell`")
+  queryBuilder
     .then((rows) => {
-      if (rows[0][0].total == 0) {
-        let dbc = DBC.read(`${path}/Spell.dbc`);
-        for (let i = 0; i < dbc.recordCount; i = i + 1000) {
-          let chunk = [];
-          let end = i + 1000;
-          if (end < dbc.recordCount) {
-            chunk = dbc.records.slice(i, end);
-          } else {
-            chunk = dbc.records.slice(i);
-          }
+      if (rows[0].total == 0) {
+        try {
+          let dbc = DBC.read(`${path}/Spell.dbc`);
           foxyKnex()
-            .insert(chunk)
-            .into("dbc_spell")
-            .then(() => {});
+            .batchInsert("dbc_spell", dbc.records)
+            .then(() => {
+              event.reply(SEARCH_DBC_SPELLS);
+            })
+            .catch((error) => {
+              event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
+            });
+        } catch (error) {
+          event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
         }
-        event.reply(SEARCH_DBC_SPELLS);
       } else {
         event.reply(SEARCH_DBC_SPELLS);
       }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
+    });
+});
+
+ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
+  let queryBuilder = foxyKnex()
+    .count("* as total")
+    .from("dbc_spell_duration");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        try {
+          let dbc = DBC.read(`${path}/SpellDuration.dbc`);
+          foxyKnex()
+            .batchInsert("dbc_spell_duration", dbc.records)
+            .then(() => {
+              event.reply(SEARCH_DBC_SPELL_DURATIONS);
+            })
+            .catch((error) => {
+              event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
+            });
+        } catch (error) {
+          event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
+        }
+      } else {
+        event.reply(SEARCH_DBC_SPELL_DURATIONS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
+    });
+});
+
+ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
+  let queryBuilder = foxyKnex()
+    .count("* as total")
+    .from("dbc_scaling_stat_distribution");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        try {
+          let dbc = DBC.read(`${path}/ScalingStatDistribution.dbc`);
+          foxyKnex()
+            .batchInsert("dbc_scaling_stat_distribution", dbc.records)
+            .then(() => {
+              event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
+            })
+            .catch((error) => {
+              event.reply(
+                `${SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`,
+                error
+              );
+            });
+        } catch (error) {
+          event.reply(`${SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`, error);
+        }
+      } else {
+        event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`, error);
+    });
+});
+
+ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
+  let queryBuilder = foxyKnex()
+    .count("* as total")
+    .from("dbc_scaling_stat_values");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        try {
+          let dbc = DBC.read(`${path}/ScalingStatValues.dbc`);
+          foxyKnex()
+            .batchInsert("dbc_scaling_stat_values", dbc.records)
+            .then(() => {
+              event.reply(SEARCH_DBC_SCALING_STAT_VALUES);
+            })
+            .catch((error) => {
+              event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
+            });
+        } catch (error) {
+          event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
+        }
+      } else {
+        event.reply(SEARCH_DBC_SCALING_STAT_VALUES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
     });
 });
 
 ipcMain.on(EXPORT_SPELL_DBC, (event) => {
-  foxyKnex()
+  let queryBuilder = foxyKnex()
     .select()
-    .from("dbc_spell")
+    .from("dbc_spell");
+
+  queryBuilder
     .then((rows) => {
       try {
         DBC.write(`${path}/Spell.dbc`, rows);
         event.reply(EXPORT_SPELL_DBC);
       } catch (error) {
-        event.reply(`${EXPORT_SPELL_DBC}_REJECT`);
-        event.reply(GLOBAL_NOTICE, {
-          category: "alert",
-          type: "error",
-          title: `${error.code}`,
-          message: `${error.stack}`,
-        });
+        event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
       }
     })
     .catch((error) => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "alert",
-        type: "error",
-        title: `${error.code}`,
-        message: `${error.stack}`,
-      });
+      event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
     });
-});
-
-ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
-  let dbc = DBC.read(`${path}/SpellDuration.dbc`);
-  event.reply(SEARCH_DBC_SPELL_DURATIONS, dbc);
-});
-
-ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
-  let dbc = DBC.read(`${path}/ScalingStatDistribution.dbc`);
-  event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, dbc);
-});
-
-ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
-  let dbc = DBC.read(`${path}/ScalingStatValues.dbc`);
-  event.reply(SEARCH_DBC_SCALING_STAT_VALUES, dbc);
 });

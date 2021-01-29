@@ -17,7 +17,7 @@ const { foxyKnex } = require("../libs/mysql");
 ipcMain.on(SEARCH_SPELLS, (event, payload) => {
   let queryBuilder = foxyKnex()
     .select([
-      "ID",
+      "ds.ID as ID",
       "Name_Lang_zhCN",
       "NameSubtext_Lang_zhCN",
       "Description_Lang_zhCN",
@@ -33,10 +33,12 @@ ipcMain.on(SEARCH_SPELLS, (event, payload) => {
       "EffectAuraPeriod_2",
       "EffectAuraPeriod_3",
       "ProcCharges",
+      "dsd.Duration as Duration",
     ])
-    .from("dbc_spell");
+    .from("dbc_spell as ds")
+    .leftJoin("dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ds.ID", "like", `%${payload.ID}%`);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(
@@ -67,9 +69,10 @@ ipcMain.on(SEARCH_SPELLS, (event, payload) => {
 ipcMain.on(COUNT_SPELLS, (event, payload) => {
   let queryBuilder = foxyKnex()
     .count("* as total")
-    .from("dbc_spell");
+    .from("dbc_spell as ds")
+    .leftJoin("dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ds.ID", "like", `%${payload.ID}%`);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(

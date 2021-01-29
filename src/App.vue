@@ -61,6 +61,7 @@
 
 <script>
 const ipcRenderer = window.require("electron").ipcRenderer;
+
 import { mapState, mapActions } from "vuex";
 import { GLOBAL_NOTICE, START_EXPORT } from "./constants";
 
@@ -75,20 +76,11 @@ export default {
   },
   computed: {
     ...mapState("global", [
+      "active",
+      "developerConfig",
       "mysqlConfig",
       "dbcConfig",
       "configConfig",
-      "developerConfig",
-      "active",
-    ]),
-    ...mapState("dbc", [
-      "factions",
-      "factionTemplates",
-      "itemDisplayInfos",
-      "scalingStatDistributions",
-      "scalingStatValues",
-      "spells",
-      "spellDurations",
     ]),
   },
   methods: {
@@ -104,11 +96,11 @@ export default {
       "exportSpellDbc",
     ]),
     ...mapActions("global", [
+      "setActive",
       "storeDeveloperConfig",
       "storeMysqlConfig",
       "storeDbcConfig",
       "storeConfigConfig",
-      "setActive",
       "initMysqlConnection",
       "initDbcConnection",
     ]),
@@ -277,11 +269,20 @@ export default {
           this.visible = false;
           this.modal = false;
         })
-        .catch(() => {
+        .catch((error) => {
           clearInterval(timer);
           this.initializingText = "导出失败";
           this.visible = false;
           this.modal = false;
+          this.$alert(
+            error.message.replace(/at /g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "),
+            error.title,
+            {
+              type: "error",
+              dangerouslyUseHTMLString: true,
+              customClass: "wider-message-box",
+            }
+          );
         });
     });
   },
