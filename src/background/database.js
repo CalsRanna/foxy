@@ -1,11 +1,10 @@
-const { knex, init, initFoxy } = require("../libs/mysql");
+const { knex, init } = require("../libs/mysql");
 
 import { ipcMain } from "electron";
 import { INIT_MYSQL_CONNECTION, TEST_MYSQL_CONNECTION } from "../constants";
 
 ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
   init(payload);
-  initFoxy(payload);
   knex()
     .raw("SHOW TABLES")
     .then(() => {
@@ -64,7 +63,6 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
 
 ipcMain.on(TEST_MYSQL_CONNECTION, (event, payload) => {
   init(payload);
-  initFoxy(payload);
   // 尝试连接数据库，校验配置是否正确
   try {
     knex()
