@@ -15,7 +15,7 @@ import {
 } from "../constants";
 
 const DBC = require("warcrafty");
-const { foxyKnex } = require("../libs/mysql");
+const { knex } = require("../libs/mysql");
 
 let path;
 
@@ -25,16 +25,16 @@ ipcMain.on(INIT_DBC_CONFIG, (event, payload) => {
 });
 
 ipcMain.on(SEARCH_DBC_FACTIONS, (event) => {
-  let queryBuilder = foxyKnex()
+  let queryBuilder = knex()
     .count("* as total")
-    .from("dbc_faction");
+    .from("foxy.dbc_faction");
 
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
         try {
           let dbc = DBC.read(`${path}/Faction.dbc`);
-          foxyKnex()
+          knex()
             .batchInsert("dbc_faction", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_FACTIONS);
@@ -55,16 +55,16 @@ ipcMain.on(SEARCH_DBC_FACTIONS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, (event) => {
-  let queryBuilder = foxyKnex()
+  let queryBuilder = knex()
     .count("* as total")
-    .from("dbc_faction_template");
+    .from("foxy.dbc_faction_template");
 
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
         try {
           let dbc = DBC.read(`${path}/FactionTemplate.dbc`);
-          foxyKnex()
+          knex()
             .batchInsert("dbc_faction_template", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_FACTION_TEMPLATES);
@@ -85,16 +85,16 @@ ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_ITEMS, (event) => {
-  let queryBuilder = foxyKnex()
+  let queryBuilder = knex()
     .count("* as total")
-    .from("dbc_item");
+    .from("foxy.dbc_item");
 
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
         try {
           let dbc = DBC.read(`${path}/Item.dbc`);
-          foxyKnex()
+          knex()
             .batchInsert("dbc_item", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_ITEMS);
@@ -115,16 +115,16 @@ ipcMain.on(SEARCH_DBC_ITEMS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
-  let queryBuilder = foxyKnex()
+  let queryBuilder = knex()
     .count("* as total")
-    .from("dbc_item_display_info");
+    .from("foxy.dbc_item_display_info");
 
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
         try {
           let dbc = DBC.read(`${path}/ItemDisplayInfo.dbc`);
-          foxyKnex()
+          knex()
             .batchInsert("dbc_item_display_info", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS);
@@ -145,16 +145,16 @@ ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
-  let queryBuilder = foxyKnex()
+  let queryBuilder = knex()
     .count("* as total")
-    .from("dbc_spell");
+    .from("foxy.dbc_spell");
 
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
         try {
           let dbc = DBC.read(`${path}/Spell.dbc`);
-          foxyKnex()
+          knex()
             .batchInsert("dbc_spell", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_SPELLS);
@@ -175,16 +175,16 @@ ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
-  let queryBuilder = foxyKnex()
+  let queryBuilder = knex()
     .count("* as total")
-    .from("dbc_spell_duration");
+    .from("foxy.dbc_spell_duration");
 
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
         try {
           let dbc = DBC.read(`${path}/SpellDuration.dbc`);
-          foxyKnex()
+          knex()
             .batchInsert("dbc_spell_duration", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_SPELL_DURATIONS);
@@ -205,16 +205,16 @@ ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
-  let queryBuilder = foxyKnex()
+  let queryBuilder = knex()
     .count("* as total")
-    .from("dbc_scaling_stat_distribution");
+    .from("foxy.dbc_scaling_stat_distribution");
 
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
         try {
           let dbc = DBC.read(`${path}/ScalingStatDistribution.dbc`);
-          foxyKnex()
+          knex()
             .batchInsert("dbc_scaling_stat_distribution", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
@@ -238,16 +238,16 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
-  let queryBuilder = foxyKnex()
+  let queryBuilder = knex()
     .count("* as total")
-    .from("dbc_scaling_stat_values");
+    .from("foxy.dbc_scaling_stat_values");
 
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
         try {
           let dbc = DBC.read(`${path}/ScalingStatValues.dbc`);
-          foxyKnex()
+          knex()
             .batchInsert("dbc_scaling_stat_values", dbc.records)
             .then(() => {
               event.reply(SEARCH_DBC_SCALING_STAT_VALUES);
@@ -268,9 +268,9 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
 });
 
 ipcMain.on(EXPORT_SPELL_DBC, (event) => {
-  let queryBuilder = foxyKnex()
+  let queryBuilder = knex()
     .select()
-    .from("dbc_spell");
+    .from("foxy.dbc_spell");
 
   queryBuilder
     .then((rows) => {
