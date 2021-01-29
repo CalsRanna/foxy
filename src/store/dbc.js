@@ -119,8 +119,8 @@ export default {
         ipcRenderer.on(EXPORT_SPELL_DBC, () => {
           resolve();
         });
-        ipcRenderer.on(`${EXPORT_SPELL_DBC}_REJECT`, () => {
-          reject();
+        ipcRenderer.on(`${EXPORT_SPELL_DBC}_REJECT`, (error) => {
+          reject(error);
         });
       });
     },

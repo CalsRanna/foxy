@@ -12,13 +12,6 @@ export default {
   computed: {
     ...mapState("dbc", ["spellDurations"]),
     description() {
-      let duration = 0;
-      for (let spellDuration of this.spellDurations.records) {
-        if (spellDuration.ID == this.spell.DurationIndex) {
-          duration = spellDuration.Duration / 1000;
-          break;
-        }
-      }
       return this.spell[this.field]
         .replace(
           "$s1",
@@ -36,7 +29,7 @@ export default {
         .replace("$t2", this.spell.EffectAuraPeriod_2 / 1000)
         .replace("$t3", this.spell.EffectAuraPeriod_3 / 1000)
         .replace("$n", this.spell.ProcCharges)
-        .replace("$d", `${duration}秒`);
+        .replace("$d", `${this.spell.Duration / 1000}秒`);
     },
   },
 };
