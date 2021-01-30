@@ -9668,10 +9668,10 @@ vuex@^3.6.0:
   resolved "https://registry.npmjs.org/vuex/-/vuex-3.6.0.tgz#95efa56a58f7607c135b053350833a09e01aa813"
   integrity sha512-W74OO2vCJPs9/YjNjW8lLbj+jzT24waTo2KShI8jLvJW8OaIkgb3wuAMA7D+ZiUxDOx3ubwSZTaJBip9G8a3aQ==
 
-warcrafty@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.npmjs.org/warcrafty/-/warcrafty-1.0.6.tgz#ed8385e666e173977b2bcf782735dfd9c4ae48bc"
-  integrity sha512-iYXK/T1N6/GCO/kgJtR9wjKKHJpVRlIELyPowa0lKQC/hnysccOhqk9ekMEhLrfckoJ37tAx2zCKh6PCLAw15w==
+warcrafty@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/warcrafty/-/warcrafty-1.0.7.tgz#d33c064b5673396d6657edeed4d4809362f0545c"
+  integrity sha512-EQHjRPSo6jvws6M0DvVu9SVjQy3KywSyMc2SCC3fzNgWDa9fTHln7VClrVmqomFs7bLX00EJ+Hk6pNvVpnelRA==
 
 watchpack-chokidar2@^2.0.1:
   version "2.0.1"

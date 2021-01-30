@@ -32,19 +32,20 @@ ipcMain.on(SEARCH_DBC_FACTIONS, (event) => {
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
-        try {
-          let dbc = DBC.read(`${path}/Faction.dbc`);
-          knex()
-            .batchInsert("foxy.dbc_faction", dbc.records)
-            .then(() => {
-              event.reply(SEARCH_DBC_FACTIONS);
-            })
-            .catch((error) => {
-              event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
-            });
-        } catch (error) {
-          event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
-        }
+        DBC.read(`${path}/Faction.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_faction", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_FACTIONS);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
+          });
       } else {
         event.reply(SEARCH_DBC_FACTIONS);
       }
@@ -62,19 +63,20 @@ ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, (event) => {
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
-        try {
-          let dbc = DBC.read(`${path}/FactionTemplate.dbc`);
-          knex()
-            .batchInsert("foxy.dbc_faction_template", dbc.records)
-            .then(() => {
-              event.reply(SEARCH_DBC_FACTION_TEMPLATES);
-            })
-            .catch((error) => {
-              event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
-            });
-        } catch (error) {
-          event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
-        }
+        DBC.read(`${path}/FactionTemplate.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_faction_template", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_FACTION_TEMPLATES);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
+          });
       } else {
         event.reply(SEARCH_DBC_FACTION_TEMPLATES);
       }
@@ -92,19 +94,20 @@ ipcMain.on(SEARCH_DBC_ITEMS, (event) => {
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
-        try {
-          let dbc = DBC.read(`${path}/Item.dbc`);
-          knex()
-            .batchInsert("foxy.dbc_item", dbc.records)
-            .then(() => {
-              event.reply(SEARCH_DBC_ITEMS);
-            })
-            .catch((error) => {
-              event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
-            });
-        } catch (error) {
-          event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
-        }
+        DBC.read(`${path}/Item.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_item", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_ITEMS);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
+          });
       } else {
         event.reply(SEARCH_DBC_ITEMS);
       }
@@ -122,19 +125,20 @@ ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
-        try {
-          let dbc = DBC.read(`${path}/ItemDisplayInfo.dbc`);
-          knex()
-            .batchInsert("foxy.dbc_item_display_info", dbc.records)
-            .then(() => {
-              event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS);
-            })
-            .catch((error) => {
-              event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
-            });
-        } catch (error) {
-          event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
-        }
+        DBC.read(`${path}/ItemDisplayInfo.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_item_display_info", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
+          });
       } else {
         event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS);
       }
@@ -152,19 +156,20 @@ ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
-        try {
-          let dbc = DBC.read(`${path}/Spell.dbc`);
-          knex()
-            .batchInsert("foxy.dbc_spell", dbc.records)
-            .then(() => {
-              event.reply(SEARCH_DBC_SPELLS);
-            })
-            .catch((error) => {
-              event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
-            });
-        } catch (error) {
-          event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
-        }
+        DBC.read(`${path}/Spell.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_spell", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_SPELLS);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
+          });
       } else {
         event.reply(SEARCH_DBC_SPELLS);
       }
@@ -182,19 +187,20 @@ ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
-        try {
-          let dbc = DBC.read(`${path}/SpellDuration.dbc`);
-          knex()
-            .batchInsert("foxy.dbc_spell_duration", dbc.records)
-            .then(() => {
-              event.reply(SEARCH_DBC_SPELL_DURATIONS);
-            })
-            .catch((error) => {
-              event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
-            });
-        } catch (error) {
-          event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
-        }
+        DBC.read(`${path}/SpellDuration.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_spell_duration", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_SPELL_DURATIONS);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
+          });
       } else {
         event.reply(SEARCH_DBC_SPELL_DURATIONS);
       }
@@ -212,22 +218,26 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
-        try {
-          let dbc = DBC.read(`${path}/ScalingStatDistribution.dbc`);
-          knex()
-            .batchInsert("foxy.dbc_scaling_stat_distribution", dbc.records)
-            .then(() => {
-              event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
-            })
-            .catch((error) => {
-              event.reply(
-                `${SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`,
-                error
-              );
-            });
-        } catch (error) {
-          event.reply(`${SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`, error);
-        }
+        DBC.read(`${path}/ScalingStatDistribution.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_scaling_stat_distribution", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
+              })
+              .catch((error) => {
+                event.reply(
+                  `${SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`,
+                  error
+                );
+              });
+          })
+          .catch((error) => {
+            event.reply(
+              `${SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`,
+              error
+            );
+          });
       } else {
         event.reply(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
       }
@@ -245,19 +255,20 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
   queryBuilder
     .then((rows) => {
       if (rows[0].total == 0) {
-        try {
-          let dbc = DBC.read(`${path}/ScalingStatValues.dbc`);
-          knex()
-            .batchInsert("foxy.dbc_scaling_stat_values", dbc.records)
-            .then(() => {
-              event.reply(SEARCH_DBC_SCALING_STAT_VALUES);
-            })
-            .catch((error) => {
-              event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
-            });
-        } catch (error) {
-          event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
-        }
+        DBC.read(`${path}/ScalingStatValues.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_scaling_stat_values", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_SCALING_STAT_VALUES);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
+          });
       } else {
         event.reply(SEARCH_DBC_SCALING_STAT_VALUES);
       }
@@ -274,12 +285,13 @@ ipcMain.on(EXPORT_SPELL_DBC, (event) => {
 
   queryBuilder
     .then((rows) => {
-      try {
-        DBC.write(`${path}/Spell.dbc`, rows);
-        event.reply(EXPORT_SPELL_DBC);
-      } catch (error) {
-        event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
-      }
+      DBC.write(`${path}/Spell.dbc`, rows)
+        .then(() => {
+          event.reply(EXPORT_SPELL_DBC);
+        })
+        .catch((error) => {
+          event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
+        });
     })
     .catch((error) => {
       event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
