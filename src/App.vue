@@ -266,23 +266,27 @@ export default {
         .then(() => {
           clearInterval(timer);
           this.initializingText = "导出成功";
-          this.visible = false;
-          this.modal = false;
+          setTimeout(() => {
+            this.visible = false;
+            this.modal = false;
+          }, 500);
         })
         .catch((error) => {
           clearInterval(timer);
           this.initializingText = "导出失败";
-          this.visible = false;
-          this.modal = false;
-          this.$alert(
-            error.message.replace(/at /g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "),
-            error.title,
-            {
-              type: "error",
-              dangerouslyUseHTMLString: true,
-              customClass: "wider-message-box",
-            }
-          );
+          setTimeout(() => {
+            this.visible = false;
+            this.modal = false;
+            this.$alert(
+              error.message.replace(/at /g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "),
+              error.title,
+              {
+                type: "error",
+                dangerouslyUseHTMLString: true,
+                customClass: "wider-message-box",
+              }
+            );
+          }, 500);
         });
     });
   },
