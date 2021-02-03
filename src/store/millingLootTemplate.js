@@ -18,45 +18,75 @@ export default {
   }),
   actions: {
     searchMillingLootTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_MILLING_LOOT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_MILLING_LOOT_TEMPLATES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_MILLING_LOOT_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     storeMillingLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_MILLING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(STORE_MILLING_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${STORE_MILLING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findMillingLootTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_MILLING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(FIND_MILLING_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_MILLING_LOOT_TEMPLATE, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${FIND_MILLING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateMillingLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_MILLING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_MILLING_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${UPDATE_MILLING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     destroyMillingLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_MILLING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_MILLING_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${DESTROY_MILLING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     createMillingLootTemplate({ commit }, payload) {
@@ -66,11 +96,17 @@ export default {
       });
     },
     copyMillingLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_MILLING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(COPY_MILLING_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${COPY_MILLING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

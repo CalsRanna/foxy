@@ -30,20 +30,26 @@ export default {
   }),
   actions: {
     searchSpells({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELLS, payload);
         ipcRenderer.on(SEARCH_SPELLS, (event, response) => {
           commit(SEARCH_SPELLS, response);
           resolve();
         });
+        ipcRenderer.on(`${SEARCH_SPELLS}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     countSpells({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SPELLS, payload);
         ipcRenderer.on(COUNT_SPELLS, (event, response) => {
           commit(COUNT_SPELLS, response);
           resolve();
+        });
+        ipcRenderer.on(`${COUNT_SPELLS}_REJECT`, (event, error) => {
+          reject(error);
         });
       });
     },
@@ -54,61 +60,73 @@ export default {
       });
     },
     storeSpell({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL, payload);
         ipcRenderer.on(STORE_SPELL, () => {
           commit("UPDATE_REFRESH_OF_SPELL", true);
           resolve();
         });
+        ipcRenderer.on(`${STORE_SPELL}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     findSpell({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL, payload);
         ipcRenderer.on(FIND_SPELL, (event, response) => {
           commit(FIND_SPELL, response);
           resolve();
         });
+        ipcRenderer.on(`${FIND_SPELL}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     updateSpell({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL, payload);
         ipcRenderer.on(UPDATE_SPELL, () => {
           commit("UPDATE_REFRESH_OF_SPELL", true);
           resolve();
         });
+        ipcRenderer.on(`${UPDATE_SPELL}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     destroySpell(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SPELL, payload);
         ipcRenderer.on(DESTROY_SPELL, () => {
           resolve();
         });
+        ipcRenderer.on(`${DESTROY_SPELL}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     createSpell({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_SPELL, payload);
         ipcRenderer.on(CREATE_SPELL, (event, response) => {
           commit(CREATE_SPELL, response);
           resolve();
         });
+        ipcRenderer.on(`${CREATE_SPELL}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     copySpell(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SPELL, payload);
         ipcRenderer.on(COPY_SPELL, () => {
           resolve();
         });
-      });
-    },
-    updateFilter({ commit }, payload) {
-      return new Promise((resolve) => {
-        commit("UPDATE_FILTER_OF_SPELL", payload);
-        resolve();
+        ipcRenderer.on(`${COPY_SPELL}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     resetCredential({ commit }) {
@@ -140,9 +158,6 @@ export default {
     },
     [CREATE_SPELL](state, spell) {
       state.spell = spell;
-    },
-    UPDATE_FILTER_OF_SPELL(state, filter) {
-      state.filter = filter;
     },
     UPDATE_REFRESH_OF_SPELL(state, refresh) {
       state.refresh = refresh;

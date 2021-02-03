@@ -17,7 +17,7 @@ ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
     .select(["mlt.*", "it.name", "itl.Name as localeName"])
     .from("milling_loot_template as mlt")
     .leftJoin("item_template as it", "mlt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function () {
+    .leftJoin("item_template_locale as itl", function() {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -31,7 +31,7 @@ ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
       event.reply(SEARCH_MILLING_LOOT_TEMPLATES, rows);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${SEARCH_MILLING_LOOT_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -42,7 +42,9 @@ ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_MILLING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("milling_loot_template");
+  let queryBuilder = knex()
+    .insert(payload)
+    .into("milling_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -55,7 +57,7 @@ ipcMain.on(STORE_MILLING_LOOT_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${STORE_MILLING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -76,7 +78,7 @@ ipcMain.on(FIND_MILLING_LOOT_TEMPLATE, (event, payload) => {
       event.reply(FIND_MILLING_LOOT_TEMPLATE, rows.length > 0 ? rows[0] : {});
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${FIND_MILLING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -103,7 +105,7 @@ ipcMain.on(UPDATE_MILLING_LOOT_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${UPDATE_MILLING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -130,7 +132,7 @@ ipcMain.on(DESTROY_MILLING_LOOT_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${DESTROY_MILLING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -180,7 +182,7 @@ ipcMain.on(COPY_MILLING_LOOT_TEMPLATE, (event, payload) => {
           });
         })
         .catch((error) => {
-          throw error;
+          event.reply(`${COPY_MILLING_LOOT_TEMPLATE}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
@@ -190,6 +192,6 @@ ipcMain.on(COPY_MILLING_LOOT_TEMPLATE, (event, payload) => {
         });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${COPY_MILLING_LOOT_TEMPLATE}_REJECT`, error);
     });
 });

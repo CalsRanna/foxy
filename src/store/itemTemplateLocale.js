@@ -12,20 +12,32 @@ export default {
   }),
   actions: {
     searchItemTemplateLocales({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ITEM_TEMPLATE_LOCALES, payload);
         ipcRenderer.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, response) => {
           commit(SEARCH_ITEM_TEMPLATE_LOCALES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_ITEM_TEMPLATE_LOCALES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     storeItemTemplateLocales(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ITEM_TEMPLATE_LOCALES, payload);
         ipcRenderer.on(STORE_ITEM_TEMPLATE_LOCALES, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${STORE_ITEM_TEMPLATE_LOCALES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

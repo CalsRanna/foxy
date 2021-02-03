@@ -14,19 +14,25 @@ ipcMain.on(STORE_QUEST_OFFER_REWARD, (event, payload) => {
     .insert(payload)
     .into("quest_offer_reward");
 
-  queryBuilder.then((rows) => {
-    event.reply(STORE_QUEST_OFFER_REWARD, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "新建成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(STORE_QUEST_OFFER_REWARD, rows);
+      event.reply(GLOBAL_NOTICE, {
+        category: "notification",
+        title: "成功",
+        message: "新建成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${STORE_QUEST_OFFER_REWARD}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(FIND_QUEST_OFFER_REWARD, (event, payload) => {
@@ -35,13 +41,19 @@ ipcMain.on(FIND_QUEST_OFFER_REWARD, (event, payload) => {
     .from("quest_offer_reward")
     .where(payload);
 
-  queryBuilder.then((rows) => {
-    event.reply(FIND_QUEST_OFFER_REWARD, rows.length > 0 ? rows[0] : {});
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
+  queryBuilder
+    .then((rows) => {
+      event.reply(FIND_QUEST_OFFER_REWARD, rows.length > 0 ? rows[0] : {});
+    })
+    .catch((error) => {
+      event.reply(`${FIND_QUEST_OFFER_REWARD}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-  });
 });
 
 ipcMain.on(UPDATE_QUEST_OFFER_REWARD, (event, payload) => {
@@ -50,17 +62,23 @@ ipcMain.on(UPDATE_QUEST_OFFER_REWARD, (event, payload) => {
     .where(payload.credential)
     .update(payload.questOfferReward);
 
-  queryBuilder.then((rows) => {
-    event.reply(UPDATE_QUEST_OFFER_REWARD, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "修改成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(UPDATE_QUEST_OFFER_REWARD, rows);
+      event.reply(GLOBAL_NOTICE, {
+        category: "notification",
+        title: "成功",
+        message: "修改成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${UPDATE_QUEST_OFFER_REWARD}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });

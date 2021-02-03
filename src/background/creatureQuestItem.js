@@ -8,7 +8,7 @@ import {
   DESTROY_CREATURE_QUEST_ITEM,
   CREATE_CREATURE_QUEST_ITEM,
   COPY_CREATURE_QUEST_ITEM,
-  GLOBAL_NOTICE
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -28,16 +28,16 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ITEMS, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(SEARCH_CREATURE_QUEST_ITEMS, rows);
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${SEARCH_CREATURE_QUEST_ITEMS}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -48,22 +48,22 @@ ipcMain.on(STORE_CREATURE_QUEST_ITEM, (event, payload) => {
     .into("creature_questitem");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(STORE_CREATURE_QUEST_ITEM, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "新建成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${STORE_CREATURE_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -75,16 +75,16 @@ ipcMain.on(FIND_CREATURE_QUEST_ITEM, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(FIND_CREATURE_QUEST_ITEM, rows.length > 0 ? rows[0] : {});
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${FIND_CREATURE_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -96,22 +96,22 @@ ipcMain.on(UPDATE_CREATURE_QUEST_ITEM, (event, payload) => {
     .update(payload.creatureQuestItem);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(UPDATE_CREATURE_QUEST_ITEM, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "修改成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${UPDATE_CREATURE_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -123,22 +123,22 @@ ipcMain.on(DESTROY_CREATURE_QUEST_ITEM, (event, payload) => {
     .delete();
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(DESTROY_CREATURE_QUEST_ITEM, rows);
       event.reply("GLOBAL_NOTICE", {
         category: "notification",
         title: "成功",
         message: "删除成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${DESTROY_CREATURE_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -151,19 +151,19 @@ ipcMain.on(CREATE_CREATURE_QUEST_ITEM, (event, payload) => {
     .orderBy("Idx", "desc");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(CREATE_CREATURE_QUEST_ITEM, {
         CreatureEntry: payload.CreatureEntry,
-        Idx: rows.length > 0 ? rows[0].Idx + 1 : 1
+        Idx: rows.length > 0 ? rows[0].Idx + 1 : 1,
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${CREATE_CREATURE_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -182,12 +182,12 @@ ipcMain.on(COPY_CREATURE_QUEST_ITEM, (event, payload) => {
     .from("creature_questitem")
     .where(payload);
   Promise.all([
-    idxQueryBuilder.then(rows => {
+    idxQueryBuilder.then((rows) => {
       idx = rows.length > 0 ? rows[0].Idx : 1;
     }),
-    findCreatureQuestItemQueryBuilder.then(rows => {
+    findCreatureQuestItemQueryBuilder.then((rows) => {
       creatureQuestItem = rows.length > 0 ? rows[0] : {};
-    })
+    }),
   ])
     .then(() => {
       creatureQuestItem.Idx = idx + 1;
@@ -195,26 +195,26 @@ ipcMain.on(COPY_CREATURE_QUEST_ITEM, (event, payload) => {
         .insert(creatureQuestItem)
         .into("creature_questitem");
       queryBuilder
-        .then(rows => {
+        .then((rows) => {
           event.reply(COPY_CREATURE_QUEST_ITEM, rows);
           event.reply(GLOBAL_NOTICE, {
             type: "success",
             category: "notification",
             title: "成功",
-            message: `复制成功，新的装备模板Idx为${idx + 1}。`
+            message: `复制成功，新的装备模板Idx为${idx + 1}。`,
           });
         })
-        .catch(error => {
-          throw error;
+        .catch((error) => {
+          event.reply(`${COPY_CREATURE_QUEST_ITEM}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
             category: "message",
-            message: queryBuilder.toString()
+            message: queryBuilder.toString(),
           });
         });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${COPY_CREATURE_QUEST_ITEM}_REJECT`, error);
     });
 });

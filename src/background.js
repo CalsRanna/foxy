@@ -72,13 +72,6 @@ function createWindow() {
       label: "工具",
       submenu: [
         {
-          label: "导入",
-          accelerator: "CmdOrCtrl+O",
-          click() {
-            win.webContents.send("START_IMPORT");
-          },
-        },
-        {
           label: "导出",
           accelerator: "CmdOrCtrl+S",
           click() {
@@ -100,10 +93,6 @@ function createWindow() {
           role: "toggleDevTools",
         },
       ],
-    },
-    {
-      label: "关于",
-      submenu: [{ label: "帮助" }],
     },
   ];
 

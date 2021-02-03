@@ -7,7 +7,7 @@ import {
   UPDATE_SKINNING_LOOT_TEMPLATE,
   DESTROY_SKINNING_LOOT_TEMPLATE,
   COPY_SKINNING_LOOT_TEMPLATE,
-  GLOBAL_NOTICE
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -27,16 +27,16 @@ ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
     .where("slt.Entry", payload.Entry);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(SEARCH_SKINNING_LOOT_TEMPLATES, rows);
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${SEARCH_SKINNING_LOOT_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -47,22 +47,22 @@ ipcMain.on(STORE_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     .into("skinning_loot_template");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(STORE_SKINNING_LOOT_TEMPLATE, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "新建成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${STORE_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -74,16 +74,16 @@ ipcMain.on(FIND_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(FIND_SKINNING_LOOT_TEMPLATE, rows.length > 0 ? rows[0] : {});
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${FIND_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -95,22 +95,22 @@ ipcMain.on(UPDATE_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     .update(payload.skinningLootTemplate);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(UPDATE_SKINNING_LOOT_TEMPLATE, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "修改成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${UPDATE_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -122,22 +122,22 @@ ipcMain.on(DESTROY_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     .delete();
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(DESTROY_SKINNING_LOOT_TEMPLATE, rows);
       event.reply("GLOBAL_NOTICE", {
         category: "notification",
         title: "成功",
         message: "删除成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${DESTROY_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -156,12 +156,12 @@ ipcMain.on(COPY_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     .from("skinning_loot_template")
     .where(payload);
   Promise.all([
-    itemQueryBuilder.then(rows => {
+    itemQueryBuilder.then((rows) => {
       item = rows.length > 0 ? rows[0].Item : 0;
     }),
-    findSkinningLootTemplateQueryBuilder.then(rows => {
+    findSkinningLootTemplateQueryBuilder.then((rows) => {
       skinningLootTemplate = rows.length > 0 ? rows[0] : {};
-    })
+    }),
   ])
     .then(() => {
       skinningLootTemplate.Item = item + 1;
@@ -172,26 +172,26 @@ ipcMain.on(COPY_SKINNING_LOOT_TEMPLATE, (event, payload) => {
         .insert(skinningLootTemplate)
         .into("skinning_loot_template");
       queryBuilder
-        .then(rows => {
+        .then((rows) => {
           event.reply(COPY_SKINNING_LOOT_TEMPLATE, rows);
           event.reply(GLOBAL_NOTICE, {
             type: "success",
             category: "notification",
             title: "成功",
-            message: `复制成功，新的装备模板Item为${item + 1}。`
+            message: `复制成功，新的装备模板Item为${item + 1}。`,
           });
         })
-        .catch(error => {
-          throw error;
+        .catch((error) => {
+          event.reply(`${COPY_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
             category: "message",
-            message: queryBuilder.toString()
+            message: queryBuilder.toString(),
           });
         });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${COPY_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
     });
 });

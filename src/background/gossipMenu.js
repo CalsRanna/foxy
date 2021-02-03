@@ -42,13 +42,19 @@ ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
     .limit(50)
     .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
 
-  queryBuilder.then((rows) => {
-    event.reply(SEARCH_GOSSIP_MENUS, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
+  queryBuilder
+    .then((rows) => {
+      event.reply(SEARCH_GOSSIP_MENUS, rows);
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_GOSSIP_MENUS}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-  });
 });
 
 ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
@@ -77,13 +83,19 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
     );
   }
 
-  queryBuilder.then((rows) => {
-    event.reply(COUNT_GOSSIP_MENUS, rows[0].total);
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
+  queryBuilder
+    .then((rows) => {
+      event.reply(COUNT_GOSSIP_MENUS, rows[0].total);
+    })
+    .catch((error) => {
+      event.reply(`${COUNT_GOSSIP_MENUS}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-  });
 });
 
 ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
@@ -91,19 +103,25 @@ ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
     .insert(payload)
     .into("gossip_menu");
 
-  queryBuilder.then((rows) => {
-    event.reply(STORE_GOSSIP_MENU, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "新建成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(STORE_GOSSIP_MENU, rows);
+      event.reply(GLOBAL_NOTICE, {
+        category: "notification",
+        title: "成功",
+        message: "新建成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${STORE_GOSSIP_MENU}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(FIND_GOSSIP_MENU, (event, payload) => {
@@ -112,13 +130,19 @@ ipcMain.on(FIND_GOSSIP_MENU, (event, payload) => {
     .from("gossip_menu")
     .where(payload);
 
-  queryBuilder.then((rows) => {
-    event.reply(FIND_GOSSIP_MENU, rows.length > 0 ? rows[0] : {});
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
+  queryBuilder
+    .then((rows) => {
+      event.reply(FIND_GOSSIP_MENU, rows.length > 0 ? rows[0] : {});
+    })
+    .catch((error) => {
+      event.reply(`${FIND_GOSSIP_MENU}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-  });
 });
 
 ipcMain.on(UPDATE_GOSSIP_MENU, (event, payload) => {
@@ -128,19 +152,25 @@ ipcMain.on(UPDATE_GOSSIP_MENU, (event, payload) => {
     .where("TextID", payload.credential.TextID)
     .update(payload.gossipMenu);
 
-  queryBuilder.then((rows) => {
-    event.reply(UPDATE_GOSSIP_MENU, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "修改成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(UPDATE_GOSSIP_MENU, rows);
+      event.reply(GLOBAL_NOTICE, {
+        category: "notification",
+        title: "成功",
+        message: "修改成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${UPDATE_GOSSIP_MENU}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(DESTROY_GOSSIP_MENU, (event, payload) => {
@@ -149,19 +179,25 @@ ipcMain.on(DESTROY_GOSSIP_MENU, (event, payload) => {
     .where(payload)
     .delete();
 
-  queryBuilder.then((rows) => {
-    event.reply(DESTROY_GOSSIP_MENU, rows);
-    event.reply("GLOBAL_NOTICE", {
-      category: "notification",
-      title: "成功",
-      message: "删除成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(DESTROY_GOSSIP_MENU, rows);
+      event.reply("GLOBAL_NOTICE", {
+        category: "notification",
+        title: "成功",
+        message: "删除成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${DESTROY_GOSSIP_MENU}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(CREATE_GOSSIP_MENU, (event, payload) => {
@@ -170,15 +206,21 @@ ipcMain.on(CREATE_GOSSIP_MENU, (event, payload) => {
     .from("gossip_menu")
     .orderBy("MenuID", "desc");
 
-  queryBuilder.then((rows) => {
-    event.reply(CREATE_GOSSIP_MENU, {
-      MenuID: rows[0].MenuID + 1,
+  queryBuilder
+    .then((rows) => {
+      event.reply(CREATE_GOSSIP_MENU, {
+        MenuID: rows[0].MenuID + 1,
+      });
+    })
+    .catch((error) => {
+      event.reply(`${CREATE_GOSSIP_MENU}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
@@ -200,23 +242,33 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
     findGossipMenuQueryBuilder.then((rows) => {
       gossipMenu = rows.length > 0 ? rows[0] : {};
     }),
-  ]).then(() => {
-    gossipMenu.MenuID = MenuID + 1;
-    let queryBuilder = knex()
-      .insert(gossipMenu)
-      .into("gossip_menu");
-    queryBuilder.then((rows) => {
-      event.reply(COPY_GOSSIP_MENU, rows);
-      event.reply(GLOBAL_NOTICE, {
-        type: "success",
-        category: "notification",
-        title: "成功",
-        message: `复制成功，新的对话 MenuID 为 ${MenuID + 1}。`,
-      });
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+  ])
+    .then(() => {
+      gossipMenu.MenuID = MenuID + 1;
+      let queryBuilder = knex()
+        .insert(gossipMenu)
+        .into("gossip_menu");
+      queryBuilder
+        .then((rows) => {
+          event.reply(COPY_GOSSIP_MENU, rows);
+          event.reply(GLOBAL_NOTICE, {
+            type: "success",
+            category: "notification",
+            title: "成功",
+            message: `复制成功，新的对话 MenuID 为 ${MenuID + 1}。`,
+          });
+        })
+        .catch((error) => {
+          event.reply(`${COPY_GOSSIP_MENU}_REJECT`, error);
+        })
+        .finally(() => {
+          event.reply(GLOBAL_NOTICE, {
+            category: "message",
+            message: queryBuilder.toString(),
+          });
+        });
+    })
+    .catch((error) => {
+      event.reply(`${COPY_GOSSIP_MENU}_REJECT`, error);
     });
-  });
 });

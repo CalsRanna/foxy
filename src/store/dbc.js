@@ -35,65 +35,88 @@ export default {
   },
   actions: {
     searchDbcFactions({ commit }) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DBC_FACTIONS);
         ipcRenderer.on(SEARCH_DBC_FACTIONS, (event, response) => {
           commit(SEARCH_DBC_FACTIONS, response);
           resolve();
         });
+        ipcRenderer.on(`${SEARCH_DBC_FACTIONS}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     searchDbcFactionTemplates({ commit }) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DBC_FACTION_TEMPLATES);
         ipcRenderer.on(SEARCH_DBC_FACTION_TEMPLATES, (event, response) => {
           commit(SEARCH_DBC_FACTION_TEMPLATES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     searchDbcItems({ commit }) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DBC_ITEMS);
         ipcRenderer.on(SEARCH_DBC_ITEMS, (event, response) => {
           commit(SEARCH_DBC_ITEMS, response);
           resolve();
         });
+        ipcRenderer.on(`${SEARCH_DBC_ITEMS}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     searchDbcItemDisplayInfos({ commit }) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DBC_ITEM_DISPLAY_INFOS);
         ipcRenderer.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event, response) => {
           commit(SEARCH_DBC_ITEM_DISPLAY_INFOS, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     searchDbcSpells({ commit }) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DBC_SPELLS);
-        // ipcRenderer.on(SEARCH_DBC_SPELLS, (event, response) => {
-        //   commit(SEARCH_DBC_SPELLS, response);
-        //   resolve();
-        // });
         ipcRenderer.on(SEARCH_DBC_SPELLS, () => {
           commit(SEARCH_DBC_SPELLS, {});
           resolve();
         });
+        ipcRenderer.on(`${SEARCH_DBC_SPELLS}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     searchDbcSpellDurations({ commit }) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DBC_SPELL_DURATIONS);
         ipcRenderer.on(SEARCH_DBC_SPELL_DURATIONS, (event, response) => {
           commit(SEARCH_DBC_SPELL_DURATIONS, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_DBC_SPELL_DURATIONS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     searchDbcScalingStatDistributions({ commit }) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS);
         ipcRenderer.on(
           SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
@@ -102,15 +125,27 @@ export default {
             resolve();
           }
         );
+        ipcRenderer.on(
+          `${SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     searchDbcScalingStatValues({ commit }) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DBC_SCALING_STAT_VALUES);
         ipcRenderer.on(SEARCH_DBC_SCALING_STAT_VALUES, (event, response) => {
           commit(SEARCH_DBC_SCALING_STAT_VALUES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     exportSpellDbc() {

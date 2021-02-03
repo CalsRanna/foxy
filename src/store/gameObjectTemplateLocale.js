@@ -12,7 +12,7 @@ export default {
   }),
   actions: {
     searchGameObjectTemplateLocales({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GAME_OBJECT_TEMPLATE_LOCALES, payload);
         ipcRenderer.on(
           SEARCH_GAME_OBJECT_TEMPLATE_LOCALES,
@@ -21,14 +21,26 @@ export default {
             resolve();
           }
         );
+        ipcRenderer.on(
+          `${SEARCH_GAME_OBJECT_TEMPLATE_LOCALES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     storeGameObjectTemplateLocales(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GAME_OBJECT_TEMPLATE_LOCALES, payload);
         ipcRenderer.on(STORE_GAME_OBJECT_TEMPLATE_LOCALES, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${STORE_GAME_OBJECT_TEMPLATE_LOCALES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

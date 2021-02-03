@@ -18,45 +18,69 @@ export default {
   }),
   actions: {
     searchItemLootTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ITEM_LOOT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_ITEM_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_ITEM_LOOT_TEMPLATES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_ITEM_LOOT_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     storeItemLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ITEM_LOOT_TEMPLATE, payload);
         ipcRenderer.on(STORE_ITEM_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(`${STORE_ITEM_LOOT_TEMPLATE}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     findItemLootTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ITEM_LOOT_TEMPLATE, payload);
         ipcRenderer.on(FIND_ITEM_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_ITEM_LOOT_TEMPLATE, response);
           resolve();
         });
+        ipcRenderer.on(`${FIND_ITEM_LOOT_TEMPLATE}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     updateItemLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ITEM_LOOT_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_ITEM_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${UPDATE_ITEM_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     destroyItemLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_ITEM_LOOT_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_ITEM_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${DESTROY_ITEM_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     createItemLootTemplate({ commit }, payload) {
@@ -66,10 +90,13 @@ export default {
       });
     },
     copyItemLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_ITEM_LOOT_TEMPLATE, payload);
         ipcRenderer.on(COPY_ITEM_LOOT_TEMPLATE, () => {
           resolve();
+        });
+        ipcRenderer.on(`${COPY_ITEM_LOOT_TEMPLATE}_REJECT`, (event, error) => {
+          reject(error);
         });
       });
     },

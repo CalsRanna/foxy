@@ -13,19 +13,25 @@ ipcMain.on(STORE_NPC_TEXT, (event, payload) => {
     .insert(payload)
     .into("npc_text");
 
-  queryBuilder.then((rows) => {
-    event.reply(STORE_NPC_TEXT, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "新建成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(STORE_NPC_TEXT, rows);
+      event.reply(GLOBAL_NOTICE, {
+        category: "notification",
+        title: "成功",
+        message: "新建成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${STORE_NPC_TEXT}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(FIND_NPC_TEXT, (event, payload) => {
@@ -34,13 +40,19 @@ ipcMain.on(FIND_NPC_TEXT, (event, payload) => {
     .from("npc_text")
     .where(payload);
 
-  queryBuilder.then((rows) => {
-    event.reply(FIND_NPC_TEXT, rows.length > 0 ? rows[0] : {});
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
+  queryBuilder
+    .then((rows) => {
+      event.reply(FIND_NPC_TEXT, rows.length > 0 ? rows[0] : {});
+    })
+    .catch((error) => {
+      event.reply(`${FIND_NPC_TEXT}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-  });
 });
 
 ipcMain.on(UPDATE_NPC_TEXT, (event, payload) => {
@@ -49,17 +61,23 @@ ipcMain.on(UPDATE_NPC_TEXT, (event, payload) => {
     .where("ID", payload.credential.ID)
     .update(payload.npcText);
 
-  queryBuilder.then((rows) => {
-    event.reply(UPDATE_NPC_TEXT, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "修改成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(UPDATE_NPC_TEXT, rows);
+      event.reply(GLOBAL_NOTICE, {
+        category: "notification",
+        title: "成功",
+        message: "修改成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${UPDATE_NPC_TEXT}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });

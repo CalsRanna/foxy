@@ -32,21 +32,33 @@ export default {
   },
   actions: {
     searchGameObjectTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GAME_OBJECT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_GAME_OBJECT_TEMPLATES, (event, response) => {
           commit(SEARCH_GAME_OBJECT_TEMPLATES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_GAME_OBJECT_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     countGameObjectTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_GAME_OBJECT_TEMPLATES, payload);
         ipcRenderer.on(COUNT_GAME_OBJECT_TEMPLATES, (event, response) => {
           commit(COUNT_GAME_OBJECT_TEMPLATES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${COUNT_GAME_OBJECT_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     paginateGameObjectTemplates({ commit }, payload) {
@@ -56,55 +68,91 @@ export default {
       });
     },
     storeGameObjectTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(STORE_GAME_OBJECT_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_GAME_OBJECT_TEMPLATE", true);
           resolve();
         });
+        ipcRenderer.on(
+          `${STORE_GAME_OBJECT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findGameObjectTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(FIND_GAME_OBJECT_TEMPLATE, (event, response) => {
           commit(FIND_GAME_OBJECT_TEMPLATE, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${FIND_GAME_OBJECT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateGameObjectTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_GAME_OBJECT_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_GAME_OBJECT_TEMPLATE", true);
           resolve();
         });
+        ipcRenderer.on(
+          `${UPDATE_GAME_OBJECT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     destroyGameObjectTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_GAME_OBJECT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${DESTROY_GAME_OBJECT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     createGameObjectTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(CREATE_GAME_OBJECT_TEMPLATE, (event, response) => {
           commit(CREATE_GAME_OBJECT_TEMPLATE, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${CREATE_GAME_OBJECT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     copyGameObjectTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_GAME_OBJECT_TEMPLATE, payload);
         ipcRenderer.on(COPY_GAME_OBJECT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${COPY_GAME_OBJECT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     resetCredential({ commit }) {

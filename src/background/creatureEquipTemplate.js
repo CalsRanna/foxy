@@ -8,7 +8,7 @@ import {
   DESTROY_CREATURE_EQUIP_TEMPLATE,
   CREATE_CREATURE_EQUIP_TEMPLATE,
   COPY_CREATURE_EQUIP_TEMPLATE,
-  GLOBAL_NOTICE
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -25,7 +25,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
       "itl2.Name as Name2",
       "it3.displayid as displayid3",
       "it3.name as name3",
-      "itl3.Name as Name3"
+      "itl3.Name as Name3",
     ])
     .from("creature_equip_template as cet")
     .leftJoin("item_template as it1", "cet.ItemID1", "it1.entry")
@@ -55,16 +55,16 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(SEARCH_CREATURE_EQUIP_TEMPLATES, rows);
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${SEARCH_CREATURE_EQUIP_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -75,22 +75,22 @@ ipcMain.on(STORE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
     .into("creature_equip_template");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(STORE_CREATURE_EQUIP_TEMPLATE, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "新建成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${STORE_CREATURE_EQUIP_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -102,16 +102,16 @@ ipcMain.on(FIND_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(FIND_CREATURE_EQUIP_TEMPLATE, rows.length > 0 ? rows[0] : {});
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${FIND_CREATURE_EQUIP_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -123,22 +123,22 @@ ipcMain.on(UPDATE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
     .update(payload.creatureEquipTemplate);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(UPDATE_CREATURE_EQUIP_TEMPLATE, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "修改成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${UPDATE_CREATURE_EQUIP_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -150,22 +150,22 @@ ipcMain.on(DESTROY_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
     .delete();
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(DESTROY_CREATURE_EQUIP_TEMPLATE, rows);
       event.reply("GLOBAL_NOTICE", {
         category: "notification",
         title: "成功",
         message: "删除成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${DESTROY_CREATURE_EQUIP_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -178,19 +178,19 @@ ipcMain.on(CREATE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
     .orderBy("ID", "desc");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(CREATE_CREATURE_EQUIP_TEMPLATE, {
         CreatureID: payload.CreatureID,
-        ID: rows.length > 0 ? rows[0].ID + 1 : 1
+        ID: rows.length > 0 ? rows[0].ID + 1 : 1,
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${CREATE_CREATURE_EQUIP_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -209,12 +209,12 @@ ipcMain.on(COPY_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
     .from("creature_equip_template")
     .where(payload);
   Promise.all([
-    idQueryBuilder.then(rows => {
+    idQueryBuilder.then((rows) => {
       id = rows.length > 0 ? rows[0].ID : 1;
     }),
-    findCreatureEquipTemplateQueryBuilder.then(rows => {
+    findCreatureEquipTemplateQueryBuilder.then((rows) => {
       creatureEquipTemplate = rows.length > 0 ? rows[0] : {};
-    })
+    }),
   ])
     .then(() => {
       creatureEquipTemplate.ID = id + 1;
@@ -222,26 +222,26 @@ ipcMain.on(COPY_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
         .insert(creatureEquipTemplate)
         .into("creature_equip_template");
       queryBuilder
-        .then(rows => {
+        .then((rows) => {
           event.reply(COPY_CREATURE_EQUIP_TEMPLATE, rows);
           event.reply(GLOBAL_NOTICE, {
             type: "success",
             category: "notification",
             title: "成功",
-            message: `复制成功，新的装备模板ID为${id + 1}。`
+            message: `复制成功，新的装备模板ID为${id + 1}。`,
           });
         })
-        .catch(error => {
-          throw error;
+        .catch((error) => {
+          event.reply(`${COPY_CREATURE_EQUIP_TEMPLATE}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
             category: "message",
-            message: queryBuilder.toString()
+            message: queryBuilder.toString(),
           });
         });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${COPY_CREATURE_EQUIP_TEMPLATE}_REJECT`, error);
     });
 });

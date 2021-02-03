@@ -4,7 +4,7 @@ import {
   STORE_CREATURE_ONKILL_REPUTATION,
   FIND_CREATURE_ONKILL_REPUTATION,
   UPDATE_CREATURE_ONKILL_REPUTATION,
-  GLOBAL_NOTICE
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -15,22 +15,22 @@ ipcMain.on(STORE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
     .into("creature_onkill_reputation");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(STORE_CREATURE_ONKILL_REPUTATION, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "新建成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${STORE_CREATURE_ONKILL_REPUTATION}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -42,19 +42,19 @@ ipcMain.on(FIND_CREATURE_ONKILL_REPUTATION, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(
         FIND_CREATURE_ONKILL_REPUTATION,
         rows.length > 0 ? rows[0] : {}
       );
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${FIND_CREATURE_ONKILL_REPUTATION}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -66,22 +66,22 @@ ipcMain.on(UPDATE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
     .update(payload.creatureOnKillReputation);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(UPDATE_CREATURE_ONKILL_REPUTATION, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "修改成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${UPDATE_CREATURE_ONKILL_REPUTATION}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });

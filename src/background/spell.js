@@ -56,7 +56,7 @@ ipcMain.on(SEARCH_SPELLS, (event, payload) => {
       event.reply(SEARCH_SPELLS, rows);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${SEARCH_SPELLS}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -87,7 +87,7 @@ ipcMain.on(COUNT_SPELLS, (event, payload) => {
       event.reply(COUNT_SPELLS, rows[0].total);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${COUNT_SPELLS}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -113,7 +113,7 @@ ipcMain.on(STORE_SPELL, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${STORE_SPELL}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -134,7 +134,7 @@ ipcMain.on(FIND_SPELL, (event, payload) => {
       event.reply(FIND_SPELL, rows.length > 0 ? rows[0] : {});
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${FIND_SPELL}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -161,7 +161,7 @@ ipcMain.on(UPDATE_SPELL, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${UPDATE_SPELL}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -188,7 +188,7 @@ ipcMain.on(DESTROY_SPELL, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${DESTROY_SPELL}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -211,7 +211,7 @@ ipcMain.on(CREATE_SPELL, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${CREATE_SPELL}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -240,29 +240,33 @@ ipcMain.on(COPY_SPELL, (event, payload) => {
     findSpellQueryBuilder.then((rows) => {
       spell = rows.length > 0 ? rows[0] : {};
     }),
-  ]).then(() => {
-    spell.ID = ID + 1;
-    let queryBuilder = knex()
-      .insert(spell)
-      .into("foxy.dbc_spell");
-    queryBuilder
-      .then((rows) => {
-        event.reply(COPY_SPELL, rows);
-        event.reply(GLOBAL_NOTICE, {
-          type: "success",
-          category: "notification",
-          title: "成功",
-          message: `复制成功，新的技能ID为${ID + 1}。`,
+  ])
+    .then(() => {
+      spell.ID = ID + 1;
+      let queryBuilder = knex()
+        .insert(spell)
+        .into("foxy.dbc_spell");
+      queryBuilder
+        .then((rows) => {
+          event.reply(COPY_SPELL, rows);
+          event.reply(GLOBAL_NOTICE, {
+            type: "success",
+            category: "notification",
+            title: "成功",
+            message: `复制成功，新的技能ID为${ID + 1}。`,
+          });
+        })
+        .catch((error) => {
+          event.reply(`${COPY_SPELL}_REJECT`, error);
+        })
+        .finally(() => {
+          event.reply(GLOBAL_NOTICE, {
+            category: "message",
+            message: queryBuilder.toString(),
+          });
         });
-      })
-      .catch((error) => {
-        throw error;
-      })
-      .finally(() => {
-        event.reply(GLOBAL_NOTICE, {
-          category: "message",
-          message: queryBuilder.toString(),
-        });
-      });
-  });
+    })
+    .catch((error) => {
+      event.reply(`${COPY_SPELL}_REJECT`, error);
+    });
 });

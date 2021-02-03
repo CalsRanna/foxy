@@ -19,7 +19,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
       event.reply(SEARCH_GAME_OBJECT_TEMPLATE_LOCALES, rows);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${SEARCH_GAME_OBJECT_TEMPLATE_LOCALES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -51,7 +51,7 @@ ipcMain.on(STORE_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
           });
         })
         .catch((error) => {
-          throw error;
+          event.reply(`${STORE_GAME_OBJECT_TEMPLATE_LOCALES}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
@@ -61,6 +61,6 @@ ipcMain.on(STORE_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
         });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${STORE_GAME_OBJECT_TEMPLATE_LOCALES}_REJECT`, error);
     });
 });

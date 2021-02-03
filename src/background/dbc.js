@@ -11,7 +11,7 @@ import {
   SEARCH_DBC_SPELLS,
   EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
-  GLOBAL_NOTICE,
+  RELOAD_APP,
 } from "../constants";
 
 const DBC = require("warcrafty");
@@ -283,8 +283,10 @@ ipcMain.on(EXPORT_SPELL_DBC, (event) => {
     .select()
     .from("foxy.dbc_spell");
 
+  event.reply(`${EXPORT_SPELL_DBC}_PROGRESS`, "Searching database");
   queryBuilder
     .then((rows) => {
+      event.reply(`${EXPORT_SPELL_DBC}_PROGRESS`, "Writing dbc");
       DBC.write(`${path}/Spell.dbc`, rows)
         .then(() => {
           event.reply(EXPORT_SPELL_DBC);

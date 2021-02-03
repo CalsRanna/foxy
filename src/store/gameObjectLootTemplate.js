@@ -18,45 +18,75 @@ export default {
   }),
   actions: {
     searchGameObjectLootTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_GAME_OBJECT_LOOT_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     storeGameObjectLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GAME_OBJECT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(STORE_GAME_OBJECT_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${STORE_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findGameObjectLootTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_GAME_OBJECT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(FIND_GAME_OBJECT_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_GAME_OBJECT_LOOT_TEMPLATE, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${FIND_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateGameObjectLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_GAME_OBJECT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_GAME_OBJECT_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${UPDATE_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     destroyGameObjectLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_GAME_OBJECT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_GAME_OBJECT_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${DESTROY_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     createGameObjectLootTemplate({ commit }, payload) {
@@ -66,11 +96,17 @@ export default {
       });
     },
     copyGameObjectLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_GAME_OBJECT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(COPY_GAME_OBJECT_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${COPY_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

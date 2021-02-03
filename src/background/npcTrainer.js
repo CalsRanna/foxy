@@ -7,7 +7,7 @@ import {
   UPDATE_NPC_TRAINER,
   DESTROY_NPC_TRAINER,
   COPY_NPC_TRAINER,
-  GLOBAL_NOTICE
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -19,16 +19,16 @@ ipcMain.on(SEARCH_NPC_TRAINERS, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(SEARCH_NPC_TRAINERS, rows);
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${SEARCH_NPC_TRAINERS}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -39,22 +39,22 @@ ipcMain.on(STORE_NPC_TRAINER, (event, payload) => {
     .into("npc_trainer");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(STORE_NPC_TRAINER, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "新建成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${STORE_NPC_TRAINER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -66,16 +66,16 @@ ipcMain.on(FIND_NPC_TRAINER, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(FIND_NPC_TRAINER, rows.length > 0 ? rows[0] : {});
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${FIND_NPC_TRAINER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -87,22 +87,22 @@ ipcMain.on(UPDATE_NPC_TRAINER, (event, payload) => {
     .update(payload.npcTrainer);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(UPDATE_NPC_TRAINER, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "修改成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${UPDATE_NPC_TRAINER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -114,22 +114,22 @@ ipcMain.on(DESTROY_NPC_TRAINER, (event, payload) => {
     .delete();
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(DESTROY_NPC_TRAINER, rows);
       event.reply("GLOBAL_NOTICE", {
         category: "notification",
         title: "成功",
         message: "删除成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${DESTROY_NPC_TRAINER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -148,12 +148,12 @@ ipcMain.on(COPY_NPC_TRAINER, (event, payload) => {
     .from("npc_trainer")
     .where(payload);
   Promise.all([
-    spellIdQueryBuilder.then(rows => {
+    spellIdQueryBuilder.then((rows) => {
       spellId = rows.length > 0 ? rows[0].SpellID : 1;
     }),
-    findNpcTrainerQueryBuilder.then(rows => {
+    findNpcTrainerQueryBuilder.then((rows) => {
       npcTrainer = rows.length > 0 ? rows[0] : {};
-    })
+    }),
   ])
     .then(() => {
       npcTrainer.SpellID = spellId + 1;
@@ -161,26 +161,26 @@ ipcMain.on(COPY_NPC_TRAINER, (event, payload) => {
         .insert(npcTrainer)
         .into("npc_trainer");
       queryBuilder
-        .then(rows => {
+        .then((rows) => {
           event.reply(COPY_NPC_TRAINER, rows);
           event.reply(GLOBAL_NOTICE, {
             type: "success",
             category: "notification",
             title: "成功",
-            message: `复制成功，新的装备模板SpellID为${spellId + 1}。`
+            message: `复制成功，新的装备模板SpellID为${spellId + 1}。`,
           });
         })
-        .catch(error => {
-          throw error;
+        .catch((error) => {
+          event.reply(`${COPY_NPC_TRAINER}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
             category: "message",
-            message: queryBuilder.toString()
+            message: queryBuilder.toString(),
           });
         });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${COPY_NPC_TRAINER}_REJECT`, error);
     });
 });

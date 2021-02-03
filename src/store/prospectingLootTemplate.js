@@ -18,45 +18,75 @@ export default {
   }),
   actions: {
     searchProspectingLootTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_PROSPECTING_LOOT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_PROSPECTING_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_PROSPECTING_LOOT_TEMPLATES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_PROSPECTING_LOOT_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     storeProspectingLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_PROSPECTING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(STORE_PROSPECTING_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${STORE_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findProspectingLootTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_PROSPECTING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(FIND_PROSPECTING_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_PROSPECTING_LOOT_TEMPLATE, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${FIND_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateProspectingLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_PROSPECTING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_PROSPECTING_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${UPDATE_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     destroyProspectingLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_PROSPECTING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_PROSPECTING_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${DESTROY_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     createProspectingLootTemplate({ commit }, payload) {
@@ -66,11 +96,17 @@ export default {
       });
     },
     copyProspectingLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_PROSPECTING_LOOT_TEMPLATE, payload);
         ipcRenderer.on(COPY_PROSPECTING_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${COPY_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

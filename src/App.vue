@@ -54,6 +54,14 @@
       <div style="text-align:center; margin-bottom: 24px; font-size: 20px;">
         <i class="el-icon-loading"></i>
         {{ initializingText }}
+        <template v-show="progressText != undefined">
+          <br />
+          <br />
+          <small style="color: #909399; font-size: 14px">
+            {{ progressText }}
+            <span v-show="seconds != 0">，用时{{ seconds }}秒</span>
+          </small>
+        </template>
       </div>
     </el-dialog>
   </el-container>
@@ -63,7 +71,7 @@
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 import { mapState, mapActions } from "vuex";
-import { GLOBAL_NOTICE, START_EXPORT } from "./constants";
+import { EXPORT_SPELL_DBC, GLOBAL_NOTICE, START_EXPORT } from "./constants";
 
 export default {
   data() {
@@ -72,6 +80,8 @@ export default {
       visible: false,
       modal: false,
       initializingText: "加载开始",
+      seconds: 0,
+      progressText: undefined,
     };
   },
   computed: {
@@ -134,8 +144,16 @@ export default {
             password: password,
             database: database,
           }).then(() => {
-            this.initMysqlConnection(this.mysqlConfig);
-            resolve();
+            this.initMysqlConnection(this.mysqlConfig)
+              .then(() => {
+                resolve();
+              })
+              .catch(() => {
+                this.setActive("setting");
+                this.setSettingActive("mysql");
+                this.$router.push("/setting/mysql").catch((error) => error);
+                reject();
+              });
           });
         } else {
           this.setActive("setting");
@@ -180,37 +198,39 @@ export default {
     async init() {
       try {
         this.visible = true;
-        this.initializingText = "加载开发者配置";
+        this.progressText = "加载开发者配置";
         await this.initDeveloperConfig();
-        this.initializingText = "加载数据库配置";
+        this.progressText = "加载数据库配置";
         await this.initMysqlConfig();
-        this.initializingText = "加载DBC配置";
+        this.progressText = "加载DBC配置";
         await this.initDbcConfig();
-        this.initializingText = "加载Faction.dbc";
+        this.progressText = "加载Faction.dbc";
         await this.searchDbcFactions();
-        this.initializingText = "加载FactionTemplate.dbc";
+        this.progressText = "加载FactionTemplate.dbc";
         await this.searchDbcFactionTemplates();
-        this.initializingText = "加载Item.dbc";
+        this.progressText = "加载Item.dbc";
         await this.searchDbcItems();
-        this.initializingText = "加载ItemDisplayInfo.dbc";
+        this.progressText = "加载ItemDisplayInfo.dbc";
         await this.searchDbcItemDisplayInfos();
-        this.initializingText = "加载ScalingStatDistribution.dbc";
+        this.progressText = "加载ScalingStatDistribution.dbc";
         await this.searchDbcScalingStatDistributions();
-        this.initializingText = "加载ScalingStatValues.dbc";
+        this.progressText = "加载ScalingStatValues.dbc";
         await this.searchDbcScalingStatValues();
-        this.initializingText = "加载Spell.dbc";
+        this.progressText = "加载Spell.dbc";
         await this.searchDbcSpells();
-        this.initializingText = "加载SpellDuration.dbc";
+        this.progressText = "加载SpellDuration.dbc";
         await this.searchDbcSpellDurations();
-        this.initializingText = "加载服务端配置";
+        this.progressText = "加载服务端配置";
         await this.initConfigConfig();
         this.initializingText = "加载完成";
+        this.progressText = undefined;
         setTimeout(() => {
           this.initializing = false;
           this.visible = false;
         }, 500);
       } catch (error) {
         this.initializingText = "加载中止";
+        this.progressText = undefined;
         setTimeout(() => {
           this.initializing = false;
           this.visible = false;
@@ -257,10 +277,8 @@ export default {
       this.visible = true;
       this.modal = true;
       this.initializingText = "正在导出，请稍后";
-      let seconds = 1;
       let timer = setInterval(() => {
-        this.initializingText = `正在导出，请稍后：${seconds}s`;
-        seconds++;
+        this.seconds++;
       }, 1000);
       this.exportSpellDbc()
         .then(() => {
@@ -270,6 +288,12 @@ export default {
             this.visible = false;
             this.modal = false;
           }, 500);
+          this.$notify({
+            type: "success",
+            title: "导出成功",
+            message: `导出所有dbc文件用时${this.seconds}秒`,
+          });
+          this.seconds = 0;
         })
         .catch((error) => {
           clearInterval(timer);
@@ -287,7 +311,12 @@ export default {
               }
             );
           }, 500);
+          this.seconds = 0;
         });
+    });
+
+    ipcRenderer.on(`${EXPORT_SPELL_DBC}_PROGRESS`, (event, text) => {
+      this.progressText = text;
     });
   },
 };
