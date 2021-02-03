@@ -33,7 +33,7 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ENDERS, (event, payload) => {
       event.reply(SEARCH_CREATURE_QUEST_ENDERS, rows);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${SEARCH_CREATURE_QUEST_ENDERS}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -59,7 +59,7 @@ ipcMain.on(STORE_CREATURE_QUEST_ENDER, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${STORE_CREATURE_QUEST_ENDER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -80,7 +80,7 @@ ipcMain.on(FIND_CREATURE_QUEST_ENDER, (event, payload) => {
       event.reply(FIND_CREATURE_QUEST_ENDER, rows.length > 0 ? rows[0] : {});
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${FIND_CREATURE_QUEST_ENDER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -107,7 +107,7 @@ ipcMain.on(UPDATE_CREATURE_QUEST_ENDER, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${UPDATE_CREATURE_QUEST_ENDER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -134,7 +134,7 @@ ipcMain.on(DESTROY_CREATURE_QUEST_ENDER, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${DESTROY_CREATURE_QUEST_ENDER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -181,7 +181,7 @@ ipcMain.on(COPY_CREATURE_QUEST_ENDER, (event, payload) => {
           });
         })
         .catch((error) => {
-          throw error;
+          event.reply(`${COPY_CREATURE_QUEST_ENDER}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
@@ -191,6 +191,6 @@ ipcMain.on(COPY_CREATURE_QUEST_ENDER, (event, payload) => {
         });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${COPY_CREATURE_QUEST_ENDER}_REJECT`, error);
     });
 });

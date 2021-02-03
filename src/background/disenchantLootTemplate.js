@@ -17,7 +17,7 @@ ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
     .select(["dlt.*", "it.name", "itl.Name as localeName"])
     .from("disenchant_loot_template as dlt")
     .leftJoin("item_template as it", "dlt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function () {
+    .leftJoin("item_template_locale as itl", function() {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -31,7 +31,7 @@ ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
       event.reply(SEARCH_DISENCHANT_LOOT_TEMPLATES, rows);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${SEARCH_DISENCHANT_LOOT_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -42,7 +42,9 @@ ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("disenchant_loot_template");
+  let queryBuilder = knex()
+    .insert(payload)
+    .into("disenchant_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -55,7 +57,7 @@ ipcMain.on(STORE_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${STORE_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -79,7 +81,7 @@ ipcMain.on(FIND_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
       );
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${FIND_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -106,7 +108,7 @@ ipcMain.on(UPDATE_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${UPDATE_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -133,7 +135,7 @@ ipcMain.on(DESTROY_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${DESTROY_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -183,7 +185,7 @@ ipcMain.on(COPY_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
           });
         })
         .catch((error) => {
-          throw error;
+          event.reply(`${COPY_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
@@ -193,6 +195,6 @@ ipcMain.on(COPY_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
         });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${COPY_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
     });
 });

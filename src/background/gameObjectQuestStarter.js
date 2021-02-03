@@ -33,7 +33,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_STARTERS, (event, payload) => {
       event.reply(SEARCH_GAME_OBJECT_QUEST_STARTERS, rows);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${SEARCH_GAME_OBJECT_QUEST_STARTERS}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -59,7 +59,7 @@ ipcMain.on(STORE_GAME_OBJECT_QUEST_STARTER, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${STORE_GAME_OBJECT_QUEST_STARTER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -83,7 +83,7 @@ ipcMain.on(FIND_GAME_OBJECT_QUEST_STARTER, (event, payload) => {
       );
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${FIND_GAME_OBJECT_QUEST_STARTER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -110,7 +110,7 @@ ipcMain.on(UPDATE_GAME_OBJECT_QUEST_STARTER, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${UPDATE_GAME_OBJECT_QUEST_STARTER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -137,7 +137,7 @@ ipcMain.on(DESTROY_GAME_OBJECT_QUEST_STARTER, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${DESTROY_GAME_OBJECT_QUEST_STARTER}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -184,7 +184,7 @@ ipcMain.on(COPY_GAME_OBJECT_QUEST_STARTER, (event, payload) => {
           });
         })
         .catch((error) => {
-          throw error;
+          event.reply(`${COPY_GAME_OBJECT_QUEST_STARTER}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
@@ -194,6 +194,6 @@ ipcMain.on(COPY_GAME_OBJECT_QUEST_STARTER, (event, payload) => {
         });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${COPY_GAME_OBJECT_QUEST_STARTER}_REJECT`, error);
     });
 });

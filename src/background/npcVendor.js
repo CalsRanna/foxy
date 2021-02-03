@@ -8,7 +8,7 @@ import {
   DESTROY_NPC_VENDOR,
   CREATE_NPC_VENDOR,
   COPY_NPC_VENDOR,
-  GLOBAL_NOTICE
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -28,16 +28,16 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
     .where("nv.entry", payload.entry);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(SEARCH_NPC_VENDORS, rows);
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${SEARCH_NPC_VENDORS}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -48,22 +48,22 @@ ipcMain.on(STORE_NPC_VENDOR, (event, payload) => {
     .into("npc_vendor");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(STORE_NPC_VENDOR, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "新建成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${STORE_NPC_VENDOR}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -75,16 +75,16 @@ ipcMain.on(FIND_NPC_VENDOR, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(FIND_NPC_VENDOR, rows.length > 0 ? rows[0] : {});
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${FIND_NPC_VENDOR}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -96,22 +96,22 @@ ipcMain.on(UPDATE_NPC_VENDOR, (event, payload) => {
     .update(payload.npcVendor);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(UPDATE_NPC_VENDOR, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "修改成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${UPDATE_NPC_VENDOR}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -123,22 +123,22 @@ ipcMain.on(DESTROY_NPC_VENDOR, (event, payload) => {
     .delete();
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(DESTROY_NPC_VENDOR, rows);
       event.reply("GLOBAL_NOTICE", {
         category: "notification",
         title: "成功",
         message: "删除成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${DESTROY_NPC_VENDOR}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -151,19 +151,19 @@ ipcMain.on(CREATE_NPC_VENDOR, (event, payload) => {
     .orderBy("slot", "desc");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(CREATE_CREATURE_EQUIP_TEMPLATE, {
         entry: payload.entry,
-        slot: rows.length > 0 ? rows[0].slot + 1 : 0
+        slot: rows.length > 0 ? rows[0].slot + 1 : 0,
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${CREATE_NPC_VENDOR}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -188,15 +188,15 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
     .from("npc_vendor")
     .where(payload);
   Promise.all([
-    slotQueryBuilder.then(rows => {
+    slotQueryBuilder.then((rows) => {
       slot = rows.length > 0 ? rows[0].slot : 0;
     }),
-    extendedCostQueryBuilder.then(rows => {
+    extendedCostQueryBuilder.then((rows) => {
       extendedCost = rows.length > 0 ? rows[0].ExtendedCost : 0;
     }),
-    findNpcVendorQueryBuilder.then(rows => {
+    findNpcVendorQueryBuilder.then((rows) => {
       npcVendor = rows.length > 0 ? rows[0] : {};
-    })
+    }),
   ])
     .then(() => {
       npcVendor.slot = slot + 1;
@@ -205,26 +205,27 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
         .insert(npcVendor)
         .into("npc_vendor");
       queryBuilder
-        .then(rows => {
+        .then((rows) => {
           event.reply(COPY_NPC_VENDOR, rows);
           event.reply(GLOBAL_NOTICE, {
             type: "success",
             category: "notification",
             title: "成功",
-            message: `复制成功，新的装备模板ExtendedCost为${extendedCost + 1}。`
+            message: `复制成功，新的装备模板ExtendedCost为${extendedCost +
+              1}。`,
           });
         })
-        .catch(error => {
-          throw error;
+        .catch((error) => {
+          event.reply(`${COPY_NPC_VENDOR}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
             category: "message",
-            message: queryBuilder.toString()
+            message: queryBuilder.toString(),
           });
         });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${COPY_NPC_VENDOR}_REJECT`, error);
     });
 });

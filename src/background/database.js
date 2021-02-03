@@ -58,6 +58,9 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
             event.reply(INIT_MYSQL_CONNECTION);
           });
         });
+    })
+    .catch((error) => {
+      event.reply(`${INIT_MYSQL_CONNECTION}_REJECT`, error);
     });
 });
 

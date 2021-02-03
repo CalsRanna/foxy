@@ -32,7 +32,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ITEMS, (event, payload) => {
       event.reply(SEARCH_GAME_OBJECT_QUEST_ITEMS, rows);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${SEARCH_GAME_OBJECT_QUEST_ITEMS}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -58,7 +58,7 @@ ipcMain.on(STORE_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${STORE_GAME_OBJECT_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -79,7 +79,7 @@ ipcMain.on(FIND_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
       event.reply(FIND_GAME_OBJECT_QUEST_ITEM, rows.length > 0 ? rows[0] : {});
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${FIND_GAME_OBJECT_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -106,7 +106,7 @@ ipcMain.on(UPDATE_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${UPDATE_GAME_OBJECT_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -133,7 +133,7 @@ ipcMain.on(DESTROY_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${DESTROY_GAME_OBJECT_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -158,7 +158,7 @@ ipcMain.on(CREATE_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${CREATE_GAME_OBJECT_QUEST_ITEM}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -205,7 +205,7 @@ ipcMain.on(COPY_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
           });
         })
         .catch((error) => {
-          throw error;
+          event.reply(`${COPY_GAME_OBJECT_QUEST_ITEM}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
@@ -215,6 +215,6 @@ ipcMain.on(COPY_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
         });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${COPY_GAME_OBJECT_QUEST_ITEM}_REJECT`, error);
     });
 });

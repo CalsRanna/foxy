@@ -7,7 +7,7 @@ import {
   UPDATE_PICKPOCKETING_LOOT_TEMPLATE,
   DESTROY_PICKPOCKETING_LOOT_TEMPLATE,
   COPY_PICKPOCKETING_LOOT_TEMPLATE,
-  GLOBAL_NOTICE
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -27,16 +27,16 @@ ipcMain.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, payload) => {
     .where("plt.Entry", payload.Entry);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, rows);
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${SEARCH_PICKPOCKETING_LOOT_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -47,22 +47,22 @@ ipcMain.on(STORE_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     .into("pickpocketing_loot_template");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(STORE_PICKPOCKETING_LOOT_TEMPLATE, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "新建成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${STORE_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -74,19 +74,19 @@ ipcMain.on(FIND_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(
         FIND_PICKPOCKETING_LOOT_TEMPLATE,
         rows.length > 0 ? rows[0] : {}
       );
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${FIND_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -98,22 +98,22 @@ ipcMain.on(UPDATE_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     .update(payload.pickpocketingLootTemplate);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(UPDATE_PICKPOCKETING_LOOT_TEMPLATE, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "修改成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${UPDATE_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -125,22 +125,22 @@ ipcMain.on(DESTROY_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     .delete();
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(DESTROY_PICKPOCKETING_LOOT_TEMPLATE, rows);
       event.reply("GLOBAL_NOTICE", {
         category: "notification",
         title: "成功",
         message: "删除成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${DESTROY_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -159,12 +159,12 @@ ipcMain.on(COPY_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     .from("pickpocketing_loot_template")
     .where(payload);
   Promise.all([
-    itemQueryBuilder.then(rows => {
+    itemQueryBuilder.then((rows) => {
       item = rows.length > 0 ? rows[0].Item : 0;
     }),
-    findPickpocketingLootTemplateQueryBuilder.then(rows => {
+    findPickpocketingLootTemplateQueryBuilder.then((rows) => {
       pickpocketingLootTemplate = rows.length > 0 ? rows[0] : {};
-    })
+    }),
   ])
     .then(() => {
       pickpocketingLootTemplate.Item = item + 1;
@@ -175,26 +175,26 @@ ipcMain.on(COPY_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
         .insert(pickpocketingLootTemplate)
         .into("pickpocketing_loot_template");
       queryBuilder
-        .then(rows => {
+        .then((rows) => {
           event.reply(COPY_PICKPOCKETING_LOOT_TEMPLATE, rows);
           event.reply(GLOBAL_NOTICE, {
             type: "success",
             category: "notification",
             title: "成功",
-            message: `复制成功，新的装备模板Item为${item + 1}。`
+            message: `复制成功，新的装备模板Item为${item + 1}。`,
           });
         })
-        .catch(error => {
-          throw error;
+        .catch((error) => {
+          event.reply(`${COPY_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
             category: "message",
-            message: queryBuilder.toString()
+            message: queryBuilder.toString(),
           });
         });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${COPY_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
     });
 });

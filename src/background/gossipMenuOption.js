@@ -23,13 +23,19 @@ ipcMain.on(SEARCH_GOSSIP_MENU_OPTIONS, (event, payload) => {
     })
     .where("gmo.MenuID", payload.MenuID);
 
-  queryBuilder.then((rows) => {
-    event.reply(SEARCH_GOSSIP_MENU_OPTIONS, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
+  queryBuilder
+    .then((rows) => {
+      event.reply(SEARCH_GOSSIP_MENU_OPTIONS, rows);
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_GOSSIP_MENU_OPTIONS}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-  });
 });
 
 ipcMain.on(STORE_GOSSIP_MENU_OPTION, (event, payload) => {
@@ -37,19 +43,25 @@ ipcMain.on(STORE_GOSSIP_MENU_OPTION, (event, payload) => {
     .insert(payload)
     .into("gossip_menu_option");
 
-  queryBuilder.then((rows) => {
-    event.reply(STORE_GOSSIP_MENU_OPTION, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "新建成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(STORE_GOSSIP_MENU_OPTION, rows);
+      event.reply(GLOBAL_NOTICE, {
+        category: "notification",
+        title: "成功",
+        message: "新建成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${STORE_GOSSIP_MENU_OPTION}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(FIND_GOSSIP_MENU_OPTION, (event, payload) => {
@@ -58,13 +70,19 @@ ipcMain.on(FIND_GOSSIP_MENU_OPTION, (event, payload) => {
     .from("gossip_menu_option")
     .where(payload);
 
-  queryBuilder.then((rows) => {
-    event.reply(FIND_GOSSIP_MENU_OPTION, rows.length > 0 ? rows[0] : {});
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
+  queryBuilder
+    .then((rows) => {
+      event.reply(FIND_GOSSIP_MENU_OPTION, rows.length > 0 ? rows[0] : {});
+    })
+    .catch((error) => {
+      event.reply(`${FIND_GOSSIP_MENU_OPTION}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-  });
 });
 
 ipcMain.on(UPDATE_GOSSIP_MENU_OPTION, (event, payload) => {
@@ -74,19 +92,25 @@ ipcMain.on(UPDATE_GOSSIP_MENU_OPTION, (event, payload) => {
     .where("OptionID", payload.credential.OptionID)
     .update(payload.gossipMenuOption);
 
-  queryBuilder.then((rows) => {
-    event.reply(UPDATE_GOSSIP_MENU_OPTION, rows);
-    event.reply(GLOBAL_NOTICE, {
-      category: "notification",
-      title: "成功",
-      message: "修改成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(UPDATE_GOSSIP_MENU_OPTION, rows);
+      event.reply(GLOBAL_NOTICE, {
+        category: "notification",
+        title: "成功",
+        message: "修改成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${UPDATE_GOSSIP_MENU_OPTION}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(DESTROY_GOSSIP_MENU_OPTION, (event, payload) => {
@@ -95,19 +119,25 @@ ipcMain.on(DESTROY_GOSSIP_MENU_OPTION, (event, payload) => {
     .where(payload)
     .delete();
 
-  queryBuilder.then((rows) => {
-    event.reply(DESTROY_GOSSIP_MENU_OPTION, rows);
-    event.reply("GLOBAL_NOTICE", {
-      category: "notification",
-      title: "成功",
-      message: "删除成功。",
-      type: "success",
+  queryBuilder
+    .then((rows) => {
+      event.reply(DESTROY_GOSSIP_MENU_OPTION, rows);
+      event.reply("GLOBAL_NOTICE", {
+        category: "notification",
+        title: "成功",
+        message: "删除成功。",
+        type: "success",
+      });
+    })
+    .catch((error) => {
+      event.reply(`${DESTROY_GOSSIP_MENU_OPTION}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(CREATE_GOSSIP_MENU_OPTION, (event, payload) => {
@@ -117,16 +147,22 @@ ipcMain.on(CREATE_GOSSIP_MENU_OPTION, (event, payload) => {
     .where(payload)
     .orderBy("OptionID", "desc");
 
-  queryBuilder.then((rows) => {
-    event.reply(CREATE_GOSSIP_MENU_OPTION, {
-      MenuID: payload.MenuID,
-      OptionID: rows.length > 0 ? rows[0].OptionID + 1 : 0,
+  queryBuilder
+    .then((rows) => {
+      event.reply(CREATE_GOSSIP_MENU_OPTION, {
+        MenuID: payload.MenuID,
+        OptionID: rows.length > 0 ? rows[0].OptionID + 1 : 0,
+      });
+    })
+    .catch((error) => {
+      event.reply(`${CREATE_GOSSIP_MENU_OPTION}_REJECT`, error);
+    })
+    .finally(() => {
+      event.reply(GLOBAL_NOTICE, {
+        category: "message",
+        message: queryBuilder.toString(),
+      });
     });
-    event.reply(GLOBAL_NOTICE, {
-      category: "message",
-      message: queryBuilder.toString(),
-    });
-  });
 });
 
 ipcMain.on(COPY_GOSSIP_MENU_OPTION, (event, payload) => {
@@ -149,23 +185,33 @@ ipcMain.on(COPY_GOSSIP_MENU_OPTION, (event, payload) => {
     findGossipMenuOptionQueryBuilder.then((rows) => {
       gossipMenuOption = rows.length > 0 ? rows[0] : {};
     }),
-  ]).then(() => {
-    gossipMenuOption.OptionID = OptionID + 1;
-    let queryBuilder = knex()
-      .insert(gossipMenuOption)
-      .into("gossip_menu_option");
-    queryBuilder.then((rows) => {
-      event.reply(COPY_GOSSIP_MENU_OPTION, rows);
-      event.reply(GLOBAL_NOTICE, {
-        type: "success",
-        category: "notification",
-        title: "成功",
-        message: `复制成功，新的对话选项 OptionID 为 ${OptionID + 1}。`,
-      });
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+  ])
+    .then(() => {
+      gossipMenuOption.OptionID = OptionID + 1;
+      let queryBuilder = knex()
+        .insert(gossipMenuOption)
+        .into("gossip_menu_option");
+      queryBuilder
+        .then((rows) => {
+          event.reply(COPY_GOSSIP_MENU_OPTION, rows);
+          event.reply(GLOBAL_NOTICE, {
+            type: "success",
+            category: "notification",
+            title: "成功",
+            message: `复制成功，新的对话选项 OptionID 为 ${OptionID + 1}。`,
+          });
+        })
+        .catch((error) => {
+          event.reply(`${COPY_GOSSIP_MENU_OPTION}_REJECT`, error);
+        })
+        .finally(() => {
+          event.reply(GLOBAL_NOTICE, {
+            category: "message",
+            message: queryBuilder.toString(),
+          });
+        });
+    })
+    .catch((error) => {
+      event.reply(`${COPY_GOSSIP_MENU_OPTION}_REJECT`, error);
     });
-  });
 });

@@ -35,20 +35,26 @@ export default {
   }),
   actions: {
     searchItemTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ITEM_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_ITEM_TEMPLATES, (event, response) => {
           commit(SEARCH_ITEM_TEMPLATES, response);
           resolve();
         });
+        ipcRenderer.on(`${SEARCH_ITEM_TEMPLATES}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     countItemTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_ITEM_TEMPLATES, payload);
         ipcRenderer.on(COUNT_ITEM_TEMPLATES, (event, response) => {
           commit(COUNT_ITEM_TEMPLATES, response);
           resolve();
+        });
+        ipcRenderer.on(`${COUNT_ITEM_TEMPLATES}_REJECT`, (event, error) => {
+          reject(error);
         });
       });
     },
@@ -59,54 +65,72 @@ export default {
       });
     },
     storeItemTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ITEM_TEMPLATE, payload);
         ipcRenderer.on(STORE_ITEM_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_ITEM_TEMPLATE", true);
           resolve();
         });
+        ipcRenderer.on(`${STORE_ITEM_TEMPLATE}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     findItemTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ITEM_TEMPLATE, payload);
         ipcRenderer.on(FIND_ITEM_TEMPLATE, (event, response) => {
           commit(FIND_ITEM_TEMPLATE, response);
           resolve();
         });
+        ipcRenderer.on(`${FIND_ITEM_TEMPLATE}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     updateItemTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ITEM_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_ITEM_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_ITEM_TEMPLATE", true);
           resolve();
         });
+        ipcRenderer.on(`${UPDATE_ITEM_TEMPLATE}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     destroyItemTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_ITEM_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_ITEM_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(`${DESTROY_ITEM_TEMPLATE}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     createItemTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_ITEM_TEMPLATE, payload);
         ipcRenderer.on(CREATE_ITEM_TEMPLATE, (event, response) => {
           commit(CREATE_ITEM_TEMPLATE, response);
           resolve();
         });
+        ipcRenderer.on(`${CREATE_ITEM_TEMPLATE}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     copyItemTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_ITEM_TEMPLATE, payload);
         ipcRenderer.on(COPY_ITEM_TEMPLATE, () => {
           resolve();
+        });
+        ipcRenderer.on(`${COPY_ITEM_TEMPLATE}_REJECT`, (event, error) => {
+          reject(error);
         });
       });
     },

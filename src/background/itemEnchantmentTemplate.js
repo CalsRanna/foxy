@@ -23,7 +23,7 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
       event.reply(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, rows);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${SEARCH_ITEM_ENCHANTMENT_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -34,7 +34,9 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("item_enchantment_template");
+  let queryBuilder = knex()
+    .insert(payload)
+    .into("item_enchantment_template");
 
   queryBuilder
     .then((rows) => {
@@ -47,7 +49,7 @@ ipcMain.on(STORE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${STORE_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -71,7 +73,7 @@ ipcMain.on(FIND_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
       );
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${FIND_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -98,7 +100,7 @@ ipcMain.on(UPDATE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${UPDATE_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -125,7 +127,7 @@ ipcMain.on(DESTROY_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${DESTROY_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -172,7 +174,7 @@ ipcMain.on(COPY_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
           });
         })
         .catch((error) => {
-          throw error;
+          event.reply(`${COPY_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
@@ -182,6 +184,6 @@ ipcMain.on(COPY_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
         });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${COPY_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
     });
 });

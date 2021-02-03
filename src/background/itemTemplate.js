@@ -29,7 +29,7 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
       "it.RequiredLevel",
     ])
     .from("item_template as it")
-    .leftJoin("item_template_locale as itl", function () {
+    .leftJoin("item_template_locale as itl", function() {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -68,7 +68,7 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
       event.reply(SEARCH_ITEM_TEMPLATES, rows);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${SEARCH_ITEM_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -82,7 +82,7 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
   let queryBuilder = knex()
     .count("* as total")
     .from("item_template as it")
-    .leftJoin("item_template_locale as itl", function () {
+    .leftJoin("item_template_locale as itl", function() {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -118,7 +118,7 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
       event.reply(COUNT_ITEM_TEMPLATES, rows[0].total);
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${COUNT_ITEM_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -129,7 +129,9 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("item_template");
+  let queryBuilder = knex()
+    .insert(payload)
+    .into("item_template");
 
   queryBuilder
     .then((rows) => {
@@ -142,7 +144,7 @@ ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${STORE_ITEM_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -153,14 +155,17 @@ ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().select().from("item_template").where(payload);
+  let queryBuilder = knex()
+    .select()
+    .from("item_template")
+    .where(payload);
 
   queryBuilder
     .then((rows) => {
       event.reply(FIND_ITEM_TEMPLATE, rows.length > 0 ? rows[0] : {});
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${FIND_ITEM_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -187,7 +192,7 @@ ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${UPDATE_ITEM_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -198,7 +203,10 @@ ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().table("item_template").where(payload).delete();
+  let queryBuilder = knex()
+    .table("item_template")
+    .where(payload)
+    .delete();
 
   queryBuilder
     .then((rows) => {
@@ -211,7 +219,7 @@ ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${DESTROY_ITEM_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -234,7 +242,7 @@ ipcMain.on(CREATE_ITEM_TEMPLATE, (event, payload) => {
       });
     })
     .catch((error) => {
-      throw error;
+      event.reply(`${CREATE_ITEM_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
@@ -263,27 +271,33 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
     findItemTemplateQueryBuilder.then((rows) => {
       itemTemplate = rows.length > 0 ? rows[0] : {};
     }),
-  ]).then(() => {
-    itemTemplate.entry = entry + 1;
-    let queryBuilder = knex().insert(itemTemplate).into("item_template");
-    queryBuilder
-      .then((rows) => {
-        event.reply(COPY_ITEM_TEMPLATE, rows);
-        event.reply(GLOBAL_NOTICE, {
-          type: "success",
-          category: "notification",
-          title: "成功",
-          message: `复制成功，新的物体模板entry为${entry + 1}。`,
+  ])
+    .then(() => {
+      itemTemplate.entry = entry + 1;
+      let queryBuilder = knex()
+        .insert(itemTemplate)
+        .into("item_template");
+      queryBuilder
+        .then((rows) => {
+          event.reply(COPY_ITEM_TEMPLATE, rows);
+          event.reply(GLOBAL_NOTICE, {
+            type: "success",
+            category: "notification",
+            title: "成功",
+            message: `复制成功，新的物体模板entry为${entry + 1}。`,
+          });
+        })
+        .catch((error) => {
+          event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
+        })
+        .finally(() => {
+          event.reply(GLOBAL_NOTICE, {
+            category: "message",
+            message: queryBuilder.toString(),
+          });
         });
-      })
-      .catch((error) => {
-        throw error;
-      })
-      .finally(() => {
-        event.reply(GLOBAL_NOTICE, {
-          category: "message",
-          message: queryBuilder.toString(),
-        });
-      });
-  });
+    })
+    .catch((error) => {
+      event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
+    });
 });

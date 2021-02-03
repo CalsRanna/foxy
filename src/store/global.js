@@ -71,18 +71,24 @@ export default {
       });
     },
     initMysqlConnection(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(INIT_MYSQL_CONNECTION, payload);
         ipcRenderer.on(INIT_MYSQL_CONNECTION, () => {
           resolve();
         });
+        ipcRenderer.on(`${INIT_MYSQL_CONNECTION}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     initDbcConnection(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(INIT_DBC_CONFIG, payload);
         ipcRenderer.on(INIT_DBC_CONFIG, () => {
           resolve();
+        });
+        ipcRenderer.on(`${INIT_DBC_CONFIG}_REJECT`, (event, error) => {
+          reject(error);
         });
       });
     },

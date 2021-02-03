@@ -9,7 +9,7 @@ import {
   DESTROY_CREATURE_TEMPLATE,
   CREATE_CREATURE_TEMPLATE,
   COPY_CREATURE_TEMPLATE,
-  GLOBAL_NOTICE
+  GLOBAL_NOTICE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -23,7 +23,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
       "ct.subname",
       "ctl.Title as localeTitle",
       "ct.minlevel",
-      "ct.maxlevel"
+      "ct.maxlevel",
     ])
     .from("creature_template as ct")
     .leftJoin("creature_template_locale as ctl", function() {
@@ -37,14 +37,14 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
     queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
   }
   if (payload.name) {
-    queryBuilder = queryBuilder.where(builder =>
+    queryBuilder = queryBuilder.where((builder) =>
       builder
         .where("ct.name", "like", `%${payload.name}%`)
         .orWhere("ctl.Name", "like", `%${payload.name}%`)
     );
   }
   if (payload.subname) {
-    queryBuilder = queryBuilder.where(builder =>
+    queryBuilder = queryBuilder.where((builder) =>
       builder
         .where("ct.subname", "like", `%${payload.subname}%`)
         .orWhere("ctl.Title", "like", `%${payload.subname}%`)
@@ -55,16 +55,16 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
     .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(SEARCH_CREATURE_TEMPLATES, rows);
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${SEARCH_CREATURE_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -84,14 +84,14 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
     queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
   }
   if (payload.name) {
-    queryBuilder = queryBuilder.where(builder =>
+    queryBuilder = queryBuilder.where((builder) =>
       builder
         .where("ct.name", "like", `%${payload.name}%`)
         .orWhere("ctl.Name", "like", `%${payload.name}%`)
     );
   }
   if (payload.subname) {
-    queryBuilder = queryBuilder.where(builder =>
+    queryBuilder = queryBuilder.where((builder) =>
       builder
         .where("ct.subname", "like", `%${payload.subname}%`)
         .orWhere("ctl.Title", "like", `%${payload.subname}%`)
@@ -99,16 +99,16 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
   }
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(COUNT_CREATURE_TEMPLATES, rows[0].total);
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${COUNT_CREATURE_TEMPLATES}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -119,22 +119,22 @@ ipcMain.on(STORE_CREATURE_TEMPLATE, (event, payload) => {
     .into("creature_template");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(STORE_CREATURE_TEMPLATE, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "新建成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${STORE_CREATURE_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -146,16 +146,16 @@ ipcMain.on(FIND_CREATURE_TEMPLATE, (event, payload) => {
     .where(payload);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(FIND_CREATURE_TEMPLATE, rows.length > 0 ? rows[0] : {});
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${FIND_CREATURE_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -167,22 +167,22 @@ ipcMain.on(UPDATE_CREATURE_TEMPLATE, (event, payload) => {
     .update(payload.creatureTemplate);
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(UPDATE_CREATURE_TEMPLATE, rows);
       event.reply(GLOBAL_NOTICE, {
         category: "notification",
         title: "成功",
         message: "修改成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${UPDATE_CREATURE_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -194,22 +194,22 @@ ipcMain.on(DESTROY_CREATURE_TEMPLATE, (event, payload) => {
     .delete();
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(DESTROY_CREATURE_TEMPLATE, rows);
       event.reply("GLOBAL_NOTICE", {
         category: "notification",
         title: "成功",
         message: "删除成功。",
-        type: "success"
+        type: "success",
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${DESTROY_CREATURE_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -221,18 +221,18 @@ ipcMain.on(CREATE_CREATURE_TEMPLATE, (event, payload) => {
     .orderBy("entry", "desc");
 
   queryBuilder
-    .then(rows => {
+    .then((rows) => {
       event.reply(CREATE_CREATURE_TEMPLATE, {
-        entry: rows[0].entry + 1
+        entry: rows[0].entry + 1,
       });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${CREATE_CREATURE_TEMPLATE}_REJECT`, error);
     })
     .finally(() => {
       event.reply(GLOBAL_NOTICE, {
         category: "message",
-        message: queryBuilder.toString()
+        message: queryBuilder.toString(),
       });
     });
 });
@@ -250,12 +250,12 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
     .from("creature_template")
     .where(payload);
   Promise.all([
-    entryQueryBuilder.then(rows => {
+    entryQueryBuilder.then((rows) => {
       entry = rows[0].entry;
     }),
-    findCreatureTemplateQueryBuilder.then(rows => {
+    findCreatureTemplateQueryBuilder.then((rows) => {
       creatureTemplate = rows.length > 0 ? rows[0] : {};
-    })
+    }),
   ])
     .then(() => {
       creatureTemplate.entry = entry + 1;
@@ -263,26 +263,26 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
         .insert(creatureTemplate)
         .into("creature_template");
       queryBuilder
-        .then(rows => {
+        .then((rows) => {
           event.reply(COPY_CREATURE_TEMPLATE, rows);
           event.reply(GLOBAL_NOTICE, {
             type: "success",
             category: "notification",
             title: "成功",
-            message: `复制成功，新的生物模板entry为${entry + 1}。`
+            message: `复制成功，新的生物模板entry为${entry + 1}。`,
           });
         })
-        .catch(error => {
-          throw error;
+        .catch((error) => {
+          event.reply(`${COPY_CREATURE_TEMPLATE}_REJECT`, error);
         })
         .finally(() => {
           event.reply(GLOBAL_NOTICE, {
             category: "message",
-            message: queryBuilder.toString()
+            message: queryBuilder.toString(),
           });
         });
     })
-    .catch(error => {
-      throw error;
+    .catch((error) => {
+      event.reply(`${COPY_CREATURE_TEMPLATE}_REJECT`, error);
     });
 });

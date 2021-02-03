@@ -18,45 +18,75 @@ export default {
   }),
   actions: {
     searchDisenchantLootTemplates({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DISENCHANT_LOOT_TEMPLATES, payload);
         ipcRenderer.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_DISENCHANT_LOOT_TEMPLATES, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${SEARCH_DISENCHANT_LOOT_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     storeDisenchantLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_DISENCHANT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(STORE_DISENCHANT_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${STORE_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findDisenchantLootTemplate({ commit }, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_DISENCHANT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(FIND_DISENCHANT_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_DISENCHANT_LOOT_TEMPLATE, response);
           resolve();
         });
+        ipcRenderer.on(
+          `${FIND_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateDisenchantLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_DISENCHANT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(UPDATE_DISENCHANT_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${UPDATE_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     destroyDisenchantLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_DISENCHANT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(DESTROY_DISENCHANT_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${DESTROY_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     createDisenchantLootTemplate({ commit }, payload) {
@@ -66,11 +96,17 @@ export default {
       });
     },
     copyDisenchantLootTemplate(context, payload) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_DISENCHANT_LOOT_TEMPLATE, payload);
         ipcRenderer.on(COPY_DISENCHANT_LOOT_TEMPLATE, () => {
           resolve();
         });
+        ipcRenderer.on(
+          `${COPY_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },
