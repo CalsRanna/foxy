@@ -10,6 +10,7 @@ import {
   SEARCH_DBC_SPELLS,
   EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
+  EXPORT_ITEM_DBC,
 } from "../constants";
 
 export default {
@@ -146,6 +147,17 @@ export default {
             reject(error);
           }
         );
+      });
+    },
+    exportItemDbc() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(EXPORT_ITEM_DBC);
+        ipcRenderer.on(EXPORT_ITEM_DBC, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${EXPORT_ITEM_DBC}_REJECT`, (error) => {
+          reject(error);
+        });
       });
     },
     exportSpellDbc() {

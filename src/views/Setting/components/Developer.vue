@@ -20,8 +20,8 @@ export default {
       this.storeDeveloperConfig({ debug: value });
       this.$notify({
         type: "success",
-        title: "成功",
-        message: "修改设置成功。",
+        title: "开发者模式",
+        message: value === true ? "打开开发者模式" : "关闭开发者模式",
       });
     },
   },

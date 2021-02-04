@@ -31,9 +31,6 @@
             内建脚本 <small>SMART SCRIPT</small>
           </el-menu-item>
           <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
-          <el-menu-item index="developer" v-show="developerConfig.debug">
-            开发者 <small>DEVELOPER</small>
-          </el-menu-item>
           <el-menu-item index="setting">
             设置 <small>SETTING</small>
           </el-menu-item>
@@ -53,7 +50,7 @@
     >
       <div style="text-align:center; margin-bottom: 24px; font-size: 20px;">
         <i class="el-icon-loading"></i>
-        {{ initializingText }}
+        {{ loadingText }}
         <template v-show="progressText != undefined">
           <br />
           <br />
@@ -71,7 +68,12 @@
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 import { mapState, mapActions } from "vuex";
-import { EXPORT_SPELL_DBC, GLOBAL_NOTICE, START_EXPORT } from "./constants";
+import {
+  EXPORT_ITEM_DBC,
+  EXPORT_SPELL_DBC,
+  GLOBAL_NOTICE,
+  START_EXPORT,
+} from "./constants";
 
 export default {
   data() {
@@ -79,7 +81,7 @@ export default {
       initializing: true,
       visible: false,
       modal: false,
-      initializingText: "加载开始",
+      loadingText: "加载开始",
       seconds: 0,
       progressText: undefined,
     };
@@ -103,6 +105,7 @@ export default {
       "searchDbcScalingStatValues",
       "searchDbcSpellDurations",
       "searchDbcSpells",
+      "exportItemDbc",
       "exportSpellDbc",
     ]),
     ...mapActions("global", [
@@ -120,41 +123,40 @@ export default {
       this.$router.push(`/${index}`).catch((error) => error);
     },
     initDeveloperConfig() {
-      return new Promise((resolve) => {
-        let debug = localStorage.getItem("debug");
+      return new Promise((resolve, reject) => {
+        let config = {
+          debug: localStorage.getItem("debug") === "true" ? true : false,
+        };
 
-        this.storeDeveloperConfig({
-          debug: debug === "true" ? true : false,
-        }).then(() => {
-          resolve();
-        });
+        this.storeDeveloperConfig(config)
+          .then(() => {
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
       });
     },
     initMysqlConfig() {
       return new Promise((resolve, reject) => {
-        let host = localStorage.getItem("host");
-        let user = localStorage.getItem("user");
-        let password = localStorage.getItem("password");
-        let database = localStorage.getItem("database");
+        let config = {
+          host: localStorage.getItem("host"),
+          user: localStorage.getItem("user"),
+          password: localStorage.getItem("password"),
+          database: localStorage.getItem("database"),
+        };
 
-        if (host && user && password && database) {
-          this.storeMysqlConfig({
-            host: host,
-            user: user,
-            password: password,
-            database: database,
-          }).then(() => {
-            this.initMysqlConnection(this.mysqlConfig)
-              .then(() => {
-                resolve();
-              })
-              .catch(() => {
-                this.setActive("setting");
-                this.setSettingActive("mysql");
-                this.$router.push("/setting/mysql").catch((error) => error);
-                reject();
-              });
-          });
+        if (config.host && config.user && config.password && config.database) {
+          Promise.all([
+            this.storeMysqlConfig(config),
+            this.initMysqlConnection(config),
+          ])
+            .then(() => {
+              resolve();
+            })
+            .catch((error) => {
+              reject(error);
+            });
         } else {
           this.setActive("setting");
           this.setSettingActive("mysql");
@@ -165,32 +167,25 @@ export default {
     },
     initDbcConfig() {
       return new Promise((resolve, reject) => {
-        let path = localStorage.getItem("dbcPath");
+        let config = {
+          path: localStorage.getItem("dbcPath"),
+        };
 
-        if (path) {
-          this.storeDbcConfig({
-            path: path,
-          }).then(() => {
-            this.initDbcConnection(this.dbcConfig).then(() => {
+        if (config.path) {
+          Promise.all([
+            this.storeDbcConfig(config),
+            this.initDbcConnection(config),
+          ])
+            .then(() => {
               resolve();
+            })
+            .catch((error) => {
+              reject(error);
             });
-          });
         } else {
-          reject();
-        }
-      });
-    },
-    initConfigConfig() {
-      return new Promise((resolve, reject) => {
-        let path = localStorage.getItem("configPath");
-
-        if (path) {
-          this.storeConfigConfig({
-            path: path,
-          }).then(() => {
-            resolve();
-          });
-        } else {
+          this.setActive("setting");
+          this.setSettingActive("dbc");
+          this.$router.push("/setting/dbc").catch((error) => error);
           reject();
         }
       });
@@ -220,16 +215,14 @@ export default {
         await this.searchDbcSpells();
         this.progressText = "加载SpellDuration.dbc";
         await this.searchDbcSpellDurations();
-        this.progressText = "加载服务端配置";
-        await this.initConfigConfig();
-        this.initializingText = "加载完成";
+        this.loadingText = "加载完成";
         this.progressText = undefined;
         setTimeout(() => {
           this.initializing = false;
           this.visible = false;
         }, 500);
       } catch (error) {
-        this.initializingText = "加载中止";
+        this.loadingText = "加载中止";
         this.progressText = undefined;
         setTimeout(() => {
           this.initializing = false;
@@ -276,28 +269,52 @@ export default {
     ipcRenderer.on(START_EXPORT, () => {
       this.visible = true;
       this.modal = true;
-      this.initializingText = "正在导出，请稍后";
+      this.loadingText = "正在导出";
       let timer = setInterval(() => {
         this.seconds++;
       }, 1000);
-      this.exportSpellDbc()
+      this.exportItemDbc()
         .then(() => {
-          clearInterval(timer);
-          this.initializingText = "导出成功";
-          setTimeout(() => {
-            this.visible = false;
-            this.modal = false;
-          }, 500);
-          this.$notify({
-            type: "success",
-            title: "导出成功",
-            message: `导出所有dbc文件用时${this.seconds}秒`,
-          });
-          this.seconds = 0;
+          this.exportSpellDbc()
+            .then(() => {
+              clearInterval(timer);
+              this.loadingText = "导出成功";
+              setTimeout(() => {
+                this.visible = false;
+                this.modal = false;
+              }, 500);
+              this.$notify({
+                type: "success",
+                title: "导出成功",
+                message: `导出所有dbc文件用时${this.seconds}秒`,
+              });
+              this.seconds = 0;
+            })
+            .catch((error) => {
+              clearInterval(timer);
+              this.loadingText = "导出失败";
+              setTimeout(() => {
+                this.visible = false;
+                this.modal = false;
+                this.$alert(
+                  error.message.replace(
+                    /at /g,
+                    "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "
+                  ),
+                  error.title,
+                  {
+                    type: "error",
+                    dangerouslyUseHTMLString: true,
+                    customClass: "wider-message-box",
+                  }
+                );
+              }, 500);
+              this.seconds = 0;
+            });
         })
         .catch((error) => {
           clearInterval(timer);
-          this.initializingText = "导出失败";
+          this.loadingText = "导出失败";
           setTimeout(() => {
             this.visible = false;
             this.modal = false;
@@ -316,6 +333,10 @@ export default {
     });
 
     ipcRenderer.on(`${EXPORT_SPELL_DBC}_PROGRESS`, (event, text) => {
+      this.progressText = text;
+    });
+
+    ipcRenderer.on(`${EXPORT_ITEM_DBC}_PROGRESS`, (event, text) => {
       this.progressText = text;
     });
   },
@@ -357,5 +378,26 @@ export default {
 
 .wider-message-box {
   width: 50vw !important;
+}
+
+.summary-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #303133;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.summary-title span {
+  font-size: 16px;
+  color: #909399;
+  margin-left: 8px;
+}
+
+.summary-content {
+  font-size: 24px;
+  font-weight: 900;
+  color: #606266;
 }
 </style>

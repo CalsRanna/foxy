@@ -12,6 +12,7 @@ import {
   EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
   RELOAD_APP,
+  EXPORT_ITEM_DBC,
 } from "../constants";
 
 const DBC = require("warcrafty");
@@ -278,6 +279,28 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
     });
 });
 
+ipcMain.on(EXPORT_ITEM_DBC, (event) => {
+  let queryBuilder = knex()
+    .select()
+    .from("foxy.dbc_item");
+
+  event.reply(`${EXPORT_ITEM_DBC}_PROGRESS`, "Searching database");
+  queryBuilder
+    .then((rows) => {
+      event.reply(`${EXPORT_ITEM_DBC}_PROGRESS`, `Writing ${path}/Item.dbc`);
+      DBC.write(`${path}/Item.dbc`, rows)
+        .then(() => {
+          event.reply(EXPORT_ITEM_DBC);
+        })
+        .catch((error) => {
+          event.reply(`${EXPORT_ITEM_DBC}_REJECT`, error);
+        });
+    })
+    .catch((error) => {
+      event.reply(`${EXPORT_ITEM_DBC}_REJECT`, error);
+    });
+});
+
 ipcMain.on(EXPORT_SPELL_DBC, (event) => {
   let queryBuilder = knex()
     .select()
@@ -286,7 +309,7 @@ ipcMain.on(EXPORT_SPELL_DBC, (event) => {
   event.reply(`${EXPORT_SPELL_DBC}_PROGRESS`, "Searching database");
   queryBuilder
     .then((rows) => {
-      event.reply(`${EXPORT_SPELL_DBC}_PROGRESS`, "Writing dbc");
+      event.reply(`${EXPORT_SPELL_DBC}_PROGRESS`, `Writing ${path}/Spell.dbc`);
       DBC.write(`${path}/Spell.dbc`, rows)
         .then(() => {
           event.reply(EXPORT_SPELL_DBC);

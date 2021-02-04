@@ -135,13 +135,30 @@ ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
 
   queryBuilder
     .then((rows) => {
-      event.reply(STORE_ITEM_TEMPLATE, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "新建成功。",
-        type: "success",
-      });
+      knex()
+        .insert({
+          ID: payload.entry,
+          ClassID: payload.class,
+          SubclassID: payload.subclass,
+          Sound_Override_Subclassid: payload.SoundOverrideSubclass,
+          Material: payload.Material,
+          DisplayInfoID: payload.displayid,
+          InventoryType: payload.InventoryType,
+          SheatheType: payload.sheath,
+        })
+        .into("foxy.dbc_item")
+        .then(() => {
+          event.reply(STORE_ITEM_TEMPLATE, rows);
+          event.reply(GLOBAL_NOTICE, {
+            category: "notification",
+            title: "成功",
+            message: "新建成功。",
+            type: "success",
+          });
+        })
+        .catch((error) => {
+          event.reply(`${STORE_ITEM_TEMPLATE}_REJECT`, error);
+        });
     })
     .catch((error) => {
       event.reply(`${STORE_ITEM_TEMPLATE}_REJECT`, error);
@@ -183,13 +200,33 @@ ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
 
   queryBuilder
     .then((rows) => {
-      event.reply(UPDATE_ITEM_TEMPLATE, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "修改成功。",
-        type: "success",
-      });
+      knex()
+        .table("foxy.dbc_item")
+        .where({
+          ID: payload.credential.entry,
+        })
+        .update({
+          ID: payload.itemTemplate.entry,
+          ClassID: payload.itemTemplate.class,
+          SubclassID: payload.itemTemplate.subclass,
+          Sound_Override_Subclassid: payload.itemTemplate.SoundOverrideSubclass,
+          Material: payload.itemTemplate.Material,
+          DisplayInfoID: payload.itemTemplate.displayid,
+          InventoryType: payload.itemTemplate.InventoryType,
+          SheatheType: payload.itemTemplate.sheath,
+        })
+        .then(() => {
+          event.reply(UPDATE_ITEM_TEMPLATE, rows);
+          event.reply(GLOBAL_NOTICE, {
+            category: "notification",
+            title: "成功",
+            message: "修改成功。",
+            type: "success",
+          });
+        })
+        .catch((error) => {
+          event.reply(`${UPDATE_ITEM_TEMPLATE}_REJECT`, error);
+        });
     })
     .catch((error) => {
       event.reply(`${UPDATE_ITEM_TEMPLATE}_REJECT`, error);
@@ -210,13 +247,22 @@ ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
 
   queryBuilder
     .then((rows) => {
-      event.reply(DESTROY_ITEM_TEMPLATE, rows);
-      event.reply("GLOBAL_NOTICE", {
-        category: "notification",
-        title: "成功",
-        message: "删除成功。",
-        type: "success",
-      });
+      knex()
+        .table("foxy.dbc_item")
+        .where({ ID: payload.entry })
+        .delete()
+        .then(() => {
+          event.reply(DESTROY_ITEM_TEMPLATE, rows);
+          event.reply("GLOBAL_NOTICE", {
+            category: "notification",
+            title: "成功",
+            message: "删除成功。",
+            type: "success",
+          });
+        })
+        .catch((error) => {
+          event.reply(`${DESTROY_ITEM_TEMPLATE}_REJECT`, error);
+        });
     })
     .catch((error) => {
       event.reply(`${DESTROY_ITEM_TEMPLATE}_REJECT`, error);
@@ -279,13 +325,30 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
         .into("item_template");
       queryBuilder
         .then((rows) => {
-          event.reply(COPY_ITEM_TEMPLATE, rows);
-          event.reply(GLOBAL_NOTICE, {
-            type: "success",
-            category: "notification",
-            title: "成功",
-            message: `复制成功，新的物体模板entry为${entry + 1}。`,
-          });
+          knex()
+            .insert({
+              ID: itemTemplate.entry,
+              ClassID: itemTemplate.class,
+              SubclassID: itemTemplate.subclass,
+              Sound_Override_Subclassid: itemTemplate.SoundOverrideSubclass,
+              Material: itemTemplate.Material,
+              DisplayInfoID: itemTemplate.displayid,
+              InventoryType: itemTemplate.InventoryType,
+              SheatheType: itemTemplate.sheath,
+            })
+            .into("foxy.dbc_item")
+            .then(() => {
+              event.reply(COPY_ITEM_TEMPLATE, rows);
+              event.reply(GLOBAL_NOTICE, {
+                type: "success",
+                category: "notification",
+                title: "成功",
+                message: `复制成功，新的物体模板entry为${entry + 1}。`,
+              });
+            })
+            .catch((error) => {
+              event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
+            });
         })
         .catch((error) => {
           event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
