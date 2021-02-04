@@ -78,10 +78,14 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="势力">
-            <el-input
+            <!-- <el-input
               v-model="creatureTemplate.faction"
               placeholder="faction"
-            ></el-input>
+            ></el-input> -->
+            <faction-template-selector
+              v-model="creatureTemplate.faction"
+              placeholder="faction"
+            ></faction-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -979,10 +983,11 @@ import {
   movementIdTooltip,
   inhabitTypeTooltip,
   inhabitTypes,
-  hoverHeightTooltip
+  hoverHeightTooltip,
 } from "@/locales/creature";
 
 import CreatureTemplateLocalizer from "@/views/Creature/components/CreatureTemplateLocalizer";
+import FactionTemplateSelector from "@/components/FactionTemplateSelector";
 import FlagEditor from "@/components/FlagEditor";
 import GossipMenuSelector from "@/components/GossipMenuSelector";
 import HintLabel from "@/components/HintLabel";
@@ -1034,7 +1039,7 @@ export default {
       hoverHeightTooltip: hoverHeightTooltip,
       initing: false,
       loading: false,
-      creating: false
+      creating: false,
     };
   },
   computed: {
@@ -1042,16 +1047,16 @@ export default {
     ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"]),
     credential() {
       return {
-        entry: this.$route.params.id
+        entry: this.$route.params.id,
       };
-    }
+    },
   },
   methods: {
     ...mapActions("creatureTemplate", [
       "storeCreatureTemplate",
       "findCreatureTemplate",
       "updateCreatureTemplate",
-      "createCreatureTemplate"
+      "createCreatureTemplate",
     ]),
     ...mapActions("creatureTemplateLocale", ["searchCreatureTemplateLocales"]),
     async store() {
@@ -1062,7 +1067,7 @@ export default {
       } else {
         await this.updateCreatureTemplate({
           credential: this.credential,
-          creatureTemplate: this.creatureTemplate
+          creatureTemplate: this.creatureTemplate,
         });
       }
       this.loading = false;
@@ -1076,26 +1081,27 @@ export default {
         this.creating = true;
         await Promise.all([
           this.createCreatureTemplate(),
-          this.searchCreatureTemplateLocales({ entry: 0 })
+          this.searchCreatureTemplateLocales({ entry: 0 }),
         ]);
       } else {
         await Promise.all([
           this.findCreatureTemplate(this.credential),
-          this.searchCreatureTemplateLocales(this.credential)
+          this.searchCreatureTemplateLocales(this.credential),
         ]);
       }
       this.initing = false;
-    }
+    },
   },
   mounted() {
     this.init();
   },
   components: {
+    FactionTemplateSelector,
     FlagEditor,
     GossipMenuSelector,
     HintLabel,
     SpellSelector,
-    CreatureTemplateLocalizer
-  }
+    CreatureTemplateLocalizer,
+  },
 };
 </script>

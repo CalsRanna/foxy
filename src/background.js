@@ -42,6 +42,7 @@ import "./background/npcTextLocale";
 import "./background/gossipMenuOption";
 import "./background/smartScript";
 import "./background/spell";
+import "./background/factionTemplateSelector";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 

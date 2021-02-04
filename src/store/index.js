@@ -41,6 +41,7 @@ import gossipMenuOption from "./gossipMenuOption";
 import smartScript from "./smartScript";
 import spell from "./spell";
 import setting from "./setting";
+import factionTemplateSelector from "./factionTemplateSelector";
 
 Vue.use(Vuex);
 
@@ -86,5 +87,6 @@ export default new Vuex.Store({
     smartScript,
     spell,
     setting,
+    factionTemplateSelector,
   },
 });
