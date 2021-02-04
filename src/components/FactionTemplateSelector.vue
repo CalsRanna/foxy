@@ -14,9 +14,9 @@
       :close-on-click-modal="false"
     >
       <div slot="title">
-        <span style="font-size: 18px; color: #303133; margin-right: 16px"
-          >势力选择器</span
-        >
+        <span style="font-size: 18px; color: #303133; margin-right: 16px">
+          势力选择器
+        </span>
       </div>
       <el-card style="margin-top: 16px">
         <el-form>
@@ -52,7 +52,7 @@
         highlight-current-row
         @current-change="select"
         @row-dblclick="(row) => store(row)"
-        class="faction-template-editor"
+        class="faction-template-selector"
       >
         <el-table-column prop="ID" label="ID" width="80px"> </el-table-column>
         <el-table-column prop="Name_Lang_zhCN" label="名称"> </el-table-column>
@@ -70,9 +70,9 @@
       ></el-pagination>
       <div slot="footer">
         <el-button @click="close">取消</el-button>
-        <el-button type="primary" @click="() => store(currentRow)"
-          >保存</el-button
-        >
+        <el-button type="primary" @click="() => store(currentRow)">
+          保存
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -170,11 +170,11 @@ export default {
 </script>
 
 <style scoped>
-.faction-template-editor {
+.faction-template-selector {
   max-height: 40vh;
   overflow: auto;
 }
-.faction-template-editor tbody tr {
+.faction-template-selector tbody tr {
   cursor: pointer;
 }
 </style>

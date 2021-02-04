@@ -43,6 +43,7 @@ import "./background/gossipMenuOption";
 import "./background/smartScript";
 import "./background/spell";
 import "./background/factionTemplateSelector";
+import "./background/spellSelector";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
