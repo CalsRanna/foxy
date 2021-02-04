@@ -78,10 +78,6 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="势力">
-            <!-- <el-input
-              v-model="creatureTemplate.faction"
-              placeholder="faction"
-            ></el-input> -->
             <faction-template-selector
               v-model="creatureTemplate.faction"
               placeholder="faction"
@@ -305,7 +301,7 @@
           <el-form-item label="对话菜单">
             <gossip-menu-selector
               v-model="creatureTemplate.gossip_menu_id"
-              placeholder="npcflag"
+              placeholder="gossip_menu_id"
             ></gossip-menu-selector>
           </el-form-item>
         </el-col>

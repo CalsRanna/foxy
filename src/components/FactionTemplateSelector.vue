@@ -166,6 +166,10 @@ export default {
       ]);
     },
   },
+  mounted() {
+    this.faction = this.value;
+    this.ID = this.value;
+  },
 };
 </script>
 
