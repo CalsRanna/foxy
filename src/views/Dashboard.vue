@@ -107,8 +107,7 @@
             <span>Foxy</span>
           </div>
           <p style="text-indent: 2em">
-            目前存在的编辑器都不是很能满足我对一个好用的编辑器的期望：简单，易用，美观，因此我提交了Foxy
-            这个开源项目。
+            目前存在的编辑器都不是很能满足我对一个好用的编辑器的期望：简单，易用，美观，因此我提交了Foxy这个开源项目。
           </p>
           <p style="text-indent: 2em">
             一旦涉及自定义配置项，软件很难做到简单易用，因此目前暂不支持对数据库表的定义，
@@ -203,16 +202,20 @@ export default {
     },
     async init() {
       this.loading = true;
-      await Promise.all([
-        this.countCreatureTemplates({}),
-        this.countGameObjectTemplates({}),
-        this.countItemTemplates({}),
-        this.countQuestTemplates({}),
-        this.countGossipMenus({}),
-        this.countSmartScripts({}),
-        this.countSpells({}),
-      ]);
-      this.loading = false;
+      try {
+        await Promise.all([
+          this.countCreatureTemplates({}),
+          this.countGameObjectTemplates({}),
+          this.countItemTemplates({}),
+          this.countQuestTemplates({}),
+          this.countGossipMenus({}),
+          this.countSmartScripts({}),
+          this.countSpells({}),
+        ]);
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+      }
     },
   },
   components: {
@@ -223,26 +226,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.summary-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #303133;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-}
-
-.summary-title span {
-  font-size: 16px;
-  color: #909399;
-  margin-left: 8px;
-}
-
-.summary-content {
-  font-size: 24px;
-  font-weight: 900;
-  color: #606266;
-}
-</style>

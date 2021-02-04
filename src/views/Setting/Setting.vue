@@ -19,7 +19,6 @@
           <el-card body-style="padding: 0">
             <el-menu-item index="mysql"> 数据库配置 </el-menu-item>
             <el-menu-item index="dbc"> DBC文件路径 </el-menu-item>
-            <el-menu-item index="config"> 配置文件路径 </el-menu-item>
           </el-card>
           <el-card body-style="padding: 0" style="margin-top: 16px">
             <el-menu-item index="developer"> 开发者 </el-menu-item>

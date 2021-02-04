@@ -150,12 +150,16 @@ export default {
     ]),
     async search() {
       this.loading = true;
-      await this.paginateCreatureTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
-      await Promise.all([
-        this.searchCreatureTemplates(this.payload),
-        this.countCreatureTemplates(this.payload),
-      ]);
-      this.loading = false;
+      try {
+        await this.paginateCreatureTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
+        await Promise.all([
+          this.searchCreatureTemplates(this.payload),
+          this.countCreatureTemplates(this.payload),
+        ]);
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+      }
     },
     reset() {
       this.resetCredential();
@@ -225,20 +229,28 @@ export default {
     },
     async paginate(page) {
       this.loading = true;
-      await this.paginateCreatureTemplates({ page: page });
-      await this.searchCreatureTemplates(this.payload);
-      this.loading = false;
+      try {
+        await this.paginateCreatureTemplates({ page: page });
+        await this.searchCreatureTemplates(this.payload);
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+      }
     },
     show(row) {
       this.$router.push(`/creature/${row.entry}`);
     },
     async init() {
       this.loading = true;
-      await Promise.all([
-        this.searchCreatureTemplates(this.payload),
-        this.countCreatureTemplates(this.payload),
-      ]);
-      this.loading = false;
+      try {
+        await Promise.all([
+          this.searchCreatureTemplates(this.payload),
+          this.countCreatureTemplates(this.payload),
+        ]);
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+      }
     },
   },
   mounted() {
