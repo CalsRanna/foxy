@@ -132,7 +132,7 @@
             <span
               style="color: #409eff; cursor: pointer"
               @click="
-                () => openBrowser('https://github.com/CalsRanna/foxy/release')
+                () => openBrowser('https://github.com/CalsRanna/foxy/releases')
               "
             >
               下载页面
