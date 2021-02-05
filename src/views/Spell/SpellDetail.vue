@@ -1321,10 +1321,10 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="消耗物品1">
-                  <el-input
+                  <item-template-selector
                     v-model="spell.Reagent_1"
                     placeholder="Reagent_1"
-                  ></el-input>
+                  ></item-template-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1338,10 +1338,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗物品2">
-                  <el-input
+                  <item-template-selector
                     v-model="spell.Reagent_2"
                     placeholder="Reagent_2"
-                  ></el-input>
+                  ></item-template-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1355,10 +1355,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗物品3">
-                  <el-input
+                  <item-template-selector
                     v-model="spell.Reagent_3"
                     placeholder="Reagent_3"
-                  ></el-input>
+                  ></item-template-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1372,10 +1372,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗物品4">
-                  <el-input
+                  <item-template-selector
                     v-model="spell.Reagent_4"
                     placeholder="Reagent_4"
-                  ></el-input>
+                  ></item-template-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1389,10 +1389,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗物品5">
-                  <el-input
+                  <item-template-selector
                     v-model="spell.Reagent_5"
                     placeholder="Reagent_5"
-                  ></el-input>
+                  ></item-template-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1406,10 +1406,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗物品6">
-                  <el-input
+                  <item-template-selector
                     v-model="spell.Reagent_6"
                     placeholder="Reagent_6"
-                  ></el-input>
+                  ></item-template-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1423,10 +1423,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗物品7">
-                  <el-input
+                  <item-template-selector
                     v-model="spell.Reagent_7"
                     placeholder="Reagent_7"
-                  ></el-input>
+                  ></item-template-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1440,10 +1440,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="消耗物品8">
-                  <el-input
+                  <item-template-selector
                     v-model="spell.Reagent_8"
                     placeholder="Reagent_8"
-                  ></el-input>
+                  ></item-template-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1669,6 +1669,7 @@ import {
 import FlagEditor from "@/components/FlagEditor";
 
 import { mapState, mapActions } from "vuex";
+import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
 
 export default {
   data() {
@@ -1738,6 +1739,7 @@ export default {
   },
   components: {
     FlagEditor,
+    ItemTemplateSelector,
   },
 };
 </script>

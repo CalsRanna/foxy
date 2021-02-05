@@ -18,6 +18,7 @@ import "./background/pickpocketingLootTemplate";
 import "./background/skinningLootTemplate";
 import "./background/itemTemplate";
 import "./background/itemTemplateLocale";
+import "./background/itemTemplateSelector";
 import "./background/itemEnchantmentTemplate";
 import "./background/itemLootTemplate";
 import "./background/disenchantLootTemplate";

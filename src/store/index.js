@@ -16,6 +16,7 @@ import pickpocketingLootTemplate from "./pickpocketingLootTemplate";
 import skinningLootTemplate from "./skinningLootTemplate";
 import itemTemplate from "./itemTemplate";
 import itemTemplateLocale from "./itemTemplateLocale";
+import itemTemplateSelector from "./itemTemplateSelector";
 import itemEnchantmentTemplate from "./itemEnchantmentTemplate";
 import itemLootTemplate from "./itemLootTemplate";
 import disenchantLootTemplate from "./disenchantLootTemplate";
@@ -65,6 +66,7 @@ export default new Vuex.Store({
     skinningLootTemplate,
     itemTemplate,
     itemTemplateLocale,
+    itemTemplateSelector,
     itemEnchantmentTemplate,
     itemLootTemplate,
     disenchantLootTemplate,
