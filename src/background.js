@@ -29,6 +29,7 @@ import "./background/gameObjectTemplateAddon";
 import "./background/gameObjectQuestItem";
 import "./background/gameObjectLootTemplate";
 import "./background/questTemplate";
+import "./background/questTemplateLocale";
 import "./background/questTemplateAddon";
 import "./background/questOfferReward";
 import "./background/questRequestItems";

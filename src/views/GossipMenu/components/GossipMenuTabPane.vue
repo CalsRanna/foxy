@@ -46,6 +46,8 @@ export default {
   },
   computed: {
     ...mapState("gossipMenu", ["gossipMenu"]),
+    ...mapState("npcText", ["npcText"]),
+    ...mapState("npcTextLocale", ["npcTextLocales"]),
     credential() {
       return {
         MenuID: this.$route.params.id,
@@ -60,6 +62,8 @@ export default {
       "updateGossipMenu",
       "createGossipMenu",
     ]),
+    ...mapActions("npcText", ["findNpcText"]),
+    ...mapActions("npcTextLocale", ["searchNpcTextLocales"]),
     async store() {
       this.loading = true;
       if (this.creating) {
@@ -83,6 +87,10 @@ export default {
         await this.createGossipMenu();
       } else {
         await this.findGossipMenu(this.credential);
+        await Promise.all([
+          this.findNpcText({ ID: this.gossipMenu.TextID }),
+          this.searchNpcTextLocales({ ID: this.gossipMenu.TextID }),
+        ]);
       }
       this.initing = false;
     },

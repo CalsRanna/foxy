@@ -24,7 +24,7 @@
         </span>
         <el-button size="mini" @click="create">新增</el-button>
       </div>
-      <el-table :data="itemTemplateLocales">
+      <el-table :data="questTemplateLocales">
         <el-table-column width="48">
           <el-button
             type="danger"
@@ -52,16 +52,72 @@
             ></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="Name" label="名称">
+        <el-table-column prop="Title" label="名称">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.Name" placeholder="Name"></el-input>
+            <el-input v-model="scope.row.Title" placeholder="Title"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="Title" label="描述">
+        <el-table-column prop="Details" label="任务详情">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.Description"
-              placeholder="Description"
+              v-model="scope.row.Details"
+              placeholder="Details"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Objectives" label="Objectives">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.Objectives"
+              placeholder="Objectives"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="EndText" label="EndText">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.EndText"
+              placeholder="EndText"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="CompletedText" label="CompletedText">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.CompletedText"
+              placeholder="CompletedText"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ObjectiveText1" label="ObjectiveText1">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.ObjectiveText1"
+              placeholder="ObjectiveText1"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ObjectiveText2" label="ObjectiveText2">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.ObjectiveText2"
+              placeholder="ObjectiveText2"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ObjectiveText3" label="ObjectiveText3">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.ObjectiveText3"
+              placeholder="ObjectiveText3"
+            ></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ObjectiveText4" label="ObjectiveText4">
+          <template slot-scope="scope">
+            <el-input
+              v-model="scope.row.ObjectiveText4"
+              placeholder="ObjectiveText4"
             ></el-input>
           </template>
         </el-table-column>
@@ -94,24 +150,24 @@ export default {
     return {
       text: undefined,
       visible: false,
-      loading: false
+      loading: false,
     };
   },
   props: {
     value: String,
-    placeholder: String
+    placeholder: String,
   },
   watch: {
     value: function(newValue) {
       this.text = newValue;
-    }
+    },
   },
   computed: {
-    ...mapState("itemTemplate", ["itemTemplate"]),
-    ...mapState("itemTemplateLocale", ["itemTemplateLocales"])
+    ...mapState("questTemplate", ["questTemplate"]),
+    ...mapState("questTemplateLocale", ["questTemplateLocales"]),
   },
   methods: {
-    ...mapActions("itemTemplateLocale", ["storeItemTemplateLocales"]),
+    ...mapActions("questTemplateLocale", ["storeQuestTemplateLocales"]),
     input(text) {
       this.$emit("input", text);
     },
@@ -122,26 +178,26 @@ export default {
       this.visible = true;
     },
     create() {
-      this.itemTemplateLocales.push({
-        ID: this.itemTemplate.entry,
-        VerifiedBuild: 0
+      this.questTemplateLocales.push({
+        ID: this.questTemplate.entry,
+        VerifiedBuild: 0,
       });
     },
     destroy(index) {
-      this.itemTemplateLocales.splice(index, 1);
+      this.questTemplateLocales.splice(index, 1);
     },
     async store() {
       this.loading = true;
-      await this.storeItemTemplateLocales(this.itemTemplateLocales);
+      await this.storeQuestTemplateLocales(this.questTemplateLocales);
       this.loading = false;
       this.visible = false;
     },
     cancel() {
       this.visible = false;
-    }
+    },
   },
   created() {
     this.text = this.value;
-  }
+  },
 };
 </script>

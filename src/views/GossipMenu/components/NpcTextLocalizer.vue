@@ -182,10 +182,10 @@
         </el-table-column>
       </el-table>
       <div slot="footer">
+        <el-button @click="cancel">取消</el-button>
         <el-button type="primary" :loading="loading" @click="store">
           保存
         </el-button>
-        <el-button @click="cancel">取消</el-button>
       </div>
     </el-dialog>
   </div>
