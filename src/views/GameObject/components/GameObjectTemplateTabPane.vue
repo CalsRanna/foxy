@@ -20,17 +20,18 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="名称">
-            <el-input v-model="gameObjectTemplate.name" placeholder="name">
-            </el-input>
+            <game-object-template-localizer
+              v-model="gameObjectTemplate.name"
+              placeholder="name"
+            ></game-object-template-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="使用文字">
-            <el-input
+            <game-object-template-localizer
               v-model="gameObjectTemplate.castBarCaption"
               placeholder="castBarCaption"
-            >
-            </el-input>
+            ></game-object-template-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -311,6 +312,8 @@
 </template>
 
 <script>
+import GameObjectTemplateLocalizer from "@/views/GameObject/components/GameObjectTemplateLocalizer";
+
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -376,5 +379,6 @@ export default {
   mounted() {
     this.init();
   },
+  components: { GameObjectTemplateLocalizer },
 };
 </script>

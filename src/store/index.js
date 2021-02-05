@@ -27,6 +27,7 @@ import gameObjectTemplateAddon from "./gameObjectTemplateAddon";
 import gameObjectQuestItem from "./gameObjectQuestItem";
 import gameObjectLootTemplate from "./gameObjectLootTemplate";
 import questTemplate from "./questTemplate";
+import questTemplateLocale from "./questTemplateLocale";
 import questTemplateAddon from "./questTemplateAddon";
 import questOfferReward from "./questOfferReward";
 import questRequestItems from "./questRequestItems";
@@ -75,6 +76,7 @@ export default new Vuex.Store({
     gameObjectQuestItem,
     gameObjectLootTemplate,
     questTemplate,
+    questTemplateLocale,
     questTemplateAddon,
     questOfferReward,
     questRequestItems,

@@ -20,11 +20,11 @@
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
-          名称/描述本地化
+          名称/称号本地化
         </span>
         <el-button size="mini" @click="create">新增</el-button>
       </div>
-      <el-table :data="itemTemplateLocales">
+      <el-table :data="gameObjectTemplateLocales">
         <el-table-column width="48">
           <el-button
             type="danger"
@@ -38,7 +38,7 @@
         <el-table-column prop="entry" label="编号">
           <template slot-scope="scope">
             <el-input-number
-              v-model="scope.row.ID"
+              v-model="scope.row.entry"
               controls-position="right"
               disabled
             ></el-input-number>
@@ -52,17 +52,14 @@
             ></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="Name" label="名称">
+        <el-table-column prop="name" label="名称">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.Name" placeholder="Name"></el-input>
+            <el-input v-model="scope.row.name" placeholder="name"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="Title" label="描述">
+        <el-table-column prop="castBarCaption" label="使用文字">
           <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.Description"
-              placeholder="Description"
-            ></el-input>
+            <el-input v-model="scope.row.castBarCaption" placeholder="castBarCaption"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="VerifiedBuild" label="VerifiedBuild">
@@ -107,11 +104,11 @@ export default {
     }
   },
   computed: {
-    ...mapState("itemTemplate", ["itemTemplate"]),
-    ...mapState("itemTemplateLocale", ["itemTemplateLocales"])
+    ...mapState("gameObjectTemplate", ["gameObjectTemplate"]),
+    ...mapState("gameObjectTemplateLocale", ["gameObjectTemplateLocales"])
   },
   methods: {
-    ...mapActions("itemTemplateLocale", ["storeItemTemplateLocales"]),
+    ...mapActions("gameObjectTemplateLocale", ["storeGameObjectTemplateLocales"]),
     input(text) {
       this.$emit("input", text);
     },
@@ -122,17 +119,17 @@ export default {
       this.visible = true;
     },
     create() {
-      this.itemTemplateLocales.push({
-        ID: this.itemTemplate.entry,
+      this.gameObjectTemplateLocales.push({
+        entry: this.gameObjectTemplate.entry,
         VerifiedBuild: 0
       });
     },
     destroy(index) {
-      this.itemTemplateLocales.splice(index, 1);
+      this.gameObjectTemplateLocales.splice(index, 1);
     },
     async store() {
       this.loading = true;
-      await this.storeItemTemplateLocales(this.itemTemplateLocales);
+      await this.storeGameObjectTemplateLocales(this.gameObjectTemplateLocales);
       this.loading = false;
       this.visible = false;
     },
@@ -140,7 +137,7 @@ export default {
       this.visible = false;
     }
   },
-  created() {
+  mounted() {
     this.text = this.value;
   }
 };

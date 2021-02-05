@@ -10,7 +10,9 @@
         </el-breadcrumb-item>
         <el-breadcrumb-item>对话详情</el-breadcrumb-item>
       </el-breadcrumb>
-      <h3 style="margin: 16px 0 0 0">
+      <h3
+        style="margin: 16px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+      >
         {{ localeName }}
         <small>
           {{ localeSubname }}
@@ -32,14 +34,37 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 import GossipMenuTabPane from "@/views/GossipMenu/components/GossipMenuTabPane";
 import NpcTextTabPane from "@/views/GossipMenu/components/NpcTextTabPane";
 import GossipMenuOptionTabPane from "@/views/GossipMenu/components/GossipMenuOptionTabPane";
 
 export default {
   computed: {
+    ...mapState("npcText", ["npcText"]),
+    ...mapState("npcTextLocale", ["npcTextLocales"]),
     localeName() {
-      return null;
+      if (this.npcTextLocales.length > 0) {
+        let name = undefined;
+        for (let npcTextLocale of this.npcTextLocales) {
+          if (npcTextLocale.Locale === "zhCN") {
+            name =
+              npcTextLocale.Text0_0 != ""
+                ? npcTextLocale.Text0_0
+                : npcTextLocale.Text0_1;
+          }
+        }
+        return name !== ""
+          ? name
+          : this.npcText.text0_0 != ""
+          ? this.npcText.text0_0
+          : this.npcText.text0_1;
+      } else {
+        return this.npcText.text0_0 != ""
+          ? this.npcText.text0_0
+          : this.npcText.text0_1;
+      }
     },
     localeSubname() {
       return null;

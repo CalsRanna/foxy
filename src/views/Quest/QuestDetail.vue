@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 import QuestTemplateTabPane from "@/views/Quest/components/QuestTemplateTabPane";
 import QuestTemplateAddonTabPane from "@/views/Quest/components/QuestTemplateAddonTabPane";
 import QuestOfferRewardTabPane from "@/views/Quest/components/QuestOfferRewardTabPane";
@@ -60,11 +62,35 @@ import GameObjectQuestEnder from "./components/GameObjectQuestEnder";
 
 export default {
   computed: {
+    ...mapState("questTemplate", ["questTemplate"]),
+    ...mapState("questTemplateLocale", ["questTemplateLocales"]),
     localeName() {
-      return null;
+      if (this.questTemplateLocales.length > 0) {
+        let name = undefined;
+        for (let questTemplateLocale of this.questTemplateLocales) {
+          if (questTemplateLocale.locale === "zhCN") {
+            name = questTemplateLocale.Title;
+          }
+        }
+        return name !== undefined ? name : this.questTemplate.LogTitle;
+      } else {
+        return this.questTemplate.LogTitle;
+      }
     },
     localeDescription() {
-      return null;
+      if (this.questTemplateLocales.length > 0) {
+        let description = undefined;
+        for (let questTemplateLocale of this.questTemplateLocales) {
+          if (questTemplateLocale.locale === "zhCN") {
+            description = questTemplateLocale.ObjectiveText1;
+          }
+        }
+        return description !== undefined
+          ? description
+          : this.questTemplate.ObjectText1;
+      } else {
+        return this.questTemplate.ObjectText1;
+      }
     },
   },
   components: {
