@@ -7,7 +7,8 @@ import {
   UPDATE_SMART_SCRIPT,
   DESTROY_SMART_SCRIPT,
   COPY_SMART_SCRIPT,
-  GLOBAL_NOTICE,
+  GLOBAL_MESSAGE_BOX,
+  GLOBAL_MESSAGE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -49,12 +50,10 @@ ipcMain.on(SEARCH_SMART_SCRIPTS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_SMART_SCRIPTS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -83,12 +82,10 @@ ipcMain.on(COUNT_SMART_SCRIPTS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_SMART_SCRIPTS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -100,21 +97,13 @@ ipcMain.on(STORE_SMART_SCRIPT, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(STORE_SMART_SCRIPT, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "新建成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${STORE_SMART_SCRIPT}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -130,12 +119,10 @@ ipcMain.on(FIND_SMART_SCRIPT, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_SMART_SCRIPT}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -149,21 +136,13 @@ ipcMain.on(UPDATE_SMART_SCRIPT, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(UPDATE_SMART_SCRIPT, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "修改成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${UPDATE_SMART_SCRIPT}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -176,21 +155,13 @@ ipcMain.on(DESTROY_SMART_SCRIPT, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(DESTROY_SMART_SCRIPT, rows);
-      event.reply("GLOBAL_NOTICE", {
-        category: "notification",
-        title: "成功",
-        message: "删除成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${DESTROY_SMART_SCRIPT}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -223,28 +194,18 @@ ipcMain.on(COPY_SMART_SCRIPT, (event, payload) => {
       queryBuilder
         .then((rows) => {
           event.reply(COPY_SMART_SCRIPT, rows);
-          event.reply(GLOBAL_NOTICE, {
-            type: "success",
-            category: "notification",
-            title: "成功",
-            message: `复制成功，新的物体模板 id 为 ${id + 1}。`,
-          });
-          event.reply(GLOBAL_NOTICE, {
-            category: "message",
-            message: queryBuilder.toString(),
-          });
+          event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
         })
         .catch((error) => {
           event.reply(`${COPY_SMART_SCRIPT}_REJECT`, error);
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
-          event.reply(GLOBAL_NOTICE, {
-            category: "message",
-            message: queryBuilder.toString(),
-          });
+          event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
         });
     })
     .catch((error) => {
       event.reply(`${COPY_SMART_SCRIPT}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

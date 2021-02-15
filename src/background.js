@@ -165,21 +165,11 @@ if (isDevelopment) {
 }
 
 process.on("uncaughtException", (error) => {
-  win.webContents.send("GLOBAL_NOTICE", {
-    category: "alert",
-    type: "error",
-    title: `${error.code}`,
-    message: `${error.stack}`,
-  });
+  win.webContents.send("GLOBAL_MESSAGE_BOX", error);
 });
 
 process.on("unhandledRejection", (error) => {
-  win.webContents.send("GLOBAL_NOTICE", {
-    category: "alert",
-    type: "error",
-    title: `${error.code}`,
-    message: `${error.stack}`,
-  });
+  win.webContents.send("GLOBAL_MESSAGE_BOX", error);
 });
 
 ipcMain.on("SELECT_DBC_PATH", (event) => {

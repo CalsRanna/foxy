@@ -9,7 +9,8 @@ import {
   DESTROY_ITEM_TEMPLATE,
   CREATE_ITEM_TEMPLATE,
   COPY_ITEM_TEMPLATE,
-  GLOBAL_NOTICE,
+  GLOBAL_MESSAGE_BOX,
+  GLOBAL_MESSAGE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -69,12 +70,10 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_ITEM_TEMPLATES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -119,12 +118,10 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_ITEM_TEMPLATES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -149,25 +146,18 @@ ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
         .into("foxy.dbc_item")
         .then(() => {
           event.reply(STORE_ITEM_TEMPLATE, rows);
-          event.reply(GLOBAL_NOTICE, {
-            category: "notification",
-            title: "成功",
-            message: "新建成功。",
-            type: "success",
-          });
         })
         .catch((error) => {
           event.reply(`${STORE_ITEM_TEMPLATE}_REJECT`, error);
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         });
     })
     .catch((error) => {
       event.reply(`${STORE_ITEM_TEMPLATE}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -183,12 +173,10 @@ ipcMain.on(FIND_ITEM_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_ITEM_TEMPLATE}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -217,25 +205,18 @@ ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
         })
         .then(() => {
           event.reply(UPDATE_ITEM_TEMPLATE, rows);
-          event.reply(GLOBAL_NOTICE, {
-            category: "notification",
-            title: "成功",
-            message: "修改成功。",
-            type: "success",
-          });
         })
         .catch((error) => {
           event.reply(`${UPDATE_ITEM_TEMPLATE}_REJECT`, error);
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         });
     })
     .catch((error) => {
       event.reply(`${UPDATE_ITEM_TEMPLATE}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -253,25 +234,18 @@ ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
         .delete()
         .then(() => {
           event.reply(DESTROY_ITEM_TEMPLATE, rows);
-          event.reply("GLOBAL_NOTICE", {
-            category: "notification",
-            title: "成功",
-            message: "删除成功。",
-            type: "success",
-          });
         })
         .catch((error) => {
           event.reply(`${DESTROY_ITEM_TEMPLATE}_REJECT`, error);
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         });
     })
     .catch((error) => {
       event.reply(`${DESTROY_ITEM_TEMPLATE}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -289,12 +263,10 @@ ipcMain.on(CREATE_ITEM_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${CREATE_ITEM_TEMPLATE}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -339,28 +311,22 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
             .into("foxy.dbc_item")
             .then(() => {
               event.reply(COPY_ITEM_TEMPLATE, rows);
-              event.reply(GLOBAL_NOTICE, {
-                type: "success",
-                category: "notification",
-                title: "成功",
-                message: `复制成功，新的物体模板entry为${entry + 1}。`,
-              });
             })
             .catch((error) => {
               event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
+              event.reply(GLOBAL_MESSAGE_BOX, error);
             });
         })
         .catch((error) => {
           event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
-          event.reply(GLOBAL_NOTICE, {
-            category: "message",
-            message: queryBuilder.toString(),
-          });
+          event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
         });
     })
     .catch((error) => {
       event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

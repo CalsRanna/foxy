@@ -8,7 +8,8 @@ import {
   DESTROY_CREATURE_QUEST_ITEM,
   CREATE_CREATURE_QUEST_ITEM,
   COPY_CREATURE_QUEST_ITEM,
-  GLOBAL_NOTICE,
+  GLOBAL_MESSAGE_BOX,
+  GLOBAL_MESSAGE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -33,12 +34,10 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ITEMS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_CREATURE_QUEST_ITEMS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -50,21 +49,13 @@ ipcMain.on(STORE_CREATURE_QUEST_ITEM, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(STORE_CREATURE_QUEST_ITEM, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "新建成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${STORE_CREATURE_QUEST_ITEM}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -80,12 +71,10 @@ ipcMain.on(FIND_CREATURE_QUEST_ITEM, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_CREATURE_QUEST_ITEM}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -98,21 +87,13 @@ ipcMain.on(UPDATE_CREATURE_QUEST_ITEM, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(UPDATE_CREATURE_QUEST_ITEM, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "修改成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${UPDATE_CREATURE_QUEST_ITEM}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -125,21 +106,13 @@ ipcMain.on(DESTROY_CREATURE_QUEST_ITEM, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(DESTROY_CREATURE_QUEST_ITEM, rows);
-      event.reply("GLOBAL_NOTICE", {
-        category: "notification",
-        title: "成功",
-        message: "删除成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${DESTROY_CREATURE_QUEST_ITEM}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -159,12 +132,10 @@ ipcMain.on(CREATE_CREATURE_QUEST_ITEM, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${CREATE_CREATURE_QUEST_ITEM}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -197,24 +168,17 @@ ipcMain.on(COPY_CREATURE_QUEST_ITEM, (event, payload) => {
       queryBuilder
         .then((rows) => {
           event.reply(COPY_CREATURE_QUEST_ITEM, rows);
-          event.reply(GLOBAL_NOTICE, {
-            type: "success",
-            category: "notification",
-            title: "成功",
-            message: `复制成功，新的装备模板Idx为${idx + 1}。`,
-          });
         })
         .catch((error) => {
           event.reply(`${COPY_CREATURE_QUEST_ITEM}_REJECT`, error);
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
-          event.reply(GLOBAL_NOTICE, {
-            category: "message",
-            message: queryBuilder.toString(),
-          });
+          event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
         });
     })
     .catch((error) => {
       event.reply(`${COPY_CREATURE_QUEST_ITEM}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

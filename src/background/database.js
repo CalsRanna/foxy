@@ -1,7 +1,11 @@
 const { knex, init } = require("../libs/mysql");
 
 import { ipcMain } from "electron";
-import { INIT_MYSQL_CONNECTION, TEST_MYSQL_CONNECTION } from "../constants";
+import {
+  GLOBAL_MESSAGE_BOX,
+  INIT_MYSQL_CONNECTION,
+  TEST_MYSQL_CONNECTION,
+} from "../constants";
 
 ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
   init(payload);
@@ -61,6 +65,7 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${INIT_MYSQL_CONNECTION}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
 
@@ -72,21 +77,10 @@ ipcMain.on(TEST_MYSQL_CONNECTION, (event, payload) => {
     .from("creature")
     .first()
     .then((rows) => {
-      event.reply("GLOBAL_NOTICE", {
-        category: "notification",
-        title: "成功",
-        message: `数据库配置检验成功。`,
-        type: "success",
-      });
       event.reply(TEST_MYSQL_CONNECTION);
     })
     .catch((error) => {
-      event.reply("GLOBAL_NOTICE", {
-        category: "alert",
-        type: "error",
-        title: `${error.code}`,
-        message: `${error.stack}`,
-      });
       event.reply(`${TEST_MYSQL_CONNECTION}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
