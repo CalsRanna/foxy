@@ -36,7 +36,6 @@ import {
   Dialog,
   Checkbox,
   Image,
-  // Notification
 } from "element-ui";
 
 Vue.use(Button);
@@ -75,4 +74,3 @@ Vue.use(Tag);
 Vue.use(Dialog);
 Vue.use(Checkbox);
 Vue.use(Image);
-// Vue.use(Notification);

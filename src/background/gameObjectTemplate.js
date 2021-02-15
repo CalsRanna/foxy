@@ -169,7 +169,6 @@ ipcMain.on(DESTROY_GAME_OBJECT_TEMPLATE, (event, payload) => {
     });
 });
 
-// 新建空的物体模板，entry自动生成
 ipcMain.on(CREATE_GAME_OBJECT_TEMPLATE, (event, payload) => {
   let queryBuilder = knex()
     .select("entry")

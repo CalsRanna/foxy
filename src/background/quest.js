@@ -172,7 +172,6 @@ ipcMain.on(DESTROY_QUEST_TEMPLATE, (event, payload) => {
     });
 });
 
-// 新建空的物品模板，entry自动生成
 ipcMain.on(CREATE_QUEST_TEMPLATE, (event, payload) => {
   let queryBuilder = knex()
     .select("ID")

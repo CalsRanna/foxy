@@ -71,7 +71,6 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
 
 ipcMain.on(TEST_MYSQL_CONNECTION, (event, payload) => {
   init(payload);
-  // 尝试连接数据库，校验配置是否正确
   knex()
     .select("guid")
     .from("creature")
