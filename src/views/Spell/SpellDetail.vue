@@ -1711,11 +1711,21 @@ export default {
       this.loading = true;
       if (this.creating) {
         this.storeSpell(this.spell);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
         this.creating = false;
       } else {
         await this.updateSpell({
           credential: this.credential,
           spell: this.spell,
+        });
+        this.$notify({
+          title: "修改成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       this.loading = false;

@@ -41,9 +41,9 @@ export default {
       this.loading = true;
       await this.storeMysqlConfig(this.config);
       this.$notify({
+        title: "保存成功",
+        position: "bottom-left",
         type: "success",
-        title: "成功",
-        message: "修改设置成功。",
       });
       this.loading = false;
     },
@@ -51,6 +51,11 @@ export default {
       this.loading = true;
       this.testMysqlConfig(this.config)
         .then(() => {
+          this.$notify({
+            title: "连接成功",
+            position: "bottom-left",
+            type: "success",
+          });
           this.loading = false;
         })
         .catch(() => {

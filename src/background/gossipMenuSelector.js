@@ -43,7 +43,7 @@ ipcMain.on(SEARCH_GOSSIP_MENUS_FOR_SELECTOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_GOSSIP_MENUS_FOR_SELECTOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -82,7 +82,7 @@ ipcMain.on(COUNT_GOSSIP_MENUS_FOR_SELECTOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_GOSSIP_MENUS_FOR_SELECTOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());

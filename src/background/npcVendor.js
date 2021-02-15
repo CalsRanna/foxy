@@ -34,7 +34,7 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_NPC_VENDORS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -52,7 +52,7 @@ ipcMain.on(STORE_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -71,7 +71,7 @@ ipcMain.on(FIND_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -90,7 +90,7 @@ ipcMain.on(UPDATE_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -109,7 +109,7 @@ ipcMain.on(DESTROY_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -125,14 +125,14 @@ ipcMain.on(CREATE_NPC_VENDOR, (event, payload) => {
 
   queryBuilder
     .then((rows) => {
-      event.reply(CREATE_CREATURE_EQUIP_TEMPLATE, {
+      event.reply(CREATE_NPC_VENDOR, {
         entry: payload.entry,
         slot: rows.length > 0 ? rows[0].slot + 1 : 0,
       });
     })
     .catch((error) => {
       event.reply(`${CREATE_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -181,7 +181,7 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_NPC_VENDOR}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -189,6 +189,6 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

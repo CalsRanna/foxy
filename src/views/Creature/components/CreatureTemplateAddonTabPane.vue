@@ -95,7 +95,7 @@ export default {
     return {
       initing: false,
       loading: false,
-      creating: false
+      creating: false,
     };
   },
   computed: {
@@ -103,9 +103,9 @@ export default {
     ...mapState("creatureTemplateAddon", ["creatureTemplateAddon"]),
     credential() {
       return {
-        entry:this.creatureTemplate.entry
-      }
-    }
+        entry: this.creatureTemplate.entry,
+      };
+    },
   },
   methods: {
     ...mapActions("creatureTemplateAddon", [
@@ -116,26 +116,44 @@ export default {
     ]),
     async store() {
       this.loading = true;
-      if (this.creating) {
-        await this.storeCreatureTemplateAddon(this.creatureTemplateAddon);
-        this.creating = false;
-      } else {
-        await this.updateCreatureTemplateAddon({
-          credential: this.credential,
-          creatureTemplateAddon: this.creatureTemplateAddon
-        });
+      try {
+        if (this.creating) {
+          await this.storeCreatureTemplateAddon(this.creatureTemplateAddon);
+          this.$notify({
+            title: "保存成功",
+            position: "bottom-left",
+            type: "success",
+          });
+          this.creating = false;
+        } else {
+          await this.updateCreatureTemplateAddon({
+            credential: this.credential,
+            creatureTemplateAddon: this.creatureTemplateAddon,
+          });
+          this.$notify({
+            title: "修改成功",
+            position: "bottom-left",
+            type: "success",
+          });
+        }
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
       }
-      this.loading = false;
     },
     cancel() {
       this.$router.go(-1);
     },
     async init() {
       this.initing = true;
-      await this.findCreatureTemplateAddon({ entry: this.creatureTemplate.entry });
+      await this.findCreatureTemplateAddon({
+        entry: this.creatureTemplate.entry,
+      });
       if (this.creatureTemplateAddon.entry == undefined) {
         this.creating = true;
-        await this.createCreatureTemplateAddon({ entry: this.creatureTemplate.entry });
+        await this.createCreatureTemplateAddon({
+          entry: this.creatureTemplate.entry,
+        });
       }
       this.initing = false;
     },

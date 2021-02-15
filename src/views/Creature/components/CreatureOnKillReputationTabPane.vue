@@ -21,18 +21,18 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="势力1">
-            <el-input
+            <faction-template-selector
               v-model="creatureOnKillReputation.RewOnKillRepFaction1"
               placeholder="RewOnKillRepFaction1"
-            ></el-input>
+            ></faction-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="势力2">
-            <el-input
+            <faction-template-selector
               v-model="creatureOnKillReputation.RewOnKillRepFaction2"
               placeholder="RewOnKillRepFaction2"
-            ></el-input>
+            ></faction-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -125,6 +125,7 @@
 import { maxStandings } from "@/locales/creature";
 
 import { mapState, mapActions } from "vuex";
+import FactionTemplateSelector from "../../../components/FactionTemplateSelector.vue";
 
 export default {
   data() {
@@ -132,7 +133,7 @@ export default {
       initing: false,
       loading: false,
       creating: false,
-      maxStandings: maxStandings
+      maxStandings: maxStandings,
     };
   },
   computed: {
@@ -140,29 +141,45 @@ export default {
     ...mapState("creatureOnKillReputation", ["creatureOnKillReputation"]),
     credential() {
       return {
-        creature_id: this.creatureTemplate.entry
+        creature_id: this.creatureTemplate.entry,
       };
-    }
+    },
   },
   methods: {
     ...mapActions("creatureOnKillReputation", [
       "storeCreatureOnKillReputation",
       "findCreatureOnKillReputation",
       "updateCreatureOnKillReputation",
-      "createCreatureOnKillReputation"
+      "createCreatureOnKillReputation",
     ]),
     async store() {
       this.loading = true;
-      if (this.creating) {
-        await this.storeCreatureOnKillReputation(this.creatureOnKillReputation);
-        this.creating = false;
-      } else {
-        await this.updateCreatureOnKillReputation({
-          credential: this.credential,
-          creatureOnKillReputation: this.creatureOnKillReputation
-        });
+      try {
+        if (this.creating) {
+          await this.storeCreatureOnKillReputation(
+            this.creatureOnKillReputation
+          );
+          this.$notify({
+            title: "保存成功",
+            position: "bottom-left",
+            type: "success",
+          });
+          this.creating = false;
+        } else {
+          await this.updateCreatureOnKillReputation({
+            credential: this.credential,
+            creatureOnKillReputation: this.creatureOnKillReputation,
+          });
+          this.$notify({
+            title: "修改成功",
+            position: "bottom-left",
+            type: "success",
+          });
+        }
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
       }
-      this.loading = false;
     },
     cancel() {
       this.$router.go(-1);
@@ -175,10 +192,11 @@ export default {
         await this.createCreatureOnKillReputation(this.credential);
       }
       this.initing = false;
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
+  components: { FactionTemplateSelector },
 };
 </script>

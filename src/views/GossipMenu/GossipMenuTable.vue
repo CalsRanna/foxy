@@ -156,8 +156,8 @@ export default {
       this.$router.push("/gossip-menu/create");
     },
     copy() {
-      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
-        confirmButtonText: "确定",
+      this.$confirm("此操作不会复制关联表数据，确认继续？", "确认复制", {
+        confirmButtonText: "确认",
         cancelButtonText: "取消",
         type: "info",
         dangerouslyUseHTMLString: true,
@@ -175,6 +175,11 @@ export default {
                 ]);
               })
               .then(() => {
+                this.$notify({
+                  title: "复制成功",
+                  position: "bottom-left",
+                  type: "success",
+                });
                 instance.confirmButtonLoading = false;
                 done();
               });
@@ -187,11 +192,11 @@ export default {
     destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
-        "提示",
+        "确认删除",
         {
-          confirmButtonText: "确定",
+          confirmButtonText: "确认",
           cancelButtonText: "取消",
-          type: "error",
+          type: "info",
           dangerouslyUseHTMLString: true,
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
@@ -208,6 +213,11 @@ export default {
                   ]);
                 })
                 .then(() => {
+                  this.$notify({
+                    title: "删除成功",
+                    position: "bottom-left",
+                    type: "success",
+                  });
                   instance.confirmButtonLoading = false;
                   done();
                 });

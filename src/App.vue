@@ -236,10 +236,17 @@ export default {
     this.init();
 
     ipcRenderer.on(GLOBAL_MESSAGE_BOX, (event, error) => {
+      error = JSON.parse(error);
       let content = this.developerConfig.debug
-        ? `${error.stack}`.replace(/at /g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at ")
-        : `${error.message}`;
-      let title = error.code == undefined ? "未知错误" : `${error.code}`;
+        ? [
+            `- ${error.index}`,
+            error.sqlState,
+            error.sqlMessage,
+            error.sql,
+          ].join("<br>- ")
+        : `${error.sqlMessage}`;
+      let title =
+        error.code == undefined ? "未知错误" : `[${error.errno}] ${error.code}`;
       this.$alert(content, title, {
         type: "error",
         dangerouslyUseHTMLString: true,
@@ -271,9 +278,9 @@ export default {
                 this.modal = false;
               }, 500);
               this.$notify({
+                title: `导出成功，用时${this.seconds}秒`,
+                position: "bottom-left",
                 type: "success",
-                title: "导出成功",
-                message: `导出所有dbc文件用时${this.seconds}秒`,
               });
               this.seconds = 0;
             })

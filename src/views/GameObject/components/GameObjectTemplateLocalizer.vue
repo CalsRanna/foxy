@@ -59,7 +59,10 @@
         </el-table-column>
         <el-table-column prop="castBarCaption" label="使用文字">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.castBarCaption" placeholder="castBarCaption"></el-input>
+            <el-input
+              v-model="scope.row.castBarCaption"
+              placeholder="castBarCaption"
+            ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="VerifiedBuild" label="VerifiedBuild">
@@ -91,24 +94,26 @@ export default {
     return {
       text: undefined,
       visible: false,
-      loading: false
+      loading: false,
     };
   },
   props: {
     value: String,
-    placeholder: String
+    placeholder: String,
   },
   watch: {
     value: function(newValue) {
       this.text = newValue;
-    }
+    },
   },
   computed: {
     ...mapState("gameObjectTemplate", ["gameObjectTemplate"]),
-    ...mapState("gameObjectTemplateLocale", ["gameObjectTemplateLocales"])
+    ...mapState("gameObjectTemplateLocale", ["gameObjectTemplateLocales"]),
   },
   methods: {
-    ...mapActions("gameObjectTemplateLocale", ["storeGameObjectTemplateLocales"]),
+    ...mapActions("gameObjectTemplateLocale", [
+      "storeGameObjectTemplateLocales",
+    ]),
     input(text) {
       this.$emit("input", text);
     },
@@ -121,7 +126,7 @@ export default {
     create() {
       this.gameObjectTemplateLocales.push({
         entry: this.gameObjectTemplate.entry,
-        VerifiedBuild: 0
+        VerifiedBuild: 0,
       });
     },
     destroy(index) {
@@ -130,15 +135,20 @@ export default {
     async store() {
       this.loading = true;
       await this.storeGameObjectTemplateLocales(this.gameObjectTemplateLocales);
+      this.$notify({
+        title: "保存成功",
+        position: "bottom-left",
+        type: "success",
+      });
       this.loading = false;
       this.visible = false;
     },
     cancel() {
       this.visible = false;
-    }
+    },
   },
   mounted() {
     this.text = this.value;
-  }
+  },
 };
 </script>

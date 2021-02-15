@@ -43,12 +43,12 @@ ipcMain.on(SEARCH_DBC_FACTIONS, (event) => {
               })
               .catch((error) => {
                 event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
-                event.reply(GLOBAL_MESSAGE_BOX, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
               });
           })
           .catch((error) => {
             event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
-            event.reply(GLOBAL_MESSAGE_BOX, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
           });
       } else {
         event.reply(SEARCH_DBC_FACTIONS);
@@ -56,7 +56,7 @@ ipcMain.on(SEARCH_DBC_FACTIONS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_FACTIONS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -77,12 +77,12 @@ ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, (event) => {
               })
               .catch((error) => {
                 event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
-                event.reply(GLOBAL_MESSAGE_BOX, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
               });
           })
           .catch((error) => {
             event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
-            event.reply(GLOBAL_MESSAGE_BOX, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
           });
       } else {
         event.reply(SEARCH_DBC_FACTION_TEMPLATES);
@@ -90,7 +90,7 @@ ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -111,12 +111,12 @@ ipcMain.on(SEARCH_DBC_ITEMS, (event) => {
               })
               .catch((error) => {
                 event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
-                event.reply(GLOBAL_MESSAGE_BOX, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
               });
           })
           .catch((error) => {
             event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
-            event.reply(GLOBAL_MESSAGE_BOX, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
           });
       } else {
         event.reply(SEARCH_DBC_ITEMS);
@@ -124,7 +124,7 @@ ipcMain.on(SEARCH_DBC_ITEMS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_ITEMS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -145,12 +145,12 @@ ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
               })
               .catch((error) => {
                 event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
-                event.reply(GLOBAL_MESSAGE_BOX, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
               });
           })
           .catch((error) => {
             event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
-            event.reply(GLOBAL_MESSAGE_BOX, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
           });
       } else {
         event.reply(SEARCH_DBC_ITEM_DISPLAY_INFOS);
@@ -158,7 +158,7 @@ ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -179,12 +179,12 @@ ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
               })
               .catch((error) => {
                 event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
-                event.reply(GLOBAL_MESSAGE_BOX, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
               });
           })
           .catch((error) => {
             event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
-            event.reply(GLOBAL_MESSAGE_BOX, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
           });
       } else {
         event.reply(SEARCH_DBC_SPELLS);
@@ -192,7 +192,7 @@ ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_SPELLS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -213,12 +213,12 @@ ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
               })
               .catch((error) => {
                 event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
-                event.reply(GLOBAL_MESSAGE_BOX, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
               });
           })
           .catch((error) => {
             event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
-            event.reply(GLOBAL_MESSAGE_BOX, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
           });
       } else {
         event.reply(SEARCH_DBC_SPELL_DURATIONS);
@@ -226,7 +226,7 @@ ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_SPELL_DURATIONS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -264,7 +264,7 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -285,12 +285,12 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
               })
               .catch((error) => {
                 event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
-                event.reply(GLOBAL_MESSAGE_BOX, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
               });
           })
           .catch((error) => {
             event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
-            event.reply(GLOBAL_MESSAGE_BOX, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
           });
       } else {
         event.reply(SEARCH_DBC_SCALING_STAT_VALUES);
@@ -298,7 +298,7 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -317,12 +317,12 @@ ipcMain.on(EXPORT_ITEM_DBC, (event) => {
         })
         .catch((error) => {
           event.reply(`${EXPORT_ITEM_DBC}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
         });
     })
     .catch((error) => {
       event.reply(`${EXPORT_ITEM_DBC}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -341,11 +341,11 @@ ipcMain.on(EXPORT_SPELL_DBC, (event) => {
         })
         .catch((error) => {
           event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
         });
     })
     .catch((error) => {
       event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

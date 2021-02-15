@@ -368,11 +368,21 @@ export default {
       this.loading = true;
       if (this.creating) {
         this.storeSmartScript(this.smartScript);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
         this.creating = false;
       } else {
         await this.updateSmartScript({
           credential: this.credential,
           smartScript: this.smartScript,
+        });
+        this.$notify({
+          title: "修改成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       this.loading = false;

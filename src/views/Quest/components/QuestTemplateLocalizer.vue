@@ -189,6 +189,11 @@ export default {
     async store() {
       this.loading = true;
       await this.storeQuestTemplateLocales(this.questTemplateLocales);
+      this.$notify({
+        title: "保存成功",
+        position: "bottom-left",
+        type: "success",
+      });
       this.loading = false;
       this.visible = false;
     },

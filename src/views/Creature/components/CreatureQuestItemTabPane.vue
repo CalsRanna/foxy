@@ -61,11 +61,11 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="物品">
-                <el-input-number
+                <item-template-selector
                   v-model="creatureQuestItem.ItemId"
                   controls-position="right"
                   placeholder="ItemId"
-                ></el-input-number>
+                ></item-template-selector>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -91,6 +91,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ItemTemplateSelector from "../../../components/ItemTemplateSelector.vue";
 
 export default {
   data() {
@@ -99,14 +100,14 @@ export default {
       creating: false,
       editing: false,
       currentRow: undefined,
-      loading: false
+      loading: false,
     };
   },
   computed: {
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureQuestItem", [
       "creatureQuestItems",
-      "creatureQuestItem"
+      "creatureQuestItem",
     ]),
     disabled() {
       return this.currentRow == undefined;
@@ -117,9 +118,9 @@ export default {
           this.currentRow != undefined
             ? this.currentRow.CreatureEntry
             : undefined,
-        Idx: this.currentRow != undefined ? this.currentRow.Idx : undefined
+        Idx: this.currentRow != undefined ? this.currentRow.Idx : undefined,
       };
-    }
+    },
   },
   methods: {
     ...mapActions("creatureQuestItem", [
@@ -129,26 +130,36 @@ export default {
       "updateCreatureQuestItem",
       "destroyCreatureQuestItem",
       "createCreatureQuestItem",
-      "copyCreatureQuestItem"
+      "copyCreatureQuestItem",
     ]),
     async create() {
       this.creating = true;
       this.editing = false;
       await this.createCreatureQuestItem({
-        CreatureEntry: this.creatureTemplate.entry
+        CreatureEntry: this.creatureTemplate.entry,
       });
     },
     async store() {
       if (!this.editing) {
         await this.storeCreatureQuestItem(this.creatureQuestItem);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
       } else {
         await this.updateCreatureQuestItem({
           credential: this.credential,
-          creatureQuestItem: this.creatureQuestItem
+          creatureQuestItem: this.creatureQuestItem,
+        });
+        this.$notify({
+          title: "修改成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       await this.searchCreatureQuestItems({
-        creatureEntry: this.creatureTemplate.entry
+        creatureEntry: this.creatureTemplate.entry,
       });
       this.creating = false;
       this.editing = false;
@@ -157,8 +168,8 @@ export default {
       this.creating = false;
     },
     copy() {
-      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
-        confirmButtonText: "确定",
+      this.$confirm("此操作不会复制关联表数据，确认继续？", "确认复制", {
+        confirmButtonText: "确认",
         cancelButtonText: "取消",
         type: "info",
         dangerouslyUseHTMLString: true,
@@ -168,27 +179,32 @@ export default {
             this.copyCreatureQuestItem(this.credential)
               .then(() => {
                 this.searchCreatureQuestItems({
-                  CreatureEntry: this.creatureTemplate.entry
+                  CreatureEntry: this.creatureTemplate.entry,
                 });
               })
               .then(() => {
+                this.$notify({
+                  title: "复制成功",
+                  position: "bottom-left",
+                  type: "success",
+                });
                 instance.confirmButtonLoading = false;
                 done();
               });
           } else {
             done();
           }
-        }
+        },
       });
     },
     destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
-        "提示",
+        "确认删除",
         {
-          confirmButtonText: "确定",
+          confirmButtonText: "确认",
           cancelButtonText: "取消",
-          type: "error",
+          type: "info",
           dangerouslyUseHTMLString: true,
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
@@ -196,17 +212,22 @@ export default {
               this.destroyCreatureQuestItem(this.credential)
                 .then(() => {
                   this.searchCreatureQuestItems({
-                    CreatureEntry: this.creatureTemplate.entry
+                    CreatureEntry: this.creatureTemplate.entry,
                   });
                 })
                 .then(() => {
+                  this.$notify({
+                    title: "删除成功",
+                    position: "bottom-left",
+                    type: "success",
+                  });
                   instance.confirmButtonLoading = false;
                   done();
                 });
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -218,19 +239,20 @@ export default {
       this.editing = true;
       await this.findCreatureQuestItem({
         CreatureEntry: row.CreatureEntry,
-        Idx: row.Idx
+        Idx: row.Idx,
       });
     },
     async init() {
       this.initing = true;
       await this.searchCreatureQuestItems({
-        CreatureEntry: this.creatureTemplate.entry
+        CreatureEntry: this.creatureTemplate.entry,
       });
       this.initing = false;
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
+  components: { ItemTemplateSelector },
 };
 </script>

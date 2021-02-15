@@ -141,10 +141,20 @@ export default {
     async store() {
       if (!this.editing) {
         await this.storeGameObjectQuestItem(this.gameObjectQuestItem);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
       } else {
         await this.updateGameObjectQuestItem({
           credential: this.credential,
           gameObjectQuestItem: this.gameObjectQuestItem,
+        });
+        this.$notify({
+          title: "修改成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       await this.searchGameObjectQuestItems({
@@ -157,8 +167,8 @@ export default {
       this.creating = false;
     },
     copy() {
-      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
-        confirmButtonText: "确定",
+      this.$confirm("此操作不会复制关联表数据，确认继续？", "确认复制", {
+        confirmButtonText: "确认",
         cancelButtonText: "取消",
         type: "info",
         dangerouslyUseHTMLString: true,
@@ -172,6 +182,11 @@ export default {
                 });
               })
               .then(() => {
+                this.$notify({
+                  title: "复制成功",
+                  position: "bottom-left",
+                  type: "success",
+                });
                 instance.confirmButtonLoading = false;
                 done();
               });
@@ -184,11 +199,11 @@ export default {
     destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
-        "提示",
+        "确认删除",
         {
-          confirmButtonText: "确定",
+          confirmButtonText: "确认",
           cancelButtonText: "取消",
-          type: "error",
+          type: "info",
           dangerouslyUseHTMLString: true,
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
@@ -200,6 +215,11 @@ export default {
                   });
                 })
                 .then(() => {
+                  this.$notify({
+                    title: "删除成功",
+                    position: "bottom-left",
+                    type: "success",
+                  });
                   instance.confirmButtonLoading = false;
                   done();
                 });

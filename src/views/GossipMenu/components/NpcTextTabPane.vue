@@ -666,11 +666,21 @@ export default {
       this.loading = true;
       if (this.creating) {
         await this.storeNpcText(this.npcText);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
         this.creating = false;
       } else {
         await this.updateNpcText({
           credential: this.credential,
           npcText: this.npcText,
+        });
+        this.$notify({
+          title: "删除成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       this.loading = false;

@@ -104,11 +104,21 @@ export default {
       this.loading = true;
       if (this.creating) {
         await this.storeGameObjectTemplateAddon(this.gameObjectTemplateAddon);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
         this.creating = false;
       } else {
         await this.updateGameObjectTemplateAddon({
           credential: this.credential,
           gameObjectTemplateAddon: this.gameObjectTemplateAddon,
+        });
+        this.$notify({
+          title: "修改成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       this.loading = false;
