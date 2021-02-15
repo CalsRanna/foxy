@@ -64,11 +64,11 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="技能">
-                <el-input-number
+                <spell-selector
                   v-model="npcTrainer.SpellID"
                   controls-position="right"
                   placeholder="SpellID"
-                ></el-input-number>
+                ></spell-selector>
               </el-form-item>
             </el-col>
           </el-row>
@@ -128,6 +128,7 @@ import { spellIdTooltip } from "@/locales/creature";
 import HintLabel from "@/components/HintLabel.vue";
 
 import { mapState, mapActions } from "vuex";
+import SpellSelector from "../../../components/SpellSelector.vue";
 
 export default {
   data() {
@@ -137,7 +138,7 @@ export default {
       editing: false,
       currentRow: undefined,
       loading: false,
-      spellIdTooltip: spellIdTooltip
+      spellIdTooltip: spellIdTooltip,
     };
   },
   computed: {
@@ -150,9 +151,9 @@ export default {
       return {
         ID: this.currentRow != undefined ? this.currentRow.ID : undefined,
         SpellID:
-          this.currentRow != undefined ? this.currentRow.SpellID : undefined
+          this.currentRow != undefined ? this.currentRow.SpellID : undefined,
       };
-    }
+    },
   },
   methods: {
     ...mapActions("npcTrainer", [
@@ -162,26 +163,36 @@ export default {
       "updateNpcTrainer",
       "destroyNpcTrainer",
       "createNpcTrainer",
-      "copyNpcTrainer"
+      "copyNpcTrainer",
     ]),
     async create() {
       this.creating = true;
       this.editing = false;
       await this.createNpcTrainer({
-        ID: this.creatureTemplate.entry
+        ID: this.creatureTemplate.entry,
       });
     },
     async store() {
       if (!this.editing) {
         await this.storeNpcTrainer(this.npcTrainer);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
       } else {
         await this.updateNpcTrainer({
           credential: this.credential,
-          npcTrainer: this.npcTrainer
+          npcTrainer: this.npcTrainer,
+        });
+        this.$notify({
+          title: "修改成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       await this.searchNpcTrainers({
-        ID: this.creatureTemplate.entry
+        ID: this.creatureTemplate.entry,
       });
       this.creating = false;
       this.editing = false;
@@ -190,8 +201,8 @@ export default {
       this.creating = false;
     },
     copy() {
-      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
-        confirmButtonText: "确定",
+      this.$confirm("此操作不会复制关联表数据，确认继续？", "确认复制", {
+        confirmButtonText: "确认",
         cancelButtonText: "取消",
         type: "info",
         dangerouslyUseHTMLString: true,
@@ -201,27 +212,32 @@ export default {
             this.copyNpcTrainer(this.credential)
               .then(() => {
                 this.searchNpcTrainers({
-                  ID: this.creatureTemplate.entry
+                  ID: this.creatureTemplate.entry,
                 });
               })
               .then(() => {
+                this.$notify({
+                  title: "复制成功",
+                  position: "bottom-left",
+                  type: "success",
+                });
                 instance.confirmButtonLoading = false;
                 done();
               });
           } else {
             done();
           }
-        }
+        },
       });
     },
     destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
-        "提示",
+        "确认删除",
         {
-          confirmButtonText: "确定",
+          confirmButtonText: "确认",
           cancelButtonText: "取消",
-          type: "error",
+          type: "info",
           dangerouslyUseHTMLString: true,
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
@@ -229,17 +245,22 @@ export default {
               this.destroyNpcTrainer(this.credential)
                 .then(() => {
                   this.searchNpcTrainers({
-                    ID: this.creatureTemplate.entry
+                    ID: this.creatureTemplate.entry,
                   });
                 })
                 .then(() => {
+                  this.$notify({
+                    title: "删除成功",
+                    position: "bottom-left",
+                    type: "success",
+                  });
                   instance.confirmButtonLoading = false;
                   done();
                 });
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -251,20 +272,21 @@ export default {
       this.editing = true;
       await this.findNpcTrainer({
         ID: row.ID,
-        SpellID: row.SpellID
+        SpellID: row.SpellID,
       });
     },
     async init() {
       this.initing = true;
       await this.searchNpcTrainers({ ID: this.creatureTemplate.entry });
       this.initing = false;
-    }
+    },
   },
   mounted() {
     this.init();
   },
   components: {
-    HintLabel
-  }
+    HintLabel,
+    SpellSelector,
+  },
 };
 </script>

@@ -70,7 +70,7 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_ITEM_TEMPLATES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -118,7 +118,7 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_ITEM_TEMPLATES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -149,12 +149,12 @@ ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${STORE_ITEM_TEMPLATE}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
         });
     })
     .catch((error) => {
       event.reply(`${STORE_ITEM_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -173,7 +173,7 @@ ipcMain.on(FIND_ITEM_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_ITEM_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -208,12 +208,12 @@ ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${UPDATE_ITEM_TEMPLATE}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
         });
     })
     .catch((error) => {
       event.reply(`${UPDATE_ITEM_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -237,12 +237,12 @@ ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${DESTROY_ITEM_TEMPLATE}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
         });
     })
     .catch((error) => {
       event.reply(`${DESTROY_ITEM_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -263,7 +263,7 @@ ipcMain.on(CREATE_ITEM_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${CREATE_ITEM_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -314,12 +314,12 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
             })
             .catch((error) => {
               event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
-              event.reply(GLOBAL_MESSAGE_BOX, error);
+              event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
             });
         })
         .catch((error) => {
           event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -327,6 +327,6 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_ITEM_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

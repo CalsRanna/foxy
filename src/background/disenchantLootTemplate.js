@@ -33,7 +33,7 @@ ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DISENCHANT_LOOT_TEMPLATES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -51,7 +51,7 @@ ipcMain.on(STORE_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -73,7 +73,7 @@ ipcMain.on(FIND_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -92,7 +92,7 @@ ipcMain.on(UPDATE_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -111,7 +111,7 @@ ipcMain.on(DESTROY_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -153,7 +153,7 @@ ipcMain.on(COPY_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -161,6 +161,6 @@ ipcMain.on(COPY_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_DISENCHANT_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

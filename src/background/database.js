@@ -65,7 +65,7 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${INIT_MYSQL_CONNECTION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
 
@@ -80,6 +80,6 @@ ipcMain.on(TEST_MYSQL_CONNECTION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${TEST_MYSQL_CONNECTION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

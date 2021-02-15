@@ -91,21 +91,21 @@ export default {
     return {
       text: undefined,
       visible: false,
-      loading: false
+      loading: false,
     };
   },
   props: {
     value: String,
-    placeholder: String
+    placeholder: String,
   },
   watch: {
     value: function(newValue) {
       this.text = newValue;
-    }
+    },
   },
   computed: {
     ...mapState("creatureTemplate", ["creatureTemplate"]),
-    ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"])
+    ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"]),
   },
   methods: {
     ...mapActions("creatureTemplateLocale", ["storeCreatureTemplateLocales"]),
@@ -121,7 +121,7 @@ export default {
     create() {
       this.creatureTemplateLocales.push({
         entry: this.creatureTemplate.entry,
-        VerifiedBuild: 0
+        VerifiedBuild: 0,
       });
     },
     destroy(index) {
@@ -130,15 +130,20 @@ export default {
     async store() {
       this.loading = true;
       await this.storeCreatureTemplateLocales(this.creatureTemplateLocales);
+      this.$notify({
+        title: "保存成功",
+        position: "bottom-left",
+        type: "success",
+      });
       this.loading = false;
       this.visible = false;
     },
     cancel() {
       this.visible = false;
-    }
+    },
   },
   created() {
     this.text = this.value;
-  }
+  },
 };
 </script>

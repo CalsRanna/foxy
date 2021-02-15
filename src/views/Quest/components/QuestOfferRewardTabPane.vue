@@ -136,11 +136,21 @@ export default {
       this.loading = true;
       if (this.creating) {
         await this.storeQuestOfferReward(this.questOfferReward);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
         this.creating = false;
       } else {
         await this.updateQuestOfferReward({
           credential: this.credential,
           questOfferReward: this.questOfferReward,
+        });
+        this.$notify({
+          title: "修改成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       this.loading = false;

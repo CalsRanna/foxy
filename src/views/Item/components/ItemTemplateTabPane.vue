@@ -1332,11 +1332,21 @@ export default {
       this.loading = true;
       if (this.creating) {
         await this.storeItemTemplate(this.itemTemplate);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
         this.creating = false;
       } else {
         await this.updateItemTemplate({
           credential: this.credential,
           itemTemplate: this.itemTemplate,
+        });
+        this.$notify({
+          title: "修改成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       this.loading = false;

@@ -19,9 +19,9 @@ export default {
     handleChange(value) {
       this.storeDeveloperConfig({ debug: value });
       this.$notify({
+        title: value === true ? "打开开发者模式" : "关闭开发者模式",
+        position: "bottom-left",
         type: "success",
-        title: "开发者模式",
-        message: value === true ? "打开开发者模式" : "关闭开发者模式",
       });
     },
   },

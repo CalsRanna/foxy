@@ -81,29 +81,29 @@
           <el-row :gutter="24">
             <el-col :span="6">
               <el-form-item label="物品1">
-                <el-input-number
+                <item-template-selector
                   v-model="creatureEquipTemplate.ItemID1"
                   controls-position="right"
                   placeholder="ItemID1"
-                ></el-input-number>
+                ></item-template-selector>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="物品2">
-                <el-input-number
+                <item-template-selector
                   v-model="creatureEquipTemplate.ItemID2"
                   controls-position="right"
                   placeholder="ItemID2"
-                ></el-input-number>
+                ></item-template-selector>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="物品3">
-                <el-input-number
+                <item-template-selector
                   v-model="creatureEquipTemplate.ItemID3"
                   controls-position="right"
                   placeholder="ItemID3"
-                ></el-input-number>
+                ></item-template-selector>
               </el-form-item>
             </el-col>
           </el-row>
@@ -121,6 +121,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ItemTemplateSelector from "../../../components/ItemTemplateSelector.vue";
 
 export default {
   data() {
@@ -129,14 +130,14 @@ export default {
       creating: false,
       editing: false,
       currentRow: undefined,
-      loading: false
+      loading: false,
     };
   },
   computed: {
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureEquipTemplate", [
       "creatureEquipTemplates",
-      "creatureEquipTemplate"
+      "creatureEquipTemplate",
     ]),
     disabled() {
       return this.currentRow == undefined;
@@ -145,9 +146,9 @@ export default {
       return {
         CreatureID:
           this.currentRow != undefined ? this.currentRow.CreatureID : undefined,
-        ID: this.currentRow != undefined ? this.currentRow.ID : undefined
+        ID: this.currentRow != undefined ? this.currentRow.ID : undefined,
       };
-    }
+    },
   },
   methods: {
     ...mapActions("creatureEquipTemplate", [
@@ -157,84 +158,116 @@ export default {
       "updateCreatureEquipTemplate",
       "destroyCreatureEquipTemplate",
       "createCreatureEquipTemplate",
-      "copyCreatureEquipTemplate"
+      "copyCreatureEquipTemplate",
     ]),
     async create() {
       this.creating = true;
       this.editing = false;
       await this.createCreatureEquipTemplate({
-        CreatureID: this.creatureTemplate.entry
+        CreatureID: this.creatureTemplate.entry,
       });
     },
     async store() {
-      if (!this.editing) {
-        await this.storeCreatureEquipTemplate(this.creatureEquipTemplate);
-      } else {
-        await this.updateCreatureEquipTemplate({
-          credential: this.credential,
-          creatureEquipTemplate: this.creatureEquipTemplate
-        });
+      this.loading = true;
+      try {
+        if (!this.editing) {
+          await this.storeCreatureEquipTemplate(this.creatureEquipTemplate);
+          this.$notify({
+            title: "保存成功",
+            position: "bottom-left",
+            type: "success",
+          });
+          await this.searchCreatureEquipTemplates({
+            CreatureID: this.creatureTemplate.entry,
+          });
+          this.creating = false;
+          this.editing = false;
+        } else {
+          await this.updateCreatureEquipTemplate({
+            credential: this.credential,
+            creatureEquipTemplate: this.creatureEquipTemplate,
+          });
+          this.$notify({
+            title: "修改成功",
+            position: "bottom-left",
+            type: "success",
+          });
+          await this.searchCreatureEquipTemplates({
+            CreatureID: this.creatureTemplate.entry,
+          });
+          this.creating = false;
+          this.editing = false;
+        }
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
       }
-      await this.searchCreatureEquipTemplates({
-        CreatureID: this.creatureTemplate.entry
-      });
-      this.creating = false;
-      this.editing = false;
     },
     cancel() {
       this.creating = false;
     },
     copy() {
-      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
-        confirmButtonText: "确定",
+      this.$confirm("此操作不会复制关联表数据，确认继续？", "确认复制", {
+        confirmButtonText: "确认",
         cancelButtonText: "取消",
         type: "info",
         dangerouslyUseHTMLString: true,
-        beforeClose: (action, instance, done) => {
+        beforeClose: async (action, instance, done) => {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            this.copyCreatureEquipTemplate(this.credential)
-              .then(() => {
-                this.searchCreatureEquipTemplates({
-                  CreatureID: this.creatureTemplate.entry
-                });
-              })
-              .then(() => {
-                instance.confirmButtonLoading = false;
-                done();
+            try {
+              await this.copyCreatureEquipTemplate(this.credential);
+              await this.searchCreatureEquipTemplates({
+                CreatureID: this.creatureTemplate.entry,
               });
+              this.$notify({
+                title: "复制成功",
+                position: "bottom-left",
+                type: "success",
+              });
+              instance.confirmButtonLoading = false;
+              done();
+            } catch (error) {
+              instance.confirmButtonLoading = false;
+              done();
+            }
           } else {
             done();
           }
-        }
+        },
       });
     },
     destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
-        "提示",
+        "确认删除",
         {
-          confirmButtonText: "确定",
+          confirmButtonText: "确认",
           cancelButtonText: "取消",
-          type: "error",
+          type: "info",
           dangerouslyUseHTMLString: true,
-          beforeClose: (action, instance, done) => {
+          beforeClose: async (action, instance, done) => {
             if (action === "confirm") {
-              instance.confirmButtonLoading = true;
-              this.destroyCreatureEquipTemplate(this.credential)
-                .then(() => {
-                  this.searchCreatureEquipTemplates({
-                    CreatureID: this.creatureTemplate.entry
-                  });
-                })
-                .then(() => {
-                  instance.confirmButtonLoading = false;
-                  done();
+              try {
+                await this.destroyCreatureEquipTemplate(this.credential);
+                await this.searchCreatureEquipTemplates({
+                  CreatureID: this.creatureTemplate.entry,
                 });
+                this.$notify({
+                  title: "删除成功",
+                  position: "bottom-left",
+                  type: "success",
+                });
+                instance.confirmButtonLoading = false;
+                done();
+              } catch (error) {
+                instance.confirmButtonLoading = false;
+                done();
+              }
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -246,19 +279,20 @@ export default {
       this.editing = true;
       await this.findCreatureEquipTemplate({
         CreatureID: row.CreatureID,
-        ID: row.ID
+        ID: row.ID,
       });
     },
     async init() {
       this.initing = true;
       await this.searchCreatureEquipTemplates({
-        CreatureID: this.creatureTemplate.entry
+        CreatureID: this.creatureTemplate.entry,
       });
       this.initing = false;
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
+  components: { ItemTemplateSelector },
 };
 </script>

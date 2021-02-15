@@ -1057,35 +1057,53 @@ export default {
     ...mapActions("creatureTemplateLocale", ["searchCreatureTemplateLocales"]),
     async store() {
       this.loading = true;
-      if (this.creating) {
-        await this.storeCreatureTemplate(this.creatureTemplate);
-        this.creating = false;
-      } else {
-        await this.updateCreatureTemplate({
-          credential: this.credential,
-          creatureTemplate: this.creatureTemplate,
-        });
+      try {
+        if (this.creating) {
+          await this.storeCreatureTemplate(this.creatureTemplate);
+          this.$notify({
+            title: "保存成功",
+            position: "bottom-left",
+            type: "success",
+          });
+          this.creating = false;
+        } else {
+          await this.updateCreatureTemplate({
+            credential: this.credential,
+            creatureTemplate: this.creatureTemplate,
+          });
+          this.$notify({
+            title: "修改成功",
+            position: "bottom-left",
+            type: "success",
+          });
+        }
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
       }
-      this.loading = false;
     },
     cancel() {
       this.$router.go(-1);
     },
     async init() {
       this.initing = true;
-      if (this.$route.path == "/creature/create") {
-        this.creating = true;
-        await Promise.all([
-          this.createCreatureTemplate(),
-          this.searchCreatureTemplateLocales({ entry: 0 }),
-        ]);
-      } else {
-        await Promise.all([
-          this.findCreatureTemplate(this.credential),
-          this.searchCreatureTemplateLocales(this.credential),
-        ]);
+      try {
+        if (this.$route.path == "/creature/create") {
+          this.creating = true;
+          await Promise.all([
+            this.createCreatureTemplate(),
+            this.searchCreatureTemplateLocales({ entry: 0 }),
+          ]);
+        } else {
+          await Promise.all([
+            this.findCreatureTemplate(this.credential),
+            this.searchCreatureTemplateLocales(this.credential),
+          ]);
+        }
+        this.initing = false;
+      } catch (error) {
+        this.initing = false;
       }
-      this.initing = false;
     },
   },
   mounted() {

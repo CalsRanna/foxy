@@ -186,14 +186,14 @@ export default {
       creating: false,
       editing: false,
       currentRow: undefined,
-      loading: false
+      loading: false,
     };
   },
   computed: {
     ...mapState("itemTemplate", ["itemTemplate"]),
     ...mapState("disenchantLootTemplate", [
       "disenchantLootTemplates",
-      "disenchantLootTemplate"
+      "disenchantLootTemplate",
     ]),
     disabled() {
       return this.currentRow == undefined;
@@ -201,9 +201,9 @@ export default {
     credential() {
       return {
         Entry: this.currentRow != undefined ? this.currentRow.Entry : undefined,
-        Item: this.currentRow != undefined ? this.currentRow.Item : undefined
+        Item: this.currentRow != undefined ? this.currentRow.Item : undefined,
       };
-    }
+    },
   },
   methods: {
     ...mapActions("disenchantLootTemplate", [
@@ -213,26 +213,36 @@ export default {
       "updateDisenchantLootTemplate",
       "destroyDisenchantLootTemplate",
       "createDisenchantLootTemplate",
-      "copyDisenchantLootTemplate"
+      "copyDisenchantLootTemplate",
     ]),
     async create() {
       this.creating = true;
       this.editing = false;
       await this.createDisenchantLootTemplate({
-        Entry: this.itemTemplate.DisenchantID
+        Entry: this.itemTemplate.DisenchantID,
       });
     },
     async store() {
       if (!this.editing) {
         await this.storeDisenchantLootTemplate(this.disenchantLootTemplate);
+        this.$notify({
+          title: "保存成功",
+          position: "bottom-left",
+          type: "success",
+        });
       } else {
         await this.updateDisenchantLootTemplate({
           credential: this.credential,
-          disenchantLootTemplate: this.disenchantLootTemplate
+          disenchantLootTemplate: this.disenchantLootTemplate,
+        });
+        this.$notify({
+          title: "修改成功",
+          position: "bottom-left",
+          type: "success",
         });
       }
       await this.searchDisenchantLootTemplates({
-        Entry: this.itemTemplate.DisenchantID
+        Entry: this.itemTemplate.DisenchantID,
       });
       this.creating = false;
       this.editing = false;
@@ -241,8 +251,8 @@ export default {
       this.creating = false;
     },
     copy() {
-      this.$confirm("此操作不会复制关联表数据，确认继续？</small>", "提示", {
-        confirmButtonText: "确定",
+      this.$confirm("此操作不会复制关联表数据，确认继续？", "确认复制", {
+        confirmButtonText: "确认",
         cancelButtonText: "取消",
         type: "info",
         dangerouslyUseHTMLString: true,
@@ -252,27 +262,32 @@ export default {
             this.copyDisenchantLootTemplate(this.credential)
               .then(() => {
                 this.searchDisenchantLootTemplates({
-                  Entry: this.itemTemplate.DisenchantID
+                  Entry: this.itemTemplate.DisenchantID,
                 });
               })
               .then(() => {
+                this.$notify({
+                  title: "复制成功",
+                  position: "bottom-left",
+                  type: "success",
+                });
                 instance.confirmButtonLoading = false;
                 done();
               });
           } else {
             done();
           }
-        }
+        },
       });
     },
     destroy() {
       this.$confirm(
         "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
-        "提示",
+        "确认删除",
         {
-          confirmButtonText: "确定",
+          confirmButtonText: "确认",
           cancelButtonText: "取消",
-          type: "error",
+          type: "info",
           dangerouslyUseHTMLString: true,
           beforeClose: (action, instance, done) => {
             if (action === "confirm") {
@@ -280,17 +295,22 @@ export default {
               this.destroyDisenchantLootTemplate(this.credential)
                 .then(() => {
                   this.searchDisenchantLootTemplates({
-                    Entry: this.itemTemplate.DisenchantID
+                    Entry: this.itemTemplate.DisenchantID,
                   });
                 })
                 .then(() => {
+                  this.$notify({
+                    title: "删除成功",
+                    position: "bottom-left",
+                    type: "success",
+                  });
                   instance.confirmButtonLoading = false;
                   done();
                 });
             } else {
               done();
             }
-          }
+          },
         }
       );
     },
@@ -302,19 +322,19 @@ export default {
       this.editing = true;
       await this.findDisenchantLootTemplate({
         Entry: row.Entry,
-        Item: row.Item
+        Item: row.Item,
       });
     },
     async init() {
       this.initing = true;
       await this.searchDisenchantLootTemplates({
-        Entry: this.itemTemplate.DisenchantID
+        Entry: this.itemTemplate.DisenchantID,
       });
       this.initing = false;
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>

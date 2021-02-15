@@ -34,7 +34,7 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ITEMS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_CREATURE_QUEST_ITEMS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -52,7 +52,7 @@ ipcMain.on(STORE_CREATURE_QUEST_ITEM, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_CREATURE_QUEST_ITEM}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -71,7 +71,7 @@ ipcMain.on(FIND_CREATURE_QUEST_ITEM, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_CREATURE_QUEST_ITEM}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -90,7 +90,7 @@ ipcMain.on(UPDATE_CREATURE_QUEST_ITEM, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_CREATURE_QUEST_ITEM}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -109,7 +109,7 @@ ipcMain.on(DESTROY_CREATURE_QUEST_ITEM, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_CREATURE_QUEST_ITEM}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -132,7 +132,7 @@ ipcMain.on(CREATE_CREATURE_QUEST_ITEM, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${CREATE_CREATURE_QUEST_ITEM}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -171,7 +171,7 @@ ipcMain.on(COPY_CREATURE_QUEST_ITEM, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_CREATURE_QUEST_ITEM}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -179,6 +179,6 @@ ipcMain.on(COPY_CREATURE_QUEST_ITEM, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_CREATURE_QUEST_ITEM}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
