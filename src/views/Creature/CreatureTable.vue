@@ -114,9 +114,6 @@ export default {
   data() {
     return {
       loading: false,
-      // entry: undefined,
-      // name: "",
-      // subname: "",
       currentRow: undefined,
     };
   },
