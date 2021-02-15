@@ -148,7 +148,7 @@ export default {
     async search() {
       this.loading = true;
       try {
-        await this.paginateCreatureTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
+        await this.paginateCreatureTemplates({ page: 1 });
         await Promise.all([
           this.searchCreatureTemplates(this.payload),
           this.countCreatureTemplates(this.payload),

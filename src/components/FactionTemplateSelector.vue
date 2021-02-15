@@ -132,7 +132,7 @@ export default {
       ]);
     },
     async search() {
-      this.paginateFactionTemplatesForSelector({ page: 1 }); //每次搜索时使分页器设为第一页
+      this.paginateFactionTemplatesForSelector({ page: 1 });
       await Promise.all([
         this.searchFactionTemplatesForSelector(this.payload),
         this.countFactionTemplatesForSelector(this.payload),

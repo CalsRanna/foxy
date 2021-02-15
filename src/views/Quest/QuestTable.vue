@@ -154,7 +154,7 @@ export default {
     ]),
     async search() {
       this.loading = true;
-      await this.paginateQuestTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
+      await this.paginateQuestTemplates({ page: 1 });
       await Promise.all([
         this.searchQuestTemplates(this.payload),
         this.countQuestTemplates(this.payload),
@@ -228,7 +228,7 @@ export default {
     },
     async paginate(page) {
       this.loading = true;
-      await this.paginateQuestTemplates({ page: page }); //每次搜索时使分页器设为第一页
+      await this.paginateQuestTemplates({ page: page });
       await this.searchQuestTemplates(this.payload);
       this.loading = false;
     },

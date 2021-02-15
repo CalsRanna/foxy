@@ -151,7 +151,7 @@ export default {
       ]);
     },
     async search() {
-      this.paginateItemTemplatesForSelector({ page: 1 }); //每次搜索时使分页器设为第一页
+      this.paginateItemTemplatesForSelector({ page: 1 });
       await Promise.all([
         this.searchItemTemplatesForSelector(this.payload),
         this.countItemTemplatesForSelector(this.payload),

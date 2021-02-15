@@ -142,7 +142,7 @@ export default {
     ]),
     async search() {
       this.loading = true;
-      await this.paginateGossipMenus({ page: 1 }); //每次搜索时使分页器设为第一页
+      await this.paginateGossipMenus({ page: 1 });
       await Promise.all([
         this.searchGossipMenus(this.payload),
         this.countGossipMenus(this.payload),
