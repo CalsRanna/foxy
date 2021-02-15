@@ -188,7 +188,7 @@ export default {
     },
     async search() {
       this.loading = true;
-      await this.paginateItemTemplates({ page: 1 }); //每次搜索时使分页器设为第一页
+      await this.paginateItemTemplates({ page: 1 });
       await Promise.all([
         this.searchItemTemplates(this.payload),
         this.countItemTemplates(this.payload),

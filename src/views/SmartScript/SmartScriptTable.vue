@@ -154,7 +154,7 @@ export default {
     ]),
     async search() {
       this.loading = true;
-      this.paginateSmartScripts({ page: 1 }); //每次搜索时使分页器设为第一页
+      this.paginateSmartScripts({ page: 1 });
       await Promise.all([
         this.searchSmartScripts(this.payload),
         this.countSmartScripts(this.payload),
