@@ -9,7 +9,8 @@ import {
   DESTROY_SPELL,
   CREATE_SPELL,
   COPY_SPELL,
-  GLOBAL_NOTICE,
+  GLOBAL_MESSAGE_BOX,
+  GLOBAL_MESSAGE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -57,12 +58,10 @@ ipcMain.on(SEARCH_SPELLS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_SPELLS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -88,12 +87,10 @@ ipcMain.on(COUNT_SPELLS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_SPELLS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -105,21 +102,13 @@ ipcMain.on(STORE_SPELL, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(STORE_SPELL, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "新建成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${STORE_SPELL}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -135,12 +124,10 @@ ipcMain.on(FIND_SPELL, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_SPELL}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -153,21 +140,13 @@ ipcMain.on(UPDATE_SPELL, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(UPDATE_SPELL, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "修改成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${UPDATE_SPELL}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -180,21 +159,13 @@ ipcMain.on(DESTROY_SPELL, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(DESTROY_SPELL, rows);
-      event.reply("GLOBAL_NOTICE", {
-        category: "notification",
-        title: "成功",
-        message: "删除成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${DESTROY_SPELL}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -212,12 +183,10 @@ ipcMain.on(CREATE_SPELL, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${CREATE_SPELL}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -249,24 +218,17 @@ ipcMain.on(COPY_SPELL, (event, payload) => {
       queryBuilder
         .then((rows) => {
           event.reply(COPY_SPELL, rows);
-          event.reply(GLOBAL_NOTICE, {
-            type: "success",
-            category: "notification",
-            title: "成功",
-            message: `复制成功，新的技能ID为${ID + 1}。`,
-          });
         })
         .catch((error) => {
           event.reply(`${COPY_SPELL}_REJECT`, error);
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
-          event.reply(GLOBAL_NOTICE, {
-            category: "message",
-            message: queryBuilder.toString(),
-          });
+          event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
         });
     })
     .catch((error) => {
       event.reply(`${COPY_SPELL}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

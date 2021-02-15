@@ -71,7 +71,8 @@ import { mapState, mapActions } from "vuex";
 import {
   EXPORT_ITEM_DBC,
   EXPORT_SPELL_DBC,
-  GLOBAL_NOTICE,
+  GLOBAL_MESSAGE_BOX,
+  GLOBAL_MESSAGE,
   START_EXPORT,
 } from "./constants";
 
@@ -234,35 +235,21 @@ export default {
   mounted() {
     this.init();
 
-    ipcRenderer.on(GLOBAL_NOTICE, (event, response) => {
-      switch (response.category) {
-        case "message":
-          if (this.developerConfig.debug) {
-            this.$message({
-              message: response.message,
-            });
-          }
-          break;
-        case "notification":
-          this.$notify({
-            type: response.type,
-            title: response.title,
-            message: response.message,
-          });
-          break;
-        case "alert":
-          this.$alert(
-            response.message.replace(/at /g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "),
-            response.title,
-            {
-              type: response.type,
-              dangerouslyUseHTMLString: true,
-              customClass: "wider-message-box",
-            }
-          );
-          break;
-        default:
-          break;
+    ipcRenderer.on(GLOBAL_MESSAGE_BOX, (event, error) => {
+      let content = this.developerConfig.debug
+        ? `${error.stack}`.replace(/at /g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at ")
+        : `${error.message}`;
+      let title = error.code == undefined ? "未知错误" : `${error.code}`;
+      this.$alert(content, title, {
+        type: "error",
+        dangerouslyUseHTMLString: true,
+        customClass: "wider-message-box",
+      });
+    });
+
+    ipcRenderer.on(GLOBAL_MESSAGE, (event, message) => {
+      if (this.developerConfig.debug) {
+        this.$message(message);
       }
     });
 

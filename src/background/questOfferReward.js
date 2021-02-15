@@ -4,7 +4,8 @@ import {
   STORE_QUEST_OFFER_REWARD,
   FIND_QUEST_OFFER_REWARD,
   UPDATE_QUEST_OFFER_REWARD,
-  GLOBAL_NOTICE,
+  GLOBAL_MESSAGE_BOX,
+  GLOBAL_MESSAGE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -17,21 +18,13 @@ ipcMain.on(STORE_QUEST_OFFER_REWARD, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(STORE_QUEST_OFFER_REWARD, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "新建成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${STORE_QUEST_OFFER_REWARD}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -47,12 +40,10 @@ ipcMain.on(FIND_QUEST_OFFER_REWARD, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_QUEST_OFFER_REWARD}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -65,20 +56,12 @@ ipcMain.on(UPDATE_QUEST_OFFER_REWARD, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(UPDATE_QUEST_OFFER_REWARD, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "修改成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${UPDATE_QUEST_OFFER_REWARD}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });

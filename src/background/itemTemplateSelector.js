@@ -3,7 +3,8 @@ import { ipcMain } from "electron";
 import {
   SEARCH_ITEM_TEMPLATES_FOR_SELECTOR,
   COUNT_ITEM_TEMPLATES_FOR_SELECTOR,
-  GLOBAL_NOTICE,
+  GLOBAL_MESSAGE_BOX,
+  GLOBAL_MESSAGE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -62,12 +63,10 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES_FOR_SELECTOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_ITEM_TEMPLATES_FOR_SELECTOR}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -112,11 +111,9 @@ ipcMain.on(COUNT_ITEM_TEMPLATES_FOR_SELECTOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_ITEM_TEMPLATES_FOR_SELECTOR}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });

@@ -3,7 +3,8 @@ import { ipcMain } from "electron";
 import {
   SEARCH_GAME_OBJECT_TEMPLATE_LOCALES,
   STORE_GAME_OBJECT_TEMPLATE_LOCALES,
-  GLOBAL_NOTICE,
+  GLOBAL_MESSAGE_BOX,
+  GLOBAL_MESSAGE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -20,12 +21,10 @@ ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_GAME_OBJECT_TEMPLATE_LOCALES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -43,24 +42,17 @@ ipcMain.on(STORE_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
       insertQueryBuilder
         .then((rows) => {
           event.reply(STORE_GAME_OBJECT_TEMPLATE_LOCALES, rows);
-          event.reply(GLOBAL_NOTICE, {
-            type: "success",
-            category: "notification",
-            title: "成功",
-            message: `保存成功。`,
-          });
         })
         .catch((error) => {
           event.reply(`${STORE_GAME_OBJECT_TEMPLATE_LOCALES}_REJECT`, error);
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
-          event.reply(GLOBAL_NOTICE, {
-            category: "message",
-            message: insertQueryBuilder.toString(),
-          });
+          event.reply(GLOBAL_MESSAGE, insertQueryBuilder.toString());
         });
     })
     .catch((error) => {
       event.reply(`${STORE_GAME_OBJECT_TEMPLATE_LOCALES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

@@ -3,7 +3,8 @@ import {
   STORE_CREATURE_TEMPLATE_ADDON,
   FIND_CREATURE_TEMPLATE_ADDON,
   UPDATE_CREATURE_TEMPLATE_ADDON,
-  GLOBAL_NOTICE,
+  GLOBAL_MESSAGE_BOX,
+  GLOBAL_MESSAGE,
 } from "../constants";
 
 const { knex } = require("../libs/mysql");
@@ -16,21 +17,13 @@ ipcMain.on(STORE_CREATURE_TEMPLATE_ADDON, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(STORE_CREATURE_TEMPLATE_ADDON, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "新建成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${STORE_CREATURE_TEMPLATE_ADDON}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -46,12 +39,10 @@ ipcMain.on(FIND_CREATURE_TEMPLATE_ADDON, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_CREATURE_TEMPLATE_ADDON}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
 
@@ -64,20 +55,12 @@ ipcMain.on(UPDATE_CREATURE_TEMPLATE_ADDON, (event, payload) => {
   queryBuilder
     .then((rows) => {
       event.reply(UPDATE_CREATURE_TEMPLATE_ADDON, rows);
-      event.reply(GLOBAL_NOTICE, {
-        category: "notification",
-        title: "成功",
-        message: "修改成功。",
-        type: "success",
-      });
     })
     .catch((error) => {
       event.reply(`${UPDATE_CREATURE_TEMPLATE_ADDON}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
-      event.reply(GLOBAL_NOTICE, {
-        category: "message",
-        message: queryBuilder.toString(),
-      });
+      event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
     });
 });
