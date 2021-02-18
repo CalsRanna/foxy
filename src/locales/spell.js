@@ -2538,6 +2538,34 @@ const schoolMasks = [
   },
 ];
 
+const defenseTypes = [
+  "无",
+  "魔法",
+  "近战",
+  "远程",
+];
+
+const dispelTypes = [
+  "无",
+  "魔法",
+  "诅咒",
+  "疾病",
+  "中毒",
+  "偷窃",
+  "隐身",
+  "MAGIC, DISEASE, CURSE, POISON",
+  "SPELL, NPC ONLY",
+  "激怒",
+  "ZULGURUB TRINKETS",
+  "OLD, UNUSED"
+];
+
+const preventionTypes = [
+  "无",
+  "沉默",
+  "平静",
+];
+
 export {
   effects,
   auras,
@@ -2554,4 +2582,7 @@ export {
   procTypeMasks,
   implicitTargets,
   schoolMasks,
+  defenseTypes,
+  dispelTypes,
+  preventionTypes,
 };
