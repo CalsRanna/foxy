@@ -277,7 +277,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="宠物技能">
+          <el-form-item>
+            <hint-label
+              label="宠物技能"
+              :tooltip="petSpellDataIdTooltip"
+              slot="label"
+            ></hint-label>
             <el-input
               v-model="creatureTemplate.PetSpellDataId"
               placeholder="PetSpellDataId"
@@ -963,6 +968,7 @@ import {
   flagsExtra,
   mechanicImmuneMasksTooltip,
   mechanicImmuneMasks,
+  petSpellDataIdTooltip,
   vehicleIdTooltip,
   dmgSchools,
   trainerTypeTooltip,
@@ -1016,6 +1022,7 @@ export default {
       flagsExtra: flagsExtra,
       mechanicImmuneMasksTooltip: mechanicImmuneMasksTooltip,
       mechanicImmuneMasks: mechanicImmuneMasks,
+      petSpellDataIdTooltip: petSpellDataIdTooltip,
       vehicleIdTooltip: vehicleIdTooltip,
       dmgSchools: dmgSchools,
       trainerTypeTooltip: trainerTypeTooltip,

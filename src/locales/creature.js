@@ -1257,6 +1257,10 @@ const mechanicImmuneMasks = [
   }
 ];
 
+const petSpellDataIdTooltip = `
+  ID, found in CreatureSpellData.dbc, that displays what spells the pet has in the client.
+`;
+
 const vehicleIdTooltip = `
   Entry of vehicle if creature is/has a vehicle entry. This field determines how the player appears on
   the vehicle, how the vehicle moves, and whether or not the vehicle action bar is shown. For example, a
@@ -1530,6 +1534,7 @@ export {
   flagsExtra,
   mechanicImmuneMasksTooltip,
   mechanicImmuneMasks,
+  petSpellDataIdTooltip,
   vehicleIdTooltip,
   dmgSchools,
   trainerTypeTooltip,

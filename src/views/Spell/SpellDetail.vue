@@ -168,10 +168,10 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="持续时间">
-                  <el-input
+                  <spell-duration-selector
                     v-model="spell.DurationIndex"
                     placeholder="DurationIndex"
-                  ></el-input>
+                  ></spell-duration-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1670,6 +1670,7 @@ import FlagEditor from "@/components/FlagEditor";
 
 import { mapState, mapActions } from "vuex";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
+import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
 
 export default {
   data() {
@@ -1750,6 +1751,7 @@ export default {
   components: {
     FlagEditor,
     ItemTemplateSelector,
+    SpellDurationSelector,
   },
 };
 </script>
