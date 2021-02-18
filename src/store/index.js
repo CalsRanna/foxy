@@ -45,6 +45,7 @@ import spell from "./spell";
 import setting from "./setting";
 import factionTemplateSelector from "./factionTemplateSelector";
 import spellSelector from "./spellSelector";
+import spellDurationSelector from "./spellDurationSelector";
 import gossipMenuSelector from "./gossipMenuSelector";
 
 Vue.use(Vuex);
@@ -95,6 +96,7 @@ export default new Vuex.Store({
     setting,
     factionTemplateSelector,
     spellSelector,
+    spellDurationSelector,
     gossipMenuSelector,
   },
 });
