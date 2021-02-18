@@ -350,6 +350,10 @@ export default {
   width: 100%;
 }
 
+.el-dialog__body {
+  padding: 10px 20px !important;
+}
+
 .left-menu {
   position: fixed;
   min-height: 100vh;
