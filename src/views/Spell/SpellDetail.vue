@@ -438,10 +438,12 @@
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="打断标识">
-                  <el-input
+                  <flag-editor
                     v-model="spell.InterruptFlags"
+                    title="打断标识编辑器"
+                    :flags="interruptFlags"
                     placeholder="InterruptFlags"
-                  ></el-input>
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1653,6 +1655,7 @@
 import {
   effects,
   auras,
+  interruptFlags,
   attributes,
   attributesEx,
   attributesExB,
@@ -1680,6 +1683,7 @@ export default {
       creating: false,
       effects: effects,
       auras: auras,
+      interruptFlags: interruptFlags,
       attributes: attributes,
       attributesEx: attributesEx,
       attributesExB: attributesExB,

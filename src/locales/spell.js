@@ -454,6 +454,45 @@ const auras = [
   "286 指定技能的持续伤害可以暴击",
 ];
 
+const interruptFlags = [
+  {
+    index: 0,
+    flag: 1,
+    name: "ON_MOVEMENT",
+    comment: "",
+  },
+  {
+    index: 1,
+    flag: 2,
+    name: "PUSHBACK",
+    comment: "",
+  },
+  {
+    index: 2,
+    flag: 4,
+    name: "ON_INTERRUPT_CAST",
+    comment: "",
+  },
+  {
+    index: 3,
+    flag: 8,
+    name: "ON_INTERRUPT_SCHOOL",
+    comment: "",
+  },
+  {
+    index: 4,
+    flag: 16,
+    name: "	ON_DAMAGE_TAKEN",
+    comment: "",
+  },
+  {
+    index: 5,
+    flag: 32,
+    name: "ON_INTERRUPT_ALL",
+    comment: "",
+  },
+];
+
 const attributes = [
   {
     index: 0,
@@ -2307,6 +2346,7 @@ const schoolMasks = [
 export {
   effects,
   auras,
+  interruptFlags,
   attributes,
   attributesEx,
   attributesExB,
