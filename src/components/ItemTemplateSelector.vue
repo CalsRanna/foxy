@@ -18,20 +18,20 @@
           物品选择器
         </span>
       </div>
-      <el-card style="margin-top: 16px">
+      <el-card>
         <el-form>
           <el-row :gutter="16">
-            <el-col :span="6">
+            <el-col :span="8">
               <el-input-number
                 v-model="entry"
                 controls-position="right"
                 placeholder="entry"
               ></el-input-number>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-input v-model="name" placeholder="名称"></el-input>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-button type="primary" @click="search">查询</el-button>
               <el-button @click="reset">重置</el-button>
             </el-col>
