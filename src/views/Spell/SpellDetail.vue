@@ -386,50 +386,56 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="符文消耗">
-                  <el-input
+                  <el-input-number
                     v-model="spell.RuneCostID"
+                    controls-position="right"
                     placeholder="RuneCostID"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="法力消耗">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ManaCost"
+                    controls-position="right"
                     placeholder="ManaCost"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="法力消耗(%)">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ManaCostPct"
+                    controls-position="right"
                     placeholder="ManaCostPct"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="法力消耗/级">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ManaCostPerLevel"
+                    controls-position="right"
                     placeholder="ManaCostPerLevel"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="法力消耗/秒">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ManaPerSecond"
+                    controls-position="right"
                     placeholder="ManaPerSecond"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="法力消耗/秒/级">
-                  <el-input
+                  <el-input-number
                     v-model="spell.ManaPerSecondPerLevel"
+                    controls-position="right"
                     placeholder="ManaPerSecondPerLevel"
-                  ></el-input>
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -448,18 +454,22 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="光环打断标识">
-                  <el-input
+                  <flag-editor
                     v-model="spell.AuraInterruptFlags"
+                    title="光环打断标识编辑器"
+                    :flags="auraInterruptFlags"
                     placeholder="AuraInterruptFlags"
-                  ></el-input>
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="引导打断标识">
-                  <el-input
+                  <flag-editor
                     v-model="spell.ChannelInterruptFlags"
+                    title="引导打断标识编辑器"
+                    :flags="auraInterruptFlags"
                     placeholder="ChannelInterruptFlags"
-                  ></el-input>
+                  ></flag-editor>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -1656,6 +1666,7 @@ import {
   effects,
   auras,
   interruptFlags,
+  auraInterruptFlags,
   attributes,
   attributesEx,
   attributesExB,
@@ -1684,6 +1695,7 @@ export default {
       effects: effects,
       auras: auras,
       interruptFlags: interruptFlags,
+      auraInterruptFlags: auraInterruptFlags,
       attributes: attributes,
       attributesEx: attributesEx,
       attributesExB: attributesExB,
