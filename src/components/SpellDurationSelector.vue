@@ -31,7 +31,8 @@
             <el-col :span="8">
               <el-input-number
                 v-model="Duration"
-                placeholder="名称"
+                controls-position="right"
+                placeholder="持续时间"
               ></el-input-number>
             </el-col>
             <el-col :span="8">
