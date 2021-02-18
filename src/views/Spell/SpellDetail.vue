@@ -123,11 +123,19 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="DefenseType">
-                  <el-input
+                <el-form-item label="防护类型">
+                  <el-select
                     v-model="spell.DefenseType"
+                    filterable
                     placeholder="DefenseType"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(defenseType, index) in defenseTypes"
+                      :key="`defenseType-${index}`"
+                      :label="defenseType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -140,18 +148,34 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="驱散类型">
-                  <el-input
+                  <el-select
                     v-model="spell.DispelType"
+                    filterable
                     placeholder="DispelType"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(dispelType, index) in dispelTypes"
+                      :key="`dispelType-${index}`"
+                      :label="dispelType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="阻止类型">
-                  <el-input
+                  <el-select
                     v-model="spell.PreventionType"
+                    filterable
                     placeholder="PreventionType"
-                  ></el-input>
+                  >
+                    <el-option
+                      v-for="(preventionType, index) in preventionTypes"
+                      :key="`preventionType-${index}`"
+                      :label="preventionType"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -1678,6 +1702,9 @@ import {
   procTypeMasks,
   implicitTargets,
   schoolMasks,
+  defenseTypes,
+  dispelTypes,
+  preventionTypes,
 } from "@/locales/spell";
 
 import FlagEditor from "@/components/FlagEditor";
@@ -1707,6 +1734,9 @@ export default {
       procTypeMasks: procTypeMasks,
       implicitTargets: implicitTargets,
       schoolMasks: schoolMasks,
+      defenseTypes: defenseTypes,
+      dispelTypes: dispelTypes,
+      preventionTypes: preventionTypes,
     };
   },
   computed: {
