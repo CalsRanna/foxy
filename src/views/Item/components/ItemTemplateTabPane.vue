@@ -173,7 +173,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="随机后缀">
+          <el-form-item label="随机前缀">
             <el-input
               v-model="itemTemplate.RandomSuffix"
               controls-position="right"
