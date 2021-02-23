@@ -316,34 +316,34 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="模型1">
-            <el-input
+            <creature-model-info-selector
               v-model="creatureTemplate.modelid1"
               placeholder="modelid1"
-            ></el-input>
+            ></creature-model-info-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="模型2">
-            <el-input
+            <creature-model-info-selector
               v-model="creatureTemplate.modelid2"
               placeholder="modelid2"
-            ></el-input>
+            ></creature-model-info-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="模型3">
-            <el-input
+            <creature-model-info-selector
               v-model="creatureTemplate.modelid3"
               placeholder="modelid3"
-            ></el-input>
+            ></creature-model-info-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="模型4">
-            <el-input
+            <creature-model-info-selector
               v-model="creatureTemplate.modelid4"
               placeholder="modelid4"
-            ></el-input>
+            ></creature-model-info-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -995,6 +995,7 @@ import FlagEditor from "@/components/FlagEditor";
 import GossipMenuSelector from "@/components/GossipMenuSelector";
 import HintLabel from "@/components/HintLabel";
 import SpellSelector from "@/components/SpellSelector";
+import CreatureModelInfoSelector from "@/components/CreatureModelInfoSelector.vue";
 
 import { mapState, mapActions } from "vuex";
 
@@ -1120,6 +1121,7 @@ export default {
   components: {
     FactionTemplateSelector,
     CreatureSpellDataSelector,
+    CreatureModelInfoSelector,
     FlagEditor,
     GossipMenuSelector,
     HintLabel,

@@ -4,6 +4,8 @@ import {
   SEARCH_DBC_FACTIONS,
   SEARCH_DBC_FACTION_TEMPLATES,
   SEARCH_DBC_CREATURE_SPELL_DATAS,
+  SEARCH_DBC_CREATURE_DISPLAY_INFOS,
+  SEARCH_DBC_CREATURE_MODEL_DATAS,
   SEARCH_DBC_ITEM_DISPLAY_INFOS,
   SEARCH_DBC_ITEMS,
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
@@ -20,6 +22,8 @@ export default {
     factions: {},
     factionTemplates: {},
     creatureSpellDatas: {},
+    creatureDisplayInfos: {},
+    creatureModelDatas: {},
     items: {},
     itemDisplayInfos: {},
     spells: {},
@@ -73,6 +77,36 @@ export default {
         });
         ipcRenderer.on(
           `${SEARCH_DBC_CREATURE_SPELL_DATAS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    searchDbcCreatureDisplayInfos({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(SEARCH_DBC_CREATURE_DISPLAY_INFOS);
+        ipcRenderer.on(SEARCH_DBC_CREATURE_DISPLAY_INFOS, (event, response) => {
+          commit(SEARCH_DBC_CREATURE_DISPLAY_INFOS, response);
+          resolve();
+        });
+        ipcRenderer.on(
+          `${SEARCH_DBC_CREATURE_DISPLAY_INFOS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    searchDbcCreatureModelDatas({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(SEARCH_DBC_CREATURE_MODEL_DATAS);
+        ipcRenderer.on(SEARCH_DBC_CREATURE_MODEL_DATAS, (event, response) => {
+          commit(SEARCH_DBC_CREATURE_MODEL_DATAS, response);
+          resolve();
+        });
+        ipcRenderer.on(
+          `${SEARCH_DBC_CREATURE_MODEL_DATAS}_REJECT`,
           (event, error) => {
             reject(error);
           }
@@ -198,6 +232,12 @@ export default {
     },
     [SEARCH_DBC_CREATURE_SPELL_DATAS](state, creatureSpellDatas) {
       state.creatureSpellDatas = creatureSpellDatas;
+    },
+    [SEARCH_DBC_CREATURE_DISPLAY_INFOS](state, creatureDisplayInfos) {
+      state.creatureDisplayInfos = creatureDisplayInfos;
+    },
+    [SEARCH_DBC_CREATURE_MODEL_DATAS](state, creatureModelDatas) {
+      state.creatureModelDatas = creatureModelDatas;
     },
     [SEARCH_DBC_ITEM_DISPLAY_INFOS](state, itemDisplayInfos) {
       state.itemDisplayInfos = itemDisplayInfos;

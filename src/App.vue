@@ -101,6 +101,8 @@ export default {
       "searchDbcFactions",
       "searchDbcFactionTemplates",
       "searchDbcCreatureSpellDatas",
+      "searchDbcCreatureDisplayInfos",
+      "searchDbcCreatureModelDatas",
       "searchDbcItemDisplayInfos",
       "searchDbcItems",
       "searchDbcScalingStatDistributions",
@@ -207,6 +209,10 @@ export default {
         await this.searchDbcFactionTemplates();
         this.progressText = "加载CreatureSpellData.dbc";
         await this.searchDbcCreatureSpellDatas();
+        this.progressText = "加载CreatureDisplayInfo.dbc";
+        await this.searchDbcCreatureDisplayInfos();
+        this.progressText = "加载CreatureModelData.dbc";
+        await this.searchDbcCreatureModelDatas();
         this.progressText = "加载Item.dbc";
         await this.searchDbcItems();
         this.progressText = "加载ItemDisplayInfo.dbc";
