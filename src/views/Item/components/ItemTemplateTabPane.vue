@@ -488,10 +488,10 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="缩放属性分配">
-            <el-input
+            <scaling-stat-distribution-selector
               v-model="itemTemplate.ScalingStatDistribution"
               placeholder="ScalingStatDistribution"
-            ></el-input>
+            ></scaling-stat-distribution-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1288,6 +1288,7 @@ import ItemTemplateLocalizer from "@/views/Item/components/ItemTemplateLocalizer
 import FlagEditor from "@/components/FlagEditor";
 import HintLabel from "@/components/HintLabel";
 import SpellSelector from "@/components/SpellSelector";
+import ScalingStatDistributionSelector from "@/components/ScalingStatDistributionSelector.vue";
 
 import { mapState, mapActions } from "vuex";
 
@@ -1381,6 +1382,7 @@ export default {
     FlagEditor,
     HintLabel,
     SpellSelector,
+    ScalingStatDistributionSelector,
   },
 };
 </script>

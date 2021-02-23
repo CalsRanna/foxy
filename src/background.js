@@ -51,6 +51,7 @@ import "./background/creatureTemplateSelector";
 import "./background/spellSelector";
 import "./background/spellDurationSelector";
 import "./background/gossipMenuSelector";
+import "./background/scalingStatDistributionSelector";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
