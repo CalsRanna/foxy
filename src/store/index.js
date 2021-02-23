@@ -50,6 +50,7 @@ import creatureTemplateSelector from "./creatureTemplateSelector";
 import spellSelector from "./spellSelector";
 import spellDurationSelector from "./spellDurationSelector";
 import gossipMenuSelector from "./gossipMenuSelector";
+import scalingStatDistributionSelector from "./scalingStatDistributionSelector";
 
 Vue.use(Vuex);
 
@@ -104,5 +105,6 @@ export default new Vuex.Store({
     spellSelector,
     spellDurationSelector,
     gossipMenuSelector,
+    scalingStatDistributionSelector,
   },
 });
