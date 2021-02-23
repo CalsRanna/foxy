@@ -5,6 +5,8 @@ import {
   SEARCH_DBC_FACTIONS,
   SEARCH_DBC_FACTION_TEMPLATES,
   SEARCH_DBC_CREATURE_SPELL_DATAS,
+  SEARCH_DBC_CREATURE_DISPLAY_INFOS,
+  SEARCH_DBC_CREATURE_MODEL_DATAS,
   SEARCH_DBC_ITEM_DISPLAY_INFOS,
   SEARCH_DBC_ITEMS,
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
@@ -125,6 +127,77 @@ ipcMain.on(SEARCH_DBC_CREATURE_SPELL_DATAS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_CREATURE_SPELL_DATAS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(SEARCH_DBC_CREATURE_DISPLAY_INFOS, (event) => {
+  let queryBuilder = knex()
+    .count("* as total")
+    .from("foxy.dbc_creature_display_info");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/CreatureDisplayInfo.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_creature_display_info", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_CREATURE_DISPLAY_INFOS);
+              })
+              .catch((error) => {
+                event.reply(
+                  `${SEARCH_DBC_CREATURE_DISPLAY_INFOS}_REJECT`,
+                  error
+                );
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_CREATURE_DISPLAY_INFOS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          });
+      } else {
+        event.reply(SEARCH_DBC_CREATURE_DISPLAY_INFOS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_CREATURE_DISPLAY_INFOS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(SEARCH_DBC_CREATURE_MODEL_DATAS, (event) => {
+  let queryBuilder = knex()
+    .count("* as total")
+    .from("foxy.dbc_creature_model_data");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/CreatureModelData.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_creature_model_data", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_CREATURE_MODEL_DATAS);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_CREATURE_MODEL_DATAS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_CREATURE_MODEL_DATAS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          });
+      } else {
+        event.reply(SEARCH_DBC_CREATURE_MODEL_DATAS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_CREATURE_MODEL_DATAS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
