@@ -4,6 +4,7 @@ import {
   INIT_DBC_CONFIG,
   SEARCH_DBC_FACTIONS,
   SEARCH_DBC_FACTION_TEMPLATES,
+  SEARCH_DBC_CREATURE_SPELL_DATAS,
   SEARCH_DBC_ITEM_DISPLAY_INFOS,
   SEARCH_DBC_ITEMS,
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
@@ -90,6 +91,40 @@ ipcMain.on(SEARCH_DBC_FACTION_TEMPLATES, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_FACTION_TEMPLATES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(SEARCH_DBC_CREATURE_SPELL_DATAS, (event) => {
+  let queryBuilder = knex()
+    .count("* as total")
+    .from("foxy.dbc_creature_spell_data");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/CreatureSpellData.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_creature_spell_data", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_CREATURE_SPELL_DATAS);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_CREATURE_SPELL_DATAS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_CREATURE_SPELL_DATAS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          });
+      } else {
+        event.reply(SEARCH_DBC_CREATURE_SPELL_DATAS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_CREATURE_SPELL_DATAS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

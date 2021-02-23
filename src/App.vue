@@ -100,6 +100,7 @@ export default {
     ...mapActions("dbc", [
       "searchDbcFactions",
       "searchDbcFactionTemplates",
+      "searchDbcCreatureSpellDatas",
       "searchDbcItemDisplayInfos",
       "searchDbcItems",
       "searchDbcScalingStatDistributions",
@@ -204,6 +205,8 @@ export default {
         await this.searchDbcFactions();
         this.progressText = "加载FactionTemplate.dbc";
         await this.searchDbcFactionTemplates();
+        this.progressText = "加载CreatureSpellData.dbc";
+        await this.searchDbcCreatureSpellDatas();
         this.progressText = "加载Item.dbc";
         await this.searchDbcItems();
         this.progressText = "加载ItemDisplayInfo.dbc";
