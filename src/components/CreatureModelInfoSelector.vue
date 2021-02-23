@@ -68,7 +68,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="ModelName_1" label="模型"> </el-table-column>
-        <el-table-column prop="ModelName_2" label="另一性别模型">
+        <el-table-column prop="ModelName_2" label="其他性别模型">
         </el-table-column>
       </el-table>
       <el-pagination
