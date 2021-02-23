@@ -47,6 +47,7 @@ import "./background/spell";
 import "./background/factionTemplateSelector";
 import "./background/creatureSpellDataSelector";
 import "./background/creatureModelInfoSelector";
+import "./background/creatureTemplateSelector";
 import "./background/spellSelector";
 import "./background/spellDurationSelector";
 import "./background/gossipMenuSelector";

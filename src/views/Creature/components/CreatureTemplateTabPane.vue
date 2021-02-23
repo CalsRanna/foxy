@@ -296,10 +296,11 @@
               :tooltip="vehicleIdTooltip"
               slot="label"
             ></hint-label>
-            <el-input
+            <el-input-number
               v-model="creatureTemplate.VehicleId"
+              controls-position="right"
               placeholder="VehicleId"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -689,11 +690,12 @@
               :tooltip="trainerSpellTooltip"
               slot="label"
             ></hint-label>
-            <el-input
+            <el-input-number
               v-model="creatureTemplate.trainer_spell"
+              controls-position="right"
               placeholder="trainer_spell"
               :disabled="(creatureTemplate.npcflag & 4194416) == 0"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -769,10 +771,10 @@
               :tooltip="killCredit1Tooltip"
               slot="label"
             ></hint-label>
-            <el-input
+            <creature-template-selector
               v-model="creatureTemplate.KillCredit1"
               placeholder="KillCredit1"
-            ></el-input>
+            ></creature-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -782,10 +784,10 @@
               :tooltip="killCredit2Tooltip"
               slot="label"
             ></hint-label>
-            <el-input
+            <creature-template-selector
               v-model="creatureTemplate.KillCredit2"
               placeholder="KillCredit2"
-            ></el-input>
+            ></creature-template-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -794,26 +796,29 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="击杀掉落ID">
-            <el-input
+            <el-input-number
               v-model="creatureTemplate.lootid"
+              controls-position="right"
               placeholder="lootid"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="偷窃掉落ID">
-            <el-input
+            <el-input-number
               v-model="creatureTemplate.pickpocketloot"
+              controls-position="right"
               placeholder="pickpocketloot"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="剥皮掉落ID">
-            <el-input
+            <el-input-number
               v-model="creatureTemplate.skinloot"
+              controls-position="right"
               placeholder="skinloot"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -827,26 +832,26 @@
               :tooltip="difficultyEntry1Tooltip"
               slot="label"
             ></hint-label>
-            <el-input
+            <creature-template-selector
               v-model="creatureTemplate.difficulty_entry_1"
               placeholder="difficulty_entry_1"
-            ></el-input>
+            ></creature-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="难度2">
-            <el-input
+            <creature-template-selector
               v-model="creatureTemplate.difficulty_entry_2"
               placeholder="difficulty_entry_2"
-            ></el-input>
+            ></creature-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="难度3">
-            <el-input
+            <creature-template-selector
               v-model="creatureTemplate.difficulty_entry_3"
               placeholder="difficulty_entry_3"
-            ></el-input>
+            ></creature-template-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -891,10 +896,11 @@
               :tooltip="movementIdTooltip"
               slot="label"
             ></hint-label>
-            <el-input
+            <el-input-number
               v-model="creatureTemplate.movementId"
+              controls-position="right"
               placeholder="movementId"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -919,18 +925,20 @@
               :tooltip="hoverHeightTooltip"
               slot="label"
             ></hint-label>
-            <el-input
+            <el-input-number
               v-model="creatureTemplate.HoverHeight"
+              controls-position="right"
               placeholder="HoverHeight"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="VerifiedBuild">
-            <el-input
+            <el-input-number
               v-model="creatureTemplate.VerifiedBuild"
+              controls-position="right"
               placeholder="VerifiedBuild"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -996,6 +1004,7 @@ import GossipMenuSelector from "@/components/GossipMenuSelector";
 import HintLabel from "@/components/HintLabel";
 import SpellSelector from "@/components/SpellSelector";
 import CreatureModelInfoSelector from "@/components/CreatureModelInfoSelector.vue";
+import CreatureTemplateSelector from "@/components/CreatureTemplateSelector.vue";
 
 import { mapState, mapActions } from "vuex";
 
@@ -1122,6 +1131,7 @@ export default {
     FactionTemplateSelector,
     CreatureSpellDataSelector,
     CreatureModelInfoSelector,
+    CreatureTemplateSelector,
     FlagEditor,
     GossipMenuSelector,
     HintLabel,

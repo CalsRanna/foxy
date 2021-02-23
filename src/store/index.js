@@ -46,6 +46,7 @@ import setting from "./setting";
 import factionTemplateSelector from "./factionTemplateSelector";
 import creatureSpellDataSelector from "./creatureSpellDataSelector";
 import creatureModelInfoSelector from "./creatureModelInfoSelector";
+import creatureTemplateSelector from "./creatureTemplateSelector";
 import spellSelector from "./spellSelector";
 import spellDurationSelector from "./spellDurationSelector";
 import gossipMenuSelector from "./gossipMenuSelector";
@@ -99,6 +100,7 @@ export default new Vuex.Store({
     factionTemplateSelector,
     creatureSpellDataSelector,
     creatureModelInfoSelector,
+    creatureTemplateSelector,
     spellSelector,
     spellDurationSelector,
     gossipMenuSelector,
