@@ -44,6 +44,7 @@ import smartScript from "./smartScript";
 import spell from "./spell";
 import setting from "./setting";
 import factionTemplateSelector from "./factionTemplateSelector";
+import creatureSpellDataSelector from "./creatureSpellDataSelector";
 import spellSelector from "./spellSelector";
 import spellDurationSelector from "./spellDurationSelector";
 import gossipMenuSelector from "./gossipMenuSelector";
@@ -95,6 +96,7 @@ export default new Vuex.Store({
     spell,
     setting,
     factionTemplateSelector,
+    creatureSpellDataSelector,
     spellSelector,
     spellDurationSelector,
     gossipMenuSelector,

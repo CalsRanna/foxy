@@ -283,10 +283,10 @@
               :tooltip="petSpellDataIdTooltip"
               slot="label"
             ></hint-label>
-            <el-input
+            <creature-spell-data-selector
               v-model="creatureTemplate.PetSpellDataId"
               placeholder="PetSpellDataId"
-            ></el-input>
+            ></creature-spell-data-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -990,6 +990,7 @@ import {
 
 import CreatureTemplateLocalizer from "@/views/Creature/components/CreatureTemplateLocalizer";
 import FactionTemplateSelector from "@/components/FactionTemplateSelector";
+import CreatureSpellDataSelector from "@/components/CreatureSpellDataSelector.vue";
 import FlagEditor from "@/components/FlagEditor";
 import GossipMenuSelector from "@/components/GossipMenuSelector";
 import HintLabel from "@/components/HintLabel";
@@ -1118,6 +1119,7 @@ export default {
   },
   components: {
     FactionTemplateSelector,
+    CreatureSpellDataSelector,
     FlagEditor,
     GossipMenuSelector,
     HintLabel,
