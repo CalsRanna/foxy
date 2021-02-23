@@ -496,10 +496,12 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="缩放属性标识">
-            <el-input
+            <flag-editor
               v-model="itemTemplate.ScalingStatValue"
+              title="缩放属性标识编辑器"
+              :flags="scalingStatValues"
               placeholder="ScalingStatValue"
-            ></el-input>
+            ></flag-editor>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1279,6 +1281,7 @@ import {
   flags,
   flagsExtra,
   flagsCustom,
+  scalingStatValues,
 } from "@/locales/item.js";
 
 import ItemTemplateLocalizer from "@/views/Item/components/ItemTemplateLocalizer";
@@ -1309,6 +1312,7 @@ export default {
       flags: flags,
       flagsExtra: flagsExtra,
       flagsCustom: flagsCustom,
+      scalingStatValues: scalingStatValues,
     };
   },
   computed: {

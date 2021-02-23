@@ -750,6 +750,141 @@ const flagsCustom = [
   },
 ];
 
+const scalingStatValues = [
+  {
+    index: 0,
+    flag: 1,
+    name: "Shoulder Budget",
+    comment: "",
+  },
+  {
+    index: 1,
+    flag: 2,
+    name: "Trinket Budget",
+    comment: "",
+  },
+  {
+    index: 2,
+    flag: 4,
+    name: "Weapon Budget One Hand",
+    comment: "",
+  },
+  {
+    index: 3,
+    flag: 8,
+    name: "Ranged Budget",
+    comment: "",
+  },
+  {
+    index: 4,
+    flag: 16,
+    name: "Cloth Shoulder Armor",
+    comment: "",
+  },
+  {
+    index: 5,
+    flag: 32,
+    name: "Leather Shoulder Armor",
+    comment: "",
+  },
+  {
+    index: 6,
+    flag: 64,
+    name: "Mail Shoulder Armor",
+    comment: "",
+  },
+  {
+    index: 7,
+    flag: 128,
+    name: "Plate Shoulder Armor",
+    comment: "",
+  },
+  {
+    index: 8,
+    flag: 256,
+    name: "Weapon DPS One Hand",
+    comment: "",
+  },
+  {
+    index: 9,
+    flag: 512,
+    name: "Weapon DPS Two Hand",
+    comment: "",
+  },
+  {
+    index: 10,
+    flag: 1024,
+    name: "Spellcaster DPS One Hand",
+    comment: "",
+  },
+  {
+    index: 11,
+    flag: 2048,
+    name: "Spellcaster DPS Two Hand",
+    comment: "",
+  },
+  {
+    index: 12,
+    flag: 4096,
+    name: "Ranged DPS",
+    comment: "",
+  },
+  {
+    index: 13,
+    flag: 8192,
+    name: "Wand DPS",
+    comment: "",
+  },
+  {
+    index: 14,
+    flag: 16384,
+    name: "Spell Power",
+    comment: "",
+  },
+  {
+    index: 15,
+    flag: 32768,
+    name: "Primary Budget",
+    comment: "",
+  },
+  {
+    index: 16,
+    flag: 65536,
+    name: "Tertiary Budget",
+    comment: "",
+  },
+  {
+    index: 17,
+    flag: 131072,
+    name: "Cloth Cloak Armor",
+    comment: "",
+  },
+  {
+    index: 18,
+    flag: 262144,
+    name: "Cloth Chest Armor",
+    comment: "",
+  },
+  {
+    index: 19,
+    flag: 524288,
+    name: "Leather Cloak Armor",
+    comment: "",
+  },
+  {
+    index: 20,
+    flag: 1048576,
+    name: "Mail Cloak Armor",
+    comment: "",
+  },
+  {
+    index: 21,
+    flag: 2097152,
+    name: "Plate Chest Armor",
+    comment: "",
+  },
+];
+
 export {
   colors,
   localeQualities,
@@ -767,4 +902,5 @@ export {
   flags,
   flagsExtra,
   flagsCustom,
+  scalingStatValues,
 };
