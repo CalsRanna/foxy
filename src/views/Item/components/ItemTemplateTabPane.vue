@@ -153,10 +153,10 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="套装">
-            <el-input
+            <item-set-selector
               v-model="itemTemplate.itemset"
               placeholder="itemset"
-            ></el-input>
+            ></item-set-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1289,6 +1289,7 @@ import FlagEditor from "@/components/FlagEditor";
 import HintLabel from "@/components/HintLabel";
 import SpellSelector from "@/components/SpellSelector";
 import ScalingStatDistributionSelector from "@/components/ScalingStatDistributionSelector.vue";
+import ItemSetSelector from "@/components/ItemSetSelector.vue";
 
 import { mapState, mapActions } from "vuex";
 
@@ -1383,6 +1384,7 @@ export default {
     HintLabel,
     SpellSelector,
     ScalingStatDistributionSelector,
+    ItemSetSelector,
   },
 };
 </script>

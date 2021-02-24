@@ -13,6 +13,7 @@ import {
   SEARCH_DBC_SPELLS,
   EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
+  SEARCH_DBC_ITEM_SETS,
   EXPORT_ITEM_DBC,
 } from "../constants";
 
@@ -30,6 +31,7 @@ export default {
     spellDurations: {},
     scalingStatDistributions: {},
     scalingStatValues: {},
+    itemSets: {},
   }),
   getters: {
     itemIcons: (state) => {
@@ -200,6 +202,18 @@ export default {
         );
       });
     },
+    searchDbcItemSets({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(SEARCH_DBC_ITEM_SETS);
+        ipcRenderer.on(SEARCH_DBC_ITEM_SETS, (event, response) => {
+          commit(SEARCH_DBC_ITEM_SETS, response);
+          resolve();
+        });
+        ipcRenderer.on(`${SEARCH_DBC_ITEM_SETS}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
+    },
     exportItemDbc() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(EXPORT_ITEM_DBC);
@@ -260,6 +274,9 @@ export default {
     },
     [SEARCH_DBC_SCALING_STAT_VALUES](state, scalingStatValues) {
       state.scalingStatValues = scalingStatValues;
+    },
+    [SEARCH_DBC_ITEM_SETS](state, itemSets) {
+      state.itemSets = itemSets;
     },
   },
 };

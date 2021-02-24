@@ -28,35 +28,39 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="坐骑模型">
-            <el-input
+          <el-form-item label="坐骑编号">
+            <el-input-number
               v-model="creatureTemplateAddon.mount"
+              controls-position="right"
               placeholder="mount"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="表情">
-            <el-input
+            <el-input-number
               v-model="creatureTemplateAddon.emote"
+              controls-position="right"
               placeholder="emote"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="覆盖标识1">
-            <el-input
+            <el-input-number
               v-model="creatureTemplateAddon.bytes1"
+              controls-position="right"
               placeholder="bytes1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="覆盖标识2">
-            <el-input
+            <el-input-number
               v-model="creatureTemplateAddon.bytes2"
+              controls-position="right"
               placeholder="bytes2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">

@@ -14,6 +14,7 @@ import {
   SEARCH_DBC_SPELLS,
   EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
+  SEARCH_DBC_ITEM_SETS,
   RELOAD_APP,
   EXPORT_ITEM_DBC,
   GLOBAL_MESSAGE_BOX,
@@ -406,6 +407,40 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_SCALING_STAT_VALUES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(SEARCH_DBC_ITEM_SETS, (event) => {
+  let queryBuilder = knex()
+    .count("* as total")
+    .from("foxy.dbc_item_set");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/ItemSet.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_item_set", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_ITEM_SETS);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_ITEM_SETS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_ITEM_SETS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          });
+      } else {
+        event.reply(SEARCH_DBC_ITEM_SETS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_ITEM_SETS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

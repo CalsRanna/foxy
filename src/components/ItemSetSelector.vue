@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-input v-model="waypointData" :placeholder="placeholder" @input="input">
+    <el-input v-model="itemSet" :placeholder="placeholder" @input="input">
       <i
         class="el-icon-s-operation clickable-icon"
         slot="suffix"
@@ -15,7 +15,7 @@
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
-          路径选择器
+          套装选择器
         </span>
       </div>
       <el-card>
@@ -23,10 +23,13 @@
           <el-row :gutter="16">
             <el-col :span="8">
               <el-input-number
-                v-model="id"
+                v-model="ID"
                 controls-position="right"
-                placeholder="id"
+                placeholder="ID"
               ></el-input-number>
+            </el-col>
+            <el-col :span="8">
+              <el-input v-model="Name_Lang_zhCN" placeholder="名称"></el-input>
             </el-col>
             <el-col :span="8">
               <el-button type="primary" @click="search">查询</el-button>
@@ -45,14 +48,14 @@
         style="margin-top: 16px"
       ></el-pagination>
       <el-table
-        :data="waypointDatas"
+        :data="itemSets"
         highlight-current-row
         @current-change="select"
         @row-dblclick="(row) => store(row)"
-        class="waypoint-data-selector"
+        class="creature-model-data-selector"
       >
-        <el-table-column prop="id" label="编号" width="80px"> </el-table-column>
-        <el-table-column prop="points" label="路径点数量"></el-table-column>
+        <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
+        <el-table-column prop="Name_Lang_zhCN" label="名称"> </el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"
@@ -79,8 +82,9 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      waypointData: undefined,
-      id: undefined,
+      itemSet: undefined,
+      ID: undefined,
+      Name_Lang_zhCN: undefined,
       visible: false,
       currentRow: undefined,
     };
@@ -91,88 +95,88 @@ export default {
   },
   watch: {
     value: function(newValue) {
-      this.waypointData = newValue;
-      this.id = newValue;
+      this.itemSet = newValue;
+      this.ID = newValue;
     },
   },
   computed: {
-    ...mapState("waypointDataSelector", ["pagination", "waypointDatas"]),
+    ...mapState("itemSetSelector", ["pagination", "itemSets"]),
     payload() {
       return {
-        id: this.id != 0 ? this.id : undefined,
+        ID: this.ID != 0 ? this.ID : undefined,
+        Name_Lang_zhCN: this.Name_Lang_zhCN,
         page: this.pagination.page,
       };
     },
   },
   methods: {
-    ...mapActions("waypointDataSelector", [
-      "searchWaypointDatasForSelector",
-      "countWaypointDatasForSelector",
-      "paginateWaypointDatasForSelector",
+    ...mapActions("itemSetSelector", [
+      "searchItemSetsForSelector",
+      "countItemSetsForSelector",
+      "paginateItemSetsForSelector",
     ]),
-    input(waypointData) {
-      if (isNaN(parseInt(waypointData))) {
+    input(itemSet) {
+      if (isNaN(parseInt(itemSet))) {
         this.$emit("input", undefined);
       } else {
-        this.$emit("input", parseInt(waypointData));
+        this.$emit("input", parseInt(itemSet));
       }
     },
     async show() {
       this.visible = true;
       await Promise.all([
-        this.searchWaypointDatasForSelector(this.payload),
-        this.countWaypointDatasForSelector(this.payload),
+        this.searchItemSetsForSelector(this.payload),
+        this.countItemSetsForSelector(this.payload),
       ]);
     },
     async search() {
-      this.paginateWaypointDatasForSelector({ page: 1 });
+      this.paginateItemSetsForSelector({ page: 1 });
       await Promise.all([
-        this.searchWaypointDatasForSelector(this.payload),
-        this.countWaypointDatasForSelector(this.payload),
+        this.searchItemSetsForSelector(this.payload),
+        this.countItemSetsForSelector(this.payload),
       ]);
     },
     reset() {
-      this.id = undefined;
-      this.ModelName = undefined;
+      this.ID = undefined;
+      this.Name_Lang_zhCN = undefined;
     },
     async paginate(page) {
-      this.paginateWaypointDatasForSelector({ page: page });
-      await this.searchWaypointDatasForSelector(this.payload);
+      this.paginateItemSetsForSelector({ page: page });
+      await this.searchItemSetsForSelector(this.payload);
     },
     select(currentRow) {
       this.currentRow = currentRow;
     },
     close() {
-      let waypointData =
-        this.waypointData != undefined ? this.waypointData : this.value;
-      this.$emit("input", waypointData);
+      let itemSet = this.itemSet != undefined ? this.itemSet : this.value;
+      this.$emit("input", itemSet);
       this.visible = false;
     },
     store(row) {
-      let waypointData = row != undefined ? row.id : this.value;
-      this.$emit("input", waypointData);
+      let itemSet = row != undefined ? row.ID : this.value;
+      this.$emit("input", itemSet);
       this.visible = false;
     },
     async init() {
       await Promise.all([
-        this.searchWaypointDatasForSelector(this.payload),
-        this.countWaypointDatasForSelector(this.payload),
+        this.searchItemSetsForSelector(this.payload),
+        this.countItemSetsForSelector(this.payload),
       ]);
     },
   },
   mounted() {
-    this.waypointData = this.value;
-    this.id = this.value;
+    this.itemSet = this.value;
+    this.ID = this.value;
   },
 };
 </script>
 
 <style scoped>
-.waypoint-data-selector {
+.creature-model-data-selector {
   max-height: 40vh;
   overflow: auto;
 }
-.waypoint-data-selector tbody tr {
+.creature-model-data-selector tbody tr {
   cursor: pointer;
 }
 </style>
