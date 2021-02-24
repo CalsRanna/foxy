@@ -54,6 +54,7 @@ import "./background/gossipMenuSelector";
 import "./background/scalingStatDistributionSelector";
 import "./background/waypointDataSelector";
 import "./background/itemSetSelector";
+import "./background/itemEnchantmentTemplateSelector";
 import "./background/itemRandomPropertiesSelector";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
