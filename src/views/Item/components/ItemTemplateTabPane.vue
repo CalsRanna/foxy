@@ -161,15 +161,14 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="随机属性">
-            <el-input
+            <item-random-properties-selector
               v-model="itemTemplate.RandomProperty"
-              controls-position="right"
               placeholder="RandomProperty"
               :disabled="
                 !Boolean(itemTemplate.RandomProperty) &&
                   Boolean(itemTemplate.RandomSuffix)
               "
-            ></el-input>
+            ></item-random-properties-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1290,6 +1289,7 @@ import HintLabel from "@/components/HintLabel";
 import SpellSelector from "@/components/SpellSelector";
 import ScalingStatDistributionSelector from "@/components/ScalingStatDistributionSelector.vue";
 import ItemSetSelector from "@/components/ItemSetSelector.vue";
+import ItemRandomPropertiesSelector from "@/components/ItemRandomPropertiesSelector.vue";
 
 import { mapState, mapActions } from "vuex";
 
@@ -1385,6 +1385,7 @@ export default {
     SpellSelector,
     ScalingStatDistributionSelector,
     ItemSetSelector,
+    ItemRandomPropertiesSelector,
   },
 };
 </script>
