@@ -12,6 +12,7 @@ const {
   dbcCreatureSpellDataSql,
   dbcCreatureDisplayInfoSql,
   dbcCreatureModelDataSql,
+  dbcItemSetSql,
 } = require("../libs/mysql");
 
 import { ipcMain } from "electron";
@@ -64,6 +65,9 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
               .then(() => {}),
             knex()
               .raw(dbcCreatureModelDataSql)
+              .then(() => {}),
+            knex()
+              .raw(dbcItemSetSql)
               .then(() => {}),
           ]).then(() => {
             event.reply(INIT_MYSQL_CONNECTION);
