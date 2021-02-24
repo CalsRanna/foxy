@@ -17,11 +17,11 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
   if (payload.type == "properties") {
     queryBuilder
       .leftJoin("foxy.dbc_item_random_properties", "ench", "ID")
-      .where("ID", ">", 0);
+      .whereNotNull("ID");
   } else {
     queryBuilder
       .leftJoin("foxy.dbc_item_random_suffix", "ench", "ID")
-      .where("ID", ">", 0);
+      .whereNotNull("ID");
   }
   if (payload.entry) {
     queryBuilder = queryBuilder.where("entry", "like", `%${payload.entry}%`);
@@ -53,11 +53,11 @@ ipcMain.on(COUNT_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
   if (payload.type == "properties") {
     queryBuilder
       .leftJoin("foxy.dbc_item_random_properties", "ench", "ID")
-      .where("ID", ">", 0);
+      .whereNotNull("ID");
   } else {
     queryBuilder
       .leftJoin("foxy.dbc_item_random_suffix", "ench", "ID")
-      .where("ID", ">", 0);
+      .whereNotNull("ID");
   }
   if (payload.entry) {
     queryBuilder = queryBuilder.where("entry", "like", `%${payload.entry}%`);

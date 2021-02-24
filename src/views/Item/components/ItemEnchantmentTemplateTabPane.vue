@@ -15,7 +15,16 @@
           @current-change="select"
           @row-dblclick="show"
         >
+          <el-table-column prop="entry" label="编号"></el-table-column>
           <el-table-column prop="ench" label="附魔"></el-table-column>
+          <el-table-column label="名称">
+            <template slot-scope="scope">
+              <span v-if="scope.row.Name_Lang_zhCN != null">
+                {{ scope.row.Name_Lang_zhCN }}
+              </span>
+              <span v-else>{{ scope.row.Name }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="chance" label="几率">
             <span slot-scope="scope">
               {{ `${scope.row.chance}%` }}
@@ -55,10 +64,11 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="几率">
-                <el-input
+                <el-input-number
                   v-model="itemEnchantmentTemplate.chance"
+                  controls-position="right"
                   placeholder="chance"
-                ></el-input>
+                ></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
@@ -143,6 +153,7 @@ export default {
         });
       }
       await this.searchItemEnchantmentTemplates({
+        type: this.itemTemplate.RandomProperty != 0 ? "properties" : "suffix",
         entry:
           this.itemTemplate.RandomProperty != 0
             ? this.itemTemplate.RandomProperty
@@ -166,6 +177,10 @@ export default {
             this.copyItemEnchantmentTemplate(this.credential)
               .then(() => {
                 this.searchItemEnchantmentTemplates({
+                  type:
+                    this.itemTemplate.RandomProperty != 0
+                      ? "properties"
+                      : "suffix",
                   entry:
                     this.itemTemplate.RandomProperty != 0
                       ? this.itemTemplate.RandomProperty
@@ -202,6 +217,10 @@ export default {
               this.destroyItemEnchantmentTemplate(this.credential)
                 .then(() => {
                   this.searchItemEnchantmentTemplates({
+                    type:
+                      this.itemTemplate.RandomProperty != 0
+                        ? "properties"
+                        : "suffix",
                     entry:
                       this.itemTemplate.RandomProperty != 0
                         ? this.itemTemplate.RandomProperty
@@ -238,6 +257,7 @@ export default {
     async init() {
       this.initing = true;
       await this.searchItemEnchantmentTemplates({
+        type: this.itemTemplate.RandomProperty != 0 ? "properties" : "suffix",
         entry:
           this.itemTemplate.RandomProperty != 0
             ? this.itemTemplate.RandomProperty
