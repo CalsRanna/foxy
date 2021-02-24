@@ -21,10 +21,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="路径ID">
-            <el-input
+            <waypoint-data-selector
               v-model="creatureTemplateAddon.path_id"
               placeholder="path_id"
-            ></el-input>
+            ></waypoint-data-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -89,6 +89,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import WaypointDataSelector from "@/components/WaypointDataSelector.vue";
 
 export default {
   data() {
@@ -161,5 +162,6 @@ export default {
   mounted() {
     this.init();
   },
+  components: { WaypointDataSelector },
 };
 </script>

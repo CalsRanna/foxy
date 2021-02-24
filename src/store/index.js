@@ -51,6 +51,7 @@ import spellSelector from "./spellSelector";
 import spellDurationSelector from "./spellDurationSelector";
 import gossipMenuSelector from "./gossipMenuSelector";
 import scalingStatDistributionSelector from "./scalingStatDistributionSelector";
+import waypointDataSelector from "./waypointDataSelector";
 
 Vue.use(Vuex);
 
@@ -106,5 +107,6 @@ export default new Vuex.Store({
     spellDurationSelector,
     gossipMenuSelector,
     scalingStatDistributionSelector,
+    waypointDataSelector: waypointDataSelector,
   },
 });
