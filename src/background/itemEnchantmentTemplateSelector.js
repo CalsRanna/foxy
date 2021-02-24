@@ -14,6 +14,15 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
     .select(["entry", knex().raw("count(ench) as enchs")])
     .groupBy("entry")
     .from("item_enchantment_template");
+  if (payload.type == "properties") {
+    queryBuilder
+      .leftJoin("foxy.dbc_item_random_properties", "ench", "ID")
+      .where("ID", ">", 0);
+  } else {
+    queryBuilder
+      .leftJoin("foxy.dbc_item_random_suffix", "ench", "ID")
+      .where("ID", ">", 0);
+  }
   if (payload.entry) {
     queryBuilder = queryBuilder.where("entry", "like", `%${payload.entry}%`);
   }
@@ -41,6 +50,15 @@ ipcMain.on(COUNT_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex()
     .count({ total: knex().raw("distinct entry") })
     .from("item_enchantment_template");
+  if (payload.type == "properties") {
+    queryBuilder
+      .leftJoin("foxy.dbc_item_random_properties", "ench", "ID")
+      .where("ID", ">", 0);
+  } else {
+    queryBuilder
+      .leftJoin("foxy.dbc_item_random_suffix", "ench", "ID")
+      .where("ID", ">", 0);
+  }
   if (payload.entry) {
     queryBuilder = queryBuilder.where("entry", "like", `%${payload.entry}%`);
   }
