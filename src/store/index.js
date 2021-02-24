@@ -53,6 +53,7 @@ import gossipMenuSelector from "./gossipMenuSelector";
 import scalingStatDistributionSelector from "./scalingStatDistributionSelector";
 import waypointDataSelector from "./waypointDataSelector";
 import itemSetSelector from "./itemSetSelector";
+import itemEnchantmentTemplateSelector from "./itemEnchantmentTemplateSelector";
 import itemRandomPropertiesSelector from "./itemRandomPropertiesSelector";
 
 Vue.use(Vuex);
@@ -111,6 +112,7 @@ export default new Vuex.Store({
     scalingStatDistributionSelector,
     waypointDataSelector: waypointDataSelector,
     itemSetSelector: itemSetSelector,
+    itemEnchantmentTemplateSelector: itemEnchantmentTemplateSelector,
     itemRandomPropertiesSelector: itemRandomPropertiesSelector,
   },
 });

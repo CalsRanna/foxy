@@ -1,6 +1,10 @@
 <template>
   <div>
-    <el-input v-model="waypointData" :placeholder="placeholder" @input="input">
+    <el-input
+      v-model="itemEnchantmentTemplate"
+      :placeholder="placeholder"
+      @input="input"
+    >
       <i
         class="el-icon-s-operation clickable-icon"
         slot="suffix"
@@ -15,7 +19,7 @@
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
-          路径选择器
+          随机附魔选择器
         </span>
       </div>
       <el-card>
@@ -23,9 +27,9 @@
           <el-row :gutter="16">
             <el-col :span="8">
               <el-input-number
-                v-model="id"
+                v-model="entry"
                 controls-position="right"
-                placeholder="id"
+                placeholder="entry"
               ></el-input-number>
             </el-col>
             <el-col :span="8">
@@ -45,14 +49,15 @@
         style="margin-top: 16px"
       ></el-pagination>
       <el-table
-        :data="waypointDatas"
+        :data="itemEnchantmentTemplates"
         highlight-current-row
         @current-change="select"
         @row-dblclick="(row) => store(row)"
-        class="waypoint-data-selector"
+        class="item-enchantment-template-selector"
       >
-        <el-table-column prop="id" label="编号" width="80px"> </el-table-column>
-        <el-table-column prop="points" label="路径点数量"></el-table-column>
+        <el-table-column prop="entry" label="编号" width="80px">
+        </el-table-column>
+        <el-table-column prop="enchs" label="附魔数量"></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"
@@ -79,8 +84,8 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      waypointData: undefined,
-      id: undefined,
+      itemEnchantmentTemplate: undefined,
+      entry: undefined,
       visible: false,
       currentRow: undefined,
     };
@@ -91,87 +96,92 @@ export default {
   },
   watch: {
     value: function(newValue) {
-      this.waypointData = newValue;
-      this.id = newValue;
+      this.itemEnchantmentTemplate = newValue;
+      this.entry = newValue;
     },
   },
   computed: {
-    ...mapState("waypointDataSelector", ["pagination", "waypointDatas"]),
+    ...mapState("itemEnchantmentTemplateSelector", [
+      "pagination",
+      "itemEnchantmentTemplates",
+    ]),
     payload() {
       return {
-        id: this.id != 0 ? this.id : undefined,
+        entry: this.entry != 0 ? this.entry : undefined,
         page: this.pagination.page,
       };
     },
   },
   methods: {
-    ...mapActions("waypointDataSelector", [
-      "searchWaypointDatasForSelector",
-      "countWaypointDatasForSelector",
-      "paginateWaypointDatasForSelector",
+    ...mapActions("itemEnchantmentTemplateSelector", [
+      "searchItemEnchantmentTemplatesForSelector",
+      "countItemEnchantmentTemplatesForSelector",
+      "paginateItemEnchantmentTemplatesForSelector",
     ]),
-    input(waypointData) {
-      if (isNaN(parseInt(waypointData))) {
+    input(itemEnchantmentTemplate) {
+      if (isNaN(parseInt(itemEnchantmentTemplate))) {
         this.$emit("input", undefined);
       } else {
-        this.$emit("input", parseInt(waypointData));
+        this.$emit("input", parseInt(itemEnchantmentTemplate));
       }
     },
     async show() {
       this.visible = true;
       await Promise.all([
-        this.searchWaypointDatasForSelector(this.payload),
-        this.countWaypointDatasForSelector(this.payload),
+        this.searchItemEnchantmentTemplatesForSelector(this.payload),
+        this.countItemEnchantmentTemplatesForSelector(this.payload),
       ]);
     },
     async search() {
-      this.paginateWaypointDatasForSelector({ page: 1 });
+      this.paginateItemEnchantmentTemplatesForSelector({ page: 1 });
       await Promise.all([
-        this.searchWaypointDatasForSelector(this.payload),
-        this.countWaypointDatasForSelector(this.payload),
+        this.searchItemEnchantmentTemplatesForSelector(this.payload),
+        this.countItemEnchantmentTemplatesForSelector(this.payload),
       ]);
     },
     reset() {
-      this.id = undefined;
+      this.entry = undefined;
     },
     async paginate(page) {
-      this.paginateWaypointDatasForSelector({ page: page });
-      await this.searchWaypointDatasForSelector(this.payload);
+      this.paginateItemEnchantmentTemplatesForSelector({ page: page });
+      await this.searchItemEnchantmentTemplatesForSelector(this.payload);
     },
     select(currentRow) {
       this.currentRow = currentRow;
     },
     close() {
-      let waypointData =
-        this.waypointData != undefined ? this.waypointData : this.value;
-      this.$emit("input", waypointData);
+      let itemEnchantmentTemplate =
+        this.itemEnchantmentTemplate != undefined
+          ? this.itemEnchantmentTemplate
+          : this.value;
+      this.$emit("input", itemEnchantmentTemplate);
       this.visible = false;
     },
     store(row) {
-      let waypointData = row != undefined ? row.id : this.value;
-      this.$emit("input", waypointData);
+      let itemEnchantmentTemplate = row != undefined ? row.entry : this.value;
+      this.$emit("input", itemEnchantmentTemplate);
       this.visible = false;
     },
     async init() {
       await Promise.all([
-        this.searchWaypointDatasForSelector(this.payload),
-        this.countWaypointDatasForSelector(this.payload),
+        this.searchItemEnchantmentTemplatesForSelector(this.payload),
+        this.countItemEnchantmentTemplatesForSelector(this.payload),
       ]);
     },
   },
   mounted() {
-    this.waypointData = this.value;
-    this.id = this.value;
+    this.itemEnchantmentTemplate = this.value;
+    this.entry = this.value;
   },
 };
 </script>
 
 <style scoped>
-.waypoint-data-selector {
+.item-enchantment-template-selector {
   max-height: 40vh;
   overflow: auto;
 }
-.waypoint-data-selector tbody tr {
+.item-enchantment-template-selector tbody tr {
   cursor: pointer;
 }
 </style>
