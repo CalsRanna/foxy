@@ -15,9 +15,19 @@ const { knex } = require("../libs/mysql");
 
 ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
   let queryBuilder = knex()
-    .select()
-    .from("item_enchantment_template")
-    .where(payload);
+    .select(["iet.*", "re.*"])
+    .from("item_enchantment_template as iet");
+  if (payload.type == "properties") {
+    queryBuilder.leftJoin(
+      "foxy.dbc_item_random_properties as re",
+      "ench",
+      "ID"
+    );
+  } else {
+    queryBuilder.leftJoin("foxy.dbc_item_random_suffix as re", "ench", "ID");
+  }
+  delete payload.type;
+  queryBuilder.whereNotNull("ID").where(payload);
 
   queryBuilder
     .then((rows) => {
