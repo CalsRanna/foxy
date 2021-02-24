@@ -55,7 +55,13 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="附魔">
+                <item-random-properties-selector
+                  v-if="this.itemTemplate.RandomProperty != 0"
+                  v-model="itemEnchantmentTemplate.ench"
+                  placeholder="ench"
+                ></item-random-properties-selector>
                 <el-input-number
+                  v-else
                   v-model="itemEnchantmentTemplate.ench"
                   controls-position="right"
                   placeholder="ench"
@@ -86,6 +92,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ItemRandomPropertiesSelector from "@/components/ItemRandomPropertiesSelector";
 
 export default {
   data() {
@@ -269,5 +276,6 @@ export default {
   mounted() {
     this.init();
   },
+  components: { ItemRandomPropertiesSelector },
 };
 </script>
