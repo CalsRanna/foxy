@@ -14,6 +14,7 @@ import {
   EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
   SEARCH_DBC_ITEM_SETS,
+  SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS,
   EXPORT_ITEM_DBC,
 } from "../constants";
 
@@ -32,6 +33,7 @@ export default {
     scalingStatDistributions: {},
     scalingStatValues: {},
     itemSets: {},
+    spellItemEnchantments: {},
   }),
   getters: {
     itemIcons: (state) => {
@@ -214,6 +216,24 @@ export default {
         });
       });
     },
+    searchDbcSpellItemEnchantments({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS);
+        ipcRenderer.on(
+          SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS,
+          (event, response) => {
+            commit(SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS, response);
+            resolve();
+          }
+        );
+        ipcRenderer.on(
+          `${SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     exportItemDbc() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(EXPORT_ITEM_DBC);
@@ -277,6 +297,9 @@ export default {
     },
     [SEARCH_DBC_ITEM_SETS](state, itemSets) {
       state.itemSets = itemSets;
+    },
+    [SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS](state, spellItemEnchantments) {
+      state.spellItemEnchantments = spellItemEnchantments;
     },
   },
 };

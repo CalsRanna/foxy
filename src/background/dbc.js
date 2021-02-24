@@ -15,6 +15,7 @@ import {
   EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
   SEARCH_DBC_ITEM_SETS,
+  SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS,
   RELOAD_APP,
   EXPORT_ITEM_DBC,
   GLOBAL_MESSAGE_BOX,
@@ -441,6 +442,43 @@ ipcMain.on(SEARCH_DBC_ITEM_SETS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_ITEM_SETS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS, (event) => {
+  let queryBuilder = knex()
+    .count("* as total")
+    .from("foxy.dbc_spell_item_enchantment");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/SpellItemEnchantment.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_spell_item_enchantment", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS);
+              })
+              .catch((error) => {
+                event.reply(
+                  `${SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS}_REJECT`,
+                  error
+                );
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          });
+      } else {
+        event.reply(SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

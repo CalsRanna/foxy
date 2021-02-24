@@ -110,6 +110,7 @@ export default {
       "searchDbcSpellDurations",
       "searchDbcSpells",
       "searchDbcItemSets",
+      "searchDbcSpellItemEnchantments",
       "exportItemDbc",
       "exportSpellDbc",
     ]),
@@ -220,6 +221,8 @@ export default {
         await this.searchDbcItemDisplayInfos();
         this.progressText = "加载ItemSet.dbc";
         await this.searchDbcItemSets();
+        this.progressText = "加载SpellItemEnchantment.dbc";
+        await this.searchDbcSpellItemEnchantments();
         this.progressText = "加载ScalingStatDistribution.dbc";
         await this.searchDbcScalingStatDistributions();
         this.progressText = "加载ScalingStatValues.dbc";
