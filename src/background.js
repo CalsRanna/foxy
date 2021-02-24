@@ -52,6 +52,7 @@ import "./background/spellSelector";
 import "./background/spellDurationSelector";
 import "./background/gossipMenuSelector";
 import "./background/scalingStatDistributionSelector";
+import "./background/waypointDataSelector";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
