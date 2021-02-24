@@ -15,6 +15,7 @@ import {
   SEARCH_DBC_SPELL_DURATIONS,
   SEARCH_DBC_ITEM_SETS,
   SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS,
+  SEARCH_DBC_ITEM_RANDOM_PROPERTITIES,
   EXPORT_ITEM_DBC,
 } from "../constants";
 
@@ -34,6 +35,7 @@ export default {
     scalingStatValues: {},
     itemSets: {},
     spellItemEnchantments: {},
+    itemRandomProperties: {},
   }),
   getters: {
     itemIcons: (state) => {
@@ -234,6 +236,24 @@ export default {
         );
       });
     },
+    searchDbcItemRandomProperties({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(SEARCH_DBC_ITEM_RANDOM_PROPERTITIES);
+        ipcRenderer.on(
+          SEARCH_DBC_ITEM_RANDOM_PROPERTITIES,
+          (event, response) => {
+            commit(SEARCH_DBC_ITEM_RANDOM_PROPERTITIES, response);
+            resolve();
+          }
+        );
+        ipcRenderer.on(
+          `${SEARCH_DBC_ITEM_RANDOM_PROPERTITIES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     exportItemDbc() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(EXPORT_ITEM_DBC);
@@ -300,6 +320,9 @@ export default {
     },
     [SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS](state, spellItemEnchantments) {
       state.spellItemEnchantments = spellItemEnchantments;
+    },
+    [SEARCH_DBC_ITEM_RANDOM_PROPERTITIES](state, itemRandomProperties) {
+      state.itemRandomProperties = itemRandomProperties;
     },
   },
 };

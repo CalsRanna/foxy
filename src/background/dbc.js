@@ -16,6 +16,7 @@ import {
   SEARCH_DBC_SPELL_DURATIONS,
   SEARCH_DBC_ITEM_SETS,
   SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS,
+  SEARCH_DBC_ITEM_RANDOM_PROPERTITIES,
   RELOAD_APP,
   EXPORT_ITEM_DBC,
   GLOBAL_MESSAGE_BOX,
@@ -479,6 +480,43 @@ ipcMain.on(SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(SEARCH_DBC_ITEM_RANDOM_PROPERTITIES, (event) => {
+  let queryBuilder = knex()
+    .count("* as total")
+    .from("foxy.dbc_item_random_properties");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/ItemRandomProperties.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_item_random_properties", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_ITEM_RANDOM_PROPERTITIES);
+              })
+              .catch((error) => {
+                event.reply(
+                  `${SEARCH_DBC_ITEM_RANDOM_PROPERTITIES}_REJECT`,
+                  error
+                );
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_ITEM_RANDOM_PROPERTITIES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          });
+      } else {
+        event.reply(SEARCH_DBC_ITEM_RANDOM_PROPERTITIES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_ITEM_RANDOM_PROPERTITIES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

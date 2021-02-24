@@ -14,6 +14,7 @@ const {
   dbcCreatureModelDataSql,
   dbcItemSetSql,
   dbcSpellItemEnchantmentSql,
+  dbcItemRandomPropertiesSql,
 } = require("../libs/mysql");
 
 import { ipcMain } from "electron";
@@ -72,6 +73,9 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
               .then(() => {}),
             knex()
               .raw(dbcSpellItemEnchantmentSql)
+              .then(() => {}),
+            knex()
+              .raw(dbcItemRandomPropertiesSql)
               .then(() => {}),
           ]).then(() => {
             event.reply(INIT_MYSQL_CONNECTION);
