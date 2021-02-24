@@ -3,6 +3,7 @@
     <el-input
       v-model="itemEnchantmentTemplate"
       :placeholder="placeholder"
+      :disabled="disabled"
       @input="input"
     >
       <i
@@ -92,7 +93,12 @@ export default {
   },
   props: {
     value: [Number, String],
+    type: {
+      type: String,
+      default: "properties",
+    },
     placeholder: String,
+    disabled: Boolean,
   },
   watch: {
     value: function(newValue) {
@@ -107,6 +113,7 @@ export default {
     ]),
     payload() {
       return {
+        type: this.type,
         entry: this.entry != 0 ? this.entry : undefined,
         page: this.pagination.page,
       };

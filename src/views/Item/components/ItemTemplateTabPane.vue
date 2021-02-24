@@ -173,15 +173,15 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="随机前缀">
-            <el-input
+            <item-enchantment-template-selector
               v-model="itemTemplate.RandomSuffix"
-              controls-position="right"
+              type="suffix"
               placeholder="RandomSuffix"
               :disabled="
                 !Boolean(itemTemplate.RandomSuffix) &&
                   Boolean(itemTemplate.RandomProperty)
               "
-            ></el-input>
+            ></item-enchantment-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
