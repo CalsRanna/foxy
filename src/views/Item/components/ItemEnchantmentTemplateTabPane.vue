@@ -60,12 +60,11 @@
                   v-model="itemEnchantmentTemplate.ench"
                   placeholder="ench"
                 ></item-random-properties-selector>
-                <el-input-number
+                <item-random-suffix-selector
                   v-else
                   v-model="itemEnchantmentTemplate.ench"
-                  controls-position="right"
                   placeholder="ench"
-                ></el-input-number>
+                ></item-random-suffix-selector>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -93,6 +92,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import ItemRandomPropertiesSelector from "@/components/ItemRandomPropertiesSelector";
+import ItemRandomSuffixSelector from "@/components/ItemRandomSuffixSelector.vue";
 
 export default {
   data() {
@@ -276,6 +276,6 @@ export default {
   mounted() {
     this.init();
   },
-  components: { ItemRandomPropertiesSelector },
+  components: { ItemRandomPropertiesSelector, ItemRandomSuffixSelector },
 };
 </script>

@@ -55,6 +55,7 @@ import waypointDataSelector from "./waypointDataSelector";
 import itemSetSelector from "./itemSetSelector";
 import itemEnchantmentTemplateSelector from "./itemEnchantmentTemplateSelector";
 import itemRandomPropertiesSelector from "./itemRandomPropertiesSelector";
+import itemRandomSuffixSelector from "./itemRandomSuffixSelector";
 
 Vue.use(Vuex);
 
@@ -114,5 +115,6 @@ export default new Vuex.Store({
     itemSetSelector: itemSetSelector,
     itemEnchantmentTemplateSelector: itemEnchantmentTemplateSelector,
     itemRandomPropertiesSelector: itemRandomPropertiesSelector,
+    itemRandomSuffixSelector: itemRandomSuffixSelector,
   },
 });
