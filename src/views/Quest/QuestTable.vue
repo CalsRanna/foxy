@@ -98,7 +98,7 @@
         ></el-table-column>
         <el-table-column
           prop="MinLevel"
-          label="所需最小等级"
+          label="最低等级"
           sortable
         ></el-table-column>
       </el-table>

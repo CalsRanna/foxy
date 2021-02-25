@@ -885,6 +885,8 @@ const scalingStatValues = [
   },
 ];
 
+const socketColors = ["", "原石", "红色", "", "黄色", "", "", "", "蓝色"];
+
 export {
   colors,
   localeQualities,
@@ -903,4 +905,5 @@ export {
   flagsExtra,
   flagsCustom,
   scalingStatValues,
+  socketColors,
 };
