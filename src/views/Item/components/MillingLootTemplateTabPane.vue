@@ -82,14 +82,10 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="物品">
-                <el-input-number
+                <item-template-selector
                   v-model="millingLootTemplate.Item"
-                  controls-position="right"
-                  v-loading="initing"
                   placeholder="Item"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
+                ></item-template-selector>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -178,6 +174,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
 
 export default {
   data() {
@@ -336,5 +333,6 @@ export default {
   mounted() {
     this.init();
   },
+  components: { ItemTemplateSelector },
 };
 </script>

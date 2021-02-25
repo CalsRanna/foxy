@@ -403,7 +403,7 @@ const flags = [
     index: 2,
     flag: 4,
     name: "可打开的",
-    comment: "",
+    comment: "物品掉落",
   },
   {
     index: 3,
@@ -499,7 +499,7 @@ const flags = [
     index: 18,
     flag: 262144,
     name: "可勘探物品",
-    comment: "",
+    comment: "选矿掉落",
   },
   {
     index: 19,
@@ -565,7 +565,7 @@ const flags = [
     index: 29,
     flag: 536870912,
     name: "有效",
-    comment: "",
+    comment: "研磨掉落",
   },
   {
     index: 30,
