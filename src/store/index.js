@@ -57,6 +57,7 @@ import itemEnchantmentTemplateSelector from "./itemEnchantmentTemplateSelector";
 import itemRandomPropertiesSelector from "./itemRandomPropertiesSelector";
 import itemRandomSuffixSelector from "./itemRandomSuffixSelector";
 import itemDisplayInfoSelector from "./itemDisplayInfoSelector";
+import questTemplateSelector from "./questTemplateSelector";
 
 Vue.use(Vuex);
 
@@ -118,5 +119,6 @@ export default new Vuex.Store({
     itemRandomPropertiesSelector: itemRandomPropertiesSelector,
     itemRandomSuffixSelector: itemRandomSuffixSelector,
     itemDisplayInfoSelector: itemDisplayInfoSelector,
+    questTemplateSelector: questTemplateSelector,
   },
 });

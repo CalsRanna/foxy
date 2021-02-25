@@ -291,10 +291,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="开始任务">
-            <el-input
+            <quest-template-selector
               v-model="itemTemplate.startquest"
               placeholder="startquest"
-            ></el-input>
+            ></quest-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -308,10 +308,11 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="分解掉落">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.DisenchantID"
+              controls-position="right"
               placeholder="DisenchantID"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -844,22 +845,25 @@
             </el-select>
           </el-form-item>
           <el-form-item label="充能次数">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcharges_1"
+              controls-position="right"
               placeholder="spellcharges_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="几率">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellppmRate_1"
+              controls-position="right"
               placeholder="spellppmRate_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcooldown_1"
+              controls-position="right"
               placeholder="spellcooldown_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="技能组">
             <el-input
@@ -868,10 +872,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="技能组冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcategorycooldown_1"
+              controls-position="right"
               placeholder="spellcategorycooldown_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </div>
         <div style="width: 20%; float: left">
@@ -895,22 +900,25 @@
             </el-select>
           </el-form-item>
           <el-form-item label="充能次数">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcharges_2"
+              controls-position="right"
               placeholder="spellcharges_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="几率">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellppmRate_2"
+              controls-position="right"
               placeholder="spellppmRate_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcooldown_2"
+              controls-position="right"
               placeholder="spellcooldown_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="技能组">
             <el-input
@@ -919,10 +927,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="技能组冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcategorycooldown_2"
+              controls-position="right"
               placeholder="spellcategorycooldown_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </div>
         <div style="width: 20%; float: left">
@@ -946,22 +955,25 @@
             </el-select>
           </el-form-item>
           <el-form-item label="充能次数">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcharges_3"
+              controls-position="right"
               placeholder="spellcharges_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="几率">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellppmRate_3"
+              controls-position="right"
               placeholder="spellppmRate_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcooldown_3"
+              controls-position="right"
               placeholder="spellcooldown_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="技能组">
             <el-input
@@ -970,10 +982,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="技能组冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcategorycooldown_3"
+              controls-position="right"
               placeholder="spellcategorycooldown_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </div>
         <div style="width: 20%; float: left">
@@ -997,22 +1010,25 @@
             </el-select>
           </el-form-item>
           <el-form-item label="充能次数">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcharges_4"
+              controls-position="right"
               placeholder="spellcharges_4"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="几率">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellppmRate_4"
+              controls-position="right"
               placeholder="spellppmRate_4"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcooldown_4"
+              controls-position="right"
               placeholder="spellcooldown_4"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="技能组">
             <el-input
@@ -1021,10 +1037,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="技能组冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcategorycooldown_4"
+              controls-position="right"
               placeholder="spellcategorycooldown_4"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </div>
         <div style="width: 20%; float: left">
@@ -1048,22 +1065,25 @@
             </el-select>
           </el-form-item>
           <el-form-item label="充能次数">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcharges_5"
+              controls-position="right"
               placeholder="spellcharges_5"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="几率">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellppmRate_5"
+              controls-position="right"
               placeholder="spellppmRate_5"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcooldown_5"
+              controls-position="right"
               placeholder="spellcooldown_5"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="技能组">
             <el-input
@@ -1072,10 +1092,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="技能组冷却时间">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.spellcategorycooldown_5"
+              controls-position="right"
               placeholder="spellcategorycooldown_5"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </div>
         <div style="clear: both"></div>
@@ -1101,18 +1122,20 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="物品等级">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.ItemLevel"
+              controls-position="right"
               placeholder="ItemLevel"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="需要等级">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.RequiredLevel"
+              controls-position="right"
               placeholder="RequiredLevel"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1133,10 +1156,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="需要法术">
-            <el-input
+            <spell-selector
               v-model="itemTemplate.requiredspell"
               placeholder="requiredspell"
-            ></el-input>
+            ></spell-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1213,27 +1236,126 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="页面ID">
+          <el-form-item label="宝石属性">
             <el-input
-              v-model="itemTemplate.PageText"
-              placeholder="PageText"
+              v-model="itemTemplate.GemProperties"
+              placeholder="GemProperties"
             ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="插槽奖励">
+            <el-input
+              v-model="itemTemplate.socketBonus"
+              placeholder="socketBonus"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="插槽颜色">
+            <el-select
+              v-model="itemTemplate.socketColor_1"
+              placeholder="socketColor_1"
+            >
+              <el-option
+                v-for="index in [1, 2, 4, 8]"
+                :key="`socketColor_1-${index}`"
+                :label="socketColors[index]"
+                :value="index"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="插槽颜色">
+            <el-select
+              v-model="itemTemplate.socketColor_2"
+              placeholder="socketColor_2"
+            >
+              <el-option
+                v-for="index in [1, 2, 4, 8]"
+                :key="`socketColor_2-${index}`"
+                :label="socketColors[index]"
+                :value="index"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="插槽颜色">
+            <el-select
+              v-model="itemTemplate.socketColor_3"
+              placeholder="socketColor_3"
+            >
+              <el-option
+                v-for="index in [1, 2, 4, 8]"
+                :key="`socketColor_3-${index}`"
+                :label="socketColors[index]"
+                :value="index"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="数量">
+            <el-input-number
+              v-model="itemTemplate.socketContent_1"
+              controls-position="right"
+              placeholder="socketContent_1"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="数量">
+            <el-input-number
+              v-model="itemTemplate.socketContent_2"
+              controls-position="right"
+              placeholder="socketContent_2"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="数量">
+            <el-input-number
+              v-model="itemTemplate.socketContent_3"
+              controls-position="right"
+              placeholder="socketContent_3"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="页面ID">
+            <el-input-number
+              v-model="itemTemplate.PageText"
+              controls-position="right"
+              placeholder="PageText"
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="页面材料">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.PageMaterial"
+              controls-position="right"
               placeholder="PageMaterial"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="语言ID">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.LanguageID"
+              controls-position="right"
               placeholder="LanguageID"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1246,10 +1368,11 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="VerifiedBuild">
-            <el-input
+            <el-input-number
               v-model="itemTemplate.VerifiedBuild"
+              controls-position="right"
               placeholder="VerifiedBuild"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1281,6 +1404,7 @@ import {
   flagsExtra,
   flagsCustom,
   scalingStatValues,
+  socketColors,
 } from "@/locales/item.js";
 
 import ItemTemplateLocalizer from "@/views/Item/components/ItemTemplateLocalizer";
@@ -1293,6 +1417,7 @@ import ItemEnchantmentTemplateSelector from "@/components/ItemEnchantmentTemplat
 
 import { mapState, mapActions } from "vuex";
 import ItemDisplayInfoSelector from "@/components/ItemDisplayInfoSelector.vue";
+import QuestTemplateSelector from "@/components/QuestTemplateSelector.vue";
 
 export default {
   data() {
@@ -1316,6 +1441,7 @@ export default {
       flagsExtra: flagsExtra,
       flagsCustom: flagsCustom,
       scalingStatValues: scalingStatValues,
+      socketColors: socketColors,
     };
   },
   computed: {
@@ -1388,6 +1514,7 @@ export default {
     ItemSetSelector,
     ItemEnchantmentTemplateSelector,
     ItemDisplayInfoSelector,
+    QuestTemplateSelector,
   },
 };
 </script>
