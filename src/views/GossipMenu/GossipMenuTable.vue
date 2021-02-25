@@ -72,7 +72,7 @@
           width="160"
           sortable
         ></el-table-column>
-        <el-table-column label="文本" sortable>
+        <el-table-column label="文本" sortable class-name="hide-when-overflow">
           <template slot-scope="scope">
             <span v-if="scope.row.Text0_0 != '' && scope.row.Text0_0 != null">{{
               scope.row.Text0_0

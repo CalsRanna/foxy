@@ -78,6 +78,7 @@
           label="描述"
           sortable
           min-width="500px"
+          class-name="hide-when-overflow"
         >
           <template slot-scope="scope">
             <template v-if="scope.row.Details !== null">{{

@@ -64,7 +64,7 @@
         <el-table-column
           prop="Name_Lang_zhCN"
           label="名称"
-          width="256px"
+          width="320px"
           sortable
         >
         </el-table-column>
@@ -74,7 +74,12 @@
           sortable
           width="128px"
         ></el-table-column>
-        <el-table-column prop="descriptionLangZhCN" label="描述" sortable>
+        <el-table-column
+          prop="descriptionLangZhCN"
+          label="描述"
+          sortable
+          class-name="hide-when-overflow"
+        >
           <template slot-scope="scope">
             <spell-description
               :spell="scope.row"
