@@ -102,10 +102,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="外观">
-            <el-input
+            <item-display-info-selector
               v-model="itemTemplate.displayid"
               placeholder="displayid"
-            ></el-input>
+            ></item-display-info-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1292,6 +1292,7 @@ import ItemSetSelector from "@/components/ItemSetSelector.vue";
 import ItemEnchantmentTemplateSelector from "@/components/ItemEnchantmentTemplateSelector.vue";
 
 import { mapState, mapActions } from "vuex";
+import ItemDisplayInfoSelector from "@/components/ItemDisplayInfoSelector.vue";
 
 export default {
   data() {
@@ -1386,6 +1387,7 @@ export default {
     ScalingStatDistributionSelector,
     ItemSetSelector,
     ItemEnchantmentTemplateSelector,
+    ItemDisplayInfoSelector,
   },
 };
 </script>
