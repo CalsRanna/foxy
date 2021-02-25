@@ -419,4 +419,10 @@ export default {
   font-weight: 900;
   color: #606266;
 }
+
+.hide-when-overflow .cell {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
 </style>
