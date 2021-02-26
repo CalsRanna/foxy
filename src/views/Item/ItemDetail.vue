@@ -80,7 +80,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      loading: false
+      loading: false,
     };
   },
   computed: {
@@ -94,7 +94,7 @@ export default {
             name = itemTemplateLocale.Name;
           }
         }
-        return name !== undefined ? name : this.itemTemplate.name;
+        return name ? name : this.itemTemplate.name;
       } else {
         return this.itemTemplate.name;
       }
@@ -107,13 +107,11 @@ export default {
             description = itemTemplateLocale.Description;
           }
         }
-        return description !== undefined
-          ? description
-          : this.itemTemplate.description;
+        return description ? description : this.itemTemplate.description;
       } else {
         return this.itemTemplate.description;
       }
-    }
+    },
   },
   components: {
     ItemTemplateTabPane,
@@ -121,7 +119,7 @@ export default {
     ItemLootTemplateTabPane,
     DisenchantLootTemplateTabPane,
     ProspectingLootTemplateTabPane,
-    MillingLootTemplateTabPane
-  }
+    MillingLootTemplateTabPane,
+  },
 };
 </script>

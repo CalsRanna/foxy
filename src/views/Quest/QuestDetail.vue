@@ -72,7 +72,7 @@ export default {
             name = questTemplateLocale.Title;
           }
         }
-        return name !== undefined ? name : this.questTemplate.LogTitle;
+        return name ? name : this.questTemplate.LogTitle;
       } else {
         return this.questTemplate.LogTitle;
       }
@@ -85,9 +85,7 @@ export default {
             description = questTemplateLocale.ObjectiveText1;
           }
         }
-        return description !== undefined
-          ? description
-          : this.questTemplate.ObjectText1;
+        return description ? description : this.questTemplate.ObjectText1;
       } else {
         return this.questTemplate.ObjectText1;
       }

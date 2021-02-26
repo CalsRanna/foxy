@@ -111,7 +111,7 @@ export default {
             name = creatureTemplateLocale.Name;
           }
         }
-        return name !== undefined ? name : this.creatureTemplate.name;
+        return name ? name : this.creatureTemplate.name;
       } else {
         return this.creatureTemplate.name;
       }
@@ -124,7 +124,7 @@ export default {
             subname = creatureTemplateLocale.Title;
           }
         }
-        return subname !== undefined ? subname : this.creatureTemplate.subname;
+        return subname ? subname : this.creatureTemplate.subname;
       } else {
         return this.creatureTemplate.subname;
       }

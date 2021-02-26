@@ -15,7 +15,9 @@
     </el-col> -->
     <el-col :span="20">
       <span :style="{ color: colors[itemTemplate.Quality] }">
-        <template v-if="itemTemplate.localeName !== null">{{ itemTemplate.localeName }}</template>
+        <template v-if="itemTemplate.localeName">
+          {{ itemTemplate.localeName }}
+        </template>
         <template v-else>{{ itemTemplate.name }}</template>
       </span>
     </el-col>
