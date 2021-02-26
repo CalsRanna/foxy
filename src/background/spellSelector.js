@@ -35,11 +35,11 @@ ipcMain.on(SEARCH_SPELLS_FOR_SELECTOR, (event, payload) => {
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ds.ID", "like", `%${payload.ID}%`);
   }
-  if (payload.Name) {
+  if (payload.Name_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
       "Name_Lang_zhCN",
       "like",
-      `%${payload.Name}%`
+      `%${payload.Name_Lang_zhCN}%`
     );
   }
   queryBuilder = queryBuilder
@@ -67,11 +67,11 @@ ipcMain.on(COUNT_SPELLS_FOR_SELECTOR, (event, payload) => {
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ds.ID", "like", `%${payload.ID}%`);
   }
-  if (payload.Name) {
+  if (payload.Name_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
       "Name_Lang_zhCN",
       "like",
-      `%${payload.Name}%`
+      `%${payload.Name_Lang_zhCN}%`
     );
   }
 
