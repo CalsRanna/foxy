@@ -67,9 +67,9 @@
           sortable
         >
           <template slot-scope="scope">
-            <template v-if="scope.row.Title !== null">{{
-              scope.row.Title
-            }}</template>
+            <template v-if="scope.row.Title">
+              {{ scope.row.Title }}
+            </template>
             <template v-else>{{ scope.row.LogTitle }}</template>
           </template>
         </el-table-column>
@@ -81,9 +81,9 @@
           class-name="hide-when-overflow"
         >
           <template slot-scope="scope">
-            <template v-if="scope.row.Details !== null">{{
-              scope.row.Details
-            }}</template>
+            <template v-if="scope.row.Details">
+              {{ scope.row.Details }}
+            </template>
             <template v-else>{{ scope.row.LogDescription }}</template>
           </template>
         </el-table-column>

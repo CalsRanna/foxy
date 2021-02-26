@@ -56,7 +56,7 @@ export default {
             name = gameObjectTemplateLocale.name;
           }
         }
-        return name !== undefined ? name : this.gameObjectTemplate.name;
+        return name ? name : this.gameObjectTemplate.name;
       } else {
         return this.gameObjectTemplate.name;
       }

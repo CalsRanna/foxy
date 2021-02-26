@@ -63,7 +63,7 @@
         <el-table-column prop="entry" label="编号" sortable></el-table-column>
         <el-table-column prop="name" label="名称" sortable>
           <template slot-scope="scope">
-            <template v-if="scope.row.localeName !== null">{{
+            <template v-if="scope.row.localeName">{{
               scope.row.localeName
             }}</template>
             <template v-else>{{ scope.row.name }}</template>
