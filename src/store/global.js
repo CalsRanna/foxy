@@ -1,6 +1,9 @@
 const ipcRenderer = window.require("electron").ipcRenderer;
 
+import axios from "axios";
+
 import {
+  FIND_LATEST_VERSION,
   INIT_MYSQL_CONNECTION,
   SET_ACTIVE,
   STORE_MYSQL_CONFIG,
@@ -14,6 +17,8 @@ import {
 export default {
   namespaced: true,
   state: () => ({
+    latestVersion: null,
+    downloadUrl: null,
     debug: false,
     active: "dashboard",
     mysqlConfig: {
@@ -33,6 +38,24 @@ export default {
     },
   }),
   actions: {
+    findLatestVersion({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get("https://api.github.com/repos/CalsRanna/foxy/releases")
+          .then((response) => {
+            if (response.data.length > 0) {
+              commit(FIND_LATEST_VERSION, {
+                version: response.data[0].tag_name,
+                url: response.data[0].assets[0].browser_download_url,
+              });
+              resolve();
+            }
+          })
+          .catch(() => {
+            reject();
+          });
+      });
+    },
     setActive({ commit }, payload) {
       return new Promise((resolve) => {
         commit(SET_ACTIVE, payload);
@@ -105,6 +128,10 @@ export default {
     },
   },
   mutations: {
+    [FIND_LATEST_VERSION](state, payload) {
+      state.latestVersion = payload.version;
+      state.downloadUrl = payload.url;
+    },
     [SET_ACTIVE](state, active) {
       state.active = active;
     },
