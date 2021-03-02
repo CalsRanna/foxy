@@ -22,6 +22,7 @@
           </el-card>
           <el-card body-style="padding: 0" style="margin-top: 16px">
             <el-menu-item index="developer"> 开发者 </el-menu-item>
+            <el-menu-item index="changelog"> 更新日志 </el-menu-item>
           </el-card>
         </el-menu>
       </el-col>
