@@ -117,6 +117,7 @@ export default {
       "exportSpellDbc",
     ]),
     ...mapActions("global", [
+      "findLatestVersion",
       "setActive",
       "storeDeveloperConfig",
       "storeMysqlConfig",
@@ -251,6 +252,7 @@ export default {
           this.visible = false;
         }, 500);
       }
+      this.findLatestVersion();
     },
   },
   mounted() {

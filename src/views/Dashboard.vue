@@ -9,11 +9,20 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">控制面板</h3>
     </el-card>
-    <el-alert
-      title="欢迎使用 Foxy ，一款开发中的魔兽世界编辑器。"
-      type="info"
-      style="margin-top: 16px"
-    >
+    <el-alert type="info" style="margin-top: 16px">
+      <span slot="title">
+        欢迎使用 Foxy ，一款开发中的魔兽世界编辑器。
+        <span v-show="latestVersion !== null && latestVersion !== version">
+          当前版本 {{ version }}，新版本
+          <span
+            style="color: #409eff; cursor: pointer"
+            @click="() => openBrowser(downloadUrl)"
+          >
+            {{ latestVersion }}
+          </span>
+          可用，请下载使用。
+        </span>
+      </span>
     </el-alert>
     <el-row :gutter="24" style="margin-top: 16px" :loading="loading">
       <el-col :span="16">
@@ -161,10 +170,15 @@ export default {
   data() {
     return {
       loading: false,
+      version: "0.1.3",
       labels: ["生物", "物品", "物体", "任务", "对话", "内建脚本", "技能"],
     };
   },
   computed: {
+    ...mapState("global", {
+      latestVersion: "latestVersion",
+      downloadUrl: "downloadUrl",
+    }),
     ...mapState("creatureTemplate", {
       quantityOfCreatureTemplate: "pagination",
     }),
