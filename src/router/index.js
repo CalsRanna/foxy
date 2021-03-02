@@ -86,6 +86,10 @@ const routes = [
         path: "developer",
         component: () => import("@/views/Setting/components/Developer"),
       },
+      {
+        path: "changelog",
+        component: () => import("@/views/Setting/components/Changelog"),
+      },
     ],
   },
 ];
