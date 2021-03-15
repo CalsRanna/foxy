@@ -18,8 +18,11 @@
       </h3>
     </el-card>
     <el-tabs value="basic" style="margin-top: 16px">
-      <el-tab-pane label="基本信息" name="basic">
+      <el-tab-pane label="基本信息" name="basic" lazy>
         <spell-tab-pane></spell-tab-pane>
+      </el-tab-pane>
+      <el-tab-pane label="区域技能" name="spell_area" lazy>
+        <spell-area-tab-pane></spell-area-tab-pane>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -27,6 +30,7 @@
 
 <script>
 import SpellTabPane from "@/views/Spell/components/SpellTabPane";
+import SpellAreaTabPane from "@/views/Spell/components/SpellAreaTabPane";
 
 import { mapState } from "vuex";
 
@@ -42,6 +46,7 @@ export default {
   },
   components: {
     SpellTabPane,
+    SpellAreaTabPane,
   },
 };
 </script>
