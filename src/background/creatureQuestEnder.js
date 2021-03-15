@@ -16,7 +16,7 @@ const { knex } = require("../libs/mysql");
 ipcMain.on(SEARCH_CREATURE_QUEST_ENDERS, (event, payload) => {
   let queryBuilder = knex()
     .select(["cqe.*", "ct.name", "ctl.Name as localeName"])
-    .from("creature_queststarter as cqe")
+    .from("creature_questender as cqe")
     .leftJoin("creature_template as ct", function() {
       this.on("cqe.id", "=", "ct.entry");
     })
