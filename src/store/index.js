@@ -44,6 +44,7 @@ import smartScript from "./smartScript";
 import spell from "./spell";
 import spellArea from "./spellArea";
 import spellBonusData from "./spellBonusData";
+import spellCustomAttr from "./spellCustomAttr";
 import setting from "./setting";
 import factionTemplateSelector from "./factionTemplateSelector";
 import creatureSpellDataSelector from "./creatureSpellDataSelector";
@@ -108,6 +109,7 @@ export default new Vuex.Store({
     spell,
     spellArea,
     spellBonusData,
+    spellCustomAttr,
     setting,
     factionTemplateSelector,
     creatureSpellDataSelector,

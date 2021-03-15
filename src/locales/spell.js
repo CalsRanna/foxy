@@ -2076,7 +2076,8 @@ const attributesExG = [
     index: 3,
     flag: 8,
     name: "IS_CHEAT_SPELL",
-    comment: "Cannot cast if caster doesn't have UnitFlag2 & UNIT_FLAG2_ALLOW_CHEAT_SPELLS",
+    comment:
+      "Cannot cast if caster doesn't have UnitFlag2 & UNIT_FLAG2_ALLOW_CHEAT_SPELLS",
   },
   {
     index: 4,
@@ -2094,7 +2095,8 @@ const attributesExG = [
     index: 6,
     flag: 64,
     name: "未知",
-    comment: "Dark Surge, Surge of Light, Burning Breath triggers (boss spells).",
+    comment:
+      "Dark Surge, Surge of Light, Burning Breath triggers (boss spells).",
   },
   {
     index: 7,
@@ -2124,7 +2126,8 @@ const attributesExG = [
     index: 11,
     flag: 2048,
     name: "INTERRUPT_ONLY_NONPLAYER",
-    comment: "Only non-player casts interrupt, though Feral Charge - Bear has it.",
+    comment:
+      "Only non-player casts interrupt, though Feral Charge - Bear has it.",
   },
   {
     index: 12,
@@ -2148,7 +2151,8 @@ const attributesExG = [
     index: 15,
     flag: 32768,
     name: "未知",
-    comment: "Exorcism. Usable on players? 100% crit chance on undead and demons?",
+    comment:
+      "Exorcism. Usable on players? 100% crit chance on undead and demons?",
   },
   {
     index: 16,
@@ -2238,7 +2242,8 @@ const attributesExG = [
     index: 30,
     flag: 1073741824,
     name: "未知",
-    comment: "Burning Determination, Divine Sacrifice, Earth Shield, Prayer of Mending",
+    comment:
+      "Burning Determination, Divine Sacrifice, Earth Shield, Prayer of Mending",
   },
   {
     index: 31,
@@ -2538,12 +2543,7 @@ const schoolMasks = [
   },
 ];
 
-const defenseTypes = [
-  "无",
-  "魔法",
-  "近战",
-  "远程",
-];
+const defenseTypes = ["无", "魔法", "近战", "远程"];
 
 const dispelTypes = [
   "无",
@@ -2557,13 +2557,204 @@ const dispelTypes = [
   "SPELL, NPC ONLY",
   "激怒",
   "ZULGURUB TRINKETS",
-  "OLD, UNUSED"
+  "OLD, UNUSED",
 ];
 
-const preventionTypes = [
-  "无",
-  "沉默",
-  "平静",
+const preventionTypes = ["无", "沉默", "平静"];
+
+const customAttributes = [
+  {
+    index: 0,
+    flag: 1,
+    name: "ENCHANT_PROC",
+    comment: "",
+  },
+  {
+    index: 1,
+    flag: 2,
+    name: "CONE_BACK",
+    comment: "",
+  },
+  {
+    index: 2,
+    flag: 4,
+    name: "CONE_LINE",
+    comment: "",
+  },
+  {
+    index: 3,
+    flag: 8,
+    name: "SHARE_DAMAGE",
+    comment: "",
+  },
+  {
+    index: 4,
+    flag: 16,
+    name: "NO_INITIAL_THREAT",
+    comment: "",
+  },
+  {
+    index: 5,
+    flag: 32,
+    name: "AURA_CC",
+    comment: "",
+  },
+  {
+    index: 6,
+    flag: 64,
+    name: "DONT_BREAK_STEALTH",
+    comment: "",
+  },
+  {
+    index: 7,
+    flag: 128,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 8,
+    flag: 256,
+    name: "DIRECT_DAMAGE",
+    comment: "",
+  },
+  {
+    index: 9,
+    flag: 512,
+    name: "CHARGE",
+    comment: "",
+  },
+  {
+    index: 10,
+    flag: 1024,
+    name: "PICKPOCKET",
+    comment: "",
+  },
+  {
+    index: 11,
+    flag: 2048,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 12,
+    flag: 4096,
+    name: "NEGATIVE_EFF0",
+    comment: "",
+  },
+  {
+    index: 13,
+    flag: 8192,
+    name: "NEGATIVE_EFF1",
+    comment: "",
+  },
+  {
+    index: 14,
+    flag: 16384,
+    name: "NEGATIVE_EFF2",
+    comment: "",
+  },
+  {
+    index: 15,
+    flag: 32768,
+    name: "IGNORE_ARMOR",
+    comment: "",
+  },
+  {
+    index: 16,
+    flag: 65536,
+    name: "REQ_TARGET_FACING_CASTER",
+    comment: "",
+  },
+  {
+    index: 17,
+    flag: 131072,
+    name: "REQ_CASTER_BEHIND_TARGET",
+    comment: "",
+  },
+  {
+    index: 18,
+    flag: 262144,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 19,
+    flag: 524288,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 20,
+    flag: 1048576,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 21,
+    flag: 2097152,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 22,
+    flag: 4194304,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 23,
+    flag: 8388608,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 24,
+    flag: 16777216,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 25,
+    flag: 33554432,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 26,
+    flag: 67108864,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 27,
+    flag: 134217728,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 28,
+    flag: 268435456,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 29,
+    flag: 536870912,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 30,
+    flag: 1073741824,
+    name: "未知",
+    comment: "",
+  },
+  {
+    index: 31,
+    flag: 2147483648,
+    name: "未知",
+    comment: "",
+  },
 ];
 
 export {
@@ -2585,4 +2776,5 @@ export {
   defenseTypes,
   dispelTypes,
   preventionTypes,
+  customAttributes,
 };
