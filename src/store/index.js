@@ -42,6 +42,7 @@ import npcTextLocale from "./npcTextLocale";
 import gossipMenuOption from "./gossipMenuOption";
 import smartScript from "./smartScript";
 import spell from "./spell";
+import spellArea from "./spellArea";
 import setting from "./setting";
 import factionTemplateSelector from "./factionTemplateSelector";
 import creatureSpellDataSelector from "./creatureSpellDataSelector";
@@ -104,6 +105,7 @@ export default new Vuex.Store({
     gossipMenuOption,
     smartScript,
     spell,
+    spellArea,
     setting,
     factionTemplateSelector,
     creatureSpellDataSelector,
