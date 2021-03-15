@@ -45,6 +45,7 @@ import "./background/gossipMenuOption";
 import "./background/smartScript";
 import "./background/spell";
 import "./background/spellArea";
+import "./background/spellBonusData";
 import "./background/factionTemplateSelector";
 import "./background/creatureSpellDataSelector";
 import "./background/creatureModelInfoSelector";
