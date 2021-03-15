@@ -51,7 +51,7 @@
         <el-card style="margin-top: 16px">
           <el-row :gutter="24">
             <el-col :span="6">
-              <el-form-item label="技能">
+              <el-form-item label="编号">
                 <el-input-number
                   v-model="spellArea.spell"
                   controls-position="right"
