@@ -29,9 +29,12 @@ ipcMain.on(SEARCH_QUEST_TEMPLATES, (event, payload) => {
     ])
     .from("quest_template as qt")
     .leftJoin("quest_template_locale as qtl", function() {
-      this.on("qt.ID", "=", "qtl.ID");
+      this.on("qt.ID", "=", "qtl.ID").andOn(
+        "qtl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     });
-  queryBuilder = queryBuilder.where('qtl.locale', 'zhCN');
   if (payload.id) {
     queryBuilder = queryBuilder.where("qt.ID", "like", `%${payload.id}%`);
   }
@@ -64,9 +67,12 @@ ipcMain.on(COUNT_QUEST_TEMPLATES, (event, payload) => {
     .count("* as total")
     .from("quest_template as qt")
     .leftJoin("quest_template_locale as qtl", function() {
-      this.on("qt.ID", "=", "qtl.ID")
+      this.on("qt.ID", "=", "qtl.ID").andOn(
+        "qtl.locale",
+        "=",
+        knex().raw("?", "zhCN")
+      );
     });
-  queryBuilder = queryBuilder.where('qtl.locale', 'zhCN');
   if (payload.id) {
     queryBuilder = queryBuilder.where("qt.ID", "like", `%${payload.id}%`);
   }
