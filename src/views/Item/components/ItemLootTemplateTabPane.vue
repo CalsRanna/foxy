@@ -59,6 +59,10 @@
           ></el-table-column>
         </el-table>
       </el-card>
+      <reference-loot-template-cards
+        :entries="referenceEntries"
+        v-if="referenceEntries.length > 0"
+      ></reference-loot-template-cards>
     </div>
     <div v-show="creating">
       <el-form
@@ -175,6 +179,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
+import ReferenceLootTemplateCards from "@/components/ReferenceLootTemplateCards.vue";
 
 export default {
   data() {
@@ -197,6 +202,15 @@ export default {
         Entry: this.currentRow != undefined ? this.currentRow.Entry : undefined,
         Item: this.currentRow != undefined ? this.currentRow.Item : undefined,
       };
+    },
+    referenceEntries() {
+      let entries = [];
+      for (let itemLootTemplate of this.itemLootTemplates) {
+        if (itemLootTemplate.Reference != 0) {
+          entries.push(itemLootTemplate.Reference);
+        }
+      }
+      return entries;
     },
   },
   methods: {
@@ -330,6 +344,6 @@ export default {
   mounted() {
     this.init();
   },
-  components: { ItemTemplateSelector },
+  components: { ItemTemplateSelector, ReferenceLootTemplateCards },
 };
 </script>
