@@ -1,52 +1,6 @@
 <template>
   <div>
     <el-divider>关联掉落</el-divider>
-    <el-card style="margin-top: 16px">
-      <el-table :data="referenceLootTemplates">
-        <el-table-column prop="displayid"></el-table-column>
-        <el-table-column label="名称" sortable>
-          <span slot-scope="scope">
-            <template v-if="scope.row.Reference == 0">
-              <template v-if="scope.row.localeName !== null">
-                {{ scope.row.localeName }}
-              </template>
-              <template v-else>{{ scope.row.name }}</template>
-            </template>
-            <template v-else>
-              <el-tag>关联掉落</el-tag>
-            </template>
-          </span>
-        </el-table-column>
-        <el-table-column
-          prop="Reference"
-          label="关联"
-          sortable
-        ></el-table-column>
-        <el-table-column prop="Chance" label="几率" sortable>
-          <span slot-scope="scope">
-            {{ `${scope.row.Chance}%` }}
-          </span>
-        </el-table-column>
-        <el-table-column prop="QuestRequired" label="需要任务" sortable>
-          <span slot-scope="scope">
-            <el-tag type="success" v-if="scope.row.QuestRequired">
-              需要
-            </el-tag>
-            <el-tag v-else>不需要</el-tag>
-          </span>
-        </el-table-column>
-        <el-table-column
-          prop="MinCount"
-          label="最小数量"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="MaxCount"
-          label="最大数量"
-          sortable
-        ></el-table-column>
-      </el-table>
-    </el-card>
     <el-card
       style="margin-top: 16px"
       v-for="referenceLootTemplates in groupedReferenceLootTemplates"
@@ -120,6 +74,11 @@ export default {
   computed: {
     ...mapState("referenceLootTemplate", ["referenceLootTemplates"]),
   },
+  watch: {
+    entries: function() {
+      (this.timer = setTimeout(this.init(), 1000)), clearTimeout(this.timer);
+    },
+  },
   methods: {
     ...mapActions("referenceLootTemplate", [
       "searchReferenceLootTemplates",
@@ -158,14 +117,13 @@ export default {
         payload.entries = checkedEntries;
       }
       await this.searchReferenceLootTemplates(payload);
-      console.log(this.entries);
-      console.log(checkedEntries);
-      console.log(this.referenceLootTemplates);
       this.groupBy();
     },
   },
   beforeMount() {
-    this.init();
+    if (this.referenceLootTemplates.length == 0) {
+      this.init();
+    }
   },
 };
 </script>
