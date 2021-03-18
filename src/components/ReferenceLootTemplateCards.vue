@@ -121,9 +121,7 @@ export default {
     },
   },
   beforeMount() {
-    if (this.referenceLootTemplates.length == 0) {
-      this.init();
-    }
+    this.init();
   },
 };
 </script>
