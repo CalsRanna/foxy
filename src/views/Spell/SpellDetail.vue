@@ -30,6 +30,9 @@
       <el-tab-pane label="区域技能" name="spell_area" lazy>
         <spell-area-tab-pane></spell-area-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="技能组" name="spell_group" lazy>
+        <spell-group-tab-pane></spell-group-tab-pane>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -39,6 +42,7 @@ import SpellTabPane from "@/views/Spell/components/SpellTabPane";
 import SpellBonusDataTabPane from "@/views/Spell/components/SpellBonusDataTabPane";
 import SpellCustomAttrTabPane from "@/views/Spell/components/SpellCustomAttrTabPane";
 import SpellAreaTabPane from "@/views/Spell/components/SpellAreaTabPane";
+import SpellGroupTabPane from "@/views/Spell/components/SpellGroupTabPane";
 
 import { mapState } from "vuex";
 
@@ -57,6 +61,7 @@ export default {
     SpellBonusDataTabPane,
     SpellCustomAttrTabPane,
     SpellAreaTabPane,
+    SpellGroupTabPane,
   },
 };
 </script>
