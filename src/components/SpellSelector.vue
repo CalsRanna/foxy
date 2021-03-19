@@ -57,6 +57,12 @@
         <el-table-column prop="ID" label="ID" width="80px"> </el-table-column>
         <el-table-column prop="Name_Lang_zhCN" label="名称"> </el-table-column>
         <el-table-column prop="Description_Lang_zhCN" label="描述">
+          <template slot-scope="scope">
+            <spell-description
+              :spell="scope.row"
+              field="Description_Lang_zhCN"
+            ></spell-description>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -80,6 +86,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import SpellDescription from "@/components/SpellDescription";
 
 export default {
   data() {
@@ -169,6 +176,9 @@ export default {
   mounted() {
     this.spell = this.value;
     this.ID = this.value;
+  },
+  components: {
+    SpellDescription,
   },
 };
 </script>
