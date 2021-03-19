@@ -21,6 +21,16 @@
             label="标识"
             sortable
           ></el-table-column>
+          <el-table-column
+            prop="stack_rule"
+            label="光环叠加规则"
+            sortable
+          ></el-table-column>
+          <el-table-column
+            prop="description"
+            label="描述"
+            sortable
+          ></el-table-column>
         </el-table>
       </el-card>
     </div>
