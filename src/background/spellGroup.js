@@ -15,8 +15,9 @@ const { knex } = require("../libs/mysql");
 
 ipcMain.on(SEARCH_SPELL_GROUPS, (event, payload) => {
   let queryBuilder = knex()
-    .select()
-    .from("spell_group")
+    .select(["sg.*", "sgsr.stack_rule", "sgsr.description"])
+    .from("spell_group as sg")
+    .leftJoin("spell_group_stack_rules as sgsr", "sg.id", "sgsr.group_id")
     .where(payload);
 
   queryBuilder
