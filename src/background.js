@@ -48,6 +48,7 @@ import "./background/spellArea";
 import "./background/spellBonusData";
 import "./background/spellCustomAttr";
 import "./background/spellGroup";
+import "./background/spellLinkedSpell";
 import "./background/referenceLootTemplate";
 import "./background/factionTemplateSelector";
 import "./background/creatureSpellDataSelector";
