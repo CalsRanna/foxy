@@ -21,7 +21,7 @@ export default {
     ...mapState("global", { config: "dbcConfig" }),
   },
   methods: {
-    ...mapActions("global", ["storeDbcConfig"]),
+    ...mapActions("global", ["storeDbcConfig", "initDbcConnection"]),
     selectPath() {
       const { ipcRenderer } = window.require("electron");
 
@@ -39,6 +39,7 @@ export default {
         });
       } else {
         this.storeDbcConfig(this.config);
+        this.initDbcConnection(this.config);
         this.$notify({
           title: "保存成功",
           position: "bottom-left",
