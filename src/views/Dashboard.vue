@@ -112,6 +112,18 @@
           <Chart :labels="labels" :data="data"></Chart>
         </el-card>
         <el-card style="margin-top: 16px; font-size: 14px">
+          <ul style="list-style: none; padding: 0">
+            <li>核心版本：{{ coreVersion.core_version }}</li>
+            <li style="margin-top: 8px;">
+              核心修正版本：{{ coreVersion.core_revision }}
+            </li>
+            <li style="margin-top: 8px;">
+              数据库版本：{{ coreVersion.db_version }}
+            </li>
+            <li style="margin-top: 8px;">软件版本：{{ version }}</li>
+          </ul>
+        </el-card>
+        <el-card style="margin-top: 16px; font-size: 14px">
           <div slot="header">
             <span>Foxy</span>
           </div>
@@ -179,6 +191,9 @@ export default {
       latestVersion: "latestVersion",
       downloadUrl: "downloadUrl",
     }),
+    ...mapState("version", {
+      coreVersion: "version",
+    }),
     ...mapState("creatureTemplate", {
       quantityOfCreatureTemplate: "pagination",
     }),
@@ -203,6 +218,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions("version", ["findVersion"]),
     ...mapActions("creatureTemplate", ["countCreatureTemplates"]),
     ...mapActions("itemTemplate", ["countItemTemplates"]),
     ...mapActions("gameObjectTemplate", ["countGameObjectTemplates"]),
@@ -226,6 +242,7 @@ export default {
           this.countSmartScripts({}),
           this.countSpells({}),
         ]);
+        await this.findVersion();
         this.loading = false;
       } catch (error) {
         this.loading = false;
