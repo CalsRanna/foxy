@@ -66,6 +66,7 @@ import "./background/itemRandomPropertiesSelector";
 import "./background/itemRandomSuffixSelector";
 import "./background/itemDisplayInfoSelector";
 import "./background/questTemplateSelector";
+import "./background/version";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 

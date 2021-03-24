@@ -65,6 +65,7 @@ import itemRandomPropertiesSelector from "./itemRandomPropertiesSelector";
 import itemRandomSuffixSelector from "./itemRandomSuffixSelector";
 import itemDisplayInfoSelector from "./itemDisplayInfoSelector";
 import questTemplateSelector from "./questTemplateSelector";
+import version from "./version";
 
 Vue.use(Vuex);
 
@@ -134,5 +135,6 @@ export default new Vuex.Store({
     itemRandomSuffixSelector: itemRandomSuffixSelector,
     itemDisplayInfoSelector: itemDisplayInfoSelector,
     questTemplateSelector: questTemplateSelector,
+    version,
   },
 });
