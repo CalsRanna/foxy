@@ -9,7 +9,7 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">设置</h3>
     </el-card>
-    <el-row :gutter="24" style="margin-top: 16px">
+    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="4">
         <el-menu
           :default-active="active"

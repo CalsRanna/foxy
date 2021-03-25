@@ -5,7 +5,7 @@
     label-width="120px"
   >
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="ID">
             <el-input-number

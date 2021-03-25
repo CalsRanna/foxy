@@ -1,7 +1,7 @@
 <template>
   <el-form :model="smartScript" label-position="right" label-width="120px">
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="entryorguid">
             <el-input-number
@@ -65,7 +65,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="事件">
             <el-select
@@ -155,7 +155,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="动作">
             <el-select
@@ -173,7 +173,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="参数1">
             <el-input-number
@@ -222,7 +222,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="目标">
             <el-select
@@ -240,7 +240,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="参数1">
             <el-input-number

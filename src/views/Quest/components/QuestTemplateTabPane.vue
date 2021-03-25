@@ -1,7 +1,7 @@
 <template>
   <el-form :model="questTemplate" label-position="right" label-width="120px">
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="编号">
             <el-input-number
@@ -137,7 +137,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="POIContinent">
             <el-input
@@ -173,7 +173,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="任务详情">
             <quest-template-localizer
@@ -241,7 +241,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="需要物品">
             <item-template-selector
@@ -347,7 +347,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="RequiredFactionId1">
             <el-input
@@ -447,7 +447,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="ItemDrop1">
             <item-template-selector
@@ -519,7 +519,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="奖励标题">
             <el-input
@@ -617,7 +617,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="奖励物品">
             <item-template-selector
@@ -689,7 +689,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="可选奖励物品">
             <item-template-selector
@@ -795,7 +795,7 @@
       </el-row>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="RewardFactionID1">
             <el-input
@@ -822,7 +822,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="RewardFactionID2">
             <el-input
@@ -849,7 +849,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="RewardFactionID3">
             <el-input
@@ -876,7 +876,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="RewardFactionID4">
             <el-input
@@ -903,7 +903,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="24">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="RewardFactionID5">
             <el-input
