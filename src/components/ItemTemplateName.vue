@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="24">
+  <el-row :gutter="16">
     <!-- 需要找个好方法解决索引图标耗时过长的问题 -->
     <!-- <el-col :span="4">
       <el-image

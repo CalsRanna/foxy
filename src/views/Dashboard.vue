@@ -24,9 +24,9 @@
         </span>
       </span>
     </el-alert>
-    <el-row :gutter="24" style="margin-top: 16px" :loading="loading">
+    <el-row :gutter="16" style="margin-top: 16px" :loading="loading">
       <el-col :span="16">
-        <el-row>
+        <el-row :gutter="16">
           <el-col :span="8">
             <el-card shadow="hover">
               <p class="summary-title">
@@ -65,6 +65,8 @@
               </p>
             </el-card>
           </el-col>
+        </el-row>
+        <el-row :gutter="16" style="margin-top: 16px">
           <el-col :span="8">
             <el-card shadow="hover">
               <p class="summary-title">任务模板<span>Quest Template</span></p>
@@ -97,6 +99,8 @@
               </p>
             </el-card>
           </el-col>
+        </el-row>
+        <el-row :gutter="16" style="margin-top: 16px">
           <el-col :span="8">
             <el-card shadow="hover">
               <p class="summary-title">技能<span>Spell</span></p>
