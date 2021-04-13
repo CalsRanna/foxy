@@ -70,6 +70,8 @@ import "./background/version";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
+const path = require("path");
+
 let win;
 
 protocol.registerSchemesAsPrivileged([
@@ -85,6 +87,8 @@ function createWindow() {
     frame: true,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
