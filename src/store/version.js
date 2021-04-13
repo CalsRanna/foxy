@@ -1,8 +1,6 @@
-const ipcRenderer = window.require("electron").ipcRenderer;
+const ipcRenderer = window.ipcRenderer;
 
-import {
-  FIND_VERSION
-} from "../constants";
+import { FIND_VERSION } from "../constants";
 
 export default {
   namespaced: true,

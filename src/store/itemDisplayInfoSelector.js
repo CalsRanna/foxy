@@ -1,4 +1,4 @@
-const ipcRenderer = window.require("electron").ipcRenderer;
+const ipcRenderer = window.ipcRenderer;
 
 import {
   SEARCH_ITEM_DISPLAY_INFOS_FOR_SELECTOR,

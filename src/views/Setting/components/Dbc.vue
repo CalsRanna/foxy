@@ -23,7 +23,7 @@ export default {
   methods: {
     ...mapActions("global", ["storeDbcConfig", "initDbcConnection"]),
     selectPath() {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.ipcRenderer;
 
       ipcRenderer.send("SELECT_DBC_PATH");
       ipcRenderer.on("SELECT_DBC_PATH_REPLY", (event, path) => {

@@ -1,4 +1,4 @@
-const ipcRenderer = window.require("electron").ipcRenderer;
+const ipcRenderer = window.ipcRenderer;
 
 import {
   STORE_CREATURE_TEMPLATE_ADDON,

@@ -65,7 +65,7 @@
 </template>
 
 <script>
-const ipcRenderer = window.require("electron").ipcRenderer;
+const ipcRenderer = window.ipcRenderer;
 
 import { mapState, mapActions } from "vuex";
 import {
