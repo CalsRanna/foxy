@@ -1,4 +1,4 @@
-const ipcRenderer = window.require("electron").ipcRenderer;
+const ipcRenderer = window.ipcRenderer;
 
 import {
   SEARCH_SPELL_DURATIONS_FOR_SELECTOR,
@@ -20,10 +20,13 @@ export default {
     searchSpellDurationsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_DURATIONS_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_SPELL_DURATIONS_FOR_SELECTOR, (event, response) => {
-          commit(SEARCH_SPELL_DURATIONS_FOR_SELECTOR, response);
-          resolve();
-        });
+        ipcRenderer.on(
+          SEARCH_SPELL_DURATIONS_FOR_SELECTOR,
+          (event, response) => {
+            commit(SEARCH_SPELL_DURATIONS_FOR_SELECTOR, response);
+            resolve();
+          }
+        );
         ipcRenderer.on(
           `${SEARCH_SPELL_DURATIONS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
@@ -35,10 +38,13 @@ export default {
     countSpellDurationsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SPELL_DURATIONS_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_SPELL_DURATIONS_FOR_SELECTOR, (event, response) => {
-          commit(COUNT_SPELL_DURATIONS_FOR_SELECTOR, response);
-          resolve();
-        });
+        ipcRenderer.on(
+          COUNT_SPELL_DURATIONS_FOR_SELECTOR,
+          (event, response) => {
+            commit(COUNT_SPELL_DURATIONS_FOR_SELECTOR, response);
+            resolve();
+          }
+        );
         ipcRenderer.on(
           `${COUNT_SPELL_DURATIONS_FOR_SELECTOR}_REJECT`,
           (event, error) => {

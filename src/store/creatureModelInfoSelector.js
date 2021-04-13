@@ -1,4 +1,4 @@
-const ipcRenderer = window.require("electron").ipcRenderer;
+const ipcRenderer = window.ipcRenderer;
 
 import {
   SEARCH_CREATURE_MODEL_INFOS_FOR_SELECTOR,

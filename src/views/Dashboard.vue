@@ -231,7 +231,7 @@ export default {
     ...mapActions("smartScript", ["countSmartScripts"]),
     ...mapActions("spell", ["countSpells"]),
     openBrowser(url) {
-      const { shell } = window.require("electron");
+      const shell = window.shell;
       shell.openExternal(url);
     },
     async init() {

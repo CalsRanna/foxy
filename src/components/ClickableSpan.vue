@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     openBrowser(url) {
-      const { shell } = window.require("electron");
+      const shell = window.shell;
       shell.openExternal(url);
     },
   },
