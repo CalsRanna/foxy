@@ -6,6 +6,7 @@ import dbc from "./dbc";
 import creatureTemplate from "./creatureTemplate";
 import creatureTemplateLocale from "./creatureTemplateLocale";
 import creatureTemplateAddon from "./creatureTemplateAddon";
+import creatureTemplateResistance from "./creatureTemplateResistance";
 import creatureOnKillReputation from "./creatureOnKillReputation";
 import creatureEquipTemplate from "./creatureEquipTemplate";
 import creatureQuestItem from "./creatureQuestItem";
@@ -77,6 +78,7 @@ export default new Vuex.Store({
     creatureTemplate,
     creatureTemplateLocale,
     creatureTemplateAddon,
+    creatureTemplateResistance,
     creatureOnKillReputation,
     creatureEquipTemplate,
     creatureQuestItem,
