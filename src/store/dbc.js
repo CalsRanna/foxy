@@ -18,6 +18,7 @@ import {
   SEARCH_DBC_ITEM_RANDOM_PROPERTITIES,
   SEARCH_DBC_ITEM_RANDOM_SUFFIXES,
   EXPORT_ITEM_DBC,
+  EXPORT_SCALING_STAT_DISTRIBUTION_DBC,
 } from "../constants";
 
 export default {
@@ -291,6 +292,20 @@ export default {
         ipcRenderer.on(`${EXPORT_SPELL_DBC}_REJECT`, (error) => {
           reject(error);
         });
+      });
+    },
+    exportScalingStatDistributionDbc() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(EXPORT_SCALING_STAT_DISTRIBUTION_DBC);
+        ipcRenderer.on(EXPORT_SCALING_STAT_DISTRIBUTION_DBC, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_REJECT`,
+          (error) => {
+            reject(error);
+          }
+        );
       });
     },
   },
