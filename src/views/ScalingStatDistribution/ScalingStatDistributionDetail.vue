@@ -5,6 +5,9 @@
         <el-breadcrumb-item :to="{ path: '/dashboard' }">
           首页
         </el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/advance' }">
+          高级
+        </el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/scaling-stat-distribution' }">
           缩放属性分配管理
         </el-breadcrumb-item>

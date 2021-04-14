@@ -5,6 +5,9 @@
         <el-breadcrumb-item :to="{ path: '/dashboard' }">
           首页
         </el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/advance' }">
+          高级
+        </el-breadcrumb-item>
         <el-breadcrumb-item>缩放属性分配管理</el-breadcrumb-item>
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">缩放属性分配列表</h3>
