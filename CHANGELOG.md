@@ -1,3 +1,34 @@
+## [0.1.4](https://e.coding.net/foxcore/foxcorefoxcore/foxy/compare/0.1.3...0.1.4) (2021-04-14)
+
+
+### Bug Fixes
+
+* **creature:** fix creature quest ender don't display ([8a27494](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8a2749475e2cb50da4f65a6cbcc87c0ee8d64c76))
+* **dbc:** fix dbc config while first set ([8b77a26](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8b77a26c704d815af492f7db0fa861d07c822414))
+* **quest:** fix used time is too long when search quest ([44f793c](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/44f793c5c784d395b10b129bded39eaecadfd096))
+* **quest_template:** fix quest template not display when has no znCN locale ([cc409fd](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cc409fd60cc38846497fe1bc3ef9c6ccef0b6088))
+* **reference_loot_template:** fix render error ([9b9349d](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/9b9349d748b3c58bc6f7374d842641d09cef12ae))
+* **scaling stat distribution:** add breadcrumb of advance ([9689065](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/96890652bde32d3f9c034c68d6335cd2850fae84))
+* **spell selector:** fix description not display well ([63b4f2c](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/63b4f2c873eda5e11738d0ba8f5da7cd520757c7))
+
+
+### Features
+
+* **advance:** add advance module ([5db5bc5](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5db5bc58a3c1ca2f1b70e68c573750b3dfafdb8d))
+* **component:** add reference loot template cards ([b37512f](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/b37512fb1391e6fe4dbaeb391e5431dee88b0a7a))
+* **component:** add version card to dashboard ([34fc07b](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/34fc07bd3a202a58622f633caa7992ab18d21d3a))
+* **scaling stat distribution:** add scaling stat distribution module ([6b29d69](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/6b29d69e4cc867418bea7bbe3d9c8c0ce4e90a6d))
+* **spell group:** add spell group tab pane ([e3e98cb](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/e3e98cb4d116c5d0b5465e946529c06385787759))
+* **spell group:** add stack_rule and description when display spell groups ([0e5efa9](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/0e5efa99777c3298d73f1b5645c0ed57a231084d))
+* **spell linked spell:** add spell linked spell tab pane ([cdffda4](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cdffda40096ac97c9d3383fd9388916827eed711))
+* **spell loot template:** add spell loot template tab pane ([5377bf9](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5377bf979bbd7ba0b89d0dcc1337d100cba5b2d6))
+* **spell_area:** add spell area tab pane ([5150532](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5150532208085136c33a4a1ee6f74c1cd7a67610))
+* **spell_bonus_data:** add spell bonus data tab pane ([f6cb1df](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/f6cb1dfc0a345e064e959d03eb04c475fd68083f))
+* **spell_custom_attr:** add spell custom attr tab pane ([ec4c6ee](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/ec4c6ee0fd7847594103b76ddbeb54049cac3a51))
+* **views:** add reference loot template cards to loot template tab panes ([a72e60c](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/a72e60c4e78a8955f9dad35b06c45e84c5058be3))
+
+
+
 ## [0.1.3](https://github.com/CalsRanna/foxy/compare/0.1.2-alpha...0.1.3) (2021-03-02)
 
 ### feat
