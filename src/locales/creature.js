@@ -1302,6 +1302,16 @@ const dmgSchools = [
   },
 ];
 
+const localeResistanceSchools = [
+  "",
+  "神圣抗性",
+  "火焰抗性",
+  "自然抗性",
+  "冰霜抗性",
+  "暗影抗性",
+  "奥术抗性",
+];
+
 const trainerTypeTooltip = `
   If the NPC is a trainer (has the trainer flag), then this field controls what kind of trainer it is.
   Both this field and the related field must be filled in for a trainer to work correctly.
@@ -1538,6 +1548,7 @@ export {
   petSpellDataIdTooltip,
   vehicleIdTooltip,
   dmgSchools,
+  localeResistanceSchools,
   trainerTypeTooltip,
   trainerTypes,
   trainerSpellTooltip,

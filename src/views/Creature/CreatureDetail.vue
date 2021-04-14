@@ -24,6 +24,9 @@
       <el-tab-pane label="模版补充" name="creature_template_addon" lazy>
         <creature-template-addon-tab-pane></creature-template-addon-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="抗性" name="creature_template_resistance" lazy>
+        <creature-template-resistance-tab-pane></creature-template-resistance-tab-pane>
+      </el-tab-pane>
       <el-tab-pane label="击杀声望" name="creature_onkill_reputation" lazy>
         <creature-on-kill-reputation-tab-pane></creature-on-kill-reputation-tab-pane>
       </el-tab-pane>
@@ -90,6 +93,7 @@ import { mapState } from "vuex";
 
 import CreatureTemplateTabPane from "@/views/Creature/components/CreatureTemplateTabPane";
 import CreatureTemplateAddonTabPane from "@/views/Creature/components/CreatureTemplateAddonTabPane";
+import CreatureTemplateResistanceTabPane from "@/views/Creature/components/CreatureTemplateResistanceTabPane";
 import CreatureOnKillReputationTabPane from "@/views/Creature/components/CreatureOnKillReputationTabPane";
 import CreatureEquipTemplateTabPane from "@/views/Creature/components/CreatureEquipTemplateTabPane";
 import CreatureQuestItemTabPane from "@/views/Creature/components/CreatureQuestItemTabPane";
@@ -128,11 +132,12 @@ export default {
       } else {
         return this.creatureTemplate.subname;
       }
-    }
+    },
   },
   components: {
     CreatureTemplateTabPane,
     CreatureTemplateAddonTabPane,
+    CreatureTemplateResistanceTabPane,
     CreatureOnKillReputationTabPane,
     CreatureEquipTemplateTabPane,
     CreatureQuestItemTabPane,
@@ -140,7 +145,7 @@ export default {
     NpcTrainerTabPane,
     CreatureLootTemplateTabPane,
     PickpocketingLootTemplateTabPane,
-    SkinningLootTemplateTabPane
-  }
+    SkinningLootTemplateTabPane,
+  },
 };
 </script>

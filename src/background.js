@@ -8,6 +8,7 @@ import "./background/database";
 import "./background/creatureTemplate";
 import "./background/creatureTemplateLocale";
 import "./background/creatureTemplateAddon";
+import "./background/creatureTemplateResistance";
 import "./background/creatureOnKillReputation";
 import "./background/creatureEquipTemplate";
 import "./background/creatureQuestItem";
