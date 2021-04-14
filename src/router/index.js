@@ -69,6 +69,7 @@ const routes = [
     component: () => import("@/views/Spell/SpellDetail"),
   },
   { path: "/spell/:id", component: () => import("@/views/Spell/SpellDetail") },
+  { path: "/advance", component: () => import("@/views/Advance") },
   {
     path: "/setting",
     component: () => import("@/views/Setting/Setting"),
