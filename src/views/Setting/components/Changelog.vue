@@ -2,6 +2,154 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
+        <h2>0.1.4 <small>2021-04-14</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>creature:</strong> fix creature quest ender don't display
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/8a2749475e2cb50da4f65a6cbcc87c0ee8d64c76"
+            text="(8a27494)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>dbc:</strong> fix dbc config while first set
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/8b77a26c704d815af492f7db0fa861d07c822414"
+            text="(8b77a26)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>quest:</strong> fix used time is too long when search quest
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/44f793c5c784d395b10b129bded39eaecadfd096"
+            text="(44f793c)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>quest_template:</strong> fix quest template not display when
+          has no znCN locale
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/cc409fd60cc38846497fe1bc3ef9c6ccef0b6088"
+            text="(cc409fd)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>reference_loot_template:</strong> fix render error
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/9b9349d748b3c58bc6f7374d842641d09cef12ae"
+            text="(9b9349d)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>scaling stat distribution:</strong> add breadcrumb of advance
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/96890652bde32d3f9c034c68d6335cd2850fae84"
+            text="(9689065)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell selector:</strong> fix description not display well
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/63b4f2c873eda5e11738d0ba8f5da7cd520757c7"
+            text="(63b4f2c)"
+          ></clickable-span>
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>advance:</strong> add advance module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/5db5bc58a3c1ca2f1b70e68c573750b3dfafdb8d"
+            text="(5db5bc5)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>component:</strong> add reference loot template cards
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/b37512fb1391e6fe4dbaeb391e5431dee88b0a7a"
+            text="(b37512f)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>component:</strong> add version card to dashboard
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/34fc07bd3a202a58622f633caa7992ab18d21d3a"
+            text="(34fc07b)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>scaling stat distribution:</strong> add scaling stat
+          distribution module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/6b29d69e4cc867418bea7bbe3d9c8c0ce4e90a6d"
+            text="(6b29d69)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell group:</strong> add spell group tab pane
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/e3e98cb4d116c5d0b5465e946529c06385787759"
+            text="(e3e98cb)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell group:</strong> add stack_rule and description when
+          display spell groups
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/0e5efa99777c3298d73f1b5645c0ed57a231084d"
+            text="(0e5efa9)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell linked spell:</strong> add spell linked spell tab pane
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/cdffda40096ac97c9d3383fd9388916827eed711"
+            text="(cdffda4)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell loot template:</strong> add spell loot template tab pane
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/5377bf979bbd7ba0b89d0dcc1337d100cba5b2d6"
+            text="(5377bf9)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell_area:</strong> add spell area tab pane
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/5150532208085136c33a4a1ee6f74c1cd7a67610"
+            text="(5150532)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell_bonus_data:</strong> add spell bonus data tab pane
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/f6cb1dfc0a345e064e959d03eb04c475fd68083f"
+            text="(f6cb1df)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell_custom_attr:</strong> add spell custom attr tab pane
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/ec4c6ee0fd7847594103b76ddbeb54049cac3a51"
+            text="(ec4c6ee)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>views:</strong> add reference loot template cards to loot
+          template tab panes
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commits/a72e60c4e78a8955f9dad35b06c45e84c5058be3"
+            text="(a72e60c)"
+          ></clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.1.3 <small>2021-03-02</small></h2>
       </div>
       <h3>feat</h3>
