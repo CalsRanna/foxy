@@ -93,6 +93,21 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/scaling-stat-distribution",
+    component: () =>
+      import("@/views/ScalingStatDistribution/ScalingStatDistributionTable"),
+  },
+  {
+    path: "/scaling-stat-distribution/create",
+    component: () =>
+      import("@/views/ScalingStatDistribution/ScalingStatDistributionDetail"),
+  },
+  {
+    path: "/scaling-stat-distribution/:id",
+    component: () =>
+      import("@/views/ScalingStatDistribution/ScalingStatDistributionDetail"),
+  },
 ];
 
 const router = new VueRouter({

@@ -20,6 +20,7 @@ import {
   SEARCH_DBC_ITEM_RANDOM_SUFFIXES,
   RELOAD_APP,
   EXPORT_ITEM_DBC,
+  EXPORT_SCALING_STAT_DISTRIBUTION_DBC,
   GLOBAL_MESSAGE_BOX,
 } from "../constants";
 
@@ -600,6 +601,36 @@ ipcMain.on(EXPORT_SPELL_DBC, (event) => {
     })
     .catch((error) => {
       event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(EXPORT_SCALING_STAT_DISTRIBUTION_DBC, (event) => {
+  let queryBuilder = knex()
+    .select()
+    .from("foxy.dbc_scaling_stat_distribution");
+
+  event.reply(
+    `${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_PROGRESS`,
+    "Searching database"
+  );
+  queryBuilder
+    .then((rows) => {
+      event.reply(
+        `${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_PROGRESS`,
+        `Writing ${path}/ScalingStatDistribution.dbc`
+      );
+      DBC.write(`${path}/ScalingStatDistribution.dbc`, rows)
+        .then(() => {
+          event.reply(EXPORT_SCALING_STAT_DISTRIBUTION_DBC);
+        })
+        .catch((error) => {
+          event.reply(`${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_REJECT`, error);
+          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+        });
+    })
+    .catch((error) => {
+      event.reply(`${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

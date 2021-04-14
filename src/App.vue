@@ -118,6 +118,7 @@ export default {
       "searchDbcItemRandomSuffixes",
       "exportItemDbc",
       "exportSpellDbc",
+      "exportScalingStatDistributionDbc",
     ]),
     ...mapActions("global", [
       "findLatestVersion",
@@ -297,18 +298,42 @@ export default {
         .then(() => {
           this.exportSpellDbc()
             .then(() => {
-              clearInterval(timer);
-              this.loadingText = "导出成功";
-              setTimeout(() => {
-                this.visible = false;
-                this.modal = false;
-              }, 500);
-              this.$notify({
-                title: `导出成功，用时${this.seconds}秒`,
-                position: "bottom-left",
-                type: "success",
-              });
-              this.seconds = 0;
+              this.exportScalingStatDistributionDbc()
+                .then(() => {
+                  clearInterval(timer);
+                  this.loadingText = "导出成功";
+                  setTimeout(() => {
+                    this.visible = false;
+                    this.modal = false;
+                  }, 500);
+                  this.$notify({
+                    title: `导出成功，用时${this.seconds}秒`,
+                    position: "bottom-left",
+                    type: "success",
+                  });
+                  this.seconds = 0;
+                })
+                .catch((error) => {
+                  clearInterval(timer);
+                  this.loadingText = "导出失败";
+                  setTimeout(() => {
+                    this.visible = false;
+                    this.modal = false;
+                    this.$alert(
+                      error.message.replace(
+                        /at /g,
+                        "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "
+                      ),
+                      error.title,
+                      {
+                        type: "error",
+                        dangerouslyUseHTMLString: true,
+                        customClass: "wider-message-box",
+                      }
+                    );
+                  }, 500);
+                  this.seconds = 0;
+                });
             })
             .catch((error) => {
               clearInterval(timer);

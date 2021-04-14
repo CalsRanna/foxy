@@ -14,7 +14,7 @@
         <el-card
           shadow="hover"
           class="clickable-card"
-          @click.native="() => navigate('scaling-stat-distribution')"
+          @click.native="() => navigate('/scaling-stat-distribution')"
         >
           <p class="summary-title">
             缩放属性分配<span>Scaling Stat Distribution</span>
