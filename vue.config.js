@@ -5,7 +5,6 @@ module.exports = {
     },
   },
   pluginOptions: {
-    preload: "src/preload.js",
     electronBuilder: {
       builderOptions: {
         appId: "xyz.calsranna.foxy",
@@ -22,6 +21,7 @@ module.exports = {
           ],
         },
       },
+      preload: "src/preload.js",
       externals: ["knex"],
     },
   },
