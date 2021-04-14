@@ -9,6 +9,7 @@ import "./background/creatureTemplate";
 import "./background/creatureTemplateLocale";
 import "./background/creatureTemplateAddon";
 import "./background/creatureTemplateResistance";
+import "./background/creatureTemplateSpell";
 import "./background/creatureOnKillReputation";
 import "./background/creatureEquipTemplate";
 import "./background/creatureQuestItem";

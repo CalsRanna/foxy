@@ -7,6 +7,7 @@ import creatureTemplate from "./creatureTemplate";
 import creatureTemplateLocale from "./creatureTemplateLocale";
 import creatureTemplateAddon from "./creatureTemplateAddon";
 import creatureTemplateResistance from "./creatureTemplateResistance";
+import creatureTemplateSpell from "./creatureTemplateSpell";
 import creatureOnKillReputation from "./creatureOnKillReputation";
 import creatureEquipTemplate from "./creatureEquipTemplate";
 import creatureQuestItem from "./creatureQuestItem";
@@ -79,6 +80,7 @@ export default new Vuex.Store({
     creatureTemplateLocale,
     creatureTemplateAddon,
     creatureTemplateResistance,
+    creatureTemplateSpell,
     creatureOnKillReputation,
     creatureEquipTemplate,
     creatureQuestItem,
