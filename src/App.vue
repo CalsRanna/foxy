@@ -31,6 +31,9 @@
             内建脚本 <small>SMART SCRIPT</small>
           </el-menu-item>
           <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
+          <el-menu-item index="advance">
+            高级 <small>ADVANCE</small>
+          </el-menu-item>
           <el-menu-item index="setting">
             设置 <small>SETTING</small>
           </el-menu-item>
@@ -399,6 +402,10 @@ export default {
 
 .wider-message-box {
   width: 50vw !important;
+}
+
+.clickable-card {
+  cursor: pointer;
 }
 
 .summary-title {
