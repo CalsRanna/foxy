@@ -369,36 +369,6 @@
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="最小近战伤害">
-            <el-input-number
-              v-model="creatureTemplate.mindmg"
-              :min="0"
-              controls-position="right"
-              placeholder="mindmg"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="最大近战伤害">
-            <el-input-number
-              v-model="creatureTemplate.maxdmg"
-              :min="0"
-              controls-position="right"
-              placeholder="maxdmg"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="近战攻击强度">
-            <el-input-number
-              v-model="creatureTemplate.attackpower"
-              :min="0"
-              controls-position="right"
-              placeholder="attackpower"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
           <el-form-item label="近战攻击间隔">
             <el-input-number
               v-model="creatureTemplate.BaseAttackTime"
@@ -409,32 +379,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="最小远程伤害">
+          <el-form-item label="近战攻击方差">
             <el-input-number
-              v-model="creatureTemplate.minrangedmg"
+              v-model="creatureTemplate.BaseVariance"
               :min="0"
               controls-position="right"
-              placeholder="minrangedmg"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="最大远程伤害">
-            <el-input-number
-              v-model="creatureTemplate.maxrangedmg"
-              :min="0"
-              controls-position="right"
-              placeholder="maxrangedmg"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="远程攻击强度">
-            <el-input-number
-              v-model="creatureTemplate.rangedattackpower"
-              :min="0"
-              controls-position="right"
-              placeholder="rangedattackpower"
+              placeholder="BaseVariance"
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -445,6 +395,16 @@
               :min="0"
               controls-position="right"
               placeholder="RangeAttackTime"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="远程攻击方差">
+            <el-input-number
+              v-model="creatureTemplate.RangeVariance"
+              :min="0"
+              controls-position="right"
+              placeholder="RangeVariance"
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -520,140 +480,6 @@
               controls-position="right"
               placeholder="speed_run"
             ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card style="margin-top: 16px">
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="神圣抗性">
-            <el-input-number
-              v-model="creatureTemplate.resistance1"
-              :min="0"
-              controls-position="right"
-              placeholder="resistance1"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="火焰抗性">
-            <el-input-number
-              v-model="creatureTemplate.resistance2"
-              :min="0"
-              controls-position="right"
-              placeholder="resistance2"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="自然抗性">
-            <el-input-number
-              v-model="creatureTemplate.resistance3"
-              :min="0"
-              controls-position="right"
-              placeholder="resistance3"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="暗影抗性">
-            <el-input-number
-              v-model="creatureTemplate.resistance5"
-              :min="0"
-              controls-position="right"
-              placeholder="resistance5"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="冰霜抗性">
-            <el-input-number
-              v-model="creatureTemplate.resistance4"
-              :min="0"
-              controls-position="right"
-              placeholder="resistance4"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="奥术抗性">
-            <el-input-number
-              v-model="creatureTemplate.resistance6"
-              :min="0"
-              controls-position="right"
-              placeholder="resistance6"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card style="margin-top: 16px">
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="技能1">
-            <spell-selector
-              v-model="creatureTemplate.spell1"
-              placeholder="spell1"
-            ></spell-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="技能2">
-            <spell-selector
-              v-model="creatureTemplate.spell2"
-              placeholder="spell2"
-            ></spell-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="技能3">
-            <spell-selector
-              v-model="creatureTemplate.spell3"
-              placeholder="spell3"
-            ></spell-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="技能4">
-            <spell-selector
-              v-model="creatureTemplate.spell4"
-              placeholder="spell4"
-            ></spell-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="技能5">
-            <spell-selector
-              v-model="creatureTemplate.spell5"
-              placeholder="spell5"
-            ></spell-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="技能6">
-            <spell-selector
-              v-model="creatureTemplate.spell6"
-              placeholder="spell6"
-            ></spell-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="技能7">
-            <spell-selector
-              v-model="creatureTemplate.spell7"
-              placeholder="spell7"
-            ></spell-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="技能8">
-            <spell-selector
-              v-model="creatureTemplate.spell8"
-              placeholder="spell8"
-            ></spell-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1002,7 +828,6 @@ import CreatureSpellDataSelector from "@/components/CreatureSpellDataSelector.vu
 import FlagEditor from "@/components/FlagEditor";
 import GossipMenuSelector from "@/components/GossipMenuSelector";
 import HintLabel from "@/components/HintLabel";
-import SpellSelector from "@/components/SpellSelector";
 import CreatureModelInfoSelector from "@/components/CreatureModelInfoSelector.vue";
 import CreatureTemplateSelector from "@/components/CreatureTemplateSelector.vue";
 
@@ -1135,7 +960,6 @@ export default {
     FlagEditor,
     GossipMenuSelector,
     HintLabel,
-    SpellSelector,
     CreatureTemplateLocalizer,
   },
 };
