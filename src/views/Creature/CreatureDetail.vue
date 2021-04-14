@@ -27,6 +27,9 @@
       <el-tab-pane label="抗性" name="creature_template_resistance" lazy>
         <creature-template-resistance-tab-pane></creature-template-resistance-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="技能" name="creature_template_spell" lazy>
+        <creature-template-spell-tab-pane></creature-template-spell-tab-pane>
+      </el-tab-pane>
       <el-tab-pane label="击杀声望" name="creature_onkill_reputation" lazy>
         <creature-on-kill-reputation-tab-pane></creature-on-kill-reputation-tab-pane>
       </el-tab-pane>
@@ -94,6 +97,7 @@ import { mapState } from "vuex";
 import CreatureTemplateTabPane from "@/views/Creature/components/CreatureTemplateTabPane";
 import CreatureTemplateAddonTabPane from "@/views/Creature/components/CreatureTemplateAddonTabPane";
 import CreatureTemplateResistanceTabPane from "@/views/Creature/components/CreatureTemplateResistanceTabPane";
+import CreatureTemplateSpellTabPane from "@/views/Creature/components/CreatureTemplateSpellTabPane";
 import CreatureOnKillReputationTabPane from "@/views/Creature/components/CreatureOnKillReputationTabPane";
 import CreatureEquipTemplateTabPane from "@/views/Creature/components/CreatureEquipTemplateTabPane";
 import CreatureQuestItemTabPane from "@/views/Creature/components/CreatureQuestItemTabPane";
@@ -138,6 +142,7 @@ export default {
     CreatureTemplateTabPane,
     CreatureTemplateAddonTabPane,
     CreatureTemplateResistanceTabPane,
+    CreatureTemplateSpellTabPane,
     CreatureOnKillReputationTabPane,
     CreatureEquipTemplateTabPane,
     CreatureQuestItemTabPane,
