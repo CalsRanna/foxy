@@ -17,6 +17,7 @@ const {
   dbcItemRandomPropertiesSql,
   dbcItemRandomSuffixSql,
   dbcSpellCastTimesSql,
+  dbcSpellRangeSql,
 } = require("../libs/mysql");
 
 import { ipcMain } from "electron";
@@ -84,6 +85,9 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
               .then(() => {}),
             knex()
               .raw(dbcSpellCastTimesSql)
+              .then(() => {}),
+            knex()
+              .raw(dbcSpellRangeSql)
               .then(() => {}),
           ]).then(() => {
             event.reply(INIT_MYSQL_CONNECTION);

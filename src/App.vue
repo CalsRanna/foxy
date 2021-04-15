@@ -117,6 +117,7 @@ export default {
       "searchDbcItemRandomProperties",
       "searchDbcItemRandomSuffixes",
       "searchDbcSpellCastTimes",
+      "searchDbcSpellRanges",
       "exportItemDbc",
       "exportSpellDbc",
       "exportScalingStatDistributionDbc",
@@ -244,6 +245,8 @@ export default {
         this.progressText = "加载SpellDuration.dbc";
         await this.searchDbcSpellDurations();
         this.progressText = "加载SpellCastTimes.dbc";
+        await this.searchDbcSpellRanges();
+        this.progressText = "加载SpellRange.dbc";
         await this.searchDbcSpellCastTimes();
         this.loadingText = "加载完成";
         this.progressText = undefined;
