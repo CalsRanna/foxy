@@ -60,6 +60,7 @@ import "./background/creatureModelInfoSelector";
 import "./background/creatureTemplateSelector";
 import "./background/spellSelector";
 import "./background/spellDurationSelector";
+import "./background/spellCastTimeSelector";
 import "./background/gossipMenuSelector";
 import "./background/scalingStatDistributionSelector";
 import "./background/waypointDataSelector";

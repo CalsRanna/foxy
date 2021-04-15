@@ -17,6 +17,7 @@ import {
   SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS,
   SEARCH_DBC_ITEM_RANDOM_PROPERTITIES,
   SEARCH_DBC_ITEM_RANDOM_SUFFIXES,
+  SEARCH_DBC_SPELL_CAST_TIMES,
   EXPORT_ITEM_DBC,
   EXPORT_SCALING_STAT_DISTRIBUTION_DBC,
 } from "../constants";
@@ -39,6 +40,7 @@ export default {
     spellItemEnchantments: {},
     itemRandomProperties: {},
     itemRandomSuffixes: {},
+    spellCastTimes: {},
   }),
   getters: {
     itemIcons: (state) => {
@@ -272,6 +274,21 @@ export default {
         );
       });
     },
+    searchDbcSpellCastTimes({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(SEARCH_DBC_SPELL_CAST_TIMES);
+        ipcRenderer.on(SEARCH_DBC_SPELL_CAST_TIMES, (event, response) => {
+          commit(SEARCH_DBC_SPELL_CAST_TIMES, response);
+          resolve();
+        });
+        ipcRenderer.on(
+          `${SEARCH_DBC_SPELL_CAST_TIMES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     exportItemDbc() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(EXPORT_ITEM_DBC);
@@ -358,6 +375,9 @@ export default {
     },
     [SEARCH_DBC_ITEM_RANDOM_SUFFIXES](state, itemRandomSuffixes) {
       state.itemRandomSuffixes = itemRandomSuffixes;
+    },
+    [SEARCH_DBC_SPELL_CAST_TIMES](state, spellCastTimes) {
+      state.spellCastTimes = spellCastTimes;
     },
   },
 };

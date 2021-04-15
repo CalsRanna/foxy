@@ -18,6 +18,7 @@ import {
   SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS,
   SEARCH_DBC_ITEM_RANDOM_PROPERTITIES,
   SEARCH_DBC_ITEM_RANDOM_SUFFIXES,
+  SEARCH_DBC_SPELL_CAST_TIMES,
   RELOAD_APP,
   EXPORT_ITEM_DBC,
   EXPORT_SCALING_STAT_DISTRIBUTION_DBC,
@@ -553,6 +554,40 @@ ipcMain.on(SEARCH_DBC_ITEM_RANDOM_SUFFIXES, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_ITEM_RANDOM_SUFFIXES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(SEARCH_DBC_SPELL_CAST_TIMES, (event) => {
+  let queryBuilder = knex()
+    .count("* as total")
+    .from("foxy.dbc_spell_cast_times");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/SpellCastTimes.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_spell_cast_times", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_SPELL_CAST_TIMES);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_SPELL_CAST_TIMES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_SPELL_CAST_TIMES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          });
+      } else {
+        event.reply(SEARCH_DBC_SPELL_CAST_TIMES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_SPELL_CAST_TIMES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });
