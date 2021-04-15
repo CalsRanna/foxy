@@ -59,6 +59,7 @@ import creatureModelInfoSelector from "./creatureModelInfoSelector";
 import creatureTemplateSelector from "./creatureTemplateSelector";
 import spellSelector from "./spellSelector";
 import spellDurationSelector from "./spellDurationSelector";
+import spellCastTimeSelector from "./spellCastTimeSelector";
 import gossipMenuSelector from "./gossipMenuSelector";
 import scalingStatDistributionSelector from "./scalingStatDistributionSelector";
 import waypointDataSelector from "./waypointDataSelector";
@@ -132,6 +133,7 @@ export default new Vuex.Store({
     creatureTemplateSelector,
     spellSelector,
     spellDurationSelector,
+    spellCastTimeSelector,
     gossipMenuSelector,
     scalingStatDistributionSelector,
     waypointDataSelector: waypointDataSelector,

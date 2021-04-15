@@ -164,10 +164,10 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="施法时间">
-            <el-input
+            <spell-cast-time-selector
               v-model="spell.CastingTimeIndex"
               placeholder="CastingTimeIndex"
-            ></el-input>
+            ></spell-cast-time-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1671,6 +1671,7 @@ import FlagEditor from "@/components/FlagEditor";
 import { mapState, mapActions } from "vuex";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
 import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
+import SpellCastTimeSelector from "@/components/SpellCastTimeSelector.vue";
 
 export default {
   data() {
@@ -1757,6 +1758,7 @@ export default {
     FlagEditor,
     ItemTemplateSelector,
     SpellDurationSelector,
+    SpellCastTimeSelector,
   },
 };
 </script>
