@@ -18,6 +18,7 @@ import {
   SEARCH_DBC_ITEM_RANDOM_PROPERTITIES,
   SEARCH_DBC_ITEM_RANDOM_SUFFIXES,
   SEARCH_DBC_SPELL_CAST_TIMES,
+  SEARCH_DBC_SPELL_RANGES,
   EXPORT_ITEM_DBC,
   EXPORT_SCALING_STAT_DISTRIBUTION_DBC,
 } from "../constants";
@@ -41,6 +42,7 @@ export default {
     itemRandomProperties: {},
     itemRandomSuffixes: {},
     spellCastTimes: {},
+    spellRanges: {},
   }),
   getters: {
     itemIcons: (state) => {
@@ -289,6 +291,18 @@ export default {
         );
       });
     },
+    searchDbcSpellRanges({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(SEARCH_DBC_SPELL_RANGES);
+        ipcRenderer.on(SEARCH_DBC_SPELL_RANGES, (event, response) => {
+          commit(SEARCH_DBC_SPELL_RANGES, response);
+          resolve();
+        });
+        ipcRenderer.on(`${SEARCH_DBC_SPELL_RANGES}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
+    },
     exportItemDbc() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(EXPORT_ITEM_DBC);
@@ -378,6 +392,9 @@ export default {
     },
     [SEARCH_DBC_SPELL_CAST_TIMES](state, spellCastTimes) {
       state.spellCastTimes = spellCastTimes;
+    },
+    [SEARCH_DBC_SPELL_RANGES](state, spellRanges) {
+      state.spellRanges = spellRanges;
     },
   },
 };

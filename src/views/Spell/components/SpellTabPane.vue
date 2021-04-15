@@ -180,10 +180,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="施法距离">
-            <el-input
+            <spell-range-selector
               v-model="spell.RangeIndex"
               placeholder="RangeIndex"
-            ></el-input>
+            ></spell-range-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1672,6 +1672,7 @@ import { mapState, mapActions } from "vuex";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
 import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
 import SpellCastTimeSelector from "@/components/SpellCastTimeSelector.vue";
+import SpellRangeSelector from "@/components/SpellRangeSelector.vue";
 
 export default {
   data() {
@@ -1759,6 +1760,7 @@ export default {
     ItemTemplateSelector,
     SpellDurationSelector,
     SpellCastTimeSelector,
+    SpellRangeSelector,
   },
 };
 </script>
