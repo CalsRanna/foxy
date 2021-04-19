@@ -1258,6 +1258,55 @@ const mechanicImmuneMasks = [
   },
 ];
 
+const spellSchoolImmuneMasksTooltip = `
+  This makes the creature immune to specific spell schools.
+`;
+
+const spellSchoolImmuneMasks = [
+  {
+    index: 0,
+    flag: 1,
+    name: "普通伤害",
+    comment: "SPELL_SCHOOL_NORMAL",
+  },
+  {
+    index: 1,
+    flag: 2,
+    name: "神圣伤害",
+    comment: "SPELL_SCHOOL_HOLY",
+  },
+  {
+    index: 2,
+    flag: 4,
+    name: "火焰伤害",
+    comment: "SPELL_SCHOOL_FIRE",
+  },
+  {
+    index: 3,
+    flag: 8,
+    name: "自然伤害",
+    comment: "SPELL_SCHOOL_NATURE",
+  },
+  {
+    index: 4,
+    flag: 16,
+    name: "冰霜伤害",
+    comment: "SPELL_SCHOOL_FROST",
+  },
+  {
+    index: 5,
+    flag: 32,
+    name: "暗影伤害",
+    comment: "SPELL_SCHOOL_SHADOW",
+  },
+  {
+    index: 6,
+    flag: 64,
+    name: "奥术伤害",
+    comment: "SPELL_SCHOOL_ARCANE",
+  },
+];
+
 const petSpellDataIdTooltip = `
   ID, found in CreatureSpellData.dbc, that displays what spells the pet has in the client.
 `;
@@ -1545,6 +1594,8 @@ export {
   flagsExtra,
   mechanicImmuneMasksTooltip,
   mechanicImmuneMasks,
+  spellSchoolImmuneMasksTooltip,
+  spellSchoolImmuneMasks,
   petSpellDataIdTooltip,
   vehicleIdTooltip,
   dmgSchools,

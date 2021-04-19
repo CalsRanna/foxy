@@ -264,21 +264,6 @@
         <el-col :span="6">
           <el-form-item>
             <hint-label
-              label="免疫技能"
-              :tooltip="mechanicImmuneMasksTooltip"
-              slot="label"
-            ></hint-label>
-            <flag-editor
-              title="免疫技能编辑器"
-              v-model="creatureTemplate.mechanic_immune_mask"
-              :flags="mechanicImmuneMasks"
-              placeholder="mechanic_immune_mask"
-            ></flag-editor>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item>
-            <hint-label
               label="宠物技能"
               :tooltip="petSpellDataIdTooltip"
               slot="label"
@@ -364,6 +349,36 @@
                 :value="dmgSchool.value"
               ></el-option>
             </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <hint-label
+              label="免疫技能"
+              :tooltip="mechanicImmuneMasksTooltip"
+              slot="label"
+            ></hint-label>
+            <flag-editor
+              title="免疫技能编辑器"
+              v-model="creatureTemplate.mechanic_immune_mask"
+              :flags="mechanicImmuneMasks"
+              placeholder="mechanic_immune_mask"
+            ></flag-editor>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <hint-label
+              label="免疫技能伤害"
+              :tooltip="spellSchoolImmuneMasksTooltip"
+              slot="label"
+            ></hint-label>
+            <flag-editor
+              title="免疫技能伤害编辑器"
+              v-model="creatureTemplate.spell_school_immune_mask"
+              :flags="spellSchoolImmuneMasks"
+              placeholder="spell_school_immune_mask"
+            ></flag-editor>
           </el-form-item>
         </el-col>
       </el-row>
@@ -802,6 +817,8 @@ import {
   flagsExtra,
   mechanicImmuneMasksTooltip,
   mechanicImmuneMasks,
+  spellSchoolImmuneMasksTooltip,
+  spellSchoolImmuneMasks,
   petSpellDataIdTooltip,
   vehicleIdTooltip,
   dmgSchools,
@@ -858,6 +875,8 @@ export default {
       flagsExtra: flagsExtra,
       mechanicImmuneMasksTooltip: mechanicImmuneMasksTooltip,
       mechanicImmuneMasks: mechanicImmuneMasks,
+      spellSchoolImmuneMasksTooltip: spellSchoolImmuneMasksTooltip,
+      spellSchoolImmuneMasks: spellSchoolImmuneMasks,
       petSpellDataIdTooltip: petSpellDataIdTooltip,
       vehicleIdTooltip: vehicleIdTooltip,
       dmgSchools: dmgSchools,
