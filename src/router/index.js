@@ -108,6 +108,18 @@ const routes = [
     component: () =>
       import("@/views/ScalingStatDistribution/ScalingStatDistributionDetail"),
   },
+  {
+    path: "/item-set",
+    component: () => import("@/views/ItemSet/ItemSetTable"),
+  },
+  {
+    path: "/item-set/create",
+    component: () => import("@/views/ItemSet/ItemSetDetail"),
+  },
+  {
+    path: "/item-set/:id",
+    component: () => import("@/views/ItemSet/ItemSetDetail"),
+  },
 ];
 
 const router = new VueRouter({
