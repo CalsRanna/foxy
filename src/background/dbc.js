@@ -20,6 +20,7 @@ import {
   SEARCH_DBC_ITEM_RANDOM_SUFFIXES,
   SEARCH_DBC_SPELL_CAST_TIMES,
   SEARCH_DBC_SPELL_RANGES,
+  SEARCH_DBC_TALENTS,
   RELOAD_APP,
   EXPORT_ITEM_DBC,
   EXPORT_SCALING_STAT_DISTRIBUTION_DBC,
@@ -623,6 +624,40 @@ ipcMain.on(SEARCH_DBC_SPELL_RANGES, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_SPELL_RANGES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(SEARCH_DBC_TALENTS, (event) => {
+  let queryBuilder = knex()
+    .count("* as total")
+    .from("foxy.dbc_talent");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/Talent.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_talent", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_TALENTS);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_TALENTS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_TALENTS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          });
+      } else {
+        event.reply(SEARCH_DBC_TALENTS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_TALENTS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

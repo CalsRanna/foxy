@@ -36,6 +36,18 @@
           </p>
         </el-card>
       </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
+          @click.native="() => navigate('/talent')"
+        >
+          <p class="summary-title">天赋<span>Talent</span></p>
+          <p class="summary-content">
+            天赋页面的技能
+          </p>
+        </el-card>
+      </el-col>
     </el-row>
   </div>
 </template>
