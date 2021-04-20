@@ -24,6 +24,18 @@
           </p>
         </el-card>
       </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
+          @click.native="() => navigate('/item-set')"
+        >
+          <p class="summary-title">套装<span>Item Set</span></p>
+          <p class="summary-content">
+            套装的部件及奖励
+          </p>
+        </el-card>
+      </el-col>
     </el-row>
   </div>
 </template>

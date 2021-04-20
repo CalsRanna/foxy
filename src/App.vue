@@ -445,7 +445,7 @@ export default {
   color: #303133;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: clip;
+  text-overflow: ellipsis;
 }
 
 .summary-title span {
@@ -458,6 +458,9 @@ export default {
   font-size: 24px;
   font-weight: 900;
   color: #606266;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hide-when-overflow .cell {
