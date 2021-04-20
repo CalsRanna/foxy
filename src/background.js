@@ -55,6 +55,7 @@ import "./background/spellLootTemplate";
 import "./background/referenceLootTemplate";
 import "./background/scalingStatDistribution";
 import "./background/itemSet";
+import "./background/talent";
 import "./background/factionTemplateSelector";
 import "./background/creatureSpellDataSelector";
 import "./background/creatureModelInfoSelector";
