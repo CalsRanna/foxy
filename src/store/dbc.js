@@ -20,6 +20,7 @@ import {
   SEARCH_DBC_SPELL_CAST_TIMES,
   SEARCH_DBC_SPELL_RANGES,
   SEARCH_DBC_TALENTS,
+  SEARCH_DBC_TALENT_TABS,
   EXPORT_ITEM_DBC,
   EXPORT_SCALING_STAT_DISTRIBUTION_DBC,
 } from "../constants";
@@ -45,6 +46,7 @@ export default {
     spellCastTimes: {},
     spellRanges: {},
     talents: {},
+    talentTabs: {},
   }),
   getters: {
     itemIcons: (state) => {
@@ -317,6 +319,18 @@ export default {
         });
       });
     },
+    searchDbcTalentTabs({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(SEARCH_DBC_TALENT_TABS);
+        ipcRenderer.on(SEARCH_DBC_TALENT_TABS, (event, response) => {
+          commit(SEARCH_DBC_TALENT_TABS, response);
+          resolve();
+        });
+        ipcRenderer.on(`${SEARCH_DBC_TALENT_TABS}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
+    },
     exportItemDbc() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(EXPORT_ITEM_DBC);
@@ -412,6 +426,9 @@ export default {
     },
     [SEARCH_DBC_TALENTS](state, talents) {
       state.talents = talents;
+    },
+    [SEARCH_DBC_TALENT_TABS](state, talentTabs) {
+      state.talentTabs = talentTabs;
     },
   },
 };

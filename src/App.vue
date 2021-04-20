@@ -119,6 +119,7 @@ export default {
       "searchDbcSpellCastTimes",
       "searchDbcSpellRanges",
       "searchDbcTalents",
+      "searchDbcTalentTabs",
       "exportItemDbc",
       "exportSpellDbc",
       "exportScalingStatDistributionDbc",
@@ -249,8 +250,10 @@ export default {
         await this.searchDbcSpellCastTimes();
         this.progressText = "加载SpellRange.dbc";
         await this.searchDbcSpellRanges();
-        this.progressText = "Talent.dbc";
+        this.progressText = "加载Talent.dbc";
         await this.searchDbcTalents();
+        this.progressText = "加载TalentTab.dbc";
+        await this.searchDbcTalentTabs();
         this.loadingText = "加载完成";
         this.progressText = undefined;
         setTimeout(() => {
