@@ -21,9 +21,12 @@
       </h3>
     </el-card>
     <el-card style="margin-top: 16px">
-      <el-tabs value="smart_script" style="margin-top: 16px">
-        <el-tab-pane label="天赋" name="smart_script" lazy>
+      <el-tabs value="talent" style="margin-top: 16px">
+        <el-tab-pane label="天赋" name="talent" lazy>
           <talent-tab-pane></talent-tab-pane>
+        </el-tab-pane>
+        <el-tab-pane label="天赋页" name="talent-tab" lazy>
+          <talent-tab-tab-pane></talent-tab-tab-pane>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -32,6 +35,7 @@
 
 <script>
 import TalentTabPane from "@/views/Talent/components/TalentTabPane";
+import TalentTabTabPane from "@/views/Talent/components/TalentTabTabPane";
 
 import { mapState } from "vuex";
 
@@ -47,6 +51,7 @@ export default {
   },
   components: {
     TalentTabPane,
+    TalentTabTabPane,
   },
 };
 </script>
