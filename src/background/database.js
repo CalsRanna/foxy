@@ -19,6 +19,7 @@ const {
   dbcSpellCastTimesSql,
   dbcSpellRangeSql,
   dbcTalentSql,
+  dbcTalentTabSql,
 } = require("../libs/mysql");
 
 import { ipcMain } from "electron";
@@ -92,6 +93,9 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
               .then(() => {}),
             knex()
               .raw(dbcTalentSql)
+              .then(() => {}),
+            knex()
+              .raw(dbcTalentTabSql)
               .then(() => {}),
           ]).then(() => {
             event.reply(INIT_MYSQL_CONNECTION);
