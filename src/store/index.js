@@ -53,6 +53,7 @@ import spellLootTemplate from "./spellLootTemplate";
 import referenceLootTemplate from "./referenceLootTemplate";
 import scalingStatDistribution from "./scalingStatDistribution";
 import itemSet from "./itemSet";
+import talent from "./talent";
 import setting from "./setting";
 import factionTemplateSelector from "./factionTemplateSelector";
 import creatureSpellDataSelector from "./creatureSpellDataSelector";
@@ -129,6 +130,7 @@ export default new Vuex.Store({
     referenceLootTemplate,
     scalingStatDistribution,
     itemSet,
+    talent,
     setting,
     factionTemplateSelector,
     creatureSpellDataSelector,

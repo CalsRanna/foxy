@@ -120,6 +120,18 @@ const routes = [
     path: "/item-set/:id",
     component: () => import("@/views/ItemSet/ItemSetDetail"),
   },
+  {
+    path: "/talent",
+    component: () => import("@/views/Talent/TalentTable"),
+  },
+  {
+    path: "/talent/create",
+    component: () => import("@/views/Talent/TalentDetail"),
+  },
+  {
+    path: "/talent/:id",
+    component: () => import("@/views/Talent/TalentDetail"),
+  },
 ];
 
 const router = new VueRouter({
