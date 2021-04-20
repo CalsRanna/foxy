@@ -132,6 +132,18 @@ const routes = [
     path: "/talent/:id",
     component: () => import("@/views/Talent/TalentDetail"),
   },
+  {
+    path: "/talent-tab",
+    component: () => import("@/views/TalentTab/TalentTabTable"),
+  },
+  {
+    path: "/talent-tab/create",
+    component: () => import("@/views/TalentTab/TalentTabDetail"),
+  },
+  {
+    path: "/talent-tab/:id",
+    component: () => import("@/views/TalentTab/TalentTabDetail"),
+  },
 ];
 
 const router = new VueRouter({
