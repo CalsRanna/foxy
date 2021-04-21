@@ -20,6 +20,7 @@ import {
   SEARCH_DBC_ITEM_RANDOM_SUFFIXES,
   SEARCH_DBC_SPELL_CAST_TIMES,
   SEARCH_DBC_SPELL_RANGES,
+  SEARCH_DBC_SPELL_MECHANICS,
   SEARCH_DBC_TALENTS,
   SEARCH_DBC_TALENT_TABS,
   RELOAD_APP,
@@ -625,6 +626,40 @@ ipcMain.on(SEARCH_DBC_SPELL_RANGES, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_SPELL_RANGES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+    });
+});
+
+ipcMain.on(SEARCH_DBC_SPELL_MECHANICS, (event) => {
+  let queryBuilder = knex()
+    .select()
+    .from("foxy.dbc_spell_mechanic");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/SpellMechanic.dbc`)
+          .then((dbc) => {
+            knex()
+              .batchInsert("foxy.dbc_spell_mechanic", dbc.records)
+              .then(() => {
+                event.reply(SEARCH_DBC_SPELL_MECHANICS, dbc.records);
+              })
+              .catch((error) => {
+                event.reply(`${SEARCH_DBC_SPELL_MECHANICS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+              });
+          })
+          .catch((error) => {
+            event.reply(`${SEARCH_DBC_SPELL_MECHANICS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          });
+      } else {
+        event.reply(SEARCH_DBC_SPELL_MECHANICS, rows);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${SEARCH_DBC_SPELL_MECHANICS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

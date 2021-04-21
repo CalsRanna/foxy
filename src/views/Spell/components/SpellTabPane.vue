@@ -119,11 +119,19 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="Mechanic">
-            <el-input
+          <el-form-item label="控制类型">
+            <el-select
               v-model="spell.Mechanic"
+              filterable
               placeholder="Mechanic"
-            ></el-input>
+            >
+              <el-option
+                v-for="mechanic in spellMechanics"
+                :key="`mechanic-${mechanic.ID}`"
+                :label="mechanic.StateName_Lang_zhCN"
+                :value="mechanic.ID"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1702,6 +1710,7 @@ export default {
   },
   computed: {
     ...mapState("spell", ["spell"]),
+    ...mapState("dbc", ["spellMechanics"]),
     credential() {
       return {
         ID: this.$route.params.id,

@@ -18,6 +18,7 @@ const {
   dbcItemRandomSuffixSql,
   dbcSpellCastTimesSql,
   dbcSpellRangeSql,
+  dbcSpellMechanicSql,
   dbcTalentSql,
   dbcTalentTabSql,
 } = require("../libs/mysql");
@@ -90,6 +91,9 @@ ipcMain.on(INIT_MYSQL_CONNECTION, (event, payload) => {
               .then(() => {}),
             knex()
               .raw(dbcSpellRangeSql)
+              .then(() => {}),
+            knex()
+              .raw(dbcSpellMechanicSql)
               .then(() => {}),
             knex()
               .raw(dbcTalentSql)
