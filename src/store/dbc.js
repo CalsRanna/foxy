@@ -19,6 +19,7 @@ import {
   SEARCH_DBC_ITEM_RANDOM_SUFFIXES,
   SEARCH_DBC_SPELL_CAST_TIMES,
   SEARCH_DBC_SPELL_RANGES,
+  SEARCH_DBC_SPELL_MECHANICS,
   SEARCH_DBC_TALENTS,
   SEARCH_DBC_TALENT_TABS,
   EXPORT_ITEM_DBC,
@@ -45,6 +46,7 @@ export default {
     itemRandomSuffixes: {},
     spellCastTimes: {},
     spellRanges: {},
+    spellMechanics: {},
     talents: {},
     talentTabs: {},
   }),
@@ -307,6 +309,21 @@ export default {
         });
       });
     },
+    searchDbcSpellMechanics({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(SEARCH_DBC_SPELL_MECHANICS);
+        ipcRenderer.on(SEARCH_DBC_SPELL_MECHANICS, (event, response) => {
+          commit(SEARCH_DBC_SPELL_MECHANICS, response);
+          resolve();
+        });
+        ipcRenderer.on(
+          `${SEARCH_DBC_SPELL_MECHANICS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     searchDbcTalents({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DBC_TALENTS);
@@ -423,6 +440,9 @@ export default {
     },
     [SEARCH_DBC_SPELL_RANGES](state, spellRanges) {
       state.spellRanges = spellRanges;
+    },
+    [SEARCH_DBC_SPELL_MECHANICS](state, spellMechanics) {
+      state.spellMechanics = spellMechanics;
     },
     [SEARCH_DBC_TALENTS](state, talents) {
       state.talents = talents;

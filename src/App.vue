@@ -118,6 +118,7 @@ export default {
       "searchDbcItemRandomSuffixes",
       "searchDbcSpellCastTimes",
       "searchDbcSpellRanges",
+      "searchDbcSpellMechanics",
       "searchDbcTalents",
       "searchDbcTalentTabs",
       "exportItemDbc",
@@ -250,6 +251,8 @@ export default {
         await this.searchDbcSpellCastTimes();
         this.progressText = "加载SpellRange.dbc";
         await this.searchDbcSpellRanges();
+        this.progressText = "加载SpellMechanic.dbc";
+        await this.searchDbcSpellMechanics();
         this.progressText = "加载Talent.dbc";
         await this.searchDbcTalents();
         this.progressText = "加载TalentTab.dbc";
