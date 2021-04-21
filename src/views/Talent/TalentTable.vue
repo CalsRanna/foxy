@@ -42,7 +42,7 @@
         删除
       </el-button>
     </el-card>
-    <el-card style="margin-top: 16px" v-loading="loading">
+    <el-card style="margin-top: 16px">
       <el-pagination
         layout="prev, pager, next"
         :current-page="pagination.page"
