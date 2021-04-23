@@ -278,17 +278,28 @@ export default {
     this.init();
 
     ipcRenderer.on(GLOBAL_MESSAGE_BOX, (event, error) => {
-      error = JSON.parse(error);
-      let content = this.developerConfig.debug
-        ? [
-            `- ${error.index}`,
-            error.sqlState,
-            error.sqlMessage,
-            error.sql,
-          ].join("<br>- ")
-        : `${error.sqlMessage}`;
-      let title =
-        error.code == undefined ? "未知错误" : `[${error.errno}] ${error.code}`;
+      let content = "";
+      let title = "";
+      try {
+        error = JSON.parse(error);
+        content = this.developerConfig.debug
+          ? [
+              `- ${error.index}`,
+              error.sqlState,
+              error.sqlMessage,
+              error.sql,
+            ].join("<br>- ")
+          : `${error.sqlMessage}`;
+        title =
+          error.code == undefined
+            ? "未知错误"
+            : `[${error.errno}] ${error.code}`;
+      } catch (e) {
+        content = error.stack
+          ? error.stack.replaceAll(" at ", "<br>&nbsp;&nbsp; at ")
+          : error;
+        title = "未知错误";
+      }
       this.$alert(content, title, {
         type: "error",
         dangerouslyUseHTMLString: true,
