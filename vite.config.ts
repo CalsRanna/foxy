@@ -10,7 +10,7 @@ const config: UserConfig = {
   root,
   resolve: {
     alias: {
-      "/@": root,
+      "@": `${root}/src`,
     },
   },
   base: "./",
