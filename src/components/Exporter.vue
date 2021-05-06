@@ -150,13 +150,13 @@ export default {
       for (let dbc of this.checkedDbcs) {
         switch (dbc) {
           case "Item":
-            promises.push(this.searchItemDbc());
+            promises.push(this.searchItemDbc);
             break;
           case "Spell":
-            promises.push(this.searchSpellDbc());
+            promises.push(this.searchSpellDbc);
             break;
           case "ScalingStatDistribution":
-            promises.push(this.searchScalingStatDistributionDbc());
+            promises.push(this.searchScalingStatDistributionDbc);
             break;
           default:
             break;
@@ -175,13 +175,13 @@ export default {
       for (let dbc of this.checkedDbcs) {
         switch (dbc) {
           case "Item":
-            promises.push(this.writeItemDbc());
+            promises.push(this.writeItemDbc);
             break;
           case "Spell":
-            promises.push(this.writeSpellDbc());
+            promises.push(this.writeSpellDbc);
             break;
           case "ScalingStatDistribution":
-            promises.push(this.writeScalingStatDistributionDbc());
+            promises.push(this.writeScalingStatDistributionDbc);
             break;
           default:
             break;
@@ -198,11 +198,8 @@ export default {
     },
   },
   mounted() {
-    console.log(
-      require("knex")({
-        client: "mysql",
-      })
-    );
+    const fs = require("knex")({});
+    console.log(fs);
     ipcRenderer.on(START_EXPORT, () => {
       if (this.visible == false && this.visible2 == false) {
         this.visible = true;
