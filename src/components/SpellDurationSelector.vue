@@ -106,7 +106,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.spellDuration = newValue;
       this.ID = newValue;
     },

@@ -19,7 +19,7 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ITEMS, (event, payload) => {
     .select(["cq.*", "it.name", "itl.Name as localeName"])
     .from("creature_questitem as cq")
     .leftJoin("item_template as it", "cq.ItemId", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -42,9 +42,7 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ITEMS, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_QUEST_ITEM, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("creature_questitem");
+  let queryBuilder = knex().insert(payload).into("creature_questitem");
 
   queryBuilder
     .then((rows) => {
@@ -60,10 +58,7 @@ ipcMain.on(STORE_CREATURE_QUEST_ITEM, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_QUEST_ITEM, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("creature_questitem")
-    .where(payload);
+  let queryBuilder = knex().select().from("creature_questitem").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -98,10 +93,7 @@ ipcMain.on(UPDATE_CREATURE_QUEST_ITEM, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_CREATURE_QUEST_ITEM, (event, payload) => {
-  let queryBuilder = knex()
-    .table("creature_questitem")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("creature_questitem").where(payload).delete();
 
   queryBuilder
     .then((rows) => {

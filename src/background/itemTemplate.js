@@ -30,7 +30,7 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
       "it.RequiredLevel",
     ])
     .from("item_template as it")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -81,7 +81,7 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
   let queryBuilder = knex()
     .count("* as total")
     .from("item_template as it")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -126,9 +126,7 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("item_template");
+  let queryBuilder = knex().insert(payload).into("item_template");
 
   queryBuilder
     .then((rows) => {
@@ -162,10 +160,7 @@ ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("item_template")
-    .where(payload);
+  let queryBuilder = knex().select().from("item_template").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -221,10 +216,7 @@ ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .table("item_template")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("item_template").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -292,9 +284,7 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
   ])
     .then(() => {
       itemTemplate.entry = entry + 1;
-      let queryBuilder = knex()
-        .insert(itemTemplate)
-        .into("item_template");
+      let queryBuilder = knex().insert(itemTemplate).into("item_template");
       queryBuilder
         .then((rows) => {
           knex()

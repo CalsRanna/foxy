@@ -18,7 +18,7 @@ const icons = [
   "未知",
   "未知",
   "未知",
-  "未知"
+  "未知",
 ];
 
 const types = [
@@ -42,7 +42,7 @@ const types = [
   "遗忘宠物天赋",
   "学习技能",
   "户外PVP",
-  "未知"
+  "未知",
 ];
 
 export { icons, types };

@@ -11,9 +11,7 @@ import {
 const { knex } = require("../libs/mysql");
 
 ipcMain.on(STORE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("creature_onkill_reputation");
+  let queryBuilder = knex().insert(payload).into("creature_onkill_reputation");
 
   queryBuilder
     .then((rows) => {

@@ -166,7 +166,7 @@
               placeholder="RandomProperty"
               :disabled="
                 !Boolean(itemTemplate.RandomProperty) &&
-                  Boolean(itemTemplate.RandomSuffix)
+                Boolean(itemTemplate.RandomSuffix)
               "
             ></item-enchantment-template-selector>
           </el-form-item>
@@ -179,7 +179,7 @@
               placeholder="RandomSuffix"
               :disabled="
                 !Boolean(itemTemplate.RandomSuffix) &&
-                  Boolean(itemTemplate.RandomProperty)
+                Boolean(itemTemplate.RandomProperty)
               "
             ></item-enchantment-template-selector>
           </el-form-item>

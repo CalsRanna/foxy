@@ -19,7 +19,7 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
     .select(["nv.*", "it.displayid", "it.name", "itl.Name"])
     .from("npc_vendor as nv")
     .leftJoin("item_template as it", "nv.item", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("nv.item", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -42,9 +42,7 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
 });
 
 ipcMain.on(STORE_NPC_VENDOR, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("npc_vendor");
+  let queryBuilder = knex().insert(payload).into("npc_vendor");
 
   queryBuilder
     .then((rows) => {
@@ -60,10 +58,7 @@ ipcMain.on(STORE_NPC_VENDOR, (event, payload) => {
 });
 
 ipcMain.on(FIND_NPC_VENDOR, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("npc_vendor")
-    .where(payload);
+  let queryBuilder = knex().select().from("npc_vendor").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -98,10 +93,7 @@ ipcMain.on(UPDATE_NPC_VENDOR, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_NPC_VENDOR, (event, payload) => {
-  let queryBuilder = knex()
-    .table("npc_vendor")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("npc_vendor").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -172,9 +164,7 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
     .then(() => {
       npcVendor.slot = slot + 1;
       npcVendor.ExtendedCost = extendedCost + 1;
-      let queryBuilder = knex()
-        .insert(npcVendor)
-        .into("npc_vendor");
+      let queryBuilder = knex().insert(npcVendor).into("npc_vendor");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_NPC_VENDOR, rows);

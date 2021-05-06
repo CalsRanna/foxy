@@ -11,9 +11,7 @@ import {
 const { knex } = require("../libs/mysql");
 
 ipcMain.on(STORE_QUEST_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("quest_template_addon");
+  let queryBuilder = knex().insert(payload).into("quest_template_addon");
 
   queryBuilder
     .then((rows) => {

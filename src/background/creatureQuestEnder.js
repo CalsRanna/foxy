@@ -17,10 +17,10 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ENDERS, (event, payload) => {
   let queryBuilder = knex()
     .select(["cqe.*", "ct.name", "ctl.Name as localeName"])
     .from("creature_questender as cqe")
-    .leftJoin("creature_template as ct", function() {
+    .leftJoin("creature_template as ct", function () {
       this.on("cqe.id", "=", "ct.entry");
     })
-    .leftJoin("creature_template_locale as ctl", function() {
+    .leftJoin("creature_template_locale as ctl", function () {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
@@ -43,9 +43,7 @@ ipcMain.on(SEARCH_CREATURE_QUEST_ENDERS, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_QUEST_ENDER, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("creature_questender");
+  let queryBuilder = knex().insert(payload).into("creature_questender");
 
   queryBuilder
     .then((rows) => {
@@ -61,10 +59,7 @@ ipcMain.on(STORE_CREATURE_QUEST_ENDER, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_QUEST_ENDER, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("creature_questender")
-    .where(payload);
+  let queryBuilder = knex().select().from("creature_questender").where(payload);
 
   queryBuilder
     .then((rows) => {

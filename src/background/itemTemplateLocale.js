@@ -33,9 +33,7 @@ ipcMain.on(STORE_ITEM_TEMPLATE_LOCALES, (event, payload) => {
     .table("item_template_locale")
     .where("ID", payload[0].ID)
     .delete();
-  let insertQueryBuilder = knex()
-    .insert(payload)
-    .into("item_template_locale");
+  let insertQueryBuilder = knex().insert(payload).into("item_template_locale");
 
   deleteQueryBuilder
     .then((rows) => {

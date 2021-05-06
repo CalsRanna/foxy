@@ -14,10 +14,7 @@ import {
 const { knex } = require("../libs/mysql");
 
 ipcMain.on(SEARCH_NPC_TRAINERS, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("npc_trainer")
-    .where(payload);
+  let queryBuilder = knex().select().from("npc_trainer").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -33,9 +30,7 @@ ipcMain.on(SEARCH_NPC_TRAINERS, (event, payload) => {
 });
 
 ipcMain.on(STORE_NPC_TRAINER, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("npc_trainer");
+  let queryBuilder = knex().insert(payload).into("npc_trainer");
 
   queryBuilder
     .then((rows) => {
@@ -51,10 +46,7 @@ ipcMain.on(STORE_NPC_TRAINER, (event, payload) => {
 });
 
 ipcMain.on(FIND_NPC_TRAINER, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("npc_trainer")
-    .where(payload);
+  let queryBuilder = knex().select().from("npc_trainer").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -89,10 +81,7 @@ ipcMain.on(UPDATE_NPC_TRAINER, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_NPC_TRAINER, (event, payload) => {
-  let queryBuilder = knex()
-    .table("npc_trainer")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("npc_trainer").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -130,9 +119,7 @@ ipcMain.on(COPY_NPC_TRAINER, (event, payload) => {
   ])
     .then(() => {
       npcTrainer.SpellID = spellId + 1;
-      let queryBuilder = knex()
-        .insert(npcTrainer)
-        .into("npc_trainer");
+      let queryBuilder = knex().insert(npcTrainer).into("npc_trainer");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_NPC_TRAINER, rows);

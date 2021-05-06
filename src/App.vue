@@ -4,9 +4,7 @@
       <el-aside width="200px" class="left-menu">
         <div class="logo">
           <h3 style="margin: 0; padding: 0">FOXY</h3>
-          <p style="font-size: 12px; color: #c0c4cc">
-            魔兽世界编辑器
-          </p>
+          <p style="font-size: 12px; color: #c0c4cc">魔兽世界编辑器</p>
         </div>
         <el-menu
           :default-active="active"
@@ -51,7 +49,7 @@
       :close-on-click-modal="false"
       :modal="modal"
     >
-      <div style="text-align:center; margin-bottom: 24px; font-size: 20px;">
+      <div style="text-align: center; margin-bottom: 24px; font-size: 20px">
         <i class="el-icon-loading"></i>
         {{ loadingText }}
         <template v-show="progressText != undefined">

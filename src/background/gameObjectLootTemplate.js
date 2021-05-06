@@ -18,7 +18,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, (event, payload) => {
     .select(["golt.*", "it.name", "itl.Name as localeName"])
     .from("gameobject_loot_template as golt")
     .leftJoin("item_template as it", "golt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -41,9 +41,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("gameobject_loot_template");
+  let queryBuilder = knex().insert(payload).into("gameobject_loot_template");
 
   queryBuilder
     .then((rows) => {

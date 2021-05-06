@@ -19,7 +19,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ITEMS, (event, payload) => {
     .select(["goqi.*", "it.name", "itl.Name as localeName"])
     .from("gameobject_questitem as goqi")
     .leftJoin("item_template as it", "goqi.ItemId", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -42,9 +42,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ITEMS, (event, payload) => {
 });
 
 ipcMain.on(STORE_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("gameobject_questitem");
+  let queryBuilder = knex().insert(payload).into("gameobject_questitem");
 
   queryBuilder
     .then((rows) => {

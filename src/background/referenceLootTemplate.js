@@ -18,7 +18,7 @@ ipcMain.on(SEARCH_REFERENCE_LOOT_TEMPLATES, (event, payload) => {
     .select(["rlt.*", "it.name", "itl.Name as localeName"])
     .from("reference_loot_template as rlt")
     .leftJoin("item_template as it", "rlt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -41,9 +41,7 @@ ipcMain.on(SEARCH_REFERENCE_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_REFERENCE_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("reference_loot_template");
+  let queryBuilder = knex().insert(payload).into("reference_loot_template");
 
   queryBuilder
     .then((rows) => {

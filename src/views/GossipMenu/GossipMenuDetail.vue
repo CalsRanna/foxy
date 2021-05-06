@@ -11,7 +11,12 @@
         <el-breadcrumb-item>对话详情</el-breadcrumb-item>
       </el-breadcrumb>
       <h3
-        style="margin: 16px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+        style="
+          margin: 16px 0 0 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        "
       >
         {{ localeName }}
         <small>

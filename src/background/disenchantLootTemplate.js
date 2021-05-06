@@ -18,7 +18,7 @@ ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
     .select(["dlt.*", "it.name", "itl.Name as localeName"])
     .from("disenchant_loot_template as dlt")
     .leftJoin("item_template as it", "dlt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -41,9 +41,7 @@ ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_DISENCHANT_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("disenchant_loot_template");
+  let queryBuilder = knex().insert(payload).into("disenchant_loot_template");
 
   queryBuilder
     .then((rows) => {

@@ -41,9 +41,7 @@ ipcMain.on(SEARCH_ITEM_SETS_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_ITEM_SETS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_item_set");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_item_set");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
   }

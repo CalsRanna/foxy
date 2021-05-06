@@ -18,7 +18,7 @@ ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
     .select(["slt.*", "it.name", "itl.Name as localeName"])
     .from("skinning_loot_template as slt")
     .leftJoin("item_template as it", "slt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -41,9 +41,7 @@ ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_SKINNING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("skinning_loot_template");
+  let queryBuilder = knex().insert(payload).into("skinning_loot_template");
 
   queryBuilder
     .then((rows) => {

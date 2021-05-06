@@ -101,7 +101,7 @@ export default {
     disabled: Boolean,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.itemEnchantmentTemplate = newValue;
       this.entry = newValue;
     },

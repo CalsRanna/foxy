@@ -166,13 +166,13 @@
           </div>
           <ul style="list-style: none; padding: 0">
             <li>核心版本：{{ coreVersion.core_version }}</li>
-            <li style="margin-top: 8px;">
+            <li style="margin-top: 8px">
               核心修正版本：{{ coreVersion.core_revision }}
             </li>
-            <li style="margin-top: 8px;">
+            <li style="margin-top: 8px">
               数据库版本：{{ coreVersion.db_version }}
             </li>
-            <li style="margin-top: 8px;">软件版本：{{ version }}</li>
+            <li style="margin-top: 8px">软件版本：{{ version }}</li>
           </ul>
         </el-card>
       </el-col>

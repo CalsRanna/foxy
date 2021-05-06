@@ -19,7 +19,7 @@ ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
     .select(["gm.*", "nt.text0_0", "nt.text0_1", "ntl.Text0_0", "ntl.Text0_1"])
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
-    .leftJoin("npc_text_locale as ntl", function() {
+    .leftJoin("npc_text_locale as ntl", function () {
       this.on("gm.TextID", "=", "ntl.ID").andOn(
         "ntl.Locale",
         "=",
@@ -61,7 +61,7 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
     .count("* as total")
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
-    .leftJoin("npc_text_locale as ntl", function() {
+    .leftJoin("npc_text_locale as ntl", function () {
       this.on("gm.TextID", "=", "ntl.ID").andOn(
         "ntl.Locale",
         "=",
@@ -96,9 +96,7 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
 });
 
 ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("gossip_menu");
+  let queryBuilder = knex().insert(payload).into("gossip_menu");
 
   queryBuilder
     .then((rows) => {
@@ -114,10 +112,7 @@ ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
 });
 
 ipcMain.on(FIND_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("gossip_menu")
-    .where(payload);
+  let queryBuilder = knex().select().from("gossip_menu").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -153,10 +148,7 @@ ipcMain.on(UPDATE_GOSSIP_MENU, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex()
-    .table("gossip_menu")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("gossip_menu").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -214,9 +206,7 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
   ])
     .then(() => {
       gossipMenu.MenuID = MenuID + 1;
-      let queryBuilder = knex()
-        .insert(gossipMenu)
-        .into("gossip_menu");
+      let queryBuilder = knex().insert(gossipMenu).into("gossip_menu");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_GOSSIP_MENU, rows);

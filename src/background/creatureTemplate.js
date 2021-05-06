@@ -27,7 +27,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
       "ct.maxlevel",
     ])
     .from("creature_template as ct")
-    .leftJoin("creature_template_locale as ctl", function() {
+    .leftJoin("creature_template_locale as ctl", function () {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
@@ -72,7 +72,7 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
   let queryBuilder = knex()
     .count("* as total")
     .from("creature_template as ct")
-    .leftJoin("creature_template_locale as ctl", function() {
+    .leftJoin("creature_template_locale as ctl", function () {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
@@ -111,9 +111,7 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("creature_template");
+  let queryBuilder = knex().insert(payload).into("creature_template");
 
   queryBuilder
     .then((rows) => {
@@ -129,10 +127,7 @@ ipcMain.on(STORE_CREATURE_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("creature_template")
-    .where(payload);
+  let queryBuilder = knex().select().from("creature_template").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -167,10 +162,7 @@ ipcMain.on(UPDATE_CREATURE_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_CREATURE_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .table("creature_template")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("creature_template").where(payload).delete();
 
   queryBuilder
     .then((rows) => {

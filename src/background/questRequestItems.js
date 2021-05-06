@@ -11,9 +11,7 @@ import {
 const { knex } = require("../libs/mysql");
 
 ipcMain.on(STORE_QUEST_REQUEST_ITEMS, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("quest_request_items");
+  let queryBuilder = knex().insert(payload).into("quest_request_items");
 
   queryBuilder
     .then((rows) => {
@@ -29,10 +27,7 @@ ipcMain.on(STORE_QUEST_REQUEST_ITEMS, (event, payload) => {
 });
 
 ipcMain.on(FIND_QUEST_REQUEST_ITEMS, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("quest_request_items")
-    .where(payload);
+  let queryBuilder = knex().select().from("quest_request_items").where(payload);
 
   queryBuilder
     .then((rows) => {

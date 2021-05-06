@@ -43,9 +43,7 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("item_enchantment_template");
+  let queryBuilder = knex().insert(payload).into("item_enchantment_template");
 
   queryBuilder
     .then((rows) => {

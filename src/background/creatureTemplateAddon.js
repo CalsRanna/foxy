@@ -10,9 +10,7 @@ import {
 const { knex } = require("../libs/mysql");
 
 ipcMain.on(STORE_CREATURE_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("creature_template_addon");
+  let queryBuilder = knex().insert(payload).into("creature_template_addon");
 
   queryBuilder
     .then((rows) => {

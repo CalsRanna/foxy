@@ -135,7 +135,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.scalingStatDistribution = newValue;
       this.ID = newValue;
     },

@@ -18,7 +18,7 @@ ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
     .select(["mlt.*", "it.name", "itl.Name as localeName"])
     .from("milling_loot_template as mlt")
     .leftJoin("item_template as it", "mlt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -41,9 +41,7 @@ ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_MILLING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("milling_loot_template");
+  let queryBuilder = knex().insert(payload).into("milling_loot_template");
 
   queryBuilder
     .then((rows) => {

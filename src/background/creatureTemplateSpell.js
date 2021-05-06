@@ -35,9 +35,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATE_SPELLS, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_TEMPLATE_SPELL, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("creature_template_spell");
+  let queryBuilder = knex().insert(payload).into("creature_template_spell");
 
   queryBuilder
     .then((rows) => {

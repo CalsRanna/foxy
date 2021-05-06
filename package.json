@@ -1,82 +1,45 @@
 {
   "name": "foxy",
-  "description": "A wow editor useful and easy to use.",
+  "version": "1.0.4",
   "author": "Cals Ranna",
-  "version": "0.1.4",
   "private": true,
   "scripts": {
-    "dev": "yarn dev:all",
-    "dev:all": "concurrently -n=vue,electron -c=green,blue \"yarn dev:vue\" \"yarn dev:electron\"",
-    "dev:vue": "vite",
-    "dev:electron": "node script/build --env=development --watch",
-    "build": "yarn build:vue && yarn build:electron && electron-builder",
-    "build:vue": "vite build",
-    "build:electron": "node script/build --env=production",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0"
+    "lint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
   },
-  "main": "dist/main/build.js",
-  "build": {
-    "appId": "xxx@gmail.com",
-    "electronDownload": {
-      "mirror": "https://npm.taobao.org/mirrors/electron/"
-    },
-    "files": [
-      "!node_modules",
-      "dist/main/**",
-      "dist/render/**"
-    ],
-    "mac": {
-      "artifactName": "${productName}_setup_${version}.${ext}",
-      "target": [
-        "dmg"
-      ]
-    },
-    "win": {
-      "target": [
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "artifactName": "${productName}_setup_${version}.${ext}"
-    },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": false
-    }
-  },
+  "main": "background.js",
   "dependencies": {
-    "vue": "^3.0.5",
+    "@vue/cli-service": "^4.5.12",
+    "axios": "^0.21.1",
+    "chart.js": "^3.2.1",
+    "conventional-changelog-cli": "^2.1.1",
+    "core-js": "^3.6.5",
+    "element-ui": "^2.15.1",
+    "knex": "^0.95.4",
+    "markdown-it": "^12.0.6",
+    "mysql": "^2.18.1",
+    "vue": "^2.6.12",
     "vue-router": "^3.5.1",
-    "vuex": "^3.6.2"
+    "vue-template-compiler": "^2.6.12",
+    "vuex": "^3.6.2",
+    "warcrafty": "^1.0.12"
   },
   "devDependencies": {
-    "@rollup/plugin-alias": "^3.1.2",
-    "@rollup/plugin-commonjs": "^18.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^11.2.1",
-    "@vitejs/plugin-vue": "^1.2.1",
-    "@vue/compiler-sfc": "^3.0.11",
-    "chalk": "^4.1.1",
-    "concurrently": "^6.0.2",
-    "conventional-changelog-cli": "^2.1.1",
-    "dotenv": "^8.2.0",
-    "electron": "^12.0.2",
-    "electron-builder": "^22.10.5",
-    "electron-connect": "^0.6.3",
-    "electron-updater": "^4.3.8",
-    "markdown-it": "^12.0.6",
-    "minimist": "^1.2.5",
-    "ora": "^5.4.0",
-    "rollup-plugin-esbuild": "^4.1.0",
-    "sass": "^1.32.11",
-    "typescript": "^4.2.4",
-    "vite": "^2.2.1",
-    "vue-tsc": "^0.0.25",
-    "wait-on": "^5.3.0"
+    "@vue/cli-plugin-babel": "^4.5.12",
+    "@vue/cli-plugin-eslint": "^4.5.12",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "babel-eslint": "^10.1.0",
+    "electron": "11.0.0",
+    "electron-devtools-installer": "^3.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "prettier": "^2.2.1",
+    "vue-cli-plugin-electron-builder": "^2.0.0-rc.6"
   }
 }
