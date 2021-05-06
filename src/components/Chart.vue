@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Chart from "chart.js";
+import Chart from "chart.js/auto";
 
 export default {
   data() {
