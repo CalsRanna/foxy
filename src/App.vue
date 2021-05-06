@@ -128,6 +128,7 @@ export default {
     ]),
     ...mapActions("global", [
       "findLatestVersion",
+      "findNetDiskUrl",
       "setActive",
       "storeDeveloperConfig",
       "storeMysqlConfig",
@@ -273,6 +274,7 @@ export default {
         }, 500);
       }
       this.findLatestVersion();
+      this.findNetDiskUrl();
     },
   },
   mounted() {
