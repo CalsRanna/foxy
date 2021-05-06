@@ -4,6 +4,7 @@ import axios from "axios";
 
 import {
   FIND_LATEST_VERSION,
+  FIND_NET_DISK_URL,
   INIT_MYSQL_CONNECTION,
   SET_ACTIVE,
   STORE_MYSQL_CONFIG,
@@ -19,6 +20,7 @@ export default {
   state: () => ({
     latestVersion: null,
     downloadUrl: null,
+    netDiskUrl: {},
     debug: false,
     active: "dashboard",
     mysqlConfig: {
@@ -50,6 +52,24 @@ export default {
               });
               resolve();
             }
+          })
+          .catch(() => {
+            reject();
+          });
+      });
+    },
+    findNetDiskUrl({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get(
+            "https://service-10eupx2f-1257886063.cd.apigw.tencentcs.com/release/APIService-GetNetDiskUrl"
+          )
+          .then((response) => {
+            commit(FIND_NET_DISK_URL, {
+              url: response.data.url,
+              code: response.data.code,
+            });
+            resolve();
           })
           .catch(() => {
             reject();
@@ -131,6 +151,9 @@ export default {
     [FIND_LATEST_VERSION](state, payload) {
       state.latestVersion = payload.version;
       state.downloadUrl = payload.url;
+    },
+    [FIND_NET_DISK_URL](state, payload) {
+      state.netDiskUrl = payload;
     },
     [SET_ACTIVE](state, active) {
       state.active = active;

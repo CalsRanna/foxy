@@ -112,10 +112,7 @@
         </el-row>
       </el-col>
       <el-col :span="8">
-        <el-card>
-          <Chart :labels="labels" :data="data"></Chart>
-        </el-card>
-        <el-card style="margin-top: 16px; font-size: 14px">
+        <el-card style="font-size: 14px">
           <div slot="header">
             <span>介绍</span>
           </div>
@@ -150,7 +147,17 @@
             >
               下载页面
             </span>
-            或者
+            或前往
+            <el-tooltip>
+              <span
+                style="color: #409eff; cursor: pointer"
+                @click="() => openBrowser(netDiskUrl.url)"
+              >
+                百度网盘
+              </span>
+              <span slot="content">提取码：{{ netDiskUrl.code }}</span>
+            </el-tooltip>
+            下载。你也可以
             <span
               style="color: #409eff; cursor: pointer"
               @click="() => openBrowser('https://github.com/CalsRanna/foxy')"
@@ -197,6 +204,7 @@ export default {
     ...mapState("global", {
       latestVersion: "latestVersion",
       downloadUrl: "downloadUrl",
+      netDiskUrl: "netDiskUrl",
     }),
     ...mapState("version", {
       coreVersion: "version",
