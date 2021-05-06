@@ -129,7 +129,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.quest = newValue;
       this.id = newValue;
     },

@@ -40,9 +40,7 @@ ipcMain.on(INIT_DBC_CONFIG, (event, payload) => {
 });
 
 ipcMain.on(SEARCH_DBC_FACTIONS, (event) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_faction");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_faction");
 
   queryBuilder
     .then((rows) => {
@@ -213,9 +211,7 @@ ipcMain.on(SEARCH_DBC_CREATURE_MODEL_DATAS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_ITEMS, (event) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_item");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_item");
 
   queryBuilder
     .then((rows) => {
@@ -281,9 +277,7 @@ ipcMain.on(SEARCH_DBC_ITEM_DISPLAY_INFOS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_spell");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_spell");
 
   queryBuilder
     .then((rows) => {
@@ -315,9 +309,7 @@ ipcMain.on(SEARCH_DBC_SPELLS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_SPELL_DURATIONS, (event) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_spell_duration");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_spell_duration");
 
   queryBuilder
     .then((rows) => {
@@ -421,9 +413,7 @@ ipcMain.on(SEARCH_DBC_SCALING_STAT_VALUES, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_ITEM_SETS, (event) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_item_set");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_item_set");
 
   queryBuilder
     .then((rows) => {
@@ -597,9 +587,7 @@ ipcMain.on(SEARCH_DBC_SPELL_CAST_TIMES, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_SPELL_RANGES, (event) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_spell_range");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_spell_range");
 
   queryBuilder
     .then((rows) => {
@@ -631,9 +619,7 @@ ipcMain.on(SEARCH_DBC_SPELL_RANGES, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_SPELL_MECHANICS, (event) => {
-  let queryBuilder = knex()
-    .select()
-    .from("foxy.dbc_spell_mechanic");
+  let queryBuilder = knex().select().from("foxy.dbc_spell_mechanic");
 
   queryBuilder
     .then((rows) => {
@@ -665,9 +651,7 @@ ipcMain.on(SEARCH_DBC_SPELL_MECHANICS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_TALENTS, (event) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_talent");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_talent");
 
   queryBuilder
     .then((rows) => {
@@ -699,9 +683,7 @@ ipcMain.on(SEARCH_DBC_TALENTS, (event) => {
 });
 
 ipcMain.on(SEARCH_DBC_TALENT_TABS, (event) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_talent_tab");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_talent_tab");
 
   queryBuilder
     .then((rows) => {
@@ -733,9 +715,7 @@ ipcMain.on(SEARCH_DBC_TALENT_TABS, (event) => {
 });
 
 ipcMain.on(EXPORT_ITEM_DBC, (event) => {
-  let queryBuilder = knex()
-    .select()
-    .from("foxy.dbc_item");
+  let queryBuilder = knex().select().from("foxy.dbc_item");
 
   event.reply(`${EXPORT_ITEM_DBC}_PROGRESS`, "Searching database");
   queryBuilder
@@ -757,9 +737,7 @@ ipcMain.on(EXPORT_ITEM_DBC, (event) => {
 });
 
 ipcMain.on(EXPORT_SPELL_DBC, (event) => {
-  let queryBuilder = knex()
-    .select()
-    .from("foxy.dbc_spell");
+  let queryBuilder = knex().select().from("foxy.dbc_spell");
 
   event.reply(`${EXPORT_SPELL_DBC}_PROGRESS`, "Searching database");
   queryBuilder
@@ -781,9 +759,7 @@ ipcMain.on(EXPORT_SPELL_DBC, (event) => {
 });
 
 ipcMain.on(EXPORT_SCALING_STAT_DISTRIBUTION_DBC, (event) => {
-  let queryBuilder = knex()
-    .select()
-    .from("foxy.dbc_scaling_stat_distribution");
+  let queryBuilder = knex().select().from("foxy.dbc_scaling_stat_distribution");
 
   event.reply(
     `${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_PROGRESS`,

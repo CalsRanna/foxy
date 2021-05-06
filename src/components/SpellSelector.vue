@@ -103,7 +103,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.spell = newValue;
       this.ID = newValue;
     },

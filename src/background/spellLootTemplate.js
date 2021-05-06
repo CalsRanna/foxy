@@ -18,7 +18,7 @@ ipcMain.on(SEARCH_SPELL_LOOT_TEMPLATES, (event, payload) => {
     .select(["slt.*", "it.name", "itl.Name as localeName"])
     .from("spell_loot_template as slt")
     .leftJoin("item_template as it", "slt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -41,9 +41,7 @@ ipcMain.on(SEARCH_SPELL_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_SPELL_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("spell_loot_template");
+  let queryBuilder = knex().insert(payload).into("spell_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -59,10 +57,7 @@ ipcMain.on(STORE_SPELL_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("spell_loot_template")
-    .where(payload);
+  let queryBuilder = knex().select().from("spell_loot_template").where(payload);
 
   queryBuilder
     .then((rows) => {

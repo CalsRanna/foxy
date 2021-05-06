@@ -1,4 +1,15 @@
-const sourceTypes = ["生物", "物体", "区域触发器", "", "", "", "", "", "", "定时动作列表"];
+const sourceTypes = [
+  "生物",
+  "物体",
+  "区域触发器",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "定时动作列表",
+];
 
 const eventTypes = [
   "进入战斗",
@@ -78,7 +89,7 @@ const eventTypes = [
   "友方血量百分比",
   "生物进入距离范围",
   "物体进入距离范围",
-  "计数器设置"
+  "计数器设置",
 ];
 
 const actionTypes = [
@@ -196,7 +207,7 @@ const actionTypes = [
   "开始最近的路径点行动",
   "未知",
   "未知",
-  "升起"
+  "升起",
 ];
 
 const targetTypes = [
@@ -226,7 +237,7 @@ const targetTypes = [
   "拥有者或者召唤者",
   "仇恨列表",
   "最近的敌方",
-  "最近的友方"
+  "最近的友方",
 ];
 
 export { sourceTypes, eventTypes, actionTypes, targetTypes };

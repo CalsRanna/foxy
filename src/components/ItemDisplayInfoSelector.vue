@@ -67,11 +67,11 @@
           <template slot-scope="scope">
             <el-image
               :src="`/icons/${scope.row.InventoryIcon_1}.png`"
-              style="width: 32px; height:32px;margin: 0; padding: 0px 0 0 0"
+              style="width: 32px; height: 32px; margin: 0; padding: 0px 0 0 0"
             >
               <el-image
                 src="/icons/INV_Misc_QuestionMark.png"
-                style="width: 32px; height:32px;margin: 0; padding: 0px 0 0 0"
+                style="width: 32px; height: 32px; margin: 0; padding: 0px 0 0 0"
                 slot="error"
               ></el-image>
             </el-image>
@@ -118,7 +118,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.itemDisplayInfo = newValue;
       this.ID = newValue;
     },

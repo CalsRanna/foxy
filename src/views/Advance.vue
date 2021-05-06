@@ -19,9 +19,7 @@
           <p class="summary-title">
             缩放属性分配<span>Scaling Stat Distribution</span>
           </p>
-          <p class="summary-content">
-            用于设定传家宝的具体属性分配规则
-          </p>
+          <p class="summary-content">用于设定传家宝的具体属性分配规则</p>
         </el-card>
       </el-col>
       <el-col :span="6">
@@ -31,9 +29,7 @@
           @click.native="() => navigate('/item-set')"
         >
           <p class="summary-title">套装<span>Item Set</span></p>
-          <p class="summary-content">
-            套装的部件及奖励
-          </p>
+          <p class="summary-content">套装的部件及奖励</p>
         </el-card>
       </el-col>
       <el-col :span="6">
@@ -43,9 +39,7 @@
           @click.native="() => navigate('/talent')"
         >
           <p class="summary-title">天赋<span>Talent</span></p>
-          <p class="summary-content">
-            天赋页面的技能
-          </p>
+          <p class="summary-content">天赋页面的技能</p>
         </el-card>
       </el-col>
       <el-col :span="6">
@@ -55,9 +49,7 @@
           @click.native="() => navigate('/talent-tab')"
         >
           <p class="summary-title">天赋页<span>Talent</span></p>
-          <p class="summary-content">
-            天赋页的相关信息
-          </p>
+          <p class="summary-content">天赋页的相关信息</p>
         </el-card>
       </el-col>
     </el-row>

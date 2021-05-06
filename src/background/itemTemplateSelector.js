@@ -23,7 +23,7 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       "it.RequiredLevel",
     ])
     .from("item_template as it")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -74,7 +74,7 @@ ipcMain.on(COUNT_ITEM_TEMPLATES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex()
     .count("* as total")
     .from("item_template as it")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",

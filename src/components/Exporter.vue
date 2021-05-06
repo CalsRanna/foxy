@@ -16,7 +16,7 @@
       <el-checkbox v-model="checkedMpq">
         同时生成{{ mpqDefaultName }}
       </el-checkbox>
-      <div style="margin: 15px 0;"></div>
+      <div style="margin: 15px 0"></div>
       <el-checkbox-group :value="checkedDbcs" @input="handleInput">
         <el-checkbox v-for="dbc in dbcs" :label="dbc" :key="dbc">
           {{ dbc }}
@@ -58,7 +58,7 @@
       <ul style="list-style: none; color: #909399" v-if="active == 0">
         <li>
           <!-- <i class="el-icon-loading"></i> -->
-          <i class="el-icon-check" style="color: #67C23A"></i>
+          <i class="el-icon-check" style="color: #67c23a"></i>
           准备Item数据
           <span> ，共{{ 46101 }}条数据 </span>
         </li>
@@ -74,7 +74,7 @@
       <ul style="list-style: none; color: #909399" v-else-if="active == 1">
         <li>
           <!-- <i class="el-icon-loading"></i> -->
-          <i class="el-icon-check" style="color: #67C23A"></i>
+          <i class="el-icon-check" style="color: #67c23a"></i>
           写入Item.dbc
         </li>
         <li>

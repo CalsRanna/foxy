@@ -17,10 +17,10 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ENDERS, (event, payload) => {
   let queryBuilder = knex()
     .select(["gqe.*", "gt.name", "gtl.Name as localeName"])
     .from("gameobject_questender as gqe")
-    .leftJoin("gameobject_template as gt", function() {
+    .leftJoin("gameobject_template as gt", function () {
       this.on("gqe.id", "=", "gt.entry");
     })
-    .leftJoin("gameobject_template_locale as gtl", function() {
+    .leftJoin("gameobject_template_locale as gtl", function () {
       this.on("gt.entry", "=", "gtl.entry").andOn(
         "gtl.locale",
         "=",
@@ -43,9 +43,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ENDERS, (event, payload) => {
 });
 
 ipcMain.on(STORE_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("gameobject_questender");
+  let queryBuilder = knex().insert(payload).into("gameobject_questender");
 
   queryBuilder
     .then((rows) => {

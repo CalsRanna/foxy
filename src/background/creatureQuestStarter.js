@@ -17,10 +17,10 @@ ipcMain.on(SEARCH_CREATURE_QUEST_STARTERS, (event, payload) => {
   let queryBuilder = knex()
     .select(["cqs.*", "ct.name", "ctl.Name as localeName"])
     .from("creature_queststarter as cqs")
-    .leftJoin("creature_template as ct", function() {
+    .leftJoin("creature_template as ct", function () {
       this.on("cqs.id", "=", "ct.entry");
     })
-    .leftJoin("creature_template_locale as ctl", function() {
+    .leftJoin("creature_template_locale as ctl", function () {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
@@ -43,9 +43,7 @@ ipcMain.on(SEARCH_CREATURE_QUEST_STARTERS, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_QUEST_STARTER, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("creature_queststarter");
+  let queryBuilder = knex().insert(payload).into("creature_queststarter");
 
   queryBuilder
     .then((rows) => {

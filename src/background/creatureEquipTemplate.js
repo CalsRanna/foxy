@@ -30,7 +30,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
     ])
     .from("creature_equip_template as cet")
     .leftJoin("item_template as it1", "cet.ItemID1", "it1.entry")
-    .leftJoin("item_template_locale as itl1", function() {
+    .leftJoin("item_template_locale as itl1", function () {
       this.on("cet.ItemID1", "=", "itl1.ID").andOn(
         "itl1.locale",
         "=",
@@ -38,7 +38,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
       );
     })
     .leftJoin("item_template as it2", "cet.ItemID2", "it2.entry")
-    .leftJoin("item_template_locale as itl2", function() {
+    .leftJoin("item_template_locale as itl2", function () {
       this.on("cet.ItemID2", "=", "itl2.ID").andOn(
         "itl2.locale",
         "=",
@@ -46,7 +46,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
       );
     })
     .leftJoin("item_template as it3", "cet.ItemID3", "it3.entry")
-    .leftJoin("item_template_locale as itl3", function() {
+    .leftJoin("item_template_locale as itl3", function () {
       this.on("cet.ItemID3", "=", "itl3.ID").andOn(
         "itl3.locale",
         "=",
@@ -69,9 +69,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("creature_equip_template");
+  let queryBuilder = knex().insert(payload).into("creature_equip_template");
 
   queryBuilder
     .then((rows) => {

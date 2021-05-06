@@ -95,9 +95,7 @@ ipcMain.on(COUNT_SPELLS, (event, payload) => {
 });
 
 ipcMain.on(STORE_SPELL, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("foxy.dbc_spell");
+  let queryBuilder = knex().insert(payload).into("foxy.dbc_spell");
 
   queryBuilder
     .then((rows) => {
@@ -113,10 +111,7 @@ ipcMain.on(STORE_SPELL, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("foxy.dbc_spell")
-    .where(payload);
+  let queryBuilder = knex().select().from("foxy.dbc_spell").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -151,10 +146,7 @@ ipcMain.on(UPDATE_SPELL, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SPELL, (event, payload) => {
-  let queryBuilder = knex()
-    .table("foxy.dbc_spell")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("foxy.dbc_spell").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -212,9 +204,7 @@ ipcMain.on(COPY_SPELL, (event, payload) => {
   ])
     .then(() => {
       spell.ID = ID + 1;
-      let queryBuilder = knex()
-        .insert(spell)
-        .into("foxy.dbc_spell");
+      let queryBuilder = knex().insert(spell).into("foxy.dbc_spell");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_SPELL, rows);

@@ -1,20 +1,48 @@
 <template>
   <div>
-    <el-input v-model="flag" :placeholder="placeholder" @input="input" @change="blur">
-      <i class="el-icon-s-operation clickable-icon" slot="suffix" style="margin-right: 8px" @click="showDialog"></i>
+    <el-input
+      v-model="flag"
+      :placeholder="placeholder"
+      @input="input"
+      @change="blur"
+    >
+      <i
+        class="el-icon-s-operation clickable-icon"
+        slot="suffix"
+        style="margin-right: 8px"
+        @click="showDialog"
+      ></i>
     </el-input>
-    <el-dialog :visible.sync="visible" :show-close="false" :close-on-click-modal="false" @opened="init">
+    <el-dialog
+      :visible.sync="visible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      @opened="init"
+    >
       <div slot="title">
-        <span style="font-size: 18px; color: #303133; margin-right: 16px">{{ title }}</span>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px">{{
+          title
+        }}</span>
       </div>
-      <el-table :data="flags" @selection-change="change" @row-click="select" class="flag-editor">
+      <el-table
+        :data="flags"
+        @selection-change="change"
+        @row-click="select"
+        class="flag-editor"
+      >
         <el-table-column type="selection" width="48"></el-table-column>
         <el-table-column prop="flag" label="标识"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
-        <el-table-column prop="comment" label="描述" min-width="400"></el-table-column>
+        <el-table-column
+          prop="comment"
+          label="描述"
+          min-width="400"
+        ></el-table-column>
       </el-table>
       <div slot="footer">
-        <span style="color: #606266; margin-right: 8px">合计值：{{ selectedFlag }}</span>
+        <span style="color: #606266; margin-right: 8px"
+          >合计值：{{ selectedFlag }}</span
+        >
         <el-button @click="closeDialog">取消</el-button>
         <el-button type="primary" @click="store">保存</el-button>
       </div>
@@ -86,7 +114,10 @@ export default {
         }
       });
       selections.forEach((selection, index) => {
-        this.$children[1].$children[2].toggleRowSelection(this.flags[index], selection);
+        this.$children[1].$children[2].toggleRowSelection(
+          this.flags[index],
+          selection
+        );
       });
     },
     change(selection) {

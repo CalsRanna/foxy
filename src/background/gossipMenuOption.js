@@ -17,7 +17,7 @@ ipcMain.on(SEARCH_GOSSIP_MENU_OPTIONS, (event, payload) => {
   let queryBuilder = knex()
     .select(["gmo.*", "gmol.OptionText as localeOptionText"])
     .from("gossip_menu_option as gmo")
-    .leftJoin("gossip_menu_option_locale as gmol", function() {
+    .leftJoin("gossip_menu_option_locale as gmol", function () {
       this.on("gmo.MenuID", "=", "gmol.MenuID")
         .andOn("gmo.OptionID", "=", "gmol.OptionID")
         .andOn("gmol.Locale", "=", knex().raw("?", "zhCN"));
@@ -38,9 +38,7 @@ ipcMain.on(SEARCH_GOSSIP_MENU_OPTIONS, (event, payload) => {
 });
 
 ipcMain.on(STORE_GOSSIP_MENU_OPTION, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("gossip_menu_option");
+  let queryBuilder = knex().insert(payload).into("gossip_menu_option");
 
   queryBuilder
     .then((rows) => {
@@ -56,10 +54,7 @@ ipcMain.on(STORE_GOSSIP_MENU_OPTION, (event, payload) => {
 });
 
 ipcMain.on(FIND_GOSSIP_MENU_OPTION, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("gossip_menu_option")
-    .where(payload);
+  let queryBuilder = knex().select().from("gossip_menu_option").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -95,10 +90,7 @@ ipcMain.on(UPDATE_GOSSIP_MENU_OPTION, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_GOSSIP_MENU_OPTION, (event, payload) => {
-  let queryBuilder = knex()
-    .table("gossip_menu_option")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("gossip_menu_option").where(payload).delete();
 
   queryBuilder
     .then((rows) => {

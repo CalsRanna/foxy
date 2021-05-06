@@ -107,7 +107,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.spellRange = newValue;
       this.ID = newValue;
     },

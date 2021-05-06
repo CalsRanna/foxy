@@ -101,7 +101,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.creatureSpellData = newValue;
       this.ID = newValue;
     },

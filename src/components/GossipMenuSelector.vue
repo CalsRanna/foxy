@@ -118,7 +118,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.gossipMenu = newValue;
       this.MenuID = newValue;
     },

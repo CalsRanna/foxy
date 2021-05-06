@@ -36,9 +36,7 @@ ipcMain.on(SEARCH_SPELL_LINKED_SPELLS, (event, payload) => {
 });
 
 ipcMain.on(STORE_SPELL_LINKED_SPELL, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("spell_linked_spell");
+  let queryBuilder = knex().insert(payload).into("spell_linked_spell");
 
   queryBuilder
     .then((rows) => {
@@ -54,10 +52,7 @@ ipcMain.on(STORE_SPELL_LINKED_SPELL, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL_LINKED_SPELL, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("spell_linked_spell")
-    .where(payload);
+  let queryBuilder = knex().select().from("spell_linked_spell").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -92,10 +87,7 @@ ipcMain.on(UPDATE_SPELL_LINKED_SPELL, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SPELL_LINKED_SPELL, (event, payload) => {
-  let queryBuilder = knex()
-    .table("spell_linked_spell")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("spell_linked_spell").where(payload).delete();
 
   queryBuilder
     .then((rows) => {

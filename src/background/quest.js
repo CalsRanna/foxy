@@ -28,7 +28,7 @@ ipcMain.on(SEARCH_QUEST_TEMPLATES, (event, payload) => {
       "qt.MinLevel",
     ])
     .from("quest_template as qt")
-    .leftJoin("quest_template_locale as qtl", function() {
+    .leftJoin("quest_template_locale as qtl", function () {
       this.on("qt.ID", "=", "qtl.ID").andOn(
         "qtl.locale",
         "=",
@@ -66,7 +66,7 @@ ipcMain.on(COUNT_QUEST_TEMPLATES, (event, payload) => {
   let queryBuilder = knex()
     .count("* as total")
     .from("quest_template as qt")
-    .leftJoin("quest_template_locale as qtl", function() {
+    .leftJoin("quest_template_locale as qtl", function () {
       this.on("qt.ID", "=", "qtl.ID").andOn(
         "qtl.locale",
         "=",
@@ -98,9 +98,7 @@ ipcMain.on(COUNT_QUEST_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_QUEST_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("quest_template");
+  let queryBuilder = knex().insert(payload).into("quest_template");
 
   queryBuilder
     .then((rows) => {
@@ -116,10 +114,7 @@ ipcMain.on(STORE_QUEST_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_QUEST_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("quest_template")
-    .where(payload);
+  let queryBuilder = knex().select().from("quest_template").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -154,10 +149,7 @@ ipcMain.on(UPDATE_QUEST_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_QUEST_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .table("quest_template")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("quest_template").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -215,9 +207,7 @@ ipcMain.on(COPY_QUEST_TEMPLATE, (event, payload) => {
   ])
     .then(() => {
       questTemplate.ID = ID + 1;
-      let queryBuilder = knex()
-        .insert(questTemplate)
-        .into("quest_template");
+      let queryBuilder = knex().insert(questTemplate).into("quest_template");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_QUEST_TEMPLATE, rows);

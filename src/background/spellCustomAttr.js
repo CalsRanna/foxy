@@ -10,9 +10,7 @@ import {
 const { knex } = require("../libs/mysql");
 
 ipcMain.on(STORE_SPELL_CUSTOM_ATTR, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("spell_custom_attr");
+  let queryBuilder = knex().insert(payload).into("spell_custom_attr");
 
   queryBuilder
     .then((rows) => {
@@ -28,10 +26,7 @@ ipcMain.on(STORE_SPELL_CUSTOM_ATTR, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL_CUSTOM_ATTR, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("spell_custom_attr")
-    .where(payload);
+  let queryBuilder = knex().select().from("spell_custom_attr").where(payload);
 
   queryBuilder
     .then((rows) => {

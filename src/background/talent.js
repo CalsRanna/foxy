@@ -83,9 +83,7 @@ ipcMain.on(COUNT_TALENTS, (event, payload) => {
 });
 
 ipcMain.on(STORE_TALENT, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("foxy.dbc_talent");
+  let queryBuilder = knex().insert(payload).into("foxy.dbc_talent");
 
   queryBuilder
     .then((rows) => {
@@ -140,10 +138,7 @@ ipcMain.on(UPDATE_TALENT, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_TALENT, (event, payload) => {
-  let queryBuilder = knex()
-    .table("foxy.dbc_talent")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("foxy.dbc_talent").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -201,9 +196,7 @@ ipcMain.on(COPY_TALENT, (event, payload) => {
   ])
     .then(() => {
       talent.ID = ID + 1;
-      let queryBuilder = knex()
-        .insert(talent)
-        .into("foxy.dbc_talent");
+      let queryBuilder = knex().insert(talent).into("foxy.dbc_talent");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_TALENT, rows);

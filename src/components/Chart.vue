@@ -24,7 +24,7 @@ export default {
     },
   },
   watch: {
-    data: function() {
+    data: function () {
       (this.timer = setTimeout(this.renderChart(), 1000)),
         clearTimeout(this.timer);
     },

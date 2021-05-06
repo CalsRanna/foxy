@@ -1,17 +1,11 @@
 import { ipcMain } from "electron";
 
-import {
-  FIND_VERSION,
-  GLOBAL_MESSAGE_BOX,
-  GLOBAL_MESSAGE,
-} from "../constants";
+import { FIND_VERSION, GLOBAL_MESSAGE_BOX, GLOBAL_MESSAGE } from "../constants";
 
 const { knex } = require("../libs/mysql");
 
 ipcMain.on(FIND_VERSION, (event) => {
-  let queryBuilder = knex()
-    .select()
-    .from("version");
+  let queryBuilder = knex().select().from("version");
 
   queryBuilder
     .then((rows) => {

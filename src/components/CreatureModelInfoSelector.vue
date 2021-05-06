@@ -108,7 +108,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.creatureModelInfo = newValue;
       this.DisplayID = newValue;
     },

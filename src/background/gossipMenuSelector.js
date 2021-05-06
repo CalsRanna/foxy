@@ -13,7 +13,7 @@ ipcMain.on(SEARCH_GOSSIP_MENUS_FOR_SELECTOR, (event, payload) => {
     .select(["gm.*", "nt.text0_0", "nt.text0_1", "ntl.Text0_0", "ntl.Text0_1"])
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
-    .leftJoin("npc_text_locale as ntl", function() {
+    .leftJoin("npc_text_locale as ntl", function () {
       this.on("gm.TextID", "=", "ntl.ID").andOn(
         "ntl.Locale",
         "=",
@@ -55,7 +55,7 @@ ipcMain.on(COUNT_GOSSIP_MENUS_FOR_SELECTOR, (event, payload) => {
     .count("* as total")
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
-    .leftJoin("npc_text_locale as ntl", function() {
+    .leftJoin("npc_text_locale as ntl", function () {
       this.on("gm.TextID", "=", "ntl.ID").andOn(
         "ntl.Locale",
         "=",

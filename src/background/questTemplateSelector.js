@@ -21,7 +21,7 @@ ipcMain.on(SEARCH_QUEST_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       "qt.MinLevel",
     ])
     .from("quest_template as qt")
-    .leftJoin("quest_template_locale as qtl", function() {
+    .leftJoin("quest_template_locale as qtl", function () {
       this.on("qt.ID", "=", "qtl.ID").andOn(
         "qtl.locale",
         "=",
@@ -59,7 +59,7 @@ ipcMain.on(COUNT_QUEST_TEMPLATES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex()
     .count("* as total")
     .from("quest_template as qt")
-    .leftJoin("quest_template_locale as qtl", function() {
+    .leftJoin("quest_template_locale as qtl", function () {
       this.on("qt.ID", "=", "qtl.ID").andOn(
         "qtl.locale",
         "=",

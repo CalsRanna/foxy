@@ -18,7 +18,7 @@ ipcMain.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, payload) => {
     .select(["plt.*", "it.name", "itl.Name as localeName"])
     .from("pickpocketing_loot_template as plt")
     .leftJoin("item_template as it", "plt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -41,9 +41,7 @@ ipcMain.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("pickpocketing_loot_template");
+  let queryBuilder = knex().insert(payload).into("pickpocketing_loot_template");
 
   queryBuilder
     .then((rows) => {

@@ -75,7 +75,7 @@ export default {
     ...mapState("referenceLootTemplate", ["referenceLootTemplates"]),
   },
   watch: {
-    entries: function() {
+    entries: function () {
       (this.timer = setTimeout(this.init(), 1000)), clearTimeout(this.timer);
     },
   },

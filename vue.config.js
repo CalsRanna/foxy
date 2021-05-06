@@ -4,6 +4,7 @@ module.exports = {
       minimize: false,
     },
   },
+
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
@@ -25,4 +26,6 @@ module.exports = {
       externals: ["knex"],
     },
   },
+
+  lintOnSave: false,
 };

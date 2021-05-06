@@ -103,7 +103,7 @@ export default {
     placeholder: String,
   },
   watch: {
-    value: function(newValue) {
+    value: function (newValue) {
       this.itemRandomProperty = newValue;
       this.ID = newValue;
     },

@@ -71,7 +71,7 @@
         lazy
         :disabled="
           creatureTemplate.pickpocketloot == 0 ||
-            creatureTemplate.pickpocketloot == undefined
+          creatureTemplate.pickpocketloot == undefined
         "
       >
         <pickpocketing-loot-template-tab-pane></pickpocketing-loot-template-tab-pane>
@@ -82,7 +82,7 @@
         lazy
         :disabled="
           creatureTemplate.skinloot == 0 ||
-            creatureTemplate.skinloot == undefined
+          creatureTemplate.skinloot == undefined
         "
       >
         <skinning-loot-template-tab-pane></skinning-loot-template-tab-pane>

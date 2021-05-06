@@ -18,7 +18,7 @@ ipcMain.on(SEARCH_ITEM_LOOT_TEMPLATES, (event, payload) => {
     .select(["ilt.*", "it.name", "itl.Name as localeName"])
     .from("item_loot_template as ilt")
     .leftJoin("item_template as it", "ilt.Item", "it.entry")
-    .leftJoin("item_template_locale as itl", function() {
+    .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
@@ -41,9 +41,7 @@ ipcMain.on(SEARCH_ITEM_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_ITEM_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("item_loot_template");
+  let queryBuilder = knex().insert(payload).into("item_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -59,10 +57,7 @@ ipcMain.on(STORE_ITEM_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_ITEM_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("item_loot_template")
-    .where(payload);
+  let queryBuilder = knex().select().from("item_loot_template").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -97,10 +92,7 @@ ipcMain.on(UPDATE_ITEM_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_ITEM_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .table("item_loot_template")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("item_loot_template").where(payload).delete();
 
   queryBuilder
     .then((rows) => {

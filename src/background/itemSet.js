@@ -47,9 +47,7 @@ ipcMain.on(SEARCH_ITEM_SETS, (event, payload) => {
 });
 
 ipcMain.on(COUNT_ITEM_SETS, (event, payload) => {
-  let queryBuilder = knex()
-    .count("* as total")
-    .from("foxy.dbc_item_set");
+  let queryBuilder = knex().count("* as total").from("foxy.dbc_item_set");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
   }
@@ -75,9 +73,7 @@ ipcMain.on(COUNT_ITEM_SETS, (event, payload) => {
 });
 
 ipcMain.on(STORE_ITEM_SET, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("foxy.dbc_item_set");
+  let queryBuilder = knex().insert(payload).into("foxy.dbc_item_set");
 
   queryBuilder
     .then((rows) => {
@@ -93,10 +89,7 @@ ipcMain.on(STORE_ITEM_SET, (event, payload) => {
 });
 
 ipcMain.on(FIND_ITEM_SET, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("foxy.dbc_item_set")
-    .where(payload);
+  let queryBuilder = knex().select().from("foxy.dbc_item_set").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -131,10 +124,7 @@ ipcMain.on(UPDATE_ITEM_SET, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_ITEM_SET, (event, payload) => {
-  let queryBuilder = knex()
-    .table("foxy.dbc_item_set")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex().table("foxy.dbc_item_set").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -192,9 +182,7 @@ ipcMain.on(COPY_ITEM_SET, (event, payload) => {
   ])
     .then(() => {
       itemSet.ID = ID + 1;
-      let queryBuilder = knex()
-        .insert(itemSet)
-        .into("foxy.dbc_item_set");
+      let queryBuilder = knex().insert(itemSet).into("foxy.dbc_item_set");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_ITEM_SET, rows);

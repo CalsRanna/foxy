@@ -20,7 +20,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       "ct.maxlevel",
     ])
     .from("creature_template as ct")
-    .leftJoin("creature_template_locale as ctl", function() {
+    .leftJoin("creature_template_locale as ctl", function () {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
@@ -58,7 +58,7 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex()
     .count("* as total")
     .from("creature_template as ct")
-    .leftJoin("creature_template_locale as ctl", function() {
+    .leftJoin("creature_template_locale as ctl", function () {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
