@@ -1,12 +1,10 @@
-import Knex from "knex";
+var knex = null;
 
-var instance = null;
-
-exports.init = (config) => {
-  instance = Knex({
+var init = function (config) {
+  knex = require("knex")({
     client: "mysql",
     connection: config,
   });
 };
 
-exports.knex = instance;
+export { knex, init };
