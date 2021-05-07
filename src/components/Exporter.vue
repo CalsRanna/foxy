@@ -57,10 +57,10 @@
       </el-steps>
       <ul style="list-style: none; color: #909399" v-if="active == 0">
         <li>
-          <!-- <i class="el-icon-loading"></i> -->
-          <i class="el-icon-check" style="color: #67c23a"></i>
+          <i class="el-icon-loading"></i>
+          <!-- <i class="el-icon-check" style="color: #67c23a"></i> -->
           准备Item数据
-          <span> ，共{{ 46101 }}条数据 </span>
+          <!-- <span> ，共{{ 46101 }}条数据 </span> -->
         </li>
         <li>
           <i class="el-icon-loading"></i>
@@ -103,6 +103,7 @@ const dbcOptions = [
 ];
 
 import { START_EXPORT } from "@/constants";
+import { init } from "@/repository/config";
 
 import { mapState, mapActions } from "vuex";
 
@@ -120,14 +121,15 @@ export default {
     };
   },
   computed: {
+    ...mapState("global", ["mysqlConfig"]),
     ...mapState("exporter", ["checkedDbcs"]),
   },
   methods: {
     ...mapActions("exporter", [
       "updateCheckedDbcs",
-      // "searchItemDbc",
-      // "searchSpellDbc",
-      // "searchScalingStatDistributionDbc",
+      "searchItemDbc",
+      "searchSpellDbc",
+      "searchScalingStatDistributionDbc",
     ]),
     handleCheckAllChange(val) {
       this.isIndeterminate = false;
@@ -143,7 +145,8 @@ export default {
     confirm() {
       this.visible = false;
       this.visible2 = true;
-      this.prepareData();
+      this.searchItemDbc();
+      // this.prepareData();
     },
     prepareData() {
       let promises = [];
@@ -198,8 +201,7 @@ export default {
     },
   },
   mounted() {
-    const fs = require("knex")({});
-    console.log(fs);
+    init(this.mysqlConfig);
     ipcRenderer.on(START_EXPORT, () => {
       if (this.visible == false && this.visible2 == false) {
         this.visible = true;
@@ -208,3 +210,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+li {
+  margin-bottom: 8px;
+}
+</style>
