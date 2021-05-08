@@ -14,7 +14,7 @@ export default {
       commit(UPDATE_CHECKED_DBCS, payload.checkedDbcs);
     },
     searchItemDbc({ commit }) {
-      return Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         itemDbcRepository
           .search()
           .then((rows) => {
