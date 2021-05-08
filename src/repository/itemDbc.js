@@ -1,10 +1,9 @@
-import { knex } from "./config";
-
 var search = function (payload) {
-  console.log(`search in repository`);
-  console.log(knex);
-  return Promise((resolve, reject) => {
-    let queryBuilder = knex.select().from("foxy.dbc_item").where(payload);
+  return new Promise((resolve, reject) => {
+    let queryBuilder = window.knex.select().from("foxy.dbc_item");
+    if (payload) {
+      queryBuilder = queryBuilder.where(payload);
+    }
 
     queryBuilder.then((rows) => {
       resolve(rows);

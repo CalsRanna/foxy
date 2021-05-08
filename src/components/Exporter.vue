@@ -201,7 +201,13 @@ export default {
     },
   },
   mounted() {
-    init(this.mysqlConfig);
+    let config = {
+      host: localStorage.getItem("host"),
+      user: localStorage.getItem("user"),
+      password: localStorage.getItem("password"),
+      database: localStorage.getItem("database"),
+    };
+    init(config);
     ipcRenderer.on(START_EXPORT, () => {
       if (this.visible == false && this.visible2 == false) {
         this.visible = true;
