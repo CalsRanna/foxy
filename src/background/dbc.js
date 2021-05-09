@@ -36,6 +36,7 @@ let path;
 
 ipcMain.on(INIT_DBC_CONFIG, (event, payload) => {
   path = payload.path;
+  global.path = payload.path;
   event.reply(INIT_DBC_CONFIG);
 });
 
