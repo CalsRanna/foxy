@@ -2,6 +2,135 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
+        <h2>1.0.5 <small>2021-05-09</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          fix preload in vue.config.js
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/dda2d9ee7978cc8c6af06893a44c5e40ee27bfa5"
+            text="(dda2d9e)"
+          ></clickable-span>
+        </li>
+        <li>
+          remove some components don't need (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/c8fb0aa7342edc36da6f28f7c518cd974c285610"
+            text="(c8fb0aa)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>creature:</strong> fix missing spell school immune mask
+          (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/4123fbf872918215d10bbfec005961e8b5b866d0"
+            text="(4123fbf)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>creature:</strong> remove some fields to match latest version
+          of creature_template (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/150d7f2980a48d7d2a231b8f73927b26eaba1f20"
+            text="(150d7f2)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>error handler:</strong> fix parse error failure
+          (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/33f5502638d9168968fcabe40beab60cd7e75fb8"
+            text="(33f5502)"
+          ></clickable-span>
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>chart:</strong> remove chart component from dashboard
+          (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/29f81ba7238365bf02ffe8cd2c446e2963d92fd9"
+            text="(29f81ba)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>component:</strong> add spell cast time selector
+          (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/ff0df0759d23ea1894fb4f9dd8b5bc552b3a1896"
+            text="(ff0df07)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>component:</strong> add spell range selector (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/f34bb0fab016fe656118ecb426c4d5e724d4ecb1"
+            text="(f34bb0f)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>creature:</strong> add creature resistance module
+          (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/efcff55a1e1083b408157ee9ac2517af346efaf0"
+            text="(efcff55)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>creature:</strong> add creature spell module (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/447586060ff9d3cf3aad4fd1e860546eb275b56c"
+            text="(4475860)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>dashboard:</strong> add net disk download url (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/2975497b7d8d3a1b012706811a24a75ce5c7becf"
+            text="(2975497)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell mechanic:</strong> add spell mechanic module
+          (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/fa9064ebde9dec31ec92217e45d04813f5e89b58"
+            text="(fa9064e)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>talent:</strong> add loading talent.dbc (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/be86accb01222787ac29dc74e42b028f6e3d0687"
+            text="(be86acc)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>talent:</strong> add talent module (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/f116ded61a2843433cd397d71b04b5beeb07845b"
+            text="(f116ded)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>talent:</strong> add talent tab tab pane to talent
+          (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/a109b15ee9490a3a26d09b4da21fc2e3b7697eb8"
+            text="(a109b15)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>talent tab:</strong> add loading TalentTab.dbc
+          (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/957c4853c0a3ee9cef53be1e69afce5f665ffb9f"
+            text="(957c485)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>talent tab:</strong> add talent tab module (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/8f2c25bc6244e985a82670f5137d2e5a765cbd47"
+            text="(8f2c25b)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>view:</strong> add item set module (<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/777f9445a26a9aae6cc3d20b0548466f882acb1c"
+            text="(777f944)"
+          ></clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.1.4 <small>2021-04-14</small></h2>
       </div>
       <h3>Bug Fixes</h3>
