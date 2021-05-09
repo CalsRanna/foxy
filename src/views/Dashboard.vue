@@ -196,7 +196,7 @@ export default {
   data() {
     return {
       loading: false,
-      version: "0.1.4",
+      version: "0.1.5",
       labels: ["生物", "物品", "物体", "任务", "对话", "内建脚本", "技能"],
     };
   },

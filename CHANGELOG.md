@@ -1,3 +1,33 @@
+## [1.0.5](https://github.com/CalsRanna/foxy/compare/0.1.4...1.0.5) (2021-05-09)
+
+
+### Bug Fixes
+
+* fix preload in vue.config.js ([dda2d9e](https://github.com/CalsRanna/foxy/commit/dda2d9ee7978cc8c6af06893a44c5e40ee27bfa5))
+* remove some components don't need ([c8fb0aa](https://github.com/CalsRanna/foxy/commit/c8fb0aa7342edc36da6f28f7c518cd974c285610))
+* **creature:** fix missing spell school immune mask ([4123fbf](https://github.com/CalsRanna/foxy/commit/4123fbf872918215d10bbfec005961e8b5b866d0))
+* **creature:** remove some fields to match latest version of creature_template ([150d7f2](https://github.com/CalsRanna/foxy/commit/150d7f2980a48d7d2a231b8f73927b26eaba1f20))
+* **error handler:** fix parse error failure ([33f5502](https://github.com/CalsRanna/foxy/commit/33f5502638d9168968fcabe40beab60cd7e75fb8))
+
+
+### Features
+
+* **chart:** remove chart component from dashboard ([29f81ba](https://github.com/CalsRanna/foxy/commit/29f81ba7238365bf02ffe8cd2c446e2963d92fd9))
+* **component:** add spell cast time selector ([ff0df07](https://github.com/CalsRanna/foxy/commit/ff0df0759d23ea1894fb4f9dd8b5bc552b3a1896))
+* **component:** add spell range selector ([f34bb0f](https://github.com/CalsRanna/foxy/commit/f34bb0fab016fe656118ecb426c4d5e724d4ecb1))
+* **creature:** add creature resistance module ([efcff55](https://github.com/CalsRanna/foxy/commit/efcff55a1e1083b408157ee9ac2517af346efaf0))
+* **creature:** add creature spell module ([4475860](https://github.com/CalsRanna/foxy/commit/447586060ff9d3cf3aad4fd1e860546eb275b56c))
+* **dashboard:** add net disk download url ([2975497](https://github.com/CalsRanna/foxy/commit/2975497b7d8d3a1b012706811a24a75ce5c7becf))
+* **spell mechanic:** add spell mechanic module ([fa9064e](https://github.com/CalsRanna/foxy/commit/fa9064ebde9dec31ec92217e45d04813f5e89b58))
+* **talent:** add loading talent.dbc ([be86acc](https://github.com/CalsRanna/foxy/commit/be86accb01222787ac29dc74e42b028f6e3d0687))
+* **talent:** add talent module ([f116ded](https://github.com/CalsRanna/foxy/commit/f116ded61a2843433cd397d71b04b5beeb07845b))
+* **talent:** add talent tab tab pane to talent ([a109b15](https://github.com/CalsRanna/foxy/commit/a109b15ee9490a3a26d09b4da21fc2e3b7697eb8))
+* **talent tab:** add loading TalentTab.dbc ([957c485](https://github.com/CalsRanna/foxy/commit/957c4853c0a3ee9cef53be1e69afce5f665ffb9f))
+* **talent tab:** add talent tab module ([8f2c25b](https://github.com/CalsRanna/foxy/commit/8f2c25bc6244e985a82670f5137d2e5a765cbd47))
+* **view:** add item set module ([777f944](https://github.com/CalsRanna/foxy/commit/777f9445a26a9aae6cc3d20b0548466f882acb1c))
+
+
+
 ## [0.1.4](https://e.coding.net/foxcore/foxcorefoxcore/foxy/compare/0.1.3...0.1.4) (2021-04-14)
 
 
