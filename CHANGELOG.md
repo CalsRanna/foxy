@@ -1,63 +1,55 @@
-## [1.0.5](https://github.com/CalsRanna/foxy/compare/0.1.4...1.0.5) (2021-05-09)
-
+## [0.1.5](https://github.com/CalsRanna/foxy/compare/0.1.4...0.1.5) (2021-05-09)
 
 ### Bug Fixes
 
-* fix preload in vue.config.js ([dda2d9e](https://github.com/CalsRanna/foxy/commit/dda2d9ee7978cc8c6af06893a44c5e40ee27bfa5))
-* remove some components don't need ([c8fb0aa](https://github.com/CalsRanna/foxy/commit/c8fb0aa7342edc36da6f28f7c518cd974c285610))
-* **creature:** fix missing spell school immune mask ([4123fbf](https://github.com/CalsRanna/foxy/commit/4123fbf872918215d10bbfec005961e8b5b866d0))
-* **creature:** remove some fields to match latest version of creature_template ([150d7f2](https://github.com/CalsRanna/foxy/commit/150d7f2980a48d7d2a231b8f73927b26eaba1f20))
-* **error handler:** fix parse error failure ([33f5502](https://github.com/CalsRanna/foxy/commit/33f5502638d9168968fcabe40beab60cd7e75fb8))
-
+- fix preload in vue.config.js ([dda2d9e](https://github.com/CalsRanna/foxy/commit/dda2d9ee7978cc8c6af06893a44c5e40ee27bfa5))
+- remove some components don't need ([c8fb0aa](https://github.com/CalsRanna/foxy/commit/c8fb0aa7342edc36da6f28f7c518cd974c285610))
+- **creature:** fix missing spell school immune mask ([4123fbf](https://github.com/CalsRanna/foxy/commit/4123fbf872918215d10bbfec005961e8b5b866d0))
+- **creature:** remove some fields to match latest version of creature_template ([150d7f2](https://github.com/CalsRanna/foxy/commit/150d7f2980a48d7d2a231b8f73927b26eaba1f20))
+- **error handler:** fix parse error failure ([33f5502](https://github.com/CalsRanna/foxy/commit/33f5502638d9168968fcabe40beab60cd7e75fb8))
 
 ### Features
 
-* **chart:** remove chart component from dashboard ([29f81ba](https://github.com/CalsRanna/foxy/commit/29f81ba7238365bf02ffe8cd2c446e2963d92fd9))
-* **component:** add spell cast time selector ([ff0df07](https://github.com/CalsRanna/foxy/commit/ff0df0759d23ea1894fb4f9dd8b5bc552b3a1896))
-* **component:** add spell range selector ([f34bb0f](https://github.com/CalsRanna/foxy/commit/f34bb0fab016fe656118ecb426c4d5e724d4ecb1))
-* **creature:** add creature resistance module ([efcff55](https://github.com/CalsRanna/foxy/commit/efcff55a1e1083b408157ee9ac2517af346efaf0))
-* **creature:** add creature spell module ([4475860](https://github.com/CalsRanna/foxy/commit/447586060ff9d3cf3aad4fd1e860546eb275b56c))
-* **dashboard:** add net disk download url ([2975497](https://github.com/CalsRanna/foxy/commit/2975497b7d8d3a1b012706811a24a75ce5c7becf))
-* **spell mechanic:** add spell mechanic module ([fa9064e](https://github.com/CalsRanna/foxy/commit/fa9064ebde9dec31ec92217e45d04813f5e89b58))
-* **talent:** add loading talent.dbc ([be86acc](https://github.com/CalsRanna/foxy/commit/be86accb01222787ac29dc74e42b028f6e3d0687))
-* **talent:** add talent module ([f116ded](https://github.com/CalsRanna/foxy/commit/f116ded61a2843433cd397d71b04b5beeb07845b))
-* **talent:** add talent tab tab pane to talent ([a109b15](https://github.com/CalsRanna/foxy/commit/a109b15ee9490a3a26d09b4da21fc2e3b7697eb8))
-* **talent tab:** add loading TalentTab.dbc ([957c485](https://github.com/CalsRanna/foxy/commit/957c4853c0a3ee9cef53be1e69afce5f665ffb9f))
-* **talent tab:** add talent tab module ([8f2c25b](https://github.com/CalsRanna/foxy/commit/8f2c25bc6244e985a82670f5137d2e5a765cbd47))
-* **view:** add item set module ([777f944](https://github.com/CalsRanna/foxy/commit/777f9445a26a9aae6cc3d20b0548466f882acb1c))
-
-
+- **chart:** remove chart component from dashboard ([29f81ba](https://github.com/CalsRanna/foxy/commit/29f81ba7238365bf02ffe8cd2c446e2963d92fd9))
+- **component:** add spell cast time selector ([ff0df07](https://github.com/CalsRanna/foxy/commit/ff0df0759d23ea1894fb4f9dd8b5bc552b3a1896))
+- **component:** add spell range selector ([f34bb0f](https://github.com/CalsRanna/foxy/commit/f34bb0fab016fe656118ecb426c4d5e724d4ecb1))
+- **creature:** add creature resistance module ([efcff55](https://github.com/CalsRanna/foxy/commit/efcff55a1e1083b408157ee9ac2517af346efaf0))
+- **creature:** add creature spell module ([4475860](https://github.com/CalsRanna/foxy/commit/447586060ff9d3cf3aad4fd1e860546eb275b56c))
+- **dashboard:** add net disk download url ([2975497](https://github.com/CalsRanna/foxy/commit/2975497b7d8d3a1b012706811a24a75ce5c7becf))
+- **spell mechanic:** add spell mechanic module ([fa9064e](https://github.com/CalsRanna/foxy/commit/fa9064ebde9dec31ec92217e45d04813f5e89b58))
+- **talent:** add loading talent.dbc ([be86acc](https://github.com/CalsRanna/foxy/commit/be86accb01222787ac29dc74e42b028f6e3d0687))
+- **talent:** add talent module ([f116ded](https://github.com/CalsRanna/foxy/commit/f116ded61a2843433cd397d71b04b5beeb07845b))
+- **talent:** add talent tab tab pane to talent ([a109b15](https://github.com/CalsRanna/foxy/commit/a109b15ee9490a3a26d09b4da21fc2e3b7697eb8))
+- **talent tab:** add loading TalentTab.dbc ([957c485](https://github.com/CalsRanna/foxy/commit/957c4853c0a3ee9cef53be1e69afce5f665ffb9f))
+- **talent tab:** add talent tab module ([8f2c25b](https://github.com/CalsRanna/foxy/commit/8f2c25bc6244e985a82670f5137d2e5a765cbd47))
+- **view:** add item set module ([777f944](https://github.com/CalsRanna/foxy/commit/777f9445a26a9aae6cc3d20b0548466f882acb1c))
 
 ## [0.1.4](https://e.coding.net/foxcore/foxcorefoxcore/foxy/compare/0.1.3...0.1.4) (2021-04-14)
 
-
 ### Bug Fixes
 
-* **creature:** fix creature quest ender don't display ([8a27494](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8a2749475e2cb50da4f65a6cbcc87c0ee8d64c76))
-* **dbc:** fix dbc config while first set ([8b77a26](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8b77a26c704d815af492f7db0fa861d07c822414))
-* **quest:** fix used time is too long when search quest ([44f793c](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/44f793c5c784d395b10b129bded39eaecadfd096))
-* **quest_template:** fix quest template not display when has no znCN locale ([cc409fd](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cc409fd60cc38846497fe1bc3ef9c6ccef0b6088))
-* **reference_loot_template:** fix render error ([9b9349d](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/9b9349d748b3c58bc6f7374d842641d09cef12ae))
-* **scaling stat distribution:** add breadcrumb of advance ([9689065](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/96890652bde32d3f9c034c68d6335cd2850fae84))
-* **spell selector:** fix description not display well ([63b4f2c](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/63b4f2c873eda5e11738d0ba8f5da7cd520757c7))
-
+- **creature:** fix creature quest ender don't display ([8a27494](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8a2749475e2cb50da4f65a6cbcc87c0ee8d64c76))
+- **dbc:** fix dbc config while first set ([8b77a26](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8b77a26c704d815af492f7db0fa861d07c822414))
+- **quest:** fix used time is too long when search quest ([44f793c](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/44f793c5c784d395b10b129bded39eaecadfd096))
+- **quest_template:** fix quest template not display when has no znCN locale ([cc409fd](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cc409fd60cc38846497fe1bc3ef9c6ccef0b6088))
+- **reference_loot_template:** fix render error ([9b9349d](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/9b9349d748b3c58bc6f7374d842641d09cef12ae))
+- **scaling stat distribution:** add breadcrumb of advance ([9689065](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/96890652bde32d3f9c034c68d6335cd2850fae84))
+- **spell selector:** fix description not display well ([63b4f2c](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/63b4f2c873eda5e11738d0ba8f5da7cd520757c7))
 
 ### Features
 
-* **advance:** add advance module ([5db5bc5](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5db5bc58a3c1ca2f1b70e68c573750b3dfafdb8d))
-* **component:** add reference loot template cards ([b37512f](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/b37512fb1391e6fe4dbaeb391e5431dee88b0a7a))
-* **component:** add version card to dashboard ([34fc07b](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/34fc07bd3a202a58622f633caa7992ab18d21d3a))
-* **scaling stat distribution:** add scaling stat distribution module ([6b29d69](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/6b29d69e4cc867418bea7bbe3d9c8c0ce4e90a6d))
-* **spell group:** add spell group tab pane ([e3e98cb](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/e3e98cb4d116c5d0b5465e946529c06385787759))
-* **spell group:** add stack_rule and description when display spell groups ([0e5efa9](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/0e5efa99777c3298d73f1b5645c0ed57a231084d))
-* **spell linked spell:** add spell linked spell tab pane ([cdffda4](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cdffda40096ac97c9d3383fd9388916827eed711))
-* **spell loot template:** add spell loot template tab pane ([5377bf9](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5377bf979bbd7ba0b89d0dcc1337d100cba5b2d6))
-* **spell_area:** add spell area tab pane ([5150532](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5150532208085136c33a4a1ee6f74c1cd7a67610))
-* **spell_bonus_data:** add spell bonus data tab pane ([f6cb1df](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/f6cb1dfc0a345e064e959d03eb04c475fd68083f))
-* **spell_custom_attr:** add spell custom attr tab pane ([ec4c6ee](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/ec4c6ee0fd7847594103b76ddbeb54049cac3a51))
-* **views:** add reference loot template cards to loot template tab panes ([a72e60c](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/a72e60c4e78a8955f9dad35b06c45e84c5058be3))
-
-
+- **advance:** add advance module ([5db5bc5](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5db5bc58a3c1ca2f1b70e68c573750b3dfafdb8d))
+- **component:** add reference loot template cards ([b37512f](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/b37512fb1391e6fe4dbaeb391e5431dee88b0a7a))
+- **component:** add version card to dashboard ([34fc07b](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/34fc07bd3a202a58622f633caa7992ab18d21d3a))
+- **scaling stat distribution:** add scaling stat distribution module ([6b29d69](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/6b29d69e4cc867418bea7bbe3d9c8c0ce4e90a6d))
+- **spell group:** add spell group tab pane ([e3e98cb](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/e3e98cb4d116c5d0b5465e946529c06385787759))
+- **spell group:** add stack_rule and description when display spell groups ([0e5efa9](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/0e5efa99777c3298d73f1b5645c0ed57a231084d))
+- **spell linked spell:** add spell linked spell tab pane ([cdffda4](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cdffda40096ac97c9d3383fd9388916827eed711))
+- **spell loot template:** add spell loot template tab pane ([5377bf9](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5377bf979bbd7ba0b89d0dcc1337d100cba5b2d6))
+- **spell_area:** add spell area tab pane ([5150532](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5150532208085136c33a4a1ee6f74c1cd7a67610))
+- **spell_bonus_data:** add spell bonus data tab pane ([f6cb1df](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/f6cb1dfc0a345e064e959d03eb04c475fd68083f))
+- **spell_custom_attr:** add spell custom attr tab pane ([ec4c6ee](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/ec4c6ee0fd7847594103b76ddbeb54049cac3a51))
+- **views:** add reference loot template cards to loot template tab panes ([a72e60c](https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/a72e60c4e78a8955f9dad35b06c45e84c5058be3))
 
 ## [0.1.3](https://github.com/CalsRanna/foxy/compare/0.1.2-alpha...0.1.3) (2021-03-02)
 

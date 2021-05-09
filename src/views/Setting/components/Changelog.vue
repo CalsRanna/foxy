@@ -2,7 +2,7 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
-        <h2>1.0.5 <small>2021-05-09</small></h2>
+        <h2>0.1.5 <small>2021-05-09</small></h2>
       </div>
       <h3>Bug Fixes</h3>
       <ul>
