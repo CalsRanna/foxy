@@ -133,6 +133,21 @@ function createWindow() {
         },
       ],
     },
+    {
+      label: "关于",
+      submenu: [
+        {
+          label: "关于Foxy",
+          click() {
+            dialog.showMessageBox({
+              message:
+                "Foxy by Cals Ranna\n\n一款致力于让自定义变得更简单的魔兽世界编辑器。",
+              buttons: ["确定"],
+            });
+          },
+        },
+      ],
+    },
   ];
 
   if (process.platform === "darwin") {
