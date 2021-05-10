@@ -2,6 +2,47 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
+        <h2>0.1.6 <small>2021-05-10</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>spell:</strong> fix mechanics didn't work properly
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/99d7e28e87f83246ef194c65683c85fcc604958e"
+            text="(99d7e28)"
+          ></clickable-span>
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>about:</strong> add about view
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/f18f2adbfd7cdb2f265c2babf07c35e5005c3d2b"
+            text="(f18f2ad)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>initiator:</strong> build a new initiator instead of inline
+          dialog
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/59127b9fc9a29d11b8f44fe4db031d5efaf471da"
+            text="(59127b9)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>version:</strong> use state of version instead of data in
+          component
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/920026d46b3cdfa08fd5807f7b3fb785e758d5e9"
+            text="(920026d)"
+          ></clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.1.5 <small>2021-05-09</small></h2>
       </div>
       <h3>Bug Fixes</h3>

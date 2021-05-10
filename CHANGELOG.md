@@ -1,3 +1,19 @@
+## [0.1.6](https://github.com/CalsRanna/foxy/compare/0.1.5...0.1.6) (2021-05-10)
+
+
+### Bug Fixes
+
+* **spell:** fix mechanics didn't work properly ([99d7e28](https://github.com/CalsRanna/foxy/commit/99d7e28e87f83246ef194c65683c85fcc604958e))
+
+
+### Features
+
+* **about:** add about view ([f18f2ad](https://github.com/CalsRanna/foxy/commit/f18f2adbfd7cdb2f265c2babf07c35e5005c3d2b))
+* **initiator:** build a new initiator instead of inline dialog ([59127b9](https://github.com/CalsRanna/foxy/commit/59127b9fc9a29d11b8f44fe4db031d5efaf471da))
+* **version:** use state of version instead of data in component ([920026d](https://github.com/CalsRanna/foxy/commit/920026d46b3cdfa08fd5807f7b3fb785e758d5e9))
+
+
+
 ## [0.1.5](https://github.com/CalsRanna/foxy/compare/0.1.4...0.1.5) (2021-05-09)
 
 ### Bug Fixes
