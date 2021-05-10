@@ -3,6 +3,8 @@
 import { app, protocol, BrowserWindow, ipcMain, dialog, Menu } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
+import "./background/initiator";
+import "./background/exporter";
 import "./background/dbc";
 import "./background/database";
 import "./background/creatureTemplate";
@@ -75,7 +77,6 @@ import "./background/itemRandomSuffixSelector";
 import "./background/itemDisplayInfoSelector";
 import "./background/questTemplateSelector";
 import "./background/version";
-import "./background/exporter";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
