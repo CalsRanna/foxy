@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_FACTION_TEMPLATES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "dft.ID",
       "dft.Faction",
@@ -47,7 +45,7 @@ ipcMain.on(SEARCH_FACTION_TEMPLATES_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_FACTION_TEMPLATES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("foxy.dbc_faction_template as dft")
     .leftJoin("foxy.dbc_faction as df", "dft.Faction", "df.ID");

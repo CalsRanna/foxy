@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["mlt.*", "it.name", "itl.Name as localeName"])
     .from("milling_loot_template as mlt")
     .leftJoin("item_template as it", "mlt.Item", "it.entry")
@@ -22,7 +20,7 @@ ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where("mlt.Entry", payload.Entry);
@@ -41,7 +39,7 @@ ipcMain.on(SEARCH_MILLING_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_MILLING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("milling_loot_template");
+  let queryBuilder = knex.insert(payload).into("milling_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -57,10 +55,7 @@ ipcMain.on(STORE_MILLING_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_MILLING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("milling_loot_template")
-    .where(payload);
+  let queryBuilder = knex.select().from("milling_loot_template").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -76,7 +71,7 @@ ipcMain.on(FIND_MILLING_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_MILLING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("milling_loot_template")
     .where(payload.credential)
     .update(payload.millingLootTemplate);
@@ -95,7 +90,7 @@ ipcMain.on(UPDATE_MILLING_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_MILLING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("milling_loot_template")
     .where(payload)
     .delete();
@@ -117,12 +112,12 @@ ipcMain.on(COPY_MILLING_LOOT_TEMPLATE, (event, payload) => {
   let item = undefined;
   let millingLootTemplate = undefined;
 
-  let itemQueryBuilder = knex()
+  let itemQueryBuilder = knex
     .select("Item")
     .from("milling_loot_template")
     .where("Entry", payload.Entry)
     .orderBy("Item", "desc");
-  let findmillingLootTempalteQueryBuilder = knex()
+  let findmillingLootTempalteQueryBuilder = knex
     .select()
     .from("milling_loot_template")
     .where(payload);
@@ -139,7 +134,7 @@ ipcMain.on(COPY_MILLING_LOOT_TEMPLATE, (event, payload) => {
       if (millingLootTemplate.Reference != 0) {
         millingLootTemplate.Reference = item + 1;
       }
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(millingLootTemplate)
         .into("milling_loot_template");
       queryBuilder

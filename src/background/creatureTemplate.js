@@ -13,10 +13,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "ct.entry",
       "ct.name",
@@ -31,7 +29,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.entry) {
@@ -69,14 +67,14 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("creature_template as ct")
     .leftJoin("creature_template_locale as ctl", function () {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.entry) {
@@ -111,7 +109,7 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("creature_template");
+  let queryBuilder = knex.insert(payload).into("creature_template");
 
   queryBuilder
     .then((rows) => {
@@ -127,7 +125,7 @@ ipcMain.on(STORE_CREATURE_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().select().from("creature_template").where(payload);
+  let queryBuilder = knex.select().from("creature_template").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -143,7 +141,7 @@ ipcMain.on(FIND_CREATURE_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_CREATURE_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_template")
     .where(payload.credential)
     .update(payload.creatureTemplate);
@@ -162,7 +160,7 @@ ipcMain.on(UPDATE_CREATURE_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_CREATURE_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().table("creature_template").where(payload).delete();
+  let queryBuilder = knex.table("creature_template").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -178,7 +176,7 @@ ipcMain.on(DESTROY_CREATURE_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(CREATE_CREATURE_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("entry")
     .from("creature_template")
     .orderBy("entry", "desc");
@@ -202,11 +200,11 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
   let entry = undefined;
   let creatureTemplate = undefined;
 
-  let entryQueryBuilder = knex()
+  let entryQueryBuilder = knex
     .select("entry")
     .from("creature_template")
     .orderBy("entry", "desc");
-  let findCreatureTemplateQueryBuilder = knex()
+  let findCreatureTemplateQueryBuilder = knex
     .select()
     .from("creature_template")
     .where(payload);
@@ -220,7 +218,7 @@ ipcMain.on(COPY_CREATURE_TEMPLATE, (event, payload) => {
   ])
     .then(() => {
       creatureTemplate.entry = entry + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(creatureTemplate)
         .into("creature_template");
       queryBuilder

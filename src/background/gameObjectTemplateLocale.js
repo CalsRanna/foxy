@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("gameobject_template_locale")
     .where(payload);
@@ -29,11 +27,11 @@ ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
 });
 
 ipcMain.on(STORE_GAME_OBJECT_TEMPLATE_LOCALES, (event, payload) => {
-  let deleteQueryBuilder = knex()
+  let deleteQueryBuilder = knex
     .table("gameobject_template_locale")
     .where("entry", payload[0].entry)
     .delete();
-  let insertQueryBuilder = knex()
+  let insertQueryBuilder = knex
     .insert(payload)
     .into("gameobject_template_locale");
 

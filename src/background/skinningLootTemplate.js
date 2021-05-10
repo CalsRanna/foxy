@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["slt.*", "it.name", "itl.Name as localeName"])
     .from("skinning_loot_template as slt")
     .leftJoin("item_template as it", "slt.Item", "it.entry")
@@ -22,7 +20,7 @@ ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where("slt.Entry", payload.Entry);
@@ -41,7 +39,7 @@ ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_SKINNING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("skinning_loot_template");
+  let queryBuilder = knex.insert(payload).into("skinning_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -57,7 +55,7 @@ ipcMain.on(STORE_SKINNING_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_SKINNING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("skinning_loot_template")
     .where(payload);
@@ -76,7 +74,7 @@ ipcMain.on(FIND_SKINNING_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SKINNING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("skinning_loot_template")
     .where(payload.credential)
     .update(payload.skinningLootTemplate);
@@ -95,7 +93,7 @@ ipcMain.on(UPDATE_SKINNING_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SKINNING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("skinning_loot_template")
     .where(payload)
     .delete();
@@ -117,12 +115,12 @@ ipcMain.on(COPY_SKINNING_LOOT_TEMPLATE, (event, payload) => {
   let item = undefined;
   let skinningLootTemplate = undefined;
 
-  let itemQueryBuilder = knex()
+  let itemQueryBuilder = knex
     .select("Item")
     .from("skinning_loot_template")
     .where("Entry", payload.Entry)
     .orderBy("Item", "desc");
-  let findSkinningLootTemplateQueryBuilder = knex()
+  let findSkinningLootTemplateQueryBuilder = knex
     .select()
     .from("skinning_loot_template")
     .where(payload);
@@ -139,7 +137,7 @@ ipcMain.on(COPY_SKINNING_LOOT_TEMPLATE, (event, payload) => {
       if (skinningLootTemplate.Reference != 0) {
         skinningLootTemplate.Reference = item + 1;
       }
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(skinningLootTemplate)
         .into("skinning_loot_template");
       queryBuilder

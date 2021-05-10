@@ -1,10 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import global from "./global";
+import app from "./app";
 import initiator from "./initiator";
 import exporter from "./exporter";
-import dbc from "./dbc";
 import creatureTemplate from "./creatureTemplate";
 import creatureTemplateLocale from "./creatureTemplateLocale";
 import creatureTemplateAddon from "./creatureTemplateAddon";
@@ -81,10 +80,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    global,
+    app,
     initiator,
     exporter,
-    dbc,
     creatureTemplate,
     creatureTemplateLocale,
     creatureTemplateAddon,

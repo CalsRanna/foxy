@@ -13,10 +13,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_TALENTS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "fdt.ID",
       "fdt.TabID",
@@ -54,7 +52,7 @@ ipcMain.on(SEARCH_TALENTS, (event, payload) => {
 });
 
 ipcMain.on(COUNT_TALENTS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("foxy.dbc_talent as fdt")
     .leftJoin("foxy.dbc_spell as fds", "fdt.SpellRank_1", "fds.ID");
@@ -83,7 +81,7 @@ ipcMain.on(COUNT_TALENTS, (event, payload) => {
 });
 
 ipcMain.on(STORE_TALENT, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("foxy.dbc_talent");
+  let queryBuilder = knex.insert(payload).into("foxy.dbc_talent");
 
   queryBuilder
     .then((rows) => {
@@ -99,7 +97,7 @@ ipcMain.on(STORE_TALENT, (event, payload) => {
 });
 
 ipcMain.on(FIND_TALENT, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["fdt.*", "fds.Name_Lang_zhCN"])
     .from("foxy.dbc_talent as fdt")
     .leftJoin("foxy.dbc_spell as fds", "fdt.SpellRank_1", "fds.ID")
@@ -119,7 +117,7 @@ ipcMain.on(FIND_TALENT, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_TALENT, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("foxy.dbc_talent")
     .where(payload.credential)
     .update(payload.talent);
@@ -138,7 +136,7 @@ ipcMain.on(UPDATE_TALENT, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_TALENT, (event, payload) => {
-  let queryBuilder = knex().table("foxy.dbc_talent").where(payload).delete();
+  let queryBuilder = knex.table("foxy.dbc_talent").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -154,7 +152,7 @@ ipcMain.on(DESTROY_TALENT, (event, payload) => {
 });
 
 ipcMain.on(CREATE_TALENT, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("ID")
     .from("foxy.dbc_talent")
     .orderBy("ID", "desc");
@@ -178,11 +176,11 @@ ipcMain.on(COPY_TALENT, (event, payload) => {
   let ID = undefined;
   let talent = undefined;
 
-  let IDQueryBuilder = knex()
+  let IDQueryBuilder = knex
     .select("ID")
     .from("foxy.dbc_talent")
     .orderBy("ID", "desc");
-  let findTalentQueryBuilder = knex()
+  let findTalentQueryBuilder = knex
     .select()
     .from("foxy.dbc_talent")
     .where(payload);
@@ -196,7 +194,7 @@ ipcMain.on(COPY_TALENT, (event, payload) => {
   ])
     .then(() => {
       talent.ID = ID + 1;
-      let queryBuilder = knex().insert(talent).into("foxy.dbc_talent");
+      let queryBuilder = knex.insert(talent).into("foxy.dbc_talent");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_TALENT, rows);

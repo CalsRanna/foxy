@@ -7,11 +7,9 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_WAYPOINT_DATAS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
-    .select(["id", knex().raw("count(point) as points")])
+  let queryBuilder = knex
+    .select(["id", knex.raw("count(point) as points")])
     .groupBy("id")
     .from("waypoint_data");
   if (payload.id) {
@@ -35,8 +33,8 @@ ipcMain.on(SEARCH_WAYPOINT_DATAS_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_WAYPOINT_DATAS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
-    .count({ total: knex().raw("distinct id") })
+  let queryBuilder = knex
+    .count({ total: knex.raw("distinct id") })
     .from("waypoint_data");
   if (payload.id) {
     queryBuilder = queryBuilder.where("id", "like", `%${payload.id}%`);

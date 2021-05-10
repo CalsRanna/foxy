@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SPELL_LINKED_SPELLS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("spell_linked_spell")
     .whereIn("spell_trigger", [
@@ -36,7 +34,7 @@ ipcMain.on(SEARCH_SPELL_LINKED_SPELLS, (event, payload) => {
 });
 
 ipcMain.on(STORE_SPELL_LINKED_SPELL, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("spell_linked_spell");
+  let queryBuilder = knex.insert(payload).into("spell_linked_spell");
 
   queryBuilder
     .then((rows) => {
@@ -52,7 +50,7 @@ ipcMain.on(STORE_SPELL_LINKED_SPELL, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL_LINKED_SPELL, (event, payload) => {
-  let queryBuilder = knex().select().from("spell_linked_spell").where(payload);
+  let queryBuilder = knex.select().from("spell_linked_spell").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -68,7 +66,7 @@ ipcMain.on(FIND_SPELL_LINKED_SPELL, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SPELL_LINKED_SPELL, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("spell_linked_spell")
     .where(payload.credential)
     .update(payload.spellLinkedSpell);
@@ -87,7 +85,7 @@ ipcMain.on(UPDATE_SPELL_LINKED_SPELL, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SPELL_LINKED_SPELL, (event, payload) => {
-  let queryBuilder = knex().table("spell_linked_spell").where(payload).delete();
+  let queryBuilder = knex.table("spell_linked_spell").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -106,11 +104,11 @@ ipcMain.on(COPY_SPELL_LINKED_SPELL, (event, payload) => {
   let spellEffect = undefined;
   let spellLinkedSpell = undefined;
 
-  let spellEffectQueryBuilder = knex()
+  let spellEffectQueryBuilder = knex
     .select("spell_effect")
     .from("spell_linked_spell")
     .orderBy("spell_effect", "desc");
-  let findSpellLinkedSpellQueryBuilder = knex()
+  let findSpellLinkedSpellQueryBuilder = knex
     .select()
     .from("spell_linked_spell")
     .where(payload);
@@ -124,7 +122,7 @@ ipcMain.on(COPY_SPELL_LINKED_SPELL, (event, payload) => {
   ])
     .then(() => {
       spellLinkedSpell.spell_effect = spellEffect + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(spellLinkedSpell)
         .into("spell_linked_spell");
       queryBuilder

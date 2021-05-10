@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["iet.*", "re.*"])
     .from("item_enchantment_template as iet");
   if (payload.type == "properties") {
@@ -43,7 +41,7 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("item_enchantment_template");
+  let queryBuilder = knex.insert(payload).into("item_enchantment_template");
 
   queryBuilder
     .then((rows) => {
@@ -59,7 +57,7 @@ ipcMain.on(STORE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("item_enchantment_template")
     .where(payload);
@@ -81,7 +79,7 @@ ipcMain.on(FIND_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("item_enchantment_template")
     .where(payload.credential)
     .update(payload.itemEnchantmentTemplate);
@@ -100,7 +98,7 @@ ipcMain.on(UPDATE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("item_enchantment_template")
     .where(payload)
     .delete();
@@ -122,12 +120,12 @@ ipcMain.on(COPY_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
   let ench = undefined;
   let itemEnchantmentTemplate = undefined;
 
-  let enchQueryBuilder = knex()
+  let enchQueryBuilder = knex
     .select("ench")
     .from("item_enchantment_template")
     .where("entry", payload.entry)
     .orderBy("ench", "desc");
-  let findItemEnchantmentTemplateQueryBuilder = knex()
+  let findItemEnchantmentTemplateQueryBuilder = knex
     .select()
     .from("item_enchantment_template")
     .where(payload);
@@ -141,7 +139,7 @@ ipcMain.on(COPY_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
   ])
     .then(() => {
       itemEnchantmentTemplate.ench = ench + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(itemEnchantmentTemplate)
         .into("item_enchantment_template");
       queryBuilder

@@ -3,7 +3,6 @@ import {
   LOAD_MYSQL_CONFIG,
   LOAD_DBC_CONFIG,
   INITIALIZE_MYSQL_CONNECTION,
-  INITIALIZE_DBC_PATH,
   LOAD_DBC_CREATURE_DISPLAY_INFOS,
   LOAD_DBC_CREATURE_MODEL_DATAS,
   LOAD_DBC_CREATURE_SPELL_DATAS,
@@ -24,6 +23,7 @@ import {
   LOAD_DBC_SPELL_RANGES,
   LOAD_DBC_TALENTS,
   LOAD_DBC_TALENT_TABS,
+  TEST_MYSQL_CONNECTION,
   GLOBAL_MESSAGE_BOX,
 } from "../constants";
 
@@ -52,24 +52,20 @@ const {
   dbcTalentTabSql,
 } = require("../libs/mysql");
 
-let knex;
-let path;
-
 ipcMain.on(LOAD_MYSQL_CONFIG, (event, payload) => {
   global.mysqlConfig = payload;
 });
 
 ipcMain.on(LOAD_DBC_CONFIG, (event, payload) => {
   global.dbcConfig = payload;
-  path = payload.path;
+  global.path = payload.path;
 });
 
 ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
-  knex = require("knex")({
+  global.knex = require("knex")({
     client: "mysql",
     connection: global.mysqlConfig,
   });
-  global.knex = knex;
   knex
     .raw(dbcDatabaseSql)
     .then(() => {
@@ -101,13 +97,11 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         .catch((error) => {
           event.reply(`${INITIALIZE_MYSQL_CONNECTION}_REJECT`, error);
           event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-          console.log(error);
         });
     })
     .catch((error) => {
       event.reply(`${INITIALIZE_MYSQL_CONNECTION}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -129,13 +123,11 @@ ipcMain.on(LOAD_DBC_CREATURE_DISPLAY_INFOS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_CREATURE_DISPLAY_INFOS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_CREATURE_DISPLAY_INFOS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_CREATURE_DISPLAY_INFOS);
@@ -144,7 +136,6 @@ ipcMain.on(LOAD_DBC_CREATURE_DISPLAY_INFOS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_CREATURE_DISPLAY_INFOS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -166,13 +157,11 @@ ipcMain.on(LOAD_DBC_CREATURE_MODEL_DATAS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_CREATURE_MODEL_DATAS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_CREATURE_MODEL_DATAS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_CREATURE_MODEL_DATAS);
@@ -181,7 +170,6 @@ ipcMain.on(LOAD_DBC_CREATURE_MODEL_DATAS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_CREATURE_MODEL_DATAS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -203,13 +191,11 @@ ipcMain.on(LOAD_DBC_CREATURE_SPELL_DATAS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_CREATURE_SPELL_DATAS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_CREATURE_SPELL_DATAS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_CREATURE_SPELL_DATAS);
@@ -218,7 +204,6 @@ ipcMain.on(LOAD_DBC_CREATURE_SPELL_DATAS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_CREATURE_SPELL_DATAS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -238,13 +223,11 @@ ipcMain.on(LOAD_DBC_FACTIONS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_FACTIONS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_FACTIONS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_FACTIONS);
@@ -253,7 +236,6 @@ ipcMain.on(LOAD_DBC_FACTIONS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_FACTIONS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -273,13 +255,11 @@ ipcMain.on(LOAD_DBC_FACTION_TEMPLATES, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_FACTION_TEMPLATES}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_FACTION_TEMPLATES}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_FACTION_TEMPLATES);
@@ -288,7 +268,6 @@ ipcMain.on(LOAD_DBC_FACTION_TEMPLATES, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_FACTION_TEMPLATES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -308,13 +287,11 @@ ipcMain.on(LOAD_DBC_ITEMS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_ITEMS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_ITEMS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_ITEMS);
@@ -323,7 +300,6 @@ ipcMain.on(LOAD_DBC_ITEMS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_ITEMS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -345,13 +321,11 @@ ipcMain.on(LOAD_DBC_ITEM_DISPLAY_INFOS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_ITEM_DISPLAY_INFOS);
@@ -360,7 +334,6 @@ ipcMain.on(LOAD_DBC_ITEM_DISPLAY_INFOS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -385,13 +358,11 @@ ipcMain.on(LOAD_DBC_ITEM_RANDOM_PROPERTITIES, (event) => {
                   error
                 );
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_ITEM_RANDOM_PROPERTITIES}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_ITEM_RANDOM_PROPERTITIES);
@@ -400,7 +371,6 @@ ipcMain.on(LOAD_DBC_ITEM_RANDOM_PROPERTITIES, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_ITEM_RANDOM_PROPERTITIES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -422,13 +392,11 @@ ipcMain.on(LOAD_DBC_ITEM_RANDOM_SUFFIXES, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_ITEM_RANDOM_SUFFIXES}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_ITEM_RANDOM_SUFFIXES}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_ITEM_RANDOM_SUFFIXES);
@@ -437,7 +405,6 @@ ipcMain.on(LOAD_DBC_ITEM_RANDOM_SUFFIXES, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_ITEM_RANDOM_SUFFIXES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -457,13 +424,11 @@ ipcMain.on(LOAD_DBC_ITEM_SETS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_ITEM_SETS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_ITEM_SETS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_ITEM_SETS);
@@ -472,7 +437,6 @@ ipcMain.on(LOAD_DBC_ITEM_SETS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_ITEM_SETS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -508,7 +472,6 @@ ipcMain.on(LOAD_DBC_SCALING_STAT_DISTRIBUTIONS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -530,13 +493,11 @@ ipcMain.on(LOAD_DBC_SCALING_STAT_VALUES, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_SCALING_STAT_VALUES}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_SCALING_STAT_VALUES}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_SCALING_STAT_VALUES);
@@ -545,7 +506,6 @@ ipcMain.on(LOAD_DBC_SCALING_STAT_VALUES, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_SCALING_STAT_VALUES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -565,13 +525,11 @@ ipcMain.on(LOAD_DBC_SPELLS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_SPELLS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_SPELLS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_SPELLS);
@@ -580,7 +538,6 @@ ipcMain.on(LOAD_DBC_SPELLS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELLS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -600,13 +557,11 @@ ipcMain.on(LOAD_DBC_SPELL_CAST_TIMES, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_SPELL_CAST_TIMES}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_SPELL_CAST_TIMES}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_SPELL_CAST_TIMES);
@@ -615,7 +570,6 @@ ipcMain.on(LOAD_DBC_SPELL_CAST_TIMES, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELL_CAST_TIMES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -635,13 +589,11 @@ ipcMain.on(LOAD_DBC_SPELL_DURATIONS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_SPELL_DURATIONS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_SPELL_DURATIONS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_SPELL_DURATIONS);
@@ -650,7 +602,6 @@ ipcMain.on(LOAD_DBC_SPELL_DURATIONS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELL_DURATIONS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -675,13 +626,11 @@ ipcMain.on(LOAD_DBC_SPELL_ITEM_ENCHANTMENTS, (event) => {
                   error
                 );
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_SPELL_ITEM_ENCHANTMENTS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_SPELL_ITEM_ENCHANTMENTS);
@@ -690,7 +639,6 @@ ipcMain.on(LOAD_DBC_SPELL_ITEM_ENCHANTMENTS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELL_ITEM_ENCHANTMENTS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -710,13 +658,11 @@ ipcMain.on(LOAD_DBC_SPELL_MECHANICS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_SPELL_MECHANICS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_SPELL_MECHANICS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_SPELL_MECHANICS, rows);
@@ -725,7 +671,6 @@ ipcMain.on(LOAD_DBC_SPELL_MECHANICS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELL_MECHANICS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -745,13 +690,11 @@ ipcMain.on(LOAD_DBC_SPELL_RANGES, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_SPELL_RANGES}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_SPELL_RANGES}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_SPELL_RANGES);
@@ -760,7 +703,6 @@ ipcMain.on(LOAD_DBC_SPELL_RANGES, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELL_RANGES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -780,13 +722,11 @@ ipcMain.on(LOAD_DBC_TALENTS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_TALENTS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_TALENTS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_TALENTS);
@@ -795,7 +735,6 @@ ipcMain.on(LOAD_DBC_TALENTS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_TALENTS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
     });
 });
 
@@ -815,13 +754,11 @@ ipcMain.on(LOAD_DBC_TALENT_TABS, (event) => {
               .catch((error) => {
                 event.reply(`${LOAD_DBC_TALENT_TABS}_REJECT`, error);
                 event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-                console.log(error);
               });
           })
           .catch((error) => {
             event.reply(`${LOAD_DBC_TALENT_TABS}_REJECT`, error);
             event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-            console.log(error);
           });
       } else {
         event.reply(LOAD_DBC_TALENT_TABS);
@@ -830,6 +767,23 @@ ipcMain.on(LOAD_DBC_TALENT_TABS, (event) => {
     .catch((error) => {
       event.reply(`${LOAD_DBC_TALENT_TABS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-      console.log(error);
+    });
+});
+
+ipcMain.on(TEST_MYSQL_CONNECTION, (event, payload) => {
+  let testKnex = require("knex")({
+    client: "mysql",
+    connection: payload,
+  });
+  testKnex
+    .select("guid")
+    .from("creature")
+    .first()
+    .then((rows) => {
+      event.reply(TEST_MYSQL_CONNECTION);
+    })
+    .catch((error) => {
+      event.reply(`${TEST_MYSQL_CONNECTION}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

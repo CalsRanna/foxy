@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(STORE_SPELL_CUSTOM_ATTR, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("spell_custom_attr");
+  let queryBuilder = knex.insert(payload).into("spell_custom_attr");
 
   queryBuilder
     .then((rows) => {
@@ -26,7 +24,7 @@ ipcMain.on(STORE_SPELL_CUSTOM_ATTR, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL_CUSTOM_ATTR, (event, payload) => {
-  let queryBuilder = knex().select().from("spell_custom_attr").where(payload);
+  let queryBuilder = knex.select().from("spell_custom_attr").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -42,7 +40,7 @@ ipcMain.on(FIND_SPELL_CUSTOM_ATTR, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SPELL_CUSTOM_ATTR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("spell_custom_attr")
     .where(payload.credential)
     .update(payload.creatureTemplateAddon);

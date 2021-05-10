@@ -6,10 +6,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_NPC_TEXT_LOCALES, (event, payload) => {
-  let queryBuilder = knex().select().from("npc_text_locale").where(payload);
+  let queryBuilder = knex.select().from("npc_text_locale").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -25,11 +23,11 @@ ipcMain.on(SEARCH_NPC_TEXT_LOCALES, (event, payload) => {
 });
 
 ipcMain.on(STORE_NPC_TEXT_LOCALES, (event, payload) => {
-  let deleteQueryBuilder = knex()
+  let deleteQueryBuilder = knex
     .table("npc_text_locale")
     .where("ID", payload[0].ID)
     .delete();
-  let insertQueryBuilder = knex().insert(payload).into("npc_text_locale");
+  let insertQueryBuilder = knex.insert(payload).into("npc_text_locale");
 
   deleteQueryBuilder
     .then(() => {

@@ -13,10 +13,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_QUEST_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "qt.ID",
       "qt.LogTitle",
@@ -32,7 +30,7 @@ ipcMain.on(SEARCH_QUEST_TEMPLATES, (event, payload) => {
       this.on("qt.ID", "=", "qtl.ID").andOn(
         "qtl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.id) {
@@ -63,14 +61,14 @@ ipcMain.on(SEARCH_QUEST_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(COUNT_QUEST_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("quest_template as qt")
     .leftJoin("quest_template_locale as qtl", function () {
       this.on("qt.ID", "=", "qtl.ID").andOn(
         "qtl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.id) {
@@ -98,7 +96,7 @@ ipcMain.on(COUNT_QUEST_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_QUEST_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("quest_template");
+  let queryBuilder = knex.insert(payload).into("quest_template");
 
   queryBuilder
     .then((rows) => {
@@ -114,7 +112,7 @@ ipcMain.on(STORE_QUEST_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_QUEST_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().select().from("quest_template").where(payload);
+  let queryBuilder = knex.select().from("quest_template").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -130,7 +128,7 @@ ipcMain.on(FIND_QUEST_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_QUEST_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("quest_template")
     .where(payload.credential)
     .update(payload.questTemplate);
@@ -149,7 +147,7 @@ ipcMain.on(UPDATE_QUEST_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_QUEST_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().table("quest_template").where(payload).delete();
+  let queryBuilder = knex.table("quest_template").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -165,7 +163,7 @@ ipcMain.on(DESTROY_QUEST_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(CREATE_QUEST_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("ID")
     .from("quest_template")
     .orderBy("ID", "desc");
@@ -189,11 +187,11 @@ ipcMain.on(COPY_QUEST_TEMPLATE, (event, payload) => {
   let ID = undefined;
   let questTemplate = undefined;
 
-  let idQueryBuilder = knex()
+  let idQueryBuilder = knex
     .select("ID")
     .from("quest_template")
     .orderBy("ID", "desc");
-  let findQuestTemplateQueryBuilder = knex()
+  let findQuestTemplateQueryBuilder = knex
     .select()
     .from("quest_template")
     .where(payload);
@@ -207,7 +205,7 @@ ipcMain.on(COPY_QUEST_TEMPLATE, (event, payload) => {
   ])
     .then(() => {
       questTemplate.ID = ID + 1;
-      let queryBuilder = knex().insert(questTemplate).into("quest_template");
+      let queryBuilder = knex.insert(questTemplate).into("quest_template");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_QUEST_TEMPLATE, rows);

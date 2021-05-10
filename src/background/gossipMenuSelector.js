@@ -6,10 +6,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_GOSSIP_MENUS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["gm.*", "nt.text0_0", "nt.text0_1", "ntl.Text0_0", "ntl.Text0_1"])
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
@@ -17,7 +15,7 @@ ipcMain.on(SEARCH_GOSSIP_MENUS_FOR_SELECTOR, (event, payload) => {
       this.on("gm.TextID", "=", "ntl.ID").andOn(
         "ntl.Locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.MenuID) {
@@ -51,7 +49,7 @@ ipcMain.on(SEARCH_GOSSIP_MENUS_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_GOSSIP_MENUS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
@@ -59,7 +57,7 @@ ipcMain.on(COUNT_GOSSIP_MENUS_FOR_SELECTOR, (event, payload) => {
       this.on("gm.TextID", "=", "ntl.ID").andOn(
         "ntl.Locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.MenuID) {

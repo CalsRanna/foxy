@@ -12,10 +12,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_CREATURE_TEMPLATE_RESISTANCES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("creature_template_resistance")
     .where(payload);
@@ -34,9 +32,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATE_RESISTANCES, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
-  let queryBuilder = knex()
-    .insert(payload)
-    .into("creature_template_resistance");
+  let queryBuilder = knex.insert(payload).into("creature_template_resistance");
 
   queryBuilder
     .then((rows) => {
@@ -52,7 +48,7 @@ ipcMain.on(STORE_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("creature_template_resistance")
     .where(payload);
@@ -74,7 +70,7 @@ ipcMain.on(FIND_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_template_resistance")
     .where(payload.credential)
     .update(payload.creatureTemplateResistance);
@@ -93,7 +89,7 @@ ipcMain.on(UPDATE_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_template_resistance")
     .where(payload)
     .delete();
@@ -112,7 +108,7 @@ ipcMain.on(DESTROY_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
 });
 
 ipcMain.on(CREATE_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("School")
     .from("creature_template_resistance")
     .where(payload)
@@ -138,12 +134,12 @@ ipcMain.on(COPY_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
   let school = undefined;
   let creatureTemplateResistance = undefined;
 
-  let schoolQueryBuilder = knex()
+  let schoolQueryBuilder = knex
     .select("School")
     .from("creature_template_resistance")
     .where("CreatureID", payload.CreatureID)
     .orderBy("School", "desc");
-  let findCreatureTemplateResistanceQueryBuilder = knex()
+  let findCreatureTemplateResistanceQueryBuilder = knex
     .select()
     .from("creature_template_resistance")
     .where(payload);
@@ -157,7 +153,7 @@ ipcMain.on(COPY_CREATURE_TEMPLATE_RESISTANCE, (event, payload) => {
   ])
     .then(() => {
       creatureTemplateResistance.School = school + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(creatureTemplateResistance)
         .into("creature_template_resistance");
       queryBuilder

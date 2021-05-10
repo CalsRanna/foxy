@@ -6,10 +6,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "ct.entry",
       "ct.name",
@@ -24,7 +22,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.entry) {
@@ -55,14 +53,14 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("creature_template as ct")
     .leftJoin("creature_template_locale as ctl", function () {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.entry) {

@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SCALING_STAT_DISTRIBUTIONS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex().select().from("foxy.dbc_scaling_stat_distribution");
+  let queryBuilder = knex.select().from("foxy.dbc_scaling_stat_distribution");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", payload.ID);
   }
@@ -48,7 +46,7 @@ ipcMain.on(SEARCH_SCALING_STAT_DISTRIBUTIONS_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_SCALING_STAT_DISTRIBUTIONS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("foxy.dbc_scaling_stat_distribution");
   if (payload.ID) {

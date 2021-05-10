@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SPELL_DURATIONS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex().select().from("foxy.dbc_spell_duration");
+  let queryBuilder = knex.select().from("foxy.dbc_spell_duration");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
   }
@@ -39,7 +37,7 @@ ipcMain.on(SEARCH_SPELL_DURATIONS_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_SPELL_DURATIONS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex().count("* as total").from("foxy.dbc_spell_duration");
+  let queryBuilder = knex.count("* as total").from("foxy.dbc_spell_duration");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
   }

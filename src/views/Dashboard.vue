@@ -12,13 +12,18 @@
     <el-alert type="info" style="margin-top: 16px">
       <span slot="title">
         欢迎使用 Foxy ，一款开发中的魔兽世界编辑器。
-        <span v-show="latestVersion !== null && latestVersion !== version">
+        <span
+          v-show="
+            softwareVersion.version !== null &&
+            softwareVersion.version !== version
+          "
+        >
           当前版本 {{ version }}，新版本
           <span
             style="color: #409eff; cursor: pointer"
-            @click="() => openBrowser(downloadUrl)"
+            @click="() => openBrowser(softwareVersion.githubUrl)"
           >
-            {{ latestVersion }}
+            {{ softwareVersion.version }}
           </span>
           可用，请下载使用。
         </span>
@@ -151,11 +156,11 @@
             <el-tooltip>
               <span
                 style="color: #409eff; cursor: pointer"
-                @click="() => openBrowser(netDiskUrl.url)"
+                @click="() => openBrowser(softwareVersion.netDiskUrl)"
               >
                 百度网盘
               </span>
-              <span slot="content">提取码：{{ netDiskUrl.code }}</span>
+              <span slot="content">提取码：{{ softwareVersion.code }}</span>
             </el-tooltip>
             下载。你也可以
             <span
@@ -201,10 +206,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("global", {
-      latestVersion: "latestVersion",
-      downloadUrl: "downloadUrl",
-      netDiskUrl: "netDiskUrl",
+    ...mapState("initiator", {
+      softwareVersion: "version",
     }),
     ...mapState("version", {
       coreVersion: "version",

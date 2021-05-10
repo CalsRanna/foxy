@@ -13,10 +13,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SPELLS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "ds.ID as ID",
       "Name_Lang_zhCN",
@@ -66,7 +64,7 @@ ipcMain.on(SEARCH_SPELLS, (event, payload) => {
 });
 
 ipcMain.on(COUNT_SPELLS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("foxy.dbc_spell as ds")
     .leftJoin("foxy.dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID");
@@ -95,7 +93,7 @@ ipcMain.on(COUNT_SPELLS, (event, payload) => {
 });
 
 ipcMain.on(STORE_SPELL, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("foxy.dbc_spell");
+  let queryBuilder = knex.insert(payload).into("foxy.dbc_spell");
 
   queryBuilder
     .then((rows) => {
@@ -111,7 +109,7 @@ ipcMain.on(STORE_SPELL, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL, (event, payload) => {
-  let queryBuilder = knex().select().from("foxy.dbc_spell").where(payload);
+  let queryBuilder = knex.select().from("foxy.dbc_spell").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -127,7 +125,7 @@ ipcMain.on(FIND_SPELL, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SPELL, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("foxy.dbc_spell")
     .where(payload.credential)
     .update(payload.spell);
@@ -146,7 +144,7 @@ ipcMain.on(UPDATE_SPELL, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SPELL, (event, payload) => {
-  let queryBuilder = knex().table("foxy.dbc_spell").where(payload).delete();
+  let queryBuilder = knex.table("foxy.dbc_spell").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -162,7 +160,7 @@ ipcMain.on(DESTROY_SPELL, (event, payload) => {
 });
 
 ipcMain.on(CREATE_SPELL, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("ID")
     .from("foxy.dbc_spell")
     .orderBy("ID", "desc");
@@ -186,11 +184,11 @@ ipcMain.on(COPY_SPELL, (event, payload) => {
   let ID = undefined;
   let spell = undefined;
 
-  let IDQueryBuilder = knex()
+  let IDQueryBuilder = knex
     .select("ID")
     .from("foxy.dbc_spell")
     .orderBy("ID", "desc");
-  let findSpellQueryBuilder = knex()
+  let findSpellQueryBuilder = knex
     .select()
     .from("foxy.dbc_spell")
     .where(payload);
@@ -204,7 +202,7 @@ ipcMain.on(COPY_SPELL, (event, payload) => {
   ])
     .then(() => {
       spell.ID = ID + 1;
-      let queryBuilder = knex().insert(spell).into("foxy.dbc_spell");
+      let queryBuilder = knex.insert(spell).into("foxy.dbc_spell");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_SPELL, rows);

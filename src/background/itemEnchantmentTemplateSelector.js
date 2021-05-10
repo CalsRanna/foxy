@@ -7,11 +7,9 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
-    .select(["entry", knex().raw("count(ench) as enchs")])
+  let queryBuilder = knex
+    .select(["entry", knex.raw("count(ench) as enchs")])
     .groupBy("entry")
     .from("item_enchantment_template");
   if (payload.type == "properties") {
@@ -47,8 +45,8 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
-    .count({ total: knex().raw("distinct entry") })
+  let queryBuilder = knex
+    .count({ total: knex.raw("distinct entry") })
     .from("item_enchantment_template");
   if (payload.type == "properties") {
     queryBuilder

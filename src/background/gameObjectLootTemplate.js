@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["golt.*", "it.name", "itl.Name as localeName"])
     .from("gameobject_loot_template as golt")
     .leftJoin("item_template as it", "golt.Item", "it.entry")
@@ -22,7 +20,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, (event, payload) => {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where("golt.Entry", payload.Entry);
@@ -41,7 +39,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("gameobject_loot_template");
+  let queryBuilder = knex.insert(payload).into("gameobject_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -57,7 +55,7 @@ ipcMain.on(STORE_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("gameobject_loot_template")
     .where(payload);
@@ -79,7 +77,7 @@ ipcMain.on(FIND_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("gameobject_loot_template")
     .where(payload.credential)
     .update(payload.gameObjectLootTemplate);
@@ -98,7 +96,7 @@ ipcMain.on(UPDATE_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("gameobject_loot_template")
     .where(payload)
     .delete();
@@ -120,12 +118,12 @@ ipcMain.on(COPY_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
   let item = undefined;
   let gameObjectLootTemplate = undefined;
 
-  let itemQueryBuilder = knex()
+  let itemQueryBuilder = knex
     .select("Item")
     .from("gameobject_loot_template")
     .where("Entry", payload.Entry)
     .orderBy("Item", "desc");
-  let findGameObjectLootTempalteQueryBuilder = knex()
+  let findGameObjectLootTempalteQueryBuilder = knex
     .select()
     .from("gameobject_loot_template")
     .where(payload);
@@ -142,7 +140,7 @@ ipcMain.on(COPY_GAME_OBJECT_LOOT_TEMPLATE, (event, payload) => {
       if (gameObjectLootTemplate.Reference != 0) {
         gameObjectLootTemplate.Reference = item + 1;
       }
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(gameObjectLootTemplate)
         .into("gameobject_loot_template");
       queryBuilder

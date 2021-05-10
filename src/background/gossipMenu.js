@@ -12,10 +12,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["gm.*", "nt.text0_0", "nt.text0_1", "ntl.Text0_0", "ntl.Text0_1"])
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
@@ -23,7 +21,7 @@ ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
       this.on("gm.TextID", "=", "ntl.ID").andOn(
         "ntl.Locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.MenuID) {
@@ -57,7 +55,7 @@ ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
 });
 
 ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("gossip_menu as gm")
     .leftJoin("npc_text as nt", "gm.TextID", "nt.ID")
@@ -65,7 +63,7 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
       this.on("gm.TextID", "=", "ntl.ID").andOn(
         "ntl.Locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.MenuID) {
@@ -96,7 +94,7 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
 });
 
 ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("gossip_menu");
+  let queryBuilder = knex.insert(payload).into("gossip_menu");
 
   queryBuilder
     .then((rows) => {
@@ -112,7 +110,7 @@ ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
 });
 
 ipcMain.on(FIND_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex().select().from("gossip_menu").where(payload);
+  let queryBuilder = knex.select().from("gossip_menu").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -128,7 +126,7 @@ ipcMain.on(FIND_GOSSIP_MENU, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("gossip_menu")
     .where("MenuID", payload.credential.MenuID)
     .where("TextID", payload.credential.TextID)
@@ -148,7 +146,7 @@ ipcMain.on(UPDATE_GOSSIP_MENU, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex().table("gossip_menu").where(payload).delete();
+  let queryBuilder = knex.table("gossip_menu").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -164,7 +162,7 @@ ipcMain.on(DESTROY_GOSSIP_MENU, (event, payload) => {
 });
 
 ipcMain.on(CREATE_GOSSIP_MENU, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("MenuID")
     .from("gossip_menu")
     .orderBy("MenuID", "desc");
@@ -188,11 +186,11 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
   let MenuID = undefined;
   let gossipMenu = undefined;
 
-  let menuIdQueryBuilder = knex()
+  let menuIdQueryBuilder = knex
     .select("MenuID")
     .from("gossip_menu")
     .orderBy("MenuID", "desc");
-  let findGossipMenuQueryBuilder = knex()
+  let findGossipMenuQueryBuilder = knex
     .select()
     .from("gossip_menu")
     .where(payload);
@@ -206,7 +204,7 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
   ])
     .then(() => {
       gossipMenu.MenuID = MenuID + 1;
-      let queryBuilder = knex().insert(gossipMenu).into("gossip_menu");
+      let queryBuilder = knex.insert(gossipMenu).into("gossip_menu");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_GOSSIP_MENU, rows);
