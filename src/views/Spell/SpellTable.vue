@@ -127,7 +127,6 @@ export default {
   },
   computed: {
     ...mapState("spell", ["refresh", "credential", "pagination", "spells"]),
-    ...mapState("dbc", ["spellDurations"]),
     payload() {
       return {
         ID: this.credential.ID,
