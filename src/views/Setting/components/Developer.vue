@@ -12,10 +12,10 @@
 import { mapState, mapActions } from "vuex";
 export default {
   computed: {
-    ...mapState("global", { config: "developerConfig" }),
+    ...mapState("initiator", { config: "developerConfig" }),
   },
   methods: {
-    ...mapActions("global", ["storeDeveloperConfig"]),
+    ...mapActions("initiator", ["storeDeveloperConfig"]),
     handleChange(value) {
       this.storeDeveloperConfig({ debug: value });
       this.$notify({
