@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(STORE_CREATURE_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("creature_template_addon");
+  let queryBuilder = knex.insert(payload).into("creature_template_addon");
 
   queryBuilder
     .then((rows) => {
@@ -26,7 +24,7 @@ ipcMain.on(STORE_CREATURE_TEMPLATE_ADDON, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("creature_template_addon")
     .where(payload);
@@ -45,7 +43,7 @@ ipcMain.on(FIND_CREATURE_TEMPLATE_ADDON, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_CREATURE_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_template_addon")
     .where(payload.credential)
     .update(payload.creatureTemplateAddon);

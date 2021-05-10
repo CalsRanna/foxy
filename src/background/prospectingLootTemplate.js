@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_PROSPECTING_LOOT_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["plt.*", "it.name", "itl.Name as localeName"])
     .from("prospecting_loot_template as plt")
     .leftJoin("item_template as it", "plt.Item", "it.entry")
@@ -22,7 +20,7 @@ ipcMain.on(SEARCH_PROSPECTING_LOOT_TEMPLATES, (event, payload) => {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where("plt.Entry", payload.Entry);
@@ -41,7 +39,7 @@ ipcMain.on(SEARCH_PROSPECTING_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_PROSPECTING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("prospecting_loot_template");
+  let queryBuilder = knex.insert(payload).into("prospecting_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -57,7 +55,7 @@ ipcMain.on(STORE_PROSPECTING_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_PROSPECTING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("prospecting_loot_template")
     .where(payload);
@@ -79,7 +77,7 @@ ipcMain.on(FIND_PROSPECTING_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_PROSPECTING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("prospecting_loot_template")
     .where(payload.credential)
     .update(payload.prospectingLootTemplate);
@@ -98,7 +96,7 @@ ipcMain.on(UPDATE_PROSPECTING_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_PROSPECTING_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("prospecting_loot_template")
     .where(payload)
     .delete();
@@ -120,12 +118,12 @@ ipcMain.on(COPY_PROSPECTING_LOOT_TEMPLATE, (event, payload) => {
   let item = undefined;
   let prospectingLootTemplate = undefined;
 
-  let itemQueryBuilder = knex()
+  let itemQueryBuilder = knex
     .select("Item")
     .from("prospecting_loot_template")
     .where("Entry", payload.Entry)
     .orderBy("Item", "desc");
-  let findProspectingLootTempalteQueryBuilder = knex()
+  let findProspectingLootTempalteQueryBuilder = knex
     .select()
     .from("prospecting_loot_template")
     .where(payload);
@@ -142,7 +140,7 @@ ipcMain.on(COPY_PROSPECTING_LOOT_TEMPLATE, (event, payload) => {
       if (prospectingLootTemplate.Reference != 0) {
         prospectingLootTemplate.Reference = item + 1;
       }
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(prospectingLootTemplate)
         .into("prospecting_loot_template");
       queryBuilder

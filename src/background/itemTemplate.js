@@ -13,10 +13,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "it.entry",
       "it.name",
@@ -34,7 +32,7 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.entry) {
@@ -78,14 +76,14 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("item_template as it")
     .leftJoin("item_template_locale as itl", function () {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.entry) {
@@ -126,11 +124,11 @@ ipcMain.on(COUNT_ITEM_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("item_template");
+  let queryBuilder = knex.insert(payload).into("item_template");
 
   queryBuilder
     .then((rows) => {
-      knex()
+      knex
         .insert({
           ID: payload.entry,
           ClassID: payload.class,
@@ -160,7 +158,7 @@ ipcMain.on(STORE_ITEM_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().select().from("item_template").where(payload);
+  let queryBuilder = knex.select().from("item_template").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -176,14 +174,14 @@ ipcMain.on(FIND_ITEM_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("item_template")
     .where(payload.credential)
     .update(payload.itemTemplate);
 
   queryBuilder
     .then((rows) => {
-      knex()
+      knex
         .table("foxy.dbc_item")
         .where({
           ID: payload.credential.entry,
@@ -216,11 +214,11 @@ ipcMain.on(UPDATE_ITEM_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().table("item_template").where(payload).delete();
+  let queryBuilder = knex.table("item_template").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
-      knex()
+      knex
         .table("foxy.dbc_item")
         .where({ ID: payload.entry })
         .delete()
@@ -242,7 +240,7 @@ ipcMain.on(DESTROY_ITEM_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(CREATE_ITEM_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("entry")
     .from("item_template")
     .orderBy("entry", "desc");
@@ -266,11 +264,11 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
   let entry = undefined;
   let itemTemplate = undefined;
 
-  let entryQueryBuilder = knex()
+  let entryQueryBuilder = knex
     .select("entry")
     .from("item_template")
     .orderBy("entry", "desc");
-  let findItemTemplateQueryBuilder = knex()
+  let findItemTemplateQueryBuilder = knex
     .select()
     .from("item_template")
     .where(payload);
@@ -284,10 +282,10 @@ ipcMain.on(COPY_ITEM_TEMPLATE, (event, payload) => {
   ])
     .then(() => {
       itemTemplate.entry = entry + 1;
-      let queryBuilder = knex().insert(itemTemplate).into("item_template");
+      let queryBuilder = knex.insert(itemTemplate).into("item_template");
       queryBuilder
         .then((rows) => {
-          knex()
+          knex
             .insert({
               ID: itemTemplate.entry,
               ClassID: itemTemplate.class,

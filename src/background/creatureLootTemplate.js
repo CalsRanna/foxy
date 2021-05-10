@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["clt.*", "it.name", "itl.Name as localeName"])
     .from("creature_loot_template as clt")
     .leftJoin("item_template as it", "clt.Item", "it.entry")
@@ -22,7 +20,7 @@ ipcMain.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, payload) => {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where("clt.Entry", payload.Entry);
@@ -41,7 +39,7 @@ ipcMain.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("creature_loot_template");
+  let queryBuilder = knex.insert(payload).into("creature_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -57,7 +55,7 @@ ipcMain.on(STORE_CREATURE_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("creature_loot_template")
     .where(payload);
@@ -76,7 +74,7 @@ ipcMain.on(FIND_CREATURE_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_CREATURE_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_loot_template")
     .where(payload.credential)
     .update(payload.creatureLootTemplate);
@@ -95,7 +93,7 @@ ipcMain.on(UPDATE_CREATURE_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_CREATURE_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_loot_template")
     .where(payload)
     .delete();
@@ -117,12 +115,12 @@ ipcMain.on(COPY_CREATURE_LOOT_TEMPLATE, (event, payload) => {
   let item = undefined;
   let creatureLootTemplate = undefined;
 
-  let itemQueryBuilder = knex()
+  let itemQueryBuilder = knex
     .select("Item")
     .from("creature_loot_template")
     .where("Entry", payload.Entry)
     .orderBy("Item", "desc");
-  let findCreatureLootTempalteQueryBuilder = knex()
+  let findCreatureLootTempalteQueryBuilder = knex
     .select()
     .from("creature_loot_template")
     .where(payload);
@@ -139,7 +137,7 @@ ipcMain.on(COPY_CREATURE_LOOT_TEMPLATE, (event, payload) => {
       if (creatureLootTemplate.Reference != 0) {
         creatureLootTemplate.Reference = item + 1;
       }
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(creatureLootTemplate)
         .into("creature_loot_template");
       queryBuilder

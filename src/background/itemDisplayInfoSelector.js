@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_ITEM_DISPLAY_INFOS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["ID", "ModelName_1", "ModelTexture_1", "InventoryIcon_1"])
     .from("foxy.dbc_item_display_info");
   if (payload.ID) {
@@ -41,7 +39,7 @@ ipcMain.on(SEARCH_ITEM_DISPLAY_INFOS_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_ITEM_DISPLAY_INFOS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("foxy.dbc_item_display_info");
   if (payload.ID) {

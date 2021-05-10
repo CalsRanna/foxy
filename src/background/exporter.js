@@ -1,10 +1,9 @@
 import { ipcMain } from "electron";
 
 const DBC = require("warcrafty");
-const { knex } = require("../libs/mysql");
 
 ipcMain.on("SEARCH_ITEM_DBC", (event) => {
-  let queryBuilder = knex().select().from("foxy.dbc_item");
+  let queryBuilder = knex.select().from("foxy.dbc_item");
 
   queryBuilder
     .then((rows) => {
@@ -21,7 +20,7 @@ ipcMain.on("SEARCH_ITEM_DBC", (event) => {
 });
 
 ipcMain.on("SEARCH_SPELL_DBC", (event) => {
-  let queryBuilder = knex().select().from("foxy.dbc_spell");
+  let queryBuilder = knex.select().from("foxy.dbc_spell");
 
   queryBuilder
     .then((rows) => {
@@ -38,7 +37,7 @@ ipcMain.on("SEARCH_SPELL_DBC", (event) => {
 });
 
 ipcMain.on("SEARCH_SCALING_STAT_DISTRIBUTION_DBC", (event) => {
-  let queryBuilder = knex().select().from("foxy.dbc_scaling_stat_distribution");
+  let queryBuilder = knex.select().from("foxy.dbc_scaling_stat_distribution");
 
   queryBuilder
     .then((rows) => {
@@ -55,7 +54,7 @@ ipcMain.on("SEARCH_SCALING_STAT_DISTRIBUTION_DBC", (event) => {
 });
 
 ipcMain.on("SEARCH_ITEM_SET_DBC", (event) => {
-  let queryBuilder = knex().select().from("foxy.dbc_item_set");
+  let queryBuilder = knex.select().from("foxy.dbc_item_set");
 
   queryBuilder
     .then((rows) => {
@@ -72,7 +71,7 @@ ipcMain.on("SEARCH_ITEM_SET_DBC", (event) => {
 });
 
 ipcMain.on("SEARCH_TALENT_DBC", (event) => {
-  let queryBuilder = knex().select().from("foxy.dbc_talent");
+  let queryBuilder = knex.select().from("foxy.dbc_talent");
 
   queryBuilder
     .then((rows) => {
@@ -89,7 +88,7 @@ ipcMain.on("SEARCH_TALENT_DBC", (event) => {
 });
 
 ipcMain.on("SEARCH_TALENT_TAB_DBC", (event) => {
-  let queryBuilder = knex().select().from("foxy.dbc_talent_TAB");
+  let queryBuilder = knex.select().from("foxy.dbc_talent_TAB");
 
   queryBuilder
     .then((rows) => {
@@ -106,7 +105,7 @@ ipcMain.on("SEARCH_TALENT_TAB_DBC", (event) => {
 });
 
 ipcMain.on("WRITE_ITEM_DBC", (event) => {
-  DBC.write(`${global.path}/Item.dbc`, global.items)
+  DBC.write(`${path}/Item.dbc`, global.items)
     .then(() => {
       event.reply("WRITE_ITEM_DBC");
     })
@@ -117,7 +116,7 @@ ipcMain.on("WRITE_ITEM_DBC", (event) => {
 });
 
 ipcMain.on("WRITE_SPELL_DBC", (event) => {
-  DBC.write(`${global.path}/Spell.dbc`, global.spells)
+  DBC.write(`${path}/Spell.dbc`, global.spells)
     .then(() => {
       event.reply("WRITE_SPELL_DBC");
     })
@@ -129,7 +128,7 @@ ipcMain.on("WRITE_SPELL_DBC", (event) => {
 
 ipcMain.on("WRITE_SCALING_STAT_DISTRIBUTION_DBC", (event) => {
   DBC.write(
-    `${global.path}/ScalingStatDistribution.dbc`,
+    `${path}/ScalingStatDistribution.dbc`,
     global.scalingStatDistributions
   )
     .then(() => {
@@ -142,7 +141,7 @@ ipcMain.on("WRITE_SCALING_STAT_DISTRIBUTION_DBC", (event) => {
 });
 
 ipcMain.on("WRITE_ITEM_SET_DBC", (event) => {
-  DBC.write(`${global.path}/ItemSet.dbc`, global.itemSets)
+  DBC.write(`${path}/ItemSet.dbc`, global.itemSets)
     .then(() => {
       event.reply("WRITE_ITEM_SET_DBC");
     })
@@ -153,7 +152,7 @@ ipcMain.on("WRITE_ITEM_SET_DBC", (event) => {
 });
 
 ipcMain.on("WRITE_TALENT_DBC", (event) => {
-  DBC.write(`${global.path}/Talent.dbc`, global.talents)
+  DBC.write(`${path}/Talent.dbc`, global.talents)
     .then(() => {
       event.reply("WRITE_TALENT_DBC");
     })
@@ -164,7 +163,7 @@ ipcMain.on("WRITE_TALENT_DBC", (event) => {
 });
 
 ipcMain.on("WRITE_TALENT_TAB_DBC", (event) => {
-  DBC.write(`${global.path}/TalentTab.dbc`, global.talentTabs)
+  DBC.write(`${path}/TalentTab.dbc`, global.talentTabs)
     .then(() => {
       event.reply("WRITE_TALENT_TAB_DBC");
     })

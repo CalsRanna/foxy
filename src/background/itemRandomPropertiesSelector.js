@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_ITEM_RANDOM_PROPERTIES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "dirp.ID",
       "dirp.Name_Lang_zhCN",
@@ -77,7 +75,7 @@ ipcMain.on(SEARCH_ITEM_RANDOM_PROPERTIES_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_ITEM_RANDOM_PROPERTIES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("foxy.dbc_item_random_properties as dirp")
     .leftJoin(

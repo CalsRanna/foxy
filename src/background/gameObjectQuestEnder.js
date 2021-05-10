@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ENDERS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["gqe.*", "gt.name", "gtl.Name as localeName"])
     .from("gameobject_questender as gqe")
     .leftJoin("gameobject_template as gt", function () {
@@ -24,7 +22,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ENDERS, (event, payload) => {
       this.on("gt.entry", "=", "gtl.entry").andOn(
         "gtl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where("gqe.quest", payload.quest);
@@ -43,7 +41,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ENDERS, (event, payload) => {
 });
 
 ipcMain.on(STORE_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("gameobject_questender");
+  let queryBuilder = knex.insert(payload).into("gameobject_questender");
 
   queryBuilder
     .then((rows) => {
@@ -59,10 +57,7 @@ ipcMain.on(STORE_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
 });
 
 ipcMain.on(FIND_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("gameobject_questender")
-    .where(payload);
+  let queryBuilder = knex.select().from("gameobject_questender").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -78,7 +73,7 @@ ipcMain.on(FIND_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("gameobject_questender")
     .where(payload.credential)
     .update(payload.gameObjectQuestEnder);
@@ -97,7 +92,7 @@ ipcMain.on(UPDATE_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("gameobject_questender")
     .where(payload)
     .delete();
@@ -119,12 +114,12 @@ ipcMain.on(COPY_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
   let id = undefined;
   let gameObjectQuestEnder = undefined;
 
-  let idQueryBuilder = knex()
+  let idQueryBuilder = knex
     .select("id")
     .from("gameobject_questender")
     .where("quest", payload.quest)
     .orderBy("id", "desc");
-  let findGameObjectQuestEnderQueryBuilder = knex()
+  let findGameObjectQuestEnderQueryBuilder = knex
     .select()
     .from("gameobject_questender")
     .where(payload);
@@ -138,7 +133,7 @@ ipcMain.on(COPY_GAME_OBJECT_QUEST_ENDER, (event, payload) => {
   ])
     .then(() => {
       gameObjectQuestEnder.id = id + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(gameObjectQuestEnder)
         .into("gameobject_questender");
       queryBuilder

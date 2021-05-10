@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(STORE_SPELL_BONUS_DATA, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("spell_bonus_data");
+  let queryBuilder = knex.insert(payload).into("spell_bonus_data");
 
   queryBuilder
     .then((rows) => {
@@ -26,7 +24,7 @@ ipcMain.on(STORE_SPELL_BONUS_DATA, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL_BONUS_DATA, (event, payload) => {
-  let queryBuilder = knex().select().from("spell_bonus_data").where(payload);
+  let queryBuilder = knex.select().from("spell_bonus_data").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -42,7 +40,7 @@ ipcMain.on(FIND_SPELL_BONUS_DATA, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SPELL_BONUS_DATA, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("spell_bonus_data")
     .where(payload.credential)
     .update(payload.creatureTemplateAddon);

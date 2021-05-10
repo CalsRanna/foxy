@@ -12,10 +12,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "cet.*",
       "it1.displayid as displayid1",
@@ -34,7 +32,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
       this.on("cet.ItemID1", "=", "itl1.ID").andOn(
         "itl1.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .leftJoin("item_template as it2", "cet.ItemID2", "it2.entry")
@@ -42,7 +40,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
       this.on("cet.ItemID2", "=", "itl2.ID").andOn(
         "itl2.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .leftJoin("item_template as it3", "cet.ItemID3", "it3.entry")
@@ -50,7 +48,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
       this.on("cet.ItemID3", "=", "itl3.ID").andOn(
         "itl3.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where(payload);
@@ -69,7 +67,7 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("creature_equip_template");
+  let queryBuilder = knex.insert(payload).into("creature_equip_template");
 
   queryBuilder
     .then((rows) => {
@@ -85,7 +83,7 @@ ipcMain.on(STORE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("creature_equip_template")
     .where(payload);
@@ -104,7 +102,7 @@ ipcMain.on(FIND_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_equip_template")
     .where(payload.credential)
     .update(payload.creatureEquipTemplate);
@@ -123,7 +121,7 @@ ipcMain.on(UPDATE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_equip_template")
     .where(payload)
     .delete();
@@ -142,7 +140,7 @@ ipcMain.on(DESTROY_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(CREATE_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("ID")
     .from("creature_equip_template")
     .where(payload)
@@ -168,12 +166,12 @@ ipcMain.on(COPY_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
   let id = undefined;
   let creatureEquipTemplate = undefined;
 
-  let idQueryBuilder = knex()
+  let idQueryBuilder = knex
     .select("ID")
     .from("creature_equip_template")
     .where("CreatureID", payload.CreatureID)
     .orderBy("ID", "desc");
-  let findCreatureEquipTemplateQueryBuilder = knex()
+  let findCreatureEquipTemplateQueryBuilder = knex
     .select()
     .from("creature_equip_template")
     .where(payload);
@@ -187,7 +185,7 @@ ipcMain.on(COPY_CREATURE_EQUIP_TEMPLATE, (event, payload) => {
   ])
     .then(() => {
       creatureEquipTemplate.ID = id + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(creatureEquipTemplate)
         .into("creature_equip_template");
       queryBuilder

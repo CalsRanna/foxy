@@ -12,10 +12,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_CREATURE_TEMPLATE_SPELLS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["cts.*", "ds.Name_Lang_zhCN", "ds.NameSubtext_Lang_zhCN"])
     .from("creature_template_spell as cts")
     .leftJoin("foxy.dbc_spell as ds", "cts.Spell", "ds.ID")
@@ -35,7 +33,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATE_SPELLS, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_TEMPLATE_SPELL, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("creature_template_spell");
+  let queryBuilder = knex.insert(payload).into("creature_template_spell");
 
   queryBuilder
     .then((rows) => {
@@ -51,7 +49,7 @@ ipcMain.on(STORE_CREATURE_TEMPLATE_SPELL, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_TEMPLATE_SPELL, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("creature_template_spell")
     .where(payload);
@@ -70,7 +68,7 @@ ipcMain.on(FIND_CREATURE_TEMPLATE_SPELL, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_CREATURE_TEMPLATE_SPELL, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_template_spell")
     .where(payload.credential)
     .update(payload.creatureTemplateSpell);
@@ -89,7 +87,7 @@ ipcMain.on(UPDATE_CREATURE_TEMPLATE_SPELL, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_CREATURE_TEMPLATE_SPELL, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_template_spell")
     .where(payload)
     .delete();
@@ -108,7 +106,7 @@ ipcMain.on(DESTROY_CREATURE_TEMPLATE_SPELL, (event, payload) => {
 });
 
 ipcMain.on(CREATE_CREATURE_TEMPLATE_SPELL, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("Index")
     .from("creature_template_spell")
     .where(payload)
@@ -134,12 +132,12 @@ ipcMain.on(COPY_CREATURE_TEMPLATE_SPELL, (event, payload) => {
   let index = undefined;
   let creatureTemplateSpell = undefined;
 
-  let indexQueryBuilder = knex()
+  let indexQueryBuilder = knex
     .select("Index")
     .from("creature_template_spell")
     .where("CreatureID", payload.CreatureID)
     .orderBy("Index", "desc");
-  let findCreatureTemplateSpellQueryBuilder = knex()
+  let findCreatureTemplateSpellQueryBuilder = knex
     .select()
     .from("creature_template_spell")
     .where(payload);
@@ -153,7 +151,7 @@ ipcMain.on(COPY_CREATURE_TEMPLATE_SPELL, (event, payload) => {
   ])
     .then(() => {
       creatureTemplateSpell.Index = index + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(creatureTemplateSpell)
         .into("creature_template_spell");
       queryBuilder

@@ -192,7 +192,6 @@ export default {
     };
   },
   computed: {
-    ...mapState("global", ["mysqlConfig"]),
     ...mapState("exporter", [
       "checkedDbcs",
       "items",

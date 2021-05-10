@@ -7,13 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("item_template_locale")
-    .where(payload);
+  let queryBuilder = knex.select().from("item_template_locale").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -29,11 +24,11 @@ ipcMain.on(SEARCH_ITEM_TEMPLATE_LOCALES, (event, payload) => {
 });
 
 ipcMain.on(STORE_ITEM_TEMPLATE_LOCALES, (event, payload) => {
-  let deleteQueryBuilder = knex()
+  let deleteQueryBuilder = knex
     .table("item_template_locale")
     .where("ID", payload[0].ID)
     .delete();
-  let insertQueryBuilder = knex().insert(payload).into("item_template_locale");
+  let insertQueryBuilder = knex.insert(payload).into("item_template_locale");
 
   deleteQueryBuilder
     .then((rows) => {

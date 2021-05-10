@@ -8,10 +8,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(STORE_QUEST_OFFER_REWARD, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("quest_offer_reward");
+  let queryBuilder = knex.insert(payload).into("quest_offer_reward");
 
   queryBuilder
     .then((rows) => {
@@ -27,7 +25,7 @@ ipcMain.on(STORE_QUEST_OFFER_REWARD, (event, payload) => {
 });
 
 ipcMain.on(FIND_QUEST_OFFER_REWARD, (event, payload) => {
-  let queryBuilder = knex().select().from("quest_offer_reward").where(payload);
+  let queryBuilder = knex.select().from("quest_offer_reward").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -43,7 +41,7 @@ ipcMain.on(FIND_QUEST_OFFER_REWARD, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_QUEST_OFFER_REWARD, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("quest_offer_reward")
     .where(payload.credential)
     .update(payload.questOfferReward);

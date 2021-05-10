@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SPELL_AREAS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("spell_area")
     .where("spell", payload.spell);
@@ -33,7 +31,7 @@ ipcMain.on(SEARCH_SPELL_AREAS, (event, payload) => {
 });
 
 ipcMain.on(STORE_SPELL_AREA, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("spell_area");
+  let queryBuilder = knex.insert(payload).into("spell_area");
 
   queryBuilder
     .then((rows) => {
@@ -49,7 +47,7 @@ ipcMain.on(STORE_SPELL_AREA, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL_AREA, (event, payload) => {
-  let queryBuilder = knex().select().from("spell_area").where(payload);
+  let queryBuilder = knex.select().from("spell_area").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -65,7 +63,7 @@ ipcMain.on(FIND_SPELL_AREA, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SPELL_AREA, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("spell_area")
     .where(payload.credential)
     .update(payload.spellArea);
@@ -84,7 +82,7 @@ ipcMain.on(UPDATE_SPELL_AREA, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SPELL_AREA, (event, payload) => {
-  let queryBuilder = knex().table("spell_area").where(payload).delete();
+  let queryBuilder = knex.table("spell_area").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -102,7 +100,7 @@ ipcMain.on(DESTROY_SPELL_AREA, (event, payload) => {
 ipcMain.on(COPY_SPELL_AREA, (event, payload) => {
   let spellArea = undefined;
 
-  let findSpellAreaQueryBuilder = knex()
+  let findSpellAreaQueryBuilder = knex
     .select()
     .from("spell_area")
     .where(payload);
@@ -110,7 +108,7 @@ ipcMain.on(COPY_SPELL_AREA, (event, payload) => {
     .then((rows) => {
       spellArea = rows.length > 0 ? rows[0] : {};
       spellArea.area = spellArea.area + 1;
-      let queryBuilder = knex().insert(spellArea).into("spell_area");
+      let queryBuilder = knex.insert(spellArea).into("spell_area");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_SPELL_AREA, rows);

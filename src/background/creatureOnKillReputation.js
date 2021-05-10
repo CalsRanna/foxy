@@ -8,10 +8,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(STORE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("creature_onkill_reputation");
+  let queryBuilder = knex.insert(payload).into("creature_onkill_reputation");
 
   queryBuilder
     .then((rows) => {
@@ -27,7 +25,7 @@ ipcMain.on(STORE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_ONKILL_REPUTATION, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("creature_onkill_reputation")
     .where(payload);
@@ -49,7 +47,7 @@ ipcMain.on(FIND_CREATURE_ONKILL_REPUTATION, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_onkill_reputation")
     .where(payload.credential)
     .update(payload.creatureOnKillReputation);

@@ -13,10 +13,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_TALENT_TABS, (event, payload) => {
-  let queryBuilder = knex().select().from("foxy.dbc_talent_tab");
+  let queryBuilder = knex.select().from("foxy.dbc_talent_tab");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
   }
@@ -45,7 +43,7 @@ ipcMain.on(SEARCH_TALENT_TABS, (event, payload) => {
 });
 
 ipcMain.on(COUNT_TALENT_TABS, (event, payload) => {
-  let queryBuilder = knex().count("* as total").from("foxy.dbc_talent_tab");
+  let queryBuilder = knex.count("* as total").from("foxy.dbc_talent_tab");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
   }
@@ -71,7 +69,7 @@ ipcMain.on(COUNT_TALENT_TABS, (event, payload) => {
 });
 
 ipcMain.on(STORE_TALENT_TAB, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("foxy.dbc_talent_tab");
+  let queryBuilder = knex.insert(payload).into("foxy.dbc_talent_tab");
 
   queryBuilder
     .then((rows) => {
@@ -87,7 +85,7 @@ ipcMain.on(STORE_TALENT_TAB, (event, payload) => {
 });
 
 ipcMain.on(FIND_TALENT_TAB, (event, payload) => {
-  let queryBuilder = knex().select().from("foxy.dbc_talent_tab").where(payload);
+  let queryBuilder = knex.select().from("foxy.dbc_talent_tab").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -103,7 +101,7 @@ ipcMain.on(FIND_TALENT_TAB, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_TALENT_TAB, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("foxy.dbc_talent_tab")
     .where(payload.credential)
     .update(payload.talentTab);
@@ -122,10 +120,7 @@ ipcMain.on(UPDATE_TALENT_TAB, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_TALENT_TAB, (event, payload) => {
-  let queryBuilder = knex()
-    .table("foxy.dbc_talent_tab")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex.table("foxy.dbc_talent_tab").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -141,7 +136,7 @@ ipcMain.on(DESTROY_TALENT_TAB, (event, payload) => {
 });
 
 ipcMain.on(CREATE_TALENT_TAB, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("ID")
     .from("foxy.dbc_talent_tab")
     .orderBy("ID", "desc");
@@ -165,11 +160,11 @@ ipcMain.on(COPY_TALENT_TAB, (event, payload) => {
   let ID = undefined;
   let talentTab = undefined;
 
-  let IDQueryBuilder = knex()
+  let IDQueryBuilder = knex
     .select("ID")
     .from("foxy.dbc_talent_tab")
     .orderBy("ID", "desc");
-  let findTalentTabQueryBuilder = knex()
+  let findTalentTabQueryBuilder = knex
     .select()
     .from("foxy.dbc_talent_tab")
     .where(payload);
@@ -183,7 +178,7 @@ ipcMain.on(COPY_TALENT_TAB, (event, payload) => {
   ])
     .then(() => {
       talentTab.ID = ID + 1;
-      let queryBuilder = knex().insert(talentTab).into("foxy.dbc_talent_tab");
+      let queryBuilder = knex.insert(talentTab).into("foxy.dbc_talent_tab");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_TALENT_TAB, rows);

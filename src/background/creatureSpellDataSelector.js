@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_CREATURE_SPELL_DATAS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "dcsd.ID as ID",
       "ds_1.Name_Lang_zhCN as Spells_1",
@@ -51,7 +49,7 @@ ipcMain.on(SEARCH_CREATURE_SPELL_DATAS_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_CREATURE_SPELL_DATAS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("foxy.dbc_creature_spell_data as dcsd")
     .leftJoin("foxy.dbc_spell as ds_1", "dcsd.Spells_1", "ds_1.ID")

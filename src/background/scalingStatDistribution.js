@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SCALING_STAT_DISTRIBUTIONS, (event, payload) => {
-  let queryBuilder = knex().select().from("foxy.dbc_scaling_stat_distribution");
+  let queryBuilder = knex.select().from("foxy.dbc_scaling_stat_distribution");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", payload.ID);
   }
@@ -49,7 +47,7 @@ ipcMain.on(SEARCH_SCALING_STAT_DISTRIBUTIONS, (event, payload) => {
 });
 
 ipcMain.on(COUNT_SCALING_STAT_DISTRIBUTIONS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("foxy.dbc_scaling_stat_distribution");
   if (payload.ID) {
@@ -83,7 +81,7 @@ ipcMain.on(COUNT_SCALING_STAT_DISTRIBUTIONS, (event, payload) => {
 });
 
 ipcMain.on(STORE_SCALING_STAT_DISTRIBUTION, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .insert(payload)
     .into("foxy.dbc_scaling_stat_distribution");
 
@@ -101,7 +99,7 @@ ipcMain.on(STORE_SCALING_STAT_DISTRIBUTION, (event, payload) => {
 });
 
 ipcMain.on(FIND_SCALING_STAT_DISTRIBUTION, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("foxy.dbc_scaling_stat_distribution")
     .where(payload);
@@ -123,7 +121,7 @@ ipcMain.on(FIND_SCALING_STAT_DISTRIBUTION, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SCALING_STAT_DISTRIBUTION, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("foxy.dbc_scaling_stat_distribution")
     .where(payload.credential)
     .update(payload.scalingStatDistribution);
@@ -142,7 +140,7 @@ ipcMain.on(UPDATE_SCALING_STAT_DISTRIBUTION, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SCALING_STAT_DISTRIBUTION, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("foxy.dbc_scaling_stat_distribution")
     .where(payload)
     .delete();
@@ -164,11 +162,11 @@ ipcMain.on(COPY_SCALING_STAT_DISTRIBUTION, (event, payload) => {
   let id = undefined;
   let scalingStatDistribution = undefined;
 
-  let idQueryBuilder = knex()
+  let idQueryBuilder = knex
     .select("ID")
     .from("foxy.dbc_scaling_stat_distribution")
     .orderBy("ID", "desc");
-  let findScalingStatDistributionQueryBuilder = knex()
+  let findScalingStatDistributionQueryBuilder = knex
     .select()
     .from("foxy.dbc_scaling_stat_distribution")
     .where(payload);
@@ -182,7 +180,7 @@ ipcMain.on(COPY_SCALING_STAT_DISTRIBUTION, (event, payload) => {
   ])
     .then(() => {
       scalingStatDistribution.ID = id + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(scalingStatDistribution)
         .into("foxy.dbc_scaling_stat_distribution");
       queryBuilder

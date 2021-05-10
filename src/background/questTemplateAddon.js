@@ -8,10 +8,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(STORE_QUEST_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("quest_template_addon");
+  let queryBuilder = knex.insert(payload).into("quest_template_addon");
 
   queryBuilder
     .then((rows) => {
@@ -27,10 +25,7 @@ ipcMain.on(STORE_QUEST_TEMPLATE_ADDON, (event, payload) => {
 });
 
 ipcMain.on(FIND_QUEST_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("quest_template_addon")
-    .where(payload);
+  let queryBuilder = knex.select().from("quest_template_addon").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -46,7 +41,7 @@ ipcMain.on(FIND_QUEST_TEMPLATE_ADDON, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_QUEST_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("quest_template_addon")
     .where(payload.credential)
     .update(payload.questTemplateAddon);

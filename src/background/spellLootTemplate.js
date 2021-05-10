@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SPELL_LOOT_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["slt.*", "it.name", "itl.Name as localeName"])
     .from("spell_loot_template as slt")
     .leftJoin("item_template as it", "slt.Item", "it.entry")
@@ -22,7 +20,7 @@ ipcMain.on(SEARCH_SPELL_LOOT_TEMPLATES, (event, payload) => {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where("slt.Entry", payload.Entry);
@@ -41,7 +39,7 @@ ipcMain.on(SEARCH_SPELL_LOOT_TEMPLATES, (event, payload) => {
 });
 
 ipcMain.on(STORE_SPELL_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("spell_loot_template");
+  let queryBuilder = knex.insert(payload).into("spell_loot_template");
 
   queryBuilder
     .then((rows) => {
@@ -57,7 +55,7 @@ ipcMain.on(STORE_SPELL_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex().select().from("spell_loot_template").where(payload);
+  let queryBuilder = knex.select().from("spell_loot_template").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -73,7 +71,7 @@ ipcMain.on(FIND_SPELL_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SPELL_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("spell_loot_template")
     .where(payload.credential)
     .update(payload.spellLootTemplate);
@@ -92,10 +90,7 @@ ipcMain.on(UPDATE_SPELL_LOOT_TEMPLATE, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SPELL_LOOT_TEMPLATE, (event, payload) => {
-  let queryBuilder = knex()
-    .table("spell_loot_template")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex.table("spell_loot_template").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -114,12 +109,12 @@ ipcMain.on(COPY_SPELL_LOOT_TEMPLATE, (event, payload) => {
   let item = undefined;
   let spellLootTemplate = undefined;
 
-  let itemQueryBuilder = knex()
+  let itemQueryBuilder = knex
     .select("Item")
     .from("spell_loot_template")
     .where("Entry", payload.Entry)
     .orderBy("Item", "desc");
-  let findSpellLootTempalteQueryBuilder = knex()
+  let findSpellLootTempalteQueryBuilder = knex
     .select()
     .from("spell_loot_template")
     .where(payload);
@@ -136,7 +131,7 @@ ipcMain.on(COPY_SPELL_LOOT_TEMPLATE, (event, payload) => {
       if (spellLootTemplate.Reference != 0) {
         spellLootTemplate.Reference = item + 1;
       }
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(spellLootTemplate)
         .into("spell_loot_template");
       queryBuilder

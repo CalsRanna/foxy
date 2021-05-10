@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SPELL_GROUPS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["sg.*", "sgsr.stack_rule", "sgsr.description"])
     .from("spell_group as sg")
     .leftJoin("spell_group_stack_rules as sgsr", "sg.id", "sgsr.group_id")
@@ -34,7 +32,7 @@ ipcMain.on(SEARCH_SPELL_GROUPS, (event, payload) => {
 });
 
 ipcMain.on(STORE_SPELL_GROUP, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("spell_group");
+  let queryBuilder = knex.insert(payload).into("spell_group");
 
   queryBuilder
     .then((rows) => {
@@ -50,7 +48,7 @@ ipcMain.on(STORE_SPELL_GROUP, (event, payload) => {
 });
 
 ipcMain.on(FIND_SPELL_GROUP, (event, payload) => {
-  let queryBuilder = knex().select().from("spell_group").where(payload);
+  let queryBuilder = knex.select().from("spell_group").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -66,7 +64,7 @@ ipcMain.on(FIND_SPELL_GROUP, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SPELL_GROUP, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("spell_group")
     .where(payload.credential)
     .update(payload.spellGroup);
@@ -85,7 +83,7 @@ ipcMain.on(UPDATE_SPELL_GROUP, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SPELL_GROUP, (event, payload) => {
-  let queryBuilder = knex().table("spell_group").where(payload).delete();
+  let queryBuilder = knex.table("spell_group").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -104,11 +102,11 @@ ipcMain.on(COPY_SPELL_GROUP, (event, payload) => {
   let id = undefined;
   let spellGroup = undefined;
 
-  let idQueryBuilder = knex()
+  let idQueryBuilder = knex
     .select("id")
     .from("spell_group")
     .orderBy("id", "desc");
-  let findSpellGroupQueryBuilder = knex()
+  let findSpellGroupQueryBuilder = knex
     .select()
     .from("spell_group")
     .where(payload);
@@ -122,7 +120,7 @@ ipcMain.on(COPY_SPELL_GROUP, (event, payload) => {
   ])
     .then(() => {
       spellGroup.id = id + 1;
-      let queryBuilder = knex().insert(spellGroup).into("spell_group");
+      let queryBuilder = knex.insert(spellGroup).into("spell_group");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_SPELL_GROUP, rows);

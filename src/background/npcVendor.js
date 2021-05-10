@@ -12,10 +12,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["nv.*", "it.displayid", "it.name", "itl.Name"])
     .from("npc_vendor as nv")
     .leftJoin("item_template as it", "nv.item", "it.entry")
@@ -23,7 +21,7 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
       this.on("nv.item", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where("nv.entry", payload.entry);
@@ -42,7 +40,7 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
 });
 
 ipcMain.on(STORE_NPC_VENDOR, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("npc_vendor");
+  let queryBuilder = knex.insert(payload).into("npc_vendor");
 
   queryBuilder
     .then((rows) => {
@@ -58,7 +56,7 @@ ipcMain.on(STORE_NPC_VENDOR, (event, payload) => {
 });
 
 ipcMain.on(FIND_NPC_VENDOR, (event, payload) => {
-  let queryBuilder = knex().select().from("npc_vendor").where(payload);
+  let queryBuilder = knex.select().from("npc_vendor").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -74,7 +72,7 @@ ipcMain.on(FIND_NPC_VENDOR, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_NPC_VENDOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("npc_vendor")
     .where(payload.credential)
     .update(payload.npcVendor);
@@ -93,7 +91,7 @@ ipcMain.on(UPDATE_NPC_VENDOR, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_NPC_VENDOR, (event, payload) => {
-  let queryBuilder = knex().table("npc_vendor").where(payload).delete();
+  let queryBuilder = knex.table("npc_vendor").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -109,7 +107,7 @@ ipcMain.on(DESTROY_NPC_VENDOR, (event, payload) => {
 });
 
 ipcMain.on(CREATE_NPC_VENDOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("slot")
     .from("npc_vendor")
     .where(payload)
@@ -136,17 +134,17 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
   let extendedCost = undefined;
   let npcVendor = undefined;
 
-  let slotQueryBuilder = knex()
+  let slotQueryBuilder = knex
     .select("slot")
     .from("npc_vendor")
     .where("entry", payload.entry)
     .orderBy("slot", "desc");
-  let extendedCostQueryBuilder = knex()
+  let extendedCostQueryBuilder = knex
     .select("ExtendedCost")
     .from("npc_vendor")
     .where("entry", payload.entry)
     .orderBy("ExtendedCost", "desc");
-  let findNpcVendorQueryBuilder = knex()
+  let findNpcVendorQueryBuilder = knex
     .select()
     .from("npc_vendor")
     .where(payload);
@@ -164,7 +162,7 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
     .then(() => {
       npcVendor.slot = slot + 1;
       npcVendor.ExtendedCost = extendedCost + 1;
-      let queryBuilder = knex().insert(npcVendor).into("npc_vendor");
+      let queryBuilder = knex.insert(npcVendor).into("npc_vendor");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_NPC_VENDOR, rows);

@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_SMART_SCRIPTS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "ss.entryorguid",
       "ss.source_type",
@@ -58,7 +56,7 @@ ipcMain.on(SEARCH_SMART_SCRIPTS, (event, payload) => {
 });
 
 ipcMain.on(COUNT_SMART_SCRIPTS, (event, payload) => {
-  let queryBuilder = knex().count("* as total").from("smart_scripts as ss");
+  let queryBuilder = knex.count("* as total").from("smart_scripts as ss");
   if (payload.entryorguid) {
     queryBuilder = queryBuilder.where(
       "ss.entryorguid",
@@ -88,7 +86,7 @@ ipcMain.on(COUNT_SMART_SCRIPTS, (event, payload) => {
 });
 
 ipcMain.on(STORE_SMART_SCRIPT, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("smart_scripts");
+  let queryBuilder = knex.insert(payload).into("smart_scripts");
 
   queryBuilder
     .then((rows) => {
@@ -104,7 +102,7 @@ ipcMain.on(STORE_SMART_SCRIPT, (event, payload) => {
 });
 
 ipcMain.on(FIND_SMART_SCRIPT, (event, payload) => {
-  let queryBuilder = knex().select().from("smart_scripts").where(payload);
+  let queryBuilder = knex.select().from("smart_scripts").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -120,7 +118,7 @@ ipcMain.on(FIND_SMART_SCRIPT, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_SMART_SCRIPT, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("smart_scripts")
     .where(payload.credential)
     .update(payload.smartScript);
@@ -139,7 +137,7 @@ ipcMain.on(UPDATE_SMART_SCRIPT, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_SMART_SCRIPT, (event, payload) => {
-  let queryBuilder = knex().table("smart_scripts").where(payload).delete();
+  let queryBuilder = knex.table("smart_scripts").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -158,12 +156,12 @@ ipcMain.on(COPY_SMART_SCRIPT, (event, payload) => {
   let id = undefined;
   let smartScript = undefined;
 
-  let idQueryBuilder = knex()
+  let idQueryBuilder = knex
     .select("id")
     .from("smart_scripts")
     .where(payload)
     .orderBy("id", "desc");
-  let findSmartScriptQueryBuilder = knex()
+  let findSmartScriptQueryBuilder = knex
     .select()
     .from("smart_scripts")
     .where(payload);
@@ -177,7 +175,7 @@ ipcMain.on(COPY_SMART_SCRIPT, (event, payload) => {
   ])
     .then(() => {
       smartScript.id = id + 1;
-      let queryBuilder = knex().insert(smartScript).into("smart_scripts");
+      let queryBuilder = knex.insert(smartScript).into("smart_scripts");
       queryBuilder
         .then((rows) => {
           event.reply(COPY_SMART_SCRIPT, rows);

@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(STORE_NPC_TEXT, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("npc_text");
+  let queryBuilder = knex.insert(payload).into("npc_text");
 
   queryBuilder
     .then((rows) => {
@@ -26,7 +24,7 @@ ipcMain.on(STORE_NPC_TEXT, (event, payload) => {
 });
 
 ipcMain.on(FIND_NPC_TEXT, (event, payload) => {
-  let queryBuilder = knex().select().from("npc_text").where(payload);
+  let queryBuilder = knex.select().from("npc_text").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -42,7 +40,7 @@ ipcMain.on(FIND_NPC_TEXT, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_NPC_TEXT, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("npc_text")
     .where("ID", payload.credential.ID)
     .update(payload.npcText);

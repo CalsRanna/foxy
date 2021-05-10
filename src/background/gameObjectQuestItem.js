@@ -12,10 +12,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ITEMS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["goqi.*", "it.name", "itl.Name as localeName"])
     .from("gameobject_questitem as goqi")
     .leftJoin("item_template as it", "goqi.ItemId", "it.entry")
@@ -23,7 +21,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ITEMS, (event, payload) => {
       this.on("it.entry", "=", "itl.ID").andOn(
         "itl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where(payload);
@@ -42,7 +40,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ITEMS, (event, payload) => {
 });
 
 ipcMain.on(STORE_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("gameobject_questitem");
+  let queryBuilder = knex.insert(payload).into("gameobject_questitem");
 
   queryBuilder
     .then((rows) => {
@@ -58,10 +56,7 @@ ipcMain.on(STORE_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
 });
 
 ipcMain.on(FIND_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("gameobject_questitem")
-    .where(payload);
+  let queryBuilder = knex.select().from("gameobject_questitem").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -77,7 +72,7 @@ ipcMain.on(FIND_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("gameobject_questitem")
     .where(payload.credential)
     .update(payload.gameObjectQuestItem);
@@ -96,10 +91,7 @@ ipcMain.on(UPDATE_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
-  let queryBuilder = knex()
-    .table("gameobject_questitem")
-    .where(payload)
-    .delete();
+  let queryBuilder = knex.table("gameobject_questitem").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
@@ -115,7 +107,7 @@ ipcMain.on(DESTROY_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
 });
 
 ipcMain.on(CREATE_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select("Idx")
     .from("gameobject_questitem")
     .where(payload)
@@ -141,12 +133,12 @@ ipcMain.on(COPY_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
   let idx = undefined;
   let gameObjectQuestItem = undefined;
 
-  let idxQueryBuilder = knex()
+  let idxQueryBuilder = knex
     .select("Idx")
     .from("gameobject_questitem")
     .where("GameObjectEntry", payload.GameObjectEntry)
     .orderBy("Idx", "desc");
-  let findGameObjectQuestItemQueryBuilder = knex()
+  let findGameObjectQuestItemQueryBuilder = knex
     .select()
     .from("gameobject_questitem")
     .where(payload);
@@ -160,7 +152,7 @@ ipcMain.on(COPY_GAME_OBJECT_QUEST_ITEM, (event, payload) => {
   ])
     .then(() => {
       gameObjectQuestItem.Idx = idx + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(gameObjectQuestItem)
         .into("gameobject_questitem");
       queryBuilder

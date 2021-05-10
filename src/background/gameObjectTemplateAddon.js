@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(STORE_GAME_OBJECT_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("gameobject_template_addon");
+  let queryBuilder = knex.insert(payload).into("gameobject_template_addon");
 
   queryBuilder
     .then((rows) => {
@@ -26,7 +24,7 @@ ipcMain.on(STORE_GAME_OBJECT_TEMPLATE_ADDON, (event, payload) => {
 });
 
 ipcMain.on(FIND_GAME_OBJECT_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select()
     .from("gameobject_template_addon")
     .where(payload);
@@ -48,7 +46,7 @@ ipcMain.on(FIND_GAME_OBJECT_TEMPLATE_ADDON, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_GAME_OBJECT_TEMPLATE_ADDON, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("gameobject_template_addon")
     .where(payload.credential)
     .update(payload.gameObjectTemplateAddon);

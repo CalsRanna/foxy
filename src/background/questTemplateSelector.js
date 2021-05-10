@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_QUEST_TEMPLATES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "qt.ID",
       "qt.LogTitle",
@@ -25,7 +23,7 @@ ipcMain.on(SEARCH_QUEST_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       this.on("qt.ID", "=", "qtl.ID").andOn(
         "qtl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.id) {
@@ -56,14 +54,14 @@ ipcMain.on(SEARCH_QUEST_TEMPLATES_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_QUEST_TEMPLATES_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("quest_template as qt")
     .leftJoin("quest_template_locale as qtl", function () {
       this.on("qt.ID", "=", "qtl.ID").andOn(
         "qtl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     });
   if (payload.id) {

@@ -11,10 +11,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_CREATURE_QUEST_STARTERS, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select(["cqs.*", "ct.name", "ctl.Name as localeName"])
     .from("creature_queststarter as cqs")
     .leftJoin("creature_template as ct", function () {
@@ -24,7 +22,7 @@ ipcMain.on(SEARCH_CREATURE_QUEST_STARTERS, (event, payload) => {
       this.on("ct.entry", "=", "ctl.entry").andOn(
         "ctl.locale",
         "=",
-        knex().raw("?", "zhCN")
+        knex.raw("?", "zhCN")
       );
     })
     .where("cqs.quest", payload.quest);
@@ -43,7 +41,7 @@ ipcMain.on(SEARCH_CREATURE_QUEST_STARTERS, (event, payload) => {
 });
 
 ipcMain.on(STORE_CREATURE_QUEST_STARTER, (event, payload) => {
-  let queryBuilder = knex().insert(payload).into("creature_queststarter");
+  let queryBuilder = knex.insert(payload).into("creature_queststarter");
 
   queryBuilder
     .then((rows) => {
@@ -59,10 +57,7 @@ ipcMain.on(STORE_CREATURE_QUEST_STARTER, (event, payload) => {
 });
 
 ipcMain.on(FIND_CREATURE_QUEST_STARTER, (event, payload) => {
-  let queryBuilder = knex()
-    .select()
-    .from("creature_queststarter")
-    .where(payload);
+  let queryBuilder = knex.select().from("creature_queststarter").where(payload);
 
   queryBuilder
     .then((rows) => {
@@ -78,7 +73,7 @@ ipcMain.on(FIND_CREATURE_QUEST_STARTER, (event, payload) => {
 });
 
 ipcMain.on(UPDATE_CREATURE_QUEST_STARTER, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_queststarter")
     .where(payload.credential)
     .update(payload.creatureQuestStarter);
@@ -97,7 +92,7 @@ ipcMain.on(UPDATE_CREATURE_QUEST_STARTER, (event, payload) => {
 });
 
 ipcMain.on(DESTROY_CREATURE_QUEST_STARTER, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .table("creature_queststarter")
     .where(payload)
     .delete();
@@ -119,12 +114,12 @@ ipcMain.on(COPY_CREATURE_QUEST_STARTER, (event, payload) => {
   let id = undefined;
   let creatureQuestStarter = undefined;
 
-  let idQueryBuilder = knex()
+  let idQueryBuilder = knex
     .select("id")
     .from("creature_queststarter")
     .where("quest", payload.quest)
     .orderBy("id", "desc");
-  let findCreatureQuestStarterQueryBuilder = knex()
+  let findCreatureQuestStarterQueryBuilder = knex
     .select()
     .from("creature_queststarter")
     .where(payload);
@@ -138,7 +133,7 @@ ipcMain.on(COPY_CREATURE_QUEST_STARTER, (event, payload) => {
   ])
     .then(() => {
       creatureQuestStarter.id = id + 1;
-      let queryBuilder = knex()
+      let queryBuilder = knex
         .insert(creatureQuestStarter)
         .into("creature_queststarter");
       queryBuilder

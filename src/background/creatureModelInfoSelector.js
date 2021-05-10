@@ -7,10 +7,8 @@ import {
   GLOBAL_MESSAGE,
 } from "../constants";
 
-const { knex } = require("../libs/mysql");
-
 ipcMain.on(SEARCH_CREATURE_MODEL_INFOS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .select([
       "DisplayID",
       "Gender",
@@ -68,7 +66,7 @@ ipcMain.on(SEARCH_CREATURE_MODEL_INFOS_FOR_SELECTOR, (event, payload) => {
 });
 
 ipcMain.on(COUNT_CREATURE_MODEL_INFOS_FOR_SELECTOR, (event, payload) => {
-  let queryBuilder = knex()
+  let queryBuilder = knex
     .count("* as total")
     .from("creature_model_info")
     .leftJoin(

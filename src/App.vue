@@ -62,7 +62,7 @@ import Exporter from "@/components/Exporter";
 
 export default {
   computed: {
-    ...mapState("global", ["active"]),
+    ...mapState("app", ["active"]),
     ...mapState("initiator", [
       "developerConfig",
       "initialized",
@@ -70,7 +70,7 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions("global", ["setActive"]),
+    ...mapActions("app", ["setActive"]),
     navigate(index) {
       this.setActive(index);
       this.$router.push(`/${index}`).catch((error) => error);
@@ -78,7 +78,6 @@ export default {
   },
   mounted() {
     ipcRenderer.on(GLOBAL_MESSAGE_BOX, (event, error) => {
-      console.log(error);
       let content = "";
       let title = "";
       try {

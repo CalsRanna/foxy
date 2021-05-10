@@ -31,7 +31,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("global", ["setActive"]),
+    ...mapActions("app", ["setActive"]),
     ...mapActions("initiator", [
       "loadDeveloperConfig",
       "loadMysqlConfig",
