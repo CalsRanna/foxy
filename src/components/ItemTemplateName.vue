@@ -38,8 +38,5 @@ export default {
   props: {
     itemTemplate: Object,
   },
-  computed: {
-    ...mapGetters("dbc", { icons: "itemIcons" }),
-  },
 };
 </script>

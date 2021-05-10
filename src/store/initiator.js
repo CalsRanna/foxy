@@ -44,6 +44,7 @@ export default {
     version: {},
     initialized: false,
     initializeSucceed: true,
+    spellMechanics: [],
   }),
   actions: {
     loadDeveloperConfig({ commit }) {
@@ -301,10 +302,11 @@ export default {
         );
       });
     },
-    loadDbcSpellMechanics() {
+    loadDbcSpellMechanics({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_MECHANICS);
-        ipcRenderer.on(LOAD_DBC_SPELL_MECHANICS, () => {
+        ipcRenderer.on(LOAD_DBC_SPELL_MECHANICS, (event, response) => {
+          commit(LOAD_DBC_SPELL_MECHANICS, response);
           resolve();
         });
         ipcRenderer.on(`${LOAD_DBC_SPELL_MECHANICS}_REJECT`, (event, error) => {
@@ -424,6 +426,9 @@ export default {
     },
     [LOAD_DBC_CONFIG](state, dbcConfig) {
       state.dbcConfig = dbcConfig;
+    },
+    [LOAD_DBC_SPELL_MECHANICS](state, spellMechanics) {
+      state.spellMechanics = spellMechanics;
     },
     [CHECK_VERSION](state, version) {
       state.version = version;

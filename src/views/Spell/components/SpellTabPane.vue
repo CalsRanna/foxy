@@ -1710,7 +1710,7 @@ export default {
   },
   computed: {
     ...mapState("spell", ["spell"]),
-    ...mapState("dbc", ["spellMechanics"]),
+    ...mapState("initiator", ["spellMechanics"]),
     credential() {
       return {
         ID: this.$route.params.id,

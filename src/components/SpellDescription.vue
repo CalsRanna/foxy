@@ -10,7 +10,6 @@ export default {
     field: String,
   },
   computed: {
-    ...mapState("dbc", ["spellDurations"]),
     description() {
       return this.spell[this.field]
         .replace(
