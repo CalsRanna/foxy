@@ -12,7 +12,6 @@ import {
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
   SEARCH_DBC_SCALING_STAT_VALUES,
   SEARCH_DBC_SPELLS,
-  EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
   SEARCH_DBC_ITEM_SETS,
   SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS,
@@ -23,9 +22,6 @@ import {
   SEARCH_DBC_SPELL_MECHANICS,
   SEARCH_DBC_TALENTS,
   SEARCH_DBC_TALENT_TABS,
-  RELOAD_APP,
-  EXPORT_ITEM_DBC,
-  EXPORT_SCALING_STAT_DISTRIBUTION_DBC,
   GLOBAL_MESSAGE_BOX,
 } from "../constants";
 
@@ -711,78 +707,6 @@ ipcMain.on(SEARCH_DBC_TALENT_TABS, (event) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_DBC_TALENT_TABS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-    });
-});
-
-ipcMain.on(EXPORT_ITEM_DBC, (event) => {
-  let queryBuilder = knex().select().from("foxy.dbc_item");
-
-  event.reply(`${EXPORT_ITEM_DBC}_PROGRESS`, "Searching database");
-  queryBuilder
-    .then((rows) => {
-      event.reply(`${EXPORT_ITEM_DBC}_PROGRESS`, `Writing ${path}/Item.dbc`);
-      DBC.write(`${path}/Item.dbc`, rows)
-        .then(() => {
-          event.reply(EXPORT_ITEM_DBC);
-        })
-        .catch((error) => {
-          event.reply(`${EXPORT_ITEM_DBC}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-        });
-    })
-    .catch((error) => {
-      event.reply(`${EXPORT_ITEM_DBC}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-    });
-});
-
-ipcMain.on(EXPORT_SPELL_DBC, (event) => {
-  let queryBuilder = knex().select().from("foxy.dbc_spell");
-
-  event.reply(`${EXPORT_SPELL_DBC}_PROGRESS`, "Searching database");
-  queryBuilder
-    .then((rows) => {
-      event.reply(`${EXPORT_SPELL_DBC}_PROGRESS`, `Writing ${path}/Spell.dbc`);
-      DBC.write(`${path}/Spell.dbc`, rows)
-        .then(() => {
-          event.reply(EXPORT_SPELL_DBC);
-        })
-        .catch((error) => {
-          event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-        });
-    })
-    .catch((error) => {
-      event.reply(`${EXPORT_SPELL_DBC}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-    });
-});
-
-ipcMain.on(EXPORT_SCALING_STAT_DISTRIBUTION_DBC, (event) => {
-  let queryBuilder = knex().select().from("foxy.dbc_scaling_stat_distribution");
-
-  event.reply(
-    `${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_PROGRESS`,
-    "Searching database"
-  );
-  queryBuilder
-    .then((rows) => {
-      event.reply(
-        `${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_PROGRESS`,
-        `Writing ${path}/ScalingStatDistribution.dbc`
-      );
-      DBC.write(`${path}/ScalingStatDistribution.dbc`, rows)
-        .then(() => {
-          event.reply(EXPORT_SCALING_STAT_DISTRIBUTION_DBC);
-        })
-        .catch((error) => {
-          event.reply(`${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
-        });
-    })
-    .catch((error) => {
-      event.reply(`${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
     });
 });

@@ -11,7 +11,6 @@ import {
   SEARCH_DBC_SCALING_STAT_DISTRIBUTIONS,
   SEARCH_DBC_SCALING_STAT_VALUES,
   SEARCH_DBC_SPELLS,
-  EXPORT_SPELL_DBC,
   SEARCH_DBC_SPELL_DURATIONS,
   SEARCH_DBC_ITEM_SETS,
   SEARCH_DBC_SPELL_ITEM_ENCHANTMENTS,
@@ -22,8 +21,6 @@ import {
   SEARCH_DBC_SPELL_MECHANICS,
   SEARCH_DBC_TALENTS,
   SEARCH_DBC_TALENT_TABS,
-  EXPORT_ITEM_DBC,
-  EXPORT_SCALING_STAT_DISTRIBUTION_DBC,
 } from "../constants";
 
 export default {
@@ -346,42 +343,6 @@ export default {
         ipcRenderer.on(`${SEARCH_DBC_TALENT_TABS}_REJECT`, (event, error) => {
           reject(error);
         });
-      });
-    },
-    exportItemDbc() {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send(EXPORT_ITEM_DBC);
-        ipcRenderer.on(EXPORT_ITEM_DBC, () => {
-          resolve();
-        });
-        ipcRenderer.on(`${EXPORT_ITEM_DBC}_REJECT`, (error) => {
-          reject(error);
-        });
-      });
-    },
-    exportSpellDbc() {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send(EXPORT_SPELL_DBC);
-        ipcRenderer.on(EXPORT_SPELL_DBC, () => {
-          resolve();
-        });
-        ipcRenderer.on(`${EXPORT_SPELL_DBC}_REJECT`, (error) => {
-          reject(error);
-        });
-      });
-    },
-    exportScalingStatDistributionDbc() {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send(EXPORT_SCALING_STAT_DISTRIBUTION_DBC);
-        ipcRenderer.on(EXPORT_SCALING_STAT_DISTRIBUTION_DBC, () => {
-          resolve();
-        });
-        ipcRenderer.on(
-          `${EXPORT_SCALING_STAT_DISTRIBUTION_DBC}_REJECT`,
-          (error) => {
-            reject(error);
-          }
-        );
       });
     },
   },

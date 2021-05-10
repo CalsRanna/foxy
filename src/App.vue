@@ -70,14 +70,7 @@
 const ipcRenderer = window.ipcRenderer;
 
 import { mapState, mapActions } from "vuex";
-import {
-  EXPORT_ITEM_DBC,
-  EXPORT_SPELL_DBC,
-  GLOBAL_MESSAGE_BOX,
-  GLOBAL_MESSAGE,
-  // START_EXPORT,
-} from "./constants";
-
+import { GLOBAL_MESSAGE_BOX, GLOBAL_MESSAGE } from "./constants";
 import Exporter from "@/components/Exporter";
 
 export default {
@@ -314,104 +307,6 @@ export default {
       if (this.developerConfig.debug) {
         this.$message(message);
       }
-    });
-
-    // ipcRenderer.on(START_EXPORT, () => {
-    //   this.visible = true;
-    //   this.modal = true;
-    //   this.loadingText = "正在导出";
-    //   let timer = setInterval(() => {
-    //     this.seconds++;
-    //   }, 1000);
-    //   this.exportItemDbc()
-    //     .then(() => {
-    //       this.exportSpellDbc()
-    //         .then(() => {
-    //           this.exportScalingStatDistributionDbc()
-    //             .then(() => {
-    //               clearInterval(timer);
-    //               this.loadingText = "导出成功";
-    //               setTimeout(() => {
-    //                 this.visible = false;
-    //                 this.modal = false;
-    //               }, 500);
-    //               this.$notify({
-    //                 title: `导出成功，用时${this.seconds}秒`,
-    //                 position: "bottom-left",
-    //                 type: "success",
-    //               });
-    //               this.seconds = 0;
-    //             })
-    //             .catch((error) => {
-    //               clearInterval(timer);
-    //               this.loadingText = "导出失败";
-    //               setTimeout(() => {
-    //                 this.visible = false;
-    //                 this.modal = false;
-    //                 this.$alert(
-    //                   error.message.replace(
-    //                     /at /g,
-    //                     "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "
-    //                   ),
-    //                   error.title,
-    //                   {
-    //                     type: "error",
-    //                     dangerouslyUseHTMLString: true,
-    //                     customClass: "wider-message-box",
-    //                   }
-    //                 );
-    //               }, 500);
-    //               this.seconds = 0;
-    //             });
-    //         })
-    //         .catch((error) => {
-    //           clearInterval(timer);
-    //           this.loadingText = "导出失败";
-    //           setTimeout(() => {
-    //             this.visible = false;
-    //             this.modal = false;
-    //             this.$alert(
-    //               error.message.replace(
-    //                 /at /g,
-    //                 "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "
-    //               ),
-    //               error.title,
-    //               {
-    //                 type: "error",
-    //                 dangerouslyUseHTMLString: true,
-    //                 customClass: "wider-message-box",
-    //               }
-    //             );
-    //           }, 500);
-    //           this.seconds = 0;
-    //         });
-    //     })
-    //     .catch((error) => {
-    //       clearInterval(timer);
-    //       this.loadingText = "导出失败";
-    //       setTimeout(() => {
-    //         this.visible = false;
-    //         this.modal = false;
-    //         this.$alert(
-    //           error.message.replace(/at /g, "<br>&nbsp;&nbsp;&nbsp;&nbsp;at "),
-    //           error.title,
-    //           {
-    //             type: "error",
-    //             dangerouslyUseHTMLString: true,
-    //             customClass: "wider-message-box",
-    //           }
-    //         );
-    //       }, 500);
-    //       this.seconds = 0;
-    //     });
-    // });
-
-    ipcRenderer.on(`${EXPORT_SPELL_DBC}_PROGRESS`, (event, text) => {
-      this.progressText = text;
-    });
-
-    ipcRenderer.on(`${EXPORT_ITEM_DBC}_PROGRESS`, (event, text) => {
-      this.progressText = text;
     });
   },
   components: { Exporter },
