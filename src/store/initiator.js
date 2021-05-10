@@ -27,6 +27,7 @@ import {
   LOAD_DBC_TALENTS,
   LOAD_DBC_TALENT_TABS,
   CHECK_VERSION,
+  TEST_MYSQL_CONNECTION,
 } from "../constants";
 
 const GITHUB_RELEASE_URL =
@@ -377,6 +378,41 @@ export default {
     },
     initializeFailure({ commit }) {
       commit("INITIALIZE_FAILURE");
+    },
+    storeDeveloperConfig({ commit }, payload) {
+      return new Promise((resolve) => {
+        localStorage.setItem("debug", payload.debug);
+        commit(LOAD_DEVELOPER_CONFIG, payload);
+        resolve();
+      });
+    },
+    storeMysqlConfig({ commit }, payload) {
+      return new Promise((resolve) => {
+        localStorage.setItem("host", payload.host);
+        localStorage.setItem("user", payload.user);
+        localStorage.setItem("password", payload.password);
+        localStorage.setItem("database", payload.database);
+        commit(LOAD_MYSQL_CONFIG, payload);
+        resolve();
+      });
+    },
+    storeDbcConfig({ commit }, payload) {
+      return new Promise((resolve) => {
+        localStorage.setItem("dbcPath", payload.path);
+        commit(LOAD_DBC_CONFIG, payload);
+        resolve();
+      });
+    },
+    testMysqlConnection(context, payload) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(TEST_MYSQL_CONNECTION, payload);
+        ipcRenderer.on(TEST_MYSQL_CONNECTION, (event, response) => {
+          resolve(response);
+        });
+        ipcRenderer.on(`${TEST_MYSQL_CONNECTION}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
     },
   },
   mutations: {

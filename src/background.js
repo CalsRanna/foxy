@@ -217,3 +217,7 @@ ipcMain.on("SELECT_CONFIG_PATH", (event) => {
     event.reply("SELECT_CONFIG_PATH_REPLY", payload.filePaths[0]);
   });
 });
+
+ipcMain.on("RELOAD_APP", (event) => {
+  win.reload();
+});

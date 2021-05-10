@@ -73,15 +73,11 @@ const routes = [
   {
     path: "/setting",
     component: () => import("@/views/Setting/Setting"),
-    redirect: "/setting/mysql",
+    redirect: "/setting/basic",
     children: [
       {
-        path: "mysql",
-        component: () => import("@/views/Setting/components/Mysql"),
-      },
-      {
-        path: "dbc",
-        component: () => import("@/views/Setting/components/Dbc"),
+        path: "basic",
+        component: () => import("@/views/Setting/components/Basic"),
       },
       {
         path: "developer",
