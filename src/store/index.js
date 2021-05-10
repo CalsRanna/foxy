@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import global from "./global";
+import initiator from "./initiator";
 import exporter from "./exporter";
 import dbc from "./dbc";
 import creatureTemplate from "./creatureTemplate";
@@ -81,6 +82,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     global,
+    initiator,
     exporter,
     dbc,
     creatureTemplate,

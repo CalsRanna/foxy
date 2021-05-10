@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <template v-if="!initializing">
+    <template v-if="initialized">
       <el-aside width="200px" class="left-menu">
         <div class="logo">
           <h3 style="margin: 0; padding: 0">FOXY</h3>
@@ -11,27 +11,33 @@
           @select="navigate"
           style="border-right: none"
         >
-          <el-menu-item index="dashboard">
-            首页 <small>DASHBOARD</small>
-          </el-menu-item>
-          <el-menu-item index="creature">
-            生物 <small>CREATURE</small>
-          </el-menu-item>
-          <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
-          <el-menu-item index="game-object">
-            物体 <small>GAME OBJECT</small>
-          </el-menu-item>
-          <el-menu-item index="quest"> 任务 <small>QUEST</small> </el-menu-item>
-          <el-menu-item index="gossip-menu">
-            对话 <small>GOSSIP MENU</small>
-          </el-menu-item>
-          <el-menu-item index="smart-script">
-            内建脚本 <small>SMART SCRIPT</small>
-          </el-menu-item>
-          <el-menu-item index="spell"> 技能 <small>SPELL</small> </el-menu-item>
-          <el-menu-item index="advance">
-            高级 <small>ADVANCE</small>
-          </el-menu-item>
+          <template v-if="initializeSucceed">
+            <el-menu-item index="dashboard">
+              首页 <small>DASHBOARD</small>
+            </el-menu-item>
+            <el-menu-item index="creature">
+              生物 <small>CREATURE</small>
+            </el-menu-item>
+            <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
+            <el-menu-item index="game-object">
+              物体 <small>GAME OBJECT</small>
+            </el-menu-item>
+            <el-menu-item index="quest">
+              任务 <small>QUEST</small>
+            </el-menu-item>
+            <el-menu-item index="gossip-menu">
+              对话 <small>GOSSIP MENU</small>
+            </el-menu-item>
+            <el-menu-item index="smart-script">
+              内建脚本 <small>SMART SCRIPT</small>
+            </el-menu-item>
+            <el-menu-item index="spell">
+              技能 <small>SPELL</small>
+            </el-menu-item>
+            <el-menu-item index="advance">
+              高级 <small>ADVANCE</small>
+            </el-menu-item>
+          </template>
           <el-menu-item index="setting">
             设置 <small>SETTING</small>
           </el-menu-item>
@@ -41,27 +47,7 @@
         <router-view></router-view>
       </el-main>
     </template>
-    <el-dialog
-      :visible.sync="visible"
-      width="30%"
-      top="40vh"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :modal="modal"
-    >
-      <div style="text-align: center; margin-bottom: 24px; font-size: 20px">
-        <i class="el-icon-loading"></i>
-        {{ loadingText }}
-        <template v-show="progressText != undefined">
-          <br />
-          <br />
-          <small style="color: #909399; font-size: 14px">
-            {{ progressText }}
-            <span v-show="seconds != 0">，用时{{ seconds }}秒</span>
-          </small>
-        </template>
-      </div>
-    </el-dialog>
+    <initiator></initiator>
     <exporter></exporter>
   </el-container>
 </template>
@@ -71,209 +57,28 @@ const ipcRenderer = window.ipcRenderer;
 
 import { mapState, mapActions } from "vuex";
 import { GLOBAL_MESSAGE_BOX, GLOBAL_MESSAGE } from "./constants";
+import Initiator from "@/components/Initiator";
 import Exporter from "@/components/Exporter";
 
 export default {
-  data() {
-    return {
-      initializing: true,
-      visible: false,
-      modal: false,
-      loadingText: "加载开始",
-      seconds: 0,
-      progressText: undefined,
-    };
-  },
   computed: {
-    ...mapState("global", [
-      "active",
+    ...mapState("global", ["active"]),
+    ...mapState("initiator", [
       "developerConfig",
-      "mysqlConfig",
-      "dbcConfig",
-      "configConfig",
+      "initialized",
+      "initializeSucceed",
     ]),
   },
   methods: {
-    ...mapActions("dbc", [
-      "searchDbcFactions",
-      "searchDbcFactionTemplates",
-      "searchDbcCreatureSpellDatas",
-      "searchDbcCreatureDisplayInfos",
-      "searchDbcCreatureModelDatas",
-      "searchDbcItemDisplayInfos",
-      "searchDbcItems",
-      "searchDbcScalingStatDistributions",
-      "searchDbcScalingStatValues",
-      "searchDbcSpellDurations",
-      "searchDbcSpells",
-      "searchDbcItemSets",
-      "searchDbcSpellItemEnchantments",
-      "searchDbcItemRandomProperties",
-      "searchDbcItemRandomSuffixes",
-      "searchDbcSpellCastTimes",
-      "searchDbcSpellRanges",
-      "searchDbcSpellMechanics",
-      "searchDbcTalents",
-      "searchDbcTalentTabs",
-      "exportItemDbc",
-      "exportSpellDbc",
-      "exportScalingStatDistributionDbc",
-    ]),
-    ...mapActions("global", [
-      "findLatestVersion",
-      "findNetDiskUrl",
-      "setActive",
-      "storeDeveloperConfig",
-      "storeMysqlConfig",
-      "storeDbcConfig",
-      "storeConfigConfig",
-      "initMysqlConnection",
-      "initDbcConnection",
-    ]),
-    ...mapActions("setting", ["setSettingActive"]),
+    ...mapActions("global", ["setActive"]),
     navigate(index) {
       this.setActive(index);
       this.$router.push(`/${index}`).catch((error) => error);
     },
-    initDeveloperConfig() {
-      return new Promise((resolve, reject) => {
-        let config = {
-          debug: localStorage.getItem("debug") === "true" ? true : false,
-        };
-
-        this.storeDeveloperConfig(config)
-          .then(() => {
-            resolve();
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    },
-    initMysqlConfig() {
-      return new Promise((resolve, reject) => {
-        let config = {
-          host: localStorage.getItem("host"),
-          user: localStorage.getItem("user"),
-          password: localStorage.getItem("password"),
-          database: localStorage.getItem("database"),
-        };
-
-        if (config.host && config.user && config.password && config.database) {
-          Promise.all([
-            this.storeMysqlConfig(config),
-            this.initMysqlConnection(config),
-          ])
-            .then(() => {
-              resolve();
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        } else {
-          this.setActive("setting");
-          this.setSettingActive("mysql");
-          this.$router.push("/setting/mysql").catch((error) => error);
-          reject();
-        }
-      });
-    },
-    initDbcConfig() {
-      return new Promise((resolve, reject) => {
-        let config = {
-          path: localStorage.getItem("dbcPath"),
-        };
-
-        if (config.path) {
-          Promise.all([
-            this.storeDbcConfig(config),
-            this.initDbcConnection(config),
-          ])
-            .then(() => {
-              resolve();
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        } else {
-          this.setActive("setting");
-          this.setSettingActive("dbc");
-          this.$router.push("/setting/dbc").catch((error) => error);
-          reject();
-        }
-      });
-    },
-    async init() {
-      try {
-        this.visible = true;
-        this.progressText = "加载开发者配置";
-        await this.initDeveloperConfig();
-        this.progressText = "加载数据库配置";
-        await this.initMysqlConfig();
-        this.progressText = "加载DBC配置";
-        await this.initDbcConfig();
-        this.progressText = "加载Faction.dbc";
-        await this.searchDbcFactions();
-        this.progressText = "加载FactionTemplate.dbc";
-        await this.searchDbcFactionTemplates();
-        this.progressText = "加载CreatureSpellData.dbc";
-        await this.searchDbcCreatureSpellDatas();
-        this.progressText = "加载CreatureDisplayInfo.dbc";
-        await this.searchDbcCreatureDisplayInfos();
-        this.progressText = "加载CreatureModelData.dbc";
-        await this.searchDbcCreatureModelDatas();
-        this.progressText = "加载Item.dbc";
-        await this.searchDbcItems();
-        this.progressText = "加载ItemDisplayInfo.dbc";
-        await this.searchDbcItemDisplayInfos();
-        this.progressText = "加载ItemSet.dbc";
-        await this.searchDbcItemSets();
-        this.progressText = "加载SpellItemEnchantment.dbc";
-        await this.searchDbcSpellItemEnchantments();
-        this.progressText = "加载ItemRandomProperties.dbc";
-        await this.searchDbcItemRandomProperties();
-        this.progressText = "加载ItemRandomSuffix.dbc";
-        await this.searchDbcItemRandomSuffixes();
-        this.progressText = "加载ScalingStatDistribution.dbc";
-        await this.searchDbcScalingStatDistributions();
-        this.progressText = "加载ScalingStatValues.dbc";
-        await this.searchDbcScalingStatValues();
-        this.progressText = "加载Spell.dbc";
-        await this.searchDbcSpells();
-        this.progressText = "加载SpellDuration.dbc";
-        await this.searchDbcSpellDurations();
-        this.progressText = "加载SpellCastTimes.dbc";
-        await this.searchDbcSpellCastTimes();
-        this.progressText = "加载SpellRange.dbc";
-        await this.searchDbcSpellRanges();
-        this.progressText = "加载SpellMechanic.dbc";
-        await this.searchDbcSpellMechanics();
-        this.progressText = "加载Talent.dbc";
-        await this.searchDbcTalents();
-        this.progressText = "加载TalentTab.dbc";
-        await this.searchDbcTalentTabs();
-        this.loadingText = "加载完成";
-        this.progressText = undefined;
-        setTimeout(() => {
-          this.initializing = false;
-          this.visible = false;
-        }, 500);
-      } catch (error) {
-        this.loadingText = "加载中止";
-        this.progressText = undefined;
-        setTimeout(() => {
-          this.initializing = false;
-          this.visible = false;
-        }, 500);
-      }
-      this.findLatestVersion();
-      this.findNetDiskUrl();
-    },
   },
   mounted() {
-    this.init();
-
     ipcRenderer.on(GLOBAL_MESSAGE_BOX, (event, error) => {
+      console.log(error);
       let content = "";
       let title = "";
       try {
@@ -309,7 +114,7 @@ export default {
       }
     });
   },
-  components: { Exporter },
+  components: { Initiator, Exporter },
 };
 </script>
 
