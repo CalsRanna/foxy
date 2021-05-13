@@ -64,5 +64,8 @@ export default {
       this.$router.push(`/setting/${index}`).catch((error) => error);
     },
   },
+  mounted() {
+    this.navigate(this.active || "basic");
+  },
 };
 </script>
