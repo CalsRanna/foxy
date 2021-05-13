@@ -4,7 +4,7 @@ export default {
   namespaced: true,
   state() {
     return {
-      active: "mysql",
+      active: "basic",
     };
   },
   actions: {
