@@ -77,6 +77,7 @@ export default {
     },
   },
   mounted() {
+    this.navigate(this.active || "dashboard");
     ipcRenderer.on(GLOBAL_MESSAGE_BOX, (event, error) => {
       let content = "";
       let title = "";
