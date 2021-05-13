@@ -35,15 +35,6 @@
             @click="() => destroy(scope.$index)"
           ></el-button>
         </el-table-column>
-        <el-table-column prop="entry" label="编号">
-          <template slot-scope="scope">
-            <el-input-number
-              v-model="scope.row.ID"
-              controls-position="right"
-              disabled
-            ></el-input-number>
-          </template>
-        </el-table-column>
         <el-table-column prop="locale" label="语言">
           <template slot-scope="scope">
             <el-input
