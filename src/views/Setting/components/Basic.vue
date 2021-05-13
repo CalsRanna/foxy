@@ -37,6 +37,14 @@
               <el-input v-model="mysqlConfig.database"></el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item label="端口">
+              <el-input
+                v-model="mysqlConfig.port"
+                placeholder="3306"
+              ></el-input>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
     </el-card>

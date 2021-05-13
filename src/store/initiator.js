@@ -63,6 +63,7 @@ export default {
           user: localStorage.getItem("user"),
           password: localStorage.getItem("password"),
           database: localStorage.getItem("database"),
+          port: localStorage.getItem("port"),
         };
         ipcRenderer.send(LOAD_MYSQL_CONFIG, mysqlConfig);
         commit(LOAD_MYSQL_CONFIG, mysqlConfig);
@@ -394,6 +395,7 @@ export default {
         localStorage.setItem("user", payload.user);
         localStorage.setItem("password", payload.password);
         localStorage.setItem("database", payload.database);
+        localStorage.setItem("port", payload.port);
         commit(LOAD_MYSQL_CONFIG, payload);
         resolve();
       });
