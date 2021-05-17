@@ -354,12 +354,12 @@
         <el-col :span="6">
           <el-form-item>
             <hint-label
-              label="免疫技能"
+              label="免疫控制"
               :tooltip="mechanicImmuneMasksTooltip"
               slot="label"
             ></hint-label>
             <flag-editor
-              title="免疫技能编辑器"
+              title="免疫控制编辑器"
               v-model="creatureTemplate.mechanic_immune_mask"
               :flags="mechanicImmuneMasks"
               placeholder="mechanic_immune_mask"
@@ -369,12 +369,12 @@
         <el-col :span="6">
           <el-form-item>
             <hint-label
-              label="免疫技能伤害"
+              label="免疫技能类型"
               :tooltip="spellSchoolImmuneMasksTooltip"
               slot="label"
             ></hint-label>
             <flag-editor
-              title="免疫技能伤害编辑器"
+              title="免疫技能类型编辑器"
               v-model="creatureTemplate.spell_school_immune_mask"
               :flags="spellSchoolImmuneMasks"
               placeholder="spell_school_immune_mask"
@@ -816,7 +816,6 @@ import {
   flagsExtraTooltip,
   flagsExtra,
   mechanicImmuneMasksTooltip,
-  mechanicImmuneMasks,
   spellSchoolImmuneMasksTooltip,
   spellSchoolImmuneMasks,
   petSpellDataIdTooltip,
@@ -874,7 +873,6 @@ export default {
       flagsExtraTooltip: flagsExtraTooltip,
       flagsExtra: flagsExtra,
       mechanicImmuneMasksTooltip: mechanicImmuneMasksTooltip,
-      mechanicImmuneMasks: mechanicImmuneMasks,
       spellSchoolImmuneMasksTooltip: spellSchoolImmuneMasksTooltip,
       spellSchoolImmuneMasks: spellSchoolImmuneMasks,
       petSpellDataIdTooltip: petSpellDataIdTooltip,
@@ -901,12 +899,23 @@ export default {
     };
   },
   computed: {
+    ...mapState("initiator", ["spellMechanics"]),
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"]),
     credential() {
       return {
         entry: this.$route.params.id,
       };
+    },
+    mechanicImmuneMasks() {
+      return this.spellMechanics.map((mechanic) => {
+        return {
+          index: mechanic.ID,
+          flag: Math.pow(2, mechanic.ID - 1),
+          name: mechanic.StateName_Lang_zhCN,
+          comment: "",
+        };
+      });
     },
   },
   methods: {
