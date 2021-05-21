@@ -71,7 +71,7 @@ export default {
   },
   watch: {
     error(value, oldValue) {
-      if (value.timestamp - oldValue.timestamp >= 5000) {
+      if (value.timestamp - oldValue.timestamp >= 1000) {
         this.$alert(this.error.content, this.error.title, {
           type: "error",
           dangerouslyUseHTMLString: true,
