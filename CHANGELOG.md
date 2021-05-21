@@ -1,3 +1,21 @@
+## [0.1.7](https://github.com/CalsRanna/foxy/compare/0.1.6...0.1.7) (2021-05-21)
+
+
+### Bug Fixes
+
+* **app:** fix active view while reloading app ([c8ccc5f](https://github.com/CalsRanna/foxy/commit/c8ccc5faa54c51ab1a79441e33d97ff69a58863b))
+* **creature:** use mechanics from dbc instead of constant ([4d5b0c7](https://github.com/CalsRanna/foxy/commit/4d5b0c7439f8ae29d4e34a1d2e847a366da9677d))
+* **localizer:** remove display entry or id from localizer ([47a124f](https://github.com/CalsRanna/foxy/commit/47a124f16db39d6dc65bc396939722faa91aa44e))
+* **setting:** fix setting active tab when init and reload view ([503568b](https://github.com/CalsRanna/foxy/commit/503568bfc5b69d3ea1157726a331b47a8c7f9ace))
+* **sql:** fix charset and collate when init loading dbc ([eca773d](https://github.com/CalsRanna/foxy/commit/eca773dbb9c40a797b8035f3b2bd0d2a5826c501))
+
+
+### Features
+
+* **mysql connection:** add port to mysql connection ([1ad7b0f](https://github.com/CalsRanna/foxy/commit/1ad7b0fcdd38fc81ca737d58dfef17dbc0d2185c))
+
+
+
 ## [0.1.6](https://github.com/CalsRanna/foxy/compare/0.1.5...0.1.6) (2021-05-10)
 
 

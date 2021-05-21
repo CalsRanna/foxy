@@ -5,6 +5,11 @@ export default {
   state: () => ({
     version: "0.1.6",
     active: "dashboard",
+    error: {
+      timestamp: 0,
+      title: "",
+      content: "",
+    },
   }),
   actions: {
     setActive({ commit }, payload) {
@@ -13,10 +18,19 @@ export default {
         resolve();
       });
     },
+    updateError({ commit }, payload) {
+      return new Promise((resolve) => {
+        commit("UPDATE_ERROR", payload);
+        resolve();
+      });
+    },
   },
   mutations: {
     [SET_ACTIVE](state, active) {
       state.active = active;
+    },
+    UPDATE_ERROR(state, error) {
+      state.error = error;
     },
   },
 };

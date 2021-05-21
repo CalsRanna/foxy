@@ -62,15 +62,26 @@ import Exporter from "@/components/Exporter";
 
 export default {
   computed: {
-    ...mapState("app", ["active"]),
+    ...mapState("app", ["active", "error"]),
     ...mapState("initiator", [
       "developerConfig",
       "initialized",
       "initializeSucceed",
     ]),
   },
+  watch: {
+    error(value, oldValue) {
+      if (value.timestamp - oldValue.timestamp >= 5000) {
+        this.$alert(this.error.content, this.error.title, {
+          type: "error",
+          dangerouslyUseHTMLString: true,
+          customClass: "wider-message-box",
+        });
+      }
+    },
+  },
   methods: {
-    ...mapActions("app", ["setActive"]),
+    ...mapActions("app", ["setActive", "updateError"]),
     navigate(index) {
       this.setActive(index);
       this.$router.push(`/${index}`).catch((error) => error);
@@ -79,10 +90,14 @@ export default {
   mounted() {
     this.navigate(this.active || "dashboard");
     ipcRenderer.on(GLOBAL_MESSAGE_BOX, (event, error) => {
-      let content = "";
       let title = "";
+      let content = "";
       try {
         error = JSON.parse(error);
+        title =
+          error.code == undefined
+            ? "未知错误"
+            : `[${error.errno}] ${error.code}`;
         content = this.developerConfig.debug
           ? [
               `- ${error.index}`,
@@ -91,20 +106,16 @@ export default {
               error.sql,
             ].join("<br>- ")
           : `${error.sqlMessage}`;
-        title =
-          error.code == undefined
-            ? "未知错误"
-            : `[${error.errno}] ${error.code}`;
       } catch (e) {
+        title = "未知错误";
         content = error.stack
           ? error.stack.replaceAll(" at ", "<br>&nbsp;&nbsp; at ")
           : error;
-        title = "未知错误";
       }
-      this.$alert(content, title, {
-        type: "error",
-        dangerouslyUseHTMLString: true,
-        customClass: "wider-message-box",
+      this.updateError({
+        timestamp: new Date().getTime(),
+        title: title,
+        content: content,
       });
     });
 
