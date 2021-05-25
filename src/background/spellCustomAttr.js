@@ -16,7 +16,7 @@ ipcMain.on(STORE_SPELL_CUSTOM_ATTR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_SPELL_CUSTOM_ATTR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -32,7 +32,7 @@ ipcMain.on(FIND_SPELL_CUSTOM_ATTR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_SPELL_CUSTOM_ATTR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -51,7 +51,7 @@ ipcMain.on(UPDATE_SPELL_CUSTOM_ATTR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_SPELL_CUSTOM_ATTR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());

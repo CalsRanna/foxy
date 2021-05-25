@@ -19,7 +19,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_CREATURE_TEMPLATE_LOCALES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -43,7 +43,7 @@ ipcMain.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${STORE_CREATURE_TEMPLATE_LOCALES}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, insertQueryBuilder.toString());
@@ -51,6 +51,6 @@ ipcMain.on(STORE_CREATURE_TEMPLATE_LOCALES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_CREATURE_TEMPLATE_LOCALES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

@@ -15,7 +15,7 @@ ipcMain.on(SEARCH_NPC_TEXT_LOCALES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_NPC_TEXT_LOCALES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -37,7 +37,7 @@ ipcMain.on(STORE_NPC_TEXT_LOCALES, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${STORE_NPC_TEXT_LOCALES}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -45,6 +45,6 @@ ipcMain.on(STORE_NPC_TEXT_LOCALES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_NPC_TEXT_LOCALES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

@@ -93,24 +93,16 @@ export default {
       let title = "";
       let content = "";
       try {
-        error = JSON.parse(error);
-        title =
-          error.code == undefined
-            ? "未知错误"
-            : `[${error.errno}] ${error.code}`;
+        let properties = Object.getOwnPropertyNames(error);
+        title = properties.includes["code"]
+          ? `内部错误[${error.code}]`
+          : "内部错误";
         content = this.developerConfig.debug
-          ? [
-              `- ${error.index}`,
-              error.sqlState,
-              error.sqlMessage,
-              error.sql,
-            ].join("<br>- ")
-          : `${error.sqlMessage}`;
+          ? error.stack.replaceAll(" at ", "<br>&nbsp;&nbsp; at ")
+          : error.message;
       } catch (e) {
         title = "未知错误";
-        content = error.stack
-          ? error.stack.replaceAll(" at ", "<br>&nbsp;&nbsp; at ")
-          : error;
+        content = error;
       }
       this.updateError({
         timestamp: new Date().getTime(),

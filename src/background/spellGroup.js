@@ -24,7 +24,7 @@ ipcMain.on(SEARCH_SPELL_GROUPS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_SPELL_GROUPS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -40,7 +40,7 @@ ipcMain.on(STORE_SPELL_GROUP, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_SPELL_GROUP}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -56,7 +56,7 @@ ipcMain.on(FIND_SPELL_GROUP, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_SPELL_GROUP}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -75,7 +75,7 @@ ipcMain.on(UPDATE_SPELL_GROUP, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_SPELL_GROUP}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -91,7 +91,7 @@ ipcMain.on(DESTROY_SPELL_GROUP, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_SPELL_GROUP}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -127,7 +127,7 @@ ipcMain.on(COPY_SPELL_GROUP, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_SPELL_GROUP}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -135,6 +135,6 @@ ipcMain.on(COPY_SPELL_GROUP, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_SPELL_GROUP}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

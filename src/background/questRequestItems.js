@@ -17,7 +17,7 @@ ipcMain.on(STORE_QUEST_REQUEST_ITEMS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_QUEST_REQUEST_ITEMS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -33,7 +33,7 @@ ipcMain.on(FIND_QUEST_REQUEST_ITEMS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_QUEST_REQUEST_ITEMS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -52,7 +52,7 @@ ipcMain.on(UPDATE_QUEST_REQUEST_ITEMS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_QUEST_REQUEST_ITEMS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());

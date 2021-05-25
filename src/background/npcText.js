@@ -16,7 +16,7 @@ ipcMain.on(STORE_NPC_TEXT, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_NPC_TEXT}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -32,7 +32,7 @@ ipcMain.on(FIND_NPC_TEXT, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_NPC_TEXT}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -51,7 +51,7 @@ ipcMain.on(UPDATE_NPC_TEXT, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_NPC_TEXT}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());

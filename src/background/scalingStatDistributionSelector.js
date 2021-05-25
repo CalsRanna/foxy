@@ -38,7 +38,7 @@ ipcMain.on(SEARCH_SCALING_STAT_DISTRIBUTIONS_FOR_SELECTOR, (event, payload) => {
         `${SEARCH_SCALING_STAT_DISTRIBUTIONS_FOR_SELECTOR}_REJECT`,
         error
       );
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -75,7 +75,7 @@ ipcMain.on(COUNT_SCALING_STAT_DISTRIBUTIONS_FOR_SELECTOR, (event, payload) => {
         `${COUNT_SCALING_STAT_DISTRIBUTIONS_FOR_SELECTOR}_REJECT`,
         error
       );
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());

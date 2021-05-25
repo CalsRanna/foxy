@@ -11,7 +11,7 @@ ipcMain.on(FIND_VERSION, (event) => {
     })
     .catch((error) => {
       event.reply(`${FIND_VERSION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());

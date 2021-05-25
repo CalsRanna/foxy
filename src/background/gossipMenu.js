@@ -47,7 +47,7 @@ ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_GOSSIP_MENUS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -86,7 +86,7 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_GOSSIP_MENUS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -102,7 +102,7 @@ ipcMain.on(STORE_GOSSIP_MENU, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_GOSSIP_MENU}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -118,7 +118,7 @@ ipcMain.on(FIND_GOSSIP_MENU, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_GOSSIP_MENU}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -138,7 +138,7 @@ ipcMain.on(UPDATE_GOSSIP_MENU, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_GOSSIP_MENU}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -154,7 +154,7 @@ ipcMain.on(DESTROY_GOSSIP_MENU, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_GOSSIP_MENU}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -175,7 +175,7 @@ ipcMain.on(CREATE_GOSSIP_MENU, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${CREATE_GOSSIP_MENU}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -211,7 +211,7 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_GOSSIP_MENU}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -219,6 +219,6 @@ ipcMain.on(COPY_GOSSIP_MENU, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_GOSSIP_MENU}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
