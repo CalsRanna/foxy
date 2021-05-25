@@ -37,7 +37,7 @@ ipcMain.on(SEARCH_ITEM_SETS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_ITEM_SETS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -63,7 +63,7 @@ ipcMain.on(COUNT_ITEM_SETS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_ITEM_SETS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -79,7 +79,7 @@ ipcMain.on(STORE_ITEM_SET, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_ITEM_SET}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -95,7 +95,7 @@ ipcMain.on(FIND_ITEM_SET, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_ITEM_SET}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -114,7 +114,7 @@ ipcMain.on(UPDATE_ITEM_SET, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_ITEM_SET}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -130,7 +130,7 @@ ipcMain.on(DESTROY_ITEM_SET, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_ITEM_SET}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -151,7 +151,7 @@ ipcMain.on(CREATE_ITEM_SET, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${CREATE_ITEM_SET}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -187,7 +187,7 @@ ipcMain.on(COPY_ITEM_SET, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_ITEM_SET}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -195,6 +195,6 @@ ipcMain.on(COPY_ITEM_SET, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_ITEM_SET}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

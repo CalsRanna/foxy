@@ -31,7 +31,7 @@ ipcMain.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_SKINNING_LOOT_TEMPLATES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -47,7 +47,7 @@ ipcMain.on(STORE_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -66,7 +66,7 @@ ipcMain.on(FIND_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -85,7 +85,7 @@ ipcMain.on(UPDATE_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -104,7 +104,7 @@ ipcMain.on(DESTROY_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -146,7 +146,7 @@ ipcMain.on(COPY_SKINNING_LOOT_TEMPLATE, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -154,6 +154,6 @@ ipcMain.on(COPY_SKINNING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_SKINNING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

@@ -45,7 +45,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_CREATURE_TEMPLATES_FOR_SELECTOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -80,7 +80,7 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_CREATURE_TEMPLATES_FOR_SELECTOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());

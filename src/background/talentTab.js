@@ -35,7 +35,7 @@ ipcMain.on(SEARCH_TALENT_TABS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_TALENT_TABS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -61,7 +61,7 @@ ipcMain.on(COUNT_TALENT_TABS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_TALENT_TABS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -77,7 +77,7 @@ ipcMain.on(STORE_TALENT_TAB, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_TALENT_TAB}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -93,7 +93,7 @@ ipcMain.on(FIND_TALENT_TAB, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_TALENT_TAB}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -112,7 +112,7 @@ ipcMain.on(UPDATE_TALENT_TAB, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_TALENT_TAB}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -128,7 +128,7 @@ ipcMain.on(DESTROY_TALENT_TAB, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_TALENT_TAB}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -149,7 +149,7 @@ ipcMain.on(CREATE_TALENT_TAB, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${CREATE_TALENT_TAB}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -185,7 +185,7 @@ ipcMain.on(COPY_TALENT_TAB, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_TALENT_TAB}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -193,6 +193,6 @@ ipcMain.on(COPY_TALENT_TAB, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_TALENT_TAB}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

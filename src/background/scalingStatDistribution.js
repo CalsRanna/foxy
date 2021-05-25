@@ -39,7 +39,7 @@ ipcMain.on(SEARCH_SCALING_STAT_DISTRIBUTIONS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_SCALING_STAT_DISTRIBUTIONS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -73,7 +73,7 @@ ipcMain.on(COUNT_SCALING_STAT_DISTRIBUTIONS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_SCALING_STAT_DISTRIBUTIONS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -91,7 +91,7 @@ ipcMain.on(STORE_SCALING_STAT_DISTRIBUTION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_SCALING_STAT_DISTRIBUTION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -113,7 +113,7 @@ ipcMain.on(FIND_SCALING_STAT_DISTRIBUTION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_SCALING_STAT_DISTRIBUTION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -132,7 +132,7 @@ ipcMain.on(UPDATE_SCALING_STAT_DISTRIBUTION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_SCALING_STAT_DISTRIBUTION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -151,7 +151,7 @@ ipcMain.on(DESTROY_SCALING_STAT_DISTRIBUTION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_SCALING_STAT_DISTRIBUTION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -190,7 +190,7 @@ ipcMain.on(COPY_SCALING_STAT_DISTRIBUTION, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_SCALING_STAT_DISTRIBUTION}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -198,6 +198,6 @@ ipcMain.on(COPY_SCALING_STAT_DISTRIBUTION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_SCALING_STAT_DISTRIBUTION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

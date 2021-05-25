@@ -32,7 +32,7 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_NPC_VENDORS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -48,7 +48,7 @@ ipcMain.on(STORE_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -64,7 +64,7 @@ ipcMain.on(FIND_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -83,7 +83,7 @@ ipcMain.on(UPDATE_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -99,7 +99,7 @@ ipcMain.on(DESTROY_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -122,7 +122,7 @@ ipcMain.on(CREATE_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${CREATE_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -169,7 +169,7 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_NPC_VENDOR}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -177,6 +177,6 @@ ipcMain.on(COPY_NPC_VENDOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_NPC_VENDOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

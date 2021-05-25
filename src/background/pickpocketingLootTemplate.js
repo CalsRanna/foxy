@@ -31,7 +31,7 @@ ipcMain.on(SEARCH_PICKPOCKETING_LOOT_TEMPLATES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_PICKPOCKETING_LOOT_TEMPLATES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -47,7 +47,7 @@ ipcMain.on(STORE_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -69,7 +69,7 @@ ipcMain.on(FIND_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -88,7 +88,7 @@ ipcMain.on(UPDATE_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -107,7 +107,7 @@ ipcMain.on(DESTROY_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -149,7 +149,7 @@ ipcMain.on(COPY_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -157,6 +157,6 @@ ipcMain.on(COPY_PICKPOCKETING_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_PICKPOCKETING_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

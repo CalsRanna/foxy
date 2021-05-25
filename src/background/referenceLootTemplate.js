@@ -31,7 +31,7 @@ ipcMain.on(SEARCH_REFERENCE_LOOT_TEMPLATES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_REFERENCE_LOOT_TEMPLATES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -47,7 +47,7 @@ ipcMain.on(STORE_REFERENCE_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_REFERENCE_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -66,7 +66,7 @@ ipcMain.on(FIND_REFERENCE_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_REFERENCE_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -85,7 +85,7 @@ ipcMain.on(UPDATE_REFERENCE_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_REFERENCE_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -104,7 +104,7 @@ ipcMain.on(DESTROY_REFERENCE_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_REFERENCE_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -146,7 +146,7 @@ ipcMain.on(COPY_REFERENCE_LOOT_TEMPLATE, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_REFERENCE_LOOT_TEMPLATE}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -154,7 +154,7 @@ ipcMain.on(COPY_REFERENCE_LOOT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_REFERENCE_LOOT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
 
@@ -170,7 +170,7 @@ ipcMain.on("CHECK_REFERENCE_ENTRIES", (event, payload) => {
     })
     .catch((error) => {
       event.reply("CHECK_REFERENCE_ENTRIES_REJECT", error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());

@@ -17,7 +17,7 @@ ipcMain.on(STORE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_CREATURE_ONKILL_REPUTATION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -39,7 +39,7 @@ ipcMain.on(FIND_CREATURE_ONKILL_REPUTATION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_CREATURE_ONKILL_REPUTATION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -58,7 +58,7 @@ ipcMain.on(UPDATE_CREATURE_ONKILL_REPUTATION, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_CREATURE_ONKILL_REPUTATION}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());

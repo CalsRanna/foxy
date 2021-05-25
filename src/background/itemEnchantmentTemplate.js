@@ -33,7 +33,7 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_ITEM_ENCHANTMENT_TEMPLATES}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -49,7 +49,7 @@ ipcMain.on(STORE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -71,7 +71,7 @@ ipcMain.on(FIND_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -90,7 +90,7 @@ ipcMain.on(UPDATE_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -109,7 +109,7 @@ ipcMain.on(DESTROY_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -148,7 +148,7 @@ ipcMain.on(COPY_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -156,6 +156,6 @@ ipcMain.on(COPY_ITEM_ENCHANTMENT_TEMPLATE, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_ITEM_ENCHANTMENT_TEMPLATE}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

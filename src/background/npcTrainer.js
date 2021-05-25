@@ -20,7 +20,7 @@ ipcMain.on(SEARCH_NPC_TRAINERS, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_NPC_TRAINERS}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -36,7 +36,7 @@ ipcMain.on(STORE_NPC_TRAINER, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${STORE_NPC_TRAINER}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -52,7 +52,7 @@ ipcMain.on(FIND_NPC_TRAINER, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${FIND_NPC_TRAINER}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -71,7 +71,7 @@ ipcMain.on(UPDATE_NPC_TRAINER, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${UPDATE_NPC_TRAINER}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -87,7 +87,7 @@ ipcMain.on(DESTROY_NPC_TRAINER, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${DESTROY_NPC_TRAINER}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -124,7 +124,7 @@ ipcMain.on(COPY_NPC_TRAINER, (event, payload) => {
         })
         .catch((error) => {
           event.reply(`${COPY_NPC_TRAINER}_REJECT`, error);
-          event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+          event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
           event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -132,6 +132,6 @@ ipcMain.on(COPY_NPC_TRAINER, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COPY_NPC_TRAINER}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

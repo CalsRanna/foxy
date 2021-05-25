@@ -50,7 +50,7 @@ ipcMain.on(SEARCH_SPELLS_FOR_SELECTOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${SEARCH_SPELLS_FOR_SELECTOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
@@ -79,7 +79,7 @@ ipcMain.on(COUNT_SPELLS_FOR_SELECTOR, (event, payload) => {
     })
     .catch((error) => {
       event.reply(`${COUNT_SPELLS_FOR_SELECTOR}_REJECT`, error);
-      event.reply(GLOBAL_MESSAGE_BOX, JSON.stringify(error));
+      event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
       event.reply(GLOBAL_MESSAGE, queryBuilder.toString());
