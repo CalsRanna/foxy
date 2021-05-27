@@ -14,7 +14,13 @@ import {
 
 ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ITEMS, (event, payload) => {
   let queryBuilder = knex
-    .select(["goqi.*", "it.name", "itl.Name as localeName"])
+    .select([
+      "goqi.*",
+      "it.name",
+      "itl.Name as localeName",
+      "it.Quality",
+      "didi.InventoryIcon_1",
+    ])
     .from("gameobject_questitem as goqi")
     .leftJoin("item_template as it", "goqi.ItemId", "it.entry")
     .leftJoin("item_template_locale as itl", function () {
@@ -24,6 +30,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_QUEST_ITEMS, (event, payload) => {
         knex.raw("?", "zhCN")
       );
     })
+    .leftJoin("foxy.dbc_item_display_info as didi", "it.displayid", "didi.ID")
     .where(payload);
 
   queryBuilder
