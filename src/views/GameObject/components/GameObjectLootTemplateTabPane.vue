@@ -256,7 +256,7 @@ export default {
         });
       }
       await this.searchGameObjectLootTemplates({
-        Entry: this.gameObjectTemplate.entry,
+        Entry: this.gameObjectTemplate.Data1,
       });
       this.creating = false;
       this.editing = false;
@@ -276,7 +276,7 @@ export default {
             this.copyGameObjectLootTemplate(this.credential)
               .then(() => {
                 this.searchGameObjectLootTemplates({
-                  Entry: this.gameObjectTemplate.entry,
+                  Entry: this.gameObjectTemplate.Data1,
                 });
               })
               .then(() => {
@@ -309,7 +309,7 @@ export default {
               this.destroyGameObjectLootTemplate(this.credential)
                 .then(() => {
                   this.searchGameObjectLootTemplates({
-                    Entry: this.gameObjectTemplate.entry,
+                    Entry: this.gameObjectTemplate.Data1,
                   });
                 })
                 .then(() => {
@@ -342,7 +342,7 @@ export default {
     async init() {
       this.initing = true;
       await this.searchGameObjectLootTemplates({
-        Entry: this.gameObjectTemplate.entry,
+        Entry: this.gameObjectTemplate.Data1,
       });
       this.initing = false;
     },

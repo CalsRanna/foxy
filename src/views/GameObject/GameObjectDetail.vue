@@ -28,7 +28,12 @@
         <el-tab-pane label="任务物品" name="game_object_quest_item" lazy>
           <game-object-quest-item-tab-pane></game-object-quest-item-tab-pane>
         </el-tab-pane>
-        <el-tab-pane label="物品掉落" name="game_object_loot_template" lazy>
+        <el-tab-pane
+          label="物品掉落"
+          name="game_object_loot_template"
+          lazy
+          :disabled="![3, 25].includes(gameObjectTemplate.type)"
+        >
           <game-object-loot-template-tab-pane></game-object-loot-template-tab-pane>
         </el-tab-pane>
       </el-tabs>
