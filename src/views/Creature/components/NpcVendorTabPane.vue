@@ -18,12 +18,10 @@
           <el-table-column prop="slot" label="插槽" sortable></el-table-column>
           <el-table-column prop="item" label="ID" sortable></el-table-column>
           <el-table-column prop="name" label="名称" sortable>
-            <span slot-scope="scope">
-              <template v-if="scope.row.Name !== null">
-                {{ scope.row.Name }}
-              </template>
-              <template v-else>{{ scope.row.name }}</template>
-            </span>
+            <item-template-name
+              slot-scope="scope"
+              :itemTemplate="scope.row"
+            ></item-template-name>
           </el-table-column>
           <el-table-column
             prop="maxcount"
@@ -144,6 +142,7 @@ import { extendedCostTooltip } from "@/locales/creature";
 import HintLabel from "@/components/HintLabel.vue";
 
 import { mapState, mapActions } from "vuex";
+import ItemTemplateName from "@/components/ItemTemplateName";
 import ItemTemplateSelector from "../../../components/ItemTemplateSelector.vue";
 
 export default {
@@ -308,6 +307,7 @@ export default {
   },
   components: {
     HintLabel,
+    ItemTemplateName,
     ItemTemplateSelector,
   },
 };
