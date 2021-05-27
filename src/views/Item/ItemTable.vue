@@ -68,9 +68,10 @@
         highlight-current-row
         @current-change="select"
         @row-dblclick="show"
+        class="tight-table"
       >
         <el-table-column prop="entry" label="ID" sortable></el-table-column>
-        <el-table-column label="名称" sortable>
+        <el-table-column label="名称" min-width="160" sortable>
           <item-template-name
             slot-scope="scope"
             :itemTemplate="scope.row"
@@ -299,3 +300,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.tight-table td {
+  padding: 6px 0;
+}
+</style>

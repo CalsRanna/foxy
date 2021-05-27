@@ -1,42 +1,32 @@
 <template>
-  <el-row :gutter="16">
-    <!-- 需要找个好方法解决索引图标耗时过长的问题 -->
-    <!-- <el-col :span="4">
-      <el-image
-        :src="`/icons/${icons[itemTemplate.displayid]}.png`"
-        style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
-      >
-        <el-image
-          src="/icons/INV_Misc_QuestionMark.png"
-          style="width: 23px; height:23px;margin: 0; padding: 0px 0 0 0"
-          slot="error"
-        ></el-image>
-      </el-image>
-    </el-col> -->
-    <el-col :span="20">
-      <span :style="{ color: colors[itemTemplate.Quality] }">
-        <template v-if="itemTemplate.localeName">
-          {{ itemTemplate.localeName }}
-        </template>
-        <template v-else>{{ itemTemplate.name }}</template>
-      </span>
-    </el-col>
-  </el-row>
+  <div style="height: 36px">
+    <img
+      :src="`/icons/${itemTemplate.InventoryIcon_1}.png`"
+      style="width: 36px; height: 36px; padding-right: 4px"
+    />
+    <span :style="styleObject" v-if="itemTemplate.localeName">
+      {{ itemTemplate.localeName }}
+    </span>
+    <span :style="styleObject" v-else>{{ itemTemplate.name }}</span>
+  </div>
 </template>
 
 <script>
 import { colors } from "../locales/item.js";
 
-import { mapGetters } from "vuex";
-
 export default {
-  data() {
-    return {
-      colors: colors,
-    };
-  },
   props: {
     itemTemplate: Object,
+  },
+  computed: {
+    styleObject() {
+      return {
+        display: "inline-block",
+        verticalAlign: "top",
+        lineHeight: "36px",
+        color: colors[this.itemTemplate.Quality],
+      };
+    },
   },
 };
 </script>
