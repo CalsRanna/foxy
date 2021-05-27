@@ -17,12 +17,16 @@
         >
           <el-table-column prop="Idx" label="编号" sortable></el-table-column>
           <el-table-column label="名称">
-            <span slot-scope="scope">
+            <item-template-name
+              slot-scope="scope"
+              :itemTemplate="scope.row"
+            ></item-template-name>
+            <!-- <span slot-scope="scope">
               <template v-if="scope.row.localeName !== null">
                 {{ scope.row.localeName }}
               </template>
               <template v-else>{{ scope.row.name }}</template>
-            </span>
+            </span> -->
           </el-table-column>
         </el-table>
       </el-card>
@@ -91,6 +95,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ItemTemplateName from "@/components/ItemTemplateName";
 import ItemTemplateSelector from "../../../components/ItemTemplateSelector.vue";
 
 export default {
@@ -253,6 +258,6 @@ export default {
   mounted() {
     this.init();
   },
-  components: { ItemTemplateSelector },
+  components: { ItemTemplateName, ItemTemplateSelector },
 };
 </script>
