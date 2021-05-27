@@ -13,7 +13,13 @@ import {
 
 ipcMain.on(SEARCH_ITEM_LOOT_TEMPLATES, (event, payload) => {
   let queryBuilder = knex
-    .select(["ilt.*", "it.name", "itl.Name as localeName"])
+    .select([
+      "ilt.*",
+      "it.name",
+      "itl.Name as localeName",
+      "it.Quality",
+      "didi.InventoryIcon_1",
+    ])
     .from("item_loot_template as ilt")
     .leftJoin("item_template as it", "ilt.Item", "it.entry")
     .leftJoin("item_template_locale as itl", function () {
@@ -23,6 +29,7 @@ ipcMain.on(SEARCH_ITEM_LOOT_TEMPLATES, (event, payload) => {
         knex.raw("?", "zhCN")
       );
     })
+    .leftJoin("foxy.dbc_item_display_info as didi", "it.displayid", "didi.ID")
     .where("ilt.Entry", payload.Entry);
 
   queryBuilder
