@@ -1,6 +1,7 @@
 <template>
   <div style="height: 36px">
     <img
+      v-if="itemTemplate.InventoryIcon_1"
       :src="`/icons/${itemTemplate.InventoryIcon_1}.png`"
       style="width: 36px; height: 36px; padding-right: 4px"
     />
@@ -21,7 +22,6 @@ export default {
   computed: {
     styleObject() {
       return {
-        display: "inline-block",
         verticalAlign: "top",
         lineHeight: "36px",
         color: colors[this.itemTemplate.Quality],
