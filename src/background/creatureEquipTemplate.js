@@ -16,15 +16,18 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
   let queryBuilder = knex
     .select([
       "cet.*",
-      "it1.displayid as displayid1",
-      "it1.name as name1",
-      "itl1.Name as Name1",
-      "it2.displayid as displayid2",
-      "it2.name as name2",
-      "itl2.Name as Name2",
-      "it3.displayid as displayid3",
-      "it3.name as name3",
-      "itl3.Name as Name3",
+      "it1.name as name_1",
+      "itl1.Name as localeName_1",
+      "it1.Quality as Quality_1",
+      "didi1.InventoryIcon_1 as Icon_1",
+      "it2.name as name_2",
+      "itl2.Name as localeName_2",
+      "it2.Quality as Quality_2",
+      "didi2.InventoryIcon_1 as Icon_2",
+      "it3.name as name_3",
+      "itl3.Name as localeName_3",
+      "it3.Quality as Quality_3",
+      "didi3.InventoryIcon_1 as Icon_3",
     ])
     .from("creature_equip_template as cet")
     .leftJoin("item_template as it1", "cet.ItemID1", "it1.entry")
@@ -35,6 +38,11 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
         knex.raw("?", "zhCN")
       );
     })
+    .leftJoin(
+      "foxy.dbc_item_display_info as didi1",
+      "it1.displayid",
+      "didi1.ID"
+    )
     .leftJoin("item_template as it2", "cet.ItemID2", "it2.entry")
     .leftJoin("item_template_locale as itl2", function () {
       this.on("cet.ItemID2", "=", "itl2.ID").andOn(
@@ -43,6 +51,11 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
         knex.raw("?", "zhCN")
       );
     })
+    .leftJoin(
+      "foxy.dbc_item_display_info as didi2",
+      "it2.displayid",
+      "didi2.ID"
+    )
     .leftJoin("item_template as it3", "cet.ItemID3", "it3.entry")
     .leftJoin("item_template_locale as itl3", function () {
       this.on("cet.ItemID3", "=", "itl3.ID").andOn(
@@ -51,6 +64,11 @@ ipcMain.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, payload) => {
         knex.raw("?", "zhCN")
       );
     })
+    .leftJoin(
+      "foxy.dbc_item_display_info as didi3",
+      "it3.displayid",
+      "didi3.ID"
+    )
     .where(payload);
 
   queryBuilder

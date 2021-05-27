@@ -17,22 +17,37 @@
         >
           <el-table-column prop="ID" label="编号"></el-table-column>
           <el-table-column label="物品1">
-            <template slot-scope="scope">
-              <template v-if="scope.row.Name1">{{ scope.row.Name1 }}</template>
-              <template v-else>{{ scope.row.name1 }}</template>
-            </template>
+            <item-template-name
+              slot-scope="scope"
+              :itemTemplate="{
+                InventoryIcon_1: scope.row.Icon_1,
+                name: scope.row.name_1,
+                localeName: scope.row.localeName_1,
+                Quality: scope.row.Quality_1,
+              }"
+            ></item-template-name>
           </el-table-column>
           <el-table-column label="物品2">
-            <template slot-scope="scope">
-              <template v-if="scope.row.Name2">{{ scope.row.Name2 }}</template>
-              <template v-else>{{ scope.row.name2 }}</template>
-            </template>
+            <item-template-name
+              slot-scope="scope"
+              :itemTemplate="{
+                InventoryIcon_1: scope.row.Icon_2,
+                name: scope.row.name_2,
+                localeName: scope.row.localeName_2,
+                Quality: scope.row.Quality_2,
+              }"
+            ></item-template-name>
           </el-table-column>
           <el-table-column label="物品3">
-            <template slot-scope="scope">
-              <template v-if="scope.row.Name3">{{ scope.row.Name3 }}</template>
-              <template v-else>{{ scope.row.name3 }}</template>
-            </template>
+            <item-template-name
+              slot-scope="scope"
+              :itemTemplate="{
+                InventoryIcon_1: scope.row.Icon_3,
+                name: scope.row.name_3,
+                localeName: scope.row.localeName_3,
+                Quality: scope.row.Quality_3,
+              }"
+            ></item-template-name>
           </el-table-column>
         </el-table>
       </el-card>
@@ -122,6 +137,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ItemTemplateName from "@/components/ItemTemplateName";
 import ItemTemplateSelector from "../../../components/ItemTemplateSelector.vue";
 
 export default {
@@ -294,6 +310,6 @@ export default {
   mounted() {
     this.init();
   },
-  components: { ItemTemplateSelector },
+  components: { ItemTemplateName, ItemTemplateSelector },
 };
 </script>
