@@ -20,10 +20,10 @@
             <item-template-name
               slot-scope="scope"
               :itemTemplate="{
-                InventoryIcon_1: scope.row.Icon_1,
                 name: scope.row.name_1,
                 localeName: scope.row.localeName_1,
                 Quality: scope.row.Quality_1,
+                InventoryIcon_1: scope.row.Icon_1,
               }"
             ></item-template-name>
           </el-table-column>
@@ -31,10 +31,10 @@
             <item-template-name
               slot-scope="scope"
               :itemTemplate="{
-                InventoryIcon_1: scope.row.Icon_2,
                 name: scope.row.name_2,
                 localeName: scope.row.localeName_2,
                 Quality: scope.row.Quality_2,
+                InventoryIcon_1: scope.row.Icon_2,
               }"
             ></item-template-name>
           </el-table-column>
@@ -42,10 +42,10 @@
             <item-template-name
               slot-scope="scope"
               :itemTemplate="{
-                InventoryIcon_1: scope.row.Icon_3,
                 name: scope.row.name_3,
                 localeName: scope.row.localeName_3,
                 Quality: scope.row.Quality_3,
+                InventoryIcon_1: scope.row.Icon_3,
               }"
             ></item-template-name>
           </el-table-column>
