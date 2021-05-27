@@ -21,12 +21,6 @@
               slot-scope="scope"
               :itemTemplate="scope.row"
             ></item-template-name>
-            <!-- <span slot-scope="scope">
-              <template v-if="scope.row.localeName !== null">
-                {{ scope.row.localeName }}
-              </template>
-              <template v-else>{{ scope.row.name }}</template>
-            </span> -->
           </el-table-column>
         </el-table>
       </el-card>

@@ -14,7 +14,13 @@ import {
 
 ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
   let queryBuilder = knex
-    .select(["nv.*", "it.displayid", "it.name", "itl.Name"])
+    .select([
+      "nv.*",
+      "it.name",
+      "itl.Name as localeName",
+      "it.Quality",
+      "didi.InventoryIcon_1",
+    ])
     .from("npc_vendor as nv")
     .leftJoin("item_template as it", "nv.item", "it.entry")
     .leftJoin("item_template_locale as itl", function () {
@@ -24,6 +30,7 @@ ipcMain.on(SEARCH_NPC_VENDORS, (event, payload) => {
         knex.raw("?", "zhCN")
       );
     })
+    .leftJoin("foxy.dbc_item_display_info as didi", "it.displayid", "didi.ID")
     .where("nv.entry", payload.entry);
 
   queryBuilder
