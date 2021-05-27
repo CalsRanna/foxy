@@ -13,7 +13,13 @@ import {
 
 ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
   let queryBuilder = knex
-    .select(["dlt.*", "it.name", "itl.Name as localeName"])
+    .select([
+      "dlt.*",
+      "it.name",
+      "itl.Name as localeName",
+      "it.Quality",
+      "didi.InventoryIcon_1",
+    ])
     .from("disenchant_loot_template as dlt")
     .leftJoin("item_template as it", "dlt.Item", "it.entry")
     .leftJoin("item_template_locale as itl", function () {
@@ -23,6 +29,7 @@ ipcMain.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, payload) => {
         knex.raw("?", "zhCN")
       );
     })
+    .leftJoin("foxy.dbc_item_display_info as didi", "it.displayid", "didi.ID")
     .where("dlt.Entry", payload.Entry);
 
   queryBuilder
