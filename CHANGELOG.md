@@ -1,36 +1,48 @@
-## [0.1.7](https://github.com/CalsRanna/foxy/compare/0.1.6...0.1.7) (2021-05-21)
-
+## [0.1.7](https://github.com/CalsRanna/foxy/compare/0.1.6...0.1.7) (2021-05-27)
 
 ### Bug Fixes
 
-* **app:** fix active view while reloading app ([c8ccc5f](https://github.com/CalsRanna/foxy/commit/c8ccc5faa54c51ab1a79441e33d97ff69a58863b))
-* **creature:** use mechanics from dbc instead of constant ([4d5b0c7](https://github.com/CalsRanna/foxy/commit/4d5b0c7439f8ae29d4e34a1d2e847a366da9677d))
-* **localizer:** remove display entry or id from localizer ([47a124f](https://github.com/CalsRanna/foxy/commit/47a124f16db39d6dc65bc396939722faa91aa44e))
-* **setting:** fix setting active tab when init and reload view ([503568b](https://github.com/CalsRanna/foxy/commit/503568bfc5b69d3ea1157726a331b47a8c7f9ace))
-* **sql:** fix charset and collate when init loading dbc ([eca773d](https://github.com/CalsRanna/foxy/commit/eca773dbb9c40a797b8035f3b2bd0d2a5826c501))
-
+- **app:** fix active view while reloading app ([c8ccc5f](https://github.com/CalsRanna/foxy/commit/c8ccc5faa54c51ab1a79441e33d97ff69a58863b))
+- **creature:** use mechanics from dbc instead of constant ([4d5b0c7](https://github.com/CalsRanna/foxy/commit/4d5b0c7439f8ae29d4e34a1d2e847a366da9677d))
+- **error:** set timeout to 1000ms ([03a1514](https://github.com/CalsRanna/foxy/commit/03a1514ea8f145880b43ce1cfec219544f08c8eb))
+- **error:** show error only once when serval same errors occurred ([da4c941](https://github.com/CalsRanna/foxy/commit/da4c941edab0336f44a8898ca585d5dc4df00f56))
+- **game object loot template:** fix searching game object loot template when game object has loot template ([0fc06ec](https://github.com/CalsRanna/foxy/commit/0fc06ec483f908f25ec24036ffd7cbf5cb5f2797))
+- **item template name:** fix img and span display error when has no icon or long name ([e574252](https://github.com/CalsRanna/foxy/commit/e574252772d8a9b58b12e2c7e43f6a2a44fa304f))
+- **localizer:** remove display entry or id from localizer ([47a124f](https://github.com/CalsRanna/foxy/commit/47a124f16db39d6dc65bc396939722faa91aa44e))
+- **setting:** fix setting active tab when init and reload view ([503568b](https://github.com/CalsRanna/foxy/commit/503568bfc5b69d3ea1157726a331b47a8c7f9ace))
+- **sql:** fix charset and collate when init loading dbc ([eca773d](https://github.com/CalsRanna/foxy/commit/eca773dbb9c40a797b8035f3b2bd0d2a5826c501))
 
 ### Features
 
-* **mysql connection:** add port to mysql connection ([1ad7b0f](https://github.com/CalsRanna/foxy/commit/1ad7b0fcdd38fc81ca737d58dfef17dbc0d2185c))
-
-
+- **creature equipment template:** add icon display in table ([ee9e9ce](https://github.com/CalsRanna/foxy/commit/ee9e9cedfde0779594b9c1f87c78319747af2ff3))
+- **creature loot template:** add icon display in table ([4943cc2](https://github.com/CalsRanna/foxy/commit/4943cc2acdce5e353028560b5cf61b1726e94030))
+- **creature quest item:** add icon display in table ([c1ee32c](https://github.com/CalsRanna/foxy/commit/c1ee32c19eb928086a6886e53182aa56dcae8aa8))
+- **disenchant loot template:** add icon display in table ([d18d2ab](https://github.com/CalsRanna/foxy/commit/d18d2ab97b8d4f6d8b2ed7bd1e82c138c8a4c11e))
+- **game object loot template:** add icon display in table ([80bbae9](https://github.com/CalsRanna/foxy/commit/80bbae96be3cf5d346d09f62596b3ab62c54ecf8))
+- **game object quest item:** add icon display in table ([d6b47af](https://github.com/CalsRanna/foxy/commit/d6b47af00e69bdd9c33958a22b374a6524c5d759))
+- **item:** add item icon in item template name component ([6c1654f](https://github.com/CalsRanna/foxy/commit/6c1654fb6b52f43a0678450a6f2aa4be999df41b))
+- **item loot template:** add icon display in table ([82f8696](https://github.com/CalsRanna/foxy/commit/82f869600fd9e039538e9ca15b0c19a1c57bbf3a))
+- **item template selector:** add icon display in table ([b0ebf5c](https://github.com/CalsRanna/foxy/commit/b0ebf5c063e0aba10914989751c86167815e1a1d))
+- **milling loot template:** add icon display in table ([1204023](https://github.com/CalsRanna/foxy/commit/12040233c8a87eb3af5c08b5d98c1b81c2598e73))
+- **mysql connection:** add port to mysql connection ([1ad7b0f](https://github.com/CalsRanna/foxy/commit/1ad7b0fcdd38fc81ca737d58dfef17dbc0d2185c))
+- **npc vendor:** add icon display in table ([dd39d8e](https://github.com/CalsRanna/foxy/commit/dd39d8e34634fc70431121efb5104903e2472ff7))
+- **pickpocketing loot template:** add icon display in table ([5c476b1](https://github.com/CalsRanna/foxy/commit/5c476b10c8c972869c116ef076c5501f9f69b7af))
+- **prospecting loot template:** add icon display in table ([45a6de2](https://github.com/CalsRanna/foxy/commit/45a6de2e360a02f5f668cc0491752b0f5490c861))
+- **reference loot template:** add icon display in table ([f9d7a23](https://github.com/CalsRanna/foxy/commit/f9d7a2338112912d348078c62cce8e9f1ea62eb3))
+- **skinning loot template:** add icon display in table ([583545f](https://github.com/CalsRanna/foxy/commit/583545f7b6cf1193c30c26b324da505c81a23b2d))
+- **spell loot template:** add icon display in table ([fb89883](https://github.com/CalsRanna/foxy/commit/fb898838b869b6d8d11752a63cc71da1a233db8a))
 
 ## [0.1.6](https://github.com/CalsRanna/foxy/compare/0.1.5...0.1.6) (2021-05-10)
 
-
 ### Bug Fixes
 
-* **spell:** fix mechanics didn't work properly ([99d7e28](https://github.com/CalsRanna/foxy/commit/99d7e28e87f83246ef194c65683c85fcc604958e))
-
+- **spell:** fix mechanics didn't work properly ([99d7e28](https://github.com/CalsRanna/foxy/commit/99d7e28e87f83246ef194c65683c85fcc604958e))
 
 ### Features
 
-* **about:** add about view ([f18f2ad](https://github.com/CalsRanna/foxy/commit/f18f2adbfd7cdb2f265c2babf07c35e5005c3d2b))
-* **initiator:** build a new initiator instead of inline dialog ([59127b9](https://github.com/CalsRanna/foxy/commit/59127b9fc9a29d11b8f44fe4db031d5efaf471da))
-* **version:** use state of version instead of data in component ([920026d](https://github.com/CalsRanna/foxy/commit/920026d46b3cdfa08fd5807f7b3fb785e758d5e9))
-
-
+- **about:** add about view ([f18f2ad](https://github.com/CalsRanna/foxy/commit/f18f2adbfd7cdb2f265c2babf07c35e5005c3d2b))
+- **initiator:** build a new initiator instead of inline dialog ([59127b9](https://github.com/CalsRanna/foxy/commit/59127b9fc9a29d11b8f44fe4db031d5efaf471da))
+- **version:** use state of version instead of data in component ([920026d](https://github.com/CalsRanna/foxy/commit/920026d46b3cdfa08fd5807f7b3fb785e758d5e9))
 
 ## [0.1.5](https://github.com/CalsRanna/foxy/compare/0.1.4...0.1.5) (2021-05-09)
 

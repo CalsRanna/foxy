@@ -2,6 +2,205 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
+        <h2>0.1.7 <small>2021-05-27</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>app:</strong> fix active view while reloading app
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/c8ccc5faa54c51ab1a79441e33d97ff69a58863b"
+            text="(c8ccc5f)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>creature:</strong> use mechanics from dbc instead of constant
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/4d5b0c7439f8ae29d4e34a1d2e847a366da9677d"
+            text="(4d5b0c7)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>error:</strong> set timeout to 1000ms
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/03a1514ea8f145880b43ce1cfec219544f08c8eb"
+            text="(03a1514)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>error:</strong> show error only once when serval same errors
+          occurred
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/da4c941edab0336f44a8898ca585d5dc4df00f56"
+            text="(da4c941)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>game object loot template:</strong> fix searching game object
+          loot template when game object has loot template
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/0fc06ec483f908f25ec24036ffd7cbf5cb5f2797"
+            text="(0fc06ec)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>item template name:</strong> fix img and span display error
+          when has no icon or long name
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/e574252772d8a9b58b12e2c7e43f6a2a44fa304f"
+            text="(e574252)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>localizer:</strong> remove display entry or id from localizer
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/47a124f16db39d6dc65bc396939722faa91aa44e"
+            text="(47a124f)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>setting:</strong> fix setting active tab when init and reload
+          view
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/503568bfc5b69d3ea1157726a331b47a8c7f9ace"
+            text="(503568b)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>sql:</strong> fix charset and collate when init loading dbc
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/eca773dbb9c40a797b8035f3b2bd0d2a5826c501"
+            text="(eca773d)"
+          ></clickable-span>
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>creature equipment template:</strong> add icon display in
+          table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/ee9e9cedfde0779594b9c1f87c78319747af2ff3"
+            text="(ee9e9ce)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>creature loot template:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/4943cc2acdce5e353028560b5cf61b1726e94030"
+            text="(4943cc2)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>creature quest item:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/c1ee32c19eb928086a6886e53182aa56dcae8aa8"
+            text="(c1ee32c)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>disenchant loot template:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/d18d2ab97b8d4f6d8b2ed7bd1e82c138c8a4c11e"
+            text="(d18d2ab)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>game object loot template:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/80bbae96be3cf5d346d09f62596b3ab62c54ecf8"
+            text="(80bbae9)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>game object quest item:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/d6b47af00e69bdd9c33958a22b374a6524c5d759"
+            text="(d6b47af)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>item:</strong> add item icon in item template name component
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/6c1654fb6b52f43a0678450a6f2aa4be999df41b"
+            text="(6c1654f)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>item loot template:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/82f869600fd9e039538e9ca15b0c19a1c57bbf3a"
+            text="(82f8696)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>item template selector:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/b0ebf5c063e0aba10914989751c86167815e1a1d"
+            text="(b0ebf5c)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>milling loot template:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/12040233c8a87eb3af5c08b5d98c1b81c2598e73"
+            text="(1204023)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>mysql connection:</strong> add port to mysql connection
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/1ad7b0fcdd38fc81ca737d58dfef17dbc0d2185c"
+            text="(1ad7b0f)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>npc vendor:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/dd39d8e34634fc70431121efb5104903e2472ff7"
+            text="(dd39d8e)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>pickpocketing loot template:</strong> add icon display in
+          table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/5c476b10c8c972869c116ef076c5501f9f69b7af"
+            text="(5c476b1)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>prospecting loot template:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/45a6de2e360a02f5f668cc0491752b0f5490c861"
+            text="(45a6de2)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>reference loot template:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/f9d7a2338112912d348078c62cce8e9f1ea62eb3"
+            text="(f9d7a23)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>skinning loot template:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/583545f7b6cf1193c30c26b324da505c81a23b2d"
+            text="(583545f)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell loot template:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/fb898838b869b6d8d11752a63cc71da1a233db8a"
+            text="(fb89883)"
+          ></clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.1.6 <small>2021-05-10</small></h2>
       </div>
       <h3>Bug Fixes</h3>
