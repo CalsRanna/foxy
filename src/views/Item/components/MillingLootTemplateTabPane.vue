@@ -19,10 +19,9 @@
           <el-table-column label="名称" sortable>
             <span slot-scope="scope">
               <template v-if="scope.row.Reference == 0">
-                <template v-if="scope.row.localeName !== null">
-                  {{ scope.row.localeName }}
-                </template>
-                <template v-else>{{ scope.row.name }}</template>
+                <item-template-name
+                  :itemTemplate="scope.row"
+                ></item-template-name>
               </template>
               <template v-else>
                 <el-tag>关联掉落</el-tag>
@@ -178,6 +177,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ItemTemplateName from "@/components/ItemTemplateName";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
 import ReferenceLootTemplateCards from "@/components/ReferenceLootTemplateCards.vue";
 
@@ -347,6 +347,10 @@ export default {
   mounted() {
     this.init();
   },
-  components: { ItemTemplateSelector, ReferenceLootTemplateCards },
+  components: {
+    ItemTemplateName,
+    ItemTemplateSelector,
+    ReferenceLootTemplateCards,
+  },
 };
 </script>
