@@ -17,12 +17,10 @@
         >
           <el-table-column prop="Idx" label="编号" sortable></el-table-column>
           <el-table-column label="名称">
-            <span slot-scope="scope">
-              <template v-if="scope.row.localeName !== null">
-                {{ scope.row.localeName }}
-              </template>
-              <template v-else>{{ scope.row.name }}</template>
-            </span>
+            <item-template-name
+              slot-scope="scope"
+              :itemTemplate="scope.row"
+            ></item-template-name>
           </el-table-column>
         </el-table>
       </el-card>
@@ -36,7 +34,7 @@
         <el-card style="margin-top: 16px">
           <el-row :gutter="16">
             <el-col :span="6">
-              <el-form-item label="生物ID">
+              <el-form-item label="物体ID">
                 <el-input-number
                   v-model="gameObjectQuestItem.GameObjectEntry"
                   controls-position="right"
@@ -91,6 +89,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ItemTemplateName from "@/components/ItemTemplateName";
 
 export default {
   data() {
@@ -252,5 +251,6 @@ export default {
   mounted() {
     this.init();
   },
+  components: { ItemTemplateName },
 };
 </script>
