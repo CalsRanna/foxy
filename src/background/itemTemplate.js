@@ -26,6 +26,7 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
       "it.InventoryType",
       "it.ItemLevel",
       "it.RequiredLevel",
+      "didi.InventoryIcon_1",
     ])
     .from("item_template as it")
     .leftJoin("item_template_locale as itl", function () {
@@ -34,7 +35,8 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES, (event, payload) => {
         "=",
         knex.raw("?", "zhCN")
       );
-    });
+    })
+    .leftJoin("foxy.dbc_item_display_info as didi", "displayid", "didi.ID");
   if (payload.entry) {
     queryBuilder = queryBuilder.where("it.entry", "like", `%${payload.entry}%`);
   }
