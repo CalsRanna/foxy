@@ -2,7 +2,7 @@
   <div style="height: 36px">
     <img
       v-if="itemTemplate.InventoryIcon_1"
-      :src="`/icons/${itemTemplate.InventoryIcon_1}.png`"
+      :src="`/icons/${icon}.png`"
       style="width: 36px; height: 36px; padding-right: 4px"
     />
     <span :style="styleObject" v-if="itemTemplate.localeName">
@@ -20,6 +20,14 @@ export default {
     itemTemplate: Object,
   },
   computed: {
+    icon() {
+      return this.itemTemplate.InventoryIcon_1.split("_")
+        .map((word) => {
+          return word.replace(word[0], word[0].toUpperCase());
+        })
+        .join("_")
+        .replace("Inv", "INV");
+    },
     styleObject() {
       return {
         verticalAlign: "top",
