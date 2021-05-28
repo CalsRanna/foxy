@@ -8,7 +8,9 @@
     <span :style="styleObject" v-if="itemTemplate.localeName">
       {{ itemTemplate.localeName }}
     </span>
-    <span :style="styleObject" v-else>{{ itemTemplate.name }}</span>
+    <span :style="styleObject" v-else>
+      {{ itemTemplate.name }}
+    </span>
   </div>
 </template>
 
