@@ -57,9 +57,9 @@
       >
         <el-table-column
           prop="ID"
-          label="ID"
+          label="编号"
           sortable
-          width="64px"
+          width="80px"
         ></el-table-column>
         <el-table-column label="名称" width="320px" sortable>
           <spell-name slot-scope="scope" :spell="scope.row"></spell-name>

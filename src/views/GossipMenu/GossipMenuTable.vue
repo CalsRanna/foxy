@@ -62,13 +62,13 @@
       >
         <el-table-column
           prop="MenuID"
-          label="对话ID"
-          width="160"
+          label="编号"
+          width="80px"
           sortable
         ></el-table-column>
         <el-table-column
           prop="TextID"
-          label="文本ID"
+          label="文本编号"
           width="160"
           sortable
         ></el-table-column>
