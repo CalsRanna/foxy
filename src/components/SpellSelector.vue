@@ -62,7 +62,9 @@
         class="spell-selector"
       >
         <el-table-column prop="ID" label="ID" width="80px"> </el-table-column>
-        <el-table-column prop="Name_Lang_zhCN" label="名称"> </el-table-column>
+        <el-table-column prop="Name_Lang_zhCN" label="名称">
+          <spell-name slot-scope="scope" :spell="scope.row"></spell-name>
+        </el-table-column>
         <el-table-column prop="Description_Lang_zhCN" label="描述">
           <template slot-scope="scope">
             <spell-description
@@ -93,6 +95,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import SpellName from "@/components/SpellName";
 import SpellDescription from "@/components/SpellDescription";
 
 export default {
@@ -192,6 +195,7 @@ export default {
     this.ID = this.value;
   },
   components: {
+    SpellName,
     SpellDescription,
   },
 };
