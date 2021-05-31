@@ -17,13 +17,16 @@ ipcMain.on(SEARCH_TALENTS, (event, payload) => {
   let queryBuilder = knex
     .select([
       "fdt.ID",
-      "fdt.TabID",
       "fdt.TierID",
       "fdt.ColumnIndex",
+      "fdtt.Name_Lang_zhCN as TabName",
       "fds.Name_Lang_zhCN",
+      "fdsi.TextureFilename",
     ])
     .from("foxy.dbc_talent as fdt")
-    .leftJoin("foxy.dbc_spell as fds", "fdt.SpellRank_1", "fds.ID");
+    .leftJoin("foxy.dbc_talent_tab as fdtt", "fdt.TabID", "fdtt.ID")
+    .leftJoin("foxy.dbc_spell as fds", "fdt.SpellRank_1", "fds.ID")
+    .leftJoin("foxy.dbc_spell_icon as fdsi", "fds.SpellIconID", "fdsi.ID");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("fdt.ID", "like", `%${payload.ID}%`);
   }

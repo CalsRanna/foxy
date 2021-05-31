@@ -60,16 +60,18 @@
       >
         <el-table-column prop="ID" label="编号" sortable width="80px">
         </el-table-column>
-        <el-table-column prop="TabID" label="天赋页" sortable></el-table-column>
+        <el-table-column label="技能" sortable>
+          <spell-name slot-scope="scope" :spell="scope.row"></spell-name>
+        </el-table-column>
+        <el-table-column
+          prop="TabName"
+          label="天赋页"
+          sortable
+        ></el-table-column>
         <el-table-column prop="TierID" label="行" sortable></el-table-column>
         <el-table-column
           prop="ColumnIndex"
           label="列"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="Name_Lang_zhCN"
-          label="技能"
           sortable
         ></el-table-column>
       </el-table>
@@ -88,6 +90,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import SpellName from "@/components/SpellName";
 
 export default {
   data() {
@@ -224,6 +227,9 @@ export default {
     if (this.refresh) {
       this.init();
     }
+  },
+  components: {
+    SpellName,
   },
 };
 </script>
