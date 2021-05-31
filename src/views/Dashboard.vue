@@ -15,7 +15,7 @@
         <span
           v-show="
             softwareVersion.version !== null &&
-            softwareVersion.version !== version
+            softwareVersion.version > version
           "
         >
           当前版本 {{ version }}，新版本
