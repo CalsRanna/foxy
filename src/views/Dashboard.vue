@@ -33,7 +33,11 @@
       <el-col :span="16">
         <el-row :gutter="16">
           <el-col :span="8">
-            <el-card shadow="hover">
+            <el-card
+              shadow="hover"
+              class="clickable-card"
+              @click.native="() => navigate('/creature')"
+            >
               <p class="summary-title">
                 生物模板<span>Creature Template</span>
               </p>
@@ -47,7 +51,11 @@
             </el-card>
           </el-col>
           <el-col :span="8">
-            <el-card shadow="hover">
+            <el-card
+              shadow="hover"
+              class="clickable-card"
+              @click.native="() => navigate('/item')"
+            >
               <p class="summary-title">物品模板<span>Item Template</span></p>
               <p class="summary-content">
                 {{
@@ -57,7 +65,11 @@
             </el-card>
           </el-col>
           <el-col :span="8">
-            <el-card shadow="hover">
+            <el-card
+              shadow="hover"
+              class="clickable-card"
+              @click.native="() => navigate('/game-object')"
+            >
               <p class="summary-title">
                 物体模板<span>Game Object Template</span>
               </p>
@@ -73,7 +85,11 @@
         </el-row>
         <el-row :gutter="16" style="margin-top: 16px">
           <el-col :span="8">
-            <el-card shadow="hover">
+            <el-card
+              shadow="hover"
+              class="clickable-card"
+              @click.native="() => navigate('/quest')"
+            >
               <p class="summary-title">任务模板<span>Quest Template</span></p>
               <p class="summary-content">
                 {{
@@ -85,7 +101,11 @@
             </el-card>
           </el-col>
           <el-col :span="8">
-            <el-card shadow="hover">
+            <el-card
+              shadow="hover"
+              class="clickable-card"
+              @click.native="() => navigate('/gossip-menu')"
+            >
               <p class="summary-title">对话<span>Gossip Menu</span></p>
               <p class="summary-content">
                 {{
@@ -95,7 +115,11 @@
             </el-card>
           </el-col>
           <el-col :span="8">
-            <el-card shadow="hover">
+            <el-card
+              shadow="hover"
+              class="clickable-card"
+              @click.native="() => navigate('/smart-script')"
+            >
               <p class="summary-title">内建脚本<span>Smart Script</span></p>
               <p class="summary-content">
                 {{
@@ -107,7 +131,11 @@
         </el-row>
         <el-row :gutter="16" style="margin-top: 16px">
           <el-col :span="8">
-            <el-card shadow="hover">
+            <el-card
+              shadow="hover"
+              class="clickable-card"
+              @click.native="() => navigate('/spell')"
+            >
               <p class="summary-title">技能<span>Spell</span></p>
               <p class="summary-content">
                 {{ parseFloat(this.quantityOfSpell.total).toLocaleString() }}
@@ -236,6 +264,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions("app", ["setActive"]),
     ...mapActions("version", ["findVersion"]),
     ...mapActions("creatureTemplate", ["countCreatureTemplates"]),
     ...mapActions("itemTemplate", ["countItemTemplates"]),
@@ -247,6 +276,10 @@ export default {
     openBrowser(url) {
       const shell = window.shell;
       shell.openExternal(url);
+    },
+    navigate(route) {
+      this.setActive(route.substr(1));
+      this.$router.push(route);
     },
     async init() {
       this.loading = true;
