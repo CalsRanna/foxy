@@ -64,6 +64,7 @@ import creatureTemplateSelector from "./creatureTemplateSelector";
 import spellSelector from "./spellSelector";
 import spellDurationSelector from "./spellDurationSelector";
 import spellCastTimeSelector from "./spellCastTimeSelector";
+import spellIconSelector from "./spellIconSelector";
 import spellRangeSelector from "./spellRangeSelector";
 import gossipMenuSelector from "./gossipMenuSelector";
 import scalingStatDistributionSelector from "./scalingStatDistributionSelector";
@@ -143,6 +144,7 @@ export default new Vuex.Store({
     spellSelector,
     spellDurationSelector,
     spellCastTimeSelector,
+    spellIconSelector,
     spellRangeSelector,
     gossipMenuSelector,
     scalingStatDistributionSelector,

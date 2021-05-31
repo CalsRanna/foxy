@@ -1473,20 +1473,18 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="图标">
-            <el-input-number
+            <spell-icon-selector
               v-model="spell.SpellIconID"
-              controls-position="right"
               placeholder="SpellIconID"
-            ></el-input-number>
+            ></spell-icon-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="激活图标">
-            <el-input-number
+            <spell-icon-selector
               v-model="spell.ActiveIconID"
-              controls-position="right"
               placeholder="ActiveIconID"
-            ></el-input-number>
+            ></spell-icon-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1674,12 +1672,12 @@ import {
   preventionTypes,
 } from "@/locales/spell";
 
-import FlagEditor from "@/components/FlagEditor";
-
 import { mapState, mapActions } from "vuex";
+import FlagEditor from "@/components/FlagEditor";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
 import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
 import SpellCastTimeSelector from "@/components/SpellCastTimeSelector.vue";
+import SpellIconSelector from "@/components/SpellIconSelector.vue";
 import SpellRangeSelector from "@/components/SpellRangeSelector.vue";
 
 export default {
@@ -1769,6 +1767,7 @@ export default {
     ItemTemplateSelector,
     SpellDurationSelector,
     SpellCastTimeSelector,
+    SpellIconSelector,
     SpellRangeSelector,
   },
 };
