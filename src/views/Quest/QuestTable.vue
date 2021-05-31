@@ -59,7 +59,12 @@
         @current-change="select"
         @row-dblclick="show"
       >
-        <el-table-column prop="ID" label="ID" sortable></el-table-column>
+        <el-table-column
+          prop="ID"
+          label="编号"
+          width="80px"
+          sortable
+        ></el-table-column>
         <el-table-column
           prop="LogTitle"
           label="标题"

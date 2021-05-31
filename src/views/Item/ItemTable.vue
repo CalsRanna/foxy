@@ -70,7 +70,12 @@
         @row-dblclick="show"
         class="tight-table"
       >
-        <el-table-column prop="entry" label="ID" sortable></el-table-column>
+        <el-table-column
+          prop="entry"
+          label="编号"
+          width="80px"
+          sortable
+        ></el-table-column>
         <el-table-column label="名称" min-width="160" sortable>
           <item-template-name
             slot-scope="scope"

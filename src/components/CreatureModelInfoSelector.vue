@@ -67,7 +67,7 @@
       >
         <el-table-column prop="DisplayID" label="编号" width="80px">
         </el-table-column>
-        <el-table-column prop="Gender" label="性别" width="80">
+        <el-table-column prop="Gender" label="性别" width="80px">
           <template slot-scope="scope">
             <span v-if="scope.row.Gender == 0">男</span>
             <span v-else-if="scope.row.Gender == 1">女</span>

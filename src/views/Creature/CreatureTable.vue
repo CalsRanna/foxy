@@ -66,7 +66,12 @@
         @current-change="select"
         @row-dblclick="show"
       >
-        <el-table-column prop="entry" label="ID" sortable></el-table-column>
+        <el-table-column
+          prop="entry"
+          label="编号"
+          width="80px"
+          sortable
+        ></el-table-column>
         <el-table-column label="姓名" sortable>
           <template slot-scope="scope">
             <span v-if="scope.row.localeName">

@@ -63,7 +63,8 @@
       >
         <el-table-column
           prop="entryorguid"
-          label="Entry Or GUID"
+          label="编号"
+          width="80px"
           sortable
         ></el-table-column>
         <el-table-column prop="source_type" label="类型" sortable>
