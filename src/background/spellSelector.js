@@ -27,9 +27,11 @@ ipcMain.on(SEARCH_SPELLS_FOR_SELECTOR, (event, payload) => {
       "EffectAuraPeriod_3",
       "ProcCharges",
       "dsd.Duration as Duration",
+      "dsi.TextureFilename",
     ])
     .from("foxy.dbc_spell as ds")
-    .leftJoin("foxy.dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID");
+    .leftJoin("foxy.dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID")
+    .leftJoin("foxy.dbc_spell_icon as dsi", "ds.SpellIconID", "dsi.ID");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ds.ID", "like", `%${payload.ID}%`);
   }
