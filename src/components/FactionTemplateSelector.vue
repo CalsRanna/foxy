@@ -19,7 +19,7 @@
         </span>
       </div>
       <el-card>
-        <el-form>
+        <el-form @submit.native.prevent="search">
           <el-row :gutter="16">
             <el-col :span="8">
               <el-input-number
@@ -32,7 +32,14 @@
               <el-input v-model="Name_Lang_zhCN" placeholder="名称"></el-input>
             </el-col>
             <el-col :span="8">
-              <el-button type="primary" @click="search">查询</el-button>
+              <el-button
+                type="primary"
+                native-type="submit"
+                :loading="loading"
+                @click="search"
+              >
+                查询
+              </el-button>
               <el-button @click="reset">重置</el-button>
             </el-col>
           </el-row>
@@ -88,6 +95,7 @@ export default {
       ID: undefined,
       Name_Lang_zhCN: undefined,
       visible: false,
+      loading: false,
       currentRow: undefined,
     };
   },
@@ -132,11 +140,17 @@ export default {
       ]);
     },
     async search() {
-      this.paginateFactionTemplatesForSelector({ page: 1 });
-      await Promise.all([
-        this.searchFactionTemplatesForSelector(this.payload),
-        this.countFactionTemplatesForSelector(this.payload),
-      ]);
+      this.loading = true;
+      try {
+        this.paginateFactionTemplatesForSelector({ page: 1 });
+        await Promise.all([
+          this.searchFactionTemplatesForSelector(this.payload),
+          this.countFactionTemplatesForSelector(this.payload),
+        ]);
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+      }
     },
     reset() {
       this.ID = undefined;
