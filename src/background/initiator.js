@@ -18,6 +18,7 @@ import {
   LOAD_DBC_SPELLS,
   LOAD_DBC_SPELL_CAST_TIMES,
   LOAD_DBC_SPELL_DURATIONS,
+  LOAD_DBC_SPELL_ICONS,
   LOAD_DBC_SPELL_ITEM_ENCHANTMENTS,
   LOAD_DBC_SPELL_MECHANICS,
   LOAD_DBC_SPELL_RANGES,
@@ -45,6 +46,7 @@ const {
   dbcSpellItemEnchantmentSql,
   dbcItemRandomPropertiesSql,
   dbcItemRandomSuffixSql,
+  dbcSpellIconSql,
   dbcSpellCastTimesSql,
   dbcSpellRangeSql,
   dbcSpellMechanicSql,
@@ -86,6 +88,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcItemRandomPropertiesSql).then(() => {}),
         knex.raw(dbcItemRandomSuffixSql).then(() => {}),
         knex.raw(dbcSpellCastTimesSql).then(() => {}),
+        knex.raw(dbcSpellIconSql).then(() => {}),
         knex.raw(dbcSpellRangeSql).then(() => {}),
         knex.raw(dbcSpellMechanicSql).then(() => {}),
         knex.raw(dbcTalentSql).then(() => {}),
@@ -601,6 +604,38 @@ ipcMain.on(LOAD_DBC_SPELL_DURATIONS, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELL_DURATIONS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_SPELL_ICONS, (event) => {
+  let queryBuilder = knex.count("* as total").from("foxy.dbc_spell_icon");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/SpellIcon.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_spell_icon", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_SPELL_ICONS);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_SPELL_ICONS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_SPELL_ICONS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_SPELL_ICONS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_SPELL_ICONS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

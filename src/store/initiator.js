@@ -21,6 +21,7 @@ import {
   LOAD_DBC_SPELLS,
   LOAD_DBC_SPELL_CAST_TIMES,
   LOAD_DBC_SPELL_DURATIONS,
+  LOAD_DBC_SPELL_ICONS,
   LOAD_DBC_SPELL_ITEM_ENCHANTMENTS,
   LOAD_DBC_SPELL_MECHANICS,
   LOAD_DBC_SPELL_RANGES,
@@ -285,6 +286,17 @@ export default {
           resolve();
         });
         ipcRenderer.on(`${LOAD_DBC_SPELL_DURATIONS}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    loadDbcSpellIcons() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_SPELL_ICONS);
+        ipcRenderer.on(LOAD_DBC_SPELL_ICONS, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_SPELL_ICONS}_REJECT`, (event, error) => {
           reject(error);
         });
       });

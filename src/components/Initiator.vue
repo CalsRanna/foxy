@@ -52,6 +52,7 @@ export default {
       "loadDbcSpells",
       "loadDbcSpellCastTimes",
       "loadDbcSpellDurations",
+      "loadDbcSpellIcons",
       "loadDbcSpellItemEnchantments",
       "loadDbcSpellMechanics",
       "loadDbcSpellRanges",
@@ -102,6 +103,8 @@ export default {
         await this.loadDbcSpellCastTimes();
         this.progressText = "加载SpellDuration.dbc";
         await this.loadDbcSpellDurations();
+        this.progressText = "加载SpellIcon.dbc";
+        await this.loadDbcSpellIcons();
         this.progressText = "加载SpellItemEnchantment.dbc";
         await this.loadDbcSpellItemEnchantments();
         this.progressText = "加载SpellMechanic.dbc";
