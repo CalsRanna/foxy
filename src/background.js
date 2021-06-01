@@ -54,6 +54,7 @@ import "./background/spellLinkedSpell";
 import "./background/spellLootTemplate";
 import "./background/referenceLootTemplate";
 import "./background/scalingStatDistribution";
+import "./background/scalingStatValue";
 import "./background/itemSet";
 import "./background/talent";
 import "./background/talentTab";

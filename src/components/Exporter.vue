@@ -85,6 +85,14 @@
             ，共{{ scalingStatDistributions }}条数据
           </span>
         </li>
+        <li v-if="checkedDbcs.indexOf('ScalingStatValues') > -1">
+          <i class="el-icon-loading" v-if="isSearchingScalingStatValuesDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备ScalingStatValues数据
+          <span v-if="!isSearchingScalingStatValuesDbc">
+            ，共{{ scalingStatValues }}条数据
+          </span>
+        </li>
         <li v-if="checkedDbcs.indexOf('Talent') > -1">
           <i class="el-icon-loading" v-if="isSearchingTalentDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -124,6 +132,11 @@
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
             写入ScalingStatDistribution.dbc
           </li>
+          <li v-if="checkedDbcs.indexOf('ScalingStatValues') > -1">
+            <i class="el-icon-loading" v-if="isWritingScalingStatValuesDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入ScalingStatValues.dbc
+          </li>
           <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
             <i class="el-icon-loading" v-if="isWritingItemSetDbc"></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -156,6 +169,7 @@ const dbcOptions = [
   "Item",
   "Spell",
   "ScalingStatDistribution",
+  "ScalingStatValues",
   "ItemSet",
   "Talent",
   "TalentTab",
@@ -180,12 +194,14 @@ export default {
       isSearchingItemDbc: true,
       isSearchingSpellDbc: true,
       isSearchingScalingStatDistributionDbc: true,
+      isSearchingScalingStatValuesDbc: true,
       isSearchingItemSetDbc: true,
       isSearchingTalentDbc: true,
       isSearchingTalentTabDbc: true,
       isWritingItemDbc: true,
       isWritingSpellDbc: true,
       isWritingScalingStatDistributionDbc: true,
+      isWritingScalingStatValuesDbc: true,
       isWritingItemSetDbc: true,
       isWritingTalentDbc: true,
       isWritingTalentTabDbc: true,
@@ -197,6 +213,7 @@ export default {
       "items",
       "spells",
       "scalingStatDistributions",
+      "scalingStatValues",
       "itemSets",
       "talents",
       "talentTabs",
@@ -208,12 +225,14 @@ export default {
       "searchItemDbc",
       "searchSpellDbc",
       "searchScalingStatDistributionDbc",
+      "searchScalingStatValuesDbc",
       "searchItemSetDbc",
       "searchTalentDbc",
       "searchTalentTabDbc",
       "writeItemDbc",
       "writeSpellDbc",
       "writeScalingStatDistributionDbc",
+      "writeScalingStatValuesDbc",
       "writeItemSetDbc",
       "writeTalentDbc",
       "writeTalentTabDbc",
@@ -233,12 +252,14 @@ export default {
       this.isSearchingItemDbc = true;
       this.isSearchingSpellDbc = true;
       this.isSearchingScalingStatDistributionDbc = true;
+      this.isSearchingScalingStatValuesDbc = true;
       this.isSearchingItemSetDbc = true;
       this.isSearchingTalentDbc = true;
       this.isSearchingTalentTabDbc = true;
       this.isWritingItemDbc = true;
       this.isWritingSpellDbc = true;
       this.isWritingScalingStatDistributionDbc = true;
+      this.isWritingScalingStatValuesDbc = true;
       this.isWritingItemSetDbc = true;
       this.isWritingTalentDbc = true;
       this.isWritingTalentTabDbc = true;
@@ -272,6 +293,13 @@ export default {
             promises.push(
               this.searchScalingStatDistributionDbc().then(() => {
                 this.isSearchingScalingStatDistributionDbc = false;
+              })
+            );
+            break;
+          case "ScalingStatValues":
+            promises.push(
+              this.searchScalingStatValuesDbc().then(() => {
+                this.isSearchingScalingStatValuesDbc = false;
               })
             );
             break;
@@ -331,6 +359,13 @@ export default {
             promises.push(
               this.writeScalingStatDistributionDbc().then(() => {
                 this.isWritingScalingStatDistributionDbc = false;
+              })
+            );
+            break;
+          case "ScalingStatValues":
+            promises.push(
+              this.writeScalingStatValuesDbc().then(() => {
+                this.isWritingScalingStatValuesDbc = false;
               })
             );
             break;

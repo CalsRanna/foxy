@@ -5,11 +5,12 @@ import { UPDATE_CHECKED_DBCS } from "../constants";
 export default {
   namespaced: true,
   state: () => ({
-    checkedDbcs: ["Item", "Spell", "ScalingStatDistribution"],
+    checkedDbcs: ["Item"],
     preparation: [],
     items: [],
     spells: [],
     scalingStatDistributions: [],
+    scalingStatValues: [],
     itemSets: [],
     talents: [],
     talentTabs: [],
@@ -57,6 +58,24 @@ export default {
         );
         ipcRenderer.on(
           "SEARCH_SCALING_STAT_DISTRIBUTION_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    searchScalingStatValuesDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("SEARCH_SCALING_STAT_VALUES_DBC");
+        ipcRenderer.on(
+          "SEARCH_SCALING_STAT_VALUES_DBC",
+          (event, scalingStatValues) => {
+            commit("SEARCH_SCALING_STAT_VALUES_DBC", scalingStatValues);
+            resolve();
+          }
+        );
+        ipcRenderer.on(
+          "SEARCH_SCALING_STAT_VALUES_DBC_REJECT",
           (event, error) => {
             reject(error);
           }
@@ -135,6 +154,20 @@ export default {
         );
       });
     },
+    writeScalingStatValuesDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("WRITE_SCALING_STAT_VALUES_DBC");
+        ipcRenderer.on("WRITE_SCALING_STAT_VALUES_DBC", (event) => {
+          resolve();
+        });
+        ipcRenderer.on(
+          "WRITE_SCALING_STAT_VALUES_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     writeItemSetDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("WRITE_ITEM_SET_DBC");
@@ -181,6 +214,9 @@ export default {
     },
     SEARCH_SCALING_STAT_DISTRIBUTION_DBC(state, scalingStatDistributions) {
       state.scalingStatDistributions = scalingStatDistributions;
+    },
+    SEARCH_SCALING_STAT_VALUES_DBC(state, scalingStatValues) {
+      state.scalingStatValues = scalingStatValues;
     },
     SEARCH_ITEM_SET_DBC(state, itemSets) {
       state.itemSets = itemSets;

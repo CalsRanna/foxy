@@ -26,6 +26,16 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          @click.native="() => navigate('/scaling-stat-value')"
+        >
+          <p class="summary-title">缩放属性值<span>Scaling Stat Value</span></p>
+          <p class="summary-content">每个等级的属性具体值</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/item-set')"
         >
           <p class="summary-title">套装<span>Item Set</span></p>
@@ -42,6 +52,8 @@
           <p class="summary-content">天赋页面的技能</p>
         </el-card>
       </el-col>
+    </el-row>
+    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"

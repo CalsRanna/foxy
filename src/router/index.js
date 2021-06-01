@@ -105,6 +105,18 @@ const routes = [
       import("@/views/ScalingStatDistribution/ScalingStatDistributionDetail"),
   },
   {
+    path: "/scaling-stat-value",
+    component: () => import("@/views/ScalingStatValue/ScalingStatValueTable"),
+  },
+  {
+    path: "/scaling-stat-value/create",
+    component: () => import("@/views/ScalingStatValue/ScalingStatValueDetail"),
+  },
+  {
+    path: "/scaling-stat-value/:id",
+    component: () => import("@/views/ScalingStatValue/ScalingStatValueDetail"),
+  },
+  {
     path: "/item-set",
     component: () => import("@/views/ItemSet/ItemSetTable"),
   },
