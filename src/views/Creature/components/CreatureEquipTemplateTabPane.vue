@@ -15,7 +15,11 @@
           @current-change="select"
           @row-dblclick="show"
         >
-          <el-table-column prop="ID" label="编号"></el-table-column>
+          <el-table-column
+            prop="ID"
+            label="编号"
+            width="80px"
+          ></el-table-column>
           <el-table-column label="物品1">
             <item-template-name
               slot-scope="scope"
