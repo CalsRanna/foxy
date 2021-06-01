@@ -2,6 +2,106 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
+        <h2>0.1.8 <small>2021-06-01</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>item template name:</strong> fix name of inventory icon to fit
+          icons in disk
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/9d55f4edcd6f3bbfdb7d57aa83a3083064fc04b6"
+            text="(9d55f4e)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>item template name:</strong> fix padding between icon and name
+          to keep same when display chinese and original name
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/b08413435dff4f0d1b5b69600b63866a84f561bc"
+            text="(b084134)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>version:</strong> fix new version shown when has no new
+          version
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/ba0ea8f3d1d0b7fedcd79cb4f568da2eff3c1379"
+            text="(ba0ea8f)"
+          ></clickable-span>
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>chr class:</strong> add chr class editor
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/da917a5a8c75aae1e6b53ce2172ce8b142c6cd0e"
+            text="(da917a5)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>chr race:</strong> add chr race editor
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/502c329ea61cb8f653fdeb5e3eb18421c2b2f5ec"
+            text="(502c329)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>dashboard:</strong> make card clickable
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/39a2a75826232f274f81cbb32cc47fea41cfa1a0"
+            text="(39a2a75)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>reference loot template:</strong> add reference loot tempalte
+          module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/f70d6942fd3a018214ca3929c26548aa2bb081da"
+            text="(f70d694)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>scaling stat values:</strong> add scaling stat values module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/ded73476b60aefb178bd3e0ab0b679c85e83cf6e"
+            text="(ded7347)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>selector:</strong> add loading while searching and use enter
+          key to search
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/621b1a2f6eec72264ba17190502ae91d00d58789"
+            text="(621b1a2)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell icon selector:</strong> add spell icon selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/87b713021fc93830d66ddd85f1d666640f7d7587"
+            text="(87b7130)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell name:</strong> add icon to spell name
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/192624828966a0b4b9c209cda6296550597af292"
+            text="(1926248)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell selector:</strong> add icon display in table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/0140fa59f6659b734b13b57fc5938a04cd71d756"
+            text="(0140fa5)"
+          ></clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.1.7 <small>2021-05-27</small></h2>
       </div>
       <h3>Bug Fixes</h3>

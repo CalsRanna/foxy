@@ -1,3 +1,27 @@
+## [0.1.8](https://github.com/CalsRanna/foxy/compare/0.1.7...0.1.8) (2021-06-01)
+
+
+### Bug Fixes
+
+* **item template name:** fix name of inventory icon to fit icons in disk ([9d55f4e](https://github.com/CalsRanna/foxy/commit/9d55f4edcd6f3bbfdb7d57aa83a3083064fc04b6))
+* **item template name:** fix padding between icon and name to keep same when display chinese and original name ([b084134](https://github.com/CalsRanna/foxy/commit/b08413435dff4f0d1b5b69600b63866a84f561bc))
+* **version:** fix new version shown when has no new version ([ba0ea8f](https://github.com/CalsRanna/foxy/commit/ba0ea8f3d1d0b7fedcd79cb4f568da2eff3c1379))
+
+
+### Features
+
+* **chr class:** add chr class editor ([da917a5](https://github.com/CalsRanna/foxy/commit/da917a5a8c75aae1e6b53ce2172ce8b142c6cd0e))
+* **chr race:** add chr race editor ([502c329](https://github.com/CalsRanna/foxy/commit/502c329ea61cb8f653fdeb5e3eb18421c2b2f5ec))
+* **dashboard:** make card clickable ([39a2a75](https://github.com/CalsRanna/foxy/commit/39a2a75826232f274f81cbb32cc47fea41cfa1a0))
+* **reference loot template:** add reference loot tempalte module ([f70d694](https://github.com/CalsRanna/foxy/commit/f70d6942fd3a018214ca3929c26548aa2bb081da))
+* **scaling stat values:** add scaling stat values module ([ded7347](https://github.com/CalsRanna/foxy/commit/ded73476b60aefb178bd3e0ab0b679c85e83cf6e))
+* **selector:** add loading while searching and use enter key to search ([621b1a2](https://github.com/CalsRanna/foxy/commit/621b1a2f6eec72264ba17190502ae91d00d58789))
+* **spell icon selector:** add spell icon selector ([87b7130](https://github.com/CalsRanna/foxy/commit/87b713021fc93830d66ddd85f1d666640f7d7587))
+* **spell name:** add icon to spell name ([1926248](https://github.com/CalsRanna/foxy/commit/192624828966a0b4b9c209cda6296550597af292))
+* **spell selector:** add icon display in table ([0140fa5](https://github.com/CalsRanna/foxy/commit/0140fa59f6659b734b13b57fc5938a04cd71d756))
+
+
+
 ## [0.1.7](https://github.com/CalsRanna/foxy/compare/0.1.6...0.1.7) (2021-05-27)
 
 ### Bug Fixes
