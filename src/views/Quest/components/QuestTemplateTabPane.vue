@@ -103,11 +103,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="AllowableRaces">
-            <el-input
+          <el-form-item label="允许种族">
+            <flag-editor
+              title="允许种族编辑器"
               v-model="questTemplate.AllowableRaces"
-              placeholder="AllowableRaces"
-            ></el-input>
+              :flags="allowableRaces"
+              placeholder="AllowableRace"
+            ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -946,6 +948,7 @@ import ItemTemplateSelector from "@/components/ItemTemplateSelector";
 import SpellSelector from "@/components/SpellSelector";
 
 import { mapState, mapActions } from "vuex";
+import FlagEditor from "@/components/FlagEditor";
 
 export default {
   data() {
@@ -956,12 +959,23 @@ export default {
     };
   },
   computed: {
+    ...mapState("initiator", ["chrRaces"]),
     ...mapState("questTemplate", ["questTemplate"]),
     ...mapState("questTemplateLocale", ["questTemplateLocales"]),
     credential() {
       return {
         ID: this.$route.params.id,
       };
+    },
+    allowableRaces() {
+      return this.chrRaces.map((chrRace) => {
+        return {
+          index: chrRace.ID,
+          flag: Math.pow(2, chrRace.ID - 1),
+          name: chrRace.Name_Lang_zhCN,
+          comment: chrRace.ClientFileString,
+        };
+      });
     },
   },
   methods: {
@@ -1018,6 +1032,11 @@ export default {
   mounted() {
     this.init();
   },
-  components: { QuestTemplateLocalizer, ItemTemplateSelector, SpellSelector },
+  components: {
+    FlagEditor,
+    QuestTemplateLocalizer,
+    ItemTemplateSelector,
+    SpellSelector,
+  },
 };
 </script>
