@@ -33,11 +33,7 @@
               ></el-input-number>
             </el-col>
             <el-col :span="8">
-              <el-input-number
-                v-model="InventoryIcon"
-                controls-position="right"
-                placeholder="图标"
-              ></el-input-number>
+              <el-input v-model="InventoryIcon" placeholder="图标"></el-input>
             </el-col>
             <el-col :span="8">
               <el-button
