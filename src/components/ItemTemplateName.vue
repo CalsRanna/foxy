@@ -23,12 +23,7 @@ export default {
   },
   computed: {
     icon() {
-      return this.itemTemplate.InventoryIcon_1.split("_")
-        .map((word) => {
-          return word.replace(word[0], word[0].toUpperCase());
-        })
-        .join("_")
-        .replace("Inv", "INV");
+      return this.itemTemplate.InventoryIcon_1.toLowerCase();
     },
     styleObject() {
       return {

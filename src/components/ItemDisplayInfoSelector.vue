@@ -72,16 +72,10 @@
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
         <el-table-column width="80px">
           <template slot-scope="scope">
-            <el-image
-              :src="`/icons/${scope.row.InventoryIcon_1}.png`"
-              style="width: 32px; height: 32px; margin: 0; padding: 0px 0 0 0"
-            >
-              <el-image
-                src="/icons/INV_Misc_QuestionMark.png"
-                style="width: 32px; height: 32px; margin: 0; padding: 0px 0 0 0"
-                slot="error"
-              ></el-image>
-            </el-image>
+            <img
+              :src="`/icons/${getIcon(scope.row.InventoryIcon_1)}.png`"
+              style="width: 36px; height: 36px; padding-right: 4px"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="InventoryIcon_1" label="图标"> </el-table-column>
@@ -147,6 +141,9 @@ export default {
       "countItemDisplayInfosForSelector",
       "paginateItemDisplayInfosForSelector",
     ]),
+    getIcon(InventoryIcon) {
+      return InventoryIcon.toLowerCase();
+    },
     input(itemDisplayInfo) {
       if (isNaN(parseInt(itemDisplayInfo))) {
         this.$emit("input", undefined);
