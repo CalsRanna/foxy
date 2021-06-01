@@ -18,14 +18,7 @@ export default {
   },
   computed: {
     icon() {
-      return this.spell.TextureFilename.split("\\")
-        .pop()
-        .split("_")
-        .map((word) => {
-          return word.replace(word[0], word[0].toUpperCase());
-        })
-        .join("_")
-        .replace("Inv", "INV");
+      return this.spell.TextureFilename.split("\\").pop().toLowerCase();
     },
     styleObject() {
       return {
@@ -33,9 +26,6 @@ export default {
         lineHeight: "36px",
       };
     },
-  },
-  mounted() {
-    console.log(this.spell);
   },
 };
 </script>

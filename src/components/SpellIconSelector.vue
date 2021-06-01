@@ -132,14 +132,7 @@ export default {
       "paginateSpellIconsForSelector",
     ]),
     getIcon(TextureFilename) {
-      return TextureFilename.split("\\")
-        .pop()
-        .split("_")
-        .map((word) => {
-          return word.replace(word[0], word[0].toUpperCase());
-        })
-        .join("_")
-        .replace("Inv", "INV");
+      return TextureFilename.split("\\").pop().toLowerCase();
     },
     input(spellIcon) {
       if (isNaN(parseInt(spellIcon))) {
