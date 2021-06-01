@@ -46,14 +46,26 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          @click.native="() => navigate('/reference-loot')"
+        >
+          <p class="summary-title">
+            关联掉落<span>Reference Loot Template</span>
+          </p>
+          <p class="summary-content">关联掉落数据</p>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row :gutter="16" style="margin-top: 16px">
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/talent')"
         >
           <p class="summary-title">天赋<span>Talent</span></p>
           <p class="summary-content">天赋页面的技能</p>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"

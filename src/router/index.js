@@ -152,6 +152,20 @@ const routes = [
     path: "/talent-tab/:id",
     component: () => import("@/views/TalentTab/TalentTabDetail"),
   },
+  {
+    path: "/reference-loot",
+    component: () => import("@/views/ReferenceLoot/ReferenceLootTemplateTable"),
+  },
+  {
+    path: "/reference-loot/create",
+    component: () =>
+      import("@/views/ReferenceLoot/ReferenceLootTemplateDetail"),
+  },
+  {
+    path: "/reference-loot/:id",
+    component: () =>
+      import("@/views/ReferenceLoot/ReferenceLootTemplateDetail"),
+  },
 ];
 
 const router = new VueRouter({
