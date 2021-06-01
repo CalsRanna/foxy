@@ -15,7 +15,6 @@
           @current-change="select"
           @row-dblclick="show"
         >
-          <el-table-column prop="displayid"></el-table-column>
           <el-table-column label="名称" sortable>
             <span slot-scope="scope">
               <template v-if="scope.row.Reference == 0">
