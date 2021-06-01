@@ -1115,11 +1115,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="需要种族">
-            <el-input
+          <el-form-item label="允许种族">
+            <flag-editor
+              title="允许种族编辑器"
               v-model="itemTemplate.AllowableRace"
+              :flags="allowableRaces"
               placeholder="AllowableRace"
-            ></el-input>
+            ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1447,7 +1449,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("initiator", ["chrClasses"]),
+    ...mapState("initiator", ["chrClasses", "chrRaces"]),
     ...mapState("itemTemplate", ["itemTemplate"]),
     ...mapState("itemTemplateLocale", ["itemTemplateLocales"]),
     credential() {
@@ -1462,6 +1464,16 @@ export default {
           flag: Math.pow(2, chrClass.ID - 1),
           name: chrClass.Name_Lang_zhCN,
           comment: chrClass.Filename,
+        };
+      });
+    },
+    allowableRaces() {
+      return this.chrRaces.map((chrRace) => {
+        return {
+          index: chrRace.ID,
+          flag: Math.pow(2, chrRace.ID - 1),
+          name: chrRace.Name_Lang_zhCN,
+          comment: chrRace.ClientFileString,
         };
       });
     },
