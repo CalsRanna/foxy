@@ -3,7 +3,7 @@ import { SET_ACTIVE } from "../constants";
 export default {
   namespaced: true,
   state: () => ({
-    version: "0.1.7",
+    version: "0.1.8",
     active: "dashboard",
     error: {
       timestamp: 0,
