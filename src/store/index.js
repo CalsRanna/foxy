@@ -53,6 +53,7 @@ import spellLinkedSpell from "./spellLinkedSpell";
 import spellLootTemplate from "./spellLootTemplate";
 import referenceLootTemplate from "./referenceLootTemplate";
 import scalingStatDistribution from "./scalingStatDistribution";
+import scalingStatValue from "./scalingStatValue";
 import itemSet from "./itemSet";
 import talent from "./talent";
 import talentTab from "./talentTab";
@@ -133,6 +134,7 @@ export default new Vuex.Store({
     spellLootTemplate,
     referenceLootTemplate,
     scalingStatDistribution,
+    scalingStatValue,
     itemSet,
     talent,
     talentTab,
