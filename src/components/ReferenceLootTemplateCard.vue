@@ -72,7 +72,7 @@ export default {
     entries: Array,
   },
   computed: {
-    ...mapState("referenceLootTemplate", ["referenceLootTemplates"]),
+    ...mapState("referenceLootTemplateCard", ["referenceLootTemplates"]),
   },
   watch: {
     entries: function () {
@@ -80,9 +80,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions("referenceLootTemplate", [
-      "searchReferenceLootTemplates",
-      "checkReferenceEntries",
+    ...mapActions("referenceLootTemplateCard", [
+      "searchReferenceLootTemplatesForCard",
+      "checkReferenceEntriesForCard",
     ]),
     groupBy() {
       let entries = [];
@@ -102,7 +102,7 @@ export default {
       let uncheckedEntries = this.entries;
       let checkedEntries = [];
       while (uncheckedEntries.length > 0) {
-        let entries = await this.checkReferenceEntries({
+        let entries = await this.checkReferenceEntriesForCard({
           entries: uncheckedEntries,
         });
         for (let entry of uncheckedEntries) {
@@ -116,7 +116,7 @@ export default {
       if (checkedEntries.length > 0) {
         payload.entries = checkedEntries;
       }
-      await this.searchReferenceLootTemplates(payload);
+      await this.searchReferenceLootTemplatesForCard(payload);
       this.groupBy();
     },
   },

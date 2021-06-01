@@ -51,12 +51,13 @@ import spellCustomAttr from "./spellCustomAttr";
 import spellGroup from "./spellGroup";
 import spellLinkedSpell from "./spellLinkedSpell";
 import spellLootTemplate from "./spellLootTemplate";
-import referenceLootTemplate from "./referenceLootTemplate";
+import referenceLootTemplateCard from "./referenceLootTemplateCard";
 import scalingStatDistribution from "./scalingStatDistribution";
 import scalingStatValue from "./scalingStatValue";
 import itemSet from "./itemSet";
 import talent from "./talent";
 import talentTab from "./talentTab";
+import referenceLootTemplate from "./referenceLootTemplate";
 import setting from "./setting";
 import factionTemplateSelector from "./factionTemplateSelector";
 import creatureSpellDataSelector from "./creatureSpellDataSelector";
@@ -132,12 +133,13 @@ export default new Vuex.Store({
     spellGroup,
     spellLinkedSpell,
     spellLootTemplate,
-    referenceLootTemplate,
+    referenceLootTemplateCard,
     scalingStatDistribution,
     scalingStatValue,
     itemSet,
     talent,
     talentTab,
+    referenceLootTemplate,
     setting,
     factionTemplateSelector,
     creatureSpellDataSelector,
