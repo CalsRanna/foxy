@@ -1105,11 +1105,13 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="需要职业">
-            <el-input
+          <el-form-item label="允许职业">
+            <flag-editor
+              title="允许职业编辑器"
               v-model="itemTemplate.AllowableClass"
+              :flags="allowableClasses"
               placeholder="AllowableClass"
-            ></el-input>
+            ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1445,12 +1447,23 @@ export default {
     };
   },
   computed: {
+    ...mapState("initiator", ["chrClasses"]),
     ...mapState("itemTemplate", ["itemTemplate"]),
     ...mapState("itemTemplateLocale", ["itemTemplateLocales"]),
     credential() {
       return {
         entry: this.$route.params.id,
       };
+    },
+    allowableClasses() {
+      return this.chrClasses.map((chrClass) => {
+        return {
+          index: chrClass.ID,
+          flag: Math.pow(2, chrClass.ID - 1),
+          name: chrClass.Name_Lang_zhCN,
+          comment: chrClass.Filename,
+        };
+      });
     },
   },
   methods: {

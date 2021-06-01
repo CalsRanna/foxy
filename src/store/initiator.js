@@ -6,6 +6,7 @@ import {
   LOAD_MYSQL_CONFIG,
   LOAD_DBC_CONFIG,
   INITIALIZE_MYSQL_CONNECTION,
+  LOAD_DBC_CHR_CLASSES,
   LOAD_DBC_CREATURE_DISPLAY_INFOS,
   LOAD_DBC_CREATURE_MODEL_DATAS,
   LOAD_DBC_CREATURE_SPELL_DATAS,
@@ -45,6 +46,7 @@ export default {
     version: {},
     initialized: false,
     initializeSucceed: true,
+    chrClasses: [],
     spellMechanics: [],
   }),
   actions: {
@@ -93,6 +95,18 @@ export default {
             reject(error);
           }
         );
+      });
+    },
+    loadDbcChrClasses({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_CHR_CLASSES);
+        ipcRenderer.on(LOAD_DBC_CHR_CLASSES, (event, response) => {
+          commit(LOAD_DBC_CHR_CLASSES, response);
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_CHR_CLASSES}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     loadDbcCreatureDisplayInfos() {
@@ -440,6 +454,9 @@ export default {
     },
     [LOAD_DBC_CONFIG](state, dbcConfig) {
       state.dbcConfig = dbcConfig;
+    },
+    [LOAD_DBC_CHR_CLASSES](state, chrClasses) {
+      state.chrClasses = chrClasses;
     },
     [LOAD_DBC_SPELL_MECHANICS](state, spellMechanics) {
       state.spellMechanics = spellMechanics;
