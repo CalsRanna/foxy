@@ -4,6 +4,7 @@ export default {
   namespaced: true,
   state: () => ({
     version: "0.1.8",
+    clientHeight: 768,
     active: "dashboard",
     error: {
       timestamp: 0,
@@ -12,6 +13,12 @@ export default {
     },
   }),
   actions: {
+    setClientHeight({ commit }, payload) {
+      return new Promise((resolve) => {
+        commit("SET_CLIENT_HEIGHT", payload);
+        resolve();
+      });
+    },
     setActive({ commit }, payload) {
       return new Promise((resolve) => {
         commit(SET_ACTIVE, payload);
@@ -26,6 +33,9 @@ export default {
     },
   },
   mutations: {
+    SET_CLIENT_HEIGHT(state, clientHeight) {
+      state.clientHeight = clientHeight;
+    },
     [SET_ACTIVE](state, active) {
       state.active = active;
     },

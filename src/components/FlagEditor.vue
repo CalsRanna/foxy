@@ -20,15 +20,16 @@
       @opened="init"
     >
       <div slot="title">
-        <span style="font-size: 18px; color: #303133; margin-right: 16px">{{
-          title
-        }}</span>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px">
+          {{ title }}
+        </span>
       </div>
       <el-table
         :data="flags"
         @selection-change="change"
         @row-click="select"
-        class="flag-editor"
+        :max-height="clientHeight / 2"
+        class="flag-editor hide-when-overflow"
       >
         <el-table-column type="selection" width="48"></el-table-column>
         <el-table-column prop="flag" label="标识"></el-table-column>
@@ -40,9 +41,9 @@
         ></el-table-column>
       </el-table>
       <div slot="footer">
-        <span style="color: #606266; margin-right: 8px"
-          >合计值：{{ selectedFlag }}</span
-        >
+        <span style="color: #606266; margin-right: 8px">
+          合计值：{{ selectedFlag }}
+        </span>
         <el-button @click="closeDialog">取消</el-button>
         <el-button type="primary" @click="store">保存</el-button>
       </div>
@@ -51,16 +52,14 @@
 </template>
 
 <style scoped>
-.flag-editor {
-  max-height: 50vh;
-  overflow: auto;
-}
 .flag-editor tbody tr {
   cursor: pointer;
 }
 </style>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
@@ -81,6 +80,7 @@ export default {
     },
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     selectedFlag() {
       let flag = 0;
       this.selection.forEach((row) => {

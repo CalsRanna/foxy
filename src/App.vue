@@ -81,13 +81,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions("app", ["setActive", "updateError"]),
+    ...mapActions("app", ["setClientHeight", "setActive", "updateError"]),
     navigate(index) {
       this.setActive(index);
       this.$router.push(`/${index}`).catch((error) => error);
     },
   },
   mounted() {
+    this.setClientHeight(document.documentElement.clientHeight);
     this.navigate(this.active || "dashboard");
     ipcRenderer.on(GLOBAL_MESSAGE_BOX, (event, error) => {
       let title = "";
