@@ -16,6 +16,8 @@
       :visible.sync="visible"
       :show-close="false"
       :close-on-click-modal="false"
+      width="68%"
+      top="8vh"
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
@@ -60,10 +62,11 @@
       ></el-pagination>
       <el-table
         :data="itemDisplayInfos"
+        :max-height="pagination.total > 50 ? clientHeight * 0.84 - 81 - 80 - 60 - 80 : clientHeight * 0.84 - 81 - 80 - 80"
         highlight-current-row
+        class="selectable-table hide-when-overflow"
         @current-change="select"
         @row-dblclick="(row) => store(row)"
-        class="spell-duration-selector"
       >
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
         <el-table-column width="80px">
@@ -78,15 +81,6 @@
         <el-table-column prop="ModelName_1" label="模型"></el-table-column>
         <el-table-column prop="ModelTexture_1" label="纹理"></el-table-column>
       </el-table>
-      <el-pagination
-        layout="prev, pager, next"
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        hide-on-single-page
-        @current-change="paginate"
-        style="margin-top: 16px"
-      ></el-pagination>
       <div slot="footer">
         <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="() => store(currentRow)">
@@ -122,6 +116,7 @@ export default {
     },
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("itemDisplayInfoSelector", ["pagination", "itemDisplayInfos"]),
     payload() {
       return {
@@ -202,13 +197,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.spell-duration-selector {
-  max-height: 40vh;
-  overflow: auto;
-}
-.spell-duration-selector tbody tr {
-  cursor: pointer;
-}
-</style>

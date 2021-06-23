@@ -12,6 +12,8 @@
       :visible.sync="visible"
       :show-close="false"
       :close-on-click-modal="false"
+      width="68%"
+      top="8vh"
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
@@ -56,10 +58,11 @@
       ></el-pagination>
       <el-table
         :data="questTemplates"
+        :max-height="pagination.total > 50 ? clientHeight * 0.84 - 81 - 80 - 60 - 80 : clientHeight * 0.84 - 81 - 80 - 80"
         highlight-current-row
+        class="selectable-table hide-when-overflow"
         @current-change="select"
         @row-dblclick="(row) => store(row)"
-        class="quest-template-selector"
       >
         <el-table-column prop="ID" label="ID" sortable></el-table-column>
         <el-table-column
@@ -99,15 +102,6 @@
           sortable
         ></el-table-column>
       </el-table>
-      <el-pagination
-        layout="prev, pager, next"
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        hide-on-single-page
-        @current-change="paginate"
-        style="margin-top: 16px"
-      ></el-pagination>
       <div slot="footer">
         <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="() => store(currentRow)">
@@ -143,6 +137,7 @@ export default {
     },
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("questTemplateSelector", ["pagination", "questTemplates"]),
     payload() {
       return {
@@ -219,13 +214,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.quest-template-selector {
-  max-height: 40vh;
-  overflow: auto;
-}
-.quest-template-selector tbody tr {
-  cursor: pointer;
-}
-</style>

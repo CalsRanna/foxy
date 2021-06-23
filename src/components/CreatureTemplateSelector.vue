@@ -12,6 +12,8 @@
       :visible.sync="visible"
       :show-close="false"
       :close-on-click-modal="false"
+      width="68%"
+      top="8vh"
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
@@ -56,10 +58,11 @@
       ></el-pagination>
       <el-table
         :data="creatureTemplates"
+        :max-height="pagination.total > 50 ? clientHeight * 0.84 - 81 - 80 - 60 - 80 : clientHeight * 0.84 - 81 - 80 - 80"
         highlight-current-row
+        class="selectable-table hide-when-overflow"
         @current-change="select"
         @row-dblclick="(row) => store(row)"
-        class="creature-template-selector"
       >
         <el-table-column prop="entry" label="编号" sortable></el-table-column>
         <el-table-column label="姓名" sortable>
@@ -89,15 +92,6 @@
           sortable
         ></el-table-column>
       </el-table>
-      <el-pagination
-        layout="prev, pager, next"
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        hide-on-single-page
-        @current-change="paginate"
-        style="margin-top: 16px"
-      ></el-pagination>
       <div slot="footer">
         <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="() => store(currentRow)">
@@ -133,6 +127,7 @@ export default {
     },
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("creatureTemplateSelector", [
       "pagination",
       "creatureTemplates",
@@ -212,13 +207,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.creature-template-selector {
-  max-height: 40vh;
-  overflow: auto;
-}
-.creature-template-selector tbody tr {
-  cursor: pointer;
-}
-</style>

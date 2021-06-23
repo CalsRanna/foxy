@@ -16,6 +16,8 @@
       :visible.sync="visible"
       :show-close="false"
       :close-on-click-modal="false"
+      width="68%"
+      top="8vh"
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
@@ -60,10 +62,11 @@
       ></el-pagination>
       <el-table
         :data="creatureSpellDatas"
+        :max-height="pagination.total > 50 ? clientHeight * 0.84 - 81 - 80 - 60 - 80 : clientHeight * 0.84 - 81 - 80 - 80"
         highlight-current-row
+        class="selectable-table hide-when-overflow"
         @current-change="select"
         @row-dblclick="(row) => store(row)"
-        class="creature-spell-data-selector"
       >
         <el-table-column prop="ID" label="ID" width="80px"> </el-table-column>
         <el-table-column prop="Spells_1" label="技能1"> </el-table-column>
@@ -71,15 +74,6 @@
         <el-table-column prop="Spells_3" label="技能3"> </el-table-column>
         <el-table-column prop="Spells_4" label="技能4"> </el-table-column>
       </el-table>
-      <el-pagination
-        layout="prev, pager, next"
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="pagination.size"
-        hide-on-single-page
-        @current-change="paginate"
-        style="margin-top: 16px"
-      ></el-pagination>
       <div slot="footer">
         <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="() => store(currentRow)">
@@ -115,6 +109,7 @@ export default {
     },
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("creatureSpellDataSelector", [
       "pagination",
       "creatureSpellDatas",
@@ -197,13 +192,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.creature-spell-data-selector {
-  max-height: 40vh;
-  overflow: auto;
-}
-.creature-spell-data-selector tbody tr {
-  cursor: pointer;
-}
-</style>
