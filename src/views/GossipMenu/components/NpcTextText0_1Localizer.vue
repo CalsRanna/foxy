@@ -22,12 +22,12 @@
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
-          名称/描述本地化
+          文本本地化
         </span>
-        <el-button size="mini" @click="create">新增</el-button>
+        <el-button type="primary" size="mini" @click="create">新增</el-button>
       </div>
       <el-table
-        :data="itemTemplateLocales"
+        :data="npcTextLocales"
         :max-height="clientHeight * 0.84 - 81 - 80"
         highlight-current-row
         class="selectable-table hide-when-overflow"
@@ -42,35 +42,20 @@
             @click="() => destroy(scope.$index)"
           ></el-button>
         </el-table-column>
-        <el-table-column prop="locale" label="语言">
+        <el-table-column prop="Locale" label="语言">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.locale"
-              placeholder="locale"
+              v-model="scope.row.Locale"
+              placeholder="Locale"
             ></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="Name" label="名称">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.Name" placeholder="Name"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="Title" label="描述">
+        <el-table-column prop="Text0_1" label="文本0_1">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.Description"
-              placeholder="Description"
+              v-model="scope.row.Text0_1"
+              placeholder="Text0_1"
             ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="VerifiedBuild" label="VerifiedBuild">
-          <template slot-scope="scope">
-            <el-input-number
-              v-model="scope.row.VerifiedBuild"
-              :min="0"
-              controls-position="right"
-              placeholder="VerifiedBuild"
-            ></el-input-number>
           </template>
         </el-table-column>
       </el-table>
@@ -106,11 +91,11 @@ export default {
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
-    ...mapState("itemTemplate", ["itemTemplate"]),
-    ...mapState("itemTemplateLocale", ["itemTemplateLocales"]),
+    ...mapState("npcText", ["npcText"]),
+    ...mapState("npcTextLocale", ["npcTextLocales"]),
   },
   methods: {
-    ...mapActions("itemTemplateLocale", ["storeItemTemplateLocales"]),
+    ...mapActions("npcTextLocale", ["storeNpcTextLocales"]),
     input(text) {
       this.$emit("input", text);
     },
@@ -121,17 +106,17 @@ export default {
       this.visible = true;
     },
     create() {
-      this.itemTemplateLocales.push({
-        ID: this.itemTemplate.entry,
+      this.npcTextLocales.push({
+        ID: this.npcText.ID,
         VerifiedBuild: 0,
       });
     },
     destroy(index) {
-      this.itemTemplateLocales.splice(index, 1);
+      this.npcTextLocales.splice(index, 1);
     },
     async store() {
       this.loading = true;
-      await this.storeItemTemplateLocales(this.itemTemplateLocales);
+      await this.storeNpcTextLocales(this.npcTextLocales);
       this.$notify({
         title: "保存成功",
         position: "bottom-left",

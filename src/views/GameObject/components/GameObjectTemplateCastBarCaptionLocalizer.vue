@@ -22,12 +22,12 @@
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
-          名称/称号本地化
+          使用说明本地化
         </span>
-        <el-button size="mini" @click="create">新增</el-button>
+        <el-button type="primary" size="mini" @click="create">新增</el-button>
       </div>
       <el-table
-        :data="creatureTemplateLocales"
+        :data="gameObjectTemplateLocales"
         :max-height="clientHeight * 0.84 - 81 - 80"
         highlight-current-row
         class="selectable-table hide-when-overflow"
@@ -50,14 +50,12 @@
             ></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="Name" label="名称">
+        <el-table-column label="使用说明">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.Name" placeholder="Name"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="Title" label="称号">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.Title" placeholder="Title"></el-input>
+            <el-input
+              v-model="scope.row.castBarCaption"
+              placeholder="castBarCaption"
+            ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="VerifiedBuild" label="VerifiedBuild">
@@ -103,11 +101,13 @@ export default {
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
-    ...mapState("creatureTemplate", ["creatureTemplate"]),
-    ...mapState("creatureTemplateLocale", ["creatureTemplateLocales"]),
+    ...mapState("gameObjectTemplate", ["gameObjectTemplate"]),
+    ...mapState("gameObjectTemplateLocale", ["gameObjectTemplateLocales"]),
   },
   methods: {
-    ...mapActions("creatureTemplateLocale", ["storeCreatureTemplateLocales"]),
+    ...mapActions("gameObjectTemplateLocale", [
+      "storeGameObjectTemplateLocales",
+    ]),
     input(text) {
       this.$emit("input", text);
     },
@@ -118,17 +118,17 @@ export default {
       this.visible = true;
     },
     create() {
-      this.creatureTemplateLocales.push({
-        entry: this.creatureTemplate.entry,
+      this.gameObjectTemplateLocales.push({
+        entry: this.gameObjectTemplate.entry,
         VerifiedBuild: 0,
       });
     },
     destroy(index) {
-      this.creatureTemplateLocales.splice(index, 1);
+      this.gameObjectTemplateLocales.splice(index, 1);
     },
     async store() {
       this.loading = true;
-      await this.storeCreatureTemplateLocales(this.creatureTemplateLocales);
+      await this.storeGameObjectTemplateLocales(this.gameObjectTemplateLocales);
       this.$notify({
         title: "保存成功",
         position: "bottom-left",
@@ -141,7 +141,7 @@ export default {
       this.visible = false;
     },
   },
-  created() {
+  mounted() {
     this.text = this.value;
   },
 };

@@ -43,18 +43,18 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="text0_0">
-            <npc-text-localizer
+            <npc-text-text0_0-localizer
               v-model="npcText.text0_0"
               placeholder="text0_0"
-            ></npc-text-localizer>
+            ></npc-text-text0_0-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="text0_1">
-            <npc-text-localizer
+            <npc-text-text0_1-localizer
               v-model="npcText.text0_1"
               placeholder="text0_1"
-            ></npc-text-localizer>
+            ></npc-text-text0_1-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -118,18 +118,18 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="text1_0">
-            <npc-text-localizer
+            <npc-text-text1_0-localizer
               v-model="npcText.text1_0"
               placeholder="text1_0"
-            ></npc-text-localizer>
+            ></npc-text-text1_0-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="text1_1">
-            <npc-text-localizer
+            <npc-text-text1_1-localizer
               v-model="npcText.text1_1"
               placeholder="text1_1"
-            ></npc-text-localizer>
+            ></npc-text-text1_1-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -193,18 +193,18 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="text2_0">
-            <npc-text-localizer
+            <npc-text-text2_0-localizer
               v-model="npcText.text2_0"
               placeholder="text2_0"
-            ></npc-text-localizer>
+            ></npc-text-text2_0-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="text2_1">
-            <npc-text-localizer
+            <npc-text-text2_1-localizer
               v-model="npcText.text2_1"
               placeholder="text2_1"
-            ></npc-text-localizer>
+            ></npc-text-text2_1-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -268,18 +268,18 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="text3_0">
-            <el-input
+            <npc-text-text3_0-localizer
               v-model="npcText.text3_0"
               placeholder="text3_0"
-            ></el-input>
+            ></npc-text-text3_0-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="text3_1">
-            <npc-text-localizer
+            <npc-text-text3_1-localizer
               v-model="npcText.text3_1"
               placeholder="text3_1"
-            ></npc-text-localizer>
+            ></npc-text-text3_1-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -343,18 +343,18 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="text4_0">
-            <el-input
+            <npc-text-text4_0-localizer
               v-model="npcText.text4_0"
               placeholder="text4_0"
-            ></el-input>
+            ></npc-text-text4_0-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="text4_1">
-            <npc-text-localizer
+            <npc-text-text4_1-localizer
               v-model="npcText.text4_1"
               placeholder="text4_1"
-            ></npc-text-localizer>
+            ></npc-text-text4_1-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -418,18 +418,18 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="text5_0">
-            <el-input
+            <npc-text-text5_0-localizer
               v-model="npcText.text5_0"
               placeholder="text5_0"
-            ></el-input>
+            ></npc-text-text5_0-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="text5_1">
-            <npc-text-localizer
+            <npc-text-text5_1-localizer
               v-model="npcText.text5_1"
               placeholder="text5_1"
-            ></npc-text-localizer>
+            ></npc-text-text5_1-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -493,18 +493,18 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="text6_0">
-            <el-input
+            <npc-text-text6_0-localizer
               v-model="npcText.text6_0"
               placeholder="text6_0"
-            ></el-input>
+            ></npc-text-text6_0-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="text6_1">
-            <npc-text-localizer
+            <npc-text-text6_1-localizer
               v-model="npcText.text6_1"
               placeholder="text6_1"
-            ></npc-text-localizer>
+            ></npc-text-text6_1-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -568,18 +568,18 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="text7_0">
-            <el-input
+            <npc-text-text7_0-localizer
               v-model="npcText.text7_0"
               placeholder="text7_0"
-            ></el-input>
+            ></npc-text-text7_0-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="text7_1">
-            <npc-text-localizer
+            <npc-text-text7_1-localizer
               v-model="npcText.text7_1"
               placeholder="text6_1"
-            ></npc-text-localizer>
+            ></npc-text-text7_1-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -634,7 +634,22 @@
 </template>
 
 <script>
-import NpcTextLocalizer from "@/views/GossipMenu/components/NpcTextLocalizer";
+import NpcTextText0_0Localizer from "@/views/GossipMenu/components/NpcTextText0_0Localizer";
+import NpcTextText0_1Localizer from "@/views/GossipMenu/components/NpcTextText0_1Localizer";
+import NpcTextText1_0Localizer from "@/views/GossipMenu/components/NpcTextText1_0Localizer";
+import NpcTextText1_1Localizer from "@/views/GossipMenu/components/NpcTextText1_1Localizer";
+import NpcTextText2_0Localizer from "@/views/GossipMenu/components/NpcTextText2_0Localizer";
+import NpcTextText2_1Localizer from "@/views/GossipMenu/components/NpcTextText2_1Localizer";
+import NpcTextText3_0Localizer from "@/views/GossipMenu/components/NpcTextText3_0Localizer";
+import NpcTextText3_1Localizer from "@/views/GossipMenu/components/NpcTextText3_1Localizer";
+import NpcTextText4_0Localizer from "@/views/GossipMenu/components/NpcTextText4_0Localizer";
+import NpcTextText4_1Localizer from "@/views/GossipMenu/components/NpcTextText4_1Localizer";
+import NpcTextText5_0Localizer from "@/views/GossipMenu/components/NpcTextText5_0Localizer";
+import NpcTextText5_1Localizer from "@/views/GossipMenu/components/NpcTextText5_1Localizer";
+import NpcTextText6_0Localizer from "@/views/GossipMenu/components/NpcTextText6_0Localizer";
+import NpcTextText6_1Localizer from "@/views/GossipMenu/components/NpcTextText6_1Localizer";
+import NpcTextText7_0Localizer from "@/views/GossipMenu/components/NpcTextText7_0Localizer";
+import NpcTextText7_1Localizer from "@/views/GossipMenu/components/NpcTextText7_1Localizer";
 
 import { mapState, mapActions } from "vuex";
 
@@ -702,7 +717,22 @@ export default {
     this.init();
   },
   components: {
-    NpcTextLocalizer,
+    NpcTextText0_0Localizer,
+    NpcTextText0_1Localizer,
+    NpcTextText1_0Localizer,
+    NpcTextText1_1Localizer,
+    NpcTextText2_0Localizer,
+    NpcTextText2_1Localizer,
+    NpcTextText3_0Localizer,
+    NpcTextText3_1Localizer,
+    NpcTextText4_0Localizer,
+    NpcTextText4_1Localizer,
+    NpcTextText5_0Localizer,
+    NpcTextText5_1Localizer,
+    NpcTextText6_0Localizer,
+    NpcTextText6_1Localizer,
+    NpcTextText7_0Localizer,
+    NpcTextText7_1Localizer,
   },
 };
 </script>

@@ -17,18 +17,18 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="姓名">
-            <creature-template-localizer
+            <creature-template-name-localizer
               v-model="creatureTemplate.name"
               placeholder="name"
-            ></creature-template-localizer>
+            ></creature-template-name-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="称号">
-            <creature-template-localizer
+            <creature-template-title-localizer
               v-model="creatureTemplate.subname"
               placeholder="subname"
-            ></creature-template-localizer>
+            ></creature-template-title-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -838,7 +838,8 @@ import {
   hoverHeightTooltip,
 } from "@/locales/creature";
 
-import CreatureTemplateLocalizer from "@/views/Creature/components/CreatureTemplateLocalizer";
+import CreatureTemplateNameLocalizer from "@/views/Creature/components/CreatureTemplateNameLocalizer";
+import CreatureTemplateTitleLocalizer from "@/views/Creature/components/CreatureTemplateTitleLocalizer";
 import FactionTemplateSelector from "@/components/FactionTemplateSelector";
 import CreatureSpellDataSelector from "@/components/CreatureSpellDataSelector.vue";
 import FlagEditor from "@/components/FlagEditor";
@@ -988,7 +989,8 @@ export default {
     FlagEditor,
     GossipMenuSelector,
     HintLabel,
-    CreatureTemplateLocalizer,
+    CreatureTemplateNameLocalizer,
+    CreatureTemplateTitleLocalizer,
   },
 };
 </script>
