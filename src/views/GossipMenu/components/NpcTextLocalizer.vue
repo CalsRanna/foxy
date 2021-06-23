@@ -17,6 +17,8 @@
       :visible.sync="visible"
       :show-close="false"
       :close-on-click-modal="false"
+      width="68%"
+      top="8vh"
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
@@ -24,7 +26,12 @@
         </span>
         <el-button size="mini" @click="create">新增</el-button>
       </div>
-      <el-table :data="npcTextLocales">
+      <el-table
+        :data="npcTextLocales"
+        :max-height="clientHeight * 0.84 - 81 - 80"
+        highlight-current-row
+        class="selectable-table hide-when-overflow"
+      >
         <el-table-column width="48">
           <el-button
             type="danger"
@@ -203,6 +210,7 @@ export default {
     },
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("npcText", ["npcText"]),
     ...mapState("npcTextLocale", ["npcTextLocales"]),
   },
