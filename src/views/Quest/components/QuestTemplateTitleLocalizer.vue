@@ -22,12 +22,12 @@
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
-          名称/称号本地化
+          名称本地化
         </span>
-        <el-button size="mini" @click="create">新增</el-button>
+        <el-button type="primary" size="mini" @click="create">新增</el-button>
       </div>
       <el-table
-        :data="gameObjectTemplateLocales"
+        :data="questTemplateLocales"
         :max-height="clientHeight * 0.84 - 81 - 80"
         highlight-current-row
         class="selectable-table hide-when-overflow"
@@ -50,17 +50,9 @@
             ></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="名称">
+        <el-table-column prop="Title" label="名称">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.name" placeholder="name"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="castBarCaption" label="使用文字">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.castBarCaption"
-              placeholder="castBarCaption"
-            ></el-input>
+            <el-input v-model="scope.row.Title" placeholder="Title"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="VerifiedBuild" label="VerifiedBuild">
@@ -106,13 +98,11 @@ export default {
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
-    ...mapState("gameObjectTemplate", ["gameObjectTemplate"]),
-    ...mapState("gameObjectTemplateLocale", ["gameObjectTemplateLocales"]),
+    ...mapState("questTemplate", ["questTemplate"]),
+    ...mapState("questTemplateLocale", ["questTemplateLocales"]),
   },
   methods: {
-    ...mapActions("gameObjectTemplateLocale", [
-      "storeGameObjectTemplateLocales",
-    ]),
+    ...mapActions("questTemplateLocale", ["storeQuestTemplateLocales"]),
     input(text) {
       this.$emit("input", text);
     },
@@ -123,17 +113,17 @@ export default {
       this.visible = true;
     },
     create() {
-      this.gameObjectTemplateLocales.push({
-        entry: this.gameObjectTemplate.entry,
+      this.questTemplateLocales.push({
+        ID: this.questTemplate.entry,
         VerifiedBuild: 0,
       });
     },
     destroy(index) {
-      this.gameObjectTemplateLocales.splice(index, 1);
+      this.questTemplateLocales.splice(index, 1);
     },
     async store() {
       this.loading = true;
-      await this.storeGameObjectTemplateLocales(this.gameObjectTemplateLocales);
+      await this.storeQuestTemplateLocales(this.questTemplateLocales);
       this.$notify({
         title: "保存成功",
         position: "bottom-left",
@@ -146,7 +136,7 @@ export default {
       this.visible = false;
     },
   },
-  mounted() {
+  created() {
     this.text = this.value;
   },
 };

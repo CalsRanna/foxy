@@ -22,12 +22,12 @@
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
-          名称/描述本地化
+          描述本地化
         </span>
-        <el-button size="mini" @click="create">新增</el-button>
+        <el-button type="primary" size="mini" @click="create">新增</el-button>
       </div>
       <el-table
-        :data="questTemplateLocales"
+        :data="itemTemplateLocales"
         :max-height="clientHeight * 0.84 - 81 - 80"
         highlight-current-row
         class="selectable-table hide-when-overflow"
@@ -50,72 +50,11 @@
             ></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="Title" label="名称">
-          <template slot-scope="scope">
-            <el-input v-model="scope.row.Title" placeholder="Title"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="Details" label="任务详情">
+        <el-table-column label="描述">
           <template slot-scope="scope">
             <el-input
-              v-model="scope.row.Details"
-              placeholder="Details"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="Objectives" label="Objectives">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.Objectives"
-              placeholder="Objectives"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="EndText" label="EndText">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.EndText"
-              placeholder="EndText"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="CompletedText" label="CompletedText">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.CompletedText"
-              placeholder="CompletedText"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="ObjectiveText1" label="ObjectiveText1">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.ObjectiveText1"
-              placeholder="ObjectiveText1"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="ObjectiveText2" label="ObjectiveText2">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.ObjectiveText2"
-              placeholder="ObjectiveText2"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="ObjectiveText3" label="ObjectiveText3">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.ObjectiveText3"
-              placeholder="ObjectiveText3"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column prop="ObjectiveText4" label="ObjectiveText4">
-          <template slot-scope="scope">
-            <el-input
-              v-model="scope.row.ObjectiveText4"
-              placeholder="ObjectiveText4"
+              v-model="scope.row.Description"
+              placeholder="Description"
             ></el-input>
           </template>
         </el-table-column>
@@ -162,11 +101,11 @@ export default {
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
-    ...mapState("questTemplate", ["questTemplate"]),
-    ...mapState("questTemplateLocale", ["questTemplateLocales"]),
+    ...mapState("itemTemplate", ["itemTemplate"]),
+    ...mapState("itemTemplateLocale", ["itemTemplateLocales"]),
   },
   methods: {
-    ...mapActions("questTemplateLocale", ["storeQuestTemplateLocales"]),
+    ...mapActions("itemTemplateLocale", ["storeItemTemplateLocales"]),
     input(text) {
       this.$emit("input", text);
     },
@@ -177,17 +116,17 @@ export default {
       this.visible = true;
     },
     create() {
-      this.questTemplateLocales.push({
-        ID: this.questTemplate.entry,
+      this.itemTemplateLocales.push({
+        ID: this.itemTemplate.entry,
         VerifiedBuild: 0,
       });
     },
     destroy(index) {
-      this.questTemplateLocales.splice(index, 1);
+      this.itemTemplateLocales.splice(index, 1);
     },
     async store() {
       this.loading = true;
-      await this.storeQuestTemplateLocales(this.questTemplateLocales);
+      await this.storeItemTemplateLocales(this.itemTemplateLocales);
       this.$notify({
         title: "保存成功",
         position: "bottom-left",

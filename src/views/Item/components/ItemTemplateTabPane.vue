@@ -17,18 +17,18 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="名称">
-            <item-template-localizer
+            <item-template-name-localizer
               v-model="itemTemplate.name"
               placeholder="name"
-            ></item-template-localizer>
+            ></item-template-name-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="描述">
-            <item-template-localizer
+            <item-template-description-localizer
               v-model="itemTemplate.description"
               placeholder="description"
-            ></item-template-localizer>
+            ></item-template-description-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1411,7 +1411,8 @@ import {
   socketColors,
 } from "@/locales/item.js";
 
-import ItemTemplateLocalizer from "@/views/Item/components/ItemTemplateLocalizer";
+import ItemTemplateNameLocalizer from "@/views/Item/components/ItemTemplateNameLocalizer";
+import ItemTemplateDescriptionLocalizer from "@/views/Item/components/ItemTemplateDescriptionLocalizer";
 import FlagEditor from "@/components/FlagEditor";
 import HintLabel from "@/components/HintLabel";
 import SpellSelector from "@/components/SpellSelector";
@@ -1531,7 +1532,8 @@ export default {
     this.init();
   },
   components: {
-    ItemTemplateLocalizer,
+    ItemTemplateNameLocalizer,
+    ItemTemplateDescriptionLocalizer,
     FlagEditor,
     HintLabel,
     SpellSelector,

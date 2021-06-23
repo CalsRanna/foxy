@@ -16,10 +16,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="名称">
-            <quest-template-localizer
+            <quest-template-title-localizer
               v-model="questTemplate.LogTitle"
               placeholder="LogTitle"
-            ></quest-template-localizer>
+            ></quest-template-title-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -178,66 +178,66 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="任务详情">
-            <quest-template-localizer
+            <quest-template-details-localizer
               v-model="questTemplate.QuestDescription"
               placeholder="QuestDescription"
-            ></quest-template-localizer>
+            ></quest-template-details-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="任务日志描述">
-            <quest-template-localizer
+            <quest-template-objectives-localizer
               v-model="questTemplate.LogDescription"
               placeholder="LogDescription"
-            ></quest-template-localizer>
+            ></quest-template-objectives-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="AreaDescription">
-            <quest-template-localizer
+            <quest-template-end-text-localizer
               v-model="questTemplate.AreaDescription"
               placeholder="AreaDescription"
-            ></quest-template-localizer>
+            ></quest-template-end-text-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="QuestCompletionLog">
-            <quest-template-localizer
+            <quest-template-completed-text-localizer
               v-model="questTemplate.QuestCompletionLog"
               placeholder="QuestCompletionLog"
-            ></quest-template-localizer>
+            ></quest-template-completed-text-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="ObjectiveText1">
-            <quest-template-localizer
+            <quest-template-objective-text1-localizer
               v-model="questTemplate.ObjectiveText1"
               placeholder="ObjectiveText1"
-            ></quest-template-localizer>
+            ></quest-template-objective-text1-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="ObjectiveText2">
-            <quest-template-localizer
+            <quest-template-objective-text2-localizer
               v-model="questTemplate.ObjectiveText2"
               placeholder="ObjectiveText2"
-            ></quest-template-localizer>
+            ></quest-template-objective-text2-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="ObjectiveText3">
-            <quest-template-localizer
+            <quest-template-objective-text3-localizer
               v-model="questTemplate.ObjectiveText3"
               placeholder="ObjectiveText3"
-            ></quest-template-localizer>
+            ></quest-template-objective-text3-localizer>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="ObjectiveText4">
-            <quest-template-localizer
+            <quest-template-objective-text4-localizer
               v-model="questTemplate.ObjectiveText4"
               placeholder="ObjectiveText4"
-            ></quest-template-localizer>
+            ></quest-template-objective-text4-localizer>
           </el-form-item>
         </el-col>
       </el-row>
@@ -943,7 +943,15 @@
 </template>
 
 <script>
-import QuestTemplateLocalizer from "@/views/Quest/components/QuestTemplateLocalizer";
+import QuestTemplateTitleLocalizer from "@/views/Quest/components/QuestTemplateTitleLocalizer";
+import QuestTemplateDetailsLocalizer from "@/views/Quest/components/QuestTemplateDetailsLocalizer";
+import QuestTemplateObjectivesLocalizer from "@/views/Quest/components/QuestTemplateObjectivesLocalizer";
+import QuestTemplateEndTextLocalizer from "@/views/Quest/components/QuestTemplateEndTextLocalizer";
+import QuestTemplateCompletedTextLocalizer from "@/views/Quest/components/QuestTemplateCompletedTextLocalizer";
+import QuestTemplateObjectiveText1Localizer from "@/views/Quest/components/QuestTemplateObjectiveText1Localizer";
+import QuestTemplateObjectiveText2Localizer from "@/views/Quest/components/QuestTemplateObjectiveText2Localizer";
+import QuestTemplateObjectiveText3Localizer from "@/views/Quest/components/QuestTemplateObjectiveText3Localizer";
+import QuestTemplateObjectiveText4Localizer from "@/views/Quest/components/QuestTemplateObjectiveText4Localizer";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector";
 import SpellSelector from "@/components/SpellSelector";
 
@@ -1034,7 +1042,15 @@ export default {
   },
   components: {
     FlagEditor,
-    QuestTemplateLocalizer,
+    QuestTemplateTitleLocalizer,
+    QuestTemplateDetailsLocalizer,
+    QuestTemplateObjectivesLocalizer,
+    QuestTemplateEndTextLocalizer,
+    QuestTemplateCompletedTextLocalizer,
+    QuestTemplateObjectiveText1Localizer,
+    QuestTemplateObjectiveText2Localizer,
+    QuestTemplateObjectiveText3Localizer,
+    QuestTemplateObjectiveText4Localizer,
     ItemTemplateSelector,
     SpellSelector,
   },
