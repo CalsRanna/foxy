@@ -155,10 +155,6 @@ export default {
   cursor: pointer;
 }
 
-.flag-editor tbody tr {
-  cursor: pointer;
-}
-
 .wider-message-box {
   width: 50vw !important;
 }
@@ -189,6 +185,10 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.selectable-table tbody tr {
+  cursor: pointer;
 }
 
 .hide-when-overflow .cell {

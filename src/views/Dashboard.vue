@@ -223,8 +223,6 @@
 <script>
 import { mapState, mapActions } from "vuex";
 
-import Chart from "@/components/Chart";
-
 export default {
   data() {
     return {
@@ -299,9 +297,6 @@ export default {
         this.loading = false;
       }
     },
-  },
-  components: {
-    Chart,
   },
   mounted() {
     this.init();

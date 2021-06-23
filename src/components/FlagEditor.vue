@@ -17,6 +17,8 @@
       :visible.sync="visible"
       :show-close="false"
       :close-on-click-modal="false"
+      width="68%"
+      top="8vh"
       @opened="init"
     >
       <div slot="title">
@@ -26,10 +28,10 @@
       </div>
       <el-table
         :data="flags"
+        :max-height="clientHeight * 0.84 - 81 - 80"
+        class="selectable-table hide-when-overflow"
         @selection-change="change"
         @row-click="select"
-        :max-height="clientHeight / 2"
-        class="flag-editor hide-when-overflow"
       >
         <el-table-column type="selection" width="48"></el-table-column>
         <el-table-column prop="flag" label="标识"></el-table-column>
@@ -50,12 +52,6 @@
     </el-dialog>
   </div>
 </template>
-
-<style scoped>
-.flag-editor tbody tr {
-  cursor: pointer;
-}
-</style>
 
 <script>
 import { mapState } from "vuex";
