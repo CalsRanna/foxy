@@ -82,12 +82,12 @@ export default {
         let description = undefined;
         for (let questTemplateLocale of this.questTemplateLocales) {
           if (questTemplateLocale.locale === "zhCN") {
-            description = questTemplateLocale.ObjectiveText1;
+            description = questTemplateLocale.Objectives;
           }
         }
-        return description ? description : this.questTemplate.ObjectText1;
+        return description ? description : this.questTemplate.LogDescription;
       } else {
-        return this.questTemplate.ObjectText1;
+        return this.questTemplate.LogDescription;
       }
     },
   },
