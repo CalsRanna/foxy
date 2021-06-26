@@ -24,26 +24,43 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="类型">
-            <el-input
+            <el-select
               v-model="questTemplate.QuestType"
               placeholder="QuestType"
-            ></el-input>
+            >
+              <el-option :value="0" label="自动完成任务"></el-option>
+              <el-option :value="1" label="未激活任务"></el-option>
+              <el-option :value="2" label="普通任务"></el-option>
+              <el-option :value="3" label="世界任务"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="允许种族">
+            <flag-editor
+              title="允许种族编辑器"
+              v-model="questTemplate.AllowableRaces"
+              :flags="allowableRaces"
+              placeholder="AllowableRace"
+            ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="等级">
-            <el-input
+            <el-input-number
               v-model="questTemplate.QuestLevel"
+              controls-position="right"
               placeholder="QuestLevel"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最小等级">
-            <el-input
+            <el-input-number
               v-model="questTemplate.MinLevel"
+              controls-position="right"
               placeholder="MinLevel"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -63,53 +80,48 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="建议队伍人数">
-            <el-input
-              v-model="questTemplate.SuggestedGroupNum"
-              placeholder="SuggestedGroupNum"
-            ></el-input>
+          <el-form-item label="标识">
+            <flag-editor
+              title="标识编辑器"
+              v-model="questTemplate.Flags"
+              :flags="flags"
+              placeholder="Flags"
+            ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredFactionId1">
-            <el-input
-              v-model="questTemplate.RequiredFactionId1"
-              placeholder="RequiredFactionId1"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="StartItem">
-            <el-input
+          <el-form-item label="开始物品">
+            <item-template-selector
               v-model="questTemplate.StartItem"
               placeholder="StartItem"
-            ></el-input>
+            ></item-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="标识">
-            <el-input
-              v-model="questTemplate.Flags"
-              placeholder="Flags"
-            ></el-input>
+          <el-form-item label="建议队伍人数">
+            <el-input-number
+              v-model="questTemplate.SuggestedGroupNum"
+              controls-position="right"
+              placeholder="SuggestedGroupNum"
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="TimeAllowed">
-            <el-input
+          <el-form-item label="时间限制">
+            <el-input-number
               v-model="questTemplate.TimeAllowed"
+              controls-position="right"
               placeholder="TimeAllowed"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="允许种族">
-            <flag-editor
-              title="允许种族编辑器"
-              v-model="questTemplate.AllowableRaces"
-              :flags="allowableRaces"
-              placeholder="AllowableRace"
-            ></flag-editor>
+          <el-form-item label="需要击杀玩家">
+            <el-input-number
+              v-model="questTemplate.RequiredPlayerKills"
+              controls-position="right"
+              placeholder="RequiredPlayerKills"
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -117,14 +129,6 @@
             <el-input
               v-model="questTemplate.Unknown0"
               placeholder="Unknown0"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RequiredPlayerKills">
-            <el-input
-              v-model="questTemplate.RequiredPlayerKills"
-              placeholder="RequiredPlayerKills"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -141,43 +145,7 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="POIContinent">
-            <el-input
-              v-model="questTemplate.POIContinent"
-              placeholder="POIContinent"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="POIx">
-            <el-input
-              v-model="questTemplate.POIx"
-              placeholder="POIx"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="POIy">
-            <el-input
-              v-model="questTemplate.POIy"
-              placeholder="POIy"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="POIPriority">
-            <el-input
-              v-model="questTemplate.POIPriority"
-              placeholder="POIPriority"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card style="margin-top: 16px">
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="任务详情">
+          <el-form-item label="详情">
             <quest-template-details-localizer
               v-model="questTemplate.QuestDescription"
               placeholder="QuestDescription"
@@ -185,7 +153,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="任务日志描述">
+          <el-form-item label="目标描述">
             <quest-template-objectives-localizer
               v-model="questTemplate.LogDescription"
               placeholder="LogDescription"
@@ -193,7 +161,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="AreaDescription">
+          <el-form-item label="结束描述">
             <quest-template-end-text-localizer
               v-model="questTemplate.AreaDescription"
               placeholder="AreaDescription"
@@ -201,7 +169,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="QuestCompletionLog">
+          <el-form-item label="完成描述">
             <quest-template-completed-text-localizer
               v-model="questTemplate.QuestCompletionLog"
               placeholder="QuestCompletionLog"
@@ -209,7 +177,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="ObjectiveText1">
+          <el-form-item label="目标">
             <quest-template-objective-text1-localizer
               v-model="questTemplate.ObjectiveText1"
               placeholder="ObjectiveText1"
@@ -217,7 +185,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="ObjectiveText2">
+          <el-form-item label="目标">
             <quest-template-objective-text2-localizer
               v-model="questTemplate.ObjectiveText2"
               placeholder="ObjectiveText2"
@@ -225,7 +193,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="ObjectiveText3">
+          <el-form-item label="目标">
             <quest-template-objective-text3-localizer
               v-model="questTemplate.ObjectiveText3"
               placeholder="ObjectiveText3"
@@ -233,11 +201,83 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="ObjectiveText4">
+          <el-form-item label="目标">
             <quest-template-objective-text4-localizer
               v-model="questTemplate.ObjectiveText4"
               placeholder="ObjectiveText4"
             ></quest-template-objective-text4-localizer>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="物品掉落">
+            <item-template-selector
+              v-model="questTemplate.ItemDrop1"
+              placeholder="ItemDrop1"
+            ></item-template-selector>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="数量">
+            <el-input-number
+              controls-position="right"
+              v-model="questTemplate.ItemDropQuantity1"
+              placeholder="ItemDropQuantity1"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="物品掉落">
+            <item-template-selector
+              v-model="questTemplate.ItemDrop2"
+              placeholder="ItemDrop2"
+            ></item-template-selector>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="数量">
+            <el-input-number
+              controls-position="right"
+              v-model="questTemplate.ItemDropQuantity2"
+              placeholder="ItemDropQuantity2"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="物品掉落">
+            <item-template-selector
+              v-model="questTemplate.ItemDrop3"
+              placeholder="ItemDrop3"
+            ></item-template-selector>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="数量">
+            <el-input-number
+              controls-position="right"
+              v-model="questTemplate.ItemDropQuantity3"
+              placeholder="ItemDropQuantity3"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="物品掉落">
+            <item-template-selector
+              v-model="questTemplate.ItemDrop4"
+              placeholder="ItemDrop4"
+            ></item-template-selector>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="数量">
+            <el-input-number
+              controls-position="right"
+              v-model="questTemplate.ItemDropQuantity4"
+              placeholder="ItemDropQuantity4"
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -351,39 +391,45 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="RequiredFactionId1">
-            <el-input
+          <el-form-item label="需要声望">
+            <faction-selector
               v-model="questTemplate.RequiredFactionId1"
               placeholder="RequiredFactionId1"
-            ></el-input>
+            ></faction-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredFactionValue1">
-            <el-input
+          <el-form-item label="数量">
+            <el-input-number
               v-model="questTemplate.RequiredFactionValue1"
+              controls-position="right"
               placeholder="RequiredFactionValue1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredFactionId2">
-            <el-input
+          <el-form-item label="需要声望">
+            <faction-selector
               v-model="questTemplate.RequiredFactionId2"
               placeholder="RequiredFactionId2"
-            ></el-input>
+            ></faction-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredFactionValue2">
-            <el-input
+          <el-form-item label="数量">
+            <el-input-number
               v-model="questTemplate.RequiredFactionValue2"
+              controls-position="right"
               placeholder="RequiredFactionValue2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="RequiredNpcOrGo1">
+          <el-form-item label="需要生物或物体">
             <el-input
               v-model="questTemplate.RequiredNpcOrGo1"
               placeholder="RequiredNpcOrGo1"
@@ -391,15 +437,16 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredNpcOrGoCount1">
-            <el-input
+          <el-form-item label="数量">
+            <el-input-number
               v-model="questTemplate.RequiredNpcOrGoCount1"
+              controls-position="right"
               placeholder="RequiredNpcOrGoCount1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredNpcOrGo2">
+          <el-form-item label="需要生物或物体">
             <el-input
               v-model="questTemplate.RequiredNpcOrGo2"
               placeholder="RequiredNpcOrGo2"
@@ -407,15 +454,16 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredNpcOrGoCount2">
-            <el-input
+          <el-form-item label="数量">
+            <el-input-number
               v-model="questTemplate.RequiredNpcOrGoCount2"
+              controls-position="right"
               placeholder="RequiredNpcOrGoCount2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredNpcOrGo3">
+          <el-form-item label="需要生物或物体">
             <el-input
               v-model="questTemplate.RequiredNpcOrGo3"
               placeholder="RequiredNpcOrGo3"
@@ -423,15 +471,16 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredNpcOrGoCount3">
-            <el-input
+          <el-form-item label="数量">
+            <el-input-number
               v-model="questTemplate.RequiredNpcOrGoCount3"
+              controls-position="right"
               placeholder="RequiredNpcOrGoCount3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredNpcOrGo4">
+          <el-form-item label="需要生物或物体">
             <el-input
               v-model="questTemplate.RequiredNpcOrGo4"
               placeholder="RequiredNpcOrGo4"
@@ -439,82 +488,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredNpcOrGoCount4">
-            <el-input
+          <el-form-item label="数量">
+            <el-input-number
               v-model="questTemplate.RequiredNpcOrGoCount4"
+              controls-position="right"
               placeholder="RequiredNpcOrGoCount4"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card style="margin-top: 16px">
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="ItemDrop1">
-            <item-template-selector
-              v-model="questTemplate.ItemDrop1"
-              placeholder="ItemDrop1"
-            ></item-template-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="数量">
-            <el-input-number
-              controls-position="right"
-              v-model="questTemplate.ItemDropQuantity1"
-              placeholder="ItemDropQuantity1"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="ItemDrop2">
-            <item-template-selector
-              v-model="questTemplate.ItemDrop2"
-              placeholder="ItemDrop2"
-            ></item-template-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="数量">
-            <el-input-number
-              controls-position="right"
-              v-model="questTemplate.ItemDropQuantity2"
-              placeholder="ItemDropQuantity2"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="ItemDrop3">
-            <item-template-selector
-              v-model="questTemplate.ItemDrop3"
-              placeholder="ItemDrop3"
-            ></item-template-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="数量">
-            <el-input-number
-              controls-position="right"
-              v-model="questTemplate.ItemDropQuantity3"
-              placeholder="ItemDropQuantity3"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="ItemDrop4">
-            <item-template-selector
-              v-model="questTemplate.ItemDrop4"
-              placeholder="ItemDrop4"
-            ></item-template-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="数量">
-            <el-input-number
-              controls-position="right"
-              v-model="questTemplate.ItemDropQuantity4"
-              placeholder="ItemDropQuantity4"
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -522,14 +500,6 @@
     </el-card>
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="奖励标题">
-            <el-input
-              v-model="questTemplate.RewardTitle"
-              placeholder="RewardTitle"
-            ></el-input>
-          </el-form-item>
-        </el-col>
         <el-col :span="6">
           <el-form-item label="奖励天赋点">
             <el-input-number
@@ -540,24 +510,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardArenaPoints">
-            <el-input-number
-              controls-position="right"
-              v-model="questTemplate.RewardArenaPoints"
-              placeholder="RewardArenaPoints"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RewardNextQuest">
-            <el-input
-              v-model="questTemplate.RewardNextQuest"
-              placeholder="RewardNextQuest"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RewardXPDifficulty">
+          <el-form-item label="奖励经验难度">
             <el-input
               v-model="questTemplate.RewardXPDifficulty"
               placeholder="RewardXPDifficulty"
@@ -574,7 +527,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardBonusMoney">
+          <el-form-item label="奖励额外金钱">
             <el-input-number
               controls-position="right"
               v-model="questTemplate.RewardBonusMoney"
@@ -583,7 +536,31 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardDisplaySpell">
+          <el-form-item label="奖励头衔">
+            <el-input
+              v-model="questTemplate.RewardTitle"
+              placeholder="RewardTitle"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="奖励下一个任务">
+            <quest-template-selector
+              v-model="questTemplate.RewardNextQuest"
+              placeholder="RewardNextQuest"
+            ></quest-template-selector>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="奖励法术">
+            <spell-selector
+              v-model="questTemplate.RewardSpell"
+              placeholder="RewardSpell"
+            ></spell-selector>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="奖励施放法术">
             <spell-selector
               v-model="questTemplate.RewardDisplaySpell"
               placeholder="RewardDisplaySpell"
@@ -591,11 +568,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="奖励技能">
-            <spell-selector
-              v-model="questTemplate.RewardSpell"
-              placeholder="RewardSpell"
-            ></spell-selector>
+          <el-form-item label="奖励竞技场点数">
+            <el-input-number
+              controls-position="right"
+              v-model="questTemplate.RewardArenaPoints"
+              placeholder="RewardArenaPoints"
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -608,7 +586,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardKillHonor">
+          <el-form-item label="奖励击杀荣誉">
             <el-input-number
               controls-position="right"
               v-model="questTemplate.RewardKillHonor"
@@ -799,15 +777,25 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="RewardFactionID1">
-            <el-input
+          <el-form-item>
+            <hint-label
+              label="奖励声望"
+              :tooltip="rewardFactionIdTooltip"
+              slot="label"
+            ></hint-label>
+            <faction-selector
               v-model="questTemplate.RewardFactionID1"
               placeholder="RewardFactionID1"
-            ></el-input>
+            ></faction-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionValue1">
+          <el-form-item>
+            <hint-label
+              label="声望值"
+              :tooltip="rewardFactionValueIdTooltip"
+              slot="label"
+            ></hint-label>
             <el-input-number
               controls-position="right"
               v-model="questTemplate.RewardFactionValue1"
@@ -816,25 +804,31 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionOverride1">
-            <el-input
+          <el-form-item>
+            <hint-label
+              label="覆盖"
+              :tooltip="rewardFactionValueIdOverrideTooltip"
+              slot="label"
+            ></hint-label>
+            <el-input-number
               v-model="questTemplate.RewardFactionOverride1"
+              controls-position="right"
               placeholder="RewardFactionOverride1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="RewardFactionID2">
-            <el-input
+          <el-form-item label="奖励声望">
+            <faction-selector
               v-model="questTemplate.RewardFactionID2"
               placeholder="RewardFactionID2"
-            ></el-input>
+            ></faction-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionValue2">
+          <el-form-item label="声望值">
             <el-input-number
               controls-position="right"
               v-model="questTemplate.RewardFactionValue2"
@@ -843,25 +837,26 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionOverride2">
-            <el-input
+          <el-form-item label="覆盖">
+            <el-input-number
               v-model="questTemplate.RewardFactionOverride2"
+              controls-position="right"
               placeholder="RewardFactionOverride2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="RewardFactionID3">
-            <el-input
+          <el-form-item label="奖励声望">
+            <faction-selector
               v-model="questTemplate.RewardFactionID3"
               placeholder="RewardFactionID3"
-            ></el-input>
+            ></faction-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionValue3">
+          <el-form-item label="声望值">
             <el-input-number
               controls-position="right"
               v-model="questTemplate.RewardFactionValue3"
@@ -870,25 +865,26 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionOverride3">
-            <el-input
+          <el-form-item label="覆盖">
+            <el-input-number
               v-model="questTemplate.RewardFactionOverride3"
+              controls-position="right"
               placeholder="RewardFactionOverride3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="RewardFactionID4">
-            <el-input
+          <el-form-item label="奖励声望">
+            <faction-selector
               v-model="questTemplate.RewardFactionID4"
               placeholder="RewardFactionID4"
-            ></el-input>
+            ></faction-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionValue4">
+          <el-form-item label="声望值">
             <el-input-number
               controls-position="right"
               v-model="questTemplate.RewardFactionValue4"
@@ -897,25 +893,26 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionOverride4">
-            <el-input
+          <el-form-item label="覆盖">
+            <el-input-number
               v-model="questTemplate.RewardFactionOverride4"
+              controls-position="right"
               placeholder="RewardFactionOverride4"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="RewardFactionID5">
-            <el-input
+          <el-form-item label="奖励声望">
+            <faction-selector
               v-model="questTemplate.RewardFactionID5"
               placeholder="RewardFactionID5"
-            ></el-input>
+            ></faction-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionValue5">
+          <el-form-item label="声望值">
             <el-input-number
               controls-position="right"
               v-model="questTemplate.RewardFactionValue5"
@@ -924,10 +921,49 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardFactionOverride5">
-            <el-input
+          <el-form-item label="覆盖">
+            <el-input-number
               v-model="questTemplate.RewardFactionOverride5"
+              controls-position="right"
               placeholder="RewardFactionOverride5"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="地图">
+            <el-input
+              v-model="questTemplate.POIContinent"
+              placeholder="POIContinent"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="X坐标">
+            <el-input-number
+              v-model="questTemplate.POIx"
+              controls-position="right"
+              placeholder="POIx"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="Y坐标">
+            <el-input-number
+              v-model="questTemplate.POIy"
+              controls-position="right"
+              placeholder="POIy"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="优先级">
+            <el-input
+              v-model="questTemplate.POIPriority"
+              placeholder="POIPriority"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -943,6 +979,13 @@
 </template>
 
 <script>
+import {
+  flags,
+  rewardFactionIdTooltip,
+  rewardFactionValueIdTooltip,
+  rewardFactionValueIdOverrideTooltip,
+} from "@/locales/quest";
+import HintLabel from "@/components/HintLabel";
 import QuestTemplateTitleLocalizer from "@/views/Quest/components/QuestTemplateTitleLocalizer";
 import QuestTemplateDetailsLocalizer from "@/views/Quest/components/QuestTemplateDetailsLocalizer";
 import QuestTemplateObjectivesLocalizer from "@/views/Quest/components/QuestTemplateObjectivesLocalizer";
@@ -953,7 +996,9 @@ import QuestTemplateObjectiveText2Localizer from "@/views/Quest/components/Quest
 import QuestTemplateObjectiveText3Localizer from "@/views/Quest/components/QuestTemplateObjectiveText3Localizer";
 import QuestTemplateObjectiveText4Localizer from "@/views/Quest/components/QuestTemplateObjectiveText4Localizer";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector";
+import QuestTemplateSelector from "@/components/QuestTemplateSelector";
 import SpellSelector from "@/components/SpellSelector";
+import FactionSelector from "@/components/FactionSelector";
 
 import { mapState, mapActions } from "vuex";
 import FlagEditor from "@/components/FlagEditor";
@@ -961,6 +1006,10 @@ import FlagEditor from "@/components/FlagEditor";
 export default {
   data() {
     return {
+      flags: flags,
+      rewardFactionIdTooltip: rewardFactionIdTooltip,
+      rewardFactionValueIdTooltip: rewardFactionValueIdTooltip,
+      rewardFactionValueIdOverrideTooltip: rewardFactionValueIdOverrideTooltip,
       initing: false,
       loading: false,
       creating: false,
@@ -1041,6 +1090,7 @@ export default {
     this.init();
   },
   components: {
+    HintLabel,
     FlagEditor,
     QuestTemplateTitleLocalizer,
     QuestTemplateDetailsLocalizer,
@@ -1052,7 +1102,9 @@ export default {
     QuestTemplateObjectiveText3Localizer,
     QuestTemplateObjectiveText4Localizer,
     ItemTemplateSelector,
+    QuestTemplateSelector,
     SpellSelector,
+    FactionSelector,
   },
 };
 </script>
