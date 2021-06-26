@@ -59,6 +59,7 @@ import talent from "./talent";
 import talentTab from "./talentTab";
 import referenceLootTemplate from "./referenceLootTemplate";
 import setting from "./setting";
+import factionSelector from "./factionSelector";
 import factionTemplateSelector from "./factionTemplateSelector";
 import creatureSpellDataSelector from "./creatureSpellDataSelector";
 import creatureModelInfoSelector from "./creatureModelInfoSelector";
@@ -141,6 +142,7 @@ export default new Vuex.Store({
     talentTab,
     referenceLootTemplate,
     setting,
+    factionSelector,
     factionTemplateSelector,
     creatureSpellDataSelector,
     creatureModelInfoSelector,
