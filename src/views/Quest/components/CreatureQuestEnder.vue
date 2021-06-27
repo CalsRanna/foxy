@@ -54,13 +54,10 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="生物编号">
-                <el-input-number
+                <creature-template-selector
                   v-model="creatureQuestEnder.id"
-                  controls-position="right"
                   placeholder="id"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
+                ></creature-template-selector>
               </el-form-item>
             </el-col>
           </el-row>
@@ -78,6 +75,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import CreatureTemplateSelector from "@/components/CreatureTemplateSelector";
 
 export default {
   data() {
@@ -233,6 +231,9 @@ export default {
   },
   mounted() {
     this.init();
+  },
+  components: {
+    CreatureTemplateSelector,
   },
 };
 </script>
