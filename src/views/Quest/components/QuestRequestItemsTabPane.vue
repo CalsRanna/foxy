@@ -7,7 +7,7 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="ID">
+          <el-form-item label="编号">
             <el-input-number
               v-model="questRequestItems.ID"
               controls-position="right"
@@ -19,23 +19,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="EmoteOnComplete">
-            <el-input
-              v-model="questRequestItems.EmoteOnComplete"
-              placeholder="EmoteOnComplete"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="EmoteOnIncomplete">
-            <el-input
-              v-model="questRequestItems.EmoteOnIncomplete"
-              placeholder="EmoteOnIncomplete"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="CompletionText">
+          <el-form-item label="完成文本">
             <el-input
               v-model="questRequestItems.CompletionText"
               placeholder="CompletionText"
@@ -47,6 +31,24 @@
             <el-input
               v-model="questRequestItems.VerifiedBuild"
               placeholder="VerifiedBuild"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">
+          <el-form-item label="完成表情">
+            <el-input
+              v-model="questRequestItems.EmoteOnComplete"
+              placeholder="EmoteOnComplete"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="未完成表情">
+            <el-input
+              v-model="questRequestItems.EmoteOnIncomplete"
+              placeholder="EmoteOnIncomplete"
             ></el-input>
           </el-form-item>
         </el-col>

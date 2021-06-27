@@ -3,7 +3,7 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="ID">
+          <el-form-item label="编号">
             <el-input-number
               v-model="questOfferReward.ID"
               controls-position="right"
@@ -15,71 +15,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="Emote1">
-            <el-input
-              v-model="questOfferReward.Emote1"
-              placeholder="Emote1"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Emote2">
-            <el-input
-              v-model="questOfferReward.Emote2"
-              placeholder="Emote2"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Emote3">
-            <el-input
-              v-model="questOfferReward.Emote3"
-              placeholder="Emote3"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Emote4">
-            <el-input
-              v-model="questOfferReward.Emote4"
-              placeholder="Emote4"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="EmoteDelay1">
-            <el-input
-              v-model="questOfferReward.EmoteDelay1"
-              placeholder="EmoteDelay1"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="EmoteDelay2">
-            <el-input
-              v-model="questOfferReward.EmoteDelay2"
-              placeholder="EmoteDelay2"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="EmoteDelay3">
-            <el-input
-              v-model="questOfferReward.EmoteDelay3"
-              placeholder="EmoteDelay3"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="EmoteDelay4">
-            <el-input
-              v-model="questOfferReward.EmoteDelay4"
-              placeholder="EmoteDelay4"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RewardText">
+          <el-form-item label="奖励文本">
             <el-input
               v-model="questOfferReward.RewardText"
               placeholder="RewardText"
@@ -92,6 +28,78 @@
               v-model="questOfferReward.VerifiedBuild"
               placeholder="VerifiedBuild"
             ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="表情">
+            <el-input
+              v-model="questOfferReward.Emote1"
+              placeholder="Emote1"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="表情">
+            <el-input
+              v-model="questOfferReward.Emote2"
+              placeholder="Emote2"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="表情">
+            <el-input
+              v-model="questOfferReward.Emote3"
+              placeholder="Emote3"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="表情">
+            <el-input
+              v-model="questOfferReward.Emote4"
+              placeholder="Emote4"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="延迟">
+            <el-input-number
+              v-model="questOfferReward.EmoteDelay1"
+              controls-position="right"
+              placeholder="EmoteDelay1"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="延迟">
+            <el-input-number
+              v-model="questOfferReward.EmoteDelay2"
+              controls-position="right"
+              placeholder="EmoteDelay2"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="延迟">
+            <el-input-number
+              v-model="questOfferReward.EmoteDelay3"
+              controls-position="right"
+              placeholder="EmoteDelay3"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="延迟">
+            <el-input-number
+              v-model="questOfferReward.EmoteDelay4"
+              controls-position="right"
+              placeholder="EmoteDelay4"
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>

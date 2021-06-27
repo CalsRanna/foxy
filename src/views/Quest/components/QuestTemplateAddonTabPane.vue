@@ -7,7 +7,7 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="ID">
+          <el-form-item label="编号">
             <el-input-number
               v-model="questTemplateAddon.ID"
               controls-position="right"
@@ -19,23 +19,26 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="MaxLevel">
-            <el-input
+          <el-form-item label="最高等级">
+            <el-input-number
               v-model="questTemplateAddon.MaxLevel"
+              controls-position="right"
               placeholder="MaxLevel"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="AllowableClasses">
-            <el-input
-              v-model="questTemplateAddon.AllowableClasses"
+          <el-form-item label="允许职业">
+            <flag-editor
+              title="允许职业编辑器"
+              v-model="questTemplate.AllowableClasses"
+              :flags="allowableClasses"
               placeholder="AllowableClasses"
-            ></el-input>
+            ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="SourceSpellID">
+          <el-form-item label="施放法术">
             <el-input
               v-model="questTemplateAddon.SourceSpellID"
               placeholder="SourceSpellID"
@@ -43,18 +46,26 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="PrevQuestID">
-            <el-input
+          <el-form-item label="前置任务">
+            <quest-template-selector
               v-model="questTemplateAddon.PrevQuestID"
               placeholder="PrevQuestID"
-            ></el-input>
+            ></quest-template-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="NextQuestID">
-            <el-input
+          <el-form-item label="后续任务">
+            <quest-template-selector
               v-model="questTemplateAddon.NextQuestID"
               placeholder="NextQuestID"
+            ></quest-template-selector>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="特殊标识">
+            <el-input
+              v-model="questTemplateAddon.SpecialFlags"
+              placeholder="SpecialFlags"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -67,39 +78,20 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RewardMailTemplateID">
-            <el-input
-              v-model="questTemplateAddon.RewardMailTemplateID"
-              placeholder="RewardMailTemplateID"
-            ></el-input>
+          <el-form-item label="提供物品数量">
+            <el-input-number
+              v-model="questTemplateAddon.ProvidedItemCount"
+              controls-position="right"
+              placeholder="ProvidedItemCount"
+            ></el-input-number>
           </el-form-item>
         </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="RewardMailDelay">
-            <el-input
-              v-model="questTemplateAddon.RewardMailDelay"
-              placeholder="RewardMailDelay"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RequiredSkillID">
-            <el-input
-              v-model="questTemplateAddon.RequiredSkillID"
-              placeholder="RequiredSkillID"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RequiredSkillPoints">
-            <el-input
-              v-model="questTemplateAddon.RequiredSkillPoints"
-              placeholder="RequiredSkillPoints"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RequiredMinRepFaction">
+          <el-form-item label="需要最低声望">
             <el-input
               v-model="questTemplateAddon.RequiredMinRepFaction"
               placeholder="RequiredMinRepFaction"
@@ -107,7 +99,16 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredMaxRepFaction">
+          <el-form-item label="声望值">
+            <el-input-number
+              v-model="questTemplateAddon.RequiredMinRepValue"
+              controls-position="right"
+              placeholder="RequiredMinRepValue"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要最高声望">
             <el-input
               v-model="questTemplateAddon.RequiredMaxRepFaction"
               placeholder="RequiredMaxRepFaction"
@@ -115,35 +116,50 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredMinRepValue">
-            <el-input
-              v-model="questTemplateAddon.RequiredMinRepValue"
-              placeholder="RequiredMinRepValue"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RequiredMaxRepValue">
-            <el-input
+          <el-form-item label="声望值">
+            <el-input-number
               v-model="questTemplateAddon.RequiredMaxRepValue"
+              controls-position="right"
               placeholder="RequiredMaxRepValue"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="需要技能">
+            <el-input
+              v-model="questTemplateAddon.RequiredSkillID"
+              placeholder="RequiredSkillID"
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="ProvidedItemCount">
+          <el-form-item label="需要熟练度">
+            <el-input-number
+              v-model="questTemplateAddon.RequiredSkillPoints"
+              controls-position="right"
+              placeholder="RequiredSkillPoints"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="邮件奖励">
             <el-input
-              v-model="questTemplateAddon.ProvidedItemCount"
-              placeholder="ProvidedItemCount"
+              v-model="questTemplateAddon.RewardMailTemplateID"
+              placeholder="RewardMailTemplateID"
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="SpecialFlags">
-            <el-input
-              v-model="questTemplateAddon.SpecialFlags"
-              placeholder="SpecialFlags"
-            ></el-input>
+          <el-form-item label="奖励延迟">
+            <el-input-number
+              v-model="questTemplateAddon.RewardMailDelay"
+              controls-position="right"
+              placeholder="RewardMailDelay"
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -158,6 +174,8 @@
 </template>
 
 <script>
+import FlagEditor from "@/components/FlagEditor";
+import QuestTemplateSelector from "@/components/QuestTemplateSelector";
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -169,12 +187,23 @@ export default {
     };
   },
   computed: {
+    ...mapState("initiator", ["chrClasses"]),
     ...mapState("questTemplate", ["questTemplate"]),
     ...mapState("questTemplateAddon", ["questTemplateAddon"]),
     credential() {
       return {
         ID: this.questTemplate.ID,
       };
+    },
+    allowableClasses() {
+      return this.chrClasses.map((chrClass) => {
+        return {
+          index: chrClass.ID,
+          flag: Math.pow(2, chrClass.ID - 1),
+          name: chrClass.Name_Lang_zhCN,
+          comment: chrClass.Filename, // 不知道为什么变成了Filename，原field应该是FileName
+        };
+      });
     },
   },
   methods: {
@@ -222,6 +251,10 @@ export default {
   },
   mounted() {
     this.init();
+  },
+  components: {
+    FlagEditor,
+    QuestTemplateSelector,
   },
 };
 </script>

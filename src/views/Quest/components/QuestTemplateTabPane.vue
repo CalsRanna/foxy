@@ -55,7 +55,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="最小等级">
+          <el-form-item label="最低等级">
             <el-input-number
               v-model="questTemplate.MinLevel"
               controls-position="right"
