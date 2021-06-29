@@ -45,6 +45,7 @@ import emoteText from "./emoteText";
 import gameObjectQuestStarter from "./gameObjectQuestStarter";
 import gameObjectQuestEnder from "./gameObjectQuestEnder";
 import gossipMenu from "./gossipMenu";
+import mapSelector from "./mapSelector";
 import npcText from "./npcText";
 import npcTextLocale from "./npcTextLocale";
 import gossipMenuOption from "./gossipMenuOption";
@@ -132,6 +133,7 @@ export default new Vuex.Store({
     gameObjectQuestStarter,
     gameObjectQuestEnder,
     gossipMenu,
+    mapSelector,
     npcText,
     npcTextLocale,
     gossipMenuOption,
