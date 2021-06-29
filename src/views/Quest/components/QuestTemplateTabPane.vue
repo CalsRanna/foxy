@@ -935,10 +935,10 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="地图">
-            <el-input
+            <map-selector
               v-model="questTemplate.POIContinent"
               placeholder="POIContinent"
-            ></el-input>
+            ></map-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1002,6 +1002,7 @@ import SpellSelector from "@/components/SpellSelector";
 import FactionSelector from "@/components/FactionSelector";
 import FlagEditor from "@/components/FlagEditor";
 import CharTitleSelector from "@/components/CharTitleSelector.vue";
+import MapSelector from "@/components/MapSelector.vue";
 
 export default {
   data() {
@@ -1106,6 +1107,7 @@ export default {
     SpellSelector,
     FactionSelector,
     CharTitleSelector,
+    MapSelector,
   },
 };
 </script>

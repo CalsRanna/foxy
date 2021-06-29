@@ -55,6 +55,7 @@ export default {
       "loadDbcItemSets",
       "loadDbcLocks",
       "loadDbcLockTypes",
+      "loadDbcMaps",
       "loadDbcScalingStatDistributions",
       "loadDbcScalingStatValues",
       "loadDbcSpells",
@@ -117,6 +118,8 @@ export default {
         await this.loadDbcLocks();
         this.progressText = "加载LockType.dbc";
         await this.loadDbcLockTypes();
+        this.progressText = "加载Map.dbc";
+        await this.loadDbcMaps();
         this.progressText = "加载ScalingStatDistribution.dbc";
         await this.loadDbcScalingStatDistributions();
         this.progressText = "加载ScalingStatValues.dbc";

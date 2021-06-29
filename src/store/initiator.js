@@ -24,6 +24,7 @@ import {
   LOAD_DBC_ITEM_SETS,
   LOAD_DBC_LOCKS,
   LOAD_DBC_LOCK_TYPES,
+  LOAD_DBC_MAPS,
   LOAD_DBC_SCALING_STAT_DISTRIBUTIONS,
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
@@ -327,6 +328,18 @@ export default {
           resolve();
         });
         ipcRenderer.on(`${LOAD_DBC_LOCK_TYPES}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    loadDbcMaps({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_MAPS);
+        ipcRenderer.on(LOAD_DBC_MAPS, (event, response) => {
+          commit(LOAD_DBC_MAPS, response);
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_MAPS}_REJECT`, (event, error) => {
           reject(error);
         });
       });

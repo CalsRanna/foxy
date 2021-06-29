@@ -28,6 +28,7 @@ import {
   LOAD_DBC_CHR_RACES,
   LOAD_DBC_LOCKS,
   LOAD_DBC_LOCK_TYPES,
+  LOAD_DBC_MAPS,
   LOAD_DBC_CHAR_TITLES,
   LOAD_DBC_EMOTES,
   LOAD_DBC_EMOTES_TEXTS,
@@ -64,6 +65,7 @@ const {
   dbcChrRacesSql,
   dbcLockSql,
   dbcLockTypeSql,
+  dbcMapSql,
   dbcCharTitleSql,
   dbcEmotesSql,
   dbcEmotesTextSql,
@@ -113,6 +115,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcChrRacesSql).then(() => {}),
         knex.raw(dbcLockSql).then(() => {}),
         knex.raw(dbcLockTypeSql).then(() => {}),
+        knex.raw(dbcMapSql).then(() => {}),
         knex.raw(dbcCharTitleSql).then(() => {}),
         knex.raw(dbcEmotesSql).then(() => {}),
         knex.raw(dbcEmotesTextSql).then(() => {}),
@@ -323,6 +326,38 @@ ipcMain.on(LOAD_DBC_LOCK_TYPES, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_LOCK_TYPES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_MAPS, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_map");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/Map.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_map", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_MAPS);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_MAPS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_MAPS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_MAPS, rows);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_MAPS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
