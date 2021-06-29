@@ -14,22 +14,10 @@
         <el-card
           shadow="hover"
           class="clickable-card"
-          @click.native="() => navigate('/scaling-stat-distribution')"
+          @click.native="() => navigate('/emote-text')"
         >
-          <p class="summary-title">
-            缩放属性分配<span>Scaling Stat Distribution</span>
-          </p>
-          <p class="summary-content">用于设定传家宝的具体属性分配规则</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/scaling-stat-value')"
-        >
-          <p class="summary-title">缩放属性值<span>Scaling Stat Value</span></p>
-          <p class="summary-content">每个等级的属性具体值</p>
+          <p class="summary-title">表情文本<span>Emote Text</span></p>
+          <p class="summary-content">表情的文本</p>
         </el-card>
       </el-col>
       <el-col :span="6">
@@ -54,8 +42,30 @@
           <p class="summary-content">关联掉落数据</p>
         </el-card>
       </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
+          @click.native="() => navigate('/scaling-stat-distribution')"
+        >
+          <p class="summary-title">
+            缩放属性分配<span>Scaling Stat Distribution</span>
+          </p>
+          <p class="summary-content">用于设定传家宝的具体属性分配规则</p>
+        </el-card>
+      </el-col>
     </el-row>
     <el-row :gutter="16" style="margin-top: 16px">
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
+          @click.native="() => navigate('/scaling-stat-value')"
+        >
+          <p class="summary-title">缩放属性值<span>Scaling Stat Value</span></p>
+          <p class="summary-content">每个等级的属性具体值</p>
+        </el-card>
+      </el-col>
       <el-col :span="6">
         <el-card
           shadow="hover"
@@ -74,16 +84,6 @@
         >
           <p class="summary-title">天赋页<span>Talent Tab</span></p>
           <p class="summary-content">天赋页的相关信息</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/emote-text')"
-        >
-          <p class="summary-title">表情文本<span>Emote Text</span></p>
-          <p class="summary-content">表情的文本</p>
         </el-card>
       </el-col>
     </el-row>
