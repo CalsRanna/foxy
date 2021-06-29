@@ -4,6 +4,7 @@ import Vuex from "vuex";
 import app from "./app";
 import initiator from "./initiator";
 import exporter from "./exporter";
+import charTitleSelector from "./charTitleSelector";
 import creatureTemplate from "./creatureTemplate";
 import creatureTemplateLocale from "./creatureTemplateLocale";
 import creatureTemplateAddon from "./creatureTemplateAddon";
@@ -88,6 +89,7 @@ export default new Vuex.Store({
     app,
     initiator,
     exporter,
+    charTitleSelector,
     creatureTemplate,
     creatureTemplateLocale,
     creatureTemplateAddon,

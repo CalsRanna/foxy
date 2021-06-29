@@ -537,10 +537,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="奖励头衔">
-            <el-input
+            <char-title-selector
               v-model="questTemplate.RewardTitle"
               placeholder="RewardTitle"
-            ></el-input>
+            ></char-title-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -985,6 +985,7 @@ import {
   rewardFactionValueIdTooltip,
   rewardFactionValueIdOverrideTooltip,
 } from "@/locales/quest";
+import { mapState, mapActions } from "vuex";
 import HintLabel from "@/components/HintLabel";
 import QuestTemplateTitleLocalizer from "@/views/Quest/components/QuestTemplateTitleLocalizer";
 import QuestTemplateDetailsLocalizer from "@/views/Quest/components/QuestTemplateDetailsLocalizer";
@@ -999,9 +1000,8 @@ import ItemTemplateSelector from "@/components/ItemTemplateSelector";
 import QuestTemplateSelector from "@/components/QuestTemplateSelector";
 import SpellSelector from "@/components/SpellSelector";
 import FactionSelector from "@/components/FactionSelector";
-
-import { mapState, mapActions } from "vuex";
 import FlagEditor from "@/components/FlagEditor";
+import CharTitleSelector from "@/components/CharTitleSelector.vue";
 
 export default {
   data() {
@@ -1105,6 +1105,7 @@ export default {
     QuestTemplateSelector,
     SpellSelector,
     FactionSelector,
+    CharTitleSelector,
   },
 };
 </script>
