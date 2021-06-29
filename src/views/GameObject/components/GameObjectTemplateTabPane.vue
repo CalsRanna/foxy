@@ -106,6 +106,11 @@
               :placeholder="data.field"
               v-else-if="data.type === 'el-input-number'"
             ></el-input-number>
+            <lock-selector
+              v-model="gameObjectTemplate[data.field]"
+              :placeholder="data.field"
+              v-else-if="data.type === 'lock-selector'"
+            ></lock-selector>
             <spell-selector
               v-model="gameObjectTemplate[data.field]"
               :placeholder="data.field"
@@ -160,6 +165,7 @@
 <script>
 import GameObjectTemplateNameLocalizer from "@/views/GameObject/components/GameObjectTemplateNameLocalizer";
 import GameObjectTemplateCastBarCaptionLocalizer from "@/views/GameObject/components/GameObjectTemplateCastBarCaptionLocalizer";
+import LockSelector from "@/components/LockSelector";
 import SpellSelector from "@/components/SpellSelector";
 import { types, datas } from "@/locales/gameObject";
 import { mapState, mapActions } from "vuex";
@@ -247,6 +253,7 @@ export default {
   components: {
     GameObjectTemplateNameLocalizer,
     GameObjectTemplateCastBarCaptionLocalizer,
+    LockSelector,
     SpellSelector,
   },
 };

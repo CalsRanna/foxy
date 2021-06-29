@@ -56,6 +56,7 @@ import "./background/referenceLootTemplateCard";
 import "./background/scalingStatDistribution";
 import "./background/scalingStatValue";
 import "./background/itemSet";
+import "./background/lockSelector";
 import "./background/talent";
 import "./background/talentTab";
 import "./background/referenceLootTemplate";

@@ -49,6 +49,8 @@ export default {
       "loadDbcItemRandomProperties",
       "loadDbcItemRandomSuffixes",
       "loadDbcItemSets",
+      "loadDbcLocks",
+      "loadDbcLockTypes",
       "loadDbcScalingStatDistributions",
       "loadDbcScalingStatValues",
       "loadDbcSpells",
@@ -99,6 +101,10 @@ export default {
         await this.loadDbcItemRandomSuffixes();
         this.progressText = "加载ItemSet.dbc";
         await this.loadDbcItemSets();
+        this.progressText = "加载Lock.dbc";
+        await this.loadDbcLocks();
+        this.progressText = "加载LockType.dbc";
+        await this.loadDbcLockTypes();
         this.progressText = "加载ScalingStatDistribution.dbc";
         await this.loadDbcScalingStatDistributions();
         this.progressText = "加载ScalingStatValues.dbc";

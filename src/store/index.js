@@ -22,6 +22,7 @@ import itemTemplateLocale from "./itemTemplateLocale";
 import itemTemplateSelector from "./itemTemplateSelector";
 import itemEnchantmentTemplate from "./itemEnchantmentTemplate";
 import itemLootTemplate from "./itemLootTemplate";
+import lockSelector from "./lockSelector";
 import disenchantLootTemplate from "./disenchantLootTemplate";
 import prospectingLootTemplate from "./prospectingLootTemplate";
 import millingLootTemplate from "./millingLootTemplate";
@@ -138,6 +139,7 @@ export default new Vuex.Store({
     scalingStatDistribution,
     scalingStatValue,
     itemSet,
+    lockSelector,
     talent,
     talentTab,
     referenceLootTemplate,
