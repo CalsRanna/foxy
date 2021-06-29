@@ -31,7 +31,7 @@
               ></el-input-number>
             </el-col>
             <el-col :span="8">
-              <el-input v-model="Name_Lang_zhCN" placeholder="名称"></el-input>
+              <el-input v-model="Name_Lang_zhCN" placeholder="类型"></el-input>
             </el-col>
             <el-col :span="8">
               <el-button
@@ -69,7 +69,7 @@
         @row-dblclick="(row) => store(row)"
       >
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
-        <el-table-column label="名称">
+        <el-table-column label="类型">
           <div slot-scope="scope">
             <el-tag v-if="scope.row.Name_1" style="margin-right: 8px">
               {{ scope.row.Name_1 }}
