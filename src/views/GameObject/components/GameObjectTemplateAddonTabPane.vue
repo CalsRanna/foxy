@@ -7,7 +7,7 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="ID">
+          <el-form-item label="编号">
             <el-input-number
               v-model="gameObjectTemplateAddon.entry"
               controls-position="right"
@@ -40,7 +40,7 @@
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="mingold">
+          <el-form-item label="最小金钱">
             <el-input-number
               v-model="gameObjectTemplateAddon.mingold"
               controls-position="right"
@@ -49,7 +49,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="maxgold">
+          <el-form-item label="最大金钱">
             <el-input-number
               v-model="gameObjectTemplateAddon.maxgold"
               controls-position="right"
