@@ -1,3 +1,22 @@
+## [0.1.9](https://github.com/CalsRanna/foxy/compare/0.1.8...0.1.9) (2021-06-29)
+
+
+### Bug Fixes
+
+* **flag editor:** fix table display in dialog when has long content ([1df210b](https://github.com/CalsRanna/foxy/commit/1df210b61ee6387d8f6074644440a4e13e3e2642))
+* **item display info selector:** fix inventory icon input type to text instead of number ([4663531](https://github.com/CalsRanna/foxy/commit/46635310f619b03f98f820a9672928edc7143e1b))
+* **localizer:** fix overflow and max height of table ([425aa0c](https://github.com/CalsRanna/foxy/commit/425aa0cd88835f009f284b89b516aed909adc243))
+* **selector:** fix overflow and max height of table ([55cf71d](https://github.com/CalsRanna/foxy/commit/55cf71d43cb10bf45ca31595eb0df7e38f98d455))
+
+
+### Features
+
+* **faction selector:** add faction selector ([8f58c83](https://github.com/CalsRanna/foxy/commit/8f58c83839160257819e29d06ae5454b2e651583))
+* **localizer:** split fields into single localizer ([9c91241](https://github.com/CalsRanna/foxy/commit/9c91241d805c91ad1aee3bf6f5d1e4ef29d0e144))
+* **lock:** build lock selector ([de53756](https://github.com/CalsRanna/foxy/commit/de5375615b3dd075fc50661e92f36d1c573df104))
+
+
+
 ## [0.1.8](https://github.com/CalsRanna/foxy/compare/0.1.7...0.1.8) (2021-06-01)
 
 

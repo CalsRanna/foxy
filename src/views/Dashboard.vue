@@ -168,7 +168,7 @@
             >
               Github
             </span>
-            上面提交 issue ，如果有什么建议，可以前往
+            上面提交 issue ，也可以前往
             <span
               style="color: #409eff; cursor: pointer"
               @click="() => openBrowser('https://t.me/foxy_editor')"

@@ -2,6 +2,75 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
+        <h2>0.1.9<small>2021-06-29</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>flag editor:</strong> fix table display in dialog when has
+          long content
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/1df210b61ee6387d8f6074644440a4e13e3e2642"
+            text="(1df210b)"
+          >
+          </clickable-span>
+        </li>
+        <li>
+          <strong>item display info selector:</strong> fix inventory icon input
+          type to text instead of number
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/46635310f619b03f98f820a9672928edc7143e1b"
+            text="(4663531)"
+          >
+          </clickable-span>
+        </li>
+        <li>
+          <strong>localizer:</strong> fix overflow and max height of table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/425aa0cd88835f009f284b89b516aed909adc243"
+            text="(425aa0c)"
+          >
+          </clickable-span>
+        </li>
+        <li>
+          <strong>selector:</strong> fix overflow and max height of table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/55cf71d43cb10bf45ca31595eb0df7e38f98d455"
+            text="(55cf71d)"
+          >
+          </clickable-span>
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>faction selector:</strong> add faction selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/8f58c83839160257819e29d06ae5454b2e651583"
+            text="(8f58c83)"
+          >
+          </clickable-span>
+        </li>
+        <li>
+          <strong>localizer:</strong> split fields into single localizer
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/9c91241d805c91ad1aee3bf6f5d1e4ef29d0e144"
+            text="(9c91241)"
+          >
+          </clickable-span>
+        </li>
+        <li>
+          <strong>lock:</strong> build lock selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/de5375615b3dd075fc50661e92f36d1c573df104"
+            text="(de53756)"
+          >
+          </clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.1.8 <small>2021-06-01</small></h2>
       </div>
       <h3>Bug Fixes</h3>
