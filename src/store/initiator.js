@@ -18,6 +18,8 @@ import {
   LOAD_DBC_ITEM_RANDOM_PROPERTITIES,
   LOAD_DBC_ITEM_RANDOM_SUFFIXES,
   LOAD_DBC_ITEM_SETS,
+  LOAD_DBC_LOCKS,
+  LOAD_DBC_LOCK_TYPES,
   LOAD_DBC_SCALING_STAT_DISTRIBUTIONS,
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
@@ -49,6 +51,7 @@ export default {
     initializeSucceed: true,
     chrClasses: [],
     chrRaces: [],
+    lockTypes: [],
     spellMechanics: [],
   }),
   actions: {
@@ -250,6 +253,29 @@ export default {
           resolve();
         });
         ipcRenderer.on(`${LOAD_DBC_ITEM_SETS}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    loadDbcLocks() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_LOCKS);
+        ipcRenderer.on(LOAD_DBC_LOCKS, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_LOCKS}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    loadDbcLockTypes({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_LOCK_TYPES);
+        ipcRenderer.on(LOAD_DBC_LOCK_TYPES, (event, response) => {
+          commit(LOAD_DBC_LOCK_TYPES, response);
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_LOCK_TYPES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -474,6 +500,9 @@ export default {
     },
     [LOAD_DBC_CHR_RACES](state, chrRaces) {
       state.chrRaces = chrRaces;
+    },
+    [LOAD_DBC_LOCK_TYPES](state, lockTypes) {
+      state.lockTypes = lockTypes;
     },
     [LOAD_DBC_SPELL_MECHANICS](state, spellMechanics) {
       state.spellMechanics = spellMechanics;
