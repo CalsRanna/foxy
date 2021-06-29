@@ -27,6 +27,7 @@ import lockSelector from "./lockSelector";
 import disenchantLootTemplate from "./disenchantLootTemplate";
 import prospectingLootTemplate from "./prospectingLootTemplate";
 import millingLootTemplate from "./millingLootTemplate";
+import gameObjectDisplayInfoSelector from "./gameObjectDisplayInfoSelector";
 import gameObjectTemplate from "./gameObjectTemplate";
 import gameObjectTemplateLocale from "./gameObjectTemplateLocale";
 import gameObjectTemplateAddon from "./gameObjectTemplateAddon";
@@ -115,6 +116,7 @@ export default new Vuex.Store({
     disenchantLootTemplate,
     prospectingLootTemplate,
     millingLootTemplate,
+    gameObjectDisplayInfoSelector,
     gameObjectTemplate,
     gameObjectTemplateLocale,
     gameObjectTemplateAddon,

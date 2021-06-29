@@ -29,6 +29,7 @@ import "./background/itemLootTemplate";
 import "./background/disenchantLootTemplate";
 import "./background/prospectingLootTemplate";
 import "./background/millingLootTemplate";
+import "./background/gameObjectDisplayInfoSelector";
 import "./background/gameObjectTemplate";
 import "./background/gameObjectTemplateLocale";
 import "./background/gameObjectTemplateAddon";
