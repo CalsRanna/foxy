@@ -28,6 +28,7 @@ import {
   LOAD_DBC_CHR_RACES,
   LOAD_DBC_LOCKS,
   LOAD_DBC_LOCK_TYPES,
+  LOAD_DBC_CHAR_TITLES,
   TEST_MYSQL_CONNECTION,
   GLOBAL_MESSAGE_BOX,
 } from "../constants";
@@ -60,6 +61,7 @@ const {
   dbcChrRacesSql,
   dbcLockSql,
   dbcLockTypeSql,
+  dbcCharTitleSql,
 } = require("../libs/mysql");
 
 ipcMain.on(LOAD_MYSQL_CONFIG, (event, payload) => {
@@ -105,6 +107,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcChrRacesSql).then(() => {}),
         knex.raw(dbcLockSql).then(() => {}),
         knex.raw(dbcLockTypeSql).then(() => {}),
+        knex.raw(dbcCharTitleSql).then(() => {}),
       ])
         .then(() => {
           event.reply(INITIALIZE_MYSQL_CONNECTION);
@@ -116,6 +119,38 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
     })
     .catch((error) => {
       event.reply(`${INITIALIZE_MYSQL_CONNECTION}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_CHAR_TITLES, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_char_titles");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/CharTitles.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_char_titles", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_CHAR_TITLES);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_CHAR_TITLES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_CHAR_TITLES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_CHAR_TITLES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_CHAR_TITLES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

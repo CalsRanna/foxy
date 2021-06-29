@@ -6,6 +6,7 @@ import {
   LOAD_MYSQL_CONFIG,
   LOAD_DBC_CONFIG,
   INITIALIZE_MYSQL_CONNECTION,
+  LOAD_DBC_CHAR_TITLES,
   LOAD_DBC_CHR_CLASSES,
   LOAD_DBC_CHR_RACES,
   LOAD_DBC_CREATURE_DISPLAY_INFOS,
@@ -100,6 +101,17 @@ export default {
             reject(error);
           }
         );
+      });
+    },
+    loadDbcCharTitles() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_CHAR_TITLES);
+        ipcRenderer.on(LOAD_DBC_CHAR_TITLES, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_CHAR_TITLES}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     loadDbcChrClasses({ commit }) {

@@ -37,6 +37,7 @@ export default {
       "loadMysqlConfig",
       "loadDbcConfig",
       "initializeMysqlConnection",
+      "loadDbcCharTitles",
       "loadDbcChrClasses",
       "loadDbcChrRaces",
       "loadDbcCreatureDisplayInfos",
@@ -77,6 +78,8 @@ export default {
         await this.loadDbcConfig();
         this.progressText = "初始化数据库连接";
         await this.initializeMysqlConnection();
+        this.progressText = "加载CharTitles.dbc";
+        await this.loadDbcCharTitles();
         this.progressText = "加载ChrClasses.dbc";
         await this.loadDbcChrClasses();
         this.progressText = "加载ChrRaces.dbc";
