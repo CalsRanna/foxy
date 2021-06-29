@@ -166,6 +166,18 @@ const routes = [
     component: () =>
       import("@/views/ReferenceLoot/ReferenceLootTemplateDetail"),
   },
+  {
+    path: "/emote-text",
+    component: () => import("@/views/EmoteText/EmoteTextTable"),
+  },
+  {
+    path: "/emote-text/create",
+    component: () => import("@/views/EmoteText/EmoteTextDetail"),
+  },
+  {
+    path: "/emote-text/:id",
+    component: () => import("@/views/EmoteText/EmoteTextDetail"),
+  },
 ];
 
 const router = new VueRouter({

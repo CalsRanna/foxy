@@ -72,8 +72,18 @@
           class="clickable-card"
           @click.native="() => navigate('/talent-tab')"
         >
-          <p class="summary-title">天赋页<span>Talent</span></p>
+          <p class="summary-title">天赋页<span>Talent Tab</span></p>
           <p class="summary-content">天赋页的相关信息</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
+          @click.native="() => navigate('/emote-text')"
+        >
+          <p class="summary-title">表情文本<span>Emote Text</span></p>
+          <p class="summary-content">表情的文本</p>
         </el-card>
       </el-col>
     </el-row>

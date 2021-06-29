@@ -183,5 +183,3 @@ export default {
   components: { EmoteSelector },
 };
 </script>
-
-Emo EmoteSelector EmoteSelectorteSelector
