@@ -29,6 +29,7 @@ import {
   LOAD_DBC_LOCKS,
   LOAD_DBC_LOCK_TYPES,
   LOAD_DBC_CHAR_TITLES,
+  LOAD_DBC_EMOTES,
   TEST_MYSQL_CONNECTION,
   GLOBAL_MESSAGE_BOX,
 } from "../constants";
@@ -62,6 +63,7 @@ const {
   dbcLockSql,
   dbcLockTypeSql,
   dbcCharTitleSql,
+  dbcEmotesSql,
 } = require("../libs/mysql");
 
 ipcMain.on(LOAD_MYSQL_CONFIG, (event, payload) => {
@@ -108,6 +110,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcLockSql).then(() => {}),
         knex.raw(dbcLockTypeSql).then(() => {}),
         knex.raw(dbcCharTitleSql).then(() => {}),
+        knex.raw(dbcEmotesSql).then(() => {}),
       ])
         .then(() => {
           event.reply(INITIALIZE_MYSQL_CONNECTION);
@@ -147,6 +150,38 @@ ipcMain.on(LOAD_DBC_CHAR_TITLES, (event) => {
           });
       } else {
         event.reply(LOAD_DBC_CHAR_TITLES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_CHAR_TITLES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_EMOTES, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_emotes");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/Emotes.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_emotes", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_EMOTES);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_EMOTES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_EMOTES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_EMOTES);
       }
     })
     .catch((error) => {
