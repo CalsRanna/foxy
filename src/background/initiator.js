@@ -31,6 +31,7 @@ import {
   LOAD_DBC_CHAR_TITLES,
   LOAD_DBC_EMOTES,
   LOAD_DBC_EMOTES_TEXTS,
+  LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS,
   TEST_MYSQL_CONNECTION,
   GLOBAL_MESSAGE_BOX,
 } from "../constants";
@@ -66,6 +67,7 @@ const {
   dbcCharTitleSql,
   dbcEmotesSql,
   dbcEmotesTextSql,
+  dbcGameObjectDisplayInfoSql,
 } = require("../libs/mysql");
 
 ipcMain.on(LOAD_MYSQL_CONFIG, (event, payload) => {
@@ -114,6 +116,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcCharTitleSql).then(() => {}),
         knex.raw(dbcEmotesSql).then(() => {}),
         knex.raw(dbcEmotesTextSql).then(() => {}),
+        knex.raw(dbcGameObjectDisplayInfoSql).then(() => {}),
       ])
         .then(() => {
           event.reply(INITIALIZE_MYSQL_CONNECTION);
@@ -217,6 +220,41 @@ ipcMain.on(LOAD_DBC_EMOTES_TEXTS, (event) => {
           });
       } else {
         event.reply(LOAD_DBC_EMOTES_TEXTS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_CHAR_TITLES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_game_object_display_info");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/GameObjectDisplayInfo.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_game_object_display_info", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS);
+              })
+              .catch((error) => {
+                event.reply(
+                  `${LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS}_REJECT`,
+                  error
+                );
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS);
       }
     })
     .catch((error) => {

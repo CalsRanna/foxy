@@ -60,11 +60,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="外观">
-            <el-input-number
+            <game-object-display-info-selector
               v-model="gameObjectTemplate.displayId"
-              controls-position="right"
               placeholder="displayId"
-            ></el-input-number>
+            ></game-object-display-info-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -163,12 +162,13 @@
 </template>
 
 <script>
-import GameObjectTemplateNameLocalizer from "@/views/GameObject/components/GameObjectTemplateNameLocalizer";
+import { mapState, mapActions } from "vuex";
+import { types, datas } from "@/locales/gameObject";
+import GameObjectDisplayInfoSelector from "@/components/GameObjectDisplayInfoSelector.vue";
 import GameObjectTemplateCastBarCaptionLocalizer from "@/views/GameObject/components/GameObjectTemplateCastBarCaptionLocalizer";
+import GameObjectTemplateNameLocalizer from "@/views/GameObject/components/GameObjectTemplateNameLocalizer";
 import LockSelector from "@/components/LockSelector";
 import SpellSelector from "@/components/SpellSelector";
-import { types, datas } from "@/locales/gameObject";
-import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -251,8 +251,9 @@ export default {
     this.init();
   },
   components: {
-    GameObjectTemplateNameLocalizer,
+    GameObjectDisplayInfoSelector,
     GameObjectTemplateCastBarCaptionLocalizer,
+    GameObjectTemplateNameLocalizer,
     LockSelector,
     SpellSelector,
   },

@@ -16,6 +16,7 @@ import {
   LOAD_DBC_EMOTES_TEXTS,
   LOAD_DBC_FACTIONS,
   LOAD_DBC_FACTION_TEMPLATES,
+  LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS,
   LOAD_DBC_ITEMS,
   LOAD_DBC_ITEM_DISPLAY_INFOS,
   LOAD_DBC_ITEM_RANDOM_PROPERTITIES,
@@ -223,6 +224,20 @@ export default {
         });
         ipcRenderer.on(
           `${LOAD_DBC_FACTION_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    loadDbcGameObjectDisplayInfos() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS);
+        ipcRenderer.on(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS}_REJECT`,
           (event, error) => {
             reject(error);
           }
