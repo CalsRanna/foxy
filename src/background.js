@@ -15,6 +15,7 @@ import "./background/creatureOnKillReputation";
 import "./background/creatureEquipTemplate";
 import "./background/creatureQuestItem";
 import "./background/emoteSelector";
+import "./background/emoteText";
 import "./background/npcVendor";
 import "./background/npcTrainer";
 import "./background/creatureLootTemplate";
