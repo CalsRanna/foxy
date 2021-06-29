@@ -168,7 +168,14 @@
             >
               Github
             </span>
-            上面提交 issue 。
+            上面提交 issue ，如果有什么建议，可以前往
+            <span
+              style="color: #409eff; cursor: pointer"
+              @click="() => openBrowser('https://t.me/foxy_editor')"
+            >
+              Telegram
+            </span>
+            讨论。
           </p>
           <p style="text-indent: 2em">
             如果你希望得到最新版本的Foxy，请访问
@@ -190,7 +197,7 @@
               </span>
               <span slot="content">提取码：{{ softwareVersion.code }}</span>
             </el-tooltip>
-            下载。你也可以
+            下载，你也可以
             <span
               style="color: #409eff; cursor: pointer"
               @click="() => openBrowser('https://github.com/CalsRanna/foxy')"

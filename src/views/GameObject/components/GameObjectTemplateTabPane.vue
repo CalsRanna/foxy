@@ -7,7 +7,7 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="ID">
+          <el-form-item label="编号">
             <el-input-number
               v-model="gameObjectTemplate.entry"
               controls-position="right"
@@ -44,10 +44,18 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="类型">
-            <el-input
+            <el-select
               v-model="gameObjectTemplate.type"
+              filterable
               placeholder="type"
-            ></el-input>
+            >
+              <el-option
+                v-for="(type, index) in types"
+                :value="index"
+                :label="type"
+                :key="`type-${index}`"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -78,197 +86,35 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card style="margin-top: 16px" v-if="matchedDatas.length > 0">
       <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="Data0">
+        <el-col
+          :span="6"
+          v-for="(data, index) in matchedDatas"
+          :key="`el-col-data-${index}`"
+        >
+          <el-form-item :label="data.label">
+            <el-switch
+              v-model="gameObjectTemplate[data.field]"
+              :active-value="1"
+              :inactive-value="0"
+              v-if="data.type === 'el-switch'"
+            ></el-switch>
+            <el-input-number
+              v-model="gameObjectTemplate[data.field]"
+              controls-position="right"
+              :placeholder="data.field"
+              v-else-if="data.type === 'el-input-number'"
+            ></el-input-number>
+            <spell-selector
+              v-model="gameObjectTemplate[data.field]"
+              :placeholder="data.field"
+              v-else-if="data.type === 'spell-selector'"
+            ></spell-selector>
             <el-input
-              v-model="gameObjectTemplate.Data0"
-              placeholder="Data0"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data1">
-            <el-input
-              v-model="gameObjectTemplate.Data1"
-              placeholder="Data1"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data2">
-            <el-input
-              v-model="gameObjectTemplate.Data2"
-              placeholder="Data2"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data3">
-            <el-input
-              v-model="gameObjectTemplate.Data3"
-              placeholder="Data3"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data4">
-            <el-input
-              v-model="gameObjectTemplate.Data4"
-              placeholder="Data4"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data5">
-            <el-input
-              v-model="gameObjectTemplate.Data5"
-              placeholder="Data5"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data6">
-            <el-input
-              v-model="gameObjectTemplate.Data6"
-              placeholder="Data6"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data7">
-            <el-input
-              v-model="gameObjectTemplate.Data7"
-              placeholder="Data7"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data8">
-            <el-input
-              v-model="gameObjectTemplate.Data8"
-              placeholder="Data8"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data9">
-            <el-input
-              v-model="gameObjectTemplate.Data9"
-              placeholder="Data9"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data10">
-            <el-input
-              v-model="gameObjectTemplate.Data10"
-              placeholder="Data10"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data11">
-            <el-input
-              v-model="gameObjectTemplate.Data11"
-              placeholder="Data11"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data12">
-            <el-input
-              v-model="gameObjectTemplate.Data12"
-              placeholder="Data12"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data13">
-            <el-input
-              v-model="gameObjectTemplate.Data13"
-              placeholder="Data13"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data14">
-            <el-input
-              v-model="gameObjectTemplate.Data14"
-              placeholder="Data14"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data15">
-            <el-input
-              v-model="gameObjectTemplate.Data15"
-              placeholder="Data15"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data16">
-            <el-input
-              v-model="gameObjectTemplate.Data16"
-              placeholder="Data16"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data17">
-            <el-input
-              v-model="gameObjectTemplate.Data17"
-              placeholder="Data17"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data18">
-            <el-input
-              v-model="gameObjectTemplate.Data18"
-              placeholder="Data18"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data19">
-            <el-input
-              v-model="gameObjectTemplate.Data19"
-              placeholder="Data19"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data20">
-            <el-input
-              v-model="gameObjectTemplate.Data20"
-              placeholder="Data20"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data21">
-            <el-input
-              v-model="gameObjectTemplate.Data21"
-              placeholder="Data21"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data22">
-            <el-input
-              v-model="gameObjectTemplate.Data22"
-              placeholder="Data22"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Data23">
-            <el-input
-              v-model="gameObjectTemplate.Data23"
-              placeholder="Data23"
+              v-model="gameObjectTemplate[data.field]"
+              :placeholder="data.field"
+              v-else
             ></el-input>
           </el-form-item>
         </el-col>
@@ -314,12 +160,15 @@
 <script>
 import GameObjectTemplateNameLocalizer from "@/views/GameObject/components/GameObjectTemplateNameLocalizer";
 import GameObjectTemplateCastBarCaptionLocalizer from "@/views/GameObject/components/GameObjectTemplateCastBarCaptionLocalizer";
-
+import SpellSelector from "@/components/SpellSelector";
+import { types, datas } from "@/locales/gameObject";
 import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
     return {
+      types: types,
+      datas: datas,
       initing: false,
       loading: false,
       creating: false,
@@ -328,6 +177,11 @@ export default {
   computed: {
     ...mapState("gameObjectTemplate", ["gameObjectTemplate"]),
     ...mapState("gameObjectTemplateLocale", ["gameObjectTemplateLocales"]),
+    matchedDatas() {
+      return this.gameObjectTemplate.type >= 0
+        ? this.datas[this.gameObjectTemplate.type]
+        : this.datas[0];
+    },
     credential() {
       return {
         entry: this.$route.params.id,
@@ -393,6 +247,7 @@ export default {
   components: {
     GameObjectTemplateNameLocalizer,
     GameObjectTemplateCastBarCaptionLocalizer,
+    SpellSelector,
   },
 };
 </script>
