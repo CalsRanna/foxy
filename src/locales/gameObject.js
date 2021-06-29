@@ -1,7 +1,7 @@
 const types = [
   "门",
   "按钮",
-  "任务发放",
+  "任务发放者",
   "箱子",
   "BINDER",
   "通用",
@@ -65,7 +65,7 @@ const datas = [
   ], // GAMEOBJECT_TYPE_BUTTON
   [
     { label: "锁", field: "Data0", type: "lock-selector" },
-    { label: "questList", field: "Data1", type: "el-input" },
+    { label: "任务列表", field: "Data1", type: "el-input" },
     {
       label: "页面材料",
       field: "Data2",
@@ -184,7 +184,7 @@ const datas = [
     },
     { label: "骑乘可用", field: "Data3", type: "el-input" },
     { label: "条件", field: "Data4", type: "el-input" },
-    { label: "骑乘时不可用", field: "Data5", type: "el-input" },
+    { label: "骑乘不可用", field: "Data5", type: "el-input" },
   ], // GAMEOBJECT_TYPE_TEXT
   [
     { label: "锁", field: "Data0", type: "lock-selector" },
@@ -304,7 +304,7 @@ const datas = [
     { label: "GiganticAOI", field: "Data4", type: "el-input" },
     { label: "条件", field: "Data5", type: "el-input" },
     { label: "playerCast", field: "Data6", type: "el-input" },
-    { label: "骑乘时不可用", field: "Data7", type: "el-switch" },
+    { label: "骑乘不可用", field: "Data7", type: "el-switch" },
   ], // GAMEOBJECT_TYPE_SPELLCASTER
   [
     { label: "最低等级", field: "Data0", type: "el-input-number" },
@@ -328,7 +328,11 @@ const datas = [
   ], // GAMEOBJECT_TYPE_TRANSPORT
   [
     { label: "半径", field: "Data0", type: "el-input-number" },
-    { label: "物品掉落", field: "Data1", type: "item-loot-template-selector" },
+    {
+      label: "物品掉落",
+      field: "Data1",
+      type: "game-object-loot-template-selector",
+    },
     { label: "最少补货", field: "Data2", type: "el-input-number" },
     { label: "最多补货", field: "Data3", type: "el-input-number" },
     { label: "锁", field: "Data4", type: "el-input" },
