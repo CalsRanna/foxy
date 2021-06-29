@@ -36,34 +36,34 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="表情">
-            <el-input
+            <emote-selector
               v-model="questOfferReward.Emote1"
               placeholder="Emote1"
-            ></el-input>
+            ></emote-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="表情">
-            <el-input
+            <emote-selector
               v-model="questOfferReward.Emote2"
               placeholder="Emote2"
-            ></el-input>
+            ></emote-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="表情">
-            <el-input
+            <emote-selector
               v-model="questOfferReward.Emote3"
               placeholder="Emote3"
-            ></el-input>
+            ></emote-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="表情">
-            <el-input
+            <emote-selector
               v-model="questOfferReward.Emote4"
               placeholder="Emote4"
-            ></el-input>
+            ></emote-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -115,6 +115,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import EmoteSelector from "@/components/EmoteSelector.vue";
 
 export default {
   data() {
@@ -179,5 +180,8 @@ export default {
   mounted() {
     this.init();
   },
+  components: { EmoteSelector },
 };
 </script>
+
+Emo EmoteSelector EmoteSelectorteSelector

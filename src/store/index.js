@@ -39,6 +39,7 @@ import questOfferReward from "./questOfferReward";
 import questRequestItems from "./questRequestItems";
 import creatureQuestStarter from "./creatureQuestStarter";
 import creatureQuestEnder from "./creatureQuestEnder";
+import emoteSelector from "./emoteSelector";
 import gameObjectQuestStarter from "./gameObjectQuestStarter";
 import gameObjectQuestEnder from "./gameObjectQuestEnder";
 import gossipMenu from "./gossipMenu";
@@ -98,6 +99,7 @@ export default new Vuex.Store({
     creatureOnKillReputation,
     creatureEquipTemplate,
     creatureQuestItem,
+    emoteSelector,
     npcVendor,
     npcTrainer,
     creatureLootTemplate,

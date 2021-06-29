@@ -12,6 +12,7 @@ import {
   LOAD_DBC_CREATURE_DISPLAY_INFOS,
   LOAD_DBC_CREATURE_MODEL_DATAS,
   LOAD_DBC_CREATURE_SPELL_DATAS,
+  LOAD_DBC_EMOTES,
   LOAD_DBC_FACTIONS,
   LOAD_DBC_FACTION_TEMPLATES,
   LOAD_DBC_ITEMS,
@@ -178,6 +179,17 @@ export default {
             reject(error);
           }
         );
+      });
+    },
+    loadDbcEmotes() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_EMOTES);
+        ipcRenderer.on(LOAD_DBC_EMOTES, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_EMOTES}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     loadDbcFactions() {

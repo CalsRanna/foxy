@@ -43,6 +43,7 @@ export default {
       "loadDbcCreatureDisplayInfos",
       "loadDbcCreatureModelDatas",
       "loadDbcCreatureSpellDatas",
+      "loadDbcEmotes",
       "loadDbcFactions",
       "loadDbcFactionTemplates",
       "loadDbcItems",
@@ -90,6 +91,8 @@ export default {
         await this.loadDbcCreatureModelDatas();
         this.progressText = "加载CreatureSpellData.dbc";
         await this.loadDbcCreatureSpellDatas();
+        this.progressText = "加载Emotes.dbc";
+        await this.loadDbcEmotes();
         this.progressText = "加载Faction.dbc";
         await this.loadDbcFactions();
         this.progressText = "加载FactionTemplate.dbc";
