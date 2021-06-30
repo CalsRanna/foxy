@@ -46,6 +46,18 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          @click.native="() => navigate('/quest-info')"
+        >
+          <p class="summary-title">任务信息<span>Quest Info</span></p>
+          <p class="summary-content">任务的分类信息</p>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row :gutter="16" style="margin-top: 16px">
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/reference-loot')"
         >
           <p class="summary-title">
@@ -54,8 +66,6 @@
           <p class="summary-content">关联掉落数据</p>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"
@@ -88,6 +98,8 @@
           <p class="summary-content">天赋页面的技能</p>
         </el-card>
       </el-col>
+    </el-row>
+    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"

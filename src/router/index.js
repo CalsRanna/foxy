@@ -193,6 +193,18 @@ const routes = [
     component: () =>
       import("@/views/QuestFactionReward/QuestFactionRewardDetail"),
   },
+  {
+    path: "/quest-info",
+    component: () => import("@/views/QuestInfo/QuestInfoTable"),
+  },
+  {
+    path: "/quest-info/create",
+    component: () => import("@/views/QuestInfo/QuestInfoDetail"),
+  },
+  {
+    path: "/quest-info/:id",
+    component: () => import("@/views/QuestInfo/QuestInfoDetail"),
+  },
 ];
 
 const router = new VueRouter({
