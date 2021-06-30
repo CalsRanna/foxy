@@ -361,11 +361,10 @@ export default {
         );
       });
     },
-    loadDbcQuestInfos({ commit }) {
+    loadDbcQuestInfos() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_QUEST_INFOS);
-        ipcRenderer.on(LOAD_DBC_QUEST_INFOS, (event, response) => {
-          commit(LOAD_DBC_QUEST_INFOS, response);
+        ipcRenderer.on(LOAD_DBC_QUEST_INFOS, () => {
           resolve();
         });
         ipcRenderer.on(`${LOAD_DBC_QUEST_INFOS}_REJECT`, (event, error) => {
