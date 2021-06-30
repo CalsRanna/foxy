@@ -6,6 +6,7 @@ import {
   LOAD_MYSQL_CONFIG,
   LOAD_DBC_CONFIG,
   INITIALIZE_MYSQL_CONNECTION,
+  LOAD_DBC_AREA_TABLES,
   LOAD_DBC_CHAR_TITLES,
   LOAD_DBC_CHR_CLASSES,
   LOAD_DBC_CHR_RACES,
@@ -27,6 +28,7 @@ import {
   LOAD_DBC_MAPS,
   LOAD_DBC_QUEST_FACTION_REWARDS,
   LOAD_DBC_QUEST_INFOS,
+  LOAD_DBC_QUEST_SORTS,
   LOAD_DBC_SCALING_STAT_DISTRIBUTIONS,
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
@@ -108,6 +110,17 @@ export default {
             reject(error);
           }
         );
+      });
+    },
+    loadDbcAreaTables() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_AREA_TABLES);
+        ipcRenderer.on(LOAD_DBC_AREA_TABLES, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_AREA_TABLES}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     loadDbcCharTitles() {
@@ -368,6 +381,17 @@ export default {
           resolve();
         });
         ipcRenderer.on(`${LOAD_DBC_QUEST_INFOS}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    loadDbcQuestSorts() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_QUEST_SORTS);
+        ipcRenderer.on(LOAD_DBC_QUEST_SORTS, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_QUEST_SORTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });

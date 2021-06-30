@@ -37,6 +37,7 @@ export default {
       "loadMysqlConfig",
       "loadDbcConfig",
       "initializeMysqlConnection",
+      "loadDbcAreaTables",
       "loadDbcCharTitles",
       "loadDbcChrClasses",
       "loadDbcChrRaces",
@@ -58,6 +59,7 @@ export default {
       "loadDbcMaps",
       "loadDbcQuestFactionRewards",
       "loadDbcQuestInfos",
+      "loadDbcQuestSorts",
       "loadDbcScalingStatDistributions",
       "loadDbcScalingStatValues",
       "loadDbcSpells",
@@ -84,6 +86,8 @@ export default {
         await this.loadDbcConfig();
         this.progressText = "初始化数据库连接";
         await this.initializeMysqlConnection();
+        this.progressText = "加载AreaTable.dbc";
+        await this.loadDbcAreaTables();
         this.progressText = "加载CharTitles.dbc";
         await this.loadDbcCharTitles();
         this.progressText = "加载ChrClasses.dbc";
@@ -126,6 +130,8 @@ export default {
         await this.loadDbcQuestFactionRewards();
         this.progressText = "加载QuestInfo.dbc";
         await this.loadDbcQuestInfos();
+        this.progressText = "加载QuestSort.dbc";
+        await this.loadDbcQuestSorts();
         this.progressText = "加载ScalingStatDistribution.dbc";
         await this.loadDbcScalingStatDistributions();
         this.progressText = "加载ScalingStatValues.dbc";

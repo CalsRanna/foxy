@@ -65,10 +65,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="任务顺序">
-            <el-input
+            <area-table-or-quest-sort-selector
               v-model="questTemplate.QuestSortID"
               placeholder="QuestSortID"
-            ></el-input>
+            ></area-table-or-quest-sort-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1034,6 +1034,7 @@ import FlagEditor from "@/components/FlagEditor";
 import CharTitleSelector from "@/components/CharTitleSelector.vue";
 import MapSelector from "@/components/MapSelector.vue";
 import QuestInfoSelector from "@/components/QuestInfoSelector.vue";
+import AreaTableOrQuestSortSelector from "@/components/AreaTableOrQuestSortSelector.vue";
 
 export default {
   data() {
@@ -1165,6 +1166,7 @@ export default {
     CharTitleSelector,
     MapSelector,
     QuestInfoSelector,
+    AreaTableOrQuestSortSelector,
   },
 };
 </script>

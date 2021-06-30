@@ -5,6 +5,7 @@ import {
   LOAD_MYSQL_CONFIG,
   LOAD_DBC_CONFIG,
   INITIALIZE_MYSQL_CONNECTION,
+  LOAD_DBC_AREA_TABLES,
   LOAD_DBC_CHAR_TITLES,
   LOAD_DBC_CHR_CLASSES,
   LOAD_DBC_CHR_RACES,
@@ -26,6 +27,7 @@ import {
   LOAD_DBC_MAPS,
   LOAD_DBC_QUEST_FACTION_REWARDS,
   LOAD_DBC_QUEST_INFOS,
+  LOAD_DBC_QUEST_SORTS,
   LOAD_DBC_SCALING_STAT_DISTRIBUTIONS,
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
@@ -42,6 +44,7 @@ import {
 const DBC = require("warcrafty");
 const {
   dbcDatabaseSql,
+  dbcAreaTableSql,
   dbcCharTitleSql,
   dbcChrClassesSql,
   dbcChrRacesSql,
@@ -62,6 +65,7 @@ const {
   dbcLockTypeSql,
   dbcMapSql,
   dbcQuestInfoSql,
+  dbcQuestSortSql,
   dbcQuestFactionRewardSql,
   dbcScalingStatDistributionSql,
   dbcScalingStatValuesSql,
@@ -94,6 +98,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
     .raw(dbcDatabaseSql)
     .then(() => {
       Promise.all([
+        knex.raw(dbcAreaTableSql).then(() => {}),
         knex.raw(dbcCharTitleSql).then(() => {}),
         knex.raw(dbcChrClassesSql).then(() => {}),
         knex.raw(dbcChrRacesSql).then(() => {}),
@@ -108,6 +113,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcLockTypeSql).then(() => {}),
         knex.raw(dbcMapSql).then(() => {}),
         knex.raw(dbcQuestInfoSql).then(() => {}),
+        knex.raw(dbcQuestSortSql).then(() => {}),
         knex.raw(dbcQuestFactionRewardSql).then(() => {}),
         knex.raw(dbcSpellDurationSql).then(() => {}),
         knex.raw(dbcScalingStatDistributionSql).then(() => {}),
@@ -137,6 +143,38 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
     })
     .catch((error) => {
       event.reply(`${INITIALIZE_MYSQL_CONNECTION}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_AREA_TABLES, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_area_table");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/AreaTable.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_area_table", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_AREA_TABLES);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_AREA_TABLES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_AREA_TABLES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_AREA_TABLES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_AREA_TABLES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
@@ -827,6 +865,38 @@ ipcMain.on(LOAD_DBC_QUEST_INFOS, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_QUEST_INFOS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_QUEST_SORTS, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_quest_sort");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/QuestSort.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_quest_sort", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_QUEST_SORTS);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_QUEST_SORTS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_QUEST_SORTS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_QUEST_SORTS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_QUEST_SORTS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
