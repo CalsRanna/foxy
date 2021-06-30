@@ -25,6 +25,7 @@ import {
   LOAD_DBC_LOCK_TYPES,
   LOAD_DBC_MAPS,
   LOAD_DBC_QUEST_FACTION_REWARDS,
+  LOAD_DBC_QUEST_INFOS,
   LOAD_DBC_SCALING_STAT_DISTRIBUTIONS,
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
@@ -60,6 +61,7 @@ const {
   dbcLockSql,
   dbcLockTypeSql,
   dbcMapSql,
+  dbcQuestInfoSql,
   dbcQuestFactionRewardSql,
   dbcScalingStatDistributionSql,
   dbcScalingStatValuesSql,
@@ -105,6 +107,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcLockSql).then(() => {}),
         knex.raw(dbcLockTypeSql).then(() => {}),
         knex.raw(dbcMapSql).then(() => {}),
+        knex.raw(dbcQuestInfoSql).then(() => {}),
         knex.raw(dbcQuestFactionRewardSql).then(() => {}),
         knex.raw(dbcSpellDurationSql).then(() => {}),
         knex.raw(dbcScalingStatDistributionSql).then(() => {}),
@@ -792,6 +795,38 @@ ipcMain.on(LOAD_DBC_QUEST_FACTION_REWARDS, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_QUEST_FACTION_REWARDS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_QUEST_INFOS, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_quest_info");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/QuestInfo.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_quest_info", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_QUEST_INFOS);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_QUEST_INFOS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_QUEST_INFOS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_QUEST_INFOS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_QUEST_INFOS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

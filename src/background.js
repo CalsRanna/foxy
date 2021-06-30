@@ -84,6 +84,7 @@ import "./background/itemEnchantmentTemplateSelector";
 import "./background/itemRandomPropertiesSelector";
 import "./background/itemRandomSuffixSelector";
 import "./background/itemDisplayInfoSelector";
+import "./background/questInfoSelector";
 import "./background/questTemplateSelector";
 import "./background/version";
 

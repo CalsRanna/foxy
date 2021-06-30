@@ -64,7 +64,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="QuestSortID">
+          <el-form-item label="任务顺序">
             <el-input
               v-model="questTemplate.QuestSortID"
               placeholder="QuestSortID"
@@ -72,11 +72,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="QuestInfoID">
-            <el-input
+          <el-form-item label="任务信息">
+            <quest-info-selector
               v-model="questTemplate.QuestInfoID"
               placeholder="QuestInfoID"
-            ></el-input>
+            ></quest-info-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1033,6 +1033,7 @@ import FactionSelector from "@/components/FactionSelector";
 import FlagEditor from "@/components/FlagEditor";
 import CharTitleSelector from "@/components/CharTitleSelector.vue";
 import MapSelector from "@/components/MapSelector.vue";
+import QuestInfoSelector from "@/components/QuestInfoSelector.vue";
 
 export default {
   data() {
@@ -1163,6 +1164,7 @@ export default {
     FactionSelector,
     CharTitleSelector,
     MapSelector,
+    QuestInfoSelector,
   },
 };
 </script>

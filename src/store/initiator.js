@@ -26,6 +26,7 @@ import {
   LOAD_DBC_LOCK_TYPES,
   LOAD_DBC_MAPS,
   LOAD_DBC_QUEST_FACTION_REWARDS,
+  LOAD_DBC_QUEST_INFOS,
   LOAD_DBC_SCALING_STAT_DISTRIBUTIONS,
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
@@ -358,6 +359,18 @@ export default {
             reject(error);
           }
         );
+      });
+    },
+    loadDbcQuestInfos({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_QUEST_INFOS);
+        ipcRenderer.on(LOAD_DBC_QUEST_INFOS, (event, response) => {
+          commit(LOAD_DBC_QUEST_INFOS, response);
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_QUEST_INFOS}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     loadDbcScalingStatDistributions() {
