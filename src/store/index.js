@@ -4,6 +4,7 @@ import Vuex from "vuex";
 import app from "./app";
 import initiator from "./initiator";
 import exporter from "./exporter";
+import areaTableOrQuestSortSelector from "./areaTableOrQuestSortSelector";
 import charTitleSelector from "./charTitleSelector";
 import creatureTemplate from "./creatureTemplate";
 import creatureTemplateLocale from "./creatureTemplateLocale";
@@ -96,6 +97,7 @@ export default new Vuex.Store({
     app,
     initiator,
     exporter,
+    areaTableOrQuestSortSelector,
     charTitleSelector,
     creatureTemplate,
     creatureTemplateLocale,

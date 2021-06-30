@@ -5,6 +5,7 @@ import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
 import "./background/initiator";
 import "./background/exporter";
+import "./background/areaTableOrQuestSortSelector";
 import "./background/charTitleSelector";
 import "./background/creatureTemplate";
 import "./background/creatureTemplateLocale";
