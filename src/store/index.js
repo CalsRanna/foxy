@@ -87,6 +87,7 @@ import itemRandomPropertiesSelector from "./itemRandomPropertiesSelector";
 import itemRandomSuffixSelector from "./itemRandomSuffixSelector";
 import itemDisplayInfoSelector from "./itemDisplayInfoSelector";
 import questInfo from "./questInfo";
+import questSort from "./questSort";
 import questInfoSelector from "./questInfoSelector";
 import questTemplateSelector from "./questTemplateSelector";
 import version from "./version";
@@ -182,6 +183,7 @@ export default new Vuex.Store({
     itemDisplayInfoSelector: itemDisplayInfoSelector,
     questInfo,
     questInfoSelector,
+    questSort,
     questTemplateSelector: questTemplateSelector,
     version,
   },

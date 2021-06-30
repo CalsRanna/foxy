@@ -1,11 +1,11 @@
 <template>
-  <el-form :model="questInfo" label-position="right" label-width="120px">
+  <el-form :model="questSort" label-position="right" label-width="120px">
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="编号">
             <el-input-number
-              v-model="questInfo.ID"
+              v-model="questSort.ID"
               controls-position="right"
               placeholder="ID"
               v-loading="initing"
@@ -17,17 +17,17 @@
         <el-col :span="6">
           <el-form-item label="名称">
             <el-input
-              v-model="questInfo.InfoName_Lang_zhCN"
-              placeholder="InfoName_Lang_zhCN"
+              v-model="questSort.SortName_Lang_zhCN"
+              placeholder="SortName_Lang_zhCN"
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="名称掩码">
             <el-input-number
-              v-model="questInfo.InfoName_Lang_Mask"
+              v-model="questSort.SortName_Lang_Mask"
               controls-position="right"
-              placeholder="Name_Lang_Mask"
+              placeholder="SortName_Lang_Mask"
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -54,7 +54,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("questInfo", ["questInfo"]),
+    ...mapState("questSort", ["questSort"]),
     credential() {
       return {
         ID: this.$route.params.id,
@@ -62,16 +62,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions("questInfo", [
-      "storeQuestInfo",
-      "findQuestInfo",
-      "updateQuestInfo",
-      "createQuestInfo",
+    ...mapActions("questSort", [
+      "storeQuestSort",
+      "findQuestSort",
+      "updateQuestSort",
+      "createQuestSort",
     ]),
     async store() {
       this.loading = true;
       if (this.creating) {
-        this.storeQuestInfo(this.questInfo);
+        this.storeQuestSort(this.questSort);
         this.$notify({
           title: "保存成功",
           position: "bottom-left",
@@ -79,9 +79,9 @@ export default {
         });
         this.creating = false;
       } else {
-        await this.updateQuestInfo({
+        await this.updateQuestSort({
           credential: this.credential,
-          questInfo: this.questInfo,
+          questSort: this.questSort,
         });
         this.$notify({
           title: "修改成功",
@@ -96,11 +96,11 @@ export default {
     },
     async init() {
       this.initing = true;
-      if (this.$route.path == "/quest-info/create") {
+      if (this.$route.path == "/quest-sort/create") {
         this.creating = true;
-        await Promise.all([this.createQuestInfo()]);
+        await Promise.all([this.createQuestSort()]);
       } else {
-        await this.findQuestInfo(this.credential);
+        await this.findQuestSort(this.credential);
       }
       this.initing = false;
     },
