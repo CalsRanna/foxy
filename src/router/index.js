@@ -178,6 +178,21 @@ const routes = [
     path: "/emote-text/:id",
     component: () => import("@/views/EmoteText/EmoteTextDetail"),
   },
+  {
+    path: "/quest-faction-reward",
+    component: () =>
+      import("@/views/QuestFactionReward/QuestFactionRewardTable"),
+  },
+  {
+    path: "/quest-faction-reward/create",
+    component: () =>
+      import("@/views/QuestFactionReward/QuestFactionRewardDetail"),
+  },
+  {
+    path: "/quest-faction-reward/:id",
+    component: () =>
+      import("@/views/QuestFactionReward/QuestFactionRewardDetail"),
+  },
 ];
 
 const router = new VueRouter({

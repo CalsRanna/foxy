@@ -49,6 +49,7 @@ import "./background/gossipMenu";
 import "./background/npcText";
 import "./background/npcTextLocale";
 import "./background/gossipMenuOption";
+import "./background/questFactionReward";
 import "./background/smartScript";
 import "./background/spell";
 import "./background/spellArea";

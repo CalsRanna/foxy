@@ -796,11 +796,17 @@
               :tooltip="rewardFactionValueIdTooltip"
               slot="label"
             ></hint-label>
-            <el-input-number
-              controls-position="right"
+            <el-select
               v-model="questTemplate.RewardFactionValue1"
               placeholder="RewardFactionValue1"
-            ></el-input-number>
+            >
+              <el-option
+                v-for="(reward, index) in factionRewards"
+                :key="`quest-faction-value1-${index}`"
+                :label="reward.label"
+                :value="reward.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -829,11 +835,17 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="声望值">
-            <el-input-number
-              controls-position="right"
+            <el-select
               v-model="questTemplate.RewardFactionValue2"
               placeholder="RewardFactionValue2"
-            ></el-input-number>
+            >
+              <el-option
+                v-for="(reward, index) in factionRewards"
+                :key="`quest-faction-value2-${index}`"
+                :label="reward.label"
+                :value="reward.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -857,11 +869,17 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="声望值">
-            <el-input-number
-              controls-position="right"
+            <el-select
               v-model="questTemplate.RewardFactionValue3"
               placeholder="RewardFactionValue3"
-            ></el-input-number>
+            >
+              <el-option
+                v-for="(reward, index) in factionRewards"
+                :key="`quest-faction-value3-${index}`"
+                :label="reward.label"
+                :value="reward.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -885,11 +903,17 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="声望值">
-            <el-input-number
-              controls-position="right"
+            <el-select
               v-model="questTemplate.RewardFactionValue4"
               placeholder="RewardFactionValue4"
-            ></el-input-number>
+            >
+              <el-option
+                v-for="(reward, index) in factionRewards"
+                :key="`quest-faction-value4-${index}`"
+                :label="reward.label"
+                :value="reward.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -913,11 +937,17 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="声望值">
-            <el-input-number
-              controls-position="right"
+            <el-select
               v-model="questTemplate.RewardFactionValue5"
               placeholder="RewardFactionValue5"
-            ></el-input-number>
+            >
+              <el-option
+                v-for="(reward, index) in factionRewards"
+                :key="`quest-faction-value5-${index}`"
+                :label="reward.label"
+                :value="reward.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1017,7 +1047,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("initiator", ["chrRaces"]),
+    ...mapState("initiator", ["chrRaces", "questFactionRewards"]),
     ...mapState("questTemplate", ["questTemplate"]),
     ...mapState("questTemplateLocale", ["questTemplateLocales"]),
     credential() {
@@ -1034,6 +1064,31 @@ export default {
           comment: chrRace.ClientFileString,
         };
       });
+    },
+    factionRewards() {
+      return [
+        { label: this.questFactionRewards[1].Difficulty_10, value: -10 },
+        { label: this.questFactionRewards[1].Difficulty_9, value: -9 },
+        { label: this.questFactionRewards[1].Difficulty_8, value: -8 },
+        { label: this.questFactionRewards[1].Difficulty_7, value: -7 },
+        { label: this.questFactionRewards[1].Difficulty_6, value: -6 },
+        { label: this.questFactionRewards[1].Difficulty_5, value: -5 },
+        { label: this.questFactionRewards[1].Difficulty_4, value: -4 },
+        { label: this.questFactionRewards[1].Difficulty_3, value: -3 },
+        { label: this.questFactionRewards[1].Difficulty_2, value: -2 },
+        { label: this.questFactionRewards[1].Difficulty_1, value: -1 },
+        { label: 0, value: 0 },
+        { label: this.questFactionRewards[0].Difficulty_1, value: 1 },
+        { label: this.questFactionRewards[0].Difficulty_2, value: 2 },
+        { label: this.questFactionRewards[0].Difficulty_3, value: 3 },
+        { label: this.questFactionRewards[0].Difficulty_4, value: 4 },
+        { label: this.questFactionRewards[0].Difficulty_5, value: 5 },
+        { label: this.questFactionRewards[0].Difficulty_6, value: 6 },
+        { label: this.questFactionRewards[0].Difficulty_7, value: 7 },
+        { label: this.questFactionRewards[0].Difficulty_8, value: 8 },
+        { label: this.questFactionRewards[0].Difficulty_9, value: 9 },
+        { label: this.questFactionRewards[0].Difficulty_10, value: 10 },
+      ];
     },
   },
   methods: {
