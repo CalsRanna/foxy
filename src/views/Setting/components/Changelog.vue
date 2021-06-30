@@ -2,6 +2,93 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
+        <h1>0.2.0<small>2021-06-30</small></h1>
+      </div>
+
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>area table:</strong> add area table module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/d9ded1949961738f57d4fa2d8a2be0eca7adfb30"
+            text="(d9ded19)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>area table or quest sort:</strong> add area table or quest
+          sort selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/fe10d6266c21729b3a9a0e94fe647d6237d867ce"
+            text="(fe10d62)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>char title:</strong> add char title selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/fc490283258cef0f0e63efc12f3e1324c3078211"
+            text="(fc49028)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>emote:</strong> add emote selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/ea7e20b65da97aa7fb58b225b43393726b93e1e2"
+            text="(ea7e20b)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>emote text:</strong> add emote text module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/63437074c1e4ffe0be38377558d8feb2c443f350"
+            text="(6343707)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>game object:</strong> add game object display info selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/73f2ec3ec4df77d1a5341c99957f6ed4af369391"
+            text="(73f2ec3)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>map:</strong> add map selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/ab5daa0850244ea6122419bd825fc77cef604f01"
+            text="(ab5daa0)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>quest faction reward:</strong> add quest faction reward module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/1dd600efc036538aafdd50e8dcc93c7337c529aa"
+            text="(1dd600e)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>quest info:</strong> add quest info module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/587b308334038afb0f1387aee351a9c82f8dc1a3"
+            text="(587b308)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>quest info:</strong> add quest info selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/c2fb3fbca574a31b4234250f96ec354eba9d7d14"
+            text="(c2fb3fb)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>quest sort:</strong> add quest sort module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/40f151195cd3587d6f3d05b3883ab67f7f45a612"
+            text="(40f1511)"
+          ></clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.1.9<small>2021-06-29</small></h2>
       </div>
       <h3>Bug Fixes</h3>
@@ -1029,7 +1116,8 @@ export default {
 </script>
 
 <style scoped>
-.changelog h2 {
+.changelog h1,
+h2 {
   color: #409eff;
 }
 .changelog small {
