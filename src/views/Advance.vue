@@ -68,6 +68,16 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          @click.native="() => navigate('/quest-sort')"
+        >
+          <p class="summary-title">任务排序<span>Quest Sort</span></p>
+          <p class="summary-content">任务的另一部分分类信息</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/reference-loot')"
         >
           <p class="summary-title">
@@ -88,6 +98,8 @@
           <p class="summary-content">用于设定传家宝的具体属性分配规则</p>
         </el-card>
       </el-col>
+    </el-row>
+    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"
@@ -98,8 +110,6 @@
           <p class="summary-content">每个等级的属性具体值</p>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"

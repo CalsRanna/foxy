@@ -88,6 +88,7 @@ import "./background/itemRandomSuffixSelector";
 import "./background/itemDisplayInfoSelector";
 import "./background/questInfo";
 import "./background/questInfoSelector";
+import "./background/questSort";
 import "./background/questTemplateSelector";
 import "./background/version";
 

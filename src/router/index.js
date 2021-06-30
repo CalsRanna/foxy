@@ -217,6 +217,18 @@ const routes = [
     path: "/area-table/:id",
     component: () => import("@/views/AreaTable/AreaTableDetail"),
   },
+  {
+    path: "/quest-sort",
+    component: () => import("@/views/QuestSort/QuestSortTable"),
+  },
+  {
+    path: "/quest-sort/create",
+    component: () => import("@/views/QuestSort/QuestSortDetail"),
+  },
+  {
+    path: "/quest-sort/:id",
+    component: () => import("@/views/QuestSort/QuestSortDetail"),
+  },
 ];
 
 const router = new VueRouter({

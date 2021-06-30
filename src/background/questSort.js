@@ -1,28 +1,28 @@
 import { ipcMain } from "electron";
 
 import {
-  SEARCH_QUEST_INFOS,
-  COUNT_QUEST_INFOS,
-  STORE_QUEST_INFO,
-  FIND_QUEST_INFO,
-  UPDATE_QUEST_INFO,
-  DESTROY_QUEST_INFO,
-  CREATE_QUEST_INFO,
-  COPY_QUEST_INFO,
+  SEARCH_QUEST_SORTS,
+  COUNT_QUEST_SORTS,
+  STORE_QUEST_SORT,
+  FIND_QUEST_SORT,
+  UPDATE_QUEST_SORT,
+  DESTROY_QUEST_SORT,
+  CREATE_QUEST_SORT,
+  COPY_QUEST_SORT,
   GLOBAL_MESSAGE_BOX,
   GLOBAL_MESSAGE,
 } from "../constants";
 
-ipcMain.on(SEARCH_QUEST_INFOS, (event, payload) => {
-  let queryBuilder = knex.select().from("foxy.dbc_quest_info");
+ipcMain.on(SEARCH_QUEST_SORTS, (event, payload) => {
+  let queryBuilder = knex.select().from("foxy.dbc_quest_sort");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
   }
-  if (payload.InfoName_Lang_zhCN) {
+  if (payload.SortName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
-      "InfoName_Lang_zhCN",
+      "SortName_Lang_zhCN",
       "like",
-      `%${payload.InfoName_Lang_zhCN}%`
+      `%${payload.SortName_Lang_zhCN}%`
     );
   }
   queryBuilder = queryBuilder
@@ -31,10 +31,10 @@ ipcMain.on(SEARCH_QUEST_INFOS, (event, payload) => {
 
   queryBuilder
     .then((rows) => {
-      event.reply(SEARCH_QUEST_INFOS, rows);
+      event.reply(SEARCH_QUEST_SORTS, rows);
     })
     .catch((error) => {
-      event.reply(`${SEARCH_QUEST_INFOS}_REJECT`, error);
+      event.reply(`${SEARCH_QUEST_SORTS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
@@ -42,25 +42,25 @@ ipcMain.on(SEARCH_QUEST_INFOS, (event, payload) => {
     });
 });
 
-ipcMain.on(COUNT_QUEST_INFOS, (event, payload) => {
-  let queryBuilder = knex.count("* as total").from("foxy.dbc_quest_info");
+ipcMain.on(COUNT_QUEST_SORTS, (event, payload) => {
+  let queryBuilder = knex.count("* as total").from("foxy.dbc_quest_sort");
   if (payload.ID) {
     queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
   }
-  if (payload.InfoName_Lang_zhCN) {
+  if (payload.SortName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
-      "InfoName_Lang_zhCN",
+      "SortName_Lang_zhCN",
       "like",
-      `%${payload.InfoName_Lang_zhCN}%`
+      `%${payload.SortName_Lang_zhCN}%`
     );
   }
 
   queryBuilder
     .then((rows) => {
-      event.reply(COUNT_QUEST_INFOS, rows[0].total);
+      event.reply(COUNT_QUEST_SORTS, rows[0].total);
     })
     .catch((error) => {
-      event.reply(`${COUNT_QUEST_INFOS}_REJECT`, error);
+      event.reply(`${COUNT_QUEST_SORTS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
@@ -68,15 +68,15 @@ ipcMain.on(COUNT_QUEST_INFOS, (event, payload) => {
     });
 });
 
-ipcMain.on(STORE_QUEST_INFO, (event, payload) => {
-  let queryBuilder = knex.insert(payload).into("foxy.dbc_quest_info");
+ipcMain.on(STORE_QUEST_SORT, (event, payload) => {
+  let queryBuilder = knex.insert(payload).into("foxy.dbc_quest_sort");
 
   queryBuilder
     .then((rows) => {
-      event.reply(STORE_QUEST_INFO, rows);
+      event.reply(STORE_QUEST_SORT, rows);
     })
     .catch((error) => {
-      event.reply(`${STORE_QUEST_INFO}_REJECT`, error);
+      event.reply(`${STORE_QUEST_SORT}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
@@ -84,15 +84,15 @@ ipcMain.on(STORE_QUEST_INFO, (event, payload) => {
     });
 });
 
-ipcMain.on(FIND_QUEST_INFO, (event, payload) => {
-  let queryBuilder = knex.select().from("foxy.dbc_quest_info").where(payload);
+ipcMain.on(FIND_QUEST_SORT, (event, payload) => {
+  let queryBuilder = knex.select().from("foxy.dbc_quest_sort").where(payload);
 
   queryBuilder
     .then((rows) => {
-      event.reply(FIND_QUEST_INFO, rows.length > 0 ? rows[0] : {});
+      event.reply(FIND_QUEST_SORT, rows.length > 0 ? rows[0] : {});
     })
     .catch((error) => {
-      event.reply(`${FIND_QUEST_INFO}_REJECT`, error);
+      event.reply(`${FIND_QUEST_SORT}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
@@ -100,18 +100,18 @@ ipcMain.on(FIND_QUEST_INFO, (event, payload) => {
     });
 });
 
-ipcMain.on(UPDATE_QUEST_INFO, (event, payload) => {
+ipcMain.on(UPDATE_QUEST_SORT, (event, payload) => {
   let queryBuilder = knex
-    .table("foxy.dbc_quest_info")
+    .table("foxy.dbc_quest_sort")
     .where(payload.credential)
-    .update(payload.questInfo);
+    .update(payload.questSort);
 
   queryBuilder
     .then((rows) => {
-      event.reply(UPDATE_QUEST_INFO, rows);
+      event.reply(UPDATE_QUEST_SORT, rows);
     })
     .catch((error) => {
-      event.reply(`${UPDATE_QUEST_INFO}_REJECT`, error);
+      event.reply(`${UPDATE_QUEST_SORT}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
@@ -119,15 +119,15 @@ ipcMain.on(UPDATE_QUEST_INFO, (event, payload) => {
     });
 });
 
-ipcMain.on(DESTROY_QUEST_INFO, (event, payload) => {
-  let queryBuilder = knex.table("foxy.dbc_quest_info").where(payload).delete();
+ipcMain.on(DESTROY_QUEST_SORT, (event, payload) => {
+  let queryBuilder = knex.table("foxy.dbc_quest_sort").where(payload).delete();
 
   queryBuilder
     .then((rows) => {
-      event.reply(DESTROY_QUEST_INFO, rows);
+      event.reply(DESTROY_QUEST_SORT, rows);
     })
     .catch((error) => {
-      event.reply(`${DESTROY_QUEST_INFO}_REJECT`, error);
+      event.reply(`${DESTROY_QUEST_SORT}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
@@ -135,20 +135,20 @@ ipcMain.on(DESTROY_QUEST_INFO, (event, payload) => {
     });
 });
 
-ipcMain.on(CREATE_QUEST_INFO, (event, payload) => {
+ipcMain.on(CREATE_QUEST_SORT, (event, payload) => {
   let queryBuilder = knex
     .select("ID")
-    .from("foxy.dbc_quest_info")
+    .from("foxy.dbc_quest_sort")
     .orderBy("ID", "desc");
 
   queryBuilder
     .then((rows) => {
-      event.reply(CREATE_QUEST_INFO, {
+      event.reply(CREATE_QUEST_SORT, {
         ID: rows[0].ID + 1,
       });
     })
     .catch((error) => {
-      event.reply(`${CREATE_QUEST_INFO}_REJECT`, error);
+      event.reply(`${CREATE_QUEST_SORT}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     })
     .finally(() => {
@@ -156,35 +156,35 @@ ipcMain.on(CREATE_QUEST_INFO, (event, payload) => {
     });
 });
 
-ipcMain.on(COPY_QUEST_INFO, (event, payload) => {
+ipcMain.on(COPY_QUEST_SORT, (event, payload) => {
   let ID = undefined;
-  let questInfo = undefined;
+  let questSort = undefined;
 
   let IDQueryBuilder = knex
     .select("ID")
-    .from("foxy.dbc_quest_info")
+    .from("foxy.dbc_quest_sort")
     .orderBy("ID", "desc");
-  let findQuestInfoQueryBuilder = knex
+  let findQuestSortQueryBuilder = knex
     .select()
-    .from("foxy.dbc_quest_info")
+    .from("foxy.dbc_quest_sort")
     .where(payload);
   Promise.all([
     IDQueryBuilder.then((rows) => {
       ID = rows[0].ID;
     }),
-    findQuestInfoQueryBuilder.then((rows) => {
-      questInfo = rows.length > 0 ? rows[0] : {};
+    findQuestSortQueryBuilder.then((rows) => {
+      questSort = rows.length > 0 ? rows[0] : {};
     }),
   ])
     .then(() => {
-      questInfo.ID = ID + 1;
-      let queryBuilder = knex.insert(questInfo).into("foxy.dbc_quest_info");
+      questSort.ID = ID + 1;
+      let queryBuilder = knex.insert(questSort).into("foxy.dbc_quest_sort");
       queryBuilder
         .then((rows) => {
-          event.reply(COPY_QUEST_INFO, rows);
+          event.reply(COPY_QUEST_SORT, rows);
         })
         .catch((error) => {
-          event.reply(`${COPY_QUEST_INFO}_REJECT`, error);
+          event.reply(`${COPY_QUEST_SORT}_REJECT`, error);
           event.reply(GLOBAL_MESSAGE_BOX, error);
         })
         .finally(() => {
@@ -192,7 +192,7 @@ ipcMain.on(COPY_QUEST_INFO, (event, payload) => {
         });
     })
     .catch((error) => {
-      event.reply(`${COPY_QUEST_INFO}_REJECT`, error);
+      event.reply(`${COPY_QUEST_SORT}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

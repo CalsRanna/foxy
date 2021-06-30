@@ -29,7 +29,7 @@ ipcMain.on(SEARCH_AREA_TABLES, (event, payload) => {
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(
-      "Name_Lang_zhCN",
+      "AreaName_Lang_zhCN",
       "like",
       `%${payload.Name}%`
     );
@@ -58,7 +58,7 @@ ipcMain.on(COUNT_AREA_TABLES, (event, payload) => {
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(
-      "Name_Lang_zhCN",
+      "AreaName_Lang_zhCN",
       "like",
       `%${payload.Name}%`
     );
