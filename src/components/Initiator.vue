@@ -56,6 +56,7 @@ export default {
       "loadDbcLocks",
       "loadDbcLockTypes",
       "loadDbcMaps",
+      "loadDbcQuestFactionRewards",
       "loadDbcScalingStatDistributions",
       "loadDbcScalingStatValues",
       "loadDbcSpells",
@@ -120,6 +121,8 @@ export default {
         await this.loadDbcLockTypes();
         this.progressText = "加载Map.dbc";
         await this.loadDbcMaps();
+        this.progressText = "加载QuestFactionReward.dbc";
+        await this.loadDbcQuestFactionRewards();
         this.progressText = "加载ScalingStatDistribution.dbc";
         await this.loadDbcScalingStatDistributions();
         this.progressText = "加载ScalingStatValues.dbc";

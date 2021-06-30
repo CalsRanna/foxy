@@ -34,6 +34,18 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          @click.native="() => navigate('/quest-faction-reward')"
+        >
+          <p class="summary-title">
+            任务声望奖励<span>Quest Faction Reward</span>
+          </p>
+          <p class="summary-content">任务奖励的声望值</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/reference-loot')"
         >
           <p class="summary-title">
@@ -42,6 +54,8 @@
           <p class="summary-content">关联掉落数据</p>
         </el-card>
       </el-col>
+    </el-row>
+    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"
@@ -54,8 +68,6 @@
           <p class="summary-content">用于设定传家宝的具体属性分配规则</p>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"

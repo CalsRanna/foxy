@@ -25,6 +25,7 @@ import {
   LOAD_DBC_LOCKS,
   LOAD_DBC_LOCK_TYPES,
   LOAD_DBC_MAPS,
+  LOAD_DBC_QUEST_FACTION_REWARDS,
   LOAD_DBC_SCALING_STAT_DISTRIBUTIONS,
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
@@ -57,6 +58,7 @@ export default {
     chrClasses: [],
     chrRaces: [],
     lockTypes: [],
+    questFactionRewards: [],
     spellMechanics: [],
   }),
   actions: {
@@ -332,16 +334,30 @@ export default {
         });
       });
     },
-    loadDbcMaps({ commit }) {
+    loadDbcMaps() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_MAPS);
-        ipcRenderer.on(LOAD_DBC_MAPS, (event, response) => {
-          commit(LOAD_DBC_MAPS, response);
+        ipcRenderer.on(LOAD_DBC_MAPS, () => {
           resolve();
         });
         ipcRenderer.on(`${LOAD_DBC_MAPS}_REJECT`, (event, error) => {
           reject(error);
         });
+      });
+    },
+    loadDbcQuestFactionRewards({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_QUEST_FACTION_REWARDS);
+        ipcRenderer.on(LOAD_DBC_QUEST_FACTION_REWARDS, (event, response) => {
+          commit(LOAD_DBC_QUEST_FACTION_REWARDS, response);
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_QUEST_FACTION_REWARDS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     loadDbcScalingStatDistributions() {
@@ -567,6 +583,9 @@ export default {
     },
     [LOAD_DBC_LOCK_TYPES](state, lockTypes) {
       state.lockTypes = lockTypes;
+    },
+    [LOAD_DBC_QUEST_FACTION_REWARDS](state, questFactionRewards) {
+      state.questFactionRewards = questFactionRewards;
     },
     [LOAD_DBC_SPELL_MECHANICS](state, spellMechanics) {
       state.spellMechanics = spellMechanics;

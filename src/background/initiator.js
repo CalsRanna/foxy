@@ -1,18 +1,30 @@
 import { ipcMain } from "electron";
 import {
+  TEST_MYSQL_CONNECTION,
+  GLOBAL_MESSAGE_BOX,
   LOAD_MYSQL_CONFIG,
   LOAD_DBC_CONFIG,
   INITIALIZE_MYSQL_CONNECTION,
+  LOAD_DBC_CHAR_TITLES,
+  LOAD_DBC_CHR_CLASSES,
+  LOAD_DBC_CHR_RACES,
   LOAD_DBC_CREATURE_DISPLAY_INFOS,
   LOAD_DBC_CREATURE_MODEL_DATAS,
   LOAD_DBC_CREATURE_SPELL_DATAS,
+  LOAD_DBC_EMOTES,
+  LOAD_DBC_EMOTES_TEXTS,
   LOAD_DBC_FACTIONS,
   LOAD_DBC_FACTION_TEMPLATES,
+  LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS,
   LOAD_DBC_ITEMS,
   LOAD_DBC_ITEM_DISPLAY_INFOS,
   LOAD_DBC_ITEM_RANDOM_PROPERTITIES,
   LOAD_DBC_ITEM_RANDOM_SUFFIXES,
   LOAD_DBC_ITEM_SETS,
+  LOAD_DBC_LOCKS,
+  LOAD_DBC_LOCK_TYPES,
+  LOAD_DBC_MAPS,
+  LOAD_DBC_QUEST_FACTION_REWARDS,
   LOAD_DBC_SCALING_STAT_DISTRIBUTIONS,
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
@@ -24,52 +36,42 @@ import {
   LOAD_DBC_SPELL_RANGES,
   LOAD_DBC_TALENTS,
   LOAD_DBC_TALENT_TABS,
-  LOAD_DBC_CHR_CLASSES,
-  LOAD_DBC_CHR_RACES,
-  LOAD_DBC_LOCKS,
-  LOAD_DBC_LOCK_TYPES,
-  LOAD_DBC_MAPS,
-  LOAD_DBC_CHAR_TITLES,
-  LOAD_DBC_EMOTES,
-  LOAD_DBC_EMOTES_TEXTS,
-  LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS,
-  TEST_MYSQL_CONNECTION,
-  GLOBAL_MESSAGE_BOX,
 } from "../constants";
 
 const DBC = require("warcrafty");
 const {
   dbcDatabaseSql,
-  dbcSpellSql,
-  dbcFactionSql,
-  dbcFactionTemplateSql,
-  dbcItemSql,
-  dbcItemDisplayInfoSql,
-  dbcSpellDurationSql,
-  dbcScalingStatDistributionSql,
-  dbcScalingStatValuesSql,
+  dbcCharTitleSql,
+  dbcChrClassesSql,
+  dbcChrRacesSql,
   dbcCreatureSpellDataSql,
   dbcCreatureDisplayInfoSql,
   dbcCreatureModelDataSql,
-  dbcItemSetSql,
-  dbcSpellItemEnchantmentSql,
+  dbcEmotesSql,
+  dbcEmotesTextSql,
+  dbcFactionSql,
+  dbcFactionTemplateSql,
+  dbcGameObjectDisplayInfoSql,
+  dbcItemDisplayInfoSql,
   dbcItemRandomPropertiesSql,
   dbcItemRandomSuffixSql,
+  dbcItemSetSql,
+  dbcItemSql,
+  dbcLockSql,
+  dbcLockTypeSql,
+  dbcMapSql,
+  dbcQuestFactionRewardSql,
+  dbcScalingStatDistributionSql,
+  dbcScalingStatValuesSql,
+  dbcSpellDurationSql,
+  dbcSpellItemEnchantmentSql,
+  dbcSpellSql,
   dbcSpellIconSql,
   dbcSpellCastTimesSql,
   dbcSpellRangeSql,
   dbcSpellMechanicSql,
   dbcTalentSql,
   dbcTalentTabSql,
-  dbcChrClassesSql,
-  dbcChrRacesSql,
-  dbcLockSql,
-  dbcLockTypeSql,
-  dbcMapSql,
-  dbcCharTitleSql,
-  dbcEmotesSql,
-  dbcEmotesTextSql,
-  dbcGameObjectDisplayInfoSql,
 } = require("../libs/mysql");
 
 ipcMain.on(LOAD_MYSQL_CONFIG, (event, payload) => {
@@ -90,11 +92,20 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
     .raw(dbcDatabaseSql)
     .then(() => {
       Promise.all([
-        knex.raw(dbcSpellSql).then(() => {}),
+        knex.raw(dbcCharTitleSql).then(() => {}),
+        knex.raw(dbcChrClassesSql).then(() => {}),
+        knex.raw(dbcChrRacesSql).then(() => {}),
+        knex.raw(dbcEmotesSql).then(() => {}),
+        knex.raw(dbcEmotesTextSql).then(() => {}),
         knex.raw(dbcFactionSql).then(() => {}),
         knex.raw(dbcFactionTemplateSql).then(() => {}),
+        knex.raw(dbcGameObjectDisplayInfoSql).then(() => {}),
         knex.raw(dbcItemSql).then(() => {}),
         knex.raw(dbcItemDisplayInfoSql).then(() => {}),
+        knex.raw(dbcLockSql).then(() => {}),
+        knex.raw(dbcLockTypeSql).then(() => {}),
+        knex.raw(dbcMapSql).then(() => {}),
+        knex.raw(dbcQuestFactionRewardSql).then(() => {}),
         knex.raw(dbcSpellDurationSql).then(() => {}),
         knex.raw(dbcScalingStatDistributionSql).then(() => {}),
         knex.raw(dbcScalingStatValuesSql).then(() => {}),
@@ -107,19 +118,11 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcItemRandomSuffixSql).then(() => {}),
         knex.raw(dbcSpellCastTimesSql).then(() => {}),
         knex.raw(dbcSpellIconSql).then(() => {}),
-        knex.raw(dbcSpellRangeSql).then(() => {}),
         knex.raw(dbcSpellMechanicSql).then(() => {}),
+        knex.raw(dbcSpellRangeSql).then(() => {}),
+        knex.raw(dbcSpellSql).then(() => {}),
         knex.raw(dbcTalentSql).then(() => {}),
         knex.raw(dbcTalentTabSql).then(() => {}),
-        knex.raw(dbcChrClassesSql).then(() => {}),
-        knex.raw(dbcChrRacesSql).then(() => {}),
-        knex.raw(dbcLockSql).then(() => {}),
-        knex.raw(dbcLockTypeSql).then(() => {}),
-        knex.raw(dbcMapSql).then(() => {}),
-        knex.raw(dbcCharTitleSql).then(() => {}),
-        knex.raw(dbcEmotesSql).then(() => {}),
-        knex.raw(dbcEmotesTextSql).then(() => {}),
-        knex.raw(dbcGameObjectDisplayInfoSql).then(() => {}),
       ])
         .then(() => {
           event.reply(INITIALIZE_MYSQL_CONNECTION);
@@ -757,6 +760,38 @@ ipcMain.on(LOAD_DBC_ITEM_SETS, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_ITEM_SETS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_QUEST_FACTION_REWARDS, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_quest_faction_reward");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/QuestFactionReward.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_quest_faction_reward", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_QUEST_FACTION_REWARDS, dbc.records);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_QUEST_FACTION_REWARDS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_QUEST_FACTION_REWARDS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_QUEST_FACTION_REWARDS, rows);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_QUEST_FACTION_REWARDS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
