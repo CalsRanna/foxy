@@ -1,3 +1,22 @@
+# [0.2.0](https://github.com/CalsRanna/foxy/compare/0.1.9...0.2.0) (2021-06-30)
+
+
+### Features
+
+* **area table:** add area table module ([d9ded19](https://github.com/CalsRanna/foxy/commit/d9ded1949961738f57d4fa2d8a2be0eca7adfb30))
+* **area table or quest sort:** add area table or quest sort selector ([fe10d62](https://github.com/CalsRanna/foxy/commit/fe10d6266c21729b3a9a0e94fe647d6237d867ce))
+* **char title:** add char title selector ([fc49028](https://github.com/CalsRanna/foxy/commit/fc490283258cef0f0e63efc12f3e1324c3078211))
+* **emote:** add emote selector ([ea7e20b](https://github.com/CalsRanna/foxy/commit/ea7e20b65da97aa7fb58b225b43393726b93e1e2))
+* **emote text:** add emote text module ([6343707](https://github.com/CalsRanna/foxy/commit/63437074c1e4ffe0be38377558d8feb2c443f350))
+* **game object:** add game object display info selector ([73f2ec3](https://github.com/CalsRanna/foxy/commit/73f2ec3ec4df77d1a5341c99957f6ed4af369391))
+* **map:** add map selector ([ab5daa0](https://github.com/CalsRanna/foxy/commit/ab5daa0850244ea6122419bd825fc77cef604f01))
+* **quest faction reward:** add quest faction reward module ([1dd600e](https://github.com/CalsRanna/foxy/commit/1dd600efc036538aafdd50e8dcc93c7337c529aa))
+* **quest info:** add quest info module ([587b308](https://github.com/CalsRanna/foxy/commit/587b308334038afb0f1387aee351a9c82f8dc1a3))
+* **quest info:** add quest info selector ([c2fb3fb](https://github.com/CalsRanna/foxy/commit/c2fb3fbca574a31b4234250f96ec354eba9d7d14))
+* **quest sort:** add quest sort module ([40f1511](https://github.com/CalsRanna/foxy/commit/40f151195cd3587d6f3d05b3883ab67f7f45a612))
+
+
+
 ## [0.1.9](https://github.com/CalsRanna/foxy/compare/0.1.8...0.1.9) (2021-06-29)
 
 
