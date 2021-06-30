@@ -19,6 +19,7 @@ ipcMain.on(SEARCH_AREA_TABLES, (event, payload) => {
       "ID",
       "AreaName_Lang_zhCN",
       "ContinentID",
+      "MinElevation",
       "ZoneMusic",
       "ExplorationLevel",
     ])

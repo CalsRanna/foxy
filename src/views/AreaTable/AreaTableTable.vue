@@ -67,7 +67,12 @@
         ></el-table-column>
         <el-table-column
           prop="ContinentID"
-          label="大陆编号"
+          label="大陆"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="MinElevation"
+          label="最低海拔"
           sortable
         ></el-table-column>
         <el-table-column
