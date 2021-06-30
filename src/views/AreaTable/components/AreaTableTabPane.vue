@@ -24,11 +24,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="名称掩码">
-            <el-input-number
+            <el-input
               v-model="areaTable.AreaName_Lang_Mask"
-              controls-position="right"
               placeholder="AreaName_Lang_Mask"
-            ></el-input-number>
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -36,7 +35,7 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="大陆编号">
+          <el-form-item label="大陆">
             <el-input v-model="areaTable.ContinentID" placeholder="ContinentID">
             </el-input>
           </el-form-item>
@@ -51,58 +50,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="AreaBit">
+          <el-form-item label="区域掩码">
             <el-input v-model="areaTable.AreaBit" placeholder="AreaBit">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="标识">
-            <el-input v-model="areaTable.Flags" placeholder="Flags"> </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="SoundProviderPref">
-            <el-input
-              v-model="areaTable.SoundProviderPref"
-              placeholder="SoundProviderPref"
-            >
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="SoundProviderPrefUnderwater">
-            <el-input
-              v-model="areaTable.SoundProviderPrefUnderwater"
-              placeholder="SoundProviderPrefUnderwater"
-            >
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="AmbienceID">
-            <el-input v-model="areaTable.AmbienceID" placeholder="AmbienceID">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="区域音乐">
-            <el-input v-model="areaTable.ZoneMusic" placeholder="ZoneMusic">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="IntroSound">
-            <el-input v-model="areaTable.IntroSound" placeholder="IntroSound">
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="探索等级">
-            <el-input
-              v-model="areaTable.ExplorationLevel"
-              placeholder="ExplorationLevel"
-            >
             </el-input>
           </el-form-item>
         </el-col>
@@ -115,6 +64,91 @@
             </el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="6">
+          <el-form-item label="环境">
+            <el-input v-model="areaTable.AmbienceID" placeholder="AmbienceID">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="环境系数">
+            <el-input-number
+              v-model="areaTable.Ambient_Multiplier"
+              controls-position="right"
+              placeholder="Ambient_Multiplier"
+            >
+            </el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="光线">
+            <el-input v-model="areaTable.Lightid" placeholder="Lightid">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="最低海拔">
+            <el-input-number
+              v-model="areaTable.MinElevation"
+              controls-position="right"
+              placeholder="MinElevation"
+            >
+            </el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="探索等级">
+            <el-input-number
+              v-model="areaTable.ExplorationLevel"
+              controls-position="right"
+              placeholder="ExplorationLevel"
+            >
+            </el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="标识">
+            <el-input v-model="areaTable.Flags" placeholder="Flags"> </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="声音">
+            <el-input
+              v-model="areaTable.SoundProviderPref"
+              placeholder="SoundProviderPref"
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="水下声音">
+            <el-input
+              v-model="areaTable.SoundProviderPrefUnderwater"
+              placeholder="SoundProviderPrefUnderwater"
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="介绍声音">
+            <el-input v-model="areaTable.IntroSound" placeholder="IntroSound">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="区域音乐">
+            <el-input v-model="areaTable.ZoneMusic" placeholder="ZoneMusic">
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="液体类型">
             <el-input
@@ -148,30 +182,6 @@
               v-model="areaTable.LiquidTypeID_4"
               placeholder="LiquidTypeID_4"
             >
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="MinElevation">
-            <el-input
-              v-model="areaTable.MinElevation"
-              placeholder="MinElevation"
-            >
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Ambient_Multiplier">
-            <el-input
-              v-model="areaTable.Ambient_Multiplier"
-              placeholder="Ambient_Multiplier"
-            >
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="Lightid">
-            <el-input v-model="areaTable.Lightid" placeholder="Lightid">
             </el-input>
           </el-form-item>
         </el-col>
