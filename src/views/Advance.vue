@@ -14,6 +14,16 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          @click.native="() => navigate('/area-table')"
+        >
+          <p class="summary-title">区域<span>Area Table</span></p>
+          <p class="summary-content">游戏中的所有区域</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/emote-text')"
         >
           <p class="summary-title">表情文本<span>Emote Text</span></p>
@@ -42,6 +52,8 @@
           <p class="summary-content">任务奖励的声望值</p>
         </el-card>
       </el-col>
+    </el-row>
+    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"
@@ -52,8 +64,6 @@
           <p class="summary-content">任务的分类信息</p>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"
@@ -88,6 +98,8 @@
           <p class="summary-content">每个等级的属性具体值</p>
         </el-card>
       </el-col>
+    </el-row>
+    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"
@@ -98,8 +110,6 @@
           <p class="summary-content">天赋页面的技能</p>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"

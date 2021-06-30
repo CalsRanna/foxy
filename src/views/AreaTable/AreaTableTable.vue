@@ -1,0 +1,242 @@
+<template>
+  <div>
+    <el-card>
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/dashboard' }">
+          首页
+        </el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/advance' }">
+          高级
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>区域管理</el-breadcrumb-item>
+      </el-breadcrumb>
+      <h3 style="margin: 16px 0 0 0">区域列表</h3>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-form :model="credential" @submit.native.prevent="search">
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-input v-model="credential.ID" placeholder="ID"></el-input>
+          </el-col>
+          <el-col :span="6">
+            <el-input v-model="credential.Name" placeholder="名称"></el-input>
+          </el-col>
+          <el-col :span="6">
+            <el-button
+              type="primary"
+              native-type="submit"
+              :loading="loading"
+              @click="search"
+            >
+              查询
+            </el-button>
+            <el-button @click="reset">重置</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-button type="primary" @click="create">新增</el-button>
+      <el-button :disabled="disabled" @click="copy">复制</el-button>
+      <el-button type="danger" :disabled="disabled" @click="destroy">
+        删除
+      </el-button>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <el-pagination
+        layout="prev, pager, next"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        hide-on-single-page
+        @current-change="paginate"
+        style="margin-top: 16px"
+      ></el-pagination>
+      <el-table
+        :data="areaTables"
+        highlight-current-row
+        @current-change="select"
+        @row-dblclick="show"
+      >
+        <el-table-column prop="ID" label="编号" sortable width="80px">
+        </el-table-column>
+        <el-table-column
+          prop="AreaName_Lang_zhCN"
+          label="名称"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="ContinentID"
+          label="大陆编号"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="ZoneMusic"
+          label="区域音乐"
+          sortable
+        ></el-table-column>
+        <el-table-column
+          prop="ExplorationLevel"
+          label="探索等级"
+          sortable
+        ></el-table-column>
+      </el-table>
+      <el-pagination
+        layout="prev, pager, next"
+        :current-page="pagination.page"
+        :total="pagination.total"
+        :page-size="pagination.size"
+        hide-on-single-page
+        @current-change="paginate"
+        style="margin-top: 16px"
+      ></el-pagination>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import { mapState, mapActions } from "vuex";
+
+export default {
+  data() {
+    return {
+      loading: false,
+      currentRow: undefined,
+    };
+  },
+  computed: {
+    ...mapState("areaTable", [
+      "refresh",
+      "credential",
+      "pagination",
+      "areaTables",
+    ]),
+    payload() {
+      return {
+        ID: this.credential.ID,
+        Name: this.credential.Name,
+        page: this.pagination.page,
+      };
+    },
+    disabled() {
+      return this.currentRow == undefined ? true : false;
+    },
+  },
+  methods: {
+    ...mapActions("areaTable", [
+      "searchAreaTables",
+      "countAreaTables",
+      "paginateAreaTables",
+      "copyAreaTable",
+      "destroyAreaTable",
+      "resetCredential",
+    ]),
+    async search() {
+      this.loading = true;
+      this.paginateAreaTables({ page: 1 });
+      await Promise.all([
+        this.searchAreaTables(this.payload),
+        this.countAreaTables(this.payload),
+      ]);
+      this.loading = false;
+    },
+    async reset() {
+      await this.resetCredential();
+    },
+    create() {
+      this.$router.push("/area-table/create");
+    },
+    copy() {
+      this.$confirm("此操作不会复制关联表数据，确认继续？", "确认复制", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "info",
+        dangerouslyUseHTMLString: true,
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            this.copyAreaTable({ ID: this.currentRow.ID })
+              .then(() => {
+                Promise.all([
+                  this.searchAreaTables(this.payload),
+                  this.countAreaTables(this.payload),
+                ]);
+              })
+              .then(() => {
+                this.$notify({
+                  title: "复制成功",
+                  position: "bottom-left",
+                  type: "success",
+                });
+                instance.confirmButtonLoading = false;
+                done();
+              });
+          } else {
+            done();
+          }
+        },
+      });
+    },
+    destroy() {
+      this.$confirm(
+        "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
+        "确认删除",
+        {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "info",
+          dangerouslyUseHTMLString: true,
+          beforeClose: (action, instance, done) => {
+            if (action === "confirm") {
+              instance.confirmButtonLoading = true;
+              this.destroyAreaTable({ ID: this.currentRow.ID })
+                .then(() => {
+                  Promise.all([
+                    this.searchAreaTables(this.payload),
+                    this.countAreaTables(this.payload),
+                  ]);
+                })
+                .then(() => {
+                  this.$notify({
+                    title: "删除成功",
+                    position: "bottom-left",
+                    type: "success",
+                  });
+                  instance.confirmButtonLoading = false;
+                  done();
+                });
+            } else {
+              done();
+            }
+          },
+        }
+      );
+    },
+    select(currentRow) {
+      this.currentRow = currentRow;
+    },
+    async paginate(page) {
+      this.loading = true;
+      this.paginateAreaTables({ page: page });
+      await this.searchAreaTables(this.payload);
+      this.loading = false;
+    },
+    show(row) {
+      this.$router.push(`/area-table/${row.ID}`);
+    },
+    async init() {
+      this.loading = true;
+      await Promise.all([
+        this.searchAreaTables(this.payload),
+        this.countAreaTables(this.payload),
+      ]);
+      this.loading = false;
+    },
+  },
+  mounted() {
+    if (this.refresh) {
+      this.init();
+    }
+  },
+};
+</script>

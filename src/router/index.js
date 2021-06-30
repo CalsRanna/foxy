@@ -205,6 +205,18 @@ const routes = [
     path: "/quest-info/:id",
     component: () => import("@/views/QuestInfo/QuestInfoDetail"),
   },
+  {
+    path: "/area-table",
+    component: () => import("@/views/AreaTable/AreaTableTable"),
+  },
+  {
+    path: "/area-table/create",
+    component: () => import("@/views/AreaTable/AreaTableDetail"),
+  },
+  {
+    path: "/area-table/:id",
+    component: () => import("@/views/AreaTable/AreaTableDetail"),
+  },
 ];
 
 const router = new VueRouter({
