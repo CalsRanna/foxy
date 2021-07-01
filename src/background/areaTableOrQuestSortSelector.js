@@ -14,7 +14,7 @@ ipcMain.on(SEARCH_AREA_TABLES_FOR_ATOQS_SELECTOR, (event, payload) => {
     .select(["ID", "AreaName_Lang_zhCN"])
     .from("foxy.dbc_area_table");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.AreaName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
@@ -43,7 +43,7 @@ ipcMain.on(SEARCH_AREA_TABLES_FOR_ATOQS_SELECTOR, (event, payload) => {
 ipcMain.on(COUNT_AREA_TABLES_FOR_ATOQS_SELECTOR, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_area_table");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.AreaName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
@@ -71,7 +71,7 @@ ipcMain.on(SEARCH_QUEST_SORTS_FOR_ATOQS_SELECTOR, (event, payload) => {
     .select(["ID", "SortName_Lang_zhCN"])
     .from("foxy.dbc_quest_sort");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.SortName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
@@ -100,7 +100,7 @@ ipcMain.on(SEARCH_QUEST_SORTS_FOR_ATOQS_SELECTOR, (event, payload) => {
 ipcMain.on(COUNT_QUEST_SORTS_FOR_ATOQS_SELECTOR, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_quest_sort");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.SortName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(

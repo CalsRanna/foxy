@@ -13,7 +13,7 @@ ipcMain.on(SEARCH_WAYPOINT_DATAS_FOR_SELECTOR, (event, payload) => {
     .groupBy("id")
     .from("waypoint_data");
   if (payload.id) {
-    queryBuilder = queryBuilder.where("id", "like", `%${payload.id}%`);
+    queryBuilder = queryBuilder.where("id", payload.id);
   }
   queryBuilder = queryBuilder
     .limit(50)
@@ -37,7 +37,7 @@ ipcMain.on(COUNT_WAYPOINT_DATAS_FOR_SELECTOR, (event, payload) => {
     .count({ total: knex.raw("distinct id") })
     .from("waypoint_data");
   if (payload.id) {
-    queryBuilder = queryBuilder.where("id", "like", `%${payload.id}%`);
+    queryBuilder = queryBuilder.where("id", payload.id);
   }
 
   queryBuilder

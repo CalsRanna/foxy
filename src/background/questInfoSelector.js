@@ -12,7 +12,7 @@ ipcMain.on(SEARCH_QUEST_INFOS_FOR_SELECTOR, (event, payload) => {
     .select(["ID", "InfoName_Lang_zhCN"])
     .from("foxy.dbc_quest_info");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.InfoName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
@@ -41,7 +41,7 @@ ipcMain.on(SEARCH_QUEST_INFOS_FOR_SELECTOR, (event, payload) => {
 ipcMain.on(COUNT_QUEST_INFOS_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_quest_info");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.InfoName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(

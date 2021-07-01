@@ -12,7 +12,7 @@ ipcMain.on(SEARCH_SPELL_ICONS_FOR_SELECTOR, (event, payload) => {
     .select(["ID", "TextureFilename"])
     .from("foxy.dbc_spell_icon");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.TextureFilename) {
     queryBuilder = queryBuilder.where(
@@ -41,7 +41,7 @@ ipcMain.on(SEARCH_SPELL_ICONS_FOR_SELECTOR, (event, payload) => {
 ipcMain.on(COUNT_SPELL_ICONS_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_spell_icon");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.TextureFilename) {
     queryBuilder = queryBuilder.where(

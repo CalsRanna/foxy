@@ -22,7 +22,7 @@ ipcMain.on(SEARCH_CREATURE_SPELL_DATAS_FOR_SELECTOR, (event, payload) => {
     .leftJoin("foxy.dbc_spell as ds_3", "dcsd.Spells_3", "ds_3.ID")
     .leftJoin("foxy.dbc_spell as ds_4", "dcsd.Spells_4", "ds_4.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("dcsd.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("dcsd.ID", payload.ID);
   }
   if (payload.Spell) {
     queryBuilder = queryBuilder
@@ -57,7 +57,7 @@ ipcMain.on(COUNT_CREATURE_SPELL_DATAS_FOR_SELECTOR, (event, payload) => {
     .leftJoin("foxy.dbc_spell as ds_3", "dcsd.Spells_3", "ds_3.ID")
     .leftJoin("foxy.dbc_spell as ds_4", "dcsd.Spells_4", "ds_4.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("dcsd.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("dcsd.ID", payload.ID);
   }
   if (payload.Spell) {
     queryBuilder = queryBuilder

@@ -33,7 +33,7 @@ ipcMain.on(SEARCH_SPELLS_FOR_SELECTOR, (event, payload) => {
     .leftJoin("foxy.dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID")
     .leftJoin("foxy.dbc_spell_icon as dsi", "ds.SpellIconID", "dsi.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ds.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ds.ID", payload.ID);
   }
   if (payload.Name_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
@@ -65,7 +65,7 @@ ipcMain.on(COUNT_SPELLS_FOR_SELECTOR, (event, payload) => {
     .from("foxy.dbc_spell as ds")
     .leftJoin("foxy.dbc_spell_duration as dsd", "ds.DurationIndex", "dsd.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ds.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ds.ID", payload.ID);
   }
   if (payload.Name_Lang_zhCN) {
     queryBuilder = queryBuilder.where(

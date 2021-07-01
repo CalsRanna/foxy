@@ -31,7 +31,7 @@ ipcMain.on(SEARCH_ITEM_TEMPLATES_FOR_SELECTOR, (event, payload) => {
     })
     .leftJoin("foxy.dbc_item_display_info as didi", "displayid", "didi.ID");
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("it.entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("it.entry", payload.entry);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where((builder) =>
@@ -82,7 +82,7 @@ ipcMain.on(COUNT_ITEM_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       );
     });
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("it.entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("it.entry", payload.entry);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where((builder) =>

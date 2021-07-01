@@ -12,7 +12,7 @@ ipcMain.on(SEARCH_ITEM_DISPLAY_INFOS_FOR_SELECTOR, (event, payload) => {
     .select(["ID", "ModelName_1", "ModelTexture_1", "InventoryIcon_1"])
     .from("foxy.dbc_item_display_info");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.InventoryIcon) {
     queryBuilder = queryBuilder.where(
@@ -43,7 +43,7 @@ ipcMain.on(COUNT_ITEM_DISPLAY_INFOS_FOR_SELECTOR, (event, payload) => {
     .count("* as total")
     .from("foxy.dbc_item_display_info");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.InventoryIcon) {
     queryBuilder = queryBuilder.where(

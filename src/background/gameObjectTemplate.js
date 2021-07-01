@@ -31,7 +31,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_TEMPLATES, (event, payload) => {
       );
     });
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("gt.entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("gt.entry", payload.entry);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where((builder) =>
@@ -69,7 +69,7 @@ ipcMain.on(COUNT_GAME_OBJECT_TEMPLATES, (event, payload) => {
       );
     });
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("gt.entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("gt.entry", payload.entry);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where((builder) =>

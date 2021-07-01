@@ -25,11 +25,7 @@ ipcMain.on(SEARCH_SMART_SCRIPTS, (event, payload) => {
     ])
     .from("smart_scripts as ss");
   if (payload.entryorguid) {
-    queryBuilder = queryBuilder.where(
-      "ss.entryorguid",
-      "like",
-      `%${payload.entryorguid}%`
-    );
+    queryBuilder = queryBuilder.where("ss.entryorguid", payload.entryorguid);
   }
   if (payload.comment) {
     queryBuilder = queryBuilder.where(
@@ -58,11 +54,7 @@ ipcMain.on(SEARCH_SMART_SCRIPTS, (event, payload) => {
 ipcMain.on(COUNT_SMART_SCRIPTS, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("smart_scripts as ss");
   if (payload.entryorguid) {
-    queryBuilder = queryBuilder.where(
-      "ss.entryorguid",
-      "like",
-      `%${payload.entryorguid}%`
-    );
+    queryBuilder = queryBuilder.where("ss.entryorguid", payload.entryorguid);
   }
   if (payload.comment) {
     queryBuilder = queryBuilder.where(

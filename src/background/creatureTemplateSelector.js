@@ -26,7 +26,7 @@ ipcMain.on(SEARCH_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       );
     });
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("ct.entry", payload.entry);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where((builder) =>
@@ -64,7 +64,7 @@ ipcMain.on(COUNT_CREATURE_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       );
     });
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("ct.entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("ct.entry", payload.entry);
   }
   if (payload.name) {
     queryBuilder = queryBuilder.where((builder) =>

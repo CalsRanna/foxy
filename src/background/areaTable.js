@@ -25,7 +25,7 @@ ipcMain.on(SEARCH_AREA_TABLES, (event, payload) => {
     ])
     .from("foxy.dbc_area_table");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(
@@ -54,7 +54,7 @@ ipcMain.on(SEARCH_AREA_TABLES, (event, payload) => {
 ipcMain.on(COUNT_AREA_TABLES, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_area_table");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(

@@ -30,7 +30,7 @@ ipcMain.on(SEARCH_LOCKS_FOR_SELECTOR, (event, payload) => {
     .leftJoin("foxy.dbc_lock_type as dlt7", "dl.Type_7", "dlt7.ID")
     .leftJoin("foxy.dbc_lock_type as dlt8", "dl.Type_8", "dlt8.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("dl.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("dl.ID", payload.ID);
   }
   if (payload.Name_Lang_zhCN) {
     queryBuilder = queryBuilder
@@ -73,7 +73,7 @@ ipcMain.on(COUNT_LOCKS_FOR_SELECTOR, (event, payload) => {
     .leftJoin("foxy.dbc_lock_type as dlt7", "dl.Type_7", "dlt7.ID")
     .leftJoin("foxy.dbc_lock_type as dlt8", "dl.Type_8", "dlt8.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("dl.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("dl.ID", payload.ID);
   }
   if (payload.Name_Lang_zhCN) {
     queryBuilder = queryBuilder

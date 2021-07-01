@@ -28,7 +28,7 @@ ipcMain.on(SEARCH_TALENTS, (event, payload) => {
     .leftJoin("foxy.dbc_spell as fds", "fdt.SpellRank_1", "fds.ID")
     .leftJoin("foxy.dbc_spell_icon as fdsi", "fds.SpellIconID", "fdsi.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("fdt.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("fdt.ID", payload.ID);
   }
   if (payload.Spell) {
     queryBuilder = queryBuilder.where(
@@ -60,7 +60,7 @@ ipcMain.on(COUNT_TALENTS, (event, payload) => {
     .from("foxy.dbc_talent as fdt")
     .leftJoin("foxy.dbc_spell as fds", "fdt.SpellRank_1", "fds.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("fdt.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("fdt.ID", payload.ID);
   }
   if (payload.Spell) {
     queryBuilder = queryBuilder.where(
