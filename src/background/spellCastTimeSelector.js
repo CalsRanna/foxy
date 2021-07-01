@@ -10,7 +10,7 @@ import {
 ipcMain.on(SEARCH_SPELL_CAST_TIMES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex.select().from("foxy.dbc_spell_cast_times");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Base) {
     queryBuilder = queryBuilder.where("Base", "like", `%${payload.Base}%`);
@@ -35,7 +35,7 @@ ipcMain.on(SEARCH_SPELL_CAST_TIMES_FOR_SELECTOR, (event, payload) => {
 ipcMain.on(COUNT_SPELL_CAST_TIMES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_spell_cast_times");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Base) {
     queryBuilder = queryBuilder.where("Base", "like", `%${payload.Base}%`);

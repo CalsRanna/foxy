@@ -22,7 +22,7 @@ ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       .whereNotNull("ID");
   }
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("entry", payload.entry);
   }
   queryBuilder = queryBuilder
     .limit(50)
@@ -58,7 +58,7 @@ ipcMain.on(COUNT_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
       .whereNotNull("ID");
   }
   if (payload.entry) {
-    queryBuilder = queryBuilder.where("entry", "like", `%${payload.entry}%`);
+    queryBuilder = queryBuilder.where("entry", payload.entry);
   }
 
   queryBuilder

@@ -18,7 +18,7 @@ ipcMain.on(SEARCH_EMOTE_TEXTS, (event, payload) => {
     .select(["ID", "Name", "EmoteID"])
     .from("foxy.dbc_emotes_text");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where("Name", "like", `%${payload.Name}%`);
@@ -43,7 +43,7 @@ ipcMain.on(SEARCH_EMOTE_TEXTS, (event, payload) => {
 ipcMain.on(COUNT_EMOTE_TEXTS, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_emotes_text");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where("Name", "like", `%${payload.Name}%`);

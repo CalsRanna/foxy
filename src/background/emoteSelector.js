@@ -12,7 +12,7 @@ ipcMain.on(SEARCH_EMOTES_FOR_SELECTOR, (event, payload) => {
     .select(["ID", "EmoteSlashCommand"])
     .from("foxy.dbc_emotes");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.EmoteSlashCommand) {
     queryBuilder = queryBuilder.where(
@@ -41,7 +41,7 @@ ipcMain.on(SEARCH_EMOTES_FOR_SELECTOR, (event, payload) => {
 ipcMain.on(COUNT_EMOTES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_emotes");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.EmoteSlashCommand) {
     queryBuilder = queryBuilder.where(

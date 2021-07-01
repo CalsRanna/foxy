@@ -16,7 +16,7 @@ import {
 ipcMain.on(SEARCH_QUEST_FACTION_REWARDS, (event, payload) => {
   let queryBuilder = knex.select().from("foxy.dbc_quest_faction_reward");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   queryBuilder = queryBuilder
     .limit(50)
@@ -40,7 +40,7 @@ ipcMain.on(COUNT_QUEST_FACTION_REWARDS, (event, payload) => {
     .count("* as total")
     .from("foxy.dbc_quest_faction_reward");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
 
   queryBuilder

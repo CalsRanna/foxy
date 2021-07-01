@@ -12,7 +12,7 @@ ipcMain.on(SEARCH_MAPS_FOR_SELECTOR, (event, payload) => {
     .select(["ID", "MapName_Lang_zhCN", "MapDescription0_Lang_zhCN"])
     .from("foxy.dbc_map");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.MapName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
@@ -41,7 +41,7 @@ ipcMain.on(SEARCH_MAPS_FOR_SELECTOR, (event, payload) => {
 ipcMain.on(COUNT_MAPS_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_map");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.MapName_Lang_zhCN) {
     queryBuilder = queryBuilder.where(

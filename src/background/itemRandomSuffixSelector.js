@@ -45,7 +45,7 @@ ipcMain.on(SEARCH_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR, (event, payload) => {
       "dsie_5.ID"
     );
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("dirs.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("dirs.ID", payload.ID);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(
@@ -101,7 +101,7 @@ ipcMain.on(COUNT_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR, (event, payload) => {
       "dsie_5.ID"
     );
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("dirs.ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("dirs.ID", payload.ID);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(

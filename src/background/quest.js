@@ -34,7 +34,7 @@ ipcMain.on(SEARCH_QUEST_TEMPLATES, (event, payload) => {
       );
     });
   if (payload.id) {
-    queryBuilder = queryBuilder.where("qt.ID", "like", `%${payload.id}%`);
+    queryBuilder = queryBuilder.where("qt.ID", payload.id);
   }
   if (payload.title) {
     queryBuilder = queryBuilder.where((builder) =>
@@ -72,7 +72,7 @@ ipcMain.on(COUNT_QUEST_TEMPLATES, (event, payload) => {
       );
     });
   if (payload.id) {
-    queryBuilder = queryBuilder.where("qt.ID", "like", `%${payload.id}%`);
+    queryBuilder = queryBuilder.where("qt.ID", payload.id);
   }
   if (payload.title) {
     queryBuilder = queryBuilder.where((builder) =>

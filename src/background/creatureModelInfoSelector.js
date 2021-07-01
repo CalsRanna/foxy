@@ -37,11 +37,7 @@ ipcMain.on(SEARCH_CREATURE_MODEL_INFOS_FOR_SELECTOR, (event, payload) => {
       "dcmd_2.ID"
     );
   if (payload.DisplayID) {
-    queryBuilder = queryBuilder.where(
-      "DisplayID",
-      "like",
-      `%${payload.DisplayID}%`
-    );
+    queryBuilder = queryBuilder.where("DisplayID", payload.DisplayID);
   }
   if (payload.ModelName) {
     queryBuilder = queryBuilder
@@ -90,11 +86,7 @@ ipcMain.on(COUNT_CREATURE_MODEL_INFOS_FOR_SELECTOR, (event, payload) => {
       "dcmd_2.ID"
     );
   if (payload.DisplayID) {
-    queryBuilder = queryBuilder.where(
-      "DisplayID",
-      "like",
-      `%${payload.DisplayID}%`
-    );
+    queryBuilder = queryBuilder.where("DisplayID", payload.DisplayID);
   }
   if (payload.ModelName) {
     queryBuilder = queryBuilder

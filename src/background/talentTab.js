@@ -16,7 +16,7 @@ import {
 ipcMain.on(SEARCH_TALENT_TABS, (event, payload) => {
   let queryBuilder = knex.select().from("foxy.dbc_talent_tab");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Name_Lang_zhCN) {
     queryBuilder = queryBuilder.where(
@@ -45,7 +45,7 @@ ipcMain.on(SEARCH_TALENT_TABS, (event, payload) => {
 ipcMain.on(COUNT_TALENT_TABS, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_talent_tab");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Name_Lang_zhCN) {
     queryBuilder = queryBuilder.where(

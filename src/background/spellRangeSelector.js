@@ -10,7 +10,7 @@ import {
 ipcMain.on(SEARCH_SPELL_RANGES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex.select().from("foxy.dbc_spell_range");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Range) {
     queryBuilder = queryBuilder
@@ -39,7 +39,7 @@ ipcMain.on(SEARCH_SPELL_RANGES_FOR_SELECTOR, (event, payload) => {
 ipcMain.on(COUNT_SPELL_RANGES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex.count("* as total").from("foxy.dbc_spell_range");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.Range) {
     queryBuilder = queryBuilder

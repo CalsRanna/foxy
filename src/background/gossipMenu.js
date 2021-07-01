@@ -25,11 +25,7 @@ ipcMain.on(SEARCH_GOSSIP_MENUS, (event, payload) => {
       );
     });
   if (payload.MenuID) {
-    queryBuilder = queryBuilder.where(
-      "gm.MenuID",
-      "like",
-      `%${payload.MenuID}%`
-    );
+    queryBuilder = queryBuilder.where("gm.MenuID", payload.MenuID);
   }
   if (payload.Text) {
     queryBuilder = queryBuilder.whereRaw(
@@ -67,11 +63,7 @@ ipcMain.on(COUNT_GOSSIP_MENUS, (event, payload) => {
       );
     });
   if (payload.MenuID) {
-    queryBuilder = queryBuilder.where(
-      "gm.MenuID",
-      "like",
-      `%${payload.MenuID}%`
-    );
+    queryBuilder = queryBuilder.where("gm.MenuID", payload.MenuID);
   }
   if (payload.Text) {
     queryBuilder = queryBuilder.whereRaw(

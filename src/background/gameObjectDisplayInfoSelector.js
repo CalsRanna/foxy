@@ -12,7 +12,7 @@ ipcMain.on(SEARCH_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR, (event, payload) => {
     .select(["ID", "ModelName"])
     .from("foxy.dbc_game_object_display_info");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.ModelName) {
     queryBuilder = queryBuilder.where(
@@ -46,7 +46,7 @@ ipcMain.on(COUNT_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR, (event, payload) => {
     .count("* as total")
     .from("foxy.dbc_game_object_display_info");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", "like", `%${payload.ID}%`);
+    queryBuilder = queryBuilder.where("ID", payload.ID);
   }
   if (payload.ModelName) {
     queryBuilder = queryBuilder.where(
