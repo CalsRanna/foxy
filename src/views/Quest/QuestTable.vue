@@ -56,6 +56,7 @@
         ref="questTable"
         :data="questTemplates"
         highlight-current-row
+        class="hide-when-overflow"
         @current-change="select"
         @row-dblclick="show"
       >
@@ -83,7 +84,6 @@
           label="描述"
           sortable
           min-width="500px"
-          class-name="hide-when-overflow"
         >
           <template slot-scope="scope">
             <template v-if="scope.row.Details">

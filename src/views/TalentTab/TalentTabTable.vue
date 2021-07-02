@@ -58,6 +58,7 @@
       <el-table
         :data="talentTabs"
         highlight-current-row
+        class="hide-when-overflow"
         @current-change="select"
         @row-dblclick="show"
       >
