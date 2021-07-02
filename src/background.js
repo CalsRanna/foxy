@@ -7,6 +7,7 @@ import "./background/initiator";
 import "./background/exporter";
 import "./background/areaTable";
 import "./background/areaTableOrQuestSortSelector";
+import "./background/broadcastTextSelector";
 import "./background/charTitleSelector";
 import "./background/creatureTemplate";
 import "./background/creatureTemplateLocale";
