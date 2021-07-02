@@ -57,6 +57,7 @@
         ref="creatureTable"
         :data="gossipMenus"
         highlight-current-row
+        class="hide-when-overflow"
         @current-change="select"
         @row-dblclick="show"
       >
@@ -72,7 +73,7 @@
           width="160"
           sortable
         ></el-table-column>
-        <el-table-column label="文本" sortable class-name="hide-when-overflow">
+        <el-table-column label="文本" sortable>
           <template slot-scope="scope">
             <span v-if="scope.row.Text0_0 != '' && scope.row.Text0_0 != null">{{
               scope.row.Text0_0

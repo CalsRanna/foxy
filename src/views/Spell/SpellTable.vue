@@ -52,6 +52,7 @@
       <el-table
         :data="spells"
         highlight-current-row
+        class="hide-when-overflow"
         @current-change="select"
         @row-dblclick="show"
       >
@@ -70,12 +71,7 @@
           sortable
           width="128px"
         ></el-table-column>
-        <el-table-column
-          prop="descriptionLangZhCN"
-          label="描述"
-          sortable
-          class-name="hide-when-overflow"
-        >
+        <el-table-column prop="descriptionLangZhCN" label="描述" sortable>
           <template slot-scope="scope">
             <spell-description
               :spell="scope.row"

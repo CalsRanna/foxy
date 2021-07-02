@@ -66,9 +66,9 @@
       <el-table
         :data="itemTemplates"
         highlight-current-row
+        class="hide-when-overflow tight-table"
         @current-change="select"
         @row-dblclick="show"
-        class="tight-table"
       >
         <el-table-column
           prop="entry"

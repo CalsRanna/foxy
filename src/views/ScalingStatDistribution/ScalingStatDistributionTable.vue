@@ -62,6 +62,7 @@
       <el-table
         :data="scalingStatDistributions"
         highlight-current-row
+        class="hide-when-overflow"
         @current-change="select"
         @row-dblclick="show"
       >
