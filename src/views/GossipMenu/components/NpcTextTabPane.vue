@@ -58,11 +58,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="BroadcastTextID0">
-            <el-input
+          <el-form-item label="广播文本">
+            <broadcast-text-selector
               v-model="npcText.BroadcastTextID0"
               placeholder="BroadcastTextID0"
-            ></el-input>
+            ></broadcast-text-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -133,11 +133,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="BroadcastTextID1">
-            <el-input
+          <el-form-item label="广播文本">
+            <broadcast-text-selector
               v-model="npcText.BroadcastTextID1"
               placeholder="BroadcastTextID1"
-            ></el-input>
+            ></broadcast-text-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -208,11 +208,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="BroadcastTextID2">
-            <el-input
+          <el-form-item label="广播文本">
+            <broadcast-text-selector
               v-model="npcText.BroadcastTextID2"
               placeholder="BroadcastTextID2"
-            ></el-input>
+            ></broadcast-text-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -283,11 +283,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="BroadcastTextID3">
-            <el-input
+          <el-form-item label="广播文本">
+            <broadcast-text-selector
               v-model="npcText.BroadcastTextID3"
               placeholder="BroadcastTextID3"
-            ></el-input>
+            ></broadcast-text-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -358,11 +358,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="BroadcastTextID4">
-            <el-input
+          <el-form-item label="广播文本">
+            <broadcast-text-selector
               v-model="npcText.BroadcastTextID4"
               placeholder="BroadcastTextID4"
-            ></el-input>
+            ></broadcast-text-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -433,11 +433,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="BroadcastTextID5">
-            <el-input
+          <el-form-item label="广播文本">
+            <broadcast-text-selector
               v-model="npcText.BroadcastTextID5"
               placeholder="BroadcastTextID5"
-            ></el-input>
+            ></broadcast-text-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -508,11 +508,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="BroadcastTextID6">
-            <el-input
+          <el-form-item label="广播文本">
+            <broadcast-text-selector
               v-model="npcText.BroadcastTextID6"
               placeholder="BroadcastTextID6"
-            ></el-input>
+            ></broadcast-text-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -583,11 +583,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="BroadcastTextID7">
-            <el-input
+          <el-form-item label="广播文本">
+            <broadcast-text-selector
               v-model="npcText.BroadcastTextID7"
               placeholder="BroadcastTextID7"
-            ></el-input>
+            ></broadcast-text-selector>
           </el-form-item>
         </el-col>
       </el-row>
@@ -634,6 +634,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 import NpcTextText0_0Localizer from "@/views/GossipMenu/components/NpcTextText0_0Localizer";
 import NpcTextText0_1Localizer from "@/views/GossipMenu/components/NpcTextText0_1Localizer";
 import NpcTextText1_0Localizer from "@/views/GossipMenu/components/NpcTextText1_0Localizer";
@@ -650,8 +651,7 @@ import NpcTextText6_0Localizer from "@/views/GossipMenu/components/NpcTextText6_
 import NpcTextText6_1Localizer from "@/views/GossipMenu/components/NpcTextText6_1Localizer";
 import NpcTextText7_0Localizer from "@/views/GossipMenu/components/NpcTextText7_0Localizer";
 import NpcTextText7_1Localizer from "@/views/GossipMenu/components/NpcTextText7_1Localizer";
-
-import { mapState, mapActions } from "vuex";
+import BroadcastTextSelector from "@/components/BroadcastTextSelector";
 
 export default {
   data() {
@@ -733,6 +733,7 @@ export default {
     NpcTextText6_1Localizer,
     NpcTextText7_0Localizer,
     NpcTextText7_1Localizer,
+    BroadcastTextSelector,
   },
 };
 </script>
