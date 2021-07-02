@@ -42,7 +42,7 @@
             @click="() => destroy(scope.$index)"
           ></el-button>
         </el-table-column>
-        <el-table-column prop="Locale" label="语言">
+        <el-table-column prop="Locale" label="语言" width="96">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.Locale"
