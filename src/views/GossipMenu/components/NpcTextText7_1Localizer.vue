@@ -29,8 +29,6 @@
       <el-table
         :data="npcTextLocales"
         :max-height="clientHeight * 0.84 - 81 - 80"
-        highlight-current-row
-        class="selectable-table hide-when-overflow"
       >
         <el-table-column width="48">
           <el-button
