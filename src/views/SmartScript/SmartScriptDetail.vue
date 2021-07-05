@@ -17,13 +17,11 @@
         </small>
       </h3>
     </el-card>
-    <el-card style="margin-top: 16px">
-      <el-tabs value="smart_script" style="margin-top: 16px">
-        <el-tab-pane label="脚本模板" name="smart_script" lazy>
-          <smart-script-tab-pane></smart-script-tab-pane>
-        </el-tab-pane>
-      </el-tabs>
-    </el-card>
+    <el-tabs value="smart_script" style="margin-top: 16px">
+      <el-tab-pane label="脚本模板" name="smart_script" lazy>
+        <smart-script-tab-pane></smart-script-tab-pane>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 

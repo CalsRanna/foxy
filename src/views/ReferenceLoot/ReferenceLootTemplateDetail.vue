@@ -20,13 +20,11 @@
         </small>
       </h3>
     </el-card>
-    <el-card style="margin-top: 16px">
-      <el-tabs value="reference-loot" style="margin-top: 16px">
-        <el-tab-pane label="关联掉落" name="reference-loot" lazy>
-          <reference-loot-template-tab-pane></reference-loot-template-tab-pane>
-        </el-tab-pane>
-      </el-tabs>
-    </el-card>
+    <el-tabs value="reference-loot" style="margin-top: 16px">
+      <el-tab-pane label="关联掉落" name="reference-loot" lazy>
+        <reference-loot-template-tab-pane></reference-loot-template-tab-pane>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 

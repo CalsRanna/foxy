@@ -20,13 +20,11 @@
         </small>
       </h3>
     </el-card>
-    <el-card style="margin-top: 16px">
-      <el-tabs value="smart_script" style="margin-top: 16px">
-        <el-tab-pane label="任务信息" name="smart_script" lazy>
-          <quest-info-tab-pane></quest-info-tab-pane>
-        </el-tab-pane>
-      </el-tabs>
-    </el-card>
+    <el-tabs value="smart_script" style="margin-top: 16px">
+      <el-tab-pane label="任务信息" name="smart_script" lazy>
+        <quest-info-tab-pane></quest-info-tab-pane>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 

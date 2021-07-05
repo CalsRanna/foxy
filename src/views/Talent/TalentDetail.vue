@@ -20,16 +20,14 @@
         </small>
       </h3>
     </el-card>
-    <el-card style="margin-top: 16px">
-      <el-tabs value="talent" style="margin-top: 16px">
-        <el-tab-pane label="天赋" name="talent" lazy>
-          <talent-tab-pane></talent-tab-pane>
-        </el-tab-pane>
-        <el-tab-pane label="天赋页" name="talent-tab" lazy>
-          <talent-tab-tab-pane></talent-tab-tab-pane>
-        </el-tab-pane>
-      </el-tabs>
-    </el-card>
+    <el-tabs value="talent" style="margin-top: 16px">
+      <el-tab-pane label="天赋" name="talent" lazy>
+        <talent-tab-pane></talent-tab-pane>
+      </el-tab-pane>
+      <el-tab-pane label="天赋页" name="talent-tab" lazy>
+        <talent-tab-tab-pane></talent-tab-tab-pane>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
