@@ -57,7 +57,6 @@
           <template slot-scope="scope">
             <el-input-number
               v-model="scope.row.VerifiedBuild"
-              :min="0"
               controls-position="right"
               placeholder="VerifiedBuild"
             ></el-input-number>
