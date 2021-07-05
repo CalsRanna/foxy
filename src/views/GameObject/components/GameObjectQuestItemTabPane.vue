@@ -68,10 +68,11 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="VerifiedBuild">
-                <el-input
+                <el-input-number
                   v-model="gameObjectQuestItem.VerifiedBuild"
+                  controls-position="right"
                   placeholder="VerifiedBuild"
-                ></el-input>
+                ></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
