@@ -15,7 +15,7 @@
           @current-change="select"
           @row-dblclick="show"
         >
-          <el-table-column prop="Idx" label="编号" sortable></el-table-column>
+          <el-table-column prop="Idx" label="编号"></el-table-column>
           <el-table-column label="名称">
             <item-template-name
               slot-scope="scope"

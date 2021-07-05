@@ -56,8 +56,7 @@
         @current-change="select"
         @row-dblclick="show"
       >
-        <el-table-column prop="ID" label="编号" sortable width="80px">
-        </el-table-column>
+        <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
         <el-table-column prop="Difficulty_1" label="难度1"> </el-table-column>
         <el-table-column prop="Difficulty_2" label="难度2"> </el-table-column>
         <el-table-column prop="Difficulty_3" label="难度3"> </el-table-column>

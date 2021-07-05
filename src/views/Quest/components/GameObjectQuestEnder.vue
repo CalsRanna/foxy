@@ -15,12 +15,8 @@
           @current-change="select"
           @row-dblclick="show"
         >
-          <el-table-column
-            prop="id"
-            label="物体编号"
-            sortable
-          ></el-table-column>
-          <el-table-column label="名称" sortable>
+          <el-table-column prop="id" label="物体编号"></el-table-column>
+          <el-table-column label="名称">
             <template slot-scope="scope">
               <span v-if="scope.row.localeName !== null">
                 {{ scope.row.localeName }}
@@ -28,7 +24,7 @@
               <span v-else>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="quest" label="任务" sortable></el-table-column>
+          <el-table-column prop="quest" label="任务"></el-table-column>
         </el-table>
       </el-card>
     </div>

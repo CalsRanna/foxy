@@ -15,25 +15,17 @@
           @current-change="select"
           @row-dblclick="show"
         >
-          <el-table-column prop="slot" label="插槽" sortable></el-table-column>
-          <el-table-column prop="item" label="编号" sortable></el-table-column>
-          <el-table-column prop="name" label="名称" sortable>
+          <el-table-column prop="slot" label="插槽"></el-table-column>
+          <el-table-column prop="item" label="编号"></el-table-column>
+          <el-table-column prop="name" label="名称">
             <item-template-name
               slot-scope="scope"
               :itemTemplate="scope.row"
             ></item-template-name>
           </el-table-column>
-          <el-table-column
-            prop="maxcount"
-            label="最大数量"
-            sortable
-          ></el-table-column>
-          <el-table-column
-            prop="incrtime"
-            label="补货时间"
-            sortable
-          ></el-table-column>
-          <el-table-column sortable>
+          <el-table-column prop="maxcount" label="最大数量"></el-table-column>
+          <el-table-column prop="incrtime" label="补货时间"></el-table-column>
+          <el-table-column>
             <hint-label
               label="扩展价格"
               :tooltip="extendedCostTooltip"

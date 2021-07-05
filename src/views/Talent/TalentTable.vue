@@ -59,22 +59,13 @@
         @current-change="select"
         @row-dblclick="show"
       >
-        <el-table-column prop="ID" label="编号" sortable width="80px">
-        </el-table-column>
-        <el-table-column label="技能" sortable>
+        <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
+        <el-table-column label="技能">
           <spell-name slot-scope="scope" :spell="scope.row"></spell-name>
         </el-table-column>
-        <el-table-column
-          prop="TabName"
-          label="天赋页"
-          sortable
-        ></el-table-column>
-        <el-table-column prop="TierID" label="行" sortable></el-table-column>
-        <el-table-column
-          prop="ColumnIndex"
-          label="列"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="TabName" label="天赋页"></el-table-column>
+        <el-table-column prop="TierID" label="行"></el-table-column>
+        <el-table-column prop="ColumnIndex" label="列"></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"

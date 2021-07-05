@@ -16,21 +16,12 @@
           @row-dblclick="show"
         >
           <el-table-column prop="id" label="技能组"></el-table-column>
-          <el-table-column
-            prop="special_flag"
-            label="标识"
-            sortable
-          ></el-table-column>
+          <el-table-column prop="special_flag" label="标识"></el-table-column>
           <el-table-column
             prop="stack_rule"
             label="光环叠加规则"
-            sortable
           ></el-table-column>
-          <el-table-column
-            prop="description"
-            label="描述"
-            sortable
-          ></el-table-column>
+          <el-table-column prop="description" label="描述"></el-table-column>
         </el-table>
       </el-card>
     </div>

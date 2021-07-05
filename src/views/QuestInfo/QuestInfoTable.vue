@@ -62,12 +62,10 @@
         @current-change="select"
         @row-dblclick="show"
       >
-        <el-table-column prop="ID" label="编号" sortable width="80px">
-        </el-table-column>
+        <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
         <el-table-column
           prop="InfoName_Lang_zhCN"
           label="名称"
-          sortable
         ></el-table-column>
         <el-table-column
           prop="InfoName_Lang_Mask"

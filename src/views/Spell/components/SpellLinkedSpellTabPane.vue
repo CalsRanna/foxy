@@ -19,12 +19,8 @@
             prop="spell_effect"
             label="链接技能"
           ></el-table-column>
-          <el-table-column prop="type" label="类型" sortable></el-table-column>
-          <el-table-column
-            prop="comment"
-            label="注解"
-            sortable
-          ></el-table-column>
+          <el-table-column prop="type" label="类型"></el-table-column>
+          <el-table-column prop="comment" label="注解"></el-table-column>
         </el-table>
       </el-card>
     </div>

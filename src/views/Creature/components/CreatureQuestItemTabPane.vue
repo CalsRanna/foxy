@@ -19,7 +19,6 @@
             prop="Idx"
             label="编号"
             width="80px"
-            sortable
           ></el-table-column>
           <el-table-column label="名称">
             <item-template-name
