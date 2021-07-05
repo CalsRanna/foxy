@@ -22,7 +22,7 @@
             <el-input-number
               v-model="credential.Charlevel"
               controls-position="right"
-              placeholder="等级"
+              placeholder="Charlevel"
             ></el-input-number>
           </el-col>
           <el-col :span="6">

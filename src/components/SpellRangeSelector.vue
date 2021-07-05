@@ -34,7 +34,7 @@
               <el-input-number
                 v-model="Range"
                 controls-position="right"
-                placeholder="施法距离"
+                placeholder="Range"
               ></el-input-number>
             </el-col>
             <el-col :span="8">

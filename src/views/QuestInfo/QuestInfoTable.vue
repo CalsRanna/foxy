@@ -21,7 +21,7 @@
           <el-col :span="6">
             <el-input
               v-model="credential.InfoName_Lang_zhCN"
-              placeholder="名称"
+              placeholder="InfoName_Lang_zhCN"
             ></el-input>
           </el-col>
           <el-col :span="6">

@@ -34,7 +34,7 @@
               <el-input-number
                 v-model="CastTime"
                 controls-position="right"
-                placeholder="施法时间"
+                placeholder="CastTime"
               ></el-input-number>
             </el-col>
             <el-col :span="8">

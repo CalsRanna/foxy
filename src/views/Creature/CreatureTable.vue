@@ -16,16 +16,16 @@
             <el-input-number
               v-model="credential.entry"
               controls-position="right"
-              placeholder="Entry"
+              placeholder="entry"
             ></el-input-number>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="credential.name" placeholder="姓名"></el-input>
+            <el-input v-model="credential.name" placeholder="name"></el-input>
           </el-col>
           <el-col :span="6">
             <el-input
               v-model="credential.subname"
-              placeholder="称号"
+              placeholder="subname"
             ></el-input>
           </el-col>
           <el-col :span="6">
