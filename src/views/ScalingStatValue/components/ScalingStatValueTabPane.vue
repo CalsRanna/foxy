@@ -1,6 +1,9 @@
 <template>
   <el-form :model="scalingStatValue" label-position="right" label-width="120px">
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="编号">
@@ -28,7 +31,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="主要预算">
@@ -86,7 +92,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="布甲肩膀护甲">
@@ -171,7 +180,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="单手武器伤害">

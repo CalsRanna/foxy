@@ -1,6 +1,9 @@
 <template>
   <el-form :model="spell" label-position="right" label-width="120px">
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="id">
@@ -82,7 +85,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="类型">
@@ -168,7 +174,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="施法时间">
@@ -372,7 +381,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="PowerDisplayID">
@@ -446,7 +458,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="打断标识">
@@ -560,7 +575,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="触发标识">
@@ -592,7 +610,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="法术大类">
@@ -632,7 +653,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="效果">
@@ -851,7 +875,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="效果">
@@ -1070,7 +1097,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="效果">
@@ -1289,7 +1319,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="Totem_1">
@@ -1329,7 +1362,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="消耗物品1">
@@ -1469,7 +1505,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="图标">
@@ -1507,7 +1546,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="CasterAuraSpell">

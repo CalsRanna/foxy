@@ -1,6 +1,9 @@
 <template>
   <el-form :model="creatureTemplate" label-position="right" label-width="120px">
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="编号">
@@ -298,7 +301,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="模型1">
@@ -334,7 +340,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="伤害类型">
@@ -425,7 +434,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="伤害系数">
@@ -499,7 +511,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item>
@@ -583,7 +598,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="最小金钱掉落">
@@ -633,7 +651,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="击杀掉落ID">
@@ -664,7 +685,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item>
@@ -697,7 +721,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="AI名称">
