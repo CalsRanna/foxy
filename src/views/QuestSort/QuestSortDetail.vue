@@ -20,13 +20,11 @@
         </small>
       </h3>
     </el-card>
-    <el-card style="margin-top: 16px">
-      <el-tabs value="quest-sort" style="margin-top: 16px">
-        <el-tab-pane label="任务排序" name="quest-sort" lazy>
-          <quest-sort-tab-pane></quest-sort-tab-pane>
-        </el-tab-pane>
-      </el-tabs>
-    </el-card>
+    <el-tabs value="quest-sort" style="margin-top: 16px">
+      <el-tab-pane label="任务排序" name="quest-sort" lazy>
+        <quest-sort-tab-pane></quest-sort-tab-pane>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
