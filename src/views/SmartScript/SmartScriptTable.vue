@@ -66,31 +66,30 @@
           prop="entryorguid"
           label="编号"
           width="80px"
-          sortable
         ></el-table-column>
-        <el-table-column prop="source_type" label="类型" sortable>
+        <el-table-column prop="source_type" label="类型">
           <template slot-scope="scope">
             {{ sourceTypes[scope.row.source_type] }}
           </template>
         </el-table-column>
-        <el-table-column prop="id" label="编号" sortable></el-table-column>
-        <el-table-column prop="link" label="链接" sortable></el-table-column>
-        <el-table-column prop="event_type" label="事件类型" sortable>
+        <el-table-column prop="id" label="编号"></el-table-column>
+        <el-table-column prop="link" label="链接"></el-table-column>
+        <el-table-column prop="event_type" label="事件类型">
           <template slot-scope="scope">
             {{ eventTypes[scope.row.event_type] }}
           </template>
         </el-table-column>
-        <el-table-column prop="action_type" label="动作类型" sortable>
+        <el-table-column prop="action_type" label="动作类型">
           <template slot-scope="scope">
             {{ actionTypes[scope.row.action_type] }}
           </template>
         </el-table-column>
-        <el-table-column prop="target_type" label="目标类型" sortable>
+        <el-table-column prop="target_type" label="目标类型">
           <template slot-scope="scope">
             {{ targetTypes[scope.row.target_type] }}
           </template>
         </el-table-column>
-        <el-table-column prop="comment" label="备注" sortable min-width="200px">
+        <el-table-column prop="comment" label="备注" min-width="200px">
         </el-table-column>
       </el-table>
       <el-pagination

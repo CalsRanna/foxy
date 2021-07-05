@@ -59,32 +59,17 @@
         @current-change="select"
         @row-dblclick="show"
       >
-        <el-table-column prop="ID" label="编号" sortable width="80px">
-        </el-table-column>
+        <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
         <el-table-column
           prop="AreaName_Lang_zhCN"
           label="名称"
-          sortable
         ></el-table-column>
-        <el-table-column
-          prop="ContinentID"
-          label="大陆"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="MinElevation"
-          label="最低海拔"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="ZoneMusic"
-          label="区域音乐"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="ContinentID" label="大陆"></el-table-column>
+        <el-table-column prop="MinElevation" label="最低海拔"></el-table-column>
+        <el-table-column prop="ZoneMusic" label="区域音乐"></el-table-column>
         <el-table-column
           prop="ExplorationLevel"
           label="探索等级"
-          sortable
         ></el-table-column>
       </el-table>
       <el-pagination

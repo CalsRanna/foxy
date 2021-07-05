@@ -68,13 +68,8 @@
         @current-change="select"
         @row-dblclick="(row) => store(row)"
       >
-        <el-table-column
-          prop="ID"
-          label="编号"
-          width="80"
-          sortable
-        ></el-table-column>
-        <el-table-column label="男性文本" sortable>
+        <el-table-column prop="ID" label="编号" width="80"></el-table-column>
+        <el-table-column label="男性文本">
           <template slot-scope="scope">
             <span v-if="scope.row.localeMaleText !== null">
               {{ scope.row.localeMaleText }}
@@ -82,7 +77,7 @@
             <span v-else>{{ scope.row.MaleText }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="女性文本" sortable>
+        <el-table-column label="女性文本">
           <template slot-scope="scope">
             <span v-if="scope.row.localeFemaleText != null">
               {{ scope.row.localeFemaleText }}

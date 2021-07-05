@@ -65,15 +65,13 @@
           prop="MenuID"
           label="编号"
           width="80px"
-          sortable
         ></el-table-column>
         <el-table-column
           prop="TextID"
           label="文本编号"
           width="160"
-          sortable
         ></el-table-column>
-        <el-table-column label="文本" sortable>
+        <el-table-column label="文本">
           <template slot-scope="scope">
             <span v-if="scope.row.Text0_0 != '' && scope.row.Text0_0 != null">{{
               scope.row.Text0_0

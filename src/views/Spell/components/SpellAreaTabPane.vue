@@ -15,33 +15,16 @@
           @current-change="select"
           @row-dblclick="show"
         >
-          <el-table-column prop="area" label="区域" sortable></el-table-column>
+          <el-table-column prop="area" label="区域"></el-table-column>
           <el-table-column
             prop="quest_start"
             label="开始任务"
-            sortable
           ></el-table-column>
-          <el-table-column
-            prop="quest_end"
-            label="结束任务"
-            sortable
-          ></el-table-column>
-          <el-table-column
-            prop="aura_spell"
-            label="光环"
-            sortable
-          ></el-table-column>
-          <el-table-column
-            prop="quest_start_status"
-            label="开始任务掩码"
-            sortable
-          >
+          <el-table-column prop="quest_end" label="结束任务"></el-table-column>
+          <el-table-column prop="aura_spell" label="光环"></el-table-column>
+          <el-table-column prop="quest_start_status" label="开始任务掩码">
           </el-table-column>
-          <el-table-column
-            prop="quest_end_status"
-            label="结束任务掩码"
-            sortable
-          >
+          <el-table-column prop="quest_end_status" label="结束任务掩码">
           </el-table-column>
         </el-table>
       </el-card>

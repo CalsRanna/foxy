@@ -74,38 +74,32 @@
           prop="entry"
           label="编号"
           width="80px"
-          sortable
         ></el-table-column>
-        <el-table-column label="名称" min-width="160" sortable>
+        <el-table-column label="名称" min-width="160">
           <item-template-name
             slot-scope="scope"
             :itemTemplate="scope.row"
           ></item-template-name>
         </el-table-column>
-        <el-table-column prop="class" label="类别" sortable>
+        <el-table-column prop="class" label="类别">
           <span slot-scope="scope">
             {{ localeClasses[scope.row.class] }}
           </span>
         </el-table-column>
-        <el-table-column prop="subclass" label="子类别" sortable>
+        <el-table-column prop="subclass" label="子类别">
           <span slot-scope="scope">
             {{ localeSubclasses[scope.row.class][scope.row.subclass] }}
           </span></el-table-column
         >
-        <el-table-column prop="InventoryType" label="佩戴位置" sortable>
+        <el-table-column prop="InventoryType" label="佩戴位置">
           <span slot-scope="scope">
             {{ localeInventoryTypes[scope.row.InventoryType] }}
           </span></el-table-column
         >
-        <el-table-column
-          prop="ItemLevel"
-          label="物品等级"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="ItemLevel" label="物品等级"></el-table-column>
         <el-table-column
           prop="RequiredLevel"
           label="需求等级"
-          sortable
         ></el-table-column>
       </el-table>
       <el-pagination

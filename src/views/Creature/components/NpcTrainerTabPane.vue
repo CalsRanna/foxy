@@ -15,7 +15,7 @@
           @current-change="select"
           @row-dblclick="show"
         >
-          <el-table-column sortable>
+          <el-table-column>
             <hint-label
               label="技能ID"
               :tooltip="spellIdTooltip"
@@ -23,26 +23,16 @@
             ></hint-label>
             <span slot-scope="scope">{{ scope.row.SpellID }}</span>
           </el-table-column>
-          <el-table-column
-            prop="MoneyCost"
-            label="价格"
-            sortable
-          ></el-table-column>
+          <el-table-column prop="MoneyCost" label="价格"></el-table-column>
           <el-table-column
             prop="ReqSkillLine"
             label="需要技能"
-            sortable
           ></el-table-column>
           <el-table-column
             prop="ReqSkillRank"
             label="需要熟练度"
-            sortable
           ></el-table-column>
-          <el-table-column
-            prop="ReqLevel"
-            label="需要等级"
-            sortable
-          ></el-table-column>
+          <el-table-column prop="ReqLevel" label="需要等级"></el-table-column>
         </el-table>
       </el-card>
     </div>

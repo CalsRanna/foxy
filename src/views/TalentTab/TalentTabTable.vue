@@ -62,33 +62,15 @@
         @current-change="select"
         @row-dblclick="show"
       >
-        <el-table-column prop="ID" label="编号" sortable width="80px">
-        </el-table-column>
-        <el-table-column
-          prop="Name_Lang_zhCN"
-          label="名称"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="RaceMask"
-          label="种族掩码"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="ClassMask"
-          label="职业掩码"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
+        <el-table-column prop="Name_Lang_zhCN" label="名称"></el-table-column>
+        <el-table-column prop="RaceMask" label="种族掩码"></el-table-column>
+        <el-table-column prop="ClassMask" label="职业掩码"></el-table-column>
         <el-table-column
           prop="PetTalentMask"
           label="宠物天赋掩码"
-          sortable
         ></el-table-column>
-        <el-table-column
-          prop="OrderIndex"
-          label="权重"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="OrderIndex" label="权重"></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"

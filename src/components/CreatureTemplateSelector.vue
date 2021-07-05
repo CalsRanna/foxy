@@ -68,8 +68,8 @@
         @current-change="select"
         @row-dblclick="(row) => store(row)"
       >
-        <el-table-column prop="entry" label="编号" sortable></el-table-column>
-        <el-table-column label="姓名" sortable>
+        <el-table-column prop="entry" label="编号"></el-table-column>
+        <el-table-column label="姓名">
           <template slot-scope="scope">
             <span v-if="scope.row.localeName !== null">
               {{ scope.row.localeName }}
@@ -77,7 +77,7 @@
             <span v-else>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="称号" sortable>
+        <el-table-column label="称号">
           <template slot-scope="scope">
             <span v-if="scope.row.localeTitle != null">
               {{ scope.row.localeTitle }}
@@ -85,16 +85,8 @@
             <span v-else>{{ scope.row.subname }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="minlevel"
-          label="最小等级"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="maxlevel"
-          label="最大等级"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="minlevel" label="最小等级"></el-table-column>
+        <el-table-column prop="maxlevel" label="最大等级"></el-table-column>
       </el-table>
       <div slot="footer">
         <el-button @click="close">取消</el-button>

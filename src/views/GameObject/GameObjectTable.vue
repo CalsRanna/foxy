@@ -65,9 +65,8 @@
           prop="entry"
           label="编号"
           width="80px"
-          sortable
         ></el-table-column>
-        <el-table-column prop="name" label="名称" sortable>
+        <el-table-column prop="name" label="名称">
           <template slot-scope="scope">
             <template v-if="scope.row.localeName">{{
               scope.row.localeName
@@ -75,8 +74,8 @@
             <template v-else>{{ scope.row.name }}</template>
           </template>
         </el-table-column>
-        <el-table-column prop="type" label="类型" sortable></el-table-column>
-        <el-table-column prop="size" label="尺寸" sortable></el-table-column>
+        <el-table-column prop="type" label="类型"></el-table-column>
+        <el-table-column prop="size" label="尺寸"></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"

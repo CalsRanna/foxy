@@ -63,9 +63,8 @@
           prop="Entry"
           label="编号"
           width="80px"
-          sortable
         ></el-table-column>
-        <el-table-column label="名称" sortable>
+        <el-table-column label="名称">
           <span slot-scope="scope">
             <template v-if="scope.row.Reference == 0">
               <item-template-name
@@ -77,17 +76,13 @@
             </template>
           </span>
         </el-table-column>
-        <el-table-column
-          prop="Reference"
-          label="关联"
-          sortable
-        ></el-table-column>
-        <el-table-column prop="Chance" label="几率" sortable>
+        <el-table-column prop="Reference" label="关联"></el-table-column>
+        <el-table-column prop="Chance" label="几率">
           <span slot-scope="scope">
             {{ `${scope.row.Chance}%` }}
           </span>
         </el-table-column>
-        <el-table-column prop="QuestRequired" label="需要任务" sortable>
+        <el-table-column prop="QuestRequired" label="需要任务">
           <span slot-scope="scope">
             <el-tag type="success" v-if="scope.row.QuestRequired">
               需要
@@ -95,16 +90,8 @@
             <el-tag v-else>不需要</el-tag>
           </span>
         </el-table-column>
-        <el-table-column
-          prop="MinCount"
-          label="最小数量"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="MaxCount"
-          label="最大数量"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="MinCount" label="最小数量"></el-table-column>
+        <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"

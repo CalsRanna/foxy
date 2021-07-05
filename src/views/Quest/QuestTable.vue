@@ -60,18 +60,8 @@
         @current-change="select"
         @row-dblclick="show"
       >
-        <el-table-column
-          prop="ID"
-          label="编号"
-          width="80px"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="LogTitle"
-          label="标题"
-          min-width="100px"
-          sortable
-        >
+        <el-table-column prop="ID" label="编号" width="80px"></el-table-column>
+        <el-table-column prop="LogTitle" label="标题" min-width="100px">
           <template slot-scope="scope">
             <template v-if="scope.row.Title">
               {{ scope.row.Title }}
@@ -79,12 +69,7 @@
             <template v-else>{{ scope.row.LogTitle }}</template>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="QuestDescription"
-          label="描述"
-          sortable
-          min-width="500px"
-        >
+        <el-table-column prop="QuestDescription" label="描述" min-width="500px">
           <template slot-scope="scope">
             <template v-if="scope.row.Details">
               {{ scope.row.Details }}
@@ -92,21 +77,9 @@
             <template v-else>{{ scope.row.LogDescription }}</template>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="QuestType"
-          label="类型"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="QuestLevel"
-          label="等级"
-          sortable
-        ></el-table-column>
-        <el-table-column
-          prop="MinLevel"
-          label="最低等级"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="QuestType" label="类型"></el-table-column>
+        <el-table-column prop="QuestLevel" label="等级"></el-table-column>
+        <el-table-column prop="MinLevel" label="最低等级"></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"

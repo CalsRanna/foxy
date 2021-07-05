@@ -59,22 +59,15 @@
         @current-change="select"
         @row-dblclick="show"
       >
-        <el-table-column prop="ID" label="编号" sortable width="80px">
-        </el-table-column>
-        <el-table-column
-          prop="Name_Lang_zhCN"
-          label="名称"
-          sortable
-        ></el-table-column>
+        <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
+        <el-table-column prop="Name_Lang_zhCN" label="名称"></el-table-column>
         <el-table-column
           prop="RequiredSkill"
           label="需要专业"
-          sortable
         ></el-table-column>
         <el-table-column
           prop="RequiredSkillRank"
           label="专业等级"
-          sortable
         ></el-table-column>
       </el-table>
       <el-pagination
