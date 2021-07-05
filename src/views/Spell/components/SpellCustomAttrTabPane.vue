@@ -1,6 +1,9 @@
 <template>
   <el-form :model="spellCustomAttr" label-position="right" label-width="120px">
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="编号">

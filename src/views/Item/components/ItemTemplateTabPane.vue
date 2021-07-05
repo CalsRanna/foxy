@@ -1,6 +1,9 @@
 <template>
   <el-form :model="itemTemplate" label-position="right" label-width="120px">
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="编号">
@@ -149,7 +152,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="套装">
@@ -335,7 +341,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="标识">
@@ -369,7 +378,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="攻击间隔">
@@ -484,7 +496,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="缩放属性分配">
@@ -506,7 +521,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="属性数量">
@@ -762,7 +780,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="神圣抗性">
@@ -1102,7 +1123,10 @@
         <div style="clear: both"></div>
       </div>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="允许职业">
@@ -1237,7 +1261,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="宝石属性">
@@ -1333,7 +1360,10 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="页面ID">
