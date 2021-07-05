@@ -19,7 +19,7 @@
             <el-input v-model="credential.ID" placeholder="ID"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="credential.Spell" placeholder="技能"></el-input>
+            <el-input v-model="credential.Spell" placeholder="Spell"></el-input>
           </el-col>
           <el-col :span="6">
             <el-button

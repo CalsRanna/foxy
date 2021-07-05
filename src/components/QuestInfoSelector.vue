@@ -33,7 +33,7 @@
             <el-col :span="8">
               <el-input
                 v-model="InfoName_Lang_zhCN"
-                placeholder="名称"
+                placeholder="InfoName_Lang_zhCN"
               ></el-input>
             </el-col>
             <el-col :span="8">

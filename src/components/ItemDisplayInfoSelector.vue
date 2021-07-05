@@ -35,7 +35,10 @@
               ></el-input-number>
             </el-col>
             <el-col :span="8">
-              <el-input v-model="InventoryIcon" placeholder="图标"></el-input>
+              <el-input
+                v-model="InventoryIcon"
+                placeholder="InventoryIcon"
+              ></el-input>
             </el-col>
             <el-col :span="8">
               <el-button
@@ -62,7 +65,11 @@
       ></el-pagination>
       <el-table
         :data="itemDisplayInfos"
-        :max-height="pagination.total > 50 ? clientHeight * 0.84 - 81 - 80 - 60 - 80 : clientHeight * 0.84 - 81 - 80 - 80"
+        :max-height="
+          pagination.total > 50
+            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
+            : clientHeight * 0.84 - 81 - 80 - 80
+        "
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"

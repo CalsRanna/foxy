@@ -19,7 +19,7 @@
             <el-input v-model="credential.ID" placeholder="ID"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-select v-model="credential.Stat" placeholder="属性">
+            <el-select v-model="credential.Stat" placeholder="Stat">
               <el-option
                 v-for="(localeStatType, index) in localeStatTypes"
                 :key="`Stat-${index}`"

@@ -51,7 +51,7 @@
               <el-col :span="8">
                 <el-input
                   v-model="AreaName_Lang_zhCN"
-                  placeholder="名称"
+                  placeholder="AreaName_Lang_zhCN"
                 ></el-input>
               </el-col>
               <el-col :span="8">
@@ -115,7 +115,7 @@
               <el-col :span="8">
                 <el-input
                   v-model="SortName_Lang_zhCN"
-                  placeholder="名称"
+                  placeholder="SortName_Lang_zhCN"
                 ></el-input>
               </el-col>
               <el-col :span="8">

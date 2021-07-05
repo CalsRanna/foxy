@@ -31,7 +31,7 @@
               ></el-input-number>
             </el-col>
             <el-col :span="8">
-              <el-input v-model="Text" placeholder="文本"></el-input>
+              <el-input v-model="Text" placeholder="Text"></el-input>
             </el-col>
             <el-col :span="8">
               <el-button
@@ -58,7 +58,11 @@
       ></el-pagination>
       <el-table
         :data="gossipMenus"
-        :max-height="pagination.total > 50 ? clientHeight * 0.84 - 81 - 80 - 60 - 80 : clientHeight * 0.84 - 81 - 80 - 80"
+        :max-height="
+          pagination.total > 50
+            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
+            : clientHeight * 0.84 - 81 - 80 - 80
+        "
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"

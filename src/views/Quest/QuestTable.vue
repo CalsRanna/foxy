@@ -18,7 +18,7 @@
           <el-col :span="6">
             <el-input
               v-model="credential.LogTitle"
-              placeholder="标题"
+              placeholder="LogTitle"
             ></el-input>
           </el-col>
           <el-col :span="6">

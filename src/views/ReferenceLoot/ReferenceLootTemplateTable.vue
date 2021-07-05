@@ -19,7 +19,7 @@
             <el-input v-model="credential.Entry" placeholder="Entry"></el-input>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="credential.name" placeholder="名称"></el-input>
+            <el-input v-model="credential.name" placeholder="name"></el-input>
           </el-col>
           <el-col :span="6">
             <el-button

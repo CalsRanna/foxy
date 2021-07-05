@@ -31,7 +31,7 @@
               ></el-input-number>
             </el-col>
             <el-col :span="8">
-              <el-input v-model="title" placeholder="名称"></el-input>
+              <el-input v-model="title" placeholder="title"></el-input>
             </el-col>
             <el-col :span="8">
               <el-button

@@ -31,7 +31,10 @@
               ></el-input-number>
             </el-col>
             <el-col :span="8">
-              <el-input v-model="Name_Lang_zhCN" placeholder="类型"></el-input>
+              <el-input
+                v-model="Name_Lang_zhCN"
+                placeholder="Name_Lang_zhCN"
+              ></el-input>
             </el-col>
             <el-col :span="8">
               <el-button

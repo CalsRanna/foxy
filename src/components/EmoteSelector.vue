@@ -33,7 +33,7 @@
             <el-col :span="8">
               <el-input
                 v-model="EmoteSlashCommand"
-                placeholder="名称"
+                placeholder="EmoteSlashCommand"
               ></el-input>
             </el-col>
             <el-col :span="8">

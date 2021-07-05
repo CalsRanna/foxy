@@ -21,7 +21,7 @@
           <el-col :span="6">
             <el-input
               v-model="credential.comment"
-              placeholder="备注"
+              placeholder="comment"
             ></el-input>
           </el-col>
           <el-col :span="6">
