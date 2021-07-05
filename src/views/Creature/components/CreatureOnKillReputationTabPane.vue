@@ -7,7 +7,7 @@
     <el-card style="margin-top: 16px">
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="ID">
+          <el-form-item label="编号">
             <el-input-number
               v-model="creatureOnKillReputation.creature_id"
               controls-position="right"

@@ -16,7 +16,7 @@
           @row-dblclick="show"
         >
           <el-table-column prop="slot" label="插槽" sortable></el-table-column>
-          <el-table-column prop="item" label="ID" sortable></el-table-column>
+          <el-table-column prop="item" label="编号" sortable></el-table-column>
           <el-table-column prop="name" label="名称" sortable>
             <item-template-name
               slot-scope="scope"

@@ -58,13 +58,17 @@
       ></el-pagination>
       <el-table
         :data="questTemplates"
-        :max-height="pagination.total > 50 ? clientHeight * 0.84 - 81 - 80 - 60 - 80 : clientHeight * 0.84 - 81 - 80 - 80"
+        :max-height="
+          pagination.total > 50
+            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
+            : clientHeight * 0.84 - 81 - 80 - 80
+        "
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
         @row-dblclick="(row) => store(row)"
       >
-        <el-table-column prop="ID" label="ID" sortable></el-table-column>
+        <el-table-column prop="ID" label="编号" sortable></el-table-column>
         <el-table-column
           prop="LogTitle"
           label="标题"
