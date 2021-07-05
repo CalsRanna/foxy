@@ -58,13 +58,17 @@
       ></el-pagination>
       <el-table
         :data="factionTemplates"
-        :max-height="pagination.total > 50 ? clientHeight * 0.84 - 81 - 80 - 60 - 80 : clientHeight * 0.84 - 81 - 80 - 80"
+        :max-height="
+          pagination.total > 50
+            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
+            : clientHeight * 0.84 - 81 - 80 - 80
+        "
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
         @row-dblclick="(row) => store(row)"
       >
-        <el-table-column prop="ID" label="ID" width="80px"> </el-table-column>
+        <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
         <el-table-column prop="Name_Lang_zhCN" label="名称"> </el-table-column>
         <el-table-column prop="Description_Lang_zhCN" label="描述">
         </el-table-column>
