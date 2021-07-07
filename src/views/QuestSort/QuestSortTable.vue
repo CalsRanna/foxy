@@ -67,10 +67,6 @@
           prop="SortName_Lang_zhCN"
           label="名称"
         ></el-table-column>
-        <el-table-column
-          prop="SortName_Lang_Mask"
-          label="名称掩码"
-        ></el-table-column>
       </el-table>
       <el-pagination
         layout="prev, pager, next"
