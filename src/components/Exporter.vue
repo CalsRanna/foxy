@@ -3,8 +3,7 @@
     <el-dialog
       title="请选择需要导出的dbc文件"
       :visible.sync="visible"
-      width="30%"
-      top="40vh"
+      top="30vh"
     >
       <el-checkbox
         :indeterminate="isIndeterminate"
@@ -18,8 +17,13 @@
       </el-checkbox> -->
       <div style="margin: 15px 0"></div>
       <el-checkbox-group :value="checkedDbcs" @input="handleInput">
-        <el-checkbox v-for="dbc in dbcs" :label="dbc" :key="dbc">
-          {{ dbc }}
+        <el-checkbox
+          v-for="option in options"
+          :label="option"
+          :key="option"
+          style="width: 20%"
+        >
+          {{ option }}
         </el-checkbox>
       </el-checkbox-group>
       <span slot="footer">
@@ -62,17 +66,60 @@
         </el-step>
       </el-steps>
       <ul style="list-style: none; color: #909399">
+        <li v-if="checkedDbcs.indexOf('AreaTable') > -1">
+          <i class="el-icon-loading" v-if="isSearchingAreaTableDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备AreaTable数据
+          <span v-if="!isSearchingAreaTableDbc">
+            ，共{{ areaTables }}条数据
+          </span>
+        </li>
+        <li v-if="checkedDbcs.indexOf('EmotesText') > -1">
+          <i class="el-icon-loading" v-if="isSearchingEmotesTextDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备EmotesText数据
+          <span v-if="!isSearchingEmotesTextDbc">
+            ，共{{ emotesTexts }}条数据
+          </span>
+        </li>
         <li v-if="checkedDbcs.indexOf('Item') > -1">
           <i class="el-icon-loading" v-if="isSearchingItemDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备Item数据
           <span v-if="!isSearchingItemDbc"> ，共{{ items }}条数据 </span>
         </li>
-        <li v-if="checkedDbcs.indexOf('Spell') > -1">
-          <i class="el-icon-loading" v-if="isSearchingSpellDbc"></i>
+        <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
+          <i class="el-icon-loading" v-if="isSearchingItemSetDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备Spell数据
-          <span v-if="!isSearchingSpellDbc"> ，共{{ spells }}条数据 </span>
+          准备ItemSet数据
+          <span v-if="!isSearchingItemSetDbc"> ，共{{ itemSets }}条数据 </span>
+        </li>
+        <li v-if="checkedDbcs.indexOf('QuestFactionReward') > -1">
+          <i
+            class="el-icon-loading"
+            v-if="isSearchingQuestFactionRewardDbc"
+          ></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备QuestFactionReward数据
+          <span v-if="!isSearchingQuestFactionRewardDbc">
+            ，共{{ questFactionRewards }}条数据
+          </span>
+        </li>
+        <li v-if="checkedDbcs.indexOf('QuestInfo') > -1">
+          <i class="el-icon-loading" v-if="isSearchingQuestInfoDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备QuestInfo数据
+          <span v-if="!isSearchingQuestInfoDbc">
+            ，共{{ questInfos }}条数据
+          </span>
+        </li>
+        <li v-if="checkedDbcs.indexOf('QuestSort') > -1">
+          <i class="el-icon-loading" v-if="isSearchingQuestSortDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备QuestSort数据
+          <span v-if="!isSearchingQuestSortDbc">
+            ，共{{ questSorts }}条数据
+          </span>
         </li>
         <li v-if="checkedDbcs.indexOf('ScalingStatDistribution') > -1">
           <i
@@ -93,6 +140,12 @@
             ，共{{ scalingStatValues }}条数据
           </span>
         </li>
+        <li v-if="checkedDbcs.indexOf('Spell') > -1">
+          <i class="el-icon-loading" v-if="isSearchingSpellDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备Spell数据
+          <span v-if="!isSearchingSpellDbc"> ，共{{ spells }}条数据 </span>
+        </li>
         <li v-if="checkedDbcs.indexOf('Talent') > -1">
           <i class="el-icon-loading" v-if="isSearchingTalentDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -107,22 +160,44 @@
             ，共{{ talentTabs }}条数据
           </span>
         </li>
-        <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
-          <i class="el-icon-loading" v-if="isSearchingItemSetDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备ItemSet数据
-          <span v-if="!isSearchingItemSetDbc"> ，共{{ itemSets }}条数据 </span>
-        </li>
         <template v-if="active > 0">
+          <li v-if="checkedDbcs.indexOf('AreaTable') > -1">
+            <i class="el-icon-loading" v-if="isWritingAreaTableDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入AreaTable.dbc
+          </li>
+          <li v-if="checkedDbcs.indexOf('EmotesText') > -1">
+            <i class="el-icon-loading" v-if="isWritingEmotesTextDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入EmotesText.dbc
+          </li>
           <li v-if="checkedDbcs.indexOf('Item') > -1">
             <i class="el-icon-loading" v-if="isWritingItemDbc"></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
             写入Item.dbc
           </li>
-          <li v-if="checkedDbcs.indexOf('Spell') > -1">
-            <i class="el-icon-loading" v-if="isWritingSpellDbc"></i>
+          <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
+            <i class="el-icon-loading" v-if="isWritingItemSetDbc"></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入Spell.dbc
+            写入ItemSet.dbc
+          </li>
+          <li v-if="checkedDbcs.indexOf('QuestFactionReward') > -1">
+            <i
+              class="el-icon-loading"
+              v-if="isWritingQuestFactionRewardDbc"
+            ></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入QuestFactionReward.dbc
+          </li>
+          <li v-if="checkedDbcs.indexOf('QuestInfo') > -1">
+            <i class="el-icon-loading" v-if="isWritingQuestInfoDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入QuestInfo.dbc
+          </li>
+          <li v-if="checkedDbcs.indexOf('QuestSort') > -1">
+            <i class="el-icon-loading" v-if="isWritingQuestSortDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入QuestSort.dbc
           </li>
           <li v-if="checkedDbcs.indexOf('ScalingStatDistribution') > -1">
             <i
@@ -137,10 +212,10 @@
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
             写入ScalingStatValues.dbc
           </li>
-          <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
-            <i class="el-icon-loading" v-if="isWritingItemSetDbc"></i>
+          <li v-if="checkedDbcs.indexOf('Spell') > -1">
+            <i class="el-icon-loading" v-if="isWritingSpellDbc"></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入ItemSet.dbc
+            写入Spell.dbc
           </li>
           <li v-if="checkedDbcs.indexOf('Talent') > -1">
             <i class="el-icon-loading" v-if="isWritingTalentDbc"></i>
@@ -164,26 +239,29 @@
 
 <script>
 const ipcRenderer = window.ipcRenderer;
-
-const dbcOptions = [
+const options = [
+  "AreaTable",
+  "EmotesText",
   "Item",
-  "Spell",
+  "ItemSet",
+  "QuestFactionReward",
+  "QuestInfo",
+  "QuestSort",
   "ScalingStatDistribution",
   "ScalingStatValues",
-  "ItemSet",
+  "Spell",
   "Talent",
   "TalentTab",
 ];
 
 import { START_EXPORT } from "@/constants";
-
 import { mapState, mapActions } from "vuex";
 
 export default {
   data() {
     return {
       visible: false,
-      dbcs: dbcOptions,
+      options: options,
       isIndeterminate: true,
       checkedMpq: false,
       mpqDefaultName: "patch-zhCN-5.MPQ",
@@ -191,18 +269,28 @@ export default {
       visible2: false,
       closable: false,
       active: 0,
+      isSearchingAreaTableDbc: true,
+      isSearchingEmotesTextDbc: true,
       isSearchingItemDbc: true,
-      isSearchingSpellDbc: true,
+      isSearchingItemSetDbc: true,
+      isSearchingQuestFactionRewardDbc: true,
+      isSearchingQuestInfoDbc: true,
+      isSearchingQuestSortDbc: true,
       isSearchingScalingStatDistributionDbc: true,
       isSearchingScalingStatValuesDbc: true,
-      isSearchingItemSetDbc: true,
+      isSearchingSpellDbc: true,
       isSearchingTalentDbc: true,
       isSearchingTalentTabDbc: true,
+      isWritingAreaTableDbc: true,
+      isWritingEmotesTextDbc: true,
       isWritingItemDbc: true,
-      isWritingSpellDbc: true,
+      isWritingItemSetDbc: true,
+      isWritingQuestFactionRewardDbc: true,
+      isWritingQuestInfoDbc: true,
+      isWritingQuestSortDbc: true,
       isWritingScalingStatDistributionDbc: true,
       isWritingScalingStatValuesDbc: true,
-      isWritingItemSetDbc: true,
+      isWritingSpellDbc: true,
       isWritingTalentDbc: true,
       isWritingTalentTabDbc: true,
     };
@@ -210,11 +298,16 @@ export default {
   computed: {
     ...mapState("exporter", [
       "checkedDbcs",
+      "areaTables",
+      "emotesTexts",
       "items",
-      "spells",
+      "itemSets",
+      "questFactionRewards",
+      "questInfos",
+      "questSorts",
       "scalingStatDistributions",
       "scalingStatValues",
-      "itemSets",
+      "spells",
       "talents",
       "talentTabs",
     ]),
@@ -222,45 +315,65 @@ export default {
   methods: {
     ...mapActions("exporter", [
       "updateCheckedDbcs",
+      "searchAreaTableDbc",
+      "searchEmotesTextDbc",
       "searchItemDbc",
-      "searchSpellDbc",
+      "searchItemSetDbc",
+      "searchQuestFactionRewardDbc",
+      "searchQuestInfoDbc",
+      "searchQuestSortDbc",
       "searchScalingStatDistributionDbc",
       "searchScalingStatValuesDbc",
-      "searchItemSetDbc",
+      "searchSpellDbc",
       "searchTalentDbc",
       "searchTalentTabDbc",
+      "writeAreaTableDbc",
+      "writeEmotesTextDbc",
       "writeItemDbc",
-      "writeSpellDbc",
+      "writeItemSetDbc",
+      "writeQuestFactionRewardDbc",
+      "writeQuestInfoDbc",
+      "writeQuestSortDbc",
       "writeScalingStatDistributionDbc",
       "writeScalingStatValuesDbc",
-      "writeItemSetDbc",
+      "writeSpellDbc",
       "writeTalentDbc",
       "writeTalentTabDbc",
     ]),
     handleCheckAllChange(val) {
       this.isIndeterminate = false;
-      this.updateCheckedDbcs({ checkedDbcs: val ? dbcOptions : [] });
+      this.updateCheckedDbcs({ checkedDbcs: val ? options : [] });
     },
     handleInput(value) {
       let checkedCount = value.length;
-      this.checkAll = checkedCount === this.dbcs.length;
+      this.checkAll = checkedCount === this.options.length;
       this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.dbcs.length;
+        checkedCount > 0 && checkedCount < this.options.length;
       this.updateCheckedDbcs({ checkedDbcs: value });
     },
     confirm() {
+      this.isSearchingAreaTableDbc = true;
+      this.isSearchingEmotesTextDbc = true;
       this.isSearchingItemDbc = true;
-      this.isSearchingSpellDbc = true;
+      this.isSearchingItemSetDbc = true;
+      this.isSearchingQuestFactionRewardDbc = true;
+      this.isSearchingQuestInfoDbc = true;
+      this.isSearchingQuestSortDbc = true;
       this.isSearchingScalingStatDistributionDbc = true;
       this.isSearchingScalingStatValuesDbc = true;
-      this.isSearchingItemSetDbc = true;
+      this.isSearchingSpellDbc = true;
       this.isSearchingTalentDbc = true;
       this.isSearchingTalentTabDbc = true;
+      this.isWritingAreaTableDbc = true;
+      this.isWritingEmotesTextDbc = true;
       this.isWritingItemDbc = true;
-      this.isWritingSpellDbc = true;
+      this.isWritingItemSetDbc = true;
+      this.isWritingQuestFactionRewardDbc = true;
+      this.isWritingQuestInfoDbc = true;
+      this.isWritingQuestSortDbc = true;
       this.isWritingScalingStatDistributionDbc = true;
       this.isWritingScalingStatValuesDbc = true;
-      this.isWritingItemSetDbc = true;
+      this.isWritingSpellDbc = true;
       this.isWritingTalentDbc = true;
       this.isWritingTalentTabDbc = true;
 
@@ -275,6 +388,20 @@ export default {
       let promises = [];
       for (let dbc of this.checkedDbcs) {
         switch (dbc) {
+          case "AreaTable":
+            promises.push(
+              this.searchAreaTableDbc().then(() => {
+                this.isSearchingAreaTableDbc = false;
+              })
+            );
+            break;
+          case "EmotesText":
+            promises.push(
+              this.searchEmotesTextDbc().then(() => {
+                this.isSearchingEmotesTextDbc = false;
+              })
+            );
+            break;
           case "Item":
             promises.push(
               this.searchItemDbc().then(() => {
@@ -282,10 +409,31 @@ export default {
               })
             );
             break;
-          case "Spell":
+          case "ItemSet":
             promises.push(
-              this.searchSpellDbc().then(() => {
-                this.isSearchingSpellDbc = false;
+              this.searchItemSetDbc().then(() => {
+                this.isSearchingItemSetDbc = false;
+              })
+            );
+            break;
+          case "QuestFactionReward":
+            promises.push(
+              this.searchQuestFactionRewardDbc().then(() => {
+                this.isSearchingQuestFactionRewardDbc = false;
+              })
+            );
+            break;
+          case "QuestInfo":
+            promises.push(
+              this.searchQuestInfoDbc().then(() => {
+                this.isSearchingQuestInfoDbc = false;
+              })
+            );
+            break;
+          case "QuestSort":
+            promises.push(
+              this.searchQuestSortDbc().then(() => {
+                this.isSearchingQuestSortDbc = false;
               })
             );
             break;
@@ -303,10 +451,10 @@ export default {
               })
             );
             break;
-          case "ItemSet":
+          case "Spell":
             promises.push(
-              this.searchItemSetDbc().then(() => {
-                this.isSearchingItemSetDbc = false;
+              this.searchSpellDbc().then(() => {
+                this.isSearchingSpellDbc = false;
               })
             );
             break;
@@ -341,6 +489,20 @@ export default {
       let promises = [];
       for (let dbc of this.checkedDbcs) {
         switch (dbc) {
+          case "AreaTable":
+            promises.push(
+              this.writeAreaTableDbc().then(() => {
+                this.isWritingAreaTableDbc = false;
+              })
+            );
+            break;
+          case "EmotesText":
+            promises.push(
+              this.writeEmotesTextDbc().then(() => {
+                this.isWritingEmotesTextDbc = false;
+              })
+            );
+            break;
           case "Item":
             promises.push(
               this.writeItemDbc().then(() => {
@@ -348,10 +510,31 @@ export default {
               })
             );
             break;
-          case "Spell":
+          case "ItemSet":
             promises.push(
-              this.writeSpellDbc().then(() => {
-                this.isWritingSpellDbc = false;
+              this.writeItemSetDbc().then(() => {
+                this.isWritingItemSetDbc = false;
+              })
+            );
+            break;
+          case "QuestFactionReward":
+            promises.push(
+              this.writeQuestFactionRewardDbc().then(() => {
+                this.isWritingQuestFactionRewardDbc = false;
+              })
+            );
+            break;
+          case "QuestInfo":
+            promises.push(
+              this.writeQuestInfoDbc().then(() => {
+                this.isWritingQuestInfoDbc = false;
+              })
+            );
+            break;
+          case "QuestSort":
+            promises.push(
+              this.writeQuestSortDbc().then(() => {
+                this.isWritingQuestSortDbc = false;
               })
             );
             break;
@@ -369,10 +552,10 @@ export default {
               })
             );
             break;
-          case "ItemSet":
+          case "Spell":
             promises.push(
-              this.writeItemSetDbc().then(() => {
-                this.isWritingItemSetDbc = false;
+              this.writeSpellDbc().then(() => {
+                this.isWritingSpellDbc = false;
               })
             );
             break;
