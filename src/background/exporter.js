@@ -2,6 +2,40 @@ import { ipcMain } from "electron";
 
 const DBC = require("warcrafty");
 
+ipcMain.on("SEARCH_AREA_TABLE_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_area_table");
+
+  queryBuilder
+    .then((rows) => {
+      global.areaTables = rows;
+      event.reply("SEARCH_AREA_TABLE_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_AREA_TABLE_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
+ipcMain.on("SEARCH_EMOTES_TEXT_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_emotes_text");
+
+  queryBuilder
+    .then((rows) => {
+      global.emotesTexts = rows;
+      event.reply("SEARCH_EMOTES_TEXT_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_EMOTES_TEXT_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
 ipcMain.on("SEARCH_ITEM_DBC", (event) => {
   let queryBuilder = knex.select().from("foxy.dbc_item");
 
@@ -19,16 +53,67 @@ ipcMain.on("SEARCH_ITEM_DBC", (event) => {
     });
 });
 
-ipcMain.on("SEARCH_SPELL_DBC", (event) => {
-  let queryBuilder = knex.select().from("foxy.dbc_spell");
+ipcMain.on("SEARCH_ITEM_SET_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_item_set");
 
   queryBuilder
     .then((rows) => {
-      global.spells = rows;
-      event.reply("SEARCH_SPELL_DBC", rows.length);
+      global.itemSets = rows;
+      event.reply("SEARCH_ITEM_SET_DBC", rows.length);
     })
     .catch((error) => {
-      event.reply("SEARCH_SPELL_DBC_REJECT", error);
+      event.reply("SEARCH_ITEM_SET_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
+ipcMain.on("SEARCH_QUEST_FACTION_REWARD_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_quest_faction_reward");
+
+  queryBuilder
+    .then((rows) => {
+      global.questFactionRewards = rows;
+      event.reply("SEARCH_QUEST_FACTION_REWARD_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_QUEST_FACTION_REWARD_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
+ipcMain.on("SEARCH_QUEST_INFO_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_quest_info");
+
+  queryBuilder
+    .then((rows) => {
+      global.questInfos = rows;
+      event.reply("SEARCH_QUEST_INFO_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_QUEST_INFO_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
+ipcMain.on("SEARCH_QUEST_SORT_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_quest_sort");
+
+  queryBuilder
+    .then((rows) => {
+      global.questSorts = rows;
+      event.reply("SEARCH_QUEST_SORT_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_QUEST_SORT_DBC_REJECT", error);
       event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     })
     .finally(() => {
@@ -70,16 +155,16 @@ ipcMain.on("SEARCH_SCALING_STAT_VALUES_DBC", (event) => {
     });
 });
 
-ipcMain.on("SEARCH_ITEM_SET_DBC", (event) => {
-  let queryBuilder = knex.select().from("foxy.dbc_item_set");
+ipcMain.on("SEARCH_SPELL_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_spell");
 
   queryBuilder
     .then((rows) => {
-      global.itemSets = rows;
-      event.reply("SEARCH_ITEM_SET_DBC", rows.length);
+      global.spells = rows;
+      event.reply("SEARCH_SPELL_DBC", rows.length);
     })
     .catch((error) => {
-      event.reply("SEARCH_ITEM_SET_DBC_REJECT", error);
+      event.reply("SEARCH_SPELL_DBC_REJECT", error);
       event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     })
     .finally(() => {
@@ -121,6 +206,28 @@ ipcMain.on("SEARCH_TALENT_TAB_DBC", (event) => {
     });
 });
 
+ipcMain.on("WRITE_AREA_TABLE_DBC", (event) => {
+  DBC.write(`${path}/AreaTable.dbc`, global.areaTables)
+    .then(() => {
+      event.reply("WRITE_AREA_TABLE_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_AREA_TABLE_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_EMOTES_TEXT_DBC", (event) => {
+  DBC.write(`${path}/EmotesText.dbc`, global.emotesTexts)
+    .then(() => {
+      event.reply("WRITE_EMOTES_TEXT_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_EMOTES_TEXT_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
 ipcMain.on("WRITE_ITEM_DBC", (event) => {
   DBC.write(`${path}/Item.dbc`, global.items)
     .then(() => {
@@ -132,13 +239,46 @@ ipcMain.on("WRITE_ITEM_DBC", (event) => {
     });
 });
 
-ipcMain.on("WRITE_SPELL_DBC", (event) => {
-  DBC.write(`${path}/Spell.dbc`, global.spells)
+ipcMain.on("WRITE_ITEM_SET_DBC", (event) => {
+  DBC.write(`${path}/ItemSet.dbc`, global.itemSets)
     .then(() => {
-      event.reply("WRITE_SPELL_DBC");
+      event.reply("WRITE_ITEM_SET_DBC");
     })
     .catch((error) => {
-      event.reply("WRITE_SPELL_DBC_REJECT", error);
+      event.reply("WRITE_ITEM_SET_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_QUEST_FACTION_REWARD_DBC", (event) => {
+  DBC.write(`${path}/QuestFactionReward.dbc`, global.questFactionRewards)
+    .then(() => {
+      event.reply("WRITE_QUEST_FACTION_REWARD_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_QUEST_FACTION_REWARD_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_QUEST_INFO_DBC", (event) => {
+  DBC.write(`${path}/QuestInfo.dbc`, global.questInfos)
+    .then(() => {
+      event.reply("WRITE_QUEST_INFO_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_QUEST_INFO_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_QUEST_SORT_DBC", (event) => {
+  DBC.write(`${path}/QuestSort.dbc`, global.questSorts)
+    .then(() => {
+      event.reply("WRITE_QUEST_SORT_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_QUEST_SORT_DBC_REJECT", error);
       event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     });
 });
@@ -168,13 +308,13 @@ ipcMain.on("WRITE_SCALING_STAT_VALUES_DBC", (event) => {
     });
 });
 
-ipcMain.on("WRITE_ITEM_SET_DBC", (event) => {
-  DBC.write(`${path}/ItemSet.dbc`, global.itemSets)
+ipcMain.on("WRITE_SPELL_DBC", (event) => {
+  DBC.write(`${path}/Spell.dbc`, global.spells)
     .then(() => {
-      event.reply("WRITE_ITEM_SET_DBC");
+      event.reply("WRITE_SPELL_DBC");
     })
     .catch((error) => {
-      event.reply("WRITE_ITEM_SET_DBC_REJECT", error);
+      event.reply("WRITE_SPELL_DBC_REJECT", error);
       event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     });
 });
