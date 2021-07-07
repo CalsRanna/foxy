@@ -17,6 +17,7 @@ export default {
     scalingStatDistributions: [],
     scalingStatValues: [],
     spells: [],
+    spellItemEnchantments: [],
     talents: [],
     talentTabs: [],
   }),
@@ -165,6 +166,21 @@ export default {
         });
       });
     },
+    searchSpellItemEnchantmentDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC");
+        ipcRenderer.on("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC", (event, spells) => {
+          commit("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC", spellItemEnchantments);
+          resolve();
+        });
+        ipcRenderer.on(
+          "SEARCH_SPELL_ITEM_ENCHANTMENT_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     searchTalentDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("SEARCH_TALENT_DBC");
@@ -308,6 +324,20 @@ export default {
         });
       });
     },
+    writeSpellItemEnchantmentDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("WRITE_SPELL_ITEM_ENCHANTMENT_DBC");
+        ipcRenderer.on("WRITE_SPELL_ITEM_ENCHANTMENT_DBC", (event) => {
+          resolve();
+        });
+        ipcRenderer.on(
+          "WRITE_SPELL_ITEM_ENCHANTMENT_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     writeTalentDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("WRITE_TALENT_DBC");
@@ -364,6 +394,9 @@ export default {
     },
     SEARCH_SPELL_DBC(state, spells) {
       state.spells = spells;
+    },
+    SEARCH_SPELL_ITEM_ENCHANTMENT_DBC(state, spellItemEnchantments) {
+      state.spellItemEnchantments = spellItemEnchantments;
     },
     SEARCH_TALENT_DBC(state, talents) {
       state.talents = talents;

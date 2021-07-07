@@ -146,6 +146,17 @@
           准备Spell数据
           <span v-if="!isSearchingSpellDbc"> ，共{{ spells }}条数据 </span>
         </li>
+        <li v-if="checkedDbcs.indexOf('SpellItemEnchantment') > -1">
+          <i
+            class="el-icon-loading"
+            v-if="isSearchingSpellItemEnchantmentDbc"
+          ></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备SpellItemEnchantment数据
+          <span v-if="!isSearchingSpellItemEnchantmentDbc">
+            ，共{{ spellItemEnchantments }}条数据
+          </span>
+        </li>
         <li v-if="checkedDbcs.indexOf('Talent') > -1">
           <i class="el-icon-loading" v-if="isSearchingTalentDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -217,6 +228,14 @@
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
             写入Spell.dbc
           </li>
+          <li v-if="checkedDbcs.indexOf('SpellItemEnchantment') > -1">
+            <i
+              class="el-icon-loading"
+              v-if="isWritingSpellItemEnchantmentDbc"
+            ></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入SpellItemEnchantment.dbc
+          </li>
           <li v-if="checkedDbcs.indexOf('Talent') > -1">
             <i class="el-icon-loading" v-if="isWritingTalentDbc"></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -250,6 +269,7 @@ const options = [
   "ScalingStatDistribution",
   "ScalingStatValues",
   "Spell",
+  "SpellItemEnchantment",
   "Talent",
   "TalentTab",
 ];
@@ -279,6 +299,7 @@ export default {
       isSearchingScalingStatDistributionDbc: true,
       isSearchingScalingStatValuesDbc: true,
       isSearchingSpellDbc: true,
+      isSearchingSpellItemEnchantmentDbc: true,
       isSearchingTalentDbc: true,
       isSearchingTalentTabDbc: true,
       isWritingAreaTableDbc: true,
@@ -291,6 +312,7 @@ export default {
       isWritingScalingStatDistributionDbc: true,
       isWritingScalingStatValuesDbc: true,
       isWritingSpellDbc: true,
+      isWritingSpellItemEnchantmentDbc: true,
       isWritingTalentDbc: true,
       isWritingTalentTabDbc: true,
     };
@@ -308,6 +330,7 @@ export default {
       "scalingStatDistributions",
       "scalingStatValues",
       "spells",
+      "spellItemEnchantments",
       "talents",
       "talentTabs",
     ]),
@@ -325,6 +348,7 @@ export default {
       "searchScalingStatDistributionDbc",
       "searchScalingStatValuesDbc",
       "searchSpellDbc",
+      "searchSpellItemEnchantmentDbc",
       "searchTalentDbc",
       "searchTalentTabDbc",
       "writeAreaTableDbc",
@@ -337,6 +361,7 @@ export default {
       "writeScalingStatDistributionDbc",
       "writeScalingStatValuesDbc",
       "writeSpellDbc",
+      "writeSpellItemEnchantmentDbc",
       "writeTalentDbc",
       "writeTalentTabDbc",
     ]),
@@ -362,6 +387,7 @@ export default {
       this.isSearchingScalingStatDistributionDbc = true;
       this.isSearchingScalingStatValuesDbc = true;
       this.isSearchingSpellDbc = true;
+      this.isSearchingSpellItemEnchantmentDbc = true;
       this.isSearchingTalentDbc = true;
       this.isSearchingTalentTabDbc = true;
       this.isWritingAreaTableDbc = true;
@@ -374,6 +400,7 @@ export default {
       this.isWritingScalingStatDistributionDbc = true;
       this.isWritingScalingStatValuesDbc = true;
       this.isWritingSpellDbc = true;
+      this.isWritingSpellItemEnchantmentDbc = true;
       this.isWritingTalentDbc = true;
       this.isWritingTalentTabDbc = true;
 
@@ -455,6 +482,13 @@ export default {
             promises.push(
               this.searchSpellDbc().then(() => {
                 this.isSearchingSpellDbc = false;
+              })
+            );
+            break;
+          case "SpellItemEnchantment":
+            promises.push(
+              this.searchSpellItemEnchantmentDbc().then(() => {
+                this.isSearchingSpellItemEnchantmentDbc = false;
               })
             );
             break;
@@ -556,6 +590,13 @@ export default {
             promises.push(
               this.writeSpellDbc().then(() => {
                 this.isWritingSpellDbc = false;
+              })
+            );
+            break;
+          case "SpellItemEnchantment":
+            promises.push(
+              this.writeSpellItemEnchantmentDbc().then(() => {
+                this.isWritingSpellItemEnchantmentDbc = false;
               })
             );
             break;
