@@ -78,6 +78,7 @@ import spellSelector from "./spellSelector";
 import spellDurationSelector from "./spellDurationSelector";
 import spellCastTimeSelector from "./spellCastTimeSelector";
 import spellIconSelector from "./spellIconSelector";
+import spellItemEnchantment from "./spellItemEnchantment";
 import spellRangeSelector from "./spellRangeSelector";
 import gossipMenuSelector from "./gossipMenuSelector";
 import scalingStatDistributionSelector from "./scalingStatDistributionSelector";
@@ -154,6 +155,7 @@ export default new Vuex.Store({
     spellBonusData,
     spellCustomAttr,
     spellGroup,
+    spellItemEnchantment,
     spellLinkedSpell,
     spellLootTemplate,
     referenceLootTemplateCard,

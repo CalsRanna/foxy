@@ -114,6 +114,18 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          @click.native="() => navigate('/spell-item-enchantment')"
+        >
+          <p class="summary-title">
+            附魔属性<span>Spell Item Enchantment</span>
+          </p>
+          <p class="summary-content">物品的附魔属性</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/talent')"
         >
           <p class="summary-title">天赋<span>Talent</span></p>
