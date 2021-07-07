@@ -65,11 +65,12 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="最小等级">
-            <el-input
+            <el-input-number
               v-model="spellItemEnchantment.MinLevel"
+              controls-position="right"
               placeholder="MinLevel"
             >
-            </el-input>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -91,7 +92,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredSkillID">
+          <el-form-item label="需要技能">
             <el-input
               v-model="spellItemEnchantment.RequiredSkillID"
               placeholder="RequiredSkillID"
@@ -100,7 +101,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="RequiredSkillRank">
+          <el-form-item label="需要技能等级">
             <el-input
               v-model="spellItemEnchantment.RequiredSkillRank"
               placeholder="RequiredSkillRank"
@@ -138,29 +139,38 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="参数">
-            <el-input
+            <el-input-number
+              v-if="spellItemEnchantment.Effect_1 === 5"
               v-model="spellItemEnchantment.EffectArg_1"
+              controls-position="right"
               placeholder="EffectArg_1"
             >
-            </el-input>
+            </el-input-number>
+            <spell-selector
+              v-else
+              v-model="spellItemEnchantment.EffectArg_1"
+              placeholder="EffectArg_1"
+            ></spell-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最小值">
-            <el-input
+            <el-input-number
               v-model="spellItemEnchantment.EffectPointsMin_1"
+              controls-position="right"
               placeholder="EffectPointsMin_1"
             >
-            </el-input>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最大值">
-            <el-input
+            <el-input-number
               v-model="spellItemEnchantment.EffectPointsMax_1"
+              controls-position="right"
               placeholder="EffectPointsMax_1"
             >
-            </el-input>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -174,29 +184,38 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="参数">
-            <el-input
+            <el-input-number
+              v-if="spellItemEnchantment.Effect_2 === 5"
               v-model="spellItemEnchantment.EffectArg_2"
+              controls-position="right"
               placeholder="EffectArg_2"
             >
-            </el-input>
+            </el-input-number>
+            <spell-selector
+              v-else
+              v-model="spellItemEnchantment.EffectArg_2"
+              placeholder="EffectArg_2"
+            ></spell-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最小值">
-            <el-input
+            <el-input-number
               v-model="spellItemEnchantment.EffectPointsMin_2"
+              controls-position="right"
               placeholder="EffectPointsMin_2"
             >
-            </el-input>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最大值">
-            <el-input
+            <el-input-number
               v-model="spellItemEnchantment.EffectPointsMax_2"
+              controls-position="right"
               placeholder="EffectPointsMax_2"
             >
-            </el-input>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -210,29 +229,38 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="参数">
-            <el-input
+            <el-input-number
+              v-if="spellItemEnchantment.Effect_3 === 5"
               v-model="spellItemEnchantment.EffectArg_3"
+              controls-position="right"
               placeholder="EffectArg_3"
             >
-            </el-input>
+            </el-input-number>
+            <spell-selector
+              v-else
+              v-model="spellItemEnchantment.EffectArg_3"
+              placeholder="EffectArg_3"
+            ></spell-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最小值">
-            <el-input
+            <el-input-number
               v-model="spellItemEnchantment.EffectPointsMin_3"
+              controls-position="right"
               placeholder="EffectPointsMin_3"
             >
-            </el-input>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最大值">
-            <el-input
+            <el-input-number
               v-model="spellItemEnchantment.EffectPointsMax_3"
+              controls-position="right"
               placeholder="EffectPointsMax_3"
             >
-            </el-input>
+            </el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -248,6 +276,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import SpellSelector from "@/components/SpellSelector";
 
 export default {
   data() {
@@ -312,5 +341,6 @@ export default {
   mounted() {
     this.init();
   },
+  components: { SpellSelector },
 };
 </script>
