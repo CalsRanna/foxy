@@ -169,10 +169,13 @@ export default {
     searchSpellItemEnchantmentDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC");
-        ipcRenderer.on("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC", (event, spells) => {
-          commit("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC", spellItemEnchantments);
-          resolve();
-        });
+        ipcRenderer.on(
+          "SEARCH_SPELL_ITEM_ENCHANTMENT_DBC",
+          (event, spellItemEnchantments) => {
+            commit("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC", spellItemEnchantments);
+            resolve();
+          }
+        );
         ipcRenderer.on(
           "SEARCH_SPELL_ITEM_ENCHANTMENT_DBC_REJECT",
           (event, error) => {
