@@ -26,7 +26,7 @@
           class="clickable-card"
           @click.native="() => navigate('/emote-text')"
         >
-          <p class="summary-title">表情文本<span>Emote Text</span></p>
+          <p class="summary-title">表情文本<span>Emotes Text</span></p>
           <p class="summary-content">表情的文本</p>
         </el-card>
       </el-col>

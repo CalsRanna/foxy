@@ -82,30 +82,38 @@
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
         <el-table-column label="属性">
           <template slot-scope="scope">
-            <span>
+            <el-tag v-if="scope.row.StatID_1 > 0" style="margin-right: 8px">
               {{ localeStatTypes[scope.row.StatID_1] }}({{ scope.row.Bonus_1 }})
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column label="属性">
-          <template slot-scope="scope">
-            <span>
+            </el-tag>
+            <el-tag v-if="scope.row.StatID_2 > 0" style="margin-right: 8px">
               {{ localeStatTypes[scope.row.StatID_2] }}({{ scope.row.Bonus_2 }})
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column label="属性">
-          <template slot-scope="scope">
-            <span>
+            </el-tag>
+            <el-tag v-if="scope.row.StatID_3 > 0" style="margin-right: 8px">
               {{ localeStatTypes[scope.row.StatID_3] }}({{ scope.row.Bonus_3 }})
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column label="属性">
-          <template slot-scope="scope">
-            <span>
+            </el-tag>
+            <el-tag v-if="scope.row.StatID_4 > 0" style="margin-right: 8px">
               {{ localeStatTypes[scope.row.StatID_4] }}({{ scope.row.Bonus_4 }})
-            </span>
+            </el-tag>
+            <el-tag v-if="scope.row.StatID_5 > 0" style="margin-right: 8px">
+              {{ localeStatTypes[scope.row.StatID_5] }}({{ scope.row.Bonus_5 }})
+            </el-tag>
+            <el-tag v-if="scope.row.StatID_6 > 0" style="margin-right: 8px">
+              {{ localeStatTypes[scope.row.StatID_6] }}({{ scope.row.Bonus_6 }})
+            </el-tag>
+            <el-tag v-if="scope.row.StatID_7 > 0" style="margin-right: 8px">
+              {{ localeStatTypes[scope.row.StatID_7] }}({{ scope.row.Bonus_7 }})
+            </el-tag>
+            <el-tag v-if="scope.row.StatID_8 > 0" style="margin-right: 8px">
+              {{ localeStatTypes[scope.row.StatID_8] }}({{ scope.row.Bonus_8 }})
+            </el-tag>
+            <el-tag v-if="scope.row.StatID_9 > 0" style="margin-right: 8px">
+              {{ localeStatTypes[scope.row.StatID_9] }}({{ scope.row.Bonus_9 }})
+            </el-tag>
+            <el-tag v-if="scope.row.StatID_10 > 0" style="margin-right: 8px">
+              {{ localeStatTypes[scope.row.StatID_10] }}({{
+                scope.row.Bonus_10
+              }})
+            </el-tag>
           </template>
         </el-table-column>
       </el-table>
