@@ -9,7 +9,10 @@ import {
 
 ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, (event, payload) => {
   let queryBuilder = knex
-    .select(["entry", knex.raw("count(ench) as enchs")])
+    .select([
+      "entry",
+      knex.raw("group_concat(Name_Lang_zhCN, '(', chance, '%)') as enchs"),
+    ])
     .groupBy("entry")
     .from("item_enchantment_template");
   if (payload.type == "properties") {

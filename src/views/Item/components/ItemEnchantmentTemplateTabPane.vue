@@ -15,14 +15,43 @@
           @current-change="select"
           @row-dblclick="show"
         >
-          <el-table-column prop="entry" label="编号"></el-table-column>
-          <el-table-column prop="ench" label="附魔"></el-table-column>
+          <el-table-column
+            prop="entry"
+            label="编号"
+            width="80px"
+          ></el-table-column>
           <el-table-column label="名称">
             <template slot-scope="scope">
               <span v-if="scope.row.Name_Lang_zhCN != null">
                 {{ scope.row.Name_Lang_zhCN }}
               </span>
-              <span v-else>{{ scope.row.Name }}</span>
+              <span v-else>
+                <template v-if="itemTemplate.RandomProperty">
+                  {{ scope.row.Name }}
+                </template>
+                <template v-if="itemTemplate.RandomSuffix">
+                  {{ scope.row.InternalName }}
+                </template>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="附魔">
+            <template slot-scope="scope">
+              <el-tag v-if="scope.row.Enchantment_1" style="margin-right: 8px">
+                {{ scope.row.Enchantment_1 }}
+              </el-tag>
+              <el-tag v-if="scope.row.Enchantment_2" style="margin-right: 8px">
+                {{ scope.row.Enchantment_2 }}
+              </el-tag>
+              <el-tag v-if="scope.row.Enchantment_3" style="margin-right: 8px">
+                {{ scope.row.Enchantment_3 }}
+              </el-tag>
+              <el-tag v-if="scope.row.Enchantment_4" style="margin-right: 8px">
+                {{ scope.row.Enchantment_4 }}
+              </el-tag>
+              <el-tag v-if="scope.row.Enchantment_5" style="margin-right: 8px">
+                {{ scope.row.Enchantment_5 }}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="chance" label="几率">
