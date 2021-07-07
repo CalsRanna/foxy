@@ -74,11 +74,25 @@
       >
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
         <el-table-column prop="Name_Lang_zhCN" label="名称"></el-table-column>
-        <el-table-column prop="Enchantment_1" label="属性1"></el-table-column>
-        <el-table-column prop="Enchantment_2" label="属性2"></el-table-column>
-        <el-table-column prop="Enchantment_3" label="属性3"></el-table-column>
-        <el-table-column prop="Enchantment_4" label="属性4"></el-table-column>
-        <el-table-column prop="Enchantment_5" label="属性5"></el-table-column>
+        <el-table-column label="属性">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.Enchantment_1" style="margin-right: 8px">
+              {{ scope.row.Enchantment_1 }}
+            </el-tag>
+            <el-tag v-if="scope.row.Enchantment_2" style="margin-right: 8px">
+              {{ scope.row.Enchantment_2 }}
+            </el-tag>
+            <el-tag v-if="scope.row.Enchantment_3" style="margin-right: 8px">
+              {{ scope.row.Enchantment_3 }}
+            </el-tag>
+            <el-tag v-if="scope.row.Enchantment_4" style="margin-right: 8px">
+              {{ scope.row.Enchantment_4 }}
+            </el-tag>
+            <el-tag v-if="scope.row.Enchantment_5" style="margin-right: 8px">
+              {{ scope.row.Enchantment_5 }}
+            </el-tag>
+          </template>
+        </el-table-column>
       </el-table>
       <div slot="footer">
         <el-button @click="close">取消</el-button>

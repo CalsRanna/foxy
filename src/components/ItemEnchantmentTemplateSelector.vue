@@ -72,7 +72,17 @@
       >
         <el-table-column prop="entry" label="编号" width="80px">
         </el-table-column>
-        <el-table-column prop="enchs" label="附魔数量"></el-table-column>
+        <el-table-column label="附魔">
+          <template slot-scope="scope">
+            <el-tag
+              v-for="(ench, index) in scope.row.enchs.split(',')"
+              :key="`ench-${index}`"
+              style="margin-right: 8px"
+            >
+              {{ ench }}
+            </el-tag>
+          </template>
+        </el-table-column>
       </el-table>
       <div slot="footer">
         <el-button @click="close">取消</el-button>

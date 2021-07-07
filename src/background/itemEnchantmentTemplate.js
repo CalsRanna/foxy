@@ -12,20 +12,100 @@ import {
 } from "../constants";
 
 ipcMain.on(SEARCH_ITEM_ENCHANTMENT_TEMPLATES, (event, payload) => {
-  let queryBuilder = knex
-    .select(["iet.*", "re.*"])
-    .from("item_enchantment_template as iet");
+  let queryBuilder = null;
   if (payload.type == "properties") {
-    queryBuilder.leftJoin(
-      "foxy.dbc_item_random_properties as re",
-      "ench",
-      "ID"
-    );
+    queryBuilder = knex
+      .select([
+        "iet.entry",
+        "iet.ench",
+        "iet.chance",
+        "dirp.Name_Lang_zhCN",
+        "dirp.Name",
+        "dsie_1.Name_Lang_zhCN as Enchantment_1",
+        "dsie_2.Name_Lang_zhCN as Enchantment_2",
+        "dsie_3.Name_Lang_zhCN as Enchantment_3",
+        "dsie_4.Name_Lang_zhCN as Enchantment_4",
+        "dsie_5.Name_Lang_zhCN as Enchantment_5",
+      ])
+      .from("item_enchantment_template as iet");
+    queryBuilder
+      .leftJoin(
+        "foxy.dbc_item_random_properties as dirp",
+        "iet.ench",
+        "dirp.ID"
+      )
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_1",
+        "dirp.Enchantment_1",
+        "dsie_1.ID"
+      )
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_2",
+        "dirp.Enchantment_2",
+        "dsie_2.ID"
+      )
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_3",
+        "dirp.Enchantment_3",
+        "dsie_3.ID"
+      )
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_4",
+        "dirp.Enchantment_4",
+        "dsie_4.ID"
+      )
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_5",
+        "dirp.Enchantment_5",
+        "dsie_5.ID"
+      );
+    delete payload.type;
+    queryBuilder.whereNotNull("dirp.ID").where(payload);
   } else {
-    queryBuilder.leftJoin("foxy.dbc_item_random_suffix as re", "ench", "ID");
+    queryBuilder = knex
+      .select([
+        "iet.entry",
+        "iet.ench",
+        "iet.chance",
+        "dirs.Name_Lang_zhCN",
+        "dirs.InternalName",
+        "dsie_1.Name_Lang_zhCN as Enchantment_1",
+        "dsie_2.Name_Lang_zhCN as Enchantment_2",
+        "dsie_3.Name_Lang_zhCN as Enchantment_3",
+        "dsie_4.Name_Lang_zhCN as Enchantment_4",
+        "dsie_5.Name_Lang_zhCN as Enchantment_5",
+      ])
+      .from("item_enchantment_template as iet");
+    queryBuilder
+      .leftJoin("foxy.dbc_item_random_suffix as dirs", "iet.ench", "dirs.ID")
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_1",
+        "dirs.Enchantment_1",
+        "dsie_1.ID"
+      )
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_2",
+        "dirs.Enchantment_2",
+        "dsie_2.ID"
+      )
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_3",
+        "dirs.Enchantment_3",
+        "dsie_3.ID"
+      )
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_4",
+        "dirs.Enchantment_4",
+        "dsie_4.ID"
+      )
+      .leftJoin(
+        "foxy.dbc_spell_item_enchantment as dsie_5",
+        "dirs.Enchantment_5",
+        "dsie_5.ID"
+      );
+    delete payload.type;
+    queryBuilder.whereNotNull("dirs.ID").where(payload);
   }
-  delete payload.type;
-  queryBuilder.whereNotNull("ID").where(payload);
 
   queryBuilder
     .then((rows) => {
