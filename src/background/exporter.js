@@ -172,6 +172,23 @@ ipcMain.on("SEARCH_SPELL_DBC", (event) => {
     });
 });
 
+ipcMain.on("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_spell_item_enchantment");
+
+  queryBuilder
+    .then((rows) => {
+      global.spellItemEnchantments = rows;
+      event.reply("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
 ipcMain.on("SEARCH_TALENT_DBC", (event) => {
   let queryBuilder = knex.select().from("foxy.dbc_talent");
 
@@ -315,6 +332,17 @@ ipcMain.on("WRITE_SPELL_DBC", (event) => {
     })
     .catch((error) => {
       event.reply("WRITE_SPELL_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_SPELL_ITEM_ENCHANTMENT_DBC", (event) => {
+  DBC.write(`${path}/SpellItemEnchantment.dbc`, global.spellItemEnchantments)
+    .then(() => {
+      event.reply("WRITE_SPELL_ITEM_ENCHANTMENT_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_SPELL_ITEM_ENCHANTMENT_DBC_REJECT", error);
       event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     });
 });
