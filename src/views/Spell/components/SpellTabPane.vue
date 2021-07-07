@@ -131,6 +131,7 @@
               filterable
               placeholder="Mechanic"
             >
+              <el-option label="无" :value="0"></el-option>
               <el-option
                 v-for="mechanic in spellMechanics"
                 :key="`mechanic-${mechanic.ID}`"
