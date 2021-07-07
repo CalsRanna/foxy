@@ -117,6 +117,21 @@ const routes = [
     component: () => import("@/views/ScalingStatValue/ScalingStatValueDetail"),
   },
   {
+    path: "/spell-item-enchantment",
+    component: () =>
+      import("@/views/SpellItemEnchantment/SpellItemEnchantmentTable"),
+  },
+  {
+    path: "/spell-item-enchantment/create",
+    component: () =>
+      import("@/views/SpellItemEnchantment/SpellItemEnchantmentDetail"),
+  },
+  {
+    path: "/spell-item-enchantment/:id",
+    component: () =>
+      import("@/views/SpellItemEnchantment/SpellItemEnchantmentDetail"),
+  },
+  {
     path: "/item-set",
     component: () => import("@/views/ItemSet/ItemSetTable"),
   },
