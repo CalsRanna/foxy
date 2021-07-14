@@ -7,7 +7,7 @@
       @input="input"
     >
       <i
-        class="el-icon-s-operation clickable-icon"
+        class="el-icon-search clickable-icon"
         slot="suffix"
         style="margin-right: 8px"
         @click="show"
