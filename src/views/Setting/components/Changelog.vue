@@ -2,9 +2,120 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
-        <h1>0.2.0<small>2021-06-30</small></h1>
+        <h2>0.2.1 <small>2021-07-14</small></h2>
       </div>
-
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          remove unused api and view
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/f59d413cad86e7a40831e134628763ff975cc24f"
+            text="(f59d413)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>el-card:</strong> fix padding of el-card body when has form
+          item component
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/2b0901f058afc7d7bbadf39273d243e5e833581a"
+            text="(2b0901f)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>el-tabs:</strong> remove el-card which warp el-tabs
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/a6adf376cdc23c89fbb3aca4826387896c694d81"
+            text="(a6adf37)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>exporter:</strong> fix export spell item enchantment
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/e0bc58b23fdd8fabf12e969c6f74d4ad065a72a5"
+            text="(e0bc58b)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell:</strong> add option to mechanic select
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/5c8979d9d9d8003639b169bdbb304edd2b7c7a00"
+            text="(5c8979d)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell item enchantment:</strong> adjust type of form item
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/e4f4b409d6b097bfd29821c711620d77f030859b"
+            text="(e4f4b40)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>table:</strong> remove sortable of all table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/6455ffe9166655c892db52c087ccf8a009da4e27"
+            text="(6455ffe)"
+          ></clickable-span>
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          make searching by primary key precisely
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/38db8ca2dac1265c49f92d87588962c70e3e8a1d"
+            text="(38db8ca)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>broadcast text:</strong> add broadcast text selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/44339ba5ba746dcc1cfe47be9b6fdb451f6ff0fe"
+            text="(44339ba)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>exporter:</strong> add missing dbc exports
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/5602710c1dcbadd6ad8748099c63083acbe9dae7"
+            text="(5602710)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>item enchantment:</strong> add tag to table and selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/b1d5938566ae6ee575807c4b426b961a8dd4a683"
+            text="(b1d5938)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>loot template:</strong> add entry column
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/42b139a0fc9625c6c2cb3f42253832da2a4d6f9b"
+            text="(42b139a)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell item enchantment:</strong> add export of spell item
+          enchantment
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/0095309253b6efa856306d40c0e1f3df751a6ca2"
+            text="(0095309)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell item enchantment:</strong> add spell item enchantment
+          module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/67e0164e630cc6fb5c4ee1bf0607308087077c3e"
+            text="(67e0164)"
+          ></clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
+        <h2>0.2.0 <small>2021-06-30</small></h2>
+      </div>
       <h3>Features</h3>
       <ul>
         <li>
@@ -89,7 +200,7 @@
     </el-card>
     <el-card style="margin-top: 16px">
       <div slot="header">
-        <h2>0.1.9<small>2021-06-29</small></h2>
+        <h2>0.1.9 <small>2021-06-29</small></h2>
       </div>
       <h3>Bug Fixes</h3>
       <ul>
