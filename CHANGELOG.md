@@ -1,3 +1,29 @@
+## [0.2.1](https://github.com/CalsRanna/foxy/compare/0.2.0...0.2.1) (2021-07-14)
+
+
+### Bug Fixes
+
+* remove unused api and view ([f59d413](https://github.com/CalsRanna/foxy/commit/f59d413cad86e7a40831e134628763ff975cc24f))
+* **el-card:** fix padding of el-card body when has form item component ([2b0901f](https://github.com/CalsRanna/foxy/commit/2b0901f058afc7d7bbadf39273d243e5e833581a))
+* **el-tabs:** remove el-card which warp el-tabs ([a6adf37](https://github.com/CalsRanna/foxy/commit/a6adf376cdc23c89fbb3aca4826387896c694d81))
+* **exporter:** fix export spell item enchantment ([e0bc58b](https://github.com/CalsRanna/foxy/commit/e0bc58b23fdd8fabf12e969c6f74d4ad065a72a5))
+* **spell:** add option to mechanic select ([5c8979d](https://github.com/CalsRanna/foxy/commit/5c8979d9d9d8003639b169bdbb304edd2b7c7a00))
+* **spell item enchantment:** adjust type of form item ([e4f4b40](https://github.com/CalsRanna/foxy/commit/e4f4b409d6b097bfd29821c711620d77f030859b))
+* **table:** remove sortable of all table ([6455ffe](https://github.com/CalsRanna/foxy/commit/6455ffe9166655c892db52c087ccf8a009da4e27))
+
+
+### Features
+
+* make searching by primary key precisely ([38db8ca](https://github.com/CalsRanna/foxy/commit/38db8ca2dac1265c49f92d87588962c70e3e8a1d))
+* **broadcast text:** add broadcast text selector ([44339ba](https://github.com/CalsRanna/foxy/commit/44339ba5ba746dcc1cfe47be9b6fdb451f6ff0fe))
+* **exporter:** add missing dbc exports ([5602710](https://github.com/CalsRanna/foxy/commit/5602710c1dcbadd6ad8748099c63083acbe9dae7))
+* **item enchantment:** add tag to table and selector ([b1d5938](https://github.com/CalsRanna/foxy/commit/b1d5938566ae6ee575807c4b426b961a8dd4a683))
+* **loot template:** add entry column ([42b139a](https://github.com/CalsRanna/foxy/commit/42b139a0fc9625c6c2cb3f42253832da2a4d6f9b))
+* **spell item enchantment:** add export of spell item enchantment ([0095309](https://github.com/CalsRanna/foxy/commit/0095309253b6efa856306d40c0e1f3df751a6ca2))
+* **spell item enchantment:** add spell item enchantment module ([67e0164](https://github.com/CalsRanna/foxy/commit/67e0164e630cc6fb5c4ee1bf0607308087077c3e))
+
+
+
 # [0.2.0](https://github.com/CalsRanna/foxy/compare/0.1.9...0.2.0) (2021-06-30)
 
 
