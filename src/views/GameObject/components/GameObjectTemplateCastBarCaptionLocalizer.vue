@@ -7,7 +7,7 @@
       @change="blur"
     >
       <i
-        class="el-icon-s-operation clickable-icon"
+        class="el-icon-orange clickable-icon"
         slot="suffix"
         style="margin-right: 8px"
         @click="show"
