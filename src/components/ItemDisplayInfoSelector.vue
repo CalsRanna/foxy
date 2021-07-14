@@ -76,7 +76,7 @@
         @row-dblclick="(row) => store(row)"
       >
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
-        <el-table-column width="80px">
+        <el-table-column width="80px" label="图标">
           <template slot-scope="scope">
             <img
               :src="`/icons/${getIcon(scope.row.InventoryIcon_1)}.png`"
@@ -84,7 +84,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="InventoryIcon_1" label="图标"> </el-table-column>
+        <el-table-column prop="InventoryIcon_1"> </el-table-column>
         <el-table-column prop="ModelName_1" label="模型"></el-table-column>
         <el-table-column prop="ModelTexture_1" label="纹理"></el-table-column>
       </el-table>

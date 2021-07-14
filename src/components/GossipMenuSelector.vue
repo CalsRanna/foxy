@@ -70,12 +70,12 @@
       >
         <el-table-column
           prop="MenuID"
-          label="对话ID"
+          label="对话编号"
           width="80px"
         ></el-table-column>
         <el-table-column
           prop="TextID"
-          label="文本ID"
+          label="文本编号"
           width="80px"
         ></el-table-column>
         <el-table-column label="文本">

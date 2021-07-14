@@ -15,7 +15,11 @@
           @current-change="select"
           @row-dblclick="show"
         >
-          <el-table-column prop="Index" label="编号"></el-table-column>
+          <el-table-column
+            prop="Index"
+            label="编号"
+            width="80px"
+          ></el-table-column>
           <el-table-column prop="Spell" label="技能"></el-table-column>
           <el-table-column prop="Name_Lang_zhCN" label="名称"></el-table-column>
           <el-table-column

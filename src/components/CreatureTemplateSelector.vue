@@ -68,7 +68,11 @@
         @current-change="select"
         @row-dblclick="(row) => store(row)"
       >
-        <el-table-column prop="entry" label="编号"></el-table-column>
+        <el-table-column
+          prop="entry"
+          label="编号"
+          width="80px"
+        ></el-table-column>
         <el-table-column label="姓名">
           <template slot-scope="scope">
             <span v-if="scope.row.localeName !== null">

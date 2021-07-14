@@ -72,7 +72,7 @@
         @row-dblclick="(row) => store(row)"
       >
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
-        <el-table-column width="80px">
+        <el-table-column width="80px" label="图标">
           <template slot-scope="scope">
             <img
               :src="`icons/${getIcon(scope.row.TextureFilename)}.png`"
@@ -80,7 +80,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="TextureFilename" label="图标"> </el-table-column>
+        <el-table-column prop="TextureFilename"> </el-table-column>
       </el-table>
       <div slot="footer">
         <el-button @click="close">取消</el-button>
