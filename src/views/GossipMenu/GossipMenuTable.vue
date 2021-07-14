@@ -69,7 +69,7 @@
         <el-table-column
           prop="TextID"
           label="文本编号"
-          width="160"
+          width="80px"
         ></el-table-column>
         <el-table-column label="文本">
           <template slot-scope="scope">

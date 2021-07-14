@@ -30,17 +30,17 @@
         :data="creatureTemplateLocales"
         :max-height="clientHeight * 0.84 - 81 - 80"
       >
-        <el-table-column width="48">
+        <el-table-column width="48px">
           <el-button
+            slot-scope="scope"
             type="danger"
             size="mini"
             icon="el-icon-delete"
-            circle=""
-            slot-scope="scope"
+            circle
             @click="() => destroy(scope.$index)"
           ></el-button>
         </el-table-column>
-        <el-table-column prop="locale" label="语言" width="96">
+        <el-table-column prop="locale" label="语言" width="96px">
           <template slot-scope="scope">
             <el-input
               v-model="scope.row.locale"
@@ -53,7 +53,11 @@
             <el-input v-model="scope.row.Name" placeholder="Name"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="VerifiedBuild" label="VerifiedBuild" width="128">
+        <el-table-column
+          prop="VerifiedBuild"
+          label="VerifiedBuild"
+          width="128px"
+        >
           <template slot-scope="scope">
             <el-input-number
               v-model="scope.row.VerifiedBuild"

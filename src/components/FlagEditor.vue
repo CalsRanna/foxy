@@ -33,14 +33,18 @@
         @selection-change="change"
         @row-click="select"
       >
-        <el-table-column type="selection" width="48"></el-table-column>
-        <el-table-column prop="flag" label="标识"></el-table-column>
-        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column type="selection" width="48px"></el-table-column>
         <el-table-column
-          prop="comment"
-          label="描述"
-          min-width="400"
+          prop="flag"
+          label="标识"
+          width="120px"
         ></el-table-column>
+        <el-table-column
+          prop="name"
+          label="名称"
+          width="120px"
+        ></el-table-column>
+        <el-table-column prop="comment" label="描述"></el-table-column>
       </el-table>
       <div slot="footer">
         <span style="color: #606266; margin-right: 8px">

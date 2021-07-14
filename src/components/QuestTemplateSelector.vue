@@ -68,8 +68,8 @@
         @current-change="select"
         @row-dblclick="(row) => store(row)"
       >
-        <el-table-column prop="ID" label="编号"></el-table-column>
-        <el-table-column prop="LogTitle" label="标题" min-width="100px">
+        <el-table-column prop="ID" label="编号" width="80px"></el-table-column>
+        <el-table-column prop="LogTitle" label="标题" width="120px">
           <template slot-scope="scope">
             <template v-if="scope.row.Title !== null">{{
               scope.row.Title
@@ -77,7 +77,7 @@
             <template v-else>{{ scope.row.LogTitle }}</template>
           </template>
         </el-table-column>
-        <el-table-column prop="QuestDescription" label="描述" min-width="500px">
+        <el-table-column prop="QuestDescription" label="描述">
           <template slot-scope="scope">
             <template v-if="scope.row.Details !== null">{{
               scope.row.Details
@@ -85,8 +85,16 @@
             <template v-else>{{ scope.row.LogDescription }}</template>
           </template>
         </el-table-column>
-        <el-table-column prop="QuestLevel" label="等级"></el-table-column>
-        <el-table-column prop="MinLevel" label="最低等级"></el-table-column>
+        <el-table-column
+          prop="QuestLevel"
+          label="等级"
+          width="80px"
+        ></el-table-column>
+        <el-table-column
+          prop="MinLevel"
+          label="最低等级"
+          width="80px"
+        ></el-table-column>
       </el-table>
       <div slot="footer">
         <el-button @click="close">取消</el-button>

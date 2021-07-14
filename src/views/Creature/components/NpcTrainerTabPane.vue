@@ -17,7 +17,7 @@
         >
           <el-table-column>
             <hint-label
-              label="技能ID"
+              label="技能编号"
               :tooltip="spellIdTooltip"
               slot="header"
             ></hint-label>

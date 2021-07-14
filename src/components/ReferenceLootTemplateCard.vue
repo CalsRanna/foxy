@@ -10,6 +10,11 @@
         <el-tag>{{ referenceLootTemplates[0].Entry }}</el-tag>
       </div>
       <el-table :data="referenceLootTemplates">
+        <el-table-column
+          prop="Item"
+          label="编号"
+          width="80px"
+        ></el-table-column>
         <el-table-column label="名称">
           <span slot-scope="scope">
             <template v-if="scope.row.Reference == 0">

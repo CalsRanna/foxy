@@ -20,7 +20,7 @@
             label="编号"
             width="80px"
           ></el-table-column>
-          <el-table-column label="物品1">
+          <el-table-column label="物品">
             <item-template-name
               slot-scope="scope"
               :itemTemplate="{
@@ -31,7 +31,7 @@
               }"
             ></item-template-name>
           </el-table-column>
-          <el-table-column label="物品2">
+          <el-table-column label="物品">
             <item-template-name
               slot-scope="scope"
               :itemTemplate="{
@@ -42,7 +42,7 @@
               }"
             ></item-template-name>
           </el-table-column>
-          <el-table-column label="物品3">
+          <el-table-column label="物品">
             <item-template-name
               slot-scope="scope"
               :itemTemplate="{

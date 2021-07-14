@@ -72,8 +72,7 @@
         @row-dblclick="(row) => store(row)"
       >
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
-        <el-table-column prop="Name_Lang_zhCN" label="名称" width="240px">
-        </el-table-column>
+        <el-table-column prop="Name_Lang_zhCN" label="名称"> </el-table-column>
         <el-table-column prop="Description_Lang_zhCN" label="描述">
         </el-table-column>
       </el-table>

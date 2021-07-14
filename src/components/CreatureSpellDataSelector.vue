@@ -73,10 +73,22 @@
         @row-dblclick="(row) => store(row)"
       >
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
-        <el-table-column prop="Spells_1" label="技能1"> </el-table-column>
-        <el-table-column prop="Spells_2" label="技能2"> </el-table-column>
-        <el-table-column prop="Spells_3" label="技能3"> </el-table-column>
-        <el-table-column prop="Spells_4" label="技能4"> </el-table-column>
+        <el-table-column label="技能">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.Spells_1" style="margin-right: 8px">
+              {{ scope.row.Spells_1 }}
+            </el-tag>
+            <el-tag v-if="scope.row.Spells_2" style="margin-right: 8px">
+              {{ scope.row.Spells_2 }}
+            </el-tag>
+            <el-tag v-if="scope.row.Spells_3" style="margin-right: 8px">
+              {{ scope.row.Spells_3 }}
+            </el-tag>
+            <el-tag v-if="scope.row.Spells_4" style="margin-right: 8px">
+              {{ scope.row.Spells_4 }}
+            </el-tag>
+          </template>
+        </el-table-column>
       </el-table>
       <div slot="footer">
         <el-button @click="close">取消</el-button>
