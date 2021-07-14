@@ -2,7 +2,7 @@
   <div>
     <el-input v-model="waypointData" :placeholder="placeholder" @input="input">
       <i
-        class="el-icon-s-operation clickable-icon"
+        class="el-icon-search clickable-icon"
         slot="suffix"
         style="margin-right: 8px"
         @click="show"
@@ -55,7 +55,11 @@
       ></el-pagination>
       <el-table
         :data="waypointDatas"
-        :max-height="pagination.total > 50 ? clientHeight * 0.84 - 81 - 80 - 60 - 80 : clientHeight * 0.84 - 81 - 80 - 80"
+        :max-height="
+          pagination.total > 50
+            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
+            : clientHeight * 0.84 - 81 - 80 - 80
+        "
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
