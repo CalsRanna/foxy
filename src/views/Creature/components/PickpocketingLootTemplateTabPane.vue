@@ -15,6 +15,13 @@
           @current-change="select"
           @row-dblclick="show"
         >
+          <el-table-column label="编号" width="80px">
+            <span slot-scope="scope">
+              <template v-if="scope.row.Reference == 0">
+                {{ scope.row.Item }}
+              </template>
+            </span>
+          </el-table-column>
           <el-table-column label="名称">
             <span slot-scope="scope">
               <template v-if="scope.row.Reference == 0">
