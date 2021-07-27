@@ -72,9 +72,14 @@
         @row-dblclick="(row) => store(row)"
       >
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
-        <el-table-column prop="Name_Lang_zhCN" label="名称">
+        <el-table-column prop="Name_Lang_zhCN" label="名称" width="320px">
           <spell-name slot-scope="scope" :spell="scope.row"></spell-name>
         </el-table-column>
+        <el-table-column
+          prop="NameSubtext_Lang_zhCN"
+          label="子名称"
+          width="128px"
+        ></el-table-column>
         <el-table-column prop="Description_Lang_zhCN" label="描述">
           <template slot-scope="scope">
             <spell-description
