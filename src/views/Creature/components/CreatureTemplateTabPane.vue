@@ -941,7 +941,7 @@ export default {
           index: mechanic.ID,
           flag: Math.pow(2, mechanic.ID - 1),
           name: mechanic.StateName_Lang_zhCN,
-          comment: "",
+          comment: mechanic.StateName_Lang_zhCN,
         };
       });
     },
