@@ -287,9 +287,10 @@ export default {
         });
         this.creating = false;
       } else {
+        let { Name_Lang_zhCN, ...payload } = this.talent;
         await this.updateTalent({
           credential: this.credential,
-          talent: this.talent,
+          talent: payload,
         });
         this.$notify({
           title: "修改成功",
