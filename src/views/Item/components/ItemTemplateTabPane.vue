@@ -1504,7 +1504,7 @@ export default {
           index: chrRace.ID,
           flag: Math.pow(2, chrRace.ID - 1),
           name: chrRace.Name_Lang_zhCN,
-          comment: chrRace.ClientFileString,
+          comment: chrRace.ClientFilestring,
         };
       });
     },

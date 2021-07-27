@@ -119,13 +119,13 @@ const npcFlags = [
     index: 2,
     flag: 4,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 3,
     flag: 8,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 4,
@@ -137,13 +137,13 @@ const npcFlags = [
     index: 5,
     flag: 32,
     name: "职业训练师",
-    comment: "",
+    comment: "职业训练师",
   },
   {
     index: 6,
     flag: 64,
     name: "专业训练师",
-    comment: "",
+    comment: "专业训练师",
   },
   {
     index: 7,
@@ -155,25 +155,25 @@ const npcFlags = [
     index: 8,
     flag: 256,
     name: "护甲商人",
-    comment: "",
+    comment: "护甲商人",
   },
   {
     index: 9,
     flag: 512,
     name: "食物商人",
-    comment: "",
+    comment: "食物商人",
   },
   {
     index: 10,
     flag: 1024,
     name: "毒药商人",
-    comment: "",
+    comment: "毒药商人",
   },
   {
     index: 11,
     flag: 2048,
     name: "药剂商人",
-    comment: "",
+    comment: "药剂商人",
   },
   {
     index: 12,
@@ -198,7 +198,7 @@ const npcFlags = [
     index: 15,
     flag: 32768,
     name: "灵魂使者",
-    comment: "",
+    comment: "灵魂使者",
   },
   {
     index: 16,
@@ -216,7 +216,7 @@ const npcFlags = [
     index: 18,
     flag: 262144,
     name: "兽栏管理员",
-    comment: "",
+    comment: "兽栏管理员",
   },
   {
     index: 19,
@@ -246,7 +246,7 @@ const npcFlags = [
     index: 23,
     flag: 8388608,
     name: "工会银行",
-    comment: "",
+    comment: "工会银行",
   },
   {
     index: 24,
@@ -314,7 +314,7 @@ const typeFlags = [
     index: 5,
     flag: 32,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 6,
@@ -369,7 +369,7 @@ const typeFlags = [
     index: 14,
     flag: 16384,
     name: "隐藏UID",
-    comment: "",
+    comment: "隐藏UID",
   },
   {
     index: 15,
@@ -418,7 +418,7 @@ const typeFlags = [
     index: 22,
     flag: 4194304,
     name: "关联所有",
-    comment: "",
+    comment: "关联所有",
   },
   {
     index: 23,
@@ -486,19 +486,19 @@ const unitFlags = [
     index: 0,
     flag: 1,
     name: "服务端控制",
-    comment: "",
+    comment: "服务端控制",
   },
   {
     index: 1,
     flag: 2,
     name: "不可攻击",
-    comment: "",
+    comment: "不可攻击",
   },
   {
     index: 2,
     flag: 4,
     name: "不能移动",
-    comment: "",
+    comment: "不能移动",
   },
   {
     index: 3,
@@ -511,7 +511,7 @@ const unitFlags = [
     index: 4,
     flag: 16,
     name: "改名",
-    comment: "",
+    comment: "改名",
   },
   {
     index: 5,
@@ -674,13 +674,13 @@ const unitFlags = [
     index: 30,
     flag: 1073741824,
     name: "武器入鞘",
-    comment: "",
+    comment: "武器入鞘",
   },
   {
     index: 31,
     flag: 2147483648,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
 ];
 
@@ -694,7 +694,7 @@ const unitFlags2 = [
     index: 0,
     flag: 1,
     name: "假装死亡",
-    comment: "",
+    comment: "假装死亡",
   },
   {
     index: 1,
@@ -706,19 +706,19 @@ const unitFlags2 = [
     index: 2,
     flag: 4,
     name: "忽略声望",
-    comment: "",
+    comment: "忽略声望",
   },
   {
     index: 3,
     flag: 8,
     name: "了解语言",
-    comment: "",
+    comment: "了解语言",
   },
   {
     index: 4,
     flag: 16,
     name: "镜像",
-    comment: "",
+    comment: "镜像",
   },
   {
     index: 5,
@@ -730,13 +730,13 @@ const unitFlags2 = [
     index: 6,
     flag: 64,
     name: "强制移动",
-    comment: "",
+    comment: "强制移动",
   },
   {
     index: 7,
     flag: 128,
     name: "不装备手",
-    comment: "",
+    comment: "不装备手",
   },
   {
     index: 8,
@@ -748,7 +748,7 @@ const unitFlags2 = [
     index: 9,
     flag: 512,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 10,
@@ -779,19 +779,19 @@ const unitFlags2 = [
     index: 14,
     flag: 16384,
     name: "跟敌人互动",
-    comment: "",
+    comment: "跟敌人互动",
   },
   {
     index: 15,
     flag: 32768,
     name: "DISABLE_TURN",
-    comment: "",
+    comment: "DISABLE_TURN",
   },
   {
     index: 16,
     flag: 65536,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 17,
@@ -817,7 +817,7 @@ const dynamicFlags = [
     index: 0,
     flag: 1,
     name: "可掉落",
-    comment: "",
+    comment: "可掉落",
   },
   {
     index: 1,
@@ -842,7 +842,7 @@ const dynamicFlags = [
     index: 4,
     flag: 16,
     name: "特殊信息",
-    comment: "",
+    comment: "特殊信息",
   },
   {
     index: 5,
@@ -855,7 +855,7 @@ const dynamicFlags = [
     index: 6,
     flag: 64,
     name: "求教伙伴",
-    comment: "",
+    comment: "求教伙伴",
   },
   {
     index: 7,
@@ -953,7 +953,7 @@ const flagsExtra = [
     index: 13,
     flag: 8192,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 14,
@@ -971,7 +971,7 @@ const flagsExtra = [
     index: 16,
     flag: 65536,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 17,
@@ -1021,25 +1021,25 @@ const flagsExtra = [
     index: 24,
     flag: 16777216,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 25,
     flag: 33554432,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 26,
     flag: 67108864,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 27,
     flag: 134217728,
     name: "未知",
-    comment: "",
+    comment: "未知",
   },
   {
     index: 28,
@@ -1098,7 +1098,7 @@ const mechanicImmuneMasks = [
     index: 4,
     flag: 16,
     name: "FEAR",
-    comment: "",
+    comment: "FEAR",
   },
   {
     index: 5,
@@ -1116,7 +1116,7 @@ const mechanicImmuneMasks = [
     index: 7,
     flag: 128,
     name: "SLOW_ATTACK",
-    comment: "",
+    comment: "SLOW_ATTACK",
   },
   {
     index: 8,
@@ -1157,8 +1157,8 @@ const mechanicImmuneMasks = [
   {
     index: 14,
     flag: 16384,
-    name: "BLEED	",
-    comment: "",
+    name: "BLEED",
+    comment: "BLEED",
   },
   {
     index: 15,
@@ -1170,19 +1170,19 @@ const mechanicImmuneMasks = [
     index: 16,
     flag: 65536,
     name: "POLYMORPH",
-    comment: "",
+    comment: "POLYMORPH",
   },
   {
     index: 17,
     flag: 131072,
     name: "BANISH",
-    comment: "",
+    comment: "BANISH",
   },
   {
     index: 18,
     flag: 262144,
     name: "SHIELD",
-    comment: "",
+    comment: "SHIELD",
   },
   {
     index: 19,
@@ -1211,7 +1211,7 @@ const mechanicImmuneMasks = [
   {
     index: 23,
     flag: 8388608,
-    name: "HORROR ",
+    name: "HORROR",
     comment: "e.g. Death Coil (Warlock)",
   },
   {
@@ -1224,13 +1224,13 @@ const mechanicImmuneMasks = [
     index: 25,
     flag: 33554432,
     name: "INTERRUPT",
-    comment: "",
+    comment: "INTERRUPT",
   },
   {
     index: 26,
     flag: 67108864,
     name: "DAZE",
-    comment: "",
+    comment: "DAZE",
   },
   {
     index: 27,
@@ -1248,13 +1248,13 @@ const mechanicImmuneMasks = [
     index: 29,
     flag: 536870912,
     name: "SAPPED",
-    comment: "",
+    comment: "SAPPED",
   },
   {
     index: 30,
     flag: 1073741824,
     name: "ENRAGED",
-    comment: "",
+    comment: "ENRAGED",
   },
 ];
 
@@ -1496,19 +1496,19 @@ const inhabitTypes = [
     index: 0,
     flag: 1,
     name: "地面",
-    comment: "",
+    comment: "地面",
   },
   {
     index: 1,
     flag: 2,
     name: "水下",
-    comment: "",
+    comment: "水下",
   },
   {
     index: 2,
     flag: 4,
     name: "空中",
-    comment: "",
+    comment: "空中",
   },
   {
     index: 3,
