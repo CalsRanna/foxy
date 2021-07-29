@@ -202,7 +202,7 @@
     >
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="SetThreshold_1">
+          <el-form-item label="阈值">
             <el-input-number
               v-model="itemSet.SetThreshold_1"
               controls-position="right"
@@ -221,7 +221,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="SetThreshold_2">
+          <el-form-item label="阈值">
             <el-input-number
               v-model="itemSet.SetThreshold_2"
               controls-position="right"
@@ -240,7 +240,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="SetThreshold_3">
+          <el-form-item label="阈值">
             <el-input-number
               v-model="itemSet.SetThreshold_3"
               controls-position="right"
@@ -259,7 +259,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="SetThreshold_4">
+          <el-form-item label="阈值">
             <el-input-number
               v-model="itemSet.SetThreshold_4"
               controls-position="right"
@@ -278,7 +278,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="SetThreshold_5">
+          <el-form-item label="阈值">
             <el-input-number
               v-model="itemSet.SetThreshold_5"
               controls-position="right"
@@ -297,7 +297,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="SetThreshold_6">
+          <el-form-item label="阈值">
             <el-input-number
               v-model="itemSet.SetThreshold_6"
               controls-position="right"
@@ -316,7 +316,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="SetThreshold_7">
+          <el-form-item label="阈值">
             <el-input-number
               v-model="itemSet.SetThreshold_7"
               controls-position="right"
@@ -335,7 +335,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="SetThreshold_8">
+          <el-form-item label="阈值">
             <el-input-number
               v-model="itemSet.SetThreshold_8"
               controls-position="right"
