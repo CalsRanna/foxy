@@ -9,26 +9,6 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">控制面板</h3>
     </el-card>
-    <el-alert type="info" style="margin-top: 16px">
-      <span slot="title">
-        欢迎使用 Foxy ，一款开发中的魔兽世界编辑器。
-        <span
-          v-show="
-            softwareVersion.version !== null &&
-            softwareVersion.version > version
-          "
-        >
-          当前版本 {{ version }}，新版本
-          <span
-            style="color: #409eff; cursor: pointer"
-            @click="() => openBrowser(softwareVersion.githubUrl)"
-          >
-            {{ softwareVersion.version }}
-          </span>
-          可用，请下载使用。
-        </span>
-      </span>
-    </el-alert>
     <el-row :gutter="16" style="margin-top: 16px" :loading="loading">
       <el-col :span="16">
         <el-row :gutter="16">
@@ -159,51 +139,36 @@
           </p>
           <p style="text-indent: 2em">
             闲余时间开发，进度随缘， Feature也随缘， Bug请到
-
-            <span
-              style="color: #409eff; cursor: pointer"
-              @click="
-                () => openBrowser('https://github.com/CalsRanna/foxy/issues')
-              "
-            >
-              Github
-            </span>
+            <clickable-span
+              text="Github"
+              url="https://github.com/CalsRanna/foxy/issues"
+            ></clickable-span>
             上面提交 issue ，也可以前往
-            <span
-              style="color: #409eff; cursor: pointer"
-              @click="() => openBrowser('https://t.me/foxy_editor')"
-            >
-              Telegram
-            </span>
+            <clickable-span
+              text="Telegram"
+              url="https://t.me/foxy_editor"
+            ></clickable-span>
             讨论。
           </p>
           <p style="text-indent: 2em">
             如果你希望得到最新版本的Foxy，请访问
-            <span
-              style="color: #409eff; cursor: pointer"
-              @click="
-                () => openBrowser('https://github.com/CalsRanna/foxy/releases')
-              "
-            >
-              下载页面
-            </span>
+            <clickable-span
+              text="下载页面"
+              url="https://github.com/CalsRanna/foxy/releases"
+            ></clickable-span>
             或前往
             <el-tooltip>
-              <span
-                style="color: #409eff; cursor: pointer"
-                @click="() => openBrowser(softwareVersion.netDiskUrl)"
-              >
-                百度网盘
-              </span>
-              <span slot="content">提取码：{{ softwareVersion.code }}</span>
+              <clickable-span
+                text="百度网盘"
+                :url="remote.netDiskUrl"
+              ></clickable-span>
+              <span slot="content">提取码：{{ remote.code }}</span>
             </el-tooltip>
             下载，你也可以
-            <span
-              style="color: #409eff; cursor: pointer"
-              @click="() => openBrowser('https://github.com/CalsRanna/foxy')"
-            >
-              Clone
-            </span>
+            <clickable-span
+              text="Clone"
+              url="https://github.com/CalsRanna/foxy"
+            ></clickable-span>
             源码自行编译使用 。
           </p>
         </el-card>
@@ -229,6 +194,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ClickableSpan from "@/components/ClickableSpan";
 
 export default {
   data() {
@@ -239,8 +205,8 @@ export default {
   },
   computed: {
     ...mapState("app", ["version"]),
-    ...mapState("initiator", {
-      softwareVersion: "version",
+    ...mapState("updater", {
+      remote: "version",
     }),
     ...mapState("version", {
       coreVersion: "version",
@@ -297,8 +263,8 @@ export default {
           this.countGossipMenus({}),
           this.countSmartScripts({}),
           this.countSpells({}),
+          this.findVersion(),
         ]);
-        await this.findVersion();
         this.loading = false;
       } catch (error) {
         this.loading = false;
@@ -308,5 +274,6 @@ export default {
   mounted() {
     this.init();
   },
+  components: { ClickableSpan },
 };
 </script>

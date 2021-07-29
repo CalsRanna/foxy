@@ -4,6 +4,7 @@ import Vuex from "vuex";
 import app from "./app";
 import initiator from "./initiator";
 import exporter from "./exporter";
+import updater from "./updater";
 import areaTable from "./areaTable";
 import areaTableOrQuestSortSelector from "./areaTableOrQuestSortSelector";
 import broadcastTextSelector from "./broadcastTextSelector";
@@ -101,6 +102,7 @@ export default new Vuex.Store({
     app,
     initiator,
     exporter,
+    updater,
     areaTable,
     areaTableOrQuestSortSelector,
     broadcastTextSelector,
