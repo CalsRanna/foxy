@@ -64,7 +64,7 @@
             : clientHeight * 0.84 - 81 - 80 - 80
         "
         highlight-current-row
-        class="selectable-table hide-when-overflow"
+        class="selectable-table hide-when-overflow tight-table"
         @current-change="select"
         @row-dblclick="(row) => store(row)"
       >
