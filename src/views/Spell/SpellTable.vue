@@ -52,7 +52,7 @@
       <el-table
         :data="spells"
         highlight-current-row
-        class="hide-when-overflow"
+        class="hide-when-overflow tight-table"
         @current-change="select"
         @row-dblclick="show"
       >
