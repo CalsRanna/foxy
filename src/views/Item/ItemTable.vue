@@ -299,9 +299,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.tight-table td {
-  padding: 6px 0;
-}
-</style>
