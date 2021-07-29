@@ -71,20 +71,17 @@
             : clientHeight * 0.84 - 81 - 80 - 80
         "
         highlight-current-row
-        class="selectable-table hide-when-overflow"
+        class="selectable-table hide-when-overflow tight-table"
         @current-change="select"
         @row-dblclick="(row) => store(row)"
       >
         <el-table-column prop="ID" label="编号" width="80px"> </el-table-column>
-        <el-table-column width="80px" label="图标">
-          <template slot-scope="scope">
-            <img
-              :src="`/icons/${getIcon(scope.row.InventoryIcon_1)}.png`"
-              style="width: 36px; height: 36px; padding-right: 4px"
-            />
-          </template>
+        <el-table-column label="图标">
+          <icon-label
+            slot-scope="scope"
+            :icon="scope.row.InventoryIcon_1"
+          ></icon-label>
         </el-table-column>
-        <el-table-column prop="InventoryIcon_1"> </el-table-column>
         <el-table-column prop="ModelName_1" label="模型"></el-table-column>
         <el-table-column prop="ModelTexture_1" label="纹理"></el-table-column>
       </el-table>
@@ -100,6 +97,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import IconLabel from "@/components/IconLabel";
 
 export default {
   data() {
@@ -139,9 +137,6 @@ export default {
       "countItemDisplayInfosForSelector",
       "paginateItemDisplayInfosForSelector",
     ]),
-    getIcon(InventoryIcon) {
-      return InventoryIcon.toLowerCase();
-    },
     input(itemDisplayInfo) {
       if (isNaN(parseInt(itemDisplayInfo))) {
         this.$emit("input", undefined);
@@ -202,5 +197,6 @@ export default {
     this.itemDisplayInfo = this.value;
     this.ID = this.value;
   },
+  components: { IconLabel },
 };
 </script>
