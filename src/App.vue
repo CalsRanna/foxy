@@ -49,6 +49,7 @@
     </template>
     <initiator></initiator>
     <exporter></exporter>
+    <updater></updater>
   </el-container>
 </template>
 
@@ -59,6 +60,7 @@ import { mapState, mapActions } from "vuex";
 import { GLOBAL_MESSAGE_BOX, GLOBAL_MESSAGE } from "./constants";
 import Initiator from "@/components/Initiator";
 import Exporter from "@/components/Exporter";
+import Updater from "@/components/Updater";
 
 export default {
   computed: {
@@ -118,7 +120,7 @@ export default {
       }
     });
   },
-  components: { Initiator, Exporter },
+  components: { Initiator, Exporter, Updater },
 };
 </script>
 
@@ -195,5 +197,9 @@ export default {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+}
+
+.tight-table td {
+  padding: 6px 0;
 }
 </style>

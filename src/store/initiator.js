@@ -55,7 +55,6 @@ export default {
     developerConfig: {},
     mysqlConfig: {},
     dbcConfig: {},
-    version: {},
     initialized: false,
     initializeSucceed: true,
     chrClasses: [],
@@ -527,34 +526,6 @@ export default {
         });
         ipcRenderer.on(`${LOAD_DBC_TALENT_TABS}_REJECT`, (event, error) => {
           reject(error);
-        });
-      });
-    },
-    checkVersion({ commit }) {
-      return new Promise((resolve, reject) => {
-        let version = "";
-        let githubUrl = "";
-        let netDiskUrl = "";
-        let code = "";
-        Promise.all([
-          axios.get(GITHUB_RELEASE_URL).then((response) => {
-            if (response.data.length > 0) {
-              version = response.data[0].tag_name;
-              githubUrl = response.data[0].assets[0].browser_download_url;
-            }
-          }),
-
-          axios.get(NET_DISK_URL).then((response) => {
-            netDiskUrl = response.data.url;
-            code = response.data.code;
-          }),
-        ]).then(() => {
-          commit(CHECK_VERSION, {
-            version: version,
-            githubUrl: githubUrl,
-            netDiskUrl: netDiskUrl,
-            code: code,
-          });
         });
       });
     },

@@ -71,7 +71,6 @@ export default {
       "loadDbcSpellRanges",
       "loadDbcTalents",
       "loadDbcTalentTabs",
-      "checkVersion",
       "initializeSuccess",
       "initializeFailure",
     ]),
@@ -155,7 +154,6 @@ export default {
         this.progressText = "加载TalentTab.dbc";
         await this.loadDbcTalentTabs();
         this.loadingText = "加载成功";
-        this.checkVersion();
         setTimeout(() => {
           this.initializeSuccess();
           this.visible = false;
