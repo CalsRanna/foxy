@@ -53,34 +53,38 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="名称掩码">
-            <el-input
+            <el-input-number
               v-model="spell.Name_Lang_Mask"
+              controls-position="right"
               placeholder="Name_Lang_Mask"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="子名称掩码">
-            <el-input
+            <el-input-number
               v-model="spell.NameSubtext_Lang_Mask"
+              controls-position="right"
               placeholder="NameSubtext_Lang_Mask"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="描述掩码">
-            <el-input
+            <el-input-number
               v-model="spell.Description_Lang_Mask"
+              controls-position="right"
               placeholder="Description_Lang_Mask"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="Buff描述掩码">
-            <el-input
+            <el-input-number
               v-model="spell.AuraDescription_Lang_Mask"
+              controls-position="right"
               placeholder="AuraDescription_Lang_Mask"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1326,12 +1330,12 @@
     >
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="Totem_1">
+          <el-form-item label="图腾">
             <el-input v-model="spell.Totem_1" placeholder="Totem_1"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="Totem_2">
+          <el-form-item label="图腾">
             <el-input v-model="spell.Totem_2" placeholder="Totem_2"></el-input>
           </el-form-item>
         </el-col>
@@ -1369,7 +1373,7 @@
     >
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="消耗物品1">
+          <el-form-item label="施法材料">
             <item-template-selector
               v-model="spell.Reagent_1"
               placeholder="Reagent_1"
@@ -1377,7 +1381,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗数量">
+          <el-form-item label="数量">
             <el-input-number
               v-model="spell.ReagentCount_1"
               controls-position="right"
@@ -1386,7 +1390,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗物品2">
+          <el-form-item label="施法材料">
             <item-template-selector
               v-model="spell.Reagent_2"
               placeholder="Reagent_2"
@@ -1394,7 +1398,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗数量">
+          <el-form-item label="数量">
             <el-input-number
               v-model="spell.ReagentCount_2"
               controls-position="right"
@@ -1403,7 +1407,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗物品3">
+          <el-form-item label="施法材料">
             <item-template-selector
               v-model="spell.Reagent_3"
               placeholder="Reagent_3"
@@ -1411,7 +1415,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗数量">
+          <el-form-item label="数量">
             <el-input-number
               v-model="spell.ReagentCount_3"
               controls-position="right"
@@ -1420,7 +1424,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗物品4">
+          <el-form-item label="施法材料">
             <item-template-selector
               v-model="spell.Reagent_4"
               placeholder="Reagent_4"
@@ -1428,7 +1432,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗数量">
+          <el-form-item label="数量">
             <el-input-number
               v-model="spell.ReagentCount_4"
               controls-position="right"
@@ -1437,7 +1441,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗物品5">
+          <el-form-item label="施法材料">
             <item-template-selector
               v-model="spell.Reagent_5"
               placeholder="Reagent_5"
@@ -1445,7 +1449,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗数量">
+          <el-form-item label="数量">
             <el-input-number
               v-model="spell.ReagentCount_5"
               controls-position="right"
@@ -1454,7 +1458,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗物品6">
+          <el-form-item label="施法材料">
             <item-template-selector
               v-model="spell.Reagent_6"
               placeholder="Reagent_6"
@@ -1462,7 +1466,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗数量">
+          <el-form-item label="数量">
             <el-input-number
               v-model="spell.ReagentCount_6"
               controls-position="right"
@@ -1471,7 +1475,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗物品7">
+          <el-form-item label="施法材料">
             <item-template-selector
               v-model="spell.Reagent_7"
               placeholder="Reagent_7"
@@ -1479,7 +1483,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗数量">
+          <el-form-item label="数量">
             <el-input-number
               v-model="spell.ReagentCount_7"
               controls-position="right"
@@ -1488,7 +1492,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗物品8">
+          <el-form-item label="施法材料">
             <item-template-selector
               v-model="spell.Reagent_8"
               placeholder="Reagent_8"
@@ -1496,7 +1500,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="消耗数量">
+          <el-form-item label="数量">
             <el-input-number
               v-model="spell.ReagentCount_8"
               controls-position="right"
@@ -1528,7 +1532,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="视觉效果1">
+          <el-form-item label="视觉效果">
             <el-input-number
               v-model="spell.SpellVisualID_1"
               controls-position="right"
@@ -1537,7 +1541,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="视觉效果2">
+          <el-form-item label="视觉效果">
             <el-input-number
               v-model="spell.SpellVisualID_2"
               controls-position="right"
