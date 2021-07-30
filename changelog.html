@@ -1,232 +1,1090 @@
-<h2><a href="https://github.com/CalsRanna/foxy/compare/0.2.0...0.2.1">0.2.1</a> (2021-07-14)</h2>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.2.1...0.2.2">0.2.2</a>
+  (2021-07-30)
+</h2>
 <h3>Bug Fixes</h3>
 <ul>
-<li>remove unused api and view (<a href="https://github.com/CalsRanna/foxy/commit/f59d413cad86e7a40831e134628763ff975cc24f">f59d413</a>)</li>
-<li><strong>el-card:</strong> fix padding of el-card body when has form item component (<a href="https://github.com/CalsRanna/foxy/commit/2b0901f058afc7d7bbadf39273d243e5e833581a">2b0901f</a>)</li>
-<li><strong>el-tabs:</strong> remove el-card which warp el-tabs (<a href="https://github.com/CalsRanna/foxy/commit/a6adf376cdc23c89fbb3aca4826387896c694d81">a6adf37</a>)</li>
-<li><strong>exporter:</strong> fix export spell item enchantment (<a href="https://github.com/CalsRanna/foxy/commit/e0bc58b23fdd8fabf12e969c6f74d4ad065a72a5">e0bc58b</a>)</li>
-<li><strong>spell:</strong> add option to mechanic select (<a href="https://github.com/CalsRanna/foxy/commit/5c8979d9d9d8003639b169bdbb304edd2b7c7a00">5c8979d</a>)</li>
-<li><strong>spell item enchantment:</strong> adjust type of form item (<a href="https://github.com/CalsRanna/foxy/commit/e4f4b409d6b097bfd29821c711620d77f030859b">e4f4b40</a>)</li>
-<li><strong>table:</strong> remove sortable of all table (<a href="https://github.com/CalsRanna/foxy/commit/6455ffe9166655c892db52c087ccf8a009da4e27">6455ffe</a>)</li>
+  <li>
+    <strong>icon:</strong> fix padding between icon and label in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/4cef4159659f6b98caa159c82d748489a9eec47f"
+      >4cef415</a
+    >)
+  </li>
+  <li>
+    <strong>talent:</strong> fix update talent (<a
+      href="https://github.com/CalsRanna/foxy/commit/6f73aa2b23ce4fd2c80d7b98eda0a1da8eb09a96"
+      >6f73aa2</a
+    >)
+  </li>
 </ul>
 <h3>Features</h3>
 <ul>
-<li>make searching by primary key precisely (<a href="https://github.com/CalsRanna/foxy/commit/38db8ca2dac1265c49f92d87588962c70e3e8a1d">38db8ca</a>)</li>
-<li><strong>broadcast text:</strong> add broadcast text selector (<a href="https://github.com/CalsRanna/foxy/commit/44339ba5ba746dcc1cfe47be9b6fdb451f6ff0fe">44339ba</a>)</li>
-<li><strong>exporter:</strong> add missing dbc exports (<a href="https://github.com/CalsRanna/foxy/commit/5602710c1dcbadd6ad8748099c63083acbe9dae7">5602710</a>)</li>
-<li><strong>item enchantment:</strong> add tag to table and selector (<a href="https://github.com/CalsRanna/foxy/commit/b1d5938566ae6ee575807c4b426b961a8dd4a683">b1d5938</a>)</li>
-<li><strong>loot template:</strong> add entry column (<a href="https://github.com/CalsRanna/foxy/commit/42b139a0fc9625c6c2cb3f42253832da2a4d6f9b">42b139a</a>)</li>
-<li><strong>spell item enchantment:</strong> add export of spell item enchantment (<a href="https://github.com/CalsRanna/foxy/commit/0095309253b6efa856306d40c0e1f3df751a6ca2">0095309</a>)</li>
-<li><strong>spell item enchantment:</strong> add spell item enchantment module (<a href="https://github.com/CalsRanna/foxy/commit/67e0164e630cc6fb5c4ee1bf0607308087077c3e">67e0164</a>)</li>
+  <li>
+    <strong>spell selector:</strong> add name subtext in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/16e7668f2ecbb1ca68e52a4ca70c6b61de3e2e7a"
+      >16e7668</a
+    >)
+  </li>
+  <li>
+    <strong>updater:</strong> redesign updater to make tips more conspicuous (<a
+      href="https://github.com/CalsRanna/foxy/commit/e67b827bc3bfaee02d81b8d201f539895211e55b"
+      >e67b827</a
+    >)
+  </li>
 </ul>
-<h1><a href="https://github.com/CalsRanna/foxy/compare/0.1.9...0.2.0">0.2.0</a> (2021-06-30)</h1>
-<h3>Features</h3>
-<ul>
-<li><strong>area table:</strong> add area table module (<a href="https://github.com/CalsRanna/foxy/commit/d9ded1949961738f57d4fa2d8a2be0eca7adfb30">d9ded19</a>)</li>
-<li><strong>area table or quest sort:</strong> add area table or quest sort selector (<a href="https://github.com/CalsRanna/foxy/commit/fe10d6266c21729b3a9a0e94fe647d6237d867ce">fe10d62</a>)</li>
-<li><strong>char title:</strong> add char title selector (<a href="https://github.com/CalsRanna/foxy/commit/fc490283258cef0f0e63efc12f3e1324c3078211">fc49028</a>)</li>
-<li><strong>emote:</strong> add emote selector (<a href="https://github.com/CalsRanna/foxy/commit/ea7e20b65da97aa7fb58b225b43393726b93e1e2">ea7e20b</a>)</li>
-<li><strong>emote text:</strong> add emote text module (<a href="https://github.com/CalsRanna/foxy/commit/63437074c1e4ffe0be38377558d8feb2c443f350">6343707</a>)</li>
-<li><strong>game object:</strong> add game object display info selector (<a href="https://github.com/CalsRanna/foxy/commit/73f2ec3ec4df77d1a5341c99957f6ed4af369391">73f2ec3</a>)</li>
-<li><strong>map:</strong> add map selector (<a href="https://github.com/CalsRanna/foxy/commit/ab5daa0850244ea6122419bd825fc77cef604f01">ab5daa0</a>)</li>
-<li><strong>quest faction reward:</strong> add quest faction reward module (<a href="https://github.com/CalsRanna/foxy/commit/1dd600efc036538aafdd50e8dcc93c7337c529aa">1dd600e</a>)</li>
-<li><strong>quest info:</strong> add quest info module (<a href="https://github.com/CalsRanna/foxy/commit/587b308334038afb0f1387aee351a9c82f8dc1a3">587b308</a>)</li>
-<li><strong>quest info:</strong> add quest info selector (<a href="https://github.com/CalsRanna/foxy/commit/c2fb3fbca574a31b4234250f96ec354eba9d7d14">c2fb3fb</a>)</li>
-<li><strong>quest sort:</strong> add quest sort module (<a href="https://github.com/CalsRanna/foxy/commit/40f151195cd3587d6f3d05b3883ab67f7f45a612">40f1511</a>)</li>
-</ul>
-<h2><a href="https://github.com/CalsRanna/foxy/compare/0.1.8...0.1.9">0.1.9</a> (2021-06-29)</h2>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.2.0...0.2.1">0.2.1</a>
+  (2021-07-14)
+</h2>
 <h3>Bug Fixes</h3>
 <ul>
-<li><strong>flag editor:</strong> fix table display in dialog when has long content (<a href="https://github.com/CalsRanna/foxy/commit/1df210b61ee6387d8f6074644440a4e13e3e2642">1df210b</a>)</li>
-<li><strong>item display info selector:</strong> fix inventory icon input type to text instead of number (<a href="https://github.com/CalsRanna/foxy/commit/46635310f619b03f98f820a9672928edc7143e1b">4663531</a>)</li>
-<li><strong>localizer:</strong> fix overflow and max height of table (<a href="https://github.com/CalsRanna/foxy/commit/425aa0cd88835f009f284b89b516aed909adc243">425aa0c</a>)</li>
-<li><strong>selector:</strong> fix overflow and max height of table (<a href="https://github.com/CalsRanna/foxy/commit/55cf71d43cb10bf45ca31595eb0df7e38f98d455">55cf71d</a>)</li>
+  <li>
+    remove unused api and view (<a
+      href="https://github.com/CalsRanna/foxy/commit/f59d413cad86e7a40831e134628763ff975cc24f"
+      >f59d413</a
+    >)
+  </li>
+  <li>
+    <strong>el-card:</strong> fix padding of el-card body when has form item
+    component (<a
+      href="https://github.com/CalsRanna/foxy/commit/2b0901f058afc7d7bbadf39273d243e5e833581a"
+      >2b0901f</a
+    >)
+  </li>
+  <li>
+    <strong>el-tabs:</strong> remove el-card which warp el-tabs (<a
+      href="https://github.com/CalsRanna/foxy/commit/a6adf376cdc23c89fbb3aca4826387896c694d81"
+      >a6adf37</a
+    >)
+  </li>
+  <li>
+    <strong>exporter:</strong> fix export spell item enchantment (<a
+      href="https://github.com/CalsRanna/foxy/commit/e0bc58b23fdd8fabf12e969c6f74d4ad065a72a5"
+      >e0bc58b</a
+    >)
+  </li>
+  <li>
+    <strong>spell:</strong> add option to mechanic select (<a
+      href="https://github.com/CalsRanna/foxy/commit/5c8979d9d9d8003639b169bdbb304edd2b7c7a00"
+      >5c8979d</a
+    >)
+  </li>
+  <li>
+    <strong>spell item enchantment:</strong> adjust type of form item (<a
+      href="https://github.com/CalsRanna/foxy/commit/e4f4b409d6b097bfd29821c711620d77f030859b"
+      >e4f4b40</a
+    >)
+  </li>
+  <li>
+    <strong>table:</strong> remove sortable of all table (<a
+      href="https://github.com/CalsRanna/foxy/commit/6455ffe9166655c892db52c087ccf8a009da4e27"
+      >6455ffe</a
+    >)
+  </li>
 </ul>
 <h3>Features</h3>
 <ul>
-<li><strong>faction selector:</strong> add faction selector (<a href="https://github.com/CalsRanna/foxy/commit/8f58c83839160257819e29d06ae5454b2e651583">8f58c83</a>)</li>
-<li><strong>localizer:</strong> split fields into single localizer (<a href="https://github.com/CalsRanna/foxy/commit/9c91241d805c91ad1aee3bf6f5d1e4ef29d0e144">9c91241</a>)</li>
-<li><strong>lock:</strong> build lock selector (<a href="https://github.com/CalsRanna/foxy/commit/de5375615b3dd075fc50661e92f36d1c573df104">de53756</a>)</li>
+  <li>
+    make searching by primary key precisely (<a
+      href="https://github.com/CalsRanna/foxy/commit/38db8ca2dac1265c49f92d87588962c70e3e8a1d"
+      >38db8ca</a
+    >)
+  </li>
+  <li>
+    <strong>broadcast text:</strong> add broadcast text selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/44339ba5ba746dcc1cfe47be9b6fdb451f6ff0fe"
+      >44339ba</a
+    >)
+  </li>
+  <li>
+    <strong>exporter:</strong> add missing dbc exports (<a
+      href="https://github.com/CalsRanna/foxy/commit/5602710c1dcbadd6ad8748099c63083acbe9dae7"
+      >5602710</a
+    >)
+  </li>
+  <li>
+    <strong>item enchantment:</strong> add tag to table and selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/b1d5938566ae6ee575807c4b426b961a8dd4a683"
+      >b1d5938</a
+    >)
+  </li>
+  <li>
+    <strong>loot template:</strong> add entry column (<a
+      href="https://github.com/CalsRanna/foxy/commit/42b139a0fc9625c6c2cb3f42253832da2a4d6f9b"
+      >42b139a</a
+    >)
+  </li>
+  <li>
+    <strong>spell item enchantment:</strong> add export of spell item
+    enchantment (<a
+      href="https://github.com/CalsRanna/foxy/commit/0095309253b6efa856306d40c0e1f3df751a6ca2"
+      >0095309</a
+    >)
+  </li>
+  <li>
+    <strong>spell item enchantment:</strong> add spell item enchantment module
+    (<a
+      href="https://github.com/CalsRanna/foxy/commit/67e0164e630cc6fb5c4ee1bf0607308087077c3e"
+      >67e0164</a
+    >)
+  </li>
 </ul>
-<h2><a href="https://github.com/CalsRanna/foxy/compare/0.1.7...0.1.8">0.1.8</a> (2021-06-01)</h2>
+<h1>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.1.9...0.2.0">0.2.0</a>
+  (2021-06-30)
+</h1>
+<h3>Features</h3>
+<ul>
+  <li>
+    <strong>area table:</strong> add area table module (<a
+      href="https://github.com/CalsRanna/foxy/commit/d9ded1949961738f57d4fa2d8a2be0eca7adfb30"
+      >d9ded19</a
+    >)
+  </li>
+  <li>
+    <strong>area table or quest sort:</strong> add area table or quest sort
+    selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/fe10d6266c21729b3a9a0e94fe647d6237d867ce"
+      >fe10d62</a
+    >)
+  </li>
+  <li>
+    <strong>char title:</strong> add char title selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/fc490283258cef0f0e63efc12f3e1324c3078211"
+      >fc49028</a
+    >)
+  </li>
+  <li>
+    <strong>emote:</strong> add emote selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/ea7e20b65da97aa7fb58b225b43393726b93e1e2"
+      >ea7e20b</a
+    >)
+  </li>
+  <li>
+    <strong>emote text:</strong> add emote text module (<a
+      href="https://github.com/CalsRanna/foxy/commit/63437074c1e4ffe0be38377558d8feb2c443f350"
+      >6343707</a
+    >)
+  </li>
+  <li>
+    <strong>game object:</strong> add game object display info selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/73f2ec3ec4df77d1a5341c99957f6ed4af369391"
+      >73f2ec3</a
+    >)
+  </li>
+  <li>
+    <strong>map:</strong> add map selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/ab5daa0850244ea6122419bd825fc77cef604f01"
+      >ab5daa0</a
+    >)
+  </li>
+  <li>
+    <strong>quest faction reward:</strong> add quest faction reward module (<a
+      href="https://github.com/CalsRanna/foxy/commit/1dd600efc036538aafdd50e8dcc93c7337c529aa"
+      >1dd600e</a
+    >)
+  </li>
+  <li>
+    <strong>quest info:</strong> add quest info module (<a
+      href="https://github.com/CalsRanna/foxy/commit/587b308334038afb0f1387aee351a9c82f8dc1a3"
+      >587b308</a
+    >)
+  </li>
+  <li>
+    <strong>quest info:</strong> add quest info selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/c2fb3fbca574a31b4234250f96ec354eba9d7d14"
+      >c2fb3fb</a
+    >)
+  </li>
+  <li>
+    <strong>quest sort:</strong> add quest sort module (<a
+      href="https://github.com/CalsRanna/foxy/commit/40f151195cd3587d6f3d05b3883ab67f7f45a612"
+      >40f1511</a
+    >)
+  </li>
+</ul>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.1.8...0.1.9">0.1.9</a>
+  (2021-06-29)
+</h2>
 <h3>Bug Fixes</h3>
 <ul>
-<li><strong>item template name:</strong> fix name of inventory icon to fit icons in disk (<a href="https://github.com/CalsRanna/foxy/commit/9d55f4edcd6f3bbfdb7d57aa83a3083064fc04b6">9d55f4e</a>)</li>
-<li><strong>item template name:</strong> fix padding between icon and name to keep same when display chinese and original name (<a href="https://github.com/CalsRanna/foxy/commit/b08413435dff4f0d1b5b69600b63866a84f561bc">b084134</a>)</li>
-<li><strong>version:</strong> fix new version shown when has no new version (<a href="https://github.com/CalsRanna/foxy/commit/ba0ea8f3d1d0b7fedcd79cb4f568da2eff3c1379">ba0ea8f</a>)</li>
+  <li>
+    <strong>flag editor:</strong> fix table display in dialog when has long
+    content (<a
+      href="https://github.com/CalsRanna/foxy/commit/1df210b61ee6387d8f6074644440a4e13e3e2642"
+      >1df210b</a
+    >)
+  </li>
+  <li>
+    <strong>item display info selector:</strong> fix inventory icon input type
+    to text instead of number (<a
+      href="https://github.com/CalsRanna/foxy/commit/46635310f619b03f98f820a9672928edc7143e1b"
+      >4663531</a
+    >)
+  </li>
+  <li>
+    <strong>localizer:</strong> fix overflow and max height of table (<a
+      href="https://github.com/CalsRanna/foxy/commit/425aa0cd88835f009f284b89b516aed909adc243"
+      >425aa0c</a
+    >)
+  </li>
+  <li>
+    <strong>selector:</strong> fix overflow and max height of table (<a
+      href="https://github.com/CalsRanna/foxy/commit/55cf71d43cb10bf45ca31595eb0df7e38f98d455"
+      >55cf71d</a
+    >)
+  </li>
 </ul>
 <h3>Features</h3>
 <ul>
-<li><strong>chr class:</strong> add chr class editor (<a href="https://github.com/CalsRanna/foxy/commit/da917a5a8c75aae1e6b53ce2172ce8b142c6cd0e">da917a5</a>)</li>
-<li><strong>chr race:</strong> add chr race editor (<a href="https://github.com/CalsRanna/foxy/commit/502c329ea61cb8f653fdeb5e3eb18421c2b2f5ec">502c329</a>)</li>
-<li><strong>dashboard:</strong> make card clickable (<a href="https://github.com/CalsRanna/foxy/commit/39a2a75826232f274f81cbb32cc47fea41cfa1a0">39a2a75</a>)</li>
-<li><strong>reference loot template:</strong> add reference loot tempalte module (<a href="https://github.com/CalsRanna/foxy/commit/f70d6942fd3a018214ca3929c26548aa2bb081da">f70d694</a>)</li>
-<li><strong>scaling stat values:</strong> add scaling stat values module (<a href="https://github.com/CalsRanna/foxy/commit/ded73476b60aefb178bd3e0ab0b679c85e83cf6e">ded7347</a>)</li>
-<li><strong>selector:</strong> add loading while searching and use enter key to search (<a href="https://github.com/CalsRanna/foxy/commit/621b1a2f6eec72264ba17190502ae91d00d58789">621b1a2</a>)</li>
-<li><strong>spell icon selector:</strong> add spell icon selector (<a href="https://github.com/CalsRanna/foxy/commit/87b713021fc93830d66ddd85f1d666640f7d7587">87b7130</a>)</li>
-<li><strong>spell name:</strong> add icon to spell name (<a href="https://github.com/CalsRanna/foxy/commit/192624828966a0b4b9c209cda6296550597af292">1926248</a>)</li>
-<li><strong>spell selector:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/0140fa59f6659b734b13b57fc5938a04cd71d756">0140fa5</a>)</li>
+  <li>
+    <strong>faction selector:</strong> add faction selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/8f58c83839160257819e29d06ae5454b2e651583"
+      >8f58c83</a
+    >)
+  </li>
+  <li>
+    <strong>localizer:</strong> split fields into single localizer (<a
+      href="https://github.com/CalsRanna/foxy/commit/9c91241d805c91ad1aee3bf6f5d1e4ef29d0e144"
+      >9c91241</a
+    >)
+  </li>
+  <li>
+    <strong>lock:</strong> build lock selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/de5375615b3dd075fc50661e92f36d1c573df104"
+      >de53756</a
+    >)
+  </li>
 </ul>
-<h2><a href="https://github.com/CalsRanna/foxy/compare/0.1.6...0.1.7">0.1.7</a> (2021-05-27)</h2>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.1.7...0.1.8">0.1.8</a>
+  (2021-06-01)
+</h2>
 <h3>Bug Fixes</h3>
 <ul>
-<li><strong>app:</strong> fix active view while reloading app (<a href="https://github.com/CalsRanna/foxy/commit/c8ccc5faa54c51ab1a79441e33d97ff69a58863b">c8ccc5f</a>)</li>
-<li><strong>creature:</strong> use mechanics from dbc instead of constant (<a href="https://github.com/CalsRanna/foxy/commit/4d5b0c7439f8ae29d4e34a1d2e847a366da9677d">4d5b0c7</a>)</li>
-<li><strong>error:</strong> set timeout to 1000ms (<a href="https://github.com/CalsRanna/foxy/commit/03a1514ea8f145880b43ce1cfec219544f08c8eb">03a1514</a>)</li>
-<li><strong>error:</strong> show error only once when serval same errors occurred (<a href="https://github.com/CalsRanna/foxy/commit/da4c941edab0336f44a8898ca585d5dc4df00f56">da4c941</a>)</li>
-<li><strong>game object loot template:</strong> fix searching game object loot template when game object has loot template (<a href="https://github.com/CalsRanna/foxy/commit/0fc06ec483f908f25ec24036ffd7cbf5cb5f2797">0fc06ec</a>)</li>
-<li><strong>item template name:</strong> fix img and span display error when has no icon or long name (<a href="https://github.com/CalsRanna/foxy/commit/e574252772d8a9b58b12e2c7e43f6a2a44fa304f">e574252</a>)</li>
-<li><strong>localizer:</strong> remove display entry or id from localizer (<a href="https://github.com/CalsRanna/foxy/commit/47a124f16db39d6dc65bc396939722faa91aa44e">47a124f</a>)</li>
-<li><strong>setting:</strong> fix setting active tab when init and reload view (<a href="https://github.com/CalsRanna/foxy/commit/503568bfc5b69d3ea1157726a331b47a8c7f9ace">503568b</a>)</li>
-<li><strong>sql:</strong> fix charset and collate when init loading dbc (<a href="https://github.com/CalsRanna/foxy/commit/eca773dbb9c40a797b8035f3b2bd0d2a5826c501">eca773d</a>)</li>
+  <li>
+    <strong>item template name:</strong> fix name of inventory icon to fit icons
+    in disk (<a
+      href="https://github.com/CalsRanna/foxy/commit/9d55f4edcd6f3bbfdb7d57aa83a3083064fc04b6"
+      >9d55f4e</a
+    >)
+  </li>
+  <li>
+    <strong>item template name:</strong> fix padding between icon and name to
+    keep same when display chinese and original name (<a
+      href="https://github.com/CalsRanna/foxy/commit/b08413435dff4f0d1b5b69600b63866a84f561bc"
+      >b084134</a
+    >)
+  </li>
+  <li>
+    <strong>version:</strong> fix new version shown when has no new version (<a
+      href="https://github.com/CalsRanna/foxy/commit/ba0ea8f3d1d0b7fedcd79cb4f568da2eff3c1379"
+      >ba0ea8f</a
+    >)
+  </li>
 </ul>
 <h3>Features</h3>
 <ul>
-<li><strong>creature equipment template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/ee9e9cedfde0779594b9c1f87c78319747af2ff3">ee9e9ce</a>)</li>
-<li><strong>creature loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/4943cc2acdce5e353028560b5cf61b1726e94030">4943cc2</a>)</li>
-<li><strong>creature quest item:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/c1ee32c19eb928086a6886e53182aa56dcae8aa8">c1ee32c</a>)</li>
-<li><strong>disenchant loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/d18d2ab97b8d4f6d8b2ed7bd1e82c138c8a4c11e">d18d2ab</a>)</li>
-<li><strong>game object loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/80bbae96be3cf5d346d09f62596b3ab62c54ecf8">80bbae9</a>)</li>
-<li><strong>game object quest item:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/d6b47af00e69bdd9c33958a22b374a6524c5d759">d6b47af</a>)</li>
-<li><strong>item:</strong> add item icon in item template name component (<a href="https://github.com/CalsRanna/foxy/commit/6c1654fb6b52f43a0678450a6f2aa4be999df41b">6c1654f</a>)</li>
-<li><strong>item loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/82f869600fd9e039538e9ca15b0c19a1c57bbf3a">82f8696</a>)</li>
-<li><strong>item template selector:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/b0ebf5c063e0aba10914989751c86167815e1a1d">b0ebf5c</a>)</li>
-<li><strong>milling loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/12040233c8a87eb3af5c08b5d98c1b81c2598e73">1204023</a>)</li>
-<li><strong>mysql connection:</strong> add port to mysql connection (<a href="https://github.com/CalsRanna/foxy/commit/1ad7b0fcdd38fc81ca737d58dfef17dbc0d2185c">1ad7b0f</a>)</li>
-<li><strong>npc vendor:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/dd39d8e34634fc70431121efb5104903e2472ff7">dd39d8e</a>)</li>
-<li><strong>pickpocketing loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/5c476b10c8c972869c116ef076c5501f9f69b7af">5c476b1</a>)</li>
-<li><strong>prospecting loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/45a6de2e360a02f5f668cc0491752b0f5490c861">45a6de2</a>)</li>
-<li><strong>reference loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/f9d7a2338112912d348078c62cce8e9f1ea62eb3">f9d7a23</a>)</li>
-<li><strong>skinning loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/583545f7b6cf1193c30c26b324da505c81a23b2d">583545f</a>)</li>
-<li><strong>spell loot template:</strong> add icon display in table (<a href="https://github.com/CalsRanna/foxy/commit/fb898838b869b6d8d11752a63cc71da1a233db8a">fb89883</a>)</li>
+  <li>
+    <strong>chr class:</strong> add chr class editor (<a
+      href="https://github.com/CalsRanna/foxy/commit/da917a5a8c75aae1e6b53ce2172ce8b142c6cd0e"
+      >da917a5</a
+    >)
+  </li>
+  <li>
+    <strong>chr race:</strong> add chr race editor (<a
+      href="https://github.com/CalsRanna/foxy/commit/502c329ea61cb8f653fdeb5e3eb18421c2b2f5ec"
+      >502c329</a
+    >)
+  </li>
+  <li>
+    <strong>dashboard:</strong> make card clickable (<a
+      href="https://github.com/CalsRanna/foxy/commit/39a2a75826232f274f81cbb32cc47fea41cfa1a0"
+      >39a2a75</a
+    >)
+  </li>
+  <li>
+    <strong>reference loot template:</strong> add reference loot tempalte module
+    (<a
+      href="https://github.com/CalsRanna/foxy/commit/f70d6942fd3a018214ca3929c26548aa2bb081da"
+      >f70d694</a
+    >)
+  </li>
+  <li>
+    <strong>scaling stat values:</strong> add scaling stat values module (<a
+      href="https://github.com/CalsRanna/foxy/commit/ded73476b60aefb178bd3e0ab0b679c85e83cf6e"
+      >ded7347</a
+    >)
+  </li>
+  <li>
+    <strong>selector:</strong> add loading while searching and use enter key to
+    search (<a
+      href="https://github.com/CalsRanna/foxy/commit/621b1a2f6eec72264ba17190502ae91d00d58789"
+      >621b1a2</a
+    >)
+  </li>
+  <li>
+    <strong>spell icon selector:</strong> add spell icon selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/87b713021fc93830d66ddd85f1d666640f7d7587"
+      >87b7130</a
+    >)
+  </li>
+  <li>
+    <strong>spell name:</strong> add icon to spell name (<a
+      href="https://github.com/CalsRanna/foxy/commit/192624828966a0b4b9c209cda6296550597af292"
+      >1926248</a
+    >)
+  </li>
+  <li>
+    <strong>spell selector:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/0140fa59f6659b734b13b57fc5938a04cd71d756"
+      >0140fa5</a
+    >)
+  </li>
 </ul>
-<h2><a href="https://github.com/CalsRanna/foxy/compare/0.1.5...0.1.6">0.1.6</a> (2021-05-10)</h2>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.1.6...0.1.7">0.1.7</a>
+  (2021-05-27)
+</h2>
 <h3>Bug Fixes</h3>
 <ul>
-<li><strong>spell:</strong> fix mechanics didn't work properly (<a href="https://github.com/CalsRanna/foxy/commit/99d7e28e87f83246ef194c65683c85fcc604958e">99d7e28</a>)</li>
+  <li>
+    <strong>app:</strong> fix active view while reloading app (<a
+      href="https://github.com/CalsRanna/foxy/commit/c8ccc5faa54c51ab1a79441e33d97ff69a58863b"
+      >c8ccc5f</a
+    >)
+  </li>
+  <li>
+    <strong>creature:</strong> use mechanics from dbc instead of constant (<a
+      href="https://github.com/CalsRanna/foxy/commit/4d5b0c7439f8ae29d4e34a1d2e847a366da9677d"
+      >4d5b0c7</a
+    >)
+  </li>
+  <li>
+    <strong>error:</strong> set timeout to 1000ms (<a
+      href="https://github.com/CalsRanna/foxy/commit/03a1514ea8f145880b43ce1cfec219544f08c8eb"
+      >03a1514</a
+    >)
+  </li>
+  <li>
+    <strong>error:</strong> show error only once when serval same errors
+    occurred (<a
+      href="https://github.com/CalsRanna/foxy/commit/da4c941edab0336f44a8898ca585d5dc4df00f56"
+      >da4c941</a
+    >)
+  </li>
+  <li>
+    <strong>game object loot template:</strong> fix searching game object loot
+    template when game object has loot template (<a
+      href="https://github.com/CalsRanna/foxy/commit/0fc06ec483f908f25ec24036ffd7cbf5cb5f2797"
+      >0fc06ec</a
+    >)
+  </li>
+  <li>
+    <strong>item template name:</strong> fix img and span display error when has
+    no icon or long name (<a
+      href="https://github.com/CalsRanna/foxy/commit/e574252772d8a9b58b12e2c7e43f6a2a44fa304f"
+      >e574252</a
+    >)
+  </li>
+  <li>
+    <strong>localizer:</strong> remove display entry or id from localizer (<a
+      href="https://github.com/CalsRanna/foxy/commit/47a124f16db39d6dc65bc396939722faa91aa44e"
+      >47a124f</a
+    >)
+  </li>
+  <li>
+    <strong>setting:</strong> fix setting active tab when init and reload view
+    (<a
+      href="https://github.com/CalsRanna/foxy/commit/503568bfc5b69d3ea1157726a331b47a8c7f9ace"
+      >503568b</a
+    >)
+  </li>
+  <li>
+    <strong>sql:</strong> fix charset and collate when init loading dbc (<a
+      href="https://github.com/CalsRanna/foxy/commit/eca773dbb9c40a797b8035f3b2bd0d2a5826c501"
+      >eca773d</a
+    >)
+  </li>
 </ul>
 <h3>Features</h3>
 <ul>
-<li><strong>about:</strong> add about view (<a href="https://github.com/CalsRanna/foxy/commit/f18f2adbfd7cdb2f265c2babf07c35e5005c3d2b">f18f2ad</a>)</li>
-<li><strong>initiator:</strong> build a new initiator instead of inline dialog (<a href="https://github.com/CalsRanna/foxy/commit/59127b9fc9a29d11b8f44fe4db031d5efaf471da">59127b9</a>)</li>
-<li><strong>version:</strong> use state of version instead of data in component (<a href="https://github.com/CalsRanna/foxy/commit/920026d46b3cdfa08fd5807f7b3fb785e758d5e9">920026d</a>)</li>
+  <li>
+    <strong>creature equipment template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/ee9e9cedfde0779594b9c1f87c78319747af2ff3"
+      >ee9e9ce</a
+    >)
+  </li>
+  <li>
+    <strong>creature loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/4943cc2acdce5e353028560b5cf61b1726e94030"
+      >4943cc2</a
+    >)
+  </li>
+  <li>
+    <strong>creature quest item:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/c1ee32c19eb928086a6886e53182aa56dcae8aa8"
+      >c1ee32c</a
+    >)
+  </li>
+  <li>
+    <strong>disenchant loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/d18d2ab97b8d4f6d8b2ed7bd1e82c138c8a4c11e"
+      >d18d2ab</a
+    >)
+  </li>
+  <li>
+    <strong>game object loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/80bbae96be3cf5d346d09f62596b3ab62c54ecf8"
+      >80bbae9</a
+    >)
+  </li>
+  <li>
+    <strong>game object quest item:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/d6b47af00e69bdd9c33958a22b374a6524c5d759"
+      >d6b47af</a
+    >)
+  </li>
+  <li>
+    <strong>item:</strong> add item icon in item template name component (<a
+      href="https://github.com/CalsRanna/foxy/commit/6c1654fb6b52f43a0678450a6f2aa4be999df41b"
+      >6c1654f</a
+    >)
+  </li>
+  <li>
+    <strong>item loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/82f869600fd9e039538e9ca15b0c19a1c57bbf3a"
+      >82f8696</a
+    >)
+  </li>
+  <li>
+    <strong>item template selector:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/b0ebf5c063e0aba10914989751c86167815e1a1d"
+      >b0ebf5c</a
+    >)
+  </li>
+  <li>
+    <strong>milling loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/12040233c8a87eb3af5c08b5d98c1b81c2598e73"
+      >1204023</a
+    >)
+  </li>
+  <li>
+    <strong>mysql connection:</strong> add port to mysql connection (<a
+      href="https://github.com/CalsRanna/foxy/commit/1ad7b0fcdd38fc81ca737d58dfef17dbc0d2185c"
+      >1ad7b0f</a
+    >)
+  </li>
+  <li>
+    <strong>npc vendor:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/dd39d8e34634fc70431121efb5104903e2472ff7"
+      >dd39d8e</a
+    >)
+  </li>
+  <li>
+    <strong>pickpocketing loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/5c476b10c8c972869c116ef076c5501f9f69b7af"
+      >5c476b1</a
+    >)
+  </li>
+  <li>
+    <strong>prospecting loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/45a6de2e360a02f5f668cc0491752b0f5490c861"
+      >45a6de2</a
+    >)
+  </li>
+  <li>
+    <strong>reference loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/f9d7a2338112912d348078c62cce8e9f1ea62eb3"
+      >f9d7a23</a
+    >)
+  </li>
+  <li>
+    <strong>skinning loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/583545f7b6cf1193c30c26b324da505c81a23b2d"
+      >583545f</a
+    >)
+  </li>
+  <li>
+    <strong>spell loot template:</strong> add icon display in table (<a
+      href="https://github.com/CalsRanna/foxy/commit/fb898838b869b6d8d11752a63cc71da1a233db8a"
+      >fb89883</a
+    >)
+  </li>
 </ul>
-<h2><a href="https://github.com/CalsRanna/foxy/compare/0.1.4...0.1.5">0.1.5</a> (2021-05-09)</h2>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.1.5...0.1.6">0.1.6</a>
+  (2021-05-10)
+</h2>
 <h3>Bug Fixes</h3>
 <ul>
-<li>fix preload in vue.config.js (<a href="https://github.com/CalsRanna/foxy/commit/dda2d9ee7978cc8c6af06893a44c5e40ee27bfa5">dda2d9e</a>)</li>
-<li>remove some components don't need (<a href="https://github.com/CalsRanna/foxy/commit/c8fb0aa7342edc36da6f28f7c518cd974c285610">c8fb0aa</a>)</li>
-<li><strong>creature:</strong> fix missing spell school immune mask (<a href="https://github.com/CalsRanna/foxy/commit/4123fbf872918215d10bbfec005961e8b5b866d0">4123fbf</a>)</li>
-<li><strong>creature:</strong> remove some fields to match latest version of creature_template (<a href="https://github.com/CalsRanna/foxy/commit/150d7f2980a48d7d2a231b8f73927b26eaba1f20">150d7f2</a>)</li>
-<li><strong>error handler:</strong> fix parse error failure (<a href="https://github.com/CalsRanna/foxy/commit/33f5502638d9168968fcabe40beab60cd7e75fb8">33f5502</a>)</li>
+  <li>
+    <strong>spell:</strong> fix mechanics didn't work properly (<a
+      href="https://github.com/CalsRanna/foxy/commit/99d7e28e87f83246ef194c65683c85fcc604958e"
+      >99d7e28</a
+    >)
+  </li>
 </ul>
 <h3>Features</h3>
 <ul>
-<li><strong>chart:</strong> remove chart component from dashboard (<a href="https://github.com/CalsRanna/foxy/commit/29f81ba7238365bf02ffe8cd2c446e2963d92fd9">29f81ba</a>)</li>
-<li><strong>component:</strong> add spell cast time selector (<a href="https://github.com/CalsRanna/foxy/commit/ff0df0759d23ea1894fb4f9dd8b5bc552b3a1896">ff0df07</a>)</li>
-<li><strong>component:</strong> add spell range selector (<a href="https://github.com/CalsRanna/foxy/commit/f34bb0fab016fe656118ecb426c4d5e724d4ecb1">f34bb0f</a>)</li>
-<li><strong>creature:</strong> add creature resistance module (<a href="https://github.com/CalsRanna/foxy/commit/efcff55a1e1083b408157ee9ac2517af346efaf0">efcff55</a>)</li>
-<li><strong>creature:</strong> add creature spell module (<a href="https://github.com/CalsRanna/foxy/commit/447586060ff9d3cf3aad4fd1e860546eb275b56c">4475860</a>)</li>
-<li><strong>dashboard:</strong> add net disk download url (<a href="https://github.com/CalsRanna/foxy/commit/2975497b7d8d3a1b012706811a24a75ce5c7becf">2975497</a>)</li>
-<li><strong>spell mechanic:</strong> add spell mechanic module (<a href="https://github.com/CalsRanna/foxy/commit/fa9064ebde9dec31ec92217e45d04813f5e89b58">fa9064e</a>)</li>
-<li><strong>talent:</strong> add loading talent.dbc (<a href="https://github.com/CalsRanna/foxy/commit/be86accb01222787ac29dc74e42b028f6e3d0687">be86acc</a>)</li>
-<li><strong>talent:</strong> add talent module (<a href="https://github.com/CalsRanna/foxy/commit/f116ded61a2843433cd397d71b04b5beeb07845b">f116ded</a>)</li>
-<li><strong>talent:</strong> add talent tab tab pane to talent (<a href="https://github.com/CalsRanna/foxy/commit/a109b15ee9490a3a26d09b4da21fc2e3b7697eb8">a109b15</a>)</li>
-<li><strong>talent tab:</strong> add loading TalentTab.dbc (<a href="https://github.com/CalsRanna/foxy/commit/957c4853c0a3ee9cef53be1e69afce5f665ffb9f">957c485</a>)</li>
-<li><strong>talent tab:</strong> add talent tab module (<a href="https://github.com/CalsRanna/foxy/commit/8f2c25bc6244e985a82670f5137d2e5a765cbd47">8f2c25b</a>)</li>
-<li><strong>view:</strong> add item set module (<a href="https://github.com/CalsRanna/foxy/commit/777f9445a26a9aae6cc3d20b0548466f882acb1c">777f944</a>)</li>
+  <li>
+    <strong>about:</strong> add about view (<a
+      href="https://github.com/CalsRanna/foxy/commit/f18f2adbfd7cdb2f265c2babf07c35e5005c3d2b"
+      >f18f2ad</a
+    >)
+  </li>
+  <li>
+    <strong>initiator:</strong> build a new initiator instead of inline dialog
+    (<a
+      href="https://github.com/CalsRanna/foxy/commit/59127b9fc9a29d11b8f44fe4db031d5efaf471da"
+      >59127b9</a
+    >)
+  </li>
+  <li>
+    <strong>version:</strong> use state of version instead of data in component
+    (<a
+      href="https://github.com/CalsRanna/foxy/commit/920026d46b3cdfa08fd5807f7b3fb785e758d5e9"
+      >920026d</a
+    >)
+  </li>
 </ul>
-<h2><a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/compare/0.1.3...0.1.4">0.1.4</a> (2021-04-14)</h2>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.1.4...0.1.5">0.1.5</a>
+  (2021-05-09)
+</h2>
 <h3>Bug Fixes</h3>
 <ul>
-<li><strong>creature:</strong> fix creature quest ender don't display (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8a2749475e2cb50da4f65a6cbcc87c0ee8d64c76">8a27494</a>)</li>
-<li><strong>dbc:</strong> fix dbc config while first set (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8b77a26c704d815af492f7db0fa861d07c822414">8b77a26</a>)</li>
-<li><strong>quest:</strong> fix used time is too long when search quest (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/44f793c5c784d395b10b129bded39eaecadfd096">44f793c</a>)</li>
-<li><strong>quest_template:</strong> fix quest template not display when has no znCN locale (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cc409fd60cc38846497fe1bc3ef9c6ccef0b6088">cc409fd</a>)</li>
-<li><strong>reference_loot_template:</strong> fix render error (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/9b9349d748b3c58bc6f7374d842641d09cef12ae">9b9349d</a>)</li>
-<li><strong>scaling stat distribution:</strong> add breadcrumb of advance (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/96890652bde32d3f9c034c68d6335cd2850fae84">9689065</a>)</li>
-<li><strong>spell selector:</strong> fix description not display well (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/63b4f2c873eda5e11738d0ba8f5da7cd520757c7">63b4f2c</a>)</li>
+  <li>
+    fix preload in vue.config.js (<a
+      href="https://github.com/CalsRanna/foxy/commit/dda2d9ee7978cc8c6af06893a44c5e40ee27bfa5"
+      >dda2d9e</a
+    >)
+  </li>
+  <li>
+    remove some components don't need (<a
+      href="https://github.com/CalsRanna/foxy/commit/c8fb0aa7342edc36da6f28f7c518cd974c285610"
+      >c8fb0aa</a
+    >)
+  </li>
+  <li>
+    <strong>creature:</strong> fix missing spell school immune mask (<a
+      href="https://github.com/CalsRanna/foxy/commit/4123fbf872918215d10bbfec005961e8b5b866d0"
+      >4123fbf</a
+    >)
+  </li>
+  <li>
+    <strong>creature:</strong> remove some fields to match latest version of
+    creature_template (<a
+      href="https://github.com/CalsRanna/foxy/commit/150d7f2980a48d7d2a231b8f73927b26eaba1f20"
+      >150d7f2</a
+    >)
+  </li>
+  <li>
+    <strong>error handler:</strong> fix parse error failure (<a
+      href="https://github.com/CalsRanna/foxy/commit/33f5502638d9168968fcabe40beab60cd7e75fb8"
+      >33f5502</a
+    >)
+  </li>
 </ul>
 <h3>Features</h3>
 <ul>
-<li><strong>advance:</strong> add advance module (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5db5bc58a3c1ca2f1b70e68c573750b3dfafdb8d">5db5bc5</a>)</li>
-<li><strong>component:</strong> add reference loot template cards (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/b37512fb1391e6fe4dbaeb391e5431dee88b0a7a">b37512f</a>)</li>
-<li><strong>component:</strong> add version card to dashboard (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/34fc07bd3a202a58622f633caa7992ab18d21d3a">34fc07b</a>)</li>
-<li><strong>scaling stat distribution:</strong> add scaling stat distribution module (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/6b29d69e4cc867418bea7bbe3d9c8c0ce4e90a6d">6b29d69</a>)</li>
-<li><strong>spell group:</strong> add spell group tab pane (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/e3e98cb4d116c5d0b5465e946529c06385787759">e3e98cb</a>)</li>
-<li><strong>spell group:</strong> add stack_rule and description when display spell groups (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/0e5efa99777c3298d73f1b5645c0ed57a231084d">0e5efa9</a>)</li>
-<li><strong>spell linked spell:</strong> add spell linked spell tab pane (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cdffda40096ac97c9d3383fd9388916827eed711">cdffda4</a>)</li>
-<li><strong>spell loot template:</strong> add spell loot template tab pane (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5377bf979bbd7ba0b89d0dcc1337d100cba5b2d6">5377bf9</a>)</li>
-<li><strong>spell_area:</strong> add spell area tab pane (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5150532208085136c33a4a1ee6f74c1cd7a67610">5150532</a>)</li>
-<li><strong>spell_bonus_data:</strong> add spell bonus data tab pane (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/f6cb1dfc0a345e064e959d03eb04c475fd68083f">f6cb1df</a>)</li>
-<li><strong>spell_custom_attr:</strong> add spell custom attr tab pane (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/ec4c6ee0fd7847594103b76ddbeb54049cac3a51">ec4c6ee</a>)</li>
-<li><strong>views:</strong> add reference loot template cards to loot template tab panes (<a href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/a72e60c4e78a8955f9dad35b06c45e84c5058be3">a72e60c</a>)</li>
+  <li>
+    <strong>chart:</strong> remove chart component from dashboard (<a
+      href="https://github.com/CalsRanna/foxy/commit/29f81ba7238365bf02ffe8cd2c446e2963d92fd9"
+      >29f81ba</a
+    >)
+  </li>
+  <li>
+    <strong>component:</strong> add spell cast time selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/ff0df0759d23ea1894fb4f9dd8b5bc552b3a1896"
+      >ff0df07</a
+    >)
+  </li>
+  <li>
+    <strong>component:</strong> add spell range selector (<a
+      href="https://github.com/CalsRanna/foxy/commit/f34bb0fab016fe656118ecb426c4d5e724d4ecb1"
+      >f34bb0f</a
+    >)
+  </li>
+  <li>
+    <strong>creature:</strong> add creature resistance module (<a
+      href="https://github.com/CalsRanna/foxy/commit/efcff55a1e1083b408157ee9ac2517af346efaf0"
+      >efcff55</a
+    >)
+  </li>
+  <li>
+    <strong>creature:</strong> add creature spell module (<a
+      href="https://github.com/CalsRanna/foxy/commit/447586060ff9d3cf3aad4fd1e860546eb275b56c"
+      >4475860</a
+    >)
+  </li>
+  <li>
+    <strong>dashboard:</strong> add net disk download url (<a
+      href="https://github.com/CalsRanna/foxy/commit/2975497b7d8d3a1b012706811a24a75ce5c7becf"
+      >2975497</a
+    >)
+  </li>
+  <li>
+    <strong>spell mechanic:</strong> add spell mechanic module (<a
+      href="https://github.com/CalsRanna/foxy/commit/fa9064ebde9dec31ec92217e45d04813f5e89b58"
+      >fa9064e</a
+    >)
+  </li>
+  <li>
+    <strong>talent:</strong> add loading talent.dbc (<a
+      href="https://github.com/CalsRanna/foxy/commit/be86accb01222787ac29dc74e42b028f6e3d0687"
+      >be86acc</a
+    >)
+  </li>
+  <li>
+    <strong>talent:</strong> add talent module (<a
+      href="https://github.com/CalsRanna/foxy/commit/f116ded61a2843433cd397d71b04b5beeb07845b"
+      >f116ded</a
+    >)
+  </li>
+  <li>
+    <strong>talent:</strong> add talent tab tab pane to talent (<a
+      href="https://github.com/CalsRanna/foxy/commit/a109b15ee9490a3a26d09b4da21fc2e3b7697eb8"
+      >a109b15</a
+    >)
+  </li>
+  <li>
+    <strong>talent tab:</strong> add loading TalentTab.dbc (<a
+      href="https://github.com/CalsRanna/foxy/commit/957c4853c0a3ee9cef53be1e69afce5f665ffb9f"
+      >957c485</a
+    >)
+  </li>
+  <li>
+    <strong>talent tab:</strong> add talent tab module (<a
+      href="https://github.com/CalsRanna/foxy/commit/8f2c25bc6244e985a82670f5137d2e5a765cbd47"
+      >8f2c25b</a
+    >)
+  </li>
+  <li>
+    <strong>view:</strong> add item set module (<a
+      href="https://github.com/CalsRanna/foxy/commit/777f9445a26a9aae6cc3d20b0548466f882acb1c"
+      >777f944</a
+    >)
+  </li>
 </ul>
-<h2><a href="https://github.com/CalsRanna/foxy/compare/0.1.2-alpha...0.1.3">0.1.3</a> (2021-03-02)</h2>
+<h2>
+  <a
+    href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/compare/0.1.3...0.1.4"
+    >0.1.4</a
+  >
+  (2021-04-14)
+</h2>
+<h3>Bug Fixes</h3>
+<ul>
+  <li>
+    <strong>creature:</strong> fix creature quest ender don't display (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8a2749475e2cb50da4f65a6cbcc87c0ee8d64c76"
+      >8a27494</a
+    >)
+  </li>
+  <li>
+    <strong>dbc:</strong> fix dbc config while first set (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/8b77a26c704d815af492f7db0fa861d07c822414"
+      >8b77a26</a
+    >)
+  </li>
+  <li>
+    <strong>quest:</strong> fix used time is too long when search quest (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/44f793c5c784d395b10b129bded39eaecadfd096"
+      >44f793c</a
+    >)
+  </li>
+  <li>
+    <strong>quest_template:</strong> fix quest template not display when has no
+    znCN locale (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cc409fd60cc38846497fe1bc3ef9c6ccef0b6088"
+      >cc409fd</a
+    >)
+  </li>
+  <li>
+    <strong>reference_loot_template:</strong> fix render error (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/9b9349d748b3c58bc6f7374d842641d09cef12ae"
+      >9b9349d</a
+    >)
+  </li>
+  <li>
+    <strong>scaling stat distribution:</strong> add breadcrumb of advance (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/96890652bde32d3f9c034c68d6335cd2850fae84"
+      >9689065</a
+    >)
+  </li>
+  <li>
+    <strong>spell selector:</strong> fix description not display well (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/63b4f2c873eda5e11738d0ba8f5da7cd520757c7"
+      >63b4f2c</a
+    >)
+  </li>
+</ul>
+<h3>Features</h3>
+<ul>
+  <li>
+    <strong>advance:</strong> add advance module (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5db5bc58a3c1ca2f1b70e68c573750b3dfafdb8d"
+      >5db5bc5</a
+    >)
+  </li>
+  <li>
+    <strong>component:</strong> add reference loot template cards (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/b37512fb1391e6fe4dbaeb391e5431dee88b0a7a"
+      >b37512f</a
+    >)
+  </li>
+  <li>
+    <strong>component:</strong> add version card to dashboard (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/34fc07bd3a202a58622f633caa7992ab18d21d3a"
+      >34fc07b</a
+    >)
+  </li>
+  <li>
+    <strong>scaling stat distribution:</strong> add scaling stat distribution
+    module (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/6b29d69e4cc867418bea7bbe3d9c8c0ce4e90a6d"
+      >6b29d69</a
+    >)
+  </li>
+  <li>
+    <strong>spell group:</strong> add spell group tab pane (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/e3e98cb4d116c5d0b5465e946529c06385787759"
+      >e3e98cb</a
+    >)
+  </li>
+  <li>
+    <strong>spell group:</strong> add stack_rule and description when display
+    spell groups (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/0e5efa99777c3298d73f1b5645c0ed57a231084d"
+      >0e5efa9</a
+    >)
+  </li>
+  <li>
+    <strong>spell linked spell:</strong> add spell linked spell tab pane (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/cdffda40096ac97c9d3383fd9388916827eed711"
+      >cdffda4</a
+    >)
+  </li>
+  <li>
+    <strong>spell loot template:</strong> add spell loot template tab pane (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5377bf979bbd7ba0b89d0dcc1337d100cba5b2d6"
+      >5377bf9</a
+    >)
+  </li>
+  <li>
+    <strong>spell_area:</strong> add spell area tab pane (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/5150532208085136c33a4a1ee6f74c1cd7a67610"
+      >5150532</a
+    >)
+  </li>
+  <li>
+    <strong>spell_bonus_data:</strong> add spell bonus data tab pane (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/f6cb1dfc0a345e064e959d03eb04c475fd68083f"
+      >f6cb1df</a
+    >)
+  </li>
+  <li>
+    <strong>spell_custom_attr:</strong> add spell custom attr tab pane (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/ec4c6ee0fd7847594103b76ddbeb54049cac3a51"
+      >ec4c6ee</a
+    >)
+  </li>
+  <li>
+    <strong>views:</strong> add reference loot template cards to loot template
+    tab panes (<a
+      href="https://e.coding.net/foxcore/foxcorefoxcore/foxy/commits/a72e60c4e78a8955f9dad35b06c45e84c5058be3"
+      >a72e60c</a
+    >)
+  </li>
+</ul>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.1.2-alpha...0.1.3"
+    >0.1.3</a
+  >
+  (2021-03-02)
+</h2>
 <h3>feat</h3>
 <ul>
-<li>add creature model info selector. (<a href="https://github.com/CalsRanna/foxy/commit/2e1bb17fab8b2f68e4cf87d4ce35a5f5a6b74118">2e1bb17</a>)</li>
-<li>add creature spell data selector. (<a href="https://github.com/CalsRanna/foxy/commit/9d99095278ae53f3cd2f55c40ea9a4b3ef43da96">9d99095</a>)</li>
-<li>add creature template selector. (<a href="https://github.com/CalsRanna/foxy/commit/cd29ee011cd7bd37a7a31fa488bb7c83bb613731">cd29ee0</a>)</li>
-<li>add item display info selector. (<a href="https://github.com/CalsRanna/foxy/commit/6bbf316b43876a7d084862b96d99212dc391c9e4">6bbf316</a>)</li>
-<li>add item enchantment template selector. (<a href="https://github.com/CalsRanna/foxy/commit/b79824bfa9d16c91c171a05d9cadd5a6a981bfe0">b79824b</a>)</li>
-<li>add item random properties selector. (<a href="https://github.com/CalsRanna/foxy/commit/23bd93a76dbd3eac0987615165e78781a4314ab7">23bd93a</a>)</li>
-<li>add item random suffix selector. (<a href="https://github.com/CalsRanna/foxy/commit/3582e8e3b2fe348d6ee38813dae885d684d8c8bc">3582e8e</a>)</li>
-<li>add item set selector. (<a href="https://github.com/CalsRanna/foxy/commit/cc7c48d1fcea6f871bd707a73ce437b25d3db641">cc7c48d</a>)</li>
-<li>add quest template selector. (<a href="https://github.com/CalsRanna/foxy/commit/dc9c7f98ec966fd250b7e264c444d817fce0875d">dc9c7f9</a>)</li>
-<li>add scaling stat distribution selector. (<a href="https://github.com/CalsRanna/foxy/commit/c80e30160f3b706e399786a7be72f4308aee079d">c80e301</a>)</li>
-<li>add scaling stat values flag editor. (<a href="https://github.com/CalsRanna/foxy/commit/25e627b605949ed8b878fcf5b7d72e70b2235347">25e627b</a>)</li>
-<li>add waypoint data selector. (<a href="https://github.com/CalsRanna/foxy/commit/840485823dd8a2cdc290e28605f5c292b165701d">8404858</a>)</li>
-<li>load CreatureSpellData.dbc. (<a href="https://github.com/CalsRanna/foxy/commit/c2a5ee0699966d65f9a70c0f1269c58904867f8f">c2a5ee0</a>)</li>
-<li>load item random properties. (<a href="https://github.com/CalsRanna/foxy/commit/269b18b7845f876af66366a23863cefb01fae422">269b18b</a>)</li>
-<li>load item random suffix. (<a href="https://github.com/CalsRanna/foxy/commit/fafb1951f8538c7f8f93e21eed5c8a9bed683ee3">fafb195</a>)</li>
-<li>load spell item enchantments. (<a href="https://github.com/CalsRanna/foxy/commit/f3ac217a067a1f68eeaec8b8744826675f3cd226">f3ac217</a>)</li>
+  <li>
+    add creature model info selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/2e1bb17fab8b2f68e4cf87d4ce35a5f5a6b74118"
+      >2e1bb17</a
+    >)
+  </li>
+  <li>
+    add creature spell data selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/9d99095278ae53f3cd2f55c40ea9a4b3ef43da96"
+      >9d99095</a
+    >)
+  </li>
+  <li>
+    add creature template selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/cd29ee011cd7bd37a7a31fa488bb7c83bb613731"
+      >cd29ee0</a
+    >)
+  </li>
+  <li>
+    add item display info selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/6bbf316b43876a7d084862b96d99212dc391c9e4"
+      >6bbf316</a
+    >)
+  </li>
+  <li>
+    add item enchantment template selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/b79824bfa9d16c91c171a05d9cadd5a6a981bfe0"
+      >b79824b</a
+    >)
+  </li>
+  <li>
+    add item random properties selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/23bd93a76dbd3eac0987615165e78781a4314ab7"
+      >23bd93a</a
+    >)
+  </li>
+  <li>
+    add item random suffix selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/3582e8e3b2fe348d6ee38813dae885d684d8c8bc"
+      >3582e8e</a
+    >)
+  </li>
+  <li>
+    add item set selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/cc7c48d1fcea6f871bd707a73ce437b25d3db641"
+      >cc7c48d</a
+    >)
+  </li>
+  <li>
+    add quest template selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/dc9c7f98ec966fd250b7e264c444d817fce0875d"
+      >dc9c7f9</a
+    >)
+  </li>
+  <li>
+    add scaling stat distribution selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/c80e30160f3b706e399786a7be72f4308aee079d"
+      >c80e301</a
+    >)
+  </li>
+  <li>
+    add scaling stat values flag editor. (<a
+      href="https://github.com/CalsRanna/foxy/commit/25e627b605949ed8b878fcf5b7d72e70b2235347"
+      >25e627b</a
+    >)
+  </li>
+  <li>
+    add waypoint data selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/840485823dd8a2cdc290e28605f5c292b165701d"
+      >8404858</a
+    >)
+  </li>
+  <li>
+    load CreatureSpellData.dbc. (<a
+      href="https://github.com/CalsRanna/foxy/commit/c2a5ee0699966d65f9a70c0f1269c58904867f8f"
+      >c2a5ee0</a
+    >)
+  </li>
+  <li>
+    load item random properties. (<a
+      href="https://github.com/CalsRanna/foxy/commit/269b18b7845f876af66366a23863cefb01fae422"
+      >269b18b</a
+    >)
+  </li>
+  <li>
+    load item random suffix. (<a
+      href="https://github.com/CalsRanna/foxy/commit/fafb1951f8538c7f8f93e21eed5c8a9bed683ee3"
+      >fafb195</a
+    >)
+  </li>
+  <li>
+    load spell item enchantments. (<a
+      href="https://github.com/CalsRanna/foxy/commit/f3ac217a067a1f68eeaec8b8744826675f3cd226"
+      >f3ac217</a
+    >)
+  </li>
 </ul>
 <h3>fix</h3>
 <ul>
-<li>adjust label of ModelName_2. (<a href="https://github.com/CalsRanna/foxy/commit/e58088c936d66d6024638d62092865f058b187ff">e58088c</a>)</li>
-<li>fix locale info in table and detail. (<a href="https://github.com/CalsRanna/foxy/commit/3d2e9f90529fedd601e14dd34a851859c724755c">3d2e9f9</a>)</li>
-<li>fix name not work when search spell in selector. (<a href="https://github.com/CalsRanna/foxy/commit/4fc2d9cc08ad4620c3029d1f46d4745513e2c69c">4fc2d9c</a>)</li>
-<li>reference right dbc while choose enchantment. (<a href="https://github.com/CalsRanna/foxy/commit/f842db9d9259d7d84833d75906ecc2fc4c74f263">f842db9</a>)</li>
-<li>reference right dbc while list enchantment. (<a href="https://github.com/CalsRanna/foxy/commit/3c6b0b3135d03202b1c02111fbd0b2e082a003cf">3c6b0b3</a>)</li>
-<li>use correct component while add enchantment. (<a href="https://github.com/CalsRanna/foxy/commit/6299e90490c1c4cc87c59fe2f098622cdb7bf403">6299e90</a>)</li>
+  <li>
+    adjust label of ModelName_2. (<a
+      href="https://github.com/CalsRanna/foxy/commit/e58088c936d66d6024638d62092865f058b187ff"
+      >e58088c</a
+    >)
+  </li>
+  <li>
+    fix locale info in table and detail. (<a
+      href="https://github.com/CalsRanna/foxy/commit/3d2e9f90529fedd601e14dd34a851859c724755c"
+      >3d2e9f9</a
+    >)
+  </li>
+  <li>
+    fix name not work when search spell in selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/4fc2d9cc08ad4620c3029d1f46d4745513e2c69c"
+      >4fc2d9c</a
+    >)
+  </li>
+  <li>
+    reference right dbc while choose enchantment. (<a
+      href="https://github.com/CalsRanna/foxy/commit/f842db9d9259d7d84833d75906ecc2fc4c74f263"
+      >f842db9</a
+    >)
+  </li>
+  <li>
+    reference right dbc while list enchantment. (<a
+      href="https://github.com/CalsRanna/foxy/commit/3c6b0b3135d03202b1c02111fbd0b2e082a003cf"
+      >3c6b0b3</a
+    >)
+  </li>
+  <li>
+    use correct component while add enchantment. (<a
+      href="https://github.com/CalsRanna/foxy/commit/6299e90490c1c4cc87c59fe2f098622cdb7bf403"
+      >6299e90</a
+    >)
+  </li>
 </ul>
 <h3>chore</h3>
 <ul>
-<li>add hide when overflow in table. (<a href="https://github.com/CalsRanna/foxy/commit/8b6c4fe0d85f93cd033aae44cb3011cdaaeaaf84">8b6c4fe</a>)</li>
-<li>update warcrafty to 1.0.8. (<a href="https://github.com/CalsRanna/foxy/commit/f663992616b6544093e4ab61568cff269457ac0c">f663992</a>)</li>
-<li>use item template selector instead. (<a href="https://github.com/CalsRanna/foxy/commit/d0fd67190ffe674ab89f20ef71da1faf72c18bc8">d0fd671</a>)</li>
+  <li>
+    add hide when overflow in table. (<a
+      href="https://github.com/CalsRanna/foxy/commit/8b6c4fe0d85f93cd033aae44cb3011cdaaeaaf84"
+      >8b6c4fe</a
+    >)
+  </li>
+  <li>
+    update warcrafty to 1.0.8. (<a
+      href="https://github.com/CalsRanna/foxy/commit/f663992616b6544093e4ab61568cff269457ac0c"
+      >f663992</a
+    >)
+  </li>
+  <li>
+    use item template selector instead. (<a
+      href="https://github.com/CalsRanna/foxy/commit/d0fd67190ffe674ab89f20ef71da1faf72c18bc8"
+      >d0fd671</a
+    >)
+  </li>
 </ul>
-<h2><a href="https://github.com/CalsRanna/foxy/compare/0.1.1-alpha...0.1.2-alpha">0.1.2-alpha</a> (2021-02-18)</h2>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.1.1-alpha...0.1.2-alpha"
+    >0.1.2-alpha</a
+  >
+  (2021-02-18)
+</h2>
 <h3>feat</h3>
 <ul>
-<li>add aura interrupt flags. (<a href="https://github.com/CalsRanna/foxy/commit/cf8fa08e4bf510619c8d085ea8589b3d3e3a2d4f">cf8fa08</a>)</li>
-<li>add interrupt flags. (<a href="https://github.com/CalsRanna/foxy/commit/40246d69e188cb220f345dd93b065cf92059ebd8">40246d6</a>)</li>
-<li>add some type select. (<a href="https://github.com/CalsRanna/foxy/commit/532cb679b3f65dc4f38c7d0d5011043730eb75de">532cb67</a>)</li>
-<li>add spell duration selector component. (<a href="https://github.com/CalsRanna/foxy/commit/946cab8488e4098688e23c38b422720713362dcb">946cab8</a>)</li>
+  <li>
+    add aura interrupt flags. (<a
+      href="https://github.com/CalsRanna/foxy/commit/cf8fa08e4bf510619c8d085ea8589b3d3e3a2d4f"
+      >cf8fa08</a
+    >)
+  </li>
+  <li>
+    add interrupt flags. (<a
+      href="https://github.com/CalsRanna/foxy/commit/40246d69e188cb220f345dd93b065cf92059ebd8"
+      >40246d6</a
+    >)
+  </li>
+  <li>
+    add some type select. (<a
+      href="https://github.com/CalsRanna/foxy/commit/532cb679b3f65dc4f38c7d0d5011043730eb75de"
+      >532cb67</a
+    >)
+  </li>
+  <li>
+    add spell duration selector component. (<a
+      href="https://github.com/CalsRanna/foxy/commit/946cab8488e4098688e23c38b422720713362dcb"
+      >946cab8</a
+    >)
+  </li>
 </ul>
 <h3>fix</h3>
 <ul>
-<li>adjust margin of components. (<a href="https://github.com/CalsRanna/foxy/commit/90d20ae9b2ecbcf4c0e6f6dea45fb2f1609218f2">90d20ae</a>)</li>
-<li>fix global error handle. (<a href="https://github.com/CalsRanna/foxy/commit/a9e558826d91cf812c73fb8a48736a6e4264d861">a9e5588</a>)</li>
-<li>fix global error handler. (<a href="https://github.com/CalsRanna/foxy/commit/b0b5e1901878eed7ea75d42d7e1868f9f78d5250">b0b5e19</a>)</li>
+  <li>
+    adjust margin of components. (<a
+      href="https://github.com/CalsRanna/foxy/commit/90d20ae9b2ecbcf4c0e6f6dea45fb2f1609218f2"
+      >90d20ae</a
+    >)
+  </li>
+  <li>
+    fix global error handle. (<a
+      href="https://github.com/CalsRanna/foxy/commit/a9e558826d91cf812c73fb8a48736a6e4264d861"
+      >a9e5588</a
+    >)
+  </li>
+  <li>
+    fix global error handler. (<a
+      href="https://github.com/CalsRanna/foxy/commit/b0b5e1901878eed7ea75d42d7e1868f9f78d5250"
+      >b0b5e19</a
+    >)
+  </li>
 </ul>
 <h3>chore</h3>
 <ul>
-<li>remove annotations. (<a href="https://github.com/CalsRanna/foxy/commit/ca0c11834028e9fda7b71a4457218407aeaec9b4">ca0c118</a>)</li>
-<li>remove annotations. (<a href="https://github.com/CalsRanna/foxy/commit/d8fb1818f520b946df7797ae67afb7779b1fe4d7">d8fb181</a>)</li>
+  <li>
+    remove annotations. (<a
+      href="https://github.com/CalsRanna/foxy/commit/ca0c11834028e9fda7b71a4457218407aeaec9b4"
+      >ca0c118</a
+    >)
+  </li>
+  <li>
+    remove annotations. (<a
+      href="https://github.com/CalsRanna/foxy/commit/d8fb1818f520b946df7797ae67afb7779b1fe4d7"
+      >d8fb181</a
+    >)
+  </li>
 </ul>
-<h2><a href="https://github.com/CalsRanna/foxy/compare/0.1.0-alpha...0.1.1-alpha">0.1.1-alpha</a> (2021-02-05)</h2>
+<h2>
+  <a href="https://github.com/CalsRanna/foxy/compare/0.1.0-alpha...0.1.1-alpha"
+    >0.1.1-alpha</a
+  >
+  (2021-02-05)
+</h2>
 <h3>feat</h3>
 <ul>
-<li>add faction template selector. (<a href="https://github.com/CalsRanna/foxy/commit/d9fd70edb6bfe1fdad6f0a79b9f0337993b7539a">d9fd70e</a>)</li>
-<li>add gossip menu selector. (<a href="https://github.com/CalsRanna/foxy/commit/96dda989a681ca9ea881df9b954c92329c9b326f">96dda98</a>)</li>
-<li>add item template selector. (<a href="https://github.com/CalsRanna/foxy/commit/3b3c457f819e8c4df8b82d3228b3929dec605487">3b3c457</a>)</li>
-<li>add some localizer. (<a href="https://github.com/CalsRanna/foxy/commit/da2e6f74bb1403838dc6dfa07d32f01523c9259d">da2e6f7</a>)</li>
-<li>add spell selector. (<a href="https://github.com/CalsRanna/foxy/commit/2e721878877270843d46e51b9ee866b97ad57094">2e72187</a>)</li>
+  <li>
+    add faction template selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/d9fd70edb6bfe1fdad6f0a79b9f0337993b7539a"
+      >d9fd70e</a
+    >)
+  </li>
+  <li>
+    add gossip menu selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/96dda989a681ca9ea881df9b954c92329c9b326f"
+      >96dda98</a
+    >)
+  </li>
+  <li>
+    add item template selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/3b3c457f819e8c4df8b82d3228b3929dec605487"
+      >3b3c457</a
+    >)
+  </li>
+  <li>
+    add some localizer. (<a
+      href="https://github.com/CalsRanna/foxy/commit/da2e6f74bb1403838dc6dfa07d32f01523c9259d"
+      >da2e6f7</a
+    >)
+  </li>
+  <li>
+    add spell selector. (<a
+      href="https://github.com/CalsRanna/foxy/commit/2e721878877270843d46e51b9ee866b97ad57094"
+      >2e72187</a
+    >)
+  </li>
 </ul>
-<h1><a href="https://github.com/CalsRanna/foxy/compare/f522c5266d00e3023dd565739804ea8fc227ab8f...0.1.0-alpha">0.1.0-alpha</a> (2021-02-04)</h1>
+<h1>
+  <a
+    href="https://github.com/CalsRanna/foxy/compare/f522c5266d00e3023dd565739804ea8fc227ab8f...0.1.0-alpha"
+    >0.1.0-alpha</a
+  >
+  (2021-02-04)
+</h1>
 <h3>chore</h3>
 <ul>
-<li>do some regular optimization. (<a href="https://github.com/CalsRanna/foxy/commit/f522c5266d00e3023dd565739804ea8fc227ab8f">f522c52</a>)</li>
+  <li>
+    do some regular optimization. (<a
+      href="https://github.com/CalsRanna/foxy/commit/f522c5266d00e3023dd565739804ea8fc227ab8f"
+      >f522c52</a
+    >)
+  </li>
 </ul>
