@@ -1,90 +1,99 @@
-## [0.2.1](https://github.com/CalsRanna/foxy/compare/0.2.0...0.2.1) (2021-07-14)
-
+## [0.2.2](https://github.com/CalsRanna/foxy/compare/0.2.1...0.2.2) (2021-07-30)
 
 ### Bug Fixes
 
-* remove unused api and view ([f59d413](https://github.com/CalsRanna/foxy/commit/f59d413cad86e7a40831e134628763ff975cc24f))
-* **el-card:** fix padding of el-card body when has form item component ([2b0901f](https://github.com/CalsRanna/foxy/commit/2b0901f058afc7d7bbadf39273d243e5e833581a))
-* **el-tabs:** remove el-card which warp el-tabs ([a6adf37](https://github.com/CalsRanna/foxy/commit/a6adf376cdc23c89fbb3aca4826387896c694d81))
-* **exporter:** fix export spell item enchantment ([e0bc58b](https://github.com/CalsRanna/foxy/commit/e0bc58b23fdd8fabf12e969c6f74d4ad065a72a5))
-* **spell:** add option to mechanic select ([5c8979d](https://github.com/CalsRanna/foxy/commit/5c8979d9d9d8003639b169bdbb304edd2b7c7a00))
-* **spell item enchantment:** adjust type of form item ([e4f4b40](https://github.com/CalsRanna/foxy/commit/e4f4b409d6b097bfd29821c711620d77f030859b))
-* **table:** remove sortable of all table ([6455ffe](https://github.com/CalsRanna/foxy/commit/6455ffe9166655c892db52c087ccf8a009da4e27))
-
+- **icon:** fix padding between icon and label in table ([4cef415](https://github.com/CalsRanna/foxy/commit/4cef4159659f6b98caa159c82d748489a9eec47f))
+- **talent:** fix update talent ([6f73aa2](https://github.com/CalsRanna/foxy/commit/6f73aa2b23ce4fd2c80d7b98eda0a1da8eb09a96))
 
 ### Features
 
-* make searching by primary key precisely ([38db8ca](https://github.com/CalsRanna/foxy/commit/38db8ca2dac1265c49f92d87588962c70e3e8a1d))
-* **broadcast text:** add broadcast text selector ([44339ba](https://github.com/CalsRanna/foxy/commit/44339ba5ba746dcc1cfe47be9b6fdb451f6ff0fe))
-* **exporter:** add missing dbc exports ([5602710](https://github.com/CalsRanna/foxy/commit/5602710c1dcbadd6ad8748099c63083acbe9dae7))
-* **item enchantment:** add tag to table and selector ([b1d5938](https://github.com/CalsRanna/foxy/commit/b1d5938566ae6ee575807c4b426b961a8dd4a683))
-* **loot template:** add entry column ([42b139a](https://github.com/CalsRanna/foxy/commit/42b139a0fc9625c6c2cb3f42253832da2a4d6f9b))
-* **spell item enchantment:** add export of spell item enchantment ([0095309](https://github.com/CalsRanna/foxy/commit/0095309253b6efa856306d40c0e1f3df751a6ca2))
-* **spell item enchantment:** add spell item enchantment module ([67e0164](https://github.com/CalsRanna/foxy/commit/67e0164e630cc6fb5c4ee1bf0607308087077c3e))
+- **spell selector:** add name subtext in table ([16e7668](https://github.com/CalsRanna/foxy/commit/16e7668f2ecbb1ca68e52a4ca70c6b61de3e2e7a))
+- **updater:** redesign updater to make tips more conspicuous ([e67b827](https://github.com/CalsRanna/foxy/commit/e67b827bc3bfaee02d81b8d201f539895211e55b))
 
+# (2021-07-30)
 
+### Bug Fixes
+
+- **icon:** fix padding between icon and label in table ([4cef415](https://github.com/CalsRanna/foxy/commit/4cef4159659f6b98caa159c82d748489a9eec47f))
+- **talent:** fix update talent ([6f73aa2](https://github.com/CalsRanna/foxy/commit/6f73aa2b23ce4fd2c80d7b98eda0a1da8eb09a96))
+
+### Features
+
+- **spell selector:** add name subtext in table ([16e7668](https://github.com/CalsRanna/foxy/commit/16e7668f2ecbb1ca68e52a4ca70c6b61de3e2e7a))
+- **updater:** redesign updater to make tips more conspicuous ([e67b827](https://github.com/CalsRanna/foxy/commit/e67b827bc3bfaee02d81b8d201f539895211e55b))
+
+## [0.2.1](https://github.com/CalsRanna/foxy/compare/0.2.0...0.2.1) (2021-07-14)
+
+### Bug Fixes
+
+- remove unused api and view ([f59d413](https://github.com/CalsRanna/foxy/commit/f59d413cad86e7a40831e134628763ff975cc24f))
+- **el-card:** fix padding of el-card body when has form item component ([2b0901f](https://github.com/CalsRanna/foxy/commit/2b0901f058afc7d7bbadf39273d243e5e833581a))
+- **el-tabs:** remove el-card which warp el-tabs ([a6adf37](https://github.com/CalsRanna/foxy/commit/a6adf376cdc23c89fbb3aca4826387896c694d81))
+- **exporter:** fix export spell item enchantment ([e0bc58b](https://github.com/CalsRanna/foxy/commit/e0bc58b23fdd8fabf12e969c6f74d4ad065a72a5))
+- **spell:** add option to mechanic select ([5c8979d](https://github.com/CalsRanna/foxy/commit/5c8979d9d9d8003639b169bdbb304edd2b7c7a00))
+- **spell item enchantment:** adjust type of form item ([e4f4b40](https://github.com/CalsRanna/foxy/commit/e4f4b409d6b097bfd29821c711620d77f030859b))
+- **table:** remove sortable of all table ([6455ffe](https://github.com/CalsRanna/foxy/commit/6455ffe9166655c892db52c087ccf8a009da4e27))
+
+### Features
+
+- make searching by primary key precisely ([38db8ca](https://github.com/CalsRanna/foxy/commit/38db8ca2dac1265c49f92d87588962c70e3e8a1d))
+- **broadcast text:** add broadcast text selector ([44339ba](https://github.com/CalsRanna/foxy/commit/44339ba5ba746dcc1cfe47be9b6fdb451f6ff0fe))
+- **exporter:** add missing dbc exports ([5602710](https://github.com/CalsRanna/foxy/commit/5602710c1dcbadd6ad8748099c63083acbe9dae7))
+- **item enchantment:** add tag to table and selector ([b1d5938](https://github.com/CalsRanna/foxy/commit/b1d5938566ae6ee575807c4b426b961a8dd4a683))
+- **loot template:** add entry column ([42b139a](https://github.com/CalsRanna/foxy/commit/42b139a0fc9625c6c2cb3f42253832da2a4d6f9b))
+- **spell item enchantment:** add export of spell item enchantment ([0095309](https://github.com/CalsRanna/foxy/commit/0095309253b6efa856306d40c0e1f3df751a6ca2))
+- **spell item enchantment:** add spell item enchantment module ([67e0164](https://github.com/CalsRanna/foxy/commit/67e0164e630cc6fb5c4ee1bf0607308087077c3e))
 
 # [0.2.0](https://github.com/CalsRanna/foxy/compare/0.1.9...0.2.0) (2021-06-30)
 
-
 ### Features
 
-* **area table:** add area table module ([d9ded19](https://github.com/CalsRanna/foxy/commit/d9ded1949961738f57d4fa2d8a2be0eca7adfb30))
-* **area table or quest sort:** add area table or quest sort selector ([fe10d62](https://github.com/CalsRanna/foxy/commit/fe10d6266c21729b3a9a0e94fe647d6237d867ce))
-* **char title:** add char title selector ([fc49028](https://github.com/CalsRanna/foxy/commit/fc490283258cef0f0e63efc12f3e1324c3078211))
-* **emote:** add emote selector ([ea7e20b](https://github.com/CalsRanna/foxy/commit/ea7e20b65da97aa7fb58b225b43393726b93e1e2))
-* **emote text:** add emote text module ([6343707](https://github.com/CalsRanna/foxy/commit/63437074c1e4ffe0be38377558d8feb2c443f350))
-* **game object:** add game object display info selector ([73f2ec3](https://github.com/CalsRanna/foxy/commit/73f2ec3ec4df77d1a5341c99957f6ed4af369391))
-* **map:** add map selector ([ab5daa0](https://github.com/CalsRanna/foxy/commit/ab5daa0850244ea6122419bd825fc77cef604f01))
-* **quest faction reward:** add quest faction reward module ([1dd600e](https://github.com/CalsRanna/foxy/commit/1dd600efc036538aafdd50e8dcc93c7337c529aa))
-* **quest info:** add quest info module ([587b308](https://github.com/CalsRanna/foxy/commit/587b308334038afb0f1387aee351a9c82f8dc1a3))
-* **quest info:** add quest info selector ([c2fb3fb](https://github.com/CalsRanna/foxy/commit/c2fb3fbca574a31b4234250f96ec354eba9d7d14))
-* **quest sort:** add quest sort module ([40f1511](https://github.com/CalsRanna/foxy/commit/40f151195cd3587d6f3d05b3883ab67f7f45a612))
-
-
+- **area table:** add area table module ([d9ded19](https://github.com/CalsRanna/foxy/commit/d9ded1949961738f57d4fa2d8a2be0eca7adfb30))
+- **area table or quest sort:** add area table or quest sort selector ([fe10d62](https://github.com/CalsRanna/foxy/commit/fe10d6266c21729b3a9a0e94fe647d6237d867ce))
+- **char title:** add char title selector ([fc49028](https://github.com/CalsRanna/foxy/commit/fc490283258cef0f0e63efc12f3e1324c3078211))
+- **emote:** add emote selector ([ea7e20b](https://github.com/CalsRanna/foxy/commit/ea7e20b65da97aa7fb58b225b43393726b93e1e2))
+- **emote text:** add emote text module ([6343707](https://github.com/CalsRanna/foxy/commit/63437074c1e4ffe0be38377558d8feb2c443f350))
+- **game object:** add game object display info selector ([73f2ec3](https://github.com/CalsRanna/foxy/commit/73f2ec3ec4df77d1a5341c99957f6ed4af369391))
+- **map:** add map selector ([ab5daa0](https://github.com/CalsRanna/foxy/commit/ab5daa0850244ea6122419bd825fc77cef604f01))
+- **quest faction reward:** add quest faction reward module ([1dd600e](https://github.com/CalsRanna/foxy/commit/1dd600efc036538aafdd50e8dcc93c7337c529aa))
+- **quest info:** add quest info module ([587b308](https://github.com/CalsRanna/foxy/commit/587b308334038afb0f1387aee351a9c82f8dc1a3))
+- **quest info:** add quest info selector ([c2fb3fb](https://github.com/CalsRanna/foxy/commit/c2fb3fbca574a31b4234250f96ec354eba9d7d14))
+- **quest sort:** add quest sort module ([40f1511](https://github.com/CalsRanna/foxy/commit/40f151195cd3587d6f3d05b3883ab67f7f45a612))
 
 ## [0.1.9](https://github.com/CalsRanna/foxy/compare/0.1.8...0.1.9) (2021-06-29)
 
-
 ### Bug Fixes
 
-* **flag editor:** fix table display in dialog when has long content ([1df210b](https://github.com/CalsRanna/foxy/commit/1df210b61ee6387d8f6074644440a4e13e3e2642))
-* **item display info selector:** fix inventory icon input type to text instead of number ([4663531](https://github.com/CalsRanna/foxy/commit/46635310f619b03f98f820a9672928edc7143e1b))
-* **localizer:** fix overflow and max height of table ([425aa0c](https://github.com/CalsRanna/foxy/commit/425aa0cd88835f009f284b89b516aed909adc243))
-* **selector:** fix overflow and max height of table ([55cf71d](https://github.com/CalsRanna/foxy/commit/55cf71d43cb10bf45ca31595eb0df7e38f98d455))
-
+- **flag editor:** fix table display in dialog when has long content ([1df210b](https://github.com/CalsRanna/foxy/commit/1df210b61ee6387d8f6074644440a4e13e3e2642))
+- **item display info selector:** fix inventory icon input type to text instead of number ([4663531](https://github.com/CalsRanna/foxy/commit/46635310f619b03f98f820a9672928edc7143e1b))
+- **localizer:** fix overflow and max height of table ([425aa0c](https://github.com/CalsRanna/foxy/commit/425aa0cd88835f009f284b89b516aed909adc243))
+- **selector:** fix overflow and max height of table ([55cf71d](https://github.com/CalsRanna/foxy/commit/55cf71d43cb10bf45ca31595eb0df7e38f98d455))
 
 ### Features
 
-* **faction selector:** add faction selector ([8f58c83](https://github.com/CalsRanna/foxy/commit/8f58c83839160257819e29d06ae5454b2e651583))
-* **localizer:** split fields into single localizer ([9c91241](https://github.com/CalsRanna/foxy/commit/9c91241d805c91ad1aee3bf6f5d1e4ef29d0e144))
-* **lock:** build lock selector ([de53756](https://github.com/CalsRanna/foxy/commit/de5375615b3dd075fc50661e92f36d1c573df104))
-
-
+- **faction selector:** add faction selector ([8f58c83](https://github.com/CalsRanna/foxy/commit/8f58c83839160257819e29d06ae5454b2e651583))
+- **localizer:** split fields into single localizer ([9c91241](https://github.com/CalsRanna/foxy/commit/9c91241d805c91ad1aee3bf6f5d1e4ef29d0e144))
+- **lock:** build lock selector ([de53756](https://github.com/CalsRanna/foxy/commit/de5375615b3dd075fc50661e92f36d1c573df104))
 
 ## [0.1.8](https://github.com/CalsRanna/foxy/compare/0.1.7...0.1.8) (2021-06-01)
 
-
 ### Bug Fixes
 
-* **item template name:** fix name of inventory icon to fit icons in disk ([9d55f4e](https://github.com/CalsRanna/foxy/commit/9d55f4edcd6f3bbfdb7d57aa83a3083064fc04b6))
-* **item template name:** fix padding between icon and name to keep same when display chinese and original name ([b084134](https://github.com/CalsRanna/foxy/commit/b08413435dff4f0d1b5b69600b63866a84f561bc))
-* **version:** fix new version shown when has no new version ([ba0ea8f](https://github.com/CalsRanna/foxy/commit/ba0ea8f3d1d0b7fedcd79cb4f568da2eff3c1379))
-
+- **item template name:** fix name of inventory icon to fit icons in disk ([9d55f4e](https://github.com/CalsRanna/foxy/commit/9d55f4edcd6f3bbfdb7d57aa83a3083064fc04b6))
+- **item template name:** fix padding between icon and name to keep same when display chinese and original name ([b084134](https://github.com/CalsRanna/foxy/commit/b08413435dff4f0d1b5b69600b63866a84f561bc))
+- **version:** fix new version shown when has no new version ([ba0ea8f](https://github.com/CalsRanna/foxy/commit/ba0ea8f3d1d0b7fedcd79cb4f568da2eff3c1379))
 
 ### Features
 
-* **chr class:** add chr class editor ([da917a5](https://github.com/CalsRanna/foxy/commit/da917a5a8c75aae1e6b53ce2172ce8b142c6cd0e))
-* **chr race:** add chr race editor ([502c329](https://github.com/CalsRanna/foxy/commit/502c329ea61cb8f653fdeb5e3eb18421c2b2f5ec))
-* **dashboard:** make card clickable ([39a2a75](https://github.com/CalsRanna/foxy/commit/39a2a75826232f274f81cbb32cc47fea41cfa1a0))
-* **reference loot template:** add reference loot tempalte module ([f70d694](https://github.com/CalsRanna/foxy/commit/f70d6942fd3a018214ca3929c26548aa2bb081da))
-* **scaling stat values:** add scaling stat values module ([ded7347](https://github.com/CalsRanna/foxy/commit/ded73476b60aefb178bd3e0ab0b679c85e83cf6e))
-* **selector:** add loading while searching and use enter key to search ([621b1a2](https://github.com/CalsRanna/foxy/commit/621b1a2f6eec72264ba17190502ae91d00d58789))
-* **spell icon selector:** add spell icon selector ([87b7130](https://github.com/CalsRanna/foxy/commit/87b713021fc93830d66ddd85f1d666640f7d7587))
-* **spell name:** add icon to spell name ([1926248](https://github.com/CalsRanna/foxy/commit/192624828966a0b4b9c209cda6296550597af292))
-* **spell selector:** add icon display in table ([0140fa5](https://github.com/CalsRanna/foxy/commit/0140fa59f6659b734b13b57fc5938a04cd71d756))
-
-
+- **chr class:** add chr class editor ([da917a5](https://github.com/CalsRanna/foxy/commit/da917a5a8c75aae1e6b53ce2172ce8b142c6cd0e))
+- **chr race:** add chr race editor ([502c329](https://github.com/CalsRanna/foxy/commit/502c329ea61cb8f653fdeb5e3eb18421c2b2f5ec))
+- **dashboard:** make card clickable ([39a2a75](https://github.com/CalsRanna/foxy/commit/39a2a75826232f274f81cbb32cc47fea41cfa1a0))
+- **reference loot template:** add reference loot tempalte module ([f70d694](https://github.com/CalsRanna/foxy/commit/f70d6942fd3a018214ca3929c26548aa2bb081da))
+- **scaling stat values:** add scaling stat values module ([ded7347](https://github.com/CalsRanna/foxy/commit/ded73476b60aefb178bd3e0ab0b679c85e83cf6e))
+- **selector:** add loading while searching and use enter key to search ([621b1a2](https://github.com/CalsRanna/foxy/commit/621b1a2f6eec72264ba17190502ae91d00d58789))
+- **spell icon selector:** add spell icon selector ([87b7130](https://github.com/CalsRanna/foxy/commit/87b713021fc93830d66ddd85f1d666640f7d7587))
+- **spell name:** add icon to spell name ([1926248](https://github.com/CalsRanna/foxy/commit/192624828966a0b4b9c209cda6296550597af292))
+- **spell selector:** add icon display in table ([0140fa5](https://github.com/CalsRanna/foxy/commit/0140fa59f6659b734b13b57fc5938a04cd71d756))
 
 ## [0.1.7](https://github.com/CalsRanna/foxy/compare/0.1.6...0.1.7) (2021-05-27)
 
