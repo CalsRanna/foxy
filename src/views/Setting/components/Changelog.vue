@@ -2,6 +2,44 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
+        <h2>0.2.2 <small>2021-07-30</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>icon:</strong> fix padding between icon and label in
+          table<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/4cef4159659f6b98caa159c82d748489a9eec47f"
+            text="(4cef415)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>talent:</strong> fix update talent<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/6f73aa2b23ce4fd2c80d7b98eda0a1da8eb09a96"
+            text="(6f73aa2)"
+          ></clickable-span>
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>spell selector:</strong> add name subtext in
+          table<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/16e7668f2ecbb1ca68e52a4ca70c6b61de3e2e7a"
+            text="(16e7668)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>updater:</strong> redesign updater to make tips more
+          conspicuous<clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/e67b827bc3bfaee02d81b8d201f539895211e55b"
+            text="(e67b827)"
+          ></clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.2.1 <small>2021-07-14</small></h2>
       </div>
       <h3>Bug Fixes</h3>
