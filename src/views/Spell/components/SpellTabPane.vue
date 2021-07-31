@@ -1553,7 +1553,7 @@
     </el-card>
     <el-card
       :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
+      style="margin: 16px 0 80px 0"
     >
       <el-row :gutter="16">
         <el-col :span="6">
@@ -1688,7 +1688,7 @@
         </el-col>
       </el-row>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card class="footer">
       <el-button type="primary" :loading="loading" @click="store">
         保存
       </el-button>

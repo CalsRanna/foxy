@@ -202,4 +202,10 @@ export default {
 .tight-table td {
   padding: 6px 0;
 }
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  z-index: 1;
+}
 </style>
