@@ -378,10 +378,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="面对目标">
-            <el-input
+            <el-switch
               v-model="spell.FacingCasterFlags"
               placeholder="FacingCasterFlags"
-            ></el-input>
+            ></el-switch>
           </el-form-item>
         </el-col>
       </el-row>
