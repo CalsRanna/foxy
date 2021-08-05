@@ -78,6 +78,7 @@ import "./background/spellSelector";
 import "./background/spellDurationSelector";
 import "./background/spellCastTimeSelector";
 import "./background/spellCategorySelector";
+import "./background/spellDescriptionVariableSelector";
 import "./background/spellIconSelector";
 import "./background/spellItemEnchantment";
 import "./background/spellRangeSelector";

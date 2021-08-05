@@ -33,6 +33,7 @@ import {
   LOAD_DBC_SPELLS,
   LOAD_DBC_SPELL_CAST_TIMES,
   LOAD_DBC_SPELL_CATEGORIES,
+  LOAD_DBC_SPELL_DESCRIPTION_VARIABLES,
   LOAD_DBC_SPELL_DURATIONS,
   LOAD_DBC_SPELL_ICONS,
   LOAD_DBC_SPELL_ITEM_ENCHANTMENTS,
@@ -76,6 +77,7 @@ const {
   dbcSpellIconSql,
   dbcSpellCastTimesSql,
   dbcSpellCategorySql,
+  dbcSpellDescriptionVariablesSql,
   dbcSpellRangeSql,
   dbcSpellMechanicSql,
   dbcTalentSql,
@@ -104,32 +106,33 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcCharTitleSql).then(() => {}),
         knex.raw(dbcChrClassesSql).then(() => {}),
         knex.raw(dbcChrRacesSql).then(() => {}),
+        knex.raw(dbcCreatureDisplayInfoSql).then(() => {}),
+        knex.raw(dbcCreatureModelDataSql).then(() => {}),
+        knex.raw(dbcCreatureSpellDataSql).then(() => {}),
         knex.raw(dbcEmotesSql).then(() => {}),
         knex.raw(dbcEmotesTextSql).then(() => {}),
         knex.raw(dbcFactionSql).then(() => {}),
         knex.raw(dbcFactionTemplateSql).then(() => {}),
         knex.raw(dbcGameObjectDisplayInfoSql).then(() => {}),
-        knex.raw(dbcItemSql).then(() => {}),
         knex.raw(dbcItemDisplayInfoSql).then(() => {}),
+        knex.raw(dbcItemRandomPropertiesSql).then(() => {}),
+        knex.raw(dbcItemRandomSuffixSql).then(() => {}),
+        knex.raw(dbcItemSetSql).then(() => {}),
+        knex.raw(dbcItemSql).then(() => {}),
         knex.raw(dbcLockSql).then(() => {}),
         knex.raw(dbcLockTypeSql).then(() => {}),
         knex.raw(dbcMapSql).then(() => {}),
         knex.raw(dbcQuestInfoSql).then(() => {}),
         knex.raw(dbcQuestSortSql).then(() => {}),
         knex.raw(dbcQuestFactionRewardSql).then(() => {}),
-        knex.raw(dbcSpellDurationSql).then(() => {}),
         knex.raw(dbcScalingStatDistributionSql).then(() => {}),
         knex.raw(dbcScalingStatValuesSql).then(() => {}),
-        knex.raw(dbcCreatureSpellDataSql).then(() => {}),
-        knex.raw(dbcCreatureDisplayInfoSql).then(() => {}),
-        knex.raw(dbcCreatureModelDataSql).then(() => {}),
-        knex.raw(dbcItemSetSql).then(() => {}),
-        knex.raw(dbcSpellItemEnchantmentSql).then(() => {}),
-        knex.raw(dbcItemRandomPropertiesSql).then(() => {}),
-        knex.raw(dbcItemRandomSuffixSql).then(() => {}),
         knex.raw(dbcSpellCastTimesSql).then(() => {}),
         knex.raw(dbcSpellCategorySql).then(() => {}),
+        knex.raw(dbcSpellDescriptionVariablesSql).then(() => {}),
+        knex.raw(dbcSpellDurationSql).then(() => {}),
         knex.raw(dbcSpellIconSql).then(() => {}),
+        knex.raw(dbcSpellItemEnchantmentSql).then(() => {}),
         knex.raw(dbcSpellMechanicSql).then(() => {}),
         knex.raw(dbcSpellRangeSql).then(() => {}),
         knex.raw(dbcSpellSql).then(() => {}),
@@ -1065,6 +1068,46 @@ ipcMain.on(LOAD_DBC_SPELL_CATEGORIES, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELL_CATEGORIES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_SPELL_DESCRIPTION_VARIABLES, (event) => {
+  let queryBuilder = knex
+    .count("* as total")
+    .from("foxy.dbc_spell_description_variables");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/SpellDescriptionVariables.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_spell_description_variables", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_SPELL_DESCRIPTION_VARIABLES);
+              })
+              .catch((error) => {
+                event.reply(
+                  `${LOAD_DBC_SPELL_DESCRIPTION_VARIABLES}_REJECT`,
+                  error
+                );
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(
+              `${LOAD_DBC_SPELL_DESCRIPTION_VARIABLES}_REJECT`,
+              error
+            );
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_SPELL_DESCRIPTION_VARIABLES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_SPELL_DESCRIPTION_VARIABLES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
