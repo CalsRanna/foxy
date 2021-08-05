@@ -112,3 +112,6 @@ exports.dbcAreaTableSql =
 
 exports.dbcQuestSortSql =
   "CREATE TABLE IF NOT EXISTS `foxy`.`dbc_quest_sort` (`ID` int(11) NOT NULL DEFAULT '0',  `SortName_Lang_enUS` text COLLATE utf8_unicode_ci,  `SortName_Lang_enGB` text COLLATE utf8_unicode_ci,  `SortName_Lang_koKR` text COLLATE utf8_unicode_ci,  `SortName_Lang_frFR` text COLLATE utf8_unicode_ci,  `SortName_Lang_deDE` text COLLATE utf8_unicode_ci,  `SortName_Lang_enCN` text COLLATE utf8_unicode_ci,  `SortName_Lang_zhCN` text COLLATE utf8_unicode_ci,  `SortName_Lang_enTW` text COLLATE utf8_unicode_ci,  `SortName_Lang_zhTW` text COLLATE utf8_unicode_ci,  `SortName_Lang_esES` text COLLATE utf8_unicode_ci,  `SortName_Lang_esMX` text COLLATE utf8_unicode_ci,  `SortName_Lang_ruRU` text COLLATE utf8_unicode_ci,  `SortName_Lang_ptPT` text COLLATE utf8_unicode_ci,  `SortName_Lang_ptBR` text COLLATE utf8_unicode_ci,  `SortName_Lang_itIT` text COLLATE utf8_unicode_ci,  `SortName_Lang_Unk` text COLLATE utf8_unicode_ci,  `SortName_Lang_Mask` int(10) unsigned NOT NULL DEFAULT '0',  PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+
+exports.dbcSpellCategorySql =
+  "CREATE TABLE IF NOT EXISTS `foxy`.`dbc_spell_category` (`ID` int NOT NULL DEFAULT '0',`Flags` int NOT NULL DEFAULT '0',PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;";

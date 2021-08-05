@@ -32,6 +32,7 @@ import {
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
   LOAD_DBC_SPELL_CAST_TIMES,
+  LOAD_DBC_SPELL_CATEGORIES,
   LOAD_DBC_SPELL_DURATIONS,
   LOAD_DBC_SPELL_ICONS,
   LOAD_DBC_SPELL_ITEM_ENCHANTMENTS,
@@ -74,6 +75,7 @@ const {
   dbcSpellSql,
   dbcSpellIconSql,
   dbcSpellCastTimesSql,
+  dbcSpellCategorySql,
   dbcSpellRangeSql,
   dbcSpellMechanicSql,
   dbcTalentSql,
@@ -126,6 +128,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcItemRandomPropertiesSql).then(() => {}),
         knex.raw(dbcItemRandomSuffixSql).then(() => {}),
         knex.raw(dbcSpellCastTimesSql).then(() => {}),
+        knex.raw(dbcSpellCategorySql).then(() => {}),
         knex.raw(dbcSpellIconSql).then(() => {}),
         knex.raw(dbcSpellMechanicSql).then(() => {}),
         knex.raw(dbcSpellRangeSql).then(() => {}),
@@ -1030,6 +1033,38 @@ ipcMain.on(LOAD_DBC_SPELL_CAST_TIMES, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELL_CAST_TIMES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_SPELL_CATEGORIES, (event) => {
+  let queryBuilder = knex.count("* as total").from("foxy.dbc_spell_category");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/SpellCategory.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_spell_category", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_SPELL_CATEGORIES);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_SPELL_CATEGORIES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_SPELL_CATEGORIES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_SPELL_CATEGORIES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_SPELL_CATEGORIES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
