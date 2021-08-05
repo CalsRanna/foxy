@@ -210,10 +210,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="描述变量">
-            <el-input
+            <spell-description-variable-selector
               v-model="spell.SpellDescriptionVariableID"
               placeholder="SpellDescriptionVariableID"
-            ></el-input>
+            ></spell-description-variable-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1739,6 +1739,7 @@ import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
 import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
 import SpellCastTimeSelector from "@/components/SpellCastTimeSelector.vue";
 import SpellCategorySelector from "@/components/SpellCategorySelector";
+import SpellDescriptionVariableSelector from "@/components/SpellDescriptionVariableSelector";
 import SpellIconSelector from "@/components/SpellIconSelector.vue";
 import SpellRangeSelector from "@/components/SpellRangeSelector.vue";
 import SpellSelector from "../../../components/SpellSelector.vue";
@@ -1831,6 +1832,7 @@ export default {
     SpellDurationSelector,
     SpellCastTimeSelector,
     SpellCategorySelector,
+    SpellDescriptionVariableSelector,
     SpellIconSelector,
     SpellRangeSelector,
     SpellSelector,

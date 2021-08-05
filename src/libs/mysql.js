@@ -115,3 +115,6 @@ exports.dbcQuestSortSql =
 
 exports.dbcSpellCategorySql =
   "CREATE TABLE IF NOT EXISTS `foxy`.`dbc_spell_category` (`ID` int NOT NULL DEFAULT '0',`Flags` int NOT NULL DEFAULT '0',PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;";
+
+exports.dbcSpellDescriptionVariablesSql =
+  "CREATE TABLE IF NOT EXISTS `foxy`.`dbc_spell_description_variables` (`ID` int NOT NULL DEFAULT '0',`Variables` text,PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;";

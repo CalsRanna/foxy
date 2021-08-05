@@ -63,8 +63,9 @@ export default {
       "loadDbcScalingStatDistributions",
       "loadDbcScalingStatValues",
       "loadDbcSpells",
-      "loadDbcSpellCategories",
       "loadDbcSpellCastTimes",
+      "loadDbcSpellCategories",
+      "loadDbcSpellDescriptionVariables",
       "loadDbcSpellDurations",
       "loadDbcSpellIcons",
       "loadDbcSpellItemEnchantments",
@@ -138,10 +139,12 @@ export default {
         await this.loadDbcScalingStatValues();
         this.progressText = "加载Spell.dbc";
         await this.loadDbcSpells();
-        this.progressText = "加载SpellCastCategory.dbc";
-        await this.loadDbcSpellCategories();
         this.progressText = "加载SpellCastTimes.dbc";
         await this.loadDbcSpellCastTimes();
+        this.progressText = "加载SpellCategory.dbc";
+        await this.loadDbcSpellCategories();
+        this.progressText = "加载SpellDescriptionVariables.dbc";
+        await this.loadDbcSpellDescriptionVariables();
         this.progressText = "加载SpellDuration.dbc";
         await this.loadDbcSpellDurations();
         this.progressText = "加载SpellIcon.dbc";
