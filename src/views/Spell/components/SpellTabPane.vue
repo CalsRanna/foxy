@@ -129,7 +129,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="控制类型">
+          <el-form-item label="机制类型">
             <el-select
               v-model="spell.Mechanic"
               filterable
@@ -709,11 +709,20 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="Mechanic">
-            <el-input
+          <el-form-item label="机制">
+            <el-select
               v-model="spell.EffectMechanic_1"
+              filterable
               placeholder="EffectMechanic_1"
-            ></el-input>
+            >
+              <el-option label="无" :value="0"></el-option>
+              <el-option
+                v-for="mechanic in spellMechanics"
+                :key="`effect-mechanic-1-${mechanic.ID}`"
+                :label="mechanic.StateName_Lang_zhCN"
+                :value="mechanic.ID"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -861,27 +870,30 @@
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="法术小类掩码1">
-            <el-input
+          <el-form-item label="法术小类1">
+            <el-input-number
               v-model="spell.EffectSpellClassMaskA_1"
+              controls-position="right"
               placeholder="EffectSpellClassMaskA_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="法术小类掩码2">
-            <el-input
+          <el-form-item label="法术小类2">
+            <el-input-number
               v-model="spell.EffectSpellClassMaskA_2"
+              controls-position="right"
               placeholder="EffectSpellClassMaskA_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="法术小类掩码3">
-            <el-input
+          <el-form-item label="法术小类3">
+            <el-input-number
               v-model="spell.EffectSpellClassMaskA_3"
+              controls-position="right"
               placeholder="EffectSpellClassMaskA_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -935,11 +947,20 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="Mechanic">
-            <el-input
+          <el-form-item label="机制">
+            <el-select
               v-model="spell.EffectMechanic_2"
+              filterable
               placeholder="EffectMechanic_2"
-            ></el-input>
+            >
+              <el-option label="无" :value="0"></el-option>
+              <el-option
+                v-for="mechanic in spellMechanics"
+                :key="`effect-mechanic-2-${mechanic.ID}`"
+                :label="mechanic.StateName_Lang_zhCN"
+                :value="mechanic.ID"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1087,27 +1108,30 @@
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="法术小类掩码1">
-            <el-input
+          <el-form-item label="法术小类1">
+            <el-input-number
               v-model="spell.EffectSpellClassMaskB_1"
+              controls-position="right"
               placeholder="EffectSpellClassMaskB_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="法术小类掩码2">
-            <el-input
+          <el-form-item label="法术小类2">
+            <el-input-number
               v-model="spell.EffectSpellClassMaskB_2"
+              controls-position="right"
               placeholder="EffectSpellClassMaskB_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="法术小类掩码3">
-            <el-input
+          <el-form-item label="法术小类3">
+            <el-input-number
               v-model="spell.EffectSpellClassMaskB_3"
+              controls-position="right"
               placeholder="EffectSpellClassMaskB_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1161,11 +1185,20 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="Mechanic">
-            <el-input
+          <el-form-item label="机制">
+            <el-select
               v-model="spell.EffectMechanic_3"
+              filterable
               placeholder="EffectMechanic_3"
-            ></el-input>
+            >
+              <el-option label="无" :value="0"></el-option>
+              <el-option
+                v-for="mechanic in spellMechanics"
+                :key="`effect-mechanic-3-${mechanic.ID}`"
+                :label="mechanic.StateName_Lang_zhCN"
+                :value="mechanic.ID"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1313,27 +1346,30 @@
       </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
-          <el-form-item label="法术小类掩码1">
-            <el-input
+          <el-form-item label="法术小类1">
+            <el-input-number
               v-model="spell.EffectSpellClassMaskC_1"
+              controls-position="right"
               placeholder="EffectSpellClassMaskC_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="法术小类掩码2">
-            <el-input
+          <el-form-item label="法术小类2">
+            <el-input-number
               v-model="spell.EffectSpellClassMaskC_2"
+              controls-position="right"
               placeholder="EffectSpellClassMaskC_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="法术小类掩码3">
-            <el-input
+          <el-form-item label="法术小类3">
+            <el-input-number
               v-model="spell.EffectSpellClassMaskC_3"
+              controls-position="right"
               placeholder="EffectSpellClassMaskC_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
