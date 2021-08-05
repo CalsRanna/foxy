@@ -36,6 +36,7 @@ import {
   LOAD_DBC_SPELL_CATEGORIES,
   LOAD_DBC_SPELL_DESCRIPTION_VARIABLES,
   LOAD_DBC_SPELL_DIFFICULTIES,
+  LOAD_DBC_SPELL_DISPEL_TYPES,
   LOAD_DBC_SPELL_DURATIONS,
   LOAD_DBC_SPELL_ICONS,
   LOAD_DBC_SPELL_ITEM_ENCHANTMENTS,
@@ -64,6 +65,7 @@ export default {
     chrRaces: [],
     lockTypes: [],
     questFactionRewards: [],
+    spellDispelTypes: [],
     spellMechanics: [],
   }),
   actions: {
@@ -493,6 +495,21 @@ export default {
         );
       });
     },
+    loadDbcSpellDispelTypes({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_SPELL_DISPEL_TYPES);
+        ipcRenderer.on(LOAD_DBC_SPELL_DISPEL_TYPES, (event, response) => {
+          commit(LOAD_DBC_SPELL_DISPEL_TYPES, response);
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_SPELL_DISPEL_TYPES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     loadDbcSpellDurations() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_DURATIONS);
@@ -638,6 +655,9 @@ export default {
     },
     [LOAD_DBC_QUEST_FACTION_REWARDS](state, questFactionRewards) {
       state.questFactionRewards = questFactionRewards;
+    },
+    [LOAD_DBC_SPELL_DISPEL_TYPES](state, spellDispelTypes) {
+      state.spellDispelTypes = spellDispelTypes;
     },
     [LOAD_DBC_SPELL_MECHANICS](state, spellMechanics) {
       state.spellMechanics = spellMechanics;

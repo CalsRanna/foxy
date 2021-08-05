@@ -121,3 +121,6 @@ exports.dbcSpellDescriptionVariablesSql =
 
 exports.dbcSpellDifficultySql =
   "CREATE TABLE IF NOT EXISTS `foxy`.`dbc_spell_difficulty` (`ID` int NOT NULL DEFAULT '0',`DifficultySpellID_1` int NOT NULL DEFAULT '0',`DifficultySpellID_2` int NOT NULL DEFAULT '0',`DifficultySpellID_3` int NOT NULL DEFAULT '0',`DifficultySpellID_4` int NOT NULL DEFAULT '0',PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;";
+
+exports.dbcSpellDispelTypeSql =
+  "CREATE TABLE IF NOT EXISTS `foxy`.`dbc_spell_dispel_type` (`ID` int NOT NULL DEFAULT '0',`Name_Lang_enUS` text,`Name_Lang_enGB` text,`Name_Lang_koKR` text,`Name_Lang_frFR` text,`Name_Lang_deDE` text,`Name_Lang_enCN` text,`Name_Lang_zhCN` text,`Name_Lang_enTW` text,`Name_Lang_zhTW` text,`Name_Lang_esES` text,`Name_Lang_esMX` text,`Name_Lang_ruRU` text,`Name_Lang_ptPT` text,`Name_Lang_ptBR` text,`Name_Lang_itIT` text,`Name_Lang_Unk` text,`Name_Lang_Mask` int unsigned NOT NULL DEFAULT '0',`Mask` int NOT NULL DEFAULT '0',`ImmunityPossible` int NOT NULL DEFAULT '0',`InternalName` text,PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;";

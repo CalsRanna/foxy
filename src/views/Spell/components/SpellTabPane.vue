@@ -153,10 +153,10 @@
               placeholder="DispelType"
             >
               <el-option
-                v-for="(dispelType, index) in dispelTypes"
-                :key="`dispelType-${index}`"
-                :label="dispelType"
-                :value="index"
+                v-for="dispelType in spellDispelTypes"
+                :key="`dispelType-${dispelType.ID}`"
+                :label="dispelType.Name_Lang_zhCN"
+                :value="dispelType.ID"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -1765,7 +1765,6 @@ import {
   implicitTargets,
   schoolMasks,
   defenseTypes,
-  dispelTypes,
   preventionTypes,
 } from "@/locales/spell";
 
@@ -1803,13 +1802,12 @@ export default {
       implicitTargets: implicitTargets,
       schoolMasks: schoolMasks,
       defenseTypes: defenseTypes,
-      dispelTypes: dispelTypes,
       preventionTypes: preventionTypes,
     };
   },
   computed: {
     ...mapState("spell", ["spell"]),
-    ...mapState("initiator", ["spellMechanics"]),
+    ...mapState("initiator", ["spellMechanics", "spellDispelTypes"]),
     credential() {
       return {
         ID: this.$route.params.id,
