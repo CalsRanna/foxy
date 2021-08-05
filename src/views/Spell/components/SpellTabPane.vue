@@ -498,6 +498,8 @@
             ></flag-editor>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="属性">
             <flag-editor
@@ -509,70 +511,70 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="额外属性1">
+          <el-form-item label="额外属性">
             <flag-editor
               v-model="spell.AttributesEx"
-              title="额外属性1编辑器"
+              title="额外属性编辑器"
               :flags="attributesEx"
               placeholder="AttributesEx"
             ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="额外属性2">
+          <el-form-item label="额外属性">
             <flag-editor
               v-model="spell.AttributesExB"
-              title="额外属性2编辑器"
+              title="额外属性编辑器"
               :flags="attributesExB"
               placeholder="AttributesExB"
             ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="额外属性3">
+          <el-form-item label="额外属性">
             <flag-editor
               v-model="spell.AttributesExC"
-              title="额外属性3编辑器"
+              title="额外属性编辑器"
               :flags="attributesExC"
               placeholder="AttributesExC"
             ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="额外属性4">
+          <el-form-item label="额外属性">
             <flag-editor
               v-model="spell.AttributesExD"
-              title="额外属性4编辑器"
+              title="额外属性编辑器"
               :flags="attributesExD"
               placeholder="AttributesExD"
             ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="额外属性5">
+          <el-form-item label="额外属性">
             <flag-editor
               v-model="spell.AttributesExE"
-              title="额外属性5编辑器"
+              title="额外属性编辑器"
               :flags="attributesExE"
               placeholder="AttributesExE"
             ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="额外属性6">
+          <el-form-item label="额外属性">
             <flag-editor
               v-model="spell.AttributesExF"
-              title="额外属性6编辑器"
+              title="额外属性编辑器"
               :flags="attributesExF"
               placeholder="AttributesExF"
             ></flag-editor>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="额外属性7">
+          <el-form-item label="额外属性">
             <flag-editor
               v-model="spell.AttributesExG"
-              title="额外属性7编辑器"
+              title="额外属性编辑器"
               :flags="attributesExG"
               placeholder="AttributesExG"
             ></flag-editor>
@@ -740,10 +742,11 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="光环效果周期">
-            <el-input
+            <el-input-number
               v-model="spell.EffectAuraPeriod_1"
+              controls-position="right"
               placeholder="EffectAuraPeriod_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -804,18 +807,20 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="倍数">
-            <el-input
+            <el-input-number
               v-model="spell.EffectMultipleValue_1"
+              controls-position="right"
               placeholder="EffectMultipleValue_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="奖励乘数">
-            <el-input
+            <el-input-number
               v-model="spell.EffectBonusMultiplier_1"
+              controls-position="right"
               placeholder="EffectBonusMultiplier_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -838,18 +843,19 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="触发法术">
-            <el-input
+            <spell-selector
               v-model="spell.EffectTriggerSpell_1"
               placeholder="EffectTriggerSpell_1"
-            ></el-input>
+            ></spell-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="每级连击点">
-            <el-input
+            <el-input-number
               v-model="spell.EffectPointsPerCombo_1"
+              controls-position="right"
               placeholder="EffectPointsPerCombo_1"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -962,10 +968,11 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="光环效果周期">
-            <el-input
+            <el-input-number
               v-model="spell.EffectAuraPeriod_2"
+              controls-position="right"
               placeholder="EffectAuraPeriod_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1026,18 +1033,20 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="倍数">
-            <el-input
+            <el-input-number
               v-model="spell.EffectMultipleValue_2"
+              controls-position="right"
               placeholder="EffectMultipleValue_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="奖励系数">
-            <el-input
+            <el-input-number
               v-model="spell.EffectBonusMultiplier_2"
+              controls-position="right"
               placeholder="EffectBonusMultiplier_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1060,18 +1069,19 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="触发法术">
-            <el-input
+            <spell-selector
               v-model="spell.EffectTriggerSpell_2"
               placeholder="EffectTriggerSpell_2"
-            ></el-input>
+            ></spell-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="每级连击点">
-            <el-input
+            <el-input-number
               v-model="spell.EffectPointsPerCombo_2"
+              controls-position="right"
               placeholder="EffectPointsPerCombo_2"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1184,10 +1194,11 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="光环效果周期">
-            <el-input
+            <el-input-number
               v-model="spell.EffectAuraPeriod_3"
+              controls-position="right"
               placeholder="EffectAuraPeriod_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1248,18 +1259,20 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="倍数">
-            <el-input
+            <el-input-number
               v-model="spell.EffectMultipleValue_3"
+              controls-position="right"
               placeholder="EffectMultipleValue_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="奖励乘数">
-            <el-input
+            <el-input-number
               v-model="spell.EffectBonusMultiplier_3"
+              controls-position="right"
               placeholder="EffectBonusMultiplier_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1282,18 +1295,19 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="触发法术">
-            <el-input
+            <spell-selector
               v-model="spell.EffectTriggerSpell_3"
               placeholder="EffectTriggerSpell_3"
-            ></el-input>
+            ></spell-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="每级连击点">
-            <el-input
+            <el-input-number
               v-model="spell.EffectPointsPerCombo_3"
+              controls-position="right"
               placeholder="EffectPointsPerCombo_3"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1726,6 +1740,7 @@ import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
 import SpellCastTimeSelector from "@/components/SpellCastTimeSelector.vue";
 import SpellIconSelector from "@/components/SpellIconSelector.vue";
 import SpellRangeSelector from "@/components/SpellRangeSelector.vue";
+import SpellSelector from "../../../components/SpellSelector.vue";
 
 export default {
   data() {
@@ -1816,6 +1831,7 @@ export default {
     SpellCastTimeSelector,
     SpellIconSelector,
     SpellRangeSelector,
+    SpellSelector,
   },
 };
 </script>
