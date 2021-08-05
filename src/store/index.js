@@ -76,10 +76,11 @@ import creatureSpellDataSelector from "./creatureSpellDataSelector";
 import creatureModelInfoSelector from "./creatureModelInfoSelector";
 import creatureTemplateSelector from "./creatureTemplateSelector";
 import spellSelector from "./spellSelector";
-import spellDurationSelector from "./spellDurationSelector";
 import spellCastTimeSelector from "./spellCastTimeSelector";
 import spellCategorySelector from "./spellCategorySelector";
 import spellDescriptionVariableSelector from "./spellDescriptionVariableSelector";
+import spellDifficultySelector from "./spellDifficultySelector";
+import spellDurationSelector from "./spellDurationSelector";
 import spellIconSelector from "./spellIconSelector";
 import spellItemEnchantment from "./spellItemEnchantment";
 import spellRangeSelector from "./spellRangeSelector";
@@ -177,10 +178,11 @@ export default new Vuex.Store({
     creatureModelInfoSelector,
     creatureTemplateSelector,
     spellSelector,
-    spellDurationSelector,
     spellCastTimeSelector,
     spellCategorySelector,
     spellDescriptionVariableSelector,
+    spellDifficultySelector,
+    spellDurationSelector,
     spellIconSelector,
     spellRangeSelector,
     gossipMenuSelector,

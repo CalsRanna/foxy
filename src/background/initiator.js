@@ -34,6 +34,7 @@ import {
   LOAD_DBC_SPELL_CAST_TIMES,
   LOAD_DBC_SPELL_CATEGORIES,
   LOAD_DBC_SPELL_DESCRIPTION_VARIABLES,
+  LOAD_DBC_SPELL_DIFFICULTIES,
   LOAD_DBC_SPELL_DURATIONS,
   LOAD_DBC_SPELL_ICONS,
   LOAD_DBC_SPELL_ITEM_ENCHANTMENTS,
@@ -71,15 +72,16 @@ const {
   dbcQuestFactionRewardSql,
   dbcScalingStatDistributionSql,
   dbcScalingStatValuesSql,
-  dbcSpellDurationSql,
-  dbcSpellItemEnchantmentSql,
-  dbcSpellSql,
-  dbcSpellIconSql,
   dbcSpellCastTimesSql,
   dbcSpellCategorySql,
   dbcSpellDescriptionVariablesSql,
-  dbcSpellRangeSql,
+  dbcSpellDifficultySql,
+  dbcSpellDurationSql,
+  dbcSpellIconSql,
+  dbcSpellItemEnchantmentSql,
   dbcSpellMechanicSql,
+  dbcSpellRangeSql,
+  dbcSpellSql,
   dbcTalentSql,
   dbcTalentTabSql,
 } = require("../libs/mysql");
@@ -130,6 +132,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcSpellCastTimesSql).then(() => {}),
         knex.raw(dbcSpellCategorySql).then(() => {}),
         knex.raw(dbcSpellDescriptionVariablesSql).then(() => {}),
+        knex.raw(dbcSpellDifficultySql).then(() => {}),
         knex.raw(dbcSpellDurationSql).then(() => {}),
         knex.raw(dbcSpellIconSql).then(() => {}),
         knex.raw(dbcSpellItemEnchantmentSql).then(() => {}),
@@ -1108,6 +1111,38 @@ ipcMain.on(LOAD_DBC_SPELL_DESCRIPTION_VARIABLES, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_SPELL_DESCRIPTION_VARIABLES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_SPELL_DIFFICULTIES, (event) => {
+  let queryBuilder = knex.count("* as total").from("foxy.dbc_spell_difficulty");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/SpellDifficulty.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_spell_difficulty", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_SPELL_DIFFICULTIES);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_SPELL_DIFFICULTIES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_SPELL_DIFFICULTIES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_SPELL_DIFFICULTIES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_SPELL_DIFFICULTIES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

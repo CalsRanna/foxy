@@ -66,6 +66,7 @@ export default {
       "loadDbcSpellCastTimes",
       "loadDbcSpellCategories",
       "loadDbcSpellDescriptionVariables",
+      "loadDbcSpellDifficulties",
       "loadDbcSpellDurations",
       "loadDbcSpellIcons",
       "loadDbcSpellItemEnchantments",
@@ -145,6 +146,8 @@ export default {
         await this.loadDbcSpellCategories();
         this.progressText = "加载SpellDescriptionVariables.dbc";
         await this.loadDbcSpellDescriptionVariables();
+        this.progressText = "加载SpellDifficulty.dbc";
+        await this.loadDbcSpellDifficulties();
         this.progressText = "加载SpellDuration.dbc";
         await this.loadDbcSpellDurations();
         this.progressText = "加载SpellIcon.dbc";

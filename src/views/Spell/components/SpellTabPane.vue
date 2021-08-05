@@ -245,10 +245,10 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="难度">
-            <el-input
+            <spell-difficulty-selector
               v-model="spell.SpellDifficultyID"
               placeholder="SpellDifficultyID"
-            ></el-input>
+            ></spell-difficulty-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1736,10 +1736,11 @@ import {
 import { mapState, mapActions } from "vuex";
 import FlagEditor from "@/components/FlagEditor";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
-import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
 import SpellCastTimeSelector from "@/components/SpellCastTimeSelector.vue";
 import SpellCategorySelector from "@/components/SpellCategorySelector";
 import SpellDescriptionVariableSelector from "@/components/SpellDescriptionVariableSelector";
+import SpellDifficultySelector from "@/components/SpellDifficultySelector";
+import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
 import SpellIconSelector from "@/components/SpellIconSelector.vue";
 import SpellRangeSelector from "@/components/SpellRangeSelector.vue";
 import SpellSelector from "../../../components/SpellSelector.vue";
@@ -1829,10 +1830,11 @@ export default {
   components: {
     FlagEditor,
     ItemTemplateSelector,
-    SpellDurationSelector,
     SpellCastTimeSelector,
     SpellCategorySelector,
     SpellDescriptionVariableSelector,
+    SpellDifficultySelector,
+    SpellDurationSelector,
     SpellIconSelector,
     SpellRangeSelector,
     SpellSelector,

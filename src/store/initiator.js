@@ -35,6 +35,7 @@ import {
   LOAD_DBC_SPELL_CAST_TIMES,
   LOAD_DBC_SPELL_CATEGORIES,
   LOAD_DBC_SPELL_DESCRIPTION_VARIABLES,
+  LOAD_DBC_SPELL_DIFFICULTIES,
   LOAD_DBC_SPELL_DURATIONS,
   LOAD_DBC_SPELL_ICONS,
   LOAD_DBC_SPELL_ITEM_ENCHANTMENTS,
@@ -464,17 +465,6 @@ export default {
         );
       });
     },
-    loadDbcSpellDurations() {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send(LOAD_DBC_SPELL_DURATIONS);
-        ipcRenderer.on(LOAD_DBC_SPELL_DURATIONS, () => {
-          resolve();
-        });
-        ipcRenderer.on(`${LOAD_DBC_SPELL_DURATIONS}_REJECT`, (event, error) => {
-          reject(error);
-        });
-      });
-    },
     loadDbcSpellDescriptionVariables() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_DESCRIPTION_VARIABLES);
@@ -487,6 +477,31 @@ export default {
             reject(error);
           }
         );
+      });
+    },
+    loadDbcSpellDifficulties() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_SPELL_DIFFICULTIES);
+        ipcRenderer.on(LOAD_DBC_SPELL_DIFFICULTIES, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_SPELL_DIFFICULTIES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    loadDbcSpellDurations() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_SPELL_DURATIONS);
+        ipcRenderer.on(LOAD_DBC_SPELL_DURATIONS, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_SPELL_DURATIONS}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     loadDbcSpellIcons() {
