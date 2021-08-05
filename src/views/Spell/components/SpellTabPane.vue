@@ -95,6 +95,47 @@
     >
       <el-row :gutter="16">
         <el-col :span="6">
+          <el-form-item label="图标">
+            <spell-icon-selector
+              v-model="spell.SpellIconID"
+              placeholder="SpellIconID"
+            ></spell-icon-selector>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="激活图标">
+            <spell-icon-selector
+              v-model="spell.ActiveIconID"
+              placeholder="ActiveIconID"
+            ></spell-icon-selector>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="视觉效果">
+            <el-input-number
+              v-model="spell.SpellVisualID_1"
+              controls-position="right"
+              placeholder="SpellVisualID_1"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="视觉效果">
+            <el-input-number
+              v-model="spell.SpellVisualID_2"
+              controls-position="right"
+              placeholder="SpellVisualID_2"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
+      <el-row :gutter="16">
+        <el-col :span="6">
           <el-form-item label="类型">
             <spell-category-selector
               v-model="spell.Category"
@@ -112,22 +153,8 @@
             ></flag-editor>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
-          <el-form-item label="防护类型">
-            <el-select
-              v-model="spell.DefenseType"
-              filterable
-              placeholder="DefenseType"
-            >
-              <el-option
-                v-for="(defenseType, index) in defenseTypes"
-                :key="`defenseType-${index}`"
-                :label="defenseType"
-                :value="index"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
+      </el-row>
+      <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="机制类型">
             <el-select
@@ -141,6 +168,22 @@
                 :key="`mechanic-${mechanic.ID}`"
                 :label="mechanic.StateName_Lang_zhCN"
                 :value="mechanic.ID"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="防护类型">
+            <el-select
+              v-model="spell.DefenseType"
+              filterable
+              placeholder="DefenseType"
+            >
+              <el-option
+                v-for="(defenseType, index) in defenseTypes"
+                :key="`defenseType-${index}`"
+                :label="defenseType"
+                :value="index"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -301,18 +344,20 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="最大目标数">
-            <el-input
+            <el-input-number
               v-model="spell.MaxTargets"
+              controls-position="right"
               placeholder="MaxTargets"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="最大目标等级">
-            <el-input
+            <el-input-number
               v-model="spell.MaxTargetLevel"
+              controls-position="right"
               placeholder="MaxTargetLevel"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -342,22 +387,6 @@
         <el-col :span="6">
           <el-form-item label="速度">
             <el-input v-model="spell.Speed" placeholder="Speed"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RequiredTotemCategoryID_1">
-            <el-input
-              v-model="spell.RequiredTotemCategoryID_1"
-              placeholder="RequiredTotemCategoryID_1"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="RequiredTotemCategoryID_2">
-            <el-input
-              v-model="spell.RequiredTotemCategoryID_2"
-              placeholder="RequiredTotemCategoryID_2"
-            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -666,6 +695,35 @@
     >
       <el-row :gutter="16">
         <el-col :span="6">
+          <el-form-item label="法术小类1">
+            <el-input-number
+              v-model="spell.EffectSpellClassMaskA_1"
+              controls-position="right"
+              placeholder="EffectSpellClassMaskA_1"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="法术小类2">
+            <el-input-number
+              v-model="spell.EffectSpellClassMaskA_2"
+              controls-position="right"
+              placeholder="EffectSpellClassMaskA_2"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="法术小类3">
+            <el-input-number
+              v-model="spell.EffectSpellClassMaskA_3"
+              controls-position="right"
+              placeholder="EffectSpellClassMaskA_3"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="16">
+        <el-col :span="6">
           <el-form-item label="效果">
             <el-select
               v-model="spell.Effect_1"
@@ -868,40 +926,40 @@
           </el-form-item>
         </el-col>
       </el-row>
+    </el-card>
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="法术小类1">
             <el-input-number
-              v-model="spell.EffectSpellClassMaskA_1"
+              v-model="spell.EffectSpellClassMaskB_1"
               controls-position="right"
-              placeholder="EffectSpellClassMaskA_1"
+              placeholder="EffectSpellClassMaskB_1"
             ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="法术小类2">
             <el-input-number
-              v-model="spell.EffectSpellClassMaskA_2"
+              v-model="spell.EffectSpellClassMaskB_2"
               controls-position="right"
-              placeholder="EffectSpellClassMaskA_2"
+              placeholder="EffectSpellClassMaskB_2"
             ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="法术小类3">
             <el-input-number
-              v-model="spell.EffectSpellClassMaskA_3"
+              v-model="spell.EffectSpellClassMaskB_3"
               controls-position="right"
-              placeholder="EffectSpellClassMaskA_3"
+              placeholder="EffectSpellClassMaskB_3"
             ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
-    </el-card>
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="效果">
@@ -1106,40 +1164,40 @@
           </el-form-item>
         </el-col>
       </el-row>
+    </el-card>
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="法术小类1">
             <el-input-number
-              v-model="spell.EffectSpellClassMaskB_1"
+              v-model="spell.EffectSpellClassMaskC_1"
               controls-position="right"
-              placeholder="EffectSpellClassMaskB_1"
+              placeholder="EffectSpellClassMaskC_1"
             ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="法术小类2">
             <el-input-number
-              v-model="spell.EffectSpellClassMaskB_2"
+              v-model="spell.EffectSpellClassMaskC_2"
               controls-position="right"
-              placeholder="EffectSpellClassMaskB_2"
+              placeholder="EffectSpellClassMaskC_2"
             ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="法术小类3">
             <el-input-number
-              v-model="spell.EffectSpellClassMaskB_3"
+              v-model="spell.EffectSpellClassMaskC_3"
               controls-position="right"
-              placeholder="EffectSpellClassMaskB_3"
+              placeholder="EffectSpellClassMaskC_3"
             ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
-    </el-card>
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="效果">
@@ -1344,52 +1402,11 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="法术小类1">
-            <el-input-number
-              v-model="spell.EffectSpellClassMaskC_1"
-              controls-position="right"
-              placeholder="EffectSpellClassMaskC_1"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="法术小类2">
-            <el-input-number
-              v-model="spell.EffectSpellClassMaskC_2"
-              controls-position="right"
-              placeholder="EffectSpellClassMaskC_2"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="法术小类3">
-            <el-input-number
-              v-model="spell.EffectSpellClassMaskC_3"
-              controls-position="right"
-              placeholder="EffectSpellClassMaskC_3"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
     </el-card>
     <el-card
       :body-style="{ padding: '22px 20px 0 20px' }"
       style="margin-top: 16px"
     >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="图腾">
-            <el-input v-model="spell.Totem_1" placeholder="Totem_1"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="图腾">
-            <el-input v-model="spell.Totem_2" placeholder="Totem_2"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="物品类型">
@@ -1413,6 +1430,34 @@
               v-model="spell.EquippedItemInvTypes"
               placeholder="EquippedItemInvTypes"
             ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="16">
+        <el-col :span="6">
+          <el-form-item label="图腾分类">
+            <el-input
+              v-model="spell.RequiredTotemCategoryID_1"
+              placeholder="RequiredTotemCategoryID_1"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="图腾">
+            <el-input v-model="spell.Totem_1" placeholder="Totem_1"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="图腾分类">
+            <el-input
+              v-model="spell.RequiredTotemCategoryID_2"
+              placeholder="RequiredTotemCategoryID_2"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="图腾">
+            <el-input v-model="spell.Totem_2" placeholder="Totem_2"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -1562,47 +1607,6 @@
     </el-card>
     <el-card
       :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="图标">
-            <spell-icon-selector
-              v-model="spell.SpellIconID"
-              placeholder="SpellIconID"
-            ></spell-icon-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="激活图标">
-            <spell-icon-selector
-              v-model="spell.ActiveIconID"
-              placeholder="ActiveIconID"
-            ></spell-icon-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="视觉效果">
-            <el-input-number
-              v-model="spell.SpellVisualID_1"
-              controls-position="right"
-              placeholder="SpellVisualID_1"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="视觉效果">
-            <el-input-number
-              v-model="spell.SpellVisualID_2"
-              controls-position="right"
-              placeholder="SpellVisualID_2"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
       style="margin: 16px 0 80px 0"
     >
       <el-row :gutter="16">
@@ -1623,7 +1627,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="MinFactionID">
+          <el-form-item label="势力">
             <el-input
               v-model="spell.MinFactionID"
               placeholder="MinFactionID"
@@ -1631,11 +1635,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="MinReputation">
-            <el-input
+          <el-form-item label="最小声望">
+            <el-input-number
               v-model="spell.MinReputation"
+              controls-position="right"
               placeholder="MinReputation"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1719,16 +1724,16 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="Unk_13">
-            <el-input v-model="spell.Unk_13" placeholder="Unk_13"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
           <el-form-item label="ShapeshiftExclude">
             <el-input
               v-model="spell.ShapeshiftExclude"
               placeholder="ShapeshiftExclude"
             ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="Unk_13">
+            <el-input v-model="spell.Unk_13" placeholder="Unk_13"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
