@@ -118,3 +118,6 @@ exports.dbcSpellCategorySql =
 
 exports.dbcSpellDescriptionVariablesSql =
   "CREATE TABLE IF NOT EXISTS `foxy`.`dbc_spell_description_variables` (`ID` int NOT NULL DEFAULT '0',`Variables` text,PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;";
+
+exports.dbcSpellDifficultySql =
+  "CREATE TABLE IF NOT EXISTS `foxy`.`dbc_spell_difficulty` (`ID` int NOT NULL DEFAULT '0',`DifficultySpellID_1` int NOT NULL DEFAULT '0',`DifficultySpellID_2` int NOT NULL DEFAULT '0',`DifficultySpellID_3` int NOT NULL DEFAULT '0',`DifficultySpellID_4` int NOT NULL DEFAULT '0',PRIMARY KEY (`ID`)) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3;";
