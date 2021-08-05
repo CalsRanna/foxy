@@ -96,10 +96,10 @@
       <el-row :gutter="16">
         <el-col :span="6">
           <el-form-item label="类型">
-            <el-input
+            <spell-category-selector
               v-model="spell.Category"
               placeholder="Category"
-            ></el-input>
+            ></spell-category-selector>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -1738,6 +1738,7 @@ import FlagEditor from "@/components/FlagEditor";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector.vue";
 import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
 import SpellCastTimeSelector from "@/components/SpellCastTimeSelector.vue";
+import SpellCategorySelector from "@/components/SpellCategorySelector";
 import SpellIconSelector from "@/components/SpellIconSelector.vue";
 import SpellRangeSelector from "@/components/SpellRangeSelector.vue";
 import SpellSelector from "../../../components/SpellSelector.vue";
@@ -1829,6 +1830,7 @@ export default {
     ItemTemplateSelector,
     SpellDurationSelector,
     SpellCastTimeSelector,
+    SpellCategorySelector,
     SpellIconSelector,
     SpellRangeSelector,
     SpellSelector,

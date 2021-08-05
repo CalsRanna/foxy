@@ -33,6 +33,7 @@ import {
   LOAD_DBC_SCALING_STAT_VALUES,
   LOAD_DBC_SPELLS,
   LOAD_DBC_SPELL_CAST_TIMES,
+  LOAD_DBC_SPELL_CATEGORIES,
   LOAD_DBC_SPELL_DURATIONS,
   LOAD_DBC_SPELL_ICONS,
   LOAD_DBC_SPELL_ITEM_ENCHANTMENTS,
@@ -442,6 +443,20 @@ export default {
         });
         ipcRenderer.on(
           `${LOAD_DBC_SPELL_CAST_TIMES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    loadDbcSpellCategories() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_SPELL_CATEGORIES);
+        ipcRenderer.on(LOAD_DBC_SPELL_CATEGORIES, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_SPELL_CATEGORIES}_REJECT`,
           (event, error) => {
             reject(error);
           }
