@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 1px">
+      <el-card style="margin: 1px 0 16px 0">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
@@ -11,7 +11,7 @@
       <div
         :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
       >
-        <el-card style="margin-top: 16px">
+        <el-card>
           <el-table
             :data="spellLootTemplates"
             highlight-current-row
@@ -234,7 +234,7 @@ export default {
       "copySpellLootTemplate",
     ]),
     calculateMaxHeight() {
-      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+      return this.clientHeight - 307;
     },
     async create() {
       this.creating = true;

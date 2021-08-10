@@ -1,62 +1,66 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 1px">
+      <el-card style="margin: 1px 0 16px 0">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
           删除
         </el-button>
       </el-card>
-      <el-card style="margin-top: 16px">
-        <el-table
-          :data="pickpocketingLootTemplates"
-          highlight-current-row
-          :max-height="calculateMaxHeight()"
-          @current-change="select"
-          @row-dblclick="show"
-        >
-          <el-table-column label="编号" width="80px">
-            <span slot-scope="scope">
-              <template v-if="scope.row.Reference == 0">
-                {{ scope.row.Item }}
-              </template>
-            </span>
-          </el-table-column>
-          <el-table-column label="名称">
-            <span slot-scope="scope">
-              <template v-if="scope.row.Reference == 0">
-                <item-template-name
-                  :itemTemplate="scope.row"
-                ></item-template-name>
-              </template>
-              <template v-else>
-                <el-tag>关联掉落</el-tag>
-              </template>
-            </span>
-          </el-table-column>
-          <el-table-column prop="Reference" label="关联"></el-table-column>
-          <el-table-column prop="Chance" label="几率">
-            <span slot-scope="scope">
-              {{ `${scope.row.Chance}%` }}
-            </span>
-          </el-table-column>
-          <el-table-column prop="QuestRequired" label="需要任务">
-            <span slot-scope="scope">
-              <el-tag type="success" v-if="scope.row.QuestRequired">
-                需要
-              </el-tag>
-              <el-tag v-else>不需要</el-tag>
-            </span>
-          </el-table-column>
-          <el-table-column prop="MinCount" label="最小数量"></el-table-column>
-          <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-        </el-table>
-      </el-card>
-      <reference-loot-template-card
-        :entries="referenceEntries"
-        v-if="referenceEntries.length > 0"
-      ></reference-loot-template-card>
+      <div
+        :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+      >
+        <el-card>
+          <el-table
+            :data="pickpocketingLootTemplates"
+            highlight-current-row
+            :max-height="calculateMaxHeight()"
+            @current-change="select"
+            @row-dblclick="show"
+          >
+            <el-table-column label="编号" width="80px">
+              <span slot-scope="scope">
+                <template v-if="scope.row.Reference == 0">
+                  {{ scope.row.Item }}
+                </template>
+              </span>
+            </el-table-column>
+            <el-table-column label="名称">
+              <span slot-scope="scope">
+                <template v-if="scope.row.Reference == 0">
+                  <item-template-name
+                    :itemTemplate="scope.row"
+                  ></item-template-name>
+                </template>
+                <template v-else>
+                  <el-tag>关联掉落</el-tag>
+                </template>
+              </span>
+            </el-table-column>
+            <el-table-column prop="Reference" label="关联"></el-table-column>
+            <el-table-column prop="Chance" label="几率">
+              <span slot-scope="scope">
+                {{ `${scope.row.Chance}%` }}
+              </span>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务">
+              <span slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
+              </span>
+            </el-table-column>
+            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
+            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
+          </el-table>
+        </el-card>
+        <reference-loot-template-card
+          :entries="referenceEntries"
+          v-if="referenceEntries.length > 0"
+        ></reference-loot-template-card>
+      </div>
     </div>
     <div v-show="creating">
       <el-form
@@ -231,7 +235,7 @@ export default {
       "copyPickpocketingLootTemplate",
     ]),
     calculateMaxHeight() {
-      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+      return this.clientHeight - 307;
     },
     async create() {
       this.creating = true;
