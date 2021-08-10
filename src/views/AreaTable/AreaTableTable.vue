@@ -50,11 +50,12 @@
         :page-size="pagination.size"
         hide-on-single-page
         @current-change="paginate"
-        style="margin-top: 16px"
+        style="margin-bottom: 16px"
       ></el-pagination>
       <el-table
         :data="areaTables"
         highlight-current-row
+        :max-height="calculateMaxHeight()"
         class="hide-when-overflow"
         @current-change="select"
         @row-dblclick="show"
@@ -96,6 +97,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("areaTable", [
       "refresh",
       "credential",
@@ -122,6 +124,11 @@ export default {
       "destroyAreaTable",
       "resetCredential",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > 50
+        ? this.clientHeight - 488
+        : this.clientHeight - 392;
+    },
     async search() {
       this.loading = true;
       this.paginateAreaTables({ page: 1 });
