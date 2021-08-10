@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
@@ -12,6 +12,7 @@
         <el-table
           :data="creatureTemplateResistances"
           highlight-current-row
+          :max-height="calculateMaxHeight()"
           @current-change="select"
           @row-dblclick="show"
         >
@@ -30,55 +31,59 @@
         label-position="right"
         label-width="120px"
       >
-        <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="生物ID">
-                <el-input-number
-                  v-model="creatureTemplateResistance.CreatureID"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="CreatureID"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="类型">
-                <el-select
-                  v-model="creatureTemplateResistance.School"
-                  placeholder="School"
-                >
-                  <el-option
-                    v-for="index in [1, 5, 2, 4, 3, 6]"
-                    :key="`School-${index}`"
-                    :label="localeResistanceSchools[index]"
-                    :value="index"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="抗性">
-                <el-input-number
-                  v-model="creatureTemplateResistance.Resistance"
-                  controls-position="right"
-                  placeholder="School"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="VerifiedBuild">
-                <el-input-number
-                  v-model="creatureTemplateResistance.VerifiedBuild"
-                  controls-position="right"
-                  placeholder="VerifiedBuild"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="生物ID">
+                  <el-input-number
+                    v-model="creatureTemplateResistance.CreatureID"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="CreatureID"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="类型">
+                  <el-select
+                    v-model="creatureTemplateResistance.School"
+                    placeholder="School"
+                  >
+                    <el-option
+                      v-for="index in [1, 5, 2, 4, 3, 6]"
+                      :key="`School-${index}`"
+                      :label="localeResistanceSchools[index]"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="抗性">
+                  <el-input-number
+                    v-model="creatureTemplateResistance.Resistance"
+                    controls-position="right"
+                    placeholder="School"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="VerifiedBuild">
+                  <el-input-number
+                    v-model="creatureTemplateResistance.VerifiedBuild"
+                    controls-position="right"
+                    placeholder="VerifiedBuild"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
           <el-button type="primary" :loading="loading" @click="store">
             保存
@@ -107,6 +112,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureTemplateResistance", [
       "creatureTemplateResistances",
@@ -134,6 +140,9 @@ export default {
       "createCreatureTemplateResistance",
       "copyCreatureTemplateResistance",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       this.creating = true;
       this.editing = false;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
@@ -12,6 +12,7 @@
         <el-table
           :data="npcTrainers"
           highlight-current-row
+          :max-height="calculateMaxHeight()"
           @current-change="select"
           @row-dblclick="show"
         >
@@ -38,69 +39,73 @@
     </div>
     <div v-show="creating">
       <el-form :model="npcTrainer" label-position="right" label-width="120px">
-        <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="编号">
-                <el-input-number
-                  v-model="npcTrainer.ID"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="ID"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="技能">
-                <spell-selector
-                  v-model="npcTrainer.SpellID"
-                  controls-position="right"
-                  placeholder="SpellID"
-                ></spell-selector>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="价格">
-                <el-input-number
-                  v-model="npcTrainer.MoneyCost"
-                  controls-position="right"
-                  placeholder="MoneyCost"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="需要技能">
-                <el-input-number
-                  v-model="npcTrainer.ReqSkillLine"
-                  controls-position="right"
-                  placeholder="ReqSkillLine"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="需要熟练度">
-                <el-input-number
-                  v-model="npcTrainer.ReqSkillRank"
-                  controls-position="right"
-                  placeholder="ReqSkillRank"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="需要等级">
-                <el-input-number
-                  v-model="npcTrainer.ReqLevel"
-                  controls-position="right"
-                  placeholder="ReqLevel"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="编号">
+                  <el-input-number
+                    v-model="npcTrainer.ID"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="ID"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能">
+                  <spell-selector
+                    v-model="npcTrainer.SpellID"
+                    controls-position="right"
+                    placeholder="SpellID"
+                  ></spell-selector>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="价格">
+                  <el-input-number
+                    v-model="npcTrainer.MoneyCost"
+                    controls-position="right"
+                    placeholder="MoneyCost"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="需要技能">
+                  <el-input-number
+                    v-model="npcTrainer.ReqSkillLine"
+                    controls-position="right"
+                    placeholder="ReqSkillLine"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="需要熟练度">
+                  <el-input-number
+                    v-model="npcTrainer.ReqSkillRank"
+                    controls-position="right"
+                    placeholder="ReqSkillRank"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="需要等级">
+                  <el-input-number
+                    v-model="npcTrainer.ReqLevel"
+                    controls-position="right"
+                    placeholder="ReqLevel"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
           <el-button type="primary" :loading="loading" @click="store">
             保存
@@ -132,6 +137,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("npcTrainer", ["npcTrainers", "npcTrainer"]),
     disabled() {
@@ -155,6 +161,9 @@ export default {
       "createNpcTrainer",
       "copyNpcTrainer",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       this.creating = true;
       this.editing = false;

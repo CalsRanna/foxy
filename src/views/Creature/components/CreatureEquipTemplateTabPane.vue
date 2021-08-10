@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
@@ -12,6 +12,7 @@
         <el-table
           :data="creatureEquipTemplates"
           highlight-current-row
+          :max-height="calculateMaxHeight()"
           @current-change="select"
           @row-dblclick="show"
         >
@@ -62,72 +63,76 @@
         label-position="right"
         label-width="120px"
       >
-        <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="生物ID">
-                <el-input-number
-                  v-model="creatureEquipTemplate.CreatureID"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="CreatureID"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="编号">
-                <el-input-number
-                  v-model="creatureEquipTemplate.ID"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="ID"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="VerifiedBuild">
-                <el-input-number
-                  v-model="creatureEquipTemplate.VerifiedBuild"
-                  controls-position="right"
-                  placeholder="VerifiedBuild"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="物品1">
-                <item-template-selector
-                  v-model="creatureEquipTemplate.ItemID1"
-                  controls-position="right"
-                  placeholder="ItemID1"
-                ></item-template-selector>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="物品2">
-                <item-template-selector
-                  v-model="creatureEquipTemplate.ItemID2"
-                  controls-position="right"
-                  placeholder="ItemID2"
-                ></item-template-selector>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="物品3">
-                <item-template-selector
-                  v-model="creatureEquipTemplate.ItemID3"
-                  controls-position="right"
-                  placeholder="ItemID3"
-                ></item-template-selector>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="生物ID">
+                  <el-input-number
+                    v-model="creatureEquipTemplate.CreatureID"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="CreatureID"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="编号">
+                  <el-input-number
+                    v-model="creatureEquipTemplate.ID"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="ID"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="VerifiedBuild">
+                  <el-input-number
+                    v-model="creatureEquipTemplate.VerifiedBuild"
+                    controls-position="right"
+                    placeholder="VerifiedBuild"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="物品1">
+                  <item-template-selector
+                    v-model="creatureEquipTemplate.ItemID1"
+                    controls-position="right"
+                    placeholder="ItemID1"
+                  ></item-template-selector>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="物品2">
+                  <item-template-selector
+                    v-model="creatureEquipTemplate.ItemID2"
+                    controls-position="right"
+                    placeholder="ItemID2"
+                  ></item-template-selector>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="物品3">
+                  <item-template-selector
+                    v-model="creatureEquipTemplate.ItemID3"
+                    controls-position="right"
+                    placeholder="ItemID3"
+                  ></item-template-selector>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
           <el-button type="primary" :loading="loading" @click="store">
             保存
@@ -155,6 +160,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureEquipTemplate", [
       "creatureEquipTemplates",
@@ -181,6 +187,9 @@ export default {
       "createCreatureEquipTemplate",
       "copyCreatureEquipTemplate",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       this.creating = true;
       this.editing = false;

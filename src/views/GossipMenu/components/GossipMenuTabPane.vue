@@ -1,32 +1,34 @@
 <template>
   <el-form :model="gossipMenu" label-position="right" label-width="120px">
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="对话ID">
-            <el-input-number
-              v-model="gossipMenu.MenuID"
-              controls-position="right"
-              placeholder="MenuID"
-              v-loading="initing"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.5)"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="文本ID">
-            <el-input
-              v-model="gossipMenu.TextID"
-              placeholder="TextID"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
+    <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 1px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="对话ID">
+              <el-input-number
+                v-model="gossipMenu.MenuID"
+                controls-position="right"
+                placeholder="MenuID"
+                v-loading="initing"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.5)"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="文本ID">
+              <el-input
+                v-model="gossipMenu.TextID"
+                placeholder="TextID"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
     <el-card style="margin-top: 16px">
       <el-button type="primary" :loading="loading" @click="store">
         保存
@@ -48,6 +50,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("gossipMenu", ["gossipMenu"]),
     ...mapState("npcText", ["npcText"]),
     ...mapState("npcTextLocale", ["npcTextLocales"]),
@@ -67,6 +70,9 @@ export default {
     ]),
     ...mapActions("npcText", ["findNpcText"]),
     ...mapActions("npcTextLocale", ["searchNpcTextLocales"]),
+    calculateMaxHeight() {
+      return this.clientHeight - 307;
+    },
     async store() {
       this.loading = true;
       if (this.creating) {

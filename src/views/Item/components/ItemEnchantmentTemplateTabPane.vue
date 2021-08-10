@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
@@ -12,6 +12,7 @@
         <el-table
           :data="itemEnchantmentTemplates"
           highlight-current-row
+          :max-height="calculateMaxHeight()"
           @current-change="select"
           @row-dblclick="show"
         >
@@ -68,45 +69,49 @@
         label-position="right"
         label-width="120px"
       >
-        <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="物品ID">
-                <el-input-number
-                  v-model="itemEnchantmentTemplate.entry"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="entry"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="附魔">
-                <item-random-properties-selector
-                  v-if="this.itemTemplate.RandomProperty != 0"
-                  v-model="itemEnchantmentTemplate.ench"
-                  placeholder="ench"
-                ></item-random-properties-selector>
-                <item-random-suffix-selector
-                  v-else
-                  v-model="itemEnchantmentTemplate.ench"
-                  placeholder="ench"
-                ></item-random-suffix-selector>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="几率">
-                <el-input-number
-                  v-model="itemEnchantmentTemplate.chance"
-                  controls-position="right"
-                  placeholder="chance"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="物品ID">
+                  <el-input-number
+                    v-model="itemEnchantmentTemplate.entry"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="entry"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="附魔">
+                  <item-random-properties-selector
+                    v-if="this.itemTemplate.RandomProperty != 0"
+                    v-model="itemEnchantmentTemplate.ench"
+                    placeholder="ench"
+                  ></item-random-properties-selector>
+                  <item-random-suffix-selector
+                    v-else
+                    v-model="itemEnchantmentTemplate.ench"
+                    placeholder="ench"
+                  ></item-random-suffix-selector>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="几率">
+                  <el-input-number
+                    v-model="itemEnchantmentTemplate.chance"
+                    controls-position="right"
+                    placeholder="chance"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
           <el-button type="primary" :loading="loading" @click="store">
             保存
@@ -134,6 +139,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("itemTemplate", ["itemTemplate"]),
     ...mapState("itemEnchantmentTemplate", [
       "itemEnchantmentTemplates",
@@ -159,6 +165,9 @@ export default {
       "createItemEnchantmentTemplate",
       "copyItemEnchantmentTemplate",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       this.creating = true;
       this.editing = false;

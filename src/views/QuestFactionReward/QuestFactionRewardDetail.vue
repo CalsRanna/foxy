@@ -37,7 +37,7 @@ export default {
   computed: {
     ...mapState("questFactionReward", ["questFactionReward"]),
     localeName() {
-      return null;
+      return this.questFactionReward.ID;
     },
     localeDescription() {
       return null;

@@ -4,87 +4,89 @@
     label-position="right"
     label-width="120px"
   >
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="编号">
-            <el-input-number
-              v-model="creatureTemplateAddon.entry"
-              controls-position="right"
-              placeholder="entry"
-              :disabled="initing"
-              v-loading="initing"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.5)"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="路径ID">
-            <waypoint-data-selector
-              v-model="creatureTemplateAddon.path_id"
-              placeholder="path_id"
-            ></waypoint-data-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="坐骑编号">
-            <el-input-number
-              v-model="creatureTemplateAddon.mount"
-              controls-position="right"
-              placeholder="mount"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="表情">
-            <el-input-number
-              v-model="creatureTemplateAddon.emote"
-              controls-position="right"
-              placeholder="emote"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="覆盖标识1">
-            <el-input-number
-              v-model="creatureTemplateAddon.bytes1"
-              controls-position="right"
-              placeholder="bytes1"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="覆盖标识2">
-            <el-input-number
-              v-model="creatureTemplateAddon.bytes2"
-              controls-position="right"
-              placeholder="bytes2"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="光环列表">
-            <el-input
-              v-model="creatureTemplateAddon.auras"
-              placeholder="auras"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="更大可视范围">
-            <el-switch
-              v-model="creatureTemplateAddon.isLarge"
-              :active-value="1"
-              :inactive-value="0"
-            ></el-switch>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
+    <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 1px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="编号">
+              <el-input-number
+                v-model="creatureTemplateAddon.entry"
+                controls-position="right"
+                placeholder="entry"
+                :disabled="initing"
+                v-loading="initing"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.5)"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="路径ID">
+              <waypoint-data-selector
+                v-model="creatureTemplateAddon.path_id"
+                placeholder="path_id"
+              ></waypoint-data-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="坐骑编号">
+              <el-input-number
+                v-model="creatureTemplateAddon.mount"
+                controls-position="right"
+                placeholder="mount"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="表情">
+              <el-input-number
+                v-model="creatureTemplateAddon.emote"
+                controls-position="right"
+                placeholder="emote"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="覆盖标识1">
+              <el-input-number
+                v-model="creatureTemplateAddon.bytes1"
+                controls-position="right"
+                placeholder="bytes1"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="覆盖标识2">
+              <el-input-number
+                v-model="creatureTemplateAddon.bytes2"
+                controls-position="right"
+                placeholder="bytes2"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="光环列表">
+              <el-input
+                v-model="creatureTemplateAddon.auras"
+                placeholder="auras"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="更大可视范围">
+              <el-switch
+                v-model="creatureTemplateAddon.isLarge"
+                :active-value="1"
+                :inactive-value="0"
+              ></el-switch>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
     <el-card style="margin-top: 16px">
       <el-button type="primary" :loading="loading" @click="store">
         保存
@@ -107,6 +109,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("creatureTemplateAddon", ["creatureTemplateAddon"]),
     credential() {
@@ -122,6 +125,9 @@ export default {
       "updateCreatureTemplateAddon",
       "createCreatureTemplateAddon",
     ]),
+    calculateMaxHeight() {
+      return this.clientHeight - 307;
+    },
     async store() {
       this.loading = true;
       try {

@@ -1,71 +1,73 @@
 <template>
   <el-form :model="spellBonusData" label-position="right" label-width="120px">
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="编号">
-            <el-input-number
-              v-model="spellBonusData.entry"
-              controls-position="right"
-              placeholder="entry"
-              :disabled="initing"
-              v-loading="initing"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.5)"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="备注">
-            <el-input
-              v-model="spellBonusData.comments"
-              placeholder="comments"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="法术强度">
-            <el-input-number
-              v-model="spellBonusData.direct_bonus"
-              controls-position="right"
-              placeholder="direct_bonus"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="法术强度(dot)">
-            <el-input-number
-              v-model="spellBonusData.dot_bonus"
-              controls-position="right"
-              placeholder="dot_bonus"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="攻击强度">
-            <el-input-number
-              v-model="spellBonusData.ap_bonus"
-              controls-position="right"
-              placeholder="ap_bonus"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="攻击强度(dot)">
-            <el-input-number
-              v-model="spellBonusData.ap_dot_bonus"
-              controls-position="right"
-              placeholder="ap_dot_bonus"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
+    <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 1px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="编号">
+              <el-input-number
+                v-model="spellBonusData.entry"
+                controls-position="right"
+                placeholder="entry"
+                :disabled="initing"
+                v-loading="initing"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.5)"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="备注">
+              <el-input
+                v-model="spellBonusData.comments"
+                placeholder="comments"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="法术强度">
+              <el-input-number
+                v-model="spellBonusData.direct_bonus"
+                controls-position="right"
+                placeholder="direct_bonus"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="法术强度(dot)">
+              <el-input-number
+                v-model="spellBonusData.dot_bonus"
+                controls-position="right"
+                placeholder="dot_bonus"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="攻击强度">
+              <el-input-number
+                v-model="spellBonusData.ap_bonus"
+                controls-position="right"
+                placeholder="ap_bonus"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="攻击强度(dot)">
+              <el-input-number
+                v-model="spellBonusData.ap_dot_bonus"
+                controls-position="right"
+                placeholder="ap_dot_bonus"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
     <el-card style="margin-top: 16px">
       <el-button type="primary" :loading="loading" @click="store">
         保存
@@ -87,6 +89,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("spell", ["spell"]),
     ...mapState("spellBonusData", ["spellBonusData"]),
     credential() {
@@ -102,6 +105,9 @@ export default {
       "updateSpellBonusData",
       "createSpellBonusData",
     ]),
+    calculateMaxHeight() {
+      return this.clientHeight - 307;
+    },
     async store() {
       this.loading = true;
       try {
