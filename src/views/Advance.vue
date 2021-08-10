@@ -9,7 +9,14 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">高级</h3>
     </el-card>
-    <el-row :gutter="16" style="margin-top: 16px">
+    <el-row
+      :gutter="16"
+      :style="{
+        marginTop: '16px',
+        maxHeight: `${calculateMaxHeight()}px`,
+        overflow: 'auto',
+      }"
+    >
       <el-col :span="6">
         <el-card
           shadow="hover"
@@ -147,8 +154,16 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
+  computed: {
+    ...mapState("app", ["version", "clientHeight"]),
+  },
   methods: {
+    calculateMaxHeight() {
+      return this.clientHeight - 154;
+    },
     navigate(route) {
       this.$router.push(route);
     },

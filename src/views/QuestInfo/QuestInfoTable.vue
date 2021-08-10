@@ -53,11 +53,12 @@
         :page-size="pagination.size"
         hide-on-single-page
         @current-change="paginate"
-        style="margin-top: 16px"
+        style="margin-bottom: 16px"
       ></el-pagination>
       <el-table
         :data="questInfos"
         highlight-current-row
+        :max-height="calculateMaxHeight()"
         class="hide-when-overflow"
         @current-change="select"
         @row-dblclick="show"
@@ -92,6 +93,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("questInfo", [
       "refresh",
       "credential",
@@ -118,6 +120,11 @@ export default {
       "destroyQuestInfo",
       "resetCredential",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > 50
+        ? this.clientHeight - 488
+        : this.clientHeight - 392;
+    },
     async search() {
       this.loading = true;
       this.paginateQuestInfos({ page: 1 });

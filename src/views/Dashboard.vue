@@ -9,7 +9,15 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">控制面板</h3>
     </el-card>
-    <el-row :gutter="16" style="margin-top: 16px" :loading="loading">
+    <el-row
+      :gutter="16"
+      :style="{
+        marginTop: '16px',
+        maxHeight: `${calculateMaxHeight()}px`,
+        overflow: 'auto',
+      }"
+      :loading="loading"
+    >
       <el-col :span="16">
         <el-row :gutter="16">
           <el-col :span="8">
@@ -204,7 +212,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("app", ["version"]),
+    ...mapState("app", ["version", "clientHeight"]),
     ...mapState("updater", {
       remote: "version",
     }),
@@ -244,6 +252,9 @@ export default {
     ...mapActions("gossipMenu", ["countGossipMenus"]),
     ...mapActions("smartScript", ["countSmartScripts"]),
     ...mapActions("spell", ["countSpells"]),
+    calculateMaxHeight() {
+      return this.clientHeight - 154;
+    },
     openBrowser(url) {
       const shell = window.shell;
       shell.openExternal(url);

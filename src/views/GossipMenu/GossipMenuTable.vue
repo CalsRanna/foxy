@@ -57,6 +57,7 @@
         ref="creatureTable"
         :data="gossipMenus"
         highlight-current-row
+        :max-height="calculateMaxHeight()"
         class="hide-when-overflow"
         @current-change="select"
         @row-dblclick="show"
@@ -112,6 +113,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("gossipMenu", [
       "refresh",
       "credential",
@@ -139,6 +141,11 @@ export default {
       "copyGossipMenu",
       "resetCredential",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > 50
+        ? this.clientHeight - 488
+        : this.clientHeight - 392;
+    },
     async search() {
       this.loading = true;
       await this.paginateGossipMenus({ page: 1 });

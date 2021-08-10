@@ -51,12 +51,13 @@
         :page-size="pagination.size"
         hide-on-single-page
         @current-change="paginate"
-        style="margin-top: 16px"
+        style="margin-bottom: 16px"
       ></el-pagination>
       <el-table
         ref="gameObjectTable"
         :data="gameObjectTemplates"
         highlight-current-row
+        :max-height="calculateMaxHeight()"
         class="hide-when-overflow"
         @current-change="select"
         @row-dblclick="show"
@@ -101,6 +102,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("gameObjectTemplate", [
       "refresh",
       "credential",
@@ -128,6 +130,11 @@ export default {
       "copyGameObjectTemplate",
       "resetCredential",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > 50
+        ? this.clientHeight - 488
+        : this.clientHeight - 392;
+    },
     async search() {
       this.loading = true;
       await this.paginateGameObjectTemplates({ page: 1 });

@@ -66,6 +66,7 @@
       <el-table
         :data="itemTemplates"
         highlight-current-row
+        :max-height="calculateMaxHeight()"
         class="hide-when-overflow tight-table"
         @current-change="select"
         @row-dblclick="show"
@@ -146,6 +147,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("itemTemplate", [
       "refresh",
       "filter",
@@ -177,6 +179,17 @@ export default {
       "copyItemTemplate",
       "resetCredential",
     ]),
+    calculateMaxHeight() {
+      if (this.filter.class === undefined) {
+        return this.pagination.total > 50
+          ? this.clientHeight - 578
+          : this.clientHeight - 482;
+      } else {
+        return this.pagination.total > 50
+          ? this.clientHeight - 653
+          : this.clientHeight - 557;
+      }
+    },
     async filtrate() {
       this.loading = true;
       await this.paginateItemTemplates({ page: 1 });
