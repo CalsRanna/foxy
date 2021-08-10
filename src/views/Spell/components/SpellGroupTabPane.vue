@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
@@ -12,6 +12,7 @@
         <el-table
           :data="spellGroups"
           highlight-current-row
+          :max-height="calculateMaxHeight()"
           @current-change="select"
           @row-dblclick="show"
         >
@@ -27,40 +28,44 @@
     </div>
     <div v-show="creating">
       <el-form :model="spellGroup" label-position="right" label-width="120px">
-        <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="技能">
-                <el-input-number
-                  v-model="spellGroup.spell_id"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="spell_id"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="技能组">
-                <el-input-number
-                  v-model="spellGroup.id"
-                  controls-position="right"
-                  placeholder="id"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="标识">
-                <el-input-number
-                  v-model="spellGroup.special_flag"
-                  controls-position="right"
-                  placeholder="special_flag"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="技能">
+                  <el-input-number
+                    v-model="spellGroup.spell_id"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="spell_id"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能组">
+                  <el-input-number
+                    v-model="spellGroup.id"
+                    controls-position="right"
+                    placeholder="id"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="标识">
+                  <el-input-number
+                    v-model="spellGroup.special_flag"
+                    controls-position="right"
+                    placeholder="special_flag"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
           <el-button type="primary" :loading="loading" @click="store">
             保存
@@ -86,6 +91,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("spell", ["spell"]),
     ...mapState("spellGroup", ["spellGroups", "spellGroup"]),
     disabled() {
@@ -109,6 +115,9 @@ export default {
       "createSpellGroup",
       "copySpellGroup",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       this.creating = true;
       this.editing = false;

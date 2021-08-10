@@ -4,60 +4,62 @@
     label-position="right"
     label-width="120px"
   >
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="编号">
-            <el-input-number
-              v-model="questRequestItems.ID"
-              controls-position="right"
-              :loading="initing"
-              placeholder="ID"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.5)"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="完成文本">
-            <el-input
-              v-model="questRequestItems.CompletionText"
-              placeholder="CompletionText"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="VerifiedBuild">
-            <el-input-number
-              v-model="questRequestItems.VerifiedBuild"
-              controls-position="right"
-              placeholder="VerifiedBuild"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="6">
-          <el-form-item label="完成表情">
-            <el-input
-              v-model="questRequestItems.EmoteOnComplete"
-              placeholder="EmoteOnComplete"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="未完成表情">
-            <el-input
-              v-model="questRequestItems.EmoteOnIncomplete"
-              placeholder="EmoteOnIncomplete"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
+    <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 1px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="编号">
+              <el-input-number
+                v-model="questRequestItems.ID"
+                controls-position="right"
+                :loading="initing"
+                placeholder="ID"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.5)"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="完成文本">
+              <el-input
+                v-model="questRequestItems.CompletionText"
+                placeholder="CompletionText"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="VerifiedBuild">
+              <el-input-number
+                v-model="questRequestItems.VerifiedBuild"
+                controls-position="right"
+                placeholder="VerifiedBuild"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="完成表情">
+              <el-input
+                v-model="questRequestItems.EmoteOnComplete"
+                placeholder="EmoteOnComplete"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="未完成表情">
+              <el-input
+                v-model="questRequestItems.EmoteOnIncomplete"
+                placeholder="EmoteOnIncomplete"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
     <el-card style="margin-top: 16px">
       <el-button type="primary" :loading="loading" @click="store">
         保存
@@ -79,6 +81,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("questTemplate", ["questTemplate"]),
     ...mapState("questRequestItems", ["questRequestItems"]),
     credential() {
@@ -94,6 +97,9 @@ export default {
       "updateQuestRequestItems",
       "createQuestRequestItems",
     ]),
+    calculateMaxHeight() {
+      return this.clientHeight - 307;
+    },
     async store() {
       this.loading = true;
       if (this.creating) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
@@ -12,6 +12,7 @@
         <el-table
           :data="npcVendors"
           highlight-current-row
+          :max-height="calculateMaxHeight()"
           @current-change="select"
           @row-dblclick="show"
         >
@@ -38,90 +39,94 @@
     </div>
     <div v-show="creating">
       <el-form :model="npcVendor" label-position="right" label-width="120px">
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="编号">
+                  <el-input-number
+                    v-model="npcVendor.entry"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="entry"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="插槽">
+                  <el-input-number
+                    v-model="npcVendor.slot"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="slot"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="VerifiedBuild">
+                  <el-input-number
+                    v-model="npcVendor.VerifiedBuild"
+                    controls-position="right"
+                    placeholder="VerifiedBuild"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="物品">
+                  <item-template-selector
+                    v-model="npcVendor.item"
+                    controls-position="right"
+                    placeholder="item"
+                  ></item-template-selector>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最大数量">
+                  <el-input-number
+                    v-model="npcVendor.maxcount"
+                    controls-position="right"
+                    placeholder="maxcount"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="补货时间">
+                  <el-input-number
+                    v-model="npcVendor.incrtime"
+                    controls-position="right"
+                    placeholder="incrtime"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item>
+                  <hint-label
+                    label="扩展价格"
+                    :tooltip="extendedCostTooltip"
+                    slot="label"
+                  ></hint-label>
+                  <el-input-number
+                    v-model="npcVendor.ExtendedCost"
+                    controls-position="right"
+                    placeholder="ExtendedCost"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="编号">
-                <el-input-number
-                  v-model="npcVendor.entry"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="entry"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="插槽">
-                <el-input-number
-                  v-model="npcVendor.slot"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="slot"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="VerifiedBuild">
-                <el-input-number
-                  v-model="npcVendor.VerifiedBuild"
-                  controls-position="right"
-                  placeholder="VerifiedBuild"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="物品">
-                <item-template-selector
-                  v-model="npcVendor.item"
-                  controls-position="right"
-                  placeholder="item"
-                ></item-template-selector>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="最大数量">
-                <el-input-number
-                  v-model="npcVendor.maxcount"
-                  controls-position="right"
-                  placeholder="maxcount"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="补货时间">
-                <el-input-number
-                  v-model="npcVendor.incrtime"
-                  controls-position="right"
-                  placeholder="incrtime"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item>
-                <hint-label
-                  label="扩展价格"
-                  :tooltip="extendedCostTooltip"
-                  slot="label"
-                ></hint-label>
-                <el-input-number
-                  v-model="npcVendor.ExtendedCost"
-                  controls-position="right"
-                  placeholder="ExtendedCost"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
-        <el-card style="margin-top: 16px">
-          <el-button type="primary" :loading="loading" @click="store"
-            >保存</el-button
-          >
+          <el-button type="primary" :loading="loading" @click="store">
+            保存
+          </el-button>
           <el-button @click="cancel">返回</el-button>
         </el-card>
       </el-form>
@@ -150,6 +155,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("npcVendor", ["npcVendors", "npcVendor"]),
     disabled() {
@@ -176,6 +182,9 @@ export default {
       "createNpcVendor",
       "copyNpcVendor",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       this.creating = true;
       this.editing = false;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
@@ -12,6 +12,7 @@
         <el-table
           :data="spellAreas"
           highlight-current-row
+          :max-height="calculateMaxHeight()"
           @current-change="select"
           @row-dblclick="show"
         >
@@ -31,105 +32,109 @@
     </div>
     <div v-show="creating">
       <el-form :model="spellArea" label-position="right" label-width="120px">
-        <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="编号">
-                <el-input-number
-                  v-model="spellArea.spell"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="spell"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="区域">
-                <el-input-number
-                  v-model="spellArea.area"
-                  controls-position="right"
-                  placeholder="area"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="开始任务">
-                <el-input-number
-                  v-model="spellArea.quest_start"
-                  controls-position="right"
-                  placeholder="quest_start"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="结束任务">
-                <el-input-number
-                  v-model="spellArea.quest_end"
-                  controls-position="right"
-                  placeholder="quest_end"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="开始任务掩码">
-                <el-input-number
-                  v-model="spellArea.quest_start_status"
-                  controls-position="right"
-                  placeholder="quest_start_status"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="结束任务掩码">
-                <el-input-number
-                  v-model="spellArea.quest_end_status"
-                  controls-position="right"
-                  placeholder="quest_end_status"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="光环">
-                <el-input-number
-                  v-model="spellArea.aura_spell"
-                  controls-position="right"
-                  placeholder="aura_spell"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="种族掩码">
-                <el-input-number
-                  v-model="spellArea.racemask"
-                  controls-position="right"
-                  placeholder="racemask"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="性别">
-                <el-input-number
-                  v-model="spellArea.gender"
-                  controls-position="right"
-                  placeholder="gender"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="自动施放">
-                <el-switch
-                  v-model="spellArea.autocast"
-                  :active-value="1"
-                  :inactive-value="0"
-                ></el-switch>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="编号">
+                  <el-input-number
+                    v-model="spellArea.spell"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="spell"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="区域">
+                  <el-input-number
+                    v-model="spellArea.area"
+                    controls-position="right"
+                    placeholder="area"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="开始任务">
+                  <el-input-number
+                    v-model="spellArea.quest_start"
+                    controls-position="right"
+                    placeholder="quest_start"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="结束任务">
+                  <el-input-number
+                    v-model="spellArea.quest_end"
+                    controls-position="right"
+                    placeholder="quest_end"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="开始任务掩码">
+                  <el-input-number
+                    v-model="spellArea.quest_start_status"
+                    controls-position="right"
+                    placeholder="quest_start_status"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="结束任务掩码">
+                  <el-input-number
+                    v-model="spellArea.quest_end_status"
+                    controls-position="right"
+                    placeholder="quest_end_status"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="光环">
+                  <el-input-number
+                    v-model="spellArea.aura_spell"
+                    controls-position="right"
+                    placeholder="aura_spell"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="种族掩码">
+                  <el-input-number
+                    v-model="spellArea.racemask"
+                    controls-position="right"
+                    placeholder="racemask"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="性别">
+                  <el-input-number
+                    v-model="spellArea.gender"
+                    controls-position="right"
+                    placeholder="gender"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="自动施放">
+                  <el-switch
+                    v-model="spellArea.autocast"
+                    :active-value="1"
+                    :inactive-value="0"
+                  ></el-switch>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
           <el-button type="primary" :loading="loading" @click="store">
             保存
@@ -155,6 +160,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("spell", ["spell"]),
     ...mapState("spellArea", ["spellAreas", "spellArea"]),
     disabled() {
@@ -187,6 +193,9 @@ export default {
       "createSpellArea",
       "copySpellArea",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       this.creating = true;
       this.editing = false;

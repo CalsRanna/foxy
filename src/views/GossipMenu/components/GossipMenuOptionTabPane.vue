@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled"
@@ -12,6 +12,7 @@
         <el-table
           :data="gossipMenuOptions"
           highlight-current-row
+          :max-height="calculateMaxHeight()"
           @current-change="select"
           @row-dblclick="show"
         >
@@ -51,143 +52,147 @@
         label-position="right"
         label-width="120px"
       >
-        <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="对话ID">
-                <el-input-number
-                  v-model="gossipMenuOption.MenuID"
-                  controls-position="right"
-                  v-loading="loading"
-                  placeholder="MenuID"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="编号">
-                <el-input
-                  v-model="gossipMenuOption.OptionID"
-                  placeholder="OptionID"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="图标">
-                <el-select
-                  v-model="gossipMenuOption.OptionIcon"
-                  placeholder="rank"
-                >
-                  <el-option
-                    v-for="(icon, index) in icons"
-                    :key="`icon-${index}`"
-                    :label="icon"
-                    :value="index"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="文本">
-                <el-input
-                  v-model="gossipMenuOption.OptionText"
-                  placeholder="OptionText"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="类型">
-                <el-select
-                  v-model="gossipMenuOption.OptionType"
-                  placeholder="rank"
-                >
-                  <el-option
-                    v-for="(type, index) in types"
-                    :key="`type-${index}`"
-                    :label="type"
-                    :value="index"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="NPC标识">
-                <flag-editor
-                  v-model="gossipMenuOption.OptionNpcFlag"
-                  :flags="npcFlags"
-                  title="Npc标识编辑器"
-                  placeholder="OptionNpcFlag"
-                ></flag-editor>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="子选项编号">
-                <el-input
-                  v-model="gossipMenuOption.ActionMenuID"
-                  placeholder="ActionMenuID"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="广播文本编号">
-                <el-input
-                  v-model="gossipMenuOption.OptionBroadcastTextID"
-                  placeholder="OptionBroadcastTextID"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="ActionPoiID">
-                <el-input
-                  v-model="gossipMenuOption.ActionPoiID"
-                  placeholder="ActionPoiID"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="BoxCoded">
-                <el-input
-                  v-model="gossipMenuOption.BoxCoded"
-                  placeholder="BoxCoded"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="BoxMoney">
-                <el-input
-                  v-model="gossipMenuOption.BoxMoney"
-                  placeholder="BoxMoney"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="BoxText">
-                <el-input
-                  v-model="gossipMenuOption.BoxText"
-                  placeholder="BoxText"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="BoxBroadcastTextID">
-                <el-input
-                  v-model="gossipMenuOption.BoxBroadcastTextID"
-                  placeholder="BoxBroadcastTextID"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="VerifiedBuild">
-                <el-input-number
-                  v-model="gossipMenuOption.VerifiedBuild"
-                  controls-position="right"
-                  placeholder="VerifiedBuild"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="对话ID">
+                  <el-input-number
+                    v-model="gossipMenuOption.MenuID"
+                    controls-position="right"
+                    v-loading="loading"
+                    placeholder="MenuID"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="编号">
+                  <el-input
+                    v-model="gossipMenuOption.OptionID"
+                    placeholder="OptionID"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="图标">
+                  <el-select
+                    v-model="gossipMenuOption.OptionIcon"
+                    placeholder="rank"
+                  >
+                    <el-option
+                      v-for="(icon, index) in icons"
+                      :key="`icon-${index}`"
+                      :label="icon"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="文本">
+                  <el-input
+                    v-model="gossipMenuOption.OptionText"
+                    placeholder="OptionText"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="类型">
+                  <el-select
+                    v-model="gossipMenuOption.OptionType"
+                    placeholder="rank"
+                  >
+                    <el-option
+                      v-for="(type, index) in types"
+                      :key="`type-${index}`"
+                      :label="type"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="NPC标识">
+                  <flag-editor
+                    v-model="gossipMenuOption.OptionNpcFlag"
+                    :flags="npcFlags"
+                    title="Npc标识编辑器"
+                    placeholder="OptionNpcFlag"
+                  ></flag-editor>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="子选项编号">
+                  <el-input
+                    v-model="gossipMenuOption.ActionMenuID"
+                    placeholder="ActionMenuID"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="广播文本编号">
+                  <el-input
+                    v-model="gossipMenuOption.OptionBroadcastTextID"
+                    placeholder="OptionBroadcastTextID"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="ActionPoiID">
+                  <el-input
+                    v-model="gossipMenuOption.ActionPoiID"
+                    placeholder="ActionPoiID"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="BoxCoded">
+                  <el-input
+                    v-model="gossipMenuOption.BoxCoded"
+                    placeholder="BoxCoded"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="BoxMoney">
+                  <el-input
+                    v-model="gossipMenuOption.BoxMoney"
+                    placeholder="BoxMoney"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="BoxText">
+                  <el-input
+                    v-model="gossipMenuOption.BoxText"
+                    placeholder="BoxText"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="BoxBroadcastTextID">
+                  <el-input
+                    v-model="gossipMenuOption.BoxBroadcastTextID"
+                    placeholder="BoxBroadcastTextID"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="VerifiedBuild">
+                  <el-input-number
+                    v-model="gossipMenuOption.VerifiedBuild"
+                    controls-position="right"
+                    placeholder="VerifiedBuild"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
           <el-button type="primary" @click="store">保存</el-button>
           <el-button @click="cancel">返回</el-button>
@@ -217,6 +222,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("gossipMenu", ["gossipMenu"]),
     ...mapState("gossipMenuOption", ["gossipMenuOptions", "gossipMenuOption"]),
     disabled() {
@@ -241,6 +247,9 @@ export default {
       "createGossipMenuOption",
       "copyGossipMenuOption",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       await this.createGossipMenuOption({ MenuID: this.gossipMenu.MenuID });
       this.creating = true;

@@ -4,175 +4,177 @@
     label-position="right"
     label-width="120px"
   >
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="编号">
-            <el-input-number
-              v-model="questTemplateAddon.ID"
-              controls-position="right"
-              :loading="initing"
-              placeholder="ID"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.5)"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="最高等级">
-            <el-input-number
-              v-model="questTemplateAddon.MaxLevel"
-              controls-position="right"
-              placeholder="MaxLevel"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="允许职业">
-            <flag-editor
-              title="允许职业编辑器"
-              v-model="questTemplate.AllowableClasses"
-              :flags="allowableClasses"
-              placeholder="AllowableClasses"
-            ></flag-editor>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="施放法术">
-            <el-input
-              v-model="questTemplateAddon.SourceSpellID"
-              placeholder="SourceSpellID"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="前置任务">
-            <quest-template-selector
-              v-model="questTemplateAddon.PrevQuestID"
-              placeholder="PrevQuestID"
-            ></quest-template-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="后续任务">
-            <quest-template-selector
-              v-model="questTemplateAddon.NextQuestID"
-              placeholder="NextQuestID"
-            ></quest-template-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="特殊标识">
-            <el-input
-              v-model="questTemplateAddon.SpecialFlags"
-              placeholder="SpecialFlags"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="ExclusiveGroup">
-            <el-input
-              v-model="questTemplateAddon.ExclusiveGroup"
-              placeholder="ExclusiveGroup"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="提供物品数量">
-            <el-input-number
-              v-model="questTemplateAddon.ProvidedItemCount"
-              controls-position="right"
-              placeholder="ProvidedItemCount"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="需要最低声望">
-            <el-input
-              v-model="questTemplateAddon.RequiredMinRepFaction"
-              placeholder="RequiredMinRepFaction"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="声望值">
-            <el-input-number
-              v-model="questTemplateAddon.RequiredMinRepValue"
-              controls-position="right"
-              placeholder="RequiredMinRepValue"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要最高声望">
-            <el-input
-              v-model="questTemplateAddon.RequiredMaxRepFaction"
-              placeholder="RequiredMaxRepFaction"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="声望值">
-            <el-input-number
-              v-model="questTemplateAddon.RequiredMaxRepValue"
-              controls-position="right"
-              placeholder="RequiredMaxRepValue"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要技能">
-            <el-input
-              v-model="questTemplateAddon.RequiredSkillID"
-              placeholder="RequiredSkillID"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要熟练度">
-            <el-input-number
-              v-model="questTemplateAddon.RequiredSkillPoints"
-              controls-position="right"
-              placeholder="RequiredSkillPoints"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="邮件奖励">
-            <el-input
-              v-model="questTemplateAddon.RewardMailTemplateID"
-              placeholder="RewardMailTemplateID"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="奖励延迟">
-            <el-input-number
-              v-model="questTemplateAddon.RewardMailDelay"
-              controls-position="right"
-              placeholder="RewardMailDelay"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
+    <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 1px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="编号">
+              <el-input-number
+                v-model="questTemplateAddon.ID"
+                controls-position="right"
+                :loading="initing"
+                placeholder="ID"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.5)"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="最高等级">
+              <el-input-number
+                v-model="questTemplateAddon.MaxLevel"
+                controls-position="right"
+                placeholder="MaxLevel"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="允许职业">
+              <flag-editor
+                title="允许职业编辑器"
+                v-model="questTemplate.AllowableClasses"
+                :flags="allowableClasses"
+                placeholder="AllowableClasses"
+              ></flag-editor>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="施放法术">
+              <el-input
+                v-model="questTemplateAddon.SourceSpellID"
+                placeholder="SourceSpellID"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="前置任务">
+              <quest-template-selector
+                v-model="questTemplateAddon.PrevQuestID"
+                placeholder="PrevQuestID"
+              ></quest-template-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="后续任务">
+              <quest-template-selector
+                v-model="questTemplateAddon.NextQuestID"
+                placeholder="NextQuestID"
+              ></quest-template-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="特殊标识">
+              <el-input
+                v-model="questTemplateAddon.SpecialFlags"
+                placeholder="SpecialFlags"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="ExclusiveGroup">
+              <el-input
+                v-model="questTemplateAddon.ExclusiveGroup"
+                placeholder="ExclusiveGroup"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="提供物品数量">
+              <el-input-number
+                v-model="questTemplateAddon.ProvidedItemCount"
+                controls-position="right"
+                placeholder="ProvidedItemCount"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="需要最低声望">
+              <el-input
+                v-model="questTemplateAddon.RequiredMinRepFaction"
+                placeholder="RequiredMinRepFaction"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="声望值">
+              <el-input-number
+                v-model="questTemplateAddon.RequiredMinRepValue"
+                controls-position="right"
+                placeholder="RequiredMinRepValue"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="需要最高声望">
+              <el-input
+                v-model="questTemplateAddon.RequiredMaxRepFaction"
+                placeholder="RequiredMaxRepFaction"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="声望值">
+              <el-input-number
+                v-model="questTemplateAddon.RequiredMaxRepValue"
+                controls-position="right"
+                placeholder="RequiredMaxRepValue"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="需要技能">
+              <el-input
+                v-model="questTemplateAddon.RequiredSkillID"
+                placeholder="RequiredSkillID"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="需要熟练度">
+              <el-input-number
+                v-model="questTemplateAddon.RequiredSkillPoints"
+                controls-position="right"
+                placeholder="RequiredSkillPoints"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="邮件奖励">
+              <el-input
+                v-model="questTemplateAddon.RewardMailTemplateID"
+                placeholder="RewardMailTemplateID"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="奖励延迟">
+              <el-input-number
+                v-model="questTemplateAddon.RewardMailDelay"
+                controls-position="right"
+                placeholder="RewardMailDelay"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
     <el-card style="margin-top: 16px">
       <el-button type="primary" :loading="loading" @click="store">
         保存
@@ -196,6 +198,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("initiator", ["chrClasses"]),
     ...mapState("questTemplate", ["questTemplate"]),
     ...mapState("questTemplateAddon", ["questTemplateAddon"]),
@@ -222,6 +225,9 @@ export default {
       "updateQuestTemplateAddon",
       "createQuestTemplateAddon",
     ]),
+    calculateMaxHeight() {
+      return this.clientHeight - 307;
+    },
     async store() {
       this.loading = true;
       if (this.creating) {

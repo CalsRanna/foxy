@@ -1,41 +1,43 @@
 <template>
   <el-form :model="questInfo" label-position="right" label-width="120px">
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="编号">
-            <el-input-number
-              v-model="questInfo.ID"
-              controls-position="right"
-              placeholder="ID"
-              v-loading="initing"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.5)"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="名称">
-            <el-input
-              v-model="questInfo.InfoName_Lang_zhCN"
-              placeholder="InfoName_Lang_zhCN"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="名称掩码">
-            <el-input-number
-              v-model="questInfo.InfoName_Lang_Mask"
-              controls-position="right"
-              placeholder="Name_Lang_Mask"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
+    <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 1px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="编号">
+              <el-input-number
+                v-model="questInfo.ID"
+                controls-position="right"
+                placeholder="ID"
+                v-loading="initing"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.5)"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="名称">
+              <el-input
+                v-model="questInfo.InfoName_Lang_zhCN"
+                placeholder="InfoName_Lang_zhCN"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="名称掩码">
+              <el-input-number
+                v-model="questInfo.InfoName_Lang_Mask"
+                controls-position="right"
+                placeholder="Name_Lang_Mask"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
     <el-card style="margin-top: 16px">
       <el-button type="primary" :loading="loading" @click="store">
         保存
@@ -57,6 +59,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("questInfo", ["questInfo"]),
     credential() {
       return {
@@ -71,6 +74,9 @@ export default {
       "updateQuestInfo",
       "createQuestInfo",
     ]),
+    calculateMaxHeight() {
+      return this.clientHeight - 307;
+    },
     async store() {
       this.loading = true;
       if (this.creating) {

@@ -4,132 +4,134 @@
     label-position="right"
     label-width="120px"
   >
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="编号">
-            <el-input-number
-              v-model="questFactionReward.ID"
-              controls-position="right"
-              placeholder="ID"
-              v-loading="initing"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.5)"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="难度1">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_1"
-              controls-position="right"
-              placeholder="Difficulty_1"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度2">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_2"
-              controls-position="right"
-              placeholder="Difficulty_2"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度3">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_3"
-              controls-position="right"
-              placeholder="Difficulty_3"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度4">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_4"
-              controls-position="right"
-              placeholder="Difficulty_4"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度5">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_5"
-              controls-position="right"
-              placeholder="Difficulty_5"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度6">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_6"
-              controls-position="right"
-              placeholder="Difficulty_6"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度7">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_7"
-              controls-position="right"
-              placeholder="Difficulty_7"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度8">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_8"
-              controls-position="right"
-              placeholder="Difficulty_8"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度9">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_9"
-              controls-position="right"
-              placeholder="Difficulty_9"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度10">
-            <el-input-number
-              v-model="questFactionReward.Difficulty_10"
-              controls-position="right"
-              placeholder="Difficulty_10"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
+    <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 1px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="编号">
+              <el-input-number
+                v-model="questFactionReward.ID"
+                controls-position="right"
+                placeholder="ID"
+                v-loading="initing"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.5)"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="难度1">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_1"
+                controls-position="right"
+                placeholder="Difficulty_1"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度2">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_2"
+                controls-position="right"
+                placeholder="Difficulty_2"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度3">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_3"
+                controls-position="right"
+                placeholder="Difficulty_3"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度4">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_4"
+                controls-position="right"
+                placeholder="Difficulty_4"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度5">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_5"
+                controls-position="right"
+                placeholder="Difficulty_5"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度6">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_6"
+                controls-position="right"
+                placeholder="Difficulty_6"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度7">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_7"
+                controls-position="right"
+                placeholder="Difficulty_7"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度8">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_8"
+                controls-position="right"
+                placeholder="Difficulty_8"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度9">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_9"
+                controls-position="right"
+                placeholder="Difficulty_9"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度10">
+              <el-input-number
+                v-model="questFactionReward.Difficulty_10"
+                controls-position="right"
+                placeholder="Difficulty_10"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
     <el-card style="margin-top: 16px">
       <el-button type="primary" :loading="loading" @click="store">
         保存
@@ -151,6 +153,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("questFactionReward", ["questFactionReward"]),
     credential() {
       return {
@@ -165,6 +168,9 @@ export default {
       "updateQuestFactionReward",
       "createQuestFactionReward",
     ]),
+    calculateMaxHeight() {
+      return this.clientHeight - 307;
+    },
     async store() {
       this.loading = true;
       if (this.creating) {

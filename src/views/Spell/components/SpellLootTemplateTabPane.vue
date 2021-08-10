@@ -1,61 +1,65 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
           删除
         </el-button>
       </el-card>
-      <el-card style="margin-top: 16px">
-        <el-table
-          :data="spellLootTemplates"
-          highlight-current-row
-          @current-change="select"
-          @row-dblclick="show"
-        >
-          <el-table-column label="编号" width="80px">
-            <span slot-scope="scope">
-              <template v-if="scope.row.Reference == 0">
-                {{ scope.row.Item }}
-              </template>
-            </span>
-          </el-table-column>
-          <el-table-column label="名称">
-            <span slot-scope="scope">
-              <template v-if="scope.row.Reference == 0">
-                <item-template-name
-                  :itemTemplate="scope.row"
-                ></item-template-name>
-              </template>
-              <template v-else>
-                <el-tag>关联掉落</el-tag>
-              </template>
-            </span>
-          </el-table-column>
-          <el-table-column prop="Reference" label="关联"></el-table-column>
-          <el-table-column prop="Chance" label="几率">
-            <span slot-scope="scope">
-              {{ `${scope.row.Chance}%` }}
-            </span>
-          </el-table-column>
-          <el-table-column prop="QuestRequired" label="需要任务">
-            <span slot-scope="scope">
-              <el-tag type="success" v-if="scope.row.QuestRequired">
-                需要
-              </el-tag>
-              <el-tag v-else>不需要</el-tag>
-            </span>
-          </el-table-column>
-          <el-table-column prop="MinCount" label="最小数量"></el-table-column>
-          <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
-        </el-table>
-      </el-card>
-      <reference-loot-template-card
-        :entries="referenceEntries"
-        v-if="referenceEntries.length > 0"
-      ></reference-loot-template-card>
+      <div
+        :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+      >
+        <el-card style="margin-top: 16px">
+          <el-table
+            :data="spellLootTemplates"
+            highlight-current-row
+            @current-change="select"
+            @row-dblclick="show"
+          >
+            <el-table-column label="编号" width="80px">
+              <span slot-scope="scope">
+                <template v-if="scope.row.Reference == 0">
+                  {{ scope.row.Item }}
+                </template>
+              </span>
+            </el-table-column>
+            <el-table-column label="名称">
+              <span slot-scope="scope">
+                <template v-if="scope.row.Reference == 0">
+                  <item-template-name
+                    :itemTemplate="scope.row"
+                  ></item-template-name>
+                </template>
+                <template v-else>
+                  <el-tag>关联掉落</el-tag>
+                </template>
+              </span>
+            </el-table-column>
+            <el-table-column prop="Reference" label="关联"></el-table-column>
+            <el-table-column prop="Chance" label="几率">
+              <span slot-scope="scope">
+                {{ `${scope.row.Chance}%` }}
+              </span>
+            </el-table-column>
+            <el-table-column prop="QuestRequired" label="需要任务">
+              <span slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.QuestRequired">
+                  需要
+                </el-tag>
+                <el-tag v-else>不需要</el-tag>
+              </span>
+            </el-table-column>
+            <el-table-column prop="MinCount" label="最小数量"></el-table-column>
+            <el-table-column prop="MaxCount" label="最大数量"></el-table-column>
+          </el-table>
+        </el-card>
+        <reference-loot-template-card
+          :entries="referenceEntries"
+          v-if="referenceEntries.length > 0"
+        ></reference-loot-template-card>
+      </div>
     </div>
     <div v-show="creating">
       <el-form
@@ -63,105 +67,109 @@
         label-position="right"
         label-width="120px"
       >
-        <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="编号">
-                <el-input-number
-                  v-model="spellLootTemplate.Entry"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="Entry"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="物品">
-                <item-template-selector
-                  v-model="spellLootTemplate.Item"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="Item"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></item-template-selector>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="关联">
-                <el-input-number
-                  v-model="spellLootTemplate.Reference"
-                  controls-position="right"
-                  placeholder="Reference"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="几率">
-                <el-input-number
-                  v-model="spellLootTemplate.Chance"
-                  controls-position="right"
-                  placeholder="Chance"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="需要任务">
-                <el-switch
-                  v-model="spellLootTemplate.QuestRequired"
-                  :active-value="1"
-                  :inactive-value="0"
-                ></el-switch>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="掉落模式">
-                <el-input-number
-                  v-model="spellLootTemplate.LootMode"
-                  controls-position="right"
-                  placeholder="LootMode"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="组ID">
-                <el-input-number
-                  v-model="spellLootTemplate.GroudId"
-                  controls-position="right"
-                  placeholder="GroudId"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="最小数量">
-                <el-input-number
-                  v-model="spellLootTemplate.MinCount"
-                  controls-position="right"
-                  placeholder="MinCount"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="最大数量">
-                <el-input-number
-                  v-model="spellLootTemplate.MaxCount"
-                  controls-position="right"
-                  placeholder="MaxCount"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="注解">
-                <el-input
-                  v-model="spellLootTemplate.Comment"
-                  placeholder="Comment"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="编号">
+                  <el-input-number
+                    v-model="spellLootTemplate.Entry"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="Entry"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="物品">
+                  <item-template-selector
+                    v-model="spellLootTemplate.Item"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="Item"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></item-template-selector>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="关联">
+                  <el-input-number
+                    v-model="spellLootTemplate.Reference"
+                    controls-position="right"
+                    placeholder="Reference"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="几率">
+                  <el-input-number
+                    v-model="spellLootTemplate.Chance"
+                    controls-position="right"
+                    placeholder="Chance"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="需要任务">
+                  <el-switch
+                    v-model="spellLootTemplate.QuestRequired"
+                    :active-value="1"
+                    :inactive-value="0"
+                  ></el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="掉落模式">
+                  <el-input-number
+                    v-model="spellLootTemplate.LootMode"
+                    controls-position="right"
+                    placeholder="LootMode"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="组ID">
+                  <el-input-number
+                    v-model="spellLootTemplate.GroudId"
+                    controls-position="right"
+                    placeholder="GroudId"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最小数量">
+                  <el-input-number
+                    v-model="spellLootTemplate.MinCount"
+                    controls-position="right"
+                    placeholder="MinCount"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最大数量">
+                  <el-input-number
+                    v-model="spellLootTemplate.MaxCount"
+                    controls-position="right"
+                    placeholder="MaxCount"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="注解">
+                  <el-input
+                    v-model="spellLootTemplate.Comment"
+                    placeholder="Comment"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
           <el-button type="primary" :loading="loading" @click="store"
             >保存</el-button
@@ -190,6 +198,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("spell", ["spell"]),
     ...mapState("spellLootTemplate", [
       "spellLootTemplates",
@@ -224,6 +233,9 @@ export default {
       "createSpellLootTemplate",
       "copySpellLootTemplate",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       this.creating = true;
       this.editing = false;

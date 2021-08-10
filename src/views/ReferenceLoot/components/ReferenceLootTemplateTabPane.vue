@@ -4,108 +4,110 @@
     label-position="right"
     label-width="120px"
   >
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-    >
-      <el-row :gutter="16">
-        <el-col :span="6">
-          <el-form-item label="编号">
-            <el-input-number
-              v-model="referenceLootTemplate.Entry"
-              controls-position="right"
-              v-loading="initing"
-              placeholder="Entry"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.5)"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="物品">
-            <item-template-selector
-              v-model="referenceLootTemplate.Item"
-              controls-position="right"
-              v-loading="initing"
-              placeholder="Item"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.5)"
-            ></item-template-selector>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="关联">
-            <el-input-number
-              v-model="referenceLootTemplate.Reference"
-              controls-position="right"
-              placeholder="Reference"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="几率">
-            <el-input-number
-              v-model="referenceLootTemplate.Chance"
-              controls-position="right"
-              placeholder="Chance"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="需要任务">
-            <el-switch
-              v-model="referenceLootTemplate.QuestRequired"
-              :active-value="1"
-              :inactive-value="0"
-            ></el-switch>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="掉落模式">
-            <el-input-number
-              v-model="referenceLootTemplate.LootMode"
-              controls-position="right"
-              placeholder="LootMode"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="组ID">
-            <el-input-number
-              v-model="referenceLootTemplate.GroudId"
-              controls-position="right"
-              placeholder="GroudId"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="最小数量">
-            <el-input-number
-              v-model="referenceLootTemplate.MinCount"
-              controls-position="right"
-              placeholder="MinCount"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="最大数量">
-            <el-input-number
-              v-model="referenceLootTemplate.MaxCount"
-              controls-position="right"
-              placeholder="MaxCount"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="注解">
-            <el-input
-              v-model="referenceLootTemplate.Comment"
-              placeholder="Comment"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
+    <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 1px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="编号">
+              <el-input-number
+                v-model="referenceLootTemplate.Entry"
+                controls-position="right"
+                v-loading="initing"
+                placeholder="Entry"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.5)"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="物品">
+              <item-template-selector
+                v-model="referenceLootTemplate.Item"
+                controls-position="right"
+                v-loading="initing"
+                placeholder="Item"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.5)"
+              ></item-template-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="关联">
+              <el-input-number
+                v-model="referenceLootTemplate.Reference"
+                controls-position="right"
+                placeholder="Reference"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="几率">
+              <el-input-number
+                v-model="referenceLootTemplate.Chance"
+                controls-position="right"
+                placeholder="Chance"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="需要任务">
+              <el-switch
+                v-model="referenceLootTemplate.QuestRequired"
+                :active-value="1"
+                :inactive-value="0"
+              ></el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="掉落模式">
+              <el-input-number
+                v-model="referenceLootTemplate.LootMode"
+                controls-position="right"
+                placeholder="LootMode"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="组ID">
+              <el-input-number
+                v-model="referenceLootTemplate.GroudId"
+                controls-position="right"
+                placeholder="GroudId"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="最小数量">
+              <el-input-number
+                v-model="referenceLootTemplate.MinCount"
+                controls-position="right"
+                placeholder="MinCount"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="最大数量">
+              <el-input-number
+                v-model="referenceLootTemplate.MaxCount"
+                controls-position="right"
+                placeholder="MaxCount"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="注解">
+              <el-input
+                v-model="referenceLootTemplate.Comment"
+                placeholder="Comment"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
     <el-card style="margin-top: 16px">
       <el-button type="primary" :loading="loading" @click="store">
         保存
@@ -129,6 +131,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("referenceLootTemplate", ["referenceLootTemplate"]),
     credential() {
       return {
@@ -144,6 +147,9 @@ export default {
       "updateReferenceLootTemplate",
       "createReferenceLootTemplate",
     ]),
+    calculateMaxHeight() {
+      return this.clientHeight - 307;
+    },
     async store() {
       this.loading = true;
       if (this.creating) {

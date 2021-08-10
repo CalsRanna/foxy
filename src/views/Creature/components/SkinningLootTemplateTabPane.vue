@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="!creating">
-      <el-card style="margin-top: 16px">
+      <el-card style="margin-top: 1px">
         <el-button type="primary" @click="create">新增</el-button>
         <el-button @click="copy" :disabled="disabled">复制</el-button>
         <el-button type="danger" @click="destroy" :disabled="disabled">
@@ -12,6 +12,7 @@
         <el-table
           :data="skinningLootTemplates"
           highlight-current-row
+          :max-height="calculateMaxHeight()"
           @current-change="select"
           @row-dblclick="show"
         >
@@ -63,105 +64,109 @@
         label-position="right"
         label-width="120px"
       >
-        <el-card style="margin-top: 16px">
-          <el-row :gutter="16">
-            <el-col :span="6">
-              <el-form-item label="编号">
-                <el-input-number
-                  v-model="skinningLootTemplate.Entry"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="Entry"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="物品">
-                <item-template-selector
-                  v-model="skinningLootTemplate.Item"
-                  controls-position="right"
-                  v-loading="initing"
-                  placeholder="Item"
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(255, 255, 255, 0.5)"
-                ></item-template-selector>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="关联">
-                <el-input-number
-                  v-model="skinningLootTemplate.Reference"
-                  controls-position="right"
-                  placeholder="Reference"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="几率">
-                <el-input-number
-                  v-model="skinningLootTemplate.Chance"
-                  controls-position="right"
-                  placeholder="Chance"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="需要任务">
-                <el-switch
-                  v-model="skinningLootTemplate.QuestRequired"
-                  :active-value="1"
-                  :inactive-value="0"
-                ></el-switch>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="掉落模式">
-                <el-input-number
-                  v-model="skinningLootTemplate.LootMode"
-                  controls-position="right"
-                  placeholder="LootMode"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="组ID">
-                <el-input-number
-                  v-model="skinningLootTemplate.GroudId"
-                  controls-position="right"
-                  placeholder="GroudId"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="最小数量">
-                <el-input-number
-                  v-model="skinningLootTemplate.MinCount"
-                  controls-position="right"
-                  placeholder="MinCount"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="最大数量">
-                <el-input-number
-                  v-model="skinningLootTemplate.MaxCount"
-                  controls-position="right"
-                  placeholder="MaxCount"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="注解">
-                <el-input
-                  v-model="skinningLootTemplate.Comment"
-                  placeholder="Comment"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card style="margin-top: 1px">
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="编号">
+                  <el-input-number
+                    v-model="skinningLootTemplate.Entry"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="Entry"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="物品">
+                  <item-template-selector
+                    v-model="skinningLootTemplate.Item"
+                    controls-position="right"
+                    v-loading="initing"
+                    placeholder="Item"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(255, 255, 255, 0.5)"
+                  ></item-template-selector>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="关联">
+                  <el-input-number
+                    v-model="skinningLootTemplate.Reference"
+                    controls-position="right"
+                    placeholder="Reference"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="几率">
+                  <el-input-number
+                    v-model="skinningLootTemplate.Chance"
+                    controls-position="right"
+                    placeholder="Chance"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="需要任务">
+                  <el-switch
+                    v-model="skinningLootTemplate.QuestRequired"
+                    :active-value="1"
+                    :inactive-value="0"
+                  ></el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="掉落模式">
+                  <el-input-number
+                    v-model="skinningLootTemplate.LootMode"
+                    controls-position="right"
+                    placeholder="LootMode"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="组ID">
+                  <el-input-number
+                    v-model="skinningLootTemplate.GroudId"
+                    controls-position="right"
+                    placeholder="GroudId"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最小数量">
+                  <el-input-number
+                    v-model="skinningLootTemplate.MinCount"
+                    controls-position="right"
+                    placeholder="MinCount"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="最大数量">
+                  <el-input-number
+                    v-model="skinningLootTemplate.MaxCount"
+                    controls-position="right"
+                    placeholder="MaxCount"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="注解">
+                  <el-input
+                    v-model="skinningLootTemplate.Comment"
+                    placeholder="Comment"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
         <el-card style="margin-top: 16px">
           <el-button type="primary" :loading="loading" @click="store"
             >保存</el-button
@@ -190,6 +195,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("app", ["clientHeight"]),
     ...mapState("creatureTemplate", ["creatureTemplate"]),
     ...mapState("skinningLootTemplate", [
       "skinningLootTemplates",
@@ -224,6 +230,9 @@ export default {
       "createSkinningLootTemplate",
       "copySkinningLootTemplate",
     ]),
+    calculateMaxHeight() {
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
     async create() {
       this.creating = true;
       this.editing = false;
