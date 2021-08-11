@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card>
+    <el-card :body-style="{ padding: '22px 20px 0 20px' }">
       <div slot="header">
         数据库配置
         <el-tooltip content="当前只支持AzerothCore数据库" placement="right">
@@ -48,7 +48,10 @@
         </el-row>
       </el-form>
     </el-card>
-    <el-card style="margin-top: 16px">
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <div slot="header">
         DBC配置
         <el-tooltip content="当前只支持3.3.5版本的DBC文件" placement="right">
