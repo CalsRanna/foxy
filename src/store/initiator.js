@@ -83,7 +83,7 @@ export default {
     loadAdvanceConfig({ commit }) {
       return new Promise((resolve) => {
         let advanceConfig = {
-          size: localStorage.getItem("size") ?? 50,
+          size: parseInt(localStorage.getItem("size") ?? 50),
         };
         commit(LOAD_ADVANCE_CONFIG, advanceConfig);
         resolve();

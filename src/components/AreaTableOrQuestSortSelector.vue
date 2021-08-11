@@ -79,11 +79,7 @@
         ></el-pagination>
         <el-table
           :data="areaTables"
-          :max-height="
-            paginationOfAreaTable.total > this.advanceConfig.size
-              ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-              : clientHeight * 0.84 - 81 - 80 - 80
-          "
+          :max-height="calculateMaxHeight('area-table')"
           highlight-current-row
           class="selectable-table hide-when-overflow"
           @current-change="select"
@@ -143,11 +139,7 @@
         ></el-pagination>
         <el-table
           :data="questSorts"
-          :max-height="
-            paginationOfQuestSort.total > this.advanceConfig.size
-              ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-              : clientHeight * 0.84 - 81 - 80 - 80
-          "
+          :max-height="calculateMaxHeight('quest-sort')"
           highlight-current-row
           class="selectable-table hide-when-overflow"
           @current-change="select"
@@ -235,6 +227,17 @@ export default {
       "countQuestSortsForSelector",
       "paginateQuestSortsForSelector",
     ]),
+    calculateMaxHeight(module) {
+      if (module === "area-table") {
+        return this.paginationOfAreaTable.total > this.advanceConfig.size
+          ? this.clientHeight * 0.84 - 301
+          : this.clientHeight * 0.84 - 241;
+      } else {
+        return this.paginationOfQuestSort.total > this.advanceConfig.size
+          ? this.clientHeight * 0.84 - 301
+          : this.clientHeight * 0.84 - 241;
+      }
+    },
     input(areaTableOrQuestSort) {
       if (isNaN(parseInt(areaTableOrQuestSort))) {
         this.$emit("input", undefined);

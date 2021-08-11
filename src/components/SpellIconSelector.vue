@@ -131,8 +131,8 @@ export default {
     ]),
     calculateMaxHeight() {
       return this.pagination.total > this.advanceConfig.size
-        ? clientHeight * 0.84 - 301
-        : clientHeight * 0.84 - 241;
+        ? this.clientHeight * 0.84 - 301
+        : this.clientHeight * 0.84 - 241;
     },
     input(spellIcon) {
       if (isNaN(parseInt(spellIcon))) {
