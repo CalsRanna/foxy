@@ -1,3 +1,29 @@
+## [0.2.3](https://github.com/CalsRanna/foxy/compare/0.2.2...0.2.3) (2021-08-11)
+
+
+### Bug Fixes
+
+* **calculateMaxHeight:** fix clientHeight undefined ([00a52e8](https://github.com/CalsRanna/foxy/commit/00a52e86339e7e00176f956f964628bcb246f5c5))
+* **developer:** make button triggable ([2ee2d45](https://github.com/CalsRanna/foxy/commit/2ee2d4549ee9a344cb222fef1e8838318a7e0c87))
+* **loot view:** adjust margin and max height to all loot view ([7ee55d7](https://github.com/CalsRanna/foxy/commit/7ee55d7c643e9a47a73c4064f55ec5fe4ee6f65a))
+* **size:** make size effect in mysql selection ([97dd090](https://github.com/CalsRanna/foxy/commit/97dd09057ea17f1f114f75bc3bec65972f8d3177))
+* **size:** rename perPage to size ([8e97bce](https://github.com/CalsRanna/foxy/commit/8e97bce932fedf99c51260f5007c1407a236f5d7))
+
+
+### Features
+
+* **advance config:** add advance config view ([420220b](https://github.com/CalsRanna/foxy/commit/420220bb58eb38f3cbb1d67613a5a3883ee41b6c))
+* **footer:** some view  add footer to make card fixed ([4b35b39](https://github.com/CalsRanna/foxy/commit/4b35b39e8e5afde277e9e8d58bfcf5025334f44d))
+* **spell:** adjust some inputs' type ([1f3086a](https://github.com/CalsRanna/foxy/commit/1f3086afc9562cab29c6272b57b098aa45aba3c0))
+* **spell category:** add spell category selector ([58a93b3](https://github.com/CalsRanna/foxy/commit/58a93b37899c9c66640c35b02876a9220af708e1))
+* **spell description variable:** add spell description variable selector ([db7e6d4](https://github.com/CalsRanna/foxy/commit/db7e6d447faebdc7b7ae7647c329f108cff2e32a))
+* **spell difficulty:** add spell difficulty selector ([028222f](https://github.com/CalsRanna/foxy/commit/028222f1c9a69a862f0fbc440c1bf09ee38f0c6e))
+* **spell dispel type:** load dispel types from dbc instead of constants ([9d26e60](https://github.com/CalsRanna/foxy/commit/9d26e6011907fc4f655f169e88bb2cd1857aaac4))
+* **tab:** add max height to all tab view ([ec7bc49](https://github.com/CalsRanna/foxy/commit/ec7bc49fa3d8bf03ee8b360e1d1b27cb7dc36955))
+* **table:** add max height to all table view ([8d723a4](https://github.com/CalsRanna/foxy/commit/8d723a4861dab830d3952b3a367653a2c85bb824))
+
+
+
 ## [0.2.2](https://github.com/CalsRanna/foxy/compare/0.2.1...0.2.2) (2021-07-30)
 
 ### Bug Fixes

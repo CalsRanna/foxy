@@ -2,13 +2,125 @@
   <div class="changelog">
     <el-card>
       <div slot="header">
+        <h2>0.2.3 <small>2021-08-11</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>calculate max height:</strong> fix client height undefined
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/00a52e86339e7e00176f956f964628bcb246f5c5"
+            text="(00a52e8)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>developer:</strong> make button triggable
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/2ee2d4549ee9a344cb222fef1e8838318a7e0c87"
+            text="(2ee2d45)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>loot view:</strong> adjust margin and max height to all loot
+          view
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/7ee55d7c643e9a47a73c4064f55ec5fe4ee6f65a"
+            text="(7ee55d7)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>size:</strong> make size effect in mysql selection
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/97dd09057ea17f1f114f75bc3bec65972f8d3177"
+            text="(97dd090)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>size:</strong> rename per page to size
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/8e97bce932fedf99c51260f5007c1407a236f5d7"
+            text="(8e97bce)"
+          ></clickable-span>
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>advance config:</strong> add advance config view
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/420220bb58eb38f3cbb1d67613a5a3883ee41b6c"
+            text="(420220b)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>footer:</strong> some view add footer to make card fixed
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/4b35b39e8e5afde277e9e8d58bfcf5025334f44d"
+            text="(4b35b39)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell:</strong> adjust some inputs' type
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/1f3086afc9562cab29c6272b57b098aa45aba3c0"
+            text="(1f3086a)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell category:</strong> add spell category selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/58a93b37899c9c66640c35b02876a9220af708e1"
+            text="(58a93b3)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell description variable:</strong> add spell description
+          variable selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/db7e6d447faebdc7b7ae7647c329f108cff2e32a"
+            text="(db7e6d4)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell difficulty:</strong> add spell difficulty selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/028222f1c9a69a862f0fbc440c1bf09ee38f0c6e"
+            text="(028222f)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>spell dispel type:</strong> load dispel types from dbc instead
+          of constants
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/9d26e6011907fc4f655f169e88bb2cd1857aaac4"
+            text="(9d26e60)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>tab:</strong> add max height to all tab view
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/ec7bc49fa3d8bf03ee8b360e1d1b27cb7dc36955"
+            text="(ec7bc49)"
+          ></clickable-span>
+        </li>
+        <li>
+          <strong>table:</strong> add max height to all table view
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/8d723a4861dab830d3952b3a367653a2c85bb824"
+            text="(8d723a4)"
+          ></clickable-span>
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.2.2 <small>2021-07-30</small></h2>
       </div>
       <h3>Bug Fixes</h3>
       <ul>
         <li>
-          <strong>icon:</strong> fix padding between icon and label in
-          table<clickable-span
+          <strong>icon:</strong> fix padding between icon and label in table
+          <clickable-span
             url="https://github.com/CalsRanna/foxy/commit/4cef4159659f6b98caa159c82d748489a9eec47f"
             text="(4cef415)"
           ></clickable-span>
@@ -23,15 +135,16 @@
       <h3>Features</h3>
       <ul>
         <li>
-          <strong>spell selector:</strong> add name subtext in
-          table<clickable-span
+          <strong>spell selector:</strong> add name subtext in table
+          <clickable-span
             url="https://github.com/CalsRanna/foxy/commit/16e7668f2ecbb1ca68e52a4ca70c6b61de3e2e7a"
             text="(16e7668)"
           ></clickable-span>
         </li>
         <li>
           <strong>updater:</strong> redesign updater to make tips more
-          conspicuous<clickable-span
+          conspicuous
+          <clickable-span
             url="https://github.com/CalsRanna/foxy/commit/e67b827bc3bfaee02d81b8d201f539895211e55b"
             text="(e67b827)"
           ></clickable-span>
