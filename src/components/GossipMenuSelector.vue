@@ -58,11 +58,7 @@
       ></el-pagination>
       <el-table
         :data="gossipMenus"
-        :max-height="
-          pagination.total > this.advanceConfig.size
-            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-            : clientHeight * 0.84 - 81 - 80 - 80
-        "
+        :max-height="calculateMaxHeight()"
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
@@ -148,6 +144,11 @@ export default {
       "countGossipMenusForSelector",
       "paginateGossipMenusForSelector",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > this.advanceConfig.size
+        ? clientHeight * 0.84 - 301
+        : clientHeight * 0.84 - 241;
+    },
     input(gossipMenu) {
       if (isNaN(parseInt(gossipMenu))) {
         this.$emit("input", undefined);

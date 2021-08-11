@@ -61,11 +61,7 @@
       ></el-pagination>
       <el-table
         :data="spellIcons"
-        :max-height="
-          pagination.total > this.advanceConfig.size
-            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-            : clientHeight * 0.84 - 81 - 80 - 80
-        "
+        :max-height="calculateMaxHeight()"
         highlight-current-row
         class="selectable-table hide-when-overflow tight-table"
         @current-change="select"
@@ -133,6 +129,11 @@ export default {
       "countSpellIconsForSelector",
       "paginateSpellIconsForSelector",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > this.advanceConfig.size
+        ? clientHeight * 0.84 - 301
+        : clientHeight * 0.84 - 241;
+    },
     input(spellIcon) {
       if (isNaN(parseInt(spellIcon))) {
         this.$emit("input", undefined);
