@@ -28,7 +28,7 @@
       </div>
       <el-table
         :data="creatureTemplateLocales"
-        :max-height="clientHeight * 0.84 - 81 - 80"
+        :max-height="calculateMaxHeight()"
       >
         <el-table-column width="48px">
           <el-button
@@ -104,6 +104,9 @@ export default {
   },
   methods: {
     ...mapActions("creatureTemplateLocale", ["storeCreatureTemplateLocales"]),
+    calculateMaxHeight() {
+      return this.clientHeight * 0.84 - 161;
+    },
     input(text) {
       this.$emit("input", text);
     },

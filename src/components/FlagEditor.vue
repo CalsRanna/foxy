@@ -28,7 +28,7 @@
       </div>
       <el-table
         :data="flags"
-        :max-height="clientHeight * 0.84 - 81 - 80"
+        :max-height="calculateMaxHeight()"
         class="selectable-table hide-when-overflow"
         @selection-change="change"
         @row-click="select"
@@ -90,6 +90,9 @@ export default {
     },
   },
   methods: {
+    calculateMaxHeight() {
+      return this.clientHeight * 0.84 - 161;
+    },
     input(flag) {
       this.$emit("input", flag);
     },
