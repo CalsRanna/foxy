@@ -72,7 +72,7 @@
           layout="prev, pager, next"
           :current-page="paginationOfAreaTable.page"
           :total="paginationOfAreaTable.total"
-          :page-size="paginationOfAreaTable.size"
+          :page-size="advanceConfig.size"
           hide-on-single-page
           @current-change="paginate"
           style="margin-top: 16px"
@@ -80,7 +80,7 @@
         <el-table
           :data="areaTables"
           :max-height="
-            paginationOfAreaTable.total > 50
+            paginationOfAreaTable.total > this.advanceConfig.size
               ? clientHeight * 0.84 - 81 - 80 - 60 - 80
               : clientHeight * 0.84 - 81 - 80 - 80
           "
@@ -136,7 +136,7 @@
           layout="prev, pager, next"
           :current-page="paginationOfQuestSort.page"
           :total="paginationOfQuestSort.total"
-          :page-size="paginationOfQuestSort.size"
+          :page-size="advanceConfig.size"
           hide-on-single-page
           @current-change="paginate"
           style="margin-top: 16px"
@@ -144,7 +144,7 @@
         <el-table
           :data="questSorts"
           :max-height="
-            paginationOfQuestSort.total > 50
+            paginationOfQuestSort.total > this.advanceConfig.size
               ? clientHeight * 0.84 - 81 - 80 - 60 - 80
               : clientHeight * 0.84 - 81 - 80 - 80
           "
@@ -201,6 +201,7 @@ export default {
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
+    ...mapState("initiator", ["advanceConfig"]),
     ...mapState("areaTableOrQuestSortSelector", [
       "paginationOfAreaTable",
       "paginationOfQuestSort",
@@ -213,12 +214,14 @@ export default {
           ID: this.IDOfAreaTable != 0 ? this.IDOfAreaTable : undefined,
           AreaName_Lang_zhCN: this.AreaName_Lang_zhCN,
           page: this.paginationOfAreaTable.page,
+          size: this.advanceConfig.size,
         };
       } else {
         return {
           ID: this.IDOfQuestSort != 0 ? this.IDOfQuestSort : undefined,
           SortName_Lang_zhCN: this.SortName_Lang_zhCN,
           page: this.paginationOfQuestSort.page,
+          size: this.advanceConfig.size,
         };
       }
     },

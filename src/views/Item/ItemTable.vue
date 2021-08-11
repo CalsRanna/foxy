@@ -58,7 +58,7 @@
         layout="prev, pager, next"
         :current-page="pagination.page"
         :total="pagination.total"
-        :page-size="pagination.size"
+        :page-size="advanceConfig.size"
         hide-on-single-page
         @current-change="paginate"
         style="margin-bottom: 16px"
@@ -107,7 +107,7 @@
         layout="prev, pager, next"
         :current-page="pagination.page"
         :total="pagination.total"
-        :page-size="pagination.size"
+        :page-size="advanceConfig.size"
         hide-on-single-page
         @current-change="paginate"
         style="margin-top: 16px"
@@ -148,6 +148,7 @@ export default {
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
+    ...mapState("initiator", ["advanceConfig"]),
     ...mapState("itemTemplate", [
       "refresh",
       "filter",
@@ -163,6 +164,7 @@ export default {
         name: this.credential.name,
         description: this.credential.description,
         page: this.pagination.page,
+        size: this.advanceConfig.size,
       };
     },
     disabled() {
@@ -181,11 +183,11 @@ export default {
     ]),
     calculateMaxHeight() {
       if (this.filter.class === undefined) {
-        return this.pagination.total > 50
+        return this.pagination.total > this.advanceConfig.size
           ? this.clientHeight - 578
           : this.clientHeight - 482;
       } else {
-        return this.pagination.total > 50
+        return this.pagination.total > this.advanceConfig.size
           ? this.clientHeight - 653
           : this.clientHeight - 557;
       }
