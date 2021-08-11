@@ -8,45 +8,46 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <el-card
-      :body-style="{ padding: '22px 20px 0 20px' }"
-      style="margin-top: 16px"
-      v-if="developerConfig.debug === true"
-    >
-      <div slot="header">
-        高级配置
-        <el-tooltip
-          content="如果不是很确定以下配置项代表的意义，请不要随意更改"
-          placement="right"
-        >
-          <i class="el-icon-info"></i>
-        </el-tooltip>
-      </div>
-      <el-form :model="advanceConfig" label-width="120px">
-        <el-row :gutter="16">
-          <el-col :span="8">
-            <el-form-item label="分页大小">
-              <el-input-number
-                v-model="advanceConfig.size"
-                controls-position="right"
-                :min="5"
-                :max="100"
-                placeholder="size"
-              >
-              </el-input-number>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-    </el-card>
-    <el-button
-      type="primary"
-      style="margin-top: 16px"
-      @click="store"
-      :loading="loading"
-    >
-      保存
-    </el-button>
+    <div v-if="developerConfig.debug === true">
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
+        <div slot="header">
+          高级配置
+          <el-tooltip
+            content="如果不是很确定以下配置项代表的意义，请不要随意更改"
+            placement="right"
+          >
+            <i class="el-icon-info"></i>
+          </el-tooltip>
+        </div>
+        <el-form :model="advanceConfig" label-width="120px">
+          <el-row :gutter="16">
+            <el-col :span="8">
+              <el-form-item label="分页大小">
+                <el-input-number
+                  v-model="advanceConfig.size"
+                  controls-position="right"
+                  :min="5"
+                  :max="100"
+                  placeholder="size"
+                >
+                </el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </el-card>
+      <el-button
+        type="primary"
+        style="margin-top: 16px"
+        @click="store"
+        :loading="loading"
+      >
+        保存
+      </el-button>
+    </div>
   </div>
 </template>
 
