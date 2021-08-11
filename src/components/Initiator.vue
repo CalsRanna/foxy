@@ -34,6 +34,7 @@ export default {
     ...mapActions("app", ["setActive"]),
     ...mapActions("initiator", [
       "loadDeveloperConfig",
+      "loadAdvanceConfig",
       "loadMysqlConfig",
       "loadDbcConfig",
       "initializeMysqlConnection",
@@ -83,6 +84,7 @@ export default {
         this.visible = true;
         this.progressText = "加载开发者配置";
         await this.loadDeveloperConfig();
+        await this.loadAdvanceConfig();
         this.progressText = "加载数据库配置";
         await this.loadMysqlConfig();
         this.progressText = "加载DBC配置";

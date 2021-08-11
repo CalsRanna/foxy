@@ -3,6 +3,7 @@ const ipcRenderer = window.ipcRenderer;
 import axios from "axios";
 import {
   LOAD_DEVELOPER_CONFIG,
+  LOAD_ADVANCE_CONFIG,
   LOAD_MYSQL_CONFIG,
   LOAD_DBC_CONFIG,
   INITIALIZE_MYSQL_CONNECTION,
@@ -57,6 +58,7 @@ export default {
   namespaced: true,
   state: () => ({
     developerConfig: {},
+    advanceConfig: {},
     mysqlConfig: {},
     dbcConfig: {},
     initialized: false,
@@ -75,6 +77,15 @@ export default {
           debug: localStorage.getItem("debug") === "true" ? true : false,
         };
         commit(LOAD_DEVELOPER_CONFIG, developerConfig);
+        resolve();
+      });
+    },
+    loadAdvanceConfig({ commit }) {
+      return new Promise((resolve) => {
+        let advanceConfig = {
+          perPage: localStorage.getItem("perPage"),
+        };
+        commit(LOAD_ADVANCE_CONFIG, advanceConfig);
         resolve();
       });
     },
@@ -604,6 +615,13 @@ export default {
         resolve();
       });
     },
+    storeAdvanceConfig({ commit }, payload) {
+      return new Promise((resolve) => {
+        localStorage.setItem("perPage", payload.perPage);
+        commit(LOAD_ADVANCE_CONFIG, payload);
+        resolve();
+      });
+    },
     storeMysqlConfig({ commit }, payload) {
       return new Promise((resolve) => {
         localStorage.setItem("host", payload.host);
@@ -637,6 +655,9 @@ export default {
   mutations: {
     [LOAD_DEVELOPER_CONFIG](state, developerConfig) {
       state.developerConfig = developerConfig;
+    },
+    [LOAD_ADVANCE_CONFIG](state, advanceConfig) {
+      state.advanceConfig = advanceConfig;
     },
     [LOAD_MYSQL_CONFIG](state, mysqlConfig) {
       state.mysqlConfig = mysqlConfig;
