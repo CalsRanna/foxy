@@ -48,7 +48,7 @@
         layout="prev, pager, next"
         :current-page="pagination.page"
         :total="pagination.total"
-        :page-size="pagination.size"
+        :page-size="advanceConfig.size"
         hide-on-single-page
         @current-change="paginate"
         style="margin-bottom: 16px"
@@ -93,7 +93,7 @@
         layout="prev, pager, next"
         :current-page="pagination.page"
         :total="pagination.total"
-        :page-size="pagination.size"
+        :page-size="advanceConfig.size"
         hide-on-single-page
         @current-change="paginate"
         style="margin-top: 16px"
@@ -114,6 +114,7 @@ export default {
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
+    ...mapState("initiator", ["advanceConfig"]),
     ...mapState("gossipMenu", [
       "refresh",
       "credential",
@@ -125,6 +126,7 @@ export default {
         MenuID: this.credential.MenuID,
         Text: this.credential.Text,
         page: this.pagination.page,
+        size: this.advanceConfig.size,
       };
     },
     disabled() {
@@ -142,7 +144,7 @@ export default {
       "resetCredential",
     ]),
     calculateMaxHeight() {
-      return this.pagination.total > 50
+      return this.pagination.total > this.advanceConfig.size
         ? this.clientHeight - 488
         : this.clientHeight - 392;
     },

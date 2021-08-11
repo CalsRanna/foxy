@@ -16,8 +16,8 @@ ipcMain.on(SEARCH_WAYPOINT_DATAS_FOR_SELECTOR, (event, payload) => {
     queryBuilder = queryBuilder.where("id", payload.id);
   }
   queryBuilder = queryBuilder
-    .limit(50)
-    .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+    .limit(payload.size)
+    .offset(payload.page != undefined ? (payload.page - 1) * payload.size : 0);
 
   queryBuilder
     .then((rows) => {

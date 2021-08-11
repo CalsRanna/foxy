@@ -22,7 +22,6 @@ export default {
       },
       pagination: {
         page: 1,
-        size: 50,
         total: 0,
       },
       questFactionRewards: [],

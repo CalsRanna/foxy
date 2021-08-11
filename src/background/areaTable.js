@@ -35,8 +35,8 @@ ipcMain.on(SEARCH_AREA_TABLES, (event, payload) => {
     );
   }
   queryBuilder = queryBuilder
-    .limit(50)
-    .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+    .limit(payload.size)
+    .offset(payload.page != undefined ? (payload.page - 1) * payload.size : 0);
 
   queryBuilder
     .then((rows) => {

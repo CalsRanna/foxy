@@ -20,8 +20,8 @@ ipcMain.on(SEARCH_SPELL_RANGES_FOR_SELECTOR, (event, payload) => {
       .orWhere("RangeMax_2", "like", `%${payload.Range}%`);
   }
   queryBuilder = queryBuilder
-    .limit(50)
-    .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+    .limit(payload.size)
+    .offset(payload.page != undefined ? (payload.page - 1) * payload.size : 0);
 
   queryBuilder
     .then((rows) => {

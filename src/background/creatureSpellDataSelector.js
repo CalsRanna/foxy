@@ -32,8 +32,8 @@ ipcMain.on(SEARCH_CREATURE_SPELL_DATAS_FOR_SELECTOR, (event, payload) => {
       .orWhere("ds_4.Name_Lang_zhCN", "like", `%${payload.Spell}%`);
   }
   queryBuilder = queryBuilder
-    .limit(50)
-    .offset(payload.page != undefined ? (payload.page - 1) * 50 : 0);
+    .limit(payload.size)
+    .offset(payload.page != undefined ? (payload.page - 1) * payload.size : 0);
 
   queryBuilder
     .then((rows) => {

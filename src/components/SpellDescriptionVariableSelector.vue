@@ -52,7 +52,7 @@
         layout="prev, pager, next"
         :current-page="pagination.page"
         :total="pagination.total"
-        :page-size="pagination.size"
+        :page-size="advanceConfig.size"
         hide-on-single-page
         @current-change="paginate"
         style="margin-top: 16px"
@@ -60,7 +60,7 @@
       <el-table
         :data="spellDescriptionVariables"
         :max-height="
-          pagination.total > 50
+          pagination.total > this.advanceConfig.size
             ? clientHeight * 0.84 - 81 - 80 - 60 - 80
             : clientHeight * 0.84 - 81 - 80 - 80
         "
@@ -107,6 +107,7 @@ export default {
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
+    ...mapState("initiator", ["advanceConfig"]),
     ...mapState("spellDescriptionVariableSelector", [
       "pagination",
       "spellDescriptionVariables",
@@ -115,6 +116,7 @@ export default {
       return {
         ID: this.ID != 0 ? this.ID : undefined,
         page: this.pagination.page,
+        size: this.advanceConfig.size,
       };
     },
   },
