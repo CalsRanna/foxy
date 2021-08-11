@@ -55,11 +55,7 @@
       ></el-pagination>
       <el-table
         :data="waypointDatas"
-        :max-height="
-          pagination.total > this.advanceConfig.size
-            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-            : clientHeight * 0.84 - 81 - 80 - 80
-        "
+        :max-height="calculateMaxHeight()"
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
@@ -119,6 +115,11 @@ export default {
       "countWaypointDatasForSelector",
       "paginateWaypointDatasForSelector",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > this.advanceConfig.size
+        ? clientHeight * 0.84 - 301
+        : clientHeight * 0.84 - 241;
+    },
     input(waypointData) {
       if (isNaN(parseInt(waypointData))) {
         this.$emit("input", undefined);

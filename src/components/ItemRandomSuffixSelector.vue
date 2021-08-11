@@ -62,11 +62,7 @@
       ></el-pagination>
       <el-table
         :data="itemRandomSuffixes"
-        :max-height="
-          pagination.total > this.advanceConfig.size
-            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-            : clientHeight * 0.84 - 81 - 80 - 80
-        "
+        :max-height="calculateMaxHeight()"
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
@@ -150,6 +146,11 @@ export default {
       "countItemRandomSuffixesForSelector",
       "paginateItemRandomSuffixesForSelector",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > this.advanceConfig.size
+        ? clientHeight * 0.84 - 301
+        : clientHeight * 0.84 - 241;
+    },
     input(itemRandomSuffix) {
       if (isNaN(parseInt(itemRandomSuffix))) {
         this.$emit("input", undefined);

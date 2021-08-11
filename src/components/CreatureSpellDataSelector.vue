@@ -62,11 +62,7 @@
       ></el-pagination>
       <el-table
         :data="creatureSpellDatas"
-        :max-height="
-          pagination.total > this.advanceConfig.size
-            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-            : clientHeight * 0.84 - 81 - 80 - 80
-        "
+        :max-height="calculateMaxHeight()"
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
@@ -146,6 +142,11 @@ export default {
       "countCreatureSpellDatasForSelector",
       "paginateCreatureSpellDatasForSelector",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > this.advanceConfig.size
+        ? clientHeight * 0.84 - 301
+        : clientHeight * 0.84 - 241;
+    },
     input(creatureSpellData) {
       if (isNaN(parseInt(creatureSpellData))) {
         this.$emit("input", undefined);

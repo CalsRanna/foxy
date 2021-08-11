@@ -62,11 +62,7 @@
       ></el-pagination>
       <el-table
         :data="itemRandomProperties"
-        :max-height="
-          pagination.total > this.advanceConfig.size
-            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-            : clientHeight * 0.84 - 81 - 80 - 80
-        "
+        :max-height="calculateMaxHeight()"
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
@@ -150,6 +146,11 @@ export default {
       "countItemRandomPropertiesForSelector",
       "paginateItemRandomPropertiesForSelector",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > this.advanceConfig.size
+        ? clientHeight * 0.84 - 301
+        : clientHeight * 0.84 - 241;
+    },
     input(itemRandomProperty) {
       if (isNaN(parseInt(itemRandomProperty))) {
         this.$emit("input", undefined);

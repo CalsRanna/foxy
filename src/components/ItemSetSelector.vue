@@ -61,11 +61,7 @@
       ></el-pagination>
       <el-table
         :data="itemSets"
-        :max-height="
-          pagination.total > this.advanceConfig.size
-            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-            : clientHeight * 0.84 - 81 - 80 - 80
-        "
+        :max-height="calculateMaxHeight()"
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
@@ -127,6 +123,11 @@ export default {
       "countItemSetsForSelector",
       "paginateItemSetsForSelector",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > this.advanceConfig.size
+        ? clientHeight * 0.84 - 301
+        : clientHeight * 0.84 - 241;
+    },
     input(itemSet) {
       if (isNaN(parseInt(itemSet))) {
         this.$emit("input", undefined);

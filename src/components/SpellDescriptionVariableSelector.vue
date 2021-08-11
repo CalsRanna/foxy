@@ -59,11 +59,7 @@
       ></el-pagination>
       <el-table
         :data="spellDescriptionVariables"
-        :max-height="
-          pagination.total > this.advanceConfig.size
-            ? clientHeight * 0.84 - 81 - 80 - 60 - 80
-            : clientHeight * 0.84 - 81 - 80 - 80
-        "
+        :max-height="calculateMaxHeight()"
         highlight-current-row
         class="selectable-table hide-when-overflow"
         @current-change="select"
@@ -126,6 +122,11 @@ export default {
       "countSpellDescriptionVariablesForSelector",
       "paginateSpellDescriptionVariablesForSelector",
     ]),
+    calculateMaxHeight() {
+      return this.pagination.total > this.advanceConfig.size
+        ? clientHeight * 0.84 - 301
+        : clientHeight * 0.84 - 241;
+    },
     input(spellDescriptionVariable) {
       if (isNaN(parseInt(spellDescriptionVariable))) {
         this.$emit("input", undefined);
