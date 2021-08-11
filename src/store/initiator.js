@@ -83,7 +83,7 @@ export default {
     loadAdvanceConfig({ commit }) {
       return new Promise((resolve) => {
         let advanceConfig = {
-          perPage: localStorage.getItem("perPage"),
+          size: localStorage.getItem("size") ?? 50,
         };
         commit(LOAD_ADVANCE_CONFIG, advanceConfig);
         resolve();
@@ -617,7 +617,7 @@ export default {
     },
     storeAdvanceConfig({ commit }, payload) {
       return new Promise((resolve) => {
-        localStorage.setItem("perPage", payload.perPage);
+        localStorage.setItem("size", payload.size);
         commit(LOAD_ADVANCE_CONFIG, payload);
         resolve();
       });

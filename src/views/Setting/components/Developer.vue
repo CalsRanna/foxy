@@ -27,11 +27,11 @@
           <el-col :span="8">
             <el-form-item label="分页大小">
               <el-input-number
-                v-model="advanceConfig.perPage"
+                v-model="advanceConfig.size"
                 controls-position="right"
                 :min="5"
                 :max="100"
-                placeholder="perPage"
+                placeholder="size"
               >
               </el-input-number>
             </el-form-item>
