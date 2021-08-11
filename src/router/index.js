@@ -144,6 +144,18 @@ const routes = [
     component: () => import("@/views/ItemSet/ItemSetDetail"),
   },
   {
+    path: "/page-text",
+    component: () => import("@/views/PageText/PageTextTable"),
+  },
+  {
+    path: "/page-text/create",
+    component: () => import("@/views/PageText/PageTextDetail"),
+  },
+  {
+    path: "/page-text/:id",
+    component: () => import("@/views/PageText/PageTextDetail"),
+  },
+  {
     path: "/talent",
     component: () => import("@/views/Talent/TalentTable"),
   },

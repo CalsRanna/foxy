@@ -163,6 +163,7 @@ export default {
 
 .clickable-card {
   cursor: pointer;
+  margin-top: 16px;
 }
 
 .summary-title {

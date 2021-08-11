@@ -1371,11 +1371,10 @@
         <el-row :gutter="16">
           <el-col :span="6">
             <el-form-item label="页面ID">
-              <el-input-number
+              <page-text-selector
                 v-model="itemTemplate.PageText"
-                controls-position="right"
                 placeholder="PageText"
-              ></el-input-number>
+              ></page-text-selector>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -1458,6 +1457,7 @@ import ItemEnchantmentTemplateSelector from "@/components/ItemEnchantmentTemplat
 import { mapState, mapActions } from "vuex";
 import ItemDisplayInfoSelector from "@/components/ItemDisplayInfoSelector.vue";
 import QuestTemplateSelector from "@/components/QuestTemplateSelector.vue";
+import PageTextSelector from "@/components/PageTextSelector.vue";
 
 export default {
   data() {
@@ -1581,6 +1581,7 @@ export default {
     ItemEnchantmentTemplateSelector,
     ItemDisplayInfoSelector,
     QuestTemplateSelector,
+    PageTextSelector,
   },
 };
 </script>

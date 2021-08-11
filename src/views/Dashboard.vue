@@ -12,7 +12,6 @@
     <el-row
       :gutter="16"
       :style="{
-        marginTop: '16px',
         maxHeight: `${calculateMaxHeight()}px`,
         overflow: 'auto',
       }"
@@ -70,8 +69,6 @@
               </p>
             </el-card>
           </el-col>
-        </el-row>
-        <el-row :gutter="16" style="margin-top: 16px">
           <el-col :span="8">
             <el-card
               shadow="hover"
@@ -116,8 +113,6 @@
               </p>
             </el-card>
           </el-col>
-        </el-row>
-        <el-row :gutter="16" style="margin-top: 16px">
           <el-col :span="8">
             <el-card
               shadow="hover"
@@ -133,7 +128,7 @@
         </el-row>
       </el-col>
       <el-col :span="8">
-        <el-card style="font-size: 14px">
+        <el-card style="margin-top: 16px; font-size: 14px">
           <div slot="header">
             <span>介绍</span>
           </div>

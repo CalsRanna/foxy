@@ -12,7 +12,6 @@
     <el-row
       :gutter="16"
       :style="{
-        marginTop: '16px',
         maxHeight: `${calculateMaxHeight()}px`,
         overflow: 'auto',
       }"
@@ -21,6 +20,7 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          style="margin-top: 16px"
           @click.native="() => navigate('/area-table')"
         >
           <p class="summary-title">区域<span>Area Table</span></p>
@@ -51,6 +51,16 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          @click.native="() => navigate('/page-text')"
+        >
+          <p class="summary-title">页面文本<span>Page Text</span></p>
+          <p class="summary-content">书籍的内容</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/quest-faction-reward')"
         >
           <p class="summary-title">
@@ -59,8 +69,6 @@
           <p class="summary-content">任务奖励的声望值</p>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"
@@ -105,8 +113,6 @@
           <p class="summary-content">用于设定传家宝的具体属性分配规则</p>
         </el-card>
       </el-col>
-    </el-row>
-    <el-row :gutter="16" style="margin-top: 16px">
       <el-col :span="6">
         <el-card
           shadow="hover"
