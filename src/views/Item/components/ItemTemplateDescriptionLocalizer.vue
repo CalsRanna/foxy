@@ -26,10 +26,7 @@
         </span>
         <el-button type="primary" size="mini" @click="create">新增</el-button>
       </div>
-      <el-table
-        :data="itemTemplateLocales"
-        :max-height="clientHeight * 0.84 - 81 - 80"
-      >
+      <el-table :data="itemTemplateLocales" :max-height="calculateMaxHeight()">
         <el-table-column width="48">
           <el-button
             type="danger"
@@ -103,6 +100,9 @@ export default {
   },
   methods: {
     ...mapActions("itemTemplateLocale", ["storeItemTemplateLocales"]),
+    calculateMaxHeight() {
+      return this.clientHeight * 0.84 - 161;
+    },
     input(text) {
       this.$emit("input", text);
     },

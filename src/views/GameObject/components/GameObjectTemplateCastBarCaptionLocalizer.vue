@@ -28,7 +28,7 @@
       </div>
       <el-table
         :data="gameObjectTemplateLocales"
-        :max-height="clientHeight * 0.84 - 81 - 80"
+        :max-height="calculateMaxHeight()"
       >
         <el-table-column width="48">
           <el-button
@@ -105,6 +105,9 @@ export default {
     ...mapActions("gameObjectTemplateLocale", [
       "storeGameObjectTemplateLocales",
     ]),
+    calculateMaxHeight() {
+      return this.clientHeight * 0.84 - 161;
+    },
     input(text) {
       this.$emit("input", text);
     },
