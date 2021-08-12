@@ -66,31 +66,6 @@
           <el-col :span="6">
             <el-form-item>
               <hint-label
-                label="属性扩展"
-                :tooltip="expTooltip"
-                slot="label"
-              ></hint-label>
-              <el-select v-model="creatureTemplate.exp" placeholder="exp">
-                <el-option
-                  v-for="(exp, index) in exps"
-                  :key="`exp-${index}`"
-                  :label="exp"
-                  :value="index"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="势力">
-              <faction-template-selector
-                v-model="creatureTemplate.faction"
-                placeholder="faction"
-              ></faction-template-selector>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
                 label="职业"
                 :tooltip="unitClassTooltip"
                 slot="label"
@@ -126,6 +101,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
+            <el-form-item label="种族领袖">
+              <el-switch
+                v-model="creatureTemplate.RacialLeader"
+                :active-value="1"
+                :inactive-value="0"
+              ></el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="势力">
+              <faction-template-selector
+                v-model="creatureTemplate.faction"
+                placeholder="faction"
+              ></faction-template-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="族群">
               <el-select
                 v-model="creatureTemplate.family"
@@ -155,105 +147,6 @@
                   :value="index"
                 ></el-option>
               </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="NPC标识"
-                :tooltip="npcFlagTooltip"
-                slot="label"
-              ></hint-label>
-              <flag-editor
-                title="Npc标识编辑器"
-                v-model="creatureTemplate.npcflag"
-                :flags="npcFlags"
-                placeholder="npcflag"
-              ></flag-editor>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="类型标识"
-                :tooltip="typeFlagsTooltip"
-                slot="label"
-              ></hint-label>
-              <flag-editor
-                title="类型标识编辑器"
-                v-model="creatureTemplate.type_flags"
-                :flags="typeFlags"
-                placeholder="type_flags"
-              ></flag-editor>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="单位标识"
-                :tooltip="unitFlagsTooltip"
-                slot="label"
-              ></hint-label>
-              <flag-editor
-                title="单位标识编辑器"
-                v-model="creatureTemplate.unit_flags"
-                :flags="unitFlags"
-                placeholder="unit_flags"
-              ></flag-editor>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="单位标识"
-                :tooltip="unitFlags2Tooltip"
-                slot="label"
-              ></hint-label>
-              <flag-editor
-                title="单位标识2编辑器"
-                v-model="creatureTemplate.unit_flags2"
-                :flags="unitFlags2"
-                placeholder="unit_flags2"
-              ></flag-editor>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="动态标识"
-                :tooltip="dynamicFlagsTooltip"
-                slot="label"
-              ></hint-label>
-              <flag-editor
-                title="动态标识编辑器"
-                v-model="creatureTemplate.dynamicflags"
-                :flags="dynamicFlags"
-                placeholder="dynamicflags"
-              ></flag-editor>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="额外标识"
-                :tooltip="flagsExtraTooltip"
-                slot="label"
-              ></hint-label>
-              <flag-editor
-                title="额外标识编辑器"
-                v-model="creatureTemplate.flags_extra"
-                :flags="flagsExtra"
-                placeholder="flags_extra"
-              ></flag-editor>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="种族领袖">
-              <el-switch
-                v-model="creatureTemplate.RacialLeader"
-                :active-value="1"
-                :inactive-value="0"
-              ></el-switch>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -306,37 +199,130 @@
         :body-style="{ padding: '22px 20px 0 20px' }"
         style="margin-top: 16px"
       >
+        <el-col :span="6">
+          <el-form-item>
+            <hint-label
+              label="NPC标识"
+              :tooltip="npcFlagTooltip"
+              slot="label"
+            ></hint-label>
+            <flag-editor
+              title="Npc标识编辑器"
+              v-model="creatureTemplate.npcflag"
+              :flags="npcFlags"
+              placeholder="npcflag"
+            ></flag-editor>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <hint-label
+              label="类型标识"
+              :tooltip="typeFlagsTooltip"
+              slot="label"
+            ></hint-label>
+            <flag-editor
+              title="类型标识编辑器"
+              v-model="creatureTemplate.type_flags"
+              :flags="typeFlags"
+              placeholder="type_flags"
+            ></flag-editor>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <hint-label
+              label="动态标识"
+              :tooltip="dynamicFlagsTooltip"
+              slot="label"
+            ></hint-label>
+            <flag-editor
+              title="动态标识编辑器"
+              v-model="creatureTemplate.dynamicflags"
+              :flags="dynamicFlags"
+              placeholder="dynamicflags"
+            ></flag-editor>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <hint-label
+              label="额外标识"
+              :tooltip="flagsExtraTooltip"
+              slot="label"
+            ></hint-label>
+            <flag-editor
+              title="额外标识编辑器"
+              v-model="creatureTemplate.flags_extra"
+              :flags="flagsExtra"
+              placeholder="flags_extra"
+            ></flag-editor>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <hint-label
+              label="单位标识"
+              :tooltip="unitFlagsTooltip"
+              slot="label"
+            ></hint-label>
+            <flag-editor
+              title="单位标识编辑器"
+              v-model="creatureTemplate.unit_flags"
+              :flags="unitFlags"
+              placeholder="unit_flags"
+            ></flag-editor>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <hint-label
+              label="单位标识"
+              :tooltip="unitFlags2Tooltip"
+              slot="label"
+            ></hint-label>
+            <flag-editor
+              title="单位标识2编辑器"
+              v-model="creatureTemplate.unit_flags2"
+              :flags="unitFlags2"
+              placeholder="unit_flags2"
+            ></flag-editor>
+          </el-form-item>
+        </el-col>
+      </el-card>
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="模型1">
-              <creature-model-info-selector
-                v-model="creatureTemplate.modelid1"
-                placeholder="modelid1"
-              ></creature-model-info-selector>
+            <el-form-item>
+              <hint-label
+                label="免疫机制"
+                :tooltip="mechanicImmuneMasksTooltip"
+                slot="label"
+              ></hint-label>
+              <flag-editor
+                title="免疫机制编辑器"
+                v-model="creatureTemplate.mechanic_immune_mask"
+                :flags="mechanicImmuneMasks"
+                placeholder="mechanic_immune_mask"
+              ></flag-editor>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="模型2">
-              <creature-model-info-selector
-                v-model="creatureTemplate.modelid2"
-                placeholder="modelid2"
-              ></creature-model-info-selector>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="模型3">
-              <creature-model-info-selector
-                v-model="creatureTemplate.modelid3"
-                placeholder="modelid3"
-              ></creature-model-info-selector>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="模型4">
-              <creature-model-info-selector
-                v-model="creatureTemplate.modelid4"
-                placeholder="modelid4"
-              ></creature-model-info-selector>
+            <el-form-item>
+              <hint-label
+                label="免疫法术类型"
+                :tooltip="spellSchoolImmuneMasksTooltip"
+                slot="label"
+              ></hint-label>
+              <flag-editor
+                title="免疫技能类型编辑器"
+                v-model="creatureTemplate.spell_school_immune_mask"
+                :flags="spellSchoolImmuneMasks"
+                placeholder="spell_school_immune_mask"
+              ></flag-editor>
             </el-form-item>
           </el-col>
         </el-row>
@@ -345,6 +331,25 @@
         :body-style="{ padding: '22px 20px 0 20px' }"
         style="margin-top: 16px"
       >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item>
+              <hint-label
+                label="属性扩展"
+                :tooltip="expTooltip"
+                slot="label"
+              ></hint-label>
+              <el-select v-model="creatureTemplate.exp" placeholder="exp">
+                <el-option
+                  v-for="(exp, index) in exps"
+                  :key="`exp-${index}`"
+                  :label="exp"
+                  :value="index"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row :gutter="16">
           <el-col :span="6">
             <el-form-item label="伤害类型">
@@ -362,33 +367,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="免疫控制"
-                :tooltip="mechanicImmuneMasksTooltip"
-                slot="label"
-              ></hint-label>
-              <flag-editor
-                title="免疫控制编辑器"
-                v-model="creatureTemplate.mechanic_immune_mask"
-                :flags="mechanicImmuneMasks"
-                placeholder="mechanic_immune_mask"
-              ></flag-editor>
+            <el-form-item label="伤害系数">
+              <el-input-number
+                v-model="creatureTemplate.DamageModifier"
+                :min="0"
+                controls-position="right"
+                placeholder="DamageModifier"
+              ></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="免疫技能类型"
-                :tooltip="spellSchoolImmuneMasksTooltip"
-                slot="label"
-              ></hint-label>
-              <flag-editor
-                title="免疫技能类型编辑器"
-                v-model="creatureTemplate.spell_school_immune_mask"
-                :flags="spellSchoolImmuneMasks"
-                placeholder="spell_school_immune_mask"
-              ></flag-editor>
+            <el-form-item label="护甲系数">
+              <el-input-number
+                v-model="creatureTemplate.ArmorModifier"
+                :min="0"
+                controls-position="right"
+                placeholder="ArmorModifier"
+              ></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -433,33 +428,6 @@
               ></el-input-number>
             </el-form-item>
           </el-col>
-        </el-row>
-      </el-card>
-      <el-card
-        :body-style="{ padding: '22px 20px 0 20px' }"
-        style="margin-top: 16px"
-      >
-        <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item label="伤害系数">
-              <el-input-number
-                v-model="creatureTemplate.DamageModifier"
-                :min="0"
-                controls-position="right"
-                placeholder="DamageModifier"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="护甲系数">
-              <el-input-number
-                v-model="creatureTemplate.ArmorModifier"
-                :min="0"
-                controls-position="right"
-                placeholder="ArmorModifier"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
           <el-col :span="6">
             <el-form-item label="生命值系数">
               <el-input-number
@@ -481,16 +449,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="缩放系数">
-              <el-input-number
-                v-model="creatureTemplate.scale"
-                :min="0"
-                controls-position="right"
-                placeholder="scale"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
             <el-form-item label="行走速度">
               <el-input-number
                 v-model="creatureTemplate.speed_walk"
@@ -508,6 +466,126 @@
                 controls-position="right"
                 placeholder="speed_run"
               ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="最小金钱掉落">
+              <el-input-number
+                v-model="creatureTemplate.mingold"
+                :min="0"
+                controls-position="right"
+                placeholder="mingold"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="最大金钱掉落">
+              <el-input-number
+                v-model="creatureTemplate.maxgold"
+                :min="0"
+                controls-position="right"
+                placeholder="maxgold"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="击杀掉落">
+              <el-input-number
+                v-model="creatureTemplate.lootid"
+                controls-position="right"
+                placeholder="lootid"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="偷窃掉落">
+              <el-input-number
+                v-model="creatureTemplate.pickpocketloot"
+                controls-position="right"
+                placeholder="pickpocketloot"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="剥皮掉落">
+              <el-input-number
+                v-model="creatureTemplate.skinloot"
+                controls-position="right"
+                placeholder="skinloot"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item>
+              <hint-label
+                label="击杀关联"
+                :tooltip="killCredit1Tooltip"
+                slot="label"
+              ></hint-label>
+              <creature-template-selector
+                v-model="creatureTemplate.KillCredit1"
+                placeholder="KillCredit1"
+              ></creature-template-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item>
+              <hint-label
+                label="击杀关联"
+                :tooltip="killCredit2Tooltip"
+                slot="label"
+              ></hint-label>
+              <creature-template-selector
+                v-model="creatureTemplate.KillCredit2"
+                placeholder="KillCredit2"
+              ></creature-template-selector>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item>
+              <hint-label
+                label="难度1"
+                :tooltip="difficultyEntry1Tooltip"
+                slot="label"
+              ></hint-label>
+              <creature-template-selector
+                v-model="creatureTemplate.difficulty_entry_1"
+                placeholder="difficulty_entry_1"
+              ></creature-template-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度2">
+              <creature-template-selector
+                v-model="creatureTemplate.difficulty_entry_2"
+                placeholder="difficulty_entry_2"
+              ></creature-template-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度3">
+              <creature-template-selector
+                v-model="creatureTemplate.difficulty_entry_3"
+                placeholder="difficulty_entry_3"
+              ></creature-template-selector>
             </el-form-item>
           </el-col>
         </el-row>
@@ -605,82 +683,46 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="最小金钱掉落">
+            <el-form-item label="模型">
+              <creature-model-info-selector
+                v-model="creatureTemplate.modelid1"
+                placeholder="modelid1"
+              ></creature-model-info-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="模型">
+              <creature-model-info-selector
+                v-model="creatureTemplate.modelid2"
+                placeholder="modelid2"
+              ></creature-model-info-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="模型">
+              <creature-model-info-selector
+                v-model="creatureTemplate.modelid3"
+                placeholder="modelid3"
+              ></creature-model-info-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="模型">
+              <creature-model-info-selector
+                v-model="creatureTemplate.modelid4"
+                placeholder="modelid4"
+              ></creature-model-info-selector>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="缩放系数">
               <el-input-number
-                v-model="creatureTemplate.mingold"
+                v-model="creatureTemplate.scale"
                 :min="0"
                 controls-position="right"
-                placeholder="mingold"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="最大金钱掉落">
-              <el-input-number
-                v-model="creatureTemplate.maxgold"
-                :min="0"
-                controls-position="right"
-                placeholder="maxgold"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="击杀关联1"
-                :tooltip="killCredit1Tooltip"
-                slot="label"
-              ></hint-label>
-              <creature-template-selector
-                v-model="creatureTemplate.KillCredit1"
-                placeholder="KillCredit1"
-              ></creature-template-selector>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="击杀关联2"
-                :tooltip="killCredit2Tooltip"
-                slot="label"
-              ></hint-label>
-              <creature-template-selector
-                v-model="creatureTemplate.KillCredit2"
-                placeholder="KillCredit2"
-              ></creature-template-selector>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-card>
-      <el-card
-        :body-style="{ padding: '22px 20px 0 20px' }"
-        style="margin-top: 16px"
-      >
-        <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item label="击杀掉落ID">
-              <el-input-number
-                v-model="creatureTemplate.lootid"
-                controls-position="right"
-                placeholder="lootid"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="偷窃掉落ID">
-              <el-input-number
-                v-model="creatureTemplate.pickpocketloot"
-                controls-position="right"
-                placeholder="pickpocketloot"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="剥皮掉落ID">
-              <el-input-number
-                v-model="creatureTemplate.skinloot"
-                controls-position="right"
-                placeholder="skinloot"
+                placeholder="scale"
               ></el-input-number>
             </el-form-item>
           </el-col>
@@ -691,58 +733,6 @@
         style="margin-top: 16px"
       >
         <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item>
-              <hint-label
-                label="难度1"
-                :tooltip="difficultyEntry1Tooltip"
-                slot="label"
-              ></hint-label>
-              <creature-template-selector
-                v-model="creatureTemplate.difficulty_entry_1"
-                placeholder="difficulty_entry_1"
-              ></creature-template-selector>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="难度2">
-              <creature-template-selector
-                v-model="creatureTemplate.difficulty_entry_2"
-                placeholder="difficulty_entry_2"
-              ></creature-template-selector>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="难度3">
-              <creature-template-selector
-                v-model="creatureTemplate.difficulty_entry_3"
-                placeholder="difficulty_entry_3"
-              ></creature-template-selector>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-card>
-      <el-card
-        :body-style="{ padding: '22px 20px 0 20px' }"
-        style="margin-top: 16px"
-      >
-        <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item label="AI名称">
-              <el-input
-                v-model="creatureTemplate.AIName"
-                placeholder="AIName"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="脚本名称">
-              <el-input
-                v-model="creatureTemplate.ScriptName"
-                placeholder="ScriptName"
-              ></el-input>
-            </el-form-item>
-          </el-col>
           <el-col :span="6">
             <el-form-item label="移动类型">
               <el-select
@@ -761,7 +751,7 @@
           <el-col :span="6">
             <el-form-item>
               <hint-label
-                label="移动ID"
+                label="移动编号"
                 :tooltip="movementIdTooltip"
                 slot="label"
               ></hint-label>
@@ -799,6 +789,22 @@
                 controls-position="right"
                 placeholder="HoverHeight"
               ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="AI名称">
+              <el-input
+                v-model="creatureTemplate.AIName"
+                placeholder="AIName"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="脚本名称">
+              <el-input
+                v-model="creatureTemplate.ScriptName"
+                placeholder="ScriptName"
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">

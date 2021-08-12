@@ -24,14 +24,14 @@
       <el-tab-pane label="模版补充" name="creature_template_addon" lazy>
         <creature-template-addon-tab-pane></creature-template-addon-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="击杀声望" name="creature_onkill_reputation" lazy>
+        <creature-on-kill-reputation-tab-pane></creature-on-kill-reputation-tab-pane>
+      </el-tab-pane>
       <el-tab-pane label="抗性" name="creature_template_resistance" lazy>
         <creature-template-resistance-tab-pane></creature-template-resistance-tab-pane>
       </el-tab-pane>
       <el-tab-pane label="技能" name="creature_template_spell" lazy>
         <creature-template-spell-tab-pane></creature-template-spell-tab-pane>
-      </el-tab-pane>
-      <el-tab-pane label="击杀声望" name="creature_onkill_reputation" lazy>
-        <creature-on-kill-reputation-tab-pane></creature-on-kill-reputation-tab-pane>
       </el-tab-pane>
       <el-tab-pane label="装备模板" name="creature_equip_template" lazy>
         <creature-equip-template-tab-pane></creature-equip-template-tab-pane>
