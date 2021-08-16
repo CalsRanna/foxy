@@ -21,6 +21,17 @@
           shadow="hover"
           class="clickable-card"
           style="margin-top: 16px"
+          @click.native="() => navigate('/achievement')"
+        >
+          <p class="summary-title">成就<span>Achievement</span></p>
+          <p class="summary-content">游戏成就的详细信息及条件</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
+          style="margin-top: 16px"
           @click.native="() => navigate('/area-table')"
         >
           <p class="summary-title">区域<span>Area Table</span></p>

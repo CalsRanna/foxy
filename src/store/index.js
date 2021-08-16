@@ -5,6 +5,9 @@ import app from "./app";
 import initiator from "./initiator";
 import exporter from "./exporter";
 import updater from "./updater";
+import achievement from "./achievement";
+import achievementCategorySelector from "./achievementCategorySelector";
+import achievementCriteria from "./achievementCriteria";
 import areaTable from "./areaTable";
 import areaTableOrQuestSortSelector from "./areaTableOrQuestSortSelector";
 import broadcastTextSelector from "./broadcastTextSelector";
@@ -109,6 +112,9 @@ export default new Vuex.Store({
     initiator,
     exporter,
     updater,
+    achievement,
+    achievementCategorySelector,
+    achievementCriteria,
     areaTable,
     areaTableOrQuestSortSelector,
     broadcastTextSelector,

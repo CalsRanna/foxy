@@ -2,6 +2,40 @@ import { ipcMain } from "electron";
 
 const DBC = require("warcrafty");
 
+ipcMain.on("SEARCH_ACHIEVEMENT_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_achievement");
+
+  queryBuilder
+    .then((rows) => {
+      global.achievements = rows;
+      event.reply("SEARCH_ACHIEVEMENT_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_ACHIEVEMENT_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
+ipcMain.on("SEARCH_ACHIEVEMENT_CRITERIA_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_achievement_criteria");
+
+  queryBuilder
+    .then((rows) => {
+      global.achievementCriterias = rows;
+      event.reply("SEARCH_ACHIEVEMENT_CRITERIA_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_ACHIEVEMENT_CRITERIA_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
 ipcMain.on("SEARCH_AREA_TABLE_DBC", (event) => {
   let queryBuilder = knex.select().from("foxy.dbc_area_table");
 
@@ -220,6 +254,28 @@ ipcMain.on("SEARCH_TALENT_TAB_DBC", (event) => {
     })
     .finally(() => {
       event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
+ipcMain.on("WRITE_ACHIEVEMENT_DBC", (event) => {
+  DBC.write(`${path}/Achievement.dbc`, global.achievements)
+    .then(() => {
+      event.reply("WRITE_ACHIEVEMENT_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_ACHIEVEMENT_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_ACHIEVEMENT_CRITERIA_DBC", (event) => {
+  DBC.write(`${path}/Achievement_Criteria.dbc`, global.achievementCriterias)
+    .then(() => {
+      event.reply("WRITE_ACHIEVEMENT_CRITERIA_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_ACHIEVEMENT_CRITERIA_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     });
 });
 

@@ -233,6 +233,18 @@ const routes = [
     component: () => import("@/views/QuestInfo/QuestInfoDetail"),
   },
   {
+    path: "/achievement",
+    component: () => import("@/views/Achievement/AchievementTable"),
+  },
+  {
+    path: "/achievement/create",
+    component: () => import("@/views/Achievement/AchievementDetail"),
+  },
+  {
+    path: "/achievement/:id",
+    component: () => import("@/views/Achievement/AchievementDetail"),
+  },
+  {
     path: "/area-table",
     component: () => import("@/views/AreaTable/AreaTableTable"),
   },

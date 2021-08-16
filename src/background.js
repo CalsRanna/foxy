@@ -5,6 +5,9 @@ import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 
 import "./background/initiator";
 import "./background/exporter";
+import "./background/achievement";
+import "./background/achievementCategorySelector";
+import "./background/achievementCriteria";
 import "./background/areaTable";
 import "./background/areaTableOrQuestSortSelector";
 import "./background/broadcastTextSelector";

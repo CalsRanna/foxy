@@ -66,6 +66,25 @@
         </el-step>
       </el-steps>
       <ul style="list-style: none; color: #909399">
+        <li v-if="checkedDbcs.indexOf('Achievement') > -1">
+          <i class="el-icon-loading" v-if="isSearchingAchievementDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备Achievement数据
+          <span v-if="!isSearchingAchievementDbc">
+            ，共{{ achievements }}条数据
+          </span>
+        </li>
+        <li v-if="checkedDbcs.indexOf('AchievementCriteria') > -1">
+          <i
+            class="el-icon-loading"
+            v-if="isSearchingAchievementCriteriaDbc"
+          ></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备AchievementCriteria数据
+          <span v-if="!isSearchingAchievementCriteriaDbc">
+            ，共{{ achievementCriterias }}条数据
+          </span>
+        </li>
         <li v-if="checkedDbcs.indexOf('AreaTable') > -1">
           <i class="el-icon-loading" v-if="isSearchingAreaTableDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -172,6 +191,19 @@
           </span>
         </li>
         <template v-if="active > 0">
+          <li v-if="checkedDbcs.indexOf('Achievement') > -1">
+            <i class="el-icon-loading" v-if="isWritingAchievementDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入Achievement.dbc
+          </li>
+          <li v-if="checkedDbcs.indexOf('AchievementCriteria') > -1">
+            <i
+              class="el-icon-loading"
+              v-if="isWritingAchievementCriteriaDbc"
+            ></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入AchievementCriteria.dbc
+          </li>
           <li v-if="checkedDbcs.indexOf('AreaTable') > -1">
             <i class="el-icon-loading" v-if="isWritingAreaTableDbc"></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -259,6 +291,8 @@
 <script>
 const ipcRenderer = window.ipcRenderer;
 const options = [
+  "Achievement",
+  "AchievementCriteria",
   "AreaTable",
   "EmotesText",
   "Item",
@@ -289,6 +323,8 @@ export default {
       visible2: false,
       closable: false,
       active: 0,
+      isSearchingAchievementDbc: true,
+      isSearchingAchievementCriteriaDbc: true,
       isSearchingAreaTableDbc: true,
       isSearchingEmotesTextDbc: true,
       isSearchingItemDbc: true,
@@ -302,6 +338,8 @@ export default {
       isSearchingSpellItemEnchantmentDbc: true,
       isSearchingTalentDbc: true,
       isSearchingTalentTabDbc: true,
+      isWritingAchievementDbc: true,
+      isWritingAchievementCriteriaDbc: true,
       isWritingAreaTableDbc: true,
       isWritingEmotesTextDbc: true,
       isWritingItemDbc: true,
@@ -320,6 +358,8 @@ export default {
   computed: {
     ...mapState("exporter", [
       "checkedDbcs",
+      "achievements",
+      "achievementCriterias",
       "areaTables",
       "emotesTexts",
       "items",
@@ -338,6 +378,8 @@ export default {
   methods: {
     ...mapActions("exporter", [
       "updateCheckedDbcs",
+      "searchAchievementDbc",
+      "searchAchievementCriteriaDbc",
       "searchAreaTableDbc",
       "searchEmotesTextDbc",
       "searchItemDbc",
@@ -351,6 +393,8 @@ export default {
       "searchSpellItemEnchantmentDbc",
       "searchTalentDbc",
       "searchTalentTabDbc",
+      "writeAchievementDbc",
+      "writeAchievementCriteriaDbc",
       "writeAreaTableDbc",
       "writeEmotesTextDbc",
       "writeItemDbc",
@@ -377,6 +421,8 @@ export default {
       this.updateCheckedDbcs({ checkedDbcs: value });
     },
     confirm() {
+      this.isSearchingAchievementDbc = true;
+      this.isSearchingAchievementCriteriaDbc = true;
       this.isSearchingAreaTableDbc = true;
       this.isSearchingEmotesTextDbc = true;
       this.isSearchingItemDbc = true;
@@ -390,6 +436,8 @@ export default {
       this.isSearchingSpellItemEnchantmentDbc = true;
       this.isSearchingTalentDbc = true;
       this.isSearchingTalentTabDbc = true;
+      this.isWritingAchievementDbc = true;
+      this.isWritingAchievementCriteriaDbc = true;
       this.isWritingAreaTableDbc = true;
       this.isWritingEmotesTextDbc = true;
       this.isWritingItemDbc = true;
@@ -415,6 +463,20 @@ export default {
       let promises = [];
       for (let dbc of this.checkedDbcs) {
         switch (dbc) {
+          case "Achievement":
+            promises.push(
+              this.searchAchievementDbc().then(() => {
+                this.isSearchingAchievementDbc = false;
+              })
+            );
+            break;
+          case "AchievementCriteria":
+            promises.push(
+              this.searchAchievementCriteriaDbc().then(() => {
+                this.isSearchingAchievementCriteriaDbc = false;
+              })
+            );
+            break;
           case "AreaTable":
             promises.push(
               this.searchAreaTableDbc().then(() => {
@@ -523,6 +585,20 @@ export default {
       let promises = [];
       for (let dbc of this.checkedDbcs) {
         switch (dbc) {
+          case "Achievement":
+            promises.push(
+              this.writeAchievementDbc().then(() => {
+                this.isWritingAchievementDbc = false;
+              })
+            );
+            break;
+          case "AchievementCriteria":
+            promises.push(
+              this.writeAchievementCriteriaDbc().then(() => {
+                this.isWritingAchievementCriteriaDbc = false;
+              })
+            );
+            break;
           case "AreaTable":
             promises.push(
               this.writeAreaTableDbc().then(() => {
