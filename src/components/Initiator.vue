@@ -38,6 +38,9 @@ export default {
       "loadMysqlConfig",
       "loadDbcConfig",
       "initializeMysqlConnection",
+      "loadDbcAchievements",
+      "loadDbcAchievementCategories",
+      "loadDbcAchievementCriterias",
       "loadDbcAreaTables",
       "loadDbcCharTitles",
       "loadDbcChrClasses",
@@ -91,6 +94,12 @@ export default {
         await this.loadDbcConfig();
         this.progressText = "初始化数据库连接";
         await this.initializeMysqlConnection();
+        this.progressText = "加载Achievement.dbc";
+        await this.loadDbcAchievements();
+        this.progressText = "加载Achievement_Category.dbc";
+        await this.loadDbcAchievementCategories();
+        this.progressText = "加载Achievement_Criteria.dbc";
+        await this.loadDbcAchievementCriterias();
         this.progressText = "加载AreaTable.dbc";
         await this.loadDbcAreaTables();
         this.progressText = "加载CharTitles.dbc";

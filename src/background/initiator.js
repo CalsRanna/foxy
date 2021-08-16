@@ -5,6 +5,9 @@ import {
   LOAD_MYSQL_CONFIG,
   LOAD_DBC_CONFIG,
   INITIALIZE_MYSQL_CONNECTION,
+  LOAD_DBC_ACHIEVEMENTS,
+  LOAD_DBC_ACHIEVEMENT_CATEGORIES,
+  LOAD_DBC_ACHIEVEMENT_CRITERIAS,
   LOAD_DBC_AREA_TABLES,
   LOAD_DBC_CHAR_TITLES,
   LOAD_DBC_CHR_CLASSES,
@@ -48,6 +51,9 @@ import {
 const DBC = require("warcrafty");
 const {
   dbcDatabaseSql,
+  dbcAchievementSql,
+  dbcAchievementCategorySql,
+  dbcAchievementCriteriaSql,
   dbcAreaTableSql,
   dbcCharTitleSql,
   dbcChrClassesSql,
@@ -106,6 +112,9 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
     .raw(dbcDatabaseSql)
     .then(() => {
       Promise.all([
+        knex.raw(dbcAchievementSql).then(() => {}),
+        knex.raw(dbcAchievementCategorySql).then(() => {}),
+        knex.raw(dbcAchievementCriteriaSql).then(() => {}),
         knex.raw(dbcAreaTableSql).then(() => {}),
         knex.raw(dbcCharTitleSql).then(() => {}),
         knex.raw(dbcChrClassesSql).then(() => {}),
@@ -155,6 +164,102 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
     })
     .catch((error) => {
       event.reply(`${INITIALIZE_MYSQL_CONNECTION}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_ACHIEVEMENTS, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_achievement");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/Achievement.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_achievement", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_ACHIEVEMENTS);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_ACHIEVEMENTS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_ACHIEVEMENTS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_ACHIEVEMENTS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_ACHIEVEMENTS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_ACHIEVEMENT_CATEGORIES, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_achievement_category");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/Achievement_Category.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_achievement_category", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_ACHIEVEMENT_CATEGORIES);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_ACHIEVEMENT_CATEGORIES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_ACHIEVEMENT_CATEGORIES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_ACHIEVEMENT_CATEGORIES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_ACHIEVEMENT_CATEGORIES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_ACHIEVEMENT_CRITERIAS, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_achievement_criteria");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/Achievement_Criteria.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_achievement_criteria", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_ACHIEVEMENT_CRITERIAS);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_ACHIEVEMENT_CRITERIAS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_ACHIEVEMENT_CRITERIAS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_ACHIEVEMENT_CRITERIAS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_ACHIEVEMENT_CRITERIAS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

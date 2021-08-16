@@ -7,6 +7,9 @@ import {
   LOAD_MYSQL_CONFIG,
   LOAD_DBC_CONFIG,
   INITIALIZE_MYSQL_CONNECTION,
+  LOAD_DBC_ACHIEVEMENTS,
+  LOAD_DBC_ACHIEVEMENT_CATEGORIES,
+  LOAD_DBC_ACHIEVEMENT_CRITERIAS,
   LOAD_DBC_AREA_TABLES,
   LOAD_DBC_CHAR_TITLES,
   LOAD_DBC_CHR_CLASSES,
@@ -92,11 +95,11 @@ export default {
     loadMysqlConfig({ commit }) {
       return new Promise((resolve) => {
         let mysqlConfig = {
-          host: localStorage.getItem("host"),
-          user: localStorage.getItem("user"),
-          password: localStorage.getItem("password"),
-          database: localStorage.getItem("database"),
-          port: localStorage.getItem("port"),
+          host: localStorage.getItem("host") ?? "127.0.0.1",
+          user: localStorage.getItem("user") ?? "acore",
+          password: localStorage.getItem("password") ?? "acore",
+          database: localStorage.getItem("database") ?? "acore_world",
+          port: localStorage.getItem("port") ?? 3306,
         };
         ipcRenderer.send(LOAD_MYSQL_CONFIG, mysqlConfig);
         commit(LOAD_MYSQL_CONFIG, mysqlConfig);
@@ -121,6 +124,45 @@ export default {
         });
         ipcRenderer.on(
           `${INITIALIZE_MYSQL_CONNECTION}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    loadDbcAchievements() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_ACHIEVEMENTS);
+        ipcRenderer.on(LOAD_DBC_ACHIEVEMENTS, () => {
+          resolve();
+        });
+        ipcRenderer.on(`${LOAD_DBC_ACHIEVEMENTS}_REJECT`, (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    loadDbcAchievementCategories() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_ACHIEVEMENT_CATEGORIES);
+        ipcRenderer.on(LOAD_DBC_ACHIEVEMENT_CATEGORIES, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_ACHIEVEMENT_CATEGORIES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    loadDbcAchievementCriterias() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_ACHIEVEMENT_CRITERIAS);
+        ipcRenderer.on(LOAD_DBC_ACHIEVEMENT_CRITERIAS, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_ACHIEVEMENT_CRITERIAS}_REJECT`,
           (event, error) => {
             reject(error);
           }

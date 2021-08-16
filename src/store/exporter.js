@@ -7,6 +7,8 @@ export default {
   state: () => ({
     checkedDbcs: ["Item", "Spell"],
     preparation: [],
+    achievements: [],
+    achievementCriterias: [],
     areaTables: [],
     emotesTexts: [],
     items: [],
@@ -24,6 +26,36 @@ export default {
   actions: {
     updateCheckedDbcs({ commit }, payload) {
       commit(UPDATE_CHECKED_DBCS, payload.checkedDbcs);
+    },
+    searchAchievementDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("SEARCH_ACHIEVEMENT_DBC");
+        ipcRenderer.on("SEARCH_ACHIEVEMENT_DBC", (event, achievements) => {
+          commit("SEARCH_ACHIEVEMENT_DBC", achievements);
+          resolve();
+        });
+        ipcRenderer.on("SEARCH_ACHIEVEMENT_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    searchAchievementCriteriaDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("SEARCH_ACHIEVEMENT_CRITERIA_DBC");
+        ipcRenderer.on(
+          "SEARCH_ACHIEVEMENT_CRITERIA_DBC",
+          (event, achievementCriterias) => {
+            commit("SEARCH_ACHIEVEMENT_CRITERIA_DBC", achievementCriterias);
+            resolve();
+          }
+        );
+        ipcRenderer.on(
+          "SEARCH_ACHIEVEMENT_CRITERIA_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
     },
     searchAreaTableDbc({ commit }) {
       return new Promise((resolve, reject) => {
@@ -208,6 +240,31 @@ export default {
         });
       });
     },
+    writeAchievementDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("WRITE_ACHIEVEMENT_DBC");
+        ipcRenderer.on("WRITE_ACHIEVEMENT_DBC", (event) => {
+          resolve();
+        });
+        ipcRenderer.on("WRITE_ACHIEVEMENT_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    writeAchievementCriteriaDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("WRITE_ACHIEVEMENT_CRITERIA_DBC");
+        ipcRenderer.on("WRITE_ACHIEVEMENT_CRITERIA_DBC", (event) => {
+          resolve();
+        });
+        ipcRenderer.on(
+          "WRITE_ACHIEVEMENT_CRITERIA_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     writeAreaTableDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("WRITE_AREA_TABLE_DBC");
@@ -367,6 +424,12 @@ export default {
   mutations: {
     [UPDATE_CHECKED_DBCS](state, checkedDbcs) {
       state.checkedDbcs = checkedDbcs;
+    },
+    SEARCH_ACHIEVEMENT_DBC(state, achievements) {
+      state.achievements = achievements;
+    },
+    SEARCH_ACHIEVEMENT_CRITERIA_DBC(state, achievementCriterias) {
+      state.achievementCriterias = achievementCriterias;
     },
     SEARCH_AREA_TABLE_DBC(state, areaTables) {
       state.areaTables = areaTables;
