@@ -1,5 +1,5 @@
 <template>
-  <div class="changelog">
+  <div class="changelog" :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
     <el-card>
       <div slot="header">
         <h2>0.2.3 <small>2021-08-11</small></h2>
@@ -1363,12 +1363,19 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import ClickableSpan from "@/components/ClickableSpan";
 export default {
+  computed: {
+    ...mapState("app", ["clientHeight"]),
+  },
   methods: {
     openBrowser(url) {
       const shell = window.shell;
       shell.openExternal(url);
+    },
+    calculateMaxHeight() {
+      return this.clientHeight - 154;
     },
   },
   components: {
