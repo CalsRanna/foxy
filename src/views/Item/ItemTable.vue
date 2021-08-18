@@ -103,15 +103,6 @@
           label="需求等级"
         ></el-table-column>
       </el-table>
-      <el-pagination
-        layout="prev, pager, next"
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="advanceConfig.size"
-        hide-on-single-page
-        @current-change="paginate"
-        style="margin-top: 16px"
-      ></el-pagination>
     </el-card>
   </div>
 </template>
@@ -184,11 +175,11 @@ export default {
     calculateMaxHeight() {
       if (this.filter.class === undefined) {
         return this.pagination.total > this.advanceConfig.size
-          ? this.clientHeight - 578
+          ? this.clientHeight - 530
           : this.clientHeight - 482;
       } else {
         return this.pagination.total > this.advanceConfig.size
-          ? this.clientHeight - 653
+          ? this.clientHeight - 605
           : this.clientHeight - 557;
       }
     },

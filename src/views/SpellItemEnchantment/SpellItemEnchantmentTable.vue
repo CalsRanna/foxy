@@ -67,15 +67,6 @@
         <el-table-column prop="Effect_2" label="效果"></el-table-column>
         <el-table-column prop="Effect_3" label="效果"></el-table-column>
       </el-table>
-      <el-pagination
-        layout="prev, pager, next"
-        :current-page="pagination.page"
-        :total="pagination.total"
-        :page-size="advanceConfig.size"
-        hide-on-single-page
-        @current-change="paginate"
-        style="margin-top: 16px"
-      ></el-pagination>
     </el-card>
   </div>
 </template>
@@ -122,7 +113,7 @@ export default {
     ]),
     calculateMaxHeight() {
       return this.pagination.total > this.advanceConfig.size
-        ? this.clientHeight - 488
+        ? this.clientHeight - 440
         : this.clientHeight - 392;
     },
     async search() {
