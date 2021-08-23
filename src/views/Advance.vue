@@ -16,175 +16,15 @@
         overflow: 'auto',
       }"
     >
-      <el-col :span="6">
+      <el-col :span="6" v-for="module of modules" :key="`${module.subtitle}-card`">
         <el-card
           shadow="hover"
           class="clickable-card"
           style="margin-top: 16px"
-          @click.native="() => navigate('/achievement')"
+          @click.native="() => navigate(`/${module.route}`)"
         >
-          <p class="summary-title">成就<span>Achievement</span></p>
-          <p class="summary-content">游戏成就的详细信息及条件</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          style="margin-top: 16px"
-          @click.native="() => navigate('/area-table')"
-        >
-          <p class="summary-title">区域<span>Area Table</span></p>
-          <p class="summary-content">游戏中的所有区域</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          style="margin-top: 16px"
-          @click.native="() => navigate('/currency')"
-        >
-          <p class="summary-title">货币<span>Currency</span></p>
-          <p class="summary-content">除金币外的其他货币</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/emote-text')"
-        >
-          <p class="summary-title">表情文本<span>Emotes Text</span></p>
-          <p class="summary-content">表情的文本</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/item-extended-cost')"
-        >
-          <p class="summary-title">扩展价格<span>Item Extended Cost</span></p>
-          <p class="summary-content">购买物品时需要的其他货币</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/item-set')"
-        >
-          <p class="summary-title">套装<span>Item Set</span></p>
-          <p class="summary-content">套装的部件及奖励</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/page-text')"
-        >
-          <p class="summary-title">页面文本<span>Page Text</span></p>
-          <p class="summary-content">书籍的内容</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/quest-faction-reward')"
-        >
-          <p class="summary-title">
-            任务声望奖励<span>Quest Faction Reward</span>
-          </p>
-          <p class="summary-content">任务奖励的声望值</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/quest-info')"
-        >
-          <p class="summary-title">任务信息<span>Quest Info</span></p>
-          <p class="summary-content">任务的分类信息</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/quest-sort')"
-        >
-          <p class="summary-title">任务排序<span>Quest Sort</span></p>
-          <p class="summary-content">任务的另一部分分类信息</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/reference-loot')"
-        >
-          <p class="summary-title">
-            关联掉落<span>Reference Loot Template</span>
-          </p>
-          <p class="summary-content">关联掉落数据</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/scaling-stat-distribution')"
-        >
-          <p class="summary-title">
-            缩放属性分配<span>Scaling Stat Distribution</span>
-          </p>
-          <p class="summary-content">用于设定传家宝的具体属性分配规则</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/scaling-stat-value')"
-        >
-          <p class="summary-title">缩放属性值<span>Scaling Stat Value</span></p>
-          <p class="summary-content">每个等级的属性具体值</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/spell-item-enchantment')"
-        >
-          <p class="summary-title">
-            附魔属性<span>Spell Item Enchantment</span>
-          </p>
-          <p class="summary-content">物品的附魔属性</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/talent')"
-        >
-          <p class="summary-title">天赋<span>Talent</span></p>
-          <p class="summary-content">天赋页面的技能</p>
-        </el-card>
-      </el-col>
-      <el-col :span="6">
-        <el-card
-          shadow="hover"
-          class="clickable-card"
-          @click.native="() => navigate('/talent-tab')"
-        >
-          <p class="summary-title">天赋页<span>Talent Tab</span></p>
-          <p class="summary-content">天赋页的相关信息</p>
+          <p class="summary-title">{{module.title}}<span>{{module.subtitle}}</span></p>
+          <p class="summary-content">{{module.description}}</p>
         </el-card>
       </el-col>
     </el-row>
@@ -195,6 +35,91 @@
 import { mapState } from "vuex";
 
 export default {
+  data(){
+    return {
+      modules: [{
+        title: '成就',
+        subtitle: 'Achievement',
+        description: '游戏成就的详细信息及条件',
+        route: 'achievement'
+      },{
+        title: '区域',
+        subtitle: 'Area Table',
+        description: '游戏中的所有区域',
+        route: 'area-table'
+      },{
+        title: '货币',
+        subtitle: 'Currency',
+        description: '除金币外的其他货币',
+        route: 'currency'
+      },{
+        title: '表情文本',
+        subtitle: 'Emotes Text',
+        description: '表情的文本',
+        route: 'emote-text'
+      },{
+        title: '扩展价格',
+        subtitle: 'Item Extended Cost',
+        description: '购买物品时需要的其他货币',
+        route: 'item-extended-cost'
+      },{
+        title: '套装',
+        subtitle: 'Item Set',
+        description: '套装的部件及奖励',
+        route: 'item-set'
+      },{
+        title: '页面文本',
+        subtitle: 'Page Text',
+        description: '书籍的内容',
+        route: 'page-text'
+      },{
+        title: '任务声望奖励',
+        subtitle: 'Quest Faction Reward',
+        description: '任务奖励的声望值',
+        route: 'quest-faction-reward'
+      },{
+        title: '任务信息',
+        subtitle: 'Achievement',
+        description: '任务的分类信息',
+        route: 'achievement'
+      },{
+        title: '任务排序',
+        subtitle: 'Achievement',
+        description: '任务的另一部分分类信息',
+        route: 'achievement'
+      },{
+        title: '关联掉落',
+        subtitle: 'Achievement',
+        description: '关联掉落数据',
+        route: 'achievement'
+      },{
+        title: '缩放属性分配',
+        subtitle: 'Achievement',
+        description: '用于设定传家宝的具体属性分配规则',
+        route: 'achievement'
+      },{
+        title: '缩放属性值',
+        subtitle: 'Achievement',
+        description: '每个等级的属性基准值',
+        route: 'achievement'
+      },{
+        title: '附魔属性',
+        subtitle: 'Achievement',
+        description: '物品的附魔属性',
+        route: 'achievement'
+      },{
+        title: '天赋',
+        subtitle: 'Achievement',
+        description: '天赋页面的技能',
+        route: 'achievement'
+      },{
+        title: '天赋页',
+        subtitle: 'Achievement',
+        description: '天赋的分类信息',
+        route: 'achievement'
+      }]
+    }
+  },
   computed: {
     ...mapState("app", ["version", "clientHeight"]),
   },

@@ -153,19 +153,19 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
+            <el-form-item label="摘要">
+              <quest-template-objectives-localizer
+                v-model="questTemplate.LogDescription"
+                placeholder="LogDescription"
+              ></quest-template-objectives-localizer>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="详情">
               <quest-template-details-localizer
                 v-model="questTemplate.QuestDescription"
                 placeholder="QuestDescription"
               ></quest-template-details-localizer>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="目标描述">
-              <quest-template-objectives-localizer
-                v-model="questTemplate.LogDescription"
-                placeholder="LogDescription"
-              ></quest-template-objectives-localizer>
             </el-form-item>
           </el-col>
           <el-col :span="6">
