@@ -24,11 +24,11 @@
       <el-tab-pane label="模版补充" name="quest_template_addon" lazy>
         <quest-template-addon-tab-pane></quest-template-addon-tab-pane>
       </el-tab-pane>
-      <el-tab-pane label="发放奖励" name="quest_offer_reward" lazy>
-        <quest-offer-reward-tab-pane></quest-offer-reward-tab-pane>
-      </el-tab-pane>
       <el-tab-pane label="提交物品" name="quest_request_items" lazy>
         <quest-request-items-tab-pane></quest-request-items-tab-pane>
+      </el-tab-pane>
+      <el-tab-pane label="发放奖励" name="quest_offer_reward" lazy>
+        <quest-offer-reward-tab-pane></quest-offer-reward-tab-pane>
       </el-tab-pane>
       <el-tab-pane label="开始生物" name="creature_quest_starter" lazy>
         <creature-quest-starter></creature-quest-starter>
