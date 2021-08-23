@@ -10,8 +10,11 @@ export default {
     achievements: [],
     achievementCriterias: [],
     areaTables: [],
+    currencyCategories: [],
+    currencyTypes: [],
     emotesTexts: [],
     items: [],
+    itemExtendedCosts: [],
     itemSets: [],
     questFactionRewards: [],
     questInfos: [],
@@ -69,6 +72,30 @@ export default {
         });
       });
     },
+    searchCurrencyCategoryDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("SEARCH_CURRENCY_CATEGORY_DBC");
+        ipcRenderer.on("SEARCH_CURRENCY_CATEGORY_DBC", (event, currencyCategories) => {
+          commit("SEARCH_CURRENCY_CATEGORY_DBC", currencyCategories);
+          resolve();
+        });
+        ipcRenderer.on("SEARCH_CURRENCY_CATEGORY_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    searchCurrencyTypeDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("SEARCH_CURRENCY_TYPE_DBC");
+        ipcRenderer.on("SEARCH_CURRENCY_TYPE_DBC", (event, currencyTypes) => {
+          commit("SEARCH_CURRENCY_TYPE_DBC", currencyTypes);
+          resolve();
+        });
+        ipcRenderer.on("SEARCH_CURRENCY_TYPE_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
     searchEmotesTextDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("SEARCH_EMOTES_TEXT_DBC");
@@ -89,6 +116,18 @@ export default {
           resolve();
         });
         ipcRenderer.on("SEARCH_ITEM_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    searchItemExtendedCostDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("SEARCH_ITEM_EXTENDED_COST_DBC");
+        ipcRenderer.on("SEARCH_ITEM_EXTENDED_COST_DBC", (event, itemExtendedCosts) => {
+          commit("SEARCH_ITEM_EXTENDED_COST_DBC", itemExtendedCosts);
+          resolve();
+        });
+        ipcRenderer.on("SEARCH_ITEM_EXTENDED_COST_DBC_REJECT", (event, error) => {
           reject(error);
         });
       });
@@ -276,6 +315,28 @@ export default {
         });
       });
     },
+    writeCurrencyCategoryDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("WRITE_CURRENCY_CATEGORY_DBC");
+        ipcRenderer.on("WRITE_CURRENCY_CATEGORY_DBC", (event) => {
+          resolve();
+        });
+        ipcRenderer.on("WRITE_CURRENCY_CATEGORY_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    writeCurrencyTypeDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("WRITE_CURRENCY_TYPE_DBC");
+        ipcRenderer.on("WRITE_CURRENCY_TYPE_DBC", (event) => {
+          resolve();
+        });
+        ipcRenderer.on("WRITE_CURRENCY_TYPE_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
     writeEmotesTextDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("WRITE_EMOTES_TEXT_DBC");
@@ -294,6 +355,17 @@ export default {
           resolve();
         });
         ipcRenderer.on("WRITE_ITEM_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    writeItemExtendedCostDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("WRITE_ITEM_EXTENDED_COST_DBC");
+        ipcRenderer.on("WRITE_ITEM_EXTENDED_COST_DBC", (event) => {
+          resolve();
+        });
+        ipcRenderer.on("WRITE_ITEM_EXTENDED_COST_DBC_REJECT", (event, error) => {
           reject(error);
         });
       });
@@ -434,11 +506,20 @@ export default {
     SEARCH_AREA_TABLE_DBC(state, areaTables) {
       state.areaTables = areaTables;
     },
+    SEARCH_CURRENCY_CATEGORY_DBC(state, currencyCategories) {
+      state.currencyCategories = currencyCategories;
+    },
+    SEARCH_CURRENCY_TYPE_DBC(state, currencyTypes) {
+      state.currencyTypes = currencyTypes;
+    },
     SEARCH_EMOTES_TEXT_DBC(state, emotesTexts) {
       state.emotesTexts = emotesTexts;
     },
     SEARCH_ITEM_DBC(state, items) {
       state.items = items;
+    },
+    SEARCH_ITEM_EXTENDED_COST_DBC(state, itemExtendedCosts) {
+      state.itemExtendedCosts = itemExtendedCosts;
     },
     SEARCH_ITEM_SET_DBC(state, itemSets) {
       state.itemSets = itemSets;

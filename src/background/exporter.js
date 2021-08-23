@@ -53,6 +53,40 @@ ipcMain.on("SEARCH_AREA_TABLE_DBC", (event) => {
     });
 });
 
+ipcMain.on("SEARCH_CURRENCY_CATEGORY_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_currency_category");
+
+  queryBuilder
+    .then((rows) => {
+      global.currencyCategories = rows;
+      event.reply("SEARCH_CURRENCY_CATEGORY_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_CURRENCY_CATEGORY_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
+ipcMain.on("SEARCH_CURRENCY_TYPE_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_currency_types");
+
+  queryBuilder
+    .then((rows) => {
+      global.currencyTypes = rows;
+      event.reply("SEARCH_CURRENCY_TYPE_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_CURRENCY_TYPE_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
 ipcMain.on("SEARCH_EMOTES_TEXT_DBC", (event) => {
   let queryBuilder = knex.select().from("foxy.dbc_emotes_text");
 
@@ -80,6 +114,23 @@ ipcMain.on("SEARCH_ITEM_DBC", (event) => {
     })
     .catch((error) => {
       event.reply("SEARCH_ITEM_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
+ipcMain.on("SEARCH_ITEM_EXTENDED_COST_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_item_extended_cost");
+
+  queryBuilder
+    .then((rows) => {
+      global.itemExtendedCosts = rows;
+      event.reply("SEARCH_ITEM_EXTENDED_COST_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_ITEM_EXTENDED_COST_DBC_REJECT", error);
       event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     })
     .finally(() => {
@@ -290,6 +341,28 @@ ipcMain.on("WRITE_AREA_TABLE_DBC", (event) => {
     });
 });
 
+ipcMain.on("WRITE_CURRENCY_CATEGORY_DBC", (event) => {
+  DBC.write(`${path}/CurrencyCategory.dbc`, global.currencyCategories)
+    .then(() => {
+      event.reply("WRITE_CURRENCY_CATEGORY_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_CURRENCY_CATEGORY_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_CURRENCY_TYPE_DBC", (event) => {
+  DBC.write(`${path}/CurrencyTypes.dbc`, global.currencyTypes)
+    .then(() => {
+      event.reply("WRITE_CURRENCY_TYPE_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_CURRENCY_TYPE_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
 ipcMain.on("WRITE_EMOTES_TEXT_DBC", (event) => {
   DBC.write(`${path}/EmotesText.dbc`, global.emotesTexts)
     .then(() => {
@@ -308,6 +381,17 @@ ipcMain.on("WRITE_ITEM_DBC", (event) => {
     })
     .catch((error) => {
       event.reply("WRITE_ITEM_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_ITEM_EXTENDED_COST_DBC", (event) => {
+  DBC.write(`${path}/ItemExtendedCost.dbc`, global.itemExtendedCosts)
+    .then(() => {
+      event.reply("WRITE_ITEM_EXTENDED_COST_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_ITEM_EXTENDED_COST_DBC_REJECT", error);
       event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     });
 });

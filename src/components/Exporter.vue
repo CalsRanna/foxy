@@ -93,6 +93,22 @@
             ，共{{ areaTables }}条数据
           </span>
         </li>
+        <li v-if="checkedDbcs.indexOf('CurrencyCategory') > -1">
+          <i class="el-icon-loading" v-if="isSearchingCurrencyCategoryDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备CurrencyCategory数据
+          <span v-if="!isSearchingCurrencyCategoryDbc">
+            ，共{{ currencyCategories }}条数据
+          </span>
+        </li>
+        <li v-if="checkedDbcs.indexOf('CurrencyType') > -1">
+          <i class="el-icon-loading" v-if="isSearchingCurrencyTypeDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备CurrencyType数据
+          <span v-if="!isSearchingCurrencyTypeDbc">
+            ，共{{ currencyTypes }}条数据
+          </span>
+        </li>
         <li v-if="checkedDbcs.indexOf('EmotesText') > -1">
           <i class="el-icon-loading" v-if="isSearchingEmotesTextDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -106,6 +122,12 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备Item数据
           <span v-if="!isSearchingItemDbc"> ，共{{ items }}条数据 </span>
+        </li>
+        <li v-if="checkedDbcs.indexOf('ItemExtendedCost') > -1">
+          <i class="el-icon-loading" v-if="isSearchingItemExtendedCostDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备ItemExtendedCost数据
+          <span v-if="!isSearchingItemExtendedCostDbc"> ，共{{ itemExtendedCosts }}条数据 </span>
         </li>
         <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
           <i class="el-icon-loading" v-if="isSearchingItemSetDbc"></i>
@@ -209,6 +231,16 @@
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
             写入AreaTable.dbc
           </li>
+          <li v-if="checkedDbcs.indexOf('CurrencyCategory') > -1">
+            <i class="el-icon-loading" v-if="isWritingCurrencyCategoryDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入CurrencyCategory.dbc
+          </li>
+          <li v-if="checkedDbcs.indexOf('CurrencyType') > -1">
+            <i class="el-icon-loading" v-if="isWritingCurrencyTypeDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入CurrencyType.dbc
+          </li>
           <li v-if="checkedDbcs.indexOf('EmotesText') > -1">
             <i class="el-icon-loading" v-if="isWritingEmotesTextDbc"></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -218,6 +250,11 @@
             <i class="el-icon-loading" v-if="isWritingItemDbc"></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
             写入Item.dbc
+          </li>
+          <li v-if="checkedDbcs.indexOf('ItemExtendedCost') > -1">
+            <i class="el-icon-loading" v-if="isWritingItemExtendedCostDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入ItemExtendedCost.dbc
           </li>
           <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
             <i class="el-icon-loading" v-if="isWritingItemSetDbc"></i>
@@ -294,8 +331,11 @@ const options = [
   "Achievement",
   "AchievementCriteria",
   "AreaTable",
+  "CurrencyCategory",
+  "CurrencyType",
   "EmotesText",
   "Item",
+  "ItemExtendedCost",
   "ItemSet",
   "QuestFactionReward",
   "QuestInfo",
@@ -326,8 +366,11 @@ export default {
       isSearchingAchievementDbc: true,
       isSearchingAchievementCriteriaDbc: true,
       isSearchingAreaTableDbc: true,
+      isSearchingCurrencyCategoryDbc: true,
+      isSearchingCurrencyTypeDbc: true,
       isSearchingEmotesTextDbc: true,
       isSearchingItemDbc: true,
+      isSearchingItemExtendedCostDbc: true,
       isSearchingItemSetDbc: true,
       isSearchingQuestFactionRewardDbc: true,
       isSearchingQuestInfoDbc: true,
@@ -341,8 +384,11 @@ export default {
       isWritingAchievementDbc: true,
       isWritingAchievementCriteriaDbc: true,
       isWritingAreaTableDbc: true,
+      isWritingCurrencyCategoryDbc: true,
+      isWritingCurrencyTypeDbc: true,
       isWritingEmotesTextDbc: true,
       isWritingItemDbc: true,
+      isWritingItemExtendedCostDbc: true,
       isWritingItemSetDbc: true,
       isWritingQuestFactionRewardDbc: true,
       isWritingQuestInfoDbc: true,
@@ -361,8 +407,11 @@ export default {
       "achievements",
       "achievementCriterias",
       "areaTables",
+      "currencyCategories",
+      "currencyTypes",
       "emotesTexts",
       "items",
+      "itemExtendedCosts",
       "itemSets",
       "questFactionRewards",
       "questInfos",
@@ -381,8 +430,11 @@ export default {
       "searchAchievementDbc",
       "searchAchievementCriteriaDbc",
       "searchAreaTableDbc",
+      "searchCurrencyCategoryDbc",
+      "searchCurrencyTypeDbc",
       "searchEmotesTextDbc",
       "searchItemDbc",
+      "searchItemExtendedCostDbc",
       "searchItemSetDbc",
       "searchQuestFactionRewardDbc",
       "searchQuestInfoDbc",
@@ -396,8 +448,11 @@ export default {
       "writeAchievementDbc",
       "writeAchievementCriteriaDbc",
       "writeAreaTableDbc",
+      "writeCurrencyCategoryDbc",
+      "writeCurrencyTypeDbc",
       "writeEmotesTextDbc",
       "writeItemDbc",
+      "writeItemExtendedCostDbc",
       "writeItemSetDbc",
       "writeQuestFactionRewardDbc",
       "writeQuestInfoDbc",
@@ -424,8 +479,11 @@ export default {
       this.isSearchingAchievementDbc = true;
       this.isSearchingAchievementCriteriaDbc = true;
       this.isSearchingAreaTableDbc = true;
+      this.isSearchingCurrencyCategoryDbc = true;
+      this.isSearchingCurrencyTypeDbc = true;
       this.isSearchingEmotesTextDbc = true;
       this.isSearchingItemDbc = true;
+      this.isSearchingItemExtendedCostDbc = true;
       this.isSearchingItemSetDbc = true;
       this.isSearchingQuestFactionRewardDbc = true;
       this.isSearchingQuestInfoDbc = true;
@@ -439,8 +497,11 @@ export default {
       this.isWritingAchievementDbc = true;
       this.isWritingAchievementCriteriaDbc = true;
       this.isWritingAreaTableDbc = true;
+      this.isWritingCurrencyCategoryDbc = true;
+      this.isWritingCurrencyTypeDbc = true;
       this.isWritingEmotesTextDbc = true;
       this.isWritingItemDbc = true;
+      this.isWritingItemExtendedCostDbc = true;
       this.isWritingItemSetDbc = true;
       this.isWritingQuestFactionRewardDbc = true;
       this.isWritingQuestInfoDbc = true;
@@ -484,6 +545,20 @@ export default {
               })
             );
             break;
+          case "CurrencyCategory":
+            promises.push(
+              this.searchCurrencyCategoryDbc().then(() => {
+                this.isSearchingCurrencyCategoryDbc = false;
+              })
+            );
+            break;
+          case "CurrencyType":
+            promises.push(
+              this.searchCurrencyTypeDbc().then(() => {
+                this.isSearchingCurrencyTypeDbc = false;
+              })
+            );
+            break;
           case "EmotesText":
             promises.push(
               this.searchEmotesTextDbc().then(() => {
@@ -495,6 +570,13 @@ export default {
             promises.push(
               this.searchItemDbc().then(() => {
                 this.isSearchingItemDbc = false;
+              })
+            );
+            break;
+          case "ItemExtendedCost":
+            promises.push(
+              this.searchItemExtendedCostDbc().then(() => {
+                this.isSearchingItemExtendedCostDbc = false;
               })
             );
             break;
@@ -606,6 +688,20 @@ export default {
               })
             );
             break;
+          case "CurrencyCategory":
+            promises.push(
+              this.writeCurrencyCategoryDbc().then(() => {
+                this.isWritingCurrencyCategoryDbc = false;
+              })
+            );
+            break;
+          case "CurrencyType":
+            promises.push(
+              this.writeCurrencyTypeDbc().then(() => {
+                this.isWritingCurrencyTypeDbc = false;
+              })
+            );
+            break;
           case "EmotesText":
             promises.push(
               this.writeEmotesTextDbc().then(() => {
@@ -617,6 +713,13 @@ export default {
             promises.push(
               this.writeItemDbc().then(() => {
                 this.isWritingItemDbc = false;
+              })
+            );
+            break;
+          case "ItemExtendedCost":
+            promises.push(
+              this.writeItemExtendedCostDbc().then(() => {
+                this.isWritingItemExtendedCostDbc = false;
               })
             );
             break;
