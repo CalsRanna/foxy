@@ -20,6 +20,9 @@ import creatureTemplateSpell from "./creatureTemplateSpell";
 import creatureOnKillReputation from "./creatureOnKillReputation";
 import creatureEquipTemplate from "./creatureEquipTemplate";
 import creatureQuestItem from "./creatureQuestItem";
+import currencyCategory from "./currencyCategory";
+import currencyCategorySelector from "./currencyCategorySelector";
+import currencyType from "./currencyType";
 import npcVendor from "./npcVendor";
 import npcTrainer from "./npcTrainer";
 import creatureLootTemplate from "./creatureLootTemplate";
@@ -127,6 +130,9 @@ export default new Vuex.Store({
     creatureOnKillReputation,
     creatureEquipTemplate,
     creatureQuestItem,
+    currencyCategory,
+    currencyCategorySelector,
+    currencyType,
     emoteSelector,
     emoteText,
     npcVendor,

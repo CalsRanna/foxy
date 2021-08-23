@@ -42,6 +42,17 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          style="margin-top: 16px"
+          @click.native="() => navigate('/currency')"
+        >
+          <p class="summary-title">货币<span>Currency</span></p>
+          <p class="summary-content">除金币外的其他货币</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/emote-text')"
         >
           <p class="summary-title">表情文本<span>Emotes Text</span></p>

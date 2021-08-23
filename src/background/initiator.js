@@ -46,6 +46,8 @@ import {
   LOAD_DBC_SPELL_RANGES,
   LOAD_DBC_TALENTS,
   LOAD_DBC_TALENT_TABS,
+  LOAD_DBC_CURRENCY_TYPES,
+  LOAD_DBC_CURRENCY_CATEGORIES,
 } from "../constants";
 
 const DBC = require("warcrafty");
@@ -112,47 +114,49 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
     .raw(dbcDatabaseSql)
     .then(() => {
       Promise.all([
-        knex.raw(dbcAchievementSql).then(() => {}),
-        knex.raw(dbcAchievementCategorySql).then(() => {}),
-        knex.raw(dbcAchievementCriteriaSql).then(() => {}),
-        knex.raw(dbcAreaTableSql).then(() => {}),
-        knex.raw(dbcCharTitleSql).then(() => {}),
-        knex.raw(dbcChrClassesSql).then(() => {}),
-        knex.raw(dbcChrRacesSql).then(() => {}),
-        knex.raw(dbcCreatureDisplayInfoSql).then(() => {}),
-        knex.raw(dbcCreatureModelDataSql).then(() => {}),
-        knex.raw(dbcCreatureSpellDataSql).then(() => {}),
-        knex.raw(dbcEmotesSql).then(() => {}),
-        knex.raw(dbcEmotesTextSql).then(() => {}),
-        knex.raw(dbcFactionSql).then(() => {}),
-        knex.raw(dbcFactionTemplateSql).then(() => {}),
-        knex.raw(dbcGameObjectDisplayInfoSql).then(() => {}),
-        knex.raw(dbcItemDisplayInfoSql).then(() => {}),
-        knex.raw(dbcItemRandomPropertiesSql).then(() => {}),
-        knex.raw(dbcItemRandomSuffixSql).then(() => {}),
-        knex.raw(dbcItemSetSql).then(() => {}),
-        knex.raw(dbcItemSql).then(() => {}),
-        knex.raw(dbcLockSql).then(() => {}),
-        knex.raw(dbcLockTypeSql).then(() => {}),
-        knex.raw(dbcMapSql).then(() => {}),
-        knex.raw(dbcQuestInfoSql).then(() => {}),
-        knex.raw(dbcQuestSortSql).then(() => {}),
-        knex.raw(dbcQuestFactionRewardSql).then(() => {}),
-        knex.raw(dbcScalingStatDistributionSql).then(() => {}),
-        knex.raw(dbcScalingStatValuesSql).then(() => {}),
-        knex.raw(dbcSpellCastTimesSql).then(() => {}),
-        knex.raw(dbcSpellCategorySql).then(() => {}),
-        knex.raw(dbcSpellDescriptionVariablesSql).then(() => {}),
-        knex.raw(dbcSpellDifficultySql).then(() => {}),
-        knex.raw(dbcSpellDispelTypeSql).then(() => {}),
-        knex.raw(dbcSpellDurationSql).then(() => {}),
-        knex.raw(dbcSpellIconSql).then(() => {}),
-        knex.raw(dbcSpellItemEnchantmentSql).then(() => {}),
-        knex.raw(dbcSpellMechanicSql).then(() => {}),
-        knex.raw(dbcSpellRangeSql).then(() => {}),
-        knex.raw(dbcSpellSql).then(() => {}),
-        knex.raw(dbcTalentSql).then(() => {}),
-        knex.raw(dbcTalentTabSql).then(() => {}),
+        knex.raw(dbcAchievementSql).then(() => { }),
+        knex.raw(dbcAchievementCategorySql).then(() => { }),
+        knex.raw(dbcAchievementCriteriaSql).then(() => { }),
+        knex.raw(dbcAreaTableSql).then(() => { }),
+        knex.raw(dbcCharTitleSql).then(() => { }),
+        knex.raw(dbcChrClassesSql).then(() => { }),
+        knex.raw(dbcChrRacesSql).then(() => { }),
+        knex.raw(dbcCreatureDisplayInfoSql).then(() => { }),
+        knex.raw(dbcCreatureModelDataSql).then(() => { }),
+        knex.raw(dbcCreatureSpellDataSql).then(() => { }),
+        knex.raw(DBC.toSql(`${path}/CurrencyCategory.dbc`)).then(() => { }),
+        knex.raw(DBC.toSql(`${path}/CurrencyTypes.dbc`)).then(() => { }),
+        knex.raw(dbcEmotesSql).then(() => { }),
+        knex.raw(dbcEmotesTextSql).then(() => { }),
+        knex.raw(dbcFactionSql).then(() => { }),
+        knex.raw(dbcFactionTemplateSql).then(() => { }),
+        knex.raw(dbcGameObjectDisplayInfoSql).then(() => { }),
+        knex.raw(dbcItemDisplayInfoSql).then(() => { }),
+        knex.raw(dbcItemRandomPropertiesSql).then(() => { }),
+        knex.raw(dbcItemRandomSuffixSql).then(() => { }),
+        knex.raw(dbcItemSetSql).then(() => { }),
+        knex.raw(dbcItemSql).then(() => { }),
+        knex.raw(dbcLockSql).then(() => { }),
+        knex.raw(dbcLockTypeSql).then(() => { }),
+        knex.raw(dbcMapSql).then(() => { }),
+        knex.raw(dbcQuestInfoSql).then(() => { }),
+        knex.raw(dbcQuestSortSql).then(() => { }),
+        knex.raw(dbcQuestFactionRewardSql).then(() => { }),
+        knex.raw(dbcScalingStatDistributionSql).then(() => { }),
+        knex.raw(dbcScalingStatValuesSql).then(() => { }),
+        knex.raw(dbcSpellCastTimesSql).then(() => { }),
+        knex.raw(dbcSpellCategorySql).then(() => { }),
+        knex.raw(dbcSpellDescriptionVariablesSql).then(() => { }),
+        knex.raw(dbcSpellDifficultySql).then(() => { }),
+        knex.raw(dbcSpellDispelTypeSql).then(() => { }),
+        knex.raw(dbcSpellDurationSql).then(() => { }),
+        knex.raw(dbcSpellIconSql).then(() => { }),
+        knex.raw(dbcSpellItemEnchantmentSql).then(() => { }),
+        knex.raw(dbcSpellMechanicSql).then(() => { }),
+        knex.raw(dbcSpellRangeSql).then(() => { }),
+        knex.raw(dbcSpellSql).then(() => { }),
+        knex.raw(dbcTalentSql).then(() => { }),
+        knex.raw(dbcTalentTabSql).then(() => { }),
       ])
         .then(() => {
           event.reply(INITIALIZE_MYSQL_CONNECTION);
@@ -324,6 +328,70 @@ ipcMain.on(LOAD_DBC_CHAR_TITLES, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_CHAR_TITLES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_CURRENCY_CATEGORIES, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_currency_category");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/CurrencyCategory.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_currency_category", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_CURRENCY_CATEGORIES);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_CURRENCY_CATEGORIES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_CURRENCY_CATEGORIES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_CURRENCY_CATEGORIES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_CURRENCY_CATEGORIES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_CURRENCY_TYPES, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_currency_types");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/CurrencyTypes.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_currency_types", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_CURRENCY_TYPES);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_CURRENCY_TYPES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_CURRENCY_TYPES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_CURRENCY_TYPES);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_CURRENCY_TYPES}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
