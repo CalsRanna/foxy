@@ -257,6 +257,18 @@ const routes = [
     component: () => import("@/views/AreaTable/AreaTableDetail"),
   },
   {
+    path: "/currency",
+    component: () => import("@/views/Currency/CurrencyTypeTable"),
+  },
+  {
+    path: "/currency/create",
+    component: () => import("@/views/Currency/CurrencyTypeDetail"),
+  },
+  {
+    path: "/currency/:id",
+    component: () => import("@/views/Currency/CurrencyTypeDetail"),
+  },
+  {
     path: "/quest-sort",
     component: () => import("@/views/QuestSort/QuestSortTable"),
   },

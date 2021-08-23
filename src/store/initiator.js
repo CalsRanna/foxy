@@ -50,6 +50,8 @@ import {
   LOAD_DBC_TALENT_TABS,
   CHECK_VERSION,
   TEST_MYSQL_CONNECTION,
+  LOAD_DBC_CURRENCY_TYPES,
+  LOAD_DBC_CURRENCY_CATEGORIES,
 } from "../constants";
 
 const GITHUB_RELEASE_URL =
@@ -251,6 +253,34 @@ export default {
         });
         ipcRenderer.on(
           `${LOAD_DBC_CREATURE_SPELL_DATAS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    loadDbcCurrencyCategories() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_CURRENCY_CATEGORIES);
+        ipcRenderer.on(LOAD_DBC_CURRENCY_CATEGORIES, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_CURRENCY_CATEGORIES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    loadDbcCurrencyTypes() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_CURRENCY_TYPES);
+        ipcRenderer.on(LOAD_DBC_CURRENCY_TYPES, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_CURRENCY_TYPES}_REJECT`,
           (event, error) => {
             reject(error);
           }
