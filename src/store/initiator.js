@@ -52,6 +52,7 @@ import {
   TEST_MYSQL_CONNECTION,
   LOAD_DBC_CURRENCY_TYPES,
   LOAD_DBC_CURRENCY_CATEGORIES,
+  LOAD_DBC_ITEM_EXTENDED_COSTS,
 } from "../constants";
 
 const GITHUB_RELEASE_URL =
@@ -367,6 +368,20 @@ export default {
         });
         ipcRenderer.on(
           `${LOAD_DBC_ITEM_DISPLAY_INFOS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    loadDbcItemExtendedCosts() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_ITEM_EXTENDED_COSTS);
+        ipcRenderer.on(LOAD_DBC_ITEM_EXTENDED_COSTS, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_ITEM_EXTENDED_COSTS}_REJECT`,
           (event, error) => {
             reject(error);
           }

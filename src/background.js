@@ -70,6 +70,8 @@ import "./background/spellLootTemplate";
 import "./background/referenceLootTemplateCard";
 import "./background/scalingStatDistribution";
 import "./background/scalingStatValue";
+import "./background/itemExtendedCost";
+import "./background/itemExtendedCostSelector";
 import "./background/itemSet";
 import "./background/pageText";
 import "./background/pageTextLocale";

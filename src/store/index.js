@@ -71,6 +71,8 @@ import spellLootTemplate from "./spellLootTemplate";
 import referenceLootTemplateCard from "./referenceLootTemplateCard";
 import scalingStatDistribution from "./scalingStatDistribution";
 import scalingStatValue from "./scalingStatValue";
+import itemExtendedCost from "./itemExtendedCost";
+import itemExtendedCostSelector from "./itemExtendedCostSelector";
 import itemSet from "./itemSet";
 import pageText from "./pageText";
 import pageTextLocale from "./pageTextLocale";
@@ -181,6 +183,8 @@ export default new Vuex.Store({
     referenceLootTemplateCard,
     scalingStatDistribution,
     scalingStatValue,
+    itemExtendedCost,
+    itemExtendedCostSelector,
     itemSet,
     pageText,
     pageTextLocale,

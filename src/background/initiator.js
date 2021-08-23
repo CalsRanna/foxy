@@ -48,6 +48,7 @@ import {
   LOAD_DBC_TALENT_TABS,
   LOAD_DBC_CURRENCY_TYPES,
   LOAD_DBC_CURRENCY_CATEGORIES,
+  LOAD_DBC_ITEM_EXTENDED_COSTS,
 } from "../constants";
 
 const DBC = require("warcrafty");
@@ -132,6 +133,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(dbcFactionTemplateSql).then(() => { }),
         knex.raw(dbcGameObjectDisplayInfoSql).then(() => { }),
         knex.raw(dbcItemDisplayInfoSql).then(() => { }),
+        knex.raw(DBC.toSql(`${path}/ItemExtendedCost.dbc`)).then(() => { }),
         knex.raw(dbcItemRandomPropertiesSql).then(() => { }),
         knex.raw(dbcItemRandomSuffixSql).then(() => { }),
         knex.raw(dbcItemSetSql).then(() => { }),
@@ -883,6 +885,40 @@ ipcMain.on(LOAD_DBC_ITEM_DISPLAY_INFOS, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_ITEM_DISPLAY_INFOS}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_ITEM_EXTENDED_COSTS, (event) => {
+  let queryBuilder = knex
+    .count("* as total")
+    .from("foxy.dbc_item_extended_cost");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows[0].total == 0) {
+        DBC.read(`${path}/ItemExtendedCost.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_item_extended_cost", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_ITEM_EXTENDED_COSTS);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_ITEM_EXTENDED_COSTS}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_ITEM_EXTENDED_COSTS}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_ITEM_EXTENDED_COSTS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_ITEM_EXTENDED_COSTS}_REJECT`, error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });

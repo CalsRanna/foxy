@@ -113,11 +113,11 @@
                     :tooltip="extendedCostTooltip"
                     slot="label"
                   ></hint-label>
-                  <el-input-number
+                  <item-extended-cost-selector
                     v-model="npcVendor.ExtendedCost"
                     controls-position="right"
                     placeholder="ExtendedCost"
-                  ></el-input-number>
+                  ></item-extended-cost-selector>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -142,6 +142,7 @@ import HintLabel from "@/components/HintLabel.vue";
 import { mapState, mapActions } from "vuex";
 import ItemTemplateName from "@/components/ItemTemplateName";
 import ItemTemplateSelector from "../../../components/ItemTemplateSelector.vue";
+import ItemExtendedCostSelector from "../../../components/ItemExtendedCostSelector.vue";
 
 export default {
   data() {
@@ -311,6 +312,7 @@ export default {
     HintLabel,
     ItemTemplateName,
     ItemTemplateSelector,
+    ItemExtendedCostSelector,
   },
 };
 </script>

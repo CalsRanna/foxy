@@ -57,6 +57,7 @@ export default {
       "loadDbcGameObjectDisplayInfos",
       "loadDbcItems",
       "loadDbcItemDisplayInfos",
+      "loadDbcItemExtendedCosts",
       "loadDbcItemRandomProperties",
       "loadDbcItemRandomSuffixes",
       "loadDbcItemSets",
@@ -116,9 +117,9 @@ export default {
         await this.loadDbcCreatureModelDatas();
         this.progressText = "加载CreatureSpellData.dbc";
         await this.loadDbcCreatureSpellDatas();
-        this.progressText = "CurrencyCategory.dbc";
+        this.progressText = "加载CurrencyCategory.dbc";
         await this.loadDbcCurrencyCategories();
-        this.progressText = "CurrencyTypes.dbc";
+        this.progressText = "加载CurrencyTypes.dbc";
         await this.loadDbcCurrencyTypes();
         this.progressText = "加载Emotes.dbc";
         await this.loadDbcEmotes();
@@ -134,6 +135,8 @@ export default {
         await this.loadDbcItems();
         this.progressText = "加载ItemDisplayInfo.dbc";
         await this.loadDbcItemDisplayInfos();
+        this.progressText = "加载ItemExtendedCost.dbc";
+        await this.loadDbcItemExtendedCosts();
         this.progressText = "加载ItemRandomProperties.dbc";
         await this.loadDbcItemRandomProperties();
         this.progressText = "加载ItemRandomSuffix.dbc";
