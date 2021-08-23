@@ -144,6 +144,18 @@ const routes = [
     component: () => import("@/views/ItemSet/ItemSetDetail"),
   },
   {
+    path: "/item-extended-cost",
+    component: () => import("@/views/ItemExtendedCost/ItemExtendedCostTable"),
+  },
+  {
+    path: "/item-extended-cost/create",
+    component: () => import("@/views/ItemExtendedCost/ItemExtendedCostDetail"),
+  },
+  {
+    path: "/item-extended-cost/:id",
+    component: () => import("@/views/ItemExtendedCost/ItemExtendedCostDetail"),
+  },
+  {
     path: "/page-text",
     component: () => import("@/views/PageText/PageTextTable"),
   },

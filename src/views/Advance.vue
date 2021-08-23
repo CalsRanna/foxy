@@ -63,6 +63,16 @@
         <el-card
           shadow="hover"
           class="clickable-card"
+          @click.native="() => navigate('/item-extended-cost')"
+        >
+          <p class="summary-title">扩展价格<span>Item Extended Cost</span></p>
+          <p class="summary-content">购买物品时需要的其他货币</p>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card
+          shadow="hover"
+          class="clickable-card"
           @click.native="() => navigate('/item-set')"
         >
           <p class="summary-title">套装<span>Item Set</span></p>
