@@ -45,6 +45,7 @@ import "./background/gameObjectTemplateLocale";
 import "./background/gameObjectTemplateAddon";
 import "./background/gameObjectQuestItem";
 import "./background/gameObjectLootTemplate";
+import "./background/questRequestItemsLocale";
 import "./background/questTemplate";
 import "./background/questTemplateLocale";
 import "./background/questTemplateAddon";

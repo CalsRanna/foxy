@@ -43,6 +43,7 @@ import gameObjectTemplateLocale from "./gameObjectTemplateLocale";
 import gameObjectTemplateAddon from "./gameObjectTemplateAddon";
 import gameObjectQuestItem from "./gameObjectQuestItem";
 import gameObjectLootTemplate from "./gameObjectLootTemplate";
+import questRequestItemsLocale from "./questRequestItemsLocale";
 import questTemplate from "./questTemplate";
 import questTemplateLocale from "./questTemplateLocale";
 import questTemplateAddon from "./questTemplateAddon";
@@ -156,6 +157,7 @@ export default new Vuex.Store({
     gameObjectTemplateAddon,
     gameObjectQuestItem,
     gameObjectLootTemplate,
+    questRequestItemsLocale,
     questTemplate,
     questTemplateLocale,
     questTemplateAddon,
