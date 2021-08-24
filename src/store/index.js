@@ -48,6 +48,7 @@ import questTemplate from "./questTemplate";
 import questTemplateLocale from "./questTemplateLocale";
 import questTemplateAddon from "./questTemplateAddon";
 import questOfferReward from "./questOfferReward";
+import questOfferRewardLocale from "./questOfferRewardLocale";
 import questRequestItems from "./questRequestItems";
 import creatureQuestStarter from "./creatureQuestStarter";
 import creatureQuestEnder from "./creatureQuestEnder";
@@ -162,6 +163,7 @@ export default new Vuex.Store({
     questTemplateLocale,
     questTemplateAddon,
     questOfferReward,
+    questOfferRewardLocale,
     questRequestItems,
     creatureQuestStarter,
     creatureQuestEnder,

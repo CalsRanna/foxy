@@ -1,10 +1,7 @@
 <template>
   <el-form :model="questOfferReward" label-position="right" label-width="120px">
     <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
-      <el-card
-        :body-style="{ padding: '22px 20px 0 20px' }"
-        style="margin-top: 1px"
-      >
+      <el-card :body-style="{ padding: '22px 20px 0 20px' }" style="margin-top: 1px">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-form-item label="编号">
@@ -20,10 +17,10 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="奖励文本">
-              <el-input
+              <quest-offer-reward-localizer
                 v-model="questOfferReward.RewardText"
                 placeholder="RewardText"
-              ></el-input>
+              ></quest-offer-reward-localizer>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -37,41 +34,26 @@
           </el-col>
         </el-row>
       </el-card>
-      <el-card
-        :body-style="{ padding: '22px 20px 0 20px' }"
-        style="margin-top: 16px"
-      >
+      <el-card :body-style="{ padding: '22px 20px 0 20px' }" style="margin-top: 16px">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-form-item label="表情">
-              <emote-selector
-                v-model="questOfferReward.Emote1"
-                placeholder="Emote1"
-              ></emote-selector>
+              <emote-selector v-model="questOfferReward.Emote1" placeholder="Emote1"></emote-selector>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="表情">
-              <emote-selector
-                v-model="questOfferReward.Emote2"
-                placeholder="Emote2"
-              ></emote-selector>
+              <emote-selector v-model="questOfferReward.Emote2" placeholder="Emote2"></emote-selector>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="表情">
-              <emote-selector
-                v-model="questOfferReward.Emote3"
-                placeholder="Emote3"
-              ></emote-selector>
+              <emote-selector v-model="questOfferReward.Emote3" placeholder="Emote3"></emote-selector>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="表情">
-              <emote-selector
-                v-model="questOfferReward.Emote4"
-                placeholder="Emote4"
-              ></emote-selector>
+              <emote-selector v-model="questOfferReward.Emote4" placeholder="Emote4"></emote-selector>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -114,9 +96,7 @@
       </el-card>
     </div>
     <el-card style="margin-top: 16px">
-      <el-button type="primary" :loading="loading" @click="store">
-        保存
-      </el-button>
+      <el-button type="primary" :loading="loading" @click="store">保存</el-button>
       <el-button @click="cancel">返回</el-button>
     </el-card>
   </el-form>
@@ -125,6 +105,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import EmoteSelector from "@/components/EmoteSelector.vue";
+import QuestOfferRewardLocalizer from "./QuestOfferRewardLocalizer";
 
 export default {
   data() {
@@ -138,6 +119,7 @@ export default {
     ...mapState("app", ["clientHeight"]),
     ...mapState("questTemplate", ["questTemplate"]),
     ...mapState("questOfferReward", ["questOfferReward"]),
+    ...mapState("questOfferRewardLocale", ["questOfferRewardLocales"]),
     credential() {
       return {
         ID: this.questTemplate.ID,
@@ -151,6 +133,7 @@ export default {
       "updateQuestOfferReward",
       "createQuestOfferReward",
     ]),
+    ...mapActions("questOfferRewardLocale", ["searchQuestOfferRewardLocales"]),
     calculateMaxHeight() {
       return this.clientHeight - 307;
     },
@@ -182,10 +165,16 @@ export default {
     },
     async init() {
       this.initing = true;
-      await this.findQuestOfferReward(this.credential);
+      await Promise.all([
+        this.findQuestOfferReward(this.credential),
+        this.searchQuestOfferRewardLocales(this.credential),
+      ]);
       if (this.questOfferReward.ID == undefined) {
         this.creating = true;
-        await this.createQuestOfferReward(this.credential);
+        await Promise.all([
+          this.createQuestOfferReward(this.credential),
+          this.searchQuestOfferRewardLocales({ ID: 0 }),
+        ]);
       }
       this.initing = false;
     },
@@ -193,6 +182,6 @@ export default {
   mounted() {
     this.init();
   },
-  components: { EmoteSelector },
+  components: { EmoteSelector, QuestOfferRewardLocalizer },
 };
 </script>
