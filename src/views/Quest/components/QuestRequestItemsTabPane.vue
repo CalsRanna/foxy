@@ -1,14 +1,7 @@
 <template>
-  <el-form
-    :model="questRequestItems"
-    label-position="right"
-    label-width="120px"
-  >
+  <el-form :model="questRequestItems" label-position="right" label-width="120px">
     <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
-      <el-card
-        :body-style="{ padding: '22px 20px 0 20px' }"
-        style="margin-top: 1px"
-      >
+      <el-card :body-style="{ padding: '22px 20px 0 20px' }" style="margin-top: 1px">
         <el-row :gutter="16">
           <el-col :span="6">
             <el-form-item label="编号">
@@ -24,10 +17,10 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="完成文本">
-              <el-input
+              <quest-request-items-localizer
                 v-model="questRequestItems.CompletionText"
                 placeholder="CompletionText"
-              ></el-input>
+              ></quest-request-items-localizer>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -43,10 +36,7 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="完成表情">
-              <el-input
-                v-model="questRequestItems.EmoteOnComplete"
-                placeholder="EmoteOnComplete"
-              ></el-input>
+              <el-input v-model="questRequestItems.EmoteOnComplete" placeholder="EmoteOnComplete"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -61,15 +51,14 @@
       </el-card>
     </div>
     <el-card style="margin-top: 16px">
-      <el-button type="primary" :loading="loading" @click="store">
-        保存
-      </el-button>
+      <el-button type="primary" :loading="loading" @click="store">保存</el-button>
       <el-button @click="cancel">返回</el-button>
     </el-card>
   </el-form>
 </template>
 
 <script>
+import QuestRequestItemsLocalizer from "./QuestRequestItemsLocalizer.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -84,6 +73,7 @@ export default {
     ...mapState("app", ["clientHeight"]),
     ...mapState("questTemplate", ["questTemplate"]),
     ...mapState("questRequestItems", ["questRequestItems"]),
+    ...mapState("questRequestItemsLocale", ["questRequestItemsLocale"]),
     credential() {
       return {
         ID: this.questTemplate.ID,
@@ -97,6 +87,7 @@ export default {
       "updateQuestRequestItems",
       "createQuestRequestItems",
     ]),
+    ...mapActions("questRequestItemsLocale", ["searchQuestRequestItemsLocales"]),
     calculateMaxHeight() {
       return this.clientHeight - 307;
     },
@@ -128,10 +119,16 @@ export default {
     },
     async init() {
       this.initing = true;
-      await this.findQuestRequestItems(this.credential);
+      await Promise.all([
+        this.findQuestRequestItems(this.credential),
+        this.searchQuestRequestItemsLocales(this.credential),
+      ]);
       if (this.questRequestItems.ID == undefined) {
         this.creating = true;
-        await this.createQuestRequestItems(this.credential);
+        await Promise.all([
+          this.createQuestRequestItems(this.credential),
+          this.searchQuestRequestItemsLocales({ ID: 0 }),
+        ]);
       }
       this.initing = false;
     },
@@ -139,5 +136,8 @@ export default {
   mounted() {
     this.init();
   },
+  components: {
+    QuestRequestItemsLocalizer
+  }
 };
 </script>
