@@ -16,10 +16,10 @@
       top="8vh"
     >
       <div slot="title">
-        <span style="font-size: 18px; color: #303133; margin-right: 16px">完成文本本地化</span>
+        <span style="font-size: 18px; color: #303133; margin-right: 16px">奖励文本本地化</span>
         <el-button type="primary" size="mini" @click="create">新增</el-button>
       </div>
-      <el-table :data="questRequestItemsLocales" :max-height="calculateMaxHeight()">
+      <el-table :data="questOfferRewardLocales" :max-height="calculateMaxHeight()">
         <el-table-column width="48">
           <el-button
             type="danger"
@@ -35,9 +35,9 @@
             <el-input v-model="scope.row.locale" placeholder="locale"></el-input>
           </template>
         </el-table-column>
-        <el-table-column label="完成文本">
+        <el-table-column label="奖励文本">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.CompletionText" placeholder="CompletionText"></el-input>
+            <el-input v-model="scope.row.RewardText" placeholder="RewardText"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="VerifiedBuild" label="VerifiedBuild" width="128">
@@ -81,10 +81,10 @@ export default {
   computed: {
     ...mapState("app", ["clientHeight"]),
     ...mapState("questTemplate", ["questTemplate"]),
-    ...mapState("questRequestItemsLocale", ["questRequestItemsLocales"]),
+    ...mapState("questOfferRewardLocale", ["questOfferRewardLocales"]),
   },
   methods: {
-    ...mapActions("questRequestItemsLocale", ["storeQuestRequestItemsLocales"]),
+    ...mapActions("questOfferRewardLocale", ["storeQuestOfferRewardLocales"]),
     calculateMaxHeight() {
       return this.clientHeight * 0.84 - 161;
     },
@@ -98,17 +98,17 @@ export default {
       this.visible = true;
     },
     create() {
-      this.questRequestItemsLocales.push({
+      this.questOfferRewardLocales.push({
         ID: this.questTemplate.entry,
         VerifiedBuild: 0,
       });
     },
     destroy(index) {
-      this.questRequestItemsLocales.splice(index, 1);
+      this.questOfferRewardLocales.splice(index, 1);
     },
     async store() {
       this.loading = true;
-      await this.storeQuestRequestItemsLocales(this.questRequestItemsLocales);
+      await this.storeQuestOfferRewardLocales(this.questOfferRewardLocales);
       this.$notify({
         title: "保存成功",
         position: "bottom-left",
