@@ -147,7 +147,7 @@ export default {
               .then(() => {
                 this.$notify({
                   title: "复制成功",
-                  position: "bottom-left",
+                  position: "top-right",
                   type: "success",
                 });
                 instance.confirmButtonLoading = false;
@@ -181,7 +181,7 @@ export default {
                 .then(() => {
                   this.$notify({
                     title: "删除成功",
-                    position: "bottom-left",
+                    position: "top-right",
                     type: "success",
                   });
                   instance.confirmButtonLoading = false;

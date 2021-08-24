@@ -109,7 +109,7 @@ export default {
         await this.testMysqlConnection(this.mysqlConfig);
         this.$notify({
           title: "连接成功",
-          position: "bottom-left",
+          position: "top-right",
           type: "success",
         });
         this.loading = false;
@@ -127,7 +127,7 @@ export default {
         this.loading = false;
         this.$notify({
           title: "保存成功",
-          position: "bottom-left",
+          position: "top-right",
           type: "success",
         });
         ipcRenderer.send("RELOAD_APP");

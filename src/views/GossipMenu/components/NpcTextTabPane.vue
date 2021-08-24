@@ -717,7 +717,7 @@ export default {
         await this.storeNpcText(this.npcText);
         this.$notify({
           title: "保存成功",
-          position: "bottom-left",
+          position: "top-right",
           type: "success",
         });
         this.creating = false;
@@ -728,7 +728,7 @@ export default {
         });
         this.$notify({
           title: "删除成功",
-          position: "bottom-left",
+          position: "top-right",
           type: "success",
         });
       }

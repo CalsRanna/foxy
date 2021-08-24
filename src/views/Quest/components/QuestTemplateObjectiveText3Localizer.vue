@@ -126,7 +126,7 @@ export default {
       await this.storeQuestTemplateLocales(this.questTemplateLocales);
       this.$notify({
         title: "保存成功",
-        position: "bottom-left",
+        position: "top-right",
         type: "success",
       });
       this.loading = false;

@@ -109,7 +109,7 @@ export default {
       await this.storeNpcTextLocales(this.npcTextLocales);
       this.$notify({
         title: "保存成功",
-        position: "bottom-left",
+        position: "top-right",
         type: "success",
       });
       this.loading = false;
