@@ -24,7 +24,7 @@ export default {
             title: "更新提示",
             message: `检测到更新的版本，请下载使用。`,
             duration: 0,
-            position: "bottom-left",
+            position: "top-right",
           });
         }
       } catch (error) {}

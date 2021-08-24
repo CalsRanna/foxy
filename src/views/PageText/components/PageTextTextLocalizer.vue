@@ -123,7 +123,7 @@ export default {
       await this.storePageTextLocales(this.pageTextLocales);
       this.$notify({
         title: "保存成功",
-        position: "bottom-left",
+        position: "top-right",
         type: "success",
       });
       this.loading = false;

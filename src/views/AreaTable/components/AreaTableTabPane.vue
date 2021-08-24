@@ -250,7 +250,7 @@ export default {
         this.storeAreaTable(this.areaTable);
         this.$notify({
           title: "保存成功",
-          position: "bottom-left",
+          position: "top-right",
           type: "success",
         });
         this.creating = false;
@@ -261,7 +261,7 @@ export default {
         });
         this.$notify({
           title: "修改成功",
-          position: "bottom-left",
+          position: "top-right",
           type: "success",
         });
       }

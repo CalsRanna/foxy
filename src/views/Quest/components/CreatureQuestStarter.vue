@@ -130,7 +130,7 @@ export default {
         await this.storeCreatureQuestStarter(this.creatureQuestStarter);
         this.$notify({
           title: "保存成功",
-          position: "bottom-left",
+          position: "top-right",
           type: "success",
         });
       } else {
@@ -140,7 +140,7 @@ export default {
         });
         this.$notify({
           title: "修改成功",
-          position: "bottom-left",
+          position: "top-right",
           type: "success",
         });
       }
@@ -171,7 +171,7 @@ export default {
               .then(() => {
                 this.$notify({
                   title: "复制成功",
-                  position: "bottom-left",
+                  position: "top-right",
                   type: "success",
                 });
                 instance.confirmButtonLoading = false;
@@ -204,7 +204,7 @@ export default {
                 .then(() => {
                   this.$notify({
                     title: "删除成功",
-                    position: "bottom-left",
+                    position: "top-right",
                     type: "success",
                   });
                   instance.confirmButtonLoading = false;

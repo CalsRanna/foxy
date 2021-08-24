@@ -68,7 +68,7 @@ export default {
       this.storeDeveloperConfig({ debug: value });
       this.$notify({
         title: value === true ? "打开开发者模式" : "关闭开发者模式",
-        position: "bottom-left",
+        position: "top-right",
         type: "success",
       });
     },
@@ -79,7 +79,7 @@ export default {
         this.loading = false;
         this.$notify({
           title: "保存成功",
-          position: "bottom-left",
+          position: "top-right",
           type: "success",
         });
         ipcRenderer.send("RELOAD_APP");
