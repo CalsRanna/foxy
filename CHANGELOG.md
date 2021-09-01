@@ -1,3 +1,24 @@
+## [0.2.4](https://github.com/CalsRanna/foxy/compare/0.2.3...0.2.4) (2021-09-01)
+
+
+### Bug Fixes
+
+* **changlog:** add max height ([26ff8e8](https://github.com/CalsRanna/foxy/commit/26ff8e87fc7d96a9cdea9232864dcd170e0ffc92))
+* **table:** remove second pagination under table ([f77d91c](https://github.com/CalsRanna/foxy/commit/f77d91c7eb54792c6bd36720a2d0c29bc2777786))
+
+
+### Features
+
+* **achievement:** add achievement module ([9aa9b9d](https://github.com/CalsRanna/foxy/commit/9aa9b9d62e90f2dae2e5d70ea47aa14328033587))
+* **currency:** add currency module ([9195ec0](https://github.com/CalsRanna/foxy/commit/9195ec061bd24a5afa978c4262a0e9349ca3ac46))
+* **exporter:** add missing dbc export function ([c4b2ede](https://github.com/CalsRanna/foxy/commit/c4b2ede64aa7c8697458564c434f8fd15c8c8caf))
+* **item extended cost:** add item extended cost module ([fceb14b](https://github.com/CalsRanna/foxy/commit/fceb14b9ba41240975064426c53798614add5c8e))
+* **page text:** add page text module and related components ([8fc099c](https://github.com/CalsRanna/foxy/commit/8fc099cfd82b3e37a8ecab8e3b70d8c31c3a2b50))
+* **quest offer reward localizer:** add quest offer reward localizer ([402761c](https://github.com/CalsRanna/foxy/commit/402761cb3e18e68756c23dca17d8ae4bb0d23a36))
+* **quest request items localizer:** add quest request items localizer ([3529f01](https://github.com/CalsRanna/foxy/commit/3529f012da16edf7b6975c7d09e38c591a7828f8))
+
+
+
 ## [0.2.3](https://github.com/CalsRanna/foxy/compare/0.2.2...0.2.3) (2021-08-11)
 
 

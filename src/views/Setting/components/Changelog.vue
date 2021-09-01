@@ -1,6 +1,86 @@
 <template>
-  <div class="changelog" :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
+  <div
+    class="changelog"
+    :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+  >
     <el-card>
+      <div slot="header">
+        <h2>0.2.4 <small>2021-09-01</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>changlog:</strong> add max height
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/26ff8e87fc7d96a9cdea9232864dcd170e0ffc92"
+            text="(26ff8e8)"
+          />
+        </li>
+        <li>
+          <strong>table:</strong> remove second pagination under table
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/f77d91c7eb54792c6bd36720a2d0c29bc2777786"
+            text="(f77d91c)"
+          />
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>achievement:</strong> add achievement module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/9aa9b9d62e90f2dae2e5d70ea47aa14328033587"
+            text="(9aa9b9d)"
+          />
+        </li>
+        <li>
+          <strong>currency:</strong> add currency module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/9195ec061bd24a5afa978c4262a0e9349ca3ac46"
+            text="(9195ec0)"
+          />
+        </li>
+        <li>
+          <strong>exporter:</strong> add missing dbc export function
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/c4b2ede64aa7c8697458564c434f8fd15c8c8caf"
+            text="(c4b2ede)"
+          />
+        </li>
+        <li>
+          <strong>item extended cost:</strong> add item extended cost module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/fceb14b9ba41240975064426c53798614add5c8e"
+            text="(fceb14b)"
+          />
+        </li>
+        <li>
+          <strong>page text:</strong> add page text module and related
+          components
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/8fc099cfd82b3e37a8ecab8e3b70d8c31c3a2b50"
+            text="(8fc099c)"
+          />
+        </li>
+        <li>
+          <strong>quest offer reward localizer:</strong> add quest offer reward
+          localizer
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/402761cb3e18e68756c23dca17d8ae4bb0d23a36"
+            text="(402761c)"
+          />
+        </li>
+        <li>
+          <strong>quest request items localizer:</strong> add quest request
+          items localizer
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/3529f012da16edf7b6975c7d09e38c591a7828f8"
+            text="(3529f01)"
+          />
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
       <div slot="header">
         <h2>0.2.3 <small>2021-08-11</small></h2>
       </div>
