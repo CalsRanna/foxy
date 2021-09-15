@@ -55,7 +55,10 @@
         <div
           :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
         >
-          <el-card style="margin-top: 1px">
+          <el-card
+            :body-style="{ padding: '22px 20px 0 20px' }"
+            style="margin-top: 1px"
+          >
             <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="对话ID">
@@ -71,35 +74,20 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="编号">
-                  <el-input
+                  <el-input-number
                     v-model="gossipMenuOption.OptionID"
                     placeholder="OptionID"
-                  ></el-input>
+                    controls-position="right"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
-              <el-col :span="6">
-                <el-form-item label="图标">
-                  <el-select
-                    v-model="gossipMenuOption.OptionIcon"
-                    placeholder="rank"
-                  >
-                    <el-option
-                      v-for="(icon, index) in icons"
-                      :key="`icon-${index}`"
-                      :label="icon"
-                      :value="index"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="文本">
-                  <el-input
-                    v-model="gossipMenuOption.OptionText"
-                    placeholder="OptionText"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
+            </el-row>
+          </el-card>
+          <el-card
+            :body-style="{ padding: '22px 20px 0 20px' }"
+            style="margin-top: 16px"
+          >
+            <el-row :gutter="16">
               <el-col :span="6">
                 <el-form-item label="类型">
                   <el-select
@@ -126,11 +114,34 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="子选项编号">
+                <el-form-item label="图标">
+                  <el-select
+                    v-model="gossipMenuOption.OptionIcon"
+                    placeholder="rank"
+                  >
+                    <el-option
+                      v-for="(icon, index) in icons"
+                      :key="`icon-${index}`"
+                      :label="icon"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="文本">
                   <el-input
+                    v-model="gossipMenuOption.OptionText"
+                    placeholder="OptionText"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="子选项编号">
+                  <gossip-menu-selector
                     v-model="gossipMenuOption.ActionMenuID"
                     placeholder="ActionMenuID"
-                  ></el-input>
+                  ></gossip-menu-selector>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -142,11 +153,12 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="ActionPoiID">
-                  <el-input
-                    v-model="gossipMenuOption.ActionPoiID"
-                    placeholder="ActionPoiID"
-                  ></el-input>
+                <el-form-item label="BoxMoney">
+                  <el-input-number
+                    v-model="gossipMenuOption.BoxMoney"
+                    placeholder="BoxMoney"
+                    controls-position="right"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -158,11 +170,12 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="BoxMoney">
-                  <el-input
-                    v-model="gossipMenuOption.BoxMoney"
-                    placeholder="BoxMoney"
-                  ></el-input>
+                <el-form-item label="BoxBroadcastTextID">
+                  <el-input-number
+                    v-model="gossipMenuOption.BoxBroadcastTextID"
+                    placeholder="BoxBroadcastTextID"
+                    controls-position="right"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -174,11 +187,12 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="BoxBroadcastTextID">
-                  <el-input
-                    v-model="gossipMenuOption.BoxBroadcastTextID"
-                    placeholder="BoxBroadcastTextID"
-                  ></el-input>
+                <el-form-item label="ActionPoiID">
+                  <el-input-number
+                    v-model="gossipMenuOption.ActionPoiID"
+                    placeholder="ActionPoiID"
+                    controls-position="right"
+                  ></el-input-number>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -206,6 +220,7 @@
 import { icons, types } from "@/locales/gossipMenuOption";
 import { npcFlags } from "@/locales/creature";
 import FlagEditor from "@/components/FlagEditor";
+import GossipMenuSelector from "@/components/GossipMenuSelector";
 
 import { mapState, mapActions } from "vuex";
 
@@ -371,6 +386,7 @@ export default {
   },
   components: {
     FlagEditor,
+    GossipMenuSelector,
   },
 };
 </script>
