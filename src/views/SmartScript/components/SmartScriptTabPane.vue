@@ -19,7 +19,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="source_type">
+            <el-form-item label="类型">
               <el-select
                 v-model="smartScript.source_type"
                 filterable
@@ -35,7 +35,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="id">
+            <el-form-item label="编号">
               <el-input-number
                 v-model="smartScript.id"
                 controls-position="right"
@@ -47,7 +47,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="link">
+            <el-form-item label="链接">
               <el-input-number
                 v-model="smartScript.link"
                 controls-position="right"
@@ -59,7 +59,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="comment">
+            <el-form-item label="注解">
               <el-input
                 v-model="smartScript.comment"
                 placeholder="comment"
@@ -100,63 +100,59 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="标识">
-              <el-input
+              <flag-editor
                 v-model="smartScript.event_flags"
+                :flags="eventFlags"
+                title="事件标识编辑器"
                 placeholder="event_flags"
-              ></el-input>
+              ></flag-editor>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="event_phase_mask">
-              <el-input
+            <el-form-item label="事件阶段掩码">
+              <flag-editor
                 v-model="smartScript.event_phase_mask"
+                :flags="eventPhaseMasks"
+                title="事件阶段掩码编辑器"
                 placeholder="event_phase_mask"
+              ></flag-editor>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col
+            :span="6"
+            v-for="(eventParam, index) in matchedEventParams"
+            :key="`event-params-${index}`"
+          >
+            <el-form-item :label="eventParam.label">
+              <el-switch
+                v-model="smartScript[eventParam.field]"
+                :active-value="1"
+                :inactive-value="0"
+                v-if="eventParam.type === 'el-switch'"
+              ></el-switch>
+              <el-input-number
+                v-model="smartScript[eventParam.field]"
+                controls-position="right"
+                :placeholder="eventParam.field"
+                v-else-if="eventParam.type === 'el-input-number'"
+              ></el-input-number>
+              <gossip-menu-selector
+                v-model="smartScript[eventParam.field]"
+                :placeholder="eventParam.field"
+                v-else-if="eventParam.type === 'gossip-menu-selector'"
+              ></gossip-menu-selector>
+              <spell-selector
+                v-model="smartScript[eventParam.field]"
+                :placeholder="eventParam.field"
+                v-else-if="eventParam.type === 'spell-selector'"
+              ></spell-selector>
+              <el-input
+                v-model="smartScript[eventParam.field]"
+                :placeholder="eventParam.field"
+                v-else
               ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数1">
-              <el-input-number
-                v-model="smartScript.event_param1"
-                controls-position="right"
-                placeholder="event_param1"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数2">
-              <el-input-number
-                v-model="smartScript.event_param2"
-                controls-position="right"
-                placeholder="event_param2"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数3">
-              <el-input-number
-                v-model="smartScript.event_param3"
-                controls-position="right"
-                placeholder="event_param3"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数4">
-              <el-input-number
-                v-model="smartScript.event_param4"
-                controls-position="right"
-                placeholder="event_param4"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数5">
-              <el-input-number
-                v-model="smartScript.event_param5"
-                controls-position="right"
-                placeholder="event_param5"
-              ></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -184,49 +180,44 @@
           </el-col>
         </el-row>
         <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item label="参数1">
+          <el-col
+            :span="6"
+            v-for="(actionParam, index) in matchedActionParams"
+            :key="`action-params-${index}`"
+          >
+            <el-form-item :label="actionParam.label">
+              <el-switch
+                v-model="smartScript[actionParam.field]"
+                :active-value="1"
+                :inactive-value="0"
+                v-if="actionParam.type === 'el-switch'"
+              ></el-switch>
               <el-input-number
-                v-model="smartScript.action_param1"
+                v-model="smartScript[actionParam.field]"
                 controls-position="right"
-                placeholder="action_param1"
+                :placeholder="actionParam.field"
+                v-else-if="actionParam.type === 'el-input-number'"
               ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数2">
-              <el-input-number
-                v-model="smartScript.action_param2"
-                controls-position="right"
-                placeholder="action_param2"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数3">
-              <el-input-number
-                v-model="smartScript.action_param3"
-                controls-position="right"
-                placeholder="action_param3"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数4">
-              <el-input-number
-                v-model="smartScript.action_param4"
-                controls-position="right"
-                placeholder="action_param4"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数5">
-              <el-input-number
-                v-model="smartScript.action_param5"
-                controls-position="right"
-                placeholder="action_param5"
-              ></el-input-number>
+              <gossip-menu-selector
+                v-model="smartScript[actionParam.field]"
+                :placeholder="actionParam.field"
+                v-else-if="actionParam.type === 'gossip-menu-selector'"
+              ></gossip-menu-selector>
+              <map-selector
+                v-model="smartScript[actionParam.field]"
+                :placeholder="actionParam.field"
+                v-else-if="actionParam.type === 'map-selector'"
+              ></map-selector>
+              <spell-selector
+                v-model="smartScript[actionParam.field]"
+                :placeholder="actionParam.field"
+                v-else-if="actionParam.type === 'spell-selector'"
+              ></spell-selector>
+              <el-input
+                v-model="smartScript[actionParam.field]"
+                :placeholder="actionParam.field"
+                v-else
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -254,76 +245,44 @@
           </el-col>
         </el-row>
         <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item label="参数1">
+          <el-col
+            :span="6"
+            v-for="(targetParam, index) in matchedTargetParams"
+            :key="`action-params-${index}`"
+          >
+            <el-form-item :label="targetParam.label">
+              <el-switch
+                v-model="smartScript[targetParam.field]"
+                :active-value="1"
+                :inactive-value="0"
+                v-if="targetParam.type === 'el-switch'"
+              ></el-switch>
               <el-input-number
-                v-model="smartScript.target_param1"
+                v-model="smartScript[targetParam.field]"
                 controls-position="right"
-                placeholder="target_param1"
+                :placeholder="targetParam.field"
+                v-else-if="targetParam.type === 'el-input-number'"
               ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数2">
-              <el-input-number
-                v-model="smartScript.target_param2"
-                controls-position="right"
-                placeholder="target_param2"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数3">
-              <el-input-number
-                v-model="smartScript.target_param3"
-                controls-position="right"
-                placeholder="target_param3"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数4">
-              <el-input-number
-                v-model="smartScript.target_param4"
-                controls-position="right"
-                placeholder="target_param4"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="target_x">
-              <el-input-number
-                v-model="smartScript.target_x"
-                controls-position="right"
-                placeholder="target_x"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="target_y">
-              <el-input-number
-                v-model="smartScript.target_y"
-                controls-position="right"
-                placeholder="target_y"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="target_z">
-              <el-input-number
-                v-model="smartScript.target_z"
-                controls-position="right"
-                placeholder="target_z"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="target_o">
-              <el-input-number
-                v-model="smartScript.target_o"
-                controls-position="right"
-                placeholder="target_o"
-              ></el-input-number>
+              <gossip-menu-selector
+                v-model="smartScript[targetParam.field]"
+                :placeholder="targetParam.field"
+                v-else-if="targetParam.type === 'gossip-menu-selector'"
+              ></gossip-menu-selector>
+              <map-selector
+                v-model="smartScript[targetParam.field]"
+                :placeholder="targetParam.field"
+                v-else-if="targetParam.type === 'map-selector'"
+              ></map-selector>
+              <spell-selector
+                v-model="smartScript[targetParam.field]"
+                :placeholder="targetParam.field"
+                v-else-if="targetParam.type === 'spell-selector'"
+              ></spell-selector>
+              <el-input
+                v-model="smartScript[targetParam.field]"
+                :placeholder="targetParam.field"
+                v-else
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -342,9 +301,18 @@
 import {
   sourceTypes,
   eventTypes,
+  eventPhaseMasks,
+  eventFlags,
+  eventParams,
   actionTypes,
+  actionParams,
   targetTypes,
+  targetParams,
 } from "@/locales/smartScript";
+import FlagEditor from "@/components/FlagEditor";
+import GossipMenuSelector from "@/components/GossipMenuSelector";
+import MapSelector from "@/components/MapSelector";
+import SpellSelector from "@/components/SpellSelector";
 
 import { mapActions, mapState } from "vuex";
 
@@ -356,13 +324,33 @@ export default {
       creating: false,
       sourceTypes: sourceTypes,
       eventTypes: eventTypes,
+      eventPhaseMasks: eventPhaseMasks,
+      eventFlags: eventFlags,
+      eventParams: eventParams,
       actionTypes: actionTypes,
+      actionParams: actionParams,
       targetTypes: targetTypes,
+      targetParams: targetParams,
     };
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
     ...mapState("smartScript", ["smartScript"]),
+    matchedEventParams() {
+      return this.smartScript.event_type >= 0
+        ? this.eventParams[this.smartScript.event_type]
+        : this.eventParams[0];
+    },
+    matchedActionParams() {
+      return this.smartScript.action_type >= 0
+        ? this.actionParams[this.smartScript.action_type]
+        : this.actionParams[0];
+    },
+    matchedTargetParams() {
+      return this.smartScript.target_type >= 0
+        ? this.targetParams[this.smartScript.target_type]
+        : this.targetParams[0];
+    },
     credential() {
       return {
         entryorguid: this.$route.query.entryorguid,
@@ -421,6 +409,12 @@ export default {
   },
   mounted() {
     this.init();
+  },
+  components: {
+    FlagEditor,
+    GossipMenuSelector,
+    MapSelector,
+    SpellSelector,
   },
 };
 </script>
