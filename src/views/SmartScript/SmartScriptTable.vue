@@ -15,7 +15,7 @@
           <el-col :span="6">
             <el-input
               v-model="credential.entryorguid"
-              placeholder="Entry Or GUID"
+              placeholder="entryorguid"
             ></el-input>
           </el-col>
           <el-col :span="6">

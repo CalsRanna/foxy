@@ -92,6 +92,449 @@ const eventTypes = [
   "计数器设置",
 ];
 
+const eventPhaseMasks = [
+  {
+    index: 0,
+    flag: 1,
+    name: "SMART_EVENT_PHASE_1",
+    comment: "Phase 1 only.",
+  },
+  {
+    index: 1,
+    flag: 2,
+    name: "SMART_EVENT_PHASE_2",
+    comment: "Phase 2 only.",
+  },
+  {
+    index: 2,
+    flag: 4,
+    name: "SMART_EVENT_PHASE_3",
+    comment: "Phase 3 only.",
+  },
+  {
+    index: 3,
+    flag: 8,
+    name: "SMART_EVENT_PHASE_4",
+    comment: "Phase 4 only.",
+  },
+  {
+    index: 4,
+    flag: 16,
+    name: "SMART_EVENT_PHASE_5",
+    comment: "Phase 5 only.",
+  },
+  {
+    index: 5,
+    flag: 32,
+    name: "SMART_EVENT_PHASE_6",
+    comment: "Phase 6 only.",
+  },
+  {
+    index: 6,
+    flag: 64,
+    name: "SMART_EVENT_PHASE_7",
+    comment: "Phase 7 only.",
+  },
+  {
+    index: 7,
+    flag: 128,
+    name: "SMART_EVENT_PHASE_8",
+    comment: "Phase 8 only.",
+  },
+  {
+    index: 8,
+    flag: 256,
+    name: "SMART_EVENT_PHASE_9",
+    comment: "Phase 9 only.",
+  },
+  {
+    index: 9,
+    flag: 512,
+    name: "SMART_EVENT_PHASE_10",
+    comment: "Phase 10 only.",
+  },
+  {
+    index: 10,
+    flag: 1024,
+    name: "SMART_EVENT_PHASE_11",
+    comment: "Phase 11 only.",
+  },
+  {
+    index: 11,
+    flag: 2048,
+    name: "SMART_EVENT_PHASE_12",
+    comment: "Phase 12 only.",
+  },
+];
+
+const eventFlags = [
+  {
+    index: 0,
+    flag: 1,
+    name: "不可重复",
+    comment: "Event can not repeat",
+  },
+  {
+    index: 1,
+    flag: 2,
+    name: "普通地下城",
+    comment: "Event only occurs in normal dungeon",
+  },
+  {
+    index: 2,
+    flag: 4,
+    name: "英雄地下城",
+    comment: "Event only occurs in heroic dungeon",
+  },
+  {
+    index: 3,
+    flag: 8,
+    name: "普通团队副本",
+    comment: "Event only occurs in normal raid",
+  },
+  {
+    index: 4,
+    flag: 16,
+    name: "英雄团队副本",
+    comment: "Event only occurs in heroic raid",
+  },
+  {
+    index: 5,
+    flag: 32,
+    name: "SMART_EVENT_FLAG_RESERVED_5",
+    comment: "SMART_EVENT_FLAG_RESERVED_5",
+  },
+  {
+    index: 6,
+    flag: 64,
+    name: "SMART_EVENT_FLAG_RESERVED_6",
+    comment: "SMART_EVENT_FLAG_RESERVED_6",
+  },
+  {
+    index: 7,
+    flag: 128,
+    name: "调试专用",
+    comment: "Event only occurs in debug build",
+  },
+  {
+    index: 8,
+    flag: 256,
+    name: "不会重置",
+    comment: "Event will not reset in SmartScript::OnReset()",
+  },
+];
+
+const eventParams = [
+  [
+    { label: "InitialMin", field: "event_param1", type: "el-input-number" },
+    { label: "InitialMax", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_UPDATE_IC
+  [
+    { label: "InitialMin", field: "event_param1", type: "el-input-number" },
+    { label: "InitialMax", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_UPDATE_OOC
+  [
+    { label: "HPMinPct", field: "event_param1", type: "el-input-number" },
+    { label: "HPMaxPct", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_HEALTH_PCT
+  [
+    { label: "ManaMinPct", field: "event_param1", type: "el-input-number" },
+    { label: "ManaMaxPct", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_MANA_PCT
+  [], // SMART_EVENT_AGGRO
+  [
+    { label: "CooldownMin", field: "event_param1", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param2", type: "el-input-number" },
+    { label: "Player only", field: "event_param3", type: "el-switch" },
+    { label: "生物编号", field: "event_param4", type: "el-input" },
+  ], // SMART_EVENT_KILL
+  [], // SMART_EVENT_DEATH
+  [], // SMART_EVENT_EVADE
+  [
+    { label: "技能", field: "event_param1", type: "spell-selector" },
+    { label: "类型", field: "event_param2", type: "el-input" },
+    { label: "CooldownMin", field: "event_param3", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_SPELLHIT
+  [
+    { label: "MinDist", field: "event_param1", type: "el-input-number" },
+    { label: "MaxDist", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_RANGE
+  [
+    { label: "NoHostile", field: "event_param1", type: "el-input-number" },
+    { label: "MaxRange", field: "event_param2", type: "el-input-number" },
+    { label: "CooldownMin", field: "event_param3", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param4", type: "el-input-number" },
+    { label: "Player Only", field: "event_param5", type: "el-switch" },
+  ], // SMART_EVENT_OOC_LOS
+  [
+    { label: "type", field: "event_param1", type: "el-input-number" },
+    { label: "MapId", field: "event_param2", type: "el-input-number" },
+    { label: "ZoneId", field: "event_param3", type: "el-input-number" },
+  ], // SMART_EVENT_RESPAWN
+  [
+    { label: "HPMinPct", field: "event_param1", type: "el-input-number" },
+    { label: "HPMaxPct", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_TARGET_HEALTH_PCT
+  [
+    { label: "RepeatMin", field: "event_param1", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param2", type: "el-input-number" },
+    { label: "SpellId", field: "event_param3", type: "spell-selector" },
+  ], // SMART_EVENT_VICTIM_CASTING
+  [
+    { label: "HPDeficit", field: "event_param1", type: "el-input-number" },
+    { label: "Radius", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_FRIENDLY_HEALTH
+  [
+    { label: "Radius", field: "event_param1", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param3", type: "el-input-number" },
+  ], // SMART_EVENT_FRIENDLY_IS_CC
+  [
+    { label: "SpellId", field: "event_param1", type: "spell-selector" },
+    { label: "Radius", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_FRIENDLY_MISSING_BUFF
+  [
+    { label: "CretureId", field: "event_param1", type: "el-input-number" },
+    { label: "CooldownMin", field: "event_param2", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param3", type: "el-input-number" },
+  ], // SMART_EVENT_SUMMONED_UNIT
+  [
+    { label: "ManaMinPct", field: "event_param1", type: "el-input-number" },
+    { label: "ManaMaxPct", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_TARGET_MANA_PCT
+  [{ label: "QuestID", field: "event_param1", type: "el-input-number" }], // SMART_EVENT_ACCEPTED_QUEST
+  [{ label: "QuestID", field: "event_param1", type: "el-input-number" }], // SMART_EVENT_REWARD_QUEST
+  [], // SMART_EVENT_REACHED_HOME
+  [
+    { label: "EmoteId", field: "event_param1", type: "el-input-number" },
+    { label: "CooldownMin", field: "event_param2", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param3", type: "el-input-number" },
+  ], // SMART_EVENT_RECEIVE_EMOTE
+  [
+    { label: "SpellId", field: "event_param1", type: "spell-selector" },
+    { label: "Stacks", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_HAS_AURA
+  [
+    { label: "SpellId", field: "event_param1", type: "spell-selector" },
+    { label: "Stacks", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_TARGET_BUFFED
+  [], // SMART_EVENT_RESET
+  [
+    { label: "NoHostile", field: "event_param1", type: "el-input-number" },
+    { label: "MaxRange", field: "event_param2", type: "el-input-number" },
+    { label: "CooldownMin", field: "event_param3", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param4", type: "el-input-number" },
+    { label: "Player Only", field: "event_param5", type: "el-switch" },
+  ], // SMART_EVENT_IC_LOS
+  [
+    { label: "CooldownMin", field: "event_param1", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_PASSENGER_BOARDED
+  [
+    { label: "CooldownMin", field: "event_param1", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_PASSENGER_REMOVED
+  [], // SMART_EVENT_CHARMED
+  [], // SMART_EVENT_CHARMED_TARGET
+  [
+    { label: "SpellId", field: "event_param1", type: "spell-selector" },
+    { label: "School", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_SPELLHIT_TARGET
+  [
+    { label: "MinDmg", field: "event_param1", type: "el-input-number" },
+    { label: "MaxDmg", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_DAMAGED
+  [
+    { label: "MinDmg", field: "event_param1", type: "el-input-number" },
+    { label: "MaxDmg", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_DAMAGED_TARGET
+  [
+    { label: "MovementType", field: "event_param1", type: "el-input-number" },
+    { label: "PointID", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_MOVEMENTINFORM
+  [
+    { label: "Entry", field: "event_param1", type: "el-input-number" },
+    { label: "CooldownMin", field: "event_param2", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param3", type: "el-input-number" },
+  ], // SMART_EVENT_SUMMON_DESPAWNED
+  [], // SMART_EVENT_CORPSE_REMOVED
+  [], // SMART_EVENT_AI_INIT
+  [
+    { label: "Field", field: "event_param1", type: "el-input-number" },
+    { label: "Value", field: "event_param2", type: "el-input-number" },
+    { label: "CooldownMin", field: "event_param3", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_DATA_SET
+  [
+    { label: "PointId", field: "event_param1", type: "el-input-number" },
+    { label: "pathID", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_WAYPOINT_START
+  [
+    { label: "PointId", field: "event_param1", type: "el-input-number" },
+    { label: "pathID", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_WAYPOINT_REACHED
+  [],
+  [],
+  [],
+  [],
+  [],
+  [{ label: "TriggerId ", field: "event_param1", type: "el-input-number" }], // SMART_EVENT_AREATRIGGER_ONTRIGGER
+  [],
+  [],
+  [],
+  [],
+  [],
+  [
+    { label: "GroupID", field: "event_param1", type: "el-input-number" },
+    { label: "CreatureID", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_TEXT_OVER
+  [
+    { label: "MinHeal", field: "event_param1", type: "el-input-number" },
+    { label: "MaxHeal", field: "event_param2", type: "el-input-number" },
+    { label: "CooldownMin", field: "event_param3", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_RECEIVE_HEAL
+  [], // SMART_EVENT_JUST_SUMMONED
+  [
+    { label: "PointId", field: "event_param1", type: "el-input-number" },
+    { label: "pathID", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_WAYPOINT_PAUSED
+  [
+    { label: "PointId", field: "event_param1", type: "el-input-number" },
+    { label: "pathID", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_WAYPOINT_RESUMED
+  [
+    { label: "PointId", field: "event_param1", type: "el-input-number" },
+    { label: "pathID", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_WAYPOINT_STOPPED
+  [
+    { label: "PointId", field: "event_param1", type: "el-input-number" },
+    { label: "pathID", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_WAYPOINT_ENDED
+  [{ label: "Id", field: "event_param1", type: "el-input-number" }], // SMART_EVENT_TIMED_EVENT_TRIGGERED
+  [
+    { label: "InitialMin", field: "event_param1", type: "el-input-number" },
+    { label: "InitialMax", field: "event_param2", type: "el-input-number" },
+    { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_UPDATE
+  [], // SMART_EVENT_LINK
+  [
+    { label: "对话编号", field: "event_param1", type: "gossip-menu-selector" },
+    { label: "子选项编号", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_GOSSIP_SELECT
+  [], // SMART_EVENT_JUST_CREATED
+  [], // SMART_EVENT_GOSSIP_HELLO
+  [], // SMART_EVENT_FOLLOW_COMPLETED
+  [], // SMART_EVENT_UNUSED_66
+  [
+    { label: "CooldownMin", field: "event_param1", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param2", type: "el-input-number" },
+  ], // SMART_EVENT_IS_BEHIND_TARGET
+  [{ label: "eventEntry", field: "event_param1", type: "el-input-number" }], // SMART_EVENT_GAME_EVENT_START
+  [{ label: "eventEntry", field: "event_param1", type: "el-input-number" }], // SMART_EVENT_GAME_EVENT_END
+  [{ label: "State", field: "event_param1", type: "el-input-number" }], // SMART_EVENT_GO_STATE_CHANGED
+  [{ label: "EventId", field: "event_param1", type: "el-input-number" }], // SMART_EVENT_GO_EVENT_INFORM
+  [{ label: "EventId", field: "event_param1", type: "el-input-number" }], // SMART_EVENT_ACTION_DONE
+  [], // SMART_EVENT_ON_SPELLCLICK
+  [
+    { label: "minHpPct", field: "event_param1", type: "el-input-number" },
+    { label: "maxHpPct", field: "event_param2", type: "el-input-number" },
+    { label: "repeatMin", field: "event_param3", type: "el-input-number" },
+    { label: "repeatMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_FRIENDLY_HEALTH_PCT
+  [
+    { label: "guid", field: "event_param1", type: "el-input-number" },
+    { label: "entry", field: "event_param2", type: "el-input-number" },
+    { label: "distance", field: "event_param3", type: "el-input-number" },
+    {
+      label: "repeat interval",
+      field: "event_param4",
+      type: "el-input-number",
+    },
+  ], // SMART_EVENT_DISTANCE_CREATURE
+  [
+    { label: "guid", field: "event_param1", type: "el-input-number" },
+    { label: "entry", field: "event_param2", type: "el-input-number" },
+    { label: "distance", field: "event_param3", type: "el-input-number" },
+    {
+      label: "repeat interval",
+      field: "event_param4",
+      type: "el-input-number",
+    },
+  ], // SMART_EVENT_DISTANCE_GAMEOBJECT
+  [
+    { label: "counterID", field: "event_param1", type: "el-input-number" },
+    { label: "value", field: "event_param2", type: "el-input-number" },
+    { label: "CooldownMin", field: "event_param3", type: "el-input-number" },
+    { label: "CooldownMax", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_COUNTER_SET 77
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [
+    { label: "maxPlayers", field: "event_param1", type: "el-input-number" },
+    { label: "Range", field: "event_param2", type: "el-input-number" },
+    { label: "FirstCheck", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatCheck", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_NEAR_PLAYERS 101
+  [
+    { label: "maxPlayers", field: "event_param1", type: "el-input-number" },
+    { label: "Range", field: "event_param2", type: "el-input-number" },
+    { label: "FirstCheck", field: "event_param3", type: "el-input-number" },
+    { label: "RepeatCheck", field: "event_param4", type: "el-input-number" },
+  ], // SMART_EVENT_NEAR_PLAYERS_NEGATION
+];
+
 const actionTypes = [
   "无",
   "谈话",
@@ -210,6 +653,647 @@ const actionTypes = [
   "升起",
 ];
 
+const actionParams = [
+  [], // SMART_ACTION_NONE
+  [
+    { label: "GroupID", field: "action_param1", type: "el-input-number" },
+    { label: "Duration", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_NONE
+  [{ label: "FactionID ", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_FACTION
+  [
+    {
+      label: "entry",
+      field: "action_param1",
+      type: "creature-template-selector",
+    },
+    { label: "modelidx", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_MORPH_TO_ENTRY_OR_MODEL
+  [
+    { label: "SoundId", field: "action_param1", type: "el-input-number" },
+    { label: "onlySelf", field: "action_param2", type: "el-switch" },
+  ], // SMART_ACTION_SOUND
+  [{ label: "EmoteId", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_PLAY_EMOTE
+  [{ label: "QuestID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_FAIL_QUEST
+  [
+    { label: "QuestID", field: "action_param1", type: "el-input-number" },
+    { label: "directAdd ", field: "action_param2", type: "el-switch" },
+  ], // SMART_ACTION_OFFER_QUEST
+  [{ label: "ReactState", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_REACT_STATE
+  [], // SMART_ACTION_ACTIVATE_GOBJECT
+  [
+    { label: "EmoteId1", field: "action_param1", type: "el-input-number" },
+    { label: "EmoteId2", field: "action_param2", type: "el-input-number" },
+    { label: "EmoteId3", field: "action_param3", type: "el-input-number" },
+    { label: "EmoteId4", field: "action_param4", type: "el-input-number" },
+    { label: "EmoteId5", field: "action_param5", type: "el-input-number" },
+    { label: "EmoteId6", field: "action_param6", type: "el-input-number" },
+  ], // SMART_ACTION_RANDOM_EMOTE
+  [
+    { label: "SpellId", field: "action_param1", type: "el-input-number" },
+    { label: "castFlags", field: "action_param2", type: "el-input-number" },
+    { label: "limitTargets", field: "action_param3", type: "el-input-number" },
+  ], // SMART_ACTION_CAST
+  [
+    { label: "entry", field: "action_param1", type: "el-input-number" },
+    { label: "Summon type", field: "action_param2", type: "el-input-number" },
+    { label: "duration", field: "action_param2", type: "el-input-number" },
+    {
+      label: "attackInvoker ",
+      field: "action_param2",
+      type: "el-input-number",
+    },
+    { label: "attackScriptOwner ", field: "action_param2", type: "el-switch" },
+  ], // SMART_ACTION_SUMMON_CREATURE
+  [
+    { label: "ThreatPctInc", field: "action_param1", type: "el-input-number" },
+    { label: "ThreatPctDec", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_THREAT_SINGLE_PCT
+  [
+    { label: "ThreatPctInc", field: "action_param1", type: "el-input-number" },
+    { label: "ThreatPctDec", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_THREAT_ALL_PCT
+  [{ label: "QuestID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_CALL_AREAEXPLOREDOREVENTHAPPENS
+  [], // SMART_ACTION_RESERVED_16
+  [{ label: "EmoteId", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_EMOTE_STATE
+  [
+    { label: "Param1", field: "action_param1", type: "el-input-number" },
+    { label: "type", field: "action_param2", type: "el-switch" },
+  ], // SMART_ACTION_SET_UNIT_FLAG
+  [
+    { label: "Param1", field: "action_param1", type: "el-input-number" },
+    { label: "type", field: "action_param2", type: "el-switch" },
+  ], // SMART_ACTION_REMOVE_UNIT_FLAG
+  [
+    {
+      label: "AllowAttackState",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_AUTO_ATTACK
+  [
+    {
+      label: "AllowCombatMovement",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_ALLOW_COMBAT_MOVEMENT
+  [
+    {
+      label: "event_phase_mask",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_SET_EVENT_PHASE
+  [
+    { label: "Increment", field: "action_param1", type: "el-input-number" },
+    { label: "Decrement", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_INC_EVENT_PHASE
+  [], // SMART_ACTION_EVADE
+  [{ label: "FleeText", field: "action_param1", type: "el-switch" }], // SMART_ACTION_FLEE_FOR_ASSIST
+  [{ label: "QuestID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_CALL_GROUPEVENTHAPPENS
+  [], // SMART_ACTION_COMBAT_STOP
+  [
+    { label: "SpellId", field: "action_param1", type: "spell-selector" },
+    { label: "charges", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_REMOVEAURASFROMSPELL
+  [
+    { label: "Distance", field: "action_param1", type: "el-input-number" },
+    { label: "Angle", field: "action_param2", type: "el-input-number" },
+    {
+      label: "entry",
+      field: "action_param3",
+      type: "creature-template-selector",
+    },
+    { label: "credit", field: "action_param4", type: "el-input-number" },
+    { label: "creditType", field: "action_param5", type: "el-input-number" },
+  ], // SMART_ACTION_FOLLOW
+  [
+    {
+      label: "event_phase_mask1",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+    {
+      label: "event_phase_mask2",
+      field: "action_param2",
+      type: "el-input-number",
+    },
+    {
+      label: "event_phase_mask3",
+      field: "action_param3",
+      type: "el-input-number",
+    },
+    {
+      label: "event_phase_mask4",
+      field: "action_param4",
+      type: "el-input-number",
+    },
+    {
+      label: "event_phase_mask5",
+      field: "action_param5",
+      type: "el-input-number",
+    },
+    {
+      label: "event_phase_mask6",
+      field: "action_param6",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_RANDOM_PHASE
+  [
+    { label: "minimum", field: "action_param1", type: "el-input-number" },
+    { label: "maximum", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_RANDOM_PHASE_RANGE
+  [], // SMART_ACTION_RESET_GOBJECT
+  [
+    {
+      label: "entry",
+      field: "action_param1",
+      type: "creature-template-selector",
+    },
+  ], // SMART_ACTION_CALL_KILLEDMONSTER
+  [
+    { label: "Field", field: "action_param1", type: "el-input-number" },
+    { label: "Data", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_SET_INST_DATA
+  [{ label: "Field", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_INST_DATA64
+  [
+    {
+      label: "entry",
+      field: "action_param1",
+      type: "creature-template-selector",
+    },
+    { label: "Update Level", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_UPDATE_TEMPLATE
+  [], // SMART_ACTION_DIE
+  [{ label: "Range", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_IN_COMBAT_WITH_ZONE
+  [
+    { label: "Radius", field: "action_param1", type: "el-input-number" },
+    { label: "Call for help", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_CALL_FOR_HELP
+  [{ label: "Sheath", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_SHEATH
+  [{ label: "Despawn", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_FORCE_DESPAWN
+  [
+    { label: "flat hp", field: "action_param1", type: "el-input-number" },
+    { label: "percent hp", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_SET_INVINCIBILITY_HP_LEVEL
+  [
+    {
+      label: "entry",
+      field: "action_param1",
+      type: "creature-template-selector",
+    },
+    { label: "modelidx", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_MOUNT_TO_ENTRY_OR_MODEL
+  [{ label: "phaseMask", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_INGAME_PHASE_MASK
+  [
+    { label: "Field", field: "action_param1", type: "el-input-number" },
+    { label: "Data", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_SET_DATA
+  [{ label: "distance", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_MOVE_FORWARD
+  [{ label: "Visibility", field: "action_param1", type: "el-switch" }], // SMART_ACTION_SET_VISIBILITY
+  [{ label: "active", field: "action_param1", type: "el-switch" }], // SMART_ACTION_SET_ACTIVE
+  [], // SMART_ACTION_ATTACK_START
+  [
+    {
+      label: "gameObjectEntry",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+    { label: "De-spawn", field: "action_param2", type: "el-input-number" },
+    { label: "targetSummon ", field: "action_param3", type: "el-switch" },
+  ], // SMART_ACTION_SUMMON_GO
+  [], // SMART_ACTION_KILL_UNIT
+  [{ label: "TaxiID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_ACTIVATE_TAXI
+  [
+    { label: "奔跑", field: "action_param1", type: "el-switch" },
+    {
+      label: "waypointsEntry",
+      field: "action_param2",
+      type: "el-input-number",
+    },
+    { label: "canRepeat", field: "action_param3", type: "el-input-number" },
+    { label: "QuestID", field: "action_param4", type: "el-input-number" },
+    { label: "despawntime", field: "action_param5", type: "el-input-number" },
+    { label: "reactState", field: "action_param6", type: "el-input-number" },
+  ], // SMART_ACTION_WP_START
+  [{ label: "Time", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_WP_PAUSE
+  [
+    { label: "despawnTime", field: "action_param1", type: "el-input-number" },
+    { label: "QuestID", field: "action_param2", type: "el-input-number" },
+    { label: "fail", field: "action_param3", type: "el-switch" },
+  ], // SMART_ACTION_WP_STOP
+  [
+    {
+      label: "物品编号",
+      field: "action_param1",
+      type: "item-template-selector",
+    },
+    { label: "数量", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_ADD_ITEM
+  [
+    {
+      label: "物品编号",
+      field: "action_param1",
+      type: "item-template-selector",
+    },
+    { label: "数量", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_REMOVE_ITEM
+  [{ label: "TemplateID ", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_INSTALL_AI_TEMPLATE
+  [{ label: "奔跑", field: "action_param1", type: "el-switch" }], // SMART_ACTION_SET_RUN
+  [
+    { label: "飞行", field: "action_param1", type: "el-switch" },
+    { label: "speed", field: "action_param2", type: "el-input-number" },
+    { label: "禁用重力", field: "action_param2", type: "el-switch" },
+  ], // SMART_ACTION_SET_FLY
+  [{ label: "游泳", field: "action_param1", type: "el-switch" }], // SMART_ACTION_SET_SWIM
+  [
+    { label: "地图ID", field: "action_param1", type: "map-selector" },
+    { label: "X坐标", field: "target_x", type: "el-input-number" },
+    { label: "Y坐标", field: "target_y", type: "el-input-number" },
+    { label: "Z坐标", field: "target_z", type: "el-input-number" },
+    { label: "方向", field: "target_o", type: "el-input-number" },
+  ], // SMART_ACTION_TELEPORT
+  [
+    { label: "counterID", field: "action_param1", type: "el-input-number" },
+    { label: "value", field: "action_param2", type: "el-input-number" },
+    { label: "reset ", field: "action_param2", type: "el-switch" },
+  ], // SMART_ACTION_SET_COUNTER
+  [{ label: "varID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_STORE_TARGET_LIST
+  [], // SMART_ACTION_WP_RESUME
+  [
+    { label: "orientation", field: "action_param1", type: "el-input-number" },
+    { label: "Random orientation", field: "action_param2", type: "el-switch" },
+  ], // SMART_ACTION_SET_ORIENTATION
+  [
+    { label: "id", field: "action_param1", type: "el-input-number" },
+    { label: "InitialMin", field: "action_param2", type: "el-input-number" },
+    { label: "InitialMax", field: "action_param3", type: "el-input-number" },
+    { label: "RepeatMin", field: "action_param4", type: "el-input-number" },
+    { label: "RepeatMax", field: "action_param5", type: "el-input-number" },
+    { label: "chance", field: "action_param6", type: "el-input-number" },
+  ], // SMART_ACTION_CREATE_TIMED_EVENT
+  [{ label: "entry", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_PLAYMOVIE
+  [
+    { label: "PointId", field: "action_param1", type: "el-input-number" },
+    { label: "isTransport ", field: "action_param2", type: "el-switch" },
+    { label: "controlled  ", field: "action_param3", type: "el-switch" },
+    {
+      label: "ContactDistance ",
+      field: "action_param2",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_MOVE_TO_POS
+  [{ label: "Respawntime ", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_RESPAWN_TARGET
+  [
+    { label: "EquipID", field: "action_param1", type: "el-input-number" },
+    { label: "Slotmask", field: "action_param2", type: "el-input-number" },
+    { label: "Slot1", field: "action_param3", type: "item-temlate-selector" },
+    { label: "Slot2", field: "action_param4", type: "item-temlate-selector" },
+    { label: "Slot3", field: "action_param5", type: "item-temlate-selector" },
+  ], // SMART_ACTION_EQUIP
+  [], // SMART_ACTION_CLOSE_GOSSIP
+  [{ label: "ID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_TRIGGER_TIMED_EVENT
+  [{ label: "ID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_REMOVE_TIMED_EVENT
+  [{ label: "SpellID", field: "action_param1", type: "spell-selector" }], // SMART_ACTION_ADD_AURA
+  [], // SMART_ACTION_OVERRIDE_SCRIPT_BASE_OBJECT
+  [], // SMART_ACTION_RESET_SCRIPT_BASE_OBJECT
+  [], // SMART_ACTION_CALL_SCRIPT_RESET
+  [
+    {
+      label: "attackDistance",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+    { label: "attackAngle", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_SET_RANGED_MOVEMENT
+  [
+    { label: "EntryOrGuid", field: "action_param1", type: "el-input-number" },
+    { label: "type", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_CALL_TIMED_ACTIONLIST
+  [{ label: "npcflag", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_NPC_FLAG
+  [{ label: "npcflag", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_ADD_NPC_FLAG
+  [{ label: "npcflag", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_REMOVE_NPC_FLAG
+  [{ label: "GroupID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SIMPLE_TALK
+  [
+    { label: "SpellID", field: "action_param1", type: "spell-selector" },
+    { label: "castFlags", field: "action_param2", type: "el-input-number" },
+    {
+      label: "triggeredFlags",
+      field: "action_param3",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_INVOKER_CAST
+  [
+    { label: "SpellID", field: "action_param1", type: "spell-selector" },
+    { label: "castFlags", field: "action_param2", type: "el-input-number" },
+    {
+      label: "CasterTargetType ",
+      field: "action_param3",
+      type: "el-input-number",
+    },
+    { label: "CasterTarget ", field: "action_param4", type: "el-input-number" },
+    { label: "CasterTarget ", field: "action_param5", type: "el-input-number" },
+    { label: "CasterTarget ", field: "action_param6", type: "el-input-number" },
+  ], // SMART_ACTION_CROSS_CAST
+  [
+    { label: "EntryOrGuid1", field: "action_param1", type: "el-input-number" },
+    { label: "EntryOrGuid2", field: "action_param2", type: "el-input-number" },
+    { label: "EntryOrGuid3", field: "action_param3", type: "el-input-number" },
+    { label: "EntryOrGuid4", field: "action_param4", type: "el-input-number" },
+    { label: "EntryOrGuid5", field: "action_param5", type: "el-input-number" },
+    { label: "EntryOrGuid6", field: "action_param6", type: "el-input-number" },
+  ], // SMART_ACTION_CALL_RANDOM_TIMED_ACTIONLIST
+  [
+    { label: "EntryOrGuid1", field: "action_param1", type: "el-input-number" },
+    { label: "EntryOrGuid2", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_CALL_RANDOM_RANGE_TIMED_ACTIONLIST
+  [{ label: "Radius", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_RANDOM_MOVE
+  [
+    { label: "Value", field: "action_param1", type: "el-input-number" },
+    { label: "Type", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_SET_UNIT_FIELD_BYTES_1
+  [
+    { label: "Value", field: "action_param1", type: "el-input-number" },
+    { label: "Type", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_REMOVE_UNIT_FIELD_BYTES_1
+  [
+    { label: "delay ", field: "action_param1", type: "el-switch" },
+    { label: "SpellId", field: "action_param2", type: "spell-selector" },
+    { label: "Instant ", field: "action_param3", type: "el-switch" },
+  ], // SMART_ACTION_INTERRUPT_SPELL
+  [{ label: "animprogress", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SEND_GO_CUSTOM_ANIM
+  [{ label: "dynamicflags", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_DYNAMIC_FLAG
+  [{ label: "dynamicflags", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_ADD_DYNAMIC_FLAG
+  [{ label: "dynamicflags", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_REMOVE_DYNAMIC_FLAG
+  [
+    { label: "Speed XY", field: "action_param1", type: "el-input-number" },
+    { label: "Speed Z", field: "action_param2", type: "el-input-number" },
+    { label: "selfJump ", field: "action_param3", type: "el-switch" },
+  ], // SMART_ACTION_JUMP_TO_POS
+  [
+    { label: "对话编号", field: "action_param1", type: "gossip-menu-selector" },
+    { label: "text_id", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_SEND_GOSSIP_MENU
+  [{ label: "LootState ", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_GO_SET_LOOT_STATE
+  [{ label: "ID", field: "action_param1", type: "el-input-number" }], // v
+  [{ label: "Home", field: "action_param1", type: "el-switch" }], // SMART_ACTION_SET_HOME_POS
+  [{ label: "HealthRegen", field: "action_param1", type: "el-switch" }], // SMART_ACTION_SET_HEALTH_REGEN
+  [{ label: "Root", field: "action_param1", type: "el-switch" }], // SMART_ACTION_SET_ROOT
+  [{ label: "flags", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_GO_FLAG
+  [{ label: "flags", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_ADD_GO_FLAG
+  [{ label: "flags", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_REMOVE_GO_FLAG
+  [
+    { label: "GroupID", field: "action_param1", type: "el-input-number" },
+    { label: "attackInvoker ", field: "action_param2", type: "el-switch" },
+    { label: "attackScriptOwner  ", field: "action_param3", type: "el-switch" },
+  ], // SMART_ACTION_SUMMON_CREATURE_GROUP
+  [
+    { label: "type", field: "action_param1", type: "el-input-number" },
+    { label: "New power", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_SET_POWER
+  [
+    { label: "type", field: "action_param1", type: "el-input-number" },
+    { label: "New power", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_ADD_POWER
+  [
+    { label: "type", field: "action_param1", type: "el-input-number" },
+    { label: "New power", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_REMOVE_POWER
+  [{ label: "eventEntry", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_GAME_EVENT_STOP
+  [{ label: "eventEntry", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_GAME_EVENT_START
+  [
+    { label: "wp1", field: "action_param1", type: "el-input-number" },
+    { label: "wp2", field: "action_param2", type: "el-input-number" },
+    { label: "wp3", field: "action_param3", type: "el-input-number" },
+    { label: "wp4", field: "action_param4", type: "el-input-number" },
+    { label: "wp5", field: "action_param5", type: "el-input-number" },
+    { label: "wp6", field: "action_param6", type: "el-input-number" },
+  ], // SMART_ACTION_START_CLOSEST_WAYPOINT
+  [{ label: "distance", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_RISE_UP
+  [
+    { label: "soundId1", field: "action_param1", type: "el-input-number" },
+    { label: "soundId2", field: "action_param2", type: "el-input-number" },
+    { label: "soundId3", field: "action_param3", type: "el-input-number" },
+    { label: "soundId4", field: "action_param4", type: "el-input-number" },
+    { label: "onlySelf ", field: "action_param5", type: "el-switch" },
+  ], // SMART_ACTION_RANDOM_SOUND
+  [],
+  [],
+  [],
+  [],
+  [],
+  [{ label: "SightDistance", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_SIGHT_DIST
+  [{ label: "FleeTime", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_FLEE
+  [
+    {
+      label: "ThreatIncrement",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+    {
+      label: "ThreatDecrement",
+      field: "action_param2",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_ADD_THREAT
+  [
+    { label: "ID", field: "action_param1", type: "el-input-number" },
+    { label: "Force", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_LOAD_EQUIPMENT
+  [
+    { label: "id min range", field: "action_param1", type: "el-input-number" },
+    { label: "id max range", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_TRIGGER_RANDOM_TIMED_EVENT
+  [], // SMART_ACTION_REMOVE_ALL_GAMEOBJECTS
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [{ label: "pointId", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_MOVE_TO_POS_TARGET
+  [{ label: "state", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_GO_STATE
+  [], // SMART_ACTION_EXIT_VEHICLE
+  [{ label: "flags", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_UNIT_MOVEMENT_FLAGS
+  [
+    {
+      label: "combatDistance",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_SET_COMBAT_DISTANCE
+  [
+    {
+      label: "followDistance",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+    { label: "resetToMax", field: "action_param2", type: "el-input-number" },
+  ], // SMART_ACTION_SET_CASTER_COMBAT_DIST
+  [{ label: "是/否", field: "action_param1", type: "el-switch" }], // SMART_ACTION_SET_HOVER
+  [
+    { label: "type", field: "action_param1", type: "el-input-number" },
+    { label: "id", field: "action_param2", type: "el-input-number" },
+    { label: "value", field: "action_param3", type: "el-input-number" },
+  ], // SMART_ACTION_ADD_IMMUNITY
+  [
+    { label: "type", field: "action_param1", type: "el-input-number" },
+    { label: "id", field: "action_param2", type: "el-input-number" },
+    { label: "value", field: "action_param3", type: "el-input-number" },
+  ], // SMART_ACTION_REMOVE_IMMUNITY
+  [], // SMART_ACTION_FALL
+  [{ label: "是/否", field: "action_param1", type: "el-switch" }], // SMART_ACTION_SET_EVENT_FLAG_RESET
+  [
+    { label: "stopMoving", field: "action_param1", type: "el-input-number" },
+    {
+      label: "movementExpired",
+      field: "action_param2",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_STOP_MOTION
+  [],
+  // SMART_ACTION_NO_ENVIRONMENT_UPDATE
+  [], // SMART_ACTION_ZONE_UNDER_ATTACK
+  [], // SMART_ACTION_LOAD_GRID
+  [
+    { label: "SoundId", field: "action_param1", type: "el-input-number" },
+    { label: "onlySelf", field: "action_param2", type: "el-switch" },
+    { label: "type", field: "action_param3", type: "el-input-number" },
+  ], // SMART_ACTION_MUSIC
+  [
+    { label: "SoundId1", field: "action_param1", type: "el-input-number" },
+    { label: "SoundId2", field: "action_param2", type: "el-input-number" },
+    { label: "SoundId3", field: "action_param3", type: "el-input-number" },
+    { label: "SoundId4", field: "action_param4", type: "el-input-number" },
+    { label: "onlySelf", field: "action_param5", type: "el-switch" },
+    { label: "type", field: "action_param6", type: "el-input-number" },
+  ], // SMART_ACTION_RANDOM_MUSIC
+  [
+    { label: "SpellID", field: "action_param1", type: "el-input-number" },
+    { label: "castFlag", field: "action_param2", type: "el-input-number" },
+    { label: "bp0", field: "action_param3", type: "el-input-number" },
+    { label: "bp1", field: "action_param4", type: "el-input-number" },
+    { label: "bp2", field: "action_param5", type: "el-input-number" },
+  ], // SMART_ACTION_CUSTOM_CAST
+  [
+    { label: "entry", field: "action_param1", type: "el-input-number" },
+    { label: "Duration", field: "action_param2", type: "el-input-number" },
+    {
+      label: "Distance between rings",
+      field: "action_param3",
+      type: "el-input-number",
+    },
+    {
+      label: "Distance between each summons in a row ",
+      field: "action_param4",
+      type: "el-switch",
+    },
+    {
+      label: "Length of the cone",
+      field: "action_param5",
+      type: "el-input-number",
+    },
+    {
+      label: "Width of the cone",
+      field: "action_param6",
+      type: "el-input-number",
+    },
+  ], // SMART_ACTION_CONE_SUMMON
+  [
+    {
+      label: "acore_string.ID",
+      field: "action_param1",
+      type: "el-input-number",
+    },
+    { label: "yell", field: "action_param2", type: "el-switch" },
+  ], // SMART_ACTION_PLAYER_TALK
+  [
+    { label: "entry", field: "action_param1", type: "el-input-number" },
+    { label: "Duration", field: "action_param2", type: "el-input-number" },
+    {
+      label: "Spiral scaling",
+      field: "action_param3",
+      type: "el-input-number",
+    },
+    {
+      label: "Spiral appearance",
+      field: "action_param4",
+      type: "el-input-number",
+    },
+    { label: "range max", field: "action_param5", type: "el-input-number" },
+    { label: "phi_delta", field: "action_param6", type: "el-input-number" },
+  ], // SMART_ACTION_VORTEX_SUMMON
+  [], // SMART_ACTION_CU_ENCOUNTER_START
+];
+
 const targetTypes = [
   "无",
   "自身",
@@ -218,7 +1302,7 @@ const targetTypes = [
   "最后仇恨目标",
   "威胁值列表中的随机目标",
   "非最高威胁值随机目标",
-  "召唤者",
+  "事件触发者",
   "位置",
   "随机生物",
   "指定GUID的生物",
@@ -240,4 +1324,367 @@ const targetTypes = [
   "最近的友方",
 ];
 
-export { sourceTypes, eventTypes, actionTypes, targetTypes };
+const targetParams = [
+  [], // SMART_TARGET_NONE
+  [], // SMART_TARGET_SELF
+  [], // SMART_TARGET_VICTIM
+  [], // SMART_TARGET_HOSTILE_SECOND_AGGRO
+  [], // SMART_TARGET_HOSTILE_LAST_AGGRO
+  [], // SMART_TARGET_HOSTILE_RANDOM
+  [], // SMART_TARGET_HOSTILE_RANDOM_NOT_TOP
+  [], // SMART_TARGET_ACTION_INVOKER
+  [
+    { label: "x", field: "target_x", type: "el-input-number" },
+    { label: "y", field: "target_y", type: "el-input-number" },
+    { label: "z", field: "target_z", type: "el-input-number" },
+    { label: "o", field: "target_o", type: "el-input-number" },
+  ], // SMART_TARGET_POSITION
+  [
+    {
+      label: "entry ",
+      field: "target_param1",
+      type: "creature-template-selector",
+    },
+    { label: "minDist", field: "target_param2", type: "el-input-number" },
+    { label: "maxDist", field: "target_param3", type: "el-input-number" },
+    { label: "alive state", field: "target_param4", type: "el-input-number" },
+  ], // SMART_TARGET_CREATURE_RANGE
+  [
+    { label: "guid ", field: "target_param1", type: "el-input-number" },
+    {
+      label: "entry",
+      field: "target_param2",
+      type: "creature-template-selector",
+    },
+    { label: "getFromHashMap ", field: "target_param3", type: "el-switch" },
+  ], // SMART_TARGET_CREATURE_GUID
+  [
+    {
+      label: "entry ",
+      field: "target_param1",
+      type: "creature-template-selector",
+    },
+    { label: "maxDist", field: "target_param2", type: "el-input-number" },
+    { label: "alive state", field: "target_param3", type: "el-input-number" },
+  ], // SMART_TARGET_CREATURE_DISTANCE
+  [{ label: "id ", field: "target_param1", type: "el-input-number" }], // SMART_TARGET_STORED
+  [
+    {
+      label: "entry ",
+      field: "target_param1",
+      type: "creature-template-selector",
+    },
+    { label: "minDist", field: "target_param2", type: "el-input-number" },
+    { label: "maxDist", field: "target_param3", type: "el-input-number" },
+  ], // SMART_TARGET_GAMEOBJECT_RANGE
+  [
+    {
+      label: "gameObjectGuid ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+    {
+      label: "gameObjectEntry",
+      field: "target_param2",
+      type: "el-input-number",
+    },
+    { label: "getFromHashMap ", field: "target_param3", type: "el-switch" },
+  ], // SMART_TARGET_GAMEOBJECT_GUID
+  [
+    {
+      label: "gameObjectEntry ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+    { label: "maxDist", field: "target_param2", type: "el-input-number" },
+  ], // SMART_TARGET_GAMEOBJECT_DISTANCE
+  [], // SMART_TARGET_INVOKER_PARTY
+  [
+    {
+      label: "minDist ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+    { label: "maxDist", field: "target_param2", type: "el-input-number" },
+    { label: "maxCount", field: "target_param3", type: "el-input-number" },
+    { label: "maxDist", field: "target_o", type: "el-input-number" },
+  ], // SMART_TARGET_PLAYER_RANGE
+  [
+    {
+      label: "maxDist ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+  ], // SMART_TARGET_PLAYER_DISTANCE
+  [
+    {
+      label: "entry  ",
+      field: "target_param1",
+      type: "creature-template-selector",
+    },
+    { label: "maxDist", field: "target_param2", type: "el-input-number" },
+    { label: "dead", field: "target_param3", type: "el-switch" },
+  ], // SMART_TARGET_CLOSEST_CREATURE
+  [
+    {
+      label: "gameObjectEntry ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+    { label: "maxDist", field: "target_param2", type: "el-input-number" },
+  ], // SMART_TARGET_CLOSEST_GAMEOBJECT
+  [
+    {
+      label: "maxDist ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+  ], // SMART_TARGET_CLOSEST_PLAYER
+  [], // SMART_TARGET_ACTION_INVOKER_VEHICLE
+  [
+    {
+      label: "Owner ",
+      field: "target_param1",
+      type: "el-switch",
+    },
+  ], // SMART_TARGET_OWNER_OR_SUMMONER
+  [
+    {
+      label: "maxDist ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+  ], // SMART_TARGET_THREAT_LIST
+  [
+    {
+      label: "maxDist ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+    { label: "playerOnly ", field: "target_param2", type: "el-switch" },
+  ], // SMART_TARGET_CLOSEST_ENEMY
+  [
+    {
+      label: "maxDist ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+    { label: "playerOnly ", field: "target_param2", type: "el-switch" },
+  ], // SMART_TARGET_CLOSEST_FRIENDLY
+  [],
+  [
+    {
+      label: "maxDist ",
+      field: "target_param1",
+      type: "el-input-number",
+    },
+    { label: "playerOnly ", field: "target_param2", type: "el-switch" },
+    { label: "isInLos  ", field: "target_param3", type: "el-switch" },
+  ], // SMART_TARGET_FARTHEST// SMART_TARGET_GAMEOBJECT_GUID
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+
+  [
+    { label: "SpellID ", field: "target_param1", type: "spell-selector" },
+    { label: "Negative", field: "target_param2", type: "el-switch" },
+    { label: "MaxDist", field: "target_param3", type: "el-input-number" },
+    { label: "MinDist", field: "target_param4", type: "el-input-number" },
+    { label: "Number to resize", field: "target_o", type: "el-input-number" },
+  ], // SMART_TARGET_PLAYER_WITH_AURA
+  [
+    { label: "range", field: "target_param1", type: "el-input-number" },
+    { label: "amount", field: "target_param2", type: "el-switch" },
+    {
+      label: "self as middle",
+      field: "target_param3",
+      type: "el-input-number",
+    },
+  ], // SMART_TARGET_RANDOM_POINT
+  [
+    { label: "rangeMax", field: "target_param1", type: "el-input-number" },
+    { label: "TargetMask", field: "target_param2", type: "el-switch" },
+    { label: "Resize list", field: "target_param3", type: "el-input-number" },
+  ], // SMART_TARGET_ROLE_SELECTION
+];
+
+export {
+  sourceTypes,
+  eventTypes,
+  eventPhaseMasks,
+  eventFlags,
+  eventParams,
+  actionTypes,
+  actionParams,
+  targetTypes,
+  targetParams,
+};
