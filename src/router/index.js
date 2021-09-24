@@ -90,6 +90,18 @@ const routes = [
     ],
   },
   {
+    path: "/condition",
+    component: () => import("@/views/Condition/ConditionTable"),
+  },
+  {
+    path: "/condition/create",
+    component: () => import("@/views/Condition/ConditionDetail"),
+  },
+  {
+    path: "/condition/:id",
+    component: () => import("@/views/Condition/ConditionDetail"),
+  },
+  {
     path: "/scaling-stat-distribution",
     component: () =>
       import("@/views/ScalingStatDistribution/ScalingStatDistributionTable"),

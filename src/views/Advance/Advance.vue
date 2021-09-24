@@ -94,6 +94,12 @@ export default {
           key: "database",
           children: [
             {
+              title: "条件",
+              subtitle: "Condition",
+              description: "掉落数据或者内建脚本等需要满足的条件",
+              key: "condition",
+            },
+            {
               title: "页面文本",
               subtitle: "Page Text",
               description: "书籍的内容",

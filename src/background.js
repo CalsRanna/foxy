@@ -12,6 +12,7 @@ import "./background/areaTable";
 import "./background/areaTableOrQuestSortSelector";
 import "./background/broadcastTextSelector";
 import "./background/charTitleSelector";
+import "./background/condition";
 import "./background/creatureTemplate";
 import "./background/creatureTemplateLocale";
 import "./background/creatureTemplateAddon";
