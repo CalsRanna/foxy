@@ -97,7 +97,7 @@ ipcMain.on(UPDATE_PLAYER_CREATE_INFO_ACTION, (event, payload) => {
   let queryBuilder = knex
     .table("playercreateinfo_action")
     .where(payload.credential)
-    .update(payload.creatureTemplateResistance);
+    .update(payload.playerCreateInfoAction);
 
   queryBuilder
     .then((rows) => {

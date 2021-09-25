@@ -13,6 +13,7 @@
           :data="playerCreateInfoActions"
           highlight-current-row
           :max-height="calculateMaxHeight()"
+          class="hide-when-overflow tight-table"
           @current-change="select"
           @row-dblclick="show"
         >

@@ -27,6 +27,9 @@
       <el-tab-pane label="动作条" name="player-create-info-action" lazy>
         <player-create-info-action-tab-pane></player-create-info-action-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="物品" name="player-create-info-item" lazy>
+        <player-create-info-item-tab-pane></player-create-info-item-tab-pane>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -34,6 +37,7 @@
 <script>
 import PlayerCreateInfoTabPane from "@/views/PlayerCreateInfo/components/PlayerCreateInfoTabPane";
 import PlayerCreateInfoActionTabPane from "@/views/PlayerCreateInfo/components/PlayerCreateInfoActionTabPane";
+import PlayerCreateInfoItemTabPane from "./components/PlayerCreateInfoItemTabPane";
 
 import { mapState } from "vuex";
 
@@ -63,6 +67,7 @@ export default {
   components: {
     PlayerCreateInfoTabPane,
     PlayerCreateInfoActionTabPane,
+    PlayerCreateInfoItemTabPane,
   },
 };
 </script>
