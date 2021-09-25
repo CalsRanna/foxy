@@ -87,6 +87,7 @@ import "./background/pageTextSelector";
 import "./background/playerCreateInfo";
 import "./background/playerCreateInfoAction";
 import "./background/playerCreateInfoItem";
+import "./background/playerCreateInfoSpellCustom";
 import "./background/lockSelector";
 import "./background/talent";
 import "./background/talentTab";

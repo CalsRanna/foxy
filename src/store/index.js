@@ -84,6 +84,7 @@ import pageTextSelector from "./pageTextSelector";
 import playerCreateInfo from "./playerCreateInfo";
 import playerCreateInfoAction from "./playerCreateInfoAction";
 import playerCreateInfoItem from "./playerCreateInfoItem";
+import playerCreateInfoSpellCustom from "./playerCreateInfoSpellCustom";
 import talent from "./talent";
 import talentTab from "./talentTab";
 import referenceLootTemplate from "./referenceLootTemplate";
@@ -203,6 +204,7 @@ export default new Vuex.Store({
     playerCreateInfo,
     playerCreateInfoAction,
     playerCreateInfoItem,
+    playerCreateInfoSpellCustom,
     lockSelector,
     talent,
     talentTab,
