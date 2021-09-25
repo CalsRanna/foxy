@@ -106,6 +106,12 @@ export default {
               key: "page-text",
             },
             {
+              title: "玩家出生信息",
+              subtitle: "Player Create Info",
+              description: "玩家出生时的相关信息",
+              key: "player-create-info",
+            },
+            {
               title: "关联掉落",
               subtitle: "Reference Loot Template",
               description: "关联掉落数据",

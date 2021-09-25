@@ -180,6 +180,18 @@ const routes = [
     component: () => import("@/views/PageText/PageTextDetail"),
   },
   {
+    path: "/player-create-info",
+    component: () => import("@/views/PlayerCreateInfo/PlayerCreateInfoTable"),
+  },
+  {
+    path: "/player-create-info/create",
+    component: () => import("@/views/PlayerCreateInfo/PlayerCreateInfoDetail"),
+  },
+  {
+    path: "/player-create-info/:id",
+    component: () => import("@/views/PlayerCreateInfo/PlayerCreateInfoDetail"),
+  },
+  {
     path: "/talent",
     component: () => import("@/views/Talent/TalentTable"),
   },

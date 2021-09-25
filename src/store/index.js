@@ -10,6 +10,7 @@ import achievementCategorySelector from "./achievementCategorySelector";
 import achievementCriteria from "./achievementCriteria";
 import areaTable from "./areaTable";
 import areaTableOrQuestSortSelector from "./areaTableOrQuestSortSelector";
+import areaTableSelector from "./areaTableSelector";
 import broadcastTextSelector from "./broadcastTextSelector";
 import charTitleSelector from "./charTitleSelector";
 import condition from "./condition";
@@ -80,6 +81,7 @@ import itemSet from "./itemSet";
 import pageText from "./pageText";
 import pageTextLocale from "./pageTextLocale";
 import pageTextSelector from "./pageTextSelector";
+import playerCreateInfo from "./playerCreateInfo";
 import talent from "./talent";
 import talentTab from "./talentTab";
 import referenceLootTemplate from "./referenceLootTemplate";
@@ -125,6 +127,7 @@ export default new Vuex.Store({
     achievementCriteria,
     areaTable,
     areaTableOrQuestSortSelector,
+    areaTableSelector,
     broadcastTextSelector,
     charTitleSelector,
     condition,
@@ -195,6 +198,7 @@ export default new Vuex.Store({
     pageText,
     pageTextLocale,
     pageTextSelector,
+    playerCreateInfo,
     lockSelector,
     talent,
     talentTab,
