@@ -30,6 +30,9 @@
       <el-tab-pane label="物品" name="player-create-info-item" lazy>
         <player-create-info-item-tab-pane></player-create-info-item-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="法术技能" name="player-create-info-spell-custom" lazy>
+        <player-create-info-spell-custom-tab-pane></player-create-info-spell-custom-tab-pane>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -38,6 +41,7 @@
 import PlayerCreateInfoTabPane from "@/views/PlayerCreateInfo/components/PlayerCreateInfoTabPane";
 import PlayerCreateInfoActionTabPane from "@/views/PlayerCreateInfo/components/PlayerCreateInfoActionTabPane";
 import PlayerCreateInfoItemTabPane from "./components/PlayerCreateInfoItemTabPane";
+import PlayerCreateInfoSpellCustomTabPane from "./components/PlayerCreateInfoSpellCustomTabPane";
 
 import { mapState } from "vuex";
 
@@ -68,6 +72,7 @@ export default {
     PlayerCreateInfoTabPane,
     PlayerCreateInfoActionTabPane,
     PlayerCreateInfoItemTabPane,
+    PlayerCreateInfoSpellCustomTabPane,
   },
 };
 </script>

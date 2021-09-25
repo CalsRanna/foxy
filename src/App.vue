@@ -32,7 +32,7 @@
               内建脚本 <small>SMART SCRIPT</small>
             </el-menu-item>
             <el-menu-item index="spell">
-              技能 <small>SPELL</small>
+              法术技能 <small>SPELL</small>
             </el-menu-item>
             <el-menu-item index="advance">
               高级 <small>ADVANCE</small>
