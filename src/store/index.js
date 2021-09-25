@@ -82,6 +82,7 @@ import pageText from "./pageText";
 import pageTextLocale from "./pageTextLocale";
 import pageTextSelector from "./pageTextSelector";
 import playerCreateInfo from "./playerCreateInfo";
+import playerCreateInfoAction from "./playerCreateInfoAction";
 import talent from "./talent";
 import talentTab from "./talentTab";
 import referenceLootTemplate from "./referenceLootTemplate";
@@ -199,6 +200,7 @@ export default new Vuex.Store({
     pageTextLocale,
     pageTextSelector,
     playerCreateInfo,
+    playerCreateInfoAction,
     lockSelector,
     talent,
     talentTab,
