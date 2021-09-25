@@ -1,235 +1,224 @@
 <template>
-  <el-form
-    :model="achievementCriteria"
-    label-position="right"
-    label-width="120px"
-  >
-    <div :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }">
-      <el-card
-        :body-style="{ padding: '22px 20px 0 20px' }"
-        style="margin-top: 1px"
-      >
-        <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item label="成就编号">
-              <el-input-number
-                v-model="achievementCriteria.Achievement_Id"
-                controls-position="right"
-                placeholder="Achievement_Id"
-                :disabled="initing"
-                v-loading="initing"
-                element-loading-spinner="el-icon-loading"
-                element-loading-background="rgba(255, 255, 255, 0.5)"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="编号">
-              <el-input-number
-                v-model="achievementCriteria.ID"
-                controls-position="right"
-                placeholder="ID"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="描述">
-              <el-input
-                v-model="achievementCriteria.Description_Lang_zhCN"
-                placeholder="Description_Lang_zhCN"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="描述掩码">
-              <el-input-number
-                v-model="achievementCriteria.Description_Lang_Mask"
-                controls-position="right"
-                placeholder="Description_Lang_Mask"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-        </el-row>
+  <div>
+    <div v-show="!creating">
+      <el-card style="margin-top: 1px">
+        <el-button type="primary" @click="create">新增</el-button>
+        <el-button @click="copy" :disabled="disabled">复制</el-button>
+        <el-button type="danger" @click="destroy" :disabled="disabled">
+          删除
+        </el-button>
       </el-card>
-      <el-card
-        :body-style="{ padding: '22px 20px 0 20px' }"
-        style="margin-top: 16px"
-      >
-        <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item label="类别">
-              <el-input
-                v-model="achievementCriteria.Type"
-                placeholder="Type"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="标识">
-              <el-input-number
-                v-model="achievementCriteria.Flags"
-                controls-position="right"
-                placeholder="Flags"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Asset_Id">
-              <el-input
-                v-model="achievementCriteria.Asset_Id"
-                placeholder="Asset_Id"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Quantity">
-              <el-input-number
-                v-model="achievementCriteria.Quantity"
-                controls-position="right"
-                placeholder="Quantity"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-card>
-      <el-card
-        :body-style="{ padding: '22px 20px 0 20px' }"
-        style="margin-top: 16px"
-      >
-        <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item label="开始事件">
-              <el-input
-                v-model="achievementCriteria.Start_Event"
-                placeholder="Start_Event"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Start_Asset">
-              <el-input
-                v-model="achievementCriteria.Start_Asset"
-                placeholder="Start_Asset"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="失败事件">
-              <el-input
-                v-model="achievementCriteria.Fail_Event"
-                placeholder="Fail_Event"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Fail_Asset">
-              <el-input
-                v-model="achievementCriteria.Fail_Asset"
-                placeholder="Fail_Asset"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Timer_Start_Event">
-              <el-input-number
-                v-model="achievementCriteria.Timer_Start_Event"
-                controls-position="right"
-                placeholder="Timer_Start_Event"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Timer_Asset_Id">
-              <el-input-number
-                v-model="achievementCriteria.Timer_Asset_Id"
-                controls-position="right"
-                placeholder="Timer_Asset_Id"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Timer_Time">
-              <el-input-number
-                v-model="achievementCriteria.Timer_Time"
-                controls-position="right"
-                placeholder="Timer_Time"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Ui_Order">
-              <el-input-number
-                v-model="achievementCriteria.Ui_Order"
-                controls-position="right"
-                placeholder="Ui_Order"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-        </el-row>
+      <el-card style="margin-top: 16px">
+        <el-table
+          :data="playerCreateInfoActions"
+          highlight-current-row
+          :max-height="calculateMaxHeight()"
+          @current-change="select"
+          @row-dblclick="show"
+        >
+          <el-table-column prop="button" label="按钮位置" width="80px" />
+          <el-table-column prop="Name_Lang_zhCN" label="技能" width="320px">
+            <spell-name slot-scope="scope" :spell="scope.row"></spell-name>
+          </el-table-column>
+          <el-table-column
+            prop="NameSubtext_Lang_zhCN"
+            label="子名称"
+            width="180px"
+          />
+          <el-table-column prop="Description_Lang_zhCN" label="描述">
+            <template slot-scope="scope">
+              <spell-description
+                :spell="scope.row"
+                field="Description_Lang_zhCN"
+              ></spell-description>
+            </template>
+          </el-table-column>
+          <el-table-column prop="type" label="类别" width="80px" />
+        </el-table>
       </el-card>
     </div>
-    <el-card style="margin-top: 16px">
-      <el-button type="primary" :loading="loading" @click="store">
-        保存
-      </el-button>
-      <el-button @click="cancel">返回</el-button>
-    </el-card>
-  </el-form>
+    <div v-show="creating">
+      <el-form
+        :model="playerCreateInfoAction"
+        label-position="right"
+        label-width="120px"
+      >
+        <div
+          :style="{ maxHeight: `${calculateMaxHeight()}px`, overflow: 'auto' }"
+        >
+          <el-card
+            style="margin-top: 1px"
+            :body-style="{ padding: '22px 20px 0 20px' }"
+          >
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="种族">
+                  <el-select
+                    v-model="playerCreateInfoAction.race"
+                    placeholder="race"
+                  >
+                    <el-option
+                      v-for="race in chrRaces"
+                      :key="`race-${race.ID}`"
+                      :label="race.Name_Lang_zhCN"
+                      :value="race.ID"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="职业">
+                  <el-select
+                    v-model="playerCreateInfoAction.class"
+                    placeholder="class"
+                  >
+                    <el-option
+                      v-for="c in chrClasses"
+                      :key="`class-${c.ID}`"
+                      :label="c.Name_Lang_zhCN"
+                      :value="c.ID"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+          <el-card
+            style="margin-top: 16px"
+            :body-style="{ padding: '22px 20px 0 20px' }"
+          >
+            <el-row :gutter="16">
+              <el-col :span="6">
+                <el-form-item label="按钮位置">
+                  <el-input-number
+                    v-model="playerCreateInfoAction.button"
+                    controls-position="right"
+                    placeholder="button"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="技能">
+                  <spell-selector
+                    v-model="playerCreateInfoAction.action"
+                    placeholder="action"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="类别">
+                  <el-input-number
+                    v-model="playerCreateInfoAction.type"
+                    controls-position="right"
+                    placeholder="type"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-card>
+        </div>
+        <el-card style="margin-top: 16px">
+          <el-button type="primary" :loading="loading" @click="store">
+            保存
+          </el-button>
+          <el-button @click="cancel">返回</el-button>
+        </el-card>
+      </el-form>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import WaypointDataSelector from "@/components/WaypointDataSelector.vue";
+import SpellName from "@/components/SpellName";
+import SpellDescription from "@/components/SpellDescription";
+import SpellSelector from "@/components/SpellSelector";
+import { localeResistanceSchools } from "@/locales/creature";
 
 export default {
   data() {
     return {
       initing: false,
-      loading: false,
       creating: false,
+      editing: false,
+      currentRow: undefined,
+      loading: false,
+      localeResistanceSchools: localeResistanceSchools,
     };
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
-    ...mapState("achievement", ["achievement"]),
-    ...mapState("achievementCriteria", ["achievementCriteria"]),
+    ...mapState("initiator", ["chrRaces", "chrClasses"]),
+    ...mapState("playerCreateInfo", ["playerCreateInfo"]),
+    ...mapState("playerCreateInfoAction", [
+      "playerCreateInfoActions",
+      "playerCreateInfoAction",
+    ]),
+    disabled() {
+      return this.currentRow == undefined;
+    },
     credential() {
       return {
-        ID: this.achievementCriteria.ID,
+        race: this.playerCreateInfo.race,
+        class: this.playerCreateInfo.class,
+        button:
+          this.currentRow != undefined ? this.currentRow.button : undefined,
       };
     },
   },
   methods: {
-    ...mapActions("achievementCriteria", [
-      "storeAchievementCriteria",
-      "findAchievementCriteria",
-      "updateAchievementCriteria",
-      "createAchievementCriteria",
+    ...mapActions("playerCreateInfoAction", [
+      "searchPlayerCreateInfoActions",
+      "storePlayerCreateInfoAction",
+      "findPlayerCreateInfoAction",
+      "updatePlayerCreateInfoAction",
+      "destroyPlayerCreateInfoAction",
+      "createPlayerCreateInfoAction",
+      "copyPlayerCreateInfoAction",
     ]),
     calculateMaxHeight() {
-      return this.clientHeight - 307;
+      return this.creating ? this.clientHeight - 307 : this.clientHeight - 349;
+    },
+    async create() {
+      this.creating = true;
+      this.editing = false;
+      await this.createPlayerCreateInfoAction({
+        race: this.playerCreateInfo.race,
+        class: this.playerCreateInfo.class,
+      });
     },
     async store() {
       this.loading = true;
       try {
-        if (this.creating) {
-          await this.storeAchievementCriteria(this.achievementCriteria);
+        if (!this.editing) {
+          await this.storePlayerCreateInfoAction(this.playerCreateInfoAction);
           this.$notify({
             title: "保存成功",
             position: "top-right",
             type: "success",
           });
+          await this.searchPlayerCreateInfoActions({
+            race: this.playerCreateInfo.race,
+            class: this.playerCreateInfo.class,
+          });
           this.creating = false;
+          this.editing = false;
         } else {
-          await this.updateAchievementCriteria({
+          await this.updatePlayerCreateInfoAction({
             credential: this.credential,
-            achievementCriteria: this.achievementCriteria,
+            playerCreateInfoAction: this.playerCreateInfoAction,
           });
           this.$notify({
             title: "修改成功",
             position: "top-right",
             type: "success",
           });
+          await this.searchPlayerCreateInfoActions({
+            race: this.playerCreateInfo.race,
+            class: this.playerCreateInfo.class,
+          });
+          this.creating = false;
+          this.editing = false;
         }
         this.loading = false;
       } catch (error) {
@@ -237,25 +226,99 @@ export default {
       }
     },
     cancel() {
-      this.$router.go(-1);
+      this.creating = false;
+    },
+    copy() {
+      this.$confirm("此操作不会复制关联表数据，确认继续？", "确认复制", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "info",
+        dangerouslyUseHTMLString: true,
+        beforeClose: async (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            try {
+              await this.copyPlayerCreateInfoAction(this.credential);
+              await this.searchPlayerCreateInfoActions({
+                race: this.playerCreateInfo.race,
+                class: this.playerCreateInfo.class,
+              });
+              this.$notify({
+                title: "复制成功",
+                position: "top-right",
+                type: "success",
+              });
+              instance.confirmButtonLoading = false;
+              done();
+            } catch (error) {
+              instance.confirmButtonLoading = false;
+              done();
+            }
+          } else {
+            done();
+          }
+        },
+      });
+    },
+    destroy() {
+      this.$confirm(
+        "此操作将永久删除该数据，确认继续？<br><small>为避免误操作，不提供删除关联表数据功能。</small>",
+        "确认删除",
+        {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "info",
+          dangerouslyUseHTMLString: true,
+          beforeClose: async (action, instance, done) => {
+            if (action === "confirm") {
+              try {
+                await this.destroyPlayerCreateInfoAction(this.credential);
+                await this.searchPlayerCreateInfoActions({
+                  race: this.playerCreateInfo.race,
+                  class: this.playerCreateInfo.class,
+                });
+                this.$notify({
+                  title: "删除成功",
+                  position: "top-right",
+                  type: "success",
+                });
+                instance.confirmButtonLoading = false;
+                done();
+              } catch (error) {
+                instance.confirmButtonLoading = false;
+                done();
+              }
+            } else {
+              done();
+            }
+          },
+        }
+      );
+    },
+    select(row) {
+      this.currentRow = row;
+    },
+    async show(row) {
+      this.creating = true;
+      this.editing = true;
+      await this.findPlayerCreateInfoAction({
+        race: this.playerCreateInfo.race,
+        class: this.playerCreateInfo.class,
+        button: row.button,
+      });
     },
     async init() {
       this.initing = true;
-      await this.findAchievementCriteria({
-        Achievement_Id: this.achievement.ID,
+      await this.searchPlayerCreateInfoActions({
+        race: this.playerCreateInfo.race,
+        class: this.playerCreateInfo.class,
       });
-      if (this.achievementCriteria.ID == undefined) {
-        this.creating = true;
-        await this.createAchievementCriteria({
-          Achievement_Id: this.achievement.ID,
-        });
-      }
       this.initing = false;
     },
   },
   mounted() {
     this.init();
   },
-  components: { WaypointDataSelector },
+  components: { SpellName, SpellDescription, SpellSelector },
 };
 </script>

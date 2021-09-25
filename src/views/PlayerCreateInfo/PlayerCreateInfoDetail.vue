@@ -24,12 +24,16 @@
       <el-tab-pane label="玩家出生信息" name="player-create-info" lazy>
         <player-create-info-tab-pane></player-create-info-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="动作条" name="player-create-info-action" lazy>
+        <player-create-info-action-tab-pane></player-create-info-action-tab-pane>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
 import PlayerCreateInfoTabPane from "@/views/PlayerCreateInfo/components/PlayerCreateInfoTabPane";
+import PlayerCreateInfoActionTabPane from "@/views/PlayerCreateInfo/components/PlayerCreateInfoActionTabPane";
 
 import { mapState } from "vuex";
 
@@ -58,6 +62,7 @@ export default {
   },
   components: {
     PlayerCreateInfoTabPane,
+    PlayerCreateInfoActionTabPane,
   },
 };
 </script>
