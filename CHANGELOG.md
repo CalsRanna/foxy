@@ -1,3 +1,18 @@
+## [0.2.5](https://github.com/CalsRanna/foxy/compare/0.2.4...0.2.5) (2021-09-30)
+
+
+### Features
+
+* **advance:** add tree filter to advance view ([ad68979](https://github.com/CalsRanna/foxy/commit/ad6897906aed7733c84c006bbcd109c17876cdcd))
+* **area table:** add area table selector ([4c128b1](https://github.com/CalsRanna/foxy/commit/4c128b1cd0aef72080668881202ab8a0c103cf19))
+* **player create info action:** add player create info action module ([0f28051](https://github.com/CalsRanna/foxy/commit/0f28051e48206174f37cc18c743705abbd2b6ac7))
+* **player create info item:** add player create info item module ([cfa3a99](https://github.com/CalsRanna/foxy/commit/cfa3a99370b50eaf52e809d69bcff4bdf4877be2))
+* **player create info spell custom:** add player create info spell custom module ([2d5375b](https://github.com/CalsRanna/foxy/commit/2d5375be9b7be508545855f400d3828aacfbb199))
+* **player create info:** add player create info module ([36ec183](https://github.com/CalsRanna/foxy/commit/36ec1831cded56db21ee7494cd66828d1328ecfd))
+* **smart script:** make params flexable with its type ([68746ac](https://github.com/CalsRanna/foxy/commit/68746ac729d802552b0b1a706e337e87a98d7160))
+
+
+
 ## [0.2.4](https://github.com/CalsRanna/foxy/compare/0.2.3...0.2.4) (2021-09-01)
 
 

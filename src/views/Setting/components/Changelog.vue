@@ -5,6 +5,66 @@
   >
     <el-card>
       <div slot="header">
+        <h2>0.2.5 <small>2021-09-30</small></h2>
+      </div>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>advance:</strong> add tree filter to advance view
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/ad6897906aed7733c84c006bbcd109c17876cdcd"
+            text="(ad68979)"
+          />
+        </li>
+        <li>
+          <strong>area table:</strong> add area table selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/4c128b1cd0aef72080668881202ab8a0c103cf19"
+            text="(4c128b1)"
+          />
+        </li>
+        <li>
+          <strong>player create info action:</strong> add player create info
+          action module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/0f28051e48206174f37cc18c743705abbd2b6ac7"
+            text="(0f28051)"
+          />
+        </li>
+        <li>
+          <strong>player create info item:</strong> add player create info item
+          module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/cfa3a99370b50eaf52e809d69bcff4bdf4877be2"
+            text="(cfa3a99)"
+          />
+        </li>
+        <li>
+          <strong>player create info spell custom:</strong> add player create
+          info spell custom module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/2d5375be9b7be508545855f400d3828aacfbb199"
+            text="(2d5375b)"
+          />
+        </li>
+        <li>
+          <strong>player create info:</strong> add player create info module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/36ec1831cded56db21ee7494cd66828d1328ecfd"
+            text="(36ec183)"
+          />
+        </li>
+        <li>
+          <strong>smart script:</strong> make params flexable with its type
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/68746ac729d802552b0b1a706e337e87a98d7160"
+            text="(68746ac)"
+          />
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.2.4 <small>2021-09-01</small></h2>
       </div>
       <h3>Bug Fixes</h3>
