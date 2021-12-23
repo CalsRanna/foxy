@@ -71,7 +71,7 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备Achievement数据
           <span v-if="!isSearchingAchievementDbc">
-            ，共{{ achievements }}条数据
+            ，共{{ achievements }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('AchievementCriteria') > -1">
@@ -82,7 +82,7 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备AchievementCriteria数据
           <span v-if="!isSearchingAchievementCriteriaDbc">
-            ，共{{ achievementCriterias }}条数据
+            ，共{{ achievementCriterias }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('AreaTable') > -1">
@@ -90,7 +90,7 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备AreaTable数据
           <span v-if="!isSearchingAreaTableDbc">
-            ，共{{ areaTables }}条数据
+            ，共{{ areaTables }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('CurrencyCategory') > -1">
@@ -98,7 +98,7 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备CurrencyCategory数据
           <span v-if="!isSearchingCurrencyCategoryDbc">
-            ，共{{ currencyCategories }}条数据
+            ，共{{ currencyCategories }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('CurrencyType') > -1">
@@ -106,7 +106,7 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备CurrencyType数据
           <span v-if="!isSearchingCurrencyTypeDbc">
-            ，共{{ currencyTypes }}条数据
+            ，共{{ currencyTypes }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('EmotesText') > -1">
@@ -114,26 +114,28 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备EmotesText数据
           <span v-if="!isSearchingEmotesTextDbc">
-            ，共{{ emotesTexts }}条数据
+            ，共{{ emotesTexts }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('Item') > -1">
           <i class="el-icon-loading" v-if="isSearchingItemDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备Item数据
-          <span v-if="!isSearchingItemDbc"> ，共{{ items }}条数据 </span>
+          <span v-if="!isSearchingItemDbc"> ，共{{ items }}条记录 </span>
         </li>
         <li v-if="checkedDbcs.indexOf('ItemExtendedCost') > -1">
           <i class="el-icon-loading" v-if="isSearchingItemExtendedCostDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备ItemExtendedCost数据
-          <span v-if="!isSearchingItemExtendedCostDbc"> ，共{{ itemExtendedCosts }}条数据 </span>
+          <span v-if="!isSearchingItemExtendedCostDbc">
+            ，共{{ itemExtendedCosts }}条记录
+          </span>
         </li>
         <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
           <i class="el-icon-loading" v-if="isSearchingItemSetDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备ItemSet数据
-          <span v-if="!isSearchingItemSetDbc"> ，共{{ itemSets }}条数据 </span>
+          <span v-if="!isSearchingItemSetDbc"> ，共{{ itemSets }}条记录 </span>
         </li>
         <li v-if="checkedDbcs.indexOf('QuestFactionReward') > -1">
           <i
@@ -143,7 +145,7 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备QuestFactionReward数据
           <span v-if="!isSearchingQuestFactionRewardDbc">
-            ，共{{ questFactionRewards }}条数据
+            ，共{{ questFactionRewards }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('QuestInfo') > -1">
@@ -151,7 +153,7 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备QuestInfo数据
           <span v-if="!isSearchingQuestInfoDbc">
-            ，共{{ questInfos }}条数据
+            ，共{{ questInfos }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('QuestSort') > -1">
@@ -159,7 +161,7 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备QuestSort数据
           <span v-if="!isSearchingQuestSortDbc">
-            ，共{{ questSorts }}条数据
+            ，共{{ questSorts }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('ScalingStatDistribution') > -1">
@@ -170,7 +172,7 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备ScalingStatDistribution数据
           <span v-if="!isSearchingScalingStatDistributionDbc">
-            ，共{{ scalingStatDistributions }}条数据
+            ，共{{ scalingStatDistributions }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('ScalingStatValues') > -1">
@@ -178,14 +180,14 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备ScalingStatValues数据
           <span v-if="!isSearchingScalingStatValuesDbc">
-            ，共{{ scalingStatValues }}条数据
+            ，共{{ scalingStatValues }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('Spell') > -1">
           <i class="el-icon-loading" v-if="isSearchingSpellDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备Spell数据
-          <span v-if="!isSearchingSpellDbc"> ，共{{ spells }}条数据 </span>
+          <span v-if="!isSearchingSpellDbc"> ，共{{ spells }}条记录 </span>
         </li>
         <li v-if="checkedDbcs.indexOf('SpellItemEnchantment') > -1">
           <i
@@ -195,21 +197,21 @@
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备SpellItemEnchantment数据
           <span v-if="!isSearchingSpellItemEnchantmentDbc">
-            ，共{{ spellItemEnchantments }}条数据
+            ，共{{ spellItemEnchantments }}条记录
           </span>
         </li>
         <li v-if="checkedDbcs.indexOf('Talent') > -1">
           <i class="el-icon-loading" v-if="isSearchingTalentDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备Talent数据
-          <span v-if="!isSearchingTalentDbc"> ，共{{ talents }}条数据 </span>
+          <span v-if="!isSearchingTalentDbc"> ，共{{ talents }}条记录 </span>
         </li>
         <li v-if="checkedDbcs.indexOf('TalentTab') > -1">
           <i class="el-icon-loading" v-if="isSearchingTalentTabDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
           准备TalentTab数据
           <span v-if="!isSearchingTalentTabDbc">
-            ，共{{ talentTabs }}条数据
+            ，共{{ talentTabs }}条记录
           </span>
         </li>
         <template v-if="active > 0">

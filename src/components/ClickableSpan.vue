@@ -1,7 +1,9 @@
 <template>
-  <span style="color: #409eff; cursor: pointer" @click="() => openBrowser(url)">
-    {{ text }}
-  </span>
+  <span
+    style="color: #409eff; cursor: pointer"
+    @click="() => openBrowser(url)"
+    >{{ text }}</span
+  >
 </template>
 
 <script>

@@ -17,6 +17,17 @@
       }"
       :loading="loading"
     >
+      <el-col :span="24" style="margin-top: 16px">
+        <el-alert type="info" :closable="false">
+          <div slot="title">
+            狐狸魔兽世界论坛<clickable-span
+              text="http://foxwow.xyz"
+              url="http://foxwow.xyz"
+            ></clickable-span
+            >已正式上线运行，请前往论坛反馈BUG及建议。
+          </div>
+        </el-alert>
+      </el-col>
       <el-col :span="16">
         <el-row :gutter="16">
           <el-col :span="8">
@@ -133,46 +144,38 @@
             <span>介绍</span>
           </div>
           <p style="text-indent: 2em">
-            目前存在的编辑器都不是很能满足我对一个好用的编辑器的期望：简单，易用，美观，因此我提交了Foxy这个开源项目。
+            目前存在的工具都不能满足我对一个好用的编辑器的期望：简单，易用，美观，因此我发起了Foxy这个项目。
           </p>
           <p style="text-indent: 2em">
-            一旦涉及自定义配置项，软件很难做到简单易用，因此目前暂不支持对数据库表的定义，
-            所有编辑项全部写死在代码里（基于AzerothCore），后期考虑改为可配置，以便适配其他服务端，
-            提高软件复用效率。
+            Foxy目前只支持AzerothCore或基于其二次开发的数据库，不支持对数据库表自定义。
           </p>
           <p style="text-indent: 2em">
-            闲余时间开发，进度随缘， Feature也随缘， Bug请到
-            <clickable-span
+            闲余时间开发，进度随缘， Feature也随缘， Bug请到<clickable-span
               text="Github"
               url="https://github.com/CalsRanna/foxy/issues"
-            ></clickable-span>
-            上面提交 issue ，也可以前往
-            <clickable-span
-              text="Telegram"
-              url="https://t.me/foxy_editor"
-            ></clickable-span>
-            讨论。
+            ></clickable-span
+            >上面提交issue，也可以前往<clickable-span
+              text="Foxwow"
+              url="http://foxwow.xyz/d/2-foxy"
+            ></clickable-span
+            >讨论。
           </p>
           <p style="text-indent: 2em">
-            如果你希望得到最新版本的Foxy，请访问
-            <clickable-span
+            如果你希望得到最新版本的Foxy，请访问<clickable-span
               text="下载页面"
               url="https://github.com/CalsRanna/foxy/releases"
-            ></clickable-span>
-            或前往
-            <el-tooltip>
-              <clickable-span
+            ></clickable-span
+            >或前往<el-tooltip
+              ><clickable-span
                 text="百度网盘"
                 :url="remote.netDiskUrl"
               ></clickable-span>
-              <span slot="content">提取码：{{ remote.code }}</span>
-            </el-tooltip>
-            下载，你也可以
-            <clickable-span
+              <span slot="content">提取码：{{ remote.code }}</span> </el-tooltip
+            >下载，你也可以<clickable-span
               text="Clone"
               url="https://github.com/CalsRanna/foxy"
-            ></clickable-span>
-            源码自行编译使用 。
+            ></clickable-span
+            >源码自行编译使用。
           </p>
         </el-card>
         <el-card style="margin-top: 16px; font-size: 14px">
