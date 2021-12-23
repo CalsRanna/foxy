@@ -44,29 +44,31 @@
         <el-row :gutter="16">
           <el-col :span="6">
             <el-form-item label="图标">
-              <el-input-number
+              <spell-icon-selector
                 v-model="talentTab.SpellIconID"
                 controls-position="right"
                 placeholder="SpellIconID"
-              ></el-input-number>
+              ></spell-icon-selector>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="种族掩码">
-              <el-input-number
+              <flag-editor
+                title="种族掩码编辑器"
                 v-model="talentTab.RaceMask"
-                controls-position="right"
+                :flags="allowableRaces"
                 placeholder="RaceMask"
-              ></el-input-number>
+              ></flag-editor>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="职业掩码">
-              <el-input-number
+              <flag-editor
+                title="职业掩码编辑器"
                 v-model="talentTab.ClassMask"
-                controls-position="right"
+                :flags="allowableClasses"
                 placeholder="ClassMask"
-              ></el-input-number>
+              ></flag-editor>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -79,7 +81,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="权重">
+            <el-form-item label="顺序">
               <el-input-number
                 v-model="talentTab.OrderIndex"
                 controls-position="right"
@@ -109,6 +111,8 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import SpellIconSelector from "../../../components/SpellIconSelector.vue";
+import FlagEditor from "../../../components/FlagEditor.vue";
 
 export default {
   data() {
@@ -120,12 +124,33 @@ export default {
   },
   computed: {
     ...mapState("app", ["clientHeight"]),
+    ...mapState("initiator", ["chrRaces", "chrClasses"]),
     ...mapState("talent", ["talent"]),
     ...mapState("talentTab", ["talentTab"]),
     credential() {
       return {
         ID: this.talent.TabID,
       };
+    },
+    allowableRaces() {
+      return this.chrRaces.map((chrRace) => {
+        return {
+          index: chrRace.ID,
+          flag: Math.pow(2, chrRace.ID - 1),
+          name: chrRace.Name_Lang_zhCN,
+          comment: chrRace.ClientFileString,
+        };
+      });
+    },
+    allowableClasses() {
+      return this.chrClasses.map((chrClass) => {
+        return {
+          index: chrClass.ID,
+          flag: Math.pow(2, chrClass.ID - 1),
+          name: chrClass.Name_Lang_zhCN,
+          comment: chrClass.Filename, // 不知道为什么变成了Filename，原field应该是FileName
+        };
+      });
     },
   },
   methods: {
@@ -185,5 +210,6 @@ export default {
   mounted() {
     this.init();
   },
+  components: { SpellIconSelector, FlagEditor },
 };
 </script>
