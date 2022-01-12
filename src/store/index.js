@@ -6,6 +6,7 @@ import initiator from "./initiator";
 import exporter from "./exporter";
 import updater from "./updater";
 import achievement from "./achievement";
+import achievementCategory from "./achievementCategory";
 import achievementCategorySelector from "./achievementCategorySelector";
 import achievementCriteria from "./achievementCriteria";
 import areaTable from "./areaTable";
@@ -126,6 +127,7 @@ export default new Vuex.Store({
     exporter,
     updater,
     achievement,
+    achievementCategory,
     achievementCategorySelector,
     achievementCriteria,
     areaTable,

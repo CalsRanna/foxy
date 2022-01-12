@@ -8,6 +8,7 @@ export default {
     checkedDbcs: ["Item", "Spell"],
     preparation: [],
     achievements: [],
+    achievementCategogies: [],
     achievementCriterias: [],
     areaTables: [],
     currencyCategories: [],
@@ -40,6 +41,24 @@ export default {
         ipcRenderer.on("SEARCH_ACHIEVEMENT_DBC_REJECT", (event, error) => {
           reject(error);
         });
+      });
+    },
+    searchAchievementCategoryDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("SEARCH_ACHIEVEMENT_CATEGORY_DBC");
+        ipcRenderer.on(
+          "SEARCH_ACHIEVEMENT_CATEGORY_DBC",
+          (event, achievementCategories) => {
+            commit("SEARCH_ACHIEVEMENT_CATEGORY_DBC", achievementCategories);
+            resolve();
+          }
+        );
+        ipcRenderer.on(
+          "SEARCH_ACHIEVEMENT_CATEGORY_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     searchAchievementCriteriaDbc({ commit }) {
@@ -75,13 +94,19 @@ export default {
     searchCurrencyCategoryDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("SEARCH_CURRENCY_CATEGORY_DBC");
-        ipcRenderer.on("SEARCH_CURRENCY_CATEGORY_DBC", (event, currencyCategories) => {
-          commit("SEARCH_CURRENCY_CATEGORY_DBC", currencyCategories);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_CURRENCY_CATEGORY_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.on(
+          "SEARCH_CURRENCY_CATEGORY_DBC",
+          (event, currencyCategories) => {
+            commit("SEARCH_CURRENCY_CATEGORY_DBC", currencyCategories);
+            resolve();
+          }
+        );
+        ipcRenderer.on(
+          "SEARCH_CURRENCY_CATEGORY_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     searchCurrencyTypeDbc({ commit }) {
@@ -123,13 +148,19 @@ export default {
     searchItemExtendedCostDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("SEARCH_ITEM_EXTENDED_COST_DBC");
-        ipcRenderer.on("SEARCH_ITEM_EXTENDED_COST_DBC", (event, itemExtendedCosts) => {
-          commit("SEARCH_ITEM_EXTENDED_COST_DBC", itemExtendedCosts);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_ITEM_EXTENDED_COST_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.on(
+          "SEARCH_ITEM_EXTENDED_COST_DBC",
+          (event, itemExtendedCosts) => {
+            commit("SEARCH_ITEM_EXTENDED_COST_DBC", itemExtendedCosts);
+            resolve();
+          }
+        );
+        ipcRenderer.on(
+          "SEARCH_ITEM_EXTENDED_COST_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     searchItemSetDbc({ commit }) {
@@ -290,6 +321,20 @@ export default {
         });
       });
     },
+    writeAchievementCategoryDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("WRITE_ACHIEVEMENT_CATEGORY_DBC");
+        ipcRenderer.on("WRITE_ACHIEVEMENT_CATEGORY_DBC", (event) => {
+          resolve();
+        });
+        ipcRenderer.on(
+          "WRITE_ACHIEVEMENT_CATEGORY_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
     writeAchievementCriteriaDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("WRITE_ACHIEVEMENT_CRITERIA_DBC");
@@ -365,9 +410,12 @@ export default {
         ipcRenderer.on("WRITE_ITEM_EXTENDED_COST_DBC", (event) => {
           resolve();
         });
-        ipcRenderer.on("WRITE_ITEM_EXTENDED_COST_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.on(
+          "WRITE_ITEM_EXTENDED_COST_DBC_REJECT",
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     writeItemSetDbc({ commit }) {
@@ -499,6 +547,9 @@ export default {
     },
     SEARCH_ACHIEVEMENT_DBC(state, achievements) {
       state.achievements = achievements;
+    },
+    SEARCH_ACHIEVEMENT_CATEGORY_DBC(state, achievementCategories) {
+      state.achievementCategories = achievementCategories;
     },
     SEARCH_ACHIEVEMENT_CRITERIA_DBC(state, achievementCriterias) {
       state.achievementCriterias = achievementCriterias;

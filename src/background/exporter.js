@@ -19,6 +19,23 @@ ipcMain.on("SEARCH_ACHIEVEMENT_DBC", (event) => {
     });
 });
 
+ipcMain.on("SEARCH_ACHIEVEMENT_CATEGORY_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_achievement_category");
+
+  queryBuilder
+    .then((rows) => {
+      global.achievementCategoris = rows;
+      event.reply("SEARCH_ACHIEVEMENT_CATEGORY_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_ACHIEVEMENT_CATEGORY_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
 ipcMain.on("SEARCH_ACHIEVEMENT_CRITERIA_DBC", (event) => {
   let queryBuilder = knex.select().from("foxy.dbc_achievement_criteria");
 
@@ -315,6 +332,17 @@ ipcMain.on("WRITE_ACHIEVEMENT_DBC", (event) => {
     })
     .catch((error) => {
       event.reply("WRITE_ACHIEVEMENT_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_ACHIEVEMENT_CATEGORY_DBC", (event) => {
+  DBC.write(`${path}/AchievementCategory.dbc`, global.achievementCategoris)
+    .then(() => {
+      event.reply("WRITE_ACHIEVEMENT_CATEGORY_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_ACHIEVEMENT_CATEGORY_DBC_REJECT", error);
       event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     });
 });
