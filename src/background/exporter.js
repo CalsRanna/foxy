@@ -292,7 +292,7 @@ ipcMain.on("SEARCH_TALENT_DBC", (event) => {
 });
 
 ipcMain.on("SEARCH_TALENT_TAB_DBC", (event) => {
-  let queryBuilder = knex.select().from("foxy.dbc_talent_TAB");
+  let queryBuilder = knex.select().from("foxy.dbc_talent_tab");
 
   queryBuilder
     .then((rows) => {
