@@ -10,6 +10,7 @@ import "./background/achievementCategory";
 import "./background/achievementCategorySelector";
 import "./background/achievementCriteria";
 import "./background/achievementCriteriaData";
+import "./background/achievementReward";
 import "./background/areaTable";
 import "./background/areaTableOrQuestSortSelector";
 import "./background/areaTableSelector";

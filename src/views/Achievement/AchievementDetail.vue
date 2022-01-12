@@ -33,6 +33,9 @@
       <el-tab-pane label="标准数据" name="achievement-criteria-data" lazy>
         <achievement-criteria-data-tab-pane></achievement-criteria-data-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="奖励" name="achievement-reward" lazy>
+        <achievement-reward-tab-pane></achievement-reward-tab-pane>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -42,6 +45,7 @@ import AchievementTabPane from "@/views/Achievement/components/AchievementTabPan
 import AchievementCategoryTabPane from "@/views/Achievement/components/AchievementCategoryTabPane";
 import AchievementCriteriaDataTabPane from "@/views/Achievement/components/AchievementCriteriaDataTabPane";
 import AchievementCriteriaTabPane from "@/views/Achievement/components/AchievementCriteriaTabPane";
+import AchievementRewardTabPane from "@/views/Achievement/components/AchievementRewardTabPane";
 
 import { mapState } from "vuex";
 
@@ -60,6 +64,7 @@ export default {
     AchievementCategoryTabPane,
     AchievementCriteriaDataTabPane,
     AchievementCriteriaTabPane,
+    AchievementRewardTabPane,
   },
 };
 </script>
