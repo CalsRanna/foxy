@@ -11,6 +11,7 @@ import achievementCategorySelector from "./achievementCategorySelector";
 import achievementCriteria from "./achievementCriteria";
 import achievementCriteriaData from "./achievementCriteriaData";
 import achievementReward from "./achievementReward";
+import achievementRewardLocale from "./achievementRewardLocale";
 import areaTable from "./areaTable";
 import areaTableOrQuestSortSelector from "./areaTableOrQuestSortSelector";
 import areaTableSelector from "./areaTableSelector";
@@ -134,6 +135,7 @@ export default new Vuex.Store({
     achievementCriteria,
     achievementCriteriaData,
     achievementReward,
+    achievementRewardLocale,
     areaTable,
     areaTableOrQuestSortSelector,
     areaTableSelector,
