@@ -25,15 +25,6 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="父级编号">
-              <el-input-number
-                v-model="achievementCategory.Parent"
-                controls-position="right"
-                placeholder="Parent"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="父级编号">
               <achievement-category-selector
                 v-model="achievementCategory.Parent"
                 placeholder="Category"
