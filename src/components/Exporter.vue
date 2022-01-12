@@ -74,6 +74,17 @@
             ，共{{ achievements }}条记录
           </span>
         </li>
+        <li v-if="checkedDbcs.indexOf('AchievementCategory') > -1">
+          <i
+            class="el-icon-loading"
+            v-if="isSearchingAchievementCategoryDbc"
+          ></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备AchievementCategory数据
+          <span v-if="!isSearchingAchievementCategoryDbc">
+            ，共{{ achievementCategories }}条记录
+          </span>
+        </li>
         <li v-if="checkedDbcs.indexOf('AchievementCriteria') > -1">
           <i
             class="el-icon-loading"
@@ -220,6 +231,14 @@
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
             写入Achievement.dbc
           </li>
+          <li v-if="checkedDbcs.indexOf('AchievementCategory') > -1">
+            <i
+              class="el-icon-loading"
+              v-if="isWritingAchievementCategoryDbc"
+            ></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入AchievementCategory.dbc
+          </li>
           <li v-if="checkedDbcs.indexOf('AchievementCriteria') > -1">
             <i
               class="el-icon-loading"
@@ -331,6 +350,7 @@
 const ipcRenderer = window.ipcRenderer;
 const options = [
   "Achievement",
+  "AchievementCategory",
   "AchievementCriteria",
   "AreaTable",
   "CurrencyCategory",
@@ -366,6 +386,7 @@ export default {
       closable: false,
       active: 0,
       isSearchingAchievementDbc: true,
+      isSearchingAchievementCategoryDbc: true,
       isSearchingAchievementCriteriaDbc: true,
       isSearchingAreaTableDbc: true,
       isSearchingCurrencyCategoryDbc: true,
@@ -384,6 +405,7 @@ export default {
       isSearchingTalentDbc: true,
       isSearchingTalentTabDbc: true,
       isWritingAchievementDbc: true,
+      isWritingAchievementCategoryDbc: true,
       isWritingAchievementCriteriaDbc: true,
       isWritingAreaTableDbc: true,
       isWritingCurrencyCategoryDbc: true,
@@ -407,6 +429,7 @@ export default {
     ...mapState("exporter", [
       "checkedDbcs",
       "achievements",
+      "achievementCategories",
       "achievementCriterias",
       "areaTables",
       "currencyCategories",
@@ -430,6 +453,7 @@ export default {
     ...mapActions("exporter", [
       "updateCheckedDbcs",
       "searchAchievementDbc",
+      "searchAchievementCategoryDbc",
       "searchAchievementCriteriaDbc",
       "searchAreaTableDbc",
       "searchCurrencyCategoryDbc",
@@ -448,6 +472,7 @@ export default {
       "searchTalentDbc",
       "searchTalentTabDbc",
       "writeAchievementDbc",
+      "writeAchievementCategoryDbc",
       "writeAchievementCriteriaDbc",
       "writeAreaTableDbc",
       "writeCurrencyCategoryDbc",
@@ -479,6 +504,7 @@ export default {
     },
     confirm() {
       this.isSearchingAchievementDbc = true;
+      this.isSearchingAchievementCategoryDbc = true;
       this.isSearchingAchievementCriteriaDbc = true;
       this.isSearchingAreaTableDbc = true;
       this.isSearchingCurrencyCategoryDbc = true;
@@ -497,6 +523,7 @@ export default {
       this.isSearchingTalentDbc = true;
       this.isSearchingTalentTabDbc = true;
       this.isWritingAchievementDbc = true;
+      this.isWritingAchievementCategoryDbc = true;
       this.isWritingAchievementCriteriaDbc = true;
       this.isWritingAreaTableDbc = true;
       this.isWritingCurrencyCategoryDbc = true;
@@ -530,6 +557,13 @@ export default {
             promises.push(
               this.searchAchievementDbc().then(() => {
                 this.isSearchingAchievementDbc = false;
+              })
+            );
+            break;
+          case "AchievementCategory":
+            promises.push(
+              this.searchAchievementCategoryDbc().then(() => {
+                this.isSearchingAchievementCategoryDbc = false;
               })
             );
             break;
@@ -673,6 +707,13 @@ export default {
             promises.push(
               this.writeAchievementDbc().then(() => {
                 this.isWritingAchievementDbc = false;
+              })
+            );
+            break;
+          case "AchievementCategory":
+            promises.push(
+              this.writeAchievementCategoryDbc().then(() => {
+                this.isWritingAchievementCategoryDbc = false;
               })
             );
             break;
