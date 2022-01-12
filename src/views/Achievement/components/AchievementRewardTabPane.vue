@@ -24,21 +24,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="Subject">
-              <el-input
-                v-model="achievementReward.Subject"
-                placeholder="Subject"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Body">
-              <el-input v-model="achievementReward.Body" placeholder="Body" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="16">
-          <el-col :span="6">
             <el-form-item label="联盟称号">
               <char-title-selector
                 v-model="achievementReward.TitleA"
@@ -57,19 +42,35 @@
         </el-row>
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="物品">
-              <item-template-selector
-                v-model="achievementReward.ItemID"
-                placeholder="ItemID"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
             <el-form-item label="发送者">
               <creature-template-selector
                 v-model="achievementReward.Sender"
                 placeholder="Sender"
               ></creature-template-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="主题">
+              <achievement-reward-subject-localizer
+                v-model="achievementReward.Subject"
+                placeholder="Subject"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="内容">
+              <achievement-reward-body-localizer
+                v-model="achievementReward.Body"
+                placeholder="Body"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="物品">
+              <item-template-selector
+                v-model="achievementReward.ItemID"
+                placeholder="ItemID"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -98,6 +99,8 @@ import { mapState, mapActions } from "vuex";
 import CharTitleSelector from "@/components/CharTitleSelector";
 import CreatureTemplateSelector from "@/components/CreatureTemplateSelector";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector";
+import AchievementRewardSubjectLocalizer from "./AchievementRewardSubjectLocalizer.vue";
+import AchievementRewardBodyLocalizer from "./AchievementRewardBodyLocalizer.vue";
 
 export default {
   data() {
@@ -123,6 +126,9 @@ export default {
       "findAchievementReward",
       "updateAchievementReward",
       "createAchievementReward",
+    ]),
+    ...mapActions("achievementRewardLocale", [
+      "searchAchievementRewardLocales",
     ]),
     calculateMaxHeight() {
       return this.clientHeight - 307;
@@ -159,18 +165,25 @@ export default {
     },
     async init() {
       this.initing = true;
-      console.log(this.achievementReward);
+      let payload = {
+        ID: this.achievement.ID,
+      };
+      await Promise.all([
+        this.findAchievementReward(payload),
+        this.searchAchievementRewardLocales(payload),
+      ]);
       await this.findAchievementReward({
         ID: this.achievement.ID,
       });
-      console.log(this.achievementReward);
+      await this.searchAchievementRewardLocales({
+        ID: this.achievement.ID,
+      });
       if (this.achievementReward.ID == undefined) {
         this.creating = true;
         await this.createAchievementReward({
           ID: this.achievement.ID,
         });
       }
-      console.log(this.achievementReward);
       this.initing = false;
     },
   },
@@ -178,6 +191,8 @@ export default {
     this.init();
   },
   components: {
+    AchievementRewardSubjectLocalizer,
+    AchievementRewardBodyLocalizer,
     CharTitleSelector,
     CreatureTemplateSelector,
     ItemTemplateSelector,
