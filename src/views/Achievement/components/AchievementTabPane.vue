@@ -207,6 +207,7 @@ export default {
       "updateAchievement",
       "createAchievement",
     ]),
+    ...mapActions("achievementCriteria", ["findAchievementCriteria"]),
     calculateMaxHeight() {
       return this.clientHeight - 307;
     },
@@ -243,6 +244,9 @@ export default {
         await Promise.all([this.createAchievement()]);
       } else {
         await this.findAchievement(this.credential);
+        await this.findAchievementCriteria({
+          Achievement_Id: this.achievement.ID,
+        });
       }
       this.initing = false;
     },
