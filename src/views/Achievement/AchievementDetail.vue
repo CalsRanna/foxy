@@ -30,6 +30,9 @@
       <el-tab-pane label="标准" name="achievement-criteria" lazy>
         <achievement-criteria-tab-pane></achievement-criteria-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="标准数据" name="achievement-criteria-data" lazy>
+        <achievement-criteria-data-tab-pane></achievement-criteria-data-tab-pane>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -37,6 +40,7 @@
 <script>
 import AchievementTabPane from "@/views/Achievement/components/AchievementTabPane";
 import AchievementCategoryTabPane from "@/views/Achievement/components/AchievementCategoryTabPane";
+import AchievementCriteriaDataTabPane from "@/views/Achievement/components/AchievementCriteriaDataTabPane";
 import AchievementCriteriaTabPane from "@/views/Achievement/components/AchievementCriteriaTabPane";
 
 import { mapState } from "vuex";
@@ -54,6 +58,7 @@ export default {
   components: {
     AchievementTabPane,
     AchievementCategoryTabPane,
+    AchievementCriteriaDataTabPane,
     AchievementCriteriaTabPane,
   },
 };
