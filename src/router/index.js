@@ -204,18 +204,6 @@ const routes = [
     component: () => import("@/views/Talent/TalentDetail"),
   },
   {
-    path: "/talent-tab",
-    component: () => import("@/views/TalentTab/TalentTabTable"),
-  },
-  {
-    path: "/talent-tab/create",
-    component: () => import("@/views/TalentTab/TalentTabDetail"),
-  },
-  {
-    path: "/talent-tab/:id",
-    component: () => import("@/views/TalentTab/TalentTabDetail"),
-  },
-  {
     path: "/reference-loot",
     component: () => import("@/views/ReferenceLoot/ReferenceLootTemplateTable"),
   },

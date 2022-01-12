@@ -202,12 +202,6 @@ export default {
               description: "天赋页面的技能",
               key: "talent",
             },
-            {
-              title: "天赋页",
-              subtitle: "Talent Tab",
-              description: "天赋的分类信息",
-              key: "talent-tab",
-            },
           ],
         },
       ],
