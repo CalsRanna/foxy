@@ -5,6 +5,74 @@
   >
     <el-card>
       <div slot="header">
+        <h2>0.2.6 <small>2022-01-12</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>achievement criteria:</strong> fix error while has no bindings
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/82091a0db99fa5cf9059a7e137c33f2a96194185"
+            text="(82091a0)"
+          />
+        </li>
+        <li>
+          <strong>clickable span:</strong> remove extra space around text
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/b272526ade578ed135ce10c81b3abb31cb45b0e9"
+            text="(b272526)"
+          />
+        </li>
+        <li>
+          <strong>exporter:</strong> fix export talent tab no such table error
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/be03539c726a053a5fb7c0a8b34d4c6d5e5369d6"
+            text="(be03539)"
+          />
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>achievement category:</strong> add achievement category module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/9ebb6870bb743505fc12295b37fc3e15843b2c60"
+            text="(9ebb687)"
+          />
+        </li>
+        <li>
+          <strong>achievement criteria data:</strong> add achievement criteria
+          data module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/86939c77685e4560f3008fa3a7bc1bb201867283"
+            text="(86939c7)"
+          />
+        </li>
+        <li>
+          <strong>achievement reward:</strong> add achievement reward module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/cf44301f191f859626a58622aa13248fbef4b7db"
+            text="(cf44301)"
+          />
+        </li>
+        <li>
+          <strong>localizer:</strong> add achievement reward localizer
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/8ca727ca6931c95da46dc4113124219a85b47ff1"
+            text="(8ca727c)"
+          />
+        </li>
+        <li>
+          <strong>talent tab:</strong> add selector and editor
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/32a0be264d138f22a3d269610c7ba62dfa850ae8"
+            text="(32a0be2)"
+          />
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.2.5 <small>2021-09-30</small></h2>
       </div>
       <h3>Features</h3>

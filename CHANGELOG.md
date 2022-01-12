@@ -1,3 +1,23 @@
+## [0.2.6](https://github.com/CalsRanna/foxy/compare/0.2.5...0.2.6) (2022-01-12)
+
+
+### Bug Fixes
+
+* **achievement criteria:** fix error while has no bindings ([82091a0](https://github.com/CalsRanna/foxy/commit/82091a0db99fa5cf9059a7e137c33f2a96194185))
+* **clickable span:** remove extra space around text ([b272526](https://github.com/CalsRanna/foxy/commit/b272526ade578ed135ce10c81b3abb31cb45b0e9))
+* **exporter:** fix export talent tab no such table error ([be03539](https://github.com/CalsRanna/foxy/commit/be03539c726a053a5fb7c0a8b34d4c6d5e5369d6))
+
+
+### Features
+
+* **achievement category:** add achievement category module ([9ebb687](https://github.com/CalsRanna/foxy/commit/9ebb6870bb743505fc12295b37fc3e15843b2c60))
+* **achievement criteria data:** add achievement criteria data module ([86939c7](https://github.com/CalsRanna/foxy/commit/86939c77685e4560f3008fa3a7bc1bb201867283))
+* **achievement reward:** add achievement reward module ([cf44301](https://github.com/CalsRanna/foxy/commit/cf44301f191f859626a58622aa13248fbef4b7db))
+* **localizer:** add achievement reward localizer ([8ca727c](https://github.com/CalsRanna/foxy/commit/8ca727ca6931c95da46dc4113124219a85b47ff1))
+* **talent tab:** add selector and editor ([32a0be2](https://github.com/CalsRanna/foxy/commit/32a0be264d138f22a3d269610c7ba62dfa850ae8))
+
+
+
 ## [0.2.5](https://github.com/CalsRanna/foxy/compare/0.2.4...0.2.5) (2021-09-30)
 
 
