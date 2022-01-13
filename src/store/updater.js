@@ -4,7 +4,7 @@ import axios from "axios";
 import { CHECK_VERSION } from "@/constants";
 
 const GITHUB_RELEASE_URL =
-  "https://api.github.com/repos/CalsRanna/foxy/releases";
+  "https://service-8hb18act-1257886063.cd.apigw.tencentcs.com/release/APIService-GetGithubUrl";
 const NET_DISK_URL =
   "https://service-10eupx2f-1257886063.cd.apigw.tencentcs.com/release/APIService-GetNetDiskUrl";
 
@@ -22,10 +22,8 @@ export default {
         let code = "";
         Promise.all([
           axios.get(GITHUB_RELEASE_URL).then((response) => {
-            if (response.data.length > 0) {
-              version = response.data[0].tag_name;
-              githubUrl = response.data[0].assets[0].browser_download_url;
-            }
+            version = response.data.version;
+            githubUrl = response.data.githubUrl;
           }),
 
           axios.get(NET_DISK_URL).then((response) => {
