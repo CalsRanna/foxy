@@ -237,7 +237,7 @@
               v-if="isWritingAchievementCategoryDbc"
             ></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入AchievementCategory.dbc
+            写入Achievement_Category.dbc
           </li>
           <li v-if="checkedDbcs.indexOf('AchievementCriteria') > -1">
             <i
@@ -245,7 +245,7 @@
               v-if="isWritingAchievementCriteriaDbc"
             ></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入AchievementCriteria.dbc
+            写入Achievement_Criteria.dbc
           </li>
           <li v-if="checkedDbcs.indexOf('AreaTable') > -1">
             <i class="el-icon-loading" v-if="isWritingAreaTableDbc"></i>
