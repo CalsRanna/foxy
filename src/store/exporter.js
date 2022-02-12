@@ -14,6 +14,7 @@ export default {
     currencyCategories: [],
     currencyTypes: [],
     emotesTexts: [],
+    glyphProperties: [],
     items: [],
     itemExtendedCosts: [],
     itemSets: [],
@@ -129,6 +130,21 @@ export default {
           resolve();
         });
         ipcRenderer.on("SEARCH_EMOTES_TEXT_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
+    searchEmotesTextDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("SEARCH_GLYPH_PROPERTY_DBC");
+        ipcRenderer.on(
+          "SEARCH_GLYPH_PROPERTY_DBC",
+          (event, glyphProperties) => {
+            commit("SEARCH_GLYPH_PROPERTY_DBC", glyphProperties);
+            resolve();
+          }
+        );
+        ipcRenderer.on("SEARCH_GLYPH_PROPERTY_DBC_REJECT", (event, error) => {
           reject(error);
         });
       });
@@ -393,6 +409,17 @@ export default {
         });
       });
     },
+    writeGlyphPropertyDbc({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("WRITE_GLYPH_PROPERTY_DBC");
+        ipcRenderer.on("WRITE_GLYPH_PROPERTY_DBC", (event) => {
+          resolve();
+        });
+        ipcRenderer.on("WRITE_GLYPH_PROPERTY_DBC_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
     writeItemDbc({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("WRITE_ITEM_DBC");
@@ -565,6 +592,9 @@ export default {
     },
     SEARCH_EMOTES_TEXT_DBC(state, emotesTexts) {
       state.emotesTexts = emotesTexts;
+    },
+    SEARCH_EMOTES_TEXT_DBC(state, glyphProperties) {
+      state.glyphProperties = glyphProperties;
     },
     SEARCH_ITEM_DBC(state, items) {
       state.items = items;

@@ -20,6 +20,7 @@ import {
   LOAD_DBC_FACTIONS,
   LOAD_DBC_FACTION_TEMPLATES,
   LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS,
+  LOAD_DBC_GLYPH_PROPERTIES,
   LOAD_DBC_ITEMS,
   LOAD_DBC_ITEM_DISPLAY_INFOS,
   LOAD_DBC_ITEM_RANDOM_PROPERTITIES,
@@ -88,6 +89,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(DBC.toSql(`${path}/Faction.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/FactionTemplate.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/GameObjectDisplayInfo.dbc`)).then(() => {}),
+        knex.raw(DBC.toSql(`${path}/GlyphProperties.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/ItemDisplayInfo.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/ItemExtendedCost.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/ItemRandomProperties.dbc`)).then(() => {}),
@@ -449,6 +451,38 @@ ipcMain.on(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS, (event) => {
           });
       } else {
         event.reply(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS);
+      }
+    })
+    .catch((error) => {
+      event.reply(`${LOAD_DBC_CHAR_TITLES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on(LOAD_DBC_GLYPH_PROPERTIES, (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_glyph_properties");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/GlyphProperties.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_glyph_properties", dbc.records)
+              .then(() => {
+                event.reply(LOAD_DBC_GLYPH_PROPERTIES);
+              })
+              .catch((error) => {
+                event.reply(`${LOAD_DBC_GLYPH_PROPERTIES}_REJECT`, error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply(`${LOAD_DBC_GLYPH_PROPERTIES}_REJECT`, error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply(LOAD_DBC_GLYPH_PROPERTIES);
       }
     })
     .catch((error) => {

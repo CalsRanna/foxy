@@ -149,6 +149,12 @@ export default {
               key: "emote-text",
             },
             {
+              title: "雕文属性",
+              subtitle: "Glyph Property",
+              description: "雕文链接的技能等信息",
+              key: "glyph-property",
+            },
+            {
               title: "扩展价格",
               subtitle: "Item Extended Cost",
               description: "购买物品时需要的其他货币",

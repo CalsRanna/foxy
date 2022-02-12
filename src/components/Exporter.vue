@@ -128,6 +128,14 @@
             ，共{{ emotesTexts }}条记录
           </span>
         </li>
+        <li v-if="checkedDbcs.indexOf('GlyphProperty') > -1">
+          <i class="el-icon-loading" v-if="isSearchingGlyphPropertyDbc"></i>
+          <i class="el-icon-check" style="color: #67c23a" v-else></i>
+          准备GlyphProperty数据
+          <span v-if="!isSearchingGlyphPropertyDbc">
+            ，共{{ GlyphProperties }}条记录
+          </span>
+        </li>
         <li v-if="checkedDbcs.indexOf('Item') > -1">
           <i class="el-icon-loading" v-if="isSearchingItemDbc"></i>
           <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -267,6 +275,11 @@
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
             写入EmotesText.dbc
           </li>
+          <li v-if="checkedDbcs.indexOf('GlyphProperty') > -1">
+            <i class="el-icon-loading" v-if="isWritingGlyphPropertyDbc"></i>
+            <i class="el-icon-check" style="color: #67c23a" v-else></i>
+            写入GlyphProperties.dbc
+          </li>
           <li v-if="checkedDbcs.indexOf('Item') > -1">
             <i class="el-icon-loading" v-if="isWritingItemDbc"></i>
             <i class="el-icon-check" style="color: #67c23a" v-else></i>
@@ -356,6 +369,7 @@ const options = [
   "CurrencyCategory",
   "CurrencyType",
   "EmotesText",
+  "GlyphProperty",
   "Item",
   "ItemExtendedCost",
   "ItemSet",
@@ -392,6 +406,7 @@ export default {
       isSearchingCurrencyCategoryDbc: true,
       isSearchingCurrencyTypeDbc: true,
       isSearchingEmotesTextDbc: true,
+      isSearchingGlyphPropertyDbc: true,
       isSearchingItemDbc: true,
       isSearchingItemExtendedCostDbc: true,
       isSearchingItemSetDbc: true,
@@ -411,6 +426,7 @@ export default {
       isWritingCurrencyCategoryDbc: true,
       isWritingCurrencyTypeDbc: true,
       isWritingEmotesTextDbc: true,
+      isWritingGlyphPropertyDbc: true,
       isWritingItemDbc: true,
       isWritingItemExtendedCostDbc: true,
       isWritingItemSetDbc: true,
@@ -435,6 +451,7 @@ export default {
       "currencyCategories",
       "currencyTypes",
       "emotesTexts",
+      "glyphProperties",
       "items",
       "itemExtendedCosts",
       "itemSets",
@@ -459,6 +476,7 @@ export default {
       "searchCurrencyCategoryDbc",
       "searchCurrencyTypeDbc",
       "searchEmotesTextDbc",
+      "searchGlyphPropertyDbc",
       "searchItemDbc",
       "searchItemExtendedCostDbc",
       "searchItemSetDbc",
@@ -478,6 +496,7 @@ export default {
       "writeCurrencyCategoryDbc",
       "writeCurrencyTypeDbc",
       "writeEmotesTextDbc",
+      "writeGlyphPropertyDbc",
       "writeItemDbc",
       "writeItemExtendedCostDbc",
       "writeItemSetDbc",
@@ -510,6 +529,7 @@ export default {
       this.isSearchingCurrencyCategoryDbc = true;
       this.isSearchingCurrencyTypeDbc = true;
       this.isSearchingEmotesTextDbc = true;
+      this.isSearchingGlyphPropertyDbc = true;
       this.isSearchingItemDbc = true;
       this.isSearchingItemExtendedCostDbc = true;
       this.isSearchingItemSetDbc = true;
@@ -529,6 +549,7 @@ export default {
       this.isWritingCurrencyCategoryDbc = true;
       this.isWritingCurrencyTypeDbc = true;
       this.isWritingEmotesTextDbc = true;
+      this.isWritingGlyphPropertyDbc = true;
       this.isWritingItemDbc = true;
       this.isWritingItemExtendedCostDbc = true;
       this.isWritingItemSetDbc = true;
@@ -599,6 +620,13 @@ export default {
             promises.push(
               this.searchEmotesTextDbc().then(() => {
                 this.isSearchingEmotesTextDbc = false;
+              })
+            );
+            break;
+          case "GlyphProperty":
+            promises.push(
+              this.searchGlyphPropertyDbc().then(() => {
+                this.isSearchingGlyphPropertyDbc = false;
               })
             );
             break;
@@ -749,6 +777,13 @@ export default {
             promises.push(
               this.writeEmotesTextDbc().then(() => {
                 this.isWritingEmotesTextDbc = false;
+              })
+            );
+            break;
+          case "GlyphProperty":
+            promises.push(
+              this.writeGlyphPropertyDbc().then(() => {
+                this.isWritingGlyphPropertyDbc = false;
               })
             );
             break;

@@ -67,6 +67,7 @@ import mapSelector from "./mapSelector";
 import npcText from "./npcText";
 import npcTextLocale from "./npcTextLocale";
 import gossipMenuOption from "./gossipMenuOption";
+import glyphProperty from "./glyphProperty";
 import questFactionReward from "./questFactionReward";
 import smartScript from "./smartScript";
 import spell from "./spell";
@@ -191,6 +192,7 @@ export default new Vuex.Store({
     npcText,
     npcTextLocale,
     gossipMenuOption,
+    glyphProperty,
     questFactionReward,
     smartScript,
     spell,

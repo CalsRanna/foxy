@@ -55,6 +55,7 @@ export default {
       "loadDbcFactions",
       "loadDbcFactionTemplates",
       "loadDbcGameObjectDisplayInfos",
+      "loadDbcGlyphProperties",
       "loadDbcItems",
       "loadDbcItemDisplayInfos",
       "loadDbcItemExtendedCosts",
@@ -131,6 +132,8 @@ export default {
         await this.loadDbcFactionTemplates();
         this.progressText = "加载GameObjectDisplayInfo.dbc";
         await this.loadDbcGameObjectDisplayInfos();
+        this.progressText = "加载GlyphProperties.dbc";
+        await this.loadDbcGlyphProperties();
         this.progressText = "加载Item.dbc";
         await this.loadDbcItems();
         this.progressText = "加载ItemDisplayInfo.dbc";
