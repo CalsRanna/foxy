@@ -1,84 +1,81 @@
-## [0.2.6](https://github.com/CalsRanna/foxy/compare/0.2.5...0.2.6) (2022-01-12)
-
+## [0.2.7](https://github.com/CalsRanna/foxy/compare/0.2.6...0.2.7) (2022-02-12)
 
 ### Bug Fixes
 
-* **achievement criteria:** fix error while has no bindings ([82091a0](https://github.com/CalsRanna/foxy/commit/82091a0db99fa5cf9059a7e137c33f2a96194185))
-* **clickable span:** remove extra space around text ([b272526](https://github.com/CalsRanna/foxy/commit/b272526ade578ed135ce10c81b3abb31cb45b0e9))
-* **exporter:** fix export talent tab no such table error ([be03539](https://github.com/CalsRanna/foxy/commit/be03539c726a053a5fb7c0a8b34d4c6d5e5369d6))
-
+- fix some typo error ([2748c44](https://github.com/CalsRanna/foxy/commit/2748c44019976def0f5062d8f198b72eaa9bae9c))
+- **updater:** use sfc instead github api to fetch remote version ([88e23a7](https://github.com/CalsRanna/foxy/commit/88e23a7d18973598a060bd46ff1329a0f92eb4ab))
 
 ### Features
 
-* **achievement category:** add achievement category module ([9ebb687](https://github.com/CalsRanna/foxy/commit/9ebb6870bb743505fc12295b37fc3e15843b2c60))
-* **achievement criteria data:** add achievement criteria data module ([86939c7](https://github.com/CalsRanna/foxy/commit/86939c77685e4560f3008fa3a7bc1bb201867283))
-* **achievement reward:** add achievement reward module ([cf44301](https://github.com/CalsRanna/foxy/commit/cf44301f191f859626a58622aa13248fbef4b7db))
-* **localizer:** add achievement reward localizer ([8ca727c](https://github.com/CalsRanna/foxy/commit/8ca727ca6931c95da46dc4113124219a85b47ff1))
-* **talent tab:** add selector and editor ([32a0be2](https://github.com/CalsRanna/foxy/commit/32a0be264d138f22a3d269610c7ba62dfa850ae8))
+- **glyph property:** add glyph property module ([86569a0](https://github.com/CalsRanna/foxy/commit/86569a0ca2a34cb5aa592f33472d17a380f63058))
+- **spell rank:** add spell rank module ([01af0e2](https://github.com/CalsRanna/foxy/commit/01af0e20a2a575b67fa0b37313a09823b455ad67))
 
+## [0.2.6](https://github.com/CalsRanna/foxy/compare/0.2.5...0.2.6) (2022-01-12)
 
+### Bug Fixes
+
+- **achievement criteria:** fix error while has no bindings ([82091a0](https://github.com/CalsRanna/foxy/commit/82091a0db99fa5cf9059a7e137c33f2a96194185))
+- **clickable span:** remove extra space around text ([b272526](https://github.com/CalsRanna/foxy/commit/b272526ade578ed135ce10c81b3abb31cb45b0e9))
+- **exporter:** fix export talent tab no such table error ([be03539](https://github.com/CalsRanna/foxy/commit/be03539c726a053a5fb7c0a8b34d4c6d5e5369d6))
+
+### Features
+
+- **achievement category:** add achievement category module ([9ebb687](https://github.com/CalsRanna/foxy/commit/9ebb6870bb743505fc12295b37fc3e15843b2c60))
+- **achievement criteria data:** add achievement criteria data module ([86939c7](https://github.com/CalsRanna/foxy/commit/86939c77685e4560f3008fa3a7bc1bb201867283))
+- **achievement reward:** add achievement reward module ([cf44301](https://github.com/CalsRanna/foxy/commit/cf44301f191f859626a58622aa13248fbef4b7db))
+- **localizer:** add achievement reward localizer ([8ca727c](https://github.com/CalsRanna/foxy/commit/8ca727ca6931c95da46dc4113124219a85b47ff1))
+- **talent tab:** add selector and editor ([32a0be2](https://github.com/CalsRanna/foxy/commit/32a0be264d138f22a3d269610c7ba62dfa850ae8))
 
 ## [0.2.5](https://github.com/CalsRanna/foxy/compare/0.2.4...0.2.5) (2021-09-30)
 
-
 ### Features
 
-* **advance:** add tree filter to advance view ([ad68979](https://github.com/CalsRanna/foxy/commit/ad6897906aed7733c84c006bbcd109c17876cdcd))
-* **area table:** add area table selector ([4c128b1](https://github.com/CalsRanna/foxy/commit/4c128b1cd0aef72080668881202ab8a0c103cf19))
-* **player create info action:** add player create info action module ([0f28051](https://github.com/CalsRanna/foxy/commit/0f28051e48206174f37cc18c743705abbd2b6ac7))
-* **player create info item:** add player create info item module ([cfa3a99](https://github.com/CalsRanna/foxy/commit/cfa3a99370b50eaf52e809d69bcff4bdf4877be2))
-* **player create info spell custom:** add player create info spell custom module ([2d5375b](https://github.com/CalsRanna/foxy/commit/2d5375be9b7be508545855f400d3828aacfbb199))
-* **player create info:** add player create info module ([36ec183](https://github.com/CalsRanna/foxy/commit/36ec1831cded56db21ee7494cd66828d1328ecfd))
-* **smart script:** make params flexable with its type ([68746ac](https://github.com/CalsRanna/foxy/commit/68746ac729d802552b0b1a706e337e87a98d7160))
-
-
+- **advance:** add tree filter to advance view ([ad68979](https://github.com/CalsRanna/foxy/commit/ad6897906aed7733c84c006bbcd109c17876cdcd))
+- **area table:** add area table selector ([4c128b1](https://github.com/CalsRanna/foxy/commit/4c128b1cd0aef72080668881202ab8a0c103cf19))
+- **player create info action:** add player create info action module ([0f28051](https://github.com/CalsRanna/foxy/commit/0f28051e48206174f37cc18c743705abbd2b6ac7))
+- **player create info item:** add player create info item module ([cfa3a99](https://github.com/CalsRanna/foxy/commit/cfa3a99370b50eaf52e809d69bcff4bdf4877be2))
+- **player create info spell custom:** add player create info spell custom module ([2d5375b](https://github.com/CalsRanna/foxy/commit/2d5375be9b7be508545855f400d3828aacfbb199))
+- **player create info:** add player create info module ([36ec183](https://github.com/CalsRanna/foxy/commit/36ec1831cded56db21ee7494cd66828d1328ecfd))
+- **smart script:** make params flexable with its type ([68746ac](https://github.com/CalsRanna/foxy/commit/68746ac729d802552b0b1a706e337e87a98d7160))
 
 ## [0.2.4](https://github.com/CalsRanna/foxy/compare/0.2.3...0.2.4) (2021-09-01)
 
-
 ### Bug Fixes
 
-* **changlog:** add max height ([26ff8e8](https://github.com/CalsRanna/foxy/commit/26ff8e87fc7d96a9cdea9232864dcd170e0ffc92))
-* **table:** remove second pagination under table ([f77d91c](https://github.com/CalsRanna/foxy/commit/f77d91c7eb54792c6bd36720a2d0c29bc2777786))
-
+- **changlog:** add max height ([26ff8e8](https://github.com/CalsRanna/foxy/commit/26ff8e87fc7d96a9cdea9232864dcd170e0ffc92))
+- **table:** remove second pagination under table ([f77d91c](https://github.com/CalsRanna/foxy/commit/f77d91c7eb54792c6bd36720a2d0c29bc2777786))
 
 ### Features
 
-* **achievement:** add achievement module ([9aa9b9d](https://github.com/CalsRanna/foxy/commit/9aa9b9d62e90f2dae2e5d70ea47aa14328033587))
-* **currency:** add currency module ([9195ec0](https://github.com/CalsRanna/foxy/commit/9195ec061bd24a5afa978c4262a0e9349ca3ac46))
-* **exporter:** add missing dbc export function ([c4b2ede](https://github.com/CalsRanna/foxy/commit/c4b2ede64aa7c8697458564c434f8fd15c8c8caf))
-* **item extended cost:** add item extended cost module ([fceb14b](https://github.com/CalsRanna/foxy/commit/fceb14b9ba41240975064426c53798614add5c8e))
-* **page text:** add page text module and related components ([8fc099c](https://github.com/CalsRanna/foxy/commit/8fc099cfd82b3e37a8ecab8e3b70d8c31c3a2b50))
-* **quest offer reward localizer:** add quest offer reward localizer ([402761c](https://github.com/CalsRanna/foxy/commit/402761cb3e18e68756c23dca17d8ae4bb0d23a36))
-* **quest request items localizer:** add quest request items localizer ([3529f01](https://github.com/CalsRanna/foxy/commit/3529f012da16edf7b6975c7d09e38c591a7828f8))
-
-
+- **achievement:** add achievement module ([9aa9b9d](https://github.com/CalsRanna/foxy/commit/9aa9b9d62e90f2dae2e5d70ea47aa14328033587))
+- **currency:** add currency module ([9195ec0](https://github.com/CalsRanna/foxy/commit/9195ec061bd24a5afa978c4262a0e9349ca3ac46))
+- **exporter:** add missing dbc export function ([c4b2ede](https://github.com/CalsRanna/foxy/commit/c4b2ede64aa7c8697458564c434f8fd15c8c8caf))
+- **item extended cost:** add item extended cost module ([fceb14b](https://github.com/CalsRanna/foxy/commit/fceb14b9ba41240975064426c53798614add5c8e))
+- **page text:** add page text module and related components ([8fc099c](https://github.com/CalsRanna/foxy/commit/8fc099cfd82b3e37a8ecab8e3b70d8c31c3a2b50))
+- **quest offer reward localizer:** add quest offer reward localizer ([402761c](https://github.com/CalsRanna/foxy/commit/402761cb3e18e68756c23dca17d8ae4bb0d23a36))
+- **quest request items localizer:** add quest request items localizer ([3529f01](https://github.com/CalsRanna/foxy/commit/3529f012da16edf7b6975c7d09e38c591a7828f8))
 
 ## [0.2.3](https://github.com/CalsRanna/foxy/compare/0.2.2...0.2.3) (2021-08-11)
 
-
 ### Bug Fixes
 
-* **calculateMaxHeight:** fix clientHeight undefined ([00a52e8](https://github.com/CalsRanna/foxy/commit/00a52e86339e7e00176f956f964628bcb246f5c5))
-* **developer:** make button triggable ([2ee2d45](https://github.com/CalsRanna/foxy/commit/2ee2d4549ee9a344cb222fef1e8838318a7e0c87))
-* **loot view:** adjust margin and max height to all loot view ([7ee55d7](https://github.com/CalsRanna/foxy/commit/7ee55d7c643e9a47a73c4064f55ec5fe4ee6f65a))
-* **size:** make size effect in mysql selection ([97dd090](https://github.com/CalsRanna/foxy/commit/97dd09057ea17f1f114f75bc3bec65972f8d3177))
-* **size:** rename perPage to size ([8e97bce](https://github.com/CalsRanna/foxy/commit/8e97bce932fedf99c51260f5007c1407a236f5d7))
-
+- **calculateMaxHeight:** fix clientHeight undefined ([00a52e8](https://github.com/CalsRanna/foxy/commit/00a52e86339e7e00176f956f964628bcb246f5c5))
+- **developer:** make button triggable ([2ee2d45](https://github.com/CalsRanna/foxy/commit/2ee2d4549ee9a344cb222fef1e8838318a7e0c87))
+- **loot view:** adjust margin and max height to all loot view ([7ee55d7](https://github.com/CalsRanna/foxy/commit/7ee55d7c643e9a47a73c4064f55ec5fe4ee6f65a))
+- **size:** make size effect in mysql selection ([97dd090](https://github.com/CalsRanna/foxy/commit/97dd09057ea17f1f114f75bc3bec65972f8d3177))
+- **size:** rename perPage to size ([8e97bce](https://github.com/CalsRanna/foxy/commit/8e97bce932fedf99c51260f5007c1407a236f5d7))
 
 ### Features
 
-* **advance config:** add advance config view ([420220b](https://github.com/CalsRanna/foxy/commit/420220bb58eb38f3cbb1d67613a5a3883ee41b6c))
-* **footer:** some view  add footer to make card fixed ([4b35b39](https://github.com/CalsRanna/foxy/commit/4b35b39e8e5afde277e9e8d58bfcf5025334f44d))
-* **spell:** adjust some inputs' type ([1f3086a](https://github.com/CalsRanna/foxy/commit/1f3086afc9562cab29c6272b57b098aa45aba3c0))
-* **spell category:** add spell category selector ([58a93b3](https://github.com/CalsRanna/foxy/commit/58a93b37899c9c66640c35b02876a9220af708e1))
-* **spell description variable:** add spell description variable selector ([db7e6d4](https://github.com/CalsRanna/foxy/commit/db7e6d447faebdc7b7ae7647c329f108cff2e32a))
-* **spell difficulty:** add spell difficulty selector ([028222f](https://github.com/CalsRanna/foxy/commit/028222f1c9a69a862f0fbc440c1bf09ee38f0c6e))
-* **spell dispel type:** load dispel types from dbc instead of constants ([9d26e60](https://github.com/CalsRanna/foxy/commit/9d26e6011907fc4f655f169e88bb2cd1857aaac4))
-* **tab:** add max height to all tab view ([ec7bc49](https://github.com/CalsRanna/foxy/commit/ec7bc49fa3d8bf03ee8b360e1d1b27cb7dc36955))
-* **table:** add max height to all table view ([8d723a4](https://github.com/CalsRanna/foxy/commit/8d723a4861dab830d3952b3a367653a2c85bb824))
-
-
+- **advance config:** add advance config view ([420220b](https://github.com/CalsRanna/foxy/commit/420220bb58eb38f3cbb1d67613a5a3883ee41b6c))
+- **footer:** some view add footer to make card fixed ([4b35b39](https://github.com/CalsRanna/foxy/commit/4b35b39e8e5afde277e9e8d58bfcf5025334f44d))
+- **spell:** adjust some inputs' type ([1f3086a](https://github.com/CalsRanna/foxy/commit/1f3086afc9562cab29c6272b57b098aa45aba3c0))
+- **spell category:** add spell category selector ([58a93b3](https://github.com/CalsRanna/foxy/commit/58a93b37899c9c66640c35b02876a9220af708e1))
+- **spell description variable:** add spell description variable selector ([db7e6d4](https://github.com/CalsRanna/foxy/commit/db7e6d447faebdc7b7ae7647c329f108cff2e32a))
+- **spell difficulty:** add spell difficulty selector ([028222f](https://github.com/CalsRanna/foxy/commit/028222f1c9a69a862f0fbc440c1bf09ee38f0c6e))
+- **spell dispel type:** load dispel types from dbc instead of constants ([9d26e60](https://github.com/CalsRanna/foxy/commit/9d26e6011907fc4f655f169e88bb2cd1857aaac4))
+- **tab:** add max height to all tab view ([ec7bc49](https://github.com/CalsRanna/foxy/commit/ec7bc49fa3d8bf03ee8b360e1d1b27cb7dc36955))
+- **table:** add max height to all table view ([8d723a4](https://github.com/CalsRanna/foxy/commit/8d723a4861dab830d3952b3a367653a2c85bb824))
 
 ## [0.2.2](https://github.com/CalsRanna/foxy/compare/0.2.1...0.2.2) (2021-07-30)
 
