@@ -76,6 +76,7 @@ import spellCustomAttr from "./spellCustomAttr";
 import spellGroup from "./spellGroup";
 import spellLinkedSpell from "./spellLinkedSpell";
 import spellLootTemplate from "./spellLootTemplate";
+import spellRank from "./spellRank";
 import referenceLootTemplateCard from "./referenceLootTemplateCard";
 import scalingStatDistribution from "./scalingStatDistribution";
 import scalingStatValue from "./scalingStatValue";
@@ -200,6 +201,7 @@ export default new Vuex.Store({
     spellItemEnchantment,
     spellLinkedSpell,
     spellLootTemplate,
+    spellRank,
     referenceLootTemplateCard,
     scalingStatDistribution,
     scalingStatValue,
