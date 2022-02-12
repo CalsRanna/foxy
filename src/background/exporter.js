@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
 
-const DBC = require("warcrafty");
+const { DBC } = require("warcrafty");
 
 ipcMain.on("SEARCH_ACHIEVEMENT_DBC", (event) => {
   let queryBuilder = knex.select().from("foxy.dbc_achievement");
