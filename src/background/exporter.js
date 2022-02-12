@@ -24,7 +24,7 @@ ipcMain.on("SEARCH_ACHIEVEMENT_CATEGORY_DBC", (event) => {
 
   queryBuilder
     .then((rows) => {
-      global.achievementCategoris = rows;
+      global.achievementCategories = rows;
       event.reply("SEARCH_ACHIEVEMENT_CATEGORY_DBC", rows.length);
     })
     .catch((error) => {
@@ -337,7 +337,7 @@ ipcMain.on("WRITE_ACHIEVEMENT_DBC", (event) => {
 });
 
 ipcMain.on("WRITE_ACHIEVEMENT_CATEGORY_DBC", (event) => {
-  DBC.write(`${path}/AchievementCategory.dbc`, global.achievementCategoris)
+  DBC.write(`${path}/Achievement_Category.dbc`, global.achievementCategories)
     .then(() => {
       event.reply("WRITE_ACHIEVEMENT_CATEGORY_DBC");
     })
