@@ -51,7 +51,7 @@ import {
   LOAD_DBC_ITEM_EXTENDED_COSTS,
 } from "../constants";
 
-const DBC = require("warcrafty");
+const { DBC } = require("warcrafty");
 
 ipcMain.on(LOAD_MYSQL_CONFIG, (event, payload) => {
   global.mysqlConfig = payload;
