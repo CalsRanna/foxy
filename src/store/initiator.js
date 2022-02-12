@@ -22,6 +22,7 @@ import {
   LOAD_DBC_FACTIONS,
   LOAD_DBC_FACTION_TEMPLATES,
   LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS,
+  LOAD_DBC_GLYPH_PROPERTIES,
   LOAD_DBC_ITEMS,
   LOAD_DBC_ITEM_DISPLAY_INFOS,
   LOAD_DBC_ITEM_RANDOM_PROPERTITIES,
@@ -280,12 +281,9 @@ export default {
         ipcRenderer.on(LOAD_DBC_CURRENCY_TYPES, () => {
           resolve();
         });
-        ipcRenderer.on(
-          `${LOAD_DBC_CURRENCY_TYPES}_REJECT`,
-          (event, error) => {
-            reject(error);
-          }
-        );
+        ipcRenderer.on(`${LOAD_DBC_CURRENCY_TYPES}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     loadDbcEmotes() {
@@ -343,6 +341,20 @@ export default {
         });
         ipcRenderer.on(
           `${LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
+      });
+    },
+    loadDbcGlyphProperties() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send(LOAD_DBC_GLYPH_PROPERTIES);
+        ipcRenderer.on(LOAD_DBC_GLYPH_PROPERTIES, () => {
+          resolve();
+        });
+        ipcRenderer.on(
+          `${LOAD_DBC_GLYPH_PROPERTIES}_REJECT`,
           (event, error) => {
             reject(error);
           }

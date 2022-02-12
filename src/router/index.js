@@ -230,6 +230,18 @@ const routes = [
     component: () => import("@/views/EmoteText/EmoteTextDetail"),
   },
   {
+    path: "/glyph-property",
+    component: () => import("@/views/GlyphProperty/GlyphPropertyTable"),
+  },
+  {
+    path: "/glyph-property/create",
+    component: () => import("@/views/GlyphProperty/GlyphPropertyDetail"),
+  },
+  {
+    path: "/glyph-property/:id",
+    component: () => import("@/views/GlyphProperty/GlyphPropertyDetail"),
+  },
+  {
     path: "/quest-faction-reward",
     component: () =>
       import("@/views/QuestFactionReward/QuestFactionRewardTable"),

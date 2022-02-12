@@ -71,6 +71,7 @@ import "./background/gossipMenu";
 import "./background/npcText";
 import "./background/npcTextLocale";
 import "./background/gossipMenuOption";
+import "./background/glyphProperty";
 import "./background/smartScript";
 import "./background/spell";
 import "./background/spellArea";

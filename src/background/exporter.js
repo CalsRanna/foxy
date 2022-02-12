@@ -121,6 +121,23 @@ ipcMain.on("SEARCH_EMOTES_TEXT_DBC", (event) => {
     });
 });
 
+ipcMain.on("SEARCH_GLYPH_PROPERTY_DBC", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_glyph_properties");
+
+  queryBuilder
+    .then((rows) => {
+      global.glyphProperties = rows;
+      event.reply("SEARCH_GLYPH_PROPERTY_DBC", rows.length);
+    })
+    .catch((error) => {
+      event.reply("SEARCH_GLYPH_PROPERTY_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    })
+    .finally(() => {
+      event.reply("GLOBAL_MESSAGE", queryBuilder.toString());
+    });
+});
+
 ipcMain.on("SEARCH_ITEM_DBC", (event) => {
   let queryBuilder = knex.select().from("foxy.dbc_item");
 
@@ -398,6 +415,17 @@ ipcMain.on("WRITE_EMOTES_TEXT_DBC", (event) => {
     })
     .catch((error) => {
       event.reply("WRITE_EMOTES_TEXT_DBC_REJECT", error);
+      event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
+    });
+});
+
+ipcMain.on("WRITE_GLYPH_PROPERTY_DBC", (event) => {
+  DBC.write(`${path}/GlyphProperties.dbc`, global.glyphProperties)
+    .then(() => {
+      event.reply("WRITE_GLYPH_PROPERTY_DBC");
+    })
+    .catch((error) => {
+      event.reply("WRITE_GLYPH_PROPERTY_DBC_REJECT", error);
       event.reply("GLOBAL_MESSAGE_BOX", JSON.stringify(error));
     });
 });
