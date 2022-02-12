@@ -14,6 +14,7 @@ module.exports = {
           output: "./dist_electron",
         },
         win: {
+          icon: "./build/icon.ico",
           target: [
             {
               target: "portable",

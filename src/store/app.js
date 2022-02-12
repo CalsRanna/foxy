@@ -3,7 +3,7 @@ import { SET_ACTIVE } from "../constants";
 export default {
   namespaced: true,
   state: () => ({
-    version: "0.2.6",
+    version: "0.2.7",
     clientHeight: 768,
     active: "dashboard",
     error: {

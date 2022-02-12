@@ -5,6 +5,46 @@
   >
     <el-card>
       <div slot="header">
+        <h2>0.2.7 <small>2022-02-12</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>typo:</strong> fix some typo error
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/2748c44019976def0f5062d8f198b72eaa9bae9c"
+            text="(2748c44)"
+          />
+        </li>
+        <li>
+          <strong>updater:</strong> use sfc instead github api to fetch remote
+          version
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/88e23a7d18973598a060bd46ff1329a0f92eb4ab"
+            text="(88e23a7)"
+          />
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>glyph property:</strong> add glyph property module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/86569a0ca2a34cb5aa592f33472d17a380f63058"
+            text="(86569a0)"
+          />
+        </li>
+        <li>
+          <strong>spell rank:</strong> add spell rank module
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/01af0e20a2a575b67fa0b37313a09823b455ad67"
+            text="(01af0e2)"
+          />
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.2.6 <small>2022-01-12</small></h2>
       </div>
       <h3>Bug Fixes</h3>
