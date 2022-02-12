@@ -79,6 +79,7 @@ import "./background/spellCustomAttr";
 import "./background/spellGroup";
 import "./background/spellLinkedSpell";
 import "./background/spellLootTemplate";
+import "./background/spellRank";
 import "./background/referenceLootTemplateCard";
 import "./background/scalingStatDistribution";
 import "./background/scalingStatValue";

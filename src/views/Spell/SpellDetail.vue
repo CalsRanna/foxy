@@ -36,6 +36,9 @@
       <el-tab-pane label="链接技能" name="spell_linked_spell" lazy>
         <spell-linked-spell-tab-pane></spell-linked-spell-tab-pane>
       </el-tab-pane>
+      <el-tab-pane label="技能排行" name="spell_ranks" lazy>
+        <spell-rank-tab-pane></spell-rank-tab-pane>
+      </el-tab-pane>
       <el-tab-pane label="技能掉落" name="spell_loot_template" lazy>
         <spell-loot-template-tab-pane></spell-loot-template-tab-pane>
       </el-tab-pane>
@@ -51,6 +54,7 @@ import SpellAreaTabPane from "@/views/Spell/components/SpellAreaTabPane";
 import SpellGroupTabPane from "@/views/Spell/components/SpellGroupTabPane";
 import SpellLinkedSpellTabPane from "@/views/Spell/components/SpellLinkedSpellTabPane";
 import SpellLootTemplateTabPane from "@/views/Spell/components/SpellLootTemplateTabPane";
+import SpellRankTabPane from "@/views/Spell/components/SpellRankTabPane";
 
 import { mapState } from "vuex";
 
@@ -72,6 +76,7 @@ export default {
     SpellGroupTabPane,
     SpellLinkedSpellTabPane,
     SpellLootTemplateTabPane,
+    SpellRankTabPane,
   },
 };
 </script>
