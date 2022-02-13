@@ -110,6 +110,7 @@ import spellIconSelector from "./spellIconSelector";
 import spellItemEnchantment from "./spellItemEnchantment";
 import spellRangeSelector from "./spellRangeSelector";
 import gossipMenuSelector from "./gossipMenuSelector";
+import glyphPropertySelector from "./glyphPropertySelector";
 import scalingStatDistributionSelector from "./scalingStatDistributionSelector";
 import waypointDataSelector from "./waypointDataSelector";
 import itemSetSelector from "./itemSetSelector";
@@ -236,6 +237,7 @@ export default new Vuex.Store({
     spellIconSelector,
     spellRangeSelector,
     gossipMenuSelector,
+    glyphPropertySelector,
     scalingStatDistributionSelector,
     waypointDataSelector: waypointDataSelector,
     itemSetSelector: itemSetSelector,
