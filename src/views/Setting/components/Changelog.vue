@@ -5,6 +5,39 @@
   >
     <el-card>
       <div slot="header">
+        <h2>0.2.8 <small>2022-02-13</small></h2>
+      </div>
+      <h3>Bug Fixes</h3>
+      <ul>
+        <li>
+          <strong>exporter:</strong> fix error when export glyph property
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/2ef727616e6fd49d70fab84337eb44a7ae9d22d8"
+            text="(2ef7276)"
+          />
+        </li>
+        <li>
+          <strong>glyph property:</strong> fix error when search by id
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/d87d2129a88c85a60f2ddd205e9b3b653a0117c7"
+            text="(d87d212)"
+          />
+        </li>
+      </ul>
+      <h3>Features</h3>
+      <ul>
+        <li>
+          <strong>glyph property selector:</strong> build glyph property
+          selector
+          <clickable-span
+            url="https://github.com/CalsRanna/foxy/commit/9fcd9522a01a57a18a6c9e12b6eb83e6a0fea2cf"
+            text="(9fcd952)"
+          />
+        </li>
+      </ul>
+    </el-card>
+    <el-card style="margin-top: 16px">
+      <div slot="header">
         <h2>0.2.7 <small>2022-02-12</small></h2>
       </div>
       <h3>Bug Fixes</h3>
