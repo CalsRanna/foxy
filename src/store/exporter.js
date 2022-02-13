@@ -41,15 +41,15 @@ export default {
         let constantCaseName = constantCase(name);
         commit("PUSH_TIP", `准备${capitalCaseName}数据`);
         ipcRenderer.send(`SEARCH_${constantCaseName}_DBC`);
-        ipcRenderer.oncece(`SEARCH_${constantCaseName}_DBC`, (event, count) => {
+        ipcRenderer.once(`SEARCH_${constantCaseName}_DBC`, (event, count) => {
           commit("PUSH_TIP", `找到${count}条${capitalCaseName}记录`);
           commit("PUSH_TIP", `写入${capitalCaseName}.dbc`);
           ipcRenderer.send(`WRITE_${constantCaseName}_DBC`);
-          ipcRenderer.oncece(`WRITE_${constantCaseName}_DBC`, (event) => {
+          ipcRenderer.once(`WRITE_${constantCaseName}_DBC`, (event) => {
             commit("PUSH_TIP", `写入${capitalCaseName}.dbc成功`);
             resolve();
           });
-          ipcRenderer.oncece(
+          ipcRenderer.once(
             `WRITE_${constantCaseName}_DBC_REJECT`,
             (event, error) => {
               commit("PUSH_TIP", `写入${capitalCaseName}.dbc失败`);
@@ -58,7 +58,7 @@ export default {
             }
           );
         });
-        ipcRenderer.oncece(
+        ipcRenderer.once(
           `SEARCH_${constantCaseName}_DBC_REJECT`,
           (event, error) => {
             commit("PUSH_TIP", `准备${capitalCaseName}数据失败`);
