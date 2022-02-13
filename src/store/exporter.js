@@ -1,636 +1,90 @@
 const ipcRenderer = window.ipcRenderer;
 
+import { capitalCase, constantCase } from "change-case";
 import { UPDATE_CHECKED_DBCS } from "../constants";
 
 export default {
   namespaced: true,
   state: () => ({
+    options: [
+      "Achievement",
+      "AchievementCategory",
+      "AchievementCriteria",
+      "AreaTable",
+      "CurrencyCategory",
+      "CurrencyType",
+      "EmotesText",
+      "GlyphProperty",
+      "Item",
+      "ItemExtendedCost",
+      "ItemSet",
+      "QuestFactionReward",
+      "QuestInfo",
+      "QuestSort",
+      "ScalingStatDistribution",
+      "ScalingStatValues",
+      "Spell",
+      "SpellItemEnchantment",
+      "Talent",
+      "TalentTab",
+    ],
     checkedDbcs: ["Item", "Spell"],
-    preparation: [],
-    achievements: [],
-    achievementCategogies: [],
-    achievementCriterias: [],
-    areaTables: [],
-    currencyCategories: [],
-    currencyTypes: [],
-    emotesTexts: [],
-    glyphProperties: [],
-    items: [],
-    itemExtendedCosts: [],
-    itemSets: [],
-    questFactionRewards: [],
-    questInfos: [],
-    questSorts: [],
-    scalingStatDistributions: [],
-    scalingStatValues: [],
-    spells: [],
-    spellItemEnchantments: [],
-    talents: [],
-    talentTabs: [],
+    tips: [],
   }),
   actions: {
     updateCheckedDbcs({ commit }, payload) {
       commit(UPDATE_CHECKED_DBCS, payload.checkedDbcs);
     },
-    searchAchievementDbc({ commit }) {
+    exportDbc({ commit }, name) {
       return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_ACHIEVEMENT_DBC");
-        ipcRenderer.on("SEARCH_ACHIEVEMENT_DBC", (event, achievements) => {
-          commit("SEARCH_ACHIEVEMENT_DBC", achievements);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_ACHIEVEMENT_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchAchievementCategoryDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_ACHIEVEMENT_CATEGORY_DBC");
-        ipcRenderer.on(
-          "SEARCH_ACHIEVEMENT_CATEGORY_DBC",
-          (event, achievementCategories) => {
-            commit("SEARCH_ACHIEVEMENT_CATEGORY_DBC", achievementCategories);
+        let capitalCaseName = capitalCase(name);
+        let constantCaseName = constantCase(name);
+        commit("PUSH_TIP", `准备${capitalCaseName}数据`);
+        ipcRenderer.send(`SEARCH_${constantCaseName}_DBC`);
+        ipcRenderer.once(`SEARCH_${constantCaseName}_DBC`, (event, count) => {
+          commit("PUSH_TIP", `找到${count}条${capitalCaseName}记录`);
+          commit("PUSH_TIP", `写入${capitalCaseName}.dbc`);
+          ipcRenderer.send(`WRITE_${constantCaseName}_DBC`);
+          ipcRenderer.once(`WRITE_${constantCaseName}_DBC`, (event) => {
+            commit("PUSH_TIP", `写入${capitalCaseName}.dbc成功`);
             resolve();
-          }
-        );
-        ipcRenderer.on(
-          "SEARCH_ACHIEVEMENT_CATEGORY_DBC_REJECT",
+          });
+          ipcRenderer.once(
+            `WRITE_${constantCaseName}_DBC_REJECT`,
+            (event, error) => {
+              commit("PUSH_TIP", `写入${capitalCaseName}.dbc失败`);
+              commit("PUSH_TIP", error);
+              reject(error);
+            }
+          );
+        });
+        ipcRenderer.once(
+          `SEARCH_${constantCaseName}_DBC_REJECT`,
           (event, error) => {
+            commit("PUSH_TIP", `准备${capitalCaseName}数据失败`);
+            commit("PUSH_TIP", error);
             reject(error);
           }
         );
       });
     },
-    searchAchievementCriteriaDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_ACHIEVEMENT_CRITERIA_DBC");
-        ipcRenderer.on(
-          "SEARCH_ACHIEVEMENT_CRITERIA_DBC",
-          (event, achievementCriterias) => {
-            commit("SEARCH_ACHIEVEMENT_CRITERIA_DBC", achievementCriterias);
-            resolve();
-          }
-        );
-        ipcRenderer.on(
-          "SEARCH_ACHIEVEMENT_CRITERIA_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
+    pushTip({ commit }, tip) {
+      commit("PUSH_TIP", tip);
     },
-    searchAreaTableDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_AREA_TABLE_DBC");
-        ipcRenderer.on("SEARCH_AREA_TABLE_DBC", (event, areaTables) => {
-          commit("SEARCH_AREA_TABLE_DBC", areaTables);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_AREA_TABLE_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchCurrencyCategoryDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_CURRENCY_CATEGORY_DBC");
-        ipcRenderer.on(
-          "SEARCH_CURRENCY_CATEGORY_DBC",
-          (event, currencyCategories) => {
-            commit("SEARCH_CURRENCY_CATEGORY_DBC", currencyCategories);
-            resolve();
-          }
-        );
-        ipcRenderer.on(
-          "SEARCH_CURRENCY_CATEGORY_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    searchCurrencyTypeDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_CURRENCY_TYPE_DBC");
-        ipcRenderer.on("SEARCH_CURRENCY_TYPE_DBC", (event, currencyTypes) => {
-          commit("SEARCH_CURRENCY_TYPE_DBC", currencyTypes);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_CURRENCY_TYPE_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchEmotesTextDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_EMOTES_TEXT_DBC");
-        ipcRenderer.on("SEARCH_EMOTES_TEXT_DBC", (event, emotesTexts) => {
-          commit("SEARCH_EMOTES_TEXT_DBC", emotesTexts);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_EMOTES_TEXT_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchEmotesTextDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_GLYPH_PROPERTY_DBC");
-        ipcRenderer.on(
-          "SEARCH_GLYPH_PROPERTY_DBC",
-          (event, glyphProperties) => {
-            commit("SEARCH_GLYPH_PROPERTY_DBC", glyphProperties);
-            resolve();
-          }
-        );
-        ipcRenderer.on("SEARCH_GLYPH_PROPERTY_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchItemDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_ITEM_DBC");
-        ipcRenderer.on("SEARCH_ITEM_DBC", (event, items) => {
-          commit("SEARCH_ITEM_DBC", items);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_ITEM_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchItemExtendedCostDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_ITEM_EXTENDED_COST_DBC");
-        ipcRenderer.on(
-          "SEARCH_ITEM_EXTENDED_COST_DBC",
-          (event, itemExtendedCosts) => {
-            commit("SEARCH_ITEM_EXTENDED_COST_DBC", itemExtendedCosts);
-            resolve();
-          }
-        );
-        ipcRenderer.on(
-          "SEARCH_ITEM_EXTENDED_COST_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    searchItemSetDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_ITEM_SET_DBC");
-        ipcRenderer.on("SEARCH_ITEM_SET_DBC", (event, itemSets) => {
-          commit("SEARCH_ITEM_SET_DBC", itemSets);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_ITEM_SET_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchQuestFactionRewardDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_QUEST_FACTION_REWARD_DBC");
-        ipcRenderer.on(
-          "SEARCH_QUEST_FACTION_REWARD_DBC",
-          (event, questFactionRewards) => {
-            commit("SEARCH_QUEST_FACTION_REWARD_DBC", questFactionRewards);
-            resolve();
-          }
-        );
-        ipcRenderer.on(
-          "SEARCH_QUEST_FACTION_REWARD_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    searchQuestInfoDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_QUEST_INFO_DBC");
-        ipcRenderer.on("SEARCH_QUEST_INFO_DBC", (event, questInfos) => {
-          commit("SEARCH_QUEST_INFO_DBC", questInfos);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_QUEST_INFO_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchQuestSortDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_QUEST_SORT_DBC");
-        ipcRenderer.on("SEARCH_QUEST_SORT_DBC", (event, questSorts) => {
-          commit("SEARCH_QUEST_SORT_DBC", questSorts);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_QUEST_SORT_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchScalingStatDistributionDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_SCALING_STAT_DISTRIBUTION_DBC");
-        ipcRenderer.on(
-          "SEARCH_SCALING_STAT_DISTRIBUTION_DBC",
-          (event, scalingStatDistributions) => {
-            commit(
-              "SEARCH_SCALING_STAT_DISTRIBUTION_DBC",
-              scalingStatDistributions
-            );
-            resolve();
-          }
-        );
-        ipcRenderer.on(
-          "SEARCH_SCALING_STAT_DISTRIBUTION_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    searchScalingStatValuesDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_SCALING_STAT_VALUES_DBC");
-        ipcRenderer.on(
-          "SEARCH_SCALING_STAT_VALUES_DBC",
-          (event, scalingStatValues) => {
-            commit("SEARCH_SCALING_STAT_VALUES_DBC", scalingStatValues);
-            resolve();
-          }
-        );
-        ipcRenderer.on(
-          "SEARCH_SCALING_STAT_VALUES_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    searchSpellDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_SPELL_DBC");
-        ipcRenderer.on("SEARCH_SPELL_DBC", (event, spells) => {
-          commit("SEARCH_SPELL_DBC", spells);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_SPELL_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchSpellItemEnchantmentDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC");
-        ipcRenderer.on(
-          "SEARCH_SPELL_ITEM_ENCHANTMENT_DBC",
-          (event, spellItemEnchantments) => {
-            commit("SEARCH_SPELL_ITEM_ENCHANTMENT_DBC", spellItemEnchantments);
-            resolve();
-          }
-        );
-        ipcRenderer.on(
-          "SEARCH_SPELL_ITEM_ENCHANTMENT_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    searchTalentDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_TALENT_DBC");
-        ipcRenderer.on("SEARCH_TALENT_DBC", (event, talents) => {
-          commit("SEARCH_TALENT_DBC", talents);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_TALENT_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    searchTalentTabDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("SEARCH_TALENT_TAB_DBC");
-        ipcRenderer.on("SEARCH_TALENT_TAB_DBC", (event, talentTabs) => {
-          commit("SEARCH_TALENT_TAB_DBC", talentTabs);
-          resolve();
-        });
-        ipcRenderer.on("SEARCH_TALENT_TAB_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeAchievementDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_ACHIEVEMENT_DBC");
-        ipcRenderer.on("WRITE_ACHIEVEMENT_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_ACHIEVEMENT_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeAchievementCategoryDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_ACHIEVEMENT_CATEGORY_DBC");
-        ipcRenderer.on("WRITE_ACHIEVEMENT_CATEGORY_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on(
-          "WRITE_ACHIEVEMENT_CATEGORY_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    writeAchievementCriteriaDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_ACHIEVEMENT_CRITERIA_DBC");
-        ipcRenderer.on("WRITE_ACHIEVEMENT_CRITERIA_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on(
-          "WRITE_ACHIEVEMENT_CRITERIA_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    writeAreaTableDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_AREA_TABLE_DBC");
-        ipcRenderer.on("WRITE_AREA_TABLE_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_AREA_TABLE_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeCurrencyCategoryDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_CURRENCY_CATEGORY_DBC");
-        ipcRenderer.on("WRITE_CURRENCY_CATEGORY_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_CURRENCY_CATEGORY_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeCurrencyTypeDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_CURRENCY_TYPE_DBC");
-        ipcRenderer.on("WRITE_CURRENCY_TYPE_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_CURRENCY_TYPE_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeEmotesTextDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_EMOTES_TEXT_DBC");
-        ipcRenderer.on("WRITE_EMOTES_TEXT_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_EMOTES_TEXT_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeGlyphPropertyDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_GLYPH_PROPERTY_DBC");
-        ipcRenderer.on("WRITE_GLYPH_PROPERTY_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_GLYPH_PROPERTY_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeItemDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_ITEM_DBC");
-        ipcRenderer.on("WRITE_ITEM_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_ITEM_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeItemExtendedCostDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_ITEM_EXTENDED_COST_DBC");
-        ipcRenderer.on("WRITE_ITEM_EXTENDED_COST_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on(
-          "WRITE_ITEM_EXTENDED_COST_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    writeItemSetDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_ITEM_SET_DBC");
-        ipcRenderer.on("WRITE_ITEM_SET_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_ITEM_SET_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeQuestFactionRewardDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_QUEST_FACTION_REWARD_DBC");
-        ipcRenderer.on("WRITE_QUEST_FACTION_REWARD_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on(
-          "WRITE_QUEST_FACTION_REWARD_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    writeQuestInfoDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_QUEST_INFO_DBC");
-        ipcRenderer.on("WRITE_QUEST_INFO_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_QUEST_INFO_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeQuestSortDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_QUEST_SORT_DBC");
-        ipcRenderer.on("WRITE_QUEST_SORT_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_QUEST_SORT_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeScalingStatDistributionDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_SCALING_STAT_DISTRIBUTION_DBC");
-        ipcRenderer.on("WRITE_SCALING_STAT_DISTRIBUTION_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on(
-          "WRITE_SCALING_STAT_DISTRIBUTION_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    writeScalingStatValuesDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_SCALING_STAT_VALUES_DBC");
-        ipcRenderer.on("WRITE_SCALING_STAT_VALUES_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on(
-          "WRITE_SCALING_STAT_VALUES_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    writeSpellDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_SPELL_DBC");
-        ipcRenderer.on("WRITE_SPELL_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_SPELL_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeSpellItemEnchantmentDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_SPELL_ITEM_ENCHANTMENT_DBC");
-        ipcRenderer.on("WRITE_SPELL_ITEM_ENCHANTMENT_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on(
-          "WRITE_SPELL_ITEM_ENCHANTMENT_DBC_REJECT",
-          (event, error) => {
-            reject(error);
-          }
-        );
-      });
-    },
-    writeTalentDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_TALENT_DBC");
-        ipcRenderer.on("WRITE_TALENT_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_TALENT_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
-    },
-    writeTalentTabDbc({ commit }) {
-      return new Promise((resolve, reject) => {
-        ipcRenderer.send("WRITE_TALENT_TAB_DBC");
-        ipcRenderer.on("WRITE_TALENT_TAB_DBC", (event) => {
-          resolve();
-        });
-        ipcRenderer.on("WRITE_TALENT_TAB_DBC_REJECT", (event, error) => {
-          reject(error);
-        });
-      });
+    resetTips({ commit }) {
+      commit("RESET_TIPS");
     },
   },
   mutations: {
     [UPDATE_CHECKED_DBCS](state, checkedDbcs) {
       state.checkedDbcs = checkedDbcs;
     },
-    SEARCH_ACHIEVEMENT_DBC(state, achievements) {
-      state.achievements = achievements;
+    PUSH_TIP(state, tip) {
+      state.tips.push(tip);
     },
-    SEARCH_ACHIEVEMENT_CATEGORY_DBC(state, achievementCategories) {
-      state.achievementCategories = achievementCategories;
-    },
-    SEARCH_ACHIEVEMENT_CRITERIA_DBC(state, achievementCriterias) {
-      state.achievementCriterias = achievementCriterias;
-    },
-    SEARCH_AREA_TABLE_DBC(state, areaTables) {
-      state.areaTables = areaTables;
-    },
-    SEARCH_CURRENCY_CATEGORY_DBC(state, currencyCategories) {
-      state.currencyCategories = currencyCategories;
-    },
-    SEARCH_CURRENCY_TYPE_DBC(state, currencyTypes) {
-      state.currencyTypes = currencyTypes;
-    },
-    SEARCH_EMOTES_TEXT_DBC(state, emotesTexts) {
-      state.emotesTexts = emotesTexts;
-    },
-    SEARCH_EMOTES_TEXT_DBC(state, glyphProperties) {
-      state.glyphProperties = glyphProperties;
-    },
-    SEARCH_ITEM_DBC(state, items) {
-      state.items = items;
-    },
-    SEARCH_ITEM_EXTENDED_COST_DBC(state, itemExtendedCosts) {
-      state.itemExtendedCosts = itemExtendedCosts;
-    },
-    SEARCH_ITEM_SET_DBC(state, itemSets) {
-      state.itemSets = itemSets;
-    },
-    SEARCH_QUEST_FACTION_REWARD_DBC(state, questFactionRewards) {
-      state.questFactionRewards = questFactionRewards;
-    },
-    SEARCH_QUEST_INFO_DBC(state, questInfos) {
-      state.questInfos = questInfos;
-    },
-    SEARCH_QUEST_SORT_DBC(state, questSorts) {
-      state.questSorts = questSorts;
-    },
-    SEARCH_SCALING_STAT_DISTRIBUTION_DBC(state, scalingStatDistributions) {
-      state.scalingStatDistributions = scalingStatDistributions;
-    },
-    SEARCH_SCALING_STAT_VALUES_DBC(state, scalingStatValues) {
-      state.scalingStatValues = scalingStatValues;
-    },
-    SEARCH_SPELL_DBC(state, spells) {
-      state.spells = spells;
-    },
-    SEARCH_SPELL_ITEM_ENCHANTMENT_DBC(state, spellItemEnchantments) {
-      state.spellItemEnchantments = spellItemEnchantments;
-    },
-    SEARCH_TALENT_DBC(state, talents) {
-      state.talents = talents;
-    },
-    SEARCH_TALENT_TAB_DBC(state, talentTabs) {
-      state.talentTabs = talentTabs;
+    RESET_TIPS(state) {
+      let length = state.tips.length;
+      state.tips.splice(0, length);
     },
   },
 };
