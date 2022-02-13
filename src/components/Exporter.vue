@@ -38,321 +38,33 @@
       </span>
     </el-dialog>
     <el-dialog
-      :visible.sync="visible2"
       width="30%"
+      :visible.sync="visible2"
       top="30vh"
       :show-close="closable"
       :close-on-click-modal="closable"
       :close-on-press-escape="closable"
+      @closed="handleClosed"
     >
-      <el-steps :active="active" align-center finish-status="success">
-        <el-step icon="el-icon-data-analysis">
-          <span slot="title">
-            准备数据
-            <i class="el-icon-loading" v-if="active == 0"></i>
+      <span slot="title">
+        导出信息<i class="el-icon-loading" v-if="exporting" />
+      </span>
+      <ul
+        style="
+          list-style: none;
+          color: #909399;
+          max-height: 300px;
+          overflow: auto;
+        "
+      >
+        <li v-for="(tip, index) in tips" :key="`tip-${index}`">
+          <span v-if="tip.indexOf('找到') > -1 || tip.indexOf('成功') > -1">
+            <i class="el-icon-check" style="color: #67c23a" />{{ tip }}
           </span>
-        </el-step>
-        <el-step icon="el-icon-document">
-          <span slot="title">
-            写入文件
-            <i class="el-icon-loading" v-if="active == 1"></i>
+          <span v-else-if="tip.indexOf('失败') > -1">
+            <i class="el-icon-close" style="color: #f56c6c" />{{ tip }}
           </span>
-        </el-step>
-        <el-step icon="el-icon-download">
-          <span slot="title">
-            导出结束
-            <i class="el-icon-loading" v-if="active == 2"></i>
-          </span>
-        </el-step>
-      </el-steps>
-      <ul style="list-style: none; color: #909399">
-        <li v-if="checkedDbcs.indexOf('Achievement') > -1">
-          <i class="el-icon-loading" v-if="isSearchingAchievementDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备Achievement数据
-          <span v-if="!isSearchingAchievementDbc">
-            ，共{{ achievements }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('AchievementCategory') > -1">
-          <i
-            class="el-icon-loading"
-            v-if="isSearchingAchievementCategoryDbc"
-          ></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备AchievementCategory数据
-          <span v-if="!isSearchingAchievementCategoryDbc">
-            ，共{{ achievementCategories }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('AchievementCriteria') > -1">
-          <i
-            class="el-icon-loading"
-            v-if="isSearchingAchievementCriteriaDbc"
-          ></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备AchievementCriteria数据
-          <span v-if="!isSearchingAchievementCriteriaDbc">
-            ，共{{ achievementCriterias }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('AreaTable') > -1">
-          <i class="el-icon-loading" v-if="isSearchingAreaTableDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备AreaTable数据
-          <span v-if="!isSearchingAreaTableDbc">
-            ，共{{ areaTables }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('CurrencyCategory') > -1">
-          <i class="el-icon-loading" v-if="isSearchingCurrencyCategoryDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备CurrencyCategory数据
-          <span v-if="!isSearchingCurrencyCategoryDbc">
-            ，共{{ currencyCategories }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('CurrencyType') > -1">
-          <i class="el-icon-loading" v-if="isSearchingCurrencyTypeDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备CurrencyType数据
-          <span v-if="!isSearchingCurrencyTypeDbc">
-            ，共{{ currencyTypes }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('EmotesText') > -1">
-          <i class="el-icon-loading" v-if="isSearchingEmotesTextDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备EmotesText数据
-          <span v-if="!isSearchingEmotesTextDbc">
-            ，共{{ emotesTexts }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('GlyphProperty') > -1">
-          <i class="el-icon-loading" v-if="isSearchingGlyphPropertyDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备GlyphProperty数据
-          <span v-if="!isSearchingGlyphPropertyDbc">
-            ，共{{ GlyphProperties }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('Item') > -1">
-          <i class="el-icon-loading" v-if="isSearchingItemDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备Item数据
-          <span v-if="!isSearchingItemDbc"> ，共{{ items }}条记录 </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('ItemExtendedCost') > -1">
-          <i class="el-icon-loading" v-if="isSearchingItemExtendedCostDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备ItemExtendedCost数据
-          <span v-if="!isSearchingItemExtendedCostDbc">
-            ，共{{ itemExtendedCosts }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
-          <i class="el-icon-loading" v-if="isSearchingItemSetDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备ItemSet数据
-          <span v-if="!isSearchingItemSetDbc"> ，共{{ itemSets }}条记录 </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('QuestFactionReward') > -1">
-          <i
-            class="el-icon-loading"
-            v-if="isSearchingQuestFactionRewardDbc"
-          ></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备QuestFactionReward数据
-          <span v-if="!isSearchingQuestFactionRewardDbc">
-            ，共{{ questFactionRewards }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('QuestInfo') > -1">
-          <i class="el-icon-loading" v-if="isSearchingQuestInfoDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备QuestInfo数据
-          <span v-if="!isSearchingQuestInfoDbc">
-            ，共{{ questInfos }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('QuestSort') > -1">
-          <i class="el-icon-loading" v-if="isSearchingQuestSortDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备QuestSort数据
-          <span v-if="!isSearchingQuestSortDbc">
-            ，共{{ questSorts }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('ScalingStatDistribution') > -1">
-          <i
-            class="el-icon-loading"
-            v-if="isSearchingScalingStatDistributionDbc"
-          ></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备ScalingStatDistribution数据
-          <span v-if="!isSearchingScalingStatDistributionDbc">
-            ，共{{ scalingStatDistributions }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('ScalingStatValues') > -1">
-          <i class="el-icon-loading" v-if="isSearchingScalingStatValuesDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备ScalingStatValues数据
-          <span v-if="!isSearchingScalingStatValuesDbc">
-            ，共{{ scalingStatValues }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('Spell') > -1">
-          <i class="el-icon-loading" v-if="isSearchingSpellDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备Spell数据
-          <span v-if="!isSearchingSpellDbc"> ，共{{ spells }}条记录 </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('SpellItemEnchantment') > -1">
-          <i
-            class="el-icon-loading"
-            v-if="isSearchingSpellItemEnchantmentDbc"
-          ></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备SpellItemEnchantment数据
-          <span v-if="!isSearchingSpellItemEnchantmentDbc">
-            ，共{{ spellItemEnchantments }}条记录
-          </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('Talent') > -1">
-          <i class="el-icon-loading" v-if="isSearchingTalentDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备Talent数据
-          <span v-if="!isSearchingTalentDbc"> ，共{{ talents }}条记录 </span>
-        </li>
-        <li v-if="checkedDbcs.indexOf('TalentTab') > -1">
-          <i class="el-icon-loading" v-if="isSearchingTalentTabDbc"></i>
-          <i class="el-icon-check" style="color: #67c23a" v-else></i>
-          准备TalentTab数据
-          <span v-if="!isSearchingTalentTabDbc">
-            ，共{{ talentTabs }}条记录
-          </span>
-        </li>
-        <template v-if="active > 0">
-          <li v-if="checkedDbcs.indexOf('Achievement') > -1">
-            <i class="el-icon-loading" v-if="isWritingAchievementDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入Achievement.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('AchievementCategory') > -1">
-            <i
-              class="el-icon-loading"
-              v-if="isWritingAchievementCategoryDbc"
-            ></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入Achievement_Category.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('AchievementCriteria') > -1">
-            <i
-              class="el-icon-loading"
-              v-if="isWritingAchievementCriteriaDbc"
-            ></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入Achievement_Criteria.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('AreaTable') > -1">
-            <i class="el-icon-loading" v-if="isWritingAreaTableDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入AreaTable.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('CurrencyCategory') > -1">
-            <i class="el-icon-loading" v-if="isWritingCurrencyCategoryDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入CurrencyCategory.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('CurrencyType') > -1">
-            <i class="el-icon-loading" v-if="isWritingCurrencyTypeDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入CurrencyType.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('EmotesText') > -1">
-            <i class="el-icon-loading" v-if="isWritingEmotesTextDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入EmotesText.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('GlyphProperty') > -1">
-            <i class="el-icon-loading" v-if="isWritingGlyphPropertyDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入GlyphProperties.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('Item') > -1">
-            <i class="el-icon-loading" v-if="isWritingItemDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入Item.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('ItemExtendedCost') > -1">
-            <i class="el-icon-loading" v-if="isWritingItemExtendedCostDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入ItemExtendedCost.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('ItemSet') > -1">
-            <i class="el-icon-loading" v-if="isWritingItemSetDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入ItemSet.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('QuestFactionReward') > -1">
-            <i
-              class="el-icon-loading"
-              v-if="isWritingQuestFactionRewardDbc"
-            ></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入QuestFactionReward.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('QuestInfo') > -1">
-            <i class="el-icon-loading" v-if="isWritingQuestInfoDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入QuestInfo.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('QuestSort') > -1">
-            <i class="el-icon-loading" v-if="isWritingQuestSortDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入QuestSort.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('ScalingStatDistribution') > -1">
-            <i
-              class="el-icon-loading"
-              v-if="isWritingScalingStatDistributionDbc"
-            ></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入ScalingStatDistribution.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('ScalingStatValues') > -1">
-            <i class="el-icon-loading" v-if="isWritingScalingStatValuesDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入ScalingStatValues.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('Spell') > -1">
-            <i class="el-icon-loading" v-if="isWritingSpellDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入Spell.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('SpellItemEnchantment') > -1">
-            <i
-              class="el-icon-loading"
-              v-if="isWritingSpellItemEnchantmentDbc"
-            ></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入SpellItemEnchantment.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('Talent') > -1">
-            <i class="el-icon-loading" v-if="isWritingTalentDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入Talent.dbc
-          </li>
-          <li v-if="checkedDbcs.indexOf('TalentTab') > -1">
-            <i class="el-icon-loading" v-if="isWritingTalentTabDbc"></i>
-            <i class="el-icon-check" style="color: #67c23a" v-else></i>
-            写入TalentTab.dbc
-          </li>
-        </template>
-        <li v-if="active === 3">
-          <i class="el-icon-check" style="color: #67c23a"></i>
-          导出成功
+          <span v-else> <i class="el-icon-arrow-right" />{{ tip }} </span>
         </li>
       </ul>
     </el-dialog>
@@ -361,28 +73,6 @@
 
 <script>
 const ipcRenderer = window.ipcRenderer;
-const options = [
-  "Achievement",
-  "AchievementCategory",
-  "AchievementCriteria",
-  "AreaTable",
-  "CurrencyCategory",
-  "CurrencyType",
-  "EmotesText",
-  "GlyphProperty",
-  "Item",
-  "ItemExtendedCost",
-  "ItemSet",
-  "QuestFactionReward",
-  "QuestInfo",
-  "QuestSort",
-  "ScalingStatDistribution",
-  "ScalingStatValues",
-  "Spell",
-  "SpellItemEnchantment",
-  "Talent",
-  "TalentTab",
-];
 
 import { START_EXPORT } from "@/constants";
 import { mapState, mapActions } from "vuex";
@@ -391,128 +81,28 @@ export default {
   data() {
     return {
       visible: false,
-      options: options,
       isIndeterminate: true,
       checkedMpq: false,
       mpqDefaultName: "patch-zhCN-5.MPQ",
       checkAll: false,
       visible2: false,
       closable: false,
-      active: 0,
-      isSearchingAchievementDbc: true,
-      isSearchingAchievementCategoryDbc: true,
-      isSearchingAchievementCriteriaDbc: true,
-      isSearchingAreaTableDbc: true,
-      isSearchingCurrencyCategoryDbc: true,
-      isSearchingCurrencyTypeDbc: true,
-      isSearchingEmotesTextDbc: true,
-      isSearchingGlyphPropertyDbc: true,
-      isSearchingItemDbc: true,
-      isSearchingItemExtendedCostDbc: true,
-      isSearchingItemSetDbc: true,
-      isSearchingQuestFactionRewardDbc: true,
-      isSearchingQuestInfoDbc: true,
-      isSearchingQuestSortDbc: true,
-      isSearchingScalingStatDistributionDbc: true,
-      isSearchingScalingStatValuesDbc: true,
-      isSearchingSpellDbc: true,
-      isSearchingSpellItemEnchantmentDbc: true,
-      isSearchingTalentDbc: true,
-      isSearchingTalentTabDbc: true,
-      isWritingAchievementDbc: true,
-      isWritingAchievementCategoryDbc: true,
-      isWritingAchievementCriteriaDbc: true,
-      isWritingAreaTableDbc: true,
-      isWritingCurrencyCategoryDbc: true,
-      isWritingCurrencyTypeDbc: true,
-      isWritingEmotesTextDbc: true,
-      isWritingGlyphPropertyDbc: true,
-      isWritingItemDbc: true,
-      isWritingItemExtendedCostDbc: true,
-      isWritingItemSetDbc: true,
-      isWritingQuestFactionRewardDbc: true,
-      isWritingQuestInfoDbc: true,
-      isWritingQuestSortDbc: true,
-      isWritingScalingStatDistributionDbc: true,
-      isWritingScalingStatValuesDbc: true,
-      isWritingSpellDbc: true,
-      isWritingSpellItemEnchantmentDbc: true,
-      isWritingTalentDbc: true,
-      isWritingTalentTabDbc: true,
+      exporting: false,
     };
   },
   computed: {
-    ...mapState("exporter", [
-      "checkedDbcs",
-      "achievements",
-      "achievementCategories",
-      "achievementCriterias",
-      "areaTables",
-      "currencyCategories",
-      "currencyTypes",
-      "emotesTexts",
-      "glyphProperties",
-      "items",
-      "itemExtendedCosts",
-      "itemSets",
-      "questFactionRewards",
-      "questInfos",
-      "questSorts",
-      "scalingStatDistributions",
-      "scalingStatValues",
-      "spells",
-      "spellItemEnchantments",
-      "talents",
-      "talentTabs",
-    ]),
+    ...mapState("exporter", ["options", "checkedDbcs", "tips"]),
   },
   methods: {
     ...mapActions("exporter", [
       "updateCheckedDbcs",
-      "searchAchievementDbc",
-      "searchAchievementCategoryDbc",
-      "searchAchievementCriteriaDbc",
-      "searchAreaTableDbc",
-      "searchCurrencyCategoryDbc",
-      "searchCurrencyTypeDbc",
-      "searchEmotesTextDbc",
-      "searchGlyphPropertyDbc",
-      "searchItemDbc",
-      "searchItemExtendedCostDbc",
-      "searchItemSetDbc",
-      "searchQuestFactionRewardDbc",
-      "searchQuestInfoDbc",
-      "searchQuestSortDbc",
-      "searchScalingStatDistributionDbc",
-      "searchScalingStatValuesDbc",
-      "searchSpellDbc",
-      "searchSpellItemEnchantmentDbc",
-      "searchTalentDbc",
-      "searchTalentTabDbc",
-      "writeAchievementDbc",
-      "writeAchievementCategoryDbc",
-      "writeAchievementCriteriaDbc",
-      "writeAreaTableDbc",
-      "writeCurrencyCategoryDbc",
-      "writeCurrencyTypeDbc",
-      "writeEmotesTextDbc",
-      "writeGlyphPropertyDbc",
-      "writeItemDbc",
-      "writeItemExtendedCostDbc",
-      "writeItemSetDbc",
-      "writeQuestFactionRewardDbc",
-      "writeQuestInfoDbc",
-      "writeQuestSortDbc",
-      "writeScalingStatDistributionDbc",
-      "writeScalingStatValuesDbc",
-      "writeSpellDbc",
-      "writeSpellItemEnchantmentDbc",
-      "writeTalentDbc",
-      "writeTalentTabDbc",
+      "exportDbc",
+      "pushTip",
+      "resetTips",
     ]),
     handleCheckAllChange(val) {
       this.isIndeterminate = false;
-      this.updateCheckedDbcs({ checkedDbcs: val ? options : [] });
+      this.updateCheckedDbcs({ checkedDbcs: val ? this.options : [] });
     },
     handleInput(value) {
       let checkedCount = value.length;
@@ -522,368 +112,38 @@ export default {
       this.updateCheckedDbcs({ checkedDbcs: value });
     },
     confirm() {
-      this.isSearchingAchievementDbc = true;
-      this.isSearchingAchievementCategoryDbc = true;
-      this.isSearchingAchievementCriteriaDbc = true;
-      this.isSearchingAreaTableDbc = true;
-      this.isSearchingCurrencyCategoryDbc = true;
-      this.isSearchingCurrencyTypeDbc = true;
-      this.isSearchingEmotesTextDbc = true;
-      this.isSearchingGlyphPropertyDbc = true;
-      this.isSearchingItemDbc = true;
-      this.isSearchingItemExtendedCostDbc = true;
-      this.isSearchingItemSetDbc = true;
-      this.isSearchingQuestFactionRewardDbc = true;
-      this.isSearchingQuestInfoDbc = true;
-      this.isSearchingQuestSortDbc = true;
-      this.isSearchingScalingStatDistributionDbc = true;
-      this.isSearchingScalingStatValuesDbc = true;
-      this.isSearchingSpellDbc = true;
-      this.isSearchingSpellItemEnchantmentDbc = true;
-      this.isSearchingTalentDbc = true;
-      this.isSearchingTalentTabDbc = true;
-      this.isWritingAchievementDbc = true;
-      this.isWritingAchievementCategoryDbc = true;
-      this.isWritingAchievementCriteriaDbc = true;
-      this.isWritingAreaTableDbc = true;
-      this.isWritingCurrencyCategoryDbc = true;
-      this.isWritingCurrencyTypeDbc = true;
-      this.isWritingEmotesTextDbc = true;
-      this.isWritingGlyphPropertyDbc = true;
-      this.isWritingItemDbc = true;
-      this.isWritingItemExtendedCostDbc = true;
-      this.isWritingItemSetDbc = true;
-      this.isWritingQuestFactionRewardDbc = true;
-      this.isWritingQuestInfoDbc = true;
-      this.isWritingQuestSortDbc = true;
-      this.isWritingScalingStatDistributionDbc = true;
-      this.isWritingScalingStatValuesDbc = true;
-      this.isWritingSpellDbc = true;
-      this.isWritingSpellItemEnchantmentDbc = true;
-      this.isWritingTalentDbc = true;
-      this.isWritingTalentTabDbc = true;
-
-      this.active = 0;
-
       this.visible = false;
       this.visible2 = true;
-
-      this.prepareData();
+      this.closable = false;
+      this.exporting = true;
+      this.exportData();
     },
-    prepareData() {
+    exportData() {
+      let start = Date.now();
+      this.pushTip("导出开始");
       let promises = [];
       for (let dbc of this.checkedDbcs) {
-        switch (dbc) {
-          case "Achievement":
-            promises.push(
-              this.searchAchievementDbc().then(() => {
-                this.isSearchingAchievementDbc = false;
-              })
-            );
-            break;
-          case "AchievementCategory":
-            promises.push(
-              this.searchAchievementCategoryDbc().then(() => {
-                this.isSearchingAchievementCategoryDbc = false;
-              })
-            );
-            break;
-          case "AchievementCriteria":
-            promises.push(
-              this.searchAchievementCriteriaDbc().then(() => {
-                this.isSearchingAchievementCriteriaDbc = false;
-              })
-            );
-            break;
-          case "AreaTable":
-            promises.push(
-              this.searchAreaTableDbc().then(() => {
-                this.isSearchingAreaTableDbc = false;
-              })
-            );
-            break;
-          case "CurrencyCategory":
-            promises.push(
-              this.searchCurrencyCategoryDbc().then(() => {
-                this.isSearchingCurrencyCategoryDbc = false;
-              })
-            );
-            break;
-          case "CurrencyType":
-            promises.push(
-              this.searchCurrencyTypeDbc().then(() => {
-                this.isSearchingCurrencyTypeDbc = false;
-              })
-            );
-            break;
-          case "EmotesText":
-            promises.push(
-              this.searchEmotesTextDbc().then(() => {
-                this.isSearchingEmotesTextDbc = false;
-              })
-            );
-            break;
-          case "GlyphProperty":
-            promises.push(
-              this.searchGlyphPropertyDbc().then(() => {
-                this.isSearchingGlyphPropertyDbc = false;
-              })
-            );
-            break;
-          case "Item":
-            promises.push(
-              this.searchItemDbc().then(() => {
-                this.isSearchingItemDbc = false;
-              })
-            );
-            break;
-          case "ItemExtendedCost":
-            promises.push(
-              this.searchItemExtendedCostDbc().then(() => {
-                this.isSearchingItemExtendedCostDbc = false;
-              })
-            );
-            break;
-          case "ItemSet":
-            promises.push(
-              this.searchItemSetDbc().then(() => {
-                this.isSearchingItemSetDbc = false;
-              })
-            );
-            break;
-          case "QuestFactionReward":
-            promises.push(
-              this.searchQuestFactionRewardDbc().then(() => {
-                this.isSearchingQuestFactionRewardDbc = false;
-              })
-            );
-            break;
-          case "QuestInfo":
-            promises.push(
-              this.searchQuestInfoDbc().then(() => {
-                this.isSearchingQuestInfoDbc = false;
-              })
-            );
-            break;
-          case "QuestSort":
-            promises.push(
-              this.searchQuestSortDbc().then(() => {
-                this.isSearchingQuestSortDbc = false;
-              })
-            );
-            break;
-          case "ScalingStatDistribution":
-            promises.push(
-              this.searchScalingStatDistributionDbc().then(() => {
-                this.isSearchingScalingStatDistributionDbc = false;
-              })
-            );
-            break;
-          case "ScalingStatValues":
-            promises.push(
-              this.searchScalingStatValuesDbc().then(() => {
-                this.isSearchingScalingStatValuesDbc = false;
-              })
-            );
-            break;
-          case "Spell":
-            promises.push(
-              this.searchSpellDbc().then(() => {
-                this.isSearchingSpellDbc = false;
-              })
-            );
-            break;
-          case "SpellItemEnchantment":
-            promises.push(
-              this.searchSpellItemEnchantmentDbc().then(() => {
-                this.isSearchingSpellItemEnchantmentDbc = false;
-              })
-            );
-            break;
-          case "Talent":
-            promises.push(
-              this.searchTalentDbc().then(() => {
-                this.isSearchingTalentDbc = false;
-              })
-            );
-            break;
-          case "TalentTab":
-            promises.push(
-              this.searchTalentTabDbc().then(() => {
-                this.isSearchingTalentTabDbc = false;
-              })
-            );
-            break;
-          default:
-            break;
-        }
+        promises.push(this.exportDbc(dbc));
       }
       Promise.all(promises)
         .then(() => {
-          this.active = 1;
-          this.writeFile();
-        })
-        .catch(() => {
-          this.visible2 = false;
-        });
-    },
-    writeFile() {
-      let promises = [];
-      for (let dbc of this.checkedDbcs) {
-        switch (dbc) {
-          case "Achievement":
-            promises.push(
-              this.writeAchievementDbc().then(() => {
-                this.isWritingAchievementDbc = false;
-              })
-            );
-            break;
-          case "AchievementCategory":
-            promises.push(
-              this.writeAchievementCategoryDbc().then(() => {
-                this.isWritingAchievementCategoryDbc = false;
-              })
-            );
-            break;
-          case "AchievementCriteria":
-            promises.push(
-              this.writeAchievementCriteriaDbc().then(() => {
-                this.isWritingAchievementCriteriaDbc = false;
-              })
-            );
-            break;
-          case "AreaTable":
-            promises.push(
-              this.writeAreaTableDbc().then(() => {
-                this.isWritingAreaTableDbc = false;
-              })
-            );
-            break;
-          case "CurrencyCategory":
-            promises.push(
-              this.writeCurrencyCategoryDbc().then(() => {
-                this.isWritingCurrencyCategoryDbc = false;
-              })
-            );
-            break;
-          case "CurrencyType":
-            promises.push(
-              this.writeCurrencyTypeDbc().then(() => {
-                this.isWritingCurrencyTypeDbc = false;
-              })
-            );
-            break;
-          case "EmotesText":
-            promises.push(
-              this.writeEmotesTextDbc().then(() => {
-                this.isWritingEmotesTextDbc = false;
-              })
-            );
-            break;
-          case "GlyphProperty":
-            promises.push(
-              this.writeGlyphPropertyDbc().then(() => {
-                this.isWritingGlyphPropertyDbc = false;
-              })
-            );
-            break;
-          case "Item":
-            promises.push(
-              this.writeItemDbc().then(() => {
-                this.isWritingItemDbc = false;
-              })
-            );
-            break;
-          case "ItemExtendedCost":
-            promises.push(
-              this.writeItemExtendedCostDbc().then(() => {
-                this.isWritingItemExtendedCostDbc = false;
-              })
-            );
-            break;
-          case "ItemSet":
-            promises.push(
-              this.writeItemSetDbc().then(() => {
-                this.isWritingItemSetDbc = false;
-              })
-            );
-            break;
-          case "QuestFactionReward":
-            promises.push(
-              this.writeQuestFactionRewardDbc().then(() => {
-                this.isWritingQuestFactionRewardDbc = false;
-              })
-            );
-            break;
-          case "QuestInfo":
-            promises.push(
-              this.writeQuestInfoDbc().then(() => {
-                this.isWritingQuestInfoDbc = false;
-              })
-            );
-            break;
-          case "QuestSort":
-            promises.push(
-              this.writeQuestSortDbc().then(() => {
-                this.isWritingQuestSortDbc = false;
-              })
-            );
-            break;
-          case "ScalingStatDistribution":
-            promises.push(
-              this.writeScalingStatDistributionDbc().then(() => {
-                this.isWritingScalingStatDistributionDbc = false;
-              })
-            );
-            break;
-          case "ScalingStatValues":
-            promises.push(
-              this.writeScalingStatValuesDbc().then(() => {
-                this.isWritingScalingStatValuesDbc = false;
-              })
-            );
-            break;
-          case "Spell":
-            promises.push(
-              this.writeSpellDbc().then(() => {
-                this.isWritingSpellDbc = false;
-              })
-            );
-            break;
-          case "SpellItemEnchantment":
-            promises.push(
-              this.writeSpellItemEnchantmentDbc().then(() => {
-                this.isWritingSpellItemEnchantmentDbc = false;
-              })
-            );
-            break;
-          case "Talent":
-            promises.push(
-              this.writeTalentDbc().then(() => {
-                this.isWritingTalentDbc = false;
-              })
-            );
-            break;
-          case "TalentTab":
-            promises.push(
-              this.writeTalentTabDbc().then(() => {
-                this.isWritingTalentTabDbc = false;
-              })
-            );
-            break;
-          default:
-            break;
-        }
-      }
-      Promise.all(promises)
-        .then(() => {
-          this.active = 3;
           this.closable = true;
+          this.exporting = false;
+          let end = Date.now();
+          this.pushTip(
+            `导出成功，本次共导出${this.checkedDbcs.length}个文件，耗时${
+              (end - start) / 1000
+            }秒`
+          );
         })
-        .catch(() => {
-          this.active = 0;
-          this.visible2 = false;
+        .catch((e) => {
+          this.closable = true;
+          this.exporting = false;
+          this.pushTip(`导出失败, ${e}`);
         });
+    },
+    handleClosed() {
+      this.resetTips();
     },
   },
   mounted() {
