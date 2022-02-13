@@ -1,3 +1,14 @@
+## [0.2.8](https://github.com/CalsRanna/foxy/compare/0.2.7...0.2.8) (2022-02-13)
+
+### Bug Fixes
+
+- **exporter:** fix error when export glyph property ([2ef7276](https://github.com/CalsRanna/foxy/commit/2ef727616e6fd49d70fab84337eb44a7ae9d22d8))
+- **glyph property:** fix error when search by id ([d87d212](https://github.com/CalsRanna/foxy/commit/d87d2129a88c85a60f2ddd205e9b3b653a0117c7))
+
+### Features
+
+- **glyph property selector:** build glyph property selector ([9fcd952](https://github.com/CalsRanna/foxy/commit/9fcd9522a01a57a18a6c9e12b6eb83e6a0fea2cf))
+
 ## [0.2.7](https://github.com/CalsRanna/foxy/compare/0.2.6...0.2.7) (2022-02-12)
 
 ### Bug Fixes
