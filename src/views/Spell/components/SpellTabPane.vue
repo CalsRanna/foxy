@@ -853,11 +853,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="参数A">
+            <el-form-item label="雕文属性" v-if="spell.Effect_1 == 74">
+              <glyph-property-selector
+                v-model="spell.EffectMiscValue_1"
+                placeholder="EffectMiscValue_1"
+              />
+            </el-form-item>
+            <el-form-item label="参数A" v-else>
               <el-input
                 v-model="spell.EffectMiscValue_1"
                 placeholder="EffectMiscValue_1"
-              ></el-input>
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -1091,11 +1097,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="参数A">
+            <el-form-item label="雕文属性" v-if="spell.Effect_2 == 74">
+              <glyph-property-selector
+                v-model="spell.EffectMiscValue_2"
+                placeholder="EffectMiscValue_2"
+              />
+            </el-form-item>
+            <el-form-item label="参数A" v-else>
               <el-input
                 v-model="spell.EffectMiscValue_2"
                 placeholder="EffectMiscValue_2"
-              ></el-input>
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -1329,11 +1341,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="参数A">
+            <el-form-item label="雕文属性" v-if="spell.Effect_3 == 74">
+              <glyph-property-selector
+                v-model="spell.EffectMiscValue_3"
+                placeholder="EffectMiscValue_3"
+              />
+            </el-form-item>
+            <el-form-item label="参数A" v-else>
               <el-input
                 v-model="spell.EffectMiscValue_3"
                 placeholder="EffectMiscValue_3"
-              ></el-input>
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -1795,6 +1813,7 @@ import SpellDurationSelector from "@/components/SpellDurationSelector.vue";
 import SpellIconSelector from "@/components/SpellIconSelector.vue";
 import SpellRangeSelector from "@/components/SpellRangeSelector.vue";
 import SpellSelector from "../../../components/SpellSelector.vue";
+import GlyphPropertySelector from "@/components/GlyphPropertySelector";
 
 export default {
   data() {
@@ -1892,6 +1911,7 @@ export default {
     SpellIconSelector,
     SpellRangeSelector,
     SpellSelector,
+    GlyphPropertySelector,
   },
 };
 </script>

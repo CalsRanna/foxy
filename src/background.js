@@ -113,6 +113,7 @@ import "./background/spellIconSelector";
 import "./background/spellItemEnchantment";
 import "./background/spellRangeSelector";
 import "./background/gossipMenuSelector";
+import "./background/glyphPropertySelector";
 import "./background/scalingStatDistributionSelector";
 import "./background/waypointDataSelector";
 import "./background/itemSetSelector";
