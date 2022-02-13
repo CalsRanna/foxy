@@ -33,11 +33,11 @@ export default {
     searchQuestSorts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_QUEST_SORTS, payload);
-        ipcRenderer.on(SEARCH_QUEST_SORTS, (event, response) => {
+        ipcRenderer.once(SEARCH_QUEST_SORTS, (event, response) => {
           commit(SEARCH_QUEST_SORTS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_QUEST_SORTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_QUEST_SORTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countQuestSorts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_QUEST_SORTS, payload);
-        ipcRenderer.on(COUNT_QUEST_SORTS, (event, response) => {
+        ipcRenderer.once(COUNT_QUEST_SORTS, (event, response) => {
           commit(COUNT_QUEST_SORTS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_QUEST_SORTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_QUEST_SORTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeQuestSort({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_QUEST_SORT, payload);
-        ipcRenderer.on(STORE_QUEST_SORT, () => {
+        ipcRenderer.once(STORE_QUEST_SORT, () => {
           commit("UPDATE_REFRESH_OF_QUEST_SORT", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_QUEST_SORT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_QUEST_SORT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findQuestSort({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_QUEST_SORT, payload);
-        ipcRenderer.on(FIND_QUEST_SORT, (event, response) => {
+        ipcRenderer.once(FIND_QUEST_SORT, (event, response) => {
           commit(FIND_QUEST_SORT, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_QUEST_SORT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_QUEST_SORT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateQuestSort({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_QUEST_SORT, payload);
-        ipcRenderer.on(UPDATE_QUEST_SORT, () => {
+        ipcRenderer.once(UPDATE_QUEST_SORT, () => {
           commit("UPDATE_REFRESH_OF_QUEST_SORT", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_QUEST_SORT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_QUEST_SORT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyQuestSort(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_QUEST_SORT, payload);
-        ipcRenderer.on(DESTROY_QUEST_SORT, () => {
+        ipcRenderer.once(DESTROY_QUEST_SORT, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_QUEST_SORT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_QUEST_SORT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createQuestSort({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_QUEST_SORT, payload);
-        ipcRenderer.on(CREATE_QUEST_SORT, (event, response) => {
+        ipcRenderer.once(CREATE_QUEST_SORT, (event, response) => {
           commit(CREATE_QUEST_SORT, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_QUEST_SORT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_QUEST_SORT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyQuestSort(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_QUEST_SORT, payload);
-        ipcRenderer.on(COPY_QUEST_SORT, () => {
+        ipcRenderer.once(COPY_QUEST_SORT, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_QUEST_SORT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_QUEST_SORT}_REJECT`, (event, error) => {
           reject(error);
         });
       });

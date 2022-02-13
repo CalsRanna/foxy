@@ -20,14 +20,14 @@ export default {
     searchCreatureModelInfosForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CREATURE_MODEL_INFOS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_CREATURE_MODEL_INFOS_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_CREATURE_MODEL_INFOS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CREATURE_MODEL_INFOS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countCreatureModelInfosForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_CREATURE_MODEL_INFOS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_CREATURE_MODEL_INFOS_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_CREATURE_MODEL_INFOS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_CREATURE_MODEL_INFOS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

@@ -33,11 +33,11 @@ export default {
     searchTalents({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_TALENTS, payload);
-        ipcRenderer.on(SEARCH_TALENTS, (event, response) => {
+        ipcRenderer.once(SEARCH_TALENTS, (event, response) => {
           commit(SEARCH_TALENTS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_TALENTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_TALENTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countTalents({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_TALENTS, payload);
-        ipcRenderer.on(COUNT_TALENTS, (event, response) => {
+        ipcRenderer.once(COUNT_TALENTS, (event, response) => {
           commit(COUNT_TALENTS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_TALENTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_TALENTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeTalent({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_TALENT, payload);
-        ipcRenderer.on(STORE_TALENT, () => {
+        ipcRenderer.once(STORE_TALENT, () => {
           commit("UPDATE_REFRESH_OF_TALENT", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_TALENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_TALENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findTalent({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_TALENT, payload);
-        ipcRenderer.on(FIND_TALENT, (event, response) => {
+        ipcRenderer.once(FIND_TALENT, (event, response) => {
           commit(FIND_TALENT, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_TALENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_TALENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateTalent({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_TALENT, payload);
-        ipcRenderer.on(UPDATE_TALENT, () => {
+        ipcRenderer.once(UPDATE_TALENT, () => {
           commit("UPDATE_REFRESH_OF_TALENT", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_TALENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_TALENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyTalent(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_TALENT, payload);
-        ipcRenderer.on(DESTROY_TALENT, () => {
+        ipcRenderer.once(DESTROY_TALENT, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_TALENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_TALENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createTalent({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_TALENT, payload);
-        ipcRenderer.on(CREATE_TALENT, (event, response) => {
+        ipcRenderer.once(CREATE_TALENT, (event, response) => {
           commit(CREATE_TALENT, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_TALENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_TALENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyTalent(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_TALENT, payload);
-        ipcRenderer.on(COPY_TALENT, () => {
+        ipcRenderer.once(COPY_TALENT, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_TALENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_TALENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });

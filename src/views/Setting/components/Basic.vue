@@ -99,7 +99,7 @@ export default {
     ]),
     selectDbcPath() {
       ipcRenderer.send("SELECT_DBC_PATH");
-      ipcRenderer.on("SELECT_DBC_PATH_REPLY", (event, path) => {
+      ipcRenderer.once("SELECT_DBC_PATH_REPLY", (event, path) => {
         this.dbcConfig.path = path;
       });
     },

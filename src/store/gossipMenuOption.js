@@ -22,11 +22,11 @@ export default {
     searchGossipMenuOptions({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GOSSIP_MENU_OPTIONS, payload);
-        ipcRenderer.on(SEARCH_GOSSIP_MENU_OPTIONS, (event, response) => {
+        ipcRenderer.once(SEARCH_GOSSIP_MENU_OPTIONS, (event, response) => {
           commit(SEARCH_GOSSIP_MENU_OPTIONS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_GOSSIP_MENU_OPTIONS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -37,34 +37,40 @@ export default {
     storeGossipMenuOption(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(STORE_GOSSIP_MENU_OPTION, () => {
+        ipcRenderer.once(STORE_GOSSIP_MENU_OPTION, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_GOSSIP_MENU_OPTION}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_GOSSIP_MENU_OPTION}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findGossipMenuOption({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(FIND_GOSSIP_MENU_OPTION, (event, response) => {
+        ipcRenderer.once(FIND_GOSSIP_MENU_OPTION, (event, response) => {
           commit(FIND_GOSSIP_MENU_OPTION, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_GOSSIP_MENU_OPTION}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_GOSSIP_MENU_OPTION}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateGossipMenuOption({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(UPDATE_GOSSIP_MENU_OPTION, () => {
+        ipcRenderer.once(UPDATE_GOSSIP_MENU_OPTION, () => {
           commit(UPDATE_GOSSIP_MENU_OPTION, payload.gossipMenuOption);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_GOSSIP_MENU_OPTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -75,10 +81,10 @@ export default {
     destroyGossipMenuOption(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(DESTROY_GOSSIP_MENU_OPTION, () => {
+        ipcRenderer.once(DESTROY_GOSSIP_MENU_OPTION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_GOSSIP_MENU_OPTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -89,11 +95,11 @@ export default {
     createGossipMenuOption({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(CREATE_GOSSIP_MENU_OPTION, (event, response) => {
+        ipcRenderer.once(CREATE_GOSSIP_MENU_OPTION, (event, response) => {
           commit(CREATE_GOSSIP_MENU_OPTION, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${CREATE_GOSSIP_MENU_OPTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -104,12 +110,15 @@ export default {
     copyGossipMenuOption(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_GOSSIP_MENU_OPTION, payload);
-        ipcRenderer.on(COPY_GOSSIP_MENU_OPTION, () => {
+        ipcRenderer.once(COPY_GOSSIP_MENU_OPTION, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_GOSSIP_MENU_OPTION}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COPY_GOSSIP_MENU_OPTION}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

@@ -33,11 +33,11 @@ export default {
     searchScalingStatValues({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SCALING_STAT_VALUES, payload);
-        ipcRenderer.on(SEARCH_SCALING_STAT_VALUES, (event, response) => {
+        ipcRenderer.once(SEARCH_SCALING_STAT_VALUES, (event, response) => {
           commit(SEARCH_SCALING_STAT_VALUES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_SCALING_STAT_VALUES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -48,11 +48,11 @@ export default {
     countScalingStatValues({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SCALING_STAT_VALUES, payload);
-        ipcRenderer.on(COUNT_SCALING_STAT_VALUES, (event, response) => {
+        ipcRenderer.once(COUNT_SCALING_STAT_VALUES, (event, response) => {
           commit(COUNT_SCALING_STAT_VALUES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_SCALING_STAT_VALUES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -69,35 +69,41 @@ export default {
     storeScalingStatValue({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SCALING_STAT_VALUE, payload);
-        ipcRenderer.on(STORE_SCALING_STAT_VALUE, () => {
+        ipcRenderer.once(STORE_SCALING_STAT_VALUE, () => {
           commit("UPDATE_REFRESH_OF_SCALING_STAT_VALUE", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_SCALING_STAT_VALUE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_SCALING_STAT_VALUE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findScalingStatValue({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SCALING_STAT_VALUE, payload);
-        ipcRenderer.on(FIND_SCALING_STAT_VALUE, (event, response) => {
+        ipcRenderer.once(FIND_SCALING_STAT_VALUE, (event, response) => {
           commit(FIND_SCALING_STAT_VALUE, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SCALING_STAT_VALUE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_SCALING_STAT_VALUE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateScalingStatValue({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SCALING_STAT_VALUE, payload);
-        ipcRenderer.on(UPDATE_SCALING_STAT_VALUE, () => {
+        ipcRenderer.once(UPDATE_SCALING_STAT_VALUE, () => {
           commit("UPDATE_REFRESH_OF_SCALING_STAT_VALUE", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_SCALING_STAT_VALUE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -108,10 +114,10 @@ export default {
     destroyScalingStatValue(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SCALING_STAT_VALUE, payload);
-        ipcRenderer.on(DESTROY_SCALING_STAT_VALUE, () => {
+        ipcRenderer.once(DESTROY_SCALING_STAT_VALUE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_SCALING_STAT_VALUE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -128,12 +134,15 @@ export default {
     copyScalingStatValue(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SCALING_STAT_VALUE, payload);
-        ipcRenderer.on(COPY_SCALING_STAT_VALUE, () => {
+        ipcRenderer.once(COPY_SCALING_STAT_VALUE, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_SCALING_STAT_VALUE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COPY_SCALING_STAT_VALUE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     resetCredential({ commit }) {

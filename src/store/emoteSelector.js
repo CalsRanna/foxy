@@ -20,11 +20,11 @@ export default {
     searchEmotesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_EMOTES_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_EMOTES_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(SEARCH_EMOTES_FOR_SELECTOR, (event, response) => {
           commit(SEARCH_EMOTES_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_EMOTES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,11 +35,11 @@ export default {
     countEmotesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_EMOTES_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_EMOTES_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_EMOTES_FOR_SELECTOR, (event, response) => {
           commit(COUNT_EMOTES_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_EMOTES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

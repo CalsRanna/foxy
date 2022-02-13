@@ -16,22 +16,25 @@ export default {
     storeSpellCustomAttr(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL_CUSTOM_ATTR, payload);
-        ipcRenderer.on(STORE_SPELL_CUSTOM_ATTR, () => {
+        ipcRenderer.once(STORE_SPELL_CUSTOM_ATTR, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_SPELL_CUSTOM_ATTR}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_SPELL_CUSTOM_ATTR}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findSpellCustomAttr({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL_CUSTOM_ATTR, payload);
-        ipcRenderer.on(FIND_SPELL_CUSTOM_ATTR, (event, response) => {
+        ipcRenderer.once(FIND_SPELL_CUSTOM_ATTR, (event, response) => {
           commit(FIND_SPELL_CUSTOM_ATTR, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SPELL_CUSTOM_ATTR}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_SPELL_CUSTOM_ATTR}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -39,12 +42,15 @@ export default {
     updateSpellCustomAttr(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL_CUSTOM_ATTR, payload);
-        ipcRenderer.on(UPDATE_SPELL_CUSTOM_ATTR, () => {
+        ipcRenderer.once(UPDATE_SPELL_CUSTOM_ATTR, () => {
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_SPELL_CUSTOM_ATTR}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${UPDATE_SPELL_CUSTOM_ATTR}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     createSpellCustomAttr({ commit }, payload) {

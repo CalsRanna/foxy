@@ -33,11 +33,11 @@ export default {
     searchCreatureTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CREATURE_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_CREATURE_TEMPLATES, (event, response) => {
+        ipcRenderer.once(SEARCH_CREATURE_TEMPLATES, (event, response) => {
           commit(SEARCH_CREATURE_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CREATURE_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -48,13 +48,16 @@ export default {
     countCreatureTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_CREATURE_TEMPLATES, payload);
-        ipcRenderer.on(COUNT_CREATURE_TEMPLATES, (event, response) => {
+        ipcRenderer.once(COUNT_CREATURE_TEMPLATES, (event, response) => {
           commit(COUNT_CREATURE_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_CREATURE_TEMPLATES}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COUNT_CREATURE_TEMPLATES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     paginateCreatureTemplates({ commit }, payload) {
@@ -66,23 +69,26 @@ export default {
     storeCreatureTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CREATURE_TEMPLATE, payload);
-        ipcRenderer.on(STORE_CREATURE_TEMPLATE, () => {
+        ipcRenderer.once(STORE_CREATURE_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_CREATURE_TEMPLATE", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_CREATURE_TEMPLATE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_CREATURE_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findCreatureTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CREATURE_TEMPLATE, payload);
-        ipcRenderer.on(FIND_CREATURE_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_CREATURE_TEMPLATE, (event, response) => {
           commit(FIND_CREATURE_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_CREATURE_TEMPLATE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_CREATURE_TEMPLATE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -90,22 +96,25 @@ export default {
     updateCreatureTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CREATURE_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_CREATURE_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_CREATURE_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_CREATURE_TEMPLATE", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_CREATURE_TEMPLATE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${UPDATE_CREATURE_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     destroyCreatureTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_CREATURE_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_CREATURE_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_CREATURE_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_CREATURE_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -116,22 +125,25 @@ export default {
     createCreatureTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_CREATURE_TEMPLATE, payload);
-        ipcRenderer.on(CREATE_CREATURE_TEMPLATE, (event, response) => {
+        ipcRenderer.once(CREATE_CREATURE_TEMPLATE, (event, response) => {
           commit(CREATE_CREATURE_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_CREATURE_TEMPLATE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${CREATE_CREATURE_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     copyCreatureTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_CREATURE_TEMPLATE, payload);
-        ipcRenderer.on(COPY_CREATURE_TEMPLATE, () => {
+        ipcRenderer.once(COPY_CREATURE_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_CREATURE_TEMPLATE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_CREATURE_TEMPLATE}_REJECT`, (event, error) => {
           reject(error);
         });
       });

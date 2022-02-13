@@ -20,11 +20,11 @@ export default {
     searchItemLootTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ITEM_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_ITEM_LOOT_TEMPLATES, (event, response) => {
+        ipcRenderer.once(SEARCH_ITEM_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_ITEM_LOOT_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_ITEM_LOOT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,33 +35,39 @@ export default {
     storeItemLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ITEM_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_ITEM_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(STORE_ITEM_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_ITEM_LOOT_TEMPLATE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_ITEM_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findItemLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ITEM_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_ITEM_LOOT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_ITEM_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_ITEM_LOOT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_ITEM_LOOT_TEMPLATE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_ITEM_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateItemLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ITEM_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_ITEM_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_ITEM_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_ITEM_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -72,10 +78,10 @@ export default {
     destroyItemLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_ITEM_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_ITEM_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_ITEM_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_ITEM_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -92,12 +98,15 @@ export default {
     copyItemLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_ITEM_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_ITEM_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(COPY_ITEM_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_ITEM_LOOT_TEMPLATE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COPY_ITEM_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

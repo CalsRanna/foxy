@@ -16,10 +16,10 @@ export default {
     storeAchievementCriteria(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ACHIEVEMENT_CRITERIA, payload);
-        ipcRenderer.on(STORE_ACHIEVEMENT_CRITERIA, () => {
+        ipcRenderer.once(STORE_ACHIEVEMENT_CRITERIA, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_ACHIEVEMENT_CRITERIA}_REJECT`,
           (event, error) => {
             reject(error);
@@ -30,11 +30,11 @@ export default {
     findAchievementCriteria({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ACHIEVEMENT_CRITERIA, payload);
-        ipcRenderer.on(FIND_ACHIEVEMENT_CRITERIA, (event, response) => {
+        ipcRenderer.once(FIND_ACHIEVEMENT_CRITERIA, (event, response) => {
           commit(FIND_ACHIEVEMENT_CRITERIA, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_ACHIEVEMENT_CRITERIA}_REJECT`,
           (event, error) => {
             reject(error);
@@ -45,10 +45,10 @@ export default {
     updateAchievementCriteria(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ACHIEVEMENT_CRITERIA, payload);
-        ipcRenderer.on(UPDATE_ACHIEVEMENT_CRITERIA, () => {
+        ipcRenderer.once(UPDATE_ACHIEVEMENT_CRITERIA, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_ACHIEVEMENT_CRITERIA}_REJECT`,
           (event, error) => {
             reject(error);

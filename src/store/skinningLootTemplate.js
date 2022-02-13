@@ -20,11 +20,11 @@ export default {
     searchSkinningLootTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SKINNING_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_SKINNING_LOOT_TEMPLATES, (event, response) => {
+        ipcRenderer.once(SEARCH_SKINNING_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_SKINNING_LOOT_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_SKINNING_LOOT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +35,10 @@ export default {
     storeSkinningLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SKINNING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_SKINNING_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(STORE_SKINNING_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_SKINNING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +49,11 @@ export default {
     findSkinningLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SKINNING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_SKINNING_LOOT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_SKINNING_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_SKINNING_LOOT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_SKINNING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +64,10 @@ export default {
     updateSkinningLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SKINNING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_SKINNING_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_SKINNING_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_SKINNING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +78,10 @@ export default {
     destroySkinningLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SKINNING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_SKINNING_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_SKINNING_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_SKINNING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,10 +98,10 @@ export default {
     copySkinningLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SKINNING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_SKINNING_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(COPY_SKINNING_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_SKINNING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);

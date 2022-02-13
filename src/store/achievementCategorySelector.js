@@ -20,14 +20,14 @@ export default {
     searchAchievementCategoriesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ACHIEVEMENT_CATEGORIES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_ACHIEVEMENT_CATEGORIES_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_ACHIEVEMENT_CATEGORIES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_ACHIEVEMENT_CATEGORIES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countAchievementCategoriesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_ACHIEVEMENT_CATEGORIES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_ACHIEVEMENT_CATEGORIES_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_ACHIEVEMENT_CATEGORIES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_ACHIEVEMENT_CATEGORIES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

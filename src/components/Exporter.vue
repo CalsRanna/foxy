@@ -147,7 +147,7 @@ export default {
     },
   },
   mounted() {
-    ipcRenderer.on(START_EXPORT, () => {
+    ipcRenderer.once(START_EXPORT, () => {
       if (this.visible == false && this.visible2 == false) {
         this.visible = true;
       }

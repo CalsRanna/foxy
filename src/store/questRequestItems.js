@@ -18,10 +18,10 @@ export default {
     storeQuestRequestItems(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_QUEST_REQUEST_ITEMS, payload);
-        ipcRenderer.on(STORE_QUEST_REQUEST_ITEMS, () => {
+        ipcRenderer.once(STORE_QUEST_REQUEST_ITEMS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_QUEST_REQUEST_ITEMS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -32,22 +32,25 @@ export default {
     findQuestRequestItems({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_QUEST_REQUEST_ITEMS, payload);
-        ipcRenderer.on(FIND_QUEST_REQUEST_ITEMS, (event, response) => {
+        ipcRenderer.once(FIND_QUEST_REQUEST_ITEMS, (event, response) => {
           commit(FIND_QUEST_REQUEST_ITEMS, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_QUEST_REQUEST_ITEMS}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_QUEST_REQUEST_ITEMS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateQuestRequestItems(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_QUEST_REQUEST_ITEMS, payload);
-        ipcRenderer.on(UPDATE_QUEST_REQUEST_ITEMS, () => {
+        ipcRenderer.once(UPDATE_QUEST_REQUEST_ITEMS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_QUEST_REQUEST_ITEMS}_REJECT`,
           (event, error) => {
             reject(error);

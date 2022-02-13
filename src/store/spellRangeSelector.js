@@ -20,11 +20,14 @@ export default {
     searchSpellRangesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_RANGES_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_SPELL_RANGES_FOR_SELECTOR, (event, response) => {
-          commit(SEARCH_SPELL_RANGES_FOR_SELECTOR, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_SPELL_RANGES_FOR_SELECTOR,
+          (event, response) => {
+            commit(SEARCH_SPELL_RANGES_FOR_SELECTOR, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_SPELL_RANGES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,11 +38,11 @@ export default {
     countSpellRangesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SPELL_RANGES_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_SPELL_RANGES_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_SPELL_RANGES_FOR_SELECTOR, (event, response) => {
           commit(COUNT_SPELL_RANGES_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_SPELL_RANGES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

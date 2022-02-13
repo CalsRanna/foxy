@@ -20,11 +20,11 @@ export default {
     searchSpellGroups({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_GROUPS, payload);
-        ipcRenderer.on(SEARCH_SPELL_GROUPS, (event, response) => {
+        ipcRenderer.once(SEARCH_SPELL_GROUPS, (event, response) => {
           commit(SEARCH_SPELL_GROUPS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_SPELL_GROUPS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_SPELL_GROUPS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -32,10 +32,10 @@ export default {
     storeSpellGroup(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL_GROUP, payload);
-        ipcRenderer.on(STORE_SPELL_GROUP, () => {
+        ipcRenderer.once(STORE_SPELL_GROUP, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_SPELL_GROUP}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_SPELL_GROUP}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -43,11 +43,11 @@ export default {
     findSpellGroup({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL_GROUP, payload);
-        ipcRenderer.on(FIND_SPELL_GROUP, (event, response) => {
+        ipcRenderer.once(FIND_SPELL_GROUP, (event, response) => {
           commit(FIND_SPELL_GROUP, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SPELL_GROUP}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_SPELL_GROUP}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -55,10 +55,10 @@ export default {
     updateSpellGroup(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL_GROUP, payload);
-        ipcRenderer.on(UPDATE_SPELL_GROUP, () => {
+        ipcRenderer.once(UPDATE_SPELL_GROUP, () => {
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_SPELL_GROUP}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_SPELL_GROUP}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -66,10 +66,10 @@ export default {
     destroySpellGroup(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SPELL_GROUP, payload);
-        ipcRenderer.on(DESTROY_SPELL_GROUP, () => {
+        ipcRenderer.once(DESTROY_SPELL_GROUP, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_SPELL_GROUP}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_SPELL_GROUP}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -83,10 +83,10 @@ export default {
     copySpellGroup(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SPELL_GROUP, payload);
-        ipcRenderer.on(COPY_SPELL_GROUP, () => {
+        ipcRenderer.once(COPY_SPELL_GROUP, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_SPELL_GROUP}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_SPELL_GROUP}_REJECT`, (event, error) => {
           reject(error);
         });
       });

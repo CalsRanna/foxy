@@ -20,11 +20,14 @@ export default {
     searchPlayerCreateInfoActions({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_PLAYER_CREATE_INFO_ACTIONS, payload);
-        ipcRenderer.on(SEARCH_PLAYER_CREATE_INFO_ACTIONS, (event, response) => {
-          commit(SEARCH_PLAYER_CREATE_INFO_ACTIONS, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_PLAYER_CREATE_INFO_ACTIONS,
+          (event, response) => {
+            commit(SEARCH_PLAYER_CREATE_INFO_ACTIONS, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_PLAYER_CREATE_INFO_ACTIONS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +38,10 @@ export default {
     storePlayerCreateInfoAction(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_PLAYER_CREATE_INFO_ACTION, payload);
-        ipcRenderer.on(STORE_PLAYER_CREATE_INFO_ACTION, () => {
+        ipcRenderer.once(STORE_PLAYER_CREATE_INFO_ACTION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_PLAYER_CREATE_INFO_ACTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +52,11 @@ export default {
     findPlayerCreateInfoAction({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_PLAYER_CREATE_INFO_ACTION, payload);
-        ipcRenderer.on(FIND_PLAYER_CREATE_INFO_ACTION, (event, response) => {
+        ipcRenderer.once(FIND_PLAYER_CREATE_INFO_ACTION, (event, response) => {
           commit(FIND_PLAYER_CREATE_INFO_ACTION, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_PLAYER_CREATE_INFO_ACTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +67,10 @@ export default {
     updatePlayerCreateInfoAction(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_PLAYER_CREATE_INFO_ACTION, payload);
-        ipcRenderer.on(UPDATE_PLAYER_CREATE_INFO_ACTION, () => {
+        ipcRenderer.once(UPDATE_PLAYER_CREATE_INFO_ACTION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_PLAYER_CREATE_INFO_ACTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +81,10 @@ export default {
     destroyPlayerCreateInfoAction(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_PLAYER_CREATE_INFO_ACTION, payload);
-        ipcRenderer.on(DESTROY_PLAYER_CREATE_INFO_ACTION, () => {
+        ipcRenderer.once(DESTROY_PLAYER_CREATE_INFO_ACTION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_PLAYER_CREATE_INFO_ACTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -92,11 +95,14 @@ export default {
     createPlayerCreateInfoAction({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_PLAYER_CREATE_INFO_ACTION, payload);
-        ipcRenderer.on(CREATE_PLAYER_CREATE_INFO_ACTION, (event, response) => {
-          commit(CREATE_PLAYER_CREATE_INFO_ACTION, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          CREATE_PLAYER_CREATE_INFO_ACTION,
+          (event, response) => {
+            commit(CREATE_PLAYER_CREATE_INFO_ACTION, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${CREATE_PLAYER_CREATE_INFO_ACTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -107,10 +113,10 @@ export default {
     copyPlayerCreateInfoAction(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_PLAYER_CREATE_INFO_ACTION, payload);
-        ipcRenderer.on(COPY_PLAYER_CREATE_INFO_ACTION, () => {
+        ipcRenderer.once(COPY_PLAYER_CREATE_INFO_ACTION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_PLAYER_CREATE_INFO_ACTION}_REJECT`,
           (event, error) => {
             reject(error);

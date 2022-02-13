@@ -123,10 +123,10 @@ export default {
     initializeMysqlConnection(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(INITIALIZE_MYSQL_CONNECTION, payload);
-        ipcRenderer.on(INITIALIZE_MYSQL_CONNECTION, () => {
+        ipcRenderer.once(INITIALIZE_MYSQL_CONNECTION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${INITIALIZE_MYSQL_CONNECTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -137,10 +137,10 @@ export default {
     loadDbcAchievements() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_ACHIEVEMENTS);
-        ipcRenderer.on(LOAD_DBC_ACHIEVEMENTS, () => {
+        ipcRenderer.once(LOAD_DBC_ACHIEVEMENTS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_ACHIEVEMENTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_ACHIEVEMENTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -148,10 +148,10 @@ export default {
     loadDbcAchievementCategories() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_ACHIEVEMENT_CATEGORIES);
-        ipcRenderer.on(LOAD_DBC_ACHIEVEMENT_CATEGORIES, () => {
+        ipcRenderer.once(LOAD_DBC_ACHIEVEMENT_CATEGORIES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_ACHIEVEMENT_CATEGORIES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -162,10 +162,10 @@ export default {
     loadDbcAchievementCriterias() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_ACHIEVEMENT_CRITERIAS);
-        ipcRenderer.on(LOAD_DBC_ACHIEVEMENT_CRITERIAS, () => {
+        ipcRenderer.once(LOAD_DBC_ACHIEVEMENT_CRITERIAS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_ACHIEVEMENT_CRITERIAS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -176,10 +176,10 @@ export default {
     loadDbcAreaTables() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_AREA_TABLES);
-        ipcRenderer.on(LOAD_DBC_AREA_TABLES, () => {
+        ipcRenderer.once(LOAD_DBC_AREA_TABLES, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_AREA_TABLES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_AREA_TABLES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -187,10 +187,10 @@ export default {
     loadDbcCharTitles() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_CHAR_TITLES);
-        ipcRenderer.on(LOAD_DBC_CHAR_TITLES, () => {
+        ipcRenderer.once(LOAD_DBC_CHAR_TITLES, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_CHAR_TITLES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_CHAR_TITLES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -198,11 +198,11 @@ export default {
     loadDbcChrClasses({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_CHR_CLASSES);
-        ipcRenderer.on(LOAD_DBC_CHR_CLASSES, (event, response) => {
+        ipcRenderer.once(LOAD_DBC_CHR_CLASSES, (event, response) => {
           commit(LOAD_DBC_CHR_CLASSES, response);
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_CHR_CLASSES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_CHR_CLASSES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -210,11 +210,11 @@ export default {
     loadDbcChrRaces({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_CHR_RACES);
-        ipcRenderer.on(LOAD_DBC_CHR_RACES, (event, response) => {
+        ipcRenderer.once(LOAD_DBC_CHR_RACES, (event, response) => {
           commit(LOAD_DBC_CHR_RACES, response);
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_CHR_RACES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_CHR_RACES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -222,10 +222,10 @@ export default {
     loadDbcCreatureDisplayInfos() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_CREATURE_DISPLAY_INFOS);
-        ipcRenderer.on(LOAD_DBC_CREATURE_DISPLAY_INFOS, () => {
+        ipcRenderer.once(LOAD_DBC_CREATURE_DISPLAY_INFOS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_CREATURE_DISPLAY_INFOS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -236,10 +236,10 @@ export default {
     loadDbcCreatureModelDatas() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_CREATURE_MODEL_DATAS);
-        ipcRenderer.on(LOAD_DBC_CREATURE_MODEL_DATAS, () => {
+        ipcRenderer.once(LOAD_DBC_CREATURE_MODEL_DATAS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_CREATURE_MODEL_DATAS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -250,10 +250,10 @@ export default {
     loadDbcCreatureSpellDatas() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_CREATURE_SPELL_DATAS);
-        ipcRenderer.on(LOAD_DBC_CREATURE_SPELL_DATAS, () => {
+        ipcRenderer.once(LOAD_DBC_CREATURE_SPELL_DATAS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_CREATURE_SPELL_DATAS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -264,10 +264,10 @@ export default {
     loadDbcCurrencyCategories() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_CURRENCY_CATEGORIES);
-        ipcRenderer.on(LOAD_DBC_CURRENCY_CATEGORIES, () => {
+        ipcRenderer.once(LOAD_DBC_CURRENCY_CATEGORIES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_CURRENCY_CATEGORIES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -278,21 +278,24 @@ export default {
     loadDbcCurrencyTypes() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_CURRENCY_TYPES);
-        ipcRenderer.on(LOAD_DBC_CURRENCY_TYPES, () => {
+        ipcRenderer.once(LOAD_DBC_CURRENCY_TYPES, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_CURRENCY_TYPES}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${LOAD_DBC_CURRENCY_TYPES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     loadDbcEmotes() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_EMOTES);
-        ipcRenderer.on(LOAD_DBC_EMOTES, () => {
+        ipcRenderer.once(LOAD_DBC_EMOTES, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_EMOTES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_EMOTES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -300,10 +303,10 @@ export default {
     loadDbcEmotesTexts() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_EMOTES_TEXTS);
-        ipcRenderer.on(LOAD_DBC_EMOTES_TEXTS, () => {
+        ipcRenderer.once(LOAD_DBC_EMOTES_TEXTS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_EMOTES_TEXTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_EMOTES_TEXTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -311,10 +314,10 @@ export default {
     loadDbcFactions() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_FACTIONS);
-        ipcRenderer.on(LOAD_DBC_FACTIONS, () => {
+        ipcRenderer.once(LOAD_DBC_FACTIONS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_FACTIONS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_FACTIONS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -322,10 +325,10 @@ export default {
     loadDbcFactionTemplates() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_FACTION_TEMPLATES);
-        ipcRenderer.on(LOAD_DBC_FACTION_TEMPLATES, () => {
+        ipcRenderer.once(LOAD_DBC_FACTION_TEMPLATES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_FACTION_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -336,10 +339,10 @@ export default {
     loadDbcGameObjectDisplayInfos() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS);
-        ipcRenderer.on(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS, () => {
+        ipcRenderer.once(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -350,10 +353,10 @@ export default {
     loadDbcGlyphProperties() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_GLYPH_PROPERTIES);
-        ipcRenderer.on(LOAD_DBC_GLYPH_PROPERTIES, () => {
+        ipcRenderer.once(LOAD_DBC_GLYPH_PROPERTIES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_GLYPH_PROPERTIES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -364,10 +367,10 @@ export default {
     loadDbcItems() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_ITEMS);
-        ipcRenderer.on(LOAD_DBC_ITEMS, () => {
+        ipcRenderer.once(LOAD_DBC_ITEMS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_ITEMS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_ITEMS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -375,10 +378,10 @@ export default {
     loadDbcItemDisplayInfos() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_ITEM_DISPLAY_INFOS);
-        ipcRenderer.on(LOAD_DBC_ITEM_DISPLAY_INFOS, () => {
+        ipcRenderer.once(LOAD_DBC_ITEM_DISPLAY_INFOS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_ITEM_DISPLAY_INFOS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -389,10 +392,10 @@ export default {
     loadDbcItemExtendedCosts() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_ITEM_EXTENDED_COSTS);
-        ipcRenderer.on(LOAD_DBC_ITEM_EXTENDED_COSTS, () => {
+        ipcRenderer.once(LOAD_DBC_ITEM_EXTENDED_COSTS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_ITEM_EXTENDED_COSTS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -403,10 +406,10 @@ export default {
     loadDbcItemRandomProperties() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_ITEM_RANDOM_PROPERTITIES);
-        ipcRenderer.on(LOAD_DBC_ITEM_RANDOM_PROPERTITIES, () => {
+        ipcRenderer.once(LOAD_DBC_ITEM_RANDOM_PROPERTITIES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_ITEM_RANDOM_PROPERTITIES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -417,10 +420,10 @@ export default {
     loadDbcItemRandomSuffixes() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_ITEM_RANDOM_SUFFIXES);
-        ipcRenderer.on(LOAD_DBC_ITEM_RANDOM_SUFFIXES, () => {
+        ipcRenderer.once(LOAD_DBC_ITEM_RANDOM_SUFFIXES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_ITEM_RANDOM_SUFFIXES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -431,10 +434,10 @@ export default {
     loadDbcItemSets() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_ITEM_SETS);
-        ipcRenderer.on(LOAD_DBC_ITEM_SETS, () => {
+        ipcRenderer.once(LOAD_DBC_ITEM_SETS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_ITEM_SETS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_ITEM_SETS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -442,10 +445,10 @@ export default {
     loadDbcLocks() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_LOCKS);
-        ipcRenderer.on(LOAD_DBC_LOCKS, () => {
+        ipcRenderer.once(LOAD_DBC_LOCKS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_LOCKS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_LOCKS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -453,11 +456,11 @@ export default {
     loadDbcLockTypes({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_LOCK_TYPES);
-        ipcRenderer.on(LOAD_DBC_LOCK_TYPES, (event, response) => {
+        ipcRenderer.once(LOAD_DBC_LOCK_TYPES, (event, response) => {
           commit(LOAD_DBC_LOCK_TYPES, response);
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_LOCK_TYPES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_LOCK_TYPES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -465,10 +468,10 @@ export default {
     loadDbcMaps() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_MAPS);
-        ipcRenderer.on(LOAD_DBC_MAPS, () => {
+        ipcRenderer.once(LOAD_DBC_MAPS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_MAPS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_MAPS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -476,11 +479,11 @@ export default {
     loadDbcQuestFactionRewards({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_QUEST_FACTION_REWARDS);
-        ipcRenderer.on(LOAD_DBC_QUEST_FACTION_REWARDS, (event, response) => {
+        ipcRenderer.once(LOAD_DBC_QUEST_FACTION_REWARDS, (event, response) => {
           commit(LOAD_DBC_QUEST_FACTION_REWARDS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_QUEST_FACTION_REWARDS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -491,10 +494,10 @@ export default {
     loadDbcQuestInfos() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_QUEST_INFOS);
-        ipcRenderer.on(LOAD_DBC_QUEST_INFOS, () => {
+        ipcRenderer.once(LOAD_DBC_QUEST_INFOS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_QUEST_INFOS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_QUEST_INFOS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -502,10 +505,10 @@ export default {
     loadDbcQuestSorts() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_QUEST_SORTS);
-        ipcRenderer.on(LOAD_DBC_QUEST_SORTS, () => {
+        ipcRenderer.once(LOAD_DBC_QUEST_SORTS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_QUEST_SORTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_QUEST_SORTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -513,10 +516,10 @@ export default {
     loadDbcScalingStatDistributions() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SCALING_STAT_DISTRIBUTIONS);
-        ipcRenderer.on(LOAD_DBC_SCALING_STAT_DISTRIBUTIONS, () => {
+        ipcRenderer.once(LOAD_DBC_SCALING_STAT_DISTRIBUTIONS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_SCALING_STAT_DISTRIBUTIONS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -527,10 +530,10 @@ export default {
     loadDbcScalingStatValues() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SCALING_STAT_VALUES);
-        ipcRenderer.on(LOAD_DBC_SCALING_STAT_VALUES, () => {
+        ipcRenderer.once(LOAD_DBC_SCALING_STAT_VALUES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_SCALING_STAT_VALUES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -541,10 +544,10 @@ export default {
     loadDbcSpells() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELLS);
-        ipcRenderer.on(LOAD_DBC_SPELLS, () => {
+        ipcRenderer.once(LOAD_DBC_SPELLS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_SPELLS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_SPELLS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -552,10 +555,10 @@ export default {
     loadDbcSpellCastTimes() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_CAST_TIMES);
-        ipcRenderer.on(LOAD_DBC_SPELL_CAST_TIMES, () => {
+        ipcRenderer.once(LOAD_DBC_SPELL_CAST_TIMES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_SPELL_CAST_TIMES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -566,10 +569,10 @@ export default {
     loadDbcSpellCategories() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_CATEGORIES);
-        ipcRenderer.on(LOAD_DBC_SPELL_CATEGORIES, () => {
+        ipcRenderer.once(LOAD_DBC_SPELL_CATEGORIES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_SPELL_CATEGORIES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -580,10 +583,10 @@ export default {
     loadDbcSpellDescriptionVariables() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_DESCRIPTION_VARIABLES);
-        ipcRenderer.on(LOAD_DBC_SPELL_DESCRIPTION_VARIABLES, () => {
+        ipcRenderer.once(LOAD_DBC_SPELL_DESCRIPTION_VARIABLES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_SPELL_DESCRIPTION_VARIABLES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -594,10 +597,10 @@ export default {
     loadDbcSpellDifficulties() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_DIFFICULTIES);
-        ipcRenderer.on(LOAD_DBC_SPELL_DIFFICULTIES, () => {
+        ipcRenderer.once(LOAD_DBC_SPELL_DIFFICULTIES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_SPELL_DIFFICULTIES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -608,11 +611,11 @@ export default {
     loadDbcSpellDispelTypes({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_DISPEL_TYPES);
-        ipcRenderer.on(LOAD_DBC_SPELL_DISPEL_TYPES, (event, response) => {
+        ipcRenderer.once(LOAD_DBC_SPELL_DISPEL_TYPES, (event, response) => {
           commit(LOAD_DBC_SPELL_DISPEL_TYPES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_SPELL_DISPEL_TYPES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -623,21 +626,24 @@ export default {
     loadDbcSpellDurations() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_DURATIONS);
-        ipcRenderer.on(LOAD_DBC_SPELL_DURATIONS, () => {
+        ipcRenderer.once(LOAD_DBC_SPELL_DURATIONS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_SPELL_DURATIONS}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${LOAD_DBC_SPELL_DURATIONS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     loadDbcSpellIcons() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_ICONS);
-        ipcRenderer.on(LOAD_DBC_SPELL_ICONS, () => {
+        ipcRenderer.once(LOAD_DBC_SPELL_ICONS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_SPELL_ICONS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_SPELL_ICONS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -645,10 +651,10 @@ export default {
     loadDbcSpellItemEnchantments() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_ITEM_ENCHANTMENTS);
-        ipcRenderer.on(LOAD_DBC_SPELL_ITEM_ENCHANTMENTS, () => {
+        ipcRenderer.once(LOAD_DBC_SPELL_ITEM_ENCHANTMENTS, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${LOAD_DBC_SPELL_ITEM_ENCHANTMENTS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -659,22 +665,25 @@ export default {
     loadDbcSpellMechanics({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_MECHANICS);
-        ipcRenderer.on(LOAD_DBC_SPELL_MECHANICS, (event, response) => {
+        ipcRenderer.once(LOAD_DBC_SPELL_MECHANICS, (event, response) => {
           commit(LOAD_DBC_SPELL_MECHANICS, response);
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_SPELL_MECHANICS}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${LOAD_DBC_SPELL_MECHANICS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     loadDbcSpellRanges() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_SPELL_RANGES);
-        ipcRenderer.on(LOAD_DBC_SPELL_RANGES, () => {
+        ipcRenderer.once(LOAD_DBC_SPELL_RANGES, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_SPELL_RANGES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_SPELL_RANGES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -682,10 +691,10 @@ export default {
     loadDbcTalents() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_TALENTS);
-        ipcRenderer.on(LOAD_DBC_TALENTS, () => {
+        ipcRenderer.once(LOAD_DBC_TALENTS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_TALENTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_TALENTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -693,10 +702,10 @@ export default {
     loadDbcTalentTabs() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_TALENT_TABS);
-        ipcRenderer.on(LOAD_DBC_TALENT_TABS, () => {
+        ipcRenderer.once(LOAD_DBC_TALENT_TABS, () => {
           resolve();
         });
-        ipcRenderer.on(`${LOAD_DBC_TALENT_TABS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${LOAD_DBC_TALENT_TABS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -742,10 +751,10 @@ export default {
     testMysqlConnection(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(TEST_MYSQL_CONNECTION, payload);
-        ipcRenderer.on(TEST_MYSQL_CONNECTION, (event, response) => {
+        ipcRenderer.once(TEST_MYSQL_CONNECTION, (event, response) => {
           resolve(response);
         });
-        ipcRenderer.on(`${TEST_MYSQL_CONNECTION}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${TEST_MYSQL_CONNECTION}_REJECT`, (event, error) => {
           reject(error);
         });
       });

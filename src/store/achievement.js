@@ -33,11 +33,11 @@ export default {
     searchAchievements({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ACHIEVEMENTS, payload);
-        ipcRenderer.on(SEARCH_ACHIEVEMENTS, (event, response) => {
+        ipcRenderer.once(SEARCH_ACHIEVEMENTS, (event, response) => {
           commit(SEARCH_ACHIEVEMENTS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_ACHIEVEMENTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_ACHIEVEMENTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countAchievements({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_ACHIEVEMENTS, payload);
-        ipcRenderer.on(COUNT_ACHIEVEMENTS, (event, response) => {
+        ipcRenderer.once(COUNT_ACHIEVEMENTS, (event, response) => {
           commit(COUNT_ACHIEVEMENTS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_ACHIEVEMENTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_ACHIEVEMENTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeAchievement({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ACHIEVEMENT, payload);
-        ipcRenderer.on(STORE_ACHIEVEMENT, () => {
+        ipcRenderer.once(STORE_ACHIEVEMENT, () => {
           commit("UPDATE_REFRESH_OF_ACHIEVEMENT", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_ACHIEVEMENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_ACHIEVEMENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findAchievement({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ACHIEVEMENT, payload);
-        ipcRenderer.on(FIND_ACHIEVEMENT, (event, response) => {
+        ipcRenderer.once(FIND_ACHIEVEMENT, (event, response) => {
           commit(FIND_ACHIEVEMENT, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_ACHIEVEMENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_ACHIEVEMENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateAchievement({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ACHIEVEMENT, payload);
-        ipcRenderer.on(UPDATE_ACHIEVEMENT, () => {
+        ipcRenderer.once(UPDATE_ACHIEVEMENT, () => {
           commit("UPDATE_REFRESH_OF_ACHIEVEMENT", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_ACHIEVEMENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_ACHIEVEMENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyAchievement(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_ACHIEVEMENT, payload);
-        ipcRenderer.on(DESTROY_ACHIEVEMENT, () => {
+        ipcRenderer.once(DESTROY_ACHIEVEMENT, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_ACHIEVEMENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_ACHIEVEMENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createAchievement({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_ACHIEVEMENT, payload);
-        ipcRenderer.on(CREATE_ACHIEVEMENT, (event, response) => {
+        ipcRenderer.once(CREATE_ACHIEVEMENT, (event, response) => {
           commit(CREATE_ACHIEVEMENT, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_ACHIEVEMENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_ACHIEVEMENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyAchievement(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_ACHIEVEMENT, payload);
-        ipcRenderer.on(COPY_ACHIEVEMENT, () => {
+        ipcRenderer.once(COPY_ACHIEVEMENT, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_ACHIEVEMENT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_ACHIEVEMENT}_REJECT`, (event, error) => {
           reject(error);
         });
       });

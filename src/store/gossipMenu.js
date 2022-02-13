@@ -33,11 +33,11 @@ export default {
     searchGossipMenus({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GOSSIP_MENUS, payload);
-        ipcRenderer.on(SEARCH_GOSSIP_MENUS, (event, response) => {
+        ipcRenderer.once(SEARCH_GOSSIP_MENUS, (event, response) => {
           commit(SEARCH_GOSSIP_MENUS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_GOSSIP_MENUS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_GOSSIP_MENUS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countGossipMenus({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_GOSSIP_MENUS, payload);
-        ipcRenderer.on(COUNT_GOSSIP_MENUS, (event, response) => {
+        ipcRenderer.once(COUNT_GOSSIP_MENUS, (event, response) => {
           commit(COUNT_GOSSIP_MENUS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_GOSSIP_MENUS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_GOSSIP_MENUS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeGossipMenu({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GOSSIP_MENU, payload);
-        ipcRenderer.on(STORE_GOSSIP_MENU, () => {
+        ipcRenderer.once(STORE_GOSSIP_MENU, () => {
           commit("UPDATE_REFRESH_OF_GOSSIP_MENU", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_GOSSIP_MENU}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_GOSSIP_MENU}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findGossipMenu({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_GOSSIP_MENU, payload);
-        ipcRenderer.on(FIND_GOSSIP_MENU, (event, response) => {
+        ipcRenderer.once(FIND_GOSSIP_MENU, (event, response) => {
           commit(FIND_GOSSIP_MENU, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_GOSSIP_MENU}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_GOSSIP_MENU}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateGossipMenu({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_GOSSIP_MENU, payload);
-        ipcRenderer.on(UPDATE_GOSSIP_MENU, () => {
+        ipcRenderer.once(UPDATE_GOSSIP_MENU, () => {
           commit("UPDATE_REFRESH_OF_GOSSIP_MENU", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_GOSSIP_MENU}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_GOSSIP_MENU}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyGossipMenu(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_GOSSIP_MENU, payload);
-        ipcRenderer.on(DESTROY_GOSSIP_MENU, () => {
+        ipcRenderer.once(DESTROY_GOSSIP_MENU, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_GOSSIP_MENU}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_GOSSIP_MENU}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createGossipMenu({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_GOSSIP_MENU, payload);
-        ipcRenderer.on(CREATE_GOSSIP_MENU, (event, response) => {
+        ipcRenderer.once(CREATE_GOSSIP_MENU, (event, response) => {
           commit(CREATE_GOSSIP_MENU, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_GOSSIP_MENU}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_GOSSIP_MENU}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyGossipMenu(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_GOSSIP_MENU, payload);
-        ipcRenderer.on(COPY_GOSSIP_MENU, () => {
+        ipcRenderer.once(COPY_GOSSIP_MENU, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_GOSSIP_MENU}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_GOSSIP_MENU}_REJECT`, (event, error) => {
           reject(error);
         });
       });

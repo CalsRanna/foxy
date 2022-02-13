@@ -18,10 +18,10 @@ export default {
     storeQuestTemplateAddon(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_QUEST_TEMPLATE_ADDON, payload);
-        ipcRenderer.on(STORE_QUEST_TEMPLATE_ADDON, () => {
+        ipcRenderer.once(STORE_QUEST_TEMPLATE_ADDON, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_QUEST_TEMPLATE_ADDON}_REJECT`,
           (event, error) => {
             reject(error);
@@ -32,11 +32,11 @@ export default {
     findQuestTemplateAddon({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_QUEST_TEMPLATE_ADDON, payload);
-        ipcRenderer.on(FIND_QUEST_TEMPLATE_ADDON, (event, response) => {
+        ipcRenderer.once(FIND_QUEST_TEMPLATE_ADDON, (event, response) => {
           commit(FIND_QUEST_TEMPLATE_ADDON, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_QUEST_TEMPLATE_ADDON}_REJECT`,
           (event, error) => {
             reject(error);
@@ -47,10 +47,10 @@ export default {
     updateQuestTemplateAddon(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_QUEST_TEMPLATE_ADDON, payload);
-        ipcRenderer.on(UPDATE_QUEST_TEMPLATE_ADDON, () => {
+        ipcRenderer.once(UPDATE_QUEST_TEMPLATE_ADDON, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_QUEST_TEMPLATE_ADDON}_REJECT`,
           (event, error) => {
             reject(error);

@@ -32,11 +32,11 @@ export default {
     searchSpells({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELLS, payload);
-        ipcRenderer.on(SEARCH_SPELLS, (event, response) => {
+        ipcRenderer.once(SEARCH_SPELLS, (event, response) => {
           commit(SEARCH_SPELLS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_SPELLS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_SPELLS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -44,11 +44,11 @@ export default {
     countSpells({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SPELLS, payload);
-        ipcRenderer.on(COUNT_SPELLS, (event, response) => {
+        ipcRenderer.once(COUNT_SPELLS, (event, response) => {
           commit(COUNT_SPELLS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_SPELLS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_SPELLS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -62,11 +62,11 @@ export default {
     storeSpell({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL, payload);
-        ipcRenderer.on(STORE_SPELL, () => {
+        ipcRenderer.once(STORE_SPELL, () => {
           commit("UPDATE_REFRESH_OF_SPELL", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_SPELL}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_SPELL}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -74,11 +74,11 @@ export default {
     findSpell({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL, payload);
-        ipcRenderer.on(FIND_SPELL, (event, response) => {
+        ipcRenderer.once(FIND_SPELL, (event, response) => {
           commit(FIND_SPELL, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SPELL}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_SPELL}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -86,11 +86,11 @@ export default {
     updateSpell({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL, payload);
-        ipcRenderer.on(UPDATE_SPELL, () => {
+        ipcRenderer.once(UPDATE_SPELL, () => {
           commit("UPDATE_REFRESH_OF_SPELL", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_SPELL}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_SPELL}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -98,10 +98,10 @@ export default {
     destroySpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SPELL, payload);
-        ipcRenderer.on(DESTROY_SPELL, () => {
+        ipcRenderer.once(DESTROY_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_SPELL}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_SPELL}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -109,11 +109,11 @@ export default {
     createSpell({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_SPELL, payload);
-        ipcRenderer.on(CREATE_SPELL, (event, response) => {
+        ipcRenderer.once(CREATE_SPELL, (event, response) => {
           commit(CREATE_SPELL, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_SPELL}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_SPELL}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -121,10 +121,10 @@ export default {
     copySpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SPELL, payload);
-        ipcRenderer.on(COPY_SPELL, () => {
+        ipcRenderer.once(COPY_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_SPELL}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_SPELL}_REJECT`, (event, error) => {
           reject(error);
         });
       });

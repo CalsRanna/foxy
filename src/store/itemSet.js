@@ -33,11 +33,11 @@ export default {
     searchItemSets({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ITEM_SETS, payload);
-        ipcRenderer.on(SEARCH_ITEM_SETS, (event, response) => {
+        ipcRenderer.once(SEARCH_ITEM_SETS, (event, response) => {
           commit(SEARCH_ITEM_SETS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_ITEM_SETS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_ITEM_SETS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countItemSets({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_ITEM_SETS, payload);
-        ipcRenderer.on(COUNT_ITEM_SETS, (event, response) => {
+        ipcRenderer.once(COUNT_ITEM_SETS, (event, response) => {
           commit(COUNT_ITEM_SETS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_ITEM_SETS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_ITEM_SETS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeItemSet({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ITEM_SET, payload);
-        ipcRenderer.on(STORE_ITEM_SET, () => {
+        ipcRenderer.once(STORE_ITEM_SET, () => {
           commit("UPDATE_REFRESH_OF_ITEM_SET", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_ITEM_SET}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_ITEM_SET}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findItemSet({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ITEM_SET, payload);
-        ipcRenderer.on(FIND_ITEM_SET, (event, response) => {
+        ipcRenderer.once(FIND_ITEM_SET, (event, response) => {
           commit(FIND_ITEM_SET, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_ITEM_SET}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_ITEM_SET}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateItemSet({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ITEM_SET, payload);
-        ipcRenderer.on(UPDATE_ITEM_SET, () => {
+        ipcRenderer.once(UPDATE_ITEM_SET, () => {
           commit("UPDATE_REFRESH_OF_ITEM_SET", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_ITEM_SET}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_ITEM_SET}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyItemSet(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_ITEM_SET, payload);
-        ipcRenderer.on(DESTROY_ITEM_SET, () => {
+        ipcRenderer.once(DESTROY_ITEM_SET, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_ITEM_SET}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_ITEM_SET}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createItemSet({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_ITEM_SET, payload);
-        ipcRenderer.on(CREATE_ITEM_SET, (event, response) => {
+        ipcRenderer.once(CREATE_ITEM_SET, (event, response) => {
           commit(CREATE_ITEM_SET, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_ITEM_SET}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_ITEM_SET}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyItemSet(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_ITEM_SET, payload);
-        ipcRenderer.on(COPY_ITEM_SET, () => {
+        ipcRenderer.once(COPY_ITEM_SET, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_ITEM_SET}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_ITEM_SET}_REJECT`, (event, error) => {
           reject(error);
         });
       });

@@ -21,11 +21,14 @@ export default {
     searchGossipMenusForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GOSSIP_MENUS_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_GOSSIP_MENUS_FOR_SELECTOR, (event, response) => {
-          commit(SEARCH_GOSSIP_MENUS_FOR_SELECTOR, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_GOSSIP_MENUS_FOR_SELECTOR,
+          (event, response) => {
+            commit(SEARCH_GOSSIP_MENUS_FOR_SELECTOR, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_GOSSIP_MENUS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -36,11 +39,11 @@ export default {
     countGossipMenusForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_GOSSIP_MENUS_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_GOSSIP_MENUS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_GOSSIP_MENUS_FOR_SELECTOR, (event, response) => {
           commit(COUNT_GOSSIP_MENUS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_GOSSIP_MENUS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

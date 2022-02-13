@@ -20,11 +20,11 @@ export default {
     searchCreatureLootTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CREATURE_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_CREATURE_LOOT_TEMPLATES, (event, response) => {
+        ipcRenderer.once(SEARCH_CREATURE_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_CREATURE_LOOT_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CREATURE_LOOT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +35,10 @@ export default {
     storeCreatureLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CREATURE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_CREATURE_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(STORE_CREATURE_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_CREATURE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +49,11 @@ export default {
     findCreatureLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CREATURE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_CREATURE_LOOT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_CREATURE_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_CREATURE_LOOT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_CREATURE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +64,10 @@ export default {
     updateCreatureLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CREATURE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_CREATURE_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_CREATURE_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_CREATURE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +78,10 @@ export default {
     destroyCreatureLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_CREATURE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_CREATURE_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_CREATURE_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_CREATURE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,10 +98,10 @@ export default {
     copyCreatureLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_CREATURE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_CREATURE_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(COPY_CREATURE_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_CREATURE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);

@@ -20,14 +20,14 @@ export default {
     searchBroadcastTextsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_BROADCAST_TEXTS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_BROADCAST_TEXTS_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_BROADCAST_TEXTS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_BROADCAST_TEXTS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countBroadcastTextsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_BROADCAST_TEXTS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_BROADCAST_TEXTS_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_BROADCAST_TEXTS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_BROADCAST_TEXTS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

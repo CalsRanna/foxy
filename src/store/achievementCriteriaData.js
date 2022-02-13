@@ -20,11 +20,14 @@ export default {
     searchAchievementCriteriaDatas({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ACHIEVEMENT_CRITERIA_DATAS, payload);
-        ipcRenderer.on(SEARCH_ACHIEVEMENT_CRITERIA_DATAS, (event, response) => {
-          commit(SEARCH_ACHIEVEMENT_CRITERIA_DATAS, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_ACHIEVEMENT_CRITERIA_DATAS,
+          (event, response) => {
+            commit(SEARCH_ACHIEVEMENT_CRITERIA_DATAS, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_ACHIEVEMENT_CRITERIA_DATAS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +38,10 @@ export default {
     storeAchievementCriteriaData(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ACHIEVEMENT_CRITERIA_DATA, payload);
-        ipcRenderer.on(STORE_ACHIEVEMENT_CRITERIA_DATA, () => {
+        ipcRenderer.once(STORE_ACHIEVEMENT_CRITERIA_DATA, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_ACHIEVEMENT_CRITERIA_DATA}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +52,11 @@ export default {
     findAchievementCriteriaData({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ACHIEVEMENT_CRITERIA_DATA, payload);
-        ipcRenderer.on(FIND_ACHIEVEMENT_CRITERIA_DATA, (event, response) => {
+        ipcRenderer.once(FIND_ACHIEVEMENT_CRITERIA_DATA, (event, response) => {
           commit(FIND_ACHIEVEMENT_CRITERIA_DATA, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_ACHIEVEMENT_CRITERIA_DATA}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +67,10 @@ export default {
     updateAchievementCriteriaData(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ACHIEVEMENT_CRITERIA_DATA, payload);
-        ipcRenderer.on(UPDATE_ACHIEVEMENT_CRITERIA_DATA, () => {
+        ipcRenderer.once(UPDATE_ACHIEVEMENT_CRITERIA_DATA, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_ACHIEVEMENT_CRITERIA_DATA}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +81,10 @@ export default {
     destroyAchievementCriteriaData(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_ACHIEVEMENT_CRITERIA_DATA, payload);
-        ipcRenderer.on(DESTROY_ACHIEVEMENT_CRITERIA_DATA, () => {
+        ipcRenderer.once(DESTROY_ACHIEVEMENT_CRITERIA_DATA, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_ACHIEVEMENT_CRITERIA_DATA}_REJECT`,
           (event, error) => {
             reject(error);
@@ -92,11 +95,14 @@ export default {
     createAchievementCriteriaData({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_ACHIEVEMENT_CRITERIA_DATA, payload);
-        ipcRenderer.on(CREATE_ACHIEVEMENT_CRITERIA_DATA, (event, response) => {
-          commit(CREATE_ACHIEVEMENT_CRITERIA_DATA, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          CREATE_ACHIEVEMENT_CRITERIA_DATA,
+          (event, response) => {
+            commit(CREATE_ACHIEVEMENT_CRITERIA_DATA, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${CREATE_ACHIEVEMENT_CRITERIA_DATA}_REJECT`,
           (event, error) => {
             reject(error);
@@ -107,10 +113,10 @@ export default {
     copyAchievementCriteriaData(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_ACHIEVEMENT_CRITERIA_DATA, payload);
-        ipcRenderer.on(COPY_ACHIEVEMENT_CRITERIA_DATA, () => {
+        ipcRenderer.once(COPY_ACHIEVEMENT_CRITERIA_DATA, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_ACHIEVEMENT_CRITERIA_DATA}_REJECT`,
           (event, error) => {
             reject(error);

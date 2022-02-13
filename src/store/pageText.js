@@ -33,11 +33,11 @@ export default {
     searchPageTexts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_PAGE_TEXTS, payload);
-        ipcRenderer.on(SEARCH_PAGE_TEXTS, (event, response) => {
+        ipcRenderer.once(SEARCH_PAGE_TEXTS, (event, response) => {
           commit(SEARCH_PAGE_TEXTS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_PAGE_TEXTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_PAGE_TEXTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countPageTexts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_PAGE_TEXTS, payload);
-        ipcRenderer.on(COUNT_PAGE_TEXTS, (event, response) => {
+        ipcRenderer.once(COUNT_PAGE_TEXTS, (event, response) => {
           commit(COUNT_PAGE_TEXTS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_PAGE_TEXTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_PAGE_TEXTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storePageText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_PAGE_TEXT, payload);
-        ipcRenderer.on(STORE_PAGE_TEXT, () => {
+        ipcRenderer.once(STORE_PAGE_TEXT, () => {
           commit("UPDATE_REFRESH_OF_PAGE_TEXT", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_PAGE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_PAGE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findPageText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_PAGE_TEXT, payload);
-        ipcRenderer.on(FIND_PAGE_TEXT, (event, response) => {
+        ipcRenderer.once(FIND_PAGE_TEXT, (event, response) => {
           commit(FIND_PAGE_TEXT, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_PAGE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_PAGE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updatePageText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_PAGE_TEXT, payload);
-        ipcRenderer.on(UPDATE_PAGE_TEXT, () => {
+        ipcRenderer.once(UPDATE_PAGE_TEXT, () => {
           commit("UPDATE_REFRESH_OF_PAGE_TEXT", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_PAGE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_PAGE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyPageText(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_PAGE_TEXT, payload);
-        ipcRenderer.on(DESTROY_PAGE_TEXT, () => {
+        ipcRenderer.once(DESTROY_PAGE_TEXT, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_PAGE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_PAGE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createPageText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_PAGE_TEXT, payload);
-        ipcRenderer.on(CREATE_PAGE_TEXT, (event, response) => {
+        ipcRenderer.once(CREATE_PAGE_TEXT, (event, response) => {
           commit(CREATE_PAGE_TEXT, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_PAGE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_PAGE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyPageText(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_PAGE_TEXT, payload);
-        ipcRenderer.on(COPY_PAGE_TEXT, () => {
+        ipcRenderer.once(COPY_PAGE_TEXT, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_PAGE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_PAGE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });

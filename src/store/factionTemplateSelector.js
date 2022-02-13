@@ -20,14 +20,14 @@ export default {
     searchFactionTemplatesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_FACTION_TEMPLATES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_FACTION_TEMPLATES_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_FACTION_TEMPLATES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_FACTION_TEMPLATES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countFactionTemplatesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_FACTION_TEMPLATES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_FACTION_TEMPLATES_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_FACTION_TEMPLATES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_FACTION_TEMPLATES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

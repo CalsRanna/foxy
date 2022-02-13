@@ -33,11 +33,14 @@ export default {
     searchScalingStatDistributions({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SCALING_STAT_DISTRIBUTIONS, payload);
-        ipcRenderer.on(SEARCH_SCALING_STAT_DISTRIBUTIONS, (event, response) => {
-          commit(SEARCH_SCALING_STAT_DISTRIBUTIONS, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_SCALING_STAT_DISTRIBUTIONS,
+          (event, response) => {
+            commit(SEARCH_SCALING_STAT_DISTRIBUTIONS, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_SCALING_STAT_DISTRIBUTIONS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -48,11 +51,14 @@ export default {
     countScalingStatDistributions({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SCALING_STAT_DISTRIBUTIONS, payload);
-        ipcRenderer.on(COUNT_SCALING_STAT_DISTRIBUTIONS, (event, response) => {
-          commit(COUNT_SCALING_STAT_DISTRIBUTIONS, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          COUNT_SCALING_STAT_DISTRIBUTIONS,
+          (event, response) => {
+            commit(COUNT_SCALING_STAT_DISTRIBUTIONS, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${COUNT_SCALING_STAT_DISTRIBUTIONS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -69,11 +75,11 @@ export default {
     storeScalingStatDistribution({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SCALING_STAT_DISTRIBUTION, payload);
-        ipcRenderer.on(STORE_SCALING_STAT_DISTRIBUTION, () => {
+        ipcRenderer.once(STORE_SCALING_STAT_DISTRIBUTION, () => {
           commit("UPDATE_REFRESH_OF_SCALING_STAT_DISTRIBUTION", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_SCALING_STAT_DISTRIBUTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -84,11 +90,11 @@ export default {
     findScalingStatDistribution({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SCALING_STAT_DISTRIBUTION, payload);
-        ipcRenderer.on(FIND_SCALING_STAT_DISTRIBUTION, (event, response) => {
+        ipcRenderer.once(FIND_SCALING_STAT_DISTRIBUTION, (event, response) => {
           commit(FIND_SCALING_STAT_DISTRIBUTION, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_SCALING_STAT_DISTRIBUTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -99,11 +105,11 @@ export default {
     updateScalingStatDistribution({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SCALING_STAT_DISTRIBUTION, payload);
-        ipcRenderer.on(UPDATE_SCALING_STAT_DISTRIBUTION, () => {
+        ipcRenderer.once(UPDATE_SCALING_STAT_DISTRIBUTION, () => {
           commit("UPDATE_REFRESH_OF_SCALING_STAT_DISTRIBUTION", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_SCALING_STAT_DISTRIBUTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -114,10 +120,10 @@ export default {
     destroyScalingStatDistribution(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SCALING_STAT_DISTRIBUTION, payload);
-        ipcRenderer.on(DESTROY_SCALING_STAT_DISTRIBUTION, () => {
+        ipcRenderer.once(DESTROY_SCALING_STAT_DISTRIBUTION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_SCALING_STAT_DISTRIBUTION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -136,10 +142,10 @@ export default {
     copyScalingStatDistribution(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SCALING_STAT_DISTRIBUTION, payload);
-        ipcRenderer.on(COPY_SCALING_STAT_DISTRIBUTION, () => {
+        ipcRenderer.once(COPY_SCALING_STAT_DISTRIBUTION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_SCALING_STAT_DISTRIBUTION}_REJECT`,
           (event, error) => {
             reject(error);

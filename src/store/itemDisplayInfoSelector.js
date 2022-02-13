@@ -20,14 +20,14 @@ export default {
     searchItemDisplayInfosForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ITEM_DISPLAY_INFOS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_ITEM_DISPLAY_INFOS_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_ITEM_DISPLAY_INFOS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_ITEM_DISPLAY_INFOS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countItemDisplayInfosForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_ITEM_DISPLAY_INFOS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_ITEM_DISPLAY_INFOS_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_ITEM_DISPLAY_INFOS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_ITEM_DISPLAY_INFOS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

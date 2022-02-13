@@ -16,10 +16,10 @@ export default {
     storeCreatureOnKillReputation(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CREATURE_ONKILL_REPUTATION, payload);
-        ipcRenderer.on(STORE_CREATURE_ONKILL_REPUTATION, () => {
+        ipcRenderer.once(STORE_CREATURE_ONKILL_REPUTATION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_CREATURE_ONKILL_REPUTATION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -30,11 +30,11 @@ export default {
     findCreatureOnKillReputation({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CREATURE_ONKILL_REPUTATION, payload);
-        ipcRenderer.on(FIND_CREATURE_ONKILL_REPUTATION, (event, response) => {
+        ipcRenderer.once(FIND_CREATURE_ONKILL_REPUTATION, (event, response) => {
           commit(FIND_CREATURE_ONKILL_REPUTATION, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_CREATURE_ONKILL_REPUTATION}_REJECT`,
           (event, error) => {
             reject(error);
@@ -45,10 +45,10 @@ export default {
     updateCreatureOnKillReputation(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CREATURE_ONKILL_REPUTATION, payload);
-        ipcRenderer.on(UPDATE_CREATURE_ONKILL_REPUTATION, () => {
+        ipcRenderer.once(UPDATE_CREATURE_ONKILL_REPUTATION, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_CREATURE_ONKILL_REPUTATION}_REJECT`,
           (event, error) => {
             reject(error);

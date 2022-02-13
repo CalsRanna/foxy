@@ -20,14 +20,14 @@ export default {
     searchCreatureSpellDatasForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CREATURE_SPELL_DATAS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_CREATURE_SPELL_DATAS_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_CREATURE_SPELL_DATAS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CREATURE_SPELL_DATAS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countCreatureSpellDatasForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_CREATURE_SPELL_DATAS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_CREATURE_SPELL_DATAS_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_CREATURE_SPELL_DATAS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_CREATURE_SPELL_DATAS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

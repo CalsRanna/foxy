@@ -33,11 +33,11 @@ export default {
     searchQuestTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_QUEST_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_QUEST_TEMPLATES, (event, response) => {
+        ipcRenderer.once(SEARCH_QUEST_TEMPLATES, (event, response) => {
           commit(SEARCH_QUEST_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_QUEST_TEMPLATES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_QUEST_TEMPLATES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countQuestTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_QUEST_TEMPLATES, payload);
-        ipcRenderer.on(COUNT_QUEST_TEMPLATES, (event, response) => {
+        ipcRenderer.once(COUNT_QUEST_TEMPLATES, (event, response) => {
           commit(COUNT_QUEST_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_QUEST_TEMPLATES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_QUEST_TEMPLATES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeQuestTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_QUEST_TEMPLATE, payload);
-        ipcRenderer.on(STORE_QUEST_TEMPLATE, () => {
+        ipcRenderer.once(STORE_QUEST_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_QUEST_TEMPLATE", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_QUEST_TEMPLATE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_QUEST_TEMPLATE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findQuestTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_QUEST_TEMPLATE, payload);
-        ipcRenderer.on(FIND_QUEST_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_QUEST_TEMPLATE, (event, response) => {
           commit(FIND_QUEST_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_QUEST_TEMPLATE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_QUEST_TEMPLATE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateQuestTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_QUEST_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_QUEST_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_QUEST_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_QUEST_TEMPLATE", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_QUEST_TEMPLATE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_QUEST_TEMPLATE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyQuestTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_QUEST_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_QUEST_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_QUEST_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_QUEST_TEMPLATE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_QUEST_TEMPLATE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createQuestTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_QUEST_TEMPLATE, payload);
-        ipcRenderer.on(CREATE_QUEST_TEMPLATE, (event, response) => {
+        ipcRenderer.once(CREATE_QUEST_TEMPLATE, (event, response) => {
           commit(CREATE_QUEST_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_QUEST_TEMPLATE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_QUEST_TEMPLATE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyQuestTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_QUEST_TEMPLATE, payload);
-        ipcRenderer.on(COPY_QUEST_TEMPLATE, () => {
+        ipcRenderer.once(COPY_QUEST_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_QUEST_TEMPLATE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_QUEST_TEMPLATE}_REJECT`, (event, error) => {
           reject(error);
         });
       });

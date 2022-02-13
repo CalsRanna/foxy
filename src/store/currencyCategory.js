@@ -16,10 +16,10 @@ export default {
     storeCurrencyCategory(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CURRENCY_CATEGORY, payload);
-        ipcRenderer.on(STORE_CURRENCY_CATEGORY, () => {
+        ipcRenderer.once(STORE_CURRENCY_CATEGORY, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_CURRENCY_CATEGORY}_REJECT`,
           (event, error) => {
             reject(error);
@@ -30,25 +30,22 @@ export default {
     findCurrencyCategory({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CURRENCY_CATEGORY, payload);
-        ipcRenderer.on(FIND_CURRENCY_CATEGORY, (event, response) => {
+        ipcRenderer.once(FIND_CURRENCY_CATEGORY, (event, response) => {
           commit(FIND_CURRENCY_CATEGORY, response);
           resolve();
         });
-        ipcRenderer.on(
-          `${FIND_CURRENCY_CATEGORY}_REJECT`,
-          (event, error) => {
-            reject(error);
-          }
-        );
+        ipcRenderer.once(`${FIND_CURRENCY_CATEGORY}_REJECT`, (event, error) => {
+          reject(error);
+        });
       });
     },
     updateCurrencyCategory(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CURRENCY_CATEGORY, payload);
-        ipcRenderer.on(UPDATE_CURRENCY_CATEGORY, () => {
+        ipcRenderer.once(UPDATE_CURRENCY_CATEGORY, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_CURRENCY_CATEGORY}_REJECT`,
           (event, error) => {
             reject(error);

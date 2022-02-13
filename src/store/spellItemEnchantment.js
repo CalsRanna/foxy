@@ -33,11 +33,11 @@ export default {
     searchSpellItemEnchantments({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_ITEM_ENCHANTMENTS, payload);
-        ipcRenderer.on(SEARCH_SPELL_ITEM_ENCHANTMENTS, (event, response) => {
+        ipcRenderer.once(SEARCH_SPELL_ITEM_ENCHANTMENTS, (event, response) => {
           commit(SEARCH_SPELL_ITEM_ENCHANTMENTS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_SPELL_ITEM_ENCHANTMENTS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -48,11 +48,11 @@ export default {
     countSpellItemEnchantments({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SPELL_ITEM_ENCHANTMENTS, payload);
-        ipcRenderer.on(COUNT_SPELL_ITEM_ENCHANTMENTS, (event, response) => {
+        ipcRenderer.once(COUNT_SPELL_ITEM_ENCHANTMENTS, (event, response) => {
           commit(COUNT_SPELL_ITEM_ENCHANTMENTS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_SPELL_ITEM_ENCHANTMENTS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -69,11 +69,11 @@ export default {
     storeSpellItemEnchantment({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL_ITEM_ENCHANTMENT, payload);
-        ipcRenderer.on(STORE_SPELL_ITEM_ENCHANTMENT, () => {
+        ipcRenderer.once(STORE_SPELL_ITEM_ENCHANTMENT, () => {
           commit("UPDATE_REFRESH_OF_SPELL_ITEM_ENCHANTMENT", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_SPELL_ITEM_ENCHANTMENT}_REJECT`,
           (event, error) => {
             reject(error);
@@ -84,11 +84,11 @@ export default {
     findSpellItemEnchantment({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL_ITEM_ENCHANTMENT, payload);
-        ipcRenderer.on(FIND_SPELL_ITEM_ENCHANTMENT, (event, response) => {
+        ipcRenderer.once(FIND_SPELL_ITEM_ENCHANTMENT, (event, response) => {
           commit(FIND_SPELL_ITEM_ENCHANTMENT, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_SPELL_ITEM_ENCHANTMENT}_REJECT`,
           (event, error) => {
             reject(error);
@@ -99,11 +99,11 @@ export default {
     updateSpellItemEnchantment({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL_ITEM_ENCHANTMENT, payload);
-        ipcRenderer.on(UPDATE_SPELL_ITEM_ENCHANTMENT, () => {
+        ipcRenderer.once(UPDATE_SPELL_ITEM_ENCHANTMENT, () => {
           commit("UPDATE_REFRESH_OF_SPELL_ITEM_ENCHANTMENT", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_SPELL_ITEM_ENCHANTMENT}_REJECT`,
           (event, error) => {
             reject(error);
@@ -114,10 +114,10 @@ export default {
     destroySpellItemEnchantment(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SPELL_ITEM_ENCHANTMENT, payload);
-        ipcRenderer.on(DESTROY_SPELL_ITEM_ENCHANTMENT, () => {
+        ipcRenderer.once(DESTROY_SPELL_ITEM_ENCHANTMENT, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_SPELL_ITEM_ENCHANTMENT}_REJECT`,
           (event, error) => {
             reject(error);
@@ -128,11 +128,11 @@ export default {
     createSpellItemEnchantment({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_SPELL_ITEM_ENCHANTMENT, payload);
-        ipcRenderer.on(CREATE_SPELL_ITEM_ENCHANTMENT, (event, response) => {
+        ipcRenderer.once(CREATE_SPELL_ITEM_ENCHANTMENT, (event, response) => {
           commit(CREATE_SPELL_ITEM_ENCHANTMENT, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${CREATE_SPELL_ITEM_ENCHANTMENT}_REJECT`,
           (event, error) => {
             reject(error);
@@ -143,10 +143,10 @@ export default {
     copySpellItemEnchantment(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SPELL_ITEM_ENCHANTMENT, payload);
-        ipcRenderer.on(COPY_SPELL_ITEM_ENCHANTMENT, () => {
+        ipcRenderer.once(COPY_SPELL_ITEM_ENCHANTMENT, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_SPELL_ITEM_ENCHANTMENT}_REJECT`,
           (event, error) => {
             reject(error);

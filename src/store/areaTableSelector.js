@@ -20,11 +20,11 @@ export default {
     searchAreaTablesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_AREA_TABLES_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_AREA_TABLES_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(SEARCH_AREA_TABLES_FOR_SELECTOR, (event, response) => {
           commit(SEARCH_AREA_TABLES_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_AREA_TABLES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,11 +35,11 @@ export default {
     countAreaTablesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_AREA_TABLES_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_AREA_TABLES_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_AREA_TABLES_FOR_SELECTOR, (event, response) => {
           commit(COUNT_AREA_TABLES_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_AREA_TABLES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

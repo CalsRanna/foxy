@@ -20,14 +20,14 @@ export default {
     searchWaypointDatasForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_WAYPOINT_DATAS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_WAYPOINT_DATAS_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_WAYPOINT_DATAS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_WAYPOINT_DATAS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,11 +38,14 @@ export default {
     countWaypointDatasForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_WAYPOINT_DATAS_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_WAYPOINT_DATAS_FOR_SELECTOR, (event, response) => {
-          commit(COUNT_WAYPOINT_DATAS_FOR_SELECTOR, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          COUNT_WAYPOINT_DATAS_FOR_SELECTOR,
+          (event, response) => {
+            commit(COUNT_WAYPOINT_DATAS_FOR_SELECTOR, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${COUNT_WAYPOINT_DATAS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

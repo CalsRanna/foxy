@@ -16,33 +16,39 @@ export default {
     storeAchievementReward(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ACHIEVEMENT_REWARD, payload);
-        ipcRenderer.on(STORE_ACHIEVEMENT_REWARD, () => {
+        ipcRenderer.once(STORE_ACHIEVEMENT_REWARD, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_ACHIEVEMENT_REWARD}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_ACHIEVEMENT_REWARD}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findAchievementReward({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ACHIEVEMENT_REWARD, payload);
-        ipcRenderer.on(FIND_ACHIEVEMENT_REWARD, (event, response) => {
+        ipcRenderer.once(FIND_ACHIEVEMENT_REWARD, (event, response) => {
           commit(FIND_ACHIEVEMENT_REWARD, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_ACHIEVEMENT_REWARD}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_ACHIEVEMENT_REWARD}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateAchievementReward(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ACHIEVEMENT_REWARD, payload);
-        ipcRenderer.on(UPDATE_ACHIEVEMENT_REWARD, () => {
+        ipcRenderer.once(UPDATE_ACHIEVEMENT_REWARD, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_ACHIEVEMENT_REWARD}_REJECT`,
           (event, error) => {
             reject(error);

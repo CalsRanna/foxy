@@ -20,14 +20,14 @@ export default {
     searchReferenceLootTemplatesForCard({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_REFERENCE_LOOT_TEMPLATES_FOR_CARD, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_REFERENCE_LOOT_TEMPLATES_FOR_CARD,
           (event, response) => {
             commit(SEARCH_REFERENCE_LOOT_TEMPLATES_FOR_CARD, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_REFERENCE_LOOT_TEMPLATES_FOR_CARD}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,10 +38,10 @@ export default {
     storeReferenceLootTemplateForCard(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_REFERENCE_LOOT_TEMPLATE_FOR_CARD, payload);
-        ipcRenderer.on(STORE_REFERENCE_LOOT_TEMPLATE_FOR_CARD, () => {
+        ipcRenderer.once(STORE_REFERENCE_LOOT_TEMPLATE_FOR_CARD, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -52,14 +52,14 @@ export default {
     findReferenceLootTemplateForCard({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_REFERENCE_LOOT_TEMPLATE_FOR_CARD, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           FIND_REFERENCE_LOOT_TEMPLATE_FOR_CARD,
           (event, response) => {
             commit(FIND_REFERENCE_LOOT_TEMPLATE_FOR_CARD, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -70,10 +70,10 @@ export default {
     updateReferenceLootTemplateForCard(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_REFERENCE_LOOT_TEMPLATE_FOR_CARD, payload);
-        ipcRenderer.on(UPDATE_REFERENCE_LOOT_TEMPLATE_FOR_CARD, () => {
+        ipcRenderer.once(UPDATE_REFERENCE_LOOT_TEMPLATE_FOR_CARD, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -84,10 +84,10 @@ export default {
     destroyReferenceLootTemplateForCard(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_REFERENCE_LOOT_TEMPLATE_FOR_CARD, payload);
-        ipcRenderer.on(DESTROY_REFERENCE_LOOT_TEMPLATE_FOR_CARD, () => {
+        ipcRenderer.once(DESTROY_REFERENCE_LOOT_TEMPLATE_FOR_CARD, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -104,10 +104,10 @@ export default {
     copyReferenceLootTemplateForCard(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_REFERENCE_LOOT_TEMPLATE_FOR_CARD, payload);
-        ipcRenderer.on(COPY_REFERENCE_LOOT_TEMPLATE_FOR_CARD, () => {
+        ipcRenderer.once(COPY_REFERENCE_LOOT_TEMPLATE_FOR_CARD, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -118,7 +118,7 @@ export default {
     checkReferenceEntriesForCard(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send("CHECK_REFERENCE_ENTRIES_FOR_CARD", payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           "CHECK_REFERENCE_ENTRIES_FOR_CARD",
           (event, response) => {
             let references = [];
@@ -130,7 +130,7 @@ export default {
             resolve(references);
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           "CHECK_REFERENCE_ENTRIES_FOR_CARD_REJECT",
           (event, error) => {
             reject(error);

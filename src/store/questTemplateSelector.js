@@ -20,14 +20,14 @@ export default {
     searchQuestTemplatesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_QUEST_TEMPLATES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_QUEST_TEMPLATES_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_QUEST_TEMPLATES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_QUEST_TEMPLATES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countQuestTemplatesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_QUEST_TEMPLATES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_QUEST_TEMPLATES_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_QUEST_TEMPLATES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_QUEST_TEMPLATES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

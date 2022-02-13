@@ -20,14 +20,14 @@ export default {
     searchSpellDifficultiesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_DIFFICULTIES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_SPELL_DIFFICULTIES_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_SPELL_DIFFICULTIES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_SPELL_DIFFICULTIES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countSpellDifficultiesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SPELL_DIFFICULTIES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_SPELL_DIFFICULTIES_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_SPELL_DIFFICULTIES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_SPELL_DIFFICULTIES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

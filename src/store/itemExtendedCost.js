@@ -33,25 +33,31 @@ export default {
     searchItemExtendedCosts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ITEM_EXTENDED_COSTS, payload);
-        ipcRenderer.on(SEARCH_ITEM_EXTENDED_COSTS, (event, response) => {
+        ipcRenderer.once(SEARCH_ITEM_EXTENDED_COSTS, (event, response) => {
           commit(SEARCH_ITEM_EXTENDED_COSTS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_ITEM_EXTENDED_COSTS}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${SEARCH_ITEM_EXTENDED_COSTS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     countItemExtendedCosts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_ITEM_EXTENDED_COSTS, payload);
-        ipcRenderer.on(COUNT_ITEM_EXTENDED_COSTS, (event, response) => {
+        ipcRenderer.once(COUNT_ITEM_EXTENDED_COSTS, (event, response) => {
           commit(COUNT_ITEM_EXTENDED_COSTS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_ITEM_EXTENDED_COSTS}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COUNT_ITEM_EXTENDED_COSTS}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     paginateItemExtendedCosts({ commit }, payload) {
@@ -63,71 +69,89 @@ export default {
     storeItemExtendedCost({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ITEM_EXTENDED_COST, payload);
-        ipcRenderer.on(STORE_ITEM_EXTENDED_COST, () => {
+        ipcRenderer.once(STORE_ITEM_EXTENDED_COST, () => {
           commit("UPDATE_REFRESH_OF_ITEM_EXTENDED_COST", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_ITEM_EXTENDED_COST}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_ITEM_EXTENDED_COST}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findItemExtendedCost({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ITEM_EXTENDED_COST, payload);
-        ipcRenderer.on(FIND_ITEM_EXTENDED_COST, (event, response) => {
+        ipcRenderer.once(FIND_ITEM_EXTENDED_COST, (event, response) => {
           commit(FIND_ITEM_EXTENDED_COST, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_ITEM_EXTENDED_COST}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_ITEM_EXTENDED_COST}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateItemExtendedCost({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ITEM_EXTENDED_COST, payload);
-        ipcRenderer.on(UPDATE_ITEM_EXTENDED_COST, () => {
+        ipcRenderer.once(UPDATE_ITEM_EXTENDED_COST, () => {
           commit("UPDATE_REFRESH_OF_ITEM_EXTENDED_COST", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_ITEM_EXTENDED_COST}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${UPDATE_ITEM_EXTENDED_COST}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     destroyItemExtendedCost(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_ITEM_EXTENDED_COST, payload);
-        ipcRenderer.on(DESTROY_ITEM_EXTENDED_COST, () => {
+        ipcRenderer.once(DESTROY_ITEM_EXTENDED_COST, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_ITEM_EXTENDED_COST}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${DESTROY_ITEM_EXTENDED_COST}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     createItemExtendedCost({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_ITEM_EXTENDED_COST, payload);
-        ipcRenderer.on(CREATE_ITEM_EXTENDED_COST, (event, response) => {
+        ipcRenderer.once(CREATE_ITEM_EXTENDED_COST, (event, response) => {
           commit(CREATE_ITEM_EXTENDED_COST, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_ITEM_EXTENDED_COST}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${CREATE_ITEM_EXTENDED_COST}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     copyItemExtendedCost(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_ITEM_EXTENDED_COST, payload);
-        ipcRenderer.on(COPY_ITEM_EXTENDED_COST, () => {
+        ipcRenderer.once(COPY_ITEM_EXTENDED_COST, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_ITEM_EXTENDED_COST}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COPY_ITEM_EXTENDED_COST}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     resetCredential({ commit }) {

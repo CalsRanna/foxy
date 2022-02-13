@@ -33,11 +33,11 @@ export default {
     searchQuestInfos({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_QUEST_INFOS, payload);
-        ipcRenderer.on(SEARCH_QUEST_INFOS, (event, response) => {
+        ipcRenderer.once(SEARCH_QUEST_INFOS, (event, response) => {
           commit(SEARCH_QUEST_INFOS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_QUEST_INFOS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_QUEST_INFOS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countQuestInfos({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_QUEST_INFOS, payload);
-        ipcRenderer.on(COUNT_QUEST_INFOS, (event, response) => {
+        ipcRenderer.once(COUNT_QUEST_INFOS, (event, response) => {
           commit(COUNT_QUEST_INFOS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_QUEST_INFOS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_QUEST_INFOS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeQuestInfo({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_QUEST_INFO, payload);
-        ipcRenderer.on(STORE_QUEST_INFO, () => {
+        ipcRenderer.once(STORE_QUEST_INFO, () => {
           commit("UPDATE_REFRESH_OF_QUEST_INFO", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_QUEST_INFO}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_QUEST_INFO}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findQuestInfo({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_QUEST_INFO, payload);
-        ipcRenderer.on(FIND_QUEST_INFO, (event, response) => {
+        ipcRenderer.once(FIND_QUEST_INFO, (event, response) => {
           commit(FIND_QUEST_INFO, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_QUEST_INFO}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_QUEST_INFO}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateQuestInfo({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_QUEST_INFO, payload);
-        ipcRenderer.on(UPDATE_QUEST_INFO, () => {
+        ipcRenderer.once(UPDATE_QUEST_INFO, () => {
           commit("UPDATE_REFRESH_OF_QUEST_INFO", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_QUEST_INFO}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_QUEST_INFO}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyQuestInfo(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_QUEST_INFO, payload);
-        ipcRenderer.on(DESTROY_QUEST_INFO, () => {
+        ipcRenderer.once(DESTROY_QUEST_INFO, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_QUEST_INFO}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_QUEST_INFO}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createQuestInfo({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_QUEST_INFO, payload);
-        ipcRenderer.on(CREATE_QUEST_INFO, (event, response) => {
+        ipcRenderer.once(CREATE_QUEST_INFO, (event, response) => {
           commit(CREATE_QUEST_INFO, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_QUEST_INFO}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_QUEST_INFO}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyQuestInfo(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_QUEST_INFO, payload);
-        ipcRenderer.on(COPY_QUEST_INFO, () => {
+        ipcRenderer.once(COPY_QUEST_INFO, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_QUEST_INFO}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_QUEST_INFO}_REJECT`, (event, error) => {
           reject(error);
         });
       });

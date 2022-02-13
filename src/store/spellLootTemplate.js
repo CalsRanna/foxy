@@ -20,11 +20,11 @@ export default {
     searchSpellLootTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_SPELL_LOOT_TEMPLATES, (event, response) => {
+        ipcRenderer.once(SEARCH_SPELL_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_SPELL_LOOT_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_SPELL_LOOT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +35,10 @@ export default {
     storeSpellLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_SPELL_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(STORE_SPELL_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_SPELL_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,22 +49,25 @@ export default {
     findSpellLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_SPELL_LOOT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_SPELL_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_SPELL_LOOT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SPELL_LOOT_TEMPLATE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_SPELL_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateSpellLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_SPELL_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_SPELL_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_SPELL_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -75,10 +78,10 @@ export default {
     destroySpellLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SPELL_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_SPELL_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_SPELL_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_SPELL_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -95,12 +98,15 @@ export default {
     copySpellLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SPELL_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_SPELL_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(COPY_SPELL_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_SPELL_LOOT_TEMPLATE}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COPY_SPELL_LOOT_TEMPLATE}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

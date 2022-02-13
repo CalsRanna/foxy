@@ -23,14 +23,14 @@ export default {
           SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR,
           payload
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -44,14 +44,14 @@ export default {
           COUNT_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR,
           payload
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_ITEM_ENCHANTMENT_TEMPLATES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

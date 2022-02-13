@@ -33,11 +33,11 @@ export default {
     searchPlayerCreateInfos({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_PLAYER_CREATE_INFOS, payload);
-        ipcRenderer.on(SEARCH_PLAYER_CREATE_INFOS, (event, response) => {
+        ipcRenderer.once(SEARCH_PLAYER_CREATE_INFOS, (event, response) => {
           commit(SEARCH_PLAYER_CREATE_INFOS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_PLAYER_CREATE_INFOS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -48,11 +48,11 @@ export default {
     countPlayerCreateInfos({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_PLAYER_CREATE_INFOS, payload);
-        ipcRenderer.on(COUNT_PLAYER_CREATE_INFOS, (event, response) => {
+        ipcRenderer.once(COUNT_PLAYER_CREATE_INFOS, (event, response) => {
           commit(COUNT_PLAYER_CREATE_INFOS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_PLAYER_CREATE_INFOS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -69,35 +69,41 @@ export default {
     storePlayerCreateInfo({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_PLAYER_CREATE_INFO, payload);
-        ipcRenderer.on(STORE_PLAYER_CREATE_INFO, () => {
+        ipcRenderer.once(STORE_PLAYER_CREATE_INFO, () => {
           commit("UPDATE_REFRESH_OF_PLAYER_CREATE_INFO", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_PLAYER_CREATE_INFO}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_PLAYER_CREATE_INFO}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findPlayerCreateInfo({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_PLAYER_CREATE_INFO, payload);
-        ipcRenderer.on(FIND_PLAYER_CREATE_INFO, (event, response) => {
+        ipcRenderer.once(FIND_PLAYER_CREATE_INFO, (event, response) => {
           commit(FIND_PLAYER_CREATE_INFO, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_PLAYER_CREATE_INFO}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_PLAYER_CREATE_INFO}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updatePlayerCreateInfo({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_PLAYER_CREATE_INFO, payload);
-        ipcRenderer.on(UPDATE_PLAYER_CREATE_INFO, () => {
+        ipcRenderer.once(UPDATE_PLAYER_CREATE_INFO, () => {
           commit("UPDATE_REFRESH_OF_PLAYER_CREATE_INFO", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_PLAYER_CREATE_INFO}_REJECT`,
           (event, error) => {
             reject(error);
@@ -108,10 +114,10 @@ export default {
     destroyPlayerCreateInfo(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_PLAYER_CREATE_INFO, payload);
-        ipcRenderer.on(DESTROY_PLAYER_CREATE_INFO, () => {
+        ipcRenderer.once(DESTROY_PLAYER_CREATE_INFO, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_PLAYER_CREATE_INFO}_REJECT`,
           (event, error) => {
             reject(error);
@@ -128,12 +134,15 @@ export default {
     copyPlayerCreateInfo(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_PLAYER_CREATE_INFO, payload);
-        ipcRenderer.on(COPY_PLAYER_CREATE_INFO, () => {
+        ipcRenderer.once(COPY_PLAYER_CREATE_INFO, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_PLAYER_CREATE_INFO}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COPY_PLAYER_CREATE_INFO}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     resetCredential({ commit }) {

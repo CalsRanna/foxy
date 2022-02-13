@@ -20,11 +20,11 @@ export default {
     searchSpellIconsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_ICONS_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_SPELL_ICONS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(SEARCH_SPELL_ICONS_FOR_SELECTOR, (event, response) => {
           commit(SEARCH_SPELL_ICONS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_SPELL_ICONS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,11 +35,11 @@ export default {
     countSpellIconsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SPELL_ICONS_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_SPELL_ICONS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_SPELL_ICONS_FOR_SELECTOR, (event, response) => {
           commit(COUNT_SPELL_ICONS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_SPELL_ICONS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

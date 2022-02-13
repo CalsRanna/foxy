@@ -20,11 +20,11 @@ export default {
     searchCreatureTemplateSpells({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CREATURE_TEMPLATE_SPELLS, payload);
-        ipcRenderer.on(SEARCH_CREATURE_TEMPLATE_SPELLS, (event, response) => {
+        ipcRenderer.once(SEARCH_CREATURE_TEMPLATE_SPELLS, (event, response) => {
           commit(SEARCH_CREATURE_TEMPLATE_SPELLS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CREATURE_TEMPLATE_SPELLS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +35,10 @@ export default {
     storeCreatureTemplateSpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CREATURE_TEMPLATE_SPELL, payload);
-        ipcRenderer.on(STORE_CREATURE_TEMPLATE_SPELL, () => {
+        ipcRenderer.once(STORE_CREATURE_TEMPLATE_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_CREATURE_TEMPLATE_SPELL}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +49,11 @@ export default {
     findCreatureTemplateSpell({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CREATURE_TEMPLATE_SPELL, payload);
-        ipcRenderer.on(FIND_CREATURE_TEMPLATE_SPELL, (event, response) => {
+        ipcRenderer.once(FIND_CREATURE_TEMPLATE_SPELL, (event, response) => {
           commit(FIND_CREATURE_TEMPLATE_SPELL, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_CREATURE_TEMPLATE_SPELL}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +64,10 @@ export default {
     updateCreatureTemplateSpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CREATURE_TEMPLATE_SPELL, payload);
-        ipcRenderer.on(UPDATE_CREATURE_TEMPLATE_SPELL, () => {
+        ipcRenderer.once(UPDATE_CREATURE_TEMPLATE_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_CREATURE_TEMPLATE_SPELL}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +78,10 @@ export default {
     destroyCreatureTemplateSpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_CREATURE_TEMPLATE_SPELL, payload);
-        ipcRenderer.on(DESTROY_CREATURE_TEMPLATE_SPELL, () => {
+        ipcRenderer.once(DESTROY_CREATURE_TEMPLATE_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_CREATURE_TEMPLATE_SPELL}_REJECT`,
           (event, error) => {
             reject(error);
@@ -92,11 +92,11 @@ export default {
     createCreatureTemplateSpell({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_CREATURE_TEMPLATE_SPELL, payload);
-        ipcRenderer.on(CREATE_CREATURE_TEMPLATE_SPELL, (event, response) => {
+        ipcRenderer.once(CREATE_CREATURE_TEMPLATE_SPELL, (event, response) => {
           commit(CREATE_CREATURE_TEMPLATE_SPELL, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${CREATE_CREATURE_TEMPLATE_SPELL}_REJECT`,
           (event, error) => {
             reject(error);
@@ -107,10 +107,10 @@ export default {
     copyCreatureTemplateSpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_CREATURE_TEMPLATE_SPELL, payload);
-        ipcRenderer.on(COPY_CREATURE_TEMPLATE_SPELL, () => {
+        ipcRenderer.once(COPY_CREATURE_TEMPLATE_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_CREATURE_TEMPLATE_SPELL}_REJECT`,
           (event, error) => {
             reject(error);

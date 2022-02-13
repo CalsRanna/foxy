@@ -33,23 +33,26 @@ export default {
     searchGlyphProperties({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GLYPH_PROPERTIES, payload);
-        ipcRenderer.on(SEARCH_GLYPH_PROPERTIES, (event, response) => {
+        ipcRenderer.once(SEARCH_GLYPH_PROPERTIES, (event, response) => {
           commit(SEARCH_GLYPH_PROPERTIES, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_GLYPH_PROPERTIES}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${SEARCH_GLYPH_PROPERTIES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     countGlyphProperties({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_GLYPH_PROPERTIES, payload);
-        ipcRenderer.on(COUNT_GLYPH_PROPERTIES, (event, response) => {
+        ipcRenderer.once(COUNT_GLYPH_PROPERTIES, (event, response) => {
           commit(COUNT_GLYPH_PROPERTIES, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_GLYPH_PROPERTIES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_GLYPH_PROPERTIES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +66,11 @@ export default {
     storeGlyphProperty({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GLYPH_PROPERTY, payload);
-        ipcRenderer.on(STORE_GLYPH_PROPERTY, () => {
+        ipcRenderer.once(STORE_GLYPH_PROPERTY, () => {
           commit("UPDATE_REFRESH_OF_GLYPH_PROPERTY", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_GLYPH_PROPERTY}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_GLYPH_PROPERTY}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +78,11 @@ export default {
     findGlyphProperty({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_GLYPH_PROPERTY, payload);
-        ipcRenderer.on(FIND_GLYPH_PROPERTY, (event, response) => {
+        ipcRenderer.once(FIND_GLYPH_PROPERTY, (event, response) => {
           commit(FIND_GLYPH_PROPERTY, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_GLYPH_PROPERTY}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_GLYPH_PROPERTY}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +90,11 @@ export default {
     updateGlyphProperty({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_GLYPH_PROPERTY, payload);
-        ipcRenderer.on(UPDATE_GLYPH_PROPERTY, () => {
+        ipcRenderer.once(UPDATE_GLYPH_PROPERTY, () => {
           commit("UPDATE_REFRESH_OF_GLYPH_PROPERTY", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_GLYPH_PROPERTY}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_GLYPH_PROPERTY}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +102,10 @@ export default {
     destroyGlyphProperty(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_GLYPH_PROPERTY, payload);
-        ipcRenderer.on(DESTROY_GLYPH_PROPERTY, () => {
+        ipcRenderer.once(DESTROY_GLYPH_PROPERTY, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_GLYPH_PROPERTY}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_GLYPH_PROPERTY}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +113,11 @@ export default {
     createGlyphProperty({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_GLYPH_PROPERTY, payload);
-        ipcRenderer.on(CREATE_GLYPH_PROPERTY, (event, response) => {
+        ipcRenderer.once(CREATE_GLYPH_PROPERTY, (event, response) => {
           commit(CREATE_GLYPH_PROPERTY, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_GLYPH_PROPERTY}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_GLYPH_PROPERTY}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +125,10 @@ export default {
     copyGlyphProperty(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_GLYPH_PROPERTY, payload);
-        ipcRenderer.on(COPY_GLYPH_PROPERTY, () => {
+        ipcRenderer.once(COPY_GLYPH_PROPERTY, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_GLYPH_PROPERTY}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_GLYPH_PROPERTY}_REJECT`, (event, error) => {
           reject(error);
         });
       });

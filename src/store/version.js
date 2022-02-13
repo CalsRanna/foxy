@@ -11,7 +11,7 @@ export default {
     findVersion({ commit }) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_VERSION);
-        ipcRenderer.on(FIND_VERSION, (event, version) => {
+        ipcRenderer.once(FIND_VERSION, (event, version) => {
           commit(FIND_VERSION, version);
           resolve();
         });

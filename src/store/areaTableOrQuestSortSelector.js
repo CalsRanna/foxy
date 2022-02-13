@@ -29,14 +29,14 @@ export default {
     searchAreaTablesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_AREA_TABLES_FOR_ATOQS_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_AREA_TABLES_FOR_ATOQS_SELECTOR,
           (event, response) => {
             commit(SEARCH_AREA_TABLES_FOR_ATOQS_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_AREA_TABLES_FOR_ATOQS_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -47,14 +47,14 @@ export default {
     countAreaTablesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_AREA_TABLES_FOR_ATOQS_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_AREA_TABLES_FOR_ATOQS_SELECTOR,
           (event, response) => {
             commit(COUNT_AREA_TABLES_FOR_ATOQS_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_AREA_TABLES_FOR_ATOQS_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -71,14 +71,14 @@ export default {
     searchQuestSortsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_QUEST_SORTS_FOR_ATOQS_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_QUEST_SORTS_FOR_ATOQS_SELECTOR,
           (event, response) => {
             commit(SEARCH_QUEST_SORTS_FOR_ATOQS_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_QUEST_SORTS_FOR_ATOQS_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -89,14 +89,14 @@ export default {
     countQuestSortsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_QUEST_SORTS_FOR_ATOQS_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_QUEST_SORTS_FOR_ATOQS_SELECTOR,
           (event, response) => {
             commit(COUNT_QUEST_SORTS_FOR_ATOQS_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_QUEST_SORTS_FOR_ATOQS_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

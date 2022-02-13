@@ -32,11 +32,11 @@ export default {
     searchQuestFactionRewards({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_QUEST_FACTION_REWARDS, payload);
-        ipcRenderer.on(SEARCH_QUEST_FACTION_REWARDS, (event, response) => {
+        ipcRenderer.once(SEARCH_QUEST_FACTION_REWARDS, (event, response) => {
           commit(SEARCH_QUEST_FACTION_REWARDS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_QUEST_FACTION_REWARDS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -47,11 +47,11 @@ export default {
     countQuestFactionRewards({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_QUEST_FACTION_REWARDS, payload);
-        ipcRenderer.on(COUNT_QUEST_FACTION_REWARDS, (event, response) => {
+        ipcRenderer.once(COUNT_QUEST_FACTION_REWARDS, (event, response) => {
           commit(COUNT_QUEST_FACTION_REWARDS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_QUEST_FACTION_REWARDS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -68,11 +68,11 @@ export default {
     storeQuestFactionReward({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_QUEST_FACTION_REWARD, payload);
-        ipcRenderer.on(STORE_QUEST_FACTION_REWARD, () => {
+        ipcRenderer.once(STORE_QUEST_FACTION_REWARD, () => {
           commit("UPDATE_REFRESH_OF_QUEST_FACTION_REWARD", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_QUEST_FACTION_REWARD}_REJECT`,
           (event, error) => {
             reject(error);
@@ -83,11 +83,11 @@ export default {
     findQuestFactionReward({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_QUEST_FACTION_REWARD, payload);
-        ipcRenderer.on(FIND_QUEST_FACTION_REWARD, (event, response) => {
+        ipcRenderer.once(FIND_QUEST_FACTION_REWARD, (event, response) => {
           commit(FIND_QUEST_FACTION_REWARD, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_QUEST_FACTION_REWARD}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,11 +98,11 @@ export default {
     updateQuestFactionReward({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_QUEST_FACTION_REWARD, payload);
-        ipcRenderer.on(UPDATE_QUEST_FACTION_REWARD, () => {
+        ipcRenderer.once(UPDATE_QUEST_FACTION_REWARD, () => {
           commit("UPDATE_REFRESH_OF_QUEST_FACTION_REWARD", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_QUEST_FACTION_REWARD}_REJECT`,
           (event, error) => {
             reject(error);
@@ -113,10 +113,10 @@ export default {
     destroyQuestFactionReward(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_QUEST_FACTION_REWARD, payload);
-        ipcRenderer.on(DESTROY_QUEST_FACTION_REWARD, () => {
+        ipcRenderer.once(DESTROY_QUEST_FACTION_REWARD, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_QUEST_FACTION_REWARD}_REJECT`,
           (event, error) => {
             reject(error);
@@ -127,11 +127,11 @@ export default {
     createQuestFactionReward({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_QUEST_FACTION_REWARD, payload);
-        ipcRenderer.on(CREATE_QUEST_FACTION_REWARD, (event, response) => {
+        ipcRenderer.once(CREATE_QUEST_FACTION_REWARD, (event, response) => {
           commit(CREATE_QUEST_FACTION_REWARD, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${CREATE_QUEST_FACTION_REWARD}_REJECT`,
           (event, error) => {
             reject(error);
@@ -142,10 +142,10 @@ export default {
     copyQuestFactionReward(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_QUEST_FACTION_REWARD, payload);
-        ipcRenderer.on(COPY_QUEST_FACTION_REWARD, () => {
+        ipcRenderer.once(COPY_QUEST_FACTION_REWARD, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_QUEST_FACTION_REWARD}_REJECT`,
           (event, error) => {
             reject(error);
