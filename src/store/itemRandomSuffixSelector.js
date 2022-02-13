@@ -20,14 +20,14 @@ export default {
     searchItemRandomSuffixesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countItemRandomSuffixesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_ITEM_RANDOM_SUFFIXES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

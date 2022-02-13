@@ -16,10 +16,10 @@ export default {
     storeSpellBonusData(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL_BONUS_DATA, payload);
-        ipcRenderer.on(STORE_SPELL_BONUS_DATA, () => {
+        ipcRenderer.once(STORE_SPELL_BONUS_DATA, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_SPELL_BONUS_DATA}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_SPELL_BONUS_DATA}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -27,11 +27,11 @@ export default {
     findSpellBonusData({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL_BONUS_DATA, payload);
-        ipcRenderer.on(FIND_SPELL_BONUS_DATA, (event, response) => {
+        ipcRenderer.once(FIND_SPELL_BONUS_DATA, (event, response) => {
           commit(FIND_SPELL_BONUS_DATA, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SPELL_BONUS_DATA}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_SPELL_BONUS_DATA}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -39,12 +39,15 @@ export default {
     updateSpellBonusData(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL_BONUS_DATA, payload);
-        ipcRenderer.on(UPDATE_SPELL_BONUS_DATA, () => {
+        ipcRenderer.once(UPDATE_SPELL_BONUS_DATA, () => {
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_SPELL_BONUS_DATA}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${UPDATE_SPELL_BONUS_DATA}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     createSpellBonusData({ commit }, payload) {

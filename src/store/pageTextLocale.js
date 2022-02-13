@@ -14,24 +14,30 @@ export default {
     searchPageTextLocales({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_PAGE_TEXT_LOCALES, payload);
-        ipcRenderer.on(SEARCH_PAGE_TEXT_LOCALES, (event, response) => {
+        ipcRenderer.once(SEARCH_PAGE_TEXT_LOCALES, (event, response) => {
           commit(SEARCH_PAGE_TEXT_LOCALES, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_PAGE_TEXT_LOCALES}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${SEARCH_PAGE_TEXT_LOCALES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     storePageTextLocales(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_PAGE_TEXT_LOCALES, payload);
-        ipcRenderer.on(STORE_PAGE_TEXT_LOCALES, () => {
+        ipcRenderer.once(STORE_PAGE_TEXT_LOCALES, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_PAGE_TEXT_LOCALES}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_PAGE_TEXT_LOCALES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

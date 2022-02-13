@@ -33,11 +33,11 @@ export default {
     searchSmartScripts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SMART_SCRIPTS, payload);
-        ipcRenderer.on(SEARCH_SMART_SCRIPTS, (event, response) => {
+        ipcRenderer.once(SEARCH_SMART_SCRIPTS, (event, response) => {
           commit(SEARCH_SMART_SCRIPTS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_SMART_SCRIPTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_SMART_SCRIPTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countSmartScripts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_SMART_SCRIPTS, payload);
-        ipcRenderer.on(COUNT_SMART_SCRIPTS, (event, response) => {
+        ipcRenderer.once(COUNT_SMART_SCRIPTS, (event, response) => {
           commit(COUNT_SMART_SCRIPTS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_SMART_SCRIPTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_SMART_SCRIPTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeSmartScript({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SMART_SCRIPT, payload);
-        ipcRenderer.on(STORE_SMART_SCRIPT, () => {
+        ipcRenderer.once(STORE_SMART_SCRIPT, () => {
           commit("UPDATE_REFRESH_OF_SMART_SCRIPT", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_SMART_SCRIPT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_SMART_SCRIPT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findSmartScript({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SMART_SCRIPT, payload);
-        ipcRenderer.on(FIND_SMART_SCRIPT, (event, response) => {
+        ipcRenderer.once(FIND_SMART_SCRIPT, (event, response) => {
           commit(FIND_SMART_SCRIPT, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SMART_SCRIPT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_SMART_SCRIPT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateSmartScript({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SMART_SCRIPT, payload);
-        ipcRenderer.on(UPDATE_SMART_SCRIPT, () => {
+        ipcRenderer.once(UPDATE_SMART_SCRIPT, () => {
           commit("UPDATE_REFRESH_OF_SMART_SCRIPT", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_SMART_SCRIPT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_SMART_SCRIPT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroySmartScript(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SMART_SCRIPT, payload);
-        ipcRenderer.on(DESTROY_SMART_SCRIPT, () => {
+        ipcRenderer.once(DESTROY_SMART_SCRIPT, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_SMART_SCRIPT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_SMART_SCRIPT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -116,10 +116,10 @@ export default {
     copySmartScript(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SMART_SCRIPT, payload);
-        ipcRenderer.on(COPY_SMART_SCRIPT, () => {
+        ipcRenderer.once(COPY_SMART_SCRIPT, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_SMART_SCRIPT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_SMART_SCRIPT}_REJECT`, (event, error) => {
           reject(error);
         });
       });

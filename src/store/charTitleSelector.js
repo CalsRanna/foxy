@@ -20,11 +20,11 @@ export default {
     searchCharTitlesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CHAR_TITLES_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_CHAR_TITLES_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(SEARCH_CHAR_TITLES_FOR_SELECTOR, (event, response) => {
           commit(SEARCH_CHAR_TITLES_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CHAR_TITLES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,11 +35,11 @@ export default {
     countCharTitlesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_CHAR_TITLES_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_CHAR_TITLES_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_CHAR_TITLES_FOR_SELECTOR, (event, response) => {
           commit(COUNT_CHAR_TITLES_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_CHAR_TITLES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

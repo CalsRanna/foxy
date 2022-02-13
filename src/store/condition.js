@@ -33,11 +33,11 @@ export default {
     searchConditions({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CONDITIONS, payload);
-        ipcRenderer.on(SEARCH_CONDITIONS, (event, response) => {
+        ipcRenderer.once(SEARCH_CONDITIONS, (event, response) => {
           commit(SEARCH_CONDITIONS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_CONDITIONS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_CONDITIONS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countConditions({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_CONDITIONS, payload);
-        ipcRenderer.on(COUNT_CONDITIONS, (event, response) => {
+        ipcRenderer.once(COUNT_CONDITIONS, (event, response) => {
           commit(COUNT_CONDITIONS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_CONDITIONS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_CONDITIONS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeCondition({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CONDITION, payload);
-        ipcRenderer.on(STORE_CONDITION, () => {
+        ipcRenderer.once(STORE_CONDITION, () => {
           commit("UPDATE_REFRESH_OF_CONDITION", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_CONDITION}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_CONDITION}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findCondition({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CONDITION, payload);
-        ipcRenderer.on(FIND_CONDITION, (event, response) => {
+        ipcRenderer.once(FIND_CONDITION, (event, response) => {
           commit(FIND_CONDITION, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_CONDITION}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_CONDITION}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateCondition({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CONDITION, payload);
-        ipcRenderer.on(UPDATE_CONDITION, () => {
+        ipcRenderer.once(UPDATE_CONDITION, () => {
           commit("UPDATE_REFRESH_OF_CONDITION", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_CONDITION}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_CONDITION}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyCondition(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_CONDITION, payload);
-        ipcRenderer.on(DESTROY_CONDITION, () => {
+        ipcRenderer.once(DESTROY_CONDITION, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_CONDITION}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_CONDITION}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -116,10 +116,10 @@ export default {
     copyCondition(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_CONDITION, payload);
-        ipcRenderer.on(COPY_CONDITION, () => {
+        ipcRenderer.once(COPY_CONDITION, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_CONDITION}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_CONDITION}_REJECT`, (event, error) => {
           reject(error);
         });
       });

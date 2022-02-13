@@ -20,11 +20,11 @@ export default {
     searchLocksForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_LOCKS_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_LOCKS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(SEARCH_LOCKS_FOR_SELECTOR, (event, response) => {
           commit(SEARCH_LOCKS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_LOCKS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,13 +35,16 @@ export default {
     countLocksForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_LOCKS_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_LOCKS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_LOCKS_FOR_SELECTOR, (event, response) => {
           commit(COUNT_LOCKS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_LOCKS_FOR_SELECTOR}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COUNT_LOCKS_FOR_SELECTOR}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     paginateLocksForSelector({ commit }, payload) {

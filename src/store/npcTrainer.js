@@ -20,11 +20,11 @@ export default {
     searchNpcTrainers({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_NPC_TRAINERS, payload);
-        ipcRenderer.on(SEARCH_NPC_TRAINERS, (event, response) => {
+        ipcRenderer.once(SEARCH_NPC_TRAINERS, (event, response) => {
           commit(SEARCH_NPC_TRAINERS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_NPC_TRAINERS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_NPC_TRAINERS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -32,10 +32,10 @@ export default {
     storeNpcTrainer(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_NPC_TRAINER, payload);
-        ipcRenderer.on(STORE_NPC_TRAINER, () => {
+        ipcRenderer.once(STORE_NPC_TRAINER, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_NPC_TRAINER}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_NPC_TRAINER}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -43,11 +43,11 @@ export default {
     findNpcTrainer({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_NPC_TRAINER, payload);
-        ipcRenderer.on(FIND_NPC_TRAINER, (event, response) => {
+        ipcRenderer.once(FIND_NPC_TRAINER, (event, response) => {
           commit(FIND_NPC_TRAINER, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_NPC_TRAINER}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_NPC_TRAINER}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -55,10 +55,10 @@ export default {
     updateNpcTrainer(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_NPC_TRAINER, payload);
-        ipcRenderer.on(UPDATE_NPC_TRAINER, () => {
+        ipcRenderer.once(UPDATE_NPC_TRAINER, () => {
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_NPC_TRAINER}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_NPC_TRAINER}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -66,10 +66,10 @@ export default {
     destroyNpcTrainer(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_NPC_TRAINER, payload);
-        ipcRenderer.on(DESTROY_NPC_TRAINER, () => {
+        ipcRenderer.once(DESTROY_NPC_TRAINER, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_NPC_TRAINER}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_NPC_TRAINER}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -83,10 +83,10 @@ export default {
     copyNpcTrainer(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_NPC_TRAINER, payload);
-        ipcRenderer.on(COPY_NPC_TRAINER, () => {
+        ipcRenderer.once(COPY_NPC_TRAINER, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_NPC_TRAINER}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_NPC_TRAINER}_REJECT`, (event, error) => {
           reject(error);
         });
       });

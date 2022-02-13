@@ -20,11 +20,11 @@ export default {
     searchSpellLinkedSpells({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_LINKED_SPELLS, payload);
-        ipcRenderer.on(SEARCH_SPELL_LINKED_SPELLS, (event, response) => {
+        ipcRenderer.once(SEARCH_SPELL_LINKED_SPELLS, (event, response) => {
           commit(SEARCH_SPELL_LINKED_SPELLS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_SPELL_LINKED_SPELLS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,33 +35,39 @@ export default {
     storeSpellLinkedSpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL_LINKED_SPELL, payload);
-        ipcRenderer.on(STORE_SPELL_LINKED_SPELL, () => {
+        ipcRenderer.once(STORE_SPELL_LINKED_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_SPELL_LINKED_SPELL}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_SPELL_LINKED_SPELL}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findSpellLinkedSpell({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL_LINKED_SPELL, payload);
-        ipcRenderer.on(FIND_SPELL_LINKED_SPELL, (event, response) => {
+        ipcRenderer.once(FIND_SPELL_LINKED_SPELL, (event, response) => {
           commit(FIND_SPELL_LINKED_SPELL, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SPELL_LINKED_SPELL}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_SPELL_LINKED_SPELL}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateSpellLinkedSpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL_LINKED_SPELL, payload);
-        ipcRenderer.on(UPDATE_SPELL_LINKED_SPELL, () => {
+        ipcRenderer.once(UPDATE_SPELL_LINKED_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_SPELL_LINKED_SPELL}_REJECT`,
           (event, error) => {
             reject(error);
@@ -72,10 +78,10 @@ export default {
     destroySpellLinkedSpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SPELL_LINKED_SPELL, payload);
-        ipcRenderer.on(DESTROY_SPELL_LINKED_SPELL, () => {
+        ipcRenderer.once(DESTROY_SPELL_LINKED_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_SPELL_LINKED_SPELL}_REJECT`,
           (event, error) => {
             reject(error);
@@ -92,12 +98,15 @@ export default {
     copySpellLinkedSpell(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SPELL_LINKED_SPELL, payload);
-        ipcRenderer.on(COPY_SPELL_LINKED_SPELL, () => {
+        ipcRenderer.once(COPY_SPELL_LINKED_SPELL, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_SPELL_LINKED_SPELL}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COPY_SPELL_LINKED_SPELL}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
   },

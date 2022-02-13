@@ -16,10 +16,10 @@ export default {
     storeAchievementCategory(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ACHIEVEMENT_CATEGORY, payload);
-        ipcRenderer.on(STORE_ACHIEVEMENT_CATEGORY, () => {
+        ipcRenderer.once(STORE_ACHIEVEMENT_CATEGORY, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_ACHIEVEMENT_CATEGORY}_REJECT`,
           (event, error) => {
             reject(error);
@@ -30,11 +30,11 @@ export default {
     findAchievementCategory({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_ACHIEVEMENT_CATEGORY, payload);
-        ipcRenderer.on(FIND_ACHIEVEMENT_CATEGORY, (event, response) => {
+        ipcRenderer.once(FIND_ACHIEVEMENT_CATEGORY, (event, response) => {
           commit(FIND_ACHIEVEMENT_CATEGORY, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_ACHIEVEMENT_CATEGORY}_REJECT`,
           (event, error) => {
             reject(error);
@@ -45,10 +45,10 @@ export default {
     updateAchievementCategory(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_ACHIEVEMENT_CATEGORY, payload);
-        ipcRenderer.on(UPDATE_ACHIEVEMENT_CATEGORY, () => {
+        ipcRenderer.once(UPDATE_ACHIEVEMENT_CATEGORY, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_ACHIEVEMENT_CATEGORY}_REJECT`,
           (event, error) => {
             reject(error);

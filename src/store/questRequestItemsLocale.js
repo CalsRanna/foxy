@@ -14,11 +14,14 @@ export default {
     searchQuestRequestItemsLocales({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_QUEST_REQUEST_ITEMS_LOCALES, payload);
-        ipcRenderer.on(SEARCH_QUEST_REQUEST_ITEMS_LOCALES, (event, response) => {
-          commit(SEARCH_QUEST_REQUEST_ITEMS_LOCALES, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_QUEST_REQUEST_ITEMS_LOCALES,
+          (event, response) => {
+            commit(SEARCH_QUEST_REQUEST_ITEMS_LOCALES, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_QUEST_REQUEST_ITEMS_LOCALES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -29,10 +32,10 @@ export default {
     storeQuestRequestItemsLocales(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_QUEST_REQUEST_ITEMS_LOCALES, payload);
-        ipcRenderer.on(STORE_QUEST_REQUEST_ITEMS_LOCALES, () => {
+        ipcRenderer.once(STORE_QUEST_REQUEST_ITEMS_LOCALES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_QUEST_REQUEST_ITEMS_LOCALES}_REJECT`,
           (event, error) => {
             reject(error);

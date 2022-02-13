@@ -33,11 +33,11 @@ export default {
     searchGameObjectTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GAME_OBJECT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_GAME_OBJECT_TEMPLATES, (event, response) => {
+        ipcRenderer.once(SEARCH_GAME_OBJECT_TEMPLATES, (event, response) => {
           commit(SEARCH_GAME_OBJECT_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_GAME_OBJECT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -48,11 +48,11 @@ export default {
     countGameObjectTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_GAME_OBJECT_TEMPLATES, payload);
-        ipcRenderer.on(COUNT_GAME_OBJECT_TEMPLATES, (event, response) => {
+        ipcRenderer.once(COUNT_GAME_OBJECT_TEMPLATES, (event, response) => {
           commit(COUNT_GAME_OBJECT_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_GAME_OBJECT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -69,11 +69,11 @@ export default {
     storeGameObjectTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_GAME_OBJECT_TEMPLATE, () => {
+        ipcRenderer.once(STORE_GAME_OBJECT_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_GAME_OBJECT_TEMPLATE", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_GAME_OBJECT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -84,11 +84,11 @@ export default {
     findGameObjectTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_GAME_OBJECT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_GAME_OBJECT_TEMPLATE, (event, response) => {
           commit(FIND_GAME_OBJECT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_GAME_OBJECT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -99,11 +99,11 @@ export default {
     updateGameObjectTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_GAME_OBJECT_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_GAME_OBJECT_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_GAME_OBJECT_TEMPLATE", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_GAME_OBJECT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -114,10 +114,10 @@ export default {
     destroyGameObjectTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_GAME_OBJECT_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_GAME_OBJECT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_GAME_OBJECT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -128,11 +128,11 @@ export default {
     createGameObjectTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(CREATE_GAME_OBJECT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(CREATE_GAME_OBJECT_TEMPLATE, (event, response) => {
           commit(CREATE_GAME_OBJECT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${CREATE_GAME_OBJECT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -143,10 +143,10 @@ export default {
     copyGameObjectTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_GAME_OBJECT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_GAME_OBJECT_TEMPLATE, () => {
+        ipcRenderer.once(COPY_GAME_OBJECT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_GAME_OBJECT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);

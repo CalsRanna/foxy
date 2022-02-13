@@ -20,14 +20,14 @@ export default {
     searchPlayerCreateInfoSpellCustoms({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_PLAYER_CREATE_INFO_SPELL_CUSTOMS, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_PLAYER_CREATE_INFO_SPELL_CUSTOMS,
           (event, response) => {
             commit(SEARCH_PLAYER_CREATE_INFO_SPELL_CUSTOMS, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_PLAYER_CREATE_INFO_SPELL_CUSTOMS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,10 +38,10 @@ export default {
     storePlayerCreateInfoSpellCustom(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_PLAYER_CREATE_INFO_SPELL_CUSTOM, payload);
-        ipcRenderer.on(STORE_PLAYER_CREATE_INFO_SPELL_CUSTOM, () => {
+        ipcRenderer.once(STORE_PLAYER_CREATE_INFO_SPELL_CUSTOM, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_PLAYER_CREATE_INFO_SPELL_CUSTOM}_REJECT`,
           (event, error) => {
             reject(error);
@@ -52,14 +52,14 @@ export default {
     findPlayerCreateInfoSpellCustom({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_PLAYER_CREATE_INFO_SPELL_CUSTOM, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           FIND_PLAYER_CREATE_INFO_SPELL_CUSTOM,
           (event, response) => {
             commit(FIND_PLAYER_CREATE_INFO_SPELL_CUSTOM, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_PLAYER_CREATE_INFO_SPELL_CUSTOM}_REJECT`,
           (event, error) => {
             reject(error);
@@ -70,10 +70,10 @@ export default {
     updatePlayerCreateInfoSpellCustom(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_PLAYER_CREATE_INFO_SPELL_CUSTOM, payload);
-        ipcRenderer.on(UPDATE_PLAYER_CREATE_INFO_SPELL_CUSTOM, () => {
+        ipcRenderer.once(UPDATE_PLAYER_CREATE_INFO_SPELL_CUSTOM, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_PLAYER_CREATE_INFO_SPELL_CUSTOM}_REJECT`,
           (event, error) => {
             reject(error);
@@ -84,10 +84,10 @@ export default {
     destroyPlayerCreateInfoSpellCustom(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_PLAYER_CREATE_INFO_SPELL_CUSTOM, payload);
-        ipcRenderer.on(DESTROY_PLAYER_CREATE_INFO_SPELL_CUSTOM, () => {
+        ipcRenderer.once(DESTROY_PLAYER_CREATE_INFO_SPELL_CUSTOM, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_PLAYER_CREATE_INFO_SPELL_CUSTOM}_REJECT`,
           (event, error) => {
             reject(error);
@@ -104,10 +104,10 @@ export default {
     copyPlayerCreateInfoSpellCustom(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_PLAYER_CREATE_INFO_SPELL_CUSTOM, payload);
-        ipcRenderer.on(COPY_PLAYER_CREATE_INFO_SPELL_CUSTOM, () => {
+        ipcRenderer.once(COPY_PLAYER_CREATE_INFO_SPELL_CUSTOM, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_PLAYER_CREATE_INFO_SPELL_CUSTOM}_REJECT`,
           (event, error) => {
             reject(error);

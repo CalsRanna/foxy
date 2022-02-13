@@ -20,11 +20,11 @@ export default {
     searchCreatureQuestEnders({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CREATURE_QUEST_ENDERS, payload);
-        ipcRenderer.on(SEARCH_CREATURE_QUEST_ENDERS, (event, response) => {
+        ipcRenderer.once(SEARCH_CREATURE_QUEST_ENDERS, (event, response) => {
           commit(SEARCH_CREATURE_QUEST_ENDERS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CREATURE_QUEST_ENDERS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +35,10 @@ export default {
     storeCreatureQuestEnder(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CREATURE_QUEST_ENDER, payload);
-        ipcRenderer.on(STORE_CREATURE_QUEST_ENDER, () => {
+        ipcRenderer.once(STORE_CREATURE_QUEST_ENDER, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_CREATURE_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +49,11 @@ export default {
     findCreatureQuestEnder({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CREATURE_QUEST_ENDER, payload);
-        ipcRenderer.on(FIND_CREATURE_QUEST_ENDER, (event, response) => {
+        ipcRenderer.once(FIND_CREATURE_QUEST_ENDER, (event, response) => {
           commit(FIND_CREATURE_QUEST_ENDER, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_CREATURE_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +64,10 @@ export default {
     updateCreatureQuestEnder(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CREATURE_QUEST_ENDER, payload);
-        ipcRenderer.on(UPDATE_CREATURE_QUEST_ENDER, () => {
+        ipcRenderer.once(UPDATE_CREATURE_QUEST_ENDER, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_CREATURE_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +78,10 @@ export default {
     destroyCreatureQuestEnder(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_CREATURE_QUEST_ENDER, payload);
-        ipcRenderer.on(DESTROY_CREATURE_QUEST_ENDER, () => {
+        ipcRenderer.once(DESTROY_CREATURE_QUEST_ENDER, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_CREATURE_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,10 +98,10 @@ export default {
     copyCreatureQuestEnder(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_CREATURE_QUEST_ENDER, payload);
-        ipcRenderer.on(COPY_CREATURE_QUEST_ENDER, () => {
+        ipcRenderer.once(COPY_CREATURE_QUEST_ENDER, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_CREATURE_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);

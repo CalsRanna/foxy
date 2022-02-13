@@ -20,11 +20,11 @@ export default {
     searchPlayerCreateInfoItems({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_PLAYER_CREATE_INFO_ITEMS, payload);
-        ipcRenderer.on(SEARCH_PLAYER_CREATE_INFO_ITEMS, (event, response) => {
+        ipcRenderer.once(SEARCH_PLAYER_CREATE_INFO_ITEMS, (event, response) => {
           commit(SEARCH_PLAYER_CREATE_INFO_ITEMS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_PLAYER_CREATE_INFO_ITEMS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +35,10 @@ export default {
     storePlayerCreateInfoItem(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_PLAYER_CREATE_INFO_ITEM, payload);
-        ipcRenderer.on(STORE_PLAYER_CREATE_INFO_ITEM, () => {
+        ipcRenderer.once(STORE_PLAYER_CREATE_INFO_ITEM, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_PLAYER_CREATE_INFO_ITEM}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +49,11 @@ export default {
     findPlayerCreateInfoItem({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_PLAYER_CREATE_INFO_ITEM, payload);
-        ipcRenderer.on(FIND_PLAYER_CREATE_INFO_ITEM, (event, response) => {
+        ipcRenderer.once(FIND_PLAYER_CREATE_INFO_ITEM, (event, response) => {
           commit(FIND_PLAYER_CREATE_INFO_ITEM, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_PLAYER_CREATE_INFO_ITEM}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +64,10 @@ export default {
     updatePlayerCreateInfoItem(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_PLAYER_CREATE_INFO_ITEM, payload);
-        ipcRenderer.on(UPDATE_PLAYER_CREATE_INFO_ITEM, () => {
+        ipcRenderer.once(UPDATE_PLAYER_CREATE_INFO_ITEM, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_PLAYER_CREATE_INFO_ITEM}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +78,10 @@ export default {
     destroyPlayerCreateInfoItem(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_PLAYER_CREATE_INFO_ITEM, payload);
-        ipcRenderer.on(DESTROY_PLAYER_CREATE_INFO_ITEM, () => {
+        ipcRenderer.once(DESTROY_PLAYER_CREATE_INFO_ITEM, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_PLAYER_CREATE_INFO_ITEM}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,10 +98,10 @@ export default {
     copyPlayerCreateInfoItem(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_PLAYER_CREATE_INFO_ITEM, payload);
-        ipcRenderer.on(COPY_PLAYER_CREATE_INFO_ITEM, () => {
+        ipcRenderer.once(COPY_PLAYER_CREATE_INFO_ITEM, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_PLAYER_CREATE_INFO_ITEM}_REJECT`,
           (event, error) => {
             reject(error);

@@ -33,11 +33,11 @@ export default {
     searchEmoteTexts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_EMOTE_TEXTS, payload);
-        ipcRenderer.on(SEARCH_EMOTE_TEXTS, (event, response) => {
+        ipcRenderer.once(SEARCH_EMOTE_TEXTS, (event, response) => {
           commit(SEARCH_EMOTE_TEXTS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_EMOTE_TEXTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_EMOTE_TEXTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countEmoteTexts({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_EMOTE_TEXTS, payload);
-        ipcRenderer.on(COUNT_EMOTE_TEXTS, (event, response) => {
+        ipcRenderer.once(COUNT_EMOTE_TEXTS, (event, response) => {
           commit(COUNT_EMOTE_TEXTS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_EMOTE_TEXTS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_EMOTE_TEXTS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeEmoteText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_EMOTE_TEXT, payload);
-        ipcRenderer.on(STORE_EMOTE_TEXT, () => {
+        ipcRenderer.once(STORE_EMOTE_TEXT, () => {
           commit("UPDATE_REFRESH_OF_EMOTE_TEXT", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_EMOTE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_EMOTE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findEmoteText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_EMOTE_TEXT, payload);
-        ipcRenderer.on(FIND_EMOTE_TEXT, (event, response) => {
+        ipcRenderer.once(FIND_EMOTE_TEXT, (event, response) => {
           commit(FIND_EMOTE_TEXT, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_EMOTE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_EMOTE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateEmoteText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_EMOTE_TEXT, payload);
-        ipcRenderer.on(UPDATE_EMOTE_TEXT, () => {
+        ipcRenderer.once(UPDATE_EMOTE_TEXT, () => {
           commit("UPDATE_REFRESH_OF_EMOTE_TEXT", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_EMOTE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_EMOTE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyEmoteText(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_EMOTE_TEXT, payload);
-        ipcRenderer.on(DESTROY_EMOTE_TEXT, () => {
+        ipcRenderer.once(DESTROY_EMOTE_TEXT, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_EMOTE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_EMOTE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createEmoteText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_EMOTE_TEXT, payload);
-        ipcRenderer.on(CREATE_EMOTE_TEXT, (event, response) => {
+        ipcRenderer.once(CREATE_EMOTE_TEXT, (event, response) => {
           commit(CREATE_EMOTE_TEXT, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_EMOTE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_EMOTE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyEmoteText(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_EMOTE_TEXT, payload);
-        ipcRenderer.on(COPY_EMOTE_TEXT, () => {
+        ipcRenderer.once(COPY_EMOTE_TEXT, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_EMOTE_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_EMOTE_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });

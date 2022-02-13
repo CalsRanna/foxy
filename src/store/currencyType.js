@@ -33,11 +33,11 @@ export default {
     searchCurrencyTypes({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CURRENCY_TYPES, payload);
-        ipcRenderer.on(SEARCH_CURRENCY_TYPES, (event, response) => {
+        ipcRenderer.once(SEARCH_CURRENCY_TYPES, (event, response) => {
           commit(SEARCH_CURRENCY_TYPES, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_CURRENCY_TYPES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_CURRENCY_TYPES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countCurrencyTypes({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_CURRENCY_TYPES, payload);
-        ipcRenderer.on(COUNT_CURRENCY_TYPES, (event, response) => {
+        ipcRenderer.once(COUNT_CURRENCY_TYPES, (event, response) => {
           commit(COUNT_CURRENCY_TYPES, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_CURRENCY_TYPES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_CURRENCY_TYPES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeCurrencyType({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CURRENCY_TYPE, payload);
-        ipcRenderer.on(STORE_CURRENCY_TYPE, () => {
+        ipcRenderer.once(STORE_CURRENCY_TYPE, () => {
           commit("UPDATE_REFRESH_OF_CURRENCY_TYPE", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_CURRENCY_TYPE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_CURRENCY_TYPE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findCurrencyType({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CURRENCY_TYPE, payload);
-        ipcRenderer.on(FIND_CURRENCY_TYPE, (event, response) => {
+        ipcRenderer.once(FIND_CURRENCY_TYPE, (event, response) => {
           commit(FIND_CURRENCY_TYPE, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_CURRENCY_TYPE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_CURRENCY_TYPE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateCurrencyType({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CURRENCY_TYPE, payload);
-        ipcRenderer.on(UPDATE_CURRENCY_TYPE, () => {
+        ipcRenderer.once(UPDATE_CURRENCY_TYPE, () => {
           commit("UPDATE_REFRESH_OF_CURRENCY_TYPE", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_CURRENCY_TYPE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_CURRENCY_TYPE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyCurrencyType(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_CURRENCY_TYPE, payload);
-        ipcRenderer.on(DESTROY_CURRENCY_TYPE, () => {
+        ipcRenderer.once(DESTROY_CURRENCY_TYPE, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_CURRENCY_TYPE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_CURRENCY_TYPE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createCurrencyType({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_CURRENCY_TYPE, payload);
-        ipcRenderer.on(CREATE_CURRENCY_TYPE, (event, response) => {
+        ipcRenderer.once(CREATE_CURRENCY_TYPE, (event, response) => {
           commit(CREATE_CURRENCY_TYPE, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_CURRENCY_TYPE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_CURRENCY_TYPE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyCurrencyType(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_CURRENCY_TYPE, payload);
-        ipcRenderer.on(COPY_CURRENCY_TYPE, () => {
+        ipcRenderer.once(COPY_CURRENCY_TYPE, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_CURRENCY_TYPE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_CURRENCY_TYPE}_REJECT`, (event, error) => {
           reject(error);
         });
       });

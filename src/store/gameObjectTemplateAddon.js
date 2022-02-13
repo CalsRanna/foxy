@@ -16,10 +16,10 @@ export default {
     storeGameObjectTemplateAddon(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GAME_OBJECT_TEMPLATE_ADDON, payload);
-        ipcRenderer.on(STORE_GAME_OBJECT_TEMPLATE_ADDON, () => {
+        ipcRenderer.once(STORE_GAME_OBJECT_TEMPLATE_ADDON, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_GAME_OBJECT_TEMPLATE_ADDON}_REJECT`,
           (event, error) => {
             reject(error);
@@ -30,11 +30,11 @@ export default {
     findGameObjectTemplateAddon({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_GAME_OBJECT_TEMPLATE_ADDON, payload);
-        ipcRenderer.on(FIND_GAME_OBJECT_TEMPLATE_ADDON, (event, response) => {
+        ipcRenderer.once(FIND_GAME_OBJECT_TEMPLATE_ADDON, (event, response) => {
           commit(FIND_GAME_OBJECT_TEMPLATE_ADDON, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_GAME_OBJECT_TEMPLATE_ADDON}_REJECT`,
           (event, error) => {
             reject(error);
@@ -45,10 +45,10 @@ export default {
     updateGameObjectTemplateAddon(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_GAME_OBJECT_TEMPLATE_ADDON, payload);
-        ipcRenderer.on(UPDATE_GAME_OBJECT_TEMPLATE_ADDON, () => {
+        ipcRenderer.once(UPDATE_GAME_OBJECT_TEMPLATE_ADDON, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_GAME_OBJECT_TEMPLATE_ADDON}_REJECT`,
           (event, error) => {
             reject(error);

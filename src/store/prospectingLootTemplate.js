@@ -20,11 +20,14 @@ export default {
     searchProspectingLootTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_PROSPECTING_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_PROSPECTING_LOOT_TEMPLATES, (event, response) => {
-          commit(SEARCH_PROSPECTING_LOOT_TEMPLATES, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_PROSPECTING_LOOT_TEMPLATES,
+          (event, response) => {
+            commit(SEARCH_PROSPECTING_LOOT_TEMPLATES, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_PROSPECTING_LOOT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +38,10 @@ export default {
     storeProspectingLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_PROSPECTING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_PROSPECTING_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(STORE_PROSPECTING_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +52,11 @@ export default {
     findProspectingLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_PROSPECTING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_PROSPECTING_LOOT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_PROSPECTING_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_PROSPECTING_LOOT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +67,10 @@ export default {
     updateProspectingLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_PROSPECTING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_PROSPECTING_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_PROSPECTING_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +81,10 @@ export default {
     destroyProspectingLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_PROSPECTING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_PROSPECTING_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_PROSPECTING_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,10 +101,10 @@ export default {
     copyProspectingLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_PROSPECTING_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_PROSPECTING_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(COPY_PROSPECTING_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_PROSPECTING_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);

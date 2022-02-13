@@ -20,11 +20,14 @@ export default {
     searchGameObjectLootTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, (event, response) => {
-          commit(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_GAME_OBJECT_LOOT_TEMPLATES,
+          (event, response) => {
+            commit(SEARCH_GAME_OBJECT_LOOT_TEMPLATES, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_GAME_OBJECT_LOOT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +38,10 @@ export default {
     storeGameObjectLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GAME_OBJECT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_GAME_OBJECT_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(STORE_GAME_OBJECT_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +52,11 @@ export default {
     findGameObjectLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_GAME_OBJECT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_GAME_OBJECT_LOOT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_GAME_OBJECT_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_GAME_OBJECT_LOOT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +67,10 @@ export default {
     updateGameObjectLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_GAME_OBJECT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_GAME_OBJECT_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_GAME_OBJECT_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +81,10 @@ export default {
     destroyGameObjectLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_GAME_OBJECT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_GAME_OBJECT_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_GAME_OBJECT_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,10 +101,10 @@ export default {
     copyGameObjectLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_GAME_OBJECT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_GAME_OBJECT_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(COPY_GAME_OBJECT_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_GAME_OBJECT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);

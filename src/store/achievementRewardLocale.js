@@ -14,11 +14,14 @@ export default {
     searchAchievementRewardLocales({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ACHIEVEMENT_REWARD_LOCALES, payload);
-        ipcRenderer.on(SEARCH_ACHIEVEMENT_REWARD_LOCALES, (event, response) => {
-          commit(SEARCH_ACHIEVEMENT_REWARD_LOCALES, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_ACHIEVEMENT_REWARD_LOCALES,
+          (event, response) => {
+            commit(SEARCH_ACHIEVEMENT_REWARD_LOCALES, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_ACHIEVEMENT_REWARD_LOCALES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -29,10 +32,10 @@ export default {
     storeAchievementRewardLocales(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_ACHIEVEMENT_REWARD_LOCALES, payload);
-        ipcRenderer.on(STORE_ACHIEVEMENT_REWARD_LOCALES, () => {
+        ipcRenderer.once(STORE_ACHIEVEMENT_REWARD_LOCALES, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_ACHIEVEMENT_REWARD_LOCALES}_REJECT`,
           (event, error) => {
             reject(error);

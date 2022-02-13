@@ -20,11 +20,11 @@ export default {
     searchCreatureEquipTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CREATURE_EQUIP_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, response) => {
+        ipcRenderer.once(SEARCH_CREATURE_EQUIP_TEMPLATES, (event, response) => {
           commit(SEARCH_CREATURE_EQUIP_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CREATURE_EQUIP_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +35,10 @@ export default {
     storeCreatureEquipTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(STORE_CREATURE_EQUIP_TEMPLATE, () => {
+        ipcRenderer.once(STORE_CREATURE_EQUIP_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_CREATURE_EQUIP_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +49,11 @@ export default {
     findCreatureEquipTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(FIND_CREATURE_EQUIP_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_CREATURE_EQUIP_TEMPLATE, (event, response) => {
           commit(FIND_CREATURE_EQUIP_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_CREATURE_EQUIP_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +64,10 @@ export default {
     updateCreatureEquipTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_CREATURE_EQUIP_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_CREATURE_EQUIP_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_CREATURE_EQUIP_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +78,10 @@ export default {
     destroyCreatureEquipTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_CREATURE_EQUIP_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_CREATURE_EQUIP_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_CREATURE_EQUIP_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -92,11 +92,11 @@ export default {
     createCreatureEquipTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(CREATE_CREATURE_EQUIP_TEMPLATE, (event, response) => {
+        ipcRenderer.once(CREATE_CREATURE_EQUIP_TEMPLATE, (event, response) => {
           commit(CREATE_CREATURE_EQUIP_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${CREATE_CREATURE_EQUIP_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -107,10 +107,10 @@ export default {
     copyCreatureEquipTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_CREATURE_EQUIP_TEMPLATE, payload);
-        ipcRenderer.on(COPY_CREATURE_EQUIP_TEMPLATE, () => {
+        ipcRenderer.once(COPY_CREATURE_EQUIP_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_CREATURE_EQUIP_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);

@@ -21,11 +21,11 @@ export default {
     searchPageTextsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_PAGE_TEXTS_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_PAGE_TEXTS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(SEARCH_PAGE_TEXTS_FOR_SELECTOR, (event, response) => {
           commit(SEARCH_PAGE_TEXTS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_PAGE_TEXTS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -36,11 +36,11 @@ export default {
     countPageTextsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_PAGE_TEXTS_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_PAGE_TEXTS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_PAGE_TEXTS_FOR_SELECTOR, (event, response) => {
           commit(COUNT_PAGE_TEXTS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_PAGE_TEXTS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

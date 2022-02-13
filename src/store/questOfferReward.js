@@ -18,33 +18,39 @@ export default {
     storeQuestOfferReward(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_QUEST_OFFER_REWARD, payload);
-        ipcRenderer.on(STORE_QUEST_OFFER_REWARD, () => {
+        ipcRenderer.once(STORE_QUEST_OFFER_REWARD, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_QUEST_OFFER_REWARD}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${STORE_QUEST_OFFER_REWARD}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     findQuestOfferReward({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_QUEST_OFFER_REWARD, payload);
-        ipcRenderer.on(FIND_QUEST_OFFER_REWARD, (event, response) => {
+        ipcRenderer.once(FIND_QUEST_OFFER_REWARD, (event, response) => {
           commit(FIND_QUEST_OFFER_REWARD, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_QUEST_OFFER_REWARD}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${FIND_QUEST_OFFER_REWARD}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     updateQuestOfferReward(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_QUEST_OFFER_REWARD, payload);
-        ipcRenderer.on(UPDATE_QUEST_OFFER_REWARD, () => {
+        ipcRenderer.once(UPDATE_QUEST_OFFER_REWARD, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_QUEST_OFFER_REWARD}_REJECT`,
           (event, error) => {
             reject(error);

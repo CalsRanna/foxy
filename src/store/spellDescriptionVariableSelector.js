@@ -23,14 +23,14 @@ export default {
           SEARCH_SPELL_DESCRIPTION_VARIABLES_FOR_SELECTOR,
           payload
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_SPELL_DESCRIPTION_VARIABLES_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_SPELL_DESCRIPTION_VARIABLES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_SPELL_DESCRIPTION_VARIABLES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -44,14 +44,14 @@ export default {
           COUNT_SPELL_DESCRIPTION_VARIABLES_FOR_SELECTOR,
           payload
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_SPELL_DESCRIPTION_VARIABLES_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_SPELL_DESCRIPTION_VARIABLES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_SPELL_DESCRIPTION_VARIABLES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

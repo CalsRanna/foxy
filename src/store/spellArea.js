@@ -20,11 +20,11 @@ export default {
     searchSpellAreas({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_AREAS, payload);
-        ipcRenderer.on(SEARCH_SPELL_AREAS, (event, response) => {
+        ipcRenderer.once(SEARCH_SPELL_AREAS, (event, response) => {
           commit(SEARCH_SPELL_AREAS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_SPELL_AREAS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_SPELL_AREAS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -32,10 +32,10 @@ export default {
     storeSpellArea(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL_AREA, payload);
-        ipcRenderer.on(STORE_SPELL_AREA, () => {
+        ipcRenderer.once(STORE_SPELL_AREA, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_SPELL_AREA}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_SPELL_AREA}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -43,11 +43,11 @@ export default {
     findSpellArea({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL_AREA, payload);
-        ipcRenderer.on(FIND_SPELL_AREA, (event, response) => {
+        ipcRenderer.once(FIND_SPELL_AREA, (event, response) => {
           commit(FIND_SPELL_AREA, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SPELL_AREA}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_SPELL_AREA}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -55,10 +55,10 @@ export default {
     updateSpellArea(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL_AREA, payload);
-        ipcRenderer.on(UPDATE_SPELL_AREA, () => {
+        ipcRenderer.once(UPDATE_SPELL_AREA, () => {
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_SPELL_AREA}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_SPELL_AREA}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -66,10 +66,10 @@ export default {
     destroySpellArea(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SPELL_AREA, payload);
-        ipcRenderer.on(DESTROY_SPELL_AREA, () => {
+        ipcRenderer.once(DESTROY_SPELL_AREA, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_SPELL_AREA}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_SPELL_AREA}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -83,10 +83,10 @@ export default {
     copySpellArea(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SPELL_AREA, payload);
-        ipcRenderer.on(COPY_SPELL_AREA, () => {
+        ipcRenderer.once(COPY_SPELL_AREA, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_SPELL_AREA}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_SPELL_AREA}_REJECT`, (event, error) => {
           reject(error);
         });
       });

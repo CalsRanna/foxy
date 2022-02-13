@@ -20,11 +20,11 @@ export default {
     searchNpcVendors({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_NPC_VENDORS, payload);
-        ipcRenderer.on(SEARCH_NPC_VENDORS, (event, response) => {
+        ipcRenderer.once(SEARCH_NPC_VENDORS, (event, response) => {
           commit(SEARCH_NPC_VENDORS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_NPC_VENDORS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_NPC_VENDORS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -32,10 +32,10 @@ export default {
     storeNpcVendor(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_NPC_VENDOR, payload);
-        ipcRenderer.on(STORE_NPC_VENDOR, () => {
+        ipcRenderer.once(STORE_NPC_VENDOR, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_NPC_VENDOR}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_NPC_VENDOR}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -43,11 +43,11 @@ export default {
     findNpcVendor({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_NPC_VENDOR, payload);
-        ipcRenderer.on(FIND_NPC_VENDOR, (event, response) => {
+        ipcRenderer.once(FIND_NPC_VENDOR, (event, response) => {
           commit(FIND_NPC_VENDOR, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_NPC_VENDOR}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_NPC_VENDOR}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -55,10 +55,10 @@ export default {
     updateNpcVendor(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_NPC_VENDOR, payload);
-        ipcRenderer.on(UPDATE_NPC_VENDOR, () => {
+        ipcRenderer.once(UPDATE_NPC_VENDOR, () => {
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_NPC_VENDOR}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_NPC_VENDOR}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -66,10 +66,10 @@ export default {
     destroyNpcVendor(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_NPC_VENDOR, payload);
-        ipcRenderer.on(DESTROY_NPC_VENDOR, () => {
+        ipcRenderer.once(DESTROY_NPC_VENDOR, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_NPC_VENDOR}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_NPC_VENDOR}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -77,11 +77,11 @@ export default {
     createNpcVendor({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_NPC_VENDOR, payload);
-        ipcRenderer.on(CREATE_NPC_VENDOR, (event, response) => {
+        ipcRenderer.once(CREATE_NPC_VENDOR, (event, response) => {
           commit(CREATE_NPC_VENDOR, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_NPC_VENDOR}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_NPC_VENDOR}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -89,10 +89,10 @@ export default {
     copyNpcVendor(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_NPC_VENDOR, payload);
-        ipcRenderer.on(COPY_NPC_VENDOR, () => {
+        ipcRenderer.once(COPY_NPC_VENDOR, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_NPC_VENDOR}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_NPC_VENDOR}_REJECT`, (event, error) => {
           reject(error);
         });
       });

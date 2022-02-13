@@ -32,11 +32,11 @@ export default {
     searchReferenceLootTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_REFERENCE_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_REFERENCE_LOOT_TEMPLATES, (event, response) => {
+        ipcRenderer.once(SEARCH_REFERENCE_LOOT_TEMPLATES, (event, response) => {
           commit(SEARCH_REFERENCE_LOOT_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_REFERENCE_LOOT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -47,11 +47,11 @@ export default {
     countReferenceLootTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_REFERENCE_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(COUNT_REFERENCE_LOOT_TEMPLATES, (event, response) => {
+        ipcRenderer.once(COUNT_REFERENCE_LOOT_TEMPLATES, (event, response) => {
           commit(COUNT_REFERENCE_LOOT_TEMPLATES, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_REFERENCE_LOOT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -68,11 +68,11 @@ export default {
     storeReferenceLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_REFERENCE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_REFERENCE_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(STORE_REFERENCE_LOOT_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_REFERENCE_LOOT_TEMPLATE", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -83,11 +83,11 @@ export default {
     findReferenceLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_REFERENCE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_REFERENCE_LOOT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_REFERENCE_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_REFERENCE_LOOT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,11 +98,11 @@ export default {
     updateReferenceLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_REFERENCE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_REFERENCE_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_REFERENCE_LOOT_TEMPLATE, () => {
           commit("UPDATE_REFRESH_OF_REFERENCE_LOOT_TEMPLATE", true);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -113,10 +113,10 @@ export default {
     destroyReferenceLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_REFERENCE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_REFERENCE_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_REFERENCE_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -133,10 +133,10 @@ export default {
     copyReferenceLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_REFERENCE_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_REFERENCE_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(COPY_REFERENCE_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_REFERENCE_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);

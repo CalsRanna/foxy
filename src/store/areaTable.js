@@ -33,11 +33,11 @@ export default {
     searchAreaTables({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_AREA_TABLES, payload);
-        ipcRenderer.on(SEARCH_AREA_TABLES, (event, response) => {
+        ipcRenderer.once(SEARCH_AREA_TABLES, (event, response) => {
           commit(SEARCH_AREA_TABLES, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_AREA_TABLES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_AREA_TABLES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countAreaTables({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_AREA_TABLES, payload);
-        ipcRenderer.on(COUNT_AREA_TABLES, (event, response) => {
+        ipcRenderer.once(COUNT_AREA_TABLES, (event, response) => {
           commit(COUNT_AREA_TABLES, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_AREA_TABLES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_AREA_TABLES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeAreaTable({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_AREA_TABLE, payload);
-        ipcRenderer.on(STORE_AREA_TABLE, () => {
+        ipcRenderer.once(STORE_AREA_TABLE, () => {
           commit("UPDATE_REFRESH_OF_AREA_TABLE", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_AREA_TABLE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_AREA_TABLE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findAreaTable({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_AREA_TABLE, payload);
-        ipcRenderer.on(FIND_AREA_TABLE, (event, response) => {
+        ipcRenderer.once(FIND_AREA_TABLE, (event, response) => {
           commit(FIND_AREA_TABLE, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_AREA_TABLE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_AREA_TABLE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateAreaTable({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_AREA_TABLE, payload);
-        ipcRenderer.on(UPDATE_AREA_TABLE, () => {
+        ipcRenderer.once(UPDATE_AREA_TABLE, () => {
           commit("UPDATE_REFRESH_OF_AREA_TABLE", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_AREA_TABLE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_AREA_TABLE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyAreaTable(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_AREA_TABLE, payload);
-        ipcRenderer.on(DESTROY_AREA_TABLE, () => {
+        ipcRenderer.once(DESTROY_AREA_TABLE, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_AREA_TABLE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_AREA_TABLE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createAreaTable({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_AREA_TABLE, payload);
-        ipcRenderer.on(CREATE_AREA_TABLE, (event, response) => {
+        ipcRenderer.once(CREATE_AREA_TABLE, (event, response) => {
           commit(CREATE_AREA_TABLE, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_AREA_TABLE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_AREA_TABLE}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyAreaTable(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_AREA_TABLE, payload);
-        ipcRenderer.on(COPY_AREA_TABLE, () => {
+        ipcRenderer.once(COPY_AREA_TABLE, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_AREA_TABLE}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_AREA_TABLE}_REJECT`, (event, error) => {
           reject(error);
         });
       });

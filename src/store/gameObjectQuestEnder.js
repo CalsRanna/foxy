@@ -20,11 +20,11 @@ export default {
     searchGameObjectQuestEnders({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_GAME_OBJECT_QUEST_ENDERS, payload);
-        ipcRenderer.on(SEARCH_GAME_OBJECT_QUEST_ENDERS, (event, response) => {
+        ipcRenderer.once(SEARCH_GAME_OBJECT_QUEST_ENDERS, (event, response) => {
           commit(SEARCH_GAME_OBJECT_QUEST_ENDERS, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_GAME_OBJECT_QUEST_ENDERS}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +35,10 @@ export default {
     storeGameObjectQuestEnder(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_GAME_OBJECT_QUEST_ENDER, payload);
-        ipcRenderer.on(STORE_GAME_OBJECT_QUEST_ENDER, () => {
+        ipcRenderer.once(STORE_GAME_OBJECT_QUEST_ENDER, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_GAME_OBJECT_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +49,11 @@ export default {
     findGameObjectQuestEnder({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_GAME_OBJECT_QUEST_ENDER, payload);
-        ipcRenderer.on(FIND_GAME_OBJECT_QUEST_ENDER, (event, response) => {
+        ipcRenderer.once(FIND_GAME_OBJECT_QUEST_ENDER, (event, response) => {
           commit(FIND_GAME_OBJECT_QUEST_ENDER, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_GAME_OBJECT_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +64,10 @@ export default {
     updateGameObjectQuestEnder(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_GAME_OBJECT_QUEST_ENDER, payload);
-        ipcRenderer.on(UPDATE_GAME_OBJECT_QUEST_ENDER, () => {
+        ipcRenderer.once(UPDATE_GAME_OBJECT_QUEST_ENDER, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_GAME_OBJECT_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +78,10 @@ export default {
     destroyGameObjectQuestEnder(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_GAME_OBJECT_QUEST_ENDER, payload);
-        ipcRenderer.on(DESTROY_GAME_OBJECT_QUEST_ENDER, () => {
+        ipcRenderer.once(DESTROY_GAME_OBJECT_QUEST_ENDER, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_GAME_OBJECT_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,10 +98,10 @@ export default {
     copyGameObjectQuestEnder(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_GAME_OBJECT_QUEST_ENDER, payload);
-        ipcRenderer.on(COPY_GAME_OBJECT_QUEST_ENDER, () => {
+        ipcRenderer.once(COPY_GAME_OBJECT_QUEST_ENDER, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_GAME_OBJECT_QUEST_ENDER}_REJECT`,
           (event, error) => {
             reject(error);

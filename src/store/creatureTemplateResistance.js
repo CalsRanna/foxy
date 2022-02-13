@@ -20,14 +20,14 @@ export default {
     searchCreatureTemplateResistances({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CREATURE_TEMPLATE_RESISTANCES, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_CREATURE_TEMPLATE_RESISTANCES,
           (event, response) => {
             commit(SEARCH_CREATURE_TEMPLATE_RESISTANCES, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CREATURE_TEMPLATE_RESISTANCES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,10 +38,10 @@ export default {
     storeCreatureTemplateResistance(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CREATURE_TEMPLATE_RESISTANCE, payload);
-        ipcRenderer.on(STORE_CREATURE_TEMPLATE_RESISTANCE, () => {
+        ipcRenderer.once(STORE_CREATURE_TEMPLATE_RESISTANCE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_CREATURE_TEMPLATE_RESISTANCE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -52,11 +52,14 @@ export default {
     findCreatureTemplateResistance({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CREATURE_TEMPLATE_RESISTANCE, payload);
-        ipcRenderer.on(FIND_CREATURE_TEMPLATE_RESISTANCE, (event, response) => {
-          commit(FIND_CREATURE_TEMPLATE_RESISTANCE, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          FIND_CREATURE_TEMPLATE_RESISTANCE,
+          (event, response) => {
+            commit(FIND_CREATURE_TEMPLATE_RESISTANCE, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${FIND_CREATURE_TEMPLATE_RESISTANCE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -67,10 +70,10 @@ export default {
     updateCreatureTemplateResistance(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CREATURE_TEMPLATE_RESISTANCE, payload);
-        ipcRenderer.on(UPDATE_CREATURE_TEMPLATE_RESISTANCE, () => {
+        ipcRenderer.once(UPDATE_CREATURE_TEMPLATE_RESISTANCE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_CREATURE_TEMPLATE_RESISTANCE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -81,10 +84,10 @@ export default {
     destroyCreatureTemplateResistance(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_CREATURE_TEMPLATE_RESISTANCE, payload);
-        ipcRenderer.on(DESTROY_CREATURE_TEMPLATE_RESISTANCE, () => {
+        ipcRenderer.once(DESTROY_CREATURE_TEMPLATE_RESISTANCE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_CREATURE_TEMPLATE_RESISTANCE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -95,14 +98,14 @@ export default {
     createCreatureTemplateResistance({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_CREATURE_TEMPLATE_RESISTANCE, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           CREATE_CREATURE_TEMPLATE_RESISTANCE,
           (event, response) => {
             commit(CREATE_CREATURE_TEMPLATE_RESISTANCE, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${CREATE_CREATURE_TEMPLATE_RESISTANCE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -113,10 +116,10 @@ export default {
     copyCreatureTemplateResistance(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_CREATURE_TEMPLATE_RESISTANCE, payload);
-        ipcRenderer.on(COPY_CREATURE_TEMPLATE_RESISTANCE, () => {
+        ipcRenderer.once(COPY_CREATURE_TEMPLATE_RESISTANCE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_CREATURE_TEMPLATE_RESISTANCE}_REJECT`,
           (event, error) => {
             reject(error);

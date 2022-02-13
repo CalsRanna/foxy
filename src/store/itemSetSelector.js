@@ -20,11 +20,11 @@ export default {
     searchItemSetsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_ITEM_SETS_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_ITEM_SETS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(SEARCH_ITEM_SETS_FOR_SELECTOR, (event, response) => {
           commit(SEARCH_ITEM_SETS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_ITEM_SETS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,11 +35,11 @@ export default {
     countItemSetsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_ITEM_SETS_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_ITEM_SETS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_ITEM_SETS_FOR_SELECTOR, (event, response) => {
           commit(COUNT_ITEM_SETS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_ITEM_SETS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

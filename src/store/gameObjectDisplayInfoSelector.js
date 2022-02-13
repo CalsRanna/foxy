@@ -23,14 +23,14 @@ export default {
           SEARCH_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR,
           payload
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -41,14 +41,14 @@ export default {
     countGameObjectDisplayInfosForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_GAME_OBJECT_DISPLAY_INFOS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

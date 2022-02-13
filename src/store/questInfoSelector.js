@@ -20,11 +20,11 @@ export default {
     searchQuestInfosForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_QUEST_INFOS_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_QUEST_INFOS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(SEARCH_QUEST_INFOS_FOR_SELECTOR, (event, response) => {
           commit(SEARCH_QUEST_INFOS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_QUEST_INFOS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,11 +35,11 @@ export default {
     countQuestInfosForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_QUEST_INFOS_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_QUEST_INFOS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_QUEST_INFOS_FOR_SELECTOR, (event, response) => {
           commit(COUNT_QUEST_INFOS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_QUEST_INFOS_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

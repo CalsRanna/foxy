@@ -20,14 +20,14 @@ export default {
     searchCurrencyCategoriesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_CURRENCY_CATEGORIES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           SEARCH_CURRENCY_CATEGORIES_FOR_SELECTOR,
           (event, response) => {
             commit(SEARCH_CURRENCY_CATEGORIES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${SEARCH_CURRENCY_CATEGORIES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);
@@ -38,14 +38,14 @@ export default {
     countCurrencyCategoriesForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_CURRENCY_CATEGORIES_FOR_SELECTOR, payload);
-        ipcRenderer.on(
+        ipcRenderer.once(
           COUNT_CURRENCY_CATEGORIES_FOR_SELECTOR,
           (event, response) => {
             commit(COUNT_CURRENCY_CATEGORIES_FOR_SELECTOR, response);
             resolve();
           }
         );
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COUNT_CURRENCY_CATEGORIES_FOR_SELECTOR}_REJECT`,
           (event, error) => {
             reject(error);

@@ -18,10 +18,10 @@ export default {
     storeNpcText(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_NPC_TEXT, payload);
-        ipcRenderer.on(STORE_NPC_TEXT, () => {
+        ipcRenderer.once(STORE_NPC_TEXT, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_NPC_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_NPC_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -29,11 +29,11 @@ export default {
     findNpcText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_NPC_TEXT, payload);
-        ipcRenderer.on(FIND_NPC_TEXT, (event, response) => {
+        ipcRenderer.once(FIND_NPC_TEXT, (event, response) => {
           commit(FIND_NPC_TEXT, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_NPC_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_NPC_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -41,11 +41,11 @@ export default {
     updateNpcText({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_NPC_TEXT, payload);
-        ipcRenderer.on(UPDATE_NPC_TEXT, () => {
+        ipcRenderer.once(UPDATE_NPC_TEXT, () => {
           commit(UPDATE_NPC_TEXT, payload.npcText);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_NPC_TEXT}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_NPC_TEXT}_REJECT`, (event, error) => {
           reject(error);
         });
       });

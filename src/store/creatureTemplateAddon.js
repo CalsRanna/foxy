@@ -16,10 +16,10 @@ export default {
     storeCreatureTemplateAddon(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_CREATURE_TEMPLATE_ADDON, payload);
-        ipcRenderer.on(STORE_CREATURE_TEMPLATE_ADDON, () => {
+        ipcRenderer.once(STORE_CREATURE_TEMPLATE_ADDON, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_CREATURE_TEMPLATE_ADDON}_REJECT`,
           (event, error) => {
             reject(error);
@@ -30,11 +30,11 @@ export default {
     findCreatureTemplateAddon({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_CREATURE_TEMPLATE_ADDON, payload);
-        ipcRenderer.on(FIND_CREATURE_TEMPLATE_ADDON, (event, response) => {
+        ipcRenderer.once(FIND_CREATURE_TEMPLATE_ADDON, (event, response) => {
           commit(FIND_CREATURE_TEMPLATE_ADDON, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_CREATURE_TEMPLATE_ADDON}_REJECT`,
           (event, error) => {
             reject(error);
@@ -45,10 +45,10 @@ export default {
     updateCreatureTemplateAddon(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_CREATURE_TEMPLATE_ADDON, payload);
-        ipcRenderer.on(UPDATE_CREATURE_TEMPLATE_ADDON, () => {
+        ipcRenderer.once(UPDATE_CREATURE_TEMPLATE_ADDON, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_CREATURE_TEMPLATE_ADDON}_REJECT`,
           (event, error) => {
             reject(error);

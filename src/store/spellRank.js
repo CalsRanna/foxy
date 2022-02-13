@@ -20,11 +20,11 @@ export default {
     searchSpellRanks({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_SPELL_RANKS, payload);
-        ipcRenderer.on(SEARCH_SPELL_RANKS, (event, response) => {
+        ipcRenderer.once(SEARCH_SPELL_RANKS, (event, response) => {
           commit(SEARCH_SPELL_RANKS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_SPELL_RANKS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_SPELL_RANKS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -32,10 +32,10 @@ export default {
     storeSpellRank(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_SPELL_RANK, payload);
-        ipcRenderer.on(STORE_SPELL_RANK, () => {
+        ipcRenderer.once(STORE_SPELL_RANK, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_SPELL_RANK}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_SPELL_RANK}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -43,11 +43,11 @@ export default {
     findSpellRank({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_SPELL_RANK, payload);
-        ipcRenderer.on(FIND_SPELL_RANK, (event, response) => {
+        ipcRenderer.once(FIND_SPELL_RANK, (event, response) => {
           commit(FIND_SPELL_RANK, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_SPELL_RANK}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_SPELL_RANK}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -55,10 +55,10 @@ export default {
     updateSpellRank(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_SPELL_RANK, payload);
-        ipcRenderer.on(UPDATE_SPELL_RANK, () => {
+        ipcRenderer.once(UPDATE_SPELL_RANK, () => {
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_SPELL_RANK}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_SPELL_RANK}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -66,10 +66,10 @@ export default {
     destroySpellRank(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_SPELL_RANK, payload);
-        ipcRenderer.on(DESTROY_SPELL_RANK, () => {
+        ipcRenderer.once(DESTROY_SPELL_RANK, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_SPELL_RANK}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_SPELL_RANK}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -83,10 +83,10 @@ export default {
     copySpellRank(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_SPELL_RANK, payload);
-        ipcRenderer.on(COPY_SPELL_RANK, () => {
+        ipcRenderer.once(COPY_SPELL_RANK, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_SPELL_RANK}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_SPELL_RANK}_REJECT`, (event, error) => {
           reject(error);
         });
       });

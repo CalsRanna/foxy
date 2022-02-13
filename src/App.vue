@@ -92,7 +92,7 @@ export default {
   mounted() {
     this.setClientHeight(document.documentElement.clientHeight);
     this.navigate(this.active || "dashboard");
-    ipcRenderer.on(GLOBAL_MESSAGE_BOX, (event, error) => {
+    ipcRenderer.once(GLOBAL_MESSAGE_BOX, (event, error) => {
       let title = "";
       let content = "";
       try {
@@ -114,7 +114,7 @@ export default {
       });
     });
 
-    ipcRenderer.on(GLOBAL_MESSAGE, (event, message) => {
+    ipcRenderer.once(GLOBAL_MESSAGE, (event, message) => {
       if (this.developerConfig.debug) {
         this.$message(message);
       }

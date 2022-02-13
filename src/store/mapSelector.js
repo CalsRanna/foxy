@@ -20,25 +20,31 @@ export default {
     searchMapsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_MAPS_FOR_SELECTOR, payload);
-        ipcRenderer.on(SEARCH_MAPS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(SEARCH_MAPS_FOR_SELECTOR, (event, response) => {
           commit(SEARCH_MAPS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_MAPS_FOR_SELECTOR}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${SEARCH_MAPS_FOR_SELECTOR}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     countMapsForSelector({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_MAPS_FOR_SELECTOR, payload);
-        ipcRenderer.on(COUNT_MAPS_FOR_SELECTOR, (event, response) => {
+        ipcRenderer.once(COUNT_MAPS_FOR_SELECTOR, (event, response) => {
           commit(COUNT_MAPS_FOR_SELECTOR, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_MAPS_FOR_SELECTOR}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${COUNT_MAPS_FOR_SELECTOR}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     paginateMapsForSelector({ commit }, payload) {

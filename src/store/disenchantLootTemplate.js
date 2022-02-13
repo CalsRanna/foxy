@@ -20,11 +20,14 @@ export default {
     searchDisenchantLootTemplates({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_DISENCHANT_LOOT_TEMPLATES, payload);
-        ipcRenderer.on(SEARCH_DISENCHANT_LOOT_TEMPLATES, (event, response) => {
-          commit(SEARCH_DISENCHANT_LOOT_TEMPLATES, response);
-          resolve();
-        });
-        ipcRenderer.on(
+        ipcRenderer.once(
+          SEARCH_DISENCHANT_LOOT_TEMPLATES,
+          (event, response) => {
+            commit(SEARCH_DISENCHANT_LOOT_TEMPLATES, response);
+            resolve();
+          }
+        );
+        ipcRenderer.once(
           `${SEARCH_DISENCHANT_LOOT_TEMPLATES}_REJECT`,
           (event, error) => {
             reject(error);
@@ -35,10 +38,10 @@ export default {
     storeDisenchantLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_DISENCHANT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(STORE_DISENCHANT_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(STORE_DISENCHANT_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${STORE_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -49,11 +52,11 @@ export default {
     findDisenchantLootTemplate({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_DISENCHANT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(FIND_DISENCHANT_LOOT_TEMPLATE, (event, response) => {
+        ipcRenderer.once(FIND_DISENCHANT_LOOT_TEMPLATE, (event, response) => {
           commit(FIND_DISENCHANT_LOOT_TEMPLATE, response);
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${FIND_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -64,10 +67,10 @@ export default {
     updateDisenchantLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_DISENCHANT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(UPDATE_DISENCHANT_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(UPDATE_DISENCHANT_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${UPDATE_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -78,10 +81,10 @@ export default {
     destroyDisenchantLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_DISENCHANT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(DESTROY_DISENCHANT_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(DESTROY_DISENCHANT_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${DESTROY_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);
@@ -98,10 +101,10 @@ export default {
     copyDisenchantLootTemplate(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_DISENCHANT_LOOT_TEMPLATE, payload);
-        ipcRenderer.on(COPY_DISENCHANT_LOOT_TEMPLATE, () => {
+        ipcRenderer.once(COPY_DISENCHANT_LOOT_TEMPLATE, () => {
           resolve();
         });
-        ipcRenderer.on(
+        ipcRenderer.once(
           `${COPY_DISENCHANT_LOOT_TEMPLATE}_REJECT`,
           (event, error) => {
             reject(error);

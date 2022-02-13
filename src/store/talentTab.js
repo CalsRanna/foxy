@@ -33,11 +33,11 @@ export default {
     searchTalentTabs({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_TALENT_TABS, payload);
-        ipcRenderer.on(SEARCH_TALENT_TABS, (event, response) => {
+        ipcRenderer.once(SEARCH_TALENT_TABS, (event, response) => {
           commit(SEARCH_TALENT_TABS, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_TALENT_TABS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${SEARCH_TALENT_TABS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -45,11 +45,11 @@ export default {
     countTalentTabs({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COUNT_TALENT_TABS, payload);
-        ipcRenderer.on(COUNT_TALENT_TABS, (event, response) => {
+        ipcRenderer.once(COUNT_TALENT_TABS, (event, response) => {
           commit(COUNT_TALENT_TABS, response);
           resolve();
         });
-        ipcRenderer.on(`${COUNT_TALENT_TABS}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COUNT_TALENT_TABS}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -63,11 +63,11 @@ export default {
     storeTalentTab({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_TALENT_TAB, payload);
-        ipcRenderer.on(STORE_TALENT_TAB, () => {
+        ipcRenderer.once(STORE_TALENT_TAB, () => {
           commit("UPDATE_REFRESH_OF_TALENT_TAB", true);
           resolve();
         });
-        ipcRenderer.on(`${STORE_TALENT_TAB}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_TALENT_TAB}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -75,11 +75,11 @@ export default {
     findTalentTab({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(FIND_TALENT_TAB, payload);
-        ipcRenderer.on(FIND_TALENT_TAB, (event, response) => {
+        ipcRenderer.once(FIND_TALENT_TAB, (event, response) => {
           commit(FIND_TALENT_TAB, response);
           resolve();
         });
-        ipcRenderer.on(`${FIND_TALENT_TAB}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${FIND_TALENT_TAB}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -87,11 +87,11 @@ export default {
     updateTalentTab({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(UPDATE_TALENT_TAB, payload);
-        ipcRenderer.on(UPDATE_TALENT_TAB, () => {
+        ipcRenderer.once(UPDATE_TALENT_TAB, () => {
           commit("UPDATE_REFRESH_OF_TALENT_TAB", true);
           resolve();
         });
-        ipcRenderer.on(`${UPDATE_TALENT_TAB}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${UPDATE_TALENT_TAB}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -99,10 +99,10 @@ export default {
     destroyTalentTab(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(DESTROY_TALENT_TAB, payload);
-        ipcRenderer.on(DESTROY_TALENT_TAB, () => {
+        ipcRenderer.once(DESTROY_TALENT_TAB, () => {
           resolve();
         });
-        ipcRenderer.on(`${DESTROY_TALENT_TAB}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${DESTROY_TALENT_TAB}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -110,11 +110,11 @@ export default {
     createTalentTab({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(CREATE_TALENT_TAB, payload);
-        ipcRenderer.on(CREATE_TALENT_TAB, (event, response) => {
+        ipcRenderer.once(CREATE_TALENT_TAB, (event, response) => {
           commit(CREATE_TALENT_TAB, response);
           resolve();
         });
-        ipcRenderer.on(`${CREATE_TALENT_TAB}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${CREATE_TALENT_TAB}_REJECT`, (event, error) => {
           reject(error);
         });
       });
@@ -122,10 +122,10 @@ export default {
     copyTalentTab(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(COPY_TALENT_TAB, payload);
-        ipcRenderer.on(COPY_TALENT_TAB, () => {
+        ipcRenderer.once(COPY_TALENT_TAB, () => {
           resolve();
         });
-        ipcRenderer.on(`${COPY_TALENT_TAB}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${COPY_TALENT_TAB}_REJECT`, (event, error) => {
           reject(error);
         });
       });

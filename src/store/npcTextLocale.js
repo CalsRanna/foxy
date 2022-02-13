@@ -13,22 +13,25 @@ export default {
     searchNpcTextLocales({ commit }, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(SEARCH_NPC_TEXT_LOCALES, payload);
-        ipcRenderer.on(SEARCH_NPC_TEXT_LOCALES, (event, response) => {
+        ipcRenderer.once(SEARCH_NPC_TEXT_LOCALES, (event, response) => {
           commit(SEARCH_NPC_TEXT_LOCALES, response);
           resolve();
         });
-        ipcRenderer.on(`${SEARCH_NPC_TEXT_LOCALES}_REJECT`, (event, error) => {
-          reject(error);
-        });
+        ipcRenderer.once(
+          `${SEARCH_NPC_TEXT_LOCALES}_REJECT`,
+          (event, error) => {
+            reject(error);
+          }
+        );
       });
     },
     storeNpcTextLocales(context, payload) {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(STORE_NPC_TEXT_LOCALES, payload);
-        ipcRenderer.on(STORE_NPC_TEXT_LOCALES, () => {
+        ipcRenderer.once(STORE_NPC_TEXT_LOCALES, () => {
           resolve();
         });
-        ipcRenderer.on(`${STORE_NPC_TEXT_LOCALES}_REJECT`, (event, error) => {
+        ipcRenderer.once(`${STORE_NPC_TEXT_LOCALES}_REJECT`, (event, error) => {
           reject(error);
         });
       });
