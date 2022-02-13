@@ -26,7 +26,7 @@ ipcMain.on(SEARCH_GLYPH_PROPERTIES, (event, payload) => {
     .leftJoin("foxy.dbc_spell_icon as si", "gp.SpellIconID", "si.ID")
     .from("foxy.dbc_glyph_properties as gp");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", payload.ID);
+    queryBuilder = queryBuilder.where("gp.ID", payload.ID);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(
@@ -60,7 +60,7 @@ ipcMain.on(COUNT_GLYPH_PROPERTIES, (event, payload) => {
     .leftJoin("foxy.dbc_spell_icon as dsi", "ds.SpellIconID", "dsi.ID")
     .leftJoin("foxy.dbc_spell_icon as si", "gp.SpellIconID", "si.ID");
   if (payload.ID) {
-    queryBuilder = queryBuilder.where("ID", payload.ID);
+    queryBuilder = queryBuilder.where("gp.ID", payload.ID);
   }
   if (payload.Name) {
     queryBuilder = queryBuilder.where(
