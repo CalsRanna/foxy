@@ -717,7 +717,7 @@
         </el-row>
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="缩放系数">
+            <el-form-item label="缩放比例">
               <el-input-number
                 v-model="creatureTemplate.scale"
                 :min="0"
