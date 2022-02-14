@@ -291,7 +291,7 @@ const eventParams = [
   [
     { label: "RepeatMin", field: "event_param1", type: "el-input-number" },
     { label: "RepeatMax", field: "event_param2", type: "el-input-number" },
-    { label: "SpellId", field: "event_param3", type: "spell-selector" },
+    { label: "法术技能", field: "event_param3", type: "spell-selector" },
   ], // SMART_EVENT_VICTIM_CASTING
   [
     { label: "HPDeficit", field: "event_param1", type: "el-input-number" },
@@ -305,7 +305,7 @@ const eventParams = [
     { label: "RepeatMax", field: "event_param3", type: "el-input-number" },
   ], // SMART_EVENT_FRIENDLY_IS_CC
   [
-    { label: "SpellId", field: "event_param1", type: "spell-selector" },
+    { label: "法术技能", field: "event_param1", type: "spell-selector" },
     { label: "Radius", field: "event_param2", type: "el-input-number" },
     { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
     { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
@@ -330,13 +330,13 @@ const eventParams = [
     { label: "CooldownMax", field: "event_param3", type: "el-input-number" },
   ], // SMART_EVENT_RECEIVE_EMOTE
   [
-    { label: "SpellId", field: "event_param1", type: "spell-selector" },
+    { label: "法术技能", field: "event_param1", type: "spell-selector" },
     { label: "Stacks", field: "event_param2", type: "el-input-number" },
     { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
     { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
   ], // SMART_EVENT_HAS_AURA
   [
-    { label: "SpellId", field: "event_param1", type: "spell-selector" },
+    { label: "法术技能", field: "event_param1", type: "spell-selector" },
     { label: "Stacks", field: "event_param2", type: "el-input-number" },
     { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
     { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
@@ -360,7 +360,7 @@ const eventParams = [
   [], // SMART_EVENT_CHARMED
   [], // SMART_EVENT_CHARMED_TARGET
   [
-    { label: "SpellId", field: "event_param1", type: "spell-selector" },
+    { label: "法术技能", field: "event_param1", type: "spell-selector" },
     { label: "School", field: "event_param2", type: "el-input-number" },
     { label: "RepeatMin", field: "event_param3", type: "el-input-number" },
     { label: "RepeatMax", field: "event_param4", type: "el-input-number" },
@@ -689,7 +689,7 @@ const actionParams = [
     { label: "EmoteId6", field: "action_param6", type: "el-input-number" },
   ], // SMART_ACTION_RANDOM_EMOTE
   [
-    { label: "SpellId", field: "action_param1", type: "el-input-number" },
+    { label: "法术技能", field: "action_param1", type: "spell-selector" },
     { label: "castFlags", field: "action_param2", type: "el-input-number" },
     { label: "limitTargets", field: "action_param3", type: "el-input-number" },
   ], // SMART_ACTION_CAST
@@ -753,7 +753,7 @@ const actionParams = [
   [{ label: "QuestID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_CALL_GROUPEVENTHAPPENS
   [], // SMART_ACTION_COMBAT_STOP
   [
-    { label: "SpellId", field: "action_param1", type: "spell-selector" },
+    { label: "法术技能", field: "action_param1", type: "spell-selector" },
     { label: "charges", field: "action_param2", type: "el-input-number" },
   ], // SMART_ACTION_REMOVEAURASFROMSPELL
   [
@@ -1018,7 +1018,7 @@ const actionParams = [
   ], // SMART_ACTION_REMOVE_UNIT_FIELD_BYTES_1
   [
     { label: "delay ", field: "action_param1", type: "el-switch" },
-    { label: "SpellId", field: "action_param2", type: "spell-selector" },
+    { label: "法术技能", field: "action_param2", type: "spell-selector" },
     { label: "Instant ", field: "action_param3", type: "el-switch" },
   ], // SMART_ACTION_INTERRUPT_SPELL
   [{ label: "animprogress", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SEND_GO_CUSTOM_ANIM
