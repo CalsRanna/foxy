@@ -9,13 +9,7 @@
       </el-breadcrumb>
       <h3 style="margin: 16px 0 0 0">高级</h3>
     </el-card>
-    <el-row
-      :gutter="16"
-      :style="{
-        maxHeight: `${calculateMaxHeight()}px`,
-        overflow: 'auto',
-      }"
-    >
+    <el-row :gutter="16">
       <el-col :span="6">
         <el-card
           :style="{
@@ -48,7 +42,13 @@
           </el-tree>
         </el-card>
       </el-col>
-      <el-col :span="18">
+      <el-col
+        :span="18"
+        :style="{
+          maxHeight: `${calculateMaxHeight()}px`,
+          overflow: 'auto',
+        }"
+      >
         <el-row :gutter="16">
           <el-col
             :span="8"
