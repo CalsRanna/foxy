@@ -29,9 +29,9 @@
           <el-col :span="6">
             <el-form-item label="标识">
               <el-input-number
-                v-model="glyphProperty.PlyphSlotFlags"
+                v-model="glyphProperty.GlyphSlotFlags"
                 controls-position="right"
-                placeholder="PlyphSlotFlags"
+                placeholder="GlyphSlotFlags"
               ></el-input-number>
             </el-form-item>
           </el-col>
