@@ -61,7 +61,16 @@
           >
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-form-item label="对话ID">
+                <el-form-item label="编号">
+                  <el-input-number
+                    v-model="gossipMenuOption.OptionID"
+                    placeholder="OptionID"
+                    controls-position="right"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="对话编号">
                   <el-input-number
                     v-model="gossipMenuOption.MenuID"
                     controls-position="right"
@@ -69,15 +78,6 @@
                     placeholder="MenuID"
                     element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(255, 255, 255, 0.5)"
-                  ></el-input-number>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="编号">
-                  <el-input-number
-                    v-model="gossipMenuOption.OptionID"
-                    placeholder="OptionID"
-                    controls-position="right"
                   ></el-input-number>
                 </el-form-item>
               </el-col>
