@@ -70,6 +70,7 @@ import "./background/gameObjectQuestEnder";
 import "./background/gossipMenu";
 import "./background/npcText";
 import "./background/npcTextLocale";
+import "./background/npcTextSelector";
 import "./background/gossipMenuOption";
 import "./background/glyphProperty";
 import "./background/smartScript";
