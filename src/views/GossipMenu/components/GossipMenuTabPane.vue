@@ -20,10 +20,10 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="文本ID">
-              <el-input
+              <npc-text-selector
                 v-model="gossipMenu.TextID"
                 placeholder="TextID"
-              ></el-input>
+              ></npc-text-selector>
             </el-form-item>
           </el-col>
         </el-row>
@@ -40,6 +40,8 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+
+import NpcTextSelector from "@/components/NpcTextSelector";
 
 export default {
   data() {
@@ -116,6 +118,9 @@ export default {
   },
   mounted() {
     this.init();
+  },
+  components: {
+    NpcTextSelector,
   },
 };
 </script>
