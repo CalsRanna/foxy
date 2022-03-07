@@ -7,7 +7,7 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="对话ID">
+            <el-form-item label="编号">
               <el-input-number
                 v-model="gossipMenu.MenuID"
                 controls-position="right"
@@ -19,7 +19,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="文本ID">
+            <el-form-item label="文本编号">
               <npc-text-selector
                 v-model="gossipMenu.TextID"
                 placeholder="TextID"
