@@ -24,6 +24,22 @@
     >
       <el-card>
         <div slot="header">
+          <h2>0.3.0 <small>2022-03-09</small></h2>
+        </div>
+        <h3>Bug Fixes</h3>
+        <ul>
+          <li>
+            <strong>exporter:</strong> fix export won't work when you try to
+            export dbc once.
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/d2b011cbfa42a4aa87d3a735ef5f9beb9a14dd22"
+              text="(d2b011c)"
+            />
+          </li>
+        </ul>
+      </el-card>
+      <el-card style="margin-top: 16px">
+        <div slot="header">
           <h2>0.2.9 <small>2022-03-09</small></h2>
         </div>
         <h3>Bug Fixes</h3>

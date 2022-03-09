@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/CalsRanna/foxy/compare/0.2.9...0.3.0) (2022-03-09)
+
+
+### Bug Fixes
+
+* **exporter:** fix export won't work when you try to export dbc once. ([d2b011c](https://github.com/CalsRanna/foxy/commit/d2b011cbfa42a4aa87d3a735ef5f9beb9a14dd22))
+
+
+
 ## [0.2.9](https://github.com/CalsRanna/foxy/compare/0.2.8...0.2.9) (2022-03-09)
 
 
