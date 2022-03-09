@@ -1,6 +1,23 @@
 <template>
   <div>
-    <el-card :body-style="{ padding: '22px 20px 0 20px' }">
+    <el-card>
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item
+          :to="{ path: '/dashboard' }"
+          v-if="initializeSucceed"
+        >
+          首页
+        </el-breadcrumb-item>
+        <el-breadcrumb-item v-else>首页</el-breadcrumb-item>
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+        <el-breadcrumb-item>基础设置</el-breadcrumb-item>
+      </el-breadcrumb>
+      <h3 style="margin: 16px 0 0 0">基础设置</h3>
+    </el-card>
+    <el-card
+      :body-style="{ padding: '22px 20px 0 20px' }"
+      style="margin-top: 16px"
+    >
       <div slot="header">
         数据库配置
         <el-tooltip content="当前只支持AzerothCore数据库" placement="right">
@@ -39,10 +56,11 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="端口">
-              <el-input
+              <el-input-number
                 v-model="mysqlConfig.port"
+                controls-position="right"
                 placeholder="3306"
-              ></el-input>
+              ></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
