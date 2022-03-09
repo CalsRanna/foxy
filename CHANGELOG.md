@@ -1,3 +1,21 @@
+## [0.2.9](https://github.com/CalsRanna/foxy/compare/0.2.8...0.2.9) (2022-03-09)
+
+
+### Bug Fixes
+
+* **advance:** fix apative height of advance view ([28222fc](https://github.com/CalsRanna/foxy/commit/28222fcbdf3d25234face109d61bc9c90e0f2245))
+* **exporter:** fix ipcRenderer.oncece to ipcRenderer.once ([d462cc2](https://github.com/CalsRanna/foxy/commit/d462cc2ca0f0169b22662cecca82acb31f827174))
+* **Glyph Property:** fix GlyphSlotFlags ([e417d0b](https://github.com/CalsRanna/foxy/commit/e417d0bc07fe9d4358b2496b751c855898bee7ec))
+
+
+### Features
+
+* **icon:** add missing icons ([2173151](https://github.com/CalsRanna/foxy/commit/2173151e3a557bb8becda172144001a79955f870))
+* **layout:** refactor left aside ([254f7dd](https://github.com/CalsRanna/foxy/commit/254f7dd35a5463e773973c28995ed76adb9aa379))
+* **npc text selector:** add npc text selector ([828bedb](https://github.com/CalsRanna/foxy/commit/828bedb1dbb97722ca16f67ba0f8fab68fe4607d))
+
+
+
 ## [0.2.8](https://github.com/CalsRanna/foxy/compare/0.2.7...0.2.8) (2022-02-13)
 
 ### Bug Fixes

@@ -24,6 +24,60 @@
     >
       <el-card>
         <div slot="header">
+          <h2>0.2.9 <small>2022-03-09</small></h2>
+        </div>
+        <h3>Bug Fixes</h3>
+        <ul>
+          <li>
+            <strong>advance:</strong> fix apative height of advance view
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/28222fcbdf3d25234face109d61bc9c90e0f2245"
+              text="(28222fc)"
+            />
+          </li>
+          <li>
+            <strong>exporter:</strong> fix ipcRenderer.oncece to
+            ipcRenderer.once
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/d462cc2ca0f0169b22662cecca82acb31f827174"
+              text="(d462cc2)"
+            />
+          </li>
+          <li>
+            <strong>Glyph Property:</strong> fix GlyphSlotFlags
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/e417d0bc07fe9d4358b2496b751c855898bee7ec"
+              text="(e417d0b)"
+            />
+          </li>
+        </ul>
+        <h3>Features</h3>
+        <ul>
+          <li>
+            <strong>icon:</strong> add missing icons
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/2173151e3a557bb8becda172144001a79955f870"
+              text="(2173151)"
+            />
+          </li>
+          <li>
+            <strong>layout:</strong> refactor left aside
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/254f7dd35a5463e773973c28995ed76adb9aa379"
+              text="(254f7dd)"
+            />
+          </li>
+          <li>
+            <strong>npc text selector:</strong> add npc text selector
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/828bedb1dbb97722ca16f67ba0f8fab68fe4607d"
+              text="(828bedb)"
+            />
+          </li>
+        </ul>
+      </el-card>
+      <el-card style="margin-top: 16px">
+        <div slot="header">
           <h2>0.2.8 <small>2022-02-13</small></h2>
         </div>
         <h3>Bug Fixes</h3>
