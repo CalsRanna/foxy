@@ -70,24 +70,15 @@ const routes = [
   },
   { path: "/spell/:id", component: () => import("@/views/Spell/SpellDetail") },
   { path: "/advance", component: () => import("@/views/Advance/Advance") },
+  { path: "/setting", redirect: "/setting/basic" },
+  { path: "/setting/basic", component: () => import("@/views/Setting/Basic") },
   {
-    path: "/setting",
-    component: () => import("@/views/Setting/Setting"),
-    redirect: "/setting/basic",
-    children: [
-      {
-        path: "basic",
-        component: () => import("@/views/Setting/components/Basic"),
-      },
-      {
-        path: "developer",
-        component: () => import("@/views/Setting/components/Developer"),
-      },
-      {
-        path: "changelog",
-        component: () => import("@/views/Setting/components/Changelog"),
-      },
-    ],
+    path: "/setting/developer",
+    component: () => import("@/views/Setting/Developer"),
+  },
+  {
+    path: "/setting/changelog",
+    component: () => import("@/views/Setting/Changelog"),
   },
   {
     path: "/condition",

@@ -1,49 +1,63 @@
 <template>
   <el-container>
     <template v-if="initialized">
-      <el-aside width="200px" class="left-menu">
-        <div class="logo">
-          <h3 style="margin: 0; padding: 0">FOXY</h3>
-          <p style="font-size: 12px; color: #c0c4cc">魔兽世界编辑器</p>
-        </div>
+      <el-aside class="left-menu" style="width: 65px">
         <el-menu
           :default-active="active"
+          :collapse="true"
           @select="navigate"
           style="border-right: none"
         >
           <template v-if="initializeSucceed">
             <el-menu-item index="dashboard">
-              首页 <small>DASHBOARD</small>
+              <i class="el-icon-menu" />
+              <span slot="title">首页</span>
             </el-menu-item>
             <el-menu-item index="creature">
-              生物 <small>CREATURE</small>
+              <i class="el-icon-user" />
+              <span slot="title">生物</span>
             </el-menu-item>
-            <el-menu-item index="item"> 物品 <small>ITEM</small> </el-menu-item>
+            <el-menu-item index="item">
+              <i class="el-icon-coin" />
+              <span slot="title"> 物品</span>
+            </el-menu-item>
             <el-menu-item index="game-object">
-              物体 <small>GAME OBJECT</small>
+              <i class="el-icon-map-location" />
+              <span slot="title">物体</span>
             </el-menu-item>
             <el-menu-item index="quest">
-              任务 <small>QUEST</small>
+              <i class="el-icon-trophy" />
+              <span slot="title">任务</span>
             </el-menu-item>
             <el-menu-item index="gossip-menu">
-              对话 <small>GOSSIP MENU</small>
+              <i class="el-icon-chat-round" />
+              <span slot="title">对话</span>
             </el-menu-item>
             <el-menu-item index="smart-script">
-              内建脚本 <small>SMART SCRIPT</small>
+              <i class="el-icon-connection" />
+              <span slot="title">内建脚本</span>
             </el-menu-item>
             <el-menu-item index="spell">
-              法术技能 <small>SPELL</small>
+              <i class="el-icon-magic-stick" />
+              <span slot="title">法术技能</span>
             </el-menu-item>
             <el-menu-item index="advance">
-              高级 <small>ADVANCE</small>
+              <i class="el-icon-more-outline" />
+              <span slot="title">高级</span>
             </el-menu-item>
           </template>
-          <el-menu-item index="setting">
-            设置 <small>SETTING</small>
-          </el-menu-item>
+          <el-submenu index="setting">
+            <template slot="title">
+              <i class="el-icon-setting"></i>
+              <span slot="title">设置</span>
+            </template>
+            <el-menu-item index="setting/basic">基础设置</el-menu-item>
+            <el-menu-item index="setting/developer">开发者</el-menu-item>
+            <el-menu-item index="setting/changelog">更新日志</el-menu-item>
+          </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main style="margin-left: 200px">
+      <el-main style="margin-left: 65px">
         <router-view></router-view>
       </el-main>
     </template>
