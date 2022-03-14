@@ -65,13 +65,13 @@ const datas = [
   ], // GAMEOBJECT_TYPE_BUTTON
   [
     { label: "锁", field: "Data0", type: "lock-selector" },
-    { label: "任务列表", field: "Data1", type: "el-input" },
+    { label: "任务列表", field: "Data1", type: "quest-template-selector" },
     {
       label: "页面材料",
       field: "Data2",
       type: "page-text-material-selector",
     },
-    { label: "对话", field: "Data3", type: "gossip-menu-option-selector" },
+    { label: "对话", field: "Data3", type: "gossip-menu-selector" },
     { label: "customAnim", field: "Data4", type: "el-switch" },
     { label: "无伤害免疫", field: "Data5", type: "el-switch" },
     { label: "开启文本", field: "Data6", type: "broadcast-text-selector" },

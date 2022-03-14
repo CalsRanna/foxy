@@ -659,10 +659,10 @@ const actionParams = [
     { label: "GroupID", field: "action_param1", type: "el-input-number" },
     { label: "Duration", field: "action_param2", type: "el-input-number" },
   ], // SMART_ACTION_NONE
-  [{ label: "FactionID ", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_FACTION
+  [{ label: "势力 ", field: "action_param1", type: "faction-selector" }], // SMART_ACTION_SET_FACTION
   [
     {
-      label: "entry",
+      label: "编号",
       field: "action_param1",
       type: "creature-template-selector",
     },
@@ -673,9 +673,9 @@ const actionParams = [
     { label: "onlySelf", field: "action_param2", type: "el-switch" },
   ], // SMART_ACTION_SOUND
   [{ label: "EmoteId", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_PLAY_EMOTE
-  [{ label: "QuestID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_FAIL_QUEST
+  [{ label: "编号", field: "action_param1", type: "quest-template-selector" }], // SMART_ACTION_FAIL_QUEST
   [
-    { label: "QuestID", field: "action_param1", type: "el-input-number" },
+    { label: "编号", field: "action_param1", type: "quest-template-selector" },
     { label: "directAdd ", field: "action_param2", type: "el-switch" },
   ], // SMART_ACTION_OFFER_QUEST
   [{ label: "ReactState", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_REACT_STATE
@@ -694,7 +694,11 @@ const actionParams = [
     { label: "limitTargets", field: "action_param3", type: "el-input-number" },
   ], // SMART_ACTION_CAST
   [
-    { label: "entry", field: "action_param1", type: "el-input-number" },
+    {
+      label: "编号",
+      field: "action_param1",
+      type: "creature-template-selector",
+    },
     { label: "Summon type", field: "action_param2", type: "el-input-number" },
     { label: "duration", field: "action_param2", type: "el-input-number" },
     {
@@ -712,7 +716,7 @@ const actionParams = [
     { label: "ThreatPctInc", field: "action_param1", type: "el-input-number" },
     { label: "ThreatPctDec", field: "action_param2", type: "el-input-number" },
   ], // SMART_ACTION_THREAT_ALL_PCT
-  [{ label: "QuestID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_CALL_AREAEXPLOREDOREVENTHAPPENS
+  [{ label: "任务", field: "action_param1", type: "quest-template-selector" }], // SMART_ACTION_CALL_AREAEXPLOREDOREVENTHAPPENS
   [], // SMART_ACTION_RESERVED_16
   [{ label: "EmoteId", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_EMOTE_STATE
   [
@@ -750,17 +754,17 @@ const actionParams = [
   ], // SMART_ACTION_INC_EVENT_PHASE
   [], // SMART_ACTION_EVADE
   [{ label: "FleeText", field: "action_param1", type: "el-switch" }], // SMART_ACTION_FLEE_FOR_ASSIST
-  [{ label: "QuestID", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_CALL_GROUPEVENTHAPPENS
+  [{ label: "任务", field: "action_param1", type: "quest-template-selector" }], // SMART_ACTION_CALL_GROUPEVENTHAPPENS
   [], // SMART_ACTION_COMBAT_STOP
   [
     { label: "法术技能", field: "action_param1", type: "spell-selector" },
-    { label: "charges", field: "action_param2", type: "el-input-number" },
+    { label: "充能次数", field: "action_param2", type: "el-input-number" },
   ], // SMART_ACTION_REMOVEAURASFROMSPELL
   [
     { label: "Distance", field: "action_param1", type: "el-input-number" },
     { label: "Angle", field: "action_param2", type: "el-input-number" },
     {
-      label: "entry",
+      label: "编号",
       field: "action_param3",
       type: "creature-template-selector",
     },
@@ -806,7 +810,7 @@ const actionParams = [
   [], // SMART_ACTION_RESET_GOBJECT
   [
     {
-      label: "entry",
+      label: "编号",
       field: "action_param1",
       type: "creature-template-selector",
     },
@@ -818,7 +822,7 @@ const actionParams = [
   [{ label: "Field", field: "action_param1", type: "el-input-number" }], // SMART_ACTION_SET_INST_DATA64
   [
     {
-      label: "entry",
+      label: "编号",
       field: "action_param1",
       type: "creature-template-selector",
     },
@@ -838,7 +842,7 @@ const actionParams = [
   ], // SMART_ACTION_SET_INVINCIBILITY_HP_LEVEL
   [
     {
-      label: "entry",
+      label: "编号",
       field: "action_param1",
       type: "creature-template-selector",
     },
