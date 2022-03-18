@@ -11,7 +11,7 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="分类编号">
+            <el-form-item label="编号">
               <el-input-number
                 v-model="achievementCategory.ID"
                 controls-position="right"
@@ -52,7 +52,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="Ui Order">
+            <el-form-item label="顺序">
               <el-input-number
                 v-model="achievementCategory.Ui_Order"
                 controls-position="right"

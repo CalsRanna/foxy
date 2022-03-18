@@ -11,7 +11,16 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="成就编号">
+            <el-form-item label="编号">
+              <el-input-number
+                v-model="achievementCriteria.ID"
+                controls-position="right"
+                placeholder="ID"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="成就">
               <el-input-number
                 v-model="achievementCriteria.Achievement_Id"
                 controls-position="right"
@@ -20,15 +29,6 @@
                 v-loading="initing"
                 element-loading-spinner="el-icon-loading"
                 element-loading-background="rgba(255, 255, 255, 0.5)"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="编号">
-              <el-input-number
-                v-model="achievementCriteria.ID"
-                controls-position="right"
-                placeholder="ID"
               ></el-input-number>
             </el-form-item>
           </el-col>
@@ -74,19 +74,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="Asset_Id">
-              <el-input
-                v-model="achievementCriteria.Asset_Id"
-                placeholder="Asset_Id"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Quantity">
+            <el-form-item label="顺序">
               <el-input-number
-                v-model="achievementCriteria.Quantity"
+                v-model="achievementCriteria.Ui_Order"
                 controls-position="right"
-                placeholder="Quantity"
+                placeholder="Ui_Order"
               ></el-input-number>
             </el-form-item>
           </el-col>
@@ -96,6 +88,25 @@
         :body-style="{ padding: '22px 20px 0 20px' }"
         style="margin-top: 16px"
       >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="物品">
+              <item-template-selector
+                v-model="achievementCriteria.Asset_Id"
+                placeholder="Asset_Id"
+              ></item-template-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="数量">
+              <el-input-number
+                v-model="achievementCriteria.Quantity"
+                controls-position="right"
+                placeholder="Quantity"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row :gutter="16">
           <el-col :span="6">
             <el-form-item label="开始事件">
@@ -156,15 +167,6 @@
               ></el-input-number>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="Ui_Order">
-              <el-input-number
-                v-model="achievementCriteria.Ui_Order"
-                controls-position="right"
-                placeholder="Ui_Order"
-              ></el-input-number>
-            </el-form-item>
-          </el-col>
         </el-row>
       </el-card>
     </div>
@@ -179,6 +181,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import ItemTemplateSelector from "@/components/ItemTemplateSelector";
 import WaypointDataSelector from "@/components/WaypointDataSelector.vue";
 
 export default {
@@ -256,6 +259,6 @@ export default {
   mounted() {
     this.init();
   },
-  components: { WaypointDataSelector },
+  components: { ItemTemplateSelector, WaypointDataSelector },
 };
 </script>

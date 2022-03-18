@@ -78,22 +78,65 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="Faction">
-              <el-input v-model="achievement.Faction" placeholder="Faction">
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Instance_Id">
-              <el-input
-                v-model="achievement.Instance_Id"
-                placeholder="Instance_Id"
+            <el-form-item label="分类">
+              <achievement-category-selector
+                v-model="achievement.Category"
+                placeholder="Category"
               >
+              </achievement-category-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="图标">
+              <spell-icon-selector
+                v-model="achievement.IconID"
+                placeholder="IconID"
+              >
+              </spell-icon-selector>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="顺序">
+              <el-input-number
+                v-model="achievement.Ui_Order"
+                controls-position="right"
+                placeholder="Ui_Order"
+              >
+              </el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="阵营">
+              <el-select v-model="achievement.Faction" placeholder="Faction">
+                <el-option
+                  v-for="(faction, index) in factions"
+                  :key="`faction-${index}`"
+                  :label="faction"
+                  :value="index - 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="标识">
+              <el-input v-model="achievement.Flags" placeholder="Flags">
               </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="Supercedes">
+            <el-form-item>
+              <hint-label
+                label="取代"
+                :tooltip="supercedesTooltip"
+                slot="label"
+              ></hint-label>
               <el-input
                 v-model="achievement.Supercedes"
                 placeholder="Supercedes"
@@ -102,12 +145,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="分类">
-              <achievement-category-selector
-                v-model="achievement.Category"
-                placeholder="Category"
+            <el-form-item>
+              <hint-label
+                label="地图"
+                :tooltip="instanceIdTooltip"
+                slot="label"
+              ></hint-label>
+              <map-selector
+                v-model="achievement.Instance_Id"
+                placeholder="Instance_Id"
               >
-              </achievement-category-selector>
+              </map-selector>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -120,27 +168,6 @@
               </el-input-number>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="Ui_Order">
-              <el-input v-model="achievement.Ui_Order" placeholder="Ui_Order">
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="标识">
-              <el-input v-model="achievement.Flags" placeholder="Flags">
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="图标">
-              <spell-icon-selector
-                v-model="achievement.IconID"
-                placeholder="IconID"
-              >
-              </spell-icon-selector>
-            </el-form-item>
-          </el-col>
         </el-row>
       </el-card>
       <el-card
@@ -149,21 +176,23 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="Minimum_Criteria">
-              <el-input
-                v-model="achievement.Minimum_Criteria"
-                placeholder="Minimum_Criteria"
+            <el-form-item label="关联标准">
+              <el-input-number
+                v-model="achievement.Shares_Criteria"
+                controls-position="right"
+                placeholder="Shares_Criteria"
               >
-              </el-input>
+              </el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="Shares_Criteria">
-              <el-input
-                v-model="achievement.Shares_Criteria"
-                placeholder="Shares_Criteria"
+            <el-form-item label="数量">
+              <el-input-number
+                v-model="achievement.Minimum_Criteria"
+                controls-position="right"
+                placeholder="Minimum_Criteria"
               >
-              </el-input>
+              </el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -179,13 +208,24 @@
 </template>
 
 <script>
+import {
+  factions,
+  instanceIdTooltip,
+  supercedesTooltip,
+} from "@/locales/achievement";
+
 import AchievementCategorySelector from "@/components/AchievementCategorySelector";
+import HintLabel from "@/components/HintLabel";
+import MapSelector from "@/components/MapSelector";
 import SpellIconSelector from "@/components/SpellIconSelector";
 import { mapActions, mapState } from "vuex";
 
 export default {
   data() {
     return {
+      factions: factions,
+      instanceIdTooltip: instanceIdTooltip,
+      supercedesTooltip: supercedesTooltip,
       initing: false,
       loading: false,
       creating: false,
@@ -256,6 +296,8 @@ export default {
   },
   components: {
     AchievementCategorySelector,
+    HintLabel,
+    MapSelector,
     SpellIconSelector,
   },
 };
