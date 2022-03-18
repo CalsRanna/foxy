@@ -40,9 +40,25 @@
             </el-form-item>
           </el-col>
         </el-row>
+      </el-card>
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="发送者">
+            <el-form-item label="邮件模板">
+              <el-input-number
+                v-model="achievementReward.MailTemplateID"
+                controls-position="right"
+                placeholder="MailTemplateID"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="16">
+          <el-col :span="6">
+            <el-form-item label="发件人">
               <creature-template-selector
                 v-model="achievementReward.Sender"
                 placeholder="Sender"
@@ -71,15 +87,6 @@
                 v-model="achievementReward.ItemID"
                 placeholder="ItemID"
               />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="邮件模板">
-              <el-input-number
-                v-model="achievementReward.MailTemplateID"
-                controls-position="right"
-                placeholder="MailTemplateID"
-              ></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
