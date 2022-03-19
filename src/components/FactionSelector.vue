@@ -17,7 +17,7 @@
     >
       <div slot="title">
         <span style="font-size: 18px; color: #303133; margin-right: 16px">
-          势力选择器
+          阵营选择器
         </span>
       </div>
       <el-card>
