@@ -1655,7 +1655,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="势力">
+            <el-form-item label="阵营">
               <el-input
                 v-model="spell.MinFactionID"
                 placeholder="MinFactionID"

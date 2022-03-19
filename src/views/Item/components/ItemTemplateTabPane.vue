@@ -989,7 +989,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="需要势力声望">
+            <el-form-item label="需要阵营声望">
               <el-input
                 v-model="itemTemplate.RequiredReputationFaction"
                 placeholder="RequiredReputationFaction"

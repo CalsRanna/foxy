@@ -659,7 +659,7 @@ const actionParams = [
     { label: "GroupID", field: "action_param1", type: "el-input-number" },
     { label: "Duration", field: "action_param2", type: "el-input-number" },
   ], // SMART_ACTION_NONE
-  [{ label: "势力 ", field: "action_param1", type: "faction-selector" }], // SMART_ACTION_SET_FACTION
+  [{ label: "阵营 ", field: "action_param1", type: "faction-selector" }], // SMART_ACTION_SET_FACTION
   [
     {
       label: "编号",

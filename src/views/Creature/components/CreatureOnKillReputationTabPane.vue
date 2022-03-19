@@ -24,7 +24,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="势力1">
+            <el-form-item label="阵营1">
               <faction-template-selector
                 v-model="creatureOnKillReputation.RewOnKillRepFaction1"
                 placeholder="RewOnKillRepFaction1"
@@ -32,7 +32,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="势力2">
+            <el-form-item label="阵营2">
               <faction-template-selector
                 v-model="creatureOnKillReputation.RewOnKillRepFaction2"
                 placeholder="RewOnKillRepFaction2"
