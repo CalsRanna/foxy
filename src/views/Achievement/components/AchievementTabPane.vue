@@ -175,7 +175,12 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="关联标准">
+            <el-form-item>
+              <hint-label
+                label="关联标准"
+                :tooltip="sharesCriteriaTooltip"
+                slot="label"
+              />
               <achievement-selector
                 v-model="achievement.Shares_Criteria"
                 controls-position="right"
@@ -184,7 +189,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="数量">
+            <el-form-item>
+              <hint-label
+                label="数量"
+                :tooltip="minimumCriteriaTooltip"
+                slot="label"
+              />
               <el-input-number
                 v-model="achievement.Minimum_Criteria"
                 controls-position="right"
@@ -210,6 +220,8 @@ import {
   factions,
   instanceIdTooltip,
   supercedesTooltip,
+  sharesCriteriaTooltip,
+  minimumCriteriaTooltip,
 } from "@/locales/achievement";
 
 import AchievementCategorySelector from "@/components/AchievementCategorySelector";
@@ -225,6 +237,8 @@ export default {
       factions: factions,
       instanceIdTooltip: instanceIdTooltip,
       supercedesTooltip: supercedesTooltip,
+      sharesCriteriaTooltip: sharesCriteriaTooltip,
+      minimumCriteriaTooltip: minimumCriteriaTooltip,
       initing: false,
       loading: false,
       creating: false,
