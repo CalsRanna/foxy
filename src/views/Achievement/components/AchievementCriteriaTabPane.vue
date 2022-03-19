@@ -21,15 +21,10 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="成就">
-              <el-input-number
+              <achievement-selector
                 v-model="achievementCriteria.Achievement_Id"
-                controls-position="right"
                 placeholder="Achievement_Id"
-                :disabled="initing"
-                v-loading="initing"
-                element-loading-spinner="el-icon-loading"
-                element-loading-background="rgba(255, 255, 255, 0.5)"
-              ></el-input-number>
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -57,14 +52,6 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="类别">
-              <el-input
-                v-model="achievementCriteria.Type"
-                placeholder="Type"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
             <el-form-item label="标识">
               <el-input-number
                 v-model="achievementCriteria.Flags"
@@ -90,58 +77,82 @@
       >
         <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="物品">
-              <item-template-selector
-                v-model="achievementCriteria.Asset_Id"
-                placeholder="Asset_Id"
-              ></item-template-selector>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="数量">
-              <el-input-number
-                v-model="achievementCriteria.Quantity"
-                controls-position="right"
-                placeholder="Quantity"
-              ></el-input-number>
+            <el-form-item label="类别">
+              <el-select
+                v-model="achievementCriteria.Type"
+                placeholder="Type"
+                filterable
+              >
+                <el-option
+                  v-for="(type, index) in types"
+                  :key="`type-${index}`"
+                  :value="index"
+                  :label="type"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="16">
-          <el-col :span="6">
-            <el-form-item label="开始事件">
+          <el-col
+            :span="6"
+            v-for="(criteria, index) in matchedCriterias"
+            :key="`criteria-${index}`"
+          >
+            <el-form-item :label="criteria.label">
+              <el-switch
+                v-model="achievementCriteria[criteria.field]"
+                :active-value="1"
+                :inactive-value="0"
+                v-if="criteria.type === 'el-switch'"
+              ></el-switch>
+              <el-input-number
+                v-model="achievementCriteria[criteria.field]"
+                controls-position="right"
+                :placeholder="criteria.field"
+                v-else-if="criteria.type === 'el-input-number'"
+              ></el-input-number>
+              <map-selector
+                v-model="achievementCriteria[criteria.field]"
+                :placeholder="criteria.field"
+                v-else-if="criteria.type === 'map-selector'"
+              ></map-selector>
+              <faction-selector
+                v-model="achievementCriteria[criteria.field]"
+                :placeholder="criteria.field"
+                v-else-if="criteria.type === 'faction-selector'"
+              />
+              <quest-template-selector
+                v-model="achievementCriteria[criteria.field]"
+                :placeholder="criteria.field"
+                v-else-if="criteria.type === 'quest-template-selector'"
+              />
+              <spell-selector
+                v-model="achievementCriteria[criteria.field]"
+                :placeholder="criteria.field"
+                v-else-if="criteria.type === 'spell-selector'"
+              ></spell-selector>
               <el-input
-                v-model="achievementCriteria.Start_Event"
-                placeholder="Start_Event"
+                v-model="achievementCriteria[criteria.field]"
+                :placeholder="criteria.field"
+                v-else
               ></el-input>
             </el-form-item>
           </el-col>
+        </el-row>
+      </el-card>
+      <el-card
+        :body-style="{ padding: '22px 20px 0 20px' }"
+        style="margin-top: 16px"
+      >
+        <el-row :gutter="16">
           <el-col :span="6">
-            <el-form-item label="Start_Asset">
-              <el-input
-                v-model="achievementCriteria.Start_Asset"
-                placeholder="Start_Asset"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="失败事件">
-              <el-input
-                v-model="achievementCriteria.Fail_Event"
-                placeholder="Fail_Event"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Fail_Asset">
-              <el-input
-                v-model="achievementCriteria.Fail_Asset"
-                placeholder="Fail_Asset"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="Timer_Start_Event">
+            <el-form-item>
+              <hint-label
+                label="开始事件"
+                :tooltip="timerStartEventTooltip"
+                slot="label"
+              />
               <el-input-number
                 v-model="achievementCriteria.Timer_Start_Event"
                 controls-position="right"
@@ -150,7 +161,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="Timer_Asset_Id">
+            <el-form-item>
+              <hint-label
+                label="要求"
+                :tooltip="timerAssetIdTooltip"
+                slot="label"
+              />
               <el-input-number
                 v-model="achievementCriteria.Timer_Asset_Id"
                 controls-position="right"
@@ -159,7 +175,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="Timer_Time">
+            <el-form-item label="计时器时间">
               <el-input-number
                 v-model="achievementCriteria.Timer_Time"
                 controls-position="right"
@@ -180,13 +196,30 @@
 </template>
 
 <script>
+import {
+  types,
+  criterias,
+  timerStartEventTooltip,
+  timerAssetIdTooltip,
+} from "@/locales/achievement";
+
 import { mapState, mapActions } from "vuex";
+import AchievementSelector from "@/components/AchievementSelector";
+import FactionSelector from "@/components/FactionSelector";
+import HintLabel from "@/components/HintLabel";
 import ItemTemplateSelector from "@/components/ItemTemplateSelector";
-import WaypointDataSelector from "@/components/WaypointDataSelector.vue";
+import MapSelector from "@/components/MapSelector";
+import QuestTemplateSelector from "@/components/QuestTemplateSelector";
+import SpellSelector from "@/components/SpellSelector";
+import WaypointDataSelector from "@/components/WaypointDataSelector";
 
 export default {
   data() {
     return {
+      types: types,
+      criterias: criterias,
+      timerStartEventTooltip: timerStartEventTooltip,
+      timerAssetIdTooltip: timerAssetIdTooltip,
       initing: false,
       loading: false,
       creating: false,
@@ -196,6 +229,11 @@ export default {
     ...mapState("app", ["clientHeight"]),
     ...mapState("achievement", ["achievement"]),
     ...mapState("achievementCriteria", ["achievementCriteria"]),
+    matchedCriterias() {
+      return this.achievementCriteria.Type >= 0
+        ? this.criterias[this.achievementCriteria.Type]
+        : this.criterias[0];
+    },
     credential() {
       return {
         ID: this.achievementCriteria.ID,
@@ -259,6 +297,15 @@ export default {
   mounted() {
     this.init();
   },
-  components: { ItemTemplateSelector, WaypointDataSelector },
+  components: {
+    HintLabel,
+    AchievementSelector,
+    FactionSelector,
+    ItemTemplateSelector,
+    MapSelector,
+    QuestTemplateSelector,
+    SpellSelector,
+    WaypointDataSelector,
+  },
 };
 </script>

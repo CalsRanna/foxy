@@ -81,6 +81,8 @@
               />
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row :gutter="16">
           <el-col :span="6">
             <el-form-item label="物品">
               <item-template-selector
