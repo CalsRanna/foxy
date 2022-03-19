@@ -137,11 +137,10 @@
                 :tooltip="supercedesTooltip"
                 slot="label"
               ></hint-label>
-              <el-input
+              <achievement-selector
                 v-model="achievement.Supercedes"
                 placeholder="Supercedes"
-              >
-              </el-input>
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -177,12 +176,11 @@
         <el-row :gutter="16">
           <el-col :span="6">
             <el-form-item label="关联标准">
-              <el-input-number
+              <achievement-selector
                 v-model="achievement.Shares_Criteria"
                 controls-position="right"
                 placeholder="Shares_Criteria"
-              >
-              </el-input-number>
+              />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -215,6 +213,7 @@ import {
 } from "@/locales/achievement";
 
 import AchievementCategorySelector from "@/components/AchievementCategorySelector";
+import AchievementSelector from "@/components/AchievementSelector";
 import HintLabel from "@/components/HintLabel";
 import MapSelector from "@/components/MapSelector";
 import SpellIconSelector from "@/components/SpellIconSelector";
@@ -296,6 +295,7 @@ export default {
   },
   components: {
     AchievementCategorySelector,
+    AchievementSelector,
     HintLabel,
     MapSelector,
     SpellIconSelector,
