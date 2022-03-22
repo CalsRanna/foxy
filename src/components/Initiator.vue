@@ -20,6 +20,8 @@
 </template>
 
 <script>
+const ipcRenderer = window.ipcRenderer;
+
 import { mapActions } from "vuex";
 
 export default {
@@ -85,6 +87,7 @@ export default {
       "loadDbcTalentTabs",
       "initializeSuccess",
       "initializeFailure",
+      "resetFoxy",
     ]),
     async init() {
       try {
@@ -208,6 +211,35 @@ export default {
   },
   mounted() {
     this.init();
+    ipcRenderer.on("RESET_FOXY", () => {
+      this.$confirm("此操作将抹去foxy数据库中的所有内容，是否继续？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        dangerouslyUseHTMLString: true,
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            this.resetFoxy()
+              .then(() => {
+                this.loadingText = "正在加载";
+                this.init();
+              })
+              .then(() => {
+                this.$notify({
+                  title: "重置成功",
+                  position: "top-right",
+                  type: "success",
+                });
+                instance.confirmButtonLoading = false;
+                done();
+              });
+          } else {
+            done();
+          }
+        },
+      });
+    });
   },
 };
 </script>

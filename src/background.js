@@ -175,6 +175,13 @@ function createWindow() {
           role: "forceReload",
         },
         {
+          label: "重置",
+          accelerator: "CmdOrCtrl+Shift+R",
+          click() {
+            win.webContents.send("RESET_FOXY");
+          },
+        },
+        {
           label: "控制台",
           role: "toggleDevTools",
         },
