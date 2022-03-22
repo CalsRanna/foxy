@@ -759,6 +759,18 @@ export default {
         });
       });
     },
+    resetFoxy({ commit }) {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("RESET_FOXY");
+        ipcRenderer.once("RESET_FOXY", (event, response) => {
+          commit("RESET_FOXY");
+          resolve(response);
+        });
+        ipcRenderer.once("RESET_FOXY_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
   },
   mutations: {
     [LOAD_DEVELOPER_CONFIG](state, developerConfig) {
@@ -800,6 +812,9 @@ export default {
     INITIALIZE_FAILURE(state) {
       state.initialized = true;
       state.initializeSucceed = false;
+    },
+    RESET_FOXY(state) {
+      state.initialized = false;
     },
   },
 };

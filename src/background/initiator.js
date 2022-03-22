@@ -1631,3 +1631,16 @@ ipcMain.on(TEST_MYSQL_CONNECTION, (event, payload) => {
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
+
+ipcMain.on("RESET_FOXY", (event, payload) => {
+  let queryBuilder = knex.raw("drop database if exists foxy");
+
+  queryBuilder
+    .then(() => {
+      event.reply("RESET_FOXY");
+    })
+    .catch((error) => {
+      event.reply("RESET_FOXY_REJECT", error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
