@@ -221,6 +221,18 @@ const routes = [
     component: () => import("@/views/EmoteText/EmoteTextDetail"),
   },
   {
+    path: "/gem-property",
+    component: () => import("@/views/GemProperty/GemPropertyTable"),
+  },
+  {
+    path: "/gem-property/create",
+    component: () => import("@/views/GemProperty/GemPropertyDetail"),
+  },
+  {
+    path: "/gem-property/:id",
+    component: () => import("@/views/GemProperty/GemPropertyDetail"),
+  },
+  {
     path: "/glyph-property",
     component: () => import("@/views/GlyphProperty/GlyphPropertyTable"),
   },

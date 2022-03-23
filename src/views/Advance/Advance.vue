@@ -149,6 +149,12 @@ export default {
               key: "emote-text",
             },
             {
+              title: "宝石属性",
+              subtitle: "Gem Property",
+              description: "可镶嵌宝石的属性",
+              key: "gem-property",
+            },
+            {
               title: "雕文属性",
               subtitle: "Glyph Property",
               description: "雕文链接的技能等信息",

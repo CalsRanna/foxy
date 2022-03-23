@@ -350,6 +350,17 @@ export default {
         );
       });
     },
+    initDbcGemProperties() {
+      return new Promise((resolve, reject) => {
+        ipcRenderer.send("INIT_DBC_GEM_PROPERTIES");
+        ipcRenderer.once("INIT_DBC_GEM_PROPERTIES", () => {
+          resolve();
+        });
+        ipcRenderer.once("INIT_DBC_GEM_PROPERTIES_REJECT", (event, error) => {
+          reject(error);
+        });
+      });
+    },
     loadDbcGlyphProperties() {
       return new Promise((resolve, reject) => {
         ipcRenderer.send(LOAD_DBC_GLYPH_PROPERTIES);

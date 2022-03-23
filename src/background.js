@@ -73,6 +73,7 @@ import "./background/npcText";
 import "./background/npcTextLocale";
 import "./background/npcTextSelector";
 import "./background/gossipMenuOption";
+import "./background/gemProperty";
 import "./background/glyphProperty";
 import "./background/smartScript";
 import "./background/spell";
