@@ -89,6 +89,7 @@ ipcMain.on(INITIALIZE_MYSQL_CONNECTION, (event) => {
         knex.raw(DBC.toSql(`${path}/Faction.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/FactionTemplate.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/GameObjectDisplayInfo.dbc`)).then(() => {}),
+        knex.raw(DBC.toSql(`${path}/GemProperties.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/GlyphProperties.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/ItemDisplayInfo.dbc`)).then(() => {}),
         knex.raw(DBC.toSql(`${path}/ItemExtendedCost.dbc`)).then(() => {}),
@@ -455,6 +456,38 @@ ipcMain.on(LOAD_DBC_GAME_OBJECT_DISPLAY_INFOS, (event) => {
     })
     .catch((error) => {
       event.reply(`${LOAD_DBC_CHAR_TITLES}_REJECT`, error);
+      event.reply(GLOBAL_MESSAGE_BOX, error);
+    });
+});
+
+ipcMain.on("INIT_DBC_GEM_PROPERTIES", (event) => {
+  let queryBuilder = knex.select().from("foxy.dbc_gem_properties");
+
+  queryBuilder
+    .then((rows) => {
+      if (rows.length == 0) {
+        DBC.read(`${path}/GemProperties.dbc`)
+          .then((dbc) => {
+            knex
+              .batchInsert("foxy.dbc_gem_properties", dbc.records)
+              .then(() => {
+                event.reply("INIT_DBC_GEM_PROPERTIES");
+              })
+              .catch((error) => {
+                event.reply("INIT_DBC_GEM_PROPERTIES_REJECT", error);
+                event.reply(GLOBAL_MESSAGE_BOX, error);
+              });
+          })
+          .catch((error) => {
+            event.reply("INIT_DBC_GEM_PROPERTIES_REJECT", error);
+            event.reply(GLOBAL_MESSAGE_BOX, error);
+          });
+      } else {
+        event.reply("INIT_DBC_GEM_PROPERTIES");
+      }
+    })
+    .catch((error) => {
+      event.reply("INIT_DBC_GEM_PROPERTIES", error);
       event.reply(GLOBAL_MESSAGE_BOX, error);
     });
 });
