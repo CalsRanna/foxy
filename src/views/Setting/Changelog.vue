@@ -24,13 +24,49 @@
     >
       <el-card>
         <div slot="header">
+          <h2>0.3.1 <small>2022-05-08</small></h2>
+        </div>
+        <h3>Features</h3>
+        <ul>
+          <li>
+            <strong>achievement selector:</strong> add achievement selector
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/c732b80759d4cbbdc690a622b06ff4914b595a71"
+              text="(c732b80)"
+            />
+          </li>
+          <li>
+            <strong>app:</strong> add reset foxy to solve data complict error
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/6e84539a29d3df074adee23fea58969ec5e99d98"
+              text="(6e84539)"
+            />
+          </li>
+          <li>
+            <strong>gem property:</strong> add gem property module
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/3a17f86f57a02e4474956444909150c15a19cdf9"
+              text="(3a17f86)"
+            />
+          </li>
+          <li>
+            <strong>item template:</strong> make stat responsive to stat count
+            <clickable-span
+              url="https://github.com/CalsRanna/foxy/commit/4172467d19fa5aceedbf1ec487fa287b786ae6fe"
+              text="(4172467)"
+            />
+          </li>
+        </ul>
+      </el-card>
+      <el-card style="margin-top: 16px">
+        <div slot="header">
           <h2>0.3.0 <small>2022-03-09</small></h2>
         </div>
         <h3>Bug Fixes</h3>
         <ul>
           <li>
             <strong>exporter:</strong> fix export won't work when you try to
-            export dbc once.
+            export dbc once
             <clickable-span
               url="https://github.com/CalsRanna/foxy/commit/d2b011cbfa42a4aa87d3a735ef5f9beb9a14dd22"
               text="(d2b011c)"

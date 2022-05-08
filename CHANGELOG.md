@@ -1,3 +1,15 @@
+## [0.3.1](https://github.com/CalsRanna/foxy/compare/0.3.0...0.3.1) (2022-05-08)
+
+
+### Features
+
+* **achievement selector:** add achievement selector ([c732b80](https://github.com/CalsRanna/foxy/commit/c732b80759d4cbbdc690a622b06ff4914b595a71))
+* **app:** add reset foxy to solve data complict error ([6e84539](https://github.com/CalsRanna/foxy/commit/6e84539a29d3df074adee23fea58969ec5e99d98))
+* **gem property:** add gem property module ([3a17f86](https://github.com/CalsRanna/foxy/commit/3a17f86f57a02e4474956444909150c15a19cdf9))
+* **item template:** make stat responsive to stat count ([4172467](https://github.com/CalsRanna/foxy/commit/4172467d19fa5aceedbf1ec487fa287b786ae6fe))
+
+
+
 # [0.3.0](https://github.com/CalsRanna/foxy/compare/0.2.9...0.3.0) (2022-03-09)
 
 
