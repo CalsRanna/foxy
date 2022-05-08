@@ -10728,10 +10728,10 @@ vuex@^3.6.2:
   resolved "https://registry.npmjs.org/vuex/-/vuex-3.6.2.tgz#236bc086a870c3ae79946f107f16de59d5895e71"
   integrity sha512-ETW44IqCgBpVomy520DT5jf8n0zoCac+sxWnn+hMe/CzaSejb/eVw2YToiXYX+Ex/AuHHia28vWTq4goAexFbw==
 
-warcrafty@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.npmjs.org/warcrafty/-/warcrafty-2.0.4.tgz#4b83099c8d22690dbf1017c05cfb5816c6632608"
-  integrity sha512-60FA32lxOYrELXqwxFwmr1+CKHF1PZ+o9013qQuOQsFQtFNhdGXONDcbViTJscHhjE3Lhsy7IcnJp5g4JpmPRA==
+warcrafty@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.npmjs.org/warcrafty/-/warcrafty-2.0.5.tgz#dcb32e3ca6907a372cfee11a644f0d1b039319f4"
+  integrity sha512-zC6tU+wtbuq4g4BrZZCw0Ecjqj7+IIopi26/z01vR82LtmCWym4CPxzZ9koCpKiQxMx2Lo5ID8KTkiAuEc3law==
   dependencies:
     "@wowserhq/stormjs" "^0.4.1"
     change-case "^4.1.2"
