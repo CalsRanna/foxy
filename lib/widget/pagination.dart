@@ -111,9 +111,7 @@ class __PaginationTileState extends State<_PaginationTile> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final primary = colorScheme.primary;
-    final onPrimary = colorScheme.onPrimary;
-    final background = (widget.active || hovered) ? primary : null;
-    final color = (widget.active || hovered) ? onPrimary : null;
+    final color = (widget.active || hovered) ? primary : null;
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: handleEnter,
@@ -125,12 +123,12 @@ class __PaginationTileState extends State<_PaginationTile> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            color: background,
+            // color: background,
           ),
           height: 32,
           width: 32,
           child: DefaultTextStyle.merge(
-            style: TextStyle(color: color),
+            style: TextStyle(color: color, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
             child: IconTheme(
               data: IconThemeData(color: color),
