@@ -13,11 +13,11 @@ class LoadingPage extends StatelessWidget {
       ref.listen(loadingLogsNotifierProvider, (previous, next) async {
         if (next.last == '加载完成') {
           await Future.delayed(const Duration(seconds: 1));
+          await windowManager.maximize();
+          await windowManager.setTitleBarStyle(TitleBarStyle.normal);
+          await windowManager.setResizable(false);
+          await windowManager.setMaximizable(false);
           if (!context.mounted) return;
-          windowManager.maximize();
-          windowManager.setTitleBarStyle(TitleBarStyle.normal);
-          windowManager.setResizable(false);
-          windowManager.setMaximizable(false);
           const DashboardRoute().go(context);
         }
       });

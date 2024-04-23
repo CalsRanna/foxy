@@ -99,7 +99,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
             selectedIndex: index,
             onDestinationSelected: handleSelected,
           ),
-          const VerticalDivider(thickness: 1),
+          const VerticalDivider(thickness: 1, width: 1),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -117,6 +117,8 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       const DashboardRoute().go(context);
     } else if (value == 1) {
       const CreatureTemplatesRoute().go(context);
+    } else if (value == 9) {
+      const SettingRoute().go(context);
     }
     setState(() {
       index = value;

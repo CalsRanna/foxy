@@ -1,6 +1,6 @@
 import 'package:foxy/service/service.dart';
 
-class CreatureTemplateApi {
+class CreatureTemplateService {
   Future<List<CreatureTemplate>> search({
     required int page,
     int pageSize = 50,

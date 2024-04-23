@@ -216,8 +216,6 @@ class __ModuleTileState extends State<_ModuleTile> {
                 Text(widget.name),
                 const Spacer(),
                 _CategoryTag(category: widget.category),
-                const SizedBox(width: 16),
-                _UpdatedAt(dateTime: widget.updatedAt),
               ],
             ),
             const SizedBox(height: 32),

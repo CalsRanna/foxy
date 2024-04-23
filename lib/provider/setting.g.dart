@@ -1,27 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'loading.dart';
+part of 'setting.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loadingLogsNotifierHash() =>
-    r'c86e4182a14246d0a4d71ec7fe85cabd5ad4d304';
+String _$settingNotifierHash() => r'aabddb45d45db9072d6ede2b9bc7cdef19dd4970';
 
-/// See also [LoadingLogsNotifier].
-@ProviderFor(LoadingLogsNotifier)
-final loadingLogsNotifierProvider =
-    AutoDisposeNotifierProvider<LoadingLogsNotifier, List<String>>.internal(
-  LoadingLogsNotifier.new,
-  name: r'loadingLogsNotifierProvider',
+/// See also [SettingNotifier].
+@ProviderFor(SettingNotifier)
+final settingNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<SettingNotifier, Setting>.internal(
+  SettingNotifier.new,
+  name: r'settingNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$loadingLogsNotifierHash,
+      : _$settingNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$LoadingLogsNotifier = AutoDisposeNotifier<List<String>>;
+typedef _$SettingNotifier = AutoDisposeAsyncNotifier<Setting>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

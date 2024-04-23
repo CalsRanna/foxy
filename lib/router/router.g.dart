@@ -23,6 +23,10 @@ RouteBase get $scaffoldRoute => ShellRouteData.$route(
           path: '/creature-templates',
           factory: $CreatureTemplatesRouteExtension._fromState,
         ),
+        GoRouteData.$route(
+          path: '/setting',
+          factory: $SettingRouteExtension._fromState,
+        ),
       ],
     );
 
@@ -54,6 +58,23 @@ extension $CreatureTemplatesRouteExtension on CreatureTemplatesRoute {
 
   String get location => GoRouteData.$location(
         '/creature-templates',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $SettingRouteExtension on SettingRoute {
+  static SettingRoute _fromState(GoRouterState state) => const SettingRoute();
+
+  String get location => GoRouteData.$location(
+        '/setting',
       );
 
   void go(BuildContext context) => context.go(location);

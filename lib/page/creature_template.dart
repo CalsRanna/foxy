@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/api/creature.dart';
+import 'package:foxy/provider/creature.dart';
 import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/widget/table.dart';
@@ -92,7 +94,16 @@ class _CreatureTemplatesPageState extends State<CreatureTemplatesPage> {
                     ],
                   ),
                   Expanded(
-                    child: ArcaneTable(templates: templates),
+                    child: Consumer(builder: (context, ref, child) {
+                      final provider =
+                          ref.watch(creatureTemplatesNotifierProvider);
+                      return switch (provider) {
+                        AsyncData(:final value) =>
+                          ArcaneTable(templates: value),
+                        AsyncError(:final error) => Text(error.toString()),
+                        _ => const SizedBox(),
+                      };
+                    }),
                   )
                 ],
               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/api/creature.dart';
+import 'package:foxy/service/creature.dart';
 
 class ArcaneTable extends StatelessWidget {
   const ArcaneTable({

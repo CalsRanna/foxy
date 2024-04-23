@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template.dart';
 import 'package:foxy/page/dashboard/dashboard.dart';
 import 'package:foxy/page/loading.dart';
+import 'package:foxy/page/setting.dart';
 import 'package:foxy/scaffold.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,6 +15,7 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
   routes: [
     TypedGoRoute<DashboardRoute>(path: '/dashboard'),
     TypedGoRoute<CreatureTemplatesRoute>(path: '/creature-templates'),
+    TypedGoRoute<SettingRoute>(path: '/setting'),
   ],
 )
 class ScaffoldRoute extends ShellRouteData {
@@ -52,6 +54,15 @@ class LoadingRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const LoadingPage();
+  }
+}
+
+class SettingRoute extends GoRouteData {
+  const SettingRoute();
+
+  @override
+  Page buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage(child: SettingPage());
   }
 }
 

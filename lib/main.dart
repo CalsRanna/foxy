@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foxy/database/isar.dart';
 import 'package:foxy/router/router.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -16,6 +17,7 @@ void main() async {
     await windowManager.show();
     await windowManager.focus();
   });
+  await IsarInitializer.ensureInitialized();
   runApp(const ProviderScope(child: Foxy()));
 }
 
