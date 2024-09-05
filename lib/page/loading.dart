@@ -15,14 +15,15 @@ class LoadingPage extends StatelessWidget {
           await Future.delayed(const Duration(seconds: 1));
           await windowManager.maximize();
           await windowManager.setTitleBarStyle(TitleBarStyle.normal);
-          await windowManager.setResizable(false);
-          await windowManager.setMaximizable(false);
+          // await windowManager.setResizable(false);
+          // await windowManager.setMaximizable(false);
           if (!context.mounted) return;
           const DashboardRoute().go(context);
         }
       });
       final logs = ref.watch(loadingLogsNotifierProvider);
       return ListView.builder(
+        padding: const EdgeInsets.all(16),
         itemBuilder: (context, index) {
           return Text(logs[index]);
         },
