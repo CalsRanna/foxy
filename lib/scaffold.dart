@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class ScaffoldPage extends StatefulWidget {
   const ScaffoldPage({super.key, required this.child});
@@ -25,14 +26,54 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedDashboardCircle),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedUserMultiple),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedBodyArmor),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedCube),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedCursorInfo01),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedBubbleChat),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedCode),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedSolarSystem),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedNanoTechnology),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedLayers01),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedMoreHorizontal),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(HugeIcons.strokeRoundedSettings01),
+                      ),
                     ],
                   ),
                 ),

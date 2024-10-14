@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class FrequentModuleComponent extends StatefulWidget {
   const FrequentModuleComponent({super.key});
@@ -36,57 +37,57 @@ class _FrequentModuleComponentState extends State<FrequentModuleComponent> {
     const creature = _ModuleTile(
       category: _ModuleCategory.database,
       description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(Icons.people_outlined),
+      icon: Icon(HugeIcons.strokeRoundedUserMultiple),
       name: '生物',
     );
     const item = _ModuleTile(
       category: _ModuleCategory.database,
       description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(Icons.people_outlined),
+      icon: Icon(HugeIcons.strokeRoundedBodyArmor),
       name: '物品',
     );
     const gameObject = _ModuleTile(
       category: _ModuleCategory.database,
       description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(Icons.people_outlined),
+      icon: Icon(HugeIcons.strokeRoundedCube),
       name: '游戏对象',
       positions: [_ModuleTileBorderPosition.top],
     );
     const quest = _ModuleTile(
       category: _ModuleCategory.database,
       description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(Icons.people_outlined),
+      icon: Icon(HugeIcons.strokeRoundedCursorInfo01),
       name: '任务',
     );
     const gossip = _ModuleTile(
       category: _ModuleCategory.database,
       description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(Icons.people_outlined),
+      icon: Icon(HugeIcons.strokeRoundedBubbleChat),
       name: '对话',
     );
     const smartScript = _ModuleTile(
       category: _ModuleCategory.database,
       description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(Icons.people_outlined),
+      icon: Icon(HugeIcons.strokeRoundedCode),
       name: '内建脚本',
       positions: [_ModuleTileBorderPosition.top],
     );
     const spell = _ModuleTile(
       category: _ModuleCategory.dbc,
       description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(Icons.people_outlined),
+      icon: Icon(HugeIcons.strokeRoundedSolarSystem),
       name: '法术',
     );
     const talent = _ModuleTile(
       category: _ModuleCategory.dbc,
       description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(Icons.people_outlined),
+      icon: Icon(HugeIcons.strokeRoundedNanoTechnology),
       name: '天赋',
     );
     const itemSet = _ModuleTile(
       category: _ModuleCategory.dbc,
       description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(Icons.people_outlined),
+      icon: Icon(HugeIcons.strokeRoundedLayers01),
       name: '套装',
       positions: [_ModuleTileBorderPosition.top],
     );
