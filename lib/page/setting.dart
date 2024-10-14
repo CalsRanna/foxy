@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/database/setting.dart';
 import 'package:foxy/provider/setting.dart';
@@ -133,23 +131,23 @@ class __BasicSettingState extends State<_BasicSetting> {
         const SizedBox(height: 16),
         const Text('连接地址'),
         const SizedBox(height: 8),
-        Input(controller: hostController),
+        FoxyInput(controller: hostController),
         const SizedBox(height: 16),
         const Text('端口'),
         const SizedBox(height: 8),
-        Input(controller: portController),
+        FoxyInput(controller: portController),
         const SizedBox(height: 16),
         const Text('数据库名称'),
         const SizedBox(height: 8),
-        Input(controller: databaseController),
+        FoxyInput(controller: databaseController),
         const SizedBox(height: 16),
         const Text('用户名'),
         const SizedBox(height: 8),
-        Input(controller: usernameController),
+        FoxyInput(controller: usernameController),
         const SizedBox(height: 16),
         const Text('密码'),
         const SizedBox(height: 8),
-        Input(controller: passwordController),
+        FoxyInput(controller: passwordController),
         const SizedBox(height: 16),
         UnconstrainedBox(
           alignment: Alignment.centerLeft,

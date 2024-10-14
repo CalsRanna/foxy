@@ -8,10 +8,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   const options = WindowOptions(
-    size: Size(400, 300),
-    center: true,
     backgroundColor: Colors.transparent,
+    center: true,
+    minimumSize: Size(800, 600),
+    size: Size(400, 300),
     titleBarStyle: TitleBarStyle.hidden,
+    windowButtonVisibility: false,
   );
   windowManager.waitUntilReadyToShow(options, () async {
     await windowManager.show();
@@ -26,21 +28,20 @@ class Foxy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: ThemeData(
-        cardTheme: CardTheme(
-          color: Theme.of(context).colorScheme.surface,
-          surfaceTintColor: Colors.transparent,
-          elevation: 8,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.25),
-        ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        fontFamily: 'Microsoft YaHei',
-        useMaterial3: true,
-      ),
-      routerConfig: router,
+    final cardTheme = CardTheme(
+      color: Theme.of(context).colorScheme.surface,
+      surfaceTintColor: Colors.transparent,
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.25),
     );
+    final themeData = ThemeData(
+      cardTheme: cardTheme,
+      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      fontFamily: 'Microsoft YaHei',
+      useMaterial3: true,
+    );
+    return MaterialApp.router(theme: themeData, routerConfig: router);
   }
 }

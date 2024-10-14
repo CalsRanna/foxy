@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/model/frequent_module.dart';
 
 class FrequentModuleComponent extends StatefulWidget {
   const FrequentModuleComponent({super.key});
@@ -10,6 +9,23 @@ class FrequentModuleComponent extends StatefulWidget {
       _FrequentModuleComponentState();
 }
 
+class _CategoryTag extends StatelessWidget {
+  final _ModuleCategory category;
+
+  const _CategoryTag({required this.category});
+
+  @override
+  Widget build(BuildContext context) {
+    const style = TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.w400,
+      height: 1.5,
+    );
+    final text = category == _ModuleCategory.database ? 'Database' : 'Dbc';
+    return Text(text, style: style);
+  }
+}
+
 class _FrequentModuleComponentState extends State<FrequentModuleComponent> {
   @override
   Widget build(BuildContext context) {
@@ -17,165 +33,124 @@ class _FrequentModuleComponentState extends State<FrequentModuleComponent> {
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline;
     final surface = colorScheme.surface;
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 8,
-            color: outline.withOpacity(0.1),
-            spreadRadius: 8,
-          )
-        ],
-        color: surface,
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              '常用的模块',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Row(children: [
-            Expanded(
-              child: _ModuleTile(
-                category: _ModuleCategory.database,
-                description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-                icon: Icon(Icons.people_outlined),
-                name: '生物',
-              ),
-            ),
-            Expanded(
-              child: _ModuleTile(
-                category: _ModuleCategory.database,
-                description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-                icon: Icon(Icons.people_outlined),
-                name: '物品',
-              ),
-            ),
-            Expanded(
-              child: _ModuleTile(
-                category: _ModuleCategory.database,
-                description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-                icon: Icon(Icons.people_outlined),
-                name: '游戏对象',
-              ),
-            ),
-          ]),
-          Row(children: [
-            Expanded(
-              child: _ModuleTile(
-                category: _ModuleCategory.database,
-                description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-                icon: Icon(Icons.people_outlined),
-                name: '任务',
-              ),
-            ),
-            Expanded(
-              child: _ModuleTile(
-                category: _ModuleCategory.database,
-                description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-                icon: Icon(Icons.people_outlined),
-                name: '对话',
-              ),
-            ),
-            Expanded(
-              child: _ModuleTile(
-                category: _ModuleCategory.database,
-                description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-                icon: Icon(Icons.people_outlined),
-                name: '内建脚本',
-              ),
-            ),
-          ]),
-          Row(children: [
-            Expanded(
-              child: _ModuleTile(
-                category: _ModuleCategory.database,
-                description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-                icon: Icon(Icons.people_outlined),
-                name: '法术',
-              ),
-            ),
-            Expanded(
-              child: _ModuleTile(
-                category: _ModuleCategory.database,
-                description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-                icon: Icon(Icons.people_outlined),
-                name: '天赋',
-              ),
-            ),
-            Expanded(
-              child: _ModuleTile(
-                category: _ModuleCategory.database,
-                description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-                icon: Icon(Icons.people_outlined),
-                name: '套装',
-              ),
-            ),
-          ]),
-        ],
-      ),
+    const creature = _ModuleTile(
+      category: _ModuleCategory.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(Icons.people_outlined),
+      name: '生物',
     );
+    const item = _ModuleTile(
+      category: _ModuleCategory.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(Icons.people_outlined),
+      name: '物品',
+    );
+    const gameObject = _ModuleTile(
+      category: _ModuleCategory.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(Icons.people_outlined),
+      name: '游戏对象',
+      positions: [_ModuleTileBorderPosition.top],
+    );
+    const quest = _ModuleTile(
+      category: _ModuleCategory.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(Icons.people_outlined),
+      name: '任务',
+    );
+    const gossip = _ModuleTile(
+      category: _ModuleCategory.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(Icons.people_outlined),
+      name: '对话',
+    );
+    const smartScript = _ModuleTile(
+      category: _ModuleCategory.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(Icons.people_outlined),
+      name: '内建脚本',
+      positions: [_ModuleTileBorderPosition.top],
+    );
+    const spell = _ModuleTile(
+      category: _ModuleCategory.dbc,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(Icons.people_outlined),
+      name: '法术',
+    );
+    const talent = _ModuleTile(
+      category: _ModuleCategory.dbc,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(Icons.people_outlined),
+      name: '天赋',
+    );
+    const itemSet = _ModuleTile(
+      category: _ModuleCategory.dbc,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(Icons.people_outlined),
+      name: '套装',
+      positions: [_ModuleTileBorderPosition.top],
+    );
+    const textStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+    const title = Text('常用的模块', style: textStyle);
+    const row1 = Row(children: [
+      Expanded(child: creature),
+      Expanded(child: item),
+      Expanded(child: gameObject),
+    ]);
+    const row2 = Row(children: [
+      Expanded(child: quest),
+      Expanded(child: gossip),
+      Expanded(child: smartScript),
+    ]);
+    const row3 = Row(children: [
+      Expanded(child: spell),
+      Expanded(child: talent),
+      Expanded(child: itemSet),
+    ]);
+    const padding = Padding(padding: EdgeInsets.all(16.0), child: title);
+    const children = [padding, row1, row2, row3];
+    const column = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
+    final boxShadow = BoxShadow(
+      blurRadius: 8,
+      color: outline.withOpacity(0.1),
+      spreadRadius: 8,
+    );
+    final boxDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(4),
+      boxShadow: [boxShadow],
+      color: surface,
+    );
+    return Container(decoration: boxDecoration, child: column);
   }
 }
 
-class _ModuleTiles extends StatelessWidget {
-  const _ModuleTiles({super.key, required this.modules});
-
-  final List<FrequentModule> modules;
-
-  @override
-  Widget build(BuildContext context) {
-    const column = 3;
-    final row = modules.length ~/ column;
-
-    return Column(
-      children: [
-        for (int i = 0; i < row; i++)
-          Row(children: [
-            for (int j = 0; j < column; j++)
-              if (i * row + j < modules.length)
-                Expanded(
-                  child: _ModuleTile(
-                    category: _ModuleCategory.dbc,
-                    description: modules[i * row + j].description,
-                    icon: Icon(Icons.auto_awesome_outlined),
-                    name: modules[i * row + j].name,
-                  ),
-                ),
-          ])
-      ],
-    );
-  }
-}
+enum _ModuleCategory { database, dbc }
 
 class _ModuleTile extends StatefulWidget {
+  final _ModuleCategory category;
+
+  final String description;
+  final Widget icon;
+  final String name;
+  final List<_ModuleTileBorderPosition> positions;
   const _ModuleTile({
-    super.key,
-    this.border,
     this.category = _ModuleCategory.database,
     required this.description,
     required this.icon,
     required this.name,
-    this.updatedAt,
+    this.positions = _ModuleTileBorderPosition.values,
   });
 
-  final Border? border;
-  final _ModuleCategory category;
-  final String description;
-  final Widget icon;
-  final String name;
-  final DateTime? updatedAt;
-
   @override
-  State<_ModuleTile> createState() => __ModuleTileState();
+  State<_ModuleTile> createState() => _ModuleTileState();
 }
 
-class __ModuleTileState extends State<_ModuleTile> {
+enum _ModuleTileBorderPosition { right, top }
+
+class _ModuleTileState extends State<_ModuleTile> {
   bool hover = false;
   @override
   Widget build(BuildContext context) {
@@ -183,46 +158,44 @@ class __ModuleTileState extends State<_ModuleTile> {
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline;
     final surface = colorScheme.surface;
-    List<BoxShadow> shadow = [];
-    if (hover) {
-      shadow = [
-        BoxShadow(
-          blurRadius: 8,
-          color: outline.withOpacity(0.1),
-          spreadRadius: 8,
-        )
-      ];
-    }
-    BorderSide side = BorderSide(color: outline.withOpacity(0.2));
-    Border border = Border(right: side, top: side);
+    final titleChildren = [
+      Text(widget.name),
+      _CategoryTag(category: widget.category)
+    ];
+    final column = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: titleChildren,
+    );
+    final children = [
+      widget.icon,
+      const SizedBox(width: 16),
+      Expanded(child: column),
+    ];
+    final title = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
+    final containerColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [title, const SizedBox(height: 32), Text(widget.description)],
+    );
+    final border = _getBorder(outline);
+    final shadow = _getShadow(outline);
+    final boxDecoration = BoxDecoration(
+      border: border,
+      boxShadow: shadow,
+      color: surface,
+    );
+    final container = Container(
+      decoration: boxDecoration,
+      padding: const EdgeInsets.all(16),
+      child: containerColumn,
+    );
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: handleEnter,
       onExit: handleExit,
-      child: Container(
-        decoration: BoxDecoration(
-          border: widget.border ?? border,
-          boxShadow: shadow,
-          color: surface,
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                widget.icon,
-                const SizedBox(width: 16),
-                Text(widget.name),
-                const Spacer(),
-                _CategoryTag(category: widget.category),
-              ],
-            ),
-            const SizedBox(height: 32),
-            Text(widget.description)
-          ],
-        ),
-      ),
+      child: container,
     );
   }
 
@@ -237,38 +210,25 @@ class __ModuleTileState extends State<_ModuleTile> {
       hover = false;
     });
   }
-}
 
-class _CategoryTag extends StatelessWidget {
-  const _CategoryTag({super.key, required this.category});
+  Border _getBorder(Color outline) {
+    BorderSide side = BorderSide(color: outline.withOpacity(0.2));
+    final positions = widget.positions;
+    final showRight = positions.contains(_ModuleTileBorderPosition.right);
+    final showTop = positions.contains(_ModuleTileBorderPosition.top);
+    return Border(
+      right: showRight ? side : BorderSide.none,
+      top: showTop ? side : BorderSide.none,
+    );
+  }
 
-  final _ModuleCategory category;
-
-  @override
-  Widget build(BuildContext context) {
-    return category == _ModuleCategory.database
-        ? const Text('Database')
-        : const Text('Dbc');
+  List<BoxShadow> _getShadow(Color outline) {
+    if (!hover) return [];
+    final shadow = BoxShadow(
+      blurRadius: 8,
+      color: outline.withOpacity(0.1),
+      spreadRadius: 8,
+    );
+    return [shadow];
   }
 }
-
-class _UpdatedAt extends StatelessWidget {
-  const _UpdatedAt({super.key, this.dateTime});
-
-  final DateTime? dateTime;
-
-  @override
-  Widget build(BuildContext context) {
-    var time = dateTime ?? DateTime.now();
-    var now = DateTime.now();
-    final different = now.difference(time);
-    return switch (different.inSeconds) {
-      < 60 => Text('${different.inSeconds} seconds ago'),
-      < 60 * 60 => Text('${different.inMinutes} minutes ago'),
-      < 60 * 60 * 24 => Text('${different.inHours} hours ago'),
-      _ => Text('${different.inDays} days ago'),
-    };
-  }
-}
-
-enum _ModuleCategory { database, dbc }

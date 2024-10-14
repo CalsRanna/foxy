@@ -15,97 +15,33 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final primary = colorScheme.primary;
-    final outline = colorScheme.outline.withOpacity(0.85);
     return Scaffold(
-      body: Row(
+      body: Column(
         children: [
-          NavigationRail(
-            destinations: [
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.dashboard_outlined,
-                  color: index == 0 ? primary : outline,
-                ),
-                label: const Text('首页'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.people_outline,
-                  color: index == 1 ? primary : outline,
-                ),
-                label: const Text('生物'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.category_outlined,
-                  color: index == 2 ? primary : outline,
-                ),
-                label: const Text('物品'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.explore_outlined,
-                  color: index == 3 ? primary : outline,
-                ),
-                label: const Text('游戏对象'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.emoji_events_outlined,
-                  color: index == 4 ? primary : outline,
-                ),
-                label: const Text('任务'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.chat_bubble_outline,
-                  color: index == 5 ? primary : outline,
-                ),
-                label: const Text('对话'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.data_object_outlined,
-                  color: index == 6 ? primary : outline,
-                ),
-                label: const Text('内建脚本'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.auto_awesome_outlined,
-                  color: index == 7 ? primary : outline,
-                ),
-                label: const Text('法术'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.more_horiz_outlined,
-                  color: index == 8 ? primary : outline,
-                ),
-                label: const Text('更多'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(
-                  Icons.settings_outlined,
-                  color: index == 9 ? primary : outline,
-                ),
-                label: const Text('设置'),
-              ),
-            ],
-            labelType: NavigationRailLabelType.all,
-            selectedIndex: index,
-            onDestinationSelected: handleSelected,
-          ),
-          const VerticalDivider(thickness: 1, width: 1),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: widget.child,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+                    ],
+                  ),
+                ),
+                const VerticalDivider(thickness: 1, width: 1),
+                Expanded(child: widget.child)
+              ],
             ),
-          )
+          ),
+          const _Indicator(),
         ],
       ),
     );
@@ -123,5 +59,36 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     setState(() {
       index = value;
     });
+  }
+}
+
+class _Indicator extends StatelessWidget {
+  const _Indicator();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final primary = colorScheme.primary;
+    final onPrimary = colorScheme.onPrimary;
+    final textStyle = TextStyle(
+      color: onPrimary,
+      fontSize: 10,
+      fontWeight: FontWeight.w400,
+    );
+    final children = [
+      Text('MPQ File Ready', style: textStyle),
+      const SizedBox(width: 16),
+      Text('Dbc File Ready', style: textStyle),
+      const SizedBox(width: 16),
+      Text('Mysql Connected: 8.0.32', style: textStyle),
+    ];
+    const edgeInsets = EdgeInsets.symmetric(horizontal: 16, vertical: 4);
+    return Container(
+      color: primary,
+      padding: edgeInsets,
+      width: double.infinity,
+      child: Row(mainAxisAlignment: MainAxisAlignment.end, children: children),
+    );
   }
 }
