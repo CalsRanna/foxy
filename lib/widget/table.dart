@@ -1,53 +1,61 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/service/creature.dart';
 
 class ArcaneTable extends StatelessWidget {
-  const ArcaneTable({
-    super.key,
-    required this.templates,
-  });
+  final List<ArcaneTableRow>? body;
+  final ArcaneTableHeader header;
 
-  final List<CreatureTemplate> templates;
+  const ArcaneTable({super.key, this.body, required this.header});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline;
+    final borderSide = BorderSide(color: outline.withOpacity(0.25));
+    final boxDecoration = BoxDecoration(border: Border(bottom: borderSide));
+    final defaultBody = Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(child: Text('暂无数据')),
+    );
     return Column(children: [
-      Container(
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: outline.withOpacity(0.25))),
-        ),
-        child: DefaultTextStyle.merge(
-          style: TextStyle(color: outline, fontWeight: FontWeight.bold),
-          child: const Row(
-            children: [
-              ArcaneTableCell(width: 100, child: Text('编号')),
-              ArcaneTableCell(child: Text('姓名')),
-              ArcaneTableCell(child: Text('称号')),
-              ArcaneTableCell(child: Text('最小等级')),
-              ArcaneTableCell(child: Text('最大等级')),
-            ],
-          ),
-        ),
-      ),
-      Expanded(
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return ArcaneTableRow(template: templates[index]);
-          },
-          itemCount: templates.length,
-        ),
-      )
+      Container(decoration: boxDecoration, child: header),
+      Expanded(child: ListView(children: body ?? [defaultBody]))
     ]);
   }
 }
 
+class ArcaneTableCell extends StatelessWidget {
+  final double? width;
+  final Widget? child;
+  const ArcaneTableCell({super.key, this.width, this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    const edgeInsets = EdgeInsets.symmetric(horizontal: 8, vertical: 16);
+    final cell = Container(padding: edgeInsets, width: width, child: child);
+    return Expanded(flex: width == null ? 1 : 0, child: cell);
+  }
+}
+
+class ArcaneTableHeader extends StatelessWidget {
+  final List<ArcaneTableCell> children;
+  const ArcaneTableHeader({super.key, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final outline = colorScheme.outline;
+    final textStyle = TextStyle(color: outline, fontWeight: FontWeight.bold);
+    final row = Row(children: children);
+    return DefaultTextStyle.merge(style: textStyle, child: row);
+  }
+}
+
 class ArcaneTableRow extends StatefulWidget {
-  final CreatureTemplate template;
-  const ArcaneTableRow({super.key, required this.template});
+  final List<ArcaneTableCell> children;
+  const ArcaneTableRow({super.key, required this.children});
 
   @override
   State<ArcaneTableRow> createState() => _ArcaneTableRowState();
@@ -64,36 +72,33 @@ class _ArcaneTableRowState extends State<ArcaneTableRow> {
     final colorScheme = theme.colorScheme;
     final primaryContainer = colorScheme.primaryContainer;
     final outline = colorScheme.outline;
+    final borderSide = BorderSide(color: outline.withOpacity(0.25));
+    final boxDecoration = BoxDecoration(
+      border: Border(bottom: borderSide),
+      color: hovered ? primaryContainer : null,
+    );
+    final row = Container(
+      decoration: boxDecoration,
+      child: Row(children: widget.children),
+    );
+    final gestureDetector = GestureDetector(
+      onDoubleTap: handleDoubleTap,
+      child: row,
+    );
+    final listener = Listener(
+      onPointerDown: handlePointerDown,
+      child: gestureDetector,
+    );
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: handleEnter,
       onExit: handleExit,
-      child: Listener(
-        onPointerDown: handlePointerDown,
-        child: GestureDetector(
-          onDoubleTap: handleDoubleTap,
-          child: Container(
-            decoration: BoxDecoration(
-              border:
-                  Border(bottom: BorderSide(color: outline.withOpacity(0.25))),
-              color: hovered ? primaryContainer : null,
-            ),
-            child: Row(
-              children: [
-                ArcaneTableCell(
-                    width: 100, child: Text(widget.template.entry.toString())),
-                ArcaneTableCell(child: Text(widget.template.name)),
-                ArcaneTableCell(child: Text(widget.template.subName)),
-                ArcaneTableCell(
-                    child: Text(widget.template.minLevel.toString())),
-                ArcaneTableCell(
-                    child: Text(widget.template.maxLevel.toString())),
-              ],
-            ),
-          ),
-        ),
-      ),
+      child: listener,
     );
+  }
+
+  void handleDoubleTap() {
+    print('Double clicked');
   }
 
   void handleEnter(PointerEnterEvent event) {
@@ -149,22 +154,5 @@ class _ArcaneTableRowState extends State<ArcaneTableRow> {
   void removeEntry() {
     print('remove entry');
     entry?.remove();
-  }
-
-  void handleDoubleTap() {
-    print('Double clicked');
-  }
-}
-
-class ArcaneTableCell extends StatelessWidget {
-  final double? width;
-  final Widget? child;
-  const ArcaneTableCell({super.key, this.width, this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    const edgeInsets = EdgeInsets.symmetric(horizontal: 8, vertical: 16);
-    final cell = Container(padding: edgeInsets, width: width, child: child);
-    return Expanded(flex: width == null ? 1 : 0, child: cell);
   }
 }

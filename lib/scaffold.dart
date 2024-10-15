@@ -87,7 +87,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       HugeIcons.strokeRoundedSettings01,
     ];
     final leftBar = ListView.separated(
-      itemBuilder: (_, index) => _itemBuilder(icons, index),
+      itemBuilder: (context, index) => _itemBuilder(context, icons, index),
       itemCount: icons.length,
       padding: EdgeInsets.all(8),
       separatorBuilder: (_, index) => SizedBox(height: 8),
@@ -117,11 +117,16 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     AutoRouter.of(context).push(route);
   }
 
-  Widget _itemBuilder(List<IconData> icons, int index) {
+  Widget _itemBuilder(BuildContext context, List<IconData> icons, int index) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final primaryContainer = colorScheme.primaryContainer;
+    final color = index == this.index ? primaryContainer : null;
     return IconButton(
       onPressed: () => handlePressed(index),
-      icon: Icon(icons[index]),
+      icon: Icon(icons[index], size: 20),
       isSelected: index == this.index,
+      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(color)),
     );
   }
 }

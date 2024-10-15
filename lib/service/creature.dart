@@ -1,3 +1,4 @@
+import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/service/service.dart';
 import 'package:mysql_client/mysql_client.dart';
 
@@ -52,12 +53,4 @@ class CreatureTemplateService with Service {
     var result = await execute(sql);
     return result.rows.first.typedColAt<int>(0) ?? 0;
   }
-}
-
-class CreatureTemplate {
-  int entry = 0;
-  String name = '';
-  String subName = '';
-  int minLevel = 0;
-  int maxLevel = 0;
 }

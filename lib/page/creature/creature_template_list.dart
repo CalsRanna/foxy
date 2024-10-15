@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/provider/creature.dart';
-import 'package:foxy/service/creature.dart';
 import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/widget/table.dart';
@@ -113,6 +113,25 @@ class _Table extends ConsumerWidget {
   }
 
   Widget _buildData(List<CreatureTemplate> templates) {
-    return ArcaneTable(templates: templates);
+    final header = ArcaneTableHeader(children: [
+      ArcaneTableCell(width: 100, child: Text('编号')),
+      ArcaneTableCell(child: Text('姓名')),
+      ArcaneTableCell(child: Text('称号')),
+      ArcaneTableCell(child: Text('最低等级')),
+      ArcaneTableCell(child: Text('最高等级')),
+    ]);
+    final body = templates.map(_buildRow).toList();
+    return ArcaneTable(header: header, body: body);
+  }
+
+  ArcaneTableRow _buildRow(CreatureTemplate template) {
+    final children = [
+      ArcaneTableCell(width: 100, child: Text(template.entry.toString())),
+      ArcaneTableCell(child: Text(template.name)),
+      ArcaneTableCell(child: Text(template.subName)),
+      ArcaneTableCell(child: Text(template.minLevel.toString())),
+      ArcaneTableCell(child: Text(template.maxLevel.toString())),
+    ];
+    return ArcaneTableRow(children: children);
   }
 }

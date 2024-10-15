@@ -1,3 +1,4 @@
+import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/service/creature.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
