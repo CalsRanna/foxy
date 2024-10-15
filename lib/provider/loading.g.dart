@@ -7,7 +7,7 @@ part of 'loading.dart';
 // **************************************************************************
 
 String _$loadingLogsNotifierHash() =>
-    r'c86e4182a14246d0a4d71ec7fe85cabd5ad4d304';
+    r'7cfda49e4539fb1b95266ed205ac50ee215e8ee1';
 
 /// See also [LoadingLogsNotifier].
 @ProviderFor(LoadingLogsNotifier)

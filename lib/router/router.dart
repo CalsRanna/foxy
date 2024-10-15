@@ -18,6 +18,7 @@ class AppRouter extends RootStackRouter {
     final children = [
       AutoRoute(page: DashboardRoute.page),
       AutoRoute(page: CreatureTemplateListRoute.page),
+      AutoRoute(page: ItemTemplateListRoute.page),
     ];
     return [
       AutoRoute(page: LoadingRoute.page, initial: true),

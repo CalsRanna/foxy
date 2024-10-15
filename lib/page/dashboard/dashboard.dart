@@ -136,7 +136,7 @@ class _Welcome extends StatelessWidget {
     );
     const supportChildren = [
       Text('欢迎使用Foxy！', style: TextStyle(fontSize: 20)),
-      Text('支持 Mysql 8.x | Trinity Core | 3.3.5 12340')
+      Text('支持 Azeroth / Trinity Core | 3.3.5 12340 | Mysql 5.x / 8.x')
     ];
     const support = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
