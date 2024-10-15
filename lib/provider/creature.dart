@@ -9,6 +9,11 @@ class CreatureTemplatesNotifier extends _$CreatureTemplatesNotifier {
   Future<List<CreatureTemplate>> build() async {
     return CreatureTemplateService().search(page: 1);
   }
+
+  Future<void> paginate(int page) async {
+    final templates = await CreatureTemplateService().search(page: page);
+    state = AsyncData(templates);
+  }
 }
 
 @Riverpod(keepAlive: true)

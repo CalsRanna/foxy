@@ -1,9 +1,9 @@
 import 'package:foxy/service/service.dart';
 
-class ApplicationService extends Service {
+class ApplicationService with Service {
   Future<String> getMysqlVersion() async {
     const sql = 'select version()';
-    final result = await pool.execute(sql);
+    final result = await execute(sql);
     return result.rows.first.typedColAt<String>(0) ?? '';
   }
 }

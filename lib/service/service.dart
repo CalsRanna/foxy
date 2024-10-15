@@ -1,24 +1,29 @@
 import 'package:mysql_client/mysql_client.dart';
 
-late MySQLConnectionPool pool;
+late MySQLConnection pool;
 
-class Service {}
+mixin Service {
+  Future<IResultSet> execute(String query) {
+    print(query);
+    return pool.execute(query);
+  }
+}
 
 class ServiceInitializer {
   static Future<void> ensureInitialized({
-    String host = '127.0.0.1',
+    String host = '43.139.61.244',
     int port = 3306,
     String username = 'root',
-    String password = 'root',
+    String password = 'mysql_nZ5mHE',
     String database = 'world',
   }) async {
-    pool = MySQLConnectionPool(
+    pool = await MySQLConnection.createConnection(
       host: host,
       port: port,
       userName: username,
       password: password,
-      maxConnections: 10,
-      databaseName: database,
+      databaseName: database, // optional
     );
+    await pool.connect();
   }
 }

@@ -24,11 +24,11 @@ class ArcaneTable extends StatelessWidget {
           style: TextStyle(color: outline, fontWeight: FontWeight.bold),
           child: const Row(
             children: [
-              _ArcaneTableCell(width: 100, child: Text('编号')),
-              _ArcaneTableCell(child: Text('姓名')),
-              _ArcaneTableCell(child: Text('称号')),
-              _ArcaneTableCell(child: Text('最小等级')),
-              _ArcaneTableCell(child: Text('最大等级')),
+              ArcaneTableCell(width: 100, child: Text('编号')),
+              ArcaneTableCell(child: Text('姓名')),
+              ArcaneTableCell(child: Text('称号')),
+              ArcaneTableCell(child: Text('最小等级')),
+              ArcaneTableCell(child: Text('最大等级')),
             ],
           ),
         ),
@@ -36,7 +36,7 @@ class ArcaneTable extends StatelessWidget {
       Expanded(
         child: ListView.builder(
           itemBuilder: (context, index) {
-            return _ArcaneTableRow(template: templates[index]);
+            return ArcaneTableRow(template: templates[index]);
           },
           itemCount: templates.length,
         ),
@@ -45,15 +45,15 @@ class ArcaneTable extends StatelessWidget {
   }
 }
 
-class _ArcaneTableRow extends StatefulWidget {
+class ArcaneTableRow extends StatefulWidget {
   final CreatureTemplate template;
-  const _ArcaneTableRow({super.key, required this.template});
+  const ArcaneTableRow({super.key, required this.template});
 
   @override
-  State<_ArcaneTableRow> createState() => _ArcaneTableRowState();
+  State<ArcaneTableRow> createState() => _ArcaneTableRowState();
 }
 
-class _ArcaneTableRowState extends State<_ArcaneTableRow> {
+class _ArcaneTableRowState extends State<ArcaneTableRow> {
   bool hovered = false;
 
   OverlayEntry? entry;
@@ -80,13 +80,13 @@ class _ArcaneTableRowState extends State<_ArcaneTableRow> {
             ),
             child: Row(
               children: [
-                _ArcaneTableCell(
+                ArcaneTableCell(
                     width: 100, child: Text(widget.template.entry.toString())),
-                _ArcaneTableCell(child: Text(widget.template.name)),
-                _ArcaneTableCell(child: Text(widget.template.subName)),
-                _ArcaneTableCell(
+                ArcaneTableCell(child: Text(widget.template.name)),
+                ArcaneTableCell(child: Text(widget.template.subName)),
+                ArcaneTableCell(
                     child: Text(widget.template.minLevel.toString())),
-                _ArcaneTableCell(
+                ArcaneTableCell(
                     child: Text(widget.template.maxLevel.toString())),
               ],
             ),
@@ -156,20 +156,15 @@ class _ArcaneTableRowState extends State<_ArcaneTableRow> {
   }
 }
 
-class _ArcaneTableCell extends StatelessWidget {
+class ArcaneTableCell extends StatelessWidget {
   final double? width;
   final Widget? child;
-  const _ArcaneTableCell({super.key, this.width, this.child});
+  const ArcaneTableCell({super.key, this.width, this.child});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: width == null ? 1 : 0,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
-        width: width,
-        child: child,
-      ),
-    );
+    const edgeInsets = EdgeInsets.symmetric(horizontal: 8, vertical: 16);
+    final cell = Container(padding: edgeInsets, width: width, child: child);
+    return Expanded(flex: width == null ? 1 : 0, child: cell);
   }
 }

@@ -1,19 +1,9 @@
 import 'package:foxy/model/frequent_module.dart';
 import 'package:foxy/service/service.dart';
-import 'package:mysql_client/mysql_client.dart';
 
-class FrequentModuleService extends Service {
-  final pool = MySQLConnectionPool(
-    host: '127.0.0.1',
-    port: 3306,
-    userName: 'root',
-    password: 'root',
-    maxConnections: 10,
-    databaseName: 'world',
-  );
+class FrequentModuleService with Service {
   Future<List<FrequentModule>> getFrequentModules() async {
-    var results = await pool.execute('select * from foxy.frequent_modules');
-    print(results.isEmpty);
+    var results = await execute('select * from foxy.frequent_modules');
     if (results.isEmpty) {
       final sql =
           'insert into foxy.frequent_modules (category, description, name, updated_at) values (?, ?, ?, ?)';
@@ -26,10 +16,8 @@ class FrequentModuleService extends Service {
     List<FrequentModule> modules = [];
     for (var result in results.rows) {
       final json = result.assoc();
-      print(json);
       modules.add(FrequentModule.fromJson(json));
     }
-    print(modules.length);
     return modules;
   }
 
@@ -43,7 +31,6 @@ class FrequentModuleService extends Service {
       'updated_at datetime not null',
     ];
     sql = '$sql (${fields.join(',')})';
-    await pool.execute(sql);
-    print(sql);
+    await execute(sql);
   }
 }

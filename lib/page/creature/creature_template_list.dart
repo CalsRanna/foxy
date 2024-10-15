@@ -85,7 +85,16 @@ class _Pagination extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = creatureTemplateTotalProvider;
     final total = ref.watch(provider).valueOrNull;
-    return Pagination(total: total ?? 0, onChange: (page) {});
+    return Pagination(
+      total: total ?? 0,
+      onChange: (page) => handleChange(ref, page),
+    );
+  }
+
+  void handleChange(WidgetRef ref, int page) {
+    final provider = creatureTemplatesNotifierProvider;
+    final notifier = ref.read(provider.notifier);
+    notifier.paginate(page);
   }
 }
 
