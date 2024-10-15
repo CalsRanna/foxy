@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/dashboard/component/frequent_module.dart';
 import 'package:foxy/page/dashboard/component/trend.dart';
 import 'package:foxy/widget/card.dart';
 
+@RoutePage()
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 

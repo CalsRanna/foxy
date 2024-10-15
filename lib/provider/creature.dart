@@ -3,10 +3,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'creature.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class CreatureTemplatesNotifier extends _$CreatureTemplatesNotifier {
   @override
   Future<List<CreatureTemplate>> build() async {
-    return await CreatureTemplateService().search(page: 1);
+    return CreatureTemplateService().search(page: 1);
   }
+}
+
+@Riverpod(keepAlive: true)
+Future<int> creatureTemplateTotal(CreatureTemplateTotalRef ref) {
+  return CreatureTemplateService().count();
 }

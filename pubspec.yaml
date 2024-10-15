@@ -9,25 +9,31 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.6
-  mysql_client: ^0.0.27
-  go_router: ^13.2.4
-  mysql_utils: ^2.1.4
+
+  auto_route: ^9.2.2
   flutter_riverpod: ^2.5.1
-  riverpod_annotation: ^2.3.5
-  window_manager: ^0.3.8
   hugeicons: ^0.0.7
-  isar: ^3.1.0
-  isar_flutter_libs: ^3.1.0
+  isar:
+    version: ^3.1.8
+    hosted: https://pub.isar-community.dev/
+  isar_flutter_libs:
+    version: ^3.1.8
+    hosted: https://pub.isar-community.dev/
+  mysql_client: ^0.0.27
+  riverpod_annotation: ^2.3.5
+  window_manager: ^0.4.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
-  go_router_builder: ^2.5.1
+
+  auto_route_generator: ^9.0.0
   build_runner: ^2.4.9
+  flutter_lints: ^5.0.0
+  isar_generator:
+    version: ^3.1.8
+    hosted: https://pub.isar-community.dev/
   riverpod_generator: ^2.4.0
-  isar_generator: ^3.1.0+1
 
 flutter:
   uses-material-design: true

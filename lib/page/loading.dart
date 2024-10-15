@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/provider/loading.dart';
-import 'package:foxy/router/router.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:window_manager/window_manager.dart';
 
+@RoutePage()
 class LoadingPage extends ConsumerWidget {
   const LoadingPage({super.key});
 
@@ -13,7 +15,7 @@ class LoadingPage extends ConsumerWidget {
       if (next.last == '加载完成') {
         await windowManager.setOpacity(0.0);
         if (!context.mounted) return;
-        const DashboardRoute().go(context);
+        AutoRouter.of(context).replaceAll([DashboardRoute()]);
         await windowManager.setSize(const Size(800, 600));
         await windowManager.center();
         await windowManager.setTitleBarStyle(TitleBarStyle.normal);

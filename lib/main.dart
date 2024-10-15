@@ -42,6 +42,6 @@ class Foxy extends StatelessWidget {
       fontFamily: 'Microsoft YaHei',
       useMaterial3: true,
     );
-    return MaterialApp.router(theme: themeData, routerConfig: router);
+    return MaterialApp.router(theme: themeData, routerConfig: routerConfig);
   }
 }

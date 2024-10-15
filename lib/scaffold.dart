@@ -1,106 +1,16 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/router/router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foxy/provider/application.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:hugeicons/hugeicons.dart';
 
+@RoutePage()
 class ScaffoldPage extends StatefulWidget {
-  const ScaffoldPage({super.key, required this.child});
-
-  final Widget child;
+  const ScaffoldPage({super.key});
 
   @override
   State<ScaffoldPage> createState() => _ScaffoldPageState();
-}
-
-class _ScaffoldPageState extends State<ScaffoldPage> {
-  int index = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedDashboardCircle),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedUserMultiple),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedBodyArmor),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedCube),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedCursorInfo01),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedBubbleChat),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedCode),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedSolarSystem),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedNanoTechnology),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedLayers01),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedMoreHorizontal),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(HugeIcons.strokeRoundedSettings01),
-                      ),
-                    ],
-                  ),
-                ),
-                const VerticalDivider(thickness: 1, width: 1),
-                Expanded(child: widget.child)
-              ],
-            ),
-          ),
-          const _Indicator(),
-        ],
-      ),
-    );
-  }
-
-  void handleSelected(int value) {
-    if (value == index) return;
-    if (value == 0) {
-      const DashboardRoute().go(context);
-    } else if (value == 1) {
-      const CreatureTemplatesRoute().go(context);
-    } else if (value == 9) {
-      const SettingRoute().go(context);
-    }
-    setState(() {
-      index = value;
-    });
-  }
 }
 
 class _Indicator extends StatelessWidget {
@@ -122,7 +32,7 @@ class _Indicator extends StatelessWidget {
       const SizedBox(width: 16),
       Text('Dbc File Ready', style: textStyle),
       const SizedBox(width: 16),
-      Text('Mysql Connected: 8.0.32', style: textStyle),
+      const _MysqlStatus(),
     ];
     const edgeInsets = EdgeInsets.symmetric(horizontal: 16, vertical: 4);
     return Container(
@@ -130,6 +40,88 @@ class _Indicator extends StatelessWidget {
       padding: edgeInsets,
       width: double.infinity,
       child: Row(mainAxisAlignment: MainAxisAlignment.end, children: children),
+    );
+  }
+}
+
+class _MysqlStatus extends ConsumerWidget {
+  const _MysqlStatus();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final onPrimary = colorScheme.onPrimary;
+    final errorContainer = colorScheme.errorContainer;
+    final provider = mysqlVersionProvider;
+    final version = ref.watch(provider).valueOrNull ?? '';
+    final connected = version.isNotEmpty;
+    final color = connected ? onPrimary : errorContainer;
+    final text = connected ? 'Mysql Connected: $version' : 'Mysql Disconnected';
+    final textStyle = TextStyle(
+      color: color,
+      fontSize: 10,
+      fontWeight: FontWeight.w400,
+    );
+    return Text(text, style: textStyle);
+  }
+}
+
+class _ScaffoldPageState extends State<ScaffoldPage> {
+  int index = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    const icons = [
+      HugeIcons.strokeRoundedDashboardCircle,
+      HugeIcons.strokeRoundedUserMultiple,
+      HugeIcons.strokeRoundedBodyArmor,
+      HugeIcons.strokeRoundedCube,
+      HugeIcons.strokeRoundedCursorInfo01,
+      HugeIcons.strokeRoundedBubbleChat,
+      HugeIcons.strokeRoundedCode,
+      HugeIcons.strokeRoundedSolarSystem,
+      HugeIcons.strokeRoundedNanoTechnology,
+      HugeIcons.strokeRoundedLayers01,
+      HugeIcons.strokeRoundedMoreHorizontal,
+      HugeIcons.strokeRoundedSettings01,
+    ];
+    final leftBar = ListView.separated(
+      itemBuilder: (_, index) => _itemBuilder(icons, index),
+      itemCount: icons.length,
+      padding: EdgeInsets.all(8),
+      separatorBuilder: (_, index) => SizedBox(height: 8),
+    );
+    final children = [
+      SizedBox(width: 80, child: leftBar),
+      const VerticalDivider(thickness: 1, width: 1),
+      Expanded(child: AutoRouter())
+    ];
+    final rightWorkspace = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
+    final bodyChildren = [Expanded(child: rightWorkspace), const _Indicator()];
+    return Scaffold(body: Column(children: bodyChildren));
+  }
+
+  void handlePressed(int value) {
+    setState(() {
+      index = value;
+    });
+    final route = switch (value) {
+      0 => DashboardRoute(),
+      1 => CreatureTemplateListRoute(),
+      _ => DashboardRoute(),
+    };
+    AutoRouter.of(context).push(route);
+  }
+
+  Widget _itemBuilder(List<IconData> icons, int index) {
+    return IconButton(
+      onPressed: () => handlePressed(index),
+      icon: Icon(icons[index]),
+      isSelected: index == this.index,
     );
   }
 }
