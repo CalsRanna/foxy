@@ -1,10 +1,11 @@
+import 'package:foxy/util/logger.dart';
 import 'package:mysql_client/mysql_client.dart';
 
 late MySQLConnection connection;
 
 mixin Service {
   Future<IResultSet> execute(String query) async {
-    print(query);
+    logger.d(query);
     if (!connection.connected) await connection.connect();
     return connection.execute(query);
   }

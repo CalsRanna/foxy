@@ -18,6 +18,8 @@ class LoadingLogsNotifier extends _$LoadingLogsNotifier {
     } on Exception catch (e) {
       state = [...state, e.toString()];
     }
+    // If loading complete too soon, the window will not be resized correctly.
+    await Future.delayed(const Duration(milliseconds: 300));
     state = [...state, '加载完成'];
   }
 }
