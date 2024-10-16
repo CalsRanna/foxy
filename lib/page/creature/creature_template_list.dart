@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/provider/creature.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/widget/table.dart';
@@ -105,14 +106,17 @@ class _Table extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = ref.watch(creatureTemplatesNotifierProvider);
     return switch (provider) {
-      AsyncData(:final value) => _buildData(value),
+      AsyncData(:final value) => _buildData(context, value),
       AsyncLoading() => CircularProgressIndicator.adaptive(),
       AsyncError(:final error) => Text(error.toString()),
       _ => const SizedBox(),
     };
   }
 
-  Widget _buildData(List<CreatureTemplate> templates) {
+  Widget _buildData(
+    BuildContext context,
+    List<BriefCreatureTemplate> templates,
+  ) {
     final header = ArcaneTableHeader(children: [
       ArcaneTableCell(width: 100, child: Text('编号')),
       ArcaneTableCell(child: Text('姓名')),
@@ -120,11 +124,18 @@ class _Table extends ConsumerWidget {
       ArcaneTableCell(child: Text('最低等级')),
       ArcaneTableCell(child: Text('最高等级')),
     ]);
-    final body = templates.map(_buildRow).toList();
+    final body = templates
+        .map(
+          (template) => _buildRow(context, template),
+        )
+        .toList();
     return ArcaneTable(header: header, body: body);
   }
 
-  ArcaneTableRow _buildRow(CreatureTemplate template) {
+  ArcaneTableRow _buildRow(
+    BuildContext context,
+    BriefCreatureTemplate template,
+  ) {
     final children = [
       ArcaneTableCell(width: 100, child: Text(template.entry.toString())),
       ArcaneTableCell(child: Text(template.name)),
@@ -132,6 +143,14 @@ class _Table extends ConsumerWidget {
       ArcaneTableCell(child: Text(template.minLevel.toString())),
       ArcaneTableCell(child: Text(template.maxLevel.toString())),
     ];
-    return ArcaneTableRow(children: children);
+    return ArcaneTableRow(
+      onDoubleTap: () => handleDoubleTap(context, template),
+      children: children,
+    );
+  }
+
+  void handleDoubleTap(BuildContext context, BriefCreatureTemplate template) {
+    final route = CreatureTemplateRoute(entry: template.entry);
+    AutoRouter.of(context).push(route);
   }
 }

@@ -7,7 +7,7 @@ part 'creature.g.dart';
 @Riverpod(keepAlive: true)
 class CreatureTemplatesNotifier extends _$CreatureTemplatesNotifier {
   @override
-  Future<List<CreatureTemplate>> build() async {
+  Future<List<BriefCreatureTemplate>> build() async {
     return CreatureTemplateService().search();
   }
 
@@ -20,4 +20,13 @@ class CreatureTemplatesNotifier extends _$CreatureTemplatesNotifier {
 @Riverpod(keepAlive: true)
 Future<int> creatureTemplateTotal(CreatureTemplateTotalRef ref) {
   return CreatureTemplateService().count();
+}
+
+@riverpod
+class CreatureTemplateNotifier extends _$CreatureTemplateNotifier {
+  @override
+  Future<CreatureTemplate> build(int? entry) async {
+    if (entry == null) return CreatureTemplate();
+    return CreatureTemplateService().find(entry);
+  }
 }

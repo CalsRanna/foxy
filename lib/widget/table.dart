@@ -54,12 +54,21 @@ class ArcaneTableHeader extends StatelessWidget {
 }
 
 class ArcaneTableRow extends StatefulWidget {
+  final void Function(ContextMenuOption)? onContextMenuTap;
+  final void Function()? onDoubleTap;
   final List<ArcaneTableCell> children;
-  const ArcaneTableRow({super.key, required this.children});
+  const ArcaneTableRow({
+    super.key,
+    this.onContextMenuTap,
+    this.onDoubleTap,
+    required this.children,
+  });
 
   @override
   State<ArcaneTableRow> createState() => _ArcaneTableRowState();
 }
+
+enum ContextMenuOption { read, edit, duplicate, destroy }
 
 class _ArcaneTableRowState extends State<ArcaneTableRow> {
   bool hovered = false;
@@ -82,7 +91,7 @@ class _ArcaneTableRowState extends State<ArcaneTableRow> {
       child: Row(children: widget.children),
     );
     final gestureDetector = GestureDetector(
-      onDoubleTap: handleDoubleTap,
+      onDoubleTap: widget.onDoubleTap,
       child: row,
     );
     final listener = Listener(
@@ -95,10 +104,6 @@ class _ArcaneTableRowState extends State<ArcaneTableRow> {
       onExit: handleExit,
       child: listener,
     );
-  }
-
-  void handleDoubleTap() {
-    print('Double clicked');
   }
 
   void handleEnter(PointerEnterEvent event) {
@@ -114,45 +119,67 @@ class _ArcaneTableRowState extends State<ArcaneTableRow> {
   }
 
   void handlePointerDown(PointerDownEvent event) {
-    if (event.kind == PointerDeviceKind.mouse &&
-        event.buttons == kSecondaryMouseButton) {
-      print('Right clicked');
-      print(event.localPosition);
-      print(event.position);
-      entry = OverlayEntry(builder: (context) {
-        return Stack(
-          children: [
-            GestureDetector(
-              onTap: removeEntry,
-              child: Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: Colors.transparent,
-              ),
-            ),
-            Positioned(
-              left: event.position.dx,
-              top: event.position.dy,
-              width: 200,
-              child: Material(
-                  child: Column(
-                children: [
-                  ListTile(onTap: () {}, title: Text('编辑')),
-                  ListTile(onTap: () {}, title: Text('复制')),
-                  Divider(),
-                  ListTile(onTap: () {}, title: Text('删除')),
-                ],
-              )),
-            )
-          ],
-        );
-      });
-      Overlay.of(context).insert(entry!);
-    }
+    if (event.buttons != kSecondaryMouseButton) return;
+    final positioned = Positioned(
+      left: event.position.dx,
+      top: event.position.dy,
+      width: 200,
+      child: _ContextMenu(onTap: handleTap),
+    );
+    final stack = Stack(children: [_Barrier(onTap: removeEntry), positioned]);
+    entry = OverlayEntry(builder: (_) => stack);
+    Overlay.of(context).insert(entry!);
+  }
+
+  void handleTap(ContextMenuOption option) {
+    entry?.remove();
+    widget.onContextMenuTap?.call(option);
   }
 
   void removeEntry() {
-    print('remove entry');
     entry?.remove();
+  }
+}
+
+class _Barrier extends StatelessWidget {
+  final void Function()? onTap;
+  const _Barrier({this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final container = Container(
+      height: double.infinity,
+      width: double.infinity,
+      color: Colors.transparent,
+    );
+    return GestureDetector(onTap: onTap, child: container);
+  }
+}
+
+class _ContextMenu extends StatelessWidget {
+  final void Function(ContextMenuOption)? onTap;
+  const _ContextMenu({this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final children = [
+      ListTile(onTap: () => handleTap(0), title: Text('查看')),
+      ListTile(onTap: () => handleTap(1), title: Text('编辑')),
+      ListTile(onTap: () => handleTap(2), title: Text('复制')),
+      Divider(),
+      ListTile(onTap: () => handleTap(3), title: Text('删除')),
+    ];
+    return Material(elevation: 8, child: Column(children: children));
+  }
+
+  void handleTap(int index) {
+    final option = switch (index) {
+      0 => ContextMenuOption.read,
+      1 => ContextMenuOption.edit,
+      2 => ContextMenuOption.duplicate,
+      3 => ContextMenuOption.destroy,
+      _ => throw Exception('Unhandled context menu option $index'),
+    };
+    onTap?.call(option);
   }
 }

@@ -16,6 +16,7 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes {
     final children = [
+      /// Scaffold
       AutoRoute(page: DashboardRoute.page),
       AutoRoute(page: CreatureTemplateListRoute.page),
       AutoRoute(page: ItemTemplateListRoute.page),
@@ -23,6 +24,9 @@ class AppRouter extends RootStackRouter {
       AutoRoute(page: QuestTemplateListRoute.page),
       AutoRoute(page: GossipMenuListRoute.page),
       AutoRoute(page: SmartScriptListRoute.page),
+
+      /// Creature Template
+      AutoRoute(page: CreatureTemplateRoute.page),
     ];
     return [
       AutoRoute(page: LoadingRoute.page, initial: true),
