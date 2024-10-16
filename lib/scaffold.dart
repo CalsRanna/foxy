@@ -116,6 +116,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       3 => GameObjectTemplateListRoute(),
       4 => QuestTemplateListRoute(),
       5 => GossipMenuListRoute(),
+      6 => SmartScriptListRoute(),
       _ => DashboardRoute(),
     };
     AutoRouter.of(context).replace(route);
