@@ -115,7 +115,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       2 => ItemTemplateListRoute(),
       _ => DashboardRoute(),
     };
-    AutoRouter.of(context).push(route);
+    AutoRouter.of(context).replace(route);
   }
 
   Widget _itemBuilder(BuildContext context, List<IconData> icons, int index) {

@@ -30,24 +30,27 @@ class CreatureTemplateService with Service {
   }
 
   CreatureTemplate _getCreatureTemplate(ResultSetRow row) {
-    final rawName = row.colAt(1) ?? '';
-    final localeName = row.colAt(5) ?? '';
+    final entry = row.typedColAt<int>(0) ?? 0;
+    final rawName = row.typedColAt<String>(1) ?? '';
+    final rawSubName = row.typedColAt<String>(2) ?? '';
+    final minLevel = row.typedColAt<int>(3) ?? 0;
+    final maxLevel = row.typedColAt<int>(4) ?? 0;
+    final localeName = row.typedColAt<String>(5) ?? '';
+    final localeSubName = row.typedColAt<String>(6) ?? '';
     final name = localeName.isNotEmpty ? localeName : rawName;
-    final rawSubName = row.colAt(2) ?? '';
-    final localeSubName = row.colAt(6) ?? '';
     final subName = localeSubName.isNotEmpty ? localeSubName : rawSubName;
     return CreatureTemplate()
-      ..entry = row.typedColAt<int>(0) ?? 0
+      ..entry = entry
       ..name = name
       ..subName = subName
-      ..minLevel = row.typedColAt<int>(3) ?? 0
-      ..maxLevel = row.typedColAt<int>(4) ?? 0;
+      ..minLevel = minLevel
+      ..maxLevel = maxLevel;
   }
 
   Future<int> count() async {
     const clause = [
       'SELECT count(*)',
-      'FROM creature_template AS ct',
+      'FROM creature_template',
     ];
     final sql = clause.join(' ');
     var result = await execute(sql);

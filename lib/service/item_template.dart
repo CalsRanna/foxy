@@ -9,20 +9,23 @@ class ItemTemplateService with Service {
   }) async {
     const fields = [
       'it.entry',
+      'it.name',
+      'it.Quality',
       'it.class',
       'it.subclass',
-      'it.name',
-      'it.displayid',
       'it.InventoryType',
       'it.ItemLevel',
       'it.RequiredLevel',
       'itl.Name',
+      // 'didi.InventoryIcon_1',
     ];
     final clauses = [
       'SELECT ${fields.join(', ')}',
       'FROM item_template AS it',
       'LEFT JOIN item_template_locale AS itl',
-      'ON it.entry = itl.ID AND ctl.locale = "zhCN"',
+      'ON it.entry = itl.ID AND itl.locale = "zhCN"',
+      // 'LEFT JOIN foxy.dbc_item_display_info as didi',
+      // 'ON it.displayid = didi.ID',
       'LIMIT $pageSize',
       'OFFSET ${(page - 1) * pageSize}',
     ];
@@ -33,23 +36,26 @@ class ItemTemplateService with Service {
 
   ItemTemplate _getCreatureTemplate(ResultSetRow row) {
     final entry = row.typedColAt<int>(0) ?? 0;
-    final className = row.typedColAt<int>(1) ?? 0;
-    final subclass = row.typedColAt<int>(2) ?? 0;
-    final rawName = row.typedColAt<String>(3) ?? '';
-    final displayId = row.typedColAt<int>(4) ?? 0;
+    final rawName = row.typedColAt<String>(1) ?? '';
+    final quality = row.typedColAt<int>(2) ?? 0;
+    final className = row.typedColAt<int>(3) ?? 0;
+    final subclass = row.typedColAt<int>(4) ?? 0;
     final inventoryType = row.typedColAt<int>(5) ?? 0;
     final itemLevel = row.typedColAt<int>(6) ?? 0;
     final requiredLevel = row.typedColAt<int>(7) ?? 0;
     final localeName = row.typedColAt<String>(8) ?? '';
+    // final inventoryIcon = row.typedColAt<String>(9) ?? '';
     final name = localeName.isNotEmpty ? localeName : rawName;
     return ItemTemplate()
       ..entry = entry
+      ..name = name
+      ..quality = quality
       ..className = className
       ..subclass = subclass
-      ..displayId = displayId
+      ..inventoryType = inventoryType
       ..itemLevel = itemLevel
-      ..quality = 0
-      ..name = name;
+      ..requiredLevel = requiredLevel;
+    // ..inventoryIcon = inventoryIcon;
   }
 
   Future<int> count() async {

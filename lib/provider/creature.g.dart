@@ -23,7 +23,7 @@ final creatureTemplateTotalProvider = FutureProvider<int>.internal(
 
 typedef CreatureTemplateTotalRef = FutureProviderRef<int>;
 String _$creatureTemplatesNotifierHash() =>
-    r'd28fcf102d077072ee9af9f6439335f227406cb8';
+    r'cfb705ba1739c5875c425cf479d88a56922f0708';
 
 /// See also [CreatureTemplatesNotifier].
 @ProviderFor(CreatureTemplatesNotifier)

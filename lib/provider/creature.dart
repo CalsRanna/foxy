@@ -8,7 +8,7 @@ part 'creature.g.dart';
 class CreatureTemplatesNotifier extends _$CreatureTemplatesNotifier {
   @override
   Future<List<CreatureTemplate>> build() async {
-    return CreatureTemplateService().search(page: 1);
+    return CreatureTemplateService().search();
   }
 
   Future<void> paginate(int page) async {
