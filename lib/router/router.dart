@@ -24,6 +24,7 @@ class AppRouter extends RootStackRouter {
       AutoRoute(page: QuestTemplateListRoute.page),
       AutoRoute(page: GossipMenuListRoute.page),
       AutoRoute(page: SmartScriptListRoute.page),
+      AutoRoute(page: SettingRoute.page),
 
       /// Creature Template
       AutoRoute(page: CreatureTemplateRoute.page),
