@@ -19,6 +19,7 @@ class AppRouter extends RootStackRouter {
       AutoRoute(page: DashboardRoute.page),
       AutoRoute(page: CreatureTemplateListRoute.page),
       AutoRoute(page: ItemTemplateListRoute.page),
+      AutoRoute(page: GameObjectTemplateListRoute.page),
     ];
     return [
       AutoRoute(page: LoadingRoute.page, initial: true),

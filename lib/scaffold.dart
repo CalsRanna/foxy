@@ -113,6 +113,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       0 => DashboardRoute(),
       1 => CreatureTemplateListRoute(),
       2 => ItemTemplateListRoute(),
+      3 => GameObjectTemplateListRoute(),
       _ => DashboardRoute(),
     };
     AutoRouter.of(context).replace(route);
