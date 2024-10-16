@@ -13,22 +13,20 @@ class QuestTemplateListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final children = [_Breadcrumb(), _Filter(), Expanded(child: _Table())];
+    final column = Column(children: children);
+    return Padding(padding: const EdgeInsets.all(16.0), child: column);
+  }
+}
+
+class _Breadcrumb extends StatelessWidget {
+  const _Breadcrumb();
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline.withOpacity(0.85);
-    final toolbarChildren = [
-      FilledButton(onPressed: () {}, child: Text('新增')),
-      const Spacer(),
-      _Pagination()
-    ];
-    final tableChildren = [
-      Row(children: toolbarChildren),
-      Expanded(child: _Table())
-    ];
-    final table = Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(children: tableChildren),
-    );
     const edgeInsets = EdgeInsets.symmetric(horizontal: 8.0);
     final breadcrumbChildren = [
       Text('首页', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -39,16 +37,7 @@ class QuestTemplateListPage extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(children: breadcrumbChildren),
     );
-    final children = [
-      Card(child: breadcrumb),
-      _Filter(),
-      Expanded(child: Card(child: table)),
-    ];
-    final column = Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: children,
-    );
-    return Padding(padding: const EdgeInsets.all(16.0), child: column);
+    return Card(child: breadcrumb);
   }
 }
 
@@ -120,16 +109,34 @@ class _Table extends ConsumerWidget {
   }
 
   Widget _buildData(List<QuestTemplate> templates) {
-    final header = ArcaneTableHeader(children: [
+    final toolbarChildren = [
+      FilledButton(onPressed: () {}, child: Text('新增')),
+      const Spacer(),
+      _Pagination()
+    ];
+    final header = _buildHeader();
+    final body = templates.map(_buildRow).toList();
+    final tableChildren = [
+      Row(children: toolbarChildren),
+      Expanded(child: ArcaneTable(header: header, body: body))
+    ];
+    final table = Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(children: tableChildren),
+    );
+    return Card(child: table);
+  }
+
+  ArcaneTableHeader _buildHeader() {
+    final children = [
       ArcaneTableCell(width: 80, child: Text('编号')),
       ArcaneTableCell(width: 100, child: Text('标题')),
       ArcaneTableCell(width: 400, child: Text('描述')),
       ArcaneTableCell(child: Text('类型')),
       ArcaneTableCell(child: Text('等级')),
       ArcaneTableCell(child: Text('最低等级')),
-    ]);
-    final body = templates.map(_buildRow).toList();
-    return ArcaneTable(header: header, body: body);
+    ];
+    return ArcaneTableHeader(children: children);
   }
 
   ArcaneTableRow _buildRow(QuestTemplate template) {
