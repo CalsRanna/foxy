@@ -7,11 +7,11 @@ class FrequentModuleService with Service {
     if (results.isEmpty) {
       final sql =
           'insert into foxy.frequent_modules (category, description, name, updated_at) values (?, ?, ?, ?)';
-      var statement = await pool.prepare(sql);
+      var statement = await connection.prepare(sql);
       for (var i = 0; i < 9; i++) {
         await statement.execute(['database', '生物', '生物$i', DateTime.now()]);
       }
-      results = await pool.execute('select * from foxy.frequent_modules');
+      results = await connection.execute('select * from foxy.frequent_modules');
     }
     List<FrequentModule> modules = [];
     for (var result in results.rows) {
