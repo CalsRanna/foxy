@@ -169,7 +169,11 @@ class _ContextMenu extends StatelessWidget {
       Divider(),
       ListTile(onTap: () => handleTap(3), title: Text('删除')),
     ];
-    return Material(elevation: 8, child: Column(children: children));
+    return Material(
+      borderRadius: BorderRadius.circular(8),
+      elevation: 8,
+      child: Column(children: children),
+    );
   }
 
   void handleTap(int index) {

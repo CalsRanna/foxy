@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/provider/creature.dart';
 import 'package:foxy/util/input_width_calculator.dart';
+import 'package:foxy/widget/breadcrumb.dart';
 import 'package:foxy/widget/input.dart';
 
 @RoutePage()
@@ -116,7 +117,7 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
   Widget _buildData(WidgetRef ref, CreatureTemplate template) {
     _initControllers(template);
     final width = InputWidthCalculator(context).calculate();
-    const edgeInsets = EdgeInsets.all(16.0);
+    const edgeInsets = EdgeInsets.symmetric(vertical: 16.0);
 
     /// Basic
     final entryInput = _Input(
@@ -550,9 +551,27 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
       Card(child: movementPadding),
       Card(child: otherPadding),
     ];
-    final listView = ListView(padding: edgeInsets, children: children);
+    final listView = ListView(children: children);
     final footer = _Footer(onTap: () => handleTap(ref));
-    return Column(children: [Expanded(child: listView), footer]);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Breadcrumb(children: [
+                Text('首页'),
+                Text('生物模板'),
+                Text(template.name),
+              ]),
+            ),
+          ),
+          Expanded(child: listView),
+          footer,
+        ],
+      ),
+    );
   }
 
   void _disposeControllers() {
@@ -729,7 +748,7 @@ class _Footer extends StatelessWidget {
       cancelButton,
     ];
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Row(children: children),
     );
   }

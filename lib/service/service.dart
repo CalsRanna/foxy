@@ -13,10 +13,10 @@ mixin Service {
 
 class ServiceInitializer {
   static Future<void> ensureInitialized({
-    String host = '43.139.61.244',
+    String host = '127.0.0.1',
     int port = 3306,
     String username = 'root',
-    String password = 'mysql_nZ5mHE',
+    String password = 'root',
     String database = 'world',
   }) async {
     connection = await MySQLConnection.createConnection(

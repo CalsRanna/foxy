@@ -19,7 +19,7 @@ class DashboardPage extends StatelessWidget {
     const rightChildren = [_Introduction(), SizedBox(height: 16), _Version()];
     const rightColumn = Column(children: rightChildren);
     const children = [
-      Expanded(flex: 2, child: leftColumn),
+      Expanded(flex: 3, child: leftColumn),
       SizedBox(width: 16),
       Expanded(flex: 1, child: rightColumn)
     ];
@@ -89,7 +89,7 @@ class _Introduction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const introduction = Text(
-      'Foxy已经很长时间没有更新了，但是它仍然很好用。\n\n'
+      'Foxy已经很长时间没有更新了，已经适配不上新版本的模拟器了。\n\n'
       '最近有一点空闲时间，于是使用Flutter重构了一版。\n\n'
       '之所以使用Flutter而不是Vue3进行重构，有两方面原因。一是我的技术栈已经全面迁移至Flutter，我'
       '可以使用更少的代码实现更多的功能；二是因为Vue3+Electron这套技术栈，在我个人看来有点臃肿，而'

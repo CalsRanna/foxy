@@ -130,7 +130,7 @@ class _Table extends ConsumerWidget {
   ArcaneTableHeader _buildHeader() {
     final children = [
       ArcaneTableCell(width: 80, child: Text('编号')),
-      ArcaneTableCell(width: 200, child: Text('备注')),
+      ArcaneTableCell(child: Text('备注')),
       ArcaneTableCell(child: Text('类型')),
       ArcaneTableCell(child: Text('ID')),
       ArcaneTableCell(child: Text('链接')),
@@ -144,7 +144,7 @@ class _Table extends ConsumerWidget {
   ArcaneTableRow _buildRow(SmartScript template) {
     final children = [
       ArcaneTableCell(width: 80, child: Text(template.entryOrGuid.toString())),
-      ArcaneTableCell(width: 200, child: Text(template.comment)),
+      ArcaneTableCell(child: Text(template.comment)),
       ArcaneTableCell(child: Text(template.sourceType.toString())),
       ArcaneTableCell(child: Text(template.id.toString())),
       ArcaneTableCell(child: Text(template.link.toString())),
