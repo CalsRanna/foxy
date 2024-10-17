@@ -15,7 +15,7 @@ class SmartScriptListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = [_Breadcrumb(), Header('脚本'), _Filter(), _Table()];
+    final children = [_Breadcrumb(), _Header(), _Filter(), _Table()];
     return ListView(padding: EdgeInsets.all(16), children: children);
   }
 }
@@ -63,6 +63,16 @@ class _Filter extends ConsumerWidget {
     final provider = smartScriptsNotifierProvider;
     final notifier = ref.read(provider.notifier);
     notifier.reset();
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    const edgeInsets = EdgeInsets.symmetric(vertical: 12);
+    return Padding(padding: edgeInsets, child: Header('脚本'));
   }
 }
 

@@ -558,7 +558,7 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
 
     final children = [
       _Breadcrumb(template: template),
-      Header(template.name),
+      _Header(template.name),
       Card(child: basicPadding),
       Card(child: flagPadding),
       Card(child: immunePadding),
@@ -754,6 +754,17 @@ class _Footer extends StatelessWidget {
 
   void handlePressed(BuildContext context) {
     AutoRouter.of(context).maybePop();
+  }
+}
+
+class _Header extends StatelessWidget {
+  final String title;
+  const _Header(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    const edgeInsets = EdgeInsets.symmetric(vertical: 12);
+    return Padding(padding: edgeInsets, child: Header(title));
   }
 }
 

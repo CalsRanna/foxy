@@ -37,7 +37,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final children = [_Breadcrumb(), Header('生物'), _Filter(), _Table()];
+    final children = [_Breadcrumb(), _Header(), _Filter(), _Table()];
     return ListView(padding: EdgeInsets.all(16), children: children);
   }
 }
@@ -66,6 +66,16 @@ class _Filter extends StatelessWidget {
       child: Row(children: credentialChildren),
     );
     return Card(child: filter);
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    const edgeInsets = EdgeInsets.symmetric(vertical: 12);
+    return Padding(padding: edgeInsets, child: Header('生物'));
   }
 }
 
