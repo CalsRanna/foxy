@@ -1,9 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/dashboard/component/frequent_module.dart';
-import 'package:foxy/page/dashboard/component/trend.dart';
+import 'package:foxy/page/dashboard/component/welcome.dart';
+import 'package:foxy/page/dashboard/component/workspace.dart';
 import 'package:foxy/widget/breadcrumb.dart';
-import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
 
 @RoutePage()
@@ -15,9 +14,9 @@ class DashboardPage extends StatelessWidget {
     const children = [
       _Breadcrumb(),
       Header('工作台'),
-      _Welcome(),
+      Welcome(),
       SizedBox(height: 16),
-      _Workspace(),
+      Workspace(),
     ];
     return ListView(padding: const EdgeInsets.all(16), children: children);
   }
@@ -33,110 +32,5 @@ class _Breadcrumb extends StatelessWidget {
       BreadcrumbItem(child: Text('工作台')),
     ];
     return Breadcrumb(children: children);
-  }
-}
-
-class _Introduction extends StatelessWidget {
-  const _Introduction();
-
-  @override
-  Widget build(BuildContext context) {
-    const introduction = Text(
-      'Foxy已经很长时间没有更新了，已经适配不上新版本的模拟器了。\n\n'
-      '最近有一点空闲时间，于是使用Flutter重构了一版。\n\n'
-      '之所以使用Flutter而不是Vue3进行重构，有两方面原因。一是我的技术栈已经全面迁移至Flutter，我'
-      '可以使用更少的代码实现更多的功能；二是因为Vue3+Electron这套技术栈，在我个人看来有点臃肿，而'
-      '且执行效率不够高。\n\n'
-      '希望新的Foxy能继续实现我最初的愿景，做最好的魔兽世界编辑器！',
-    );
-    return const FoxyCard(title: Text('介绍'), child: introduction);
-  }
-}
-
-class _Version extends StatelessWidget {
-  const _Version();
-
-  @override
-  Widget build(BuildContext context) {
-    const children = [
-      Text(
-          '核心版本：TrinityCore rev. 12bb3efea6af 2024-04-15 21:12:55 +0200 (3.3.5 branch) (Win64, RelWithDebInfo, Static)'),
-      Text('核心修订版本：12bb3efea6af'),
-      Text('数据库版本：TDB 335.24041'),
-      Text('软件版本：0.3.1'),
-    ];
-    const column = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
-    );
-    return const FoxyCard(title: Text('版本信息'), child: column);
-  }
-}
-
-class _Welcome extends StatelessWidget {
-  const _Welcome();
-
-  @override
-  Widget build(BuildContext context) {
-    const boxDecoration = BoxDecoration(
-      color: Colors.red,
-      shape: BoxShape.circle,
-    );
-    final avatar = Container(
-      decoration: boxDecoration,
-      width: 80,
-      height: 80,
-    );
-    const supportChildren = [
-      Text('欢迎使用Foxy！', style: TextStyle(fontSize: 20)),
-      Text('支持 Azeroth / Trinity Core | 3.3.5 12340 | Mysql 5.x / 8.x')
-    ];
-    const support = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: supportChildren,
-    );
-    const module = Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [Text('模块数'), Text('58')],
-    );
-    const count = Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [Text('使用次数'), Text('2,223')],
-    );
-    final children = [
-      avatar,
-      const SizedBox(width: 16),
-      support,
-      const Spacer(),
-      module,
-      const SizedBox(width: 16),
-      count
-    ];
-    return Row(children: children);
-  }
-}
-
-class _Workspace extends StatelessWidget {
-  const _Workspace();
-
-  @override
-  Widget build(BuildContext context) {
-    const leftChildren = [
-      FrequentModuleComponent(),
-      SizedBox(height: 16),
-      Trend(),
-    ];
-    const leftColumn = Column(children: leftChildren);
-    const rightChildren = [_Introduction(), SizedBox(height: 16), _Version()];
-    const rightColumn = Column(children: rightChildren);
-    const children = [
-      Expanded(flex: 3, child: leftColumn),
-      SizedBox(width: 16),
-      Expanded(flex: 1, child: rightColumn)
-    ];
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
-    );
   }
 }

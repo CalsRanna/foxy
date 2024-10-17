@@ -1,19 +1,136 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foxy/provider/application.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/widget/card.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class FrequentModuleComponent extends StatefulWidget {
+class FrequentModuleComponent extends StatelessWidget {
   const FrequentModuleComponent({super.key});
 
   @override
-  State<FrequentModuleComponent> createState() =>
-      _FrequentModuleComponentState();
+  Widget build(BuildContext context) {
+    const textStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+    const title = Text('常用的模块', style: textStyle);
+    final creature = _Tile(
+      category: _Category.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(HugeIcons.strokeRoundedUserMultiple),
+      name: '生物',
+      onTap: () => handleTap(context, 0),
+      positions: [_Position.right],
+    );
+    final item = _Tile(
+      category: _Category.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(HugeIcons.strokeRoundedBodyArmor),
+      name: '物品',
+      onTap: () => handleTap(context, 1),
+      positions: [_Position.right],
+    );
+    final gameObject = _Tile(
+      category: _Category.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(HugeIcons.strokeRoundedCube),
+      name: '游戏对象',
+      onTap: () => handleTap(context, 2),
+      positions: [],
+    );
+    final quest = _Tile(
+      category: _Category.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(HugeIcons.strokeRoundedCursorInfo01),
+      name: '任务',
+      onTap: () => handleTap(context, 3),
+    );
+    final gossip = _Tile(
+      category: _Category.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(HugeIcons.strokeRoundedBubbleChat),
+      name: '对话',
+      onTap: () => handleTap(context, 4),
+    );
+    final smartScript = _Tile(
+      category: _Category.database,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(HugeIcons.strokeRoundedCode),
+      name: '内建脚本',
+      onTap: () => handleTap(context, 5),
+      positions: [_Position.top],
+    );
+    final spell = _Tile(
+      category: _Category.dbc,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(HugeIcons.strokeRoundedSolarSystem),
+      name: '法术',
+      onTap: () => handleTap(context, 6),
+    );
+    final talent = _Tile(
+      category: _Category.dbc,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(HugeIcons.strokeRoundedNanoTechnology),
+      name: '天赋',
+      onTap: () => handleTap(context, 7),
+    );
+    final itemSet = _Tile(
+      category: _Category.dbc,
+      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      icon: Icon(HugeIcons.strokeRoundedLayers01),
+      name: '套装',
+      onTap: () => handleTap(context, 8),
+      positions: [_Position.top],
+    );
+    final row1 = Row(children: [
+      Expanded(child: creature),
+      Expanded(child: item),
+      Expanded(child: gameObject),
+    ]);
+    final row2 = Row(children: [
+      Expanded(child: quest),
+      Expanded(child: gossip),
+      Expanded(child: smartScript),
+    ]);
+    final row3 = Row(children: [
+      Expanded(child: spell),
+      Expanded(child: talent),
+      Expanded(child: itemSet),
+    ]);
+    final children = [row1, row2, row3];
+    final column = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
+    return FoxyCard(title: title, child: column);
+  }
+
+  void handleTap(BuildContext context, int index) {
+    final provider = selectedMenuIndexNotifierProvider;
+    final container = ProviderScope.containerOf(context);
+    final notifier = container.read(provider.notifier);
+    notifier.select(index + 1);
+    final route = switch (index) {
+      0 => CreatureTemplateListRoute(),
+      1 => ItemTemplateListRoute(),
+      2 => GameObjectTemplateListRoute(),
+      3 => QuestTemplateListRoute(),
+      4 => GossipMenuListRoute(),
+      5 => SmartScriptListRoute(),
+      _ => DashboardRoute(),
+    };
+    AutoRouter.of(context).navigate(route);
+  }
 }
 
-class _CategoryTag extends StatelessWidget {
-  final _ModuleCategory category;
+enum _Category { database, dbc }
 
-  const _CategoryTag({required this.category});
+enum _Position { right, top }
+
+class _Tag extends StatelessWidget {
+  final _Category category;
+
+  const _Tag({required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -22,136 +139,32 @@ class _CategoryTag extends StatelessWidget {
       fontWeight: FontWeight.w400,
       height: 1.5,
     );
-    final text = category == _ModuleCategory.database ? 'Database' : 'Dbc';
-    return Text(text, style: style);
+    return Text(category.name.toUpperCase(), style: style);
   }
 }
 
-class _FrequentModuleComponentState extends State<FrequentModuleComponent> {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final outline = colorScheme.outline;
-    final surface = colorScheme.surface;
-    const creature = _ModuleTile(
-      category: _ModuleCategory.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(HugeIcons.strokeRoundedUserMultiple),
-      name: '生物',
-    );
-    const item = _ModuleTile(
-      category: _ModuleCategory.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(HugeIcons.strokeRoundedBodyArmor),
-      name: '物品',
-    );
-    const gameObject = _ModuleTile(
-      category: _ModuleCategory.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(HugeIcons.strokeRoundedCube),
-      name: '游戏对象',
-      positions: [_ModuleTileBorderPosition.top],
-    );
-    const quest = _ModuleTile(
-      category: _ModuleCategory.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(HugeIcons.strokeRoundedCursorInfo01),
-      name: '任务',
-    );
-    const gossip = _ModuleTile(
-      category: _ModuleCategory.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(HugeIcons.strokeRoundedBubbleChat),
-      name: '对话',
-    );
-    const smartScript = _ModuleTile(
-      category: _ModuleCategory.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(HugeIcons.strokeRoundedCode),
-      name: '内建脚本',
-      positions: [_ModuleTileBorderPosition.top],
-    );
-    const spell = _ModuleTile(
-      category: _ModuleCategory.dbc,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(HugeIcons.strokeRoundedSolarSystem),
-      name: '法术',
-    );
-    const talent = _ModuleTile(
-      category: _ModuleCategory.dbc,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(HugeIcons.strokeRoundedNanoTechnology),
-      name: '天赋',
-    );
-    const itemSet = _ModuleTile(
-      category: _ModuleCategory.dbc,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
-      icon: Icon(HugeIcons.strokeRoundedLayers01),
-      name: '套装',
-      positions: [_ModuleTileBorderPosition.top],
-    );
-    const textStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-    const title = Text('常用的模块', style: textStyle);
-    const row1 = Row(children: [
-      Expanded(child: creature),
-      Expanded(child: item),
-      Expanded(child: gameObject),
-    ]);
-    const row2 = Row(children: [
-      Expanded(child: quest),
-      Expanded(child: gossip),
-      Expanded(child: smartScript),
-    ]);
-    const row3 = Row(children: [
-      Expanded(child: spell),
-      Expanded(child: talent),
-      Expanded(child: itemSet),
-    ]);
-    const padding = Padding(padding: EdgeInsets.all(16.0), child: title);
-    const children = [padding, row1, row2, row3];
-    const column = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
-    );
-    final boxShadow = BoxShadow(
-      blurRadius: 8,
-      color: outline.withOpacity(0.1),
-      spreadRadius: 8,
-    );
-    final boxDecoration = BoxDecoration(
-      borderRadius: BorderRadius.circular(4),
-      boxShadow: [boxShadow],
-      color: surface,
-    );
-    return Container(decoration: boxDecoration, child: column);
-  }
-}
-
-enum _ModuleCategory { database, dbc }
-
-class _ModuleTile extends StatefulWidget {
-  final _ModuleCategory category;
-
+class _Tile extends StatefulWidget {
+  final _Category category;
   final String description;
   final Widget icon;
   final String name;
-  final List<_ModuleTileBorderPosition> positions;
-  const _ModuleTile({
-    this.category = _ModuleCategory.database,
+  final void Function()? onTap;
+  final List<_Position> positions;
+
+  const _Tile({
+    this.category = _Category.database,
     required this.description,
     required this.icon,
     required this.name,
-    this.positions = _ModuleTileBorderPosition.values,
+    this.onTap,
+    this.positions = _Position.values,
   });
 
   @override
-  State<_ModuleTile> createState() => _ModuleTileState();
+  State<_Tile> createState() => _TileState();
 }
 
-enum _ModuleTileBorderPosition { right, top }
-
-class _ModuleTileState extends State<_ModuleTile> {
+class _TileState extends State<_Tile> {
   bool hover = false;
   @override
   Widget build(BuildContext context) {
@@ -159,10 +172,7 @@ class _ModuleTileState extends State<_ModuleTile> {
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline;
     final surface = colorScheme.surface;
-    final titleChildren = [
-      Text(widget.name),
-      _CategoryTag(category: widget.category)
-    ];
+    final titleChildren = [Text(widget.name), _Tag(category: widget.category)];
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: titleChildren,
@@ -178,7 +188,7 @@ class _ModuleTileState extends State<_ModuleTile> {
     );
     final containerColumn = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [title, const SizedBox(height: 32), Text(widget.description)],
+      children: [title, const SizedBox(height: 16), Text(widget.description)],
     );
     final border = _getBorder(outline);
     final shadow = _getShadow(outline);
@@ -192,11 +202,12 @@ class _ModuleTileState extends State<_ModuleTile> {
       padding: const EdgeInsets.all(16),
       child: containerColumn,
     );
+    final detector = GestureDetector(onTap: widget.onTap, child: container);
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: handleEnter,
       onExit: handleExit,
-      child: container,
+      child: detector,
     );
   }
 
@@ -215,8 +226,8 @@ class _ModuleTileState extends State<_ModuleTile> {
   Border _getBorder(Color outline) {
     BorderSide side = BorderSide(color: outline.withOpacity(0.2));
     final positions = widget.positions;
-    final showRight = positions.contains(_ModuleTileBorderPosition.right);
-    final showTop = positions.contains(_ModuleTileBorderPosition.top);
+    final showRight = positions.contains(_Position.right);
+    final showTop = positions.contains(_Position.top);
     return Border(
       right: showRight ? side : BorderSide.none,
       top: showTop ? side : BorderSide.none,

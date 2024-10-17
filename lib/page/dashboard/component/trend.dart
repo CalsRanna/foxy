@@ -8,23 +8,35 @@ class Trend extends StatelessWidget {
   Widget build(BuildContext context) {
     const children = [
       ListTile(title: Text('新建生物 XXX')),
-      Divider(),
+      _Divider(),
       ListTile(title: Text('新建生物 XXX')),
-      Divider(),
+      _Divider(),
       ListTile(title: Text('新建生物 XXX')),
-      Divider(),
+      _Divider(),
       ListTile(title: Text('新建生物 XXX')),
-      Divider(),
+      _Divider(),
       ListTile(title: Text('新建生物 XXX')),
-      Divider(),
+      _Divider(),
       ListTile(title: Text('新建生物 XXX')),
-      Divider(),
+      _Divider(),
       ListTile(title: Text('新建生物 XXX')),
-      Divider(),
+      _Divider(),
       ListTile(title: Text('新建生物 XXX')),
-      Divider(),
+      _Divider(),
       ListTile(title: Text('新建生物 XXX')),
     ];
     return const FoxyCard(title: Text('动态'), child: Column(children: children));
+  }
+}
+
+class _Divider extends StatelessWidget {
+  const _Divider();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final outline = colorScheme.outline;
+    return Divider(color: outline.withOpacity(0.2), height: 1);
   }
 }

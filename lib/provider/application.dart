@@ -7,3 +7,11 @@ part 'application.g.dart';
 Future<String> mysqlVersion(MysqlVersionRef ref) async {
   return await ApplicationService().getMysqlVersion();
 }
+
+@Riverpod(keepAlive: true)
+class SelectedMenuIndexNotifier extends _$SelectedMenuIndexNotifier {
+  @override
+  int build() => 0;
+
+  void select(int index) => state = index;
+}
