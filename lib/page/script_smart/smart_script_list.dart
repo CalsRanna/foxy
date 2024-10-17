@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/smart_script.dart';
 import 'package:foxy/provider/smart_script.dart';
+import 'package:foxy/widget/breadcrumb.dart';
+import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/widget/table.dart';
@@ -13,9 +15,8 @@ class SmartScriptListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = [_Breadcrumb(), _Filter(), Expanded(child: _Table())];
-    final column = Column(children: children);
-    return Padding(padding: const EdgeInsets.all(16.0), child: column);
+    final children = [_Breadcrumb(), Header('脚本'), _Filter(), _Table()];
+    return ListView(padding: EdgeInsets.all(16), children: children);
   }
 }
 
@@ -24,20 +25,11 @@ class _Breadcrumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final outline = colorScheme.outline.withOpacity(0.85);
-    const edgeInsets = EdgeInsets.symmetric(horizontal: 8.0);
-    final breadcrumbChildren = [
-      Text('首页', style: TextStyle(fontWeight: FontWeight.bold)),
-      Padding(padding: edgeInsets, child: Text('/')),
-      Text('脚本', style: TextStyle(color: outline)),
+    final children = [
+      BreadcrumbItem(onTap: () {}, child: Text('首页')),
+      BreadcrumbItem(child: Text('脚本')),
     ];
-    final breadcrumb = Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(children: breadcrumbChildren),
-    );
-    return Card(child: breadcrumb);
+    return Breadcrumb(children: children);
   }
 }
 
@@ -114,21 +106,16 @@ class _Table extends ConsumerWidget {
       const Spacer(),
       _Pagination()
     ];
+    final toolbar = Row(children: toolbarChildren);
     final header = _buildHeader();
     final body = templates.map(_buildRow).toList();
-    final tableChildren = [
-      Row(children: toolbarChildren),
-      Expanded(child: ArcaneTable(header: header, body: body))
-    ];
-    final table = Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(children: tableChildren),
-    );
-    return Card(child: table);
+    final table = ArcaneTable(header: header, body: body);
+    final column = Column(children: [toolbar, table]);
+    return Card(child: Padding(padding: EdgeInsets.all(16), child: column));
   }
 
   ArcaneTableHeader _buildHeader() {
-    final children = [
+    return ArcaneTableHeader(children: [
       ArcaneTableCell(width: 80, child: Text('编号')),
       ArcaneTableCell(child: Text('备注')),
       ArcaneTableCell(child: Text('类型')),
@@ -137,8 +124,7 @@ class _Table extends ConsumerWidget {
       ArcaneTableCell(child: Text('事件类型')),
       ArcaneTableCell(child: Text('动作类型')),
       ArcaneTableCell(child: Text('目标类型')),
-    ];
-    return ArcaneTableHeader(children: children);
+    ]);
   }
 
   ArcaneTableRow _buildRow(SmartScript template) {

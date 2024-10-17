@@ -1,5 +1,5 @@
-import 'package:foxy/database/isar.dart';
-import 'package:foxy/database/setting.dart';
+import 'package:foxy/schema/isar.dart';
+import 'package:foxy/schema/setting.dart';
 import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

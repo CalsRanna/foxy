@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/game_object_template.dart';
 import 'package:foxy/provider/game_object_template.dart';
+import 'package:foxy/widget/breadcrumb.dart';
+import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/widget/table.dart';
@@ -13,42 +15,21 @@ class GameObjectTemplateListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final outline = colorScheme.outline.withOpacity(0.85);
-    final toolbarChildren = [
-      FilledButton(onPressed: () {}, child: Text('新增')),
-      const Spacer(),
-      _Pagination()
-    ];
-    final tableChildren = [
-      Row(children: toolbarChildren),
-      Expanded(child: _Table())
-    ];
-    final table = Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(children: tableChildren),
-    );
-    const edgeInsets = EdgeInsets.symmetric(horizontal: 8.0);
-    final breadcrumbChildren = [
-      Text('首页', style: TextStyle(fontWeight: FontWeight.bold)),
-      Padding(padding: edgeInsets, child: Text('/')),
-      Text('游戏对象', style: TextStyle(color: outline)),
-    ];
-    final breadcrumb = Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(children: breadcrumbChildren),
-    );
+    final children = [_Breadcrumb(), Header('游戏对象'), _Filter(), _Table()];
+    return ListView(padding: EdgeInsets.all(16), children: children);
+  }
+}
+
+class _Breadcrumb extends StatelessWidget {
+  const _Breadcrumb();
+
+  @override
+  Widget build(BuildContext context) {
     final children = [
-      Card(child: breadcrumb),
-      _Filter(),
-      Expanded(child: Card(child: table)),
+      BreadcrumbItem(onTap: () {}, child: Text('首页')),
+      BreadcrumbItem(child: Text('游戏对象')),
     ];
-    final column = Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: children,
-    );
-    return Padding(padding: const EdgeInsets.all(16.0), child: column);
+    return Breadcrumb(children: children);
   }
 }
 
@@ -120,14 +101,26 @@ class _Table extends ConsumerWidget {
   }
 
   Widget _buildData(List<GameObjectTemplate> templates) {
-    final header = ArcaneTableHeader(children: [
+    final children = [
+      FilledButton(onPressed: () {}, child: Text('新增')),
+      const Spacer(),
+      _Pagination()
+    ];
+    final toolbar = Row(children: children);
+    final header = _buildHeader();
+    final body = templates.map(_buildRow).toList();
+    final table = ArcaneTable(header: header, body: body);
+    final column = Column(children: [toolbar, table]);
+    return Card(child: Padding(padding: EdgeInsets.all(16), child: column));
+  }
+
+  ArcaneTableHeader _buildHeader() {
+    return ArcaneTableHeader(children: [
       ArcaneTableCell(width: 100, child: Text('编号')),
       ArcaneTableCell(child: Text('名称')),
       ArcaneTableCell(child: Text('类型')),
       ArcaneTableCell(child: Text('尺寸')),
     ]);
-    final body = templates.map(_buildRow).toList();
-    return ArcaneTable(header: header, body: body);
   }
 
   ArcaneTableRow _buildRow(GameObjectTemplate template) {

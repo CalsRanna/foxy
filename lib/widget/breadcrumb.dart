@@ -7,27 +7,37 @@ class Breadcrumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> items = [];
-    final seperator = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-      child: Text('/'),
-    );
+    final separator = _buildSeparator();
     for (var i = 0; i < children.length; i++) {
-      if (i < children.length - 1) {
-        items.add(
-          InkWell(
-            borderRadius: BorderRadius.circular(4),
-            onTap: () {},
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: children[i],
-            ),
-          ),
-        );
-        items.add(seperator);
-      } else {
-        items.add(children[i]);
-      }
+      items.add(children[i]);
+      if (i < children.length - 1) items.add(separator);
     }
     return Row(children: items);
+  }
+
+  Widget _buildSeparator() {
+    const edgeInsets = EdgeInsets.all(4);
+    return Padding(padding: edgeInsets, child: Text('/'));
+  }
+}
+
+class BreadcrumbItem extends StatelessWidget {
+  final Function()? onTap;
+  final Widget child;
+  const BreadcrumbItem({super.key, this.onTap, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final onSurface = colorScheme.onSurface;
+    final disabled = onTap == null;
+    final opacity = disabled ? 1.0 : 0.5;
+    final textStyle = TextStyle(color: onSurface.withOpacity(opacity));
+    final item = DefaultTextStyle.merge(child: child, style: textStyle);
+    const edgeInsets = EdgeInsets.all(4);
+    final padding = Padding(padding: edgeInsets, child: item);
+    final borderRadius = BorderRadius.circular(4);
+    return InkWell(borderRadius: borderRadius, onTap: onTap, child: padding);
   }
 }

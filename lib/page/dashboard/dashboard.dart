@@ -2,7 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/dashboard/component/frequent_module.dart';
 import 'package:foxy/page/dashboard/component/trend.dart';
+import 'package:foxy/widget/breadcrumb.dart';
 import 'package:foxy/widget/card.dart';
+import 'package:foxy/widget/header.dart';
 
 @RoutePage()
 class DashboardPage extends StatelessWidget {
@@ -10,41 +12,14 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const leftChildren = [
-      FrequentModuleComponent(),
-      SizedBox(height: 16),
-      Trend(),
-    ];
-    const leftColumn = Column(children: leftChildren);
-    const rightChildren = [_Introduction(), SizedBox(height: 16), _Version()];
-    const rightColumn = Column(children: rightChildren);
     const children = [
-      Expanded(flex: 3, child: leftColumn),
-      SizedBox(width: 16),
-      Expanded(flex: 1, child: rightColumn)
-    ];
-    const row = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
-    );
-    const singleChildScrollView = SingleChildScrollView(
-      padding: EdgeInsets.all(16),
-      child: row,
-    );
-    const bodyChildren = [
-      SizedBox(height: 16),
       _Breadcrumb(),
-      SizedBox(height: 16),
-      _Header(),
-      SizedBox(height: 16),
+      Header('工作台'),
       _Welcome(),
       SizedBox(height: 16),
-      Expanded(child: singleChildScrollView),
+      _Workspace(),
     ];
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: bodyChildren,
-    );
+    return ListView(padding: const EdgeInsets.all(16), children: children);
   }
 }
 
@@ -53,33 +28,11 @@ class _Breadcrumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final outline = colorScheme.outline.withOpacity(0.85);
-    const textStyle = TextStyle(fontWeight: FontWeight.bold);
-    const edgeInsets = EdgeInsets.symmetric(horizontal: 8.0);
     final children = [
-      Text('首页', style: TextStyle(color: outline)),
-      const Padding(padding: edgeInsets, child: Text('/')),
-      const Text('工作台', style: textStyle),
+      BreadcrumbItem(onTap: () {}, child: Text('首页')),
+      BreadcrumbItem(child: Text('工作台')),
     ];
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(children: children),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header();
-
-  @override
-  Widget build(BuildContext context) {
-    const textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Text('工作台', style: textStyle),
-    );
+    return Breadcrumb(children: children);
   }
 }
 
@@ -159,7 +112,31 @@ class _Welcome extends StatelessWidget {
       const SizedBox(width: 16),
       count
     ];
-    const edgeInsets = EdgeInsets.symmetric(horizontal: 16);
-    return Padding(padding: edgeInsets, child: Row(children: children));
+    return Row(children: children);
+  }
+}
+
+class _Workspace extends StatelessWidget {
+  const _Workspace();
+
+  @override
+  Widget build(BuildContext context) {
+    const leftChildren = [
+      FrequentModuleComponent(),
+      SizedBox(height: 16),
+      Trend(),
+    ];
+    const leftColumn = Column(children: leftChildren);
+    const rightChildren = [_Introduction(), SizedBox(height: 16), _Version()];
+    const rightColumn = Column(children: rightChildren);
+    const children = [
+      Expanded(flex: 3, child: leftColumn),
+      SizedBox(width: 16),
+      Expanded(flex: 1, child: rightColumn)
+    ];
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
   }
 }

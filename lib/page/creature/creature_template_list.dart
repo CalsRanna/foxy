@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/provider/creature.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/widget/breadcrumb.dart';
+import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/widget/table.dart';
@@ -17,37 +19,34 @@ class CreatureTemplateListPage extends StatefulWidget {
       _CreatureTemplateListPageState();
 }
 
+class _Breadcrumb extends StatelessWidget {
+  const _Breadcrumb();
+
+  @override
+  Widget build(BuildContext context) {
+    final children = [
+      BreadcrumbItem(onTap: () {}, child: Text('首页')),
+      BreadcrumbItem(child: Text('生物')),
+    ];
+    return Breadcrumb(children: children);
+  }
+}
+
 class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
   int total = 0;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final outline = colorScheme.outline.withOpacity(0.85);
-    final toolbarChildren = [
-      FilledButton(onPressed: () {}, child: Text('新增')),
-      const Spacer(),
-      _Pagination()
-    ];
-    final tableChildren = [
-      Row(children: toolbarChildren),
-      Expanded(child: _Table())
-    ];
-    final table = Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(children: tableChildren),
-    );
-    const edgeInsets = EdgeInsets.symmetric(horizontal: 8.0);
-    final breadcrumbChildren = [
-      Text('首页', style: TextStyle(fontWeight: FontWeight.bold)),
-      Padding(padding: edgeInsets, child: Text('/')),
-      Text('生物', style: TextStyle(color: outline)),
-    ];
-    final breadcrumb = Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(children: breadcrumbChildren),
-    );
+    final children = [_Breadcrumb(), Header('生物'), _Filter(), _Table()];
+    return ListView(padding: EdgeInsets.all(16), children: children);
+  }
+}
+
+class _Filter extends StatelessWidget {
+  const _Filter();
+
+  @override
+  Widget build(BuildContext context) {
     final buttonChildren = [
       TextButton(onPressed: () {}, child: Text('查询')),
       const SizedBox(width: 8),
@@ -66,16 +65,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       padding: const EdgeInsets.all(16.0),
       child: Row(children: credentialChildren),
     );
-    final children = [
-      Card(child: breadcrumb),
-      Card(child: filter),
-      Expanded(child: Card(child: table)),
-    ];
-    final column = Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: children,
-    );
-    return Padding(padding: const EdgeInsets.all(16.0), child: column);
+    return Card(child: filter);
   }
 }
 
@@ -113,23 +103,38 @@ class _Table extends ConsumerWidget {
     };
   }
 
+  void handleDoubleTap(BuildContext context, BriefCreatureTemplate template) {
+    final route = CreatureTemplateRoute(entry: template.entry);
+    AutoRouter.of(context).push(route);
+  }
+
   Widget _buildData(
     BuildContext context,
     List<BriefCreatureTemplate> templates,
   ) {
-    final header = ArcaneTableHeader(children: [
+    final children = [
+      FilledButton(onPressed: () {}, child: Text('新增')),
+      const Spacer(),
+      _Pagination()
+    ];
+    final toolbar = Row(children: children);
+    final header = _buildHeader();
+    final body = templates.map((template) {
+      return _buildRow(context, template);
+    }).toList();
+    final table = ArcaneTable(header: header, body: body);
+    final column = Column(children: [toolbar, table]);
+    return Card(child: Padding(padding: EdgeInsets.all(16), child: column));
+  }
+
+  ArcaneTableHeader _buildHeader() {
+    return ArcaneTableHeader(children: [
       ArcaneTableCell(width: 100, child: Text('编号')),
       ArcaneTableCell(child: Text('姓名')),
       ArcaneTableCell(child: Text('称号')),
       ArcaneTableCell(child: Text('最低等级')),
       ArcaneTableCell(child: Text('最高等级')),
     ]);
-    final body = templates
-        .map(
-          (template) => _buildRow(context, template),
-        )
-        .toList();
-    return ArcaneTable(header: header, body: body);
   }
 
   ArcaneTableRow _buildRow(
@@ -147,10 +152,5 @@ class _Table extends ConsumerWidget {
       onDoubleTap: () => handleDoubleTap(context, template),
       children: children,
     );
-  }
-
-  void handleDoubleTap(BuildContext context, BriefCreatureTemplate template) {
-    final route = CreatureTemplateRoute(entry: template.entry);
-    AutoRouter.of(context).push(route);
   }
 }

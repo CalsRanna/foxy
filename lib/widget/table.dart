@@ -20,7 +20,7 @@ class ArcaneTable extends StatelessWidget {
     );
     return Column(children: [
       Container(decoration: boxDecoration, child: header),
-      Expanded(child: ListView(children: body ?? [defaultBody]))
+      if (body == null) defaultBody else ...body!,
     ]);
   }
 }

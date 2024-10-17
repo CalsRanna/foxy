@@ -117,10 +117,10 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       4 => QuestTemplateListRoute(),
       5 => GossipMenuListRoute(),
       6 => SmartScriptListRoute(),
-      11 => SettingRoute(),
+      11 => BasicSettingRoute(),
       _ => DashboardRoute(),
     };
-    AutoRouter.of(context).replace(route);
+    AutoRouter.of(context).navigate(route);
   }
 
   Widget _itemBuilder(BuildContext context, List<IconData> icons, int index) {

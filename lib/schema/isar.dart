@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:foxy/database/setting.dart';
+import 'package:foxy/schema/setting.dart';
 import 'package:isar/isar.dart';
 
 late Isar isar;

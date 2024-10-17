@@ -5,6 +5,7 @@ import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/provider/creature.dart';
 import 'package:foxy/util/input_width_calculator.dart';
 import 'package:foxy/widget/breadcrumb.dart';
+import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
 
 @RoutePage()
@@ -15,6 +16,21 @@ class CreatureTemplatePage extends ConsumerStatefulWidget {
   @override
   ConsumerState<CreatureTemplatePage> createState() =>
       _CreatureTemplatePageState();
+}
+
+class _Breadcrumb extends StatelessWidget {
+  final CreatureTemplate template;
+  const _Breadcrumb({required this.template});
+
+  @override
+  Widget build(BuildContext context) {
+    final children = [
+      BreadcrumbItem(onTap: () {}, child: Text('首页')),
+      BreadcrumbItem(onTap: () {}, child: Text('生物')),
+      BreadcrumbItem(child: Text(template.name)),
+    ];
+    return Breadcrumb(children: children);
+  }
 }
 
 class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
@@ -541,6 +557,8 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
     final otherPadding = Padding(padding: edgeInsets, child: otherWrap);
 
     final children = [
+      _Breadcrumb(template: template),
+      Header(template.name),
       Card(child: basicPadding),
       Card(child: flagPadding),
       Card(child: immunePadding),
@@ -550,28 +568,9 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
       Card(child: modelPadding),
       Card(child: movementPadding),
       Card(child: otherPadding),
+      _Footer(onTap: () => handleTap(ref)),
     ];
-    final listView = ListView(children: children);
-    final footer = _Footer(onTap: () => handleTap(ref));
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Breadcrumb(children: [
-                Text('首页'),
-                Text('生物模板'),
-                Text(template.name),
-              ]),
-            ),
-          ),
-          Expanded(child: listView),
-          footer,
-        ],
-      ),
-    );
+    return ListView(padding: const EdgeInsets.all(16), children: children);
   }
 
   void _disposeControllers() {
