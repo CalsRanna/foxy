@@ -16,9 +16,19 @@ class SettingNotifier extends _$SettingNotifier {
 
   Future<void> store(Setting setting) async {
     final previousState = await future;
-    setting.id = previousState.id;
+    final copiedSetting = previousState.copyWith(
+      host: setting.host,
+      port: setting.port,
+      username: setting.username,
+      password: setting.password,
+      database: setting.database,
+      dbcPath: setting.dbcPath,
+      mpqPath: setting.mpqPath,
+      mpqName: setting.mpqName,
+    );
+    copiedSetting.id = previousState.id;
     await isar.writeTxn(() async {
-      await isar.settings.put(setting);
+      await isar.settings.put(copiedSetting);
     });
     ref.invalidateSelf();
   }

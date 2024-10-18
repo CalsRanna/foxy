@@ -1,3 +1,4 @@
+import 'package:foxy/schema/setting.dart';
 import 'package:foxy/util/logger.dart';
 import 'package:mysql_client/mysql_client.dart';
 
@@ -12,19 +13,13 @@ mixin Service {
 }
 
 class ServiceInitializer {
-  static Future<void> ensureInitialized({
-    String host = '43.139.61.244',
-    int port = 3306,
-    String username = 'root',
-    String password = 'mysql_nZ5mHE',
-    String database = 'world',
-  }) async {
+  static Future<void> ensureInitialized(Setting setting) async {
     connection = await MySQLConnection.createConnection(
-      host: host,
-      port: port,
-      userName: username,
-      password: password,
-      databaseName: database, // optional
+      host: setting.host,
+      port: setting.port,
+      userName: setting.username,
+      password: setting.password,
+      databaseName: setting.database, // optional
     );
   }
 }

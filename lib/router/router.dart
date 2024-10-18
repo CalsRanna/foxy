@@ -1,8 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:foxy/router/router.gr.dart';
 
-final routerConfig = AppRouter().config();
-
 @AutoRouterConfig()
 class AppRouter extends RootStackRouter {
   @override
@@ -34,6 +32,7 @@ class AppRouter extends RootStackRouter {
     ];
     return [
       AutoRoute(page: LoadingRoute.page, initial: true),
+      AutoRoute(page: InitializerRoute.page),
       AutoRoute(page: ScaffoldRoute.page, children: children),
     ];
   }

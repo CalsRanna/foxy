@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/schema/isar.dart';
 import 'package:foxy/router/router.dart';
+import 'package:get_it/get_it.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -10,7 +11,7 @@ void main() async {
   const options = WindowOptions(
     backgroundColor: Colors.transparent,
     center: true,
-    minimumSize: Size(800, 600),
+    minimumSize: Size(1200, 900),
     size: Size(400, 300),
     titleBarStyle: TitleBarStyle.hidden,
     windowButtonVisibility: false,
@@ -20,6 +21,7 @@ void main() async {
     await windowManager.focus();
   });
   await IsarInitializer.ensureInitialized();
+  GetIt.instance.registerSingleton(AppRouter());
   runApp(const ProviderScope(child: Foxy()));
 }
 
@@ -40,6 +42,7 @@ class Foxy extends StatelessWidget {
       fontFamily: 'Microsoft YaHei',
       useMaterial3: true,
     );
-    return MaterialApp.router(theme: themeData, routerConfig: routerConfig);
+    final router = GetIt.instance.get<AppRouter>();
+    return MaterialApp.router(theme: themeData, routerConfig: router.config());
   }
 }
