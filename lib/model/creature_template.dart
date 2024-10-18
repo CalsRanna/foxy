@@ -4,6 +4,16 @@ class BriefCreatureTemplate {
   String subName = '';
   int minLevel = 0;
   int maxLevel = 0;
+
+  BriefCreatureTemplate();
+
+  BriefCreatureTemplate.fromJson(Map<String, dynamic> json) {
+    entry = json['entry'] ?? 0;
+    name = json['name'] ?? '';
+    subName = json['subname'] ?? '';
+    minLevel = json['minlevel'] ?? 0;
+    maxLevel = json['maxlevel'] ?? 0;
+  }
 }
 
 class CreatureTemplate {

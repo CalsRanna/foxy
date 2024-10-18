@@ -13,7 +13,13 @@ class LoadingPage extends ConsumerStatefulWidget {
   ConsumerState<LoadingPage> createState() => _LoadingPageState();
 }
 
-class _LoadingPageState extends ConsumerState<LoadingPage> {
+class _LoadingPageState extends ConsumerState<LoadingPage> with WindowListener {
+  @override
+  void onWindowFocus() {
+    setState(() {});
+    super.onWindowFocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     final logs = ref.watch(loadingLogsNotifierProvider);
@@ -26,16 +32,24 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
     var listView = ListView.builder(
       itemBuilder: (context, index) => _itemBuilder(logs, index),
       itemCount: logs.length,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       reverse: true,
     );
-    return Scaffold(body: Stack(children: [image, listView]));
+    var positioned = Positioned(
+      left: 0,
+      right: 200,
+      height: 300,
+      child: listView,
+    );
+    return Scaffold(body: Stack(children: [image, positioned]));
   }
 
   @override
   void initState() {
     super.initState();
-    _initialize();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initialize();
+    });
   }
 
   Future<void> _initialize() async {
@@ -53,7 +67,10 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
   }
 
   Widget _itemBuilder(List<String> logs, int index) {
-    var textStyle = TextStyle(color: Colors.white, fontSize: 12);
+    var textStyle = TextStyle(
+      color: Colors.white.withOpacity(0.6),
+      fontSize: 12,
+    );
     return Text(logs.reversed.elementAt(index), style: textStyle);
   }
 
@@ -65,6 +82,7 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
     ]);
     if (!mounted) return;
     AutoRouter.of(context).replaceAll([DashboardRoute()]);
+    Future.delayed(const Duration(milliseconds: 300));
     await windowManager.setOpacity(1);
   }
 
@@ -76,6 +94,7 @@ class _LoadingPageState extends ConsumerState<LoadingPage> {
     ]);
     if (!mounted) return;
     AutoRouter.of(context).replaceAll([InitializerRoute()]);
+    Future.delayed(const Duration(milliseconds: 300));
     await windowManager.setOpacity(1);
   }
 }

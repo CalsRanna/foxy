@@ -15,11 +15,41 @@ class CreatureTemplatesNotifier extends _$CreatureTemplatesNotifier {
     final templates = await CreatureTemplateService().search(page: page);
     state = AsyncData(templates);
   }
+
+  Future<void> search({int? entry, String? name, String? subName}) async {
+    final service = CreatureTemplateService();
+    final templates = await service.search(
+      entry: entry,
+      name: name,
+      subName: subName,
+    );
+    state = AsyncData(templates);
+  }
 }
 
 @Riverpod(keepAlive: true)
-Future<int> creatureTemplateTotal(CreatureTemplateTotalRef ref) {
-  return CreatureTemplateService().count();
+class CreatureTemplateTotalNotifier extends _$CreatureTemplateTotalNotifier {
+  @override
+  Future<int> build() async {
+    return CreatureTemplateService().count();
+  }
+
+  Future<void> count({int? entry, String? name, String? subName}) async {
+    final total = await CreatureTemplateService().count(
+      entry: entry,
+      name: name,
+      subName: subName,
+    );
+    state = AsyncData(total);
+  }
+}
+
+@Riverpod(keepAlive: true)
+class CreatureTemplatePageNotifier extends _$CreatureTemplatePageNotifier {
+  @override
+  int build() => 1;
+
+  void paginate(int page) => state = page;
 }
 
 @riverpod

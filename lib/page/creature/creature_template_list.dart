@@ -42,22 +42,55 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
   }
 }
 
-class _Filter extends StatelessWidget {
+class _Filter extends StatefulWidget {
   const _Filter();
+
+  @override
+  State<_Filter> createState() => _FilterState();
+}
+
+class _FilterState extends State<_Filter> {
+  final entryController = TextEditingController();
+  final nameController = TextEditingController();
+  final subNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _disposeControllers();
+    super.dispose();
+  }
+
+  void _disposeControllers() {
+    entryController.dispose();
+    nameController.dispose();
+    subNameController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final buttonChildren = [
-      TextButton(onPressed: () {}, child: Text('查询')),
+      TextButton(onPressed: handleSearch, child: Text('查询')),
       const SizedBox(width: 8),
-      TextButton(onPressed: () {}, child: Text('重置')),
+      TextButton(onPressed: handleReset, child: Text('重置')),
     ];
+    var entryInput = FoxyInput(
+      controller: entryController,
+      placeholder: '编号（entry）',
+    );
+    var nameInput = FoxyInput(
+      controller: nameController,
+      placeholder: '姓名（Name）',
+    );
+    var subNameInput = FoxyInput(
+      controller: subNameController,
+      placeholder: '称号（Sub Name）',
+    );
     final credentialChildren = [
-      Expanded(child: FoxyInput(placeholder: '编号（entry）')),
+      Expanded(child: entryInput),
       const SizedBox(width: 16),
-      Expanded(child: FoxyInput(placeholder: '姓名（Name）')),
+      Expanded(child: nameInput),
       const SizedBox(width: 16),
-      Expanded(child: FoxyInput(placeholder: '称号（Sub Name）')),
+      Expanded(child: subNameInput),
       const SizedBox(width: 16),
       Expanded(child: Row(children: buttonChildren)),
     ];
@@ -66,6 +99,35 @@ class _Filter extends StatelessWidget {
       child: Row(children: credentialChildren),
     );
     return Card(child: filter);
+  }
+
+  void handleSearch() {
+    final entry = int.tryParse(entryController.text);
+    final name = nameController.text;
+    final subName = subNameController.text;
+    final container = ProviderScope.containerOf(context);
+    final provider = creatureTemplatesNotifierProvider;
+    final notifier = container.read(provider.notifier);
+    notifier.search(entry: entry, name: name, subName: subName);
+    final totalProvider = creatureTemplateTotalNotifierProvider;
+    final totalNotifier = container.read(totalProvider.notifier);
+    totalNotifier.count(entry: entry, name: name, subName: subName);
+    final pageProvider = creatureTemplatePageNotifierProvider;
+    final pageNotifier = container.read(pageProvider.notifier);
+    pageNotifier.paginate(1);
+  }
+
+  void handleReset() {
+    final container = ProviderScope.containerOf(context);
+    final provider = creatureTemplatesNotifierProvider;
+    final notifier = container.read(provider.notifier);
+    notifier.search();
+    final totalProvider = creatureTemplateTotalNotifierProvider;
+    final totalNotifier = container.read(totalProvider.notifier);
+    totalNotifier.count();
+    final pageProvider = creatureTemplatePageNotifierProvider;
+    final pageNotifier = container.read(pageProvider.notifier);
+    pageNotifier.paginate(1);
   }
 }
 
@@ -84,9 +146,11 @@ class _Pagination extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final provider = creatureTemplateTotalProvider;
+    final provider = creatureTemplateTotalNotifierProvider;
     final total = ref.watch(provider).valueOrNull;
+    final page = ref.watch(creatureTemplatePageNotifierProvider);
     return Pagination(
+      page: page,
       total: total ?? 0,
       onChange: (page) => handleChange(ref, page),
     );
@@ -96,6 +160,9 @@ class _Pagination extends ConsumerWidget {
     final provider = creatureTemplatesNotifierProvider;
     final notifier = ref.read(provider.notifier);
     notifier.paginate(page);
+    final pageProvider = creatureTemplatePageNotifierProvider;
+    final pageNotifier = ref.read(pageProvider.notifier);
+    pageNotifier.paginate(page);
   }
 }
 

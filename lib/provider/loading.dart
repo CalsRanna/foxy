@@ -17,8 +17,8 @@ class LoadingLogsNotifier extends _$LoadingLogsNotifier {
     final settingProvider = settingNotifierProvider;
     final setting = await ref.read(settingProvider.future);
     state = [...state, '连接到数据库...'];
-    await ServiceInitializer.ensureInitialized(setting);
     try {
+      await ServiceInitializer.ensureInitialized(setting);
       await ApplicationService().getMysqlVersion();
       state = [...state, '数据库连接成功'];
     } catch (error) {
@@ -42,11 +42,7 @@ class LoadingLogsNotifier extends _$LoadingLogsNotifier {
     final settingProvider = settingNotifierProvider;
     final setting = await ref.read(settingProvider.future);
     await ServiceInitializer.ensureInitialized(setting);
-    try {
-      await ApplicationService().getMysqlVersion();
-      return true;
-    } catch (error) {
-      return false;
-    }
+    await ApplicationService().getMysqlVersion();
+    return true;
   }
 }

@@ -47,9 +47,9 @@ class _InitializerPage extends ConsumerState<InitializerPage> {
     setState(() {
       loading = true;
     });
+    final setting = _getSetting();
+    await _storeSetting(setting);
     try {
-      final setting = _getSetting();
-      await _storeSetting(setting);
       await _validateMysql();
       _navigateDashboard();
     } catch (error) {
@@ -142,6 +142,7 @@ class _InitializerPage extends ConsumerState<InitializerPage> {
     ]);
     if (!mounted) return;
     AutoRouter.of(context).replaceAll([DashboardRoute()]);
+    Future.delayed(const Duration(milliseconds: 300));
     await windowManager.setOpacity(1);
   }
 

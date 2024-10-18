@@ -6,24 +6,8 @@ part of 'creature.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$creatureTemplateTotalHash() =>
-    r'80840f82f9c266caf189a9b1b6cb07db6bd789be';
-
-/// See also [creatureTemplateTotal].
-@ProviderFor(creatureTemplateTotal)
-final creatureTemplateTotalProvider = FutureProvider<int>.internal(
-  creatureTemplateTotal,
-  name: r'creatureTemplateTotalProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$creatureTemplateTotalHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef CreatureTemplateTotalRef = FutureProviderRef<int>;
 String _$creatureTemplatesNotifierHash() =>
-    r'534983baafff821fdb40581134a10f0df08c7a71';
+    r'75a1e8c3e3120b7bfe4c8718d724e4ba1cb1f9d4';
 
 /// See also [CreatureTemplatesNotifier].
 @ProviderFor(CreatureTemplatesNotifier)
@@ -40,6 +24,40 @@ final creatureTemplatesNotifierProvider = AsyncNotifierProvider<
 
 typedef _$CreatureTemplatesNotifier
     = AsyncNotifier<List<BriefCreatureTemplate>>;
+String _$creatureTemplateTotalNotifierHash() =>
+    r'6572be02cc291941caa1ab66efe9c1f5310f4bba';
+
+/// See also [CreatureTemplateTotalNotifier].
+@ProviderFor(CreatureTemplateTotalNotifier)
+final creatureTemplateTotalNotifierProvider =
+    AsyncNotifierProvider<CreatureTemplateTotalNotifier, int>.internal(
+  CreatureTemplateTotalNotifier.new,
+  name: r'creatureTemplateTotalNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$creatureTemplateTotalNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CreatureTemplateTotalNotifier = AsyncNotifier<int>;
+String _$creatureTemplatePageNotifierHash() =>
+    r'a6bf67e4d50f1587191aba40f1b77400bbdad495';
+
+/// See also [CreatureTemplatePageNotifier].
+@ProviderFor(CreatureTemplatePageNotifier)
+final creatureTemplatePageNotifierProvider =
+    NotifierProvider<CreatureTemplatePageNotifier, int>.internal(
+  CreatureTemplatePageNotifier.new,
+  name: r'creatureTemplatePageNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$creatureTemplatePageNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CreatureTemplatePageNotifier = Notifier<int>;
 String _$creatureTemplateNotifierHash() =>
     r'b80e1d112e8387690c9bfa859fe07ad53ba8aad0';
 
