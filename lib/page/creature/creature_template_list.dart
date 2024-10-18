@@ -5,6 +5,7 @@ import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/provider/creature.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/widget/breadcrumb.dart';
+import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -86,7 +87,7 @@ class _FilterState extends State<_Filter> {
       padding: const EdgeInsets.all(16.0),
       child: Row(children: credentialChildren),
     );
-    return Card(child: filter);
+    return FoxyCard(child: filter);
   }
 
   @override
@@ -206,7 +207,7 @@ class _Table extends ConsumerWidget {
     }).toList();
     final table = ArcaneTable(header: header, body: body);
     final column = Column(children: [toolbar, table]);
-    return Card(child: Padding(padding: EdgeInsets.all(16), child: column));
+    return FoxyCard(child: Padding(padding: EdgeInsets.all(16), child: column));
   }
 
   ArcaneTableHeader _buildHeader() {

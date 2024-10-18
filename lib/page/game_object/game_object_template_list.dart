@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/game_object_template.dart';
 import 'package:foxy/provider/game_object_template.dart';
 import 'package:foxy/widget/breadcrumb.dart';
+import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -56,7 +57,7 @@ class _Filter extends ConsumerWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(children: credentialChildren),
     );
-    return Card(child: filter);
+    return FoxyCard(child: filter);
   }
 
   Future<void> reset(WidgetRef ref) async {
@@ -121,7 +122,7 @@ class _Table extends ConsumerWidget {
     final body = templates.map(_buildRow).toList();
     final table = ArcaneTable(header: header, body: body);
     final column = Column(children: [toolbar, table]);
-    return Card(child: Padding(padding: EdgeInsets.all(16), child: column));
+    return FoxyCard(child: Padding(padding: EdgeInsets.all(16), child: column));
   }
 
   ArcaneTableHeader _buildHeader() {

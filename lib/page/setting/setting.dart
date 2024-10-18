@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/widget/card.dart';
 
 @RoutePage()
 class SettingPage extends StatelessWidget {
@@ -21,7 +22,7 @@ class SettingPage extends StatelessWidget {
     final padding = Padding(padding: const EdgeInsets.all(16.0), child: row);
     return ListView(
       padding: EdgeInsets.all(16),
-      children: [Card(child: padding)],
+      children: [FoxyCard(child: padding)],
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/provider/creature.dart';
 import 'package:foxy/util/input_width_calculator.dart';
 import 'package:foxy/widget/breadcrumb.dart';
+import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
 
@@ -560,15 +561,15 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
     final children = [
       _Breadcrumb(template: template),
       _Header(template.name),
-      Card(child: basicPadding),
-      Card(child: flagPadding),
-      Card(child: immunePadding),
-      Card(child: modifierPadding),
-      Card(child: lootPadding),
-      Card(child: difficultyPadding),
-      Card(child: modelPadding),
-      Card(child: movementPadding),
-      Card(child: otherPadding),
+      FoxyCard(child: basicPadding),
+      FoxyCard(child: flagPadding),
+      FoxyCard(child: immunePadding),
+      FoxyCard(child: modifierPadding),
+      FoxyCard(child: lootPadding),
+      FoxyCard(child: difficultyPadding),
+      FoxyCard(child: modelPadding),
+      FoxyCard(child: movementPadding),
+      FoxyCard(child: otherPadding),
       _Footer(onTap: () => handleTap(ref)),
     ];
     return ListView(padding: const EdgeInsets.all(16), children: children);
