@@ -28,6 +28,15 @@ class CreatureTemplateService with Service {
     return result.rows.first.typedColAt<int>(0) ?? 0;
   }
 
+  Future<void> destroy(CreatureTemplate template) async {
+    final clause = [
+      'DELETE FROM creature_template',
+      'WHERE entry = ${template.entry}',
+    ];
+    final sql = clause.join(' ');
+    await execute(sql);
+  }
+
   Future<CreatureTemplate> find(int entry) async {
     final clauses = [
       'SELECT *',
@@ -80,6 +89,28 @@ class CreatureTemplateService with Service {
     final sql = clauses.join(' ');
     final result = await execute(sql);
     return result.rows.map(_getBriefCreatureTemplate).toList();
+  }
+
+  Future<int> store(CreatureTemplate template) async {
+    final json = template.toJson();
+    final fields = json.keys.join(', ');
+    final values = json.values.join(', ');
+    final sql = 'INSERT INTO creature_template ($fields) VALUES ($values)';
+    final result = await execute(sql);
+    return result.lastInsertID.toInt();
+  }
+
+  Future<void> update(CreatureTemplate template) async {
+    final json = template.toJson();
+    final entries = json.entries;
+    final sets = entries.map((entry) => '${entry.key} = ${entry.value}');
+    final clause = [
+      'UPDATE creature_template',
+      'SET ${sets.join(', ')}',
+      'WHERE entry = ${json['entry']}',
+    ];
+    final sql = clause.join(' ');
+    await execute(sql);
   }
 
   BriefCreatureTemplate _getBriefCreatureTemplate(ResultSetRow row) {

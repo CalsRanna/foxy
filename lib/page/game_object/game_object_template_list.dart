@@ -104,7 +104,7 @@ class _Table extends ConsumerWidget {
     final provider = ref.watch(gameObjectTemplatesNotifierProvider);
     return switch (provider) {
       AsyncData(:final value) => _buildData(value),
-      AsyncLoading() => CircularProgressIndicator.adaptive(),
+      AsyncLoading() => CircularProgressIndicator(),
       AsyncError(:final error) => Text(error.toString()),
       _ => const SizedBox(),
     };

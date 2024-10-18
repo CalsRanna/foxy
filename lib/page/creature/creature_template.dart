@@ -11,7 +11,7 @@ import 'package:foxy/widget/input.dart';
 @RoutePage()
 class CreatureTemplatePage extends ConsumerStatefulWidget {
   final int? entry;
-  const CreatureTemplatePage(this.entry, {super.key});
+  const CreatureTemplatePage({super.key, this.entry});
 
   @override
   ConsumerState<CreatureTemplatePage> createState() =>
@@ -117,7 +117,7 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
     return switch (state) {
       AsyncData(:final value) => _buildData(ref, value),
       AsyncError(:final error) => Text(error.toString()),
-      AsyncLoading() => CircularProgressIndicator.adaptive(),
+      AsyncLoading() => CircularProgressIndicator(),
       _ => SizedBox(),
     };
   }
@@ -140,6 +140,7 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
       controller: entryController,
       label: '编号',
       placeholder: 'entry',
+      readOnly: true,
     );
     final nameInput = _Input(
       controller: nameController,
@@ -772,12 +773,22 @@ class _Input extends StatelessWidget {
   final TextEditingController? controller;
   final String? label;
   final String? placeholder;
-  const _Input({this.controller, this.label, this.placeholder});
+  final bool readOnly;
+  const _Input({
+    this.controller,
+    this.label,
+    this.placeholder,
+    this.readOnly = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final leading = _buildLeading();
-    final input = FoxyInput(controller: controller, placeholder: placeholder);
+    final input = FoxyInput(
+      controller: controller,
+      placeholder: placeholder,
+      readOnly: readOnly,
+    );
     return Row(children: [leading, Expanded(child: input)]);
   }
 

@@ -67,14 +67,14 @@ class CreatureTemplateListRoute extends _i14.PageRouteInfo<void> {
 class CreatureTemplateRoute
     extends _i14.PageRouteInfo<CreatureTemplateRouteArgs> {
   CreatureTemplateRoute({
-    required int? entry,
     _i15.Key? key,
+    int? entry,
     List<_i14.PageRouteInfo>? children,
   }) : super(
           CreatureTemplateRoute.name,
           args: CreatureTemplateRouteArgs(
-            entry: entry,
             key: key,
+            entry: entry,
           ),
           initialChildren: children,
         );
@@ -84,10 +84,11 @@ class CreatureTemplateRoute
   static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<CreatureTemplateRouteArgs>();
+      final args = data.argsAs<CreatureTemplateRouteArgs>(
+          orElse: () => const CreatureTemplateRouteArgs());
       return _i3.CreatureTemplatePage(
-        args.entry,
         key: args.key,
+        entry: args.entry,
       );
     },
   );
@@ -95,17 +96,17 @@ class CreatureTemplateRoute
 
 class CreatureTemplateRouteArgs {
   const CreatureTemplateRouteArgs({
-    required this.entry,
     this.key,
+    this.entry,
   });
-
-  final int? entry;
 
   final _i15.Key? key;
 
+  final int? entry;
+
   @override
   String toString() {
-    return 'CreatureTemplateRouteArgs{entry: $entry, key: $key}';
+    return 'CreatureTemplateRouteArgs{key: $key, entry: $entry}';
   }
 }
 

@@ -55,18 +55,6 @@ class _FilterState extends State<_Filter> {
   final subNameController = TextEditingController();
 
   @override
-  void dispose() {
-    _disposeControllers();
-    super.dispose();
-  }
-
-  void _disposeControllers() {
-    entryController.dispose();
-    nameController.dispose();
-    subNameController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final buttonChildren = [
       TextButton(onPressed: handleSearch, child: Text('查询')),
@@ -101,6 +89,25 @@ class _FilterState extends State<_Filter> {
     return Card(child: filter);
   }
 
+  @override
+  void dispose() {
+    _disposeControllers();
+    super.dispose();
+  }
+
+  void handleReset() {
+    final container = ProviderScope.containerOf(context);
+    final provider = creatureTemplatesNotifierProvider;
+    final notifier = container.read(provider.notifier);
+    notifier.search();
+    final totalProvider = creatureTemplateTotalNotifierProvider;
+    final totalNotifier = container.read(totalProvider.notifier);
+    totalNotifier.count();
+    final pageProvider = creatureTemplatePageNotifierProvider;
+    final pageNotifier = container.read(pageProvider.notifier);
+    pageNotifier.paginate(1);
+  }
+
   void handleSearch() {
     final entry = int.tryParse(entryController.text);
     final name = nameController.text;
@@ -117,17 +124,10 @@ class _FilterState extends State<_Filter> {
     pageNotifier.paginate(1);
   }
 
-  void handleReset() {
-    final container = ProviderScope.containerOf(context);
-    final provider = creatureTemplatesNotifierProvider;
-    final notifier = container.read(provider.notifier);
-    notifier.search();
-    final totalProvider = creatureTemplateTotalNotifierProvider;
-    final totalNotifier = container.read(totalProvider.notifier);
-    totalNotifier.count();
-    final pageProvider = creatureTemplatePageNotifierProvider;
-    final pageNotifier = container.read(pageProvider.notifier);
-    pageNotifier.paginate(1);
+  void _disposeControllers() {
+    entryController.dispose();
+    nameController.dispose();
+    subNameController.dispose();
   }
 }
 
@@ -174,7 +174,7 @@ class _Table extends ConsumerWidget {
     final provider = ref.watch(creatureTemplatesNotifierProvider);
     return switch (provider) {
       AsyncData(:final value) => _buildData(context, value),
-      AsyncLoading() => CircularProgressIndicator.adaptive(),
+      AsyncLoading() => CircularProgressIndicator(),
       AsyncError(:final error) => Text(error.toString()),
       _ => const SizedBox(),
     };
@@ -185,15 +185,20 @@ class _Table extends ConsumerWidget {
     AutoRouter.of(context).push(route);
   }
 
+  void navigateCreatureTemplate(BuildContext context) {
+    final route = CreatureTemplateRoute();
+    AutoRouter.of(context).push(route);
+  }
+
   Widget _buildData(
     BuildContext context,
     List<BriefCreatureTemplate> templates,
   ) {
-    final children = [
-      FilledButton(onPressed: () {}, child: Text('新增')),
-      const Spacer(),
-      _Pagination()
-    ];
+    var filledButton = FilledButton(
+      onPressed: () => navigateCreatureTemplate(context),
+      child: Text('新增'),
+    );
+    final children = [filledButton, const Spacer(), _Pagination()];
     final toolbar = Row(children: children);
     final header = _buildHeader();
     final body = templates.map((template) {
