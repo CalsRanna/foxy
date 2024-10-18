@@ -212,7 +212,7 @@ class _Table extends ConsumerWidget {
 
   ArcaneTableHeader _buildHeader() {
     return ArcaneTableHeader(children: [
-      ArcaneTableCell(width: 100, child: Text('编号')),
+      ArcaneTableCell(width: 80, child: Text('编号')),
       ArcaneTableCell(child: Text('姓名')),
       ArcaneTableCell(child: Text('称号')),
       ArcaneTableCell(child: Text('最低等级')),
@@ -225,7 +225,7 @@ class _Table extends ConsumerWidget {
     BriefCreatureTemplate template,
   ) {
     final children = [
-      ArcaneTableCell(width: 100, child: Text(template.entry.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.entry.toString())),
       ArcaneTableCell(child: Text(template.name)),
       ArcaneTableCell(child: Text(template.subName)),
       ArcaneTableCell(child: Text(template.minLevel.toString())),

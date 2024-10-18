@@ -129,12 +129,12 @@ class _Table extends ConsumerWidget {
     return ArcaneTableHeader(children: [
       ArcaneTableCell(width: 80, child: Text('编号')),
       ArcaneTableCell(child: Text('备注')),
-      ArcaneTableCell(child: Text('类型')),
-      ArcaneTableCell(child: Text('ID')),
-      ArcaneTableCell(child: Text('链接')),
-      ArcaneTableCell(child: Text('事件类型')),
-      ArcaneTableCell(child: Text('动作类型')),
-      ArcaneTableCell(child: Text('目标类型')),
+      ArcaneTableCell(width: 80, child: Text('类型')),
+      ArcaneTableCell(width: 80, child: Text('ID')),
+      ArcaneTableCell(width: 80, child: Text('链接')),
+      ArcaneTableCell(width: 80, child: Text('事件类型')),
+      ArcaneTableCell(width: 80, child: Text('动作类型')),
+      ArcaneTableCell(width: 80, child: Text('目标类型')),
     ]);
   }
 
@@ -142,12 +142,12 @@ class _Table extends ConsumerWidget {
     final children = [
       ArcaneTableCell(width: 80, child: Text(template.entryOrGuid.toString())),
       ArcaneTableCell(child: Text(template.comment)),
-      ArcaneTableCell(child: Text(template.sourceType.toString())),
-      ArcaneTableCell(child: Text(template.id.toString())),
-      ArcaneTableCell(child: Text(template.link.toString())),
-      ArcaneTableCell(child: Text(template.eventType.toString())),
-      ArcaneTableCell(child: Text(template.actionType.toString())),
-      ArcaneTableCell(child: Text(template.targetType.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.sourceType.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.id.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.link.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.eventType.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.actionType.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.targetType.toString())),
     ];
     return ArcaneTableRow(children: children);
   }

@@ -127,19 +127,19 @@ class _Table extends ConsumerWidget {
 
   ArcaneTableHeader _buildHeader() {
     return ArcaneTableHeader(children: [
-      ArcaneTableCell(width: 100, child: Text('编号')),
+      ArcaneTableCell(width: 80, child: Text('编号')),
       ArcaneTableCell(child: Text('名称')),
-      ArcaneTableCell(child: Text('类型')),
-      ArcaneTableCell(child: Text('尺寸')),
+      ArcaneTableCell(width: 80, child: Text('类型')),
+      ArcaneTableCell(width: 80, child: Text('尺寸')),
     ]);
   }
 
   ArcaneTableRow _buildRow(GameObjectTemplate template) {
     final children = [
-      ArcaneTableCell(width: 100, child: Text(template.entry.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.entry.toString())),
       ArcaneTableCell(child: Text(template.name)),
-      ArcaneTableCell(child: Text(template.type.toString())),
-      ArcaneTableCell(child: Text(template.size.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.type.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.size.toString())),
     ];
     return ArcaneTableRow(children: children);
   }

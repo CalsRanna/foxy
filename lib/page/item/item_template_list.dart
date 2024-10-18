@@ -127,25 +127,37 @@ class _Table extends ConsumerWidget {
 
   ArcaneTableHeader _buildHeader() {
     return ArcaneTableHeader(children: [
-      ArcaneTableCell(width: 100, child: Text('编号')),
+      ArcaneTableCell(width: 80, child: Text('编号')),
       ArcaneTableCell(child: Text('名称')),
-      ArcaneTableCell(child: Text('类别')),
-      ArcaneTableCell(child: Text('子类别')),
-      ArcaneTableCell(child: Text('佩戴位置')),
-      ArcaneTableCell(child: Text('物品等级')),
-      ArcaneTableCell(child: Text('需求等级')),
+      ArcaneTableCell(width: 80, child: Text('类别')),
+      ArcaneTableCell(width: 80, child: Text('子类别')),
+      ArcaneTableCell(width: 80, child: Text('佩戴位置')),
+      ArcaneTableCell(width: 80, child: Text('物品等级')),
+      ArcaneTableCell(width: 80, child: Text('需求等级')),
     ]);
   }
 
   ArcaneTableRow _buildRow(ItemTemplate template) {
+    var inventoryTypeCell = ArcaneTableCell(
+      width: 80,
+      child: Text(template.inventoryType.toString()),
+    );
+    var itemLevelCell = ArcaneTableCell(
+      width: 80,
+      child: Text(template.itemLevel.toString()),
+    );
+    var requiredLevelCell = ArcaneTableCell(
+      width: 80,
+      child: Text(template.requiredLevel.toString()),
+    );
     final children = [
-      ArcaneTableCell(width: 100, child: Text(template.entry.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.entry.toString())),
       ArcaneTableCell(child: Text(template.name)),
-      ArcaneTableCell(child: Text(template.className.toString())),
-      ArcaneTableCell(child: Text(template.subclass.toString())),
-      ArcaneTableCell(child: Text(template.inventoryType.toString())),
-      ArcaneTableCell(child: Text(template.itemLevel.toString())),
-      ArcaneTableCell(child: Text(template.requiredLevel.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.className.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.subclass.toString())),
+      inventoryTypeCell,
+      itemLevelCell,
+      requiredLevelCell,
     ];
     return ArcaneTableRow(children: children);
   }

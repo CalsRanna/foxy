@@ -128,22 +128,22 @@ class _Table extends ConsumerWidget {
   ArcaneTableHeader _buildHeader() {
     return ArcaneTableHeader(children: [
       ArcaneTableCell(width: 80, child: Text('编号')),
-      ArcaneTableCell(width: 100, child: Text('标题')),
-      ArcaneTableCell(width: 400, child: Text('描述')),
-      ArcaneTableCell(child: Text('类型')),
-      ArcaneTableCell(child: Text('等级')),
-      ArcaneTableCell(child: Text('最低等级')),
+      ArcaneTableCell(width: 160, child: Text('标题')),
+      ArcaneTableCell(child: Text('描述')),
+      ArcaneTableCell(width: 80, child: Text('类型')),
+      ArcaneTableCell(width: 80, child: Text('等级')),
+      ArcaneTableCell(width: 80, child: Text('最低等级')),
     ]);
   }
 
   ArcaneTableRow _buildRow(QuestTemplate template) {
     final children = [
       ArcaneTableCell(width: 80, child: Text(template.entry.toString())),
-      ArcaneTableCell(width: 100, child: Text(template.title)),
-      ArcaneTableCell(width: 400, child: Text(template.description)),
-      ArcaneTableCell(child: Text(template.type.toString())),
-      ArcaneTableCell(child: Text(template.level.toString())),
-      ArcaneTableCell(child: Text(template.minLevel.toString())),
+      ArcaneTableCell(width: 160, child: Text(template.title)),
+      ArcaneTableCell(child: Text(template.description)),
+      ArcaneTableCell(width: 80, child: Text(template.type.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.level.toString())),
+      ArcaneTableCell(width: 80, child: Text(template.minLevel.toString())),
     ];
     return ArcaneTableRow(children: children);
   }

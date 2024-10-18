@@ -561,18 +561,36 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
     final children = [
       _Breadcrumb(template: template),
       _Header(template.name),
-      FoxyCard(child: basicPadding),
-      FoxyCard(child: flagPadding),
-      FoxyCard(child: immunePadding),
-      FoxyCard(child: modifierPadding),
-      FoxyCard(child: lootPadding),
-      FoxyCard(child: difficultyPadding),
-      FoxyCard(child: modelPadding),
-      FoxyCard(child: movementPadding),
-      FoxyCard(child: otherPadding),
-      _Footer(onTap: () => handleTap(ref)),
+      FoxyCard(title: Text('基本信息'), child: basicPadding),
+      SizedBox(height: 16),
+      FoxyCard(title: Text('标识信息'), child: flagPadding),
+      SizedBox(height: 16),
+      FoxyCard(title: Text('免疫信息'), child: immunePadding),
+      SizedBox(height: 16),
+      FoxyCard(title: Text('属性信息'), child: modifierPadding),
+      SizedBox(height: 16),
+      FoxyCard(title: Text('掉落信息'), child: lootPadding),
+      SizedBox(height: 16),
+      FoxyCard(title: Text('难度信息'), child: difficultyPadding),
+      SizedBox(height: 16),
+      FoxyCard(title: Text('模型信息'), child: modelPadding),
+      SizedBox(height: 16),
+      FoxyCard(title: Text('移动信息'), child: movementPadding),
+      SizedBox(height: 16),
+      FoxyCard(title: Text('其他信息'), child: otherPadding),
+      SizedBox(height: 64),
     ];
-    return ListView(padding: const EdgeInsets.all(16), children: children);
+    var listView = ListView(
+      padding: const EdgeInsets.all(16),
+      children: children,
+    );
+    var positioned = Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: _Footer(onTap: () => handleTap(ref)),
+    );
+    return Stack(children: [listView, positioned]);
   }
 
   void _disposeControllers() {
@@ -748,8 +766,17 @@ class _Footer extends StatelessWidget {
       const SizedBox(width: 8),
       cancelButton,
     ];
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final surface = colorScheme.surface;
+    final outline = colorScheme.outline;
+    var boxDecoration = BoxDecoration(
+      border: Border(top: BorderSide(color: outline.withOpacity(0.25))),
+      color: surface,
+    );
+    return Container(
+      decoration: boxDecoration,
+      padding: const EdgeInsets.all(16.0),
       child: Row(children: children),
     );
   }
