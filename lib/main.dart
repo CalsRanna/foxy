@@ -38,7 +38,7 @@ class Foxy extends StatelessWidget {
     );
     final themeData = ThemeData(
       cardTheme: cardTheme,
-      colorScheme: ColorScheme.fromSeed(seedColor: Color(0xfffa7e23)),
+      colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff1677b3)),
       fontFamily: 'Microsoft YaHei',
       useMaterial3: true,
     );

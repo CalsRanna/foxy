@@ -5,6 +5,7 @@ import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/provider/application.dart';
 import 'package:foxy/provider/creature.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/service/tab.dart';
 import 'package:foxy/util/input_width_calculator.dart';
 import 'package:foxy/widget/breadcrumb.dart';
 import 'package:foxy/widget/card.dart';
@@ -142,7 +143,7 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
     return switch (state) {
       AsyncData(:final value) => _buildData(ref, value),
       AsyncError(:final error) => Text(error.toString()),
-      AsyncLoading() => CircularProgressIndicator(),
+      AsyncLoading() => Center(child: CircularProgressIndicator()),
       _ => SizedBox(),
     };
   }
@@ -581,10 +582,19 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
     ];
     final otherWrap = Wrap(runSpacing: 8, spacing: 8, children: otherChildren);
     final otherPadding = Padding(padding: edgeInsets, child: otherWrap);
-
+    var tabs = [
+      Text('Basic'),
+      Text('Addon'),
+      Text('Movement'),
+      Text('Resistance'),
+      Text('Spell'),
+    ];
+    var tab = ArcaneTab(tabs: tabs);
     final children = [
       _Breadcrumb(template: template),
       _Header(template.name),
+      tab,
+      SizedBox(height: 16),
       ArcaneCard(title: Text('基本信息'), child: basicPadding),
       SizedBox(height: 16),
       ArcaneCard(title: Text('标识信息'), child: flagPadding),

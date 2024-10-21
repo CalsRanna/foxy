@@ -182,8 +182,8 @@ class _Table extends ConsumerWidget {
     final provider = ref.watch(creatureTemplatesNotifierProvider);
     return switch (provider) {
       AsyncData(:final value) => _buildData(context, value),
-      AsyncLoading() => CircularProgressIndicator(),
       AsyncError(:final error) => Text(error.toString()),
+      AsyncLoading() => Center(child: CircularProgressIndicator()),
       _ => const SizedBox(),
     };
   }
