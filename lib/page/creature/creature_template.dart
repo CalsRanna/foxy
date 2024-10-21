@@ -143,8 +143,8 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
     return switch (state) {
       AsyncData(:final value) => _buildData(ref, value),
       AsyncError(:final error) => Text(error.toString()),
-      AsyncLoading() => Center(child: CircularProgressIndicator()),
-      _ => SizedBox(),
+      AsyncLoading() => const Center(child: CircularProgressIndicator()),
+      _ => const SizedBox(),
     };
   }
 

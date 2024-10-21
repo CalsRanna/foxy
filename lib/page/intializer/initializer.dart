@@ -31,8 +31,8 @@ class _InitializerPage extends ConsumerState<InitializerPage> {
     final state = ref.watch(provider);
     return switch (state) {
       AsyncData(:final value) => _buildData(value),
-      AsyncLoading() => CircularProgressIndicator(),
       AsyncError(:final error) => Text(error.toString()),
+      AsyncLoading() => const Center(child: CircularProgressIndicator()),
       _ => const SizedBox(),
     };
   }

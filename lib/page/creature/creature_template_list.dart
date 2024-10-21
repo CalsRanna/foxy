@@ -183,7 +183,7 @@ class _Table extends ConsumerWidget {
     return switch (provider) {
       AsyncData(:final value) => _buildData(context, value),
       AsyncError(:final error) => Text(error.toString()),
-      AsyncLoading() => Center(child: CircularProgressIndicator()),
+      AsyncLoading() => const Center(child: CircularProgressIndicator()),
       _ => const SizedBox(),
     };
   }

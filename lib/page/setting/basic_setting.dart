@@ -25,8 +25,8 @@ class _BasicSettingPageState extends ConsumerState<BasicSettingPage> {
     final provider = ref.watch(settingNotifierProvider);
     return switch (provider) {
       AsyncData(:final value) => _buildData(value),
-      AsyncLoading() => CircularProgressIndicator(),
       AsyncError(:final error) => Text(error.toString()),
+      AsyncLoading() => const Center(child: CircularProgressIndicator()),
       _ => const SizedBox(),
     };
   }
@@ -81,16 +81,15 @@ class _BasicSettingPageState extends ConsumerState<BasicSettingPage> {
       const SizedBox(height: 16),
       button
     ];
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 300),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: children,
-        ),
-      ),
+    var column = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
     );
+    var constrainedBox = ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 300),
+      child: column,
+    );
+    return Align(alignment: Alignment.centerLeft, child: constrainedBox);
   }
 
   void _disposeControllers() {
