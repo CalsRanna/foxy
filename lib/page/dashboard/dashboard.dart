@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/page/dashboard/component/welcome.dart';
 import 'package:foxy/page/dashboard/component/workspace.dart';
+import 'package:foxy/provider/application.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/widget/breadcrumb.dart';
 import 'package:foxy/widget/header.dart';
 
@@ -22,16 +25,27 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-class _Breadcrumb extends StatelessWidget {
+class _Breadcrumb extends ConsumerWidget {
   const _Breadcrumb();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var dashboard = BreadcrumbItem(
+      onTap: () => navigateDashboard(context, ref),
+      child: Text('首页'),
+    );
     final children = [
-      BreadcrumbItem(onTap: () {}, child: Text('首页')),
+      dashboard,
       BreadcrumbItem(child: Text('工作台')),
     ];
     return Breadcrumb(children: children);
+  }
+
+  void navigateDashboard(BuildContext context, WidgetRef ref) {
+    final provider = selectedMenuIndexNotifierProvider;
+    final notifier = ref.read(provider.notifier);
+    notifier.select(0);
+    AutoRouter.of(context).navigate(DashboardRoute());
   }
 }
 

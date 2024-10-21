@@ -2,7 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/creature_template.dart';
+import 'package:foxy/provider/application.dart';
 import 'package:foxy/provider/creature.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/util/input_width_calculator.dart';
 import 'package:foxy/widget/breadcrumb.dart';
 import 'package:foxy/widget/card.dart';
@@ -19,18 +21,40 @@ class CreatureTemplatePage extends ConsumerStatefulWidget {
       _CreatureTemplatePageState();
 }
 
-class _Breadcrumb extends StatelessWidget {
+class _Breadcrumb extends ConsumerWidget {
   final CreatureTemplate template;
   const _Breadcrumb({required this.template});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var dashboard = BreadcrumbItem(
+      onTap: () => navigateDashboard(context, ref),
+      child: Text('首页'),
+    );
+    var creatureTemplateList = BreadcrumbItem(
+      onTap: () => navigateCreatureTemplateList(context, ref),
+      child: Text('生物'),
+    );
     final children = [
-      BreadcrumbItem(onTap: () {}, child: Text('首页')),
-      BreadcrumbItem(onTap: () {}, child: Text('生物')),
+      dashboard,
+      creatureTemplateList,
       BreadcrumbItem(child: Text(template.name)),
     ];
     return Breadcrumb(children: children);
+  }
+
+  void navigateDashboard(BuildContext context, WidgetRef ref) {
+    final provider = selectedMenuIndexNotifierProvider;
+    final notifier = ref.read(provider.notifier);
+    notifier.select(0);
+    AutoRouter.of(context).navigate(DashboardRoute());
+  }
+
+  void navigateCreatureTemplateList(BuildContext context, WidgetRef ref) {
+    final provider = selectedMenuIndexNotifierProvider;
+    final notifier = ref.read(provider.notifier);
+    notifier.select(1);
+    AutoRouter.of(context).navigate(CreatureTemplateListRoute());
   }
 }
 
