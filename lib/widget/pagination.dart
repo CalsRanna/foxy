@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class Pagination extends StatelessWidget {
+class ArcanePagination extends StatelessWidget {
   final int page;
   final int pageSize;
   final int total;
   final void Function(int)? onChange;
-  const Pagination({
+  const ArcanePagination({
     super.key,
     this.page = 1,
     this.pageSize = 50,
@@ -19,43 +19,43 @@ class Pagination extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final count = (total / pageSize).ceil();
-    final left = _PaginationTile(
+    final left = _Tile(
       onClick: () => change(-1, count),
       child: const Icon(Icons.chevron_left),
     );
-    final right = _PaginationTile(
+    final right = _Tile(
       onClick: () => change(1, count),
       child: const Icon(Icons.chevron_right),
     );
-    final first = _PaginationTile(
+    final first = _Tile(
       active: page == 1,
       onClick: () => handleClick(1),
       child: const Text('1'),
     );
-    final last = _PaginationTile(
+    final last = _Tile(
       active: page == count,
       onClick: () => handleClick(count),
       child: Text('$count'),
     );
     final lower = max(2, page - 2);
     final upper = min(page + 2, count - 1);
-    List<_PaginationTile> tiles = [];
+    List<_Tile> tiles = [];
     for (var i = lower; i <= upper; i++) {
-      tiles.add(_PaginationTile(
+      tiles.add(_Tile(
         active: page == i,
         onClick: () => handleClick(i),
         child: Text('$i'),
       ));
     }
     if (lower > 2) {
-      final less = _PaginationTile(
+      final less = _Tile(
         onClick: () => change(-3, count),
         child: const Text('...'),
       );
       tiles.insert(0, less);
     }
     if (upper < count - 2) {
-      final more = _PaginationTile(
+      final more = _Tile(
         onClick: () => change(3, count),
         child: const Text('...'),
       );
@@ -77,21 +77,21 @@ class Pagination extends StatelessWidget {
   }
 }
 
-class _PaginationTile extends StatefulWidget {
+class _Tile extends StatefulWidget {
   final bool active;
   final void Function()? onClick;
   final Widget child;
-  const _PaginationTile({
+  const _Tile({
     this.active = false,
     this.onClick,
     required this.child,
   });
 
   @override
-  State<_PaginationTile> createState() => _PaginationTileState();
+  State<_Tile> createState() => _TileState();
 }
 
-class _PaginationTileState extends State<_PaginationTile> {
+class _TileState extends State<_Tile> {
   bool hovered = false;
 
   @override

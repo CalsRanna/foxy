@@ -30,15 +30,15 @@ class _Breadcrumb extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = BreadcrumbItem(
+    var dashboard = ArcaneBreadcrumbItem(
       onTap: () => navigateDashboard(context, ref),
       child: Text('首页'),
     );
     final children = [
       dashboard,
-      BreadcrumbItem(child: Text('工作台')),
+      ArcaneBreadcrumbItem(child: Text('工作台')),
     ];
-    return Breadcrumb(children: children);
+    return ArcaneBreadcrumb(children: children);
   }
 
   void navigateDashboard(BuildContext context, WidgetRef ref) {
@@ -55,6 +55,6 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const edgeInsets = EdgeInsets.symmetric(vertical: 12);
-    return Padding(padding: edgeInsets, child: Header('工作台'));
+    return Padding(padding: edgeInsets, child: ArcaneHeader('工作台'));
   }
 }

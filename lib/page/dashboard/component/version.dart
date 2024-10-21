@@ -18,6 +18,6 @@ class Version extends StatelessWidget {
       children: children,
     );
     const padding = Padding(padding: EdgeInsets.all(16.0), child: column);
-    return const FoxyCard(title: Text('版本信息'), child: padding);
+    return const ArcaneCard(title: Text('版本信息'), child: padding);
   }
 }

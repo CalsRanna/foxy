@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Header extends StatelessWidget {
+class ArcaneHeader extends StatelessWidget {
   final String title;
-  const Header(this.title, {super.key});
+  const ArcaneHeader(this.title, {super.key});
 
   @override
   Widget build(BuildContext context) {

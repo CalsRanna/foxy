@@ -26,15 +26,15 @@ class _Breadcrumb extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = BreadcrumbItem(
+    var dashboard = ArcaneBreadcrumbItem(
       onTap: () => navigateDashboard(context, ref),
       child: Text('首页'),
     );
     final children = [
       dashboard,
-      BreadcrumbItem(child: Text('生物')),
+      ArcaneBreadcrumbItem(child: Text('生物')),
     ];
-    return Breadcrumb(children: children);
+    return ArcaneBreadcrumb(children: children);
   }
 
   void navigateDashboard(BuildContext context, WidgetRef ref) {
@@ -74,15 +74,15 @@ class _FilterState extends State<_Filter> {
       const SizedBox(width: 8),
       TextButton(onPressed: handleReset, child: Text('重置')),
     ];
-    var entryInput = FoxyInput(
+    var entryInput = ArcaneInput(
       controller: entryController,
       placeholder: '编号（entry）',
     );
-    var nameInput = FoxyInput(
+    var nameInput = ArcaneInput(
       controller: nameController,
       placeholder: '姓名（Name）',
     );
-    var subNameInput = FoxyInput(
+    var subNameInput = ArcaneInput(
       controller: subNameController,
       placeholder: '称号（Sub Name）',
     );
@@ -99,7 +99,7 @@ class _FilterState extends State<_Filter> {
       padding: const EdgeInsets.all(16.0),
       child: Row(children: credentialChildren),
     );
-    return FoxyCard(child: filter);
+    return ArcaneCard(child: filter);
   }
 
   @override
@@ -150,7 +150,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const edgeInsets = EdgeInsets.symmetric(vertical: 12);
-    return Padding(padding: edgeInsets, child: Header('生物'));
+    return Padding(padding: edgeInsets, child: ArcaneHeader('生物'));
   }
 }
 
@@ -162,7 +162,7 @@ class _Pagination extends ConsumerWidget {
     final provider = creatureTemplateTotalNotifierProvider;
     final total = ref.watch(provider).valueOrNull;
     final page = ref.watch(creatureTemplatePageNotifierProvider);
-    return Pagination(
+    return ArcanePagination(
       page: page,
       total: total ?? 0,
       onChange: (page) => handleChange(ref, page),
@@ -219,7 +219,8 @@ class _Table extends ConsumerWidget {
     }).toList();
     final table = ArcaneTable(header: header, body: body);
     final column = Column(children: [toolbar, table]);
-    return FoxyCard(child: Padding(padding: EdgeInsets.all(16), child: column));
+    return ArcaneCard(
+        child: Padding(padding: EdgeInsets.all(16), child: column));
   }
 
   ArcaneTableHeader _buildHeader() {

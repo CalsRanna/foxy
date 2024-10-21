@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class FoxyInput extends StatelessWidget {
+class ArcaneInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? placeholder;
   final bool readOnly;
 
-  const FoxyInput({
+  const ArcaneInput({
     super.key,
     this.controller,
     this.placeholder,

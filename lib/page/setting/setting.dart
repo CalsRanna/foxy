@@ -26,7 +26,7 @@ class SettingPage extends StatelessWidget {
     final padding = Padding(padding: const EdgeInsets.all(16.0), child: row);
     return ListView(
       padding: EdgeInsets.all(16),
-      children: [_Breadcrumb(), _Header(), FoxyCard(child: padding)],
+      children: [_Breadcrumb(), _Header(), ArcaneCard(child: padding)],
     );
   }
 }
@@ -36,15 +36,15 @@ class _Breadcrumb extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = BreadcrumbItem(
+    var dashboard = ArcaneBreadcrumbItem(
       onTap: () => navigateDashboard(context, ref),
       child: Text('首页'),
     );
     final children = [
       dashboard,
-      BreadcrumbItem(child: Text('设置')),
+      ArcaneBreadcrumbItem(child: Text('设置')),
     ];
-    return Breadcrumb(children: children);
+    return ArcaneBreadcrumb(children: children);
   }
 
   void navigateDashboard(BuildContext context, WidgetRef ref) {
@@ -61,7 +61,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const edgeInsets = EdgeInsets.symmetric(vertical: 12);
-    return Padding(padding: edgeInsets, child: Header('设置'));
+    return Padding(padding: edgeInsets, child: ArcaneHeader('设置'));
   }
 }
 

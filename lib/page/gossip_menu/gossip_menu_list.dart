@@ -28,15 +28,15 @@ class _Breadcrumb extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = BreadcrumbItem(
+    var dashboard = ArcaneBreadcrumbItem(
       onTap: () => navigateDashboard(context, ref),
       child: Text('首页'),
     );
     final children = [
       dashboard,
-      BreadcrumbItem(child: Text('对话')),
+      ArcaneBreadcrumbItem(child: Text('对话')),
     ];
-    return Breadcrumb(children: children);
+    return ArcaneBreadcrumb(children: children);
   }
 
   void navigateDashboard(BuildContext context, WidgetRef ref) {
@@ -58,11 +58,11 @@ class _Filter extends ConsumerWidget {
       TextButton(onPressed: () => reset(ref), child: Text('重置')),
     ];
     final credentialChildren = [
-      Expanded(child: FoxyInput(placeholder: '编号（Entry）')),
+      Expanded(child: ArcaneInput(placeholder: '编号（Entry）')),
       const SizedBox(width: 16),
-      Expanded(child: FoxyInput(placeholder: '名称（Name）')),
+      Expanded(child: ArcaneInput(placeholder: '名称（Name）')),
       const SizedBox(width: 16),
-      Expanded(child: FoxyInput(placeholder: '称号（Sub Name）')),
+      Expanded(child: ArcaneInput(placeholder: '称号（Sub Name）')),
       const SizedBox(width: 16),
       Expanded(child: Row(children: buttonChildren)),
     ];
@@ -70,7 +70,7 @@ class _Filter extends ConsumerWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(children: credentialChildren),
     );
-    return FoxyCard(child: filter);
+    return ArcaneCard(child: filter);
   }
 
   Future<void> reset(WidgetRef ref) async {
@@ -86,7 +86,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const edgeInsets = EdgeInsets.symmetric(vertical: 12);
-    return Padding(padding: edgeInsets, child: Header('对话'));
+    return Padding(padding: edgeInsets, child: ArcaneHeader('对话'));
   }
 }
 
@@ -97,7 +97,7 @@ class _Pagination extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = gossipMenuTotalProvider;
     final total = ref.watch(provider).valueOrNull;
-    return Pagination(
+    return ArcanePagination(
       total: total ?? 0,
       onChange: (page) => handleChange(ref, page),
     );
@@ -135,7 +135,8 @@ class _Table extends ConsumerWidget {
     final body = templates.map(_buildRow).toList();
     final table = ArcaneTable(header: header, body: body);
     final column = Column(children: [toolbar, table]);
-    return FoxyCard(child: Padding(padding: EdgeInsets.all(16), child: column));
+    return ArcaneCard(
+        child: Padding(padding: EdgeInsets.all(16), child: column));
   }
 
   ArcaneTableHeader _buildHeader() {
