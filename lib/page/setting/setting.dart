@@ -13,21 +13,8 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = [
-      SizedBox(width: 120, child: _Menu()),
-      const VerticalDivider(thickness: 1, width: 1),
-      const SizedBox(width: 16),
-      Expanded(child: AutoRouter()),
-    ];
-    final row = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
-    );
-    final padding = Padding(padding: const EdgeInsets.all(16.0), child: row);
-    return ListView(
-      padding: EdgeInsets.all(16),
-      children: [_Breadcrumb(), _Header(), ArcaneCard(child: padding)],
-    );
+    var children = [_Breadcrumb(), _Header(), _Setting()];
+    return ListView(padding: EdgeInsets.all(16), children: children);
   }
 }
 
@@ -109,5 +96,25 @@ class _MenuState extends State<_Menu> {
       _ => DashboardRoute(),
     };
     AutoRouter.of(context).navigate(route);
+  }
+}
+
+class _Setting extends StatelessWidget {
+  const _Setting();
+
+  @override
+  Widget build(BuildContext context) {
+    final children = [
+      SizedBox(width: 120, child: _Menu()),
+      const VerticalDivider(thickness: 1, width: 1),
+      const SizedBox(width: 16),
+      Expanded(child: AutoRouter()),
+    ];
+    final row = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
+    final padding = Padding(padding: const EdgeInsets.all(16.0), child: row);
+    return ArcaneCard(child: padding);
   }
 }

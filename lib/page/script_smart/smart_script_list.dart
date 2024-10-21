@@ -70,7 +70,10 @@ class _Filter extends ConsumerWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(children: credentialChildren),
     );
-    return ArcaneCard(child: filter);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: ArcaneCard(child: filter),
+    );
   }
 
   Future<void> reset(WidgetRef ref) async {

@@ -13,12 +13,14 @@ import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/widget/table.dart';
 
 @RoutePage()
-class CreatureTemplateListPage extends StatefulWidget {
+class CreatureTemplateListPage extends StatelessWidget {
   const CreatureTemplateListPage({super.key});
 
   @override
-  State<CreatureTemplateListPage> createState() =>
-      _CreatureTemplateListPageState();
+  Widget build(BuildContext context) {
+    final children = [_Breadcrumb(), _Header(), _Filter(), _Table()];
+    return ListView(padding: EdgeInsets.all(16), children: children);
+  }
 }
 
 class _Breadcrumb extends ConsumerWidget {
@@ -42,16 +44,6 @@ class _Breadcrumb extends ConsumerWidget {
     final notifier = ref.read(provider.notifier);
     notifier.select(0);
     AutoRouter.of(context).navigate(DashboardRoute());
-  }
-}
-
-class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
-  int total = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    final children = [_Breadcrumb(), _Header(), _Filter(), _Table()];
-    return ListView(padding: EdgeInsets.all(16), children: children);
   }
 }
 
@@ -99,7 +91,10 @@ class _FilterState extends State<_Filter> {
       padding: const EdgeInsets.all(16.0),
       child: Row(children: credentialChildren),
     );
-    return ArcaneCard(child: filter);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: ArcaneCard(child: filter),
+    );
   }
 
   @override
