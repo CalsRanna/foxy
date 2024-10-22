@@ -10,6 +10,7 @@ import 'package:foxy/page/scaffold/component/status.dart';
 import 'package:foxy/provider/application.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class ScaffoldPage extends StatelessWidget {
@@ -80,8 +81,24 @@ class _Drawer extends StatelessWidget {
       title: Text('退出'),
       trailing: _Shortcut('Q'),
     );
+    var github = IconButton(
+      icon: Icon(HugeIcons.strokeRoundedGithub01, size: 20),
+      onPressed: launchGithub,
+    );
+    var headerChildren = [
+      Text('Foxy'.toUpperCase(), style: TextStyle(fontSize: 32)),
+      const SizedBox(height: 8),
+      Text('「做最好的魔兽世界编辑器」'),
+      const SizedBox(height: 8),
+      github,
+    ];
+    var column = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: headerChildren,
+    );
+    var header = DrawerHeader(margin: EdgeInsets.zero, child: column);
     var children = [
-      DrawerHeader(margin: EdgeInsets.zero, child: Text('Foxy')),
+      header,
       syncAll,
       syncDbc,
       syncMpq,
@@ -94,6 +111,11 @@ class _Drawer extends StatelessWidget {
 
   void exitApp() {
     _ExitAppAction().invoke(_ExitAppIntent());
+  }
+
+  void launchGithub() {
+    final uri = Uri.parse('https://github.com/CalsRanna/foxy');
+    launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   void navigateSetting(BuildContext context) {
