@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/provider/loading.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/util/window_initializer.dart';
 import 'package:window_manager/window_manager.dart';
 
 @RoutePage()
@@ -75,26 +76,18 @@ class _LoadingPageState extends ConsumerState<LoadingPage> with WindowListener {
   }
 
   Future<void> _navigateDashboard() async {
-    await windowManager.setOpacity(0);
-    await Future.wait([
-      windowManager.setSize(Size(1200, 900)),
-      windowManager.center(),
-    ]);
+    await WindowInitializer.resize(Size(1200, 900));
     if (!mounted) return;
     AutoRouter.of(context).replaceAll([DashboardRoute()]);
     Future.delayed(const Duration(milliseconds: 300));
-    await windowManager.setOpacity(1);
+    await WindowInitializer.opaque();
   }
 
   Future<void> _navigateInitializer() async {
-    await windowManager.setOpacity(0);
-    await Future.wait([
-      windowManager.setSize(Size(600, 450)),
-      windowManager.center(),
-    ]);
+    await WindowInitializer.resize(Size(600, 450));
     if (!mounted) return;
     AutoRouter.of(context).replaceAll([InitializerRoute()]);
     Future.delayed(const Duration(milliseconds: 300));
-    await windowManager.setOpacity(1);
+    await WindowInitializer.opaque();
   }
 }

@@ -2,24 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/schema/isar.dart';
 import 'package:foxy/router/router.dart';
+import 'package:foxy/util/window_initializer.dart';
 import 'package:get_it/get_it.dart';
-import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  const options = WindowOptions(
-    backgroundColor: Colors.transparent,
-    center: true,
-    minimumSize: Size(1200, 900),
-    size: Size(400, 300),
-    titleBarStyle: TitleBarStyle.hidden,
-    windowButtonVisibility: false,
-  );
-  windowManager.waitUntilReadyToShow(options, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
+  await WindowInitializer.ensureInitialized();
   await IsarInitializer.ensureInitialized();
   GetIt.instance.registerSingleton(AppRouter());
   runApp(const ProviderScope(child: Foxy()));

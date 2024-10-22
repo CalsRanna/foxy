@@ -5,8 +5,8 @@ import 'package:foxy/provider/loading.dart';
 import 'package:foxy/provider/setting.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/schema/setting.dart';
+import 'package:foxy/util/window_initializer.dart';
 import 'package:foxy/widget/input.dart';
-import 'package:window_manager/window_manager.dart';
 
 @RoutePage()
 class InitializerPage extends ConsumerStatefulWidget {
@@ -135,15 +135,11 @@ class _InitializerPage extends ConsumerState<InitializerPage> {
     setState(() {
       loading = false;
     });
-    await windowManager.setOpacity(0);
-    await Future.wait([
-      windowManager.setSize(Size(1200, 900)),
-      windowManager.center(),
-    ]);
+    await WindowInitializer.resize(Size(1200, 900));
     if (!mounted) return;
     AutoRouter.of(context).replaceAll([DashboardRoute()]);
     Future.delayed(const Duration(milliseconds: 300));
-    await windowManager.setOpacity(1);
+    await WindowInitializer.opaque();
   }
 
   void _showError(String error) {

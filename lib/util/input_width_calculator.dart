@@ -13,6 +13,13 @@ class InputWidthCalculator {
     return (width - spaceWidth) / length;
   }
 
+  int _getLength(double width) {
+    int length = 5;
+    if (width <= 1200) length = 4;
+    if (width <= 1000) length = 3;
+    return length;
+  }
+
   double _getWidth(MediaQueryData mediaQuery) {
     const leftBarWidth = 80;
     const dividerWidth = 1;
@@ -24,12 +31,5 @@ class InputWidthCalculator {
     width -= workspacePaddingWidth;
     width -= cardPaddingWidth;
     return width;
-  }
-
-  int _getLength(double width) {
-    int length = 5;
-    if (width <= 1200) length = 4;
-    if (width <= 1000) length = 3;
-    return length;
   }
 }
