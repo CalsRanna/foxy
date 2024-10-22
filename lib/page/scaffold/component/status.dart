@@ -23,10 +23,10 @@ class Status extends StatelessWidget {
       const SizedBox(width: 16),
       const _MysqlStatus(),
     ];
-    const edgeInsets = EdgeInsets.symmetric(horizontal: 16, vertical: 4);
+    final edgeInsets = MediaQuery.paddingOf(context);
     return Container(
       color: primary,
-      padding: edgeInsets,
+      padding: EdgeInsets.fromLTRB(16, 4, 16, edgeInsets.bottom),
       width: double.infinity,
       child: Row(mainAxisAlignment: MainAxisAlignment.end, children: children),
     );

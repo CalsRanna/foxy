@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/schema/isar.dart';
 import 'package:foxy/router/router.dart';
@@ -10,6 +13,13 @@ void main() async {
   await WindowInitializer.ensureInitialized();
   await IsarInitializer.ensureInitialized();
   GetIt.instance.registerSingleton(AppRouter());
+  if (Platform.isAndroid || Platform.isIOS) {
+    var orientations = [
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight
+    ];
+    SystemChrome.setPreferredOrientations(orientations);
+  }
   runApp(const ProviderScope(child: Foxy()));
 }
 

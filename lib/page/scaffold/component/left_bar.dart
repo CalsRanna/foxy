@@ -16,10 +16,15 @@ class LeftBar extends StatelessWidget {
       (index) => _Tile(index: index),
     );
     final column = Column(children: [_Drawer(), ...menus]);
+    final edgeInsets = MediaQuery.paddingOf(context);
+    var singleChildScrollView = SingleChildScrollView(
+      padding: EdgeInsets.only(left: edgeInsets.left + 8, right: 8),
+      child: column,
+    );
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onPanStart: (details) => windowManager.startDragging(),
-      child: SingleChildScrollView(child: column),
+      child: singleChildScrollView,
     );
   }
 }

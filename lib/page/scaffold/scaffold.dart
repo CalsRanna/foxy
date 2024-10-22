@@ -18,7 +18,7 @@ class ScaffoldPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = [
-      SizedBox(width: 80, child: LeftBar()),
+      LeftBar(),
       const VerticalDivider(thickness: 1, width: 1),
       Expanded(child: AutoRouter())
     ];
