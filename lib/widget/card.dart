@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ArcaneCard extends StatefulWidget {
+class FoxyCard extends StatefulWidget {
   final Widget? title;
   final Widget child;
 
-  const ArcaneCard({super.key, this.title, required this.child});
+  const FoxyCard({super.key, this.title, required this.child});
 
   @override
-  State<ArcaneCard> createState() => _ArcaneCardState();
+  State<FoxyCard> createState() => _FoxyCardState();
 }
 
 class _Divider extends StatelessWidget {
@@ -22,7 +22,7 @@ class _Divider extends StatelessWidget {
   }
 }
 
-class _ArcaneCardState extends State<ArcaneCard> {
+class _FoxyCardState extends State<FoxyCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

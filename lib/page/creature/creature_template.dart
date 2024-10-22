@@ -28,20 +28,20 @@ class _Breadcrumb extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = ArcaneBreadcrumbItem(
+    var dashboard = FoxyBreadcrumbItem(
       onTap: () => navigateDashboard(context, ref),
       child: Text('首页'),
     );
-    var creatureTemplateList = ArcaneBreadcrumbItem(
+    var creatureTemplateList = FoxyBreadcrumbItem(
       onTap: () => navigateCreatureTemplateList(context, ref),
       child: Text('生物'),
     );
     final children = [
       dashboard,
       creatureTemplateList,
-      ArcaneBreadcrumbItem(child: Text(template.name)),
+      FoxyBreadcrumbItem(child: Text(template.name)),
     ];
-    return ArcaneBreadcrumb(children: children);
+    return FoxyBreadcrumb(children: children);
   }
 
   void navigateDashboard(BuildContext context, WidgetRef ref) {
@@ -589,29 +589,29 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
       Text('Resistance'),
       Text('Spell'),
     ];
-    var tab = ArcaneTab(tabs: tabs);
+    var tab = FoxyTab(tabs: tabs);
     final children = [
       _Breadcrumb(template: template),
       _Header(template.name),
       tab,
       SizedBox(height: 16),
-      ArcaneCard(title: Text('基本信息'), child: basicPadding),
+      FoxyCard(title: Text('基本信息'), child: basicPadding),
       SizedBox(height: 16),
-      ArcaneCard(title: Text('标识信息'), child: flagPadding),
+      FoxyCard(title: Text('标识信息'), child: flagPadding),
       SizedBox(height: 16),
-      ArcaneCard(title: Text('免疫信息'), child: immunePadding),
+      FoxyCard(title: Text('免疫信息'), child: immunePadding),
       SizedBox(height: 16),
-      ArcaneCard(title: Text('属性信息'), child: modifierPadding),
+      FoxyCard(title: Text('属性信息'), child: modifierPadding),
       SizedBox(height: 16),
-      ArcaneCard(title: Text('掉落信息'), child: lootPadding),
+      FoxyCard(title: Text('掉落信息'), child: lootPadding),
       SizedBox(height: 16),
-      ArcaneCard(title: Text('难度信息'), child: difficultyPadding),
+      FoxyCard(title: Text('难度信息'), child: difficultyPadding),
       SizedBox(height: 16),
-      ArcaneCard(title: Text('模型信息'), child: modelPadding),
+      FoxyCard(title: Text('模型信息'), child: modelPadding),
       SizedBox(height: 16),
-      ArcaneCard(title: Text('移动信息'), child: movementPadding),
+      FoxyCard(title: Text('移动信息'), child: movementPadding),
       SizedBox(height: 16),
-      ArcaneCard(title: Text('其他信息'), child: otherPadding),
+      FoxyCard(title: Text('其他信息'), child: otherPadding),
       SizedBox(height: 64),
     ];
     var listView = ListView(
@@ -827,7 +827,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const edgeInsets = EdgeInsets.symmetric(vertical: 12);
-    return Padding(padding: edgeInsets, child: ArcaneHeader(title));
+    return Padding(padding: edgeInsets, child: FoxyHeader(title));
   }
 }
 
@@ -846,7 +846,7 @@ class _Input extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final leading = _buildLeading();
-    final input = ArcaneInput(
+    final input = FoxyInput(
       controller: controller,
       placeholder: placeholder,
       readOnly: readOnly,

@@ -23,15 +23,15 @@ class _Breadcrumb extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = ArcaneBreadcrumbItem(
+    var dashboard = FoxyBreadcrumbItem(
       onTap: () => navigateDashboard(context, ref),
       child: Text('首页'),
     );
     final children = [
       dashboard,
-      ArcaneBreadcrumbItem(child: Text('设置')),
+      FoxyBreadcrumbItem(child: Text('设置')),
     ];
-    return ArcaneBreadcrumb(children: children);
+    return FoxyBreadcrumb(children: children);
   }
 
   void navigateDashboard(BuildContext context, WidgetRef ref) {
@@ -48,7 +48,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const edgeInsets = EdgeInsets.symmetric(vertical: 12);
-    return Padding(padding: edgeInsets, child: ArcaneHeader('设置'));
+    return Padding(padding: edgeInsets, child: FoxyHeader('设置'));
   }
 }
 
@@ -115,6 +115,6 @@ class _Setting extends StatelessWidget {
       children: children,
     );
     final padding = Padding(padding: const EdgeInsets.all(16.0), child: row);
-    return ArcaneCard(child: padding);
+    return FoxyCard(child: padding);
   }
 }

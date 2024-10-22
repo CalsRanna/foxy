@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class ArcanePagination extends StatelessWidget {
+class FoxyPagination extends StatelessWidget {
   final int page;
   final int pageSize;
   final int total;
   final void Function(int)? onChange;
-  const ArcanePagination({
+  const FoxyPagination({
     super.key,
     this.page = 1,
     this.pageSize = 50,

@@ -28,15 +28,15 @@ class _Breadcrumb extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = ArcaneBreadcrumbItem(
+    var dashboard = FoxyBreadcrumbItem(
       onTap: () => navigateDashboard(context, ref),
       child: Text('首页'),
     );
     final children = [
       dashboard,
-      ArcaneBreadcrumbItem(child: Text('生物')),
+      FoxyBreadcrumbItem(child: Text('生物')),
     ];
-    return ArcaneBreadcrumb(children: children);
+    return FoxyBreadcrumb(children: children);
   }
 
   void navigateDashboard(BuildContext context, WidgetRef ref) {
@@ -66,15 +66,15 @@ class _FilterState extends State<_Filter> {
       const SizedBox(width: 8),
       TextButton(onPressed: handleReset, child: Text('重置')),
     ];
-    var entryInput = ArcaneInput(
+    var entryInput = FoxyInput(
       controller: entryController,
       placeholder: '编号（entry）',
     );
-    var nameInput = ArcaneInput(
+    var nameInput = FoxyInput(
       controller: nameController,
       placeholder: '姓名（Name）',
     );
-    var subNameInput = ArcaneInput(
+    var subNameInput = FoxyInput(
       controller: subNameController,
       placeholder: '称号（Sub Name）',
     );
@@ -93,7 +93,7 @@ class _FilterState extends State<_Filter> {
     );
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: ArcaneCard(child: filter),
+      child: FoxyCard(child: filter),
     );
   }
 
@@ -145,7 +145,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const edgeInsets = EdgeInsets.symmetric(vertical: 12);
-    return Padding(padding: edgeInsets, child: ArcaneHeader('生物'));
+    return Padding(padding: edgeInsets, child: FoxyHeader('生物'));
   }
 }
 
@@ -157,7 +157,7 @@ class _Pagination extends ConsumerWidget {
     final provider = creatureTemplateTotalNotifierProvider;
     final total = ref.watch(provider).valueOrNull;
     final page = ref.watch(creatureTemplatePageNotifierProvider);
-    return ArcanePagination(
+    return FoxyPagination(
       page: page,
       total: total ?? 0,
       onChange: (page) => handleChange(ref, page),
@@ -212,34 +212,33 @@ class _Table extends ConsumerWidget {
     final body = templates.map((template) {
       return _buildRow(context, template);
     }).toList();
-    final table = ArcaneTable(header: header, body: body);
+    final table = FoxyTable(header: header, body: body);
     final column = Column(children: [toolbar, table]);
-    return ArcaneCard(
-        child: Padding(padding: EdgeInsets.all(16), child: column));
+    return FoxyCard(child: Padding(padding: EdgeInsets.all(16), child: column));
   }
 
-  ArcaneTableHeader _buildHeader() {
-    return ArcaneTableHeader(children: [
-      ArcaneTableCell(width: 80, child: Text('编号')),
-      ArcaneTableCell(child: Text('姓名')),
-      ArcaneTableCell(child: Text('称号')),
-      ArcaneTableCell(child: Text('最低等级')),
-      ArcaneTableCell(child: Text('最高等级')),
+  FoxyTableHeader _buildHeader() {
+    return FoxyTableHeader(children: [
+      FoxyTableCell(width: 80, child: Text('编号')),
+      FoxyTableCell(child: Text('姓名')),
+      FoxyTableCell(child: Text('称号')),
+      FoxyTableCell(child: Text('最低等级')),
+      FoxyTableCell(child: Text('最高等级')),
     ]);
   }
 
-  ArcaneTableRow _buildRow(
+  FoxyTableRow _buildRow(
     BuildContext context,
     BriefCreatureTemplate template,
   ) {
     final children = [
-      ArcaneTableCell(width: 80, child: Text(template.entry.toString())),
-      ArcaneTableCell(child: Text(template.name)),
-      ArcaneTableCell(child: Text(template.subName)),
-      ArcaneTableCell(child: Text(template.minLevel.toString())),
-      ArcaneTableCell(child: Text(template.maxLevel.toString())),
+      FoxyTableCell(width: 80, child: Text(template.entry.toString())),
+      FoxyTableCell(child: Text(template.name)),
+      FoxyTableCell(child: Text(template.subName)),
+      FoxyTableCell(child: Text(template.minLevel.toString())),
+      FoxyTableCell(child: Text(template.maxLevel.toString())),
     ];
-    return ArcaneTableRow(
+    return FoxyTableRow(
       onDoubleTap: () => handleDoubleTap(context, template),
       children: children,
     );

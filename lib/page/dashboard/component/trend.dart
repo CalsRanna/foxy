@@ -25,8 +25,7 @@ class Trend extends StatelessWidget {
       _Divider(),
       ListTile(title: Text('新建生物 XXX')),
     ];
-    return const ArcaneCard(
-        title: Text('动态'), child: Column(children: children));
+    return const FoxyCard(title: Text('动态'), child: Column(children: children));
   }
 }
 

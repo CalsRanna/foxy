@@ -102,7 +102,7 @@ class FrequentModuleComponent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
     );
-    return ArcaneCard(title: title, child: column);
+    return FoxyCard(title: title, child: column);
   }
 
   void handleTap(BuildContext context, int index) {

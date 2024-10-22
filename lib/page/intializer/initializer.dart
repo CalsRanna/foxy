@@ -65,10 +65,8 @@ class _InitializerPage extends ConsumerState<InitializerPage> {
 
   Widget _buildData(Setting setting) {
     var textStyle = TextStyle(fontSize: 28, fontWeight: FontWeight.bold);
-    var hostInput =
-        ArcaneInput(controller: hostController, placeholder: 'Host');
-    var portInput =
-        ArcaneInput(controller: portController, placeholder: 'Port');
+    var hostInput = FoxyInput(controller: hostController, placeholder: 'Host');
+    var portInput = FoxyInput(controller: portController, placeholder: 'Port');
     var connectionChildren = [
       Expanded(flex: 2, child: hostInput),
       const SizedBox(width: 16),
@@ -84,11 +82,11 @@ class _InitializerPage extends ConsumerState<InitializerPage> {
       SizedBox(height: 32),
       Row(children: connectionChildren),
       SizedBox(height: 16),
-      ArcaneInput(controller: userController, placeholder: 'User'),
+      FoxyInput(controller: userController, placeholder: 'User'),
       SizedBox(height: 16),
-      ArcaneInput(controller: passwordController, placeholder: 'Password'),
+      FoxyInput(controller: passwordController, placeholder: 'Password'),
       SizedBox(height: 16),
-      ArcaneInput(controller: databaseController, placeholder: 'Database'),
+      FoxyInput(controller: databaseController, placeholder: 'Database'),
       const SizedBox(height: 32),
       Row(children: buttonChildren),
     ];

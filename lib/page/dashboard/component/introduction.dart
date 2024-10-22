@@ -15,6 +15,6 @@ class Introduction extends StatelessWidget {
       '希望新的Foxy能继续实现我最初的愿景，做最好的魔兽世界编辑器！',
     );
     final padding = Padding(padding: EdgeInsets.all(16), child: text);
-    return ArcaneCard(title: Text('介绍'), child: padding);
+    return FoxyCard(title: Text('介绍'), child: padding);
   }
 }

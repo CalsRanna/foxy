@@ -28,15 +28,15 @@ class _Breadcrumb extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = ArcaneBreadcrumbItem(
+    var dashboard = FoxyBreadcrumbItem(
       onTap: () => navigateDashboard(context, ref),
       child: Text('首页'),
     );
     final children = [
       dashboard,
-      ArcaneBreadcrumbItem(child: Text('物品')),
+      FoxyBreadcrumbItem(child: Text('物品')),
     ];
-    return ArcaneBreadcrumb(children: children);
+    return FoxyBreadcrumb(children: children);
   }
 
   void navigateDashboard(BuildContext context, WidgetRef ref) {
@@ -58,11 +58,11 @@ class _Filter extends ConsumerWidget {
       TextButton(onPressed: () => reset(ref), child: Text('重置')),
     ];
     final credentialChildren = [
-      Expanded(child: ArcaneInput(placeholder: '编号（Entry）')),
+      Expanded(child: FoxyInput(placeholder: '编号（Entry）')),
       const SizedBox(width: 16),
-      Expanded(child: ArcaneInput(placeholder: '名称（Name）')),
+      Expanded(child: FoxyInput(placeholder: '名称（Name）')),
       const SizedBox(width: 16),
-      Expanded(child: ArcaneInput(placeholder: '称号（Sub Name）')),
+      Expanded(child: FoxyInput(placeholder: '称号（Sub Name）')),
       const SizedBox(width: 16),
       Expanded(child: Row(children: buttonChildren)),
     ];
@@ -72,7 +72,7 @@ class _Filter extends ConsumerWidget {
     );
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: ArcaneCard(child: filter),
+      child: FoxyCard(child: filter),
     );
   }
 
@@ -89,7 +89,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const edgeInsets = EdgeInsets.symmetric(vertical: 12);
-    return Padding(padding: edgeInsets, child: ArcaneHeader('物品'));
+    return Padding(padding: edgeInsets, child: FoxyHeader('物品'));
   }
 }
 
@@ -100,7 +100,7 @@ class _Pagination extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = itemTemplateTotalProvider;
     final total = ref.watch(provider).valueOrNull;
-    return ArcanePagination(
+    return FoxyPagination(
       total: total ?? 0,
       onChange: (page) => handleChange(ref, page),
     );
@@ -136,46 +136,45 @@ class _Table extends ConsumerWidget {
     final toolbar = Row(children: children);
     final header = _buildHeader();
     final body = templates.map(_buildRow).toList();
-    final table = ArcaneTable(header: header, body: body);
+    final table = FoxyTable(header: header, body: body);
     final column = Column(children: [toolbar, table]);
-    return ArcaneCard(
-        child: Padding(padding: EdgeInsets.all(16), child: column));
+    return FoxyCard(child: Padding(padding: EdgeInsets.all(16), child: column));
   }
 
-  ArcaneTableHeader _buildHeader() {
-    return ArcaneTableHeader(children: [
-      ArcaneTableCell(width: 80, child: Text('编号')),
-      ArcaneTableCell(child: Text('名称')),
-      ArcaneTableCell(width: 80, child: Text('类别')),
-      ArcaneTableCell(width: 80, child: Text('子类别')),
-      ArcaneTableCell(width: 80, child: Text('佩戴位置')),
-      ArcaneTableCell(width: 80, child: Text('物品等级')),
-      ArcaneTableCell(width: 80, child: Text('需求等级')),
+  FoxyTableHeader _buildHeader() {
+    return FoxyTableHeader(children: [
+      FoxyTableCell(width: 80, child: Text('编号')),
+      FoxyTableCell(child: Text('名称')),
+      FoxyTableCell(width: 80, child: Text('类别')),
+      FoxyTableCell(width: 80, child: Text('子类别')),
+      FoxyTableCell(width: 80, child: Text('佩戴位置')),
+      FoxyTableCell(width: 80, child: Text('物品等级')),
+      FoxyTableCell(width: 80, child: Text('需求等级')),
     ]);
   }
 
-  ArcaneTableRow _buildRow(ItemTemplate template) {
-    var inventoryTypeCell = ArcaneTableCell(
+  FoxyTableRow _buildRow(ItemTemplate template) {
+    var inventoryTypeCell = FoxyTableCell(
       width: 80,
       child: Text(template.inventoryType.toString()),
     );
-    var itemLevelCell = ArcaneTableCell(
+    var itemLevelCell = FoxyTableCell(
       width: 80,
       child: Text(template.itemLevel.toString()),
     );
-    var requiredLevelCell = ArcaneTableCell(
+    var requiredLevelCell = FoxyTableCell(
       width: 80,
       child: Text(template.requiredLevel.toString()),
     );
     final children = [
-      ArcaneTableCell(width: 80, child: Text(template.entry.toString())),
-      ArcaneTableCell(child: Text(template.name)),
-      ArcaneTableCell(width: 80, child: Text(template.className.toString())),
-      ArcaneTableCell(width: 80, child: Text(template.subclass.toString())),
+      FoxyTableCell(width: 80, child: Text(template.entry.toString())),
+      FoxyTableCell(child: Text(template.name)),
+      FoxyTableCell(width: 80, child: Text(template.className.toString())),
+      FoxyTableCell(width: 80, child: Text(template.subclass.toString())),
       inventoryTypeCell,
       itemLevelCell,
       requiredLevelCell,
     ];
-    return ArcaneTableRow(children: children);
+    return FoxyTableRow(children: children);
   }
 }

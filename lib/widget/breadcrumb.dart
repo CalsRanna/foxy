@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ArcaneBreadcrumb extends StatelessWidget {
+class FoxyBreadcrumb extends StatelessWidget {
   final List<Widget> children;
-  const ArcaneBreadcrumb({super.key, required this.children});
+  const FoxyBreadcrumb({super.key, required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +21,10 @@ class ArcaneBreadcrumb extends StatelessWidget {
   }
 }
 
-class ArcaneBreadcrumbItem extends StatelessWidget {
+class FoxyBreadcrumbItem extends StatelessWidget {
   final Function()? onTap;
   final Widget child;
-  const ArcaneBreadcrumbItem({super.key, this.onTap, required this.child});
+  const FoxyBreadcrumbItem({super.key, this.onTap, required this.child});
 
   @override
   Widget build(BuildContext context) {

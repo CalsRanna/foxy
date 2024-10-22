@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class ArcaneTable extends StatelessWidget {
-  final List<ArcaneTableRow>? body;
-  final ArcaneTableHeader header;
+class FoxyTable extends StatelessWidget {
+  final List<FoxyTableRow>? body;
+  final FoxyTableHeader header;
 
-  const ArcaneTable({super.key, this.body, required this.header});
+  const FoxyTable({super.key, this.body, required this.header});
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +25,10 @@ class ArcaneTable extends StatelessWidget {
   }
 }
 
-class ArcaneTableCell extends StatelessWidget {
+class FoxyTableCell extends StatelessWidget {
   final double? width;
   final Widget? child;
-  const ArcaneTableCell({super.key, this.width, this.child});
+  const FoxyTableCell({super.key, this.width, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +38,9 @@ class ArcaneTableCell extends StatelessWidget {
   }
 }
 
-class ArcaneTableHeader extends StatelessWidget {
-  final List<ArcaneTableCell> children;
-  const ArcaneTableHeader({super.key, required this.children});
+class FoxyTableHeader extends StatelessWidget {
+  final List<FoxyTableCell> children;
+  const FoxyTableHeader({super.key, required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +53,11 @@ class ArcaneTableHeader extends StatelessWidget {
   }
 }
 
-class ArcaneTableRow extends StatefulWidget {
-  final void Function(ArcaneContextMenuOption)? onContextMenuTap;
+class FoxyTableRow extends StatefulWidget {
+  final void Function(FoxyContextMenuOption)? onContextMenuTap;
   final void Function()? onDoubleTap;
-  final List<ArcaneTableCell> children;
-  const ArcaneTableRow({
+  final List<FoxyTableCell> children;
+  const FoxyTableRow({
     super.key,
     this.onContextMenuTap,
     this.onDoubleTap,
@@ -65,12 +65,12 @@ class ArcaneTableRow extends StatefulWidget {
   });
 
   @override
-  State<ArcaneTableRow> createState() => _ArcaneTableRowState();
+  State<FoxyTableRow> createState() => _FoxyTableRowState();
 }
 
-enum ArcaneContextMenuOption { read, edit, duplicate, destroy }
+enum FoxyContextMenuOption { read, edit, duplicate, destroy }
 
-class _ArcaneTableRowState extends State<ArcaneTableRow> {
+class _FoxyTableRowState extends State<FoxyTableRow> {
   bool hovered = false;
 
   OverlayEntry? entry;
@@ -131,7 +131,7 @@ class _ArcaneTableRowState extends State<ArcaneTableRow> {
     Overlay.of(context).insert(entry!);
   }
 
-  void handleTap(ArcaneContextMenuOption option) {
+  void handleTap(FoxyContextMenuOption option) {
     entry?.remove();
     widget.onContextMenuTap?.call(option);
   }
@@ -157,7 +157,7 @@ class _Barrier extends StatelessWidget {
 }
 
 class _ContextMenu extends StatelessWidget {
-  final void Function(ArcaneContextMenuOption)? onTap;
+  final void Function(FoxyContextMenuOption)? onTap;
   const _ContextMenu({this.onTap});
 
   @override
@@ -178,10 +178,10 @@ class _ContextMenu extends StatelessWidget {
 
   void handleTap(int index) {
     final option = switch (index) {
-      0 => ArcaneContextMenuOption.read,
-      1 => ArcaneContextMenuOption.edit,
-      2 => ArcaneContextMenuOption.duplicate,
-      3 => ArcaneContextMenuOption.destroy,
+      0 => FoxyContextMenuOption.read,
+      1 => FoxyContextMenuOption.edit,
+      2 => FoxyContextMenuOption.duplicate,
+      3 => FoxyContextMenuOption.destroy,
       _ => throw Exception('Unhandled context menu option $index'),
     };
     onTap?.call(option);

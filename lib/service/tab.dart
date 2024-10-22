@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ArcaneTab extends StatefulWidget {
+class FoxyTab extends StatefulWidget {
   final List<Widget> tabs;
-  const ArcaneTab({super.key, required this.tabs});
+  const FoxyTab({super.key, required this.tabs});
 
   @override
-  State<ArcaneTab> createState() => _ArcaneTabState();
+  State<FoxyTab> createState() => _FoxyTabState();
 }
 
-class ArcaneTabItem extends StatelessWidget {
+class FoxyTabItem extends StatelessWidget {
   final bool active;
   final void Function()? onTap;
   final Widget child;
-  const ArcaneTabItem({
+  const FoxyTabItem({
     super.key,
     this.active = false,
     this.onTap,
@@ -38,7 +38,7 @@ class ArcaneTabItem extends StatelessWidget {
   }
 }
 
-class _ArcaneTabState extends State<ArcaneTab> {
+class _FoxyTabState extends State<FoxyTab> {
   int index = 0;
   List<GlobalKey> keys = [];
   List<double> width = [];
@@ -92,8 +92,8 @@ class _ArcaneTabState extends State<ArcaneTab> {
     });
   }
 
-  ArcaneTabItem _buildItem(int i) {
-    return ArcaneTabItem(
+  FoxyTabItem _buildItem(int i) {
+    return FoxyTabItem(
       key: keys[i],
       active: i == index,
       onTap: () => handleTap(i),
