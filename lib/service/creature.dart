@@ -49,6 +49,18 @@ class CreatureTemplateService with Service {
     return CreatureTemplate.fromJson(json);
   }
 
+  Future<int> getMaxPrimaryKey() async {
+    final clauses = [
+      'SELECT entry',
+      'FROM creature_template',
+      'ORDER BY entry DESC',
+      'LIMIT 1',
+    ];
+    final sql = clauses.join(' ');
+    final result = await execute(sql);
+    return result.rows.first.typedColAt<int>(0) ?? 0;
+  }
+
   Future<List<BriefCreatureTemplate>> search({
     int? entry,
     String? name,
@@ -93,9 +105,9 @@ class CreatureTemplateService with Service {
 
   Future<int> store(CreatureTemplate template) async {
     final json = template.toJson();
-    final fields = json.keys.join(', ');
-    final values = json.values.join(', ');
-    final sql = 'INSERT INTO creature_template ($fields) VALUES ($values)';
+    final fields = getFieldsClause(json.keys);
+    final valueClause = getValuesClause(json.values);
+    final sql = 'INSERT INTO creature_template ($fields) VALUES ($valueClause)';
     final result = await execute(sql);
     return result.lastInsertID.toInt();
   }

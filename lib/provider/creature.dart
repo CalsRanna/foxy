@@ -4,6 +4,38 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'creature.g.dart';
 
+@riverpod
+class CreatureTemplateNotifier extends _$CreatureTemplateNotifier {
+  @override
+  Future<CreatureTemplate> build(int? entry) async {
+    if (entry == null) return CreatureTemplate();
+    return CreatureTemplateService().find(entry);
+  }
+
+  Future<void> store(CreatureTemplate template) async {
+    final service = CreatureTemplateService();
+    final maxPrimaryKey = await service.getMaxPrimaryKey();
+    int primaryKey = 600000;
+    if (maxPrimaryKey >= 600000) primaryKey = maxPrimaryKey + 1;
+    template.entry = primaryKey;
+    await service.store(template);
+    state = AsyncData(template);
+  }
+
+  Future<void> updateCreatureTemplate(CreatureTemplate template) async {
+    await CreatureTemplateService().update(template);
+    state = AsyncData(template);
+  }
+}
+
+@Riverpod(keepAlive: true)
+class CreatureTemplatePageNotifier extends _$CreatureTemplatePageNotifier {
+  @override
+  int build() => 1;
+
+  void paginate(int page) => state = page;
+}
+
 @Riverpod(keepAlive: true)
 class CreatureTemplatesNotifier extends _$CreatureTemplatesNotifier {
   @override
@@ -41,22 +73,5 @@ class CreatureTemplateTotalNotifier extends _$CreatureTemplateTotalNotifier {
       subName: subName,
     );
     state = AsyncData(total);
-  }
-}
-
-@Riverpod(keepAlive: true)
-class CreatureTemplatePageNotifier extends _$CreatureTemplatePageNotifier {
-  @override
-  int build() => 1;
-
-  void paginate(int page) => state = page;
-}
-
-@riverpod
-class CreatureTemplateNotifier extends _$CreatureTemplateNotifier {
-  @override
-  Future<CreatureTemplate> build(int? entry) async {
-    if (entry == null) return CreatureTemplate();
-    return CreatureTemplateService().find(entry);
   }
 }

@@ -25,8 +25,8 @@ class CreatureTemplate {
   int difficultyEntry1 = 0;
   int difficultyEntry2 = 0;
   int difficultyEntry3 = 0;
-  int dmgschool = 0;
-  int dynamicflags = 0;
+  int damageSchool = 0;
+  int dynamicFlags = 0;
   int entry = 0;
   int exp = 0;
   double experienceModifier = 1;
@@ -39,23 +39,23 @@ class CreatureTemplate {
   String iconName = '';
   int killCredit1 = 0;
   int killCredit2 = 0;
-  int lootid = 0;
-  int maxgold = 0;
-  int maxlevel = 1;
+  int lootId = 0;
+  int maxGold = 0;
+  int maxLevel = 1;
   double manaModifier = 1;
   int mechanicImmuneMask = 0;
-  int minlevel = 1;
-  int mingold = 0;
-  int modelid1 = 0;
-  int modelid2 = 0;
-  int modelid3 = 0;
-  int modelid4 = 0;
+  int minLevel = 1;
+  int minGold = 0;
+  int modelId1 = 0;
+  int modelId2 = 0;
+  int modelId3 = 0;
+  int modelId4 = 0;
   int movementId = 0;
   int movementType = 0;
   String name = '';
-  int npcflag = 0;
+  int npcFlag = 0;
   int petSpellDataId = 0;
-  int pickpocketloot = 0;
+  int pickpocketLoot = 0;
   int racialLeader = 0;
   int rangeAttackTime = 0;
   double rangeVariance = 1;
@@ -63,18 +63,18 @@ class CreatureTemplate {
   int regenHealth = 1;
   double scale = 1;
   String scriptName = '';
-  int skinloot = 0;
+  int skinLoot = 0;
   double speedRun = 1.14286;
   double speedWalk = 1;
   int spellSchoolImmuneMask = 0;
-  String subname = '';
+  String subName = '';
   int type = 0;
   int typeFlags = 0;
   int unitClass = 0;
   int unitFlags = 0;
   int unitFlags2 = 0;
   int vehicleId = 0;
-  int? verifiedBuild;
+  int verifiedBuild = 0;
 
   CreatureTemplate();
 
@@ -87,8 +87,8 @@ class CreatureTemplate {
     difficultyEntry1 = json['difficulty_entry_1'] ?? 0;
     difficultyEntry2 = json['difficulty_entry_2'] ?? 0;
     difficultyEntry3 = json['difficulty_entry_3'] ?? 0;
-    dmgschool = json['dmgschool'] ?? 0;
-    dynamicflags = json['dynamicflags'] ?? 0;
+    damageSchool = json['dmgschool'] ?? 0;
+    dynamicFlags = json['dynamicflags'] ?? 0;
     entry = json['entry'] ?? 0;
     exp = json['exp'] ?? 0;
     experienceModifier = json['ExperienceModifier'] ?? 1.0;
@@ -101,23 +101,23 @@ class CreatureTemplate {
     iconName = json['IconName'] ?? '';
     killCredit1 = json['KillCredit1'] ?? 0;
     killCredit2 = json['KillCredit2'] ?? 0;
-    lootid = json['lootid'] ?? 0;
-    maxgold = json['maxgold'] ?? 0;
-    maxlevel = json['maxlevel'] ?? 1;
+    lootId = json['lootid'] ?? 0;
+    maxGold = json['maxgold'] ?? 0;
+    maxLevel = json['maxlevel'] ?? 1;
     manaModifier = json['ManaModifier'] ?? 1.0;
     mechanicImmuneMask = json['mechanic_immune_mask'] ?? 0;
-    minlevel = json['minlevel'] ?? 1;
-    mingold = json['mingold'] ?? 0;
-    modelid1 = json['modelid1'] ?? 0;
-    modelid2 = json['modelid2'] ?? 0;
-    modelid3 = json['modelid3'] ?? 0;
-    modelid4 = json['modelid4'] ?? 0;
+    minLevel = json['minlevel'] ?? 1;
+    minGold = json['mingold'] ?? 0;
+    modelId1 = json['modelid1'] ?? 0;
+    modelId2 = json['modelid2'] ?? 0;
+    modelId3 = json['modelid3'] ?? 0;
+    modelId4 = json['modelid4'] ?? 0;
     movementId = json['movementId'] ?? 0;
     movementType = json['MovementType'] ?? 0;
     name = json['name'] ?? '';
-    npcflag = json['npcflag'] ?? 0;
+    npcFlag = json['npcflag'] ?? 0;
     petSpellDataId = json['PetSpellDataId'] ?? 0;
-    pickpocketloot = json['pickpocketloot'] ?? 0;
+    pickpocketLoot = json['pickpocketloot'] ?? 0;
     racialLeader = json['RacialLeader'] ?? 0;
     rangeAttackTime = json['RangeAttackTime'] ?? 0;
     rangeVariance = json['RangeVariance'] ?? 1.0;
@@ -125,18 +125,22 @@ class CreatureTemplate {
     regenHealth = json['RegenHealth'] ?? 1;
     scale = json['scale'] ?? 1.0;
     scriptName = json['ScriptName'] ?? '';
-    skinloot = json['skinloot'] ?? 0;
+    skinLoot = json['skinloot'] ?? 0;
     speedRun = json['speed_run'] ?? 1.14286;
     speedWalk = json['speed_walk'] ?? 1.0;
     spellSchoolImmuneMask = json['spell_school_immune_mask'] ?? 0;
-    subname = json['subname'] ?? '';
+    subName = json['subname'] ?? '';
     type = json['type'] ?? 0;
     typeFlags = json['type_flags'] ?? 0;
     unitClass = json['unit_class'] ?? 0;
     unitFlags = json['unit_flags'] ?? 0;
     unitFlags2 = json['unit_flags2'] ?? 0;
     vehicleId = json['VehicleId'] ?? 0;
-    verifiedBuild = json['VerifiedBuild'];
+    verifiedBuild = json['VerifiedBuild'] ?? 0;
+  }
+
+  CreatureTemplate copyWith({int? entry}) {
+    return CreatureTemplate()..entry = entry ?? this.entry;
   }
 
   Map<String, dynamic> toJson() {
@@ -149,8 +153,8 @@ class CreatureTemplate {
       'difficulty_entry_1': difficultyEntry1,
       'difficulty_entry_2': difficultyEntry2,
       'difficulty_entry_3': difficultyEntry3,
-      'dmgschool': dmgschool,
-      'dynamicflags': dynamicflags,
+      'dmgschool': damageSchool,
+      'dynamicflags': dynamicFlags,
       'entry': entry,
       'exp': exp,
       'ExperienceModifier': experienceModifier,
@@ -163,23 +167,23 @@ class CreatureTemplate {
       'IconName': iconName,
       'KillCredit1': killCredit1,
       'KillCredit2': killCredit2,
-      'lootid': lootid,
-      'maxgold': maxgold,
-      'maxlevel': maxlevel,
+      'lootid': lootId,
+      'maxgold': maxGold,
+      'maxlevel': maxLevel,
       'ManaModifier': manaModifier,
       'mechanic_immune_mask': mechanicImmuneMask,
-      'minlevel': minlevel,
-      'mingold': mingold,
-      'modelid1': modelid1,
-      'modelid2': modelid2,
-      'modelid3': modelid3,
-      'modelid4': modelid4,
+      'minlevel': minLevel,
+      'mingold': minGold,
+      'modelid1': modelId1,
+      'modelid2': modelId2,
+      'modelid3': modelId3,
+      'modelid4': modelId4,
       'movementId': movementId,
       'MovementType': movementType,
       'name': name,
-      'npcflag': npcflag,
+      'npcflag': npcFlag,
       'PetSpellDataId': petSpellDataId,
-      'pickpocketloot': pickpocketloot,
+      'pickpocketloot': pickpocketLoot,
       'RacialLeader': racialLeader,
       'RangeAttackTime': rangeAttackTime,
       'RangeVariance': rangeVariance,
@@ -187,11 +191,11 @@ class CreatureTemplate {
       'RegenHealth': regenHealth,
       'scale': scale,
       'ScriptName': scriptName,
-      'skinloot': skinloot,
+      'skinloot': skinLoot,
       'speed_run': speedRun,
       'speed_walk': speedWalk,
       'spell_school_immune_mask': spellSchoolImmuneMask,
-      'subname': subname,
+      'subname': subName,
       'type': type,
       'type_flags': typeFlags,
       'unit_class': unitClass,

@@ -16,7 +16,7 @@ class FrequentModuleComponent extends StatelessWidget {
     const title = Text('常用的模块', style: textStyle);
     final creature = _Tile(
       category: _Category.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      description: '所有生物的相关数据,包含NPC和怪物。',
       icon: Icon(HugeIcons.strokeRoundedUserMultiple),
       name: '生物',
       onTap: () => handleTap(context, 0),
@@ -24,7 +24,7 @@ class FrequentModuleComponent extends StatelessWidget {
     );
     final item = _Tile(
       category: _Category.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      description: '包含装备，物品信息。',
       icon: Icon(HugeIcons.strokeRoundedBodyArmor),
       name: '物品',
       onTap: () => handleTap(context, 1),
@@ -32,7 +32,7 @@ class FrequentModuleComponent extends StatelessWidget {
     );
     final gameObject = _Tile(
       category: _Category.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      description: '所有可交互的物体，比如陷阱，宝箱等等。',
       icon: Icon(HugeIcons.strokeRoundedCube),
       name: '游戏对象',
       onTap: () => handleTap(context, 2),
@@ -40,21 +40,21 @@ class FrequentModuleComponent extends StatelessWidget {
     );
     final quest = _Tile(
       category: _Category.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      description: '任务模板及其它关联的数据，比如奖励，任务对话等等。',
       icon: Icon(HugeIcons.strokeRoundedCursorInfo01),
       name: '任务',
       onTap: () => handleTap(context, 3),
     );
     final gossip = _Tile(
       category: _Category.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      description: '和NPC交谈时，对话框中的面板内容及对话选项。',
       icon: Icon(HugeIcons.strokeRoundedBubbleChat),
       name: '对话',
       onTap: () => handleTap(context, 4),
     );
     final smartScript = _Tile(
       category: _Category.database,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      description: '主要是一些简单的脚本，不需要复杂的代码逻辑。',
       icon: Icon(HugeIcons.strokeRoundedCode),
       name: '内建脚本',
       onTap: () => handleTap(context, 5),
@@ -62,21 +62,21 @@ class FrequentModuleComponent extends StatelessWidget {
     );
     final spell = _Tile(
       category: _Category.dbc,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      description: '角色拥有的法术技能。',
       icon: Icon(HugeIcons.strokeRoundedSolarSystem),
       name: '法术',
       onTap: () => handleTap(context, 6),
     );
     final talent = _Tile(
       category: _Category.dbc,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      description: '天赋树中的信息，配合法术一起使用。',
       icon: Icon(HugeIcons.strokeRoundedNanoTechnology),
       name: '天赋',
       onTap: () => handleTap(context, 7),
     );
     final itemSet = _Tile(
       category: _Category.dbc,
-      description: '游戏中所有生物的相关数据,包含NPC和怪物.',
+      description: '套装数据，包含组成部分，套装奖励效果等等。',
       icon: Icon(HugeIcons.strokeRoundedLayers01),
       name: '套装',
       onTap: () => handleTap(context, 8),
@@ -186,9 +186,10 @@ class _TileState extends State<_Tile> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
     );
+    var description = SizedBox(height: 72, child: Text(widget.description));
     final containerColumn = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [title, const SizedBox(height: 16), Text(widget.description)],
+      children: [title, const SizedBox(height: 16), description],
     );
     final border = _getBorder(outline);
     final shadow = _getShadow(outline);
