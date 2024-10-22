@@ -4,17 +4,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/provider/application.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:window_manager/window_manager.dart';
 
 class LeftBar extends StatelessWidget {
   const LeftBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemBuilder: (_, index) => _Tile(index: index),
-      itemCount: _Icons.icons.length,
-      padding: EdgeInsets.all(8),
-      separatorBuilder: (_, index) => SizedBox(height: 8),
+    List<Widget> menus = List.generate(
+      _Icons.icons.length,
+      (index) => _Tile(index: index),
+    );
+    final column = Column(children: [_Drawer(), ...menus]);
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onPanStart: (details) => windowManager.startDragging(),
+      child: SingleChildScrollView(child: column),
     );
   }
 }
@@ -36,6 +41,31 @@ class _Icons {
   ];
 }
 
+class _Drawer extends StatelessWidget {
+  const _Drawer();
+
+  @override
+  Widget build(BuildContext context) {
+    final icon = Icon(HugeIcons.strokeRoundedMenu01, size: 20);
+    var padding = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: icon,
+    );
+    var iconButton = IconButton(
+      onPressed: () => handleTap(context),
+      icon: padding,
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: iconButton,
+    );
+  }
+
+  void handleTap(BuildContext context) {
+    Scaffold.of(context).openDrawer();
+  }
+}
+
 class _Tile extends ConsumerWidget {
   final int index;
   const _Tile({required this.index});
@@ -50,11 +80,19 @@ class _Tile extends ConsumerWidget {
     final active = index == selectedMenuIndex;
     final color = active ? primaryContainer : null;
     final icon = Icon(_Icons.icons[index], size: 20);
-    return IconButton(
+    var padding = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: icon,
+    );
+    var iconButton = IconButton(
       onPressed: () => handlePressed(context, ref),
-      icon: icon,
+      icon: padding,
       isSelected: active,
       style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(color)),
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: iconButton,
     );
   }
 
