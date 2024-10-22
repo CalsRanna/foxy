@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foxy/provider/setting.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const boxDecoration = BoxDecoration(
-      color: Colors.red,
-      shape: BoxShape.circle,
-    );
-    final avatar = Container(
-      decoration: boxDecoration,
-      width: 80,
-      height: 80,
-    );
+    final avatar = _Avatar();
     const supportChildren = [
       Text('欢迎使用Foxy！', style: TextStyle(fontSize: 20)),
       Text('支持 Azeroth / Trinity Core | 3.3.5 12340 | Mysql 5.x / 8.x')
@@ -40,5 +34,36 @@ class Welcome extends StatelessWidget {
       count
     ];
     return Row(children: children);
+  }
+}
+
+class _Avatar extends ConsumerWidget {
+  const _Avatar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final primary = colorScheme.primary;
+    final onPrimary = colorScheme.onPrimary;
+    final boxDecoration = BoxDecoration(
+      color: primary,
+      shape: BoxShape.circle,
+    );
+    final provider = settingNotifierProvider;
+    final setting = ref.watch(provider).valueOrNull;
+    final username = setting?.username ?? 'Foxy';
+    var textStyle = TextStyle(
+      color: onPrimary,
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+    );
+    var text = Text(username.toUpperCase(), style: textStyle);
+    return Container(
+      decoration: boxDecoration,
+      width: 80,
+      height: 80,
+      child: Center(child: text),
+    );
   }
 }

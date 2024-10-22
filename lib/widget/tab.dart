@@ -53,6 +53,7 @@ class _FoxyTabState extends State<FoxyTab> {
     );
     final children = List.generate(widget.tabs.length, _buildItem);
     var listView = ListView(
+      padding: EdgeInsets.zero,
       scrollDirection: Axis.horizontal,
       children: children,
     );

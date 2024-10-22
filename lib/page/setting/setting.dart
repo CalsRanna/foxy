@@ -105,7 +105,7 @@ class _Setting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = [
-      SizedBox(width: 120, child: _Menu()),
+      SizedBox(width: 160, child: _Menu()),
       const VerticalDivider(thickness: 1, width: 1),
       const SizedBox(width: 16),
       Expanded(child: AutoRouter()),

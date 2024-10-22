@@ -144,7 +144,7 @@ class _Table extends ConsumerWidget {
   FoxyTableHeader _buildHeader() {
     return FoxyTableHeader(children: [
       FoxyTableCell(width: 80, child: Text('编号')),
-      FoxyTableCell(width: 160, child: Text('标题')),
+      FoxyTableCell(width: 120, child: Text('标题')),
       FoxyTableCell(child: Text('描述')),
       FoxyTableCell(width: 80, child: Text('类型')),
       FoxyTableCell(width: 80, child: Text('等级')),
@@ -155,7 +155,7 @@ class _Table extends ConsumerWidget {
   FoxyTableRow _buildRow(QuestTemplate template) {
     final children = [
       FoxyTableCell(width: 80, child: Text(template.entry.toString())),
-      FoxyTableCell(width: 160, child: Text(template.title)),
+      FoxyTableCell(width: 120, child: Text(template.title)),
       FoxyTableCell(child: Text(template.description)),
       FoxyTableCell(width: 80, child: Text(template.type.toString())),
       FoxyTableCell(width: 80, child: Text(template.level.toString())),

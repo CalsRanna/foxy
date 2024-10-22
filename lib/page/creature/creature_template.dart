@@ -5,7 +5,7 @@ import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/provider/application.dart';
 import 'package:foxy/provider/creature.dart';
 import 'package:foxy/router/router.gr.dart';
-import 'package:foxy/service/tab.dart';
+import 'package:foxy/widget/tab.dart';
 import 'package:foxy/util/input_width_calculator.dart';
 import 'package:foxy/widget/breadcrumb.dart';
 import 'package:foxy/widget/card.dart';

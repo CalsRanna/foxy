@@ -34,13 +34,8 @@ class _Icons {
     HugeIcons.strokeRoundedDashboardCircle,
     HugeIcons.strokeRoundedUserMultiple,
     HugeIcons.strokeRoundedBodyArmor,
-    HugeIcons.strokeRoundedCube,
     HugeIcons.strokeRoundedCursorInfo01,
-    HugeIcons.strokeRoundedBubbleChat,
-    HugeIcons.strokeRoundedCode,
     HugeIcons.strokeRoundedSolarSystem,
-    HugeIcons.strokeRoundedNanoTechnology,
-    HugeIcons.strokeRoundedLayers01,
     HugeIcons.strokeRoundedMoreHorizontal,
     HugeIcons.strokeRoundedSettings01,
   ];
@@ -109,11 +104,8 @@ class _Tile extends ConsumerWidget {
       0 => DashboardRoute(),
       1 => CreatureTemplateListRoute(),
       2 => ItemTemplateListRoute(),
-      3 => GameObjectTemplateListRoute(),
-      4 => QuestTemplateListRoute(),
-      5 => GossipMenuListRoute(),
-      6 => SmartScriptListRoute(),
-      11 => BasicSettingRoute(),
+      3 => QuestTemplateListRoute(),
+      6 => BasicSettingRoute(),
       _ => DashboardRoute(),
     };
     AutoRouter.of(context).navigate(route);

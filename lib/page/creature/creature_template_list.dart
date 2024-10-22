@@ -222,8 +222,8 @@ class _Table extends ConsumerWidget {
       FoxyTableCell(width: 80, child: Text('编号')),
       FoxyTableCell(child: Text('姓名')),
       FoxyTableCell(child: Text('称号')),
-      FoxyTableCell(child: Text('最低等级')),
-      FoxyTableCell(child: Text('最高等级')),
+      FoxyTableCell(width: 80, child: Text('最低等级')),
+      FoxyTableCell(width: 80, child: Text('最高等级')),
     ]);
   }
 
@@ -235,8 +235,8 @@ class _Table extends ConsumerWidget {
       FoxyTableCell(width: 80, child: Text(template.entry.toString())),
       FoxyTableCell(child: Text(template.name)),
       FoxyTableCell(child: Text(template.subName)),
-      FoxyTableCell(child: Text(template.minLevel.toString())),
-      FoxyTableCell(child: Text(template.maxLevel.toString())),
+      FoxyTableCell(width: 80, child: Text(template.minLevel.toString())),
+      FoxyTableCell(width: 80, child: Text(template.maxLevel.toString())),
     ];
     return FoxyTableRow(
       onDoubleTap: () => handleDoubleTap(context, template),

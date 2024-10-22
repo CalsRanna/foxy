@@ -20,9 +20,9 @@ import 'package:foxy/page/item/item_template_list.dart' as _i8;
 import 'package:foxy/page/loading/loading.dart' as _i9;
 import 'package:foxy/page/quest/quest_template_list.dart' as _i10;
 import 'package:foxy/page/scaffold/scaffold.dart' as _i11;
-import 'package:foxy/page/script_smart/smart_script_list.dart' as _i13;
 import 'package:foxy/page/setting/basic_setting.dart' as _i1;
 import 'package:foxy/page/setting/setting.dart' as _i12;
+import 'package:foxy/page/smart_script/smart_script_list.dart' as _i13;
 
 /// generated route for
 /// [_i1.BasicSettingPage]

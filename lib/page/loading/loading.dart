@@ -36,10 +36,12 @@ class _LoadingPageState extends ConsumerState<LoadingPage> with WindowListener {
       padding: EdgeInsets.all(16),
       reverse: true,
     );
+    final edgeInsets = MediaQuery.paddingOf(context);
     var positioned = Positioned(
-      left: 0,
-      right: 200,
-      height: 300,
+      bottom: edgeInsets.bottom + 16,
+      left: edgeInsets.left + 16,
+      right: edgeInsets.right + 16,
+      top: edgeInsets.top + 16,
       child: listView,
     );
     return Scaffold(body: Stack(children: [image, positioned]));

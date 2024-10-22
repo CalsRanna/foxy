@@ -25,7 +25,9 @@ class InputWidthCalculator {
     const dividerWidth = 1;
     const workspacePaddingWidth = 16 * 2;
     const cardPaddingWidth = 16 * 2;
-    double width = mediaQuery.size.width;
+    final size = MediaQuery.sizeOf(context);
+    final edgeInsets = MediaQuery.paddingOf(context);
+    double width = size.width - edgeInsets.horizontal;
     width -= leftBarWidth;
     width -= dividerWidth;
     width -= workspacePaddingWidth;

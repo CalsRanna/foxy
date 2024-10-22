@@ -101,7 +101,7 @@ class _TileState extends State<_Tile> {
     final primary = colorScheme.primary;
     final surfaceContainer = colorScheme.surfaceContainer;
     final color = (widget.active || hovered) ? primary : null;
-    var iconTheme = IconTheme(
+    var iconTheme = IconTheme.merge(
       data: IconThemeData(color: color),
       child: widget.child,
     );
@@ -119,6 +119,7 @@ class _TileState extends State<_Tile> {
       alignment: Alignment.center,
       decoration: boxDecoration,
       height: 32,
+      margin: EdgeInsets.all(4),
       width: 32,
       child: merge,
     );
