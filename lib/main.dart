@@ -25,7 +25,6 @@ class Foxy extends StatelessWidget {
       shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.25),
     );
     var colorScheme = ColorScheme.fromSeed(
-      brightness: Brightness.dark,
       seedColor: Color(0xff1677b3),
     );
     final themeData = ThemeData(

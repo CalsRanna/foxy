@@ -33,7 +33,16 @@ class FoxyTableCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const edgeInsets = EdgeInsets.symmetric(horizontal: 8, vertical: 16);
-    final cell = Container(padding: edgeInsets, width: width, child: child);
+    var defaultTextStyle = DefaultTextStyle.merge(
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      child: child ?? const SizedBox(),
+    );
+    final cell = Container(
+      padding: edgeInsets,
+      width: width,
+      child: defaultTextStyle,
+    );
     return Expanded(flex: width == null ? 1 : 0, child: cell);
   }
 }
