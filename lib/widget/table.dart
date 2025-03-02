@@ -12,7 +12,7 @@ class FoxyTable extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline;
-    final borderSide = BorderSide(color: outline.withOpacity(0.25));
+    final borderSide = BorderSide(color: outline.withValues(alpha: 0.25));
     final boxDecoration = BoxDecoration(border: Border(bottom: borderSide));
     final defaultBody = Padding(
       padding: const EdgeInsets.all(16.0),
@@ -90,7 +90,7 @@ class _FoxyTableRowState extends State<FoxyTableRow> {
     final colorScheme = theme.colorScheme;
     final primaryContainer = colorScheme.primaryContainer;
     final outline = colorScheme.outline;
-    final borderSide = BorderSide(color: outline.withOpacity(0.25));
+    final borderSide = BorderSide(color: outline.withValues(alpha: 0.25));
     final boxDecoration = BoxDecoration(
       border: Border(bottom: borderSide),
       color: hovered ? primaryContainer : null,

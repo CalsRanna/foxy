@@ -1,3 +1,9 @@
 {
-  "cSpell.words": ["hugeicons", "LTRB", "riverpod", "sublist"]
+  "cSpell.words": [
+    "hugeicons",
+    "LTRB",
+    "riverpod",
+    "sublist"
+  ],
+  "editor.formatOnSave": true
 }

@@ -18,7 +18,7 @@ class _Divider extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline;
-    return Divider(color: outline.withOpacity(0.2), height: 1);
+    return Divider(color: outline.withValues(alpha: 0.2), height: 1);
   }
 }
 
@@ -31,7 +31,7 @@ class _FoxyCardState extends State<FoxyCard> {
     final surface = colorScheme.surface;
     final boxShadow = BoxShadow(
       blurRadius: 8,
-      color: outline.withOpacity(0.1),
+      color: outline.withValues(alpha: 0.1),
       spreadRadius: 8,
     );
     final boxDecoration = BoxDecoration(

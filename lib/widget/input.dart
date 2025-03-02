@@ -19,7 +19,7 @@ class FoxyInput extends StatelessWidget {
     final outline = colorScheme.outline;
     final surfaceContainer = colorScheme.surfaceContainer;
     final boxDecoration = BoxDecoration(
-      border: Border.all(color: outline.withOpacity(0.25)),
+      border: Border.all(color: outline.withValues(alpha: 0.25)),
       borderRadius: BorderRadius.circular(8),
       color: readOnly ? surfaceContainer : null,
     );

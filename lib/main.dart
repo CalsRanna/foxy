@@ -22,7 +22,7 @@ class Foxy extends StatelessWidget {
       elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       margin: const EdgeInsets.symmetric(vertical: 8),
-      shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.25),
+      shadowColor: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.25),
     );
     var colorScheme = ColorScheme.fromSeed(
       seedColor: Color(0xff1677b3),

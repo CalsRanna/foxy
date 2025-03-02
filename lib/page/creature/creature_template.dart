@@ -916,7 +916,7 @@ class _Footer extends StatelessWidget {
     final surface = colorScheme.surface;
     final outline = colorScheme.outline;
     var boxDecoration = BoxDecoration(
-      border: Border(top: BorderSide(color: outline.withOpacity(0.25))),
+      border: Border(top: BorderSide(color: outline.withValues(alpha: 0.25))),
       color: surface,
     );
     return Container(

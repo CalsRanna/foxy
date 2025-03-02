@@ -32,8 +32,8 @@ class FoxyBreadcrumbItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final onSurface = colorScheme.onSurface;
     final disabled = onTap == null;
-    final opacity = disabled ? 1.0 : 0.5;
-    final textStyle = TextStyle(color: onSurface.withOpacity(opacity));
+    final alpha = disabled ? 1.0 : 0.5;
+    final textStyle = TextStyle(color: onSurface.withValues(alpha: alpha));
     final item = DefaultTextStyle.merge(child: child, style: textStyle);
     const edgeInsets = EdgeInsets.all(4);
     final padding = Padding(padding: edgeInsets, child: item);

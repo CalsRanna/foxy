@@ -37,6 +37,6 @@ class _Divider extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline;
-    return Divider(color: outline.withOpacity(0.2), height: 1);
+    return Divider(color: outline.withValues(alpha: 0.2), height: 1);
   }
 }

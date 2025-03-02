@@ -49,7 +49,7 @@ class _FoxyTabState extends State<FoxyTab> {
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline;
     var boxDecoration = BoxDecoration(
-      border: Border(bottom: BorderSide(color: outline.withOpacity(0.2))),
+      border: Border(bottom: BorderSide(color: outline.withValues(alpha: 0.2))),
     );
     final children = List.generate(widget.tabs.length, _buildItem);
     var listView = ListView(

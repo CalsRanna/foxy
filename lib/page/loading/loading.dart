@@ -71,7 +71,7 @@ class _LoadingPageState extends ConsumerState<LoadingPage> with WindowListener {
 
   Widget _itemBuilder(List<String> logs, int index) {
     var textStyle = TextStyle(
-      color: Colors.white.withOpacity(0.6),
+      color: Colors.white.withValues(alpha: 0.6),
       fontSize: 12,
     );
     return Text(logs.reversed.elementAt(index), style: textStyle);

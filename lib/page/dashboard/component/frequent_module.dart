@@ -225,7 +225,7 @@ class _TileState extends State<_Tile> {
   }
 
   Border _getBorder(Color outline) {
-    BorderSide side = BorderSide(color: outline.withOpacity(0.2));
+    BorderSide side = BorderSide(color: outline.withValues(alpha: 0.2));
     final positions = widget.positions;
     final showRight = positions.contains(_Position.right);
     final showTop = positions.contains(_Position.top);
@@ -239,7 +239,7 @@ class _TileState extends State<_Tile> {
     if (!hover) return [];
     final shadow = BoxShadow(
       blurRadius: 8,
-      color: outline.withOpacity(0.1),
+      color: outline.withValues(alpha: 0.1),
       spreadRadius: 8,
     );
     return [shadow];
