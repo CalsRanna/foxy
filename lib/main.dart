@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await WindowInitializer.ensureInitialized();
   await IsarInitializer.ensureInitialized();
-  GetIt.instance.registerSingleton(AppRouter());
+  GetIt.instance.registerSingleton(FoxyRouter());
   runApp(const ProviderScope(child: Foxy()));
 }
 
@@ -24,16 +24,14 @@ class Foxy extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       shadowColor: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.25),
     );
-    var colorScheme = ColorScheme.fromSeed(
-      seedColor: Color(0xff1677b3),
-    );
+    var colorScheme = ColorScheme.fromSeed(seedColor: Color(0xff1677b3));
     final themeData = ThemeData(
       cardTheme: cardTheme,
       colorScheme: colorScheme,
       fontFamily: 'Microsoft YaHei',
       useMaterial3: true,
     );
-    final router = GetIt.instance.get<AppRouter>();
+    final router = GetIt.instance.get<FoxyRouter>();
     return MaterialApp.router(theme: themeData, routerConfig: router.config());
   }
 }

@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:foxy/router/router.gr.dart';
 
 @AutoRouterConfig()
-class AppRouter extends RootStackRouter {
+class FoxyRouter extends RootStackRouter {
   @override
   RouteType get defaultRouteType {
     return RouteType.custom(
@@ -13,9 +13,7 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes {
-    final settingChildren = [
-      AutoRoute(page: BasicSettingRoute.page),
-    ];
+    final settingChildren = [AutoRoute(page: BasicSettingRoute.page)];
     final children = [
       /// Scaffold
       AutoRoute(page: DashboardRoute.page),

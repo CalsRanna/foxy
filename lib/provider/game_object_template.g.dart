@@ -21,6 +21,8 @@ final gameObjectTemplateTotalProvider = FutureProvider<int>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef GameObjectTemplateTotalRef = FutureProviderRef<int>;
 String _$gameObjectTemplatesNotifierHash() =>
     r'52ff8c2cfdb1cdbbea12f03f49cb3ebfe2893b9d';
@@ -40,4 +42,4 @@ final gameObjectTemplatesNotifierProvider = AsyncNotifierProvider<
 
 typedef _$GameObjectTemplatesNotifier = AsyncNotifier<List<GameObjectTemplate>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
