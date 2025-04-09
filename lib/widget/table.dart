@@ -18,10 +18,12 @@ class FoxyTable extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Center(child: Text('暂无数据')),
     );
-    return Column(children: [
-      Container(decoration: boxDecoration, child: header),
-      if (body == null) defaultBody else ...body!,
-    ]);
+    return Column(
+      children: [
+        Container(decoration: boxDecoration, child: header),
+        if (body == null) defaultBody else ...body!,
+      ],
+    );
   }
 }
 
@@ -130,7 +132,7 @@ class _FoxyTableRowState extends State<FoxyTableRow> {
   void handlePointerDown(PointerDownEvent event) {
     if (event.buttons != kSecondaryMouseButton) return;
     final positioned = Positioned(
-      left: event.position.dx,
+      left: event.position.dx - 84,
       top: event.position.dy,
       width: 200,
       child: _ContextMenu(onTap: handleTap),
@@ -161,7 +163,11 @@ class _Barrier extends StatelessWidget {
       width: double.infinity,
       color: Colors.transparent,
     );
-    return GestureDetector(onTap: onTap, child: container);
+    return GestureDetector(
+      onSecondaryTap: onTap,
+      onTap: onTap,
+      child: container,
+    );
   }
 }
 
@@ -172,7 +178,7 @@ class _ContextMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = [
-      ListTile(onTap: () => handleTap(0), title: Text('查看')),
+      ListTile(onTap: () => handleTap(0), title: Text('预览')),
       ListTile(onTap: () => handleTap(1), title: Text('编辑')),
       ListTile(onTap: () => handleTap(2), title: Text('复制')),
       Divider(),

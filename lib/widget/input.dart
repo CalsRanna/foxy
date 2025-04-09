@@ -25,7 +25,7 @@ class FoxyInput extends StatelessWidget {
     );
     final inputDecoration = InputDecoration.collapsed(
       hintText: placeholder ?? '请输入',
-      hintStyle: const TextStyle(height: 1.2),
+      hintStyle: TextStyle(height: 1.2, color: outline.withValues(alpha: 0.75)),
     );
     final textField = TextField(
       controller: controller,

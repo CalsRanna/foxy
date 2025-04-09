@@ -21,13 +21,13 @@ class ScaffoldPage extends StatelessWidget {
     final children = [
       LeftBar(),
       const VerticalDivider(thickness: 1, width: 1),
-      Expanded(child: AutoRouter())
+      Expanded(child: AutoRouter()),
     ];
-    final rightWorkspace = Row(
+    final topWorkspace = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
     );
-    final bodyChildren = [Expanded(child: rightWorkspace), const Status()];
+    final bodyChildren = [Expanded(child: topWorkspace), const Status()];
     var scaffold = Scaffold(
       body: Column(children: bodyChildren),
       drawer: _Drawer(),

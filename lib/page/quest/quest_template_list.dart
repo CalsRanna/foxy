@@ -32,10 +32,7 @@ class _Breadcrumb extends ConsumerWidget {
       onTap: () => navigateDashboard(context, ref),
       child: Text('首页'),
     );
-    final children = [
-      dashboard,
-      FoxyBreadcrumbItem(child: Text('任务')),
-    ];
+    final children = [dashboard, FoxyBreadcrumbItem(child: Text('任务'))];
     return FoxyBreadcrumb(children: children);
   }
 
@@ -131,7 +128,7 @@ class _Table extends ConsumerWidget {
     final children = [
       FilledButton(onPressed: () {}, child: Text('新增')),
       const Spacer(),
-      _Pagination()
+      _Pagination(),
     ];
     final toolbar = Row(children: children);
     final header = _buildHeader();
@@ -142,14 +139,15 @@ class _Table extends ConsumerWidget {
   }
 
   FoxyTableHeader _buildHeader() {
-    return FoxyTableHeader(children: [
+    var children = [
       FoxyTableCell(width: 80, child: Text('编号')),
       FoxyTableCell(width: 120, child: Text('标题')),
       FoxyTableCell(child: Text('描述')),
       FoxyTableCell(width: 80, child: Text('类型')),
       FoxyTableCell(width: 80, child: Text('等级')),
       FoxyTableCell(width: 80, child: Text('最低等级')),
-    ]);
+    ];
+    return FoxyTableHeader(children: children);
   }
 
   FoxyTableRow _buildRow(QuestTemplate template) {
