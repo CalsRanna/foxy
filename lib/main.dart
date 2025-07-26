@@ -18,7 +18,7 @@ class Foxy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardTheme = CardTheme(
+    final cardTheme = CardThemeData(
       elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       margin: const EdgeInsets.symmetric(vertical: 8),

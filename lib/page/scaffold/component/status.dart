@@ -26,7 +26,7 @@ class Status extends StatelessWidget {
     final edgeInsets = MediaQuery.paddingOf(context);
     return Container(
       color: primary,
-      padding: EdgeInsets.fromLTRB(16, 4, 16, edgeInsets.bottom),
+      padding: EdgeInsets.fromLTRB(16, 4, 16, edgeInsets.bottom + 4),
       width: double.infinity,
       child: Row(mainAxisAlignment: MainAxisAlignment.end, children: children),
     );

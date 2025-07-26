@@ -2,10 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/item_template.dart';
-import 'package:foxy/provider/application.dart';
 import 'package:foxy/provider/item.dart';
-import 'package:foxy/router/router.gr.dart';
-import 'package:foxy/widget/breadcrumb.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
@@ -18,32 +15,8 @@ class ItemTemplateListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final children = [_Breadcrumb(), _Header(), _Filter(), _Table()];
+    final children = [_Header(), _Filter(), _Table()];
     return ListView(padding: EdgeInsets.all(16), children: children);
-  }
-}
-
-class _Breadcrumb extends ConsumerWidget {
-  const _Breadcrumb();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = FoxyBreadcrumbItem(
-      onTap: () => navigateDashboard(context, ref),
-      child: Text('首页'),
-    );
-    final children = [
-      dashboard,
-      FoxyBreadcrumbItem(child: Text('物品')),
-    ];
-    return FoxyBreadcrumb(children: children);
-  }
-
-  void navigateDashboard(BuildContext context, WidgetRef ref) {
-    final provider = selectedMenuIndexNotifierProvider;
-    final notifier = ref.read(provider.notifier);
-    notifier.select(0);
-    AutoRouter.of(context).navigate(DashboardRoute());
   }
 }
 
@@ -88,8 +61,8 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const edgeInsets = EdgeInsets.symmetric(vertical: 12);
-    return Padding(padding: edgeInsets, child: FoxyHeader('物品'));
+    const edgeInsets = EdgeInsets.only(bottom: 12);
+    return Padding(padding: edgeInsets, child: FoxyHeader('物品列表'));
   }
 }
 
@@ -131,7 +104,7 @@ class _Table extends ConsumerWidget {
     final children = [
       FilledButton(onPressed: () {}, child: Text('新增')),
       const Spacer(),
-      _Pagination()
+      _Pagination(),
     ];
     final toolbar = Row(children: children);
     final header = _buildHeader();
@@ -142,15 +115,17 @@ class _Table extends ConsumerWidget {
   }
 
   FoxyTableHeader _buildHeader() {
-    return FoxyTableHeader(children: [
-      FoxyTableCell(width: 80, child: Text('编号')),
-      FoxyTableCell(child: Text('名称')),
-      FoxyTableCell(width: 80, child: Text('类别')),
-      FoxyTableCell(width: 80, child: Text('子类别')),
-      FoxyTableCell(width: 80, child: Text('佩戴位置')),
-      FoxyTableCell(width: 80, child: Text('物品等级')),
-      FoxyTableCell(width: 80, child: Text('需求等级')),
-    ]);
+    return FoxyTableHeader(
+      children: [
+        FoxyTableCell(width: 80, child: Text('编号')),
+        FoxyTableCell(child: Text('名称')),
+        FoxyTableCell(width: 80, child: Text('类别')),
+        FoxyTableCell(width: 80, child: Text('子类别')),
+        FoxyTableCell(width: 80, child: Text('佩戴位置')),
+        FoxyTableCell(width: 80, child: Text('物品等级')),
+        FoxyTableCell(width: 80, child: Text('需求等级')),
+      ],
+    );
   }
 
   FoxyTableRow _buildRow(ItemTemplate template) {

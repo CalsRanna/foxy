@@ -2,12 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/creature_template.dart';
-import 'package:foxy/provider/application.dart';
 import 'package:foxy/provider/creature.dart';
-import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/util/input_width_calculator.dart';
-import 'package:foxy/widget/breadcrumb.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
@@ -20,45 +17,6 @@ class CreatureTemplatePage extends ConsumerStatefulWidget {
   @override
   ConsumerState<CreatureTemplatePage> createState() =>
       _CreatureTemplatePageState();
-}
-
-class _Breadcrumb extends ConsumerWidget {
-  final CreatureTemplate template;
-  const _Breadcrumb({required this.template});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var dashboard = FoxyBreadcrumbItem(
-      onTap: () => navigateDashboard(context, ref),
-      child: Text('首页'),
-    );
-    var creatureTemplateList = FoxyBreadcrumbItem(
-      onTap: () => navigateCreatureTemplateList(context, ref),
-      child: Text('生物'),
-    );
-    final name = template.name;
-    final title = name.isNotEmpty ? name : '新建生物';
-    final children = [
-      dashboard,
-      creatureTemplateList,
-      FoxyBreadcrumbItem(child: Text(title)),
-    ];
-    return FoxyBreadcrumb(children: children);
-  }
-
-  void navigateDashboard(BuildContext context, WidgetRef ref) {
-    final provider = selectedMenuIndexNotifierProvider;
-    final notifier = ref.read(provider.notifier);
-    notifier.select(0);
-    AutoRouter.of(context).navigate(DashboardRoute());
-  }
-
-  void navigateCreatureTemplateList(BuildContext context, WidgetRef ref) {
-    final provider = selectedMenuIndexNotifierProvider;
-    final notifier = ref.read(provider.notifier);
-    notifier.select(1);
-    AutoRouter.of(context).navigate(CreatureTemplateListRoute());
-  }
 }
 
 class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
@@ -167,81 +125,76 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
   }
 
   Future<void> handleTap(WidgetRef ref) async {
-    final template = CreatureTemplate()
-      ..entry = int.parse(entryController.text)
-      ..name = nameController.text
-      ..subName = subNameController.text
-      ..iconName = iconNameController.text
-      ..minLevel = int.parse(minLevelController.text)
-      ..maxLevel = int.parse(maxLevelController.text)
-      ..unitClass = int.parse(unitClassController.text)
-      ..rank = int.parse(rankController.text)
-      ..racialLeader = int.parse(racialLeaderController.text)
-      ..faction = int.parse(factionController.text)
-      ..family = int.parse(familyController.text)
-      ..type = int.parse(typeController.text)
-      ..regenHealth = int.parse(regenerateHealthController.text)
-      ..petSpellDataId = int.parse(petSpellDataIdController.text)
-      ..vehicleId = int.parse(vehicleIdController.text)
-      ..gossipMenuId = int.parse(gossipMenuIdController.text)
-
-      /// Flag
-      ..npcFlag = int.parse(npcFlagController.text)
-      ..typeFlags = int.parse(typeFlagController.text)
-      ..dynamicFlags = int.parse(dynamicFlagController.text)
-      ..flagsExtra = int.parse(extraFlagController.text)
-      ..unitFlags = int.parse(unitFlagController.text)
-      ..unitFlags2 = int.parse(unitFlag2Controller.text)
-
-      /// Immune
-      ..mechanicImmuneMask = int.parse(mechanicImmuneMaskController.text)
-      ..spellSchoolImmuneMask = int.parse(spellSchoolImmuneMaskController.text)
-
-      /// Modifier
-      ..exp = int.parse(expController.text)
-      ..damageSchool = int.parse(damageSchoolController.text)
-      ..damageModifier = double.parse(damageModifierController.text)
-      ..armorModifier = double.parse(armorModifierController.text)
-      ..baseAttackTime = int.parse(baseAttackTimeController.text)
-      ..baseVariance = double.parse(baseVarianceController.text)
-      ..rangeAttackTime = int.parse(rangeAttackTimeController.text)
-      ..rangeVariance = double.parse(rangeVarianceController.text)
-      ..healthModifier = double.parse(healthModifierController.text)
-      ..manaModifier = double.parse(manaModifierController.text)
-      ..experienceModifier = double.parse(experienceModifierController.text)
-      ..speedWalk = double.parse(speedWalkController.text)
-      ..speedRun = double.parse(speedRunController.text)
-
-      /// Loot
-      ..minGold = int.parse(minGoldController.text)
-      ..maxGold = int.parse(maxGoldController.text)
-      ..lootId = int.parse(lootController.text)
-      ..pickpocketLoot = int.parse(pickpocketLootController.text)
-      ..skinLoot = int.parse(skinLootController.text)
-
-      /// Difficulty
-      ..killCredit1 = int.parse(killCredit1Controller.text)
-      ..killCredit2 = int.parse(killCredit2Controller.text)
-      ..difficultyEntry1 = int.parse(difficultyEntry1Controller.text)
-      ..difficultyEntry2 = int.parse(difficultyEntry2Controller.text)
-      ..difficultyEntry3 = int.parse(difficultyEntry3Controller.text)
-
-      /// Model
-      ..modelId1 = int.parse(modelId1Controller.text)
-      ..modelId2 = int.parse(modelId2Controller.text)
-      ..modelId3 = int.parse(modelId3Controller.text)
-      ..modelId4 = int.parse(modelId4Controller.text)
-      ..scale = double.parse(scaleController.text)
-
-      /// Movement
-      ..movementId = int.parse(movementIdController.text)
-      ..movementType = int.parse(movementTypeController.text)
-      ..hoverHeight = double.parse(hoverHeightController.text)
-
-      /// Other
-      ..aiName = aiNameController.text
-      ..scriptName = scriptNameController.text
-      ..verifiedBuild = int.parse(verifiedBuildController.text);
+    final template =
+        CreatureTemplate()
+          ..entry = int.parse(entryController.text)
+          ..name = nameController.text
+          ..subName = subNameController.text
+          ..iconName = iconNameController.text
+          ..minLevel = int.parse(minLevelController.text)
+          ..maxLevel = int.parse(maxLevelController.text)
+          ..unitClass = int.parse(unitClassController.text)
+          ..rank = int.parse(rankController.text)
+          ..racialLeader = int.parse(racialLeaderController.text)
+          ..faction = int.parse(factionController.text)
+          ..family = int.parse(familyController.text)
+          ..type = int.parse(typeController.text)
+          ..regenHealth = int.parse(regenerateHealthController.text)
+          ..petSpellDataId = int.parse(petSpellDataIdController.text)
+          ..vehicleId = int.parse(vehicleIdController.text)
+          ..gossipMenuId = int.parse(gossipMenuIdController.text)
+          /// Flag
+          ..npcFlag = int.parse(npcFlagController.text)
+          ..typeFlags = int.parse(typeFlagController.text)
+          ..dynamicFlags = int.parse(dynamicFlagController.text)
+          ..flagsExtra = int.parse(extraFlagController.text)
+          ..unitFlags = int.parse(unitFlagController.text)
+          ..unitFlags2 = int.parse(unitFlag2Controller.text)
+          /// Immune
+          ..mechanicImmuneMask = int.parse(mechanicImmuneMaskController.text)
+          ..spellSchoolImmuneMask = int.parse(
+            spellSchoolImmuneMaskController.text,
+          )
+          /// Modifier
+          ..exp = int.parse(expController.text)
+          ..damageSchool = int.parse(damageSchoolController.text)
+          ..damageModifier = double.parse(damageModifierController.text)
+          ..armorModifier = double.parse(armorModifierController.text)
+          ..baseAttackTime = int.parse(baseAttackTimeController.text)
+          ..baseVariance = double.parse(baseVarianceController.text)
+          ..rangeAttackTime = int.parse(rangeAttackTimeController.text)
+          ..rangeVariance = double.parse(rangeVarianceController.text)
+          ..healthModifier = double.parse(healthModifierController.text)
+          ..manaModifier = double.parse(manaModifierController.text)
+          ..experienceModifier = double.parse(experienceModifierController.text)
+          ..speedWalk = double.parse(speedWalkController.text)
+          ..speedRun = double.parse(speedRunController.text)
+          /// Loot
+          ..minGold = int.parse(minGoldController.text)
+          ..maxGold = int.parse(maxGoldController.text)
+          ..lootId = int.parse(lootController.text)
+          ..pickpocketLoot = int.parse(pickpocketLootController.text)
+          ..skinLoot = int.parse(skinLootController.text)
+          /// Difficulty
+          ..killCredit1 = int.parse(killCredit1Controller.text)
+          ..killCredit2 = int.parse(killCredit2Controller.text)
+          ..difficultyEntry1 = int.parse(difficultyEntry1Controller.text)
+          ..difficultyEntry2 = int.parse(difficultyEntry2Controller.text)
+          ..difficultyEntry3 = int.parse(difficultyEntry3Controller.text)
+          /// Model
+          ..modelId1 = int.parse(modelId1Controller.text)
+          ..modelId2 = int.parse(modelId2Controller.text)
+          ..modelId3 = int.parse(modelId3Controller.text)
+          ..modelId4 = int.parse(modelId4Controller.text)
+          ..scale = double.parse(scaleController.text)
+          /// Movement
+          ..movementId = int.parse(movementIdController.text)
+          ..movementType = int.parse(movementTypeController.text)
+          ..hoverHeight = double.parse(hoverHeightController.text)
+          /// Other
+          ..aiName = aiNameController.text
+          ..scriptName = scriptNameController.text
+          ..verifiedBuild = int.parse(verifiedBuildController.text);
     if (template.entry == 0) return _store(ref, template);
     return _update(ref, template);
   }
@@ -702,7 +655,6 @@ class _CreatureTemplatePageState extends ConsumerState<CreatureTemplatePage> {
     ];
     var tab = FoxyTab(tabs: tabs);
     final children = [
-      _Breadcrumb(template: template),
       _Header(template.name),
       tab,
       SizedBox(height: 16),
@@ -937,7 +889,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const edgeInsets = EdgeInsets.symmetric(vertical: 12);
+    const edgeInsets = EdgeInsets.only(bottom: 12);
     final text = title.isNotEmpty ? title : '新建生物';
     return Padding(padding: edgeInsets, child: FoxyHeader(text));
   }

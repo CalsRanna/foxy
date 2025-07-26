@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/provider/application.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:window_manager/window_manager.dart';
 
 class LeftBar extends StatelessWidget {
   const LeftBar({super.key});
@@ -15,16 +14,12 @@ class LeftBar extends StatelessWidget {
       _Icons.icons.length,
       (index) => _Tile(index: index),
     );
-    final column = Column(children: [_Drawer(), ...menus]);
-    final edgeInsets = MediaQuery.paddingOf(context);
-    var singleChildScrollView = SingleChildScrollView(
-      padding: EdgeInsets.only(left: edgeInsets.left + 8, right: 8),
-      child: column,
+    var column = Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Column(children: menus),
     );
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onPanStart: (details) => windowManager.startDragging(),
-      child: singleChildScrollView,
+    return Column(
+      children: [_Drawer(), SizedBox(height: 8), Expanded(child: column)],
     );
   }
 }
@@ -55,8 +50,8 @@ class _Drawer extends StatelessWidget {
       onPressed: () => handleTap(context),
       icon: padding,
     );
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: iconButton,
     );
   }

@@ -12,7 +12,13 @@ class FoxyBreadcrumb extends StatelessWidget {
       items.add(children[i]);
       if (i < children.length - 1) items.add(separator);
     }
-    return Row(children: items);
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey)),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(children: items),
+    );
   }
 
   Widget _buildSeparator() {
@@ -35,7 +41,7 @@ class FoxyBreadcrumbItem extends StatelessWidget {
     final alpha = disabled ? 1.0 : 0.5;
     final textStyle = TextStyle(color: onSurface.withValues(alpha: alpha));
     final item = DefaultTextStyle.merge(child: child, style: textStyle);
-    const edgeInsets = EdgeInsets.all(4);
+    const edgeInsets = EdgeInsets.symmetric(horizontal: 4);
     final padding = Padding(padding: edgeInsets, child: item);
     final borderRadius = BorderRadius.circular(4);
     return InkWell(borderRadius: borderRadius, onTap: onTap, child: padding);

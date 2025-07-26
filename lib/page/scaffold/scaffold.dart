@@ -9,6 +9,7 @@ import 'package:foxy/page/scaffold/component/left_bar.dart';
 import 'package:foxy/page/scaffold/component/status.dart';
 import 'package:foxy/provider/application.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/widget/breadcrumb.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,7 +22,19 @@ class ScaffoldPage extends StatelessWidget {
     final children = [
       LeftBar(),
       const VerticalDivider(thickness: 1, width: 1),
-      Expanded(child: AutoRouter()),
+      Expanded(
+        child: Column(
+          children: [
+            FoxyBreadcrumb(
+              children: [
+                FoxyBreadcrumbItem(onTap: () {}, child: Text('首页')),
+                FoxyBreadcrumbItem(onTap: () {}, child: Text('工作台')),
+              ],
+            ),
+            Expanded(child: AutoRouter()),
+          ],
+        ),
+      ),
     ];
     final topWorkspace = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
