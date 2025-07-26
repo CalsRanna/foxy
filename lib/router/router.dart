@@ -29,7 +29,7 @@ class FoxyRouter extends RootStackRouter {
       AutoRoute(page: CreatureTemplateRoute.page),
     ];
     return [
-      AutoRoute(page: LoadingRoute.page, initial: true),
+      AutoRoute(page: BootstrapRoute.page, initial: true),
       AutoRoute(page: InitializerRoute.page),
       AutoRoute(page: ScaffoldRoute.page, children: children),
     ];

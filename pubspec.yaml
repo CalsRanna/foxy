@@ -22,8 +22,11 @@ dependencies:
     hosted: https://pub.isar-community.dev/
   logger: ^2.4.0
   mysql_client: ^0.0.27
+  package_info_plus: ^8.3.0
   path_provider: ^2.1.4
   riverpod_annotation: ^2.3.5
+  signals: ^6.0.2
+  signals_flutter: ^6.0.2
   url_launcher: ^6.3.1
   window_manager: ^0.4.2
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foxy/di.dart';
 import 'package:foxy/schema/isar.dart';
 import 'package:foxy/router/router.dart';
 import 'package:foxy/util/window_initializer.dart';
@@ -10,6 +11,7 @@ void main() async {
   await WindowInitializer.ensureInitialized();
   await IsarInitializer.ensureInitialized();
   GetIt.instance.registerSingleton(FoxyRouter());
+  DI.ensureInitialized();
   runApp(const ProviderScope(child: Foxy()));
 }
 

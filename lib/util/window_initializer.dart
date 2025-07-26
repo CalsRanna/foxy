@@ -13,7 +13,7 @@ class WindowInitializer {
       backgroundColor: Colors.transparent,
       center: true,
       minimumSize: Size(1200, 900),
-      size: Size(400, 300),
+      size: Size(1200, 900),
       titleBarStyle: TitleBarStyle.hidden,
       windowButtonVisibility: false,
     );
@@ -27,10 +27,7 @@ class WindowInitializer {
     if (kIsWeb) return;
     if (Platform.isAndroid || Platform.isFuchsia || Platform.isIOS) return;
     await windowManager.setOpacity(0);
-    await Future.wait([
-      windowManager.setSize(size),
-      windowManager.center(),
-    ]);
+    await Future.wait([windowManager.setSize(size), windowManager.center()]);
   }
 
   static Future<void> opaque() async {
