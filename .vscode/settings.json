@@ -3,7 +3,8 @@
     "hugeicons",
     "LTRB",
     "riverpod",
-    "sublist"
+    "sublist",
+    "unmaximize"
   ],
   "editor.formatOnSave": true
 }

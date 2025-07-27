@@ -1,113 +1,97 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foxy/page/bootstrap/bootstrap_simulator_tile.dart';
+import 'package:foxy/page/bootstrap/bootstrap_simulator_form.dart';
+import 'package:foxy/page/bootstrap/bootstrap_simulator_list_view.dart';
 import 'package:foxy/page/bootstrap/bootstrap_view_model.dart';
+import 'package:foxy/page/bootstrap/bootstrap_window_header.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hugeicons/hugeicons.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
-class BootstrapPage extends ConsumerStatefulWidget {
+class BootstrapPage extends StatefulWidget {
   const BootstrapPage({super.key});
 
   @override
-  ConsumerState<BootstrapPage> createState() => _BootstrapPageState();
+  State<BootstrapPage> createState() => _BootstrapPageState();
 }
 
-class _BootstrapPageState extends ConsumerState<BootstrapPage> {
+class _BootstrapPageState extends State<BootstrapPage> {
   final viewModel = GetIt.instance.get<BootstrapViewModel>();
 
   @override
   Widget build(BuildContext context) {
+    var stack = Stack(
+      children: [_buildInformationPanel(), _buildWorkspacePanel()],
+    );
+    var children = [
+      Expanded(child: _buildCoverPanel()),
+      Expanded(child: stack),
+    ];
     return Scaffold(
-      body: Stack(
-        children: [
-          _buildInformationPanel(),
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildAddSimulatorButton(),
-                Watch((_) => _buildForm()),
-              ],
+      body: Stack(children: [Row(children: children), BootstrapWindowHeader()]),
+    );
+  }
+
+  Widget _buildWorkspacePanel() {
+    return Watch(
+      (_) => AnimatedSwitcher(
+        duration: Durations.medium1,
+        transitionBuilder:
+            (child, animation) => SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1.0, 0.0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
             ),
-          ),
-        ],
+        layoutBuilder: (currentChild, previousChildren) => currentChild!,
+        child:
+            viewModel.showForm.value
+                ? BootstrapSimulatorForm(
+                  key: const ValueKey('form'),
+                  onBack: () => viewModel.updateShowForm(false),
+                  nameController: viewModel.nameController,
+                  hostController: viewModel.hostController,
+                  portController: viewModel.portController,
+                  databaseController: viewModel.databaseController,
+                  usernameController: viewModel.usernameController,
+                  passwordController: viewModel.passwordController,
+                )
+                : BootstrapSimulatorListView(
+                  key: const ValueKey('list'),
+                  onAdd: viewModel.updateShowForm,
+                ),
       ),
     );
   }
 
-  Widget _buildForm() {
-    if (!viewModel.showForm.value) {
-      return SizedBox();
-    }
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Theme.of(
-          context,
-        ).colorScheme.primaryContainer.withValues(alpha: 0.5),
-      ),
-      width: 400,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildInput(TextEditingController(), 'Host'),
-          Divider(height: 1, thickness: 1),
-          _buildInput(TextEditingController(), 'Port(Optional)'),
-          Divider(height: 1, thickness: 1),
-          _buildInput(TextEditingController(), 'Database'),
-          Divider(height: 1, thickness: 1),
-          _buildInput(TextEditingController(), 'Username'),
-          Divider(height: 1, thickness: 1),
-          _buildInput(TextEditingController(), 'Password', obscureText: true),
-        ],
-      ),
+  Widget _buildCoverPanel() {
+    var image = Image.asset(
+      'asset/image/background.jpg',
+      fit: BoxFit.cover,
+      height: double.infinity,
+      width: double.infinity,
     );
-  }
-
-  Widget _buildInput(
-    TextEditingController controller,
-    String hintText, {
-    bool obscureText = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration.collapsed(hintText: hintText),
-        obscureText: obscureText,
-      ),
+    var linearGradient = LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [Colors.transparent, Colors.white],
     );
+    var boxDecoration = BoxDecoration(gradient: linearGradient);
+    return Stack(children: [image, Container(decoration: boxDecoration)]);
   }
 
   Widget _buildInformationPanel() {
-    var version = Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    var column = Column(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [Text('Foxy'), Watch((_) => Text(viewModel.version.value))],
+      children: [Watch((_) => Text(viewModel.version.value))],
     );
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(width: 200),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          width: 200,
-          child: version,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAddSimulatorButton() {
-    return BootstrapSimulatorTile(
-      child: Icon(
-        HugeIcons.strokeRoundedAdd01,
-        color: Theme.of(context).colorScheme.primary,
-        size: 32,
-      ),
+    return Container(
+      color: Colors.white,
+      height: double.infinity,
+      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      child: column,
     );
   }
 
