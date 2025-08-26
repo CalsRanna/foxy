@@ -14,12 +14,6 @@ dependencies:
   flutter_riverpod: ^2.5.1
   get_it: ^8.0.0
   hugeicons: ^0.0.7
-  isar:
-    version: ^3.1.8
-    hosted: https://pub.isar-community.dev/
-  isar_flutter_libs:
-    version: ^3.1.8
-    hosted: https://pub.isar-community.dev/
   logger: ^2.4.0
   mysql_client: ^0.0.27
   package_info_plus: ^8.3.0
@@ -37,9 +31,6 @@ dev_dependencies:
   auto_route_generator: ^9.0.0
   build_runner: ^2.4.9
   flutter_lints: ^5.0.0
-  isar_generator:
-    version: ^3.1.8
-    hosted: https://pub.isar-community.dev/
   riverpod_generator: ^2.4.0
 
 flutter:
