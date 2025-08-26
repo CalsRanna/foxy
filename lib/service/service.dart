@@ -1,4 +1,3 @@
-import 'package:foxy/schema/setting.dart';
 import 'package:foxy/util/logger.dart';
 import 'package:mysql_client/mysql_client.dart';
 
@@ -31,13 +30,5 @@ mixin Service {
 }
 
 class ServiceInitializer {
-  static Future<void> ensureInitialized(Setting setting) async {
-    connection = await MySQLConnection.createConnection(
-      host: setting.host,
-      port: setting.port,
-      userName: setting.username,
-      password: setting.password,
-      databaseName: setting.database, // optional
-    );
-  }
+  static Future<void> ensureInitialized() async {}
 }

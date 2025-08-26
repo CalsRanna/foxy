@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foxy/provider/setting.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
@@ -10,7 +9,7 @@ class Welcome extends StatelessWidget {
     final avatar = _Avatar();
     const supportChildren = [
       Text('欢迎使用Foxy！', style: TextStyle(fontSize: 20)),
-      Text('支持 Azeroth / Trinity Core | 3.3.5 12340 | Mysql 5.x / 8.x')
+      Text('支持 Azeroth / Trinity Core | 3.3.5 12340 | Mysql 5.x / 8.x'),
     ];
     const support = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +30,7 @@ class Welcome extends StatelessWidget {
       const Spacer(),
       module,
       const SizedBox(width: 16),
-      count
+      count,
     ];
     return Row(children: children);
   }
@@ -46,13 +45,8 @@ class _Avatar extends ConsumerWidget {
     final colorScheme = theme.colorScheme;
     final primary = colorScheme.primary;
     final onPrimary = colorScheme.onPrimary;
-    final boxDecoration = BoxDecoration(
-      color: primary,
-      shape: BoxShape.circle,
-    );
-    final provider = settingNotifierProvider;
-    final setting = ref.watch(provider).valueOrNull;
-    final username = setting?.username ?? 'Foxy';
+    final boxDecoration = BoxDecoration(color: primary, shape: BoxShape.circle);
+    final username = 'Foxy';
     var textStyle = TextStyle(
       color: onPrimary,
       fontSize: 20,

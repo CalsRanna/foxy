@@ -30,7 +30,6 @@ class FoxyRouter extends RootStackRouter {
     ];
     return [
       AutoRoute(page: BootstrapRoute.page, initial: true),
-      AutoRoute(page: InitializerRoute.page),
       AutoRoute(page: ScaffoldRoute.page, children: children),
     ];
   }

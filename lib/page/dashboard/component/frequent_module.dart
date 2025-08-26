@@ -30,20 +30,27 @@ class FrequentModuleComponent extends StatelessWidget {
       onTap: () => handleTap(context, 1),
       positions: [_Position.right],
     );
+    final quest = _Tile(
+      category: _Category.database,
+      description: '任务模板及其它关联的数据，比如奖励，任务对话等等。',
+      icon: Icon(HugeIcons.strokeRoundedCursorInfo01),
+      name: '任务',
+      onTap: () => handleTap(context, 2),
+      positions: [],
+    );
+    final spell = _Tile(
+      category: _Category.dbc,
+      description: '角色拥有的法术技能。',
+      icon: Icon(HugeIcons.strokeRoundedSolarSystem),
+      name: '法术',
+      onTap: () => handleTap(context, 6),
+    );
     final gameObject = _Tile(
       category: _Category.database,
       description: '所有可交互的物体，比如陷阱，宝箱等等。',
       icon: Icon(HugeIcons.strokeRoundedCube),
       name: '游戏对象',
       onTap: () => handleTap(context, 2),
-      positions: [],
-    );
-    final quest = _Tile(
-      category: _Category.database,
-      description: '任务模板及其它关联的数据，比如奖励，任务对话等等。',
-      icon: Icon(HugeIcons.strokeRoundedCursorInfo01),
-      name: '任务',
-      onTap: () => handleTap(context, 3),
     );
     final gossip = _Tile(
       category: _Category.database,
@@ -60,13 +67,6 @@ class FrequentModuleComponent extends StatelessWidget {
       onTap: () => handleTap(context, 5),
       positions: [_Position.top],
     );
-    final spell = _Tile(
-      category: _Category.dbc,
-      description: '角色拥有的法术技能。',
-      icon: Icon(HugeIcons.strokeRoundedSolarSystem),
-      name: '法术',
-      onTap: () => handleTap(context, 6),
-    );
     final talent = _Tile(
       category: _Category.dbc,
       description: '天赋树中的信息，配合法术一起使用。',
@@ -82,21 +82,27 @@ class FrequentModuleComponent extends StatelessWidget {
       onTap: () => handleTap(context, 8),
       positions: [_Position.top],
     );
-    final row1 = Row(children: [
-      Expanded(child: creature),
-      Expanded(child: item),
-      Expanded(child: gameObject),
-    ]);
-    final row2 = Row(children: [
-      Expanded(child: quest),
-      Expanded(child: gossip),
-      Expanded(child: smartScript),
-    ]);
-    final row3 = Row(children: [
-      Expanded(child: spell),
-      Expanded(child: talent),
-      Expanded(child: itemSet),
-    ]);
+    final row1 = Row(
+      children: [
+        Expanded(child: creature),
+        Expanded(child: item),
+        Expanded(child: quest),
+      ],
+    );
+    final row2 = Row(
+      children: [
+        Expanded(child: spell),
+        Expanded(child: gossip),
+        Expanded(child: smartScript),
+      ],
+    );
+    final row3 = Row(
+      children: [
+        Expanded(child: gameObject),
+        Expanded(child: talent),
+        Expanded(child: itemSet),
+      ],
+    );
     final children = [row1, row2, row3];
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,8 +119,8 @@ class FrequentModuleComponent extends StatelessWidget {
     final route = switch (index) {
       0 => CreatureTemplateListRoute(),
       1 => ItemTemplateListRoute(),
-      2 => GameObjectTemplateListRoute(),
-      3 => QuestTemplateListRoute(),
+      2 => QuestTemplateListRoute(),
+      3 => GameObjectTemplateListRoute(),
       4 => GossipMenuListRoute(),
       5 => SmartScriptListRoute(),
       _ => DashboardRoute(),
@@ -183,7 +189,7 @@ class _TileState extends State<_Tile> {
       Expanded(child: column),
     ];
     final title = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: children,
     );
     var description = SizedBox(height: 72, child: Text(widget.description));

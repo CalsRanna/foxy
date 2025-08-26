@@ -1,8 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foxy/provider/setting.dart';
-import 'package:foxy/schema/setting.dart';
 import 'package:foxy/widget/input.dart';
 
 @RoutePage()
@@ -22,13 +20,7 @@ class _BasicSettingPageState extends ConsumerState<BasicSettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = ref.watch(settingNotifierProvider);
-    return switch (provider) {
-      AsyncData(:final value) => _buildData(value),
-      AsyncError(:final error) => Text(error.toString()),
-      AsyncLoading() => const Center(child: CircularProgressIndicator()),
-      _ => const SizedBox(),
-    };
+    return _buildData();
   }
 
   @override
@@ -37,25 +29,9 @@ class _BasicSettingPageState extends ConsumerState<BasicSettingPage> {
     super.dispose();
   }
 
-  void storeSetting(Setting setting) async {
-    final notifier = ref.read(settingNotifierProvider.notifier);
-    await notifier.store(setting);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('保存成功')),
-    );
-  }
-
-  Widget _buildData(Setting setting) {
-    _initControllers(setting);
-    const textStyle = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 18,
-    );
-    final button = FilledButton(
-      onPressed: () => storeSetting(setting),
-      child: const Text('保存'),
-    );
+  Widget _buildData() {
+    const textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 18);
+    final button = FilledButton(onPressed: () {}, child: const Text('保存'));
     final children = [
       const Text('基本设置', style: textStyle),
       const SizedBox(height: 16),
@@ -79,7 +55,7 @@ class _BasicSettingPageState extends ConsumerState<BasicSettingPage> {
       const SizedBox(height: 8),
       FoxyInput(controller: databaseController),
       const SizedBox(height: 16),
-      button
+      button,
     ];
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,13 +74,5 @@ class _BasicSettingPageState extends ConsumerState<BasicSettingPage> {
     databaseController.dispose();
     usernameController.dispose();
     passwordController.dispose();
-  }
-
-  void _initControllers(Setting setting) {
-    hostController.text = setting.host;
-    portController.text = setting.port.toString();
-    databaseController.text = setting.database;
-    usernameController.text = setting.username;
-    passwordController.text = setting.password;
   }
 }
