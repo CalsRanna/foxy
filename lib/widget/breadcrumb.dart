@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 
 class FoxyBreadcrumb extends StatelessWidget {
   final List<Widget> children;
@@ -12,12 +13,17 @@ class FoxyBreadcrumb extends StatelessWidget {
       items.add(children[i]);
       if (i < children.length - 1) items.add(separator);
     }
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey)),
-      ),
+    var borderSide = BorderSide(color: Colors.grey.withValues(alpha: 0.5));
+    var boxDecoration = BoxDecoration(border: Border(bottom: borderSide));
+    var container = Container(
+      decoration: boxDecoration,
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(children: items),
+    );
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onPanStart: (details) => windowManager.startDragging(),
+      child: container,
     );
   }
 
