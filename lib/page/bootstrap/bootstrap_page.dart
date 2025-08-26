@@ -34,33 +34,21 @@ class _BootstrapPageState extends State<BootstrapPage> {
 
   Widget _buildWorkspacePanel() {
     return Watch(
-      (_) => AnimatedSwitcher(
-        duration: Durations.medium1,
-        transitionBuilder:
-            (child, animation) => SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(1.0, 0.0),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
-            ),
-        layoutBuilder: (currentChild, previousChildren) => currentChild!,
-        child:
-            viewModel.showForm.value
-                ? BootstrapSimulatorForm(
-                  key: const ValueKey('form'),
-                  onBack: () => viewModel.updateShowForm(false),
-                  nameController: viewModel.nameController,
-                  hostController: viewModel.hostController,
-                  portController: viewModel.portController,
-                  databaseController: viewModel.databaseController,
-                  usernameController: viewModel.usernameController,
-                  passwordController: viewModel.passwordController,
-                )
-                : BootstrapSimulatorListView(
-                  key: const ValueKey('list'),
-                  onAdd: viewModel.updateShowForm,
-                ),
+      (_) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BootstrapSimulatorForm(
+            key: const ValueKey('form'),
+            nameController: viewModel.nameController,
+            hostController: viewModel.hostController,
+            portController: viewModel.portController,
+            databaseController: viewModel.databaseController,
+            usernameController: viewModel.usernameController,
+            passwordController: viewModel.passwordController,
+            onLogin: () => viewModel.login(context),
+          ),
+          BootstrapSimulatorWrapView(),
+        ],
       ),
     );
   }

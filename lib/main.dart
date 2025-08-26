@@ -10,7 +10,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await WindowInitializer.ensureInitialized();
   await IsarInitializer.ensureInitialized();
-  GetIt.instance.registerSingleton(FoxyRouter());
   DI.ensureInitialized();
   runApp(const ProviderScope(child: Foxy()));
 }

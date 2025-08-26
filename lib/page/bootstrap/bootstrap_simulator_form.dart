@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 class BootstrapSimulatorForm extends StatelessWidget {
-  final VoidCallback? onBack;
+  final void Function()? onLogin;
   final TextEditingController nameController;
   final TextEditingController hostController;
   final TextEditingController portController;
@@ -11,7 +10,7 @@ class BootstrapSimulatorForm extends StatelessWidget {
   final TextEditingController passwordController;
   const BootstrapSimulatorForm({
     super.key,
-    this.onBack,
+    this.onLogin,
     required this.nameController,
     required this.hostController,
     required this.portController,
@@ -29,18 +28,9 @@ class BootstrapSimulatorForm extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 16,
         children: [
-          Row(
-            spacing: 16,
-            children: [
-              IconButton(
-                onPressed: onBack,
-                icon: Icon(HugeIcons.strokeRoundedArrowLeft02),
-              ),
-              Text(
-                'Welcome to Foxy',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),
-              ),
-            ],
+          Text(
+            'Welcome to Foxy',
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),
           ),
           Column(
             mainAxisSize: MainAxisSize.min,
@@ -72,7 +62,7 @@ class BootstrapSimulatorForm extends StatelessWidget {
             ],
           ),
           FilledButton.tonal(
-            onPressed: () {},
+            onPressed: onLogin,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -99,11 +89,12 @@ class BootstrapSimulatorForm extends StatelessWidget {
       decoration: InputDecoration.collapsed(hintText: hintText),
       obscureText: obscureText,
     );
+    var boxDecoration = BoxDecoration(
+      border: Border.all(color: outline.withValues(alpha: 0.25)),
+      borderRadius: BorderRadius.circular(8),
+    );
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: outline.withValues(alpha: 0.25)),
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: boxDecoration,
       padding: edgeInsets,
       child: textField,
     );
