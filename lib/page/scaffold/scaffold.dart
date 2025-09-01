@@ -19,22 +19,18 @@ class ScaffoldPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var breadcrumbChildren = [
+      FoxyBreadcrumbItem(onTap: () {}, child: Text('首页')),
+      FoxyBreadcrumbItem(onTap: () {}, child: Text('工作台')),
+    ];
+    var rightColumnChildren = [
+      FoxyBreadcrumb(children: breadcrumbChildren),
+      Expanded(child: AutoRouter()),
+    ];
     final children = [
       LeftBar(),
       const VerticalDivider(thickness: 1, width: 1),
-      Expanded(
-        child: Column(
-          children: [
-            FoxyBreadcrumb(
-              children: [
-                FoxyBreadcrumbItem(onTap: () {}, child: Text('首页')),
-                FoxyBreadcrumbItem(onTap: () {}, child: Text('工作台')),
-              ],
-            ),
-            Expanded(child: AutoRouter()),
-          ],
-        ),
-      ),
+      Expanded(child: Column(children: rightColumnChildren)),
     ];
     final topWorkspace = Row(
       crossAxisAlignment: CrossAxisAlignment.start,

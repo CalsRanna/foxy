@@ -34,3 +34,5 @@ class FoxyRouter extends RootStackRouter {
     ];
   }
 }
+
+final router = FoxyRouter();

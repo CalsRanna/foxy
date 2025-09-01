@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BootstrapSimulatorForm extends StatelessWidget {
-  final void Function()? onLogin;
-  final TextEditingController nameController;
+  final void Function()? onConnect;
   final TextEditingController hostController;
   final TextEditingController portController;
   final TextEditingController databaseController;
@@ -10,8 +9,7 @@ class BootstrapSimulatorForm extends StatelessWidget {
   final TextEditingController passwordController;
   const BootstrapSimulatorForm({
     super.key,
-    this.onLogin,
-    required this.nameController,
+    this.onConnect,
     required this.hostController,
     required this.portController,
     required this.databaseController,
@@ -36,7 +34,6 @@ class BootstrapSimulatorForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: 16,
             children: [
-              _buildInput(context, nameController, 'Simulator Name(Optional)'),
               Row(
                 spacing: 16,
                 children: [
@@ -62,11 +59,11 @@ class BootstrapSimulatorForm extends StatelessWidget {
             ],
           ),
           FilledButton.tonal(
-            onPressed: onLogin,
+            onPressed: onConnect,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text('Login'),
+                child: Text('Connect'),
               ),
             ),
           ),

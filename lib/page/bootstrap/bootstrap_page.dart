@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/bootstrap/bootstrap_simulator_form.dart';
-import 'package:foxy/page/bootstrap/bootstrap_simulator_list_view.dart';
 import 'package:foxy/page/bootstrap/bootstrap_view_model.dart';
 import 'package:foxy/page/bootstrap/bootstrap_window_header.dart';
 import 'package:get_it/get_it.dart';
@@ -34,21 +33,14 @@ class _BootstrapPageState extends State<BootstrapPage> {
 
   Widget _buildWorkspacePanel() {
     return Watch(
-      (_) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BootstrapSimulatorForm(
-            key: const ValueKey('form'),
-            nameController: viewModel.nameController,
-            hostController: viewModel.hostController,
-            portController: viewModel.portController,
-            databaseController: viewModel.databaseController,
-            usernameController: viewModel.usernameController,
-            passwordController: viewModel.passwordController,
-            onLogin: () => viewModel.login(context),
-          ),
-          BootstrapSimulatorWrapView(),
-        ],
+      (_) => BootstrapSimulatorForm(
+        key: const ValueKey('form'),
+        hostController: viewModel.hostController,
+        portController: viewModel.portController,
+        databaseController: viewModel.databaseController,
+        usernameController: viewModel.usernameController,
+        passwordController: viewModel.passwordController,
+        onConnect: () => viewModel.connect(context),
       ),
     );
   }
