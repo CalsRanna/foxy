@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/model/creature_template.dart';
-import 'package:foxy/page/creature/creature_template_list_view_model.dart';
+import 'package:foxy/page/creature_template/creature_template_list_view_model.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
@@ -55,7 +55,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     );
     var subNameInput = FoxyInput(
       controller: viewModel.subNameController,
-      placeholder: '称号（sub name）',
+      placeholder: '称号（subname）',
     );
     final credentialChildren = [
       Expanded(child: entryInput),

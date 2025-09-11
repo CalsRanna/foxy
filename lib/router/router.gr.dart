@@ -12,14 +12,16 @@
 import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:flutter/material.dart' as _i14;
 import 'package:foxy/page/bootstrap/bootstrap_page.dart' as _i2;
-import 'package:foxy/page/creature/creature_template_detail_page.dart' as _i3;
-import 'package:foxy/page/creature/creature_template_list_page.dart' as _i4;
+import 'package:foxy/page/creature_template/creature_template_detail_page.dart'
+    as _i3;
+import 'package:foxy/page/creature_template/creature_template_list_page.dart'
+    as _i4;
 import 'package:foxy/page/dashboard/dashboard_page.dart' as _i5;
 import 'package:foxy/page/game_object/game_object_template_list.dart' as _i6;
 import 'package:foxy/page/gossip_menu/gossip_menu_list.dart' as _i7;
 import 'package:foxy/page/item/item_template_list.dart' as _i8;
 import 'package:foxy/page/quest/quest_template_list.dart' as _i9;
-import 'package:foxy/page/scaffold/scaffold.dart' as _i10;
+import 'package:foxy/page/scaffold/scaffold_page.dart' as _i10;
 import 'package:foxy/page/setting/basic_setting.dart' as _i1;
 import 'package:foxy/page/setting/setting.dart' as _i11;
 import 'package:foxy/page/smart_script/smart_script_list.dart' as _i12;

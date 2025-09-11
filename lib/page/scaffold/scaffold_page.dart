@@ -5,53 +5,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foxy/page/scaffold/component/left_bar.dart';
 import 'package:foxy/page/scaffold/component/status.dart';
+import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/provider/application.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/widget/breadcrumb.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:signals/signals_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
-class ScaffoldPage extends StatelessWidget {
+class ScaffoldPage extends StatefulWidget {
   const ScaffoldPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var breadcrumbChildren = [
-      FoxyBreadcrumbItem(onTap: () {}, child: Text('首页')),
-      FoxyBreadcrumbItem(onTap: () {}, child: Text('工作台')),
-    ];
-    var rightColumnChildren = [
-      FoxyBreadcrumb(children: breadcrumbChildren),
-      Expanded(child: AutoRouter()),
-    ];
-    final children = [
-      LeftBar(),
-      const VerticalDivider(thickness: 1, width: 1),
-      Expanded(child: Column(children: rightColumnChildren)),
-    ];
-    final topWorkspace = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
-    );
-    final bodyChildren = [Expanded(child: topWorkspace), const Status()];
-    var scaffold = Scaffold(
-      body: Column(children: bodyChildren),
-      drawer: _Drawer(),
-    );
-    if (kIsWeb) return scaffold;
-    if (Platform.isAndroid || Platform.isIOS) return scaffold;
-    var actions = Actions(
-      actions: _ShortcutManager.instance.actions,
-      child: scaffold,
-    );
-    return Shortcuts(
-      shortcuts: _ShortcutManager.instance.shortcuts,
-      child: actions,
-    );
-  }
+  State<ScaffoldPage> createState() => _ScaffoldPageState();
 }
 
 class _Drawer extends StatelessWidget {
@@ -159,6 +128,101 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
 }
 
 class _NavigateSettingIntent extends Intent {}
+
+class _ScaffoldPageState extends State<ScaffoldPage> {
+  final viewModel = GetIt.instance.get<ScaffoldViewModel>();
+
+  @override
+  Widget build(BuildContext context) {
+    var rightColumnChildren = [
+      Watch((_) => _buildBreadcrumb()),
+      Expanded(child: AutoRouter()),
+    ];
+    final children = [
+      Watch((_) => _buildLeftBar()),
+      const VerticalDivider(thickness: 1, width: 1),
+      Expanded(child: Column(children: rightColumnChildren)),
+    ];
+    final topWorkspace = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
+    final bodyChildren = [Expanded(child: topWorkspace), const Status()];
+    var scaffold = Scaffold(
+      body: Column(children: bodyChildren),
+      drawer: _Drawer(),
+    );
+    if (kIsWeb) return scaffold;
+    if (Platform.isAndroid || Platform.isIOS) return scaffold;
+    var actions = Actions(
+      actions: _ShortcutManager.instance.actions,
+      child: scaffold,
+    );
+    return Shortcuts(
+      shortcuts: _ShortcutManager.instance.shortcuts,
+      child: actions,
+    );
+  }
+
+  Widget _buildBreadcrumb() {
+    var children = <Widget>[];
+    for (var page in viewModel.pages.value) {
+      var text = Text(viewModel.localPages.value[page] ?? page);
+      var item = FoxyBreadcrumbItem(onTap: () {}, child: text);
+      if (page == viewModel.pages.value.last) {
+        item = FoxyBreadcrumbItem(child: text);
+      }
+      children.add(item);
+    }
+    return FoxyBreadcrumb(children: children);
+  }
+
+  Widget _buildDrawer() {
+    var padding = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Icon(HugeIcons.strokeRoundedMenu01, size: 20),
+    );
+    return IconButton(onPressed: () {}, icon: padding);
+  }
+
+  Widget _buildLeftBar() {
+    var drawer = _buildDrawer();
+    var iconButtons = viewModel.menus.map(_buildLeftBarTile).toList();
+    var children = [
+      const SizedBox(height: 8),
+      drawer,
+      const SizedBox(height: 12),
+      ...iconButtons,
+    ];
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Column(mainAxisSize: MainAxisSize.min, children: children),
+    );
+  }
+
+  Widget _buildLeftBarTile(String menu) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final primaryContainer = colorScheme.primaryContainer;
+    final active = viewModel.pages.value.last.startsWith(menu);
+    final color = active ? primaryContainer : null;
+    final icon = viewModel.getIcon(menu);
+    var padding = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Icon(icon, size: 20),
+    );
+    var iconButton = IconButton(
+      onPressed: () => viewModel.navigatePage(context, menu),
+      icon: padding,
+      isSelected: active,
+      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(color)),
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: iconButton,
+    );
+  }
+}
 
 class _Shortcut extends StatelessWidget {
   final String keyboardKey;
