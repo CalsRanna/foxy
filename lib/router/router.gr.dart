@@ -1,3 +1,4 @@
+// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -12,8 +13,8 @@ import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:flutter/material.dart' as _i14;
 import 'package:foxy/page/bootstrap/bootstrap_page.dart' as _i2;
 import 'package:foxy/page/creature/creature_template.dart' as _i4;
-import 'package:foxy/page/creature/creature_template_list.dart' as _i3;
-import 'package:foxy/page/dashboard/dashboard.dart' as _i5;
+import 'package:foxy/page/creature/creature_template_list_page.dart' as _i3;
+import 'package:foxy/page/dashboard/dashboard_page.dart' as _i5;
 import 'package:foxy/page/game_object/game_object_template_list.dart' as _i6;
 import 'package:foxy/page/gossip_menu/gossip_menu_list.dart' as _i7;
 import 'package:foxy/page/item/item_template_list.dart' as _i8;
@@ -27,10 +28,7 @@ import 'package:foxy/page/smart_script/smart_script_list.dart' as _i12;
 /// [_i1.BasicSettingPage]
 class BasicSettingRoute extends _i13.PageRouteInfo<void> {
   const BasicSettingRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          BasicSettingRoute.name,
-          initialChildren: children,
-        );
+    : super(BasicSettingRoute.name, initialChildren: children);
 
   static const String name = 'BasicSettingRoute';
 
@@ -46,10 +44,7 @@ class BasicSettingRoute extends _i13.PageRouteInfo<void> {
 /// [_i2.BootstrapPage]
 class BootstrapRoute extends _i13.PageRouteInfo<void> {
   const BootstrapRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          BootstrapRoute.name,
-          initialChildren: children,
-        );
+    : super(BootstrapRoute.name, initialChildren: children);
 
   static const String name = 'BootstrapRoute';
 
@@ -65,10 +60,7 @@ class BootstrapRoute extends _i13.PageRouteInfo<void> {
 /// [_i3.CreatureTemplateListPage]
 class CreatureTemplateListRoute extends _i13.PageRouteInfo<void> {
   const CreatureTemplateListRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          CreatureTemplateListRoute.name,
-          initialChildren: children,
-        );
+    : super(CreatureTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'CreatureTemplateListRoute';
 
@@ -89,13 +81,10 @@ class CreatureTemplateRoute
     int? entry,
     List<_i13.PageRouteInfo>? children,
   }) : super(
-          CreatureTemplateRoute.name,
-          args: CreatureTemplateRouteArgs(
-            key: key,
-            entry: entry,
-          ),
-          initialChildren: children,
-        );
+         CreatureTemplateRoute.name,
+         args: CreatureTemplateRouteArgs(key: key, entry: entry),
+         initialChildren: children,
+       );
 
   static const String name = 'CreatureTemplateRoute';
 
@@ -103,20 +92,15 @@ class CreatureTemplateRoute
     name,
     builder: (data) {
       final args = data.argsAs<CreatureTemplateRouteArgs>(
-          orElse: () => const CreatureTemplateRouteArgs());
-      return _i4.CreatureTemplatePage(
-        key: args.key,
-        entry: args.entry,
+        orElse: () => const CreatureTemplateRouteArgs(),
       );
+      return _i4.CreatureTemplatePage(key: args.key, entry: args.entry);
     },
   );
 }
 
 class CreatureTemplateRouteArgs {
-  const CreatureTemplateRouteArgs({
-    this.key,
-    this.entry,
-  });
+  const CreatureTemplateRouteArgs({this.key, this.entry});
 
   final _i14.Key? key;
 
@@ -132,10 +116,7 @@ class CreatureTemplateRouteArgs {
 /// [_i5.DashboardPage]
 class DashboardRoute extends _i13.PageRouteInfo<void> {
   const DashboardRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          DashboardRoute.name,
-          initialChildren: children,
-        );
+    : super(DashboardRoute.name, initialChildren: children);
 
   static const String name = 'DashboardRoute';
 
@@ -151,10 +132,7 @@ class DashboardRoute extends _i13.PageRouteInfo<void> {
 /// [_i6.GameObjectTemplateListPage]
 class GameObjectTemplateListRoute extends _i13.PageRouteInfo<void> {
   const GameObjectTemplateListRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          GameObjectTemplateListRoute.name,
-          initialChildren: children,
-        );
+    : super(GameObjectTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'GameObjectTemplateListRoute';
 
@@ -170,10 +148,7 @@ class GameObjectTemplateListRoute extends _i13.PageRouteInfo<void> {
 /// [_i7.GossipMenuListPage]
 class GossipMenuListRoute extends _i13.PageRouteInfo<void> {
   const GossipMenuListRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          GossipMenuListRoute.name,
-          initialChildren: children,
-        );
+    : super(GossipMenuListRoute.name, initialChildren: children);
 
   static const String name = 'GossipMenuListRoute';
 
@@ -189,10 +164,7 @@ class GossipMenuListRoute extends _i13.PageRouteInfo<void> {
 /// [_i8.ItemTemplateListPage]
 class ItemTemplateListRoute extends _i13.PageRouteInfo<void> {
   const ItemTemplateListRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          ItemTemplateListRoute.name,
-          initialChildren: children,
-        );
+    : super(ItemTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'ItemTemplateListRoute';
 
@@ -208,10 +180,7 @@ class ItemTemplateListRoute extends _i13.PageRouteInfo<void> {
 /// [_i9.QuestTemplateListPage]
 class QuestTemplateListRoute extends _i13.PageRouteInfo<void> {
   const QuestTemplateListRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          QuestTemplateListRoute.name,
-          initialChildren: children,
-        );
+    : super(QuestTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'QuestTemplateListRoute';
 
@@ -227,10 +196,7 @@ class QuestTemplateListRoute extends _i13.PageRouteInfo<void> {
 /// [_i10.ScaffoldPage]
 class ScaffoldRoute extends _i13.PageRouteInfo<void> {
   const ScaffoldRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          ScaffoldRoute.name,
-          initialChildren: children,
-        );
+    : super(ScaffoldRoute.name, initialChildren: children);
 
   static const String name = 'ScaffoldRoute';
 
@@ -246,10 +212,7 @@ class ScaffoldRoute extends _i13.PageRouteInfo<void> {
 /// [_i11.SettingPage]
 class SettingRoute extends _i13.PageRouteInfo<void> {
   const SettingRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          SettingRoute.name,
-          initialChildren: children,
-        );
+    : super(SettingRoute.name, initialChildren: children);
 
   static const String name = 'SettingRoute';
 
@@ -265,10 +228,7 @@ class SettingRoute extends _i13.PageRouteInfo<void> {
 /// [_i12.SmartScriptListPage]
 class SmartScriptListRoute extends _i13.PageRouteInfo<void> {
   const SmartScriptListRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          SmartScriptListRoute.name,
-          initialChildren: children,
-        );
+    : super(SmartScriptListRoute.name, initialChildren: children);
 
   static const String name = 'SmartScriptListRoute';
 

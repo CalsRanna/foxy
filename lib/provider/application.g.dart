@@ -29,14 +29,15 @@ String _$selectedMenuIndexNotifierHash() =>
 @ProviderFor(SelectedMenuIndexNotifier)
 final selectedMenuIndexNotifierProvider =
     NotifierProvider<SelectedMenuIndexNotifier, int>.internal(
-  SelectedMenuIndexNotifier.new,
-  name: r'selectedMenuIndexNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$selectedMenuIndexNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SelectedMenuIndexNotifier.new,
+      name: r'selectedMenuIndexNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$selectedMenuIndexNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SelectedMenuIndexNotifier = Notifier<int>;
 // ignore_for_file: type=lint

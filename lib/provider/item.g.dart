@@ -13,9 +13,10 @@ String _$itemTemplateTotalHash() => r'2377aa48d2a78cafd4f48df30d64d483d5e87cee';
 final itemTemplateTotalProvider = FutureProvider<int>.internal(
   itemTemplateTotal,
   name: r'itemTemplateTotalProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$itemTemplateTotalHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$itemTemplateTotalHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -30,14 +31,15 @@ String _$itemTemplatesNotifierHash() =>
 @ProviderFor(ItemTemplatesNotifier)
 final itemTemplatesNotifierProvider =
     AsyncNotifierProvider<ItemTemplatesNotifier, List<ItemTemplate>>.internal(
-  ItemTemplatesNotifier.new,
-  name: r'itemTemplatesNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$itemTemplatesNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ItemTemplatesNotifier.new,
+      name: r'itemTemplatesNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$itemTemplatesNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ItemTemplatesNotifier = AsyncNotifier<List<ItemTemplate>>;
 // ignore_for_file: type=lint

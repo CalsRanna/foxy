@@ -12,17 +12,20 @@ String _$frequentModulesNotifierHash() =>
 /// See also [FrequentModulesNotifier].
 @ProviderFor(FrequentModulesNotifier)
 final frequentModulesNotifierProvider = AutoDisposeAsyncNotifierProvider<
-    FrequentModulesNotifier, List<FrequentModule>>.internal(
+  FrequentModulesNotifier,
+  List<FrequentModule>
+>.internal(
   FrequentModulesNotifier.new,
   name: r'frequentModulesNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$frequentModulesNotifierHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$frequentModulesNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$FrequentModulesNotifier
-    = AutoDisposeAsyncNotifier<List<FrequentModule>>;
+typedef _$FrequentModulesNotifier =
+    AutoDisposeAsyncNotifier<List<FrequentModule>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

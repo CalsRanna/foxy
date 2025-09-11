@@ -1,9 +1,14 @@
-import 'package:foxy/page/foxy_app/foxy_view_model.dart';
-import 'package:get_it/get_it.dart';
+import 'package:foxy/model/version_entity.dart';
+import 'package:foxy/repository/repository_mixin.dart';
 
-class VersionRepository {
+class VersionRepository with RepositoryMixin {
+  final String _table = 'version';
   Future<void> connect() async {
-    var viewModel = GetIt.instance.get<FoxyViewModel>();
-    await viewModel.laconic.statement('select version()');
+    await laconic.statement('select version()');
+  }
+
+  Future<VersionEntity> getVersion() async {
+    var result = await laconic.table(_table).first();
+    return VersionEntity.fromJson(result.toMap());
   }
 }
