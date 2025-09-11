@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/creature/creature_template_detail_view_model.dart';
+import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/util/input_width_calculator.dart';
 import 'package:foxy/widget/card.dart';
