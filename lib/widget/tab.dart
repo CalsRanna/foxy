@@ -30,10 +30,14 @@ class FoxyTabItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: DefaultTextStyle.merge(style: textStyle, child: child),
     );
-    return GestureDetector(
+    var gestureDetector = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: container,
+    );
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: gestureDetector,
     );
   }
 }

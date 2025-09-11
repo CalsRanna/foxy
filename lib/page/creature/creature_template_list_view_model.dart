@@ -2,9 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/model/creature_template_filter_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:signals_flutter/signals_core.dart';
 
-class CreatureTemplateViewModel {
+class CreatureTemplateListViewModel {
   final entryController = TextEditingController();
   final nameController = TextEditingController();
   final subNameController = TextEditingController();
@@ -52,5 +53,9 @@ class CreatureTemplateViewModel {
     page.value = 1;
     templates.value = await repository.getBriefCreatureTemplates();
     total.value = await repository.count();
+  }
+
+  void navigateCreatureTemplateDetailPage(BuildContext context, {int? entry}) {
+    CreatureTemplateDetailRoute(entry: entry).push(context);
   }
 }

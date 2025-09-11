@@ -24,25 +24,6 @@ class BootstrapViewModel {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void dispose() {
-    hostController.dispose();
-    portController.dispose();
-    databaseController.dispose();
-    usernameController.dispose();
-    passwordController.dispose();
-  }
-
-  Future<void> initSignals() async {
-    var config = await _loadConfig();
-    hostController.text = config['host']!;
-    portController.text = config['port']!;
-    databaseController.text = config['database']!;
-    usernameController.text = config['username']!;
-    passwordController.text = config['password']!;
-    final packageInfo = await PackageInfo.fromPlatform();
-    version.value = '${packageInfo.version}+${packageInfo.buildNumber}';
-  }
-
   Future<void> connect(BuildContext context) async {
     try {
       DialogUtil.instance.loading();
@@ -66,18 +47,35 @@ class BootstrapViewModel {
       AutoRouter.of(context).replaceAll([DashboardRoute()]);
     } catch (e) {
       DialogUtil.instance.dismiss();
-      await Future.delayed(const Duration(seconds: 1));
+      logger.e(e.toString());
       DialogUtil.instance.error(e.toString());
     }
+  }
+
+  void dispose() {
+    hostController.dispose();
+    portController.dispose();
+    databaseController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+  }
+
+  Future<void> initSignals() async {
+    var config = await _loadConfig();
+    hostController.text = config['host']!;
+    portController.text = config['port']!;
+    databaseController.text = config['database']!;
+    usernameController.text = config['username']!;
+    passwordController.text = config['password']!;
+    final packageInfo = await PackageInfo.fromPlatform();
+    version.value = '${packageInfo.version}+${packageInfo.buildNumber}';
   }
 
   Future<Map<String, String>> _loadConfig() async {
     var currentDirectory = Directory.current;
     var path = join(currentDirectory.path, 'config.yaml');
     var file = File(path);
-    if (!await file.exists()) {
-      await file.create(recursive: true);
-    }
+    if (!await file.exists()) await file.create(recursive: true);
     var content = await file.readAsString();
     if (content.isNotEmpty) return Map.from(loadYaml(content));
     var defaultConfig = {
@@ -94,12 +92,7 @@ class BootstrapViewModel {
   }
 
   Future<void> _updateConfig() async {
-    var currentDirectory = Directory.current;
-    var path = join(currentDirectory.path, 'config.yaml');
-    var file = File(path);
-    if (!await file.exists()) {
-      await file.create(recursive: true);
-    }
+    var editor = YamlEditor('');
     var config = {
       'host': hostController.text,
       'port': portController.text,
@@ -107,8 +100,11 @@ class BootstrapViewModel {
       'username': usernameController.text,
       'password': passwordController.text,
     };
-    var editor = YamlEditor('');
     editor.update([], config);
+    var currentDirectory = Directory.current;
+    var path = join(currentDirectory.path, 'config.yaml');
+    var file = File(path);
+    if (!await file.exists()) await file.create(recursive: true);
     await file.writeAsString(editor.toString());
   }
 }

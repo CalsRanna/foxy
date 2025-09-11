@@ -13,7 +13,7 @@ class FrequentModuleComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const textStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-    const title = Text('常用的模块', style: textStyle);
+    const title = Text('常用功能', style: textStyle);
     final creature = _Tile(
       category: _Category.database,
       description: '所有生物的相关数据,包含NPC和怪物。',
