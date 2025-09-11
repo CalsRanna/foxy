@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class FoxyTable extends StatelessWidget {
   final List<FoxyTableRow>? body;
@@ -18,12 +19,11 @@ class FoxyTable extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Center(child: Text('暂无数据')),
     );
-    return Column(
-      children: [
-        Container(decoration: boxDecoration, child: header),
-        if (body == null) defaultBody else ...body!,
-      ],
-    );
+    var children = [
+      Container(decoration: boxDecoration, child: header),
+      if (body == null) defaultBody else ...body!,
+    ];
+    return Column(children: children);
   }
 }
 
@@ -83,6 +83,7 @@ enum FoxyContextMenuOption { read, edit, duplicate, destroy }
 
 class _FoxyTableRowState extends State<FoxyTableRow> {
   bool hovered = false;
+  bool rightTapped = false;
 
   OverlayEntry? entry;
 
@@ -95,7 +96,7 @@ class _FoxyTableRowState extends State<FoxyTableRow> {
     final borderSide = BorderSide(color: outline.withValues(alpha: 0.25));
     final boxDecoration = BoxDecoration(
       border: Border(bottom: borderSide),
-      color: hovered ? primaryContainer : null,
+      color: (hovered || rightTapped) ? primaryContainer : null,
     );
     final row = Container(
       decoration: boxDecoration,
@@ -131,10 +132,13 @@ class _FoxyTableRowState extends State<FoxyTableRow> {
 
   void handlePointerDown(PointerDownEvent event) {
     if (event.buttons != kSecondaryMouseButton) return;
+    setState(() {
+      rightTapped = true;
+    });
     final positioned = Positioned(
       left: event.position.dx - 84,
-      top: event.position.dy,
-      width: 200,
+      top: event.position.dy - 52,
+      width: 160,
       child: _ContextMenu(onTap: handleTap),
     );
     final stack = Stack(children: [_Barrier(onTap: removeEntry), positioned]);
@@ -144,11 +148,17 @@ class _FoxyTableRowState extends State<FoxyTableRow> {
 
   void handleTap(FoxyContextMenuOption option) {
     entry?.remove();
+    setState(() {
+      rightTapped = false;
+    });
     widget.onContextMenuTap?.call(option);
   }
 
   void removeEntry() {
     entry?.remove();
+    setState(() {
+      rightTapped = false;
+    });
   }
 }
 
@@ -178,11 +188,22 @@ class _ContextMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final children = [
-      ListTile(onTap: () => handleTap(0), title: Text('预览')),
-      ListTile(onTap: () => handleTap(1), title: Text('编辑')),
-      ListTile(onTap: () => handleTap(2), title: Text('复制')),
-      Divider(),
-      ListTile(onTap: () => handleTap(3), title: Text('删除')),
+      ListTile(
+        leading: Icon(HugeIcons.strokeRoundedEdit01),
+        onTap: () => handleTap(0),
+        title: Text('编辑'),
+      ),
+      ListTile(
+        leading: Icon(HugeIcons.strokeRoundedCopy01),
+        onTap: () => handleTap(1),
+        title: Text('复制'),
+      ),
+      Divider(height: 1, thickness: 1),
+      ListTile(
+        leading: Icon(HugeIcons.strokeRoundedDelete01),
+        onTap: () => handleTap(2),
+        title: Text('删除'),
+      ),
     ];
     return Material(
       borderRadius: BorderRadius.circular(8),
@@ -193,10 +214,9 @@ class _ContextMenu extends StatelessWidget {
 
   void handleTap(int index) {
     final option = switch (index) {
-      0 => FoxyContextMenuOption.read,
-      1 => FoxyContextMenuOption.edit,
-      2 => FoxyContextMenuOption.duplicate,
-      3 => FoxyContextMenuOption.destroy,
+      0 => FoxyContextMenuOption.edit,
+      1 => FoxyContextMenuOption.duplicate,
+      2 => FoxyContextMenuOption.destroy,
       _ => throw Exception('Unhandled context menu option $index'),
     };
     onTap?.call(option);

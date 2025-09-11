@@ -1,13 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/model/creature_template.dart';
-import 'package:foxy/page/creature/creature_template_view_model.dart';
+import 'package:foxy/page/creature/creature_template_list_view_model.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/widget/table.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -20,7 +21,7 @@ class CreatureTemplateListPage extends StatefulWidget {
 }
 
 class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
-  final viewModel = GetIt.instance.get<CreatureTemplateViewModel>();
+  final viewModel = GetIt.instance.get<CreatureTemplateListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +51,11 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     );
     var nameInput = FoxyInput(
       controller: viewModel.nameController,
-      placeholder: '姓名（Name）',
+      placeholder: '姓名（name）',
     );
     var subNameInput = FoxyInput(
       controller: viewModel.subNameController,
-      placeholder: '称号（Sub Name）',
+      placeholder: '称号（sub name）',
     );
     final credentialChildren = [
       Expanded(child: entryInput),
@@ -81,7 +82,18 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
   }
 
   Widget _buildTable() {
-    var filledButton = FilledButton(onPressed: () {}, child: Text('新增'));
+    var row = Row(
+      spacing: 4,
+      children: [Icon(HugeIcons.strokeRoundedAdd01), Text('新增')],
+    );
+    var paddedRow = Padding(
+      padding: EdgeInsets.symmetric(vertical: 12),
+      child: row,
+    );
+    var filledButton = FilledButton(
+      onPressed: () => viewModel.navigateCreatureTemplateDetailPage(context),
+      child: paddedRow,
+    );
     var pagination = FoxyPagination(
       page: viewModel.page.value,
       total: viewModel.total.value,
@@ -98,12 +110,10 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     ];
     final header = FoxyTableHeader(children: tableHeaderChildren);
     var body = viewModel.templates.value.map(_buildTableTile).toList();
+    var table = FoxyTable(header: header, body: body);
     if (viewModel.templates.value.isEmpty) {
-      var text = Text('没有查询到任何数据', textAlign: TextAlign.center);
-      var foxyTableRow = FoxyTableRow(children: [FoxyTableCell(child: text)]);
-      body = [foxyTableRow];
+      table = FoxyTable(header: header);
     }
-    final table = FoxyTable(header: header, body: body);
     final column = Column(children: [toolbar, table]);
     return FoxyCard(child: Padding(padding: EdgeInsets.all(16), child: column));
   }
@@ -116,6 +126,13 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       FoxyTableCell(width: 80, child: Text(template.minLevel.toString())),
       FoxyTableCell(width: 80, child: Text(template.maxLevel.toString())),
     ];
-    return FoxyTableRow(onDoubleTap: () {}, children: children);
+    return FoxyTableRow(
+      onDoubleTap:
+          () => viewModel.navigateCreatureTemplateDetailPage(
+            context,
+            entry: template.entry,
+          ),
+      children: children,
+    );
   }
 }

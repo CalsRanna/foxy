@@ -12,8 +12,8 @@
 import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:flutter/material.dart' as _i14;
 import 'package:foxy/page/bootstrap/bootstrap_page.dart' as _i2;
-import 'package:foxy/page/creature/creature_template.dart' as _i4;
-import 'package:foxy/page/creature/creature_template_list_page.dart' as _i3;
+import 'package:foxy/page/creature/creature_template_detail_page.dart' as _i3;
+import 'package:foxy/page/creature/creature_template_list_page.dart' as _i4;
 import 'package:foxy/page/dashboard/dashboard_page.dart' as _i5;
 import 'package:foxy/page/game_object/game_object_template_list.dart' as _i6;
 import 'package:foxy/page/gossip_menu/gossip_menu_list.dart' as _i7;
@@ -57,7 +57,47 @@ class BootstrapRoute extends _i13.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i3.CreatureTemplateListPage]
+/// [_i3.CreatureTemplateDetailPage]
+class CreatureTemplateDetailRoute
+    extends _i13.PageRouteInfo<CreatureTemplateDetailRouteArgs> {
+  CreatureTemplateDetailRoute({
+    _i14.Key? key,
+    int? entry,
+    List<_i13.PageRouteInfo>? children,
+  }) : super(
+         CreatureTemplateDetailRoute.name,
+         args: CreatureTemplateDetailRouteArgs(key: key, entry: entry),
+         initialChildren: children,
+       );
+
+  static const String name = 'CreatureTemplateDetailRoute';
+
+  static _i13.PageInfo page = _i13.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CreatureTemplateDetailRouteArgs>(
+        orElse: () => const CreatureTemplateDetailRouteArgs(),
+      );
+      return _i3.CreatureTemplateDetailPage(key: args.key, entry: args.entry);
+    },
+  );
+}
+
+class CreatureTemplateDetailRouteArgs {
+  const CreatureTemplateDetailRouteArgs({this.key, this.entry});
+
+  final _i14.Key? key;
+
+  final int? entry;
+
+  @override
+  String toString() {
+    return 'CreatureTemplateDetailRouteArgs{key: $key, entry: $entry}';
+  }
+}
+
+/// generated route for
+/// [_i4.CreatureTemplateListPage]
 class CreatureTemplateListRoute extends _i13.PageRouteInfo<void> {
   const CreatureTemplateListRoute({List<_i13.PageRouteInfo>? children})
     : super(CreatureTemplateListRoute.name, initialChildren: children);
@@ -67,49 +107,9 @@ class CreatureTemplateListRoute extends _i13.PageRouteInfo<void> {
   static _i13.PageInfo page = _i13.PageInfo(
     name,
     builder: (data) {
-      return const _i3.CreatureTemplateListPage();
+      return const _i4.CreatureTemplateListPage();
     },
   );
-}
-
-/// generated route for
-/// [_i4.CreatureTemplatePage]
-class CreatureTemplateRoute
-    extends _i13.PageRouteInfo<CreatureTemplateRouteArgs> {
-  CreatureTemplateRoute({
-    _i14.Key? key,
-    int? entry,
-    List<_i13.PageRouteInfo>? children,
-  }) : super(
-         CreatureTemplateRoute.name,
-         args: CreatureTemplateRouteArgs(key: key, entry: entry),
-         initialChildren: children,
-       );
-
-  static const String name = 'CreatureTemplateRoute';
-
-  static _i13.PageInfo page = _i13.PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<CreatureTemplateRouteArgs>(
-        orElse: () => const CreatureTemplateRouteArgs(),
-      );
-      return _i4.CreatureTemplatePage(key: args.key, entry: args.entry);
-    },
-  );
-}
-
-class CreatureTemplateRouteArgs {
-  const CreatureTemplateRouteArgs({this.key, this.entry});
-
-  final _i14.Key? key;
-
-  final int? entry;
-
-  @override
-  String toString() {
-    return 'CreatureTemplateRouteArgs{key: $key, entry: $entry}';
-  }
 }
 
 /// generated route for

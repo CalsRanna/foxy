@@ -5,6 +5,33 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureTemplateRepository with RepositoryMixin {
   final String _table = 'creature_template';
 
+  Future<int> count({CreatureTemplateFilterEntity? filter}) async {
+    var builder = laconic.table('$_table AS ct');
+    builder.select(['ct.entry']);
+    builder = builder.join(
+      'creature_template_locale AS ctl',
+      (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
+    );
+    if (filter?.entry.isNotEmpty == true) {
+      builder = builder.where('ct.entry', filter!.entry);
+    }
+    if (filter?.name.isNotEmpty == true) {
+      builder = builder.where(
+        'ct.name',
+        '%${filter!.name}%',
+        comparator: 'like',
+      );
+    }
+    if (filter?.subName.isNotEmpty == true) {
+      builder = builder.where(
+        'ct.subname',
+        '%${filter!.subName}%',
+        comparator: 'like',
+      );
+    }
+    return builder.count();
+  }
+
   Future<List<BriefCreatureTemplate>> getBriefCreatureTemplates({
     int page = 1,
     CreatureTemplateFilterEntity? filter,
@@ -49,30 +76,8 @@ class CreatureTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> count({CreatureTemplateFilterEntity? filter}) async {
-    var builder = laconic.table('$_table AS ct');
-    builder.select(['ct.entry']);
-    builder = builder.join(
-      'creature_template_locale AS ctl',
-      (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
-    );
-    if (filter?.entry.isNotEmpty == true) {
-      builder = builder.where('ct.entry', filter!.entry);
-    }
-    if (filter?.name.isNotEmpty == true) {
-      builder = builder.where(
-        'ct.name',
-        '%${filter!.name}%',
-        comparator: 'like',
-      );
-    }
-    if (filter?.subName.isNotEmpty == true) {
-      builder = builder.where(
-        'ct.subname',
-        '%${filter!.subName}%',
-        comparator: 'like',
-      );
-    }
-    return builder.count();
+  Future<CreatureTemplate> getCreatureTemplate(int entry) async {
+    var result = await laconic.table(_table).where('entry', entry).first();
+    return CreatureTemplate.fromJson(result.toMap());
   }
 }

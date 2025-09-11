@@ -41,11 +41,13 @@ class FoxyPagination extends StatelessWidget {
     final upper = min(page + 2, count - 1);
     List<_Tile> tiles = [];
     for (var i = lower; i <= upper; i++) {
-      tiles.add(_Tile(
-        active: page == i,
-        onClick: () => handleClick(i),
-        child: Text('$i'),
-      ));
+      tiles.add(
+        _Tile(
+          active: page == i,
+          onClick: () => handleClick(i),
+          child: Text('$i'),
+        ),
+      );
     }
     if (lower > 2) {
       final less = _Tile(
@@ -69,7 +71,7 @@ class FoxyPagination extends StatelessWidget {
   }
 
   void change(int step, int count) {
-    onChange?.call(page.clamp(1, count));
+    onChange?.call((page + step).clamp(1, count));
   }
 
   void handleClick(int index) {
@@ -81,11 +83,7 @@ class _Tile extends StatefulWidget {
   final bool active;
   final void Function()? onClick;
   final Widget child;
-  const _Tile({
-    this.active = false,
-    this.onClick,
-    required this.child,
-  });
+  const _Tile({this.active = false, this.onClick, required this.child});
 
   @override
   State<_Tile> createState() => _TileState();
