@@ -14,9 +14,10 @@ String _$questTemplateTotalHash() =>
 final questTemplateTotalProvider = FutureProvider<int>.internal(
   questTemplateTotal,
   name: r'questTemplateTotalProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$questTemplateTotalHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$questTemplateTotalHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -31,14 +32,15 @@ String _$questTemplatesNotifierHash() =>
 @ProviderFor(QuestTemplatesNotifier)
 final questTemplatesNotifierProvider =
     AsyncNotifierProvider<QuestTemplatesNotifier, List<QuestTemplate>>.internal(
-  QuestTemplatesNotifier.new,
-  name: r'questTemplatesNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$questTemplatesNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      QuestTemplatesNotifier.new,
+      name: r'questTemplatesNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$questTemplatesNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$QuestTemplatesNotifier = AsyncNotifier<List<QuestTemplate>>;
 // ignore_for_file: type=lint

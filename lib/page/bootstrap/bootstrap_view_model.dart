@@ -6,6 +6,7 @@ import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -52,10 +53,14 @@ class BootstrapViewModel {
         port: int.parse(portController.text),
         username: usernameController.text,
       );
-      var laconic = Laconic.mysql(config);
+      var laconic = Laconic.mysql(
+        config,
+        listen: (query) => logger.d(query.rawSql),
+      );
       var foxyViewModel = GetIt.instance.get<FoxyViewModel>();
       foxyViewModel.initSignals(laconic);
       await VersionRepository().connect();
+      await _updateConfig();
       DialogUtil.instance.dismiss();
       if (!context.mounted) return;
       AutoRouter.of(context).replaceAll([DashboardRoute()]);
@@ -86,5 +91,24 @@ class BootstrapViewModel {
     editor.update([], defaultConfig);
     await file.writeAsString(editor.toString());
     return defaultConfig;
+  }
+
+  Future<void> _updateConfig() async {
+    var currentDirectory = Directory.current;
+    var path = join(currentDirectory.path, 'config.yaml');
+    var file = File(path);
+    if (!await file.exists()) {
+      await file.create(recursive: true);
+    }
+    var config = {
+      'host': hostController.text,
+      'port': portController.text,
+      'database': databaseController.text,
+      'username': usernameController.text,
+      'password': passwordController.text,
+    };
+    var editor = YamlEditor('');
+    editor.update([], config);
+    await file.writeAsString(editor.toString());
   }
 }

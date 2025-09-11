@@ -31,18 +31,16 @@ class _BootstrapPageState extends State<BootstrapPage> {
     );
   }
 
-  Widget _buildWorkspacePanel() {
-    return Watch(
-      (_) => BootstrapSimulatorForm(
-        key: const ValueKey('form'),
-        hostController: viewModel.hostController,
-        portController: viewModel.portController,
-        databaseController: viewModel.databaseController,
-        usernameController: viewModel.usernameController,
-        passwordController: viewModel.passwordController,
-        onConnect: () => viewModel.connect(context),
-      ),
-    );
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.initSignals();
   }
 
   Widget _buildCoverPanel() {
@@ -75,9 +73,17 @@ class _BootstrapPageState extends State<BootstrapPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals();
+  Widget _buildWorkspacePanel() {
+    return Watch(
+      (_) => BootstrapSimulatorForm(
+        key: const ValueKey('form'),
+        hostController: viewModel.hostController,
+        portController: viewModel.portController,
+        databaseController: viewModel.databaseController,
+        usernameController: viewModel.usernameController,
+        passwordController: viewModel.passwordController,
+        onConnect: () => viewModel.connect(context),
+      ),
+    );
   }
 }

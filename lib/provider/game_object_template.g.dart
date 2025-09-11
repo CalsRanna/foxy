@@ -14,9 +14,10 @@ String _$gameObjectTemplateTotalHash() =>
 final gameObjectTemplateTotalProvider = FutureProvider<int>.internal(
   gameObjectTemplateTotal,
   name: r'gameObjectTemplateTotalProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gameObjectTemplateTotalHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$gameObjectTemplateTotalHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -30,12 +31,15 @@ String _$gameObjectTemplatesNotifierHash() =>
 /// See also [GameObjectTemplatesNotifier].
 @ProviderFor(GameObjectTemplatesNotifier)
 final gameObjectTemplatesNotifierProvider = AsyncNotifierProvider<
-    GameObjectTemplatesNotifier, List<GameObjectTemplate>>.internal(
+  GameObjectTemplatesNotifier,
+  List<GameObjectTemplate>
+>.internal(
   GameObjectTemplatesNotifier.new,
   name: r'gameObjectTemplatesNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$gameObjectTemplatesNotifierHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$gameObjectTemplatesNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

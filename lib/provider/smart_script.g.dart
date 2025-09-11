@@ -13,9 +13,10 @@ String _$smartScriptTotalHash() => r'811311338b85b91e849d877600c73b582f4427e3';
 final smartScriptTotalProvider = FutureProvider<int>.internal(
   smartScriptTotal,
   name: r'smartScriptTotalProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$smartScriptTotalHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$smartScriptTotalHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -30,14 +31,15 @@ String _$smartScriptsNotifierHash() =>
 @ProviderFor(SmartScriptsNotifier)
 final smartScriptsNotifierProvider =
     AsyncNotifierProvider<SmartScriptsNotifier, List<SmartScript>>.internal(
-  SmartScriptsNotifier.new,
-  name: r'smartScriptsNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$smartScriptsNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      SmartScriptsNotifier.new,
+      name: r'smartScriptsNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$smartScriptsNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$SmartScriptsNotifier = AsyncNotifier<List<SmartScript>>;
 // ignore_for_file: type=lint

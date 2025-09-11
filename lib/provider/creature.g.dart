@@ -34,9 +34,7 @@ abstract class _$CreatureTemplateNotifier
     extends BuildlessAutoDisposeAsyncNotifier<CreatureTemplate> {
   late final int? entry;
 
-  FutureOr<CreatureTemplate> build(
-    int? entry,
-  );
+  FutureOr<CreatureTemplate> build(int? entry);
 }
 
 /// See also [CreatureTemplateNotifier].
@@ -50,21 +48,15 @@ class CreatureTemplateNotifierFamily
   const CreatureTemplateNotifierFamily();
 
   /// See also [CreatureTemplateNotifier].
-  CreatureTemplateNotifierProvider call(
-    int? entry,
-  ) {
-    return CreatureTemplateNotifierProvider(
-      entry,
-    );
+  CreatureTemplateNotifierProvider call(int? entry) {
+    return CreatureTemplateNotifierProvider(entry);
   }
 
   @override
   CreatureTemplateNotifierProvider getProviderOverride(
     covariant CreatureTemplateNotifierProvider provider,
   ) {
-    return call(
-      provider.entry,
-    );
+    return call(provider.entry);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -84,24 +76,26 @@ class CreatureTemplateNotifierFamily
 
 /// See also [CreatureTemplateNotifier].
 class CreatureTemplateNotifierProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<CreatureTemplateNotifier,
-        CreatureTemplate> {
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<
+          CreatureTemplateNotifier,
+          CreatureTemplate
+        > {
   /// See also [CreatureTemplateNotifier].
-  CreatureTemplateNotifierProvider(
-    int? entry,
-  ) : this._internal(
-          () => CreatureTemplateNotifier()..entry = entry,
-          from: creatureTemplateNotifierProvider,
-          name: r'creatureTemplateNotifierProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$creatureTemplateNotifierHash,
-          dependencies: CreatureTemplateNotifierFamily._dependencies,
-          allTransitiveDependencies:
-              CreatureTemplateNotifierFamily._allTransitiveDependencies,
-          entry: entry,
-        );
+  CreatureTemplateNotifierProvider(int? entry)
+    : this._internal(
+        () => CreatureTemplateNotifier()..entry = entry,
+        from: creatureTemplateNotifierProvider,
+        name: r'creatureTemplateNotifierProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$creatureTemplateNotifierHash,
+        dependencies: CreatureTemplateNotifierFamily._dependencies,
+        allTransitiveDependencies:
+            CreatureTemplateNotifierFamily._allTransitiveDependencies,
+        entry: entry,
+      );
 
   CreatureTemplateNotifierProvider._internal(
     super._createNotifier, {
@@ -119,9 +113,7 @@ class CreatureTemplateNotifierProvider
   FutureOr<CreatureTemplate> runNotifierBuild(
     covariant CreatureTemplateNotifier notifier,
   ) {
-    return notifier.build(
-      entry,
-    );
+    return notifier.build(entry);
   }
 
   @override
@@ -141,8 +133,11 @@ class CreatureTemplateNotifierProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<CreatureTemplateNotifier,
-      CreatureTemplate> createElement() {
+  AutoDisposeAsyncNotifierProviderElement<
+    CreatureTemplateNotifier,
+    CreatureTemplate
+  >
+  createElement() {
     return _CreatureTemplateNotifierProviderElement(this);
   }
 
@@ -169,8 +164,12 @@ mixin CreatureTemplateNotifierRef
 }
 
 class _CreatureTemplateNotifierProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<CreatureTemplateNotifier,
-        CreatureTemplate> with CreatureTemplateNotifierRef {
+    extends
+        AutoDisposeAsyncNotifierProviderElement<
+          CreatureTemplateNotifier,
+          CreatureTemplate
+        >
+    with CreatureTemplateNotifierRef {
   _CreatureTemplateNotifierProviderElement(super.provider);
 
   @override
@@ -184,14 +183,15 @@ String _$creatureTemplatePageNotifierHash() =>
 @ProviderFor(CreatureTemplatePageNotifier)
 final creatureTemplatePageNotifierProvider =
     NotifierProvider<CreatureTemplatePageNotifier, int>.internal(
-  CreatureTemplatePageNotifier.new,
-  name: r'creatureTemplatePageNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$creatureTemplatePageNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      CreatureTemplatePageNotifier.new,
+      name: r'creatureTemplatePageNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$creatureTemplatePageNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$CreatureTemplatePageNotifier = Notifier<int>;
 String _$creatureTemplatesNotifierHash() =>
@@ -200,18 +200,21 @@ String _$creatureTemplatesNotifierHash() =>
 /// See also [CreatureTemplatesNotifier].
 @ProviderFor(CreatureTemplatesNotifier)
 final creatureTemplatesNotifierProvider = AsyncNotifierProvider<
-    CreatureTemplatesNotifier, List<BriefCreatureTemplate>>.internal(
+  CreatureTemplatesNotifier,
+  List<BriefCreatureTemplate>
+>.internal(
   CreatureTemplatesNotifier.new,
   name: r'creatureTemplatesNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$creatureTemplatesNotifierHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$creatureTemplatesNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CreatureTemplatesNotifier
-    = AsyncNotifier<List<BriefCreatureTemplate>>;
+typedef _$CreatureTemplatesNotifier =
+    AsyncNotifier<List<BriefCreatureTemplate>>;
 String _$creatureTemplateTotalNotifierHash() =>
     r'6572be02cc291941caa1ab66efe9c1f5310f4bba';
 
@@ -219,14 +222,15 @@ String _$creatureTemplateTotalNotifierHash() =>
 @ProviderFor(CreatureTemplateTotalNotifier)
 final creatureTemplateTotalNotifierProvider =
     AsyncNotifierProvider<CreatureTemplateTotalNotifier, int>.internal(
-  CreatureTemplateTotalNotifier.new,
-  name: r'creatureTemplateTotalNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$creatureTemplateTotalNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      CreatureTemplateTotalNotifier.new,
+      name: r'creatureTemplateTotalNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$creatureTemplateTotalNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$CreatureTemplateTotalNotifier = AsyncNotifier<int>;
 // ignore_for_file: type=lint
