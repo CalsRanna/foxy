@@ -9,7 +9,7 @@ class BootstrapWindowHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     var container = Container(
       alignment: Alignment.topRight,
-      height: 50,
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: WindowButton(),
     );
     return GestureDetector(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/window_button.dart';
 import 'package:window_manager/window_manager.dart';
 
 class FoxyBreadcrumb extends StatelessWidget {
@@ -13,12 +14,13 @@ class FoxyBreadcrumb extends StatelessWidget {
       items.add(children[i]);
       if (i < children.length - 1) items.add(separator);
     }
+    var rowChildren = [...items, const Spacer(), WindowButton()];
     var borderSide = BorderSide(color: Colors.grey.withValues(alpha: 0.5));
     var boxDecoration = BoxDecoration(border: Border(bottom: borderSide));
     var container = Container(
       decoration: boxDecoration,
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(children: items),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(children: rowChildren),
     );
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -44,7 +46,7 @@ class FoxyBreadcrumbItem extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final onSurface = colorScheme.onSurface;
     final disabled = onTap == null;
-    final alpha = disabled ? 1.0 : 0.5;
+    final alpha = disabled ? 0.5 : 1.0;
     final textStyle = TextStyle(color: onSurface.withValues(alpha: alpha));
     final item = DefaultTextStyle.merge(child: child, style: textStyle);
     const edgeInsets = EdgeInsets.symmetric(horizontal: 4);
