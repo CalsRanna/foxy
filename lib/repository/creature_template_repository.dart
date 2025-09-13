@@ -5,6 +5,13 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureTemplateRepository with RepositoryMixin {
   final String _table = 'creature_template';
 
+  Future<void> copyCreatureTemplate(int entry) async {
+    var template = await getCreatureTemplate(entry);
+    var json = template.toJson();
+    json.remove('entry');
+    await laconic.table(_table).insert([json]);
+  }
+
   Future<int> count({CreatureTemplateFilterEntity? filter}) async {
     var builder = laconic.table('$_table AS ct');
     builder.select(['ct.entry']);
@@ -30,6 +37,10 @@ class CreatureTemplateRepository with RepositoryMixin {
       );
     }
     return builder.count();
+  }
+
+  Future<void> destroyCreatureTemplate(int entry) async {
+    await laconic.table(_table).where('entry', entry).delete();
   }
 
   Future<List<BriefCreatureTemplate>> getBriefCreatureTemplates({
@@ -79,5 +90,17 @@ class CreatureTemplateRepository with RepositoryMixin {
   Future<CreatureTemplate> getCreatureTemplate(int entry) async {
     var result = await laconic.table(_table).where('entry', entry).first();
     return CreatureTemplate.fromJson(result.toMap());
+  }
+
+  Future<void> storeCreatureTemplate(CreatureTemplate template) async {
+    var json = template.toJson();
+    json.remove('entry');
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> updateCreatureTemplate(CreatureTemplate template) async {
+    var json = template.toJson();
+    json.remove('entry');
+    await laconic.table(_table).where('entry', template.entry).update(json);
   }
 }
