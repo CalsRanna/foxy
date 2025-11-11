@@ -1,179 +1,180 @@
-# Foxy - 做最好的魔兽世界编辑器
+# Foxy
 
-Foxy 是一个专为魔兽世界私服开发设计的桌面级数据库管理工具，提供直观易用的界面来管理游戏数据。支持 Windows、macOS 和 Linux 平台。
+一个基于 Flutter 的 AzerothCore 数据库管理工具，提供可视化界面来管理魔兽世界私服的游戏数据。
 
-## 🎯 核心功能
+## 功能特性
 
-### 📊 数据管理
-- **生物模板管理** - 创建、编辑和管理生物(NPC)数据
-- **物品模板管理** - 完整的物品数据库编辑功能
-- **任务模板管理** - 任务系统设计和管理
-- **游戏对象管理** - 游戏世界中的物体管理
-- **对话菜单管理** - NPC对话和交互菜单
-- **智能脚本管理** - 高级AI脚本和行为逻辑
+### 🎮 游戏数据管理
+- **生物模板管理**: 创建、编辑、删除和查询 NPC 数据
+- **物品模板管理**: 管理游戏内物品的属性和配置  
+- **任务模板管理**: 配置游戏任务的各项参数
+- **游戏对象管理**: 管理可交互的游戏对象
+- **对话菜单管理**: 配置 NPC 对话系统
+- **智能脚本管理**: 管理 AI 脚本和事件响应
 
-### 🔧 技术特性
-- **MySQL数据库连接** - 直接连接魔兽世界数据库
-- **本地配置存储** - 使用Isar进行本地设置加密存储
-- **响应式状态管理** - 基于Signals的现代状态管理
-- **类型安全路由** - 使用AutoRoute进行导航管理
-- **桌面级体验** - 专为桌面环境优化的UI设计
+### 🖥️ 桌面应用
+- **跨平台支持**: Windows、Linux、macOS
+- **直观界面**: 现代化的桌面应用界面
+- **数据库连接**: 直接连接到 MySQL 数据库
+- **实时预览**: 即时查看数据修改效果
 
-### 🚀 快速开始
+### 📊 数据统计
+- **仪表盘**: 显示数据库统计信息和版本信息
+- **版本追踪**: 显示 AzerothCore 版本和数据库版本
+- **使用统计**: 常用模块快速访问
 
-#### 环境要求
-- Flutter 3.7.2 或更高版本
-- MySQL服务器 (支持魔兽世界数据库)
-- Windows 10+/macOS 10.15+/Linux Ubuntu 18.04+
+## 技术架构
 
-#### 安装步骤
+- **框架**: Flutter 3.35.7+
+- **状态管理**: Signals + GetIt
+- **路由管理**: auto_route
+- **数据库**: MySQL (AzerothCore)
+- **查询构建**: laconic (自定义包)
 
-1. **克隆项目**
+## 环境要求
+
+- Flutter 3.9.2 或更高版本
+- MySQL 数据库 (AzerothCore)
+- Windows 10/11、Linux 或 macOS
+
+## 安装与配置
+
+### 1. 克隆项目
 ```bash
-git clone https://github.com/CalsRanna/foxy.git
+git clone <repository-url>
 cd foxy
 ```
 
-2. **安装依赖**
+### 2. 安装依赖
 ```bash
 flutter pub get
-flutter pub run build_runner build
 ```
 
-3. **运行应用**
+### 3. 生成代码
 ```bash
-# Windows/macOS/Linux桌面
-flutter run -d windows  # Windows
-flutter run -d macos   # macOS
-flutter run -d linux   # Linux
+flutter packages pub run build_runner build
 ```
 
-4. **首次配置**
-启动应用后，通过引导界面配置数据库连接：
-- 数据库主机地址
-- 端口号 (默认3306)
-- 数据库名称
-- 用户名和密码
+### 4. 配置数据库
+在项目根目录创建 `config.yaml` 文件：
+```yaml
+host: 127.0.0.1
+port: "3306"
+database: acore_world
+username: your_username
+password: your_password
+```
 
-#### 构建发布版本
+### 5. 运行应用
+```bash
+flutter run
+```
 
+## 开发指南
+
+### 构建应用
 ```bash
 # Windows
 flutter build windows
 
+# Linux  
+flutter build linux
+
 # macOS
 flutter build macos
-
-# Linux
-flutter build linux
 ```
 
-### 🏗️ 项目架构
+### 代码质量
+```bash
+# 静态分析
+flutter analyze
 
-#### 技术栈
-- **Flutter** - 跨平台UI框架
-- **Signals** - 响应式状态管理 (从Riverpod迁移)
-- **AutoRoute** - 类型安全路由管理
-- **MySQL** - 主数据库连接
-- **Isar** - 本地NoSQL数据库
-- **GetIt** - 依赖注入容器
+# 运行测试
+flutter test
 
-#### 目录结构
+# 清理构建文件
+flutter clean
+```
+
+### 代码生成
+```bash
+# 生成路由文件
+flutter packages pub run build_runner build
+
+# 强制重新生成
+flutter packages pub run build_runner build --delete-conflicting-outputs
+```
+
+## 项目结构
+
 ```
 lib/
-├── page/           # 功能页面
-│   ├── bootstrap/  # 初始化引导
-│   ├── dashboard/  # 主工作台
-│   ├── creature/   # 生物管理
-│   ├── item/       # 物品管理
-│   ├── quest/      # 任务管理
-│   ├── game_object/# 游戏对象
-│   ├── gossip_menu/# 对话菜单
-│   ├── smart_script/# 智能脚本
-│   └── setting/    # 设置页面
-├── service/        # 业务逻辑层
-├── model/          # 数据模型
-├── provider/       # 状态管理 (Signals)
-├── schema/         # 数据库模式
-├── router/         # 路由配置
-└── util/           # 工具类
+├── di.dart                 # 依赖注入配置
+├── main.dart              # 应用入口
+├── model/                 # 数据模型
+├── page/                  # 页面组件
+│   ├── bootstrap/         # 启动页和数据库连接
+│   ├── dashboard/         # 仪表盘
+│   ├── creature_template/ # 生物模板管理
+│   ├── scaffold/          # 主框架
+│   └── ...
+├── repository/            # 数据访问层
+├── router/                # 路由配置
+├── service/               # 业务逻辑层
+├── util/                  # 工具类
+└── widget/                # 可复用组件
 ```
 
-### 🎮 功能模块详解
+## 数据库支持
 
-#### 1. 生物模板管理 (Creature Template)
-- 生物基础属性编辑
-- 掉落表管理
-- 技能和行为配置
-- 刷新点和路径设置
+该应用专为 AzerothCore 设计，支持以下核心数据表：
 
-#### 2. 物品模板管理 (Item Template)
-- 物品属性编辑
-- 掉落来源管理
-- 合成配方配置
-- 装备属性设置
+- `creature_template` - NPC 模板
+- `item_template` - 物品模板
+- `quest_template` - 任务模板
+- `gameobject_template` - 游戏对象模板
+- `gossip_menu` - 对话菜单
+- `smart_scripts` - 智能脚本
 
-#### 3. 任务模板管理 (Quest Template)
-- 任务链设计
-- 奖励配置
-- 前置条件设置
-- 任务目标定义
+## 使用说明
 
-#### 4. 智能脚本系统 (Smart Script)
-- AI行为逻辑设计
-- 事件响应系统
-- 条件判断和动作执行
-- 复杂的NPC交互逻辑
+### 首次启动
+1. 启动应用后，首先会进入数据库连接配置页面
+2. 输入 MySQL 数据库连接信息
+3. 点击连接按钮建立连接
+4. 连接成功后进入主界面
 
-### 🛠️ 开发指南
+### 数据管理
+1. 使用左侧导航栏选择要管理的数据类型
+2. 在列表页面可以查询、筛选现有数据
+3. 点击详情可以查看和编辑具体记录
+4. 支持创建新记录和删除现有记录
 
-#### 添加新功能模块
-1. 创建对应的页面组件
-2. 定义数据模型
-3. 实现服务层逻辑
-4. 配置路由和状态管理
-5. 添加UI组件和交互
+### 快捷键
+- `Ctrl+S` - 同步所有文件
+- `Ctrl+D` - 同步 DBC 文件
+- `Ctrl+M` - 同步 MPQ 文件
 
-#### 数据库操作
-```dart
-// 示例：查询生物模板
-final result = await creatureService.query(
-  where: 'entry = ?',
-  whereArgs: [1234],
-);
-```
-
-#### 状态管理示例
-```dart
-// 使用Signals创建响应式状态
-final counter = signal(0);
-final isEven = computed(() => counter.value % 2 == 0);
-```
-
-### 🤝 贡献指南
-
-我们欢迎社区贡献！请遵循以下步骤：
+## 贡献指南
 
 1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
 3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 创建 Pull Request
+5. 打开 Pull Request
 
-### 📄 许可证
+## 许可证
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
-### 🙋‍♂️ 支持与联系
+## 支持与反馈
 
-- **GitHub Issues**: [提交问题](https://github.com/CalsRanna/foxy/issues)
-- **讨论区**: [GitHub Discussions](https://github.com/CalsRanna/foxy/discussions)
-- **QQ群**: 123456789 (魔兽世界开发群)
+如果您在使用过程中遇到问题或有建议，请：
 
-### 🌟 致谢
-
-感谢所有为魔兽世界私服开发社区做出贡献的开发者们！
+1. 查看 [Issues](https://github.com/your-repo/foxy/issues) 页面
+2. 创建新的 Issue 描述问题
+3. 提供详细的错误信息和复现步骤
 
 ---
 
-**Foxy** - 让魔兽世界私服开发更简单、更高效！
+**注意**: 本工具仅用于 AzerothCore 私服管理，请确保您有合法的服务器使用权限。
