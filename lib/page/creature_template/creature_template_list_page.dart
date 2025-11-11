@@ -8,7 +8,7 @@ import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/widget/table.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hugeicons/hugeicons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -82,10 +82,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
   }
 
   Widget _buildTable() {
-    var row = Row(
-      spacing: 4,
-      children: [Icon(HugeIcons.strokeRoundedAdd01), Text('新增')],
-    );
+    var row = Row(spacing: 4, children: [Icon(LucideIcons.plus), Text('新增')]);
     var paddedRow = Padding(
       padding: EdgeInsets.symmetric(vertical: 12),
       child: row,
@@ -115,7 +112,9 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       table = FoxyTable(header: header);
     }
     final column = Column(children: [toolbar, table]);
-    return FoxyCard(child: Padding(padding: EdgeInsets.all(16), child: column));
+    return FoxyCard(
+      child: Padding(padding: EdgeInsets.all(16), child: column),
+    );
   }
 
   FoxyTableRow _buildTableTile(BriefCreatureTemplate template) {
@@ -127,11 +126,10 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       FoxyTableCell(width: 80, child: Text(template.maxLevel.toString())),
     ];
     return FoxyTableRow(
-      onDoubleTap:
-          () => viewModel.navigateCreatureTemplateDetailPage(
-            context,
-            entry: template.entry,
-          ),
+      onDoubleTap: () => viewModel.navigateCreatureTemplateDetailPage(
+        context,
+        entry: template.entry,
+      ),
       children: children,
     );
   }

@@ -6,8 +6,8 @@ class FoxyRouter extends RootStackRouter {
   @override
   RouteType get defaultRouteType {
     return RouteType.custom(
-      durationInMilliseconds: 0,
-      reverseDurationInMilliseconds: 0,
+      duration: Duration.zero,
+      reverseDuration: Duration.zero,
     );
   }
 

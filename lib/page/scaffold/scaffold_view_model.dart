@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/router/router.gr.dart';
-import 'package:hugeicons/hugeicons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:signals/signals.dart';
 
 class ScaffoldViewModel {
@@ -27,14 +27,14 @@ class ScaffoldViewModel {
 
   IconData getIcon(String menu) {
     return switch (menu) {
-      'dashboard' => HugeIcons.strokeRoundedDashboardCircle,
-      'creatureTemplate' => HugeIcons.strokeRoundedUserMultiple,
-      'itemTemplate' => HugeIcons.strokeRoundedBodyArmor,
-      'questTemplate' => HugeIcons.strokeRoundedCursorInfo01,
-      'spell' => HugeIcons.strokeRoundedSolarSystem,
-      'more' => HugeIcons.strokeRoundedMoreHorizontal,
-      'setting' => HugeIcons.strokeRoundedSettings01,
-      _ => HugeIcons.strokeRoundedDashboardCircle,
+      'dashboard' => LucideIcons.layoutDashboard,
+      'creatureTemplate' => LucideIcons.pawPrint,
+      'itemTemplate' => LucideIcons.swords,
+      'questTemplate' => LucideIcons.badgeQuestionMark,
+      'spell' => LucideIcons.shell,
+      'more' => LucideIcons.ellipsis,
+      'setting' => LucideIcons.settings,
+      _ => LucideIcons.layoutDashboard,
     };
   }
 
