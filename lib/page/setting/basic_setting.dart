@@ -1,17 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/widget/input.dart';
 
 @RoutePage()
-class BasicSettingPage extends ConsumerStatefulWidget {
+class BasicSettingPage extends StatefulWidget {
   const BasicSettingPage({super.key});
 
   @override
-  ConsumerState<BasicSettingPage> createState() => _BasicSettingPageState();
+  State<BasicSettingPage> createState() => _BasicSettingPageState();
 }
 
-class _BasicSettingPageState extends ConsumerState<BasicSettingPage> {
+class _BasicSettingPageState extends State<BasicSettingPage> {
   final hostController = TextEditingController();
   final portController = TextEditingController();
   final databaseController = TextEditingController();

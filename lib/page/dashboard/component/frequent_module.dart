@@ -1,11 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foxy/provider/application.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/widget/card.dart';
-import 'package:hugeicons/hugeicons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class FrequentModuleComponent extends StatelessWidget {
   const FrequentModuleComponent({super.key});
@@ -17,7 +15,7 @@ class FrequentModuleComponent extends StatelessWidget {
     final creature = _Tile(
       category: _Category.database,
       description: '所有生物的相关数据,包含NPC和怪物。',
-      icon: Icon(HugeIcons.strokeRoundedUserMultiple),
+      icon: Icon(LucideIcons.pawPrint),
       name: '生物',
       onTap: () => handleTap(context, 0),
       positions: [_Position.right],
@@ -25,7 +23,7 @@ class FrequentModuleComponent extends StatelessWidget {
     final item = _Tile(
       category: _Category.database,
       description: '包含装备，物品信息。',
-      icon: Icon(HugeIcons.strokeRoundedBodyArmor),
+      icon: Icon(LucideIcons.swords),
       name: '物品',
       onTap: () => handleTap(context, 1),
       positions: [_Position.right],
@@ -33,7 +31,7 @@ class FrequentModuleComponent extends StatelessWidget {
     final quest = _Tile(
       category: _Category.database,
       description: '任务模板及其它关联的数据，比如奖励，任务对话等等。',
-      icon: Icon(HugeIcons.strokeRoundedCursorInfo01),
+      icon: Icon(LucideIcons.badgeQuestionMark),
       name: '任务',
       onTap: () => handleTap(context, 2),
       positions: [],
@@ -41,28 +39,28 @@ class FrequentModuleComponent extends StatelessWidget {
     final spell = _Tile(
       category: _Category.dbc,
       description: '角色拥有的法术技能。',
-      icon: Icon(HugeIcons.strokeRoundedSolarSystem),
+      icon: Icon(LucideIcons.shell),
       name: '法术',
       onTap: () => handleTap(context, 6),
     );
     final gameObject = _Tile(
       category: _Category.database,
       description: '所有可交互的物体，比如陷阱，宝箱等等。',
-      icon: Icon(HugeIcons.strokeRoundedCube),
+      icon: Icon(LucideIcons.mapPin),
       name: '游戏对象',
       onTap: () => handleTap(context, 2),
     );
     final gossip = _Tile(
       category: _Category.database,
       description: '和NPC交谈时，对话框中的面板内容及对话选项。',
-      icon: Icon(HugeIcons.strokeRoundedBubbleChat),
+      icon: Icon(LucideIcons.messageCircle),
       name: '对话',
       onTap: () => handleTap(context, 4),
     );
     final smartScript = _Tile(
       category: _Category.database,
       description: '主要是一些简单的脚本，不需要复杂的代码逻辑。',
-      icon: Icon(HugeIcons.strokeRoundedCode),
+      icon: Icon(LucideIcons.code),
       name: '内建脚本',
       onTap: () => handleTap(context, 5),
       positions: [_Position.top],
@@ -70,14 +68,14 @@ class FrequentModuleComponent extends StatelessWidget {
     final talent = _Tile(
       category: _Category.dbc,
       description: '天赋树中的信息，配合法术一起使用。',
-      icon: Icon(HugeIcons.strokeRoundedNanoTechnology),
+      icon: Icon(LucideIcons.sparkles),
       name: '天赋',
       onTap: () => handleTap(context, 7),
     );
     final itemSet = _Tile(
       category: _Category.dbc,
       description: '套装数据，包含组成部分，套装奖励效果等等。',
-      icon: Icon(HugeIcons.strokeRoundedLayers01),
+      icon: Icon(LucideIcons.layers),
       name: '套装',
       onTap: () => handleTap(context, 8),
       positions: [_Position.top],
@@ -112,10 +110,6 @@ class FrequentModuleComponent extends StatelessWidget {
   }
 
   void handleTap(BuildContext context, int index) {
-    final provider = selectedMenuIndexNotifierProvider;
-    final container = ProviderScope.containerOf(context);
-    final notifier = container.read(provider.notifier);
-    notifier.select(index + 1);
     final route = switch (index) {
       0 => CreatureTemplateListRoute(),
       1 => ItemTemplateListRoute(),

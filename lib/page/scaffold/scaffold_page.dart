@@ -4,14 +4,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/page/scaffold/component/status.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
-import 'package:foxy/provider/application.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/widget/breadcrumb.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hugeicons/hugeicons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,38 +27,38 @@ class _Drawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var syncAll = ListTile(
-      leading: Icon(HugeIcons.strokeRoundedDatabaseSync01),
+      leading: Icon(LucideIcons.folder),
       onTap: () {},
       subtitle: Text('包含 dbc 和 mpq 文件'),
       title: Text('同步所有文件'),
       trailing: _Shortcut('S'),
     );
     var syncDbc = ListTile(
-      leading: Icon(HugeIcons.strokeRoundedFolderSync),
+      leading: Icon(LucideIcons.database),
       onTap: () {},
       title: Text('同步 dbc 文件'),
       trailing: _Shortcut('D'),
     );
     var syncMpq = ListTile(
-      leading: Icon(HugeIcons.strokeRoundedFileSync),
+      leading: Icon(LucideIcons.package),
       onTap: () {},
       title: Text('同步 mpq 文件'),
       trailing: _Shortcut('M'),
     );
     var setting = ListTile(
-      leading: Icon(HugeIcons.strokeRoundedSettings01),
+      leading: Icon(LucideIcons.settings),
       onTap: () => navigateSetting(context),
       title: Text('设置'),
       trailing: _Shortcut(','),
     );
     var exitTile = ListTile(
-      leading: Icon(HugeIcons.strokeRoundedCancel01),
+      leading: Icon(LucideIcons.logOut),
       onTap: exitApp,
       title: Text('退出'),
       trailing: _Shortcut('Q'),
     );
     var github = IconButton(
-      icon: Icon(HugeIcons.strokeRoundedGithub01, size: 20),
+      icon: Icon(LucideIcons.github, size: 20),
       onPressed: launchGithub,
     );
     var headerChildren = [
@@ -117,10 +115,6 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
   static Object? handleInvoke(_NavigateSettingIntent intent) {
     final context = primaryFocus?.context;
     if (context == null) return null;
-    final provider = selectedMenuIndexNotifierProvider;
-    final container = ProviderScope.containerOf(context);
-    final notifier = container.read(provider.notifier);
-    notifier.select(11);
     Scaffold.of(context).closeDrawer();
     AutoRouter.of(context).push(const BasicSettingRoute());
     return null;
@@ -180,7 +174,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   Widget _buildDrawer() {
     var padding = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Icon(HugeIcons.strokeRoundedMenu01, size: 20),
+      child: Icon(LucideIcons.menu, size: 20),
     );
     return IconButton(onPressed: () {}, icon: padding);
   }

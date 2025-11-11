@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
@@ -36,11 +35,11 @@ class Welcome extends StatelessWidget {
   }
 }
 
-class _Avatar extends ConsumerWidget {
+class _Avatar extends StatelessWidget {
   const _Avatar();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final primary = colorScheme.primary;

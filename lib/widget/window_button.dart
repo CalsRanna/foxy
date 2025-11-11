@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hugeicons/hugeicons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WindowButton extends StatefulWidget {
@@ -16,17 +16,17 @@ class _WindowButtonState extends State<WindowButton> {
   Widget build(BuildContext context) {
     var minimizeButton = IconButton(
       onPressed: () => windowManager.minimize(),
-      icon: const Icon(HugeIcons.strokeRoundedMinusSign),
+      icon: const Icon(LucideIcons.minus),
       visualDensity: VisualDensity.compact,
     );
     var maximizeButton = IconButton(
       onPressed: _toggleMaximize,
-      icon: const Icon(HugeIcons.strokeRoundedFullScreen),
+      icon: const Icon(LucideIcons.maximize),
       visualDensity: VisualDensity.compact,
     );
     var closeButton = IconButton(
       onPressed: () => windowManager.close(),
-      icon: const Icon(HugeIcons.strokeRoundedCancel01),
+      icon: const Icon(LucideIcons.x),
       visualDensity: VisualDensity.compact,
     );
     var row = Row(

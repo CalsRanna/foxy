@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foxy/provider/application.dart';
 
 class Status extends StatelessWidget {
   const Status({super.key});
@@ -33,17 +31,16 @@ class Status extends StatelessWidget {
   }
 }
 
-class _MysqlStatus extends ConsumerWidget {
+class _MysqlStatus extends StatelessWidget {
   const _MysqlStatus();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final onPrimary = colorScheme.onPrimary;
     final errorContainer = colorScheme.errorContainer;
-    final provider = mysqlVersionProvider;
-    final version = ref.watch(provider).valueOrNull ?? '';
+    final version = '';
     final connected = version.isNotEmpty;
     final color = connected ? onPrimary : errorContainer;
     final text = connected ? 'Mysql Connected: $version' : 'Mysql Disconnected';

@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:hugeicons/hugeicons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class FoxyTable extends StatelessWidget {
   final List<FoxyTableRow>? body;
@@ -141,7 +141,12 @@ class _FoxyTableRowState extends State<FoxyTableRow> {
       width: 160,
       child: _ContextMenu(onTap: handleTap),
     );
-    final stack = Stack(children: [_Barrier(onTap: removeEntry), positioned]);
+    final stack = Stack(
+      children: [
+        _Barrier(onTap: removeEntry),
+        positioned,
+      ],
+    );
     entry = OverlayEntry(builder: (_) => stack);
     Overlay.of(context).insert(entry!);
   }
@@ -189,18 +194,18 @@ class _ContextMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final children = [
       ListTile(
-        leading: Icon(HugeIcons.strokeRoundedEdit01),
+        leading: Icon(LucideIcons.squarePen),
         onTap: () => handleTap(0),
         title: Text('编辑'),
       ),
       ListTile(
-        leading: Icon(HugeIcons.strokeRoundedCopy01),
+        leading: Icon(LucideIcons.copy),
         onTap: () => handleTap(1),
         title: Text('复制'),
       ),
       Divider(height: 1, thickness: 1),
       ListTile(
-        leading: Icon(HugeIcons.strokeRoundedDelete01),
+        leading: Icon(LucideIcons.trash),
         onTap: () => handleTap(2),
         title: Text('删除'),
       ),

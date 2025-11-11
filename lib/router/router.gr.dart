@@ -96,6 +96,16 @@ class CreatureTemplateDetailRouteArgs {
   String toString() {
     return 'CreatureTemplateDetailRouteArgs{key: $key, entry: $entry}';
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! CreatureTemplateDetailRouteArgs) return false;
+    return key == other.key && entry == other.entry;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ entry.hashCode;
 }
 
 /// generated route for

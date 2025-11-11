@@ -1,8 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foxy/model/game_object_template.dart';
-import 'package:foxy/provider/game_object_template.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/input.dart';
@@ -20,15 +18,15 @@ class GameObjectTemplateListPage extends StatelessWidget {
   }
 }
 
-class _Filter extends ConsumerWidget {
+class _Filter extends StatelessWidget {
   const _Filter();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final buttonChildren = [
       TextButton(onPressed: () {}, child: Text('查询')),
       const SizedBox(width: 8),
-      TextButton(onPressed: () => reset(ref), child: Text('重置')),
+      TextButton(onPressed: () => reset(), child: Text('重置')),
     ];
     final credentialChildren = [
       Expanded(child: FoxyInput(placeholder: '编号（Entry）')),
@@ -49,11 +47,7 @@ class _Filter extends ConsumerWidget {
     );
   }
 
-  Future<void> reset(WidgetRef ref) async {
-    final provider = gameObjectTemplatesNotifierProvider;
-    final notifier = ref.read(provider.notifier);
-    notifier.reset();
-  }
+  Future<void> reset() async {}
 }
 
 class _Header extends StatelessWidget {
@@ -66,38 +60,23 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _Pagination extends ConsumerWidget {
+class _Pagination extends StatelessWidget {
   const _Pagination();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final provider = gameObjectTemplateTotalProvider;
-    final total = ref.watch(provider).valueOrNull;
-    return FoxyPagination(
-      total: total ?? 0,
-      onChange: (page) => handleChange(ref, page),
-    );
+  Widget build(BuildContext context) {
+    return FoxyPagination(total: 0, onChange: (page) => handleChange(page));
   }
 
-  void handleChange(WidgetRef ref, int page) {
-    final provider = gameObjectTemplatesNotifierProvider;
-    final notifier = ref.read(provider.notifier);
-    notifier.paginate(page);
-  }
+  void handleChange(int page) {}
 }
 
-class _Table extends ConsumerWidget {
+class _Table extends StatelessWidget {
   const _Table();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final provider = ref.watch(gameObjectTemplatesNotifierProvider);
-    return switch (provider) {
-      AsyncData(:final value) => _buildData(value),
-      AsyncError(:final error) => Text(error.toString()),
-      AsyncLoading() => const Center(child: CircularProgressIndicator()),
-      _ => const SizedBox(),
-    };
+  Widget build(BuildContext context) {
+    return _buildData([]);
   }
 
   Widget _buildData(List<GameObjectTemplate> templates) {
@@ -111,7 +90,9 @@ class _Table extends ConsumerWidget {
     final body = templates.map(_buildRow).toList();
     final table = FoxyTable(header: header, body: body);
     final column = Column(children: [toolbar, table]);
-    return FoxyCard(child: Padding(padding: EdgeInsets.all(16), child: column));
+    return FoxyCard(
+      child: Padding(padding: EdgeInsets.all(16), child: column),
+    );
   }
 
   FoxyTableHeader _buildHeader() {

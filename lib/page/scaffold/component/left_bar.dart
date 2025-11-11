@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foxy/provider/application.dart';
 import 'package:foxy/router/router.gr.dart';
-import 'package:hugeicons/hugeicons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LeftBar extends StatelessWidget {
   const LeftBar({super.key});
@@ -19,20 +17,24 @@ class LeftBar extends StatelessWidget {
       child: Column(children: menus),
     );
     return Column(
-      children: [_Drawer(), SizedBox(height: 8), Expanded(child: column)],
+      children: [
+        _Drawer(),
+        SizedBox(height: 8),
+        Expanded(child: column),
+      ],
     );
   }
 }
 
 class _Icons {
   static const icons = [
-    HugeIcons.strokeRoundedDashboardCircle,
-    HugeIcons.strokeRoundedUserMultiple,
-    HugeIcons.strokeRoundedBodyArmor,
-    HugeIcons.strokeRoundedCursorInfo01,
-    HugeIcons.strokeRoundedSolarSystem,
-    HugeIcons.strokeRoundedMoreHorizontal,
-    HugeIcons.strokeRoundedSettings01,
+    LucideIcons.layoutDashboard,
+    LucideIcons.pawPrint,
+    LucideIcons.swords,
+    LucideIcons.badgeQuestionMark,
+    LucideIcons.shell,
+    LucideIcons.ellipsis,
+    LucideIcons.settings,
   ];
 }
 
@@ -41,7 +43,7 @@ class _Drawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = Icon(HugeIcons.strokeRoundedMenu01, size: 20);
+    final icon = Icon(LucideIcons.menu, size: 20);
     var padding = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: icon,
@@ -61,17 +63,16 @@ class _Drawer extends StatelessWidget {
   }
 }
 
-class _Tile extends ConsumerWidget {
+class _Tile extends StatelessWidget {
   final int index;
   const _Tile({required this.index});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final primaryContainer = colorScheme.primaryContainer;
-    final provider = selectedMenuIndexNotifierProvider;
-    final selectedMenuIndex = ref.watch(provider);
+    final selectedMenuIndex = 0;
     final active = index == selectedMenuIndex;
     final color = active ? primaryContainer : null;
     final icon = Icon(_Icons.icons[index], size: 20);
@@ -80,7 +81,7 @@ class _Tile extends ConsumerWidget {
       child: icon,
     );
     var iconButton = IconButton(
-      onPressed: () => handlePressed(context, ref),
+      onPressed: () => handlePressed(context),
       icon: padding,
       isSelected: active,
       style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(color)),
@@ -91,10 +92,7 @@ class _Tile extends ConsumerWidget {
     );
   }
 
-  void handlePressed(BuildContext context, WidgetRef ref) {
-    final provider = selectedMenuIndexNotifierProvider;
-    final notifier = ref.read(provider.notifier);
-    notifier.select(index);
+  void handlePressed(BuildContext context) {
     final route = switch (index) {
       0 => DashboardRoute(),
       1 => CreatureTemplateListRoute(),
