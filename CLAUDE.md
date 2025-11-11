@@ -4,132 +4,91 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Foxy** is a desktop Flutter application for World of Warcraft database management, designed as "做最好的魔兽世界编辑器". It provides tools for managing creatures, items, quests, game objects, and smart scripts through a MySQL connection to WoW databases.
+Foxy is a Flutter desktop application for managing AzerothCore World of Warcraft database objects. It provides a user interface for CRUD operations on game objects like creatures, items, quests, and smart scripts. The application connects to a MySQL database containing AzerothCore world data.
+
+## Technology Stack
+
+- **Framework**: Flutter (Desktop - Windows, Linux, macOS)
+- **Database**: MySQL with AzerothCore schema
+- **State Management**: Signals (replacing Riverpod)
+- **Dependency Injection**: GetIt (replacing Riverpod)
+- **Routing**: auto_route
+- **Database Client**: mysql_client
+- **Query Builder**: laconic (custom package)
+
+## Architecture
+
+The application follows a layered architecture:
+
+- **Models** (`lib/model/`): Data models for database entities
+- **Services** (`lib/service/`): Business logic and database operations
+- **Repositories** (`lib/repository/`): Data access layer using laconic query builder
+- **Pages/ViewModels** (`lib/page/`): UI pages with corresponding view models
+- **Widgets** (`lib/widget/`): Reusable UI components
+- **Router** (`lib/router/`): Navigation configuration using auto_route
+
+### Key Components
+
+- **Bootstrap**: Database connection setup and configuration
+- **Scaffold**: Main application shell with navigation
+- **Dashboard**: Home page with statistics and quick access
+- **Template Modules**: CRUD interfaces for creature templates, items, quests, etc.
+
+## Database Configuration
+
+Database connection is configured via `config.yaml`:
+```yaml
+host: 127.0.0.1
+port: "3306"
+database: acore_world
+username: acore
+password: acore
+```
 
 ## Development Commands
 
-### Setup & Installation
+### Build and Run
 ```bash
-flutter pub get
-flutter pub run build_runner build
+flutter run                    # Run in development mode
+flutter build windows         # Build Windows executable
+flutter build linux           # Build Linux executable
+flutter build macos           # Build macOS executable
 ```
 
-### Development Server
+### Code Quality
 ```bash
-# Desktop
-desktop-run
-
-# Web
-flutter run -d chrome
-
-# Mobile
-flutter run
-```
-
-### Build Commands
-```bash
-# Desktop builds
-flutter build windows
-flutter build macos
-flutter build linux
-
-# Web build
-flutter build web
-
-# Mobile builds
-flutter build apk
-flutter build ios
+flutter analyze               # Run static analysis
+flutter test                 # Run unit and widget tests
+flutter clean                # Clean build artifacts
 ```
 
 ### Code Generation
 ```bash
-# Generate all code
-flutter pub run build_runner build
-
-# Watch for changes
-flutter pub run build_runner watch
-
-# Clean generated files
-flutter pub run build_runner clean
+flutter packages pub run build_runner build          # Generate auto_route files
+flutter packages pub run build_runner build --delete-conflicting-outputs  # Force regenerate
 ```
 
-### Testing
-```bash
-# Run all tests
-flutter test
+## Database Schema
 
-# Run specific test file
-flutter test test/widget_test.dart
-```
+The application works with AzerothCore database tables:
+- `creature_template`: NPC definitions
+- `item_template`: Item definitions  
+- `quest_template`: Quest definitions
+- `gameobject_template`: Game object definitions
+- `gossip_menu`: NPC dialogue menus
+- `smart_scripts`: AI scripting system
 
-## Architecture Overview
+## Important Files
 
-### Tech Stack
-- **State Management**: Signals (reactive state management) - migrated from Riverpod
-- **Navigation**: AutoRoute for type-safe routing
-- **Database**: MySQL (primary) + Isar (local settings)
-- **DI**: GetIt service locator
-- **Platform**: Desktop-first (Windows, macOS, Linux)
+- `lib/di.dart`: Dependency injection setup using GetIt
+- `lib/service/service.dart`: MySQL connection wrapper and query helpers
+- `lib/router/router.dart`: Application routing configuration
+- `config.yaml`: Database connection configuration
+- `pubspec.yaml`: Flutter dependencies and project configuration
 
-### Key Entry Points
-1. `main.dart` → Bootstrap initial setup
-2. `lib/page/bootstrap/` → Configuration wizard
-3. `lib/page/scaffold/` → Main application interface
+## Development Notes
 
-### Directory Structure
-```
-lib/
-├── page/           # Feature-based UI pages
-├── provider/       # Signals state management (legacy: Riverpod providers)
-├── service/        # Business logic & database access
-├── model/          # Data models
-├── schema/         # Isar database schemas
-├── router/         # AutoRoute navigation
-└── util/           # Utilities
-```
-
-### State Management Patterns
-- **Global State**: Signals for reactive state management across the app
-- **Local UI State**: Signals package for reactive components
-- **Services**: GetIt registration for database and business logic
-
-### Database Architecture
-- **MySQL**: Primary WoW database connection via `mysql_client`
-- **Isar**: Local encrypted storage for settings and configuration
-- **Service Pattern**: Each entity has dedicated service (CreatureTemplateService, etc.)
-- **Query Style**: Raw SQL with parameterized queries, locale joins for zhCN support
-
-### Code Generation
-- **AutoRoute**: Generates `router.gr.dart` for type-safe navigation
-- **Isar**: Generates database schemas from model annotations
-- **Legacy**: Riverpod previously generated `*.g.dart` files (being phased out)
-
-## Common Development Tasks
-
-### Adding New Routes
-1. Add route to `lib/router/app_router.dart`
-2. Run `flutter pub run build_runner build`
-3. Import generated route in `router.gr.dart`
-
-### Adding New State Signals
-1. Create signals in appropriate service or page file
-2. Use `signal()` for reactive state
-3. Use `computed()` for derived state
-4. No code generation needed for Signals
-
-### Database Operations
-1. Create service in `lib/service/`
-2. Extend base `Service` mixin for MySQL operations
-3. Use existing patterns for pagination and search
-
-### UI Development
-1. Create page in appropriate `lib/page/` subdirectory
-2. Use existing component patterns from scaffold/
-3. Follow established responsive design for desktop
-
-## Configuration Files
-
-- **Database**: Configure MySQL via UI bootstrap process
-- **Window Settings**: Custom window management in `lib/util/window_initializer.dart`
-- **Locale**: Chinese (zhCN) support built-in
-- **Build**: Desktop-specific configurations in platform directories
+- The project is transitioning from Riverpod to GetIt + Signals for state management
+- Window management is handled via window_manager package for desktop functionality
+- The laconic package provides a fluent query builder interface for MySQL operations
+- All database operations go through the Service mixin which handles connection management and logging
