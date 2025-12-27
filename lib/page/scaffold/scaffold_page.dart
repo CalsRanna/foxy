@@ -272,7 +272,6 @@ class _SyncAllFilesAction extends CallbackAction<_SyncAllFilesIntent> {
   _SyncAllFilesAction() : super(onInvoke: handleInvoke);
 
   static Object? handleInvoke(_SyncAllFilesIntent intent) {
-    print(intent.toString());
     return null;
   }
 }
@@ -283,7 +282,6 @@ class _SyncDbcFilesAction extends CallbackAction<_SyncDbcFilesIntent> {
   _SyncDbcFilesAction() : super(onInvoke: handleInvoke);
 
   static Object? handleInvoke(_SyncDbcFilesIntent intent) {
-    print(intent.toString());
     return null;
   }
 }
@@ -294,7 +292,6 @@ class _SyncMpqFileAction extends CallbackAction<_SyncMpqFileIntent> {
   _SyncMpqFileAction() : super(onInvoke: handleInvoke);
 
   static Object? handleInvoke(_SyncMpqFileIntent intent) {
-    print(intent.toString());
     return null;
   }
 }
