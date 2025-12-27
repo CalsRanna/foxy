@@ -1,14 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/page/creature_template/creature_template_list_view_model.dart';
-import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
-import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
-import 'package:foxy/widget/table.dart';
 import 'package:get_it/get_it.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -28,6 +24,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     final children = [
       _buildHeader(),
       _buildFilter(),
+      const SizedBox(height: 16),
       Watch((_) => _buildTable()),
     ];
     return ListView(padding: EdgeInsets.all(16), children: children);
@@ -41,21 +38,21 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
 
   Widget _buildFilter() {
     final buttonChildren = [
-      TextButton(onPressed: viewModel.search, child: Text('查询')),
+      ShadButton(onPressed: viewModel.search, child: Text('查询')),
       const SizedBox(width: 8),
-      TextButton(onPressed: viewModel.reset, child: Text('重置')),
+      ShadButton.ghost(onPressed: viewModel.reset, child: Text('重置')),
     ];
-    var entryInput = FoxyInput(
+    var entryInput = ShadInput(
       controller: viewModel.entryController,
-      placeholder: '编号（entry）',
+      placeholder: Text('编号（entry）'),
     );
-    var nameInput = FoxyInput(
+    var nameInput = ShadInput(
       controller: viewModel.nameController,
-      placeholder: '姓名（name）',
+      placeholder: Text('姓名（name）'),
     );
-    var subNameInput = FoxyInput(
+    var subNameInput = ShadInput(
       controller: viewModel.subNameController,
-      placeholder: '称号（subname）',
+      placeholder: Text('称号（subname）'),
     );
     final credentialChildren = [
       Expanded(child: entryInput),
@@ -66,13 +63,9 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       const SizedBox(width: 16),
       Expanded(child: Row(children: buttonChildren)),
     ];
-    final filter = Padding(
-      padding: const EdgeInsets.all(16.0),
+    return ShadCard(
+      padding: const EdgeInsets.all(16),
       child: Row(children: credentialChildren),
-    );
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: FoxyCard(child: filter),
     );
   }
 
@@ -82,55 +75,90 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
   }
 
   Widget _buildTable() {
-    var row = Row(spacing: 4, children: [Icon(LucideIcons.plus), Text('新增')]);
-    var paddedRow = Padding(
-      padding: EdgeInsets.symmetric(vertical: 12),
-      child: row,
-    );
-    var filledButton = FilledButton(
+    final templates = viewModel.templates.value;
+    final page = viewModel.page.value;
+    final total = viewModel.total.value;
+
+    var filledButton = ShadButton(
+      leading: Icon(LucideIcons.plus),
       onPressed: () => viewModel.navigateCreatureTemplateDetailPage(context),
-      child: paddedRow,
+      child: Text('新增'),
     );
     var pagination = FoxyPagination(
-      page: viewModel.page.value,
-      total: viewModel.total.value,
+      page: page,
+      total: total,
       onChange: viewModel.paginate,
     );
     final toolbarChildren = [filledButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
-    var tableHeaderChildren = [
-      FoxyTableCell(width: 80, child: Text('编号')),
-      FoxyTableCell(child: Text('姓名')),
-      FoxyTableCell(child: Text('称号')),
-      FoxyTableCell(width: 80, child: Text('最低等级')),
-      FoxyTableCell(width: 80, child: Text('最高等级')),
-    ];
-    final header = FoxyTableHeader(children: tableHeaderChildren);
-    var body = viewModel.templates.value.map(_buildTableTile).toList();
-    var table = FoxyTable(header: header, body: body);
-    if (viewModel.templates.value.isEmpty) {
-      table = FoxyTable(header: header);
-    }
-    final column = Column(children: [toolbar, table]);
-    return FoxyCard(
-      child: Padding(padding: EdgeInsets.all(16), child: column),
-    );
-  }
 
-  FoxyTableRow _buildTableTile(BriefCreatureTemplate template) {
-    final children = [
-      FoxyTableCell(width: 80, child: Text(template.entry.toString())),
-      FoxyTableCell(child: Text(template.name)),
-      FoxyTableCell(child: Text(template.subName)),
-      FoxyTableCell(width: 80, child: Text(template.minLevel.toString())),
-      FoxyTableCell(width: 80, child: Text(template.maxLevel.toString())),
-    ];
-    return FoxyTableRow(
-      onDoubleTap: () => viewModel.navigateCreatureTemplateDetailPage(
-        context,
-        entry: template.entry,
-      ),
-      children: children,
+    Widget table;
+    if (templates.isEmpty) {
+      table = Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(LucideIcons.inbox, size: 64, color: Colors.grey.shade400),
+            const SizedBox(height: 16),
+            Text(
+              '暂无数据',
+              style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+            ),
+          ],
+        ),
+      );
+    } else {
+      table = LayoutBuilder(
+        builder: (context, constraints) {
+          var width = constraints.maxWidth - 560;
+          return ShadTable.list(
+            columnSpanExtent: (index) {
+              return switch (index) {
+                0 => FixedTableSpanExtent(80),
+                1 => FixedTableSpanExtent(240),
+                2 => FixedTableSpanExtent(width),
+                3 => FixedTableSpanExtent(120),
+                4 => FixedTableSpanExtent(120),
+                _ => null,
+              };
+            },
+            header: const [
+              ShadTableCell.header(child: Text('编号')),
+              ShadTableCell.header(child: Text('姓名')),
+              ShadTableCell.header(child: Text('称号')),
+              ShadTableCell.header(child: Text('最低等级')),
+              ShadTableCell.header(child: Text('最高等级')),
+            ],
+            onRowTap: (row) {
+              viewModel.navigateCreatureTemplateDetailPage(context);
+            },
+            pinnedRowCount: 1,
+            children: templates.map((template) {
+              return [
+                ShadTableCell(child: Text(template.entry.toString())),
+                ShadTableCell(child: Text(template.name)),
+                ShadTableCell(child: Text(template.subName)),
+                ShadTableCell(child: Text(template.minLevel.toString())),
+                ShadTableCell(child: Text(template.maxLevel.toString())),
+              ];
+            }),
+          );
+        },
+      );
+    }
+
+    final column = Column(
+      spacing: 16,
+      children: [
+        toolbar,
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height - 300,
+          ),
+          child: table,
+        ),
+      ],
     );
+    return ShadCard(padding: EdgeInsets.all(16), child: column);
   }
 }
