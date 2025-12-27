@@ -2,11 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:foxy/util/input_width_calculator.dart';
-import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
-import 'package:foxy/widget/input.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -30,9 +28,6 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = InputWidthCalculator(context).calculate();
-    const edgeInsets = EdgeInsets.symmetric(vertical: 16.0);
-
     /// Basic
     final entryInput = _Input(
       controller: viewModel.entryController,
@@ -115,26 +110,45 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: '对话',
       placeholder: 'gossip_menu_id',
     );
-    final basicChildren = [
-      SizedBox(width: width, child: entryInput),
-      SizedBox(width: width, child: nameInput),
-      SizedBox(width: width, child: subNameInput),
-      SizedBox(width: width, child: iconNameInput),
-      SizedBox(width: width, child: minLevelInput),
-      SizedBox(width: width, child: maxLevelInput),
-      SizedBox(width: width, child: uniClassInput),
-      SizedBox(width: width, child: rankInput),
-      SizedBox(width: width, child: racialLeaderInput),
-      SizedBox(width: width, child: factionInput),
-      SizedBox(width: width, child: familyInput),
-      SizedBox(width: width, child: typeInput),
-      SizedBox(width: width, child: regenerateHealthInput),
-      SizedBox(width: width, child: petSpellDataIdInput),
-      SizedBox(width: width, child: vehicleIdInput),
-      SizedBox(width: width, child: gossipMenuIdInput),
+
+    final basicRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: entryInput),
+          Expanded(child: nameInput),
+          Expanded(child: subNameInput),
+          Expanded(child: iconNameInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: minLevelInput),
+          Expanded(child: maxLevelInput),
+          Expanded(child: uniClassInput),
+          Expanded(child: rankInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: racialLeaderInput),
+          Expanded(child: factionInput),
+          Expanded(child: familyInput),
+          Expanded(child: typeInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: regenerateHealthInput),
+          Expanded(child: petSpellDataIdInput),
+          Expanded(child: vehicleIdInput),
+          Expanded(child: gossipMenuIdInput),
+        ],
+      ),
     ];
-    final basicWrap = Wrap(runSpacing: 8, spacing: 8, children: basicChildren);
-    final basicPadding = Padding(padding: edgeInsets, child: basicWrap);
 
     /// Flag
     final npcFlagInput = _Input(
@@ -167,16 +181,27 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: '单位标识2',
       placeholder: 'unit_flags2',
     );
-    final flagChildren = [
-      SizedBox(width: width, child: npcFlagInput),
-      SizedBox(width: width, child: typeFlagInput),
-      SizedBox(width: width, child: dynamicFlagInput),
-      SizedBox(width: width, child: extraFlagInput),
-      SizedBox(width: width, child: unitFlagInput),
-      SizedBox(width: width, child: unitFlag2Input),
+
+    final flagRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: npcFlagInput),
+          Expanded(child: typeFlagInput),
+          Expanded(child: dynamicFlagInput),
+          Expanded(child: extraFlagInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: unitFlagInput),
+          Expanded(child: unitFlag2Input),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+        ],
+      ),
     ];
-    final flagWrap = Wrap(runSpacing: 8, spacing: 8, children: flagChildren);
-    final flagPadding = Padding(padding: edgeInsets, child: flagWrap);
 
     /// Immune
     final mechanicImmuneMaskInput = _Input(
@@ -189,16 +214,18 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: '免疫法术类型',
       placeholder: 'spell_school_immune_mask',
     );
-    final immuneChildren = [
-      SizedBox(width: width, child: mechanicImmuneMaskInput),
-      SizedBox(width: width, child: spellSchoolImmuneMaskInput),
+
+    final immuneRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: mechanicImmuneMaskInput),
+          Expanded(child: spellSchoolImmuneMaskInput),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+        ],
+      ),
     ];
-    final immuneWrap = Wrap(
-      runSpacing: 8,
-      spacing: 8,
-      children: immuneChildren,
-    );
-    final immunePadding = Padding(padding: edgeInsets, child: immuneWrap);
 
     /// Modifier
     final expInput = _Input(
@@ -266,27 +293,45 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: '奔跑速度',
       placeholder: 'speed_run',
     );
-    final modifierChildren = [
-      SizedBox(width: width, child: expInput),
-      SizedBox(width: width, child: damageSchoolInput),
-      SizedBox(width: width, child: damageModifierInput),
-      SizedBox(width: width, child: armorModifierInput),
-      SizedBox(width: width, child: baseAttackTimeInput),
-      SizedBox(width: width, child: baseVarianceInput),
-      SizedBox(width: width, child: rangeAttackTimeInput),
-      SizedBox(width: width, child: rangeVarianceInput),
-      SizedBox(width: width, child: healthModifierInput),
-      SizedBox(width: width, child: manaModifierInput),
-      SizedBox(width: width, child: experienceModifierInput),
-      SizedBox(width: width, child: speedWalkInput),
-      SizedBox(width: width, child: speedRunInput),
+
+    final modifierRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: expInput),
+          Expanded(child: damageSchoolInput),
+          Expanded(child: damageModifierInput),
+          Expanded(child: armorModifierInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: baseAttackTimeInput),
+          Expanded(child: baseVarianceInput),
+          Expanded(child: rangeAttackTimeInput),
+          Expanded(child: rangeVarianceInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: healthModifierInput),
+          Expanded(child: manaModifierInput),
+          Expanded(child: experienceModifierInput),
+          Expanded(child: speedWalkInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: speedRunInput),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+        ],
+      ),
     ];
-    final modifierWrap = Wrap(
-      runSpacing: 8,
-      spacing: 8,
-      children: modifierChildren,
-    );
-    final modifierPadding = Padding(padding: edgeInsets, child: modifierWrap);
 
     /// Loot
     final minGoldInput = _Input(
@@ -314,15 +359,27 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: '剥皮掉落',
       placeholder: 'skinloot',
     );
-    final lootChildren = [
-      SizedBox(width: width, child: minGoldInput),
-      SizedBox(width: width, child: maxGoldInput),
-      SizedBox(width: width, child: lootInput),
-      SizedBox(width: width, child: pickpocketLootInput),
-      SizedBox(width: width, child: skinLootInput),
+
+    final lootRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: minGoldInput),
+          Expanded(child: maxGoldInput),
+          Expanded(child: lootInput),
+          Expanded(child: pickpocketLootInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: skinLootInput),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+        ],
+      ),
     ];
-    final lootWrap = Wrap(runSpacing: 8, spacing: 8, children: lootChildren);
-    final lootPadding = Padding(padding: edgeInsets, child: lootWrap);
 
     /// Difficulty
     final killCredit1Input = _Input(
@@ -350,22 +407,27 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: '难度3',
       placeholder: 'difficulty_entry_3',
     );
-    final difficultyChildren = [
-      SizedBox(width: width, child: killCredit1Input),
-      SizedBox(width: width, child: killCredit2input),
-      SizedBox(width: width, child: difficultyEntry1Input),
-      SizedBox(width: width, child: difficultyEntry2Input),
-      SizedBox(width: width, child: difficultyEntry3Input),
+
+    final difficultyRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: killCredit1Input),
+          Expanded(child: killCredit2input),
+          Expanded(child: difficultyEntry1Input),
+          Expanded(child: difficultyEntry2Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: difficultyEntry3Input),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+        ],
+      ),
     ];
-    final difficultyWrap = Wrap(
-      runSpacing: 8,
-      spacing: 8,
-      children: difficultyChildren,
-    );
-    final difficultyPadding = Padding(
-      padding: edgeInsets,
-      child: difficultyWrap,
-    );
 
     /// Model
     final modelId1Input = _Input(
@@ -393,15 +455,27 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: '缩放',
       placeholder: 'scale',
     );
-    final modelChildren = [
-      SizedBox(width: width, child: modelId1Input),
-      SizedBox(width: width, child: modelId2Input),
-      SizedBox(width: width, child: modelId3Input),
-      SizedBox(width: width, child: modelId4Input),
-      SizedBox(width: width, child: scaleInput),
+
+    final modelRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: modelId1Input),
+          Expanded(child: modelId2Input),
+          Expanded(child: modelId3Input),
+          Expanded(child: modelId4Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: scaleInput),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+        ],
+      ),
     ];
-    final modelWrap = Wrap(runSpacing: 8, spacing: 8, children: modelChildren);
-    final modelPadding = Padding(padding: edgeInsets, child: modelWrap);
 
     /// Movement
     final movementIdInput = _Input(
@@ -419,17 +493,18 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: '盘旋高度',
       placeholder: 'HoverHeight',
     );
-    final movementChildren = [
-      SizedBox(width: width, child: movementIdInput),
-      SizedBox(width: width, child: movementTypeInput),
-      SizedBox(width: width, child: hoverHeightInput),
+
+    final movementRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: movementIdInput),
+          Expanded(child: movementTypeInput),
+          Expanded(child: hoverHeightInput),
+          Expanded(child: SizedBox()),
+        ],
+      ),
     ];
-    final movementWrap = Wrap(
-      runSpacing: 8,
-      spacing: 8,
-      children: movementChildren,
-    );
-    final movementPadding = Padding(padding: edgeInsets, child: movementWrap);
 
     /// Other
     final aiNameInput = _Input(
@@ -447,13 +522,19 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: 'VerifiedBuild',
       placeholder: 'VerifiedBuild',
     );
-    final otherChildren = [
-      SizedBox(width: width, child: aiNameInput),
-      SizedBox(width: width, child: scriptNameInput),
-      SizedBox(width: width, child: verifiedBuildInput),
+
+    final otherRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: aiNameInput),
+          Expanded(child: scriptNameInput),
+          Expanded(child: verifiedBuildInput),
+          Expanded(child: SizedBox()),
+        ],
+      ),
     ];
-    final otherWrap = Wrap(runSpacing: 8, spacing: 8, children: otherChildren);
-    final otherPadding = Padding(padding: edgeInsets, child: otherWrap);
+
     var tabs = [
       Text('生物模板'),
       Text('模板补充'),
@@ -474,24 +555,60 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       Watch((_) => _Header(viewModel.template.value.name)),
       tab,
       SizedBox(height: 16),
-      FoxyCard(title: Text('基本信息'), child: basicPadding),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        description: Text('基本信息'),
+        child: Column(spacing: 8, children: basicRows),
+      ),
       SizedBox(height: 16),
-      FoxyCard(title: Text('标识信息'), child: flagPadding),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        description: Text('标识信息'),
+        child: Column(spacing: 8, children: flagRows),
+      ),
       SizedBox(height: 16),
-      FoxyCard(title: Text('免疫信息'), child: immunePadding),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        description: Text('免疫信息'),
+        child: Column(spacing: 8, children: immuneRows),
+      ),
       SizedBox(height: 16),
-      FoxyCard(title: Text('属性信息'), child: modifierPadding),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        description: Text('属性信息'),
+        child: Column(spacing: 8, children: modifierRows),
+      ),
       SizedBox(height: 16),
-      FoxyCard(title: Text('掉落信息'), child: lootPadding),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        description: Text('掉落信息'),
+        child: Column(spacing: 8, children: lootRows),
+      ),
       SizedBox(height: 16),
-      FoxyCard(title: Text('难度信息'), child: difficultyPadding),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        description: Text('难度信息'),
+        child: Column(spacing: 8, children: difficultyRows),
+      ),
       SizedBox(height: 16),
-      FoxyCard(title: Text('模型信息'), child: modelPadding),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        description: Text('模型信息'),
+        child: Column(spacing: 8, children: modelRows),
+      ),
       SizedBox(height: 16),
-      FoxyCard(title: Text('移动信息'), child: movementPadding),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        description: Text('移动信息'),
+        child: Column(spacing: 8, children: movementRows),
+      ),
       SizedBox(height: 16),
-      FoxyCard(title: Text('其他信息'), child: otherPadding),
-      SizedBox(height: 64),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        description: Text('其他信息'),
+        child: Column(spacing: 8, children: otherRows),
+      ),
+      SizedBox(height: 72),
     ];
     var listView = ListView(
       padding: const EdgeInsets.all(16),
@@ -519,12 +636,12 @@ class _Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cancelButton = TextButton(
+    final cancelButton = ShadButton.ghost(
       onPressed: () => handlePressed(context),
       child: Text('取消'),
     );
     final children = [
-      FilledButton(onPressed: onTap, child: Text('保存')),
+      ShadButton(onPressed: onTap, child: Text('保存')),
       const SizedBox(width: 8),
       cancelButton,
     ];
@@ -575,21 +692,23 @@ class _Input extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final leading = _buildLeading();
-    final input = FoxyInput(
+    final input = ShadInput(
       controller: controller,
-      placeholder: placeholder,
+      placeholder: Text(placeholder ?? ''),
       readOnly: readOnly,
     );
-    return Row(children: [leading, Expanded(child: input)]);
+    return Row(
+      spacing: 16,
+      children: [
+        leading,
+        Expanded(child: input),
+      ],
+    );
   }
 
   Widget _buildLeading() {
     if (label == null) return const SizedBox();
     if (label!.isEmpty) return const SizedBox();
-    return Container(
-      padding: EdgeInsets.only(right: 16),
-      width: 120,
-      child: Text(label!, textAlign: TextAlign.end),
-    );
+    return SizedBox(width: 96, child: Text(label!, textAlign: TextAlign.end));
   }
 }
