@@ -12,7 +12,8 @@
       "WebFetch(domain:github.com)",
       "Bash(cat:*)",
       "Bash(find:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "mcp__dart-mcp-server__analyze_files"
     ],
     "deny": []
   }

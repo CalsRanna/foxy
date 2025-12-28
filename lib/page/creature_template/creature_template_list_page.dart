@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_list_view_model.dart';
+import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:get_it/get_it.dart';
@@ -91,7 +93,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var width = constraints.maxWidth - 320;
-        return ShadTable(
+        return FoxyShadTable(
           builder: (context, vicinity) {
             final template = templates[vicinity.row];
             return switch (vicinity.column) {
@@ -120,10 +122,42 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
           onRowTap: (row) {
             viewModel.selectRow(row);
           },
-          onRowSecondaryTap: (row) {
+          onRowDoubleTap: (row) {
             viewModel.navigateCreatureTemplateDetailPage(
               context,
               entry: templates[row].entry,
+            );
+          },
+          onRowSecondaryTapDownWithDetails: (row, details) {
+            showFoxyContextMenu(
+              context: context,
+              position: details.globalPosition,
+              items: [
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.squarePen, size: 16),
+                  onPressed: () {
+                    viewModel.navigateCreatureTemplateDetailPage(
+                      context,
+                      entry: templates[row].entry,
+                    );
+                  },
+                  child: Text('编辑'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.copy, size: 16),
+                  onPressed: () {
+                    // TODO: 实现复制功能
+                  },
+                  child: Text('复制'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () {
+                    // TODO: 实现删除功能
+                  },
+                  child: Text('删除'),
+                ),
+              ],
             );
           },
           pinnedRowCount: 1,
