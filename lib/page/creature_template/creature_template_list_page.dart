@@ -22,12 +22,16 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
   @override
   Widget build(BuildContext context) {
     final children = [
-      _buildHeader(),
+      FoxyHeader('生物列表'),
       _buildFilter(),
-      const SizedBox(height: 16),
-      Watch((_) => _buildTable()),
+      Expanded(child: Watch((_) => _buildTable())),
     ];
-    return ListView(padding: EdgeInsets.all(16), children: children);
+    var column = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 16,
+      children: children,
+    );
+    return Padding(padding: const EdgeInsets.all(16.0), child: column);
   }
 
   @override
@@ -37,11 +41,6 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
   }
 
   Widget _buildFilter() {
-    final buttonChildren = [
-      ShadButton(onPressed: viewModel.search, child: Text('查询')),
-      const SizedBox(width: 8),
-      ShadButton.ghost(onPressed: viewModel.reset, child: Text('重置')),
-    ];
     var entryInput = ShadInput(
       controller: viewModel.entryController,
       placeholder: Text('编号（entry）'),
@@ -54,111 +53,87 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       controller: viewModel.subNameController,
       placeholder: Text('称号（subname）'),
     );
+    final buttonChildren = [
+      ShadButton(onPressed: viewModel.search, child: Text('查询')),
+      ShadButton.ghost(onPressed: viewModel.reset, child: Text('重置')),
+    ];
+    var row = Row(spacing: 16, children: buttonChildren);
     final credentialChildren = [
       Expanded(child: entryInput),
-      const SizedBox(width: 16),
       Expanded(child: nameInput),
-      const SizedBox(width: 16),
       Expanded(child: subNameInput),
-      const SizedBox(width: 16),
-      Expanded(child: Row(children: buttonChildren)),
+      Expanded(child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
-      child: Row(children: credentialChildren),
+      child: Row(spacing: 16, children: credentialChildren),
     );
   }
 
-  Widget _buildHeader() {
-    const edgeInsets = EdgeInsets.only(bottom: 12);
-    return Padding(padding: edgeInsets, child: FoxyHeader('生物列表'));
-  }
-
   Widget _buildTable() {
-    final templates = viewModel.templates.value;
-    final page = viewModel.page.value;
-    final total = viewModel.total.value;
-
-    var filledButton = ShadButton(
+    var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
       onPressed: () => viewModel.navigateCreatureTemplateDetailPage(context),
       child: Text('新增'),
     );
+    final templates = viewModel.templates.value;
+    final page = viewModel.page.value;
+    final total = viewModel.total.value;
     var pagination = FoxyPagination(
       page: page,
       total: total,
       onChange: viewModel.paginate,
     );
-    final toolbarChildren = [filledButton, const Spacer(), pagination];
+    final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    Widget table;
-    if (templates.isEmpty) {
-      table = Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(LucideIcons.inbox, size: 64, color: Colors.grey.shade400),
-            const SizedBox(height: 16),
-            Text(
-              '暂无数据',
-              style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
-            ),
-          ],
-        ),
-      );
-    } else {
-      table = LayoutBuilder(
-        builder: (context, constraints) {
-          var width = constraints.maxWidth - 560;
-          return ShadTable.list(
-            columnSpanExtent: (index) {
-              return switch (index) {
-                0 => FixedTableSpanExtent(80),
-                1 => FixedTableSpanExtent(240),
-                2 => FixedTableSpanExtent(width),
-                3 => FixedTableSpanExtent(120),
-                4 => FixedTableSpanExtent(120),
-                _ => null,
-              };
-            },
-            header: const [
-              ShadTableCell.header(child: Text('编号')),
-              ShadTableCell.header(child: Text('姓名')),
-              ShadTableCell.header(child: Text('称号')),
-              ShadTableCell.header(child: Text('最低等级')),
-              ShadTableCell.header(child: Text('最高等级')),
-            ],
-            onRowTap: (row) {
-              viewModel.navigateCreatureTemplateDetailPage(context);
-            },
-            pinnedRowCount: 1,
-            children: templates.map((template) {
-              return [
-                ShadTableCell(child: Text(template.entry.toString())),
-                ShadTableCell(child: Text(template.name)),
-                ShadTableCell(child: Text(template.subName)),
-                ShadTableCell(child: Text(template.minLevel.toString())),
-                ShadTableCell(child: Text(template.maxLevel.toString())),
-              ];
-            }),
-          );
-        },
-      );
-    }
-
-    final column = Column(
-      spacing: 16,
-      children: [
-        toolbar,
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height - 300,
-          ),
-          child: table,
-        ),
-      ],
+    final headers = ['编号', '姓名', '称号', '最低等级', '最高等级'];
+    Widget layoutBuilder = LayoutBuilder(
+      builder: (context, constraints) {
+        var width = constraints.maxWidth - 320;
+        return ShadTable(
+          builder: (context, vicinity) {
+            final template = templates[vicinity.row];
+            return switch (vicinity.column) {
+              0 => ShadTableCell(child: Text(template.entry.toString())),
+              1 => ShadTableCell(child: Text(template.name)),
+              2 => ShadTableCell(child: Text(template.subName)),
+              3 => ShadTableCell(child: Text(template.minLevel.toString())),
+              4 => ShadTableCell(child: Text(template.maxLevel.toString())),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+          columnCount: headers.length,
+          columnSpanExtent: (index) {
+            return switch (index) {
+              0 => FixedTableSpanExtent(80),
+              1 => FixedTableSpanExtent(width / 2),
+              2 => FixedTableSpanExtent(width / 2),
+              3 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(120),
+              _ => null,
+            };
+          },
+          header: (context, index) {
+            return ShadTableCell.header(child: Text(headers[index]));
+          },
+          onRowTap: (row) {
+            viewModel.selectRow(row);
+          },
+          onRowSecondaryTap: (row) {
+            viewModel.navigateCreatureTemplateDetailPage(
+              context,
+              entry: templates[row].entry,
+            );
+          },
+          pinnedRowCount: 1,
+          rowCount: templates.length,
+        );
+      },
     );
-    return ShadCard(padding: EdgeInsets.all(16), child: column);
+
+    var children = [toolbar, Expanded(child: layoutBuilder)];
+    final column = Column(spacing: 16, children: children);
+    return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 }
