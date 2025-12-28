@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
+import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:get_it/get_it.dart';
@@ -29,83 +30,83 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
   @override
   Widget build(BuildContext context) {
     /// Basic
-    final entryInput = _Input(
+    final entryInput = FormItem(
       controller: viewModel.entryController,
       label: '编号',
       placeholder: 'entry',
       readOnly: true,
     );
-    final nameInput = _Input(
+    final nameInput = FormItem(
       controller: viewModel.nameController,
       label: '名称',
       placeholder: 'name',
     );
-    final subNameInput = _Input(
+    final subNameInput = FormItem(
       controller: viewModel.subNameController,
       label: '称号',
       placeholder: 'subname',
     );
-    final iconNameInput = _Input(
+    final iconNameInput = FormItem(
       controller: viewModel.iconNameController,
       label: '鼠标形状',
       placeholder: 'IconName',
     );
-    final minLevelInput = _Input(
+    final minLevelInput = FormItem(
       controller: viewModel.minLevelController,
       label: '最低等级',
       placeholder: 'minlevel',
     );
-    final maxLevelInput = _Input(
+    final maxLevelInput = FormItem(
       controller: viewModel.maxLevelController,
       label: '最高等级',
       placeholder: 'maxlevel',
     );
-    final uniClassInput = _Input(
+    final uniClassInput = FormItem(
       controller: viewModel.unitClassController,
       label: '职业',
       placeholder: 'unit_class',
     );
-    final rankInput = _Input(
+    final rankInput = FormItem(
       controller: viewModel.rankController,
       label: '稀有程度',
       placeholder: 'unit_class',
     );
-    final racialLeaderInput = _Input(
+    final racialLeaderInput = FormItem(
       controller: viewModel.racialLeaderController,
       label: '种族领袖',
       placeholder: 'RacialLeader',
     );
-    final factionInput = _Input(
+    final factionInput = FormItem(
       controller: viewModel.factionController,
       label: '阵营',
       placeholder: 'faction',
     );
-    final familyInput = _Input(
+    final familyInput = FormItem(
       controller: viewModel.familyController,
       label: '族群',
       placeholder: 'family',
     );
-    final typeInput = _Input(
+    final typeInput = FormItem(
       controller: viewModel.typeController,
       label: '类型',
       placeholder: 'type',
     );
-    final regenerateHealthInput = _Input(
+    final regenerateHealthInput = FormItem(
       controller: viewModel.regenerateHealthController,
       label: '回复生命',
       placeholder: 'RegenHealth',
     );
-    final petSpellDataIdInput = _Input(
+    final petSpellDataIdInput = FormItem(
       controller: viewModel.petSpellDataIdController,
       label: '宠物技能',
       placeholder: 'PetSpellDataId',
     );
-    final vehicleIdInput = _Input(
+    final vehicleIdInput = FormItem(
       controller: viewModel.vehicleIdController,
       label: '载具',
       placeholder: 'VehicleId',
     );
-    final gossipMenuIdInput = _Input(
+    final gossipMenuIdInput = FormItem(
       controller: viewModel.gossipMenuIdController,
       label: '对话',
       placeholder: 'gossip_menu_id',
@@ -151,32 +152,32 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     ];
 
     /// Flag
-    final npcFlagInput = _Input(
+    final npcFlagInput = FormItem(
       controller: viewModel.npcFlagController,
       label: 'NPC标识',
       placeholder: 'npcflag',
     );
-    final typeFlagInput = _Input(
+    final typeFlagInput = FormItem(
       controller: viewModel.typeFlagController,
       label: '类型标识',
       placeholder: 'type_flags',
     );
-    final dynamicFlagInput = _Input(
+    final dynamicFlagInput = FormItem(
       controller: viewModel.dynamicFlagController,
       label: '动态标识',
       placeholder: 'dynamicflags',
     );
-    final extraFlagInput = _Input(
+    final extraFlagInput = FormItem(
       controller: viewModel.extraFlagController,
       label: '额外标识',
       placeholder: 'flags_extra',
     );
-    final unitFlagInput = _Input(
+    final unitFlagInput = FormItem(
       controller: viewModel.unitFlagController,
       label: '单位标识',
       placeholder: 'unit_flags',
     );
-    final unitFlag2Input = _Input(
+    final unitFlag2Input = FormItem(
       controller: viewModel.unitFlag2Controller,
       label: '单位标识2',
       placeholder: 'unit_flags2',
@@ -204,12 +205,12 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     ];
 
     /// Immune
-    final mechanicImmuneMaskInput = _Input(
+    final mechanicImmuneMaskInput = FormItem(
       controller: viewModel.mechanicImmuneMaskController,
       label: '免疫机制',
       placeholder: 'mechanic_immune_mask',
     );
-    final spellSchoolImmuneMaskInput = _Input(
+    final spellSchoolImmuneMaskInput = FormItem(
       controller: viewModel.spellSchoolImmuneMaskController,
       label: '免疫法术类型',
       placeholder: 'spell_school_immune_mask',
@@ -228,67 +229,67 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     ];
 
     /// Modifier
-    final expInput = _Input(
+    final expInput = FormItem(
       controller: viewModel.expController,
       label: '属性扩展',
       placeholder: 'exp',
     );
-    final damageSchoolInput = _Input(
+    final damageSchoolInput = FormItem(
       controller: viewModel.damageSchoolController,
       label: '伤害类型',
       placeholder: 'dmgschool',
     );
-    final damageModifierInput = _Input(
+    final damageModifierInput = FormItem(
       controller: viewModel.damageModifierController,
       label: '伤害系数',
       placeholder: 'dmgschool',
     );
-    final armorModifierInput = _Input(
+    final armorModifierInput = FormItem(
       controller: viewModel.armorModifierController,
       label: '护甲系数',
       placeholder: 'ArmorModifier',
     );
-    final baseAttackTimeInput = _Input(
+    final baseAttackTimeInput = FormItem(
       controller: viewModel.baseAttackTimeController,
       label: '近战攻击间隔',
       placeholder: 'BaseAttackTime',
     );
-    final baseVarianceInput = _Input(
+    final baseVarianceInput = FormItem(
       controller: viewModel.baseVarianceController,
       label: '近战攻击方差',
       placeholder: 'BaseVariance',
     );
-    final rangeAttackTimeInput = _Input(
+    final rangeAttackTimeInput = FormItem(
       controller: viewModel.rangeAttackTimeController,
       label: '远程攻击间隔',
       placeholder: 'RangeAttackTime',
     );
-    final rangeVarianceInput = _Input(
+    final rangeVarianceInput = FormItem(
       controller: viewModel.rangeVarianceController,
       label: '远程攻击方差',
       placeholder: 'RangeVariance',
     );
-    final healthModifierInput = _Input(
+    final healthModifierInput = FormItem(
       controller: viewModel.healthModifierController,
       label: '生命值系数',
       placeholder: 'HealthModifier',
     );
-    final manaModifierInput = _Input(
+    final manaModifierInput = FormItem(
       controller: viewModel.manaModifierController,
       label: '法力值系数',
       placeholder: 'ManaModifier',
     );
-    final experienceModifierInput = _Input(
+    final experienceModifierInput = FormItem(
       controller: viewModel.experienceModifierController,
       label: '经验值系数',
       placeholder: 'ExperienceModifier',
     );
-    final speedWalkInput = _Input(
+    final speedWalkInput = FormItem(
       controller: viewModel.speedWalkController,
       label: '行走速度',
       placeholder: 'speed_walk',
     );
-    final speedRunInput = _Input(
+    final speedRunInput = FormItem(
       controller: viewModel.speedRunController,
       label: '奔跑速度',
       placeholder: 'speed_run',
@@ -334,27 +335,27 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     ];
 
     /// Loot
-    final minGoldInput = _Input(
+    final minGoldInput = FormItem(
       controller: viewModel.minGoldController,
       label: '最小金钱掉落',
       placeholder: 'mingold',
     );
-    final maxGoldInput = _Input(
+    final maxGoldInput = FormItem(
       controller: viewModel.maxGoldController,
       label: '最大金钱掉落',
       placeholder: 'maxgold',
     );
-    final lootInput = _Input(
+    final lootInput = FormItem(
       controller: viewModel.lootController,
       label: '击杀掉落',
       placeholder: 'lootid',
     );
-    final pickpocketLootInput = _Input(
+    final pickpocketLootInput = FormItem(
       controller: viewModel.pickpocketLootController,
       label: '偷窃掉落',
       placeholder: 'pickpocketloot',
     );
-    final skinLootInput = _Input(
+    final skinLootInput = FormItem(
       controller: viewModel.skinLootController,
       label: '剥皮掉落',
       placeholder: 'skinloot',
@@ -382,27 +383,27 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     ];
 
     /// Difficulty
-    final killCredit1Input = _Input(
+    final killCredit1Input = FormItem(
       controller: viewModel.killCredit1Controller,
       label: '击杀关联1',
       placeholder: 'KillCredit1',
     );
-    final killCredit2input = _Input(
+    final killCredit2input = FormItem(
       controller: viewModel.killCredit2Controller,
       label: '击杀关联2',
       placeholder: 'KillCredit2',
     );
-    final difficultyEntry1Input = _Input(
+    final difficultyEntry1Input = FormItem(
       controller: viewModel.difficultyEntry1Controller,
       label: '难度1',
       placeholder: 'difficulty_entry_2',
     );
-    final difficultyEntry2Input = _Input(
+    final difficultyEntry2Input = FormItem(
       controller: viewModel.difficultyEntry2Controller,
       label: '难度2',
       placeholder: 'difficulty_entry_2',
     );
-    final difficultyEntry3Input = _Input(
+    final difficultyEntry3Input = FormItem(
       controller: viewModel.difficultyEntry3Controller,
       label: '难度3',
       placeholder: 'difficulty_entry_3',
@@ -430,27 +431,27 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     ];
 
     /// Model
-    final modelId1Input = _Input(
+    final modelId1Input = FormItem(
       controller: viewModel.modelId1Controller,
       label: '模型1',
       placeholder: 'modelid4',
     );
-    final modelId2Input = _Input(
+    final modelId2Input = FormItem(
       controller: viewModel.modelId2Controller,
       label: '模型2',
       placeholder: 'modelid2',
     );
-    final modelId3Input = _Input(
+    final modelId3Input = FormItem(
       controller: viewModel.modelId3Controller,
       label: '模型3',
       placeholder: 'modelid3',
     );
-    final modelId4Input = _Input(
+    final modelId4Input = FormItem(
       controller: viewModel.modelId4Controller,
       label: '模型4',
       placeholder: 'modelid4',
     );
-    final scaleInput = _Input(
+    final scaleInput = FormItem(
       controller: viewModel.scaleController,
       label: '缩放',
       placeholder: 'scale',
@@ -478,17 +479,17 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     ];
 
     /// Movement
-    final movementIdInput = _Input(
+    final movementIdInput = FormItem(
       controller: viewModel.movementIdController,
       label: '移动',
       placeholder: 'movementId',
     );
-    final movementTypeInput = _Input(
+    final movementTypeInput = FormItem(
       controller: viewModel.movementTypeController,
       label: '移动类型',
       placeholder: 'movementType',
     );
-    final hoverHeightInput = _Input(
+    final hoverHeightInput = FormItem(
       controller: viewModel.hoverHeightController,
       label: '盘旋高度',
       placeholder: 'HoverHeight',
@@ -507,17 +508,17 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     ];
 
     /// Other
-    final aiNameInput = _Input(
+    final aiNameInput = FormItem(
       controller: viewModel.aiNameController,
       label: 'AI',
       placeholder: 'AIName',
     );
-    final scriptNameInput = _Input(
+    final scriptNameInput = FormItem(
       controller: viewModel.scriptNameController,
       label: '脚本',
       placeholder: 'ScriptName',
     );
-    final verifiedBuildInput = _Input(
+    final verifiedBuildInput = FormItem(
       controller: viewModel.verifiedBuildController,
       label: 'VerifiedBuild',
       placeholder: 'VerifiedBuild',
@@ -555,57 +556,93 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       Watch((_) => _Header(viewModel.template.value.name)),
       tab,
       SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('基本信息'),
+      ),
+      SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        description: Text('基本信息'),
         child: Column(spacing: 8, children: basicRows),
       ),
       SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('标识信息'),
+      ),
+      SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        description: Text('标识信息'),
         child: Column(spacing: 8, children: flagRows),
       ),
       SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('免疫信息'),
+      ),
+      SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        description: Text('免疫信息'),
         child: Column(spacing: 8, children: immuneRows),
       ),
       SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('属性信息'),
+      ),
+      SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        description: Text('属性信息'),
         child: Column(spacing: 8, children: modifierRows),
       ),
       SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('掉落信息'),
+      ),
+      SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        description: Text('掉落信息'),
         child: Column(spacing: 8, children: lootRows),
       ),
       SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('难度信息'),
+      ),
+      SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        description: Text('难度信息'),
         child: Column(spacing: 8, children: difficultyRows),
       ),
       SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('模型信息'),
+      ),
+      SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        description: Text('模型信息'),
         child: Column(spacing: 8, children: modelRows),
       ),
       SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('移动信息'),
+      ),
+      SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        description: Text('移动信息'),
         child: Column(spacing: 8, children: movementRows),
       ),
       SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('其他信息'),
+      ),
+      SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        description: Text('其他信息'),
         child: Column(spacing: 8, children: otherRows),
       ),
       SizedBox(height: 72),
@@ -674,41 +711,5 @@ class _Header extends StatelessWidget {
     const edgeInsets = EdgeInsets.only(bottom: 12);
     final text = title.isNotEmpty ? title : '新建生物';
     return Padding(padding: edgeInsets, child: FoxyHeader(text));
-  }
-}
-
-class _Input extends StatelessWidget {
-  final TextEditingController? controller;
-  final String? label;
-  final String? placeholder;
-  final bool readOnly;
-  const _Input({
-    this.controller,
-    this.label,
-    this.placeholder,
-    this.readOnly = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final leading = _buildLeading();
-    final input = ShadInput(
-      controller: controller,
-      placeholder: Text(placeholder ?? ''),
-      readOnly: readOnly,
-    );
-    return Row(
-      spacing: 16,
-      children: [
-        leading,
-        Expanded(child: input),
-      ],
-    );
-  }
-
-  Widget _buildLeading() {
-    if (label == null) return const SizedBox();
-    if (label!.isEmpty) return const SizedBox();
-    return SizedBox(width: 96, child: Text(label!, textAlign: TextAlign.end));
   }
 }

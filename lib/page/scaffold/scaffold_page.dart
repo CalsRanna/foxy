@@ -171,20 +171,11 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     return FoxyBreadcrumb(children: children);
   }
 
-  Widget _buildDrawer() {
-    var padding = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Icon(LucideIcons.menu, size: 20),
-    );
-    return IconButton(onPressed: () {}, icon: padding);
-  }
-
   Widget _buildLeftBar() {
-    var drawer = _buildDrawer();
     var iconButtons = viewModel.menus.map(_buildLeftBarTile).toList();
     var children = [
-      const SizedBox(height: 8),
-      drawer,
+      const SizedBox(height: 16),
+      Text('FOXY', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
       const SizedBox(height: 12),
       ...iconButtons,
     ];
@@ -197,9 +188,9 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   Widget _buildLeftBarTile(String menu) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final primaryContainer = colorScheme.primaryContainer;
+    final secondary = colorScheme.secondary;
     final active = viewModel.pages.value.last.startsWith(menu);
-    final color = active ? primaryContainer : null;
+    final color = active ? secondary : null;
     final icon = viewModel.getIcon(menu);
     var padding = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),

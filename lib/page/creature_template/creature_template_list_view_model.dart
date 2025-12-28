@@ -14,6 +14,7 @@ class CreatureTemplateListViewModel {
   final page = signal(1);
   final templates = signal(<BriefCreatureTemplate>[]);
   final total = signal(0);
+  final selectedRowIndex = signal(-1);
 
   void dispose() {
     entryController.dispose();
@@ -34,11 +35,10 @@ class CreatureTemplateListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    var filter =
-        CreatureTemplateFilterEntity()
-          ..entry = entryController.text
-          ..name = nameController.text
-          ..subName = subNameController.text;
+    var filter = CreatureTemplateFilterEntity()
+      ..entry = entryController.text
+      ..name = nameController.text
+      ..subName = subNameController.text;
     templates.value = await repository.getBriefCreatureTemplates(
       page: page.value,
       filter: filter,
@@ -57,5 +57,9 @@ class CreatureTemplateListViewModel {
 
   void navigateCreatureTemplateDetailPage(BuildContext context, {int? entry}) {
     CreatureTemplateDetailRoute(entry: entry).push(context);
+  }
+
+  void selectRow(int row) {
+    selectedRowIndex.value = row;
   }
 }

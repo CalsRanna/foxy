@@ -5,7 +5,14 @@
       "mcp__dart-mcp-server__hover",
       "mcp__dart-mcp-server__add_roots",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs"
+      "mcp__context7__get-library-docs",
+      "WebSearch",
+      "WebFetch(domain:pub.dev)",
+      "WebFetch(domain:flutter-shadcn-ui.mariuti.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }
