@@ -40,11 +40,18 @@ void showFoxyContextMenu({
             behavior: HitTestBehavior.translucent,
           ),
         ),
-        ShadContextMenu(
-          controller: controller,
-          anchor: ShadGlobalAnchor(position),
-          items: items,
-          child: const SizedBox.shrink(),
+        Positioned(
+          left: position.dx,
+          top: position.dy,
+          child: ShadContextMenu(
+            controller: controller,
+            anchor: const ShadAnchorAuto(
+              followerAnchor: Alignment.bottomRight,
+              targetAnchor: Alignment.topLeft,
+            ),
+            items: items,
+            child: const SizedBox.shrink(),
+          ),
         ),
       ],
     ),
