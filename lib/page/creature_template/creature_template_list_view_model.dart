@@ -58,8 +58,4 @@ class CreatureTemplateListViewModel {
   void navigateCreatureTemplateDetailPage(BuildContext context, {int? entry}) {
     CreatureTemplateDetailRoute(entry: entry).push(context);
   }
-
-  void selectRow(int row) {
-    selectedRowIndex.value = row;
-  }
 }

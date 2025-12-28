@@ -119,9 +119,6 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
           header: (context, index) {
             return ShadTableCell.header(child: Text(headers[index]));
           },
-          onRowTap: (row) {
-            viewModel.selectRow(row);
-          },
           onRowDoubleTap: (row) {
             viewModel.navigateCreatureTemplateDetailPage(
               context,
