@@ -93,14 +93,14 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     final headers = ['编号', '姓名', '称号', '最低等级', '最高等级'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 340;
+        var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final template = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(template.entry.toString())),
-              1 => ShadTableCell(child: Text(template.name)),
-              2 => ShadTableCell(child: Text(template.subName)),
+              1 => ShadTableCell(child: Text(template.displayName)),
+              2 => ShadTableCell(child: Text(template.displaySubName)),
               3 => ShadTableCell(child: Text(template.minLevel.toString())),
               4 => ShadTableCell(child: Text(template.maxLevel.toString())),
               _ => ShadTableCell(child: SizedBox()),
@@ -109,7 +109,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
           columnCount: headers.length,
           columnSpanExtent: (index) {
             return switch (index) {
-              0 => FixedTableSpanExtent(100),
+              0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(width / 2),
               2 => FixedTableSpanExtent(width / 2),
               3 => FixedTableSpanExtent(120),
