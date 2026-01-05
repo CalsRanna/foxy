@@ -6,6 +6,7 @@ class FormItem extends StatelessWidget {
   final String? label;
   final String? placeholder;
   final bool readOnly;
+  final Widget? child;
 
   const FormItem({
     super.key,
@@ -13,6 +14,7 @@ class FormItem extends StatelessWidget {
     this.label,
     this.placeholder,
     this.readOnly = false,
+    this.child,
   });
 
   @override
@@ -22,13 +24,8 @@ class FormItem extends StatelessWidget {
       controller: controller,
       placeholder: Text(placeholder ?? ''),
       readOnly: readOnly,
-      trailing: ShadIconButton.ghost(
-        height: 20,
-        width: 20,
-        icon: Icon(LucideIcons.globe, size: 12),
-      ),
     );
-    var children = [leading, Expanded(child: input)];
+    var children = [leading, Expanded(child: child ?? input)];
     return Row(spacing: 16, children: children);
   }
 
