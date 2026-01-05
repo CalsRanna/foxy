@@ -188,19 +188,21 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   Widget _buildLeftBarTile(String menu) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final secondary = colorScheme.secondary;
     final active = viewModel.pages.value.last.startsWith(menu);
-    final color = active ? secondary : null;
+    final backgroundColor = active ? colorScheme.primary : null;
+    final iconColor = active ? Colors.white : colorScheme.onSurface;
     final icon = viewModel.getIcon(menu);
     var padding = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Icon(icon, size: 20),
+      child: Icon(icon, size: 20, color: iconColor),
     );
     var iconButton = IconButton(
       onPressed: () => viewModel.navigatePage(context, menu),
       icon: padding,
       isSelected: active,
-      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(color)),
+      style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(backgroundColor),
+      ),
     );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
