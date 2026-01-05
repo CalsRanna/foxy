@@ -2,6 +2,8 @@ class BriefCreatureTemplate {
   int entry = 0;
   String name = '';
   String subName = '';
+  String localeName = '';
+  String localeSubName = '';
   int minLevel = 0;
   int maxLevel = 0;
 
@@ -11,9 +13,14 @@ class BriefCreatureTemplate {
     entry = json['entry'] ?? 0;
     name = json['name'] ?? '';
     subName = json['subname'] ?? '';
+    localeName = json['Name'] ?? '';
+    localeSubName = json['Title'] ?? '';
     minLevel = json['minlevel'] ?? 0;
     maxLevel = json['maxlevel'] ?? 0;
   }
+
+  String get displayName => localeName.isNotEmpty ? localeName : name;
+  String get displaySubName => localeSubName.isNotEmpty ? localeSubName : subName;
 }
 
 class CreatureTemplate {
