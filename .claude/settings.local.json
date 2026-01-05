@@ -13,7 +13,8 @@
       "Bash(cat:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
-      "mcp__dart-mcp-server__analyze_files"
+      "mcp__dart-mcp-server__analyze_files",
+      "mcp__context7__query-docs"
     ],
     "deny": []
   }

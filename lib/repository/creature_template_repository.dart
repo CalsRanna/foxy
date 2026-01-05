@@ -8,8 +8,27 @@ class CreatureTemplateRepository with RepositoryMixin {
   Future<void> copyCreatureTemplate(int entry) async {
     var template = await getCreatureTemplate(entry);
     var json = template.toJson();
-    json.remove('entry');
+    var newEntry = await _getNextEntry();
+    json['entry'] = newEntry;
+    // 处理 MySQL 保留字
+    if (json.containsKey('rank')) {
+      json['`rank`'] = json.remove('rank');
+    }
     await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> _getNextEntry() async {
+    const minEntry = 60001;
+    var result = await laconic
+        .table(_table)
+        .select(['MAX(entry) as max_entry'])
+        .where('entry', minEntry, comparator: '>=')
+        .first();
+    var maxEntry = result.toMap()['max_entry'] as int?;
+    if (maxEntry == null || maxEntry < minEntry) {
+      return minEntry;
+    }
+    return maxEntry + 1;
   }
 
   Future<int> count({CreatureTemplateFilterEntity? filter}) async {

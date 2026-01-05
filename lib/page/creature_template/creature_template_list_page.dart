@@ -143,14 +143,14 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    // TODO: 实现复制功能
+                    viewModel.copyCreatureTemplate(templates[row].entry);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    // TODO: 实现删除功能
+                    viewModel.deleteCreatureTemplate(templates[row].entry);
                   },
                   child: Text('删除'),
                 ),

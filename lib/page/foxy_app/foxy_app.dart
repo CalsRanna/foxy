@@ -7,9 +7,11 @@ class FoxyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var shadSonnerTheme = ShadSonnerTheme(alignment: Alignment.topCenter);
     return ShadApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: router.config(),
+      theme: ShadThemeData(sonnerTheme: shadSonnerTheme),
     );
   }
 }
