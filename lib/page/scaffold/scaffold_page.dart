@@ -7,9 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:foxy/page/scaffold/component/status.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/router/router.gr.dart';
-import 'package:foxy/widget/breadcrumb.dart';
 import 'package:get_it/get_it.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -162,13 +161,20 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     var children = <Widget>[];
     for (var page in viewModel.pages.value) {
       var text = Text(viewModel.localPages.value[page] ?? page);
-      var item = FoxyBreadcrumbItem(onTap: () {}, child: text);
-      if (page == viewModel.pages.value.last) {
-        item = FoxyBreadcrumbItem(child: text);
+      if (page != viewModel.pages.value.last) {
+        var item = ShadBreadcrumbLink(onPressed: () {}, child: text);
+        children.add(item);
+      } else {
+        children.add(text);
       }
-      children.add(item);
     }
-    return FoxyBreadcrumb(children: children);
+    var borderSide = BorderSide(color: Colors.grey.withValues(alpha: 0.5));
+    return Container(
+      decoration: BoxDecoration(border: Border(bottom: borderSide)),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      width: double.infinity,
+      child: ShadBreadcrumb(children: children),
+    );
   }
 
   Widget _buildLeftBar() {
