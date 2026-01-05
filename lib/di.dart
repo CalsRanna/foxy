@@ -4,6 +4,7 @@ import 'package:foxy/page/creature_template/creature_template_list_view_model.da
 import 'package:foxy/page/dashboard/dashboard_view_model.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
+import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:get_it/get_it.dart';
 
 class DI {
@@ -14,5 +15,6 @@ class DI {
     GetIt.instance.registerFactory(() => DashboardViewModel());
     GetIt.instance.registerFactory(() => CreatureTemplateListViewModel());
     GetIt.instance.registerFactory(() => CreatureTemplateDetailViewModel());
+    GetIt.instance.registerFactory(() => SettingViewModel());
   }
 }

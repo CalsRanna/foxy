@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/repository/setting_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -41,6 +42,24 @@ class BootstrapViewModel {
       var foxyViewModel = GetIt.instance.get<FoxyViewModel>();
       foxyViewModel.initSignals(laconic);
       await VersionRepository().connect();
+
+      // Check for locale tables and load locale settings
+      var hasLocaleTables = await SettingRepository().hasLocaleTables();
+      var savedConfig = await _loadConfig();
+      var localeEnabled = savedConfig['locale_enabled'] == true;
+      // Auto-enable locale if tables exist and not explicitly set
+      if (hasLocaleTables && !savedConfig.containsKey('locale_enabled')) {
+        localeEnabled = true;
+      }
+      // Disable locale if no tables exist
+      if (!hasLocaleTables) {
+        localeEnabled = false;
+      }
+      foxyViewModel.setLocaleSettings(
+        hasLocaleTables: hasLocaleTables,
+        localeEnabled: localeEnabled,
+      );
+
       await _updateConfig();
       DialogUtil.instance.dismiss();
       if (!context.mounted) return;
@@ -62,22 +81,22 @@ class BootstrapViewModel {
 
   Future<void> initSignals() async {
     var config = await _loadConfig();
-    hostController.text = config['host']!;
-    portController.text = config['port']!;
-    databaseController.text = config['database']!;
-    usernameController.text = config['username']!;
-    passwordController.text = config['password']!;
+    hostController.text = config['host'] ?? '127.0.0.1';
+    portController.text = config['port'] ?? '3306';
+    databaseController.text = config['database'] ?? 'arcane_world';
+    usernameController.text = config['username'] ?? 'root';
+    passwordController.text = config['password'] ?? 'root';
     final packageInfo = await PackageInfo.fromPlatform();
     version.value = '${packageInfo.version}+${packageInfo.buildNumber}';
   }
 
-  Future<Map<String, String>> _loadConfig() async {
+  Future<Map<String, dynamic>> _loadConfig() async {
     var currentDirectory = Directory.current;
     var path = join(currentDirectory.path, 'config.yaml');
     var file = File(path);
     if (!await file.exists()) await file.create(recursive: true);
     var content = await file.readAsString();
-    if (content.isNotEmpty) return Map.from(loadYaml(content));
+    if (content.isNotEmpty) return Map<String, dynamic>.from(loadYaml(content));
     var defaultConfig = {
       'host': '127.0.0.1',
       'port': '3306',
@@ -92,19 +111,25 @@ class BootstrapViewModel {
   }
 
   Future<void> _updateConfig() async {
-    var editor = YamlEditor('');
+    var currentDirectory = Directory.current;
+    var path = join(currentDirectory.path, 'config.yaml');
+    var file = File(path);
+    if (!await file.exists()) await file.create(recursive: true);
+    var content = await file.readAsString();
+    Map<String, dynamic> existingConfig = {};
+    if (content.isNotEmpty) {
+      existingConfig = Map<String, dynamic>.from(loadYaml(content));
+    }
     var config = {
+      ...existingConfig,
       'host': hostController.text,
       'port': portController.text,
       'database': databaseController.text,
       'username': usernameController.text,
       'password': passwordController.text,
     };
+    var editor = YamlEditor('');
     editor.update([], config);
-    var currentDirectory = Directory.current;
-    var path = join(currentDirectory.path, 'config.yaml');
-    var file = File(path);
-    if (!await file.exists()) await file.create(recursive: true);
     await file.writeAsString(editor.toString());
   }
 }

@@ -13,7 +13,10 @@ class FoxyRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes {
-    final settingChildren = [AutoRoute(page: BasicSettingRoute.page)];
+    final settingChildren = [
+      AutoRoute(page: BasicSettingRoute.page, initial: true),
+      AutoRoute(page: DatabaseSettingRoute.page),
+    ];
     final children = [
       /// Scaffold
       AutoRoute(page: DashboardRoute.page),
