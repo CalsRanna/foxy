@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
+import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/widget/header.dart';
@@ -37,14 +38,20 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       readOnly: true,
     );
     final nameInput = FormItem(
-      controller: viewModel.nameController,
       label: '名称',
-      placeholder: 'name',
+      child: CreatureTemplateLocaleNameSelector(
+        entry: widget.entry,
+        controller: viewModel.nameController,
+        placeholder: 'name',
+      ),
     );
     final subNameInput = FormItem(
-      controller: viewModel.subNameController,
       label: '称号',
-      placeholder: 'subname',
+      child: CreatureTemplateLocaleNameSelector(
+        entry: widget.entry,
+        controller: viewModel.subNameController,
+        placeholder: 'subname',
+      ),
     );
     final iconNameInput = FormItem(
       controller: viewModel.iconNameController,
