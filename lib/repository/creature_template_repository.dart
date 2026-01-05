@@ -18,10 +18,9 @@ class CreatureTemplateRepository with RepositoryMixin {
   }
 
   Future<int> _getNextEntry() async {
-    var result = await laconic
-        .table(_table)
-        .select(['MAX(entry) as max_entry'])
-        .first();
+    var result = await laconic.table(_table).select([
+      'MAX(entry) as max_entry',
+    ]).first();
     var maxEntry = result.toMap()['max_entry'] as int?;
     return (maxEntry ?? 0) + 1;
   }
@@ -37,17 +36,17 @@ class CreatureTemplateRepository with RepositoryMixin {
       builder = builder.where('ct.entry', filter!.entry);
     }
     if (filter?.name.isNotEmpty == true) {
-      builder = builder.where(
-        'ct.name',
+      builder = builder.whereAny(
+        ['ct.name', 'ctl.Name'],
         '%${filter!.name}%',
-        comparator: 'like',
+        operator: 'like',
       );
     }
     if (filter?.subName.isNotEmpty == true) {
-      builder = builder.where(
-        'ct.subname',
+      builder = builder.whereAny(
+        ['ct.subname', 'ctl.Title'],
         '%${filter!.subName}%',
-        comparator: 'like',
+        operator: 'like',
       );
     }
     return builder.count();
@@ -81,17 +80,17 @@ class CreatureTemplateRepository with RepositoryMixin {
       builder = builder.where('ct.entry', filter!.entry);
     }
     if (filter?.name.isNotEmpty == true) {
-      builder = builder.where(
-        'ct.name',
+      builder = builder.whereAny(
+        ['ct.name', 'ctl.Name'],
         '%${filter!.name}%',
-        comparator: 'like',
+        operator: 'like',
       );
     }
     if (filter?.subName.isNotEmpty == true) {
-      builder = builder.where(
-        'ct.subname',
+      builder = builder.whereAny(
+        ['ct.subname', 'ctl.Title'],
         '%${filter!.subName}%',
-        comparator: 'like',
+        operator: 'like',
       );
     }
     builder = builder.limit(kPageSize).offset(offset);

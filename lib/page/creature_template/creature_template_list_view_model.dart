@@ -76,8 +76,15 @@ class CreatureTemplateListViewModel {
 
   Future<void> paginate(int page) async {
     this.page.value = page;
-    templates.value = await repository.getBriefCreatureTemplates(page: page);
-    total.value = await repository.count();
+    var filter = CreatureTemplateFilterEntity()
+      ..entry = entryController.text
+      ..name = nameController.text
+      ..subName = subNameController.text;
+    templates.value = await repository.getBriefCreatureTemplates(
+      page: page,
+      filter: filter,
+    );
+    total.value = await repository.count(filter: filter);
   }
 
   Future<void> reset() async {
