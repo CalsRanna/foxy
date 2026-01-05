@@ -63,7 +63,7 @@ class FoxyPagination extends StatelessWidget {
       );
       tiles.add(more);
     }
-    if (count == 0) return const SizedBox();
+    if (count <= 1) return const SizedBox();
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [left, first, ...tiles, last, right],
