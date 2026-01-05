@@ -104,7 +104,7 @@ class _TileState extends State<_Tile> {
       child: widget.child,
     );
     var merge = DefaultTextStyle.merge(
-      style: TextStyle(color: color, fontWeight: FontWeight.bold),
+      style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
       textAlign: TextAlign.center,
       child: iconTheme,
     );

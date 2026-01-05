@@ -83,6 +83,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
       page: page,
+      pageSize: 25,
       total: total,
       onChange: viewModel.paginate,
     );
@@ -92,7 +93,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     final headers = ['编号', '姓名', '称号', '最低等级', '最高等级'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 320;
+        var width = constraints.maxWidth - 340;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final template = templates[vicinity.row];
@@ -108,7 +109,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
           columnCount: headers.length,
           columnSpanExtent: (index) {
             return switch (index) {
-              0 => FixedTableSpanExtent(80),
+              0 => FixedTableSpanExtent(100),
               1 => FixedTableSpanExtent(width / 2),
               2 => FixedTableSpanExtent(width / 2),
               3 => FixedTableSpanExtent(120),

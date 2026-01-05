@@ -18,23 +18,18 @@ class CreatureTemplateRepository with RepositoryMixin {
   }
 
   Future<int> _getNextEntry() async {
-    const minEntry = 60001;
     var result = await laconic
         .table(_table)
         .select(['MAX(entry) as max_entry'])
-        .where('entry', minEntry, comparator: '>=')
         .first();
     var maxEntry = result.toMap()['max_entry'] as int?;
-    if (maxEntry == null || maxEntry < minEntry) {
-      return minEntry;
-    }
-    return maxEntry + 1;
+    return (maxEntry ?? 0) + 1;
   }
 
   Future<int> count({CreatureTemplateFilterEntity? filter}) async {
     var builder = laconic.table('$_table AS ct');
     builder.select(['ct.entry']);
-    builder = builder.join(
+    builder = builder.leftJoin(
       'creature_template_locale AS ctl',
       (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
     );
@@ -78,7 +73,7 @@ class CreatureTemplateRepository with RepositoryMixin {
       'ctl.Title',
     ];
     builder = builder.select(fields);
-    builder = builder.join(
+    builder = builder.leftJoin(
       'creature_template_locale AS ctl',
       (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
     );
