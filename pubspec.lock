@@ -425,10 +425,10 @@ packages:
     dependency: "direct main"
     description:
       name: laconic
-      sha256: "3d566b481597bead6bb37c28b65cab8047d43776821b72135f5ab5c99ea08ded"
+      sha256: "654b9eb958a849b23755e39aff386ac6fde4e4fbb8f60df7b5e479b81017e70c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   leak_tracker:
     dependency: transitive
     description:
