@@ -12,8 +12,8 @@ class WindowInitializer {
     const options = WindowOptions(
       backgroundColor: Colors.transparent,
       center: true,
-      minimumSize: Size(1200, 900),
-      size: Size(1200, 900),
+      minimumSize: Size(1000, 750),
+      size: Size(1000, 750),
       titleBarStyle: TitleBarStyle.hidden,
       windowButtonVisibility: false,
     );

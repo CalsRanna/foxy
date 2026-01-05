@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:foxy/page/scaffold/component/status.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:get_it/get_it.dart';
@@ -140,11 +139,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
     );
-    final bodyChildren = [Expanded(child: topWorkspace), const Status()];
-    var scaffold = Scaffold(
-      body: Column(children: bodyChildren),
-      drawer: _Drawer(),
-    );
+    var scaffold = Scaffold(body: topWorkspace, drawer: _Drawer());
     if (kIsWeb) return scaffold;
     if (Platform.isAndroid || Platform.isIOS) return scaffold;
     var actions = Actions(
