@@ -1,17 +1,104 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router.gr.dart';
-import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/header.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 @RoutePage()
-class SettingPage extends StatelessWidget {
+class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
   @override
+  State<SettingPage> createState() => _SettingPageState();
+}
+
+class _SettingPageState extends State<SettingPage> {
+  int _selectedIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    var children = [_Header(), _Setting()];
+    var children = [_Header(), _buildContent()];
     return ListView(padding: EdgeInsets.all(16), children: children);
+  }
+
+  Widget _buildContent() {
+    final children = [
+      SizedBox(width: 200, child: _buildMenu()),
+      const VerticalDivider(thickness: 1, width: 1),
+      const SizedBox(width: 16),
+      Expanded(child: AutoRouter()),
+    ];
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
+  }
+
+  Widget _buildMenu() {
+    var menuItems = [
+      _MenuItem(title: '基本设置', icon: LucideIcons.settings),
+      _MenuItem(title: '数据库设置', icon: LucideIcons.database),
+      _MenuItem(title: '更新日志', icon: LucideIcons.fileText),
+    ];
+    return Column(
+      spacing: 8,
+      children: menuItems.asMap().entries.map((entry) {
+        final index = entry.key;
+        final item = entry.value;
+        return _buildMenuItem(item, index);
+      }).toList(),
+    );
+  }
+
+  Widget _buildMenuItem(_MenuItem item, int index) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isSelected = _selectedIndex == index;
+
+    return Material(
+      color: isSelected ? colorScheme.primaryContainer : Colors.transparent,
+      borderRadius: BorderRadius.circular(8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () => _handleMenuTap(index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            children: [
+              Icon(
+                item.icon,
+                size: 18,
+                color: isSelected
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                item.title,
+                style: TextStyle(
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  color: isSelected
+                      ? colorScheme.onPrimaryContainer
+                      : colorScheme.onSurface,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _handleMenuTap(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    final route = switch (index) {
+      0 => BasicSettingRoute(),
+      1 => DatabaseSettingRoute(),
+      _ => BasicSettingRoute(),
+    };
+    AutoRouter.of(context).navigate(route);
   }
 }
 
@@ -25,69 +112,9 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _Menu extends StatefulWidget {
-  const _Menu();
+class _MenuItem {
+  final String title;
+  final IconData icon;
 
-  @override
-  State<_Menu> createState() => _MenuState();
-}
-
-class _MenuState extends State<_Menu> {
-  int index = 0;
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final primaryContainer = colorScheme.primaryContainer;
-    final basic = ListTile(
-      onTap: () => handleTap(0),
-      selected: index == 0,
-      selectedTileColor: primaryContainer,
-      title: const Text('基本设置'),
-    );
-    final software = ListTile(
-      onTap: () => handleTap(1),
-      selected: index == 1,
-      selectedTileColor: primaryContainer,
-      title: const Text('软件设置'),
-    );
-    final changelog = ListTile(
-      onTap: () => handleTap(2),
-      selected: index == 2,
-      selectedTileColor: primaryContainer,
-      title: const Text('更新日志'),
-    );
-    return Column(children: [basic, software, changelog]);
-  }
-
-  void handleTap(int value) {
-    setState(() {
-      index = value;
-    });
-    final route = switch (value) {
-      0 => BasicSettingRoute(),
-      _ => DashboardRoute(),
-    };
-    AutoRouter.of(context).navigate(route);
-  }
-}
-
-class _Setting extends StatelessWidget {
-  const _Setting();
-
-  @override
-  Widget build(BuildContext context) {
-    final children = [
-      SizedBox(width: 160, child: _Menu()),
-      const VerticalDivider(thickness: 1, width: 1),
-      const SizedBox(width: 16),
-      Expanded(child: AutoRouter()),
-    ];
-    final row = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
-    );
-    final padding = Padding(padding: const EdgeInsets.all(16.0), child: row);
-    return FoxyCard(child: padding);
-  }
+  const _MenuItem({required this.title, required this.icon});
 }
