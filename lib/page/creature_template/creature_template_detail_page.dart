@@ -2,12 +2,21 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
+import 'package:foxy/widget/enum_select.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+
+/// unit_class 职业选项
+const kUnitClassOptions = {
+  1: '战士 (Warrior)',
+  2: '圣骑士 (Paladin)',
+  4: '盗贼 (Rogue)',
+  8: '法师 (Mage)',
+};
 
 @RoutePage()
 class CreatureTemplateDetailPage extends StatefulWidget {
@@ -69,9 +78,19 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       placeholder: 'maxlevel',
     );
     final uniClassInput = FormItem(
-      controller: viewModel.unitClassController,
       label: '职业',
-      placeholder: 'unit_class',
+      child: Watch((_) {
+        final unitClass = viewModel.template.value.unitClass;
+        return EnumSelect<int>(
+          value: unitClass,
+          options: kUnitClassOptions,
+          placeholder: 'unit_class',
+          onChanged: (value) {
+            viewModel.template.value.unitClass = value ?? 0;
+            viewModel.unitClassController.text = (value ?? 0).toString();
+          },
+        );
+      }),
     );
     final rankInput = FormItem(
       controller: viewModel.rankController,
