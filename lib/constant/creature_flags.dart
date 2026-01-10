@@ -202,3 +202,10 @@ const kSpellSchoolImmuneMaskOptions = [
   FlagItem(0x20, '暗影 (Shadow)'),
   FlagItem(0x40, '奥术 (Arcane)'),
 ];
+
+/// 栖息类型选项 (InhabitType)
+const kInhabitTypeOptions = [
+  FlagItem(0x01, '地面 (Ground)'),
+  FlagItem(0x02, '水中 (Water)'),
+  FlagItem(0x04, '飞行 (Flying)'),
+];
