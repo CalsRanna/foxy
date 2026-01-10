@@ -8,6 +8,7 @@ class CreatureTemplateLocaleNameSelector extends StatefulWidget {
   final TextEditingController? controller;
   final String? placeholder;
   final bool readOnly;
+  final String title;
 
   const CreatureTemplateLocaleNameSelector({
     super.key,
@@ -15,6 +16,7 @@ class CreatureTemplateLocaleNameSelector extends StatefulWidget {
     this.controller,
     this.placeholder,
     this.readOnly = false,
+    required this.title,
   });
 
   @override
@@ -58,6 +60,7 @@ class _CreatureTemplateLocaleNameSelectorState
               locales,
             );
           },
+          title: widget.title,
         );
       },
     );
@@ -68,11 +71,13 @@ class _LocaleDialog extends StatefulWidget {
   final int entry;
   final List<CreatureTemplateLocale> locales;
   final Future<void> Function(List<CreatureTemplateLocale>) onSave;
+  final String title;
 
   const _LocaleDialog({
     required this.entry,
     required this.locales,
     required this.onSave,
+    required this.title,
   });
 
   @override
@@ -101,7 +106,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     return ShadDialog(
-      title: Text('Creature Template Locale Editor'),
+      title: Text(widget.title),
       // description: Text('编号: ${widget.entry}'),
       constraints: BoxConstraints(maxWidth: 600),
       actions: [
