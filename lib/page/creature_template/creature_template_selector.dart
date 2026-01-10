@@ -244,12 +244,12 @@ class _CreatureTemplateSelectorDialogState
         };
       },
       rowSpanBackgroundDecoration: (row) {
-        if (row < 0 || row >= _items.length) return null;
-        final item = _items[row];
+        // row 包含 header，所以减 1
+        final dataRow = row - 1;
+        if (dataRow < 0 || dataRow >= _items.length) return null;
+        final item = _items[dataRow];
         if (item.entry == _selectedId) {
-          return TableSpanDecoration(
-            color: theme.colorScheme.accent.withValues(alpha: 0.2),
-          );
+          return TableSpanDecoration(color: theme.colorScheme.accent);
         }
         return null;
       },
