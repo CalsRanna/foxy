@@ -54,6 +54,7 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
         entry: widget.entry,
         controller: viewModel.nameController,
         placeholder: 'name',
+        title: '名称',
       ),
     );
     final subNameInput = FormItem(
@@ -62,6 +63,7 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
         entry: widget.entry,
         controller: viewModel.subNameController,
         placeholder: 'subname',
+        title: '称号',
       ),
     );
     final iconNameInput = FormItem(
