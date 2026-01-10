@@ -84,6 +84,108 @@ class CreatureTemplateDetailViewModel {
   final entry = signal(0);
   final template = signal(CreatureTemplate());
 
+  /// 保存模板到数据库
+  Future<void> save() async {
+    final t = _collectFromControllers();
+    final repository = CreatureTemplateRepository();
+    if (t.entry == 0) {
+      // 新建
+      await repository.storeCreatureTemplate(t);
+    } else {
+      // 更新
+      await repository.updateCreatureTemplate(t);
+    }
+    template.value = t;
+  }
+
+  /// 从所有 Controller 收集数据构建 CreatureTemplate
+  CreatureTemplate _collectFromControllers() {
+    final t = CreatureTemplate();
+
+    /// Basic
+    t.entry = _parseInt(entryController.text);
+    t.name = nameController.text;
+    t.subName = subNameController.text;
+    t.iconName = iconNameController.text;
+    t.minLevel = _parseInt(minLevelController.text);
+    t.maxLevel = _parseInt(maxLevelController.text);
+    t.unitClass = _getSelectValue(unitClassController);
+    t.rank = _getSelectValue(rankController);
+    t.racialLeader = _getSelectValue(racialLeaderController);
+    t.faction = _parseInt(factionController.text);
+    t.family = _getSelectValue(familyController);
+    t.type = _getSelectValue(typeController);
+    t.regenHealth = _getSelectValue(regenerateHealthController);
+    t.petSpellDataId = _parseInt(petSpellDataIdController.text);
+    t.vehicleId = _parseInt(vehicleIdController.text);
+    t.gossipMenuId = _parseInt(gossipMenuIdController.text);
+
+    /// Flag
+    t.npcFlag = _parseInt(npcFlagController.text);
+    t.typeFlags = _parseInt(typeFlagController.text);
+    t.dynamicFlags = _parseInt(dynamicFlagController.text);
+    t.flagsExtra = _parseInt(extraFlagController.text);
+    t.unitFlags = _parseInt(unitFlagController.text);
+    t.unitFlags2 = _parseInt(unitFlag2Controller.text);
+
+    /// Immune
+    t.mechanicImmuneMask = _parseInt(mechanicImmuneMaskController.text);
+    t.spellSchoolImmuneMask = _parseInt(spellSchoolImmuneMaskController.text);
+
+    /// Modifier
+    t.exp = _getSelectValue(expController);
+    t.damageSchool = _getSelectValue(damageSchoolController);
+    t.damageModifier = _parseDouble(damageModifierController.text);
+    t.armorModifier = _parseDouble(armorModifierController.text);
+    t.baseAttackTime = _parseInt(baseAttackTimeController.text);
+    t.baseVariance = _parseDouble(baseVarianceController.text);
+    t.rangeAttackTime = _parseInt(rangeAttackTimeController.text);
+    t.rangeVariance = _parseDouble(rangeVarianceController.text);
+    t.healthModifier = _parseDouble(healthModifierController.text);
+    t.manaModifier = _parseDouble(manaModifierController.text);
+    t.experienceModifier = _parseDouble(experienceModifierController.text);
+    t.speedWalk = _parseDouble(speedWalkController.text);
+    t.speedRun = _parseDouble(speedRunController.text);
+
+    /// Loot
+    t.minGold = _parseInt(minGoldController.text);
+    t.maxGold = _parseInt(maxGoldController.text);
+    t.lootId = _parseInt(lootController.text);
+    t.pickpocketLoot = _parseInt(pickpocketLootController.text);
+    t.skinLoot = _parseInt(skinLootController.text);
+
+    /// Difficulty
+    t.killCredit1 = _parseInt(killCredit1Controller.text);
+    t.killCredit2 = _parseInt(killCredit2Controller.text);
+    t.difficultyEntry1 = _parseInt(difficultyEntry1Controller.text);
+    t.difficultyEntry2 = _parseInt(difficultyEntry2Controller.text);
+    t.difficultyEntry3 = _parseInt(difficultyEntry3Controller.text);
+
+    /// Model
+    t.modelId1 = _parseInt(modelId1Controller.text);
+    t.modelId2 = _parseInt(modelId2Controller.text);
+    t.modelId3 = _parseInt(modelId3Controller.text);
+    t.modelId4 = _parseInt(modelId4Controller.text);
+    t.scale = _parseDouble(scaleController.text);
+
+    /// Movement
+    t.movementId = _parseInt(movementIdController.text);
+    t.movementType = _getSelectValue(movementTypeController);
+    t.hoverHeight = _parseDouble(hoverHeightController.text);
+
+    /// Other
+    t.aiName = aiNameController.text;
+    t.scriptName = scriptNameController.text;
+    t.verifiedBuild = _parseInt(verifiedBuildController.text);
+
+    return t;
+  }
+
+  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
+  double _parseDouble(String text) => text.isEmpty ? 0.0 : double.parse(text);
+  int _getSelectValue(ShadSelectController<int> controller) =>
+      controller.value.firstOrNull ?? 0;
+
   void dispose() {
     /// Basic
     entryController.dispose();
