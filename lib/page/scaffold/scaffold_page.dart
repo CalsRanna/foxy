@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/widget/window_button.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -172,9 +173,15 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       },
       child: Container(
         decoration: BoxDecoration(border: Border(bottom: borderSide)),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         width: double.infinity,
-        child: ShadBreadcrumb(children: children),
+        child: Row(
+          children: [
+            ShadBreadcrumb(children: children),
+            Spacer(),
+            WindowButton(),
+          ],
+        ),
       ),
     );
   }
