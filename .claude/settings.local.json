@@ -19,7 +19,8 @@
       "Bash(git stash:*)",
       "Bash(xargs:*)",
       "mcp__dart-mcp-server__resolve_workspace_symbol",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:wowdev.wiki)"
     ],
     "deny": []
   }

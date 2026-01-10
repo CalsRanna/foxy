@@ -209,7 +209,7 @@ class _CreatureDisplayInfoSelectorDialogState
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth;
-        var width = maxWidth - 200;
+        var modelPathWidth = maxWidth - 140;
         return FoxyShadTable(
           columnCount: 3,
           rowCount: _items.length,
@@ -217,16 +217,16 @@ class _CreatureDisplayInfoSelectorDialogState
           header: (context, column) {
             return switch (column) {
               0 => ShadTableCell.header(child: Text('编号')),
-              1 => ShadTableCell.header(child: Text('模型')),
+              1 => ShadTableCell.header(child: Text('模型路径')),
               2 => ShadTableCell.header(child: Text('缩放')),
               _ => ShadTableCell.header(child: SizedBox()),
             };
           },
           columnSpanExtent: (column) {
             return switch (column) {
-              0 => FixedTableSpanExtent(100),
-              1 => FixedTableSpanExtent(width),
-              2 => FixedTableSpanExtent(100),
+              0 => FixedTableSpanExtent(80),
+              1 => FixedTableSpanExtent(modelPathWidth),
+              2 => FixedTableSpanExtent(60),
               _ => null,
             };
           },
@@ -259,7 +259,13 @@ class _CreatureDisplayInfoSelectorDialogState
             final item = _items[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.modelId.toString())),
+              1 => ShadTableCell(
+                child: Text(
+                  item.modelName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               2 => ShadTableCell(
                 child: Text(item.creatureModelScale.toString()),
               ),

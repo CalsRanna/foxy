@@ -6,20 +6,24 @@ class CreatureDisplayInfo {
   int extendedDisplayInfoId = 0;
   double creatureModelScale = 1.0;
 
+  /// 来自 dbc_creature_model_data 的模型路径
+  String modelName = '';
+
   CreatureDisplayInfo();
 
   CreatureDisplayInfo.fromJson(Map<String, dynamic> json) {
     id = json['ID'] ?? json['id'] ?? 0;
     modelId = json['ModelID'] ?? json['ModelId'] ?? json['modelId'] ?? 0;
     soundId = json['SoundID'] ?? json['SoundId'] ?? json['soundId'] ?? 0;
-    extendedDisplayInfoId = json['ExtendedDisplayInfoID'] ??
+    extendedDisplayInfoId =
+        json['ExtendedDisplayInfoID'] ??
         json['ExtendedDisplayInfoId'] ??
         json['extendedDisplayInfoId'] ??
         0;
-    creatureModelScale = (json['CreatureModelScale'] ??
-            json['creatureModelScale'] ??
-            1.0)
-        .toDouble();
+    creatureModelScale =
+        (json['CreatureModelScale'] ?? json['creatureModelScale'] ?? 1.0)
+            .toDouble();
+    modelName = json['ModelName'] ?? json['modelName'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
