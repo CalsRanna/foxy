@@ -83,7 +83,8 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       child: ShadSelect<int>(
         controller: viewModel.unitClassController,
         options: kUnitClassOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) => Text(kUnitClassOptions[value] ?? ''),
+        selectedOptionBuilder: (context, value) =>
+            Text(kUnitClassOptions[value] ?? ''),
         placeholder: const Text('unit_class'),
       ),
     );
@@ -92,7 +93,8 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       child: ShadSelect<int>(
         controller: viewModel.rankController,
         options: kRankOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) => Text(kRankOptions[value] ?? ''),
+        selectedOptionBuilder: (context, value) =>
+            Text(kRankOptions[value] ?? ''),
         placeholder: const Text('rank'),
       ),
     );
@@ -101,7 +103,8 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       child: ShadSelect<int>(
         controller: viewModel.racialLeaderController,
         options: kBooleanOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) => Text(kBooleanOptions[value] ?? ''),
+        selectedOptionBuilder: (context, value) =>
+            Text(kBooleanOptions[value] ?? ''),
         placeholder: const Text('RacialLeader'),
       ),
     );
@@ -117,7 +120,8 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       child: ShadSelect<int>(
         controller: viewModel.familyController,
         options: kCreatureFamilyOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) => Text(kCreatureFamilyOptions[value] ?? ''),
+        selectedOptionBuilder: (context, value) =>
+            Text(kCreatureFamilyOptions[value] ?? ''),
         placeholder: const Text('family'),
       ),
     );
@@ -126,7 +130,8 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       child: ShadSelect<int>(
         controller: viewModel.typeController,
         options: kCreatureTypeOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) => Text(kCreatureTypeOptions[value] ?? ''),
+        selectedOptionBuilder: (context, value) =>
+            Text(kCreatureTypeOptions[value] ?? ''),
         placeholder: const Text('type'),
       ),
     );
@@ -135,7 +140,8 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       child: ShadSelect<int>(
         controller: viewModel.regenerateHealthController,
         options: kBooleanOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) => Text(kBooleanOptions[value] ?? ''),
+        selectedOptionBuilder: (context, value) =>
+            Text(kBooleanOptions[value] ?? ''),
         placeholder: const Text('RegenHealth'),
       ),
     );
@@ -161,6 +167,7 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       ),
     );
 
+    /// 1. 基础信息 (8个字段)
     final basicRows = [
       Row(
         spacing: 8,
@@ -180,22 +187,95 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
           Expanded(child: rankInput),
         ],
       ),
+    ];
+
+    /// 外观模型输入
+    final modelId1Input = FormItem(
+      label: '模型1',
+      child: CreatureDisplayInfoSelector(
+        controller: viewModel.modelId1Controller,
+        placeholder: 'modelid1',
+      ),
+    );
+    final modelId2Input = FormItem(
+      label: '模型2',
+      child: CreatureDisplayInfoSelector(
+        controller: viewModel.modelId2Controller,
+        placeholder: 'modelid2',
+      ),
+    );
+    final modelId3Input = FormItem(
+      label: '模型3',
+      child: CreatureDisplayInfoSelector(
+        controller: viewModel.modelId3Controller,
+        placeholder: 'modelid3',
+      ),
+    );
+    final modelId4Input = FormItem(
+      label: '模型4',
+      child: CreatureDisplayInfoSelector(
+        controller: viewModel.modelId4Controller,
+        placeholder: 'modelid4',
+      ),
+    );
+    final scaleInput = FormItem(
+      controller: viewModel.scaleController,
+      label: '缩放',
+      placeholder: 'scale',
+    );
+
+    /// 类型阵营输入
+    final expInput = FormItem(
+      label: '属性扩展',
+      child: ShadSelect<int>(
+        controller: viewModel.expController,
+        options: kExpansionOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) =>
+            Text(kExpansionOptions[value] ?? ''),
+        placeholder: const Text('exp'),
+      ),
+    );
+
+    /// 2. 类型阵营 (7个字段)
+    final typeRows = [
       Row(
         spacing: 8,
         children: [
-          Expanded(child: racialLeaderInput),
-          Expanded(child: factionInput),
-          Expanded(child: familyInput),
           Expanded(child: typeInput),
+          Expanded(child: familyInput),
+          Expanded(child: factionInput),
+          Expanded(child: racialLeaderInput),
         ],
       ),
       Row(
         spacing: 8,
         children: [
           Expanded(child: regenerateHealthInput),
-          Expanded(child: petSpellDataIdInput),
-          Expanded(child: vehicleIdInput),
+          Expanded(child: expInput),
           Expanded(child: gossipMenuIdInput),
+          Expanded(child: SizedBox()),
+        ],
+      ),
+    ];
+
+    /// 3. 外观模型 (5个字段)
+    final modelRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: modelId1Input),
+          Expanded(child: modelId2Input),
+          Expanded(child: modelId3Input),
+          Expanded(child: modelId4Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: scaleInput),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -256,75 +336,14 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       ),
     );
 
-    final flagRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: npcFlagInput),
-          Expanded(child: typeFlagInput),
-          Expanded(child: dynamicFlagInput),
-          Expanded(child: extraFlagInput),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: unitFlagInput),
-          Expanded(child: unitFlag2Input),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    /// Immune
-    final mechanicImmuneMaskInput = FormItem(
-      label: '免疫机制',
-      child: FlagPicker(
-        controller: viewModel.mechanicImmuneMaskController,
-        flags: kMechanicImmuneMaskOptions,
-        title: '免疫机制',
-        placeholder: 'mechanic_immune_mask',
-      ),
-    );
-    final spellSchoolImmuneMaskInput = FormItem(
-      label: '免疫法术类型',
-      child: FlagPicker(
-        controller: viewModel.spellSchoolImmuneMaskController,
-        flags: kSpellSchoolImmuneMaskOptions,
-        title: '免疫法术类型',
-        placeholder: 'spell_school_immune_mask',
-      ),
-    );
-
-    final immuneRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: mechanicImmuneMaskInput),
-          Expanded(child: spellSchoolImmuneMaskInput),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
     /// Modifier
-    final expInput = FormItem(
-      label: '属性扩展',
-      child: ShadSelect<int>(
-        controller: viewModel.expController,
-        options: kExpansionOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) => Text(kExpansionOptions[value] ?? ''),
-        placeholder: const Text('exp'),
-      ),
-    );
     final damageSchoolInput = FormItem(
       label: '伤害类型',
       child: ShadSelect<int>(
         controller: viewModel.damageSchoolController,
         options: kDamageSchoolOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) => Text(kDamageSchoolOptions[value] ?? ''),
+        selectedOptionBuilder: (context, value) =>
+            Text(kDamageSchoolOptions[value] ?? ''),
         placeholder: const Text('dmgschool'),
       ),
     );
@@ -384,40 +403,32 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       placeholder: 'speed_run',
     );
 
-    final modifierRows = [
+    /// 4. 战斗属性 (11个字段)
+    final combatRows = [
       Row(
         spacing: 8,
         children: [
-          Expanded(child: expInput),
           Expanded(child: damageSchoolInput),
           Expanded(child: damageModifierInput),
           Expanded(child: armorModifierInput),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: baseAttackTimeInput),
-          Expanded(child: baseVarianceInput),
-          Expanded(child: rangeAttackTimeInput),
-          Expanded(child: rangeVarianceInput),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
           Expanded(child: healthModifierInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
           Expanded(child: manaModifierInput),
           Expanded(child: experienceModifierInput),
-          Expanded(child: speedWalkInput),
+          Expanded(child: baseAttackTimeInput),
+          Expanded(child: baseVarianceInput),
         ],
       ),
       Row(
         spacing: 8,
         children: [
-          Expanded(child: speedRunInput),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+          Expanded(child: rangeAttackTimeInput),
+          Expanded(child: rangeVarianceInput),
+          Expanded(child: petSpellDataIdInput),
           Expanded(child: SizedBox()),
         ],
       ),
@@ -456,28 +467,93 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       ),
     );
 
-    final lootRows = [
+    /// 移动属性输入
+    final movementIdInput = FormItem(
+      controller: viewModel.movementIdController,
+      label: '移动',
+      placeholder: 'movementId',
+    );
+    final movementTypeInput = FormItem(
+      label: '移动类型',
+      child: ShadSelect<int>(
+        controller: viewModel.movementTypeController,
+        options: kMovementTypeOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) =>
+            Text(kMovementTypeOptions[value] ?? ''),
+        placeholder: const Text('movementType'),
+      ),
+    );
+    final hoverHeightInput = FormItem(
+      controller: viewModel.hoverHeightController,
+      label: '盘旋高度',
+      placeholder: 'HoverHeight',
+    );
+
+    /// 5. 移动属性 (6个字段)
+    final movementRows = [
       Row(
         spacing: 8,
         children: [
-          Expanded(child: minGoldInput),
-          Expanded(child: maxGoldInput),
-          Expanded(child: lootInput),
-          Expanded(child: pickpocketLootInput),
+          Expanded(child: movementIdInput),
+          Expanded(child: movementTypeInput),
+          Expanded(child: speedWalkInput),
+          Expanded(child: speedRunInput),
         ],
       ),
       Row(
         spacing: 8,
         children: [
-          Expanded(child: skinLootInput),
-          Expanded(child: SizedBox()),
+          Expanded(child: hoverHeightInput),
+          Expanded(child: vehicleIdInput),
           Expanded(child: SizedBox()),
           Expanded(child: SizedBox()),
         ],
       ),
     ];
 
-    /// Difficulty
+    /// 免疫输入
+    final mechanicImmuneMaskInput = FormItem(
+      label: '免疫机制',
+      child: FlagPicker(
+        controller: viewModel.mechanicImmuneMaskController,
+        flags: kMechanicImmuneMaskOptions,
+        title: '免疫机制',
+        placeholder: 'mechanic_immune_mask',
+      ),
+    );
+    final spellSchoolImmuneMaskInput = FormItem(
+      label: '免疫法术类型',
+      child: FlagPicker(
+        controller: viewModel.spellSchoolImmuneMaskController,
+        flags: kSpellSchoolImmuneMaskOptions,
+        title: '免疫法术类型',
+        placeholder: 'spell_school_immune_mask',
+      ),
+    );
+
+    /// 6. 标识免疫 (8个字段)
+    final flagImmuneRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: npcFlagInput),
+          Expanded(child: unitFlagInput),
+          Expanded(child: unitFlag2Input),
+          Expanded(child: typeFlagInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: dynamicFlagInput),
+          Expanded(child: extraFlagInput),
+          Expanded(child: mechanicImmuneMaskInput),
+          Expanded(child: spellSchoolImmuneMaskInput),
+        ],
+      ),
+    ];
+
+    /// 难度与脚本输入
     final killCredit1Input = FormItem(
       label: '击杀关联1',
       child: CreatureTemplateSelector(
@@ -513,118 +589,6 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
         placeholder: 'difficulty_entry_3',
       ),
     );
-
-    final difficultyRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: killCredit1Input),
-          Expanded(child: killCredit2input),
-          Expanded(child: difficultyEntry1Input),
-          Expanded(child: difficultyEntry2Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: difficultyEntry3Input),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    /// Model
-    final modelId1Input = FormItem(
-      label: '模型1',
-      child: CreatureDisplayInfoSelector(
-        controller: viewModel.modelId1Controller,
-        placeholder: 'modelid1',
-      ),
-    );
-    final modelId2Input = FormItem(
-      label: '模型2',
-      child: CreatureDisplayInfoSelector(
-        controller: viewModel.modelId2Controller,
-        placeholder: 'modelid2',
-      ),
-    );
-    final modelId3Input = FormItem(
-      label: '模型3',
-      child: CreatureDisplayInfoSelector(
-        controller: viewModel.modelId3Controller,
-        placeholder: 'modelid3',
-      ),
-    );
-    final modelId4Input = FormItem(
-      label: '模型4',
-      child: CreatureDisplayInfoSelector(
-        controller: viewModel.modelId4Controller,
-        placeholder: 'modelid4',
-      ),
-    );
-    final scaleInput = FormItem(
-      controller: viewModel.scaleController,
-      label: '缩放',
-      placeholder: 'scale',
-    );
-
-    final modelRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: modelId1Input),
-          Expanded(child: modelId2Input),
-          Expanded(child: modelId3Input),
-          Expanded(child: modelId4Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: scaleInput),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    /// Movement
-    final movementIdInput = FormItem(
-      controller: viewModel.movementIdController,
-      label: '移动',
-      placeholder: 'movementId',
-    );
-    final movementTypeInput = FormItem(
-      label: '移动类型',
-      child: ShadSelect<int>(
-        controller: viewModel.movementTypeController,
-        options: kMovementTypeOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) => Text(kMovementTypeOptions[value] ?? ''),
-        placeholder: const Text('movementType'),
-      ),
-    );
-    final hoverHeightInput = FormItem(
-      controller: viewModel.hoverHeightController,
-      label: '盘旋高度',
-      placeholder: 'HoverHeight',
-    );
-
-    final movementRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: movementIdInput),
-          Expanded(child: movementTypeInput),
-          Expanded(child: hoverHeightInput),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    /// Other
     final aiNameInput = FormItem(
       controller: viewModel.aiNameController,
       label: 'AI',
@@ -641,7 +605,35 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       placeholder: 'VerifiedBuild',
     );
 
-    final otherRows = [
+    /// 7. 掉落难度与脚本 (13个字段)
+    final lootDifficultyScriptRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: minGoldInput),
+          Expanded(child: maxGoldInput),
+          Expanded(child: lootInput),
+          Expanded(child: pickpocketLootInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: skinLootInput),
+          Expanded(child: killCredit1Input),
+          Expanded(child: killCredit2input),
+          Expanded(child: difficultyEntry1Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: difficultyEntry2Input),
+          Expanded(child: difficultyEntry3Input),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+        ],
+      ),
       Row(
         spacing: 8,
         children: [
@@ -687,7 +679,7 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       SizedBox(height: 16),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('基本信息'),
+        child: Text('基础信息'),
       ),
       SizedBox(height: 4),
       ShadCard(
@@ -697,57 +689,17 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       SizedBox(height: 16),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('标识信息'),
+        child: Text('类型阵营'),
       ),
       SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: flagRows),
+        child: Column(spacing: 8, children: typeRows),
       ),
       SizedBox(height: 16),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('免疫信息'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: immuneRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('属性信息'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: modifierRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('掉落信息'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: lootRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('难度信息'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: difficultyRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('模型信息'),
+        child: Text('外观模型'),
       ),
       SizedBox(height: 4),
       ShadCard(
@@ -757,7 +709,17 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       SizedBox(height: 16),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('移动信息'),
+        child: Text('战斗属性'),
+      ),
+      SizedBox(height: 4),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        child: Column(spacing: 8, children: combatRows),
+      ),
+      SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('移动属性'),
       ),
       SizedBox(height: 4),
       ShadCard(
@@ -767,12 +729,22 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       SizedBox(height: 16),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('其他信息'),
+        child: Text('标识免疫'),
       ),
       SizedBox(height: 4),
       ShadCard(
         padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: otherRows),
+        child: Column(spacing: 8, children: flagImmuneRows),
+      ),
+      SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text('掉落难度与脚本'),
+      ),
+      SizedBox(height: 4),
+      ShadCard(
+        padding: EdgeInsets.all(16),
+        child: Column(spacing: 8, children: lootDifficultyScriptRows),
       ),
       SizedBox(height: 72),
     ];
