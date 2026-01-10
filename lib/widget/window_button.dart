@@ -35,10 +35,7 @@ class _WindowButtonState extends State<WindowButton> {
       children: [minimizeButton, maximizeButton, closeButton],
     );
     var iconThemeData = IconThemeData(size: 16);
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: IconTheme(data: iconThemeData, child: row),
-    );
+    return IconTheme(data: iconThemeData, child: row);
   }
 
   void _toggleMaximize() {
