@@ -105,11 +105,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
       // description: Text('编号: ${widget.entry}'),
       constraints: BoxConstraints(maxWidth: 600),
       actions: [
-        ShadButton.outline(
-          leading: Icon(LucideIcons.plus, size: 16),
-          onPressed: _addRow,
-          child: Text('添加'),
-        ),
+        ShadButton.outline(onPressed: _addRow, child: Text('添加')),
         const Spacer(),
         ShadButton.outline(
           onPressed: () => Navigator.of(context).pop(),
@@ -164,6 +160,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
         return Padding(
           padding: EdgeInsets.symmetric(vertical: 4),
           child: Row(
+            spacing: 16,
             children: [
               SizedBox(
                 width: 100,
@@ -172,14 +169,12 @@ class _LocaleDialogState extends State<_LocaleDialog> {
                   placeholder: Text('zhCN'),
                 ),
               ),
-              SizedBox(width: 16),
               Expanded(
                 child: ShadInput(
                   controller: row.nameController,
                   placeholder: Text('名称'),
                 ),
               ),
-              SizedBox(width: 16),
               Expanded(
                 child: ShadInput(
                   controller: row.titleController,
