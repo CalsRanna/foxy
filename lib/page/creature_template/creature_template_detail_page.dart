@@ -4,11 +4,14 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
+import 'package:foxy/widget/creature_display_info_selector.dart';
+import 'package:foxy/widget/creature_spell_data_selector.dart';
 import 'package:foxy/widget/creature_template_selector.dart';
 import 'package:foxy/widget/faction_template_selector.dart';
 import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/widget/gossip_menu_selector.dart';
 import 'package:foxy/widget/loot_template_selector.dart';
+import 'package:foxy/widget/vehicle_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/widget/header.dart';
@@ -110,9 +113,13 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       ),
     );
     final familyInput = FormItem(
-      controller: viewModel.familyController,
       label: '族群',
-      placeholder: 'family',
+      child: ShadSelect<int>(
+        controller: viewModel.familyController,
+        options: kCreatureFamilyOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) => Text(kCreatureFamilyOptions[value] ?? ''),
+        placeholder: const Text('family'),
+      ),
     );
     final typeInput = FormItem(
       label: '类型',
@@ -133,14 +140,18 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       ),
     );
     final petSpellDataIdInput = FormItem(
-      controller: viewModel.petSpellDataIdController,
       label: '宠物技能',
-      placeholder: 'PetSpellDataId',
+      child: CreatureSpellDataSelector(
+        controller: viewModel.petSpellDataIdController,
+        placeholder: 'PetSpellDataId',
+      ),
     );
     final vehicleIdInput = FormItem(
-      controller: viewModel.vehicleIdController,
       label: '载具',
-      placeholder: 'VehicleId',
+      child: VehicleSelector(
+        controller: viewModel.vehicleIdController,
+        placeholder: 'VehicleId',
+      ),
     );
     final gossipMenuIdInput = FormItem(
       label: '对话',
@@ -526,24 +537,32 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
 
     /// Model
     final modelId1Input = FormItem(
-      controller: viewModel.modelId1Controller,
       label: '模型1',
-      placeholder: 'modelid4',
+      child: CreatureDisplayInfoSelector(
+        controller: viewModel.modelId1Controller,
+        placeholder: 'modelid1',
+      ),
     );
     final modelId2Input = FormItem(
-      controller: viewModel.modelId2Controller,
       label: '模型2',
-      placeholder: 'modelid2',
+      child: CreatureDisplayInfoSelector(
+        controller: viewModel.modelId2Controller,
+        placeholder: 'modelid2',
+      ),
     );
     final modelId3Input = FormItem(
-      controller: viewModel.modelId3Controller,
       label: '模型3',
-      placeholder: 'modelid3',
+      child: CreatureDisplayInfoSelector(
+        controller: viewModel.modelId3Controller,
+        placeholder: 'modelid3',
+      ),
     );
     final modelId4Input = FormItem(
-      controller: viewModel.modelId4Controller,
       label: '模型4',
-      placeholder: 'modelid4',
+      child: CreatureDisplayInfoSelector(
+        controller: viewModel.modelId4Controller,
+        placeholder: 'modelid4',
+      ),
     );
     final scaleInput = FormItem(
       controller: viewModel.scaleController,

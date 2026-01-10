@@ -16,7 +16,7 @@ class CreatureTemplateDetailViewModel {
   final rankController = ShadSelectController<int>();
   final racialLeaderController = ShadSelectController<int>();
   final factionController = TextEditingController();
-  final familyController = TextEditingController();
+  final familyController = ShadSelectController<int>();
   final typeController = ShadSelectController<int>();
   final regenerateHealthController = ShadSelectController<int>();
   final petSpellDataIdController = TextEditingController();
@@ -182,7 +182,7 @@ class CreatureTemplateDetailViewModel {
     rankController.value = {template.rank};
     racialLeaderController.value = {template.racialLeader};
     factionController.text = template.faction.toString();
-    familyController.text = template.family.toString();
+    familyController.value = {template.family};
     typeController.value = {template.type};
     regenerateHealthController.value = {template.regenHealth};
     petSpellDataIdController.text = template.petSpellDataId.toString();
