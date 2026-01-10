@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
+import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/widget/header.dart';
@@ -181,34 +183,58 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
 
     /// Flag
     final npcFlagInput = FormItem(
-      controller: viewModel.npcFlagController,
       label: 'NPC标识',
-      placeholder: 'npcflag',
+      child: FlagPicker(
+        controller: viewModel.npcFlagController,
+        flags: kNpcFlagOptions,
+        title: 'NPC标识',
+        placeholder: 'npcflag',
+      ),
     );
     final typeFlagInput = FormItem(
-      controller: viewModel.typeFlagController,
       label: '类型标识',
-      placeholder: 'type_flags',
+      child: FlagPicker(
+        controller: viewModel.typeFlagController,
+        flags: kCreatureTypeFlagOptions,
+        title: '类型标识',
+        placeholder: 'type_flags',
+      ),
     );
     final dynamicFlagInput = FormItem(
-      controller: viewModel.dynamicFlagController,
       label: '动态标识',
-      placeholder: 'dynamicflags',
+      child: FlagPicker(
+        controller: viewModel.dynamicFlagController,
+        flags: kDynamicFlagOptions,
+        title: '动态标识',
+        placeholder: 'dynamicflags',
+      ),
     );
     final extraFlagInput = FormItem(
-      controller: viewModel.extraFlagController,
       label: '额外标识',
-      placeholder: 'flags_extra',
+      child: FlagPicker(
+        controller: viewModel.extraFlagController,
+        flags: kFlagsExtraOptions,
+        title: '额外标识',
+        placeholder: 'flags_extra',
+      ),
     );
     final unitFlagInput = FormItem(
-      controller: viewModel.unitFlagController,
       label: '单位标识',
-      placeholder: 'unit_flags',
+      child: FlagPicker(
+        controller: viewModel.unitFlagController,
+        flags: kUnitFlagOptions,
+        title: '单位标识',
+        placeholder: 'unit_flags',
+      ),
     );
     final unitFlag2Input = FormItem(
-      controller: viewModel.unitFlag2Controller,
       label: '单位标识2',
-      placeholder: 'unit_flags2',
+      child: FlagPicker(
+        controller: viewModel.unitFlag2Controller,
+        flags: kUnitFlag2Options,
+        title: '单位标识2',
+        placeholder: 'unit_flags2',
+      ),
     );
 
     final flagRows = [
@@ -234,14 +260,22 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
 
     /// Immune
     final mechanicImmuneMaskInput = FormItem(
-      controller: viewModel.mechanicImmuneMaskController,
       label: '免疫机制',
-      placeholder: 'mechanic_immune_mask',
+      child: FlagPicker(
+        controller: viewModel.mechanicImmuneMaskController,
+        flags: kMechanicImmuneMaskOptions,
+        title: '免疫机制',
+        placeholder: 'mechanic_immune_mask',
+      ),
     );
     final spellSchoolImmuneMaskInput = FormItem(
-      controller: viewModel.spellSchoolImmuneMaskController,
       label: '免疫法术类型',
-      placeholder: 'spell_school_immune_mask',
+      child: FlagPicker(
+        controller: viewModel.spellSchoolImmuneMaskController,
+        flags: kSpellSchoolImmuneMaskOptions,
+        title: '免疫法术类型',
+        placeholder: 'spell_school_immune_mask',
+      ),
     );
 
     final immuneRows = [

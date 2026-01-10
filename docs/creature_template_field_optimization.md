@@ -3044,18 +3044,27 @@ archive 分支: src/components/CreatureModelInfoSelector.vue
 
 ---
 
-### 第二阶段：P1 标志位组件 ⬜ 待实施
+### 第二阶段：P1 标志位组件 ✅ 已完成
+
+**完成时间**: 2026-01-10
 
 | 序号 | 字段 | 中文名 | 状态 |
 |------|------|--------|------|
-| 1 | `npcflag` | NPC标识 | ⬜ 待实现 |
-| 2 | `unit_flags` | 单位标识 | ⬜ 待实现 |
-| 3 | `unit_flags2` | 单位标识2 | ⬜ 待实现 |
-| 4 | `type_flags` | 类型标识 | ⬜ 待实现 |
-| 5 | `dynamicflags` | 动态标识 | ⬜ 待实现 |
-| 6 | `flags_extra` | 额外标识 | ⬜ 待实现 |
-| 7 | `mechanic_immune_mask` | 免疫机制 | ⬜ 待实现 |
-| 8 | `spell_school_immune_mask` | 免疫法术类型 | ⬜ 待实现 |
+| 1 | `npcflag` | NPC标识 | ✅ 已完成 |
+| 2 | `unit_flags` | 单位标识 | ✅ 已完成 |
+| 3 | `unit_flags2` | 单位标识2 | ✅ 已完成 |
+| 4 | `type_flags` | 类型标识 | ✅ 已完成 |
+| 5 | `dynamicflags` | 动态标识 | ✅ 已完成 |
+| 6 | `flags_extra` | 额外标识 | ✅ 已完成 |
+| 7 | `mechanic_immune_mask` | 免疫机制 | ✅ 已完成 |
+| 8 | `spell_school_immune_mask` | 免疫法术类型 | ✅ 已完成 |
+
+**新建文件**:
+- `lib/constant/creature_flags.dart` - 标志位常量定义
+- `lib/widget/flag_picker.dart` - FlagPicker 组件
+
+**修改文件**:
+- `lib/page/creature_template/creature_template_detail_page.dart` - 应用 FlagPicker 组件
 
 ---
 
