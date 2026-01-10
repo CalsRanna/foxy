@@ -3015,7 +3015,7 @@ archive 分支: src/components/CreatureModelInfoSelector.vue
 
 ---
 
-最后更新: 2026-01-10（添加架构和编码规范约束章节）
+最后更新: 2026-01-10（完成 P2 关联选择器阶段）
 
 ---
 
@@ -3068,17 +3068,35 @@ archive 分支: src/components/CreatureModelInfoSelector.vue
 
 ---
 
-### 第三阶段：P2 关联选择器 ⬜ 待实施
+### 第三阶段：P2 关联选择器 ✅ 已完成
+
+**完成时间**: 2026-01-10
 
 | 序号 | 字段 | 中文名 | 状态 |
 |------|------|--------|------|
-| 1 | `faction` | 阵营 | ⬜ 待实现 |
-| 2 | `gossip_menu_id` | 对话菜单 | ⬜ 待实现 |
-| 3 | `lootid` | 击杀掉落 | ⬜ 待实现 |
-| 4 | `pickpocketloot` | 偷窃掉落 | ⬜ 待实现 |
-| 5 | `skinloot` | 剥皮掉落 | ⬜ 待实现 |
-| 6 | `KillCredit1/2` | 击杀关联 | ⬜ 待实现 |
-| 7 | `difficulty_entry_*` | 难度模板 | ⬜ 待实现 |
+| 1 | `faction` | 阵营 | ✅ 已完成 |
+| 2 | `gossip_menu_id` | 对话菜单 | ✅ 已完成 |
+| 3 | `lootid` | 击杀掉落 | ✅ 已完成 |
+| 4 | `pickpocketloot` | 偷窃掉落 | ✅ 已完成 |
+| 5 | `skinloot` | 剥皮掉落 | ✅ 已完成 |
+| 6 | `KillCredit1/2` | 击杀关联 | ✅ 已完成 |
+| 7 | `difficulty_entry_*` | 难度模板 | ✅ 已完成 |
+
+**新建文件**:
+- `lib/widget/entity_selector.dart` - 通用实体选择器组件
+- `lib/model/faction_template.dart` - 阵营模板模型
+- `lib/repository/faction_template_repository.dart` - 阵营模板仓库
+- `lib/widget/faction_template_selector.dart` - 阵营选择器
+- `lib/repository/gossip_menu_repository.dart` - 对话菜单仓库
+- `lib/widget/gossip_menu_selector.dart` - 对话菜单选择器
+- `lib/model/loot_template.dart` - 掉落模板模型
+- `lib/repository/loot_template_repository.dart` - 掉落模板仓库
+- `lib/widget/loot_template_selector.dart` - 掉落选择器
+- `lib/widget/creature_template_selector.dart` - 生物模板选择器
+
+**修改文件**:
+- `lib/model/gossip_menu.dart` - 更新模型结构
+- `lib/page/creature_template/creature_template_detail_page.dart` - 应用关联选择器
 
 ---
 

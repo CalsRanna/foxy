@@ -106,8 +106,8 @@ class _Table extends StatelessWidget {
 
   FoxyTableRow _buildRow(GossipMenu template) {
     final children = [
-      FoxyTableCell(width: 80, child: Text(template.entry.toString())),
-      FoxyTableCell(child: Text(template.text)),
+      FoxyTableCell(width: 80, child: Text(template.menuId.toString())),
+      FoxyTableCell(child: Text(template.textId.toString())),
     ];
     return FoxyTableRow(children: children);
   }
