@@ -13,6 +13,7 @@ import 'package:foxy/widget/gossip_menu_selector.dart';
 import 'package:foxy/widget/loot_template_selector.dart';
 import 'package:foxy/widget/vehicle_selector.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:get_it/get_it.dart';
@@ -80,31 +81,25 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     );
     final uniClassInput = FormItem(
       label: '职业',
-      child: ShadSelect<int>(
+      child: FoxyShadSelect<int>(
         controller: viewModel.unitClassController,
-        options: kUnitClassOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) =>
-            Text(kUnitClassOptions[value] ?? ''),
+        options: kUnitClassOptions,
         placeholder: const Text('unit_class'),
       ),
     );
     final rankInput = FormItem(
       label: '稀有程度',
-      child: ShadSelect<int>(
+      child: FoxyShadSelect<int>(
         controller: viewModel.rankController,
-        options: kRankOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) =>
-            Text(kRankOptions[value] ?? ''),
+        options: kRankOptions,
         placeholder: const Text('rank'),
       ),
     );
     final racialLeaderInput = FormItem(
       label: '种族领袖',
-      child: ShadSelect<int>(
+      child: FoxyShadSelect<int>(
         controller: viewModel.racialLeaderController,
-        options: kBooleanOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) =>
-            Text(kBooleanOptions[value] ?? ''),
+        options: kBooleanOptions,
         placeholder: const Text('RacialLeader'),
       ),
     );
@@ -117,31 +112,25 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     );
     final familyInput = FormItem(
       label: '族群',
-      child: ShadSelect<int>(
+      child: FoxyShadSelect<int>(
         controller: viewModel.familyController,
-        options: kCreatureFamilyOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) =>
-            Text(kCreatureFamilyOptions[value] ?? ''),
+        options: kCreatureFamilyOptions,
         placeholder: const Text('family'),
       ),
     );
     final typeInput = FormItem(
       label: '类型',
-      child: ShadSelect<int>(
+      child: FoxyShadSelect<int>(
         controller: viewModel.typeController,
-        options: kCreatureTypeOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) =>
-            Text(kCreatureTypeOptions[value] ?? ''),
+        options: kCreatureTypeOptions,
         placeholder: const Text('type'),
       ),
     );
     final regenerateHealthInput = FormItem(
       label: '回复生命',
-      child: ShadSelect<int>(
+      child: FoxyShadSelect<int>(
         controller: viewModel.regenerateHealthController,
-        options: kBooleanOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) =>
-            Text(kBooleanOptions[value] ?? ''),
+        options: kBooleanOptions,
         placeholder: const Text('RegenHealth'),
       ),
     );
@@ -227,11 +216,9 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     /// 类型阵营输入
     final expInput = FormItem(
       label: '属性扩展',
-      child: ShadSelect<int>(
+      child: FoxyShadSelect<int>(
         controller: viewModel.expController,
-        options: kExpansionOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) =>
-            Text(kExpansionOptions[value] ?? ''),
+        options: kExpansionOptions,
         placeholder: const Text('exp'),
       ),
     );
@@ -339,11 +326,9 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     /// Modifier
     final damageSchoolInput = FormItem(
       label: '伤害类型',
-      child: ShadSelect<int>(
+      child: FoxyShadSelect<int>(
         controller: viewModel.damageSchoolController,
-        options: kDamageSchoolOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) =>
-            Text(kDamageSchoolOptions[value] ?? ''),
+        options: kDamageSchoolOptions,
         placeholder: const Text('dmgschool'),
       ),
     );
@@ -475,11 +460,9 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     );
     final movementTypeInput = FormItem(
       label: '移动类型',
-      child: ShadSelect<int>(
+      child: FoxyShadSelect<int>(
         controller: viewModel.movementTypeController,
-        options: kMovementTypeOptions.toShadOptions(),
-        selectedOptionBuilder: (context, value) =>
-            Text(kMovementTypeOptions[value] ?? ''),
+        options: kMovementTypeOptions,
         placeholder: const Text('movementType'),
       ),
     );
