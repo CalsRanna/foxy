@@ -120,19 +120,18 @@ class _CreatureDisplayInfoSelectorDialogState
     final tableMaxHeight = screenHeight * 0.5;
 
     return ShadDialog(
-      title: Text('选择模型'),
       actions: [
         ShadButton.outline(
           onPressed: () => Navigator.of(context).pop(),
           child: Text('取消'),
         ),
         ShadButton(
-          onPressed: _selectedId != null
-              ? () => Navigator.of(context).pop(_selectedId)
-              : null,
+          onPressed: () => Navigator.of(context).pop(_selectedId),
           child: Text('确定'),
         ),
       ],
+      constraints: BoxConstraints(maxWidth: 720),
+      title: Text('模型'),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -142,10 +141,7 @@ class _CreatureDisplayInfoSelectorDialogState
           _buildToolbar(),
           SizedBox(height: 8),
           ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: 720,
-              maxHeight: tableMaxHeight,
-            ),
+            constraints: BoxConstraints(maxHeight: tableMaxHeight),
             child: _loading
                 ? Center(child: CircularProgressIndicator())
                 : _buildTable(),
@@ -177,7 +173,7 @@ class _CreatureDisplayInfoSelectorDialogState
               child: Text('查询'),
             ),
             SizedBox(width: 8),
-            ShadButton.outline(
+            ShadButton.ghost(
               size: ShadButtonSize.sm,
               onPressed: _reset,
               child: Text('重置'),
@@ -210,58 +206,67 @@ class _CreatureDisplayInfoSelectorDialogState
 
     final theme = ShadTheme.of(context);
 
-    return FoxyShadTable(
-      columnCount: 3,
-      rowCount: _items.length,
-      pinnedRowCount: 1,
-      header: (context, column) {
-        return switch (column) {
-          0 => ShadTableCell.header(child: Text('编号')),
-          1 => ShadTableCell.header(child: Text('模型')),
-          2 => ShadTableCell.header(child: Text('缩放')),
-          _ => ShadTableCell.header(child: SizedBox()),
-        };
-      },
-      columnSpanExtent: (column) {
-        return switch (column) {
-          0 => FixedTableSpanExtent(100),
-          1 => FixedTableSpanExtent(100),
-          _ => null,
-        };
-      },
-      rowSpanBackgroundDecoration: (row) {
-        if (row < 0 || row >= _items.length) return null;
-        final item = _items[row];
-        if (item.id == _selectedId) {
-          return TableSpanDecoration(
-            color: theme.colorScheme.accent.withValues(alpha: 0.2),
-          );
-        }
-        return null;
-      },
-      onRowTap: (row) {
-        if (row >= 0 && row < _items.length) {
-          setState(() {
-            _selectedId = _items[row].id;
-          });
-        }
-      },
-      onRowDoubleTap: (row) {
-        if (row >= 0 && row < _items.length) {
-          Navigator.of(context).pop(_items[row].id);
-        }
-      },
-      builder: (context, vicinity) {
-        if (vicinity.row < 0 || vicinity.row >= _items.length) {
-          return ShadTableCell(child: SizedBox());
-        }
-        final item = _items[vicinity.row];
-        return switch (vicinity.column) {
-          0 => ShadTableCell(child: Text(item.id.toString())),
-          1 => ShadTableCell(child: Text(item.modelId.toString())),
-          2 => ShadTableCell(child: Text(item.creatureModelScale.toString())),
-          _ => ShadTableCell(child: SizedBox()),
-        };
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxWidth = constraints.maxWidth;
+        var width = maxWidth - 200;
+        return FoxyShadTable(
+          columnCount: 3,
+          rowCount: _items.length,
+          pinnedRowCount: 1,
+          header: (context, column) {
+            return switch (column) {
+              0 => ShadTableCell.header(child: Text('编号')),
+              1 => ShadTableCell.header(child: Text('模型')),
+              2 => ShadTableCell.header(child: Text('缩放')),
+              _ => ShadTableCell.header(child: SizedBox()),
+            };
+          },
+          columnSpanExtent: (column) {
+            return switch (column) {
+              0 => FixedTableSpanExtent(100),
+              1 => FixedTableSpanExtent(width),
+              2 => FixedTableSpanExtent(100),
+              _ => null,
+            };
+          },
+          rowSpanBackgroundDecoration: (row) {
+            // row 包含 header，所以减 1
+            final dataRow = row - 1;
+            if (dataRow < 0 || dataRow >= _items.length) return null;
+            final item = _items[dataRow];
+            if (item.id == _selectedId) {
+              return TableSpanDecoration(color: theme.colorScheme.accent);
+            }
+            return null;
+          },
+          onRowTap: (row) {
+            if (row >= 0 && row < _items.length) {
+              setState(() {
+                _selectedId = _items[row].id;
+              });
+            }
+          },
+          onRowDoubleTap: (row) {
+            if (row >= 0 && row < _items.length) {
+              Navigator.of(context).pop(_items[row].id);
+            }
+          },
+          builder: (context, vicinity) {
+            if (vicinity.row < 0 || vicinity.row >= _items.length) {
+              return ShadTableCell(child: SizedBox());
+            }
+            final item = _items[vicinity.row];
+            return switch (vicinity.column) {
+              0 => ShadTableCell(child: Text(item.id.toString())),
+              1 => ShadTableCell(child: Text(item.modelId.toString())),
+              2 => ShadTableCell(
+                child: Text(item.creatureModelScale.toString()),
+              ),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+        );
       },
     );
   }
