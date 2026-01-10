@@ -110,22 +110,27 @@ class CreatureTemplateRepository with RepositoryMixin {
   Future<void> storeCreatureTemplate(CreatureTemplate template) async {
     var json = template.toJson();
     json.remove('entry');
+    // 处理 MySQL 保留字
+    if (json.containsKey('rank')) {
+      json['`rank`'] = json.remove('rank');
+    }
     await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateCreatureTemplate(CreatureTemplate template) async {
     var json = template.toJson();
     json.remove('entry');
+    // 处理 MySQL 保留字
+    if (json.containsKey('rank')) {
+      json['`rank`'] = json.remove('rank');
+    }
     await laconic.table(_table).where('entry', template.entry).update(json);
   }
 
   Future<List<CreatureTemplateLocale>> getCreatureTemplateLocales(
     int entry,
   ) async {
-    var results = await laconic
-        .table(_localeTable)
-        .where('entry', entry)
-        .get();
+    var results = await laconic.table(_localeTable).where('entry', entry).get();
     return results
         .map((e) => CreatureTemplateLocale.fromJson(e.toMap()))
         .toList();

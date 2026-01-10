@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 class FoxyTab extends StatefulWidget {
   final List<Widget> tabs;
-  const FoxyTab({super.key, required this.tabs});
+  final Set<int> disabledIndexes;
+  const FoxyTab({
+    super.key,
+    required this.tabs,
+    this.disabledIndexes = const {},
+  });
 
   @override
   State<FoxyTab> createState() => _FoxyTabState();
@@ -10,11 +15,13 @@ class FoxyTab extends StatefulWidget {
 
 class FoxyTabItem extends StatelessWidget {
   final bool active;
+  final bool disabled;
   final void Function()? onTap;
   final Widget child;
   const FoxyTabItem({
     super.key,
     this.active = false,
+    this.disabled = false,
     this.onTap,
     required this.child,
   });
@@ -24,12 +31,18 @@ class FoxyTabItem extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final primary = colorScheme.primary;
-    final textStyle = TextStyle(color: active ? primary : null);
+    final disabledColor = colorScheme.outline.withValues(alpha: 0.5);
+    final textStyle = TextStyle(
+      color: disabled ? disabledColor : (active ? primary : null),
+    );
     var container = Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: DefaultTextStyle.merge(style: textStyle, child: child),
     );
+    if (disabled) {
+      return container;
+    }
     var gestureDetector = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -98,10 +111,12 @@ class _FoxyTabState extends State<FoxyTab> {
   }
 
   FoxyTabItem _buildItem(int i) {
+    final isDisabled = widget.disabledIndexes.contains(i);
     return FoxyTabItem(
       key: keys[i],
       active: i == index,
-      onTap: () => handleTap(i),
+      disabled: isDisabled,
+      onTap: isDisabled ? null : () => handleTap(i),
       child: widget.tabs[i],
     );
   }

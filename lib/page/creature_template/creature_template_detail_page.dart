@@ -668,7 +668,19 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       Text('剥皮掉落'),
       Text('移动'),
     ];
-    var tab = FoxyTab(tabs: tabs);
+    // Tab 条件禁用：根据 npcflag 和掉落 ID 禁用相关 Tab
+    // 商人标识: 0x80 | 0x100 | 0x200 | 0x400 | 0x800 = 3968
+    // 训练师标识: 0x10 | 0x20 | 0x40 | 0x400000 = 4194416
+    var tab = Watch((_) {
+      final t = viewModel.template.value;
+      final disabledIndexes = <int>{};
+      if ((t.npcFlag & 3968) == 0) disabledIndexes.add(7); // 商人
+      if ((t.npcFlag & 4194416) == 0) disabledIndexes.add(8); // 训练师
+      if (t.lootId == 0) disabledIndexes.add(9); // 击杀掉落
+      if (t.pickpocketLoot == 0) disabledIndexes.add(10); // 偷窃掉落
+      if (t.skinLoot == 0) disabledIndexes.add(11); // 剥皮掉落
+      return FoxyTab(tabs: tabs, disabledIndexes: disabledIndexes);
+    });
     final children = [
       Watch((_) => _Header(viewModel.template.value.name)),
       tab,
@@ -772,9 +784,37 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       bottom: 0,
       left: 0,
       right: 0,
-      child: _Footer(onTap: () {}),
+      child: _Footer(onSave: _handleSave),
     );
     return Stack(children: [listView, positioned]);
+  }
+
+  Future<void> _handleSave() async {
+    try {
+      await viewModel.save();
+      if (!mounted) return;
+      // 保存成功，返回上一页
+      AutoRouter.of(context).maybePop(true);
+    } catch (e) {
+      if (!mounted) return;
+      // 显示错误对话框
+      showShadDialog(
+        context: context,
+        builder: (context) => ShadDialog.alert(
+          title: const Text('保存失败'),
+          description: Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: SelectableText(e.toString()),
+          ),
+          actions: [
+            ShadButton(
+              child: const Text('确定'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -785,17 +825,17 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
 }
 
 class _Footer extends StatelessWidget {
-  final void Function()? onTap;
-  const _Footer({this.onTap});
+  final Future<void> Function()? onSave;
+  const _Footer({this.onSave});
 
   @override
   Widget build(BuildContext context) {
     final cancelButton = ShadButton.ghost(
-      onPressed: () => handlePressed(context),
+      onPressed: () => handleCancel(context),
       child: Text('取消'),
     );
     final children = [
-      ShadButton(onPressed: onTap, child: Text('保存')),
+      ShadButton(onPressed: onSave, child: Text('保存')),
       const SizedBox(width: 8),
       cancelButton,
     ];
@@ -814,7 +854,7 @@ class _Footer extends StatelessWidget {
     );
   }
 
-  void handlePressed(BuildContext context) {
+  void handleCancel(BuildContext context) {
     AutoRouter.of(context).maybePop();
   }
 }
