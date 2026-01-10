@@ -19,6 +19,7 @@ dependencies:
   package_info_plus: ^9.0.0
   path: ^1.9.1
   shadcn_ui: ^0.43.0
+  shared_preferences: ^2.3.5
   signals: ^6.0.2
   signals_flutter: ^6.0.2
   url_launcher: ^6.3.1
