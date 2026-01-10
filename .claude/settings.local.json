@@ -16,7 +16,9 @@
       "mcp__dart-mcp-server__analyze_files",
       "mcp__context7__query-docs",
       "Bash(git checkout:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(xargs:*)",
+      "mcp__dart-mcp-server__resolve_workspace_symbol"
     ],
     "deny": []
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class CreatureTemplateDetailViewModel {
@@ -11,13 +12,13 @@ class CreatureTemplateDetailViewModel {
   final iconNameController = TextEditingController();
   final minLevelController = TextEditingController();
   final maxLevelController = TextEditingController();
-  final unitClassController = TextEditingController();
-  final rankController = TextEditingController();
-  final racialLeaderController = TextEditingController();
+  final unitClassController = ShadSelectController<int>();
+  final rankController = ShadSelectController<int>();
+  final racialLeaderController = ShadSelectController<int>();
   final factionController = TextEditingController();
   final familyController = TextEditingController();
-  final typeController = TextEditingController();
-  final regenerateHealthController = TextEditingController();
+  final typeController = ShadSelectController<int>();
+  final regenerateHealthController = ShadSelectController<int>();
   final petSpellDataIdController = TextEditingController();
   final vehicleIdController = TextEditingController();
   final gossipMenuIdController = TextEditingController();
@@ -35,8 +36,8 @@ class CreatureTemplateDetailViewModel {
   final spellSchoolImmuneMaskController = TextEditingController();
 
   /// Modifier
-  final expController = TextEditingController();
-  final damageSchoolController = TextEditingController();
+  final expController = ShadSelectController<int>();
+  final damageSchoolController = ShadSelectController<int>();
   final damageModifierController = TextEditingController();
   final armorModifierController = TextEditingController();
   final baseAttackTimeController = TextEditingController();
@@ -72,7 +73,7 @@ class CreatureTemplateDetailViewModel {
 
   /// Movement
   final movementIdController = TextEditingController();
-  final movementTypeController = TextEditingController();
+  final movementTypeController = ShadSelectController<int>();
   final hoverHeightController = TextEditingController();
 
   /// Other
@@ -177,13 +178,13 @@ class CreatureTemplateDetailViewModel {
     iconNameController.text = template.iconName;
     minLevelController.text = template.minLevel.toString();
     maxLevelController.text = template.maxLevel.toString();
-    unitClassController.text = template.unitClass.toString();
-    rankController.text = template.rank.toString();
-    racialLeaderController.text = template.racialLeader.toString();
+    unitClassController.value = {template.unitClass};
+    rankController.value = {template.rank};
+    racialLeaderController.value = {template.racialLeader};
     factionController.text = template.faction.toString();
     familyController.text = template.family.toString();
-    typeController.text = template.type.toString();
-    regenerateHealthController.text = template.regenHealth.toString();
+    typeController.value = {template.type};
+    regenerateHealthController.value = {template.regenHealth};
     petSpellDataIdController.text = template.petSpellDataId.toString();
     vehicleIdController.text = template.vehicleId.toString();
     gossipMenuIdController.text = template.gossipMenuId.toString();
@@ -202,8 +203,8 @@ class CreatureTemplateDetailViewModel {
         template.spellSchoolImmuneMask.toString();
 
     /// Modifier
-    expController.text = template.exp.toString();
-    damageSchoolController.text = template.damageSchool.toString();
+    expController.value = {template.exp};
+    damageSchoolController.value = {template.damageSchool};
     damageModifierController.text = template.damageModifier.toString();
     armorModifierController.text = template.armorModifier.toString();
     baseAttackTimeController.text = template.baseAttackTime.toString();
@@ -239,7 +240,7 @@ class CreatureTemplateDetailViewModel {
 
     ///Movement
     movementIdController.text = template.movementId.toString();
-    movementTypeController.text = template.movementType.toString();
+    movementTypeController.value = {template.movementType};
     hoverHeightController.text = template.hoverHeight.toString();
 
     /// Other

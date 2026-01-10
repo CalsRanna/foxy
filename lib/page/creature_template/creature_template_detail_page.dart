@@ -1,22 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
-import 'package:foxy/widget/enum_select.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-
-/// unit_class 职业选项
-const kUnitClassOptions = {
-  1: '战士 (Warrior)',
-  2: '圣骑士 (Paladin)',
-  4: '盗贼 (Rogue)',
-  8: '法师 (Mage)',
-};
 
 @RoutePage()
 class CreatureTemplateDetailPage extends StatefulWidget {
@@ -79,28 +71,30 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     );
     final uniClassInput = FormItem(
       label: '职业',
-      child: Watch((_) {
-        final unitClass = viewModel.template.value.unitClass;
-        return EnumSelect<int>(
-          value: unitClass,
-          options: kUnitClassOptions,
-          placeholder: 'unit_class',
-          onChanged: (value) {
-            viewModel.template.value.unitClass = value ?? 0;
-            viewModel.unitClassController.text = (value ?? 0).toString();
-          },
-        );
-      }),
+      child: ShadSelect<int>(
+        controller: viewModel.unitClassController,
+        options: kUnitClassOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) => Text(kUnitClassOptions[value] ?? ''),
+        placeholder: const Text('unit_class'),
+      ),
     );
     final rankInput = FormItem(
-      controller: viewModel.rankController,
       label: '稀有程度',
-      placeholder: 'unit_class',
+      child: ShadSelect<int>(
+        controller: viewModel.rankController,
+        options: kRankOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) => Text(kRankOptions[value] ?? ''),
+        placeholder: const Text('rank'),
+      ),
     );
     final racialLeaderInput = FormItem(
-      controller: viewModel.racialLeaderController,
       label: '种族领袖',
-      placeholder: 'RacialLeader',
+      child: ShadSelect<int>(
+        controller: viewModel.racialLeaderController,
+        options: kBooleanOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) => Text(kBooleanOptions[value] ?? ''),
+        placeholder: const Text('RacialLeader'),
+      ),
     );
     final factionInput = FormItem(
       controller: viewModel.factionController,
@@ -113,14 +107,22 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       placeholder: 'family',
     );
     final typeInput = FormItem(
-      controller: viewModel.typeController,
       label: '类型',
-      placeholder: 'type',
+      child: ShadSelect<int>(
+        controller: viewModel.typeController,
+        options: kCreatureTypeOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) => Text(kCreatureTypeOptions[value] ?? ''),
+        placeholder: const Text('type'),
+      ),
     );
     final regenerateHealthInput = FormItem(
-      controller: viewModel.regenerateHealthController,
       label: '回复生命',
-      placeholder: 'RegenHealth',
+      child: ShadSelect<int>(
+        controller: viewModel.regenerateHealthController,
+        options: kBooleanOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) => Text(kBooleanOptions[value] ?? ''),
+        placeholder: const Text('RegenHealth'),
+      ),
     );
     final petSpellDataIdInput = FormItem(
       controller: viewModel.petSpellDataIdController,
@@ -256,14 +258,22 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
 
     /// Modifier
     final expInput = FormItem(
-      controller: viewModel.expController,
       label: '属性扩展',
-      placeholder: 'exp',
+      child: ShadSelect<int>(
+        controller: viewModel.expController,
+        options: kExpansionOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) => Text(kExpansionOptions[value] ?? ''),
+        placeholder: const Text('exp'),
+      ),
     );
     final damageSchoolInput = FormItem(
-      controller: viewModel.damageSchoolController,
       label: '伤害类型',
-      placeholder: 'dmgschool',
+      child: ShadSelect<int>(
+        controller: viewModel.damageSchoolController,
+        options: kDamageSchoolOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) => Text(kDamageSchoolOptions[value] ?? ''),
+        placeholder: const Text('dmgschool'),
+      ),
     );
     final damageModifierInput = FormItem(
       controller: viewModel.damageModifierController,
@@ -511,9 +521,13 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       placeholder: 'movementId',
     );
     final movementTypeInput = FormItem(
-      controller: viewModel.movementTypeController,
       label: '移动类型',
-      placeholder: 'movementType',
+      child: ShadSelect<int>(
+        controller: viewModel.movementTypeController,
+        options: kMovementTypeOptions.toShadOptions(),
+        selectedOptionBuilder: (context, value) => Text(kMovementTypeOptions[value] ?? ''),
+        placeholder: const Text('movementType'),
+      ),
     );
     final hoverHeightInput = FormItem(
       controller: viewModel.hoverHeightController,
