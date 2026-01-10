@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class FoxyTab extends StatefulWidget {
   final List<Widget> tabs;
+  final List<Widget> contents;
   final Set<int> disabledIndexes;
   const FoxyTab({
     super.key,
     required this.tabs,
+    required this.contents,
     this.disabledIndexes = const {},
   });
 
@@ -86,7 +88,29 @@ class _FoxyTabState extends State<FoxyTab> {
       left: _getOffset(),
       child: _Indicator(width: width[index]),
     );
-    return Stack(children: [container, animatedPositioned]);
+
+    // 获取当前显示的内容，如果没有则显示占位符
+    Widget currentContent = widget.contents.length > index
+        ? widget.contents[index]
+        : Center(child: Text('该Tab尚未实现'));
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Stack(children: [container, animatedPositioned]),
+        Flexible(
+          fit: FlexFit.loose,
+          child: AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            child: KeyedSubtree(
+              key: ValueKey(index),
+              child: currentContent,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   void handleTap(int index) {

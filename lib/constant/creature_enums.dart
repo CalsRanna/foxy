@@ -121,3 +121,52 @@ const kCreatureFamilyOptions = {
   45: '熔火犬 (Core Hound)',
   46: '灵魂兽 (Spirit Beast)',
 };
+
+/// resistance school 抗性类型选项
+const kResistanceSchoolOptions = {
+  0: '物理 (Physical)',
+  1: '神圣 (Holy)',
+  2: '火焰 (Fire)',
+  3: '自然 (Nature)',
+  4: '冰霜 (Frost)',
+  5: '暗影 (Shadow)',
+  6: '奥术 (Arcane)',
+};
+
+/// trainer_type 训练师类型选项
+const kTrainerTypeOptions = {
+  0: '职业训练师 (Class Trainer)',
+  1: '坐骑训练师 (Mount Trainer)',
+  2: '商业技能训练师 (Tradeskill Trainer)',
+  3: '宠物训练师 (Pet Trainer)',
+};
+
+/// trainer_class 训练师职业选项
+const kTrainerClassOptions = {
+  0: '无 (None)',
+  1: '战士 (Warrior)',
+  2: '圣骑士 (Paladin)',
+  3: '猎人 (Hunter)',
+  4: '盗贼 (Rogue)',
+  5: '牧师 (Priest)',
+  6: '死亡骑士 (Death Knight)',
+  7: '萨满祭司 (Shaman)',
+  8: '法师 (Mage)',
+  9: '术士 (Warlock)',
+  11: '德鲁伊 (Druid)',
+};
+
+/// trainer_race 训练师种族选项
+const kTrainerRaceOptions = {
+  0: '无 (None)',
+  1: '人类 (Human)',
+  2: '兽人 (Orc)',
+  3: '矮人 (Dwarf)',
+  4: '暗夜精灵 (Night Elf)',
+  5: '亡灵 (Undead)',
+  6: '牛头人 (Tauren)',
+  7: '侏儒 (Gnome)',
+  8: '巨魔 (Troll)',
+  10: '血精灵 (Blood Elf)',
+  11: '德莱尼 (Draenei)',
+};

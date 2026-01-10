@@ -8,10 +8,22 @@ import 'package:foxy/page/creature_template/creature_display_info_selector.dart'
 import 'package:foxy/page/creature_template/creature_spell_data_selector.dart';
 import 'package:foxy/page/creature_template/creature_template_selector.dart';
 import 'package:foxy/page/creature_template/faction_template_selector.dart';
-import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/page/creature_template/gossip_menu_selector.dart';
 import 'package:foxy/page/creature_template/loot_template_selector.dart';
 import 'package:foxy/page/creature_template/vehicle_selector.dart';
+// 新增Tab组件导入
+import 'package:foxy/page/creature_template/tab/creature_template_addon_tab.dart';
+import 'package:foxy/page/creature_template/tab/creature_onkill_reputation_tab.dart';
+import 'package:foxy/page/creature_template/tab/creature_template_resistance_tab.dart';
+import 'package:foxy/page/creature_template/tab/creature_template_spell_tab.dart';
+import 'package:foxy/page/creature_template/tab/creature_equip_template_tab.dart';
+import 'package:foxy/page/creature_template/tab/creature_questitem_tab.dart';
+import 'package:foxy/page/creature_template/tab/npc_vendor_tab.dart';
+import 'package:foxy/page/creature_template/tab/npc_trainer_tab.dart';
+import 'package:foxy/page/creature_template/tab/creature_loot_template_tab.dart';
+import 'package:foxy/page/creature_template/tab/pickpocketing_loot_template_tab.dart';
+import 'package:foxy/page/creature_template/tab/skinning_loot_template_tab.dart';
+import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/tab.dart';
@@ -473,8 +485,48 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       label: '盘旋高度',
       placeholder: 'HoverHeight',
     );
+    final inhabitTypeInput = FormItem(
+      label: '栖息类型',
+      child: FlagPicker(
+        controller: viewModel.inhabitTypeController,
+        flags: kInhabitTypeOptions,
+        title: '栖息类型',
+        placeholder: 'InhabitType',
+      ),
+    );
 
-    /// 5. 移动属性 (6个字段)
+    /// 训练师属性输入
+    final trainerTypeInput = FormItem(
+      label: '训练师类型',
+      child: FoxyShadSelect<int>(
+        controller: viewModel.trainerTypeController,
+        options: kTrainerTypeOptions,
+        placeholder: const Text('trainer_type'),
+      ),
+    );
+    final trainerSpellInput = FormItem(
+      controller: viewModel.trainerSpellController,
+      label: '训练师法术',
+      placeholder: 'trainer_spell',
+    );
+    final trainerClassInput = FormItem(
+      label: '训练师职业',
+      child: FoxyShadSelect<int>(
+        controller: viewModel.trainerClassController,
+        options: kTrainerClassOptions,
+        placeholder: const Text('trainer_class'),
+      ),
+    );
+    final trainerRaceInput = FormItem(
+      label: '训练师种族',
+      child: FoxyShadSelect<int>(
+        controller: viewModel.trainerRaceController,
+        options: kTrainerRaceOptions,
+        placeholder: const Text('trainer_race'),
+      ),
+    );
+
+    /// 5. 移动属性 (7个字段)
     final movementRows = [
       Row(
         spacing: 8,
@@ -490,8 +542,21 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
         children: [
           Expanded(child: hoverHeightInput),
           Expanded(child: vehicleIdInput),
+          Expanded(child: inhabitTypeInput),
           Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
+        ],
+      ),
+    ];
+
+    /// 8. 训练师属性 (4个字段，根据npcFlag条件显示)
+    final trainerRows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: trainerTypeInput),
+          Expanded(child: trainerSpellInput),
+          Expanded(child: trainerClassInput),
+          Expanded(child: trainerRaceInput),
         ],
       ),
     ];
@@ -643,12 +708,130 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       Text('击杀掉落'),
       Text('偷窃掉落'),
       Text('剥皮掉落'),
-      Text('移动'),
     ];
-    // Tab 条件禁用：根据 npcflag 和掉落 ID 禁用相关 Tab
-    // 商人标识: 0x80 | 0x100 | 0x200 | 0x400 | 0x800 = 3968
-    // 训练师标识: 0x10 | 0x20 | 0x40 | 0x400000 = 4194416
-    var tab = Watch((_) {
+
+    // Tab内容列表（生物模板内容）
+    var basicTabContent = SingleChildScrollView(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          // 基础信息
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('基础信息'),
+          ),
+          SizedBox(height: 4),
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: basicRows),
+          ),
+          // 类型阵营
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('类型阵营'),
+          ),
+          SizedBox(height: 4),
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: typeRows),
+          ),
+          // 外观模型
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('外观模型'),
+          ),
+          SizedBox(height: 4),
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: modelRows),
+          ),
+          // 战斗属性
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('战斗属性'),
+          ),
+          SizedBox(height: 4),
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: combatRows),
+          ),
+          // 移动属性
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('移动属性'),
+          ),
+          SizedBox(height: 4),
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: movementRows),
+          ),
+          // 训练师属性
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('训练师属性'),
+          ),
+          SizedBox(height: 4),
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: trainerRows),
+          ),
+          // 标识免疫
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('标识免疫'),
+          ),
+          SizedBox(height: 4),
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: flagImmuneRows),
+          ),
+          // 掉落难度与脚本
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('掉落难度与脚本'),
+          ),
+          SizedBox(height: 4),
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: lootDifficultyScriptRows),
+          ),
+          SizedBox(height: 72),
+        ],
+      ),
+    );
+
+    // Tab内容列表
+    var tabContents = [
+      // 生物模板（主内容）
+      basicTabContent,
+      // 模板补充 Tab
+      CreatureTemplateAddonTab(entry: widget.entry ?? 0),
+      // 击杀声望 Tab
+      CreatureOnkillReputationTab(creatureID: widget.entry ?? 0),
+      // 抗性 Tab
+      CreatureTemplateResistanceTab(creatureID: widget.entry ?? 0),
+      // 技能 Tab
+      CreatureTemplateSpellTab(creatureID: widget.entry ?? 0),
+      // 装备模板 Tab
+      CreatureEquipTemplateTab(creatureID: widget.entry ?? 0),
+      // 任务物品 Tab
+      CreatureQuestitemTab(creatureEntry: widget.entry ?? 0),
+      // 商人 Tab
+      NpcVendorTab(entry: widget.entry ?? 0),
+      // 训练师 Tab
+      NpcTrainerTab(id: widget.entry ?? 0),
+      // 击杀掉落 Tab
+      CreatureLootTemplateTab(lootId: viewModel.template.value.lootId),
+      // 偷窃掉落 Tab
+      PickpocketingLootTemplateTab(lootId: viewModel.template.value.pickpocketLoot),
+      // 剥皮掉落 Tab
+      SkinningLootTemplateTab(lootId: viewModel.template.value.skinLoot),
+    ];
+
+    // Tab容器
+    var tabBar = Watch((_) {
       final t = viewModel.template.value;
       final disabledIndexes = <int>{};
       if ((t.npcFlag & 3968) == 0) disabledIndexes.add(7); // 商人
@@ -656,83 +839,19 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       if (t.lootId == 0) disabledIndexes.add(9); // 击杀掉落
       if (t.pickpocketLoot == 0) disabledIndexes.add(10); // 偷窃掉落
       if (t.skinLoot == 0) disabledIndexes.add(11); // 剥皮掉落
-      return FoxyTab(tabs: tabs, disabledIndexes: disabledIndexes);
+      return FoxyTab(
+        tabs: tabs,
+        disabledIndexes: disabledIndexes,
+        contents: tabContents,
+      );
     });
+
     final children = [
       Watch((_) => _Header(viewModel.template.value.name)),
-      tab,
+      tabBar,
       SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('基础信息'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: basicRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('类型阵营'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: typeRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('外观模型'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: modelRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('战斗属性'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: combatRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('移动属性'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: movementRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('标识免疫'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: flagImmuneRows),
-      ),
-      SizedBox(height: 16),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text('掉落难度与脚本'),
-      ),
-      SizedBox(height: 4),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: lootDifficultyScriptRows),
-      ),
-      SizedBox(height: 72),
     ];
+
     var listView = ListView(
       padding: const EdgeInsets.all(16),
       children: children,

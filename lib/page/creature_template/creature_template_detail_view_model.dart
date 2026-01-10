@@ -75,6 +75,13 @@ class CreatureTemplateDetailViewModel {
   final movementIdController = TextEditingController();
   final movementTypeController = ShadSelectController<int>();
   final hoverHeightController = TextEditingController();
+  final inhabitTypeController = TextEditingController();
+
+  /// Trainer
+  final trainerTypeController = ShadSelectController<int>();
+  final trainerSpellController = TextEditingController();
+  final trainerClassController = ShadSelectController<int>();
+  final trainerRaceController = ShadSelectController<int>();
 
   /// Other
   final aiNameController = TextEditingController();
@@ -172,6 +179,13 @@ class CreatureTemplateDetailViewModel {
     t.movementId = _parseInt(movementIdController.text);
     t.movementType = _getSelectValue(movementTypeController);
     t.hoverHeight = _parseDouble(hoverHeightController.text);
+    t.inhabitType = _parseInt(inhabitTypeController.text);
+
+    /// Trainer
+    t.trainerType = _getSelectValue(trainerTypeController);
+    t.trainerSpell = _parseInt(trainerSpellController.text);
+    t.trainerClass = _getSelectValue(trainerClassController);
+    t.trainerRace = _getSelectValue(trainerRaceController);
 
     /// Other
     t.aiName = aiNameController.text;
@@ -257,6 +271,13 @@ class CreatureTemplateDetailViewModel {
     movementIdController.dispose();
     movementTypeController.dispose();
     hoverHeightController.dispose();
+    inhabitTypeController.dispose();
+
+    /// Trainer
+    trainerTypeController.dispose();
+    trainerSpellController.dispose();
+    trainerClassController.dispose();
+    trainerRaceController.dispose();
 
     /// Other
     aiNameController.dispose();
@@ -344,6 +365,13 @@ class CreatureTemplateDetailViewModel {
     movementIdController.text = template.movementId.toString();
     movementTypeController.value = {template.movementType};
     hoverHeightController.text = template.hoverHeight.toString();
+    inhabitTypeController.text = template.inhabitType.toString();
+
+    /// Trainer
+    trainerTypeController.value = {template.trainerType};
+    trainerSpellController.text = template.trainerSpell.toString();
+    trainerClassController.value = {template.trainerClass};
+    trainerRaceController.value = {template.trainerRace};
 
     /// Other
     aiNameController.text = template.aiName;

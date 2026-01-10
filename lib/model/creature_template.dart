@@ -75,6 +75,10 @@ class CreatureTemplate {
   double speedWalk = 1;
   int spellSchoolImmuneMask = 0;
   String subName = '';
+  int trainerClass = 0;
+  int trainerRace = 0;
+  int trainerSpell = 0;
+  int trainerType = 0;
   int type = 0;
   int typeFlags = 0;
   int unitClass = 0;
@@ -82,6 +86,7 @@ class CreatureTemplate {
   int unitFlags2 = 0;
   int vehicleId = 0;
   int verifiedBuild = 0;
+  int inhabitType = 7;
 
   CreatureTemplate();
 
@@ -137,6 +142,10 @@ class CreatureTemplate {
     speedWalk = json['speed_walk'] ?? 1.0;
     spellSchoolImmuneMask = json['spell_school_immune_mask'] ?? 0;
     subName = json['subname'] ?? '';
+    trainerClass = json['trainer_class'] ?? 0;
+    trainerRace = json['trainer_race'] ?? 0;
+    trainerSpell = json['trainer_spell'] ?? 0;
+    trainerType = json['trainer_type'] ?? 0;
     type = json['type'] ?? 0;
     typeFlags = json['type_flags'] ?? 0;
     unitClass = json['unit_class'] ?? 0;
@@ -144,6 +153,7 @@ class CreatureTemplate {
     unitFlags2 = json['unit_flags2'] ?? 0;
     vehicleId = json['VehicleId'] ?? 0;
     verifiedBuild = json['VerifiedBuild'] ?? 0;
+    inhabitType = json['InhabitType'] ?? 7;
   }
 
   CreatureTemplate copyWith({int? entry}) {
@@ -203,13 +213,18 @@ class CreatureTemplate {
       'speed_walk': speedWalk,
       'spell_school_immune_mask': spellSchoolImmuneMask,
       'subname': subName,
+      'trainer_class': trainerClass,
+      'trainer_race': trainerRace,
+      'trainer_spell': trainerSpell,
+      'trainer_type': trainerType,
       'type': type,
       'type_flags': typeFlags,
       'unit_class': unitClass,
       'unit_flags': unitFlags,
       'unit_flags2': unitFlags2,
       'VehicleId': vehicleId,
-      'VerifiedBuild': verifiedBuild
+      'VerifiedBuild': verifiedBuild,
+      'InhabitType': inhabitType,
     };
   }
 }
