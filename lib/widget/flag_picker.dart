@@ -34,7 +34,6 @@ class _FlagPickerState extends State<FlagPicker> {
     return ShadInput(
       controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
-      readOnly: true,
       trailing: ShadButton.ghost(
         height: 20,
         width: 20,
