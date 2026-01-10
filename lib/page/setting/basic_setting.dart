@@ -27,7 +27,7 @@ class _BasicSettingPageState extends State<BasicSettingPage> {
     return Align(
       alignment: Alignment.topLeft,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
+        constraints: const BoxConstraints(maxWidth: 720),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -90,9 +90,7 @@ class _SettingItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
