@@ -4,7 +4,11 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
+import 'package:foxy/widget/creature_template_selector.dart';
+import 'package:foxy/widget/faction_template_selector.dart';
 import 'package:foxy/widget/flag_picker.dart';
+import 'package:foxy/widget/gossip_menu_selector.dart';
+import 'package:foxy/widget/loot_template_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:foxy/widget/header.dart';
@@ -99,9 +103,11 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       ),
     );
     final factionInput = FormItem(
-      controller: viewModel.factionController,
       label: '阵营',
-      placeholder: 'faction',
+      child: FactionTemplateSelector(
+        controller: viewModel.factionController,
+        placeholder: 'faction',
+      ),
     );
     final familyInput = FormItem(
       controller: viewModel.familyController,
@@ -137,9 +143,11 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       placeholder: 'VehicleId',
     );
     final gossipMenuIdInput = FormItem(
-      controller: viewModel.gossipMenuIdController,
       label: '对话',
-      placeholder: 'gossip_menu_id',
+      child: GossipMenuSelector(
+        controller: viewModel.gossipMenuIdController,
+        placeholder: 'gossip_menu_id',
+      ),
     );
 
     final basicRows = [
@@ -416,19 +424,25 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       placeholder: 'maxgold',
     );
     final lootInput = FormItem(
-      controller: viewModel.lootController,
       label: '击杀掉落',
-      placeholder: 'lootid',
+      child: LootTemplateSelector.creature(
+        controller: viewModel.lootController,
+        placeholder: 'lootid',
+      ),
     );
     final pickpocketLootInput = FormItem(
-      controller: viewModel.pickpocketLootController,
       label: '偷窃掉落',
-      placeholder: 'pickpocketloot',
+      child: LootTemplateSelector.pickpocket(
+        controller: viewModel.pickpocketLootController,
+        placeholder: 'pickpocketloot',
+      ),
     );
     final skinLootInput = FormItem(
-      controller: viewModel.skinLootController,
       label: '剥皮掉落',
-      placeholder: 'skinloot',
+      child: LootTemplateSelector.skinning(
+        controller: viewModel.skinLootController,
+        placeholder: 'skinloot',
+      ),
     );
 
     final lootRows = [
@@ -454,29 +468,39 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
 
     /// Difficulty
     final killCredit1Input = FormItem(
-      controller: viewModel.killCredit1Controller,
       label: '击杀关联1',
-      placeholder: 'KillCredit1',
+      child: CreatureTemplateSelector(
+        controller: viewModel.killCredit1Controller,
+        placeholder: 'KillCredit1',
+      ),
     );
     final killCredit2input = FormItem(
-      controller: viewModel.killCredit2Controller,
       label: '击杀关联2',
-      placeholder: 'KillCredit2',
+      child: CreatureTemplateSelector(
+        controller: viewModel.killCredit2Controller,
+        placeholder: 'KillCredit2',
+      ),
     );
     final difficultyEntry1Input = FormItem(
-      controller: viewModel.difficultyEntry1Controller,
       label: '难度1',
-      placeholder: 'difficulty_entry_2',
+      child: CreatureTemplateSelector(
+        controller: viewModel.difficultyEntry1Controller,
+        placeholder: 'difficulty_entry_1',
+      ),
     );
     final difficultyEntry2Input = FormItem(
-      controller: viewModel.difficultyEntry2Controller,
       label: '难度2',
-      placeholder: 'difficulty_entry_2',
+      child: CreatureTemplateSelector(
+        controller: viewModel.difficultyEntry2Controller,
+        placeholder: 'difficulty_entry_2',
+      ),
     );
     final difficultyEntry3Input = FormItem(
-      controller: viewModel.difficultyEntry3Controller,
       label: '难度3',
-      placeholder: 'difficulty_entry_3',
+      child: CreatureTemplateSelector(
+        controller: viewModel.difficultyEntry3Controller,
+        placeholder: 'difficulty_entry_3',
+      ),
     );
 
     final difficultyRows = [

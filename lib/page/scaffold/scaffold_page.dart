@@ -10,6 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:window_manager/window_manager.dart';
 
 @RoutePage()
 class ScaffoldPage extends StatefulWidget {
@@ -164,11 +165,17 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       }
     }
     var borderSide = BorderSide(color: Colors.grey.withValues(alpha: 0.5));
-    return Container(
-      decoration: BoxDecoration(border: Border(bottom: borderSide)),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      width: double.infinity,
-      child: ShadBreadcrumb(children: children),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onPanStart: (details) {
+        windowManager.startDragging();
+      },
+      child: Container(
+        decoration: BoxDecoration(border: Border(bottom: borderSide)),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        width: double.infinity,
+        child: ShadBreadcrumb(children: children),
+      ),
     );
   }
 
