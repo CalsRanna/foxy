@@ -108,7 +108,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     return ShadDialog(
       title: Text(widget.title),
       // description: Text('编号: ${widget.entry}'),
-      constraints: BoxConstraints(maxWidth: 600),
+      constraints: BoxConstraints(maxWidth: 720),
       actions: [
         ShadButton.outline(onPressed: _addRow, child: Text('添加')),
         const Spacer(),

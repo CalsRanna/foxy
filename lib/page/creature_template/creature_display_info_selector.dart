@@ -127,10 +127,9 @@ class _CreatureDisplayInfoSelectorDialogState
           child: Text('取消'),
         ),
         ShadButton(
-          onPressed:
-              _selectedId != null
-                  ? () => Navigator.of(context).pop(_selectedId)
-                  : null,
+          onPressed: _selectedId != null
+              ? () => Navigator.of(context).pop(_selectedId)
+              : null,
           child: Text('确定'),
         ),
       ],
@@ -143,7 +142,10 @@ class _CreatureDisplayInfoSelectorDialogState
           _buildToolbar(),
           SizedBox(height: 8),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 480, maxHeight: tableMaxHeight),
+            constraints: BoxConstraints(
+              maxWidth: 720,
+              maxHeight: tableMaxHeight,
+            ),
             child: _loading
                 ? Center(child: CircularProgressIndicator())
                 : _buildTable(),
@@ -193,7 +195,7 @@ class _CreatureDisplayInfoSelectorDialogState
         Spacer(),
         FoxyPagination(
           page: _page,
-          pageSize: 25,
+          pageSize: 50,
           total: _total,
           onChange: _paginate,
         ),

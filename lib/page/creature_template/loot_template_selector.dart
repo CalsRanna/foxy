@@ -146,10 +146,13 @@ class _LootTemplateSelectorDialogState
     setState(() => _loading = true);
     try {
       final repository = LootTemplateRepository(widget.tableType);
-      final entry =
-          _entryController.text.isEmpty ? null : _entryController.text;
-      final items =
-          await repository.searchDistinctEntries(entry: entry, page: _page);
+      final entry = _entryController.text.isEmpty
+          ? null
+          : _entryController.text;
+      final items = await repository.searchDistinctEntries(
+        entry: entry,
+        page: _page,
+      );
       final total = await repository.count(entry: entry);
       if (mounted) {
         setState(() {
@@ -186,10 +189,9 @@ class _LootTemplateSelectorDialogState
           child: Text('取消'),
         ),
         ShadButton(
-          onPressed:
-              _selectedId != null
-                  ? () => Navigator.of(context).pop(_selectedId)
-                  : null,
+          onPressed: _selectedId != null
+              ? () => Navigator.of(context).pop(_selectedId)
+              : null,
           child: Text('确定'),
         ),
       ],
@@ -202,7 +204,10 @@ class _LootTemplateSelectorDialogState
           _buildToolbar(),
           SizedBox(height: 8),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 320, maxHeight: tableMaxHeight),
+            constraints: BoxConstraints(
+              maxWidth: 720,
+              maxHeight: tableMaxHeight,
+            ),
             child: _loading
                 ? Center(child: CircularProgressIndicator())
                 : _buildTable(),
@@ -252,7 +257,7 @@ class _LootTemplateSelectorDialogState
         Spacer(),
         FoxyPagination(
           page: _page,
-          pageSize: 25,
+          pageSize: 50,
           total: _total,
           onChange: _paginate,
         ),

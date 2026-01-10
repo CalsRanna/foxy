@@ -3,5 +3,5 @@ import 'package:get_it/get_it.dart';
 
 mixin RepositoryMixin {
   final laconic = GetIt.instance.get<FoxyViewModel>().laconic!;
-  final kPageSize = 25;
+  final kPageSize = 50;
 }

@@ -83,7 +83,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
       page: page,
-      pageSize: 25,
+      pageSize: 50,
       total: total,
       onChange: viewModel.paginate,
     );

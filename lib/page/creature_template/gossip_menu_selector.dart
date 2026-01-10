@@ -86,8 +86,9 @@ class _GossipMenuSelectorDialogState extends State<_GossipMenuSelectorDialog> {
     setState(() => _loading = true);
     try {
       final repository = GossipMenuRepository();
-      final menuId =
-          _menuIdController.text.isEmpty ? null : _menuIdController.text;
+      final menuId = _menuIdController.text.isEmpty
+          ? null
+          : _menuIdController.text;
       final items = await repository.search(menuId: menuId, page: _page);
       final total = await repository.count(menuId: menuId);
       if (mounted) {
@@ -125,10 +126,9 @@ class _GossipMenuSelectorDialogState extends State<_GossipMenuSelectorDialog> {
           child: Text('取消'),
         ),
         ShadButton(
-          onPressed:
-              _selectedId != null
-                  ? () => Navigator.of(context).pop(_selectedId)
-                  : null,
+          onPressed: _selectedId != null
+              ? () => Navigator.of(context).pop(_selectedId)
+              : null,
           child: Text('确定'),
         ),
       ],
@@ -141,7 +141,10 @@ class _GossipMenuSelectorDialogState extends State<_GossipMenuSelectorDialog> {
           _buildToolbar(),
           SizedBox(height: 8),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 400, maxHeight: tableMaxHeight),
+            constraints: BoxConstraints(
+              maxWidth: 720,
+              maxHeight: tableMaxHeight,
+            ),
             child: _loading
                 ? Center(child: CircularProgressIndicator())
                 : _buildTable(),
@@ -191,7 +194,7 @@ class _GossipMenuSelectorDialogState extends State<_GossipMenuSelectorDialog> {
         Spacer(),
         FoxyPagination(
           page: _page,
-          pageSize: 25,
+          pageSize: 50,
           total: _total,
           onChange: _paginate,
         ),

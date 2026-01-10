@@ -22,7 +22,7 @@ class _DatabaseSettingPageState extends State<DatabaseSettingPage> {
     return Align(
       alignment: Alignment.topLeft,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 400),
+        constraints: const BoxConstraints(maxWidth: 720),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
