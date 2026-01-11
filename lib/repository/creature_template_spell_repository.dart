@@ -21,7 +21,9 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
       builder = builder.where('cts.CreatureID', creatureID);
       builder = builder.orderBy('cts.Index');
       var results = await builder.get();
-      return results.map((e) => CreatureTemplateSpell.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => CreatureTemplateSpell.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       return [];
     }
@@ -35,7 +37,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
           .where('CreatureID', creatureID)
           .where('Index', index)
           .first();
-      return result != null ? CreatureTemplateSpell.fromJson(result.toMap()) : null;
+      return CreatureTemplateSpell.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -60,7 +62,11 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
 
   /// 删除技能
   Future<void> delete(int creatureID, int index) async {
-    await laconic.table(_table).where('CreatureID', creatureID).where('Index', index).delete();
+    await laconic
+        .table(_table)
+        .where('CreatureID', creatureID)
+        .where('Index', index)
+        .delete();
   }
 
   /// 复制技能
@@ -71,7 +77,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
         .select(['MAX(`Index`) AS maxIndex'])
         .where('CreatureID', creatureID)
         .first();
-    var maxIndex = (maxIndexResult?.toMap()['maxIndex'] ?? 0) as int;
+    var maxIndex = (maxIndexResult.toMap()['maxIndex'] ?? 0) as int;
 
     // 获取源记录
     var source = await find(creatureID, index);
@@ -94,7 +100,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
         .select(['MAX(`Index`) AS maxIndex'])
         .where('CreatureID', creatureID)
         .first();
-    var maxIndex = (maxResult?.toMap()['maxIndex'] ?? 0) as int;
+    var maxIndex = (maxResult.toMap()['maxIndex'] ?? 0) as int;
     return maxIndex + 1;
   }
 }

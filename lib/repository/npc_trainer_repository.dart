@@ -35,7 +35,7 @@ class NpcTrainerRepository with RepositoryMixin {
           .where('ID', id)
           .where('SpellID', spellID)
           .first();
-      return result != null ? NpcTrainer.fromJson(result.toMap()) : null;
+      return NpcTrainer.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -60,7 +60,11 @@ class NpcTrainerRepository with RepositoryMixin {
 
   /// 删除训练师技能
   Future<void> delete(int id, int spellID) async {
-    await laconic.table(_table).where('ID', id).where('SpellID', spellID).delete();
+    await laconic
+        .table(_table)
+        .where('ID', id)
+        .where('SpellID', spellID)
+        .delete();
   }
 
   /// 复制训练师技能
@@ -71,7 +75,7 @@ class NpcTrainerRepository with RepositoryMixin {
         .select(['MAX(SpellID) AS maxSpellID'])
         .where('ID', id)
         .first();
-    var maxSpellID = (maxSpellResult?.toMap()['maxSpellID'] ?? 0) as int;
+    var maxSpellID = (maxSpellResult.toMap()['maxSpellID'] ?? 0) as int;
 
     // 获取源记录
     var source = await find(id, spellID);

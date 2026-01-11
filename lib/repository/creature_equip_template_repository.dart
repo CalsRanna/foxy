@@ -73,7 +73,9 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
       builder = builder.where('cet.CreatureID', creatureID);
       builder = builder.orderBy('cet.ID');
       var results = await builder.get();
-      return results.map((e) => CreatureEquipTemplate.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => CreatureEquipTemplate.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       return [];
     }
@@ -87,7 +89,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
           .where('CreatureID', creatureID)
           .where('ID', id)
           .first();
-      return result != null ? CreatureEquipTemplate.fromJson(result.toMap()) : null;
+      return CreatureEquipTemplate.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -112,7 +114,11 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
 
   /// 删除装备模板
   Future<void> delete(int creatureID, int id) async {
-    await laconic.table(_table).where('CreatureID', creatureID).where('ID', id).delete();
+    await laconic
+        .table(_table)
+        .where('CreatureID', creatureID)
+        .where('ID', id)
+        .delete();
   }
 
   /// 复制装备模板
@@ -123,7 +129,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
         .select(['MAX(ID) AS maxId'])
         .where('CreatureID', creatureID)
         .first();
-    var maxId = (maxIdResult?.toMap()['maxId'] ?? 0) as int;
+    var maxId = (maxIdResult.toMap()['maxId'] ?? 0) as int;
 
     // 获取源记录
     var source = await find(creatureID, id);
@@ -146,7 +152,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
         .select(['MAX(ID) AS maxId'])
         .where('CreatureID', creatureID)
         .first();
-    var maxId = (maxResult?.toMap()['maxId'] ?? 0) as int;
+    var maxId = (maxResult.toMap()['maxId'] ?? 0) as int;
     return maxId + 1;
   }
 }

@@ -12,7 +12,9 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
       builder = builder.where('CreatureID', creatureID);
       builder = builder.orderBy('School');
       var results = await builder.get();
-      return results.map((e) => CreatureTemplateResistance.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => CreatureTemplateResistance.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       return [];
     }
@@ -26,7 +28,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
           .where('CreatureID', creatureID)
           .where('School', school)
           .first();
-      return result != null ? CreatureTemplateResistance.fromJson(result.toMap()) : null;
+      return CreatureTemplateResistance.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -51,7 +53,11 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
 
   /// 删除抗性
   Future<void> delete(int creatureID, int school) async {
-    await laconic.table(_table).where('CreatureID', creatureID).where('School', school).delete();
+    await laconic
+        .table(_table)
+        .where('CreatureID', creatureID)
+        .where('School', school)
+        .delete();
   }
 
   /// 复制抗性
@@ -62,7 +68,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
         .select(['MAX(School) AS maxSchool'])
         .where('CreatureID', creatureID)
         .first();
-    var maxSchool = (maxSchoolResult?.toMap()['maxSchool'] ?? 0) as int;
+    var maxSchool = (maxSchoolResult.toMap()['maxSchool'] ?? 0) as int;
 
     // 获取源记录
     var source = await find(creatureID, school);
@@ -85,7 +91,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
         .select(['MAX(School) AS maxSchool'])
         .where('CreatureID', creatureID)
         .first();
-    var maxSchool = (maxResult?.toMap()['maxSchool'] ?? 0) as int;
+    var maxSchool = (maxResult.toMap()['maxSchool'] ?? 0) as int;
     return maxSchool + 1;
   }
 }

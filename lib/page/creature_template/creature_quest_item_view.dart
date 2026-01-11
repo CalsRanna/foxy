@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/model/creature_questitem.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
-import 'package:foxy/repository/creature_questitem_repository.dart';
+import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';

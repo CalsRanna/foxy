@@ -5,11 +5,7 @@ class SpellRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell';
 
   /// 搜索技能
-  Future<List<Spell>> search({
-    String? id,
-    String? name,
-    int page = 1,
-  }) async {
+  Future<List<Spell>> search({String? id, String? name, int page = 1}) async {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table);
@@ -30,10 +26,7 @@ class SpellRepository with RepositoryMixin {
   }
 
   /// 计数
-  Future<int> count({
-    String? id,
-    String? name,
-  }) async {
+  Future<int> count({String? id, String? name}) async {
     try {
       var builder = laconic.table(_table);
       if (id != null && id.isNotEmpty) {
@@ -52,7 +45,7 @@ class SpellRepository with RepositoryMixin {
   Future<Spell?> find(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
-      return result != null ? Spell.fromJson(result.toMap()) : null;
+      return Spell.fromJson(result.toMap());
     } catch (e) {
       return null;
     }

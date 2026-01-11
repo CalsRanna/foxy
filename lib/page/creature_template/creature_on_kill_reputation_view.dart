@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/model/creature_onkill_reputation.dart';
-import 'package:foxy/repository/creature_onkill_reputation_repository.dart';
+import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
