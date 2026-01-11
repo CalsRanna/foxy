@@ -23,7 +23,8 @@
       "WebFetch(domain:wowdev.wiki)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(dir:*)",
-      "mcp__dart-mcp-server__dart_format"
+      "mcp__dart-mcp-server__dart_format",
+      "Bash(mysql:*)"
     ],
     "deny": []
   }

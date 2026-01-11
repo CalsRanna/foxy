@@ -1,10 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class CreatureTemplateDetailViewModel {
+  final routerFacade = GetIt.instance.get<RouterFacade>();
+
   /// Basic
   final entryController = TextEditingController();
   final nameController = TextEditingController();
@@ -92,17 +96,31 @@ class CreatureTemplateDetailViewModel {
   final template = signal(CreatureTemplate());
 
   /// 保存模板到数据库
-  Future<void> save() async {
-    final t = _collectFromControllers();
-    final repository = CreatureTemplateRepository();
-    if (t.entry == 0) {
-      // 新建
-      await repository.storeCreatureTemplate(t);
-    } else {
-      // 更新
-      await repository.updateCreatureTemplate(t);
+  Future<void> save(BuildContext context) async {
+    try {
+      final t = _collectFromControllers();
+      final repository = CreatureTemplateRepository();
+      if (t.entry == 0) {
+        // 新建
+        await repository.storeCreatureTemplate(t);
+      } else {
+        // 更新
+        await repository.updateCreatureTemplate(t);
+      }
+      template.value = t;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('模板数据已保存'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
-    template.value = t;
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
   }
 
   /// 从所有 Controller 收集数据构建 CreatureTemplate

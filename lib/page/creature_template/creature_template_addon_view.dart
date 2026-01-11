@@ -126,7 +126,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                   child: Text('保存'),
                 ),
                 ShadButton.ghost(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => viewModel.pop(),
                   child: Text('取消'),
                 ),
               ],

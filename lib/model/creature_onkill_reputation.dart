@@ -7,8 +7,8 @@ class CreatureOnKillReputation {
   int maxStanding2 = 0;
   bool isTeamAward1 = false;
   bool isTeamAward2 = false;
-  int rewOnKillRepValue1 = 0;
-  int rewOnKillRepValue2 = 0;
+  double rewOnKillRepValue1 = 0.0;
+  double rewOnKillRepValue2 = 0.0;
   int teamDependent = 0;
 
   CreatureOnKillReputation();
@@ -24,9 +24,11 @@ class CreatureOnKillReputation {
     isTeamAward1 = (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1;
     isTeamAward2 = (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1;
     rewOnKillRepValue1 =
-        json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0;
+        (json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0.0)
+            .toDouble();
     rewOnKillRepValue2 =
-        json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2'] ?? 0;
+        (json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2'] ?? 0.0)
+            .toDouble();
     teamDependent = json['TeamDependent'] ?? json['teamDependent'] ?? 0;
   }
 
