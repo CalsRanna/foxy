@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/card.dart';
-import 'package:get_it/get_it.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class FrequentModuleComponent extends StatelessWidget {
-  const FrequentModuleComponent({super.key});
+  final void Function(RouterMenu menu)? onMenuTap;
+
+  const FrequentModuleComponent({super.key, this.onMenuTap});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class FrequentModuleComponent extends StatelessWidget {
       description: '所有生物的相关数据,包含NPC和怪物。',
       icon: Icon(LucideIcons.pawPrint),
       name: '生物',
-      onTap: () => handleTap(context, 0),
+      onTap: () => onMenuTap?.call(RouterMenu.creatureTemplate),
       positions: [_Position.right],
     );
     final item = _Tile(
@@ -26,7 +26,7 @@ class FrequentModuleComponent extends StatelessWidget {
       description: '包含装备，物品信息。',
       icon: Icon(LucideIcons.swords),
       name: '物品',
-      onTap: () => handleTap(context, 1),
+      onTap: () => onMenuTap?.call(RouterMenu.itemTemplate),
       positions: [_Position.right],
     );
     final quest = _Tile(
@@ -34,7 +34,7 @@ class FrequentModuleComponent extends StatelessWidget {
       description: '任务模板及其它关联的数据，比如奖励，任务对话等等。',
       icon: Icon(LucideIcons.badgeQuestionMark),
       name: '任务',
-      onTap: () => handleTap(context, 2),
+      onTap: () => onMenuTap?.call(RouterMenu.questTemplate),
       positions: [],
     );
     final spell = _Tile(
@@ -42,28 +42,28 @@ class FrequentModuleComponent extends StatelessWidget {
       description: '角色拥有的法术技能。',
       icon: Icon(LucideIcons.shell),
       name: '法术',
-      onTap: () => handleTap(context, 6),
+      onTap: () => onMenuTap?.call(RouterMenu.spell),
     );
     final gameObject = _Tile(
       category: _Category.database,
       description: '所有可交互的物体，比如陷阱，宝箱等等。',
       icon: Icon(LucideIcons.mapPin),
       name: '游戏对象',
-      onTap: () => handleTap(context, 2),
+      onTap: () => onMenuTap?.call(RouterMenu.gameObjectTemplate),
     );
     final gossip = _Tile(
       category: _Category.database,
       description: '和NPC交谈时，对话框中的面板内容及对话选项。',
       icon: Icon(LucideIcons.messageCircle),
       name: '对话',
-      onTap: () => handleTap(context, 4),
+      onTap: () => onMenuTap?.call(RouterMenu.gossipMenu),
     );
     final smartScript = _Tile(
       category: _Category.database,
       description: '主要是一些简单的脚本，不需要复杂的代码逻辑。',
       icon: Icon(LucideIcons.code),
       name: '内建脚本',
-      onTap: () => handleTap(context, 5),
+      onTap: () => onMenuTap?.call(RouterMenu.smartScript),
       positions: [_Position.top],
     );
     final talent = _Tile(
@@ -71,14 +71,14 @@ class FrequentModuleComponent extends StatelessWidget {
       description: '天赋树中的信息，配合法术一起使用。',
       icon: Icon(LucideIcons.sparkles),
       name: '天赋',
-      onTap: () => handleTap(context, 7),
+      onTap: () => onMenuTap?.call(RouterMenu.dashboard), // TODO: 添加 talent 菜单
     );
     final itemSet = _Tile(
       category: _Category.dbc,
       description: '套装数据，包含组成部分，套装奖励效果等等。',
       icon: Icon(LucideIcons.layers),
       name: '套装',
-      onTap: () => handleTap(context, 8),
+      onTap: () => onMenuTap?.call(RouterMenu.dashboard), // TODO: 添加 itemSet 菜单
       positions: [_Position.top],
     );
     final row1 = Row(
@@ -108,20 +108,6 @@ class FrequentModuleComponent extends StatelessWidget {
       children: children,
     );
     return FoxyCard(title: title, child: column);
-  }
-
-  void handleTap(BuildContext context, int index) {
-    final menu = switch (index) {
-      0 => RouterMenu.creatureTemplate,
-      1 => RouterMenu.itemTemplate,
-      2 => RouterMenu.questTemplate,
-      3 => RouterMenu.gameObjectTemplate,
-      4 => RouterMenu.gossipMenu,
-      5 => RouterMenu.smartScript,
-      _ => RouterMenu.dashboard,
-    };
-    final routerFacade = GetIt.instance.get<RouterFacade>();
-    routerFacade.navigateToMenu(menu);
   }
 }
 
