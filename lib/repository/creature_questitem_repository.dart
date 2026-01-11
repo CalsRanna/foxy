@@ -1,11 +1,11 @@
 import 'package:foxy/model/creature_questitem.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
-class CreatureQuestitemRepository with RepositoryMixin {
+class CreatureQuestItemRepository with RepositoryMixin {
   static const _table = 'creature_questitem';
 
   /// 获取指定生物的所有任务物品（带物品信息）
-  Future<List<CreatureQuestitem>> getByEntry(int creatureEntry) async {
+  Future<List<CreatureQuestItem>> getByEntry(int creatureEntry) async {
     try {
       var builder = laconic.table('$_table AS cq');
       const fields = [
@@ -31,33 +31,33 @@ class CreatureQuestitemRepository with RepositoryMixin {
       builder = builder.where('cq.CreatureEntry', creatureEntry);
       builder = builder.orderBy('cq.Idx');
       var results = await builder.get();
-      return results.map((e) => CreatureQuestitem.fromJson(e.toMap())).toList();
+      return results.map((e) => CreatureQuestItem.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
   }
 
   /// 查找单条记录
-  Future<CreatureQuestitem?> find(int creatureEntry, int idx) async {
+  Future<CreatureQuestItem?> find(int creatureEntry, int idx) async {
     try {
       var result = await laconic
           .table(_table)
           .where('CreatureEntry', creatureEntry)
           .where('Idx', idx)
           .first();
-      return result != null ? CreatureQuestitem.fromJson(result.toMap()) : null;
+      return result != null ? CreatureQuestItem.fromJson(result.toMap()) : null;
     } catch (e) {
       return null;
     }
   }
 
   /// 新增任务物品
-  Future<void> store(CreatureQuestitem questitem) async {
+  Future<void> store(CreatureQuestItem questitem) async {
     await laconic.table(_table).insert([questitem.toJson()]);
   }
 
   /// 更新任务物品
-  Future<void> update(CreatureQuestitem questitem) async {
+  Future<void> update(CreatureQuestItem questitem) async {
     var json = questitem.toJson();
     json.remove('CreatureEntry');
     json.remove('Idx');
@@ -70,11 +70,15 @@ class CreatureQuestitemRepository with RepositoryMixin {
 
   /// 删除任务物品
   Future<void> delete(int creatureEntry, int idx) async {
-    await laconic.table(_table).where('CreatureEntry', creatureEntry).where('Idx', idx).delete();
+    await laconic
+        .table(_table)
+        .where('CreatureEntry', creatureEntry)
+        .where('Idx', idx)
+        .delete();
   }
 
   /// 复制任务物品
-  Future<CreatureQuestitem> copy(int creatureEntry, int idx) async {
+  Future<CreatureQuestItem> copy(int creatureEntry, int idx) async {
     // 获取最大Idx
     var maxIdxResult = await laconic
         .table(_table)
@@ -90,7 +94,7 @@ class CreatureQuestitemRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newQuestitem = CreatureQuestitem.fromJson(source.toJson());
+    var newQuestitem = CreatureQuestItem.fromJson(source.toJson());
     newQuestitem.idx = maxIdx + 1;
 
     await store(newQuestitem);
