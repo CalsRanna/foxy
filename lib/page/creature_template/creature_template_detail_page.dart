@@ -13,7 +13,6 @@ import 'package:foxy/page/creature_template/tab/npc_trainer_tab.dart';
 import 'package:foxy/page/creature_template/tab/npc_vendor_tab.dart';
 import 'package:foxy/page/creature_template/tab/pickpocketing_loot_template_tab.dart';
 import 'package:foxy/page/creature_template/tab/skinning_loot_template_tab.dart';
-import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
@@ -25,10 +24,11 @@ class CreatureTemplateDetailPage extends StatefulWidget {
 
   @override
   State<CreatureTemplateDetailPage> createState() =>
-      _CreatureTemplatePageState();
+      _CreatureTemplateDetailPageState();
 }
 
-class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
+class _CreatureTemplateDetailPageState
+    extends State<CreatureTemplateDetailPage> {
   final viewModel = GetIt.instance.get<CreatureTemplateDetailViewModel>();
 
   @override
@@ -94,23 +94,20 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
       );
     });
 
-    final children = [
-      Watch((_) => _Header(viewModel.template.value.name)),
-      tabBar,
-    ];
-
-    return ListView(padding: const EdgeInsets.all(16), children: children);
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [_buildHeader(), tabBar],
+    );
   }
-}
 
-class _Header extends StatelessWidget {
-  final String title;
-  const _Header(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    const edgeInsets = EdgeInsets.only(bottom: 12);
-    final text = title.isNotEmpty ? title : '新建生物';
-    return Padding(padding: edgeInsets, child: FoxyHeader(text));
+  Widget _buildHeader() {
+    return Watch((_) {
+      var creatureTemplate = viewModel.template.value.name;
+      var name = creatureTemplate.isNotEmpty ? creatureTemplate : '新建生物';
+      var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
+      var text = Text(name, style: textStyle);
+      var edgeInsets = EdgeInsets.only(bottom: 12);
+      return Padding(padding: edgeInsets, child: text);
+    });
   }
 }
