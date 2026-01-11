@@ -8,16 +8,16 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// NPC商人Tab
-class NpcVendorTab extends StatefulWidget {
+class NpcVendorView extends StatefulWidget {
   final int entry;
 
-  const NpcVendorTab({super.key, required this.entry});
+  const NpcVendorView({super.key, required this.entry});
 
   @override
-  State<NpcVendorTab> createState() => _NpcVendorTabState();
+  State<NpcVendorView> createState() => _NpcVendorViewState();
 }
 
-class _NpcVendorTabState extends State<NpcVendorTab> {
+class _NpcVendorViewState extends State<NpcVendorView> {
   final _repository = NpcVendorRepository();
   List<NpcVendor> _items = [];
   int? _selectedIndex;
@@ -128,15 +128,15 @@ class _NpcVendorTabState extends State<NpcVendorTab> {
       await _repository.copy(widget.entry, vendor.slot);
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('复制成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('复制成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
           ShadToast.destructive(
-              title: Text('复制失败'), description: Text(e.toString())),
+            title: Text('复制失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -167,15 +167,15 @@ class _NpcVendorTabState extends State<NpcVendorTab> {
         await _repository.delete(widget.entry, vendor.slot);
         await _load();
         if (mounted) {
-          ShadToaster.of(context).show(
-            ShadToast(title: Text('删除成功')),
-          );
+          ShadToaster.of(context).show(ShadToast(title: Text('删除成功')));
         }
       } catch (e) {
         if (mounted) {
           ShadToaster.of(context).show(
             ShadToast.destructive(
-                title: Text('删除失败'), description: Text(e.toString())),
+              title: Text('删除失败'),
+              description: Text(e.toString()),
+            ),
           );
         }
       }
@@ -192,15 +192,15 @@ class _NpcVendorTabState extends State<NpcVendorTab> {
       }
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('保存成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('保存成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
           ShadToast.destructive(
-              title: Text('保存失败'), description: Text(e.toString())),
+            title: Text('保存失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -231,20 +231,14 @@ class _NpcVendorTabState extends State<NpcVendorTab> {
             children: [
               _buildToolbar(),
               SizedBox(height: 8),
-              Flexible(
-                fit: FlexFit.loose,
-                child: _buildTable(),
-              ),
+              Flexible(fit: FlexFit.loose, child: _buildTable()),
             ],
           ),
         ),
         SizedBox(width: 16),
         // 右侧表单
         if (_editing || _creating)
-          Flexible(
-            fit: FlexFit.loose,
-            child: _buildForm(),
-          ),
+          Flexible(fit: FlexFit.loose, child: _buildForm()),
       ],
     );
   }
@@ -343,17 +337,26 @@ class _NpcVendorTabState extends State<NpcVendorTab> {
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(vendor.slot.toString())),
               1 => ShadTableCell(
-                  child: Text(
-                    vendor.displayName,
-                    style: TextStyle(color: qualityColor),
-                  ),
+                child: Text(
+                  vendor.displayName,
+                  style: TextStyle(color: qualityColor),
                 ),
+              ),
               2 => ShadTableCell(
-                  child: Text(vendor.maxcount == 0 ? '无限' : vendor.maxcount.toString())),
+                child: Text(
+                  vendor.maxcount == 0 ? '无限' : vendor.maxcount.toString(),
+                ),
+              ),
               3 => ShadTableCell(
-                  child: Text(vendor.incrtime == 0 ? '-' : '${vendor.incrtime}s')),
+                child: Text(vendor.incrtime == 0 ? '-' : '${vendor.incrtime}s'),
+              ),
               4 => ShadTableCell(
-                  child: Text(vendor.extendedCost == 0 ? '-' : vendor.extendedCost.toString())),
+                child: Text(
+                  vendor.extendedCost == 0
+                      ? '-'
+                      : vendor.extendedCost.toString(),
+                ),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -371,8 +374,10 @@ class _NpcVendorTabState extends State<NpcVendorTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 12,
           children: [
-            Text(_creating ? '新增商品' : '编辑商品',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              _creating ? '新增商品' : '编辑商品',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             FormItem(
               controller: _slotController,
               label: '插槽',
