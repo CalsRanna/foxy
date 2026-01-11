@@ -27,7 +27,12 @@ class _BootstrapPageState extends State<BootstrapPage> {
       Expanded(child: stack),
     ];
     return Scaffold(
-      body: Stack(children: [Row(children: children), BootstrapWindowHeader()]),
+      body: Stack(
+        children: [
+          Row(children: children),
+          BootstrapWindowHeader(),
+        ],
+      ),
     );
   }
 
@@ -56,7 +61,12 @@ class _BootstrapPageState extends State<BootstrapPage> {
       colors: [Colors.transparent, Colors.white],
     );
     var boxDecoration = BoxDecoration(gradient: linearGradient);
-    return Stack(children: [image, Container(decoration: boxDecoration)]);
+    return Stack(
+      children: [
+        image,
+        Container(decoration: boxDecoration),
+      ],
+    );
   }
 
   Widget _buildInformationPanel() {

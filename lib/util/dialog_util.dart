@@ -43,6 +43,14 @@ class DialogUtil {
 
   void error(String error) {
     final context = router.navigatorKey.currentContext!;
+    if (!context.mounted) return;
+
+    // 先关闭所有现有对话框
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+
+    // 然后显示错误对话框
     showShadDialog(
       context: context,
       builder: (context) {
@@ -61,17 +69,36 @@ class DialogUtil {
   }
 
   void loading() {
-    showDialog(
+    final context = router.navigatorKey.currentContext!;
+    showShadDialog(
       barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-      context: router.navigatorKey.currentContext!,
+      context: context,
+      builder: (context) {
+        return const ShadDialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('连接中...'),
+            ],
+          ),
+        );
+      },
     );
+  }
+
+  void dismissAll() {
+    final context = router.navigatorKey.currentContext!;
+    if (!context.mounted) return;
+    // 关闭所有对话框
+    while (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
   }
 
   void success(String message) {
     final context = router.navigatorKey.currentContext!;
-    ShadSonner.of(context).show(
-      ShadToast(title: Text(message)),
-    );
+    ShadSonner.of(context).show(ShadToast(title: Text(message)));
   }
 }
