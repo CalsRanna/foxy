@@ -5,17 +5,17 @@ import 'package:foxy/widget/form_item.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 生物模板附加数据Tab
-class CreatureTemplateAddonTab extends StatefulWidget {
+class CreatureTemplateAddonView extends StatefulWidget {
   final int entry;
 
-  const CreatureTemplateAddonTab({super.key, required this.entry});
+  const CreatureTemplateAddonView({super.key, required this.entry});
 
   @override
-  State<CreatureTemplateAddonTab> createState() =>
-      _CreatureTemplateAddonTabState();
+  State<CreatureTemplateAddonView> createState() =>
+      _CreatureTemplateAddonViewState();
 }
 
-class _CreatureTemplateAddonTabState extends State<CreatureTemplateAddonTab> {
+class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
   final _pathIdController = TextEditingController();
   final _mountController = TextEditingController();
   final _emoteController = TextEditingController();
@@ -50,8 +50,8 @@ class _CreatureTemplateAddonTabState extends State<CreatureTemplateAddonTab> {
         _pathIdController.text = addon.pathId.toString();
         _mountController.text = addon.mount.toString();
         _emoteController.text = addon.emote.toString();
-        _visibilityDistanceTypeController.text =
-            addon.visibilityDistanceType.toString();
+        _visibilityDistanceTypeController.text = addon.visibilityDistanceType
+            .toString();
         _aurasController.text = addon.auras;
       }
     } finally {
@@ -75,12 +75,9 @@ class _CreatureTemplateAddonTabState extends State<CreatureTemplateAddonTab> {
       await repository.save(addon);
 
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(
-            title: Text('保存成功'),
-            description: Text('模板补充数据已保存'),
-          ),
-        );
+        ShadToaster.of(
+          context,
+        ).show(ShadToast(title: Text('保存成功'), description: Text('模板补充数据已保存')));
       }
     } catch (e) {
       if (mounted) {
