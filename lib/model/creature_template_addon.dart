@@ -4,8 +4,10 @@ class CreatureTemplateAddon {
   int pathId = 0;
   int mount = 0;
   int emote = 0;
-  int visibilityDistanceType = 0;
+  int bytes1 = 0;
+  int bytes2 = 0;
   String auras = '';
+  int isLarge = 0;
 
   CreatureTemplateAddon();
 
@@ -14,8 +16,10 @@ class CreatureTemplateAddon {
     pathId = json['path_id'] ?? 0;
     mount = json['mount'] ?? 0;
     emote = json['emote'] ?? 0;
-    visibilityDistanceType = json['visibilityDistanceType'] ?? 0;
+    bytes1 = json['bytes1'] ?? 0;
+    bytes2 = json['bytes2'] ?? 0;
     auras = json['auras'] ?? '';
+    isLarge = json['isLarge'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -24,8 +28,10 @@ class CreatureTemplateAddon {
       'path_id': pathId,
       'mount': mount,
       'emote': emote,
-      'visibilityDistanceType': visibilityDistanceType,
+      'bytes1': bytes1,
+      'bytes2': bytes2,
       'auras': auras,
+      'isLarge': isLarge,
     };
   }
 }

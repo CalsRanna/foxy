@@ -18,10 +18,7 @@ class VehicleRepository with RepositoryMixin {
     }
   }
 
-  Future<List<Vehicle>> search({
-    String? id,
-    int page = 1,
-  }) async {
+  Future<List<Vehicle>> search({String? id, int page = 1}) async {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table);

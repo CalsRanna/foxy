@@ -20,7 +20,8 @@ class BriefCreatureTemplate {
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
-  String get displaySubName => localeSubName.isNotEmpty ? localeSubName : subName;
+  String get displaySubName =>
+      localeSubName.isNotEmpty ? localeSubName : subName;
 }
 
 class CreatureTemplate {

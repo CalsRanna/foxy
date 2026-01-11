@@ -159,10 +159,7 @@ class _ItemExtendedCostSelectorDialogState
       spacing: 12,
       children: [
         Expanded(
-          child: ShadInput(
-            controller: _idController,
-            placeholder: Text('编号'),
-          ),
+          child: ShadInput(controller: _idController, placeholder: Text('编号')),
         ),
         Row(
           mainAxisSize: MainAxisSize.min,

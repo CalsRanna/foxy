@@ -15,7 +15,8 @@ class NpcVendor {
   String itemIcon = '';
 
   /// 显示名称（优先显示本地化名称）
-  String get displayName => itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
+  String get displayName =>
+      itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
   NpcVendor();
 

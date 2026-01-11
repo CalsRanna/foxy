@@ -322,8 +322,8 @@ class CreatureTemplateDetailViewModel {
 
     /// Immune
     mechanicImmuneMaskController.text = template.mechanicImmuneMask.toString();
-    spellSchoolImmuneMaskController.text =
-        template.spellSchoolImmuneMask.toString();
+    spellSchoolImmuneMaskController.text = template.spellSchoolImmuneMask
+        .toString();
 
     /// Modifier
     expController.value = {template.exp};

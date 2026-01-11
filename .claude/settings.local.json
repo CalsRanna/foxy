@@ -22,7 +22,8 @@
       "Bash(ls:*)",
       "WebFetch(domain:wowdev.wiki)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "mcp__dart-mcp-server__dart_format"
     ],
     "deny": []
   }
