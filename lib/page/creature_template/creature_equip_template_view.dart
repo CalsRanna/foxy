@@ -7,24 +7,23 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 装备模板Tab
-class CreatureEquipTemplateTab extends StatefulWidget {
+class CreatureEquipTemplateView extends StatefulWidget {
   final int creatureID;
 
-  const CreatureEquipTemplateTab({super.key, required this.creatureID});
+  const CreatureEquipTemplateView({super.key, required this.creatureID});
 
   @override
-  State<CreatureEquipTemplateTab> createState() =>
-      _CreatureEquipTemplateTabState();
+  State<CreatureEquipTemplateView> createState() =>
+      _CreatureEquipTemplateViewState();
 }
 
-class _CreatureEquipTemplateTabState extends State<CreatureEquipTemplateTab> {
+class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   final _repository = CreatureEquipTemplateRepository();
   List<CreatureEquipTemplate> _items = [];
   int? _selectedIndex;
   bool _loading = true;
   bool _editing = false;
   bool _creating = false;
-  int? _editingId;
 
   // 表单控制器
   final _idController = TextEditingController();
@@ -101,7 +100,6 @@ class _CreatureEquipTemplateTabState extends State<CreatureEquipTemplateTab> {
       _creating = true;
       _editing = false;
       _selectedIndex = null;
-      _editingId = null;
     });
   }
 
@@ -112,7 +110,6 @@ class _CreatureEquipTemplateTabState extends State<CreatureEquipTemplateTab> {
     setState(() {
       _editing = true;
       _creating = false;
-      _editingId = equip.id;
     });
   }
 
@@ -205,7 +202,6 @@ class _CreatureEquipTemplateTabState extends State<CreatureEquipTemplateTab> {
     setState(() {
       _editing = false;
       _creating = false;
-      _editingId = null;
     });
   }
 

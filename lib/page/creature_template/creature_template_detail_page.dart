@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_view.dart';
-import 'package:foxy/page/creature_template/tab/creature_equip_template_tab.dart';
+import 'package:foxy/page/creature_template/creature_equip_template_view.dart';
 import 'package:foxy/page/creature_template/tab/creature_loot_template_tab.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view.dart';
 import 'package:foxy/page/creature_template/tab/creature_questitem_tab.dart';
@@ -61,7 +61,7 @@ class _CreatureTemplateDetailPageState
       // 技能 Tab
       CreatureTemplateSpellView(creatureID: widget.entry ?? 0),
       // 装备模板 Tab
-      CreatureEquipTemplateTab(creatureID: widget.entry ?? 0),
+      CreatureEquipTemplateView(creatureID: widget.entry ?? 0),
       // 任务物品 Tab
       CreatureQuestitemTab(creatureEntry: widget.entry ?? 0),
       // 商人 Tab
