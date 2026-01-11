@@ -131,7 +131,7 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             final maxWidth = constraints.maxWidth;
-            var width = maxWidth - 240;
+            var width = maxWidth - 280;
             return ShadTable(
               columnCount: 3,
               rowCount: flags.length,
