@@ -45,12 +45,7 @@ class LootTemplateRepository with RepositoryMixin {
       builder = builder.groupBy('Entry');
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
-      return results.map((e) {
-        var loot = LootTemplate();
-        var map = e.toMap();
-        loot.entry = (map['Entry'] ?? 0) as int;
-        return loot;
-      }).toList();
+      return results.map((e) => LootTemplate.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }

@@ -17,6 +17,9 @@ class LootTemplate {
   int itemQuality = 0;
   String itemIcon = '';
 
+  // 聚合字段
+  int itemCount = 0;
+
   /// 显示名称（优先显示本地化名称）
   String get displayName => itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
@@ -38,6 +41,8 @@ class LootTemplate {
     itemLocaleName = json['localeName'] ?? '';
     itemQuality = json['Quality'] ?? 0;
     itemIcon = json['InventoryIcon_1'] ?? '';
+    // 聚合字段
+    itemCount = json['ItemCount'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
