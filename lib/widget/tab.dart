@@ -103,10 +103,7 @@ class _FoxyTabState extends State<FoxyTab> {
           fit: FlexFit.loose,
           child: AnimatedSwitcher(
             duration: Duration(milliseconds: 300),
-            child: KeyedSubtree(
-              key: ValueKey(index),
-              child: currentContent,
-            ),
+            child: KeyedSubtree(key: ValueKey(index), child: currentContent),
           ),
         ),
       ],
