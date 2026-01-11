@@ -25,16 +25,17 @@ class _CreatureDisplayInfoSelectorState
     extends State<CreatureDisplayInfoSelector> {
   @override
   Widget build(BuildContext context) {
+    var shadButton = ShadButton.ghost(
+      height: 20,
+      padding: EdgeInsets.zero,
+      onPressed: _openDialog,
+      width: 20,
+      child: Icon(LucideIcons.search, size: 12),
+    );
     return ShadInput(
       controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
-      trailing: ShadButton.ghost(
-        height: 20,
-        width: 20,
-        padding: EdgeInsets.zero,
-        onPressed: _openDialog,
-        child: Icon(LucideIcons.search, size: 12),
-      ),
+      trailing: shadButton,
     );
   }
 
@@ -42,29 +43,25 @@ class _CreatureDisplayInfoSelectorState
     final currentValue = int.tryParse(widget.controller.text);
     final result = await showShadDialog<int>(
       context: context,
-      builder: (context) {
-        return _CreatureDisplayInfoSelectorDialog(initialValue: currentValue);
-      },
+      builder: (context) => _Dialog(initialValue: currentValue),
     );
-    if (result != null) {
-      widget.controller.text = result.toString();
-    }
+    if (result == null) return;
+    widget.controller.text = result.toString();
   }
 }
 
-class _CreatureDisplayInfoSelectorDialog extends StatefulWidget {
+class _Dialog extends StatefulWidget {
   final int? initialValue;
 
-  const _CreatureDisplayInfoSelectorDialog({this.initialValue});
+  const _Dialog({this.initialValue});
 
   @override
-  State<_CreatureDisplayInfoSelectorDialog> createState() =>
-      _CreatureDisplayInfoSelectorDialogState();
+  State<_Dialog> createState() => _DialogState();
 }
 
-class _CreatureDisplayInfoSelectorDialogState
-    extends State<_CreatureDisplayInfoSelectorDialog> {
+class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
+  final _modelNameController = TextEditingController();
 
   List<CreatureDisplayInfo> _items = [];
   int _total = 0;
@@ -73,122 +70,80 @@ class _CreatureDisplayInfoSelectorDialogState
   bool _loading = false;
 
   @override
-  void initState() {
-    super.initState();
-    _selectedId = widget.initialValue;
-    _search();
+  Widget build(BuildContext context) {
+    var cancelButton = ShadButton.outline(
+      onPressed: () => Navigator.of(context).pop(),
+      child: Text('取消'),
+    );
+    var confirmButton = ShadButton(
+      onPressed: () => Navigator.of(context).pop(_selectedId),
+      child: Text('确定'),
+    );
+    var children = [_buildFilter(), _buildPagination(), _buildTable()];
+    return ShadDialog(
+      title: Text('模型'),
+      actions: [cancelButton, confirmButton],
+      constraints: BoxConstraints(maxWidth: 720),
+      child: Column(spacing: 8, children: children),
+    );
   }
 
   @override
   void dispose() {
     _idController.dispose();
+    _modelNameController.dispose();
     super.dispose();
   }
 
-  Future<void> _search() async {
-    setState(() => _loading = true);
-    try {
-      final repository = CreatureDisplayInfoRepository();
-      final id = _idController.text.isEmpty ? null : _idController.text;
-      final items = await repository.search(id: id, page: _page);
-      final total = await repository.count(id: id);
-      if (mounted) {
-        setState(() {
-          _items = items;
-          _total = total;
-        });
-      }
-    } finally {
-      if (mounted) setState(() => _loading = false);
-    }
-  }
-
-  void _reset() {
-    _idController.clear();
-    _page = 1;
-    _search();
-  }
-
-  void _paginate(int page) {
-    _page = page;
-    _search();
-  }
-
   @override
-  Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final tableMaxHeight = screenHeight * 0.5;
+  void initState() {
+    super.initState();
+    if (widget.initialValue != 0) {
+      _idController.text = widget.initialValue?.toString() ?? '';
+      _selectedId = widget.initialValue;
+    }
+    _search();
+  }
 
-    return ShadDialog(
-      actions: [
-        ShadButton.outline(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text('取消'),
-        ),
-        ShadButton(
-          onPressed: () => Navigator.of(context).pop(_selectedId),
-          child: Text('确定'),
-        ),
-      ],
-      constraints: BoxConstraints(maxWidth: 720),
-      title: Text('模型'),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildSearchForm(),
-          SizedBox(height: 12),
-          _buildToolbar(),
-          SizedBox(height: 8),
-          ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: tableMaxHeight),
-            child: _loading
-                ? Center(child: CircularProgressIndicator())
-                : _buildTable(),
-          ),
-        ],
-      ),
+  Widget _buildFilter() {
+    var idInput = ShadInput(
+      controller: _idController,
+      placeholder: Text('模型ID'),
+    );
+    var modelNameInput = ShadInput(
+      controller: _modelNameController,
+      placeholder: Text('模型名称'),
+    );
+    var searchButton = ShadButton(
+      onPressed: _doSearch,
+      size: ShadButtonSize.sm,
+      child: Text('查询'),
+    );
+    var resetButton = ShadButton.ghost(
+      onPressed: _reset,
+      size: ShadButtonSize.sm,
+      child: Text('重置'),
+    );
+    var children = [
+      Expanded(child: idInput),
+      Expanded(child: modelNameInput),
+      Expanded(child: Row(spacing: 8, children: [searchButton, resetButton])),
+    ];
+    return ShadCard(
+      padding: const EdgeInsets.all(16),
+      child: Row(spacing: 8, children: children),
     );
   }
 
-  Widget _buildSearchForm() {
+  Widget _buildPagination() {
     return Row(
-      spacing: 12,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Expanded(
-          child: ShadInput(
-            controller: _idController,
-            placeholder: Text('模型ID'),
+        if (_loading)
+          SizedBox.square(
+            dimension: 20,
+            child: CircularProgressIndicator(strokeWidth: 2),
           ),
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ShadButton(
-              size: ShadButtonSize.sm,
-              onPressed: () {
-                _page = 1;
-                _search();
-              },
-              child: Text('查询'),
-            ),
-            SizedBox(width: 8),
-            ShadButton.ghost(
-              size: ShadButtonSize.sm,
-              onPressed: _reset,
-              child: Text('重置'),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildToolbar() {
-    return Row(
-      children: [
-        Text('共 $_total 条记录'),
-        Spacer(),
         FoxyPagination(
           page: _page,
           pageSize: 50,
@@ -200,80 +155,123 @@ class _CreatureDisplayInfoSelectorDialogState
   }
 
   Widget _buildTable() {
-    if (_items.isEmpty) {
-      return Center(child: Text('暂无数据'));
-    }
-
     final theme = ShadTheme.of(context);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final maxWidth = constraints.maxWidth;
-        var modelPathWidth = maxWidth - 140;
-        return FoxyShadTable(
-          columnCount: 3,
-          rowCount: _items.length,
-          pinnedRowCount: 1,
-          header: (context, column) {
-            return switch (column) {
-              0 => ShadTableCell.header(child: Text('编号')),
-              1 => ShadTableCell.header(child: Text('模型路径')),
-              2 => ShadTableCell.header(child: Text('缩放')),
-              _ => ShadTableCell.header(child: SizedBox()),
-            };
-          },
-          columnSpanExtent: (column) {
-            return switch (column) {
-              0 => FixedTableSpanExtent(80),
-              1 => FixedTableSpanExtent(modelPathWidth),
-              2 => FixedTableSpanExtent(60),
-              _ => null,
-            };
-          },
-          rowSpanBackgroundDecoration: (row) {
-            // row 包含 header，所以减 1
-            final dataRow = row - 1;
-            if (dataRow < 0 || dataRow >= _items.length) return null;
-            final item = _items[dataRow];
-            if (item.id == _selectedId) {
-              return TableSpanDecoration(color: theme.colorScheme.accent);
-            }
-            return null;
-          },
-          onRowTap: (row) {
-            if (row >= 0 && row < _items.length) {
-              setState(() {
-                _selectedId = _items[row].id;
-              });
-            }
-          },
-          onRowDoubleTap: (row) {
-            if (row >= 0 && row < _items.length) {
-              Navigator.of(context).pop(_items[row].id);
-            }
-          },
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= _items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final item = _items[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(
-                child: Text(
-                  item.modelName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+    final screenHeight = MediaQuery.of(context).size.height;
+    final tableMaxHeight = screenHeight * 0.5;
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: tableMaxHeight),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final maxWidth = constraints.maxWidth;
+          var modelPathWidth = maxWidth - 240;
+          return FoxyShadTable(
+            columnCount: 3,
+            rowCount: _items.length,
+            pinnedRowCount: 1,
+            header: (context, column) {
+              return switch (column) {
+                0 => ShadTableCell.header(child: Text('编号')),
+                1 => ShadTableCell.header(child: Text('模型路径')),
+                2 => ShadTableCell.header(child: Text('缩放')),
+                _ => ShadTableCell.header(child: SizedBox()),
+              };
+            },
+            columnSpanExtent: (column) {
+              return switch (column) {
+                0 => FixedTableSpanExtent(120),
+                1 => FixedTableSpanExtent(modelPathWidth),
+                2 => FixedTableSpanExtent(120),
+                _ => null,
+              };
+            },
+            rowSpanBackgroundDecoration: (row) {
+              // row 包含 header，所以减 1
+              final dataRow = row - 1;
+              if (dataRow < 0 || dataRow >= _items.length) return null;
+              final item = _items[dataRow];
+              if (item.id == _selectedId) {
+                return TableSpanDecoration(color: theme.colorScheme.accent);
+              }
+              return null;
+            },
+            onRowTap: (row) {
+              if (row >= 0 && row < _items.length) {
+                setState(() {
+                  _selectedId = _items[row].id;
+                });
+              }
+            },
+            onRowDoubleTap: (row) {
+              if (row >= 0 && row < _items.length) {
+                Navigator.of(context).pop(_items[row].id);
+              }
+            },
+            builder: (context, vicinity) {
+              if (vicinity.row < 0 || vicinity.row >= _items.length) {
+                return ShadTableCell(child: SizedBox());
+              }
+              final item = _items[vicinity.row];
+              return switch (vicinity.column) {
+                0 => ShadTableCell(child: Text(item.id.toString())),
+                1 => ShadTableCell(
+                  child: Text(
+                    item.modelName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-              2 => ShadTableCell(
-                child: Text(item.creatureModelScale.toString()),
-              ),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-        );
-      },
+                2 => ShadTableCell(
+                  child: Text(item.creatureModelScale.toString()),
+                ),
+                _ => ShadTableCell(child: SizedBox()),
+              };
+            },
+          );
+        },
+      ),
     );
+  }
+
+  void _doSearch() {
+    _page = 1;
+    _search();
+  }
+
+  void _paginate(int page) {
+    _page = page;
+    _search();
+  }
+
+  void _reset() {
+    _idController.clear();
+    _modelNameController.clear();
+    _page = 1;
+    _search();
+  }
+
+  Future<void> _search() async {
+    setState(() => _loading = true);
+    try {
+      final repository = CreatureDisplayInfoRepository();
+      final id = _idController.text.isEmpty ? null : _idController.text;
+      final modelName = _modelNameController.text.isEmpty
+          ? null
+          : _modelNameController.text;
+      final items = await repository.search(
+        id: id,
+        modelName: modelName,
+        page: _page,
+      );
+      final total = await repository.count(id: id, modelName: modelName);
+      if (mounted) {
+        setState(() {
+          _items = items;
+          _total = total;
+        });
+      }
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 }

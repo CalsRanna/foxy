@@ -6,11 +6,22 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   final String _table = 'foxy.dbc_creature_display_info';
   final String _modelDataTable = 'foxy.dbc_creature_model_data';
 
-  Future<int> count({String? id}) async {
+  Future<int> count({String? id, String? modelName}) async {
     try {
-      var builder = laconic.table(_table);
+      var builder = laconic.table('$_table AS cdi');
+      builder = builder.leftJoin(
+        '$_modelDataTable AS cmd',
+        (join) => join.on('cdi.ModelID', 'cmd.ID'),
+      );
       if (id != null && id.isNotEmpty) {
-        builder = builder.where('ID', id);
+        builder = builder.where('cdi.ID', id);
+      }
+      if (modelName != null && modelName.isNotEmpty) {
+        builder = builder.where(
+          'cmd.ModelName',
+          '%$modelName%',
+          comparator: 'like',
+        );
       }
       return await builder.count();
     } catch (e) {
@@ -19,7 +30,11 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<List<CreatureDisplayInfo>> search({String? id, int page = 1}) async {
+  Future<List<CreatureDisplayInfo>> search({
+    String? id,
+    String? modelName,
+    int page = 1,
+  }) async {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table('$_table AS cdi');
@@ -37,6 +52,13 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
       );
       if (id != null && id.isNotEmpty) {
         builder = builder.where('cdi.ID', id);
+      }
+      if (modelName != null && modelName.isNotEmpty) {
+        builder = builder.where(
+          'cmd.ModelName',
+          '%$modelName%',
+          comparator: 'like',
+        );
       }
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
