@@ -7,23 +7,22 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 任务物品Tab
-class CreatureQuestitemTab extends StatefulWidget {
+class CreatureQuestItemView extends StatefulWidget {
   final int creatureEntry;
 
-  const CreatureQuestitemTab({super.key, required this.creatureEntry});
+  const CreatureQuestItemView({super.key, required this.creatureEntry});
 
   @override
-  State<CreatureQuestitemTab> createState() => _CreatureQuestitemTabState();
+  State<CreatureQuestItemView> createState() => _CreatureQuestItemViewState();
 }
 
-class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
-  final _repository = CreatureQuestitemRepository();
-  List<CreatureQuestitem> _items = [];
+class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
+  final _repository = CreatureQuestItemRepository();
+  List<CreatureQuestItem> _items = [];
   int? _selectedIndex;
   bool _loading = true;
   bool _editing = false;
   bool _creating = false;
-  int? _editingIdx;
 
   // 表单控制器
   final _idxController = TextEditingController();
@@ -67,19 +66,19 @@ class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
     _verifiedBuildController.text = '0';
   }
 
-  void _fillForm(CreatureQuestitem questitem) {
-    _idxController.text = questitem.idx.toString();
-    _itemIdController.text = questitem.itemId.toString();
-    _verifiedBuildController.text = questitem.verifiedBuild.toString();
+  void _fillForm(CreatureQuestItem questItem) {
+    _idxController.text = questItem.idx.toString();
+    _itemIdController.text = questItem.itemId.toString();
+    _verifiedBuildController.text = questItem.verifiedBuild.toString();
   }
 
-  CreatureQuestitem _collectFromForm() {
-    final questitem = CreatureQuestitem();
-    questitem.creatureEntry = widget.creatureEntry;
-    questitem.idx = int.tryParse(_idxController.text) ?? 0;
-    questitem.itemId = int.tryParse(_itemIdController.text) ?? 0;
-    questitem.verifiedBuild = int.tryParse(_verifiedBuildController.text) ?? 0;
-    return questitem;
+  CreatureQuestItem _collectFromForm() {
+    final questItem = CreatureQuestItem();
+    questItem.creatureEntry = widget.creatureEntry;
+    questItem.idx = int.tryParse(_idxController.text) ?? 0;
+    questItem.itemId = int.tryParse(_itemIdController.text) ?? 0;
+    questItem.verifiedBuild = int.tryParse(_verifiedBuildController.text) ?? 0;
+    return questItem;
   }
 
   Future<void> _create() async {
@@ -90,36 +89,35 @@ class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
       _creating = true;
       _editing = false;
       _selectedIndex = null;
-      _editingIdx = null;
     });
   }
 
   void _edit() {
     if (_selectedIndex == null) return;
-    final questitem = _items[_selectedIndex!];
-    _fillForm(questitem);
+    final questItem = _items[_selectedIndex!];
+    _fillForm(questItem);
     setState(() {
       _editing = true;
       _creating = false;
-      _editingIdx = questitem.idx;
     });
   }
 
   Future<void> _copy() async {
     if (_selectedIndex == null) return;
-    final questitem = _items[_selectedIndex!];
+    final questItem = _items[_selectedIndex!];
     try {
-      await _repository.copy(widget.creatureEntry, questitem.idx);
+      await _repository.copy(widget.creatureEntry, questItem.idx);
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('复制成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('复制成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('复制失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('复制失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -127,7 +125,7 @@ class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
 
   Future<void> _delete() async {
     if (_selectedIndex == null) return;
-    final questitem = _items[_selectedIndex!];
+    final questItem = _items[_selectedIndex!];
     final confirmed = await showShadDialog<bool>(
       context: context,
       builder: (context) => ShadDialog.alert(
@@ -147,17 +145,18 @@ class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
     );
     if (confirmed == true) {
       try {
-        await _repository.delete(widget.creatureEntry, questitem.idx);
+        await _repository.delete(widget.creatureEntry, questItem.idx);
         await _load();
         if (mounted) {
-          ShadToaster.of(context).show(
-            ShadToast(title: Text('删除成功')),
-          );
+          ShadToaster.of(context).show(ShadToast(title: Text('删除成功')));
         }
       } catch (e) {
         if (mounted) {
           ShadToaster.of(context).show(
-            ShadToast.destructive(title: Text('删除失败'), description: Text(e.toString())),
+            ShadToast.destructive(
+              title: Text('删除失败'),
+              description: Text(e.toString()),
+            ),
           );
         }
       }
@@ -166,22 +165,23 @@ class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
 
   Future<void> _save() async {
     try {
-      final questitem = _collectFromForm();
+      final questItem = _collectFromForm();
       if (_creating) {
-        await _repository.store(questitem);
+        await _repository.store(questItem);
       } else if (_editing) {
-        await _repository.update(questitem);
+        await _repository.update(questItem);
       }
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('保存成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('保存成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('保存失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('保存失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -191,7 +191,6 @@ class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
     setState(() {
       _editing = false;
       _creating = false;
-      _editingIdx = null;
     });
   }
 
@@ -212,20 +211,14 @@ class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
             children: [
               _buildToolbar(),
               SizedBox(height: 8),
-              Flexible(
-                fit: FlexFit.loose,
-                child: _buildTable(),
-              ),
+              Flexible(fit: FlexFit.loose, child: _buildTable()),
             ],
           ),
         ),
         SizedBox(width: 16),
         // 右侧表单
         if (_editing || _creating)
-          Flexible(
-            fit: FlexFit.loose,
-            child: _buildForm(),
-          ),
+          Flexible(fit: FlexFit.loose, child: _buildForm()),
       ],
     );
   }
@@ -316,20 +309,21 @@ class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
             if (vicinity.row < 0 || vicinity.row >= _items.length) {
               return ShadTableCell(child: SizedBox());
             }
-            final questitem = _items[vicinity.row];
-            final qualityColor =
-                _getQualityColor(questitem.itemQuality);
+            final questItem = _items[vicinity.row];
+            final qualityColor = _getQualityColor(questItem.itemQuality);
 
             return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(questitem.idx.toString())),
+              0 => ShadTableCell(child: Text(questItem.idx.toString())),
               1 => ShadTableCell(
-                  child: Text(
-                    questitem.displayName,
-                    style: TextStyle(color: qualityColor),
-                  ),
+                child: Text(
+                  questItem.displayName,
+                  style: TextStyle(color: qualityColor),
                 ),
-              2 => ShadTableCell(child: Text(questitem.itemId.toString())),
-              3 => ShadTableCell(child: Text(questitem.verifiedBuild.toString())),
+              ),
+              2 => ShadTableCell(child: Text(questItem.itemId.toString())),
+              3 => ShadTableCell(
+                child: Text(questItem.verifiedBuild.toString()),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -347,8 +341,10 @@ class _CreatureQuestitemTabState extends State<CreatureQuestitemTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 12,
           children: [
-            Text(_creating ? '新增任务物品' : '编辑任务物品',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              _creating ? '新增任务物品' : '编辑任务物品',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             FormItem(
               controller: _idxController,
               label: '索引',

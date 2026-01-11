@@ -5,7 +5,7 @@ import 'package:foxy/page/creature_template/creature_template_view.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view.dart';
 import 'package:foxy/page/creature_template/tab/creature_loot_template_tab.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view.dart';
-import 'package:foxy/page/creature_template/tab/creature_questitem_tab.dart';
+import 'package:foxy/page/creature_template/creature_quest_item_view.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view.dart';
 import 'package:foxy/page/creature_template/creature_template_resistance_view.dart';
 import 'package:foxy/page/creature_template/creature_template_spell_view.dart';
@@ -63,7 +63,7 @@ class _CreatureTemplateDetailPageState
       // 装备模板 Tab
       CreatureEquipTemplateView(creatureID: widget.entry ?? 0),
       // 任务物品 Tab
-      CreatureQuestitemTab(creatureEntry: widget.entry ?? 0),
+      CreatureQuestItemView(creatureEntry: widget.entry ?? 0),
       // 商人 Tab
       NpcVendorTab(entry: widget.entry ?? 0),
       // 训练师 Tab

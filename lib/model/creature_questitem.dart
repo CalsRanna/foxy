@@ -1,5 +1,5 @@
 /// 生物任务物品
-class CreatureQuestitem {
+class CreatureQuestItem {
   int creatureEntry = 0;
   int idx = 0;
   int itemId = 0;
@@ -12,11 +12,12 @@ class CreatureQuestitem {
   String itemIcon = '';
 
   /// 显示名称（优先显示本地化名称）
-  String get displayName => itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
+  String get displayName =>
+      itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
-  CreatureQuestitem();
+  CreatureQuestItem();
 
-  CreatureQuestitem.fromJson(Map<String, dynamic> json) {
+  CreatureQuestItem.fromJson(Map<String, dynamic> json) {
     creatureEntry = json['CreatureEntry'] ?? json['creatureEntry'] ?? 0;
     idx = json['Idx'] ?? json['idx'] ?? 0;
     itemId = json['ItemId'] ?? json['itemId'] ?? 0;
