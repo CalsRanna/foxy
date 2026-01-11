@@ -66,10 +66,15 @@ class CreatureTemplateDetailRoute
   CreatureTemplateDetailRoute({
     _i15.Key? key,
     int? entry,
+    String? name,
     List<_i14.PageRouteInfo>? children,
   }) : super(
          CreatureTemplateDetailRoute.name,
-         args: CreatureTemplateDetailRouteArgs(key: key, entry: entry),
+         args: CreatureTemplateDetailRouteArgs(
+           key: key,
+           entry: entry,
+           name: name,
+         ),
          initialChildren: children,
        );
 
@@ -81,32 +86,38 @@ class CreatureTemplateDetailRoute
       final args = data.argsAs<CreatureTemplateDetailRouteArgs>(
         orElse: () => const CreatureTemplateDetailRouteArgs(),
       );
-      return _i3.CreatureTemplateDetailPage(key: args.key, entry: args.entry);
+      return _i3.CreatureTemplateDetailPage(
+        key: args.key,
+        entry: args.entry,
+        name: args.name,
+      );
     },
   );
 }
 
 class CreatureTemplateDetailRouteArgs {
-  const CreatureTemplateDetailRouteArgs({this.key, this.entry});
+  const CreatureTemplateDetailRouteArgs({this.key, this.entry, this.name});
 
   final _i15.Key? key;
 
   final int? entry;
 
+  final String? name;
+
   @override
   String toString() {
-    return 'CreatureTemplateDetailRouteArgs{key: $key, entry: $entry}';
+    return 'CreatureTemplateDetailRouteArgs{key: $key, entry: $entry, name: $name}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! CreatureTemplateDetailRouteArgs) return false;
-    return key == other.key && entry == other.entry;
+    return key == other.key && entry == other.entry && name == other.name;
   }
 
   @override
-  int get hashCode => key.hashCode ^ entry.hashCode;
+  int get hashCode => key.hashCode ^ entry.hashCode ^ name.hashCode;
 }
 
 /// generated route for

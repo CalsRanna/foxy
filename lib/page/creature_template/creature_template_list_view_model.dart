@@ -70,8 +70,12 @@ class CreatureTemplateListViewModel {
     total.value = await repository.count();
   }
 
-  void navigateCreatureTemplateDetailPage(BuildContext context, {int? entry}) {
-    CreatureTemplateDetailRoute(entry: entry).push(context);
+  void navigateCreatureTemplateDetailPage(
+    BuildContext context, {
+    int? entry,
+    String? name,
+  }) {
+    CreatureTemplateDetailRoute(entry: entry, name: name).push(context);
   }
 
   Future<void> paginate(int page) async {

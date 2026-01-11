@@ -19,9 +19,9 @@ enum ItemQuality {
 
   static ItemQuality? fromValue(int value) {
     return ItemQuality.values.cast<ItemQuality?>().firstWhere(
-          (e) => e?.value == value,
-          orElse: () => null,
-        );
+      (e) => e?.value == value,
+      orElse: () => null,
+    );
   }
 }
 
@@ -40,7 +40,7 @@ const kItemQualityColors = <int, Color>{
   4: Color(0xFFA335EE), // Epic 史诗 (紫色)
   5: Color(0xFFFF8000), // Legendary 传说 (橙色)
   6: Color(0xFFE6CC80), // Artifact 神器 (浅金色)
-  7: Color(0xFF1ABC9C), // Heirloom 传家宝 (青色)
+  7: Color(0xFF00CCFF), // Heirloom 传家宝 (浅蓝色)
 };
 
 /// 根据品质值获取对应颜色
