@@ -12,7 +12,7 @@ import 'package:foxy/page/creature_template/creature_template_spell_view.dart';
 import 'package:foxy/page/creature_template/npc_trainer_view.dart';
 import 'package:foxy/page/creature_template/npc_vendor_view.dart';
 import 'package:foxy/page/creature_template/pickpocketing_loot_template_view.dart';
-import 'package:foxy/page/creature_template/tab/skinning_loot_template_tab.dart';
+import 'package:foxy/page/creature_template/skinning_loot_template_view.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
@@ -75,7 +75,7 @@ class _CreatureTemplateDetailPageState
         lootId: viewModel.template.value.pickpocketLoot,
       ),
       // 剥皮掉落 Tab
-      SkinningLootTemplateTab(lootId: viewModel.template.value.skinLoot),
+      SkinningLootTemplateView(lootId: viewModel.template.value.skinLoot),
     ];
 
     // Tab容器
