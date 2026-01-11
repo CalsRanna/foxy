@@ -7,23 +7,23 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 技能Tab
-class CreatureTemplateSpellTab extends StatefulWidget {
+class CreatureTemplateSpellView extends StatefulWidget {
   final int creatureID;
 
-  const CreatureTemplateSpellTab({super.key, required this.creatureID});
+  const CreatureTemplateSpellView({super.key, required this.creatureID});
 
   @override
-  State<CreatureTemplateSpellTab> createState() => _CreatureTemplateSpellTabState();
+  State<CreatureTemplateSpellView> createState() =>
+      _CreatureTemplateSpellViewState();
 }
 
-class _CreatureTemplateSpellTabState extends State<CreatureTemplateSpellTab> {
+class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
   final _repository = CreatureTemplateSpellRepository();
   List<CreatureTemplateSpell> _items = [];
   int? _selectedIndex;
   bool _loading = true;
   bool _editing = false;
   bool _creating = false;
-  int? _editingIndex;
 
   // 表单控制器
   final _indexController = TextEditingController();
@@ -90,7 +90,6 @@ class _CreatureTemplateSpellTabState extends State<CreatureTemplateSpellTab> {
       _creating = true;
       _editing = false;
       _selectedIndex = null;
-      _editingIndex = null;
     });
   }
 
@@ -101,7 +100,6 @@ class _CreatureTemplateSpellTabState extends State<CreatureTemplateSpellTab> {
     setState(() {
       _editing = true;
       _creating = false;
-      _editingIndex = spell.index;
     });
   }
 
@@ -112,14 +110,15 @@ class _CreatureTemplateSpellTabState extends State<CreatureTemplateSpellTab> {
       await _repository.copy(widget.creatureID, spell.index);
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('复制成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('复制成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('复制失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('复制失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -150,14 +149,15 @@ class _CreatureTemplateSpellTabState extends State<CreatureTemplateSpellTab> {
         await _repository.delete(widget.creatureID, spell.index);
         await _load();
         if (mounted) {
-          ShadToaster.of(context).show(
-            ShadToast(title: Text('删除成功')),
-          );
+          ShadToaster.of(context).show(ShadToast(title: Text('删除成功')));
         }
       } catch (e) {
         if (mounted) {
           ShadToaster.of(context).show(
-            ShadToast.destructive(title: Text('删除失败'), description: Text(e.toString())),
+            ShadToast.destructive(
+              title: Text('删除失败'),
+              description: Text(e.toString()),
+            ),
           );
         }
       }
@@ -174,14 +174,15 @@ class _CreatureTemplateSpellTabState extends State<CreatureTemplateSpellTab> {
       }
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('保存成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('保存成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('保存失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('保存失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -191,7 +192,6 @@ class _CreatureTemplateSpellTabState extends State<CreatureTemplateSpellTab> {
     setState(() {
       _editing = false;
       _creating = false;
-      _editingIndex = null;
     });
   }
 
@@ -212,20 +212,14 @@ class _CreatureTemplateSpellTabState extends State<CreatureTemplateSpellTab> {
             children: [
               _buildToolbar(),
               SizedBox(height: 8),
-              Flexible(
-                fit: FlexFit.loose,
-                child: _buildTable(),
-              ),
+              Flexible(fit: FlexFit.loose, child: _buildTable()),
             ],
           ),
         ),
         SizedBox(width: 16),
         // 右侧表单
         if (_editing || _creating)
-          Flexible(
-            fit: FlexFit.loose,
-            child: _buildForm(),
-          ),
+          Flexible(fit: FlexFit.loose, child: _buildForm()),
       ],
     );
   }
@@ -341,8 +335,10 @@ class _CreatureTemplateSpellTabState extends State<CreatureTemplateSpellTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 12,
           children: [
-            Text(_creating ? '新增技能' : '编辑技能',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              _creating ? '新增技能' : '编辑技能',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             FormItem(
               controller: _indexController,
               label: '索引',
