@@ -191,6 +191,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
                 child: ShadButton.ghost(
                   padding: EdgeInsets.zero,
                   onPressed: () => _removeRow(index),
+                  size: ShadButtonSize.sm,
                   child: Icon(LucideIcons.trash, size: 16),
                 ),
               ),

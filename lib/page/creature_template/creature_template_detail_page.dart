@@ -20,7 +20,9 @@ import 'package:signals/signals_flutter.dart';
 @RoutePage()
 class CreatureTemplateDetailPage extends StatefulWidget {
   final int? entry;
-  const CreatureTemplateDetailPage({super.key, this.entry});
+  final String? name;
+
+  const CreatureTemplateDetailPage({super.key, this.entry, this.name});
 
   @override
   State<CreatureTemplateDetailPage> createState() =>
@@ -101,13 +103,10 @@ class _CreatureTemplateDetailPageState
   }
 
   Widget _buildHeader() {
-    return Watch((_) {
-      var creatureTemplate = viewModel.template.value.name;
-      var name = creatureTemplate.isNotEmpty ? creatureTemplate : '新建生物';
-      var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
-      var text = Text(name, style: textStyle);
-      var edgeInsets = EdgeInsets.only(bottom: 12);
-      return Padding(padding: edgeInsets, child: text);
-    });
+    var name = widget.name?.isNotEmpty == true ? widget.name! : '新建生物';
+    var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
+    var text = Text(name, style: textStyle);
+    var edgeInsets = EdgeInsets.only(bottom: 12);
+    return Padding(padding: edgeInsets, child: text);
   }
 }

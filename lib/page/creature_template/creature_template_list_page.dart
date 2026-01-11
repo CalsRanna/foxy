@@ -130,6 +130,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
             viewModel.navigateCreatureTemplateDetailPage(
               context,
               entry: templates[row].entry,
+              name: templates[row].displayName,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -143,6 +144,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
                     viewModel.navigateCreatureTemplateDetailPage(
                       context,
                       entry: templates[row].entry,
+                      name: templates[row].displayName,
                     );
                   },
                   child: Text('编辑'),
