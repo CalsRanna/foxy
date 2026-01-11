@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_template_addon.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class CreatureTemplateAddonViewModel {
@@ -12,8 +13,8 @@ class CreatureTemplateAddonViewModel {
   final emoteController = TextEditingController();
   final bytes1Controller = TextEditingController();
   final bytes2Controller = TextEditingController();
+  final visibilityDistanceTypeController = TextEditingController();
   final aurasController = TextEditingController();
-  final isLargeController = TextEditingController();
 
   final loading = signal(false);
   final saving = signal(false);
@@ -38,18 +39,18 @@ class CreatureTemplateAddonViewModel {
   }
 
   /// 保存数据到数据库
-  Future<void> save() async {
-    saving.value = true;
+  Future<void> save(BuildContext context) async {
     try {
       final addonData = _collectFromControllers();
       final repository = CreatureTemplateAddonRepository();
       await repository.save(addonData);
       addon.value = addonData;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('模板补充数据已保存'));
+      ShadSonner.of(context).show(toast);
     } catch (e) {
-      // 重新抛出异常，让调用者处理
-      rethrow;
-    } finally {
-      saving.value = false;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
   }
 
@@ -62,8 +63,8 @@ class CreatureTemplateAddonViewModel {
     data.emote = _parseInt(emoteController.text);
     data.bytes1 = _parseInt(bytes1Controller.text);
     data.bytes2 = _parseInt(bytes2Controller.text);
+    data.visibilityDistanceType = _parseInt(visibilityDistanceTypeController.text);
     data.auras = aurasController.text;
-    data.isLarge = _parseInt(isLargeController.text);
     return data;
   }
 
@@ -76,12 +77,12 @@ class CreatureTemplateAddonViewModel {
     emoteController.text = data.emote.toString();
     bytes1Controller.text = data.bytes1.toString();
     bytes2Controller.text = data.bytes2.toString();
+    visibilityDistanceTypeController.text = data.visibilityDistanceType.toString();
     aurasController.text = data.auras;
-    isLargeController.text = data.isLarge.toString();
   }
 
   /// 初始化 ViewModel
-  Future<void> init({required int entryId}) async {
+  Future<void> initSignals({required int entryId}) async {
     entry.value = entryId;
     await load();
   }
@@ -93,7 +94,7 @@ class CreatureTemplateAddonViewModel {
     emoteController.dispose();
     bytes1Controller.dispose();
     bytes2Controller.dispose();
+    visibilityDistanceTypeController.dispose();
     aurasController.dispose();
-    isLargeController.dispose();
   }
 }
