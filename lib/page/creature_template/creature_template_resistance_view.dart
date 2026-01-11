@@ -8,23 +8,24 @@ import 'package:foxy/widget/form_item.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 抗性Tab
-class CreatureTemplateResistanceTab extends StatefulWidget {
+class CreatureTemplateResistanceView extends StatefulWidget {
   final int creatureID;
 
-  const CreatureTemplateResistanceTab({super.key, required this.creatureID});
+  const CreatureTemplateResistanceView({super.key, required this.creatureID});
 
   @override
-  State<CreatureTemplateResistanceTab> createState() => _CreatureTemplateResistanceTabState();
+  State<CreatureTemplateResistanceView> createState() =>
+      _CreatureTemplateResistanceViewState();
 }
 
-class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistanceTab> {
+class _CreatureTemplateResistanceViewState
+    extends State<CreatureTemplateResistanceView> {
   final _repository = CreatureTemplateResistanceRepository();
   List<CreatureTemplateResistance> _items = [];
   int? _selectedIndex;
   bool _loading = true;
   bool _editing = false;
   bool _creating = false;
-  int? _editingSchool;
 
   // 表单控制器
   final _schoolController = ShadSelectController<int>();
@@ -91,7 +92,6 @@ class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistan
       _creating = true;
       _editing = false;
       _selectedIndex = null;
-      _editingSchool = null;
     });
   }
 
@@ -102,7 +102,6 @@ class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistan
     setState(() {
       _editing = true;
       _creating = false;
-      _editingSchool = resistance.school;
     });
   }
 
@@ -113,14 +112,15 @@ class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistan
       await _repository.copy(widget.creatureID, resistance.school);
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('复制成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('复制成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('复制失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('复制失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -151,14 +151,15 @@ class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistan
         await _repository.delete(widget.creatureID, resistance.school);
         await _load();
         if (mounted) {
-          ShadToaster.of(context).show(
-            ShadToast(title: Text('删除成功')),
-          );
+          ShadToaster.of(context).show(ShadToast(title: Text('删除成功')));
         }
       } catch (e) {
         if (mounted) {
           ShadToaster.of(context).show(
-            ShadToast.destructive(title: Text('删除失败'), description: Text(e.toString())),
+            ShadToast.destructive(
+              title: Text('删除失败'),
+              description: Text(e.toString()),
+            ),
           );
         }
       }
@@ -175,14 +176,15 @@ class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistan
       }
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('保存成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('保存成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('保存失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('保存失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -192,7 +194,6 @@ class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistan
     setState(() {
       _editing = false;
       _creating = false;
-      _editingSchool = null;
     });
   }
 
@@ -213,20 +214,14 @@ class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistan
             children: [
               _buildToolbar(),
               SizedBox(height: 8),
-              Flexible(
-                fit: FlexFit.loose,
-                child: _buildTable(),
-              ),
+              Flexible(fit: FlexFit.loose, child: _buildTable()),
             ],
           ),
         ),
         SizedBox(width: 16),
         // 右侧表单
         if (_editing || _creating)
-          Flexible(
-            fit: FlexFit.loose,
-            child: _buildForm(),
-          ),
+          Flexible(fit: FlexFit.loose, child: _buildForm()),
       ],
     );
   }
@@ -319,9 +314,16 @@ class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistan
             final resistance = _items[vicinity.row];
 
             return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(kResistanceSchoolOptions[resistance.school] ?? '未知 (${resistance.school})')),
+              0 => ShadTableCell(
+                child: Text(
+                  kResistanceSchoolOptions[resistance.school] ??
+                      '未知 (${resistance.school})',
+                ),
+              ),
               1 => ShadTableCell(child: Text(resistance.resistance.toString())),
-              2 => ShadTableCell(child: Text(resistance.verifiedBuild.toString())),
+              2 => ShadTableCell(
+                child: Text(resistance.verifiedBuild.toString()),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -339,8 +341,10 @@ class _CreatureTemplateResistanceTabState extends State<CreatureTemplateResistan
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 12,
           children: [
-            Text(_creating ? '新增抗性' : '编辑抗性',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              _creating ? '新增抗性' : '编辑抗性',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             FormItem(
               label: '抗性类型',
               child: FoxyShadSelect<int>(

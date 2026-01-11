@@ -7,7 +7,7 @@ import 'package:foxy/page/creature_template/tab/creature_loot_template_tab.dart'
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view.dart';
 import 'package:foxy/page/creature_template/tab/creature_questitem_tab.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view.dart';
-import 'package:foxy/page/creature_template/tab/creature_template_resistance_tab.dart';
+import 'package:foxy/page/creature_template/creature_template_resistance_view.dart';
 import 'package:foxy/page/creature_template/tab/creature_template_spell_tab.dart';
 import 'package:foxy/page/creature_template/tab/npc_trainer_tab.dart';
 import 'package:foxy/page/creature_template/tab/npc_vendor_tab.dart';
@@ -57,7 +57,7 @@ class _CreatureTemplateDetailPageState
       // 击杀声望 Tab
       CreatureOnKillReputationView(creatureID: widget.entry ?? 0),
       // 抗性 Tab
-      CreatureTemplateResistanceTab(creatureID: widget.entry ?? 0),
+      CreatureTemplateResistanceView(creatureID: widget.entry ?? 0),
       // 技能 Tab
       CreatureTemplateSpellTab(creatureID: widget.entry ?? 0),
       // 装备模板 Tab
