@@ -3,6 +3,8 @@ class ItemTemplate {
   int entry = 0;
   String name = '';
   String localeName = '';
+  String description = '';
+  String localeDescription = '';
   int quality = 0;
   int className = 0;
   int subclass = 0;
@@ -15,12 +17,18 @@ class ItemTemplate {
   /// 显示名称（优先显示本地化名称）
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
+  /// 显示描述（优先显示本地化描述）
+  String get displayDescription =>
+      localeDescription.isNotEmpty ? localeDescription : description;
+
   ItemTemplate();
 
   ItemTemplate.fromJson(Map<String, dynamic> json) {
     entry = json['entry'] ?? 0;
     name = json['name'] ?? '';
     localeName = json['localeName'] ?? json['Name'] ?? '';
+    description = json['description'] ?? '';
+    localeDescription = json['localeDescription'] ?? json['Description'] ?? '';
     quality = json['Quality'] ?? json['quality'] ?? 0;
     className = json['class'] ?? json['className'] ?? 0;
     subclass = json['subclass'] ?? 0;
@@ -35,6 +43,7 @@ class ItemTemplate {
     return {
       'entry': entry,
       'name': name,
+      'description': description,
       'Quality': quality,
       'class': className,
       'subclass': subclass,

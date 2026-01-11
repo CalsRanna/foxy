@@ -9,6 +9,7 @@ class ItemTemplateRepository with RepositoryMixin {
   Future<List<ItemTemplate>> search({
     String? entry,
     String? name,
+    String? description,
     int page = 1,
   }) async {
     try {
@@ -17,6 +18,7 @@ class ItemTemplateRepository with RepositoryMixin {
       const fields = [
         'it.entry',
         'it.name',
+        'it.description',
         'it.Quality',
         'it.class',
         'it.subclass',
@@ -25,6 +27,7 @@ class ItemTemplateRepository with RepositoryMixin {
         'it.RequiredLevel',
         'it.displayid',
         'itl.Name AS localeName',
+        'itl.Description AS localeDescription',
         'didi.InventoryIcon_1',
       ];
       builder = builder.select(fields);
@@ -46,6 +49,13 @@ class ItemTemplateRepository with RepositoryMixin {
           operator: 'like',
         );
       }
+      if (description != null && description.isNotEmpty) {
+        builder = builder.whereAny(
+          ['it.description', 'itl.Description'],
+          '%$description%',
+          operator: 'like',
+        );
+      }
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
       return results.map((e) => ItemTemplate.fromJson(e.toMap())).toList();
@@ -55,7 +65,7 @@ class ItemTemplateRepository with RepositoryMixin {
   }
 
   /// 计数
-  Future<int> count({String? entry, String? name}) async {
+  Future<int> count({String? entry, String? name, String? description}) async {
     try {
       var builder = laconic.table('$_table AS it');
       builder = builder.leftJoin(
@@ -72,6 +82,13 @@ class ItemTemplateRepository with RepositoryMixin {
           operator: 'like',
         );
       }
+      if (description != null && description.isNotEmpty) {
+        builder = builder.whereAny(
+          ['it.description', 'itl.Description'],
+          '%$description%',
+          operator: 'like',
+        );
+      }
       return await builder.count();
     } catch (e) {
       return 0;
@@ -85,6 +102,7 @@ class ItemTemplateRepository with RepositoryMixin {
       const fields = [
         'it.entry',
         'it.name',
+        'it.description',
         'it.Quality',
         'it.class',
         'it.subclass',
@@ -93,6 +111,7 @@ class ItemTemplateRepository with RepositoryMixin {
         'it.RequiredLevel',
         'it.displayid',
         'itl.Name AS localeName',
+        'itl.Description AS localeDescription',
         'didi.InventoryIcon_1',
       ];
       builder = builder.select(fields);
