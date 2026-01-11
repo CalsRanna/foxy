@@ -4,9 +4,9 @@ import 'package:foxy/page/creature_template/creature_template_detail_view_model.
 import 'package:foxy/page/creature_template/creature_template_view.dart';
 import 'package:foxy/page/creature_template/tab/creature_equip_template_tab.dart';
 import 'package:foxy/page/creature_template/tab/creature_loot_template_tab.dart';
-import 'package:foxy/page/creature_template/tab/creature_onkill_reputation_tab.dart';
+import 'package:foxy/page/creature_template/creature_on_kill_reputation_view.dart';
 import 'package:foxy/page/creature_template/tab/creature_questitem_tab.dart';
-import 'package:foxy/page/creature_template/tab/creature_template_addon_tab.dart';
+import 'package:foxy/page/creature_template/creature_template_addon_view.dart';
 import 'package:foxy/page/creature_template/tab/creature_template_resistance_tab.dart';
 import 'package:foxy/page/creature_template/tab/creature_template_spell_tab.dart';
 import 'package:foxy/page/creature_template/tab/npc_trainer_tab.dart';
@@ -53,9 +53,9 @@ class _CreatureTemplateDetailPageState
       // 生物模板（主内容）
       CreatureTemplateView(entry: widget.entry ?? 0),
       // 模板补充 Tab
-      CreatureTemplateAddonTab(entry: widget.entry ?? 0),
+      CreatureTemplateAddonView(entry: widget.entry ?? 0),
       // 击杀声望 Tab
-      CreatureOnkillReputationTab(creatureID: widget.entry ?? 0),
+      CreatureOnKillReputationView(creatureID: widget.entry ?? 0),
       // 抗性 Tab
       CreatureTemplateResistanceTab(creatureID: widget.entry ?? 0),
       // 技能 Tab

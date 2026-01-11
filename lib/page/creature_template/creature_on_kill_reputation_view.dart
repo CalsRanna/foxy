@@ -7,18 +7,19 @@ import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 击杀声望Tab
-class CreatureOnkillReputationTab extends StatefulWidget {
+class CreatureOnKillReputationView extends StatefulWidget {
   final int creatureID;
 
-  const CreatureOnkillReputationTab({super.key, required this.creatureID});
+  const CreatureOnKillReputationView({super.key, required this.creatureID});
 
   @override
-  State<CreatureOnkillReputationTab> createState() => _CreatureOnkillReputationTabState();
+  State<CreatureOnKillReputationView> createState() =>
+      _CreatureOnKillReputationViewState();
 }
 
-class _CreatureOnkillReputationTabState extends State<CreatureOnkillReputationTab> {
-  final _repository = CreatureOnkillReputationRepository();
-  CreatureOnkillReputation? _rep;
+class _CreatureOnKillReputationViewState
+    extends State<CreatureOnKillReputationView> {
+  final _repository = CreatureOnKillReputationRepository();
   bool _loading = true;
 
   // 表单控制器
@@ -58,7 +59,6 @@ class _CreatureOnkillReputationTabState extends State<CreatureOnkillReputationTa
       final rep = await _repository.getByEntry(widget.creatureID);
       if (mounted) {
         setState(() {
-          _rep = rep;
           if (rep != null) {
             _fillForm(rep);
           } else {
@@ -83,7 +83,7 @@ class _CreatureOnkillReputationTabState extends State<CreatureOnkillReputationTa
     _teamDependentController.text = '0';
   }
 
-  void _fillForm(CreatureOnkillReputation rep) {
+  void _fillForm(CreatureOnKillReputation rep) {
     _rewOnKillRepFaction1Controller.text = rep.rewOnKillRepFaction1.toString();
     _rewOnKillRepFaction2Controller.text = rep.rewOnKillRepFaction2.toString();
     _maxStanding1Controller.text = rep.maxStanding1.toString();
@@ -95,17 +95,21 @@ class _CreatureOnkillReputationTabState extends State<CreatureOnkillReputationTa
     _teamDependentController.text = rep.teamDependent.toString();
   }
 
-  CreatureOnkillReputation _collectFromForm() {
-    final rep = CreatureOnkillReputation();
+  CreatureOnKillReputation _collectFromForm() {
+    final rep = CreatureOnKillReputation();
     rep.creatureID = widget.creatureID;
-    rep.rewOnKillRepFaction1 = int.tryParse(_rewOnKillRepFaction1Controller.text) ?? 0;
-    rep.rewOnKillRepFaction2 = int.tryParse(_rewOnKillRepFaction2Controller.text) ?? 0;
+    rep.rewOnKillRepFaction1 =
+        int.tryParse(_rewOnKillRepFaction1Controller.text) ?? 0;
+    rep.rewOnKillRepFaction2 =
+        int.tryParse(_rewOnKillRepFaction2Controller.text) ?? 0;
     rep.maxStanding1 = int.tryParse(_maxStanding1Controller.text) ?? 0;
     rep.maxStanding2 = int.tryParse(_maxStanding2Controller.text) ?? 0;
     rep.isTeamAward1 = _isTeamAward1Controller.value.first == 1;
     rep.isTeamAward2 = _isTeamAward2Controller.value.first == 1;
-    rep.rewOnKillRepValue1 = int.tryParse(_rewOnKillRepValue1Controller.text) ?? 0;
-    rep.rewOnKillRepValue2 = int.tryParse(_rewOnKillRepValue2Controller.text) ?? 0;
+    rep.rewOnKillRepValue1 =
+        int.tryParse(_rewOnKillRepValue1Controller.text) ?? 0;
+    rep.rewOnKillRepValue2 =
+        int.tryParse(_rewOnKillRepValue2Controller.text) ?? 0;
     rep.teamDependent = int.tryParse(_teamDependentController.text) ?? 0;
     return rep;
   }
@@ -116,14 +120,15 @@ class _CreatureOnkillReputationTabState extends State<CreatureOnkillReputationTa
       await _repository.save(rep);
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('保存成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('保存成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('保存失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('保存失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -143,8 +148,10 @@ class _CreatureOnkillReputationTabState extends State<CreatureOnkillReputationTa
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            Text('击杀声望奖励',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              '击杀声望奖励',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 8),
             Row(
               spacing: 16,
@@ -153,8 +160,10 @@ class _CreatureOnkillReputationTabState extends State<CreatureOnkillReputationTa
                   child: Column(
                     spacing: 12,
                     children: [
-                      Text('阵营1',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(
+                        '阵营1',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       FormItem(
                         controller: _rewOnKillRepFaction1Controller,
                         label: '阵营ID',
@@ -185,8 +194,10 @@ class _CreatureOnkillReputationTabState extends State<CreatureOnkillReputationTa
                   child: Column(
                     spacing: 12,
                     children: [
-                      Text('阵营2',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(
+                        '阵营2',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       FormItem(
                         controller: _rewOnKillRepFaction2Controller,
                         label: '阵营ID',

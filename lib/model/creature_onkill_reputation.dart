@@ -1,5 +1,5 @@
 /// 生物击杀声望
-class CreatureOnkillReputation {
+class CreatureOnKillReputation {
   int creatureID = 0;
   int rewOnKillRepFaction1 = 0;
   int rewOnKillRepFaction2 = 0;
@@ -11,18 +11,22 @@ class CreatureOnkillReputation {
   int rewOnKillRepValue2 = 0;
   int teamDependent = 0;
 
-  CreatureOnkillReputation();
+  CreatureOnKillReputation();
 
-  CreatureOnkillReputation.fromJson(Map<String, dynamic> json) {
+  CreatureOnKillReputation.fromJson(Map<String, dynamic> json) {
     creatureID = json['creature_id'] ?? json['creatureID'] ?? 0;
-    rewOnKillRepFaction1 = json['RewOnKillRepFaction1'] ?? json['rewOnKillRepFaction1'] ?? 0;
-    rewOnKillRepFaction2 = json['RewOnKillRepFaction2'] ?? json['rewOnKillRepFaction2'] ?? 0;
+    rewOnKillRepFaction1 =
+        json['RewOnKillRepFaction1'] ?? json['rewOnKillRepFaction1'] ?? 0;
+    rewOnKillRepFaction2 =
+        json['RewOnKillRepFaction2'] ?? json['rewOnKillRepFaction2'] ?? 0;
     maxStanding1 = json['MaxStanding1'] ?? json['maxStanding1'] ?? 0;
     maxStanding2 = json['MaxStanding2'] ?? json['maxStanding2'] ?? 0;
     isTeamAward1 = (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1;
     isTeamAward2 = (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1;
-    rewOnKillRepValue1 = json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0;
-    rewOnKillRepValue2 = json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2'] ?? 0;
+    rewOnKillRepValue1 =
+        json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0;
+    rewOnKillRepValue2 =
+        json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2'] ?? 0;
     teamDependent = json['TeamDependent'] ?? json['teamDependent'] ?? 0;
   }
 
