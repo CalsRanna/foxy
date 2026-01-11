@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/model/loot_template.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/loot_template_repository.dart';

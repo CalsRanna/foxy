@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/model/creature_equip_template.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
@@ -321,9 +322,9 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
               return ShadTableCell(child: SizedBox());
             }
             final equip = _items[vicinity.row];
-            final qualityColor1 = _getQualityColor(equip.quality1);
-            final qualityColor2 = _getQualityColor(equip.quality2);
-            final qualityColor3 = _getQualityColor(equip.quality3);
+            final qualityColor1 = getItemQualityColor(equip.quality1);
+            final qualityColor2 = getItemQualityColor(equip.quality2);
+            final qualityColor3 = getItemQualityColor(equip.quality3);
 
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(equip.id.toString())),
@@ -409,19 +410,5 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
         ),
       ),
     );
-  }
-
-  Color _getQualityColor(int quality) {
-    const qualityColors = {
-      0: Colors.white,
-      1: Colors.grey,
-      2: Colors.green,
-      3: Colors.blue,
-      4: Colors.purple,
-      5: Colors.orange,
-      6: Colors.red,
-      7: Color(0xFFe6cc80),
-    };
-    return qualityColors[quality] ?? Colors.white;
   }
 }

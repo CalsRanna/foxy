@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/model/loot_template.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -349,7 +350,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
               return ShadTableCell(child: SizedBox());
             }
             final loot = _items[vicinity.row];
-            final qualityColor = _getQualityColor(loot.itemQuality);
+            final qualityColor = getItemQualityColor(loot.itemQuality);
 
             return switch (vicinity.column) {
               0 => ShadTableCell(
@@ -465,19 +466,5 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
         ),
       ),
     );
-  }
-
-  Color _getQualityColor(int quality) {
-    const qualityColors = {
-      0: Colors.white,
-      1: Colors.grey,
-      2: Colors.green,
-      3: Colors.blue,
-      4: Colors.purple,
-      5: Colors.orange,
-      6: Colors.red,
-      7: Color(0xFFe6cc80),
-    };
-    return qualityColors[quality] ?? Colors.white;
   }
 }

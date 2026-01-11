@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/model/item_template.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-
-/// 物品品质颜色
-const kItemQualityColors = <int, Color>{
-  0: Color(0xFF9D9D9D), // Poor (灰色)
-  1: Color(0xFFFFFFFF), // Common (白色)
-  2: Color(0xFF1EFF00), // Uncommon (绿色)
-  3: Color(0xFF0070DD), // Rare (蓝色)
-  4: Color(0xFFA335EE), // Epic (紫色)
-  5: Color(0xFFFF8000), // Legendary (橙色)
-  6: Color(0xFFE6CC80), // Artifact (浅金色)
-  7: Color(0xFF00CCFF), // Heirloom (浅蓝色)
-};
 
 /// 物品模板选择器
 class ItemTemplateSelector extends StatefulWidget {
