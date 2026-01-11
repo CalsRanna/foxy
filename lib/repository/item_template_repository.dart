@@ -55,10 +55,7 @@ class ItemTemplateRepository with RepositoryMixin {
   }
 
   /// 计数
-  Future<int> count({
-    String? entry,
-    String? name,
-  }) async {
+  Future<int> count({String? entry, String? name}) async {
     try {
       var builder = laconic.table('$_table AS it');
       builder = builder.leftJoin(
@@ -109,7 +106,7 @@ class ItemTemplateRepository with RepositoryMixin {
       );
       builder = builder.where('it.entry', entry);
       var result = await builder.first();
-      return result != null ? ItemTemplate.fromJson(result.toMap()) : null;
+      return ItemTemplate.fromJson(result.toMap());
     } catch (e) {
       return null;
     }

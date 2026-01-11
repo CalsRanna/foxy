@@ -8,9 +8,7 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
   Future<CreatureTemplateAddon?> find(int entry) async {
     try {
       var result = await laconic.table(_table).where('entry', entry).first();
-      return result != null
-          ? CreatureTemplateAddon.fromJson(result.toMap())
-          : null;
+      return CreatureTemplateAddon.fromJson(result.toMap());
     } catch (e) {
       return null;
     }

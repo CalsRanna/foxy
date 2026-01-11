@@ -45,26 +45,26 @@ class CreatureQuestItemRepository with RepositoryMixin {
           .where('CreatureEntry', creatureEntry)
           .where('Idx', idx)
           .first();
-      return result != null ? CreatureQuestItem.fromJson(result.toMap()) : null;
+      return CreatureQuestItem.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 新增任务物品
-  Future<void> store(CreatureQuestItem questitem) async {
-    await laconic.table(_table).insert([questitem.toJson()]);
+  Future<void> store(CreatureQuestItem questItem) async {
+    await laconic.table(_table).insert([questItem.toJson()]);
   }
 
   /// 更新任务物品
-  Future<void> update(CreatureQuestItem questitem) async {
-    var json = questitem.toJson();
+  Future<void> update(CreatureQuestItem questItem) async {
+    var json = questItem.toJson();
     json.remove('CreatureEntry');
     json.remove('Idx');
     await laconic
         .table(_table)
-        .where('CreatureEntry', questitem.creatureEntry)
-        .where('Idx', questitem.idx)
+        .where('CreatureEntry', questItem.creatureEntry)
+        .where('Idx', questItem.idx)
         .update(json);
   }
 
@@ -85,7 +85,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
         .select(['MAX(Idx) AS maxIdx'])
         .where('CreatureEntry', creatureEntry)
         .first();
-    var maxIdx = (maxIdxResult?.toMap()['maxIdx'] ?? 0) as int;
+    var maxIdx = (maxIdxResult.toMap()['maxIdx'] ?? 0) as int;
 
     // 获取源记录
     var source = await find(creatureEntry, idx);
@@ -94,11 +94,11 @@ class CreatureQuestItemRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newQuestitem = CreatureQuestItem.fromJson(source.toJson());
-    newQuestitem.idx = maxIdx + 1;
+    var newQuestItem = CreatureQuestItem.fromJson(source.toJson());
+    newQuestItem.idx = maxIdx + 1;
 
-    await store(newQuestitem);
-    return newQuestitem;
+    await store(newQuestItem);
+    return newQuestItem;
   }
 
   /// 获取下一个可用的Idx
@@ -108,7 +108,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
         .select(['MAX(Idx) AS maxIdx'])
         .where('CreatureEntry', creatureEntry)
         .first();
-    var maxIdx = (maxResult?.toMap()['maxIdx'] ?? 0) as int;
+    var maxIdx = (maxResult.toMap()['maxIdx'] ?? 0) as int;
     return maxIdx + 1;
   }
 }

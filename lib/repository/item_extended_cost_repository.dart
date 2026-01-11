@@ -5,10 +5,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
 
   /// 搜索扩展价格
-  Future<List<ItemExtendedCost>> search({
-    String? id,
-    int page = 1,
-  }) async {
+  Future<List<ItemExtendedCost>> search({String? id, int page = 1}) async {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table);
@@ -42,7 +39,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
   Future<ItemExtendedCost?> find(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
-      return result != null ? ItemExtendedCost.fromJson(result.toMap()) : null;
+      return ItemExtendedCost.fromJson(result.toMap());
     } catch (e) {
       return null;
     }

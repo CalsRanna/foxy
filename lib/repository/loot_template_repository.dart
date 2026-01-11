@@ -96,7 +96,7 @@ class LootTemplateRepository with RepositoryMixin {
           .where('Entry', entry)
           .where('Item', item)
           .first();
-      return result != null ? LootTemplate.fromJson(result.toMap()) : null;
+      return LootTemplate.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -121,7 +121,11 @@ class LootTemplateRepository with RepositoryMixin {
 
   /// 删除掉落
   Future<void> delete(int entry, int item) async {
-    await laconic.table(_table).where('Entry', entry).where('Item', item).delete();
+    await laconic
+        .table(_table)
+        .where('Entry', entry)
+        .where('Item', item)
+        .delete();
   }
 
   /// 复制掉落（获取新的Item ID）
@@ -132,7 +136,7 @@ class LootTemplateRepository with RepositoryMixin {
         .select(['MAX(Item) AS maxItem'])
         .where('Entry', entry)
         .first();
-    var maxItem = (maxResult?.toMap()['maxItem'] ?? 0) as int;
+    var maxItem = (maxResult.toMap()['maxItem'] ?? 0) as int;
 
     // 获取源记录
     var source = await find(entry, item);
@@ -158,7 +162,7 @@ class LootTemplateRepository with RepositoryMixin {
         .select(['MAX(Item) AS maxItem'])
         .where('Entry', entry)
         .first();
-    var maxItem = (maxResult?.toMap()['maxItem'] ?? 0) as int;
+    var maxItem = (maxResult.toMap()['maxItem'] ?? 0) as int;
     return maxItem + 1;
   }
 }

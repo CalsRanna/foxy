@@ -45,7 +45,7 @@ class NpcVendorRepository with RepositoryMixin {
           .where('entry', entry)
           .where('slot', slot)
           .first();
-      return result != null ? NpcVendor.fromJson(result.toMap()) : null;
+      return NpcVendor.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -70,7 +70,11 @@ class NpcVendorRepository with RepositoryMixin {
 
   /// 删除商品
   Future<void> delete(int entry, int slot) async {
-    await laconic.table(_table).where('entry', entry).where('slot', slot).delete();
+    await laconic
+        .table(_table)
+        .where('entry', entry)
+        .where('slot', slot)
+        .delete();
   }
 
   /// 复制商品
@@ -81,7 +85,7 @@ class NpcVendorRepository with RepositoryMixin {
         .select(['MAX(slot) AS maxSlot'])
         .where('entry', entry)
         .first();
-    var maxSlot = (maxSlotResult?.toMap()['maxSlot'] ?? 0) as int;
+    var maxSlot = (maxSlotResult.toMap()['maxSlot'] ?? 0) as int;
 
     // 获取源记录
     var source = await find(entry, slot);
@@ -104,7 +108,7 @@ class NpcVendorRepository with RepositoryMixin {
         .select(['MAX(slot) AS maxSlot'])
         .where('entry', entry)
         .first();
-    var maxSlot = (maxResult?.toMap()['maxSlot'] ?? -1) as int;
+    var maxSlot = (maxResult.toMap()['maxSlot'] ?? -1) as int;
     return maxSlot + 1;
   }
 }

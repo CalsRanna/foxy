@@ -11,9 +11,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
       builder = builder.select(['*']);
       builder = builder.where('creature_id', creatureID);
       var result = await builder.first();
-      return result != null
-          ? CreatureOnKillReputation.fromJson(result.toMap())
-          : null;
+      return CreatureOnKillReputation.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -26,9 +24,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
           .table(_table)
           .where('creature_id', creatureID)
           .first();
-      return result != null
-          ? CreatureOnKillReputation.fromJson(result.toMap())
-          : null;
+      return CreatureOnKillReputation.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
