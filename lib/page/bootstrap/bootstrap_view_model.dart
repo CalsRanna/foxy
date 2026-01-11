@@ -65,7 +65,6 @@ class BootstrapViewModel {
       if (!context.mounted) return;
       AutoRouter.of(context).replaceAll([DashboardRoute()]);
     } catch (e) {
-      DialogUtil.instance.dismiss();
       logger.e(e.toString());
       DialogUtil.instance.error(e.toString());
     }
