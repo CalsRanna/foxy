@@ -9,7 +9,12 @@ class SpellRepository with RepositoryMixin {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table);
-      const fields = ['ID', 'Name_Lang_zhCN', 'NameSubtext_Lang_zhCN'];
+      const fields = [
+        'ID',
+        'Name_Lang_zhCN',
+        'NameSubtext_Lang_zhCN',
+        'Description_Lang_zhCN',
+      ];
       builder = builder.select(fields);
       if (id != null && id.isNotEmpty) {
         builder = builder.where('ID', id);
