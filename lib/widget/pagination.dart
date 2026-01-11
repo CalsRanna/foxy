@@ -18,13 +18,18 @@ class FoxyPagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final count = (total / pageSize).ceil();
+    // 确保 count 至少为 1
+    final count = max(1, (total / pageSize).ceil());
+    final canGoLeft = page > 1;
+    final canGoRight = page < count;
     final left = _Tile(
-      onClick: () => change(-1, count),
+      disabled: !canGoLeft,
+      onClick: canGoLeft ? () => change(-1, count) : null,
       child: const Icon(Icons.chevron_left),
     );
     final right = _Tile(
-      onClick: () => change(1, count),
+      disabled: !canGoRight,
+      onClick: canGoRight ? () => change(1, count) : null,
       child: const Icon(Icons.chevron_right),
     );
     final first = _Tile(
@@ -32,41 +37,50 @@ class FoxyPagination extends StatelessWidget {
       onClick: () => handleClick(1),
       child: const Text('1'),
     );
-    final last = _Tile(
-      active: page == count,
-      onClick: () => handleClick(count),
-      child: Text('$count'),
-    );
-    final lower = max(2, page - 2);
-    final upper = min(page + 2, count - 1);
+
+    // 只有当 count > 1 时才显示 last，避免重复显示 "1"
+    final showLast = count > 1;
+    final last = showLast
+        ? _Tile(
+            active: page == count,
+            onClick: () => handleClick(count),
+            child: Text('$count'),
+          )
+        : null;
+
     List<_Tile> tiles = [];
-    for (var i = lower; i <= upper; i++) {
-      tiles.add(
-        _Tile(
-          active: page == i,
-          onClick: () => handleClick(i),
-          child: Text('$i'),
-        ),
-      );
+    // 只有当 count > 2 时才需要中间的页码
+    if (count > 2) {
+      final lower = max(2, page - 2);
+      final upper = min(page + 2, count - 1);
+      for (var i = lower; i <= upper; i++) {
+        tiles.add(
+          _Tile(
+            active: page == i,
+            onClick: () => handleClick(i),
+            child: Text('$i'),
+          ),
+        );
+      }
+      if (lower > 2) {
+        final less = _Tile(
+          onClick: () => change(-3, count),
+          child: const Text('...'),
+        );
+        tiles.insert(0, less);
+      }
+      if (upper < count - 2) {
+        final more = _Tile(
+          onClick: () => change(3, count),
+          child: const Text('...'),
+        );
+        tiles.add(more);
+      }
     }
-    if (lower > 2) {
-      final less = _Tile(
-        onClick: () => change(-3, count),
-        child: const Text('...'),
-      );
-      tiles.insert(0, less);
-    }
-    if (upper < count - 2) {
-      final more = _Tile(
-        onClick: () => change(3, count),
-        child: const Text('...'),
-      );
-      tiles.add(more);
-    }
-    if (count <= 1) return const SizedBox();
+
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: [left, first, ...tiles, last, right],
+      children: [left, first, ...tiles, if (last != null) last, right],
     );
   }
 
@@ -81,9 +95,15 @@ class FoxyPagination extends StatelessWidget {
 
 class _Tile extends StatefulWidget {
   final bool active;
+  final bool disabled;
   final void Function()? onClick;
   final Widget child;
-  const _Tile({this.active = false, this.onClick, required this.child});
+  const _Tile({
+    this.active = false,
+    this.disabled = false,
+    this.onClick,
+    required this.child,
+  });
 
   @override
   State<_Tile> createState() => _TileState();
@@ -98,7 +118,15 @@ class _TileState extends State<_Tile> {
     final colorScheme = theme.colorScheme;
     final primary = colorScheme.primary;
     final surfaceContainer = colorScheme.surfaceContainer;
-    final color = (widget.active || hovered) ? primary : null;
+    final disabledColor = colorScheme.onSurface.withOpacity(0.38);
+
+    final isDisabled = widget.disabled;
+    final color = isDisabled
+        ? disabledColor
+        : (widget.active || hovered)
+        ? primary
+        : null;
+
     var iconTheme = IconTheme.merge(
       data: IconThemeData(color: color),
       child: widget.child,
@@ -111,7 +139,7 @@ class _TileState extends State<_Tile> {
     var boxDecoration = BoxDecoration(
       border: widget.active ? Border.all(color: primary) : null,
       borderRadius: BorderRadius.circular(4),
-      color: hovered ? surfaceContainer : null,
+      color: (!isDisabled && hovered) ? surfaceContainer : null,
     );
     var container = Container(
       alignment: Alignment.center,
@@ -123,13 +151,13 @@ class _TileState extends State<_Tile> {
     );
     var gestureDetector = GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: handleTap,
+      onTap: isDisabled ? null : handleTap,
       child: container,
     );
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: handleEnter,
-      onExit: handleExit,
+      cursor: isDisabled ? SystemMouseCursors.basic : SystemMouseCursors.click,
+      onEnter: isDisabled ? null : handleEnter,
+      onExit: isDisabled ? null : handleExit,
       child: gestureDetector,
     );
   }
