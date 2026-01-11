@@ -7,23 +7,22 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 训练师Tab
-class NpcTrainerTab extends StatefulWidget {
+class NpcTrainerView extends StatefulWidget {
   final int id;
 
-  const NpcTrainerTab({super.key, required this.id});
+  const NpcTrainerView({super.key, required this.id});
 
   @override
-  State<NpcTrainerTab> createState() => _NpcTrainerTabState();
+  State<NpcTrainerView> createState() => _NpcTrainerViewState();
 }
 
-class _NpcTrainerTabState extends State<NpcTrainerTab> {
+class _NpcTrainerViewState extends State<NpcTrainerView> {
   final _repository = NpcTrainerRepository();
   List<NpcTrainer> _items = [];
   int? _selectedIndex;
   bool _loading = true;
   bool _editing = false;
   bool _creating = false;
-  int? _editingSpellID;
 
   // 表单控制器
   final _spellIDController = TextEditingController();
@@ -98,7 +97,6 @@ class _NpcTrainerTabState extends State<NpcTrainerTab> {
       _creating = true;
       _editing = false;
       _selectedIndex = null;
-      _editingSpellID = null;
     });
   }
 
@@ -109,7 +107,6 @@ class _NpcTrainerTabState extends State<NpcTrainerTab> {
     setState(() {
       _editing = true;
       _creating = false;
-      _editingSpellID = trainer.spellID;
     });
   }
 
@@ -120,14 +117,15 @@ class _NpcTrainerTabState extends State<NpcTrainerTab> {
       await _repository.copy(widget.id, trainer.spellID);
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('复制成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('复制成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('复制失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('复制失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -158,14 +156,15 @@ class _NpcTrainerTabState extends State<NpcTrainerTab> {
         await _repository.delete(widget.id, trainer.spellID);
         await _load();
         if (mounted) {
-          ShadToaster.of(context).show(
-            ShadToast(title: Text('删除成功')),
-          );
+          ShadToaster.of(context).show(ShadToast(title: Text('删除成功')));
         }
       } catch (e) {
         if (mounted) {
           ShadToaster.of(context).show(
-            ShadToast.destructive(title: Text('删除失败'), description: Text(e.toString())),
+            ShadToast.destructive(
+              title: Text('删除失败'),
+              description: Text(e.toString()),
+            ),
           );
         }
       }
@@ -182,14 +181,15 @@ class _NpcTrainerTabState extends State<NpcTrainerTab> {
       }
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('保存成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('保存成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('保存失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('保存失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -199,7 +199,6 @@ class _NpcTrainerTabState extends State<NpcTrainerTab> {
     setState(() {
       _editing = false;
       _creating = false;
-      _editingSpellID = null;
     });
   }
 
@@ -220,20 +219,14 @@ class _NpcTrainerTabState extends State<NpcTrainerTab> {
             children: [
               _buildToolbar(),
               SizedBox(height: 8),
-              Flexible(
-                fit: FlexFit.loose,
-                child: _buildTable(),
-              ),
+              Flexible(fit: FlexFit.loose, child: _buildTable()),
             ],
           ),
         ),
         SizedBox(width: 16),
         // 右侧表单
         if (_editing || _creating)
-          Flexible(
-            fit: FlexFit.loose,
-            child: _buildForm(),
-          ),
+          Flexible(fit: FlexFit.loose, child: _buildForm()),
       ],
     );
   }
@@ -353,8 +346,10 @@ class _NpcTrainerTabState extends State<NpcTrainerTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 12,
           children: [
-            Text(_creating ? '新增训练师技能' : '编辑训练师技能',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              _creating ? '新增训练师技能' : '编辑训练师技能',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             FormItem(
               label: '技能',
               child: SpellSelector(

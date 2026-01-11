@@ -9,7 +9,7 @@ import 'package:foxy/page/creature_template/creature_quest_item_view.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view.dart';
 import 'package:foxy/page/creature_template/creature_template_resistance_view.dart';
 import 'package:foxy/page/creature_template/creature_template_spell_view.dart';
-import 'package:foxy/page/creature_template/tab/npc_trainer_tab.dart';
+import 'package:foxy/page/creature_template/npc_trainer_view.dart';
 import 'package:foxy/page/creature_template/npc_vendor_view.dart';
 import 'package:foxy/page/creature_template/tab/pickpocketing_loot_template_tab.dart';
 import 'package:foxy/page/creature_template/tab/skinning_loot_template_tab.dart';
@@ -67,7 +67,7 @@ class _CreatureTemplateDetailPageState
       // 商人 Tab
       NpcVendorView(entry: widget.entry ?? 0),
       // 训练师 Tab
-      NpcTrainerTab(id: widget.entry ?? 0),
+      NpcTrainerView(id: widget.entry ?? 0),
       // 击杀掉落 Tab
       CreatureLootTemplateTab(lootId: viewModel.template.value.lootId),
       // 偷窃掉落 Tab
