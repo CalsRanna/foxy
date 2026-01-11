@@ -107,6 +107,7 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
     final flags = widget.flags;
 
     return ShadDialog(
+      constraints: BoxConstraints(maxWidth: 720),
       title: Text(widget.title),
       description: Text('当前值: $_displayValue  |  已选: $_selectedCount 项'),
       actions: [
@@ -126,55 +127,61 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
         ),
       ],
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 720, maxHeight: tableMaxHeight),
-        child: ShadTable(
-          columnCount: 3,
-          rowCount: flags.length,
-          pinnedRowCount: 1,
-          header: (context, column) {
-            return switch (column) {
-              0 => ShadTableCell.header(child: SizedBox()),
-              1 => ShadTableCell.header(child: Text('标志值')),
-              2 => ShadTableCell.header(child: Text('名称')),
-              _ => ShadTableCell.header(child: SizedBox()),
-            };
-          },
-          columnSpanExtent: (column) {
-            return switch (column) {
-              0 => FixedTableSpanExtent(56),
-              1 => FixedTableSpanExtent(160),
-              2 => RemainingTableSpanExtent(),
-              _ => null,
-            };
-          },
-          onRowTap: (row) {
-            // row 包含 header，所以减 1
-            final dataRow = row - 1;
-            if (dataRow >= 0 && dataRow < flags.length) {
-              _toggleFlag(flags[dataRow].value);
-            }
-          },
-          builder: (context, vicinity) {
-            // 边界检查
-            if (vicinity.row < 0 || vicinity.row >= flags.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final flag = flags[vicinity.row];
-            final isSelected = (_currentValue & flag.value) != 0;
-            final hexValue =
-                '0x${flag.value.toRadixString(16).toUpperCase().padLeft(8, '0')}';
+        constraints: BoxConstraints(maxHeight: tableMaxHeight),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxWidth = constraints.maxWidth;
+            var width = maxWidth - 240;
+            return ShadTable(
+              columnCount: 3,
+              rowCount: flags.length,
+              pinnedRowCount: 1,
+              header: (context, column) {
+                return switch (column) {
+                  0 => ShadTableCell.header(child: SizedBox()),
+                  1 => ShadTableCell.header(child: Text('标志值')),
+                  2 => ShadTableCell.header(child: Text('名称')),
+                  _ => ShadTableCell.header(child: SizedBox()),
+                };
+              },
+              columnSpanExtent: (column) {
+                return switch (column) {
+                  0 => FixedTableSpanExtent(120),
+                  1 => FixedTableSpanExtent(160),
+                  2 => FixedTableSpanExtent(width),
+                  _ => null,
+                };
+              },
+              onRowTap: (row) {
+                // row 包含 header，所以减 1
+                final dataRow = row - 1;
+                if (dataRow >= 0 && dataRow < flags.length) {
+                  _toggleFlag(flags[dataRow].value);
+                }
+              },
+              builder: (context, vicinity) {
+                // 边界检查
+                if (vicinity.row < 0 || vicinity.row >= flags.length) {
+                  return ShadTableCell(child: SizedBox());
+                }
+                final flag = flags[vicinity.row];
+                final isSelected = (_currentValue & flag.value) != 0;
+                final hexValue =
+                    '0x${flag.value.toRadixString(16).toUpperCase().padLeft(8, '0')}';
 
-            return switch (vicinity.column) {
-              0 => ShadTableCell(
-                child: ShadCheckbox(
-                  value: isSelected,
-                  onChanged: (_) => _toggleFlag(flag.value),
-                ),
-              ),
-              1 => ShadTableCell(child: Text(hexValue)),
-              2 => ShadTableCell(child: Text(flag.label)),
-              _ => ShadTableCell(child: SizedBox()),
-            };
+                return switch (vicinity.column) {
+                  0 => ShadTableCell(
+                    child: ShadCheckbox(
+                      value: isSelected,
+                      onChanged: (_) => _toggleFlag(flag.value),
+                    ),
+                  ),
+                  1 => ShadTableCell(child: Text(hexValue)),
+                  2 => ShadTableCell(child: Text(flag.label)),
+                  _ => ShadTableCell(child: SizedBox()),
+                };
+              },
+            );
           },
         ),
       ),
