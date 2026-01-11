@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_template_addon.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class CreatureTemplateAddonViewModel {
+  final routerFacade = GetIt.instance.get<RouterFacade>();
   final entry = signal(0);
 
   final pathIdController = TextEditingController();
@@ -54,6 +57,11 @@ class CreatureTemplateAddonViewModel {
     }
   }
 
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
   /// 从 Controller 收集数据构建 CreatureTemplateAddon
   CreatureTemplateAddon _collectFromControllers() {
     final data = CreatureTemplateAddon();
@@ -63,7 +71,9 @@ class CreatureTemplateAddonViewModel {
     data.emote = _parseInt(emoteController.text);
     data.bytes1 = _parseInt(bytes1Controller.text);
     data.bytes2 = _parseInt(bytes2Controller.text);
-    data.visibilityDistanceType = _parseInt(visibilityDistanceTypeController.text);
+    data.visibilityDistanceType = _parseInt(
+      visibilityDistanceTypeController.text,
+    );
     data.auras = aurasController.text;
     return data;
   }
@@ -77,7 +87,8 @@ class CreatureTemplateAddonViewModel {
     emoteController.text = data.emote.toString();
     bytes1Controller.text = data.bytes1.toString();
     bytes2Controller.text = data.bytes2.toString();
-    visibilityDistanceTypeController.text = data.visibilityDistanceType.toString();
+    visibilityDistanceTypeController.text = data.visibilityDistanceType
+        .toString();
     aurasController.text = data.auras;
   }
 

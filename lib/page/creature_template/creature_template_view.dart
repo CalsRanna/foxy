@@ -770,10 +770,13 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
           ),
           Row(
             children: [
-              ShadButton(onPressed: _handleSave, child: Text('保存')),
+              ShadButton(
+                onPressed: () => viewModel.save(context),
+                child: Text('保存'),
+              ),
               const SizedBox(width: 8),
               ShadButton.ghost(
-                onPressed: () => Navigator.of(context).maybePop(),
+                onPressed: () => viewModel.pop(),
                 child: Text('取消'),
               ),
             ],
@@ -781,33 +784,5 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
         ],
       ),
     );
-  }
-
-  Future<void> _handleSave() async {
-    try {
-      await viewModel.save();
-      if (!mounted) return;
-      // 保存成功，返回上一页
-      Navigator.of(context).maybePop(true);
-    } catch (e) {
-      if (!mounted) return;
-      // 显示错误对话框
-      showShadDialog(
-        context: context,
-        builder: (context) => ShadDialog.alert(
-          title: const Text('保存失败'),
-          description: Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: SelectableText(e.toString()),
-          ),
-          actions: [
-            ShadButton(
-              child: const Text('确定'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
-    }
   }
 }

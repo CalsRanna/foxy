@@ -170,3 +170,15 @@ const kTrainerRaceOptions = {
   10: '血精灵 (Blood Elf)',
   11: '德莱尼 (Draenei)',
 };
+
+/// MaxStanding 最高声望选项
+const kMaxStandingOptions = {
+  0: '仇恨 (Hated)',
+  1: '敌对 (Hostile)',
+  2: '冷淡 (Unfriendly)',
+  3: '中立 (Neutral)',
+  4: '友善 (Friendly)',
+  5: '尊敬 (Honored)',
+  6: '崇敬 (Revered)',
+  7: '崇拜 (Exalted)',
+};
