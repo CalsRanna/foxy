@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/model/npc_vendor.dart';
 import 'package:foxy/page/creature_template/item_extended_cost_selector.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';

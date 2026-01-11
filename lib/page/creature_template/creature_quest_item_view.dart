@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/model/creature_questitem.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
@@ -310,7 +311,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
               return ShadTableCell(child: SizedBox());
             }
             final questItem = _items[vicinity.row];
-            final qualityColor = _getQualityColor(questItem.itemQuality);
+            final qualityColor = getItemQualityColor(questItem.itemQuality);
 
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(questItem.idx.toString())),
@@ -374,19 +375,5 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
         ),
       ),
     );
-  }
-
-  Color _getQualityColor(int quality) {
-    const qualityColors = {
-      0: Colors.white,
-      1: Colors.grey,
-      2: Colors.green,
-      3: Colors.blue,
-      4: Colors.purple,
-      5: Colors.orange,
-      6: Colors.red,
-      7: Color(0xFFe6cc80),
-    };
-    return qualityColors[quality] ?? Colors.white;
   }
 }
