@@ -21,7 +21,8 @@
       "mcp__dart-mcp-server__resolve_workspace_symbol",
       "Bash(ls:*)",
       "WebFetch(domain:wowdev.wiki)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(dir:*)"
     ],
     "deny": []
   }

@@ -3,8 +3,11 @@ import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/model/creature_template_filter_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger.dart';
+import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_core.dart';
 
 class CreatureTemplateListViewModel {
@@ -75,7 +78,15 @@ class CreatureTemplateListViewModel {
     int? entry,
     String? name,
   }) {
-    CreatureTemplateDetailRoute(entry: entry, name: name).push(context);
+    final label = name?.isNotEmpty == true ? name! : '新建生物';
+    final id = entry != null ? 'creature_$entry' : 'creature_new';
+    final routerFacade = GetIt.instance.get<RouterFacade>();
+    routerFacade.navigateToDetail(
+      id: id,
+      label: label,
+      route: CreatureTemplateDetailRoute(entry: entry, name: name),
+      parentMenu: RouterMenu.creatureTemplate,
+    );
   }
 
   Future<void> paginate(int page) async {

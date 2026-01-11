@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/window_button.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -125,6 +127,7 @@ class _NavigateSettingIntent extends Intent {}
 
 class _ScaffoldPageState extends State<ScaffoldPage> {
   final viewModel = GetIt.instance.get<ScaffoldViewModel>();
+  final routerFacade = GetIt.instance.get<RouterFacade>();
 
   @override
   Widget build(BuildContext context) {
@@ -155,11 +158,18 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 
   Widget _buildBreadcrumb() {
+    final nodes = routerFacade.path.value;
     var children = <Widget>[];
-    for (var page in viewModel.pages.value) {
-      var text = Text(viewModel.localPages.value[page] ?? page);
-      if (page != viewModel.pages.value.last) {
-        var item = ShadBreadcrumbLink(onPressed: () {}, child: text);
+    for (var i = 0; i < nodes.length; i++) {
+      final node = nodes[i];
+      final isLast = i == nodes.length - 1;
+      var text = Text(node.label);
+      if (!isLast) {
+        final index = i;
+        var item = ShadBreadcrumbLink(
+          onPressed: () => routerFacade.navigateToBreadcrumb(index),
+          child: text,
+        );
         children.add(item);
       } else {
         children.add(text);
@@ -200,19 +210,18 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     );
   }
 
-  Widget _buildLeftBarTile(String menu) {
+  Widget _buildLeftBarTile(RouterMenu menu) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final active = viewModel.pages.value.last.startsWith(menu);
+    final active = viewModel.activeMenu == menu;
     final backgroundColor = active ? colorScheme.primary : null;
     final iconColor = active ? Colors.white : colorScheme.onSurface;
-    final icon = viewModel.getIcon(menu);
     var padding = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Icon(icon, size: 20, color: iconColor),
+      child: Icon(menu.icon, size: 20, color: iconColor),
     );
     var iconButton = IconButton(
-      onPressed: () => viewModel.navigatePage(context, menu),
+      onPressed: () => viewModel.navigatePage(menu),
       icon: padding,
       isSelected: active,
       style: ButtonStyle(
