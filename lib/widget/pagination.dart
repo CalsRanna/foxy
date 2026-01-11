@@ -118,7 +118,7 @@ class _TileState extends State<_Tile> {
     final colorScheme = theme.colorScheme;
     final primary = colorScheme.primary;
     final surfaceContainer = colorScheme.surfaceContainer;
-    final disabledColor = colorScheme.onSurface.withOpacity(0.38);
+    final disabledColor = colorScheme.onSurface.withValues(alpha: 0.38);
 
     final isDisabled = widget.disabled;
     final color = isDisabled
