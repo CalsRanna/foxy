@@ -1,8 +1,7 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/scaffold/scaffold_view_model.dart';
-import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -112,27 +111,17 @@ class FrequentModuleComponent extends StatelessWidget {
   }
 
   void handleTap(BuildContext context, int index) {
-    final route = switch (index) {
-      0 => CreatureTemplateListRoute(),
-      1 => ItemTemplateListRoute(),
-      2 => QuestTemplateListRoute(),
-      3 => GameObjectTemplateListRoute(),
-      4 => GossipMenuListRoute(),
-      5 => SmartScriptListRoute(),
-      _ => DashboardRoute(),
+    final menu = switch (index) {
+      0 => RouterMenu.creatureTemplate,
+      1 => RouterMenu.itemTemplate,
+      2 => RouterMenu.questTemplate,
+      3 => RouterMenu.gameObjectTemplate,
+      4 => RouterMenu.gossipMenu,
+      5 => RouterMenu.smartScript,
+      _ => RouterMenu.dashboard,
     };
-    var menu = switch (index) {
-      0 => 'creatureTemplate',
-      1 => 'itemTemplate',
-      2 => 'questTemplate',
-      3 => 'gameObjectTemplate',
-      4 => 'gossipMenu',
-      5 => 'smartScript',
-      _ => 'dashboard',
-    };
-    AutoRouter.of(context).navigate(route);
-    var viewModel = GetIt.instance.get<ScaffoldViewModel>();
-    viewModel.updateMenu(menu);
+    final routerFacade = GetIt.instance.get<RouterFacade>();
+    routerFacade.navigateToMenu(menu);
   }
 }
 
