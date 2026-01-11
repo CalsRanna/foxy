@@ -41,11 +41,11 @@ class FoxyShadTable extends StatefulWidget {
 
   /// 列背景装饰
   final TableSpanDecoration? Function(int column)?
-      columnSpanBackgroundDecoration;
+  columnSpanBackgroundDecoration;
 
   /// 列前景装饰
   final TableSpanDecoration? Function(int column)?
-      columnSpanForegroundDecoration;
+  columnSpanForegroundDecoration;
 
   /// 悬停行索引变化回调
   final ValueChanged<int?>? onHoveredRowIndex;
@@ -139,7 +139,7 @@ class FoxyShadTable extends StatefulWidget {
   /// [row] - 行索引（数据行，不包含 header）
   /// [details] - 点击详情，包含 globalPosition 等信息
   final void Function(int row, TapDownDetails details)?
-      onRowSecondaryTapDownWithDetails;
+  onRowSecondaryTapDownWithDetails;
 
   const FoxyShadTable({
     super.key,
@@ -308,12 +308,18 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
       onColumnSecondaryTapCancel: widget.onColumnSecondaryTapCancel,
     );
 
+    if (widget.rowCount == 0) {
+      return Column(
+        children: [
+          SizedBox(height: 64, child: table),
+          Text('暂无数据'),
+        ],
+      );
+    }
+
     // 使用 Listener 捕获右键点击位置
     if (widget.onRowSecondaryTapDownWithDetails != null) {
-      table = Listener(
-        onPointerDown: _handlePointerDown,
-        child: table,
-      );
+      table = Listener(onPointerDown: _handlePointerDown, child: table);
     }
 
     return table;
