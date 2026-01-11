@@ -58,4 +58,8 @@ class ScaffoldViewModel {
     localPages.value.putIfAbsent(page, () => localPage);
     localPages.value = {...localPages.value};
   }
+
+  void updateMenu(String menu) {
+    pages.value = ['dashboard', if (menu != 'dashboard') menu];
+  }
 }
