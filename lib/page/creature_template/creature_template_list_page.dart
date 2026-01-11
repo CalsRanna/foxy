@@ -55,11 +55,17 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       controller: viewModel.subNameController,
       placeholder: Text('称号（subname）'),
     );
-    final buttonChildren = [
-      ShadButton(onPressed: viewModel.search, child: Text('查询')),
-      ShadButton.ghost(onPressed: viewModel.reset, child: Text('重置')),
-    ];
-    var row = Row(spacing: 16, children: buttonChildren);
+    var searchButton = ShadButton(
+      onPressed: viewModel.search,
+      size: ShadButtonSize.sm,
+      child: Text('查询'),
+    );
+    var resetButton = ShadButton.ghost(
+      onPressed: viewModel.reset,
+      size: ShadButtonSize.sm,
+      child: Text('重置'),
+    );
+    var row = Row(spacing: 16, children: [searchButton, resetButton]);
     final credentialChildren = [
       Expanded(child: entryInput),
       Expanded(child: nameInput),

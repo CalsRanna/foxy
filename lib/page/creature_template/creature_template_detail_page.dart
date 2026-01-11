@@ -7,7 +7,7 @@ import 'package:foxy/page/creature_template/creature_template_locale_name_select
 import 'package:foxy/page/creature_template/creature_display_info_selector.dart';
 import 'package:foxy/page/creature_template/creature_spell_data_selector.dart';
 import 'package:foxy/page/creature_template/creature_template_selector.dart';
-import 'package:foxy/page/creature_template/faction_template_selector.dart';
+import 'package:foxy/page/creature_template/dbc_faction_selector.dart';
 import 'package:foxy/page/creature_template/gossip_menu_selector.dart';
 import 'package:foxy/page/creature_template/loot_template_selector.dart';
 import 'package:foxy/page/creature_template/vehicle_selector.dart';
@@ -119,7 +119,7 @@ class _CreatureTemplatePageState extends State<CreatureTemplateDetailPage> {
     );
     final factionInput = FormItem(
       label: '阵营',
-      child: FactionTemplateSelector(
+      child: DbcFactionSelector(
         controller: viewModel.factionController,
         placeholder: 'faction',
       ),
