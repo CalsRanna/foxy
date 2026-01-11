@@ -9,17 +9,17 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 击杀掉落Tab
-class CreatureLootTemplateTab extends StatefulWidget {
+class CreatureLootTemplateView extends StatefulWidget {
   final int lootId;
 
-  const CreatureLootTemplateTab({super.key, required this.lootId});
+  const CreatureLootTemplateView({super.key, required this.lootId});
 
   @override
-  State<CreatureLootTemplateTab> createState() =>
-      _CreatureLootTemplateTabState();
+  State<CreatureLootTemplateView> createState() =>
+      _CreatureLootTemplateViewState();
 }
 
-class _CreatureLootTemplateTabState extends State<CreatureLootTemplateTab> {
+class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
   final _repository = LootTemplateRepository(LootTableType.creature);
   List<LootTemplate> _items = [];
   int? _selectedIndex;
@@ -145,14 +145,15 @@ class _CreatureLootTemplateTabState extends State<CreatureLootTemplateTab> {
       await _repository.copy(widget.lootId, loot.item);
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('复制成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('复制成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('复制失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('复制失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -183,14 +184,15 @@ class _CreatureLootTemplateTabState extends State<CreatureLootTemplateTab> {
         await _repository.delete(widget.lootId, loot.item);
         await _load();
         if (mounted) {
-          ShadToaster.of(context).show(
-            ShadToast(title: Text('删除成功')),
-          );
+          ShadToaster.of(context).show(ShadToast(title: Text('删除成功')));
         }
       } catch (e) {
         if (mounted) {
           ShadToaster.of(context).show(
-            ShadToast.destructive(title: Text('删除失败'), description: Text(e.toString())),
+            ShadToast.destructive(
+              title: Text('删除失败'),
+              description: Text(e.toString()),
+            ),
           );
         }
       }
@@ -207,14 +209,15 @@ class _CreatureLootTemplateTabState extends State<CreatureLootTemplateTab> {
       }
       await _load();
       if (mounted) {
-        ShadToaster.of(context).show(
-          ShadToast(title: Text('保存成功')),
-        );
+        ShadToaster.of(context).show(ShadToast(title: Text('保存成功')));
       }
     } catch (e) {
       if (mounted) {
         ShadToaster.of(context).show(
-          ShadToast.destructive(title: Text('保存失败'), description: Text(e.toString())),
+          ShadToast.destructive(
+            title: Text('保存失败'),
+            description: Text(e.toString()),
+          ),
         );
       }
     }
@@ -245,20 +248,14 @@ class _CreatureLootTemplateTabState extends State<CreatureLootTemplateTab> {
             children: [
               _buildToolbar(),
               SizedBox(height: 8),
-              Flexible(
-                fit: FlexFit.loose,
-                child: _buildTable(),
-              ),
+              Flexible(fit: FlexFit.loose, child: _buildTable()),
             ],
           ),
         ),
         SizedBox(width: 16),
         // 右侧表单
         if (_editing || _creating)
-          Flexible(
-            fit: FlexFit.loose,
-            child: _buildForm(),
-          ),
+          Flexible(fit: FlexFit.loose, child: _buildForm()),
       ],
     );
   }
@@ -357,20 +354,24 @@ class _CreatureLootTemplateTabState extends State<CreatureLootTemplateTab> {
 
             return switch (vicinity.column) {
               0 => ShadTableCell(
-                  child: Text(loot.reference != 0
+                child: Text(
+                  loot.reference != 0
                       ? '${loot.item} (R)'
-                      : loot.item.toString()),
+                      : loot.item.toString(),
                 ),
+              ),
               1 => ShadTableCell(
-                  child: loot.reference != 0
-                      ? Text('关联掉落', style: TextStyle(color: Colors.grey))
-                      : Text(
-                          loot.displayName,
-                          style: TextStyle(color: qualityColor),
-                        ),
-                ),
+                child: loot.reference != 0
+                    ? Text('关联掉落', style: TextStyle(color: Colors.grey))
+                    : Text(
+                        loot.displayName,
+                        style: TextStyle(color: qualityColor),
+                      ),
+              ),
               2 => ShadTableCell(child: Text('${loot.chance}%')),
-              3 => ShadTableCell(child: Text('${loot.minCount}-${loot.maxCount}')),
+              3 => ShadTableCell(
+                child: Text('${loot.minCount}-${loot.maxCount}'),
+              ),
               4 => ShadTableCell(child: Text(loot.questRequired ? '是' : '否')),
               5 => ShadTableCell(child: Text(loot.groupId.toString())),
               _ => ShadTableCell(child: SizedBox()),
@@ -390,8 +391,10 @@ class _CreatureLootTemplateTabState extends State<CreatureLootTemplateTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 12,
           children: [
-            Text(_creating ? '新增掉落' : '编辑掉落',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              _creating ? '新增掉落' : '编辑掉落',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             FormItem(
               label: '物品ID',
               child: ItemTemplateSelector(

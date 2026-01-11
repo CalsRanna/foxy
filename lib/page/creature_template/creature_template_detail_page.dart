@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_view.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view.dart';
-import 'package:foxy/page/creature_template/tab/creature_loot_template_tab.dart';
+import 'package:foxy/page/creature_template/creature_loot_template_view.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view.dart';
 import 'package:foxy/page/creature_template/creature_quest_item_view.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view.dart';
@@ -69,7 +69,7 @@ class _CreatureTemplateDetailPageState
       // 训练师 Tab
       NpcTrainerView(id: widget.entry ?? 0),
       // 击杀掉落 Tab
-      CreatureLootTemplateTab(lootId: viewModel.template.value.lootId),
+      CreatureLootTemplateView(lootId: viewModel.template.value.lootId),
       // 偷窃掉落 Tab
       PickpocketingLootTemplateTab(
         lootId: viewModel.template.value.pickpocketLoot,
