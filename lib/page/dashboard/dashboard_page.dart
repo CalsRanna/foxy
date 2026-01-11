@@ -36,12 +36,12 @@ class _DashboardPageRoute extends State<DashboardPage> {
   }
 
   Widget _buildWorkspace() {
-    const leftChildren = [
-      FrequentModuleComponent(),
+    final leftChildren = [
+      FrequentModuleComponent(onMenuTap: viewModel.navigateToMenu),
       SizedBox(height: 16),
       Trend(),
     ];
-    const leftColumn = Column(children: leftChildren);
+    final leftColumn = Column(children: leftChildren);
     final rightChildren = [
       Introduction(),
       SizedBox(height: 16),
