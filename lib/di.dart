@@ -10,6 +10,7 @@ import 'package:foxy/page/creature_template/creature_template_resistance_view_mo
 import 'package:foxy/page/creature_template/creature_template_spell_view_model.dart';
 import 'package:foxy/page/creature_template/npc_trainer_view_model.dart';
 import 'package:foxy/page/creature_template/npc_vendor_view_model.dart';
+import 'package:foxy/page/creature_template/pickpocketing_loot_template_view_model.dart';
 import 'package:foxy/page/dashboard/dashboard_view_model.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
@@ -35,6 +36,8 @@ class DI {
     GetIt.instance.registerFactory(() => CreatureLootTemplateViewModel());
     GetIt.instance.registerFactory(() => NpcTrainerViewModel());
     GetIt.instance.registerFactory(() => NpcVendorViewModel());
+    GetIt.instance
+        .registerFactory(() => PickpocketingLootTemplateViewModel());
     GetIt.instance.registerFactory(() => SettingViewModel());
   }
 }
