@@ -108,9 +108,9 @@ class CreatureOnKillReputationViewModel {
   }
 
   /// 初始化 ViewModel
-  Future<void> initSignals({required int entryId}) async {
-    creatureId.value = entryId;
-    creatureIdController.text = entryId.toString();
+  Future<void> initSignals({required int creatureId}) async {
+    this.creatureId.value = creatureId;
+    creatureIdController.text = creatureId.toString();
     await load();
   }
 

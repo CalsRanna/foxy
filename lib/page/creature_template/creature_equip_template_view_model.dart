@@ -192,8 +192,8 @@ class CreatureEquipTemplateViewModel {
   }
 
   /// 初始化
-  Future<void> initSignals({required int entryId}) async {
-    creatureId.value = entryId;
+  Future<void> initSignals({required int creatureId}) async {
+    this.creatureId.value = creatureId;
     await load();
   }
 

@@ -13,23 +13,22 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 剥皮掉落Tab
 class SkinningLootTemplateView extends StatefulWidget {
-  final int lootId;
+  final int creatureId;
 
-  const SkinningLootTemplateView({super.key, required this.lootId});
+  const SkinningLootTemplateView({super.key, required this.creatureId});
 
   @override
   State<SkinningLootTemplateView> createState() =>
       _SkinningLootTemplateViewState();
 }
 
-class _SkinningLootTemplateViewState
-    extends State<SkinningLootTemplateView> {
+class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
   final viewModel = GetIt.instance.get<SkinningLootTemplateViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.lootId);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
@@ -197,11 +196,13 @@ class _SkinningLootTemplateViewState
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 掉落ID（只读）
+          // 生物ID（只读）
           FormItem(
-            controller: TextEditingController(text: widget.lootId.toString()),
-            label: '掉落ID',
-            placeholder: 'LootID',
+            controller: TextEditingController(
+              text: widget.creatureId.toString(),
+            ),
+            label: '生物ID',
+            placeholder: 'CreatureID',
             readOnly: true,
           ),
           SizedBox(height: 16),

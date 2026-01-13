@@ -13,9 +13,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 偷窃掉落Tab
 class PickpocketingLootTemplateView extends StatefulWidget {
-  final int lootId;
+  final int creatureId;
 
-  const PickpocketingLootTemplateView({super.key, required this.lootId});
+  const PickpocketingLootTemplateView({super.key, required this.creatureId});
 
   @override
   State<PickpocketingLootTemplateView> createState() =>
@@ -29,7 +29,7 @@ class _PickpocketingLootTemplateViewState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.lootId);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
@@ -197,11 +197,13 @@ class _PickpocketingLootTemplateViewState
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 掉落ID（只读）
+          // 生物ID（只读）
           FormItem(
-            controller: TextEditingController(text: widget.lootId.toString()),
-            label: '掉落ID',
-            placeholder: 'LootID',
+            controller: TextEditingController(
+              text: widget.creatureId.toString(),
+            ),
+            label: '生物ID',
+            placeholder: 'CreatureID',
             readOnly: true,
           ),
           SizedBox(height: 16),

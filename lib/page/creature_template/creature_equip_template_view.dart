@@ -11,9 +11,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 装备模板Tab
 class CreatureEquipTemplateView extends StatefulWidget {
-  final int creatureID;
+  final int creatureId;
 
-  const CreatureEquipTemplateView({super.key, required this.creatureID});
+  const CreatureEquipTemplateView({super.key, required this.creatureId});
 
   @override
   State<CreatureEquipTemplateView> createState() =>
@@ -26,7 +26,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.creatureID);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
@@ -203,7 +203,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           // 生物ID（只读）
           FormItem(
             controller: TextEditingController(
-              text: widget.creatureID.toString(),
+              text: widget.creatureId.toString(),
             ),
             label: '生物ID',
             placeholder: 'CreatureID',

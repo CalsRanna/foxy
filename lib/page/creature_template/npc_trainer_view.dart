@@ -10,9 +10,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 训练师Tab
 class NpcTrainerView extends StatefulWidget {
-  final int id;
+  final int creatureId;
 
-  const NpcTrainerView({super.key, required this.id});
+  const NpcTrainerView({super.key, required this.creatureId});
 
   @override
   State<NpcTrainerView> createState() => _NpcTrainerViewState();
@@ -24,7 +24,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.id);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
@@ -180,7 +180,9 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
         children: [
           // 训练师ID（只读）
           FormItem(
-            controller: TextEditingController(text: widget.id.toString()),
+            controller: TextEditingController(
+              text: widget.creatureId.toString(),
+            ),
             label: '训练师ID',
             placeholder: 'ID',
             readOnly: true,

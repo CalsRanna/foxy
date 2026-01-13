@@ -184,8 +184,8 @@ class CreatureQuestItemViewModel {
   }
 
   /// 初始化
-  Future<void> initSignals({required int entryId}) async {
-    creatureEntry.value = entryId;
+  Future<void> initSignals({required int creatureId}) async {
+    creatureEntry.value = creatureId;
     await load();
   }
 

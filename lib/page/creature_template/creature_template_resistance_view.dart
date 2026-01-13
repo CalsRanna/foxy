@@ -11,9 +11,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 抗性Tab
 class CreatureTemplateResistanceView extends StatefulWidget {
-  final int creatureID;
+  final int creatureId;
 
-  const CreatureTemplateResistanceView({super.key, required this.creatureID});
+  const CreatureTemplateResistanceView({super.key, required this.creatureId});
 
   @override
   State<CreatureTemplateResistanceView> createState() =>
@@ -27,7 +27,7 @@ class _CreatureTemplateResistanceViewState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.creatureID);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
@@ -184,7 +184,7 @@ class _CreatureTemplateResistanceViewState
           // 生物ID（只读）
           FormItem(
             controller: TextEditingController(
-              text: widget.creatureID.toString(),
+              text: widget.creatureId.toString(),
             ),
             label: '生物ID',
             placeholder: 'CreatureID',

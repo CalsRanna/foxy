@@ -7,9 +7,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 生物模板附加数据Tab
 class CreatureTemplateAddonView extends StatefulWidget {
-  final int entry;
+  final int creatureId;
 
-  const CreatureTemplateAddonView({super.key, required this.entry});
+  const CreatureTemplateAddonView({super.key, required this.creatureId});
 
   @override
   State<CreatureTemplateAddonView> createState() =>
@@ -22,7 +22,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.entry);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
@@ -43,9 +43,11 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
       }
 
       final entryInput = FormItem(
-        controller: viewModel.entry.value == 0
-            ? TextEditingController(text: widget.entry.toString())
-            : TextEditingController(text: viewModel.entry.value.toString()),
+        controller: viewModel.creatureId.value == 0
+            ? TextEditingController(text: widget.creatureId.toString())
+            : TextEditingController(
+                text: viewModel.creatureId.value.toString(),
+              ),
         label: '编号',
         placeholder: 'entry',
         readOnly: true,

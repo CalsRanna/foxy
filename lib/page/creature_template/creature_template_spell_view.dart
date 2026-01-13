@@ -10,9 +10,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 技能Tab
 class CreatureTemplateSpellView extends StatefulWidget {
-  final int creatureID;
+  final int creatureId;
 
-  const CreatureTemplateSpellView({super.key, required this.creatureID});
+  const CreatureTemplateSpellView({super.key, required this.creatureId});
 
   @override
   State<CreatureTemplateSpellView> createState() =>
@@ -25,7 +25,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.creatureID);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
@@ -176,7 +176,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           // 生物ID（只读）
           FormItem(
             controller: TextEditingController(
-              text: widget.creatureID.toString(),
+              text: widget.creatureId.toString(),
             ),
             label: '生物ID',
             placeholder: 'CreatureID',
