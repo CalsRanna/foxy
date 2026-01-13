@@ -58,7 +58,7 @@ class _CreatureTemplateResistanceViewState
     final toolbar = Row(children: [createButton, Spacer()]);
 
     final items = viewModel.items.value;
-    final headers = ['抗性类型', '抗性值'];
+    final headers = ['抗性类型', '抗性值', '验证版本'];
 
     // 表格（固定高度）
     Widget layoutBuilder = SizedBox(
@@ -66,7 +66,7 @@ class _CreatureTemplateResistanceViewState
       child: LayoutBuilder(
         builder: (context, constraints) {
           var maxWidth = constraints.maxWidth;
-          var width = maxWidth;
+          var width = maxWidth - 120;
           return FoxyShadTable(
             builder: (context, vicinity) {
               if (vicinity.row < 0 || vicinity.row >= items.length) {
@@ -83,6 +83,9 @@ class _CreatureTemplateResistanceViewState
                 1 => ShadTableCell(
                   child: Text(resistance.resistance.toString()),
                 ),
+                2 => ShadTableCell(
+                  child: Text(resistance.verifiedBuild.toString()),
+                ),
                 _ => ShadTableCell(child: SizedBox()),
               };
             },
@@ -91,6 +94,7 @@ class _CreatureTemplateResistanceViewState
               return switch (index) {
                 0 => FixedTableSpanExtent(width / 2),
                 1 => FixedTableSpanExtent(width / 2),
+                2 => FixedTableSpanExtent(120),
                 _ => null,
               };
             },
