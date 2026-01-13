@@ -56,7 +56,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
     final toolbar = Row(children: [createButton, Spacer()]);
 
     final items = viewModel.items.value;
-    final headers = ['索引', '技能名称', 'VerifiedBuild'];
+    final headers = ['索引', '技能名称', '验证版本'];
 
     // 表格（固定高度）
     Widget layoutBuilder = SizedBox(
@@ -64,7 +64,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           var maxWidth = constraints.maxWidth;
-          var width = maxWidth;
+          var width = maxWidth - 240;
           return FoxyShadTable(
             builder: (context, vicinity) {
               if (vicinity.row < 0 || vicinity.row >= items.length) {
@@ -75,24 +75,18 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
                   ? '${spell.spellName} - ${spell.spellSubtext}'
                   : spell.spellName;
               return switch (vicinity.column) {
-                0 => ShadTableCell(
-                    child: Text(spell.index.toString()),
-                  ),
-                1 => ShadTableCell(
-                    child: Text(displayName),
-                  ),
-                2 => ShadTableCell(
-                    child: Text(spell.verifiedBuild.toString()),
-                  ),
+                0 => ShadTableCell(child: Text(spell.index.toString())),
+                1 => ShadTableCell(child: Text(displayName)),
+                2 => ShadTableCell(child: Text(spell.verifiedBuild.toString())),
                 _ => ShadTableCell(child: SizedBox()),
               };
             },
             columnCount: headers.length,
             columnSpanExtent: (index) {
               return switch (index) {
-                0 => FixedTableSpanExtent(width * 0.15),
-                1 => FixedTableSpanExtent(width * 0.55),
-                2 => FixedTableSpanExtent(width * 0.30),
+                0 => FixedTableSpanExtent(120),
+                1 => FixedTableSpanExtent(width),
+                2 => FixedTableSpanExtent(120),
                 _ => null,
               };
             },
