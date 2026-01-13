@@ -1,6 +1,7 @@
 import 'package:foxy/page/bootstrap/bootstrap_view_model.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view_model.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view_model.dart';
+import 'package:foxy/page/creature_template/creature_quest_item_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_list_view_model.dart';
@@ -25,6 +26,7 @@ class DI {
     GetIt.instance.registerFactory(() => CreatureTemplateAddonViewModel());
     GetIt.instance.registerFactory(() => CreatureOnKillReputationViewModel());
     GetIt.instance.registerFactory(() => CreatureEquipTemplateViewModel());
+    GetIt.instance.registerFactory(() => CreatureQuestItemViewModel());
     GetIt.instance.registerFactory(() => CreatureTemplateResistanceViewModel());
     GetIt.instance.registerFactory(() => CreatureTemplateSpellViewModel());
     GetIt.instance.registerFactory(() => SettingViewModel());
