@@ -19,7 +19,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
         (join) => join.on('cts.Spell', 'ds.ID'),
       );
       builder = builder.where('cts.CreatureID', creatureID);
-      builder = builder.orderBy('cts.Index');
+      builder = builder.orderBy('cts.`Index`');
       var results = await builder.get();
       return results
           .map((e) => CreatureTemplateSpell.fromJson(e.toMap()))
@@ -35,7 +35,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
       var result = await laconic
           .table(_table)
           .where('CreatureID', creatureID)
-          .where('Index', index)
+          .where('`Index`', index)
           .first();
       return CreatureTemplateSpell.fromJson(result.toMap());
     } catch (e) {
@@ -45,18 +45,22 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
 
   /// 新增技能
   Future<void> store(CreatureTemplateSpell spell) async {
-    await laconic.table(_table).insert([spell.toJson()]);
+    var json = spell.toJson();
+    // 处理 MySQL 保留字 Index
+    json['`Index`'] = json.remove('Index');
+    await laconic.table(_table).insert([json]);
   }
 
   /// 更新技能
   Future<void> update(CreatureTemplateSpell spell) async {
     var json = spell.toJson();
     json.remove('CreatureID');
-    json.remove('Index');
+    // 处理 MySQL 保留字 Index
+    json['`Index`'] = json.remove('Index');
     await laconic
         .table(_table)
         .where('CreatureID', spell.creatureID)
-        .where('Index', spell.index)
+        .where('`Index`', spell.index)
         .update(json);
   }
 
@@ -65,7 +69,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
     await laconic
         .table(_table)
         .where('CreatureID', creatureID)
-        .where('Index', index)
+        .where('`Index`', index)
         .delete();
   }
 

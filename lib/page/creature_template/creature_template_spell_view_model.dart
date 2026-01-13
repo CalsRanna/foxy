@@ -1,0 +1,203 @@
+import 'package:flutter/material.dart';
+import 'package:foxy/model/creature_template_spell.dart';
+import 'package:foxy/repository/creature_template_spell_repository.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals.dart';
+
+class CreatureTemplateSpellViewModel {
+  final routerFacade = GetIt.instance.get<RouterFacade>();
+
+  final creatureId = signal(0);
+  final items = signal<List<CreatureTemplateSpell>>([]);
+  final selectedIndex = signal<int?>(null);
+  final loading = signal(false);
+  final saving = signal(false);
+
+  // 表单控制器
+  final indexController = TextEditingController();
+  final spellController = TextEditingController();
+  final verifiedBuildController = TextEditingController();
+
+  final repository = CreatureTemplateSpellRepository();
+
+  /// 加载数据
+  Future<void> load() async {
+    loading.value = true;
+    try {
+      final data = await repository.getByEntry(creatureId.value);
+      items.value = data;
+      selectedIndex.value = null;
+    } catch (e) {
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  /// 重置表单
+  void resetForm() {
+    indexController.clear();
+    spellController.clear();
+    verifiedBuildController.text = '0';
+  }
+
+  /// 填充表单
+  void fillForm(CreatureTemplateSpell spell) {
+    indexController.text = spell.index.toString();
+    spellController.text = spell.spell.toString();
+    verifiedBuildController.text = spell.verifiedBuild.toString();
+  }
+
+  /// 从表单收集数据
+  CreatureTemplateSpell collectFromForm() {
+    final spell = CreatureTemplateSpell();
+    spell.creatureID = creatureId.value;
+    spell.index = _parseInt(indexController.text);
+    spell.spell = _parseInt(spellController.text);
+    spell.verifiedBuild = _parseInt(verifiedBuildController.text);
+    return spell;
+  }
+
+  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
+
+  /// 创建新记录
+  Future<void> create() async {
+    final nextIndex = await repository.getNextIndex(creatureId.value);
+    resetForm();
+    indexController.text = nextIndex.toString();
+    selectedIndex.value = null;
+  }
+
+  /// 编辑选中记录
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final spell = items.value[index];
+    fillForm(spell);
+  }
+
+  /// 复制记录
+  Future<void> copy(BuildContext context) async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final spell = items.value[index];
+    try {
+      await repository.copy(spell.creatureID, spell.index);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('复制成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 删除记录
+  Future<void> delete(BuildContext context) async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final spell = items.value[index];
+
+    final confirmed = await showShadDialog<bool>(
+      context: context,
+      builder: (context) => ShadDialog.alert(
+        title: Text('确认删除'),
+        description: Text('确定要删除这条技能记录吗？'),
+        actions: [
+          ShadButton.outline(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('取消'),
+          ),
+          ShadButton.destructive(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('删除'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await repository.delete(spell.creatureID, spell.index);
+        await load();
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text('删除成功'));
+        ShadSonner.of(context).show(toast);
+      } catch (e) {
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text(e.toString()));
+        ShadSonner.of(context).show(toast);
+      }
+    }
+  }
+
+  /// 保存记录
+  Future<void> save(BuildContext context) async {
+    saving.value = true;
+    try {
+      final spell = collectFromForm();
+      await repository.store(spell);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('保存成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
+    }
+  }
+
+  /// 更新记录
+  Future<void> update(BuildContext context) async {
+    saving.value = true;
+    try {
+      final spell = collectFromForm();
+      await repository.update(spell);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('更新成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
+  }
+
+  /// 初始化
+  Future<void> initSignals({required int entryId}) async {
+    creatureId.value = entryId;
+    await load();
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  /// 清理资源
+  void dispose() {
+    indexController.dispose();
+    spellController.dispose();
+    verifiedBuildController.dispose();
+  }
+}
