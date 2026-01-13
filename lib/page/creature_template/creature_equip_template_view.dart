@@ -61,7 +61,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
 
     // 表格（固定高度）
     Widget layoutBuilder = SizedBox(
-      height: 400,
+      height: 500,
       child: LayoutBuilder(
         builder: (context, constraints) {
           var maxWidth = constraints.maxWidth;
