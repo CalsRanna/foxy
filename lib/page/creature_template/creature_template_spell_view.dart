@@ -222,7 +222,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
                   } else {
                     await viewModel.save(dialogContext);
                   }
-                  if (!mounted) return;
+                  if (!dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),

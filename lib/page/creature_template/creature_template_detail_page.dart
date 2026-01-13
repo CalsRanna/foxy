@@ -85,10 +85,10 @@ class _CreatureTemplateDetailPageState
       final t = viewModel.template.value;
       final disabledIndexes = <int>{};
       // if ((t.npcFlag & 3968) == 0) disabledIndexes.add(7); // 商人
-      if ((t.npcFlag & 4194416) == 0) disabledIndexes.add(8); // 训练师
-      if (t.lootId == 0) disabledIndexes.add(9); // 击杀掉落
-      if (t.pickpocketLoot == 0) disabledIndexes.add(10); // 偷窃掉落
-      if (t.skinLoot == 0) disabledIndexes.add(11); // 剥皮掉落
+      // if ((t.npcFlag & 4194416) == 0) disabledIndexes.add(8); // 训练师
+      // if (t.lootId == 0) disabledIndexes.add(9); // 击杀掉落
+      // if (t.pickpocketLoot == 0) disabledIndexes.add(10); // 偷窃掉落
+      // if (t.skinLoot == 0) disabledIndexes.add(11); // 剥皮掉落
       return FoxyTab(
         tabs: tabs,
         disabledIndexes: disabledIndexes,
