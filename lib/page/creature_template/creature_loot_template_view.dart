@@ -304,7 +304,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
     final theme = ShadTheme.of(context);
 
     return SizedBox(
-      height: 400, // 给表格固定高度
+      height: 500, // 给表格固定高度
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: FoxyShadTable(
