@@ -14,6 +14,7 @@ import 'package:foxy/page/creature_template/pickpocketing_loot_template_view_mod
 import 'package:foxy/page/creature_template/skinning_loot_template_view_model.dart';
 import 'package:foxy/page/dashboard/dashboard_view_model.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/page/item/item_template_list_view_model.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -41,6 +42,7 @@ class DI {
         .registerFactory(() => PickpocketingLootTemplateViewModel());
     GetIt.instance
         .registerFactory(() => SkinningLootTemplateViewModel());
+    GetIt.instance.registerLazySingleton(() => ItemTemplateListViewModel());
     GetIt.instance.registerFactory(() => SettingViewModel());
   }
 }
