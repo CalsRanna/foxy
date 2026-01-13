@@ -198,8 +198,8 @@ class NpcTrainerViewModel {
   }
 
   /// 初始化
-  Future<void> initSignals({required int entryId}) async {
-    id.value = entryId;
+  Future<void> initSignals({required int creatureId}) async {
+    id.value = creatureId;
     await load();
   }
 

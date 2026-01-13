@@ -201,8 +201,8 @@ class NpcVendorViewModel {
   }
 
   /// 初始化
-  Future<void> initSignals({required int entryId}) async {
-    entry.value = entryId;
+  Future<void> initSignals({required int creatureId}) async {
+    entry.value = creatureId;
     await load();
   }
 

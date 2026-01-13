@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/model/loot_template.dart';
+import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -9,7 +11,8 @@ import 'package:signals/signals.dart';
 class CreatureLootTemplateViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final lootId = signal(0);
+  final creatureId = signal(0);
+  final creatureTemplate = signal<CreatureTemplate?>(null);
   final items = signal<List<LootTemplate>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
@@ -30,12 +33,18 @@ class CreatureLootTemplateViewModel {
   final commentController = TextEditingController();
 
   final repository = LootTemplateRepository(LootTableType.creature);
+  final creatureRepository = CreatureTemplateRepository();
 
   /// 加载数据
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getByEntry(lootId.value);
+      final template = await creatureRepository.getCreatureTemplate(
+        creatureId.value,
+      );
+      creatureTemplate.value = template;
+
+      final data = await repository.getByEntry(template.lootId);
       items.value = data;
       selectedIndex.value = null;
       creating.value = false;
@@ -76,8 +85,11 @@ class CreatureLootTemplateViewModel {
 
   /// 从表单收集数据
   LootTemplate collectFromForm() {
+    final template = creatureTemplate.value;
+    if (template == null) return LootTemplate();
+
     final loot = LootTemplate();
-    loot.entry = lootId.value;
+    loot.entry = template.lootId;
     loot.item = _parseInt(itemController.text);
     loot.reference = _parseInt(referenceController.text);
     loot.chance = _parseDouble(chanceController.text);
@@ -91,12 +103,14 @@ class CreatureLootTemplateViewModel {
   }
 
   int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
-  double _parseDouble(String text) =>
-      text.isEmpty ? 0 : double.parse(text);
+  double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
 
   /// 创建新记录
   Future<void> create() async {
-    final nextItem = await repository.getNextItemId(lootId.value);
+    final template = creatureTemplate.value;
+    if (template == null) return;
+
+    final nextItem = await repository.getNextItemId(template.lootId);
     resetForm();
     itemController.text = nextItem.toString();
     creating.value = true;
@@ -222,8 +236,8 @@ class CreatureLootTemplateViewModel {
   }
 
   /// 初始化
-  Future<void> initSignals({required int entryId}) async {
-    lootId.value = entryId;
+  Future<void> initSignals({required int creatureId}) async {
+    this.creatureId.value = creatureId;
     await load();
   }
 

@@ -12,9 +12,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// NPC商人Tab
 class NpcVendorView extends StatefulWidget {
-  final int entry;
+  final int creatureId;
 
-  const NpcVendorView({super.key, required this.entry});
+  const NpcVendorView({super.key, required this.creatureId});
 
   @override
   State<NpcVendorView> createState() => _NpcVendorViewState();
@@ -26,7 +26,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.entry);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
@@ -198,7 +198,9 @@ class _NpcVendorViewState extends State<NpcVendorView> {
         children: [
           // 商人ID（只读）
           FormItem(
-            controller: TextEditingController(text: widget.entry.toString()),
+            controller: TextEditingController(
+              text: widget.creatureId.toString(),
+            ),
             label: '商人ID',
             placeholder: 'Entry',
             readOnly: true,

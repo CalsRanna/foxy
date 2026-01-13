@@ -55,35 +55,33 @@ class _CreatureTemplateDetailPageState
       // 生物模板（主内容）
       CreatureTemplateView(entry: widget.entry ?? 0),
       // 模板补充 Tab
-      CreatureTemplateAddonView(entry: widget.entry ?? 0),
+      CreatureTemplateAddonView(creatureId: widget.entry ?? 0),
       // 击杀声望 Tab
-      CreatureOnKillReputationView(creatureID: widget.entry ?? 0),
+      CreatureOnKillReputationView(creatureId: widget.entry ?? 0),
       // 抗性 Tab
-      CreatureTemplateResistanceView(creatureID: widget.entry ?? 0),
+      CreatureTemplateResistanceView(creatureId: widget.entry ?? 0),
       // 技能 Tab
-      CreatureTemplateSpellView(creatureID: widget.entry ?? 0),
+      CreatureTemplateSpellView(creatureId: widget.entry ?? 0),
       // 装备模板 Tab
-      CreatureEquipTemplateView(creatureID: widget.entry ?? 0),
+      CreatureEquipTemplateView(creatureId: widget.entry ?? 0),
       // 任务物品 Tab
-      CreatureQuestItemView(creatureEntry: widget.entry ?? 0),
+      CreatureQuestItemView(creatureId: widget.entry ?? 0),
       // 商人 Tab
-      NpcVendorView(entry: widget.entry ?? 0),
+      NpcVendorView(creatureId: widget.entry ?? 0),
       // 训练师 Tab
-      NpcTrainerView(id: widget.entry ?? 0),
+      NpcTrainerView(creatureId: widget.entry ?? 0),
       // 击杀掉落 Tab
-      CreatureLootTemplateView(lootId: viewModel.template.value.lootId),
+      CreatureLootTemplateView(creatureId: widget.entry ?? 0),
       // 偷窃掉落 Tab
-      PickpocketingLootTemplateView(
-        lootId: viewModel.template.value.pickpocketLoot,
-      ),
+      PickpocketingLootTemplateView(creatureId: widget.entry ?? 0),
       // 剥皮掉落 Tab
-      SkinningLootTemplateView(lootId: viewModel.template.value.skinLoot),
+      SkinningLootTemplateView(creatureId: widget.entry ?? 0),
     ];
 
     // Tab容器
     var tabBar = Watch((_) {
-      final t = viewModel.template.value;
-      final disabledIndexes = <int>{};
+      // final t = viewModel.template.value;
+      // final disabledIndexes = <int>{};
       // if ((t.npcFlag & 3968) == 0) disabledIndexes.add(7); // 商人
       // if ((t.npcFlag & 4194416) == 0) disabledIndexes.add(8); // 训练师
       // if (t.lootId == 0) disabledIndexes.add(9); // 击杀掉落
@@ -91,7 +89,7 @@ class _CreatureTemplateDetailPageState
       // if (t.skinLoot == 0) disabledIndexes.add(11); // 剥皮掉落
       return FoxyTab(
         tabs: tabs,
-        disabledIndexes: disabledIndexes,
+        // disabledIndexes: disabledIndexes,
         contents: tabContents,
       );
     });

@@ -9,7 +9,7 @@ import 'package:signals/signals.dart';
 
 class CreatureTemplateAddonViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final entry = signal(0);
+  final creatureId = signal(0);
 
   final pathIdController = TextEditingController();
   final mountController = TextEditingController();
@@ -28,7 +28,7 @@ class CreatureTemplateAddonViewModel {
     loading.value = true;
     try {
       final repository = CreatureTemplateAddonRepository();
-      final data = await repository.find(entry.value);
+      final data = await repository.find(creatureId.value);
       // 只有当数据不为空时才更新 addon.value
       if (data != null) {
         addon.value = data;
@@ -65,7 +65,7 @@ class CreatureTemplateAddonViewModel {
   /// 从 Controller 收集数据构建 CreatureTemplateAddon
   CreatureTemplateAddon _collectFromControllers() {
     final data = CreatureTemplateAddon();
-    data.entry = entry.value;
+    data.entry = creatureId.value;
     data.pathId = _parseInt(pathIdController.text);
     data.mount = _parseInt(mountController.text);
     data.emote = _parseInt(emoteController.text);
@@ -93,8 +93,8 @@ class CreatureTemplateAddonViewModel {
   }
 
   /// 初始化 ViewModel
-  Future<void> initSignals({required int entryId}) async {
-    entry.value = entryId;
+  Future<void> initSignals({required int creatureId}) async {
+    this.creatureId.value = creatureId;
     await load();
   }
 

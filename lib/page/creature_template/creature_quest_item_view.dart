@@ -11,9 +11,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 任务物品Tab
 class CreatureQuestItemView extends StatefulWidget {
-  final int creatureEntry;
+  final int creatureId;
 
-  const CreatureQuestItemView({super.key, required this.creatureEntry});
+  const CreatureQuestItemView({super.key, required this.creatureId});
 
   @override
   State<CreatureQuestItemView> createState() => _CreatureQuestItemViewState();
@@ -25,7 +25,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.creatureEntry);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
@@ -181,7 +181,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           // 生物ID（只读）
           FormItem(
             controller: TextEditingController(
-              text: widget.creatureEntry.toString(),
+              text: widget.creatureId.toString(),
             ),
             label: '生物ID',
             placeholder: 'CreatureEntry',

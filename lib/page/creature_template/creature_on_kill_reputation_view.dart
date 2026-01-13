@@ -9,9 +9,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 击杀声望Tab
 class CreatureOnKillReputationView extends StatefulWidget {
-  final int creatureID;
+  final int creatureId;
 
-  const CreatureOnKillReputationView({super.key, required this.creatureID});
+  const CreatureOnKillReputationView({super.key, required this.creatureId});
 
   @override
   State<CreatureOnKillReputationView> createState() =>
@@ -25,7 +25,7 @@ class _CreatureOnKillReputationViewState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entryId: widget.creatureID);
+    viewModel.initSignals(creatureId: widget.creatureId);
   }
 
   @override
