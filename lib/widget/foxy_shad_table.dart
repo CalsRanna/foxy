@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -29,6 +30,10 @@ class FoxyShadTable extends StatefulWidget {
   /// 行高，用于 shrinkWrap 时计算总高度
   /// 默认为 48（与 ShadTable 默认行高一致）
   final double rowHeight;
+
+  /// 是否正在加载
+  /// 当为 true 时，显示表头和加载指示器
+  final bool loading;
 
   /// 列构建器
   final TableSpanBuilder? columnBuilder;
@@ -159,6 +164,7 @@ class FoxyShadTable extends StatefulWidget {
     this.footer,
     this.shrinkWrap = false,
     this.rowHeight = 48,
+    this.loading = false,
     this.columnBuilder,
     this.rowBuilder,
     this.rowSpanExtent,
@@ -333,12 +339,23 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
       onColumnSecondaryTapCancel: widget.onColumnSecondaryTapCancel,
     );
 
-    if (widget.rowCount == 0) {
+    if (widget.rowCount == 0 || widget.loading) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(height: widget.rowHeight, child: table),
-          Text('暂无数据'),
+          SizedBox(
+            height: widget.rowHeight,
+            child: Center(
+              child: widget.loading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('暂无数据'),
+            ),
+          ),
         ],
       );
     }

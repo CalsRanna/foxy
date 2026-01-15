@@ -38,10 +38,6 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
       final addonData = viewModel.addon.value;
       viewModel.initControllers(addonData);
 
-      if (viewModel.loading.value) {
-        return Center(child: CircularProgressIndicator());
-      }
-
       final entryInput = FormItem(
         controller: viewModel.creatureId.value == 0
             ? TextEditingController(text: widget.creatureId.toString())
