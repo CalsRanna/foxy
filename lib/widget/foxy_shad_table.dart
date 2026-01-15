@@ -21,6 +21,15 @@ class FoxyShadTable extends StatefulWidget {
   /// 构建表尾的回调
   final ShadTableCell Function(BuildContext context, int column)? footer;
 
+  /// 是否根据内容自适应高度
+  /// 当为 true 时，表格高度将根据行数自动计算，不再需要外部约束
+  /// 同时会禁用垂直滚动
+  final bool shrinkWrap;
+
+  /// 行高，用于 shrinkWrap 时计算总高度
+  /// 默认为 48（与 ShadTable 默认行高一致）
+  final double rowHeight;
+
   /// 列构建器
   final TableSpanBuilder? columnBuilder;
 
@@ -148,6 +157,8 @@ class FoxyShadTable extends StatefulWidget {
     required this.rowCount,
     this.header,
     this.footer,
+    this.shrinkWrap = false,
+    this.rowHeight = 48,
     this.columnBuilder,
     this.rowBuilder,
     this.rowSpanExtent,
@@ -262,6 +273,20 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
 
   @override
   Widget build(BuildContext context) {
+    // 计算 shrinkWrap 时的高度
+    double? calculatedHeight;
+    if (widget.shrinkWrap) {
+      int totalRows = widget.rowCount;
+      if (widget.header != null) totalRows += 1;
+      if (widget.footer != null) totalRows += 1;
+      calculatedHeight = totalRows * widget.rowHeight;
+    }
+
+    // shrinkWrap 时禁用垂直滚动
+    final effectiveVerticalScrollPhysics = widget.shrinkWrap
+        ? const NeverScrollableScrollPhysics()
+        : widget.verticalScrollPhysics;
+
     Widget table = ShadTable(
       builder: widget.builder,
       columnCount: widget.columnCount,
@@ -285,7 +310,7 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
       diagonalDragBehavior: widget.diagonalDragBehavior,
       dragStartBehavior: widget.dragStartBehavior,
       keyboardDismissBehavior: widget.keyboardDismissBehavior,
-      verticalScrollPhysics: widget.verticalScrollPhysics,
+      verticalScrollPhysics: effectiveVerticalScrollPhysics,
       horizontalScrollPhysics: widget.horizontalScrollPhysics,
       supportedDevices: widget.supportedDevices,
       // 行点击使用自定义处理（支持双击检测）
@@ -310,8 +335,9 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
 
     if (widget.rowCount == 0) {
       return Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 64, child: table),
+          SizedBox(height: widget.rowHeight, child: table),
           Text('暂无数据'),
         ],
       );
@@ -320,6 +346,11 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
     // 使用 Listener 捕获右键点击位置
     if (widget.onRowSecondaryTapDownWithDetails != null) {
       table = Listener(onPointerDown: _handlePointerDown, child: table);
+    }
+
+    // shrinkWrap 时用 SizedBox 包裹
+    if (widget.shrinkWrap && calculatedHeight != null) {
+      table = SizedBox(height: calculatedHeight, child: table);
     }
 
     return table;
