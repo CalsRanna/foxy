@@ -60,90 +60,78 @@ class _CreatureTemplateResistanceViewState
     final items = viewModel.items.value;
     final headers = ['抗性类型', '抗性值', '验证版本'];
 
-    // 表格（固定高度）
-    Widget layoutBuilder = SizedBox(
-      height: 500,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          var maxWidth = constraints.maxWidth;
-          var width = maxWidth - 120;
-          return FoxyShadTable(
-            builder: (context, vicinity) {
-              if (vicinity.row < 0 || vicinity.row >= items.length) {
-                return ShadTableCell(child: SizedBox());
-              }
-              final resistance = items[vicinity.row];
-              return switch (vicinity.column) {
-                0 => ShadTableCell(
-                  child: Text(
-                    kResistanceSchoolOptions[resistance.school] ??
-                        '未知 (${resistance.school})',
-                  ),
+    Widget layoutBuilder = LayoutBuilder(
+      builder: (context, constraints) {
+        var maxWidth = constraints.maxWidth;
+        var width = maxWidth - 120;
+        return FoxyShadTable(
+          builder: (context, vicinity) {
+            if (vicinity.row < 0 || vicinity.row >= items.length) {
+              return ShadTableCell(child: SizedBox());
+            }
+            final resistance = items[vicinity.row];
+            return switch (vicinity.column) {
+              0 => ShadTableCell(
+                child: Text(
+                  kResistanceSchoolOptions[resistance.school] ??
+                      '未知 (${resistance.school})',
                 ),
-                1 => ShadTableCell(
-                  child: Text(resistance.resistance.toString()),
+              ),
+              1 => ShadTableCell(child: Text(resistance.resistance.toString())),
+              2 => ShadTableCell(
+                child: Text(resistance.verifiedBuild.toString()),
+              ),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+          columnCount: headers.length,
+          columnSpanExtent: (index) {
+            return switch (index) {
+              0 => FixedTableSpanExtent(width / 2),
+              1 => FixedTableSpanExtent(width / 2),
+              2 => FixedTableSpanExtent(120),
+              _ => null,
+            };
+          },
+          header: (context, index) {
+            return ShadTableCell.header(child: Text(headers[index]));
+          },
+          onRowSecondaryTapDownWithDetails: (row, details) {
+            showFoxyContextMenu(
+              context: context,
+              position: details.globalPosition,
+              items: [
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.squarePen, size: 16),
+                  onPressed: () {
+                    viewModel.selectRow(row);
+                    viewModel.edit();
+                    _showEditDialog(context);
+                  },
+                  child: Text('编辑'),
                 ),
-                2 => ShadTableCell(
-                  child: Text(resistance.verifiedBuild.toString()),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.copy, size: 16),
+                  onPressed: () => viewModel.copy(context),
+                  child: Text('复制'),
                 ),
-                _ => ShadTableCell(child: SizedBox()),
-              };
-            },
-            columnCount: headers.length,
-            columnSpanExtent: (index) {
-              return switch (index) {
-                0 => FixedTableSpanExtent(width / 2),
-                1 => FixedTableSpanExtent(width / 2),
-                2 => FixedTableSpanExtent(120),
-                _ => null,
-              };
-            },
-            header: (context, index) {
-              return ShadTableCell.header(child: Text(headers[index]));
-            },
-            onRowSecondaryTapDownWithDetails: (row, details) {
-              showFoxyContextMenu(
-                context: context,
-                position: details.globalPosition,
-                items: [
-                  ShadContextMenuItem(
-                    leading: Icon(LucideIcons.squarePen, size: 16),
-                    onPressed: () {
-                      viewModel.selectRow(row);
-                      viewModel.edit();
-                      _showEditDialog(context);
-                    },
-                    child: Text('编辑'),
-                  ),
-                  ShadContextMenuItem(
-                    leading: Icon(LucideIcons.copy, size: 16),
-                    onPressed: () => viewModel.copy(context),
-                    child: Text('复制'),
-                  ),
-                  ShadContextMenuItem(
-                    leading: Icon(LucideIcons.trash, size: 16),
-                    onPressed: () => viewModel.delete(context),
-                    child: Text('删除'),
-                  ),
-                ],
-              );
-            },
-            pinnedRowCount: 1,
-            rowCount: items.length,
-          );
-        },
-      ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () => viewModel.delete(context),
+                  child: Text('删除'),
+                ),
+              ],
+            );
+          },
+          rowCount: items.length,
+          shrinkWrap: true,
+        );
+      },
     );
 
     var children = [toolbar, layoutBuilder];
     final column = Column(spacing: 16, children: children);
-    return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: ShadCard(
-        padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-        child: column,
-      ),
-    );
+    return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
   /// 显示新增对话框
