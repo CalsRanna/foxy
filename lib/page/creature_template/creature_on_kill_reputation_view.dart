@@ -41,10 +41,6 @@ class _CreatureOnKillReputationViewState
       final repData = viewModel.reputation.value;
       viewModel.initControllers(repData);
 
-      if (viewModel.loading.value) {
-        return Center(child: CircularProgressIndicator());
-      }
-
       return SingleChildScrollView(
         padding: EdgeInsets.only(top: 16),
         child: Column(

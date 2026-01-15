@@ -40,10 +40,6 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
   @override
   Widget build(BuildContext context) {
     return Watch((context) {
-      if (viewModel.loading.value) {
-        return Center(child: CircularProgressIndicator());
-      }
-
       return _buildTable();
     });
   }
@@ -113,6 +109,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
           header: (context, index) {
             return ShadTableCell.header(child: Text(headers[index]));
           },
+          loading: viewModel.loading.value,
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,

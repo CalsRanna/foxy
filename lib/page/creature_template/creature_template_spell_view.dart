@@ -37,10 +37,6 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
   @override
   Widget build(BuildContext context) {
     return Watch((context) {
-      if (viewModel.loading.value) {
-        return Center(child: CircularProgressIndicator());
-      }
-
       return _buildTable();
     });
   }
@@ -90,6 +86,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           header: (context, index) {
             return ShadTableCell.header(child: Text(headers[index]));
           },
+          loading: viewModel.loading.value,
           onRowSecondaryTapDownWithDetails: (row, details) {
             viewModel.selectRow(row);
             showFoxyContextMenu(

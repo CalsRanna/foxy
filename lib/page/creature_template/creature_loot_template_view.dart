@@ -40,10 +40,6 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
   @override
   Widget build(BuildContext context) {
     return Watch((context) {
-      if (viewModel.loading.value) {
-        return Center(child: CircularProgressIndicator());
-      }
-
       return _buildTable();
     });
   }
@@ -114,6 +110,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
           header: (context, index) {
             return ShadTableCell.header(child: Text(headers[index]));
           },
+          loading: viewModel.loading.value,
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
