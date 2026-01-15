@@ -24,7 +24,9 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(dir:*)",
       "mcp__dart-mcp-server__dart_format",
-      "Bash(mysql:*)"
+      "Bash(mysql:*)",
+      "mcp__dart-mcp-server__pub_dev_search",
+      "mcp__dart-mcp-server__pub"
     ],
     "deny": []
   }
