@@ -1,3 +1,4 @@
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 
 class FoxyTab extends StatefulWidget {
@@ -61,6 +62,31 @@ class _FoxyTabState extends State<FoxyTab> {
   int index = 0;
   List<GlobalKey> keys = [];
   List<double> width = [];
+  late PageController _pageController;
+  double _opacity = 1.0;
+  bool _isAnimating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    keys = widget.tabs.map((e) => GlobalKey()).toList();
+    width = List.generate(widget.tabs.length, (index) => 0.0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (var i = 0; i < keys.length; i++) {
+        final key = keys[i];
+        final renderBox = key.currentContext?.findRenderObject() as RenderBox;
+        width[i] = renderBox.size.width;
+      }
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,46 +115,66 @@ class _FoxyTabState extends State<FoxyTab> {
       child: _Indicator(width: width[index]),
     );
 
-    // 获取当前显示的内容，如果没有则显示占位符
-    Widget currentContent = widget.contents.length > index
-        ? widget.contents[index]
-        : Center(child: Text('该Tab尚未实现'));
+    // 构建内容列表
+    final contentList = List.generate(widget.contents.length, (i) {
+      return widget.contents[i];
+    });
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Stack(children: [container, animatedPositioned]),
-        Flexible(
-          fit: FlexFit.loose,
-          child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
-            child: KeyedSubtree(key: ValueKey(index), child: currentContent),
+        AnimatedOpacity(
+          opacity: _opacity,
+          duration: Duration(milliseconds: 150),
+          child: ExpandablePageView(
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+            physics: const NeverScrollableScrollPhysics(),
+            children: contentList,
           ),
         ),
       ],
     );
   }
 
-  void handleTap(int index) {
+  void _onPageChanged(int newIndex) {
     setState(() {
-      this.index = index;
+      index = newIndex;
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    keys = widget.tabs.map((e) => GlobalKey()).toList();
-    width = List.generate(widget.tabs.length, (index) => 0.0);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      for (var i = 0; i < keys.length; i++) {
-        final key = keys[i];
-        final renderBox = key.currentContext?.findRenderObject() as RenderBox;
-        width[i] = renderBox.size.width;
-      }
-      setState(() {});
-    });
+  Future<void> handleTap(int targetIndex) async {
+    if (_isAnimating) return;
+
+    final currentIndex = _pageController.page?.round() ?? 0;
+    final distance = (targetIndex - currentIndex).abs();
+
+    if (distance <= 1) {
+      // 相邻页面，直接滑动
+      _pageController.animateToPage(
+        targetIndex,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // 距离 > 1，使用淡入淡出 + 瞬间跳转
+      _isAnimating = true;
+
+      // 1. 淡出
+      setState(() => _opacity = 0.0);
+      await Future.delayed(Duration(milliseconds: 150));
+
+      // 2. 瞬间跳转
+      _pageController.jumpToPage(targetIndex);
+
+      // 3. 淡入
+      setState(() => _opacity = 1.0);
+      await Future.delayed(Duration(milliseconds: 150));
+
+      _isAnimating = false;
+    }
   }
 
   FoxyTabItem _buildItem(int i) {

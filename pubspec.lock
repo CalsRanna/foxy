@@ -217,6 +217,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  expandable_page_view:
+    dependency: "direct main"
+    description:
+      name: expandable_page_view
+      sha256: "2d2c9e6fbbaa153f761054200c199eb69dc45948c8018b98a871212c67b60608"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   extended_image:
     dependency: transitive
     description:
