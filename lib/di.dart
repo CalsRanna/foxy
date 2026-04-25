@@ -32,6 +32,8 @@ import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view_model.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/page/setting/setting_view_model.dart';
+import 'package:foxy/page/smart_script/smart_script_list_view_model.dart';
+import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/page/quest/creature_questender_view_model.dart';
 import 'package:foxy/page/quest/creature_queststarter_view_model.dart';
 import 'package:foxy/page/quest/gameobject_questender_view_model.dart';
@@ -97,5 +99,7 @@ class DI {
     GetIt.instance.registerFactory(() => NpcTextViewModel());
     GetIt.instance.registerFactory(() => GossipMenuOptionViewModel());
     GetIt.instance.registerFactory(() => SettingViewModel());
+    GetIt.instance.registerLazySingleton(() => SmartScriptListViewModel());
+    GetIt.instance.registerFactory(() => SmartScriptDetailViewModel());
   }
 }
