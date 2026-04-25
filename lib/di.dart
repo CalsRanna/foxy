@@ -14,7 +14,13 @@ import 'package:foxy/page/creature_template/pickpocketing_loot_template_view_mod
 import 'package:foxy/page/creature_template/skinning_loot_template_view_model.dart';
 import 'package:foxy/page/dashboard/dashboard_view_model.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/page/item/disenchant_loot_template_view_model.dart';
+import 'package:foxy/page/item/item_enchantment_template_view_model.dart';
+import 'package:foxy/page/item/item_loot_template_view_model.dart';
+import 'package:foxy/page/item/item_template_detail_view_model.dart';
 import 'package:foxy/page/item/item_template_list_view_model.dart';
+import 'package:foxy/page/item/milling_loot_template_view_model.dart';
+import 'package:foxy/page/item/prospecting_loot_template_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_list_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
@@ -56,6 +62,12 @@ class DI {
     GetIt.instance
         .registerFactory(() => SkinningLootTemplateViewModel());
     GetIt.instance.registerLazySingleton(() => ItemTemplateListViewModel());
+    GetIt.instance.registerFactory(() => ItemTemplateDetailViewModel());
+    GetIt.instance.registerFactory(() => ItemLootTemplateViewModel());
+    GetIt.instance.registerFactory(() => DisenchantLootTemplateViewModel());
+    GetIt.instance.registerFactory(() => ProspectingLootTemplateViewModel());
+    GetIt.instance.registerFactory(() => MillingLootTemplateViewModel());
+    GetIt.instance.registerFactory(() => ItemEnchantmentTemplateViewModel());
     GetIt.instance.registerLazySingleton(() => GossipMenuListViewModel());
     GetIt.instance.registerLazySingleton(() => QuestTemplateListViewModel());
     GetIt.instance.registerFactory(() => QuestTemplateDetailViewModel());

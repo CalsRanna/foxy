@@ -34,6 +34,9 @@ class FoxyRouter extends RootStackRouter {
 
       /// Gossip Menu
       AutoRoute(page: GossipMenuDetailRoute.page),
+
+      /// Item Template
+      AutoRoute(page: ItemTemplateDetailRoute.page),
     ];
     return [
       AutoRoute(page: BootstrapRoute.page, initial: true),

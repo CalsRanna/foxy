@@ -33,7 +33,8 @@
       "Bash(xxd /Users/cals/Code/foxy/lib/repository/quest_template_repository.dart)",
       "Bash(python3 *)",
       "Bash(dart analyze *)",
-      "Bash(dart format *)"
+      "Bash(dart format *)",
+      "Bash(git ls-tree *)"
     ],
     "deny": []
   }
