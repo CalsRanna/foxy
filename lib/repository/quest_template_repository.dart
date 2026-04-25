@@ -24,7 +24,7 @@ class QuestTemplateRepository with RepositoryMixin {
   }) async {
     try {
       final offset = (page - 1) * kPageSize;
-      var builder = laconic.table('\$_table AS qt');
+      var builder = laconic.table('${_table} AS qt');
       const fields = [
         'qt.ID',
         'qt.LogTitle',
@@ -53,7 +53,7 @@ class QuestTemplateRepository with RepositoryMixin {
   /// 计数
   Future<int> count({QuestTemplateFilterEntity? filter}) async {
     try {
-      var builder = laconic.table('\$_table AS qt');
+      var builder = laconic.table('${_table} AS qt');
       builder = builder.leftJoin(
         'quest_template_locale AS qtl',
         (join) => join.on('qt.ID', 'qtl.ID').on('qtl.locale', '"zhCN"'),
