@@ -1,0 +1,120 @@
+import 'package:flutter/widgets.dart';
+import 'package:foxy/model/quest_template.dart';
+import 'package:foxy/model/quest_template_filter_entity.dart';
+import 'package:foxy/repository/quest_template_repository.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger.dart';
+import 'package:get_it/get_it.dart';
+import 'package:signals/signals.dart';
+
+/// 任务模板列表 ViewModel（LazySingleton，保留搜索状态）
+class QuestTemplateListViewModel {
+  final _routerFacade = GetIt.instance.get<RouterFacade>();
+  final _repository = QuestTemplateRepository();
+
+  final idController = TextEditingController();
+  final titleController = TextEditingController();
+
+  final items = signal<List<BriefQuestTemplate>>([]);
+  final page = signal(1);
+  final total = signal(0);
+  final loading = signal(false);
+
+  Future<void> initSignals() async {
+    await _refresh();
+  }
+
+  void dispose() {
+    idController.dispose();
+    titleController.dispose();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    await _refresh();
+  }
+
+  Future<void> paginate(int newPage) async {
+    page.value = newPage;
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    idController.clear();
+    titleController.clear();
+    page.value = 1;
+    await _refresh();
+  }
+
+  Future<void> onCopy(int id) async {
+    try {
+      final confirmed = await DialogUtil.instance.confirm(
+        title: '确认复制',
+        description: '此操作将复制 ID=$id 的任务记录，确认继续？',
+        confirmText: '复制',
+      );
+      if (!confirmed) return;
+      DialogUtil.instance.loading();
+      await _repository.copy(id);
+      await DialogUtil.instance.dismiss();
+      DialogUtil.instance.success('复制成功');
+      await _refresh();
+    } catch (e) {
+      logger.e(e.toString());
+      DialogUtil.instance.error('复制失败: ${e.toString()}');
+    }
+  }
+
+  Future<void> onDestroy(int id) async {
+    try {
+      final confirmed = await DialogUtil.instance.confirm(
+        title: '确认删除',
+        description: '将永久删除 ID=$id 的任务记录，此操作不可撤销。',
+        confirmText: '删除',
+        destructive: true,
+      );
+      if (!confirmed) return;
+      DialogUtil.instance.loading();
+      await _repository.destroy(id);
+      await DialogUtil.instance.dismiss();
+      DialogUtil.instance.success('删除成功');
+      await _refresh();
+    } catch (e) {
+      logger.e(e.toString());
+      DialogUtil.instance.error('删除失败: ${e.toString()}');
+    }
+  }
+
+  /// 导航到详情页（null 表示新建）
+  void navigateToDetail({int? id}) {
+    _routerFacade.navigateToDetail(
+      id: id?.toString() ?? 'new',
+      label: id != null ? '任务 $id' : '新建任务',
+      route: QuestTemplateDetailRoute(questId: id),
+      parentMenu: RouterMenu.questTemplate,
+    );
+  }
+
+  Future<void> _refresh() async {
+    loading.value = true;
+    try {
+      final filter = _buildFilter();
+      items.value = await _repository.paginate(
+        filter: filter,
+        page: page.value,
+      );
+      total.value = await _repository.count(filter: filter);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  QuestTemplateFilterEntity _buildFilter() {
+    return QuestTemplateFilterEntity()
+      ..id = idController.text
+      ..title = titleController.text;
+  }
+}

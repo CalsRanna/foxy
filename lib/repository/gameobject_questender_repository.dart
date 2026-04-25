@@ -1,0 +1,102 @@
+import 'package:foxy/model/gameobject_questender.dart';
+import 'package:foxy/repository/repository_mixin.dart';
+
+/// gameobject_questender 表的数据访问层
+/// 复合主键: (id, quest)
+class GameobjectQuestenderRepository with RepositoryMixin {
+  static const _table = 'gameobject_questender';
+
+  /// 按 quest 搜索该任务下的所有任务结束者（带 gameobject_template JOIN，无 locale）
+  Future<List<BriefGameobjectQuestender>> search(int questId) async {
+    try {
+      const fields = [
+        'goe.id',
+        'goe.quest',
+        'got.name',
+      ];
+      var builder = laconic.table('$_table AS goe');
+      builder = builder.select(fields);
+      builder = builder.leftJoin(
+        'gameobject_template AS got',
+        (join) => join.on('goe.id', 'got.entry'),
+      );
+      builder = builder.where('goe.quest', questId);
+      final results = await builder.get();
+      return results
+          .map((e) => BriefGameobjectQuestender.fromJson(e.toMap()))
+          .toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /// 按复合键查找
+  Future<GameobjectQuestender?> find(Map<String, dynamic> id) async {
+    try {
+      var builder = laconic.table(_table);
+      id.forEach((k, v) {
+        builder = builder.where(k, v);
+      });
+      final result = await builder.first();
+      return GameobjectQuestender.fromJson(result.toMap());
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 取指定 quest 下的下一个 id（MAX(id) + 1）
+  Future<GameobjectQuestender> create(int questId) async {
+    try {
+      final result = await laconic
+          .table(_table)
+          .where('quest', questId)
+          .select(['MAX(id) as max_id'])
+          .first();
+      final maxId = result.toMap()['max_id'] as int?;
+      final model = GameobjectQuestender();
+      model.quest = questId;
+      model.id = maxId == null ? 0 : maxId + 1;
+      return model;
+    } catch (e) {
+      final model = GameobjectQuestender();
+      model.quest = questId;
+      model.id = 0;
+      return model;
+    }
+  }
+
+  Future<void> store(GameobjectQuestender model) async {
+    await laconic.table(_table).insert([model.toJson()]);
+  }
+
+  Future<void> update(
+    Map<String, dynamic> id,
+    GameobjectQuestender model,
+  ) async {
+    var builder = laconic.table(_table);
+    id.forEach((k, v) {
+      builder = builder.where(k, v);
+    });
+    final json = model.toJson();
+    for (final k in id.keys) {
+      json.remove(k);
+    }
+    await builder.update(json);
+  }
+
+  Future<void> destroy(Map<String, dynamic> id) async {
+    var builder = laconic.table(_table);
+    id.forEach((k, v) {
+      builder = builder.where(k, v);
+    });
+    await builder.delete();
+  }
+
+  Future<void> copy(Map<String, dynamic> id) async {
+    final original = await find(id);
+    if (original == null) return;
+    final next = await create(original.quest);
+    original.id = next.id;
+    await store(original);
+  }
+}

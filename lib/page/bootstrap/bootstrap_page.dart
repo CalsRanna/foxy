@@ -50,7 +50,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
 
   Widget _buildCoverPanel() {
     var image = Image.asset(
-      'asset/image/background.jpg',
+      'asset/image/background.png',
       fit: BoxFit.cover,
       height: double.infinity,
       width: double.infinity,
