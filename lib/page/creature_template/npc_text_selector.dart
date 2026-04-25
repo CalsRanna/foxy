@@ -1,48 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/gossip_menu.dart';
-import 'package:foxy/model/gossip_menu_filter_entity.dart';
-import 'package:foxy/repository/gossip_menu_repository.dart';
+import 'package:foxy/model/npc_text.dart';
+import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 对话菜单选择器
-class GossipMenuSelector extends StatefulWidget {
+/// NPC 文本选择器（供 gossip_menu.TextID 字段使用）
+class NpcTextSelector extends StatefulWidget {
   final TextEditingController controller;
   final String? placeholder;
 
-  const GossipMenuSelector({
+  const NpcTextSelector({
     super.key,
     required this.controller,
     this.placeholder,
   });
 
   @override
-  State<GossipMenuSelector> createState() => _GossipMenuSelectorState();
+  State<NpcTextSelector> createState() => _NpcTextSelectorState();
 }
 
-class _GossipMenuSelectorState extends State<GossipMenuSelector> {
+class _NpcTextSelectorState extends State<NpcTextSelector> {
   @override
   Widget build(BuildContext context) {
-    var shadButton = ShadButton.ghost(
+    final button = ShadButton.ghost(
       height: 20,
+      width: 20,
       padding: EdgeInsets.zero,
       onPressed: _openDialog,
-      width: 20,
       child: Icon(LucideIcons.search, size: 12),
     );
     return ShadInput(
       controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
-      trailing: shadButton,
+      trailing: button,
     );
   }
 
   Future<void> _openDialog() async {
-    final currentValue = int.tryParse(widget.controller.text);
+    final current = int.tryParse(widget.controller.text);
     final result = await showShadDialog<int>(
       context: context,
-      builder: (context) => _Dialog(initialValue: currentValue),
+      builder: (context) => _Dialog(initialValue: current),
     );
     if (result == null) return;
     widget.controller.text = result.toString();
@@ -51,7 +50,6 @@ class _GossipMenuSelectorState extends State<GossipMenuSelector> {
 
 class _Dialog extends StatefulWidget {
   final int? initialValue;
-
   const _Dialog({this.initialValue});
 
   @override
@@ -59,74 +57,76 @@ class _Dialog extends StatefulWidget {
 }
 
 class _DialogState extends State<_Dialog> {
-  final _menuIdController = TextEditingController();
+  final _idController = TextEditingController();
   final _textController = TextEditingController();
 
-  List<GossipMenu> _items = [];
+  List<NpcText> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;
   bool _loading = false;
 
   @override
-  Widget build(BuildContext context) {
-    var cancelButton = ShadButton.outline(
-      onPressed: () => Navigator.of(context).pop(),
-      child: Text('取消'),
-    );
-    var confirmButton = ShadButton(
-      onPressed: () => Navigator.of(context).pop(_selectedId),
-      child: Text('确定'),
-    );
-    var children = [_buildFilter(), _buildPagination(), _buildTable()];
-    return ShadDialog(
-      title: Text('对话菜单'),
-      actions: [cancelButton, confirmButton],
-      constraints: BoxConstraints(maxWidth: 720),
-      child: Column(spacing: 8, children: children),
-    );
-  }
-
-  @override
-  void dispose() {
-    _menuIdController.dispose();
-    _textController.dispose();
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
-    if (widget.initialValue != 0) {
-      _menuIdController.text = widget.initialValue?.toString() ?? '';
+    if (widget.initialValue != null && widget.initialValue != 0) {
+      _idController.text = widget.initialValue!.toString();
       _selectedId = widget.initialValue;
     }
     _search();
   }
 
-  Widget _buildFilter() {
-    var menuIdInput = ShadInput(
-      controller: _menuIdController,
-      placeholder: Text('菜单ID'),
+  @override
+  void dispose() {
+    _idController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cancel = ShadButton.outline(
+      onPressed: () => Navigator.of(context).pop(),
+      child: Text('取消'),
     );
-    var textInput = ShadInput(
+    final confirm = ShadButton(
+      onPressed: () => Navigator.of(context).pop(_selectedId),
+      child: Text('确定'),
+    );
+    return ShadDialog(
+      title: Text('NPC 文本'),
+      actions: [cancel, confirm],
+      constraints: BoxConstraints(maxWidth: 720),
+      child: Column(
+        spacing: 8,
+        children: [_buildFilter(), _buildPagination(), _buildTable()],
+      ),
+    );
+  }
+
+  Widget _buildFilter() {
+    final idInput = ShadInput(
+      controller: _idController,
+      placeholder: Text('ID'),
+    );
+    final textInput = ShadInput(
       controller: _textController,
       placeholder: Text('文本内容'),
     );
-    var searchButton = ShadButton(
+    final searchBtn = ShadButton(
       onPressed: _doSearch,
       size: ShadButtonSize.sm,
       child: Text('查询'),
     );
-    var resetButton = ShadButton.ghost(
+    final resetBtn = ShadButton.ghost(
       onPressed: _reset,
       size: ShadButtonSize.sm,
       child: Text('重置'),
     );
-    var children = [
-      Expanded(child: menuIdInput),
+    final children = [
+      Expanded(child: idInput),
       Expanded(child: textInput),
-      Expanded(child: Row(spacing: 8, children: [searchButton, resetButton])),
+      Expanded(child: Row(spacing: 8, children: [searchBtn, resetBtn])),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
@@ -155,55 +155,47 @@ class _DialogState extends State<_Dialog> {
 
   Widget _buildTable() {
     final theme = ShadTheme.of(context);
-
     final screenHeight = MediaQuery.of(context).size.height;
-    final tableMaxHeight = screenHeight * 0.5;
+    final maxHeight = screenHeight * 0.5;
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: tableMaxHeight),
+      constraints: BoxConstraints(maxHeight: maxHeight),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final maxWidth = constraints.maxWidth;
-          var width = maxWidth - 240;
+          final width = constraints.maxWidth - 120;
           return FoxyShadTable(
-            columnCount: 3,
+            columnCount: 2,
             rowCount: _items.length,
             pinnedRowCount: 1,
             header: (context, column) {
               return switch (column) {
-                0 => ShadTableCell.header(child: Text('菜单ID')),
-                1 => ShadTableCell.header(child: Text('文本ID')),
-                2 => ShadTableCell.header(child: Text('文本内容')),
+                0 => ShadTableCell.header(child: Text('ID')),
+                1 => ShadTableCell.header(child: Text('文本（text0_0 / text0_1）')),
                 _ => ShadTableCell.header(child: SizedBox()),
               };
             },
             columnSpanExtent: (column) {
               return switch (column) {
                 0 => FixedTableSpanExtent(120),
-                1 => FixedTableSpanExtent(120),
-                2 => FixedTableSpanExtent(width),
+                1 => FixedTableSpanExtent(width),
                 _ => null,
               };
             },
             rowSpanBackgroundDecoration: (row) {
-              // row 包含 header，所以减 1
               final dataRow = row - 1;
               if (dataRow < 0 || dataRow >= _items.length) return null;
-              final item = _items[dataRow];
-              if (item.menuId == _selectedId) {
+              if (_items[dataRow].id == _selectedId) {
                 return TableSpanDecoration(color: theme.colorScheme.accent);
               }
               return null;
             },
             onRowTap: (row) {
               if (row >= 0 && row < _items.length) {
-                setState(() {
-                  _selectedId = _items[row].menuId;
-                });
+                setState(() => _selectedId = _items[row].id);
               }
             },
             onRowDoubleTap: (row) {
               if (row >= 0 && row < _items.length) {
-                Navigator.of(context).pop(_items[row].menuId);
+                Navigator.of(context).pop(_items[row].id);
               }
             },
             builder: (context, vicinity) {
@@ -211,16 +203,18 @@ class _DialogState extends State<_Dialog> {
                 return ShadTableCell(child: SizedBox());
               }
               final item = _items[vicinity.row];
+              final text = item.entries[0].text0.isNotEmpty
+                  ? item.entries[0].text0
+                  : item.entries[0].text1;
               return switch (vicinity.column) {
-                0 => ShadTableCell(child: Text(item.menuId.toString())),
-                1 => ShadTableCell(child: Text(item.textId.toString())),
-                2 => ShadTableCell(
-                  child: Text(
-                    item.text,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                0 => ShadTableCell(child: Text(item.id.toString())),
+                1 => ShadTableCell(
+                    child: Text(
+                      text,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
                 _ => ShadTableCell(child: SizedBox()),
               };
             },
@@ -241,7 +235,7 @@ class _DialogState extends State<_Dialog> {
   }
 
   void _reset() {
-    _menuIdController.clear();
+    _idController.clear();
     _textController.clear();
     _page = 1;
     _search();
@@ -250,12 +244,11 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     setState(() => _loading = true);
     try {
-      final repository = GossipMenuRepository();
-      final filter = GossipMenuFilterEntity()
-        ..menuId = _menuIdController.text
-        ..text = _textController.text;
-      final items = await repository.paginate(filter: filter, page: _page);
-      final total = await repository.count(filter: filter);
+      final repo = NpcTextRepository();
+      final id = _idController.text.isEmpty ? null : _idController.text;
+      final text = _textController.text.isEmpty ? null : _textController.text;
+      final items = await repo.paginate(id: id, text: text, page: _page);
+      final total = await repo.count(id: id, text: text);
       if (mounted) {
         setState(() {
           _items = items;

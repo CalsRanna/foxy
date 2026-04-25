@@ -26,7 +26,9 @@
       "mcp__dart-mcp-server__dart_format",
       "Bash(mysql:*)",
       "mcp__dart-mcp-server__pub_dev_search",
-      "mcp__dart-mcp-server__pub"
+      "mcp__dart-mcp-server__pub",
+      "Read(//Users/cals/Code/foxy_archive/**)",
+      "Read(//Users/cals/**)"
     ],
     "deny": []
   }
