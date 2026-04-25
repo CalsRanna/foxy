@@ -1,18 +1,15 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:foxy/model/quest_offer_reward.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/repository/quest_offer_reward_repository.dart';
-import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-/// QuestOfferReward 子表 ViewModel（1:1 编辑模式 + locale）
-///
-/// 10 个显式 TextEditingController 用于主表字段，
-/// Map<String, TextEditingController> 用于 locale 字段。
 class QuestOfferRewardViewModel {
-  final _repository = QuestOfferRewardRepository();
-  final _localeRepository = QuestOfferRewardLocaleRepository();
+  final routerFacade = GetIt.instance.get<RouterFacade>();
+  final questId = signal(0);
 
   final idController = TextEditingController();
   final emote1Controller = TextEditingController();
@@ -26,78 +23,65 @@ class QuestOfferRewardViewModel {
   final rewardTextController = TextEditingController();
 
   final _localeControllers = <String, TextEditingController>{};
-
-  /// 按需获取 locale 字段 controller（惰性初始化）
   TextEditingController localeControllerOf(String key) {
     return _localeControllers.putIfAbsent(key, () => TextEditingController());
   }
 
-  final loading = signal(false);
-  final saving = signal(false);
-  final creating = signal(true);
-  final currentId = signal(0);
-  final localeExists = signal(false);
-
   int _originalId = 0;
 
-  /// 加载：find main + load zhCN locale，不存在则进入创建模式
-  Future<void> search(int questId) async {
-    loading.value = true;
-    try {
-      final existing = await _repository.find(questId);
-      if (existing != null) {
-        creating.value = false;
-        _originalId = existing.id;
-        currentId.value = existing.id;
-        _applyToControllers(existing);
-      } else {
-        creating.value = true;
-        final blank = await _repository.create(questId);
-        currentId.value = questId;
-        _applyToControllers(blank);
-      }
+  Future<void> initSignals({required int questId}) async {
+    this.questId.value = questId;
+    final repository = QuestOfferRewardRepository();
+    final existing = await repository.find(questId);
+    if (existing != null) {
+      _originalId = existing.id;
+      _applyToControllers(existing);
+    } else {
+      final blank = await repository.create(questId);
+      _applyToControllers(blank);
+    }
+    idController.text = questId.toString();
 
-      final locales = await _localeRepository.search(questId);
-      QuestOfferRewardLocale? zhCN;
-      for (final l in locales) {
-        if (l.locale == 'zhCN') {
-          zhCN = l;
-          break;
-        }
+    final localeRepository = QuestOfferRewardLocaleRepository();
+    final locales = await localeRepository.search(questId);
+    QuestOfferRewardLocale? zhCN;
+    for (final l in locales) {
+      if (l.locale == 'zhCN') {
+        zhCN = l;
+        break;
       }
-      localeExists.value = zhCN != null;
-      final target = zhCN ?? (QuestOfferRewardLocale()..id = questId);
-      _applyLocaleToControllers(target);
-    } finally {
-      loading.value = false;
+    }
+    final target = zhCN ?? (QuestOfferRewardLocale()..id = questId);
+    _applyLocaleToControllers(target);
+  }
+
+  Future<void> save(BuildContext context) async {
+    try {
+      final model = _collectFromControllers();
+      final repository = QuestOfferRewardRepository();
+      if (_originalId == 0) {
+        await repository.store(model);
+      } else {
+        await repository.update(_originalId, model);
+      }
+      _originalId = model.id;
+
+      final locale = _collectLocaleFromControllers(model.id);
+      final localeRepository = QuestOfferRewardLocaleRepository();
+      await localeRepository.replaceAll(model.id, [locale]);
+
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('发放奖励数据已保存'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
   }
 
-  /// 保存主表 + replaceAll locale（zhCN）
-  Future<void> onSave() async {
-    saving.value = true;
-    try {
-      final model = _collectFromControllers();
-      if (creating.value) {
-        await _repository.store(model);
-        creating.value = false;
-      } else {
-        await _repository.update(_originalId, model);
-      }
-      _originalId = model.id;
-      currentId.value = model.id;
-
-      final locale = _collectLocaleFromControllers(model.id);
-      await _localeRepository.replaceAll(model.id, [locale]);
-      localeExists.value = true;
-
-      DialogUtil.instance.success('保存成功');
-    } catch (e) {
-      logger.e(e.toString());
-      DialogUtil.instance.error('保存失败: ${e.toString()}');
-    } finally {
-      saving.value = false;
-    }
+  void pop() {
+    routerFacade.goBack();
   }
 
   void _applyToControllers(QuestOfferReward model) {
@@ -119,7 +103,7 @@ class QuestOfferRewardViewModel {
 
   QuestOfferReward _collectFromControllers() {
     final model = QuestOfferReward();
-    model.id = _parseInt(idController.text);
+    model.id = questId.value;
     model.emote1 = _parseInt(emote1Controller.text);
     model.emote2 = _parseInt(emote2Controller.text);
     model.emote3 = _parseInt(emote3Controller.text);
@@ -140,7 +124,7 @@ class QuestOfferRewardViewModel {
     return locale;
   }
 
-  int _parseInt(String text) => int.tryParse(text) ?? 0;
+  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
 
   void dispose() {
     idController.dispose();

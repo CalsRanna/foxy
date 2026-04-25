@@ -1,13 +1,14 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:foxy/model/quest_template_locale.dart';
 import 'package:foxy/repository/quest_template_locale_repository.dart';
-import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-/// QuestTemplateLocale ViewModel（纯 locale 编辑模式，无 1:1 主表）
 class QuestTemplateLocaleViewModel {
-  final _localeRepository = QuestTemplateLocaleRepository();
+  final routerFacade = GetIt.instance.get<RouterFacade>();
+  final questId = signal(0);
 
   final idController = TextEditingController();
   final localeController = TextEditingController();
@@ -17,62 +18,43 @@ class QuestTemplateLocaleViewModel {
     return _localeControllers.putIfAbsent(key, () => TextEditingController());
   }
 
-  final loading = signal(false);
-  final saving = signal(false);
-  final creating = signal(true);
-  final currentId = signal(0);
-  final localeExists = signal(false);
+  Future<void> initSignals({required int questId}) async {
+    this.questId.value = questId;
+    final repository = QuestTemplateLocaleRepository();
+    final locales = await repository.search(questId);
+    QuestTemplateLocale? zhCN;
+    for (final l in locales) {
+      if (l.locale == 'zhCN') {
+        zhCN = l;
+        break;
+      }
+    }
+    final target = zhCN ?? (QuestTemplateLocale()..id = questId);
+    _applyLocaleToControllers(target);
+    idController.text = questId.toString();
+  }
 
-  Future<void> search(int questId) async {
-    loading.value = true;
+  Future<void> save(BuildContext context) async {
     try {
-      currentId.value = questId;
+      final locale = _collectLocaleFromControllers();
+      final repository = QuestTemplateLocaleRepository();
+      await repository.replaceAll(questId.value, [locale]);
 
-      final locales = await _localeRepository.search(questId);
-      QuestTemplateLocale? zhCN;
-      for (final l in locales) {
-        if (l.locale == 'zhCN') {
-          zhCN = l;
-          break;
-        }
-      }
-
-      if (zhCN != null) {
-        creating.value = false;
-        localeExists.value = true;
-        _applyLocaleToControllers(zhCN);
-      } else {
-        creating.value = true;
-        localeExists.value = false;
-        final blank = QuestTemplateLocale();
-        blank.id = questId;
-        blank.locale = 'zhCN';
-        _applyLocaleToControllers(blank);
-      }
-    } finally {
-      loading.value = false;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('本地化数据已保存'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
   }
 
-  Future<void> onSave() async {
-    saving.value = true;
-    try {
-      final locale = _collectLocaleFromControllers();
-      await _localeRepository.replaceAll(currentId.value, [locale]);
-      localeExists.value = true;
-      creating.value = false;
-
-      DialogUtil.instance.success('保存成功');
-    } catch (e) {
-      logger.e(e.toString());
-      DialogUtil.instance.error('保存失败: ${e.toString()}');
-    } finally {
-      saving.value = false;
-    }
+  void pop() {
+    routerFacade.goBack();
   }
 
   void _applyLocaleToControllers(QuestTemplateLocale locale) {
-    idController.text = locale.id.toString();
     localeController.text = locale.locale;
     localeControllerOf('Title').text = locale.title;
     localeControllerOf('Details').text = locale.details;
@@ -87,7 +69,7 @@ class QuestTemplateLocaleViewModel {
 
   QuestTemplateLocale _collectLocaleFromControllers() {
     final locale = QuestTemplateLocale();
-    locale.id = currentId.value;
+    locale.id = questId.value;
     locale.locale = 'zhCN';
     locale.title = localeControllerOf('Title').text;
     locale.details = localeControllerOf('Details').text;
@@ -104,8 +86,8 @@ class QuestTemplateLocaleViewModel {
   void dispose() {
     idController.dispose();
     localeController.dispose();
-    for (final controller in _localeControllers.values) {
-      controller.dispose();
+    for (final c in _localeControllers.values) {
+      c.dispose();
     }
     _localeControllers.clear();
   }

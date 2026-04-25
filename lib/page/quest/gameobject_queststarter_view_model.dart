@@ -1,137 +1,212 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:foxy/model/gameobject_queststarter.dart';
 import 'package:foxy/repository/gameobject_queststarter_repository.dart';
-import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class GameobjectQueststarterViewModel {
-  final _repository = GameobjectQueststarterRepository();
-
-  final currentQuestId = signal(0);
+  final questId = signal(0);
   final items = signal<List<BriefGameobjectQueststarter>>([]);
+  final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
-  final editing = signal(false);
-  final creating = signal(false);
 
-  // Form controllers
+  // 表单控制器
   final idController = TextEditingController();
   final questController = TextEditingController();
 
   int _originalId = 0;
   int _originalQuest = 0;
 
-  Future<void> search(int questId) async {
+  final repository = GameobjectQueststarterRepository();
+
+  /// 加载数据
+  Future<void> load() async {
     loading.value = true;
     try {
-      currentQuestId.value = questId;
-      items.value = await _repository.search(questId);
+      final data = await repository.search(questId.value);
+      items.value = data;
+      selectedIndex.value = null;
+    } catch (e) {
+      rethrow;
     } finally {
       loading.value = false;
     }
   }
 
-  Future<void> onCreate() async {
-    final blank = await _repository.create(currentQuestId.value);
-    _applyToControllers(blank);
-    _originalId = blank.id;
-    _originalQuest = blank.quest;
-    creating.value = true;
-    editing.value = false;
+  /// 重置表单
+  void resetForm() {
+    idController.clear();
+    questController.clear();
   }
 
-  Future<void> onEdit(int id, int quest) async {
-    final existing = await _repository.find({'id': id, 'quest': quest});
-    if (existing == null) return;
-    _applyToControllers(existing);
-    _originalId = id;
-    _originalQuest = quest;
-    creating.value = false;
-    editing.value = true;
-  }
-
-  Future<void> onSave() async {
-    saving.value = true;
-    try {
-      final model = _collectFromControllers();
-      if (creating.value) {
-        await _repository.store(model);
-      } else {
-        await _repository.update(
-          {'id': _originalId, 'quest': _originalQuest},
-          model,
-        );
-      }
-      DialogUtil.instance.success('保存成功');
-      creating.value = false;
-      editing.value = false;
-      await search(currentQuestId.value);
-    } catch (e) {
-      logger.e(e.toString());
-      DialogUtil.instance.error('保存失败: ${e.toString()}');
-    } finally {
-      saving.value = false;
-    }
-  }
-
-  void onCancel() {
-    creating.value = false;
-    editing.value = false;
-  }
-
-  Future<void> onCopy(int id, int quest) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认复制',
-        description: '此操作不会复制关联表数据，确认继续？',
-        confirmText: '复制',
-      );
-      if (!confirmed) return;
-      DialogUtil.instance.loading();
-      await _repository.copy({'id': id, 'quest': quest});
-      await DialogUtil.instance.dismiss();
-      DialogUtil.instance.success('复制成功');
-      await search(currentQuestId.value);
-    } catch (e) {
-      logger.e(e.toString());
-      DialogUtil.instance.error('复制失败: ${e.toString()}');
-    }
-  }
-
-  Future<void> onDestroy(int id, int quest) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认删除',
-        description: '将永久删除该记录，确认继续？',
-        confirmText: '删除',
-        destructive: true,
-      );
-      if (!confirmed) return;
-      DialogUtil.instance.loading();
-      await _repository.destroy({'id': id, 'quest': quest});
-      await DialogUtil.instance.dismiss();
-      DialogUtil.instance.success('删除成功');
-      await search(currentQuestId.value);
-    } catch (e) {
-      logger.e(e.toString());
-      DialogUtil.instance.error('删除失败: ${e.toString()}');
-    }
-  }
-
-  void _applyToControllers(GameobjectQueststarter model) {
+  /// 填充表单
+  void fillForm(GameobjectQueststarter model) {
     idController.text = model.id.toString();
     questController.text = model.quest.toString();
   }
 
-  GameobjectQueststarter _collectFromControllers() {
+  /// 从表单收集数据
+  GameobjectQueststarter collectFromForm() {
     final model = GameobjectQueststarter();
     model.id = int.tryParse(idController.text) ?? 0;
     model.quest = int.tryParse(questController.text) ?? 0;
     return model;
   }
 
+  /// 创建新记录
+  Future<void> create() async {
+    final blank = await repository.create(questId.value);
+    resetForm();
+    fillForm(blank);
+    _originalId = blank.id;
+    _originalQuest = blank.quest;
+    selectedIndex.value = null;
+  }
+
+  /// 编辑选中记录
+  Future<void> edit() async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final item = items.value[index];
+    final existing = await repository.find({'id': item.id, 'quest': item.quest});
+    if (existing == null) return;
+    fillForm(existing);
+    _originalId = item.id;
+    _originalQuest = item.quest;
+  }
+
+  /// 保存新记录
+  Future<void> save(BuildContext context) async {
+    saving.value = true;
+    try {
+      final model = collectFromForm();
+      await repository.store(model);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('保存成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
+    }
+  }
+
+  /// 更新记录
+  Future<void> update(BuildContext context) async {
+    saving.value = true;
+    try {
+      final model = collectFromForm();
+      await repository.update({'id': _originalId, 'quest': _originalQuest}, model);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('更新成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
+    }
+  }
+
+  /// 复制记录
+  Future<void> copy(BuildContext context) async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final item = items.value[index];
+    final confirmed = await showShadDialog<bool>(
+      context: context,
+      builder: (context) => ShadDialog.alert(
+        title: Text('确认复制'),
+        description: Text('此操作不会复制关联表数据，确认继续？'),
+        actions: [
+          ShadButton.outline(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('取消'),
+          ),
+          ShadButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('复制'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await repository.copy({'id': item.id, 'quest': item.quest});
+        await load();
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text('复制成功'));
+        ShadSonner.of(context).show(toast);
+      } catch (e) {
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text(e.toString()));
+        ShadSonner.of(context).show(toast);
+      }
+    }
+  }
+
+  /// 删除记录
+  Future<void> delete(BuildContext context) async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final item = items.value[index];
+    final confirmed = await showShadDialog<bool>(
+      context: context,
+      builder: (context) => ShadDialog.alert(
+        title: Text('确认删除'),
+        description: Text('将永久删除该记录，确认继续？'),
+        actions: [
+          ShadButton.outline(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('取消'),
+          ),
+          ShadButton.destructive(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('删除'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await repository.destroy({'id': item.id, 'quest': item.quest});
+        await load();
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text('删除成功'));
+        ShadSonner.of(context).show(toast);
+      } catch (e) {
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text(e.toString()));
+        ShadSonner.of(context).show(toast);
+      }
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
+  }
+
+  /// 初始化
+  Future<void> initSignals({required int questId}) async {
+    this.questId.value = questId;
+    await load();
+  }
+
+  /// 清理资源
   void dispose() {
     idController.dispose();
     questController.dispose();

@@ -7,12 +7,9 @@ import 'package:foxy/page/quest/gameobject_queststarter_view.dart';
 import 'package:foxy/page/quest/quest_offer_reward_view.dart';
 import 'package:foxy/page/quest/quest_request_items_view.dart';
 import 'package:foxy/page/quest/quest_template_addon_view.dart';
-import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_locale_view.dart';
 import 'package:foxy/page/quest/quest_template_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class QuestTemplateDetailPage extends StatefulWidget {
@@ -27,48 +24,9 @@ class QuestTemplateDetailPage extends StatefulWidget {
 }
 
 class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
-  final viewModel = GetIt.instance.get<QuestTemplateDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(questId: widget.questId);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [_buildHeader(), _buildTabs()],
-    );
-  }
-
-  Widget _buildHeader() {
-    return Watch((_) {
-      final label = viewModel.creating.value
-          ? '新建任务'
-          : '任务 ${viewModel.id.value}';
-      final displayName = widget.name?.isNotEmpty == true
-          ? '$label - ${widget.name}'
-          : label;
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Text(
-          displayName,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      );
-    });
-  }
-
-  Widget _buildTabs() {
-    final tabs = [
+    var tabs = [
       Text('任务模板'),
       Text('模版补充'),
       Text('提交物品'),
@@ -79,17 +37,32 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
       Text('开始物体'),
       Text('结束物体'),
     ];
-    final contents = [
-      QuestTemplateView(viewModel: viewModel),
-      QuestTemplateAddonView(parentViewModel: viewModel),
-      QuestRequestItemsView(parentViewModel: viewModel),
-      QuestOfferRewardView(parentViewModel: viewModel),
-      QuestTemplateLocaleView(parentViewModel: viewModel),
-      CreatureQueststarterView(parentViewModel: viewModel),
-      CreatureQuestenderView(parentViewModel: viewModel),
-      GameobjectQueststarterView(parentViewModel: viewModel),
-      GameobjectQuestenderView(parentViewModel: viewModel),
+
+    var tabContents = [
+      QuestTemplateView(questId: widget.questId ?? 0),
+      QuestTemplateAddonView(questId: widget.questId ?? 0),
+      QuestRequestItemsView(questId: widget.questId ?? 0),
+      QuestOfferRewardView(questId: widget.questId ?? 0),
+      QuestTemplateLocaleView(questId: widget.questId ?? 0),
+      CreatureQueststarterView(questId: widget.questId ?? 0),
+      CreatureQuestenderView(questId: widget.questId ?? 0),
+      GameobjectQueststarterView(questId: widget.questId ?? 0),
+      GameobjectQuestenderView(questId: widget.questId ?? 0),
     ];
-    return FoxyTab(tabs: tabs, contents: contents);
+
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [_buildHeader(), tabBar],
+    );
+  }
+
+  Widget _buildHeader() {
+    var name = widget.name?.isNotEmpty == true ? widget.name! : '新建任务';
+    var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
+    var text = Text(name, style: textStyle);
+    var edgeInsets = EdgeInsets.only(bottom: 12);
+    return Padding(padding: edgeInsets, child: text);
   }
 }
