@@ -29,7 +29,6 @@ import 'package:foxy/page/quest/quest_offer_reward_view_model.dart';
 import 'package:foxy/page/quest/quest_request_items_view_model.dart';
 import 'package:foxy/page/quest/quest_template_addon_view_model.dart';
 import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
-import 'package:foxy/page/quest/quest_template_locale_view_model.dart';
 import 'package:foxy/page/quest/quest_template_list_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -63,7 +62,6 @@ class DI {
     GetIt.instance.registerFactory(() => QuestTemplateAddonViewModel());
     GetIt.instance.registerFactory(() => QuestRequestItemsViewModel());
     GetIt.instance.registerFactory(() => QuestOfferRewardViewModel());
-    GetIt.instance.registerFactory(() => QuestTemplateLocaleViewModel());
     GetIt.instance.registerFactory(() => CreatureQueststarterViewModel());
     GetIt.instance.registerFactory(() => CreatureQuestenderViewModel());
     GetIt.instance.registerFactory(() => GameobjectQueststarterViewModel());

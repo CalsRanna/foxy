@@ -29,80 +29,50 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = viewModel;
+
+    final rows = [
+      Row(spacing: 8, children: [
+        Expanded(child: FormItem(controller: vm.idController, label: '编号', readOnly: true)),
+        Expanded(child: FormItem(controller: vm.maxLevelController, label: '最大等级', placeholder: 'MaxLevel')),
+        Expanded(child: FormItem(controller: vm.allowableClassesController, label: '允许职业', placeholder: 'AllowableClasses')),
+        Expanded(child: FormItem(controller: vm.sourceSpellIdController, label: '来源法术', placeholder: 'SourceSpellId')),
+      ]),
+      Row(spacing: 8, children: [
+        Expanded(child: FormItem(controller: vm.prevQuestIdController, label: '前置任务', placeholder: 'PrevQuestID')),
+        Expanded(child: FormItem(controller: vm.nextQuestIdController, label: '后续任务', placeholder: 'NextQuestID')),
+        Expanded(child: FormItem(controller: vm.exclusiveGroupController, label: '互斥组', placeholder: 'ExclusiveGroup')),
+        Expanded(child: SizedBox()),
+      ]),
+      Row(spacing: 8, children: [
+        Expanded(child: FormItem(controller: vm.rewardMailTemplateIdController, label: '奖励邮件模板', placeholder: 'RewardMailTemplateId')),
+        Expanded(child: FormItem(controller: vm.rewardMailDelayController, label: '奖励邮件延迟', placeholder: 'RewardMailDelay')),
+        Expanded(child: FormItem(controller: vm.requiredSkillIdController, label: '需要技能', placeholder: 'RequiredSkillId')),
+        Expanded(child: FormItem(controller: vm.requiredSkillPointsController, label: '需要技能点数', placeholder: 'RequiredSkillPoints')),
+      ]),
+      Row(spacing: 8, children: [
+        Expanded(child: FormItem(controller: vm.requiredMinRepFactionController, label: '最低声望阵营', placeholder: 'RequiredMinRepFaction')),
+        Expanded(child: FormItem(controller: vm.requiredMaxRepFactionController, label: '最高声望阵营', placeholder: 'RequiredMaxRepFaction')),
+        Expanded(child: FormItem(controller: vm.requiredMinRepValueController, label: '最低声望值', placeholder: 'RequiredMinRepValue')),
+        Expanded(child: FormItem(controller: vm.requiredMaxRepValueController, label: '最高声望值', placeholder: 'RequiredMaxRepValue')),
+      ]),
+      Row(spacing: 8, children: [
+        Expanded(child: FormItem(controller: vm.providedItemCountController, label: '提供物品数量', placeholder: 'ProvidedItemCount')),
+        Expanded(child: FormItem(controller: vm.specialFlagsController, label: '特殊标志', placeholder: 'SpecialFlags')),
+        Expanded(child: SizedBox()),
+        Expanded(child: SizedBox()),
+      ]),
+    ];
+
     return SingleChildScrollView(
       padding: const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8,
+        spacing: 16,
         children: [
-          FormItem(
-            controller: viewModel.idController,
-            label: '编号',
-            readOnly: true,
-          ),
-          FormItem(
-            controller: viewModel.maxLevelController,
-            label: '最大等级',
-          ),
-          FormItem(
-            controller: viewModel.allowableClassesController,
-            label: '允许职业',
-          ),
-          FormItem(
-            controller: viewModel.sourceSpellIdController,
-            label: '来源法术',
-          ),
-          FormItem(
-            controller: viewModel.prevQuestIdController,
-            label: '前置任务',
-          ),
-          FormItem(
-            controller: viewModel.nextQuestIdController,
-            label: '后续任务',
-          ),
-          FormItem(
-            controller: viewModel.exclusiveGroupController,
-            label: '互斥组',
-          ),
-          FormItem(
-            controller: viewModel.rewardMailTemplateIdController,
-            label: '奖励邮件模板',
-          ),
-          FormItem(
-            controller: viewModel.rewardMailDelayController,
-            label: '奖励邮件延迟',
-          ),
-          FormItem(
-            controller: viewModel.requiredSkillIdController,
-            label: '需要技能',
-          ),
-          FormItem(
-            controller: viewModel.requiredSkillPointsController,
-            label: '需要技能点数',
-          ),
-          FormItem(
-            controller: viewModel.requiredMinRepFactionController,
-            label: '需要最低声望阵营',
-          ),
-          FormItem(
-            controller: viewModel.requiredMaxRepFactionController,
-            label: '需要最高声望阵营',
-          ),
-          FormItem(
-            controller: viewModel.requiredMinRepValueController,
-            label: '需要最低声望值',
-          ),
-          FormItem(
-            controller: viewModel.requiredMaxRepValueController,
-            label: '需要最高声望值',
-          ),
-          FormItem(
-            controller: viewModel.providedItemCountController,
-            label: '提供物品数量',
-          ),
-          FormItem(
-            controller: viewModel.specialFlagsController,
-            label: '特殊标志',
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: rows),
           ),
           Row(
             spacing: 8,

@@ -128,7 +128,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
               1 => ShadTableCell(child: Text(item.displayTitle)),
               2 => ShadTableCell(
                 child: Text(
-                  item.questDescription,
+                  item.displayDescription,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

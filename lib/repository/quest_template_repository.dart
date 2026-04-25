@@ -30,6 +30,7 @@ class QuestTemplateRepository with RepositoryMixin {
         'qt.LogTitle',
         'qtl.Title',
         'qt.QuestDescription',
+        'qtl.Details',
         'qt.QuestType',
         'qt.QuestLevel',
         'qt.MinLevel',
