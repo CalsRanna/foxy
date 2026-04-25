@@ -28,7 +28,12 @@
       "mcp__dart-mcp-server__pub_dev_search",
       "mcp__dart-mcp-server__pub",
       "Read(//Users/cals/Code/foxy_archive/**)",
-      "Read(//Users/cals/**)"
+      "Read(//Users/cals/**)",
+      "Bash(dart run *)",
+      "Bash(xxd /Users/cals/Code/foxy/lib/repository/quest_template_repository.dart)",
+      "Bash(python3 *)",
+      "Bash(dart analyze *)",
+      "Bash(dart format *)"
     ],
     "deny": []
   }
