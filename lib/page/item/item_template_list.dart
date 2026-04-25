@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/page/item/item_template_list_view_model.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/header.dart';
@@ -21,6 +24,7 @@ class ItemTemplateListPage extends StatefulWidget {
 
 class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   final viewModel = GetIt.instance.get<ItemTemplateListViewModel>();
+  final routerFacade = GetIt.instance.get<RouterFacade>();
 
   @override
   void initState() {
@@ -151,7 +155,12 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
       onPressed: () {
-        // TODO: 导航到物品详情页新建
+        routerFacade.navigateToDetail(
+          id: 'item_new',
+          label: '新建物品',
+          route: ItemTemplateDetailRoute(),
+          parentMenu: RouterMenu.itemTemplate,
+        );
       },
       child: Text('新增'),
     );
@@ -261,7 +270,12 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   void _openDetail(int entry, String name) {
-    // TODO: 导航到物品详情页
+    routerFacade.navigateToDetail(
+      id: 'item_$entry',
+      label: name,
+      route: ItemTemplateDetailRoute(entry: entry, name: name),
+      parentMenu: RouterMenu.itemTemplate,
+    );
   }
 
   void _copyItem(int entry) {

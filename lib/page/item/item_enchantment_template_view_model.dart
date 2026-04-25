@@ -1,0 +1,215 @@
+import 'package:flutter/material.dart';
+import 'package:foxy/model/item_enchantment_template.dart';
+import 'package:foxy/repository/item_enchantment_template_repository.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals.dart';
+
+class ItemEnchantmentTemplateViewModel {
+  final routerFacade = GetIt.instance.get<RouterFacade>();
+
+  final entry = signal(0);
+  final items = signal<List<ItemEnchantmentTemplate>>([]);
+  final selectedIndex = signal<int?>(null);
+  final loading = signal(false);
+  final saving = signal(false);
+  final creating = signal(false);
+  final editing = signal(false);
+  int? editingEnch;
+
+  // 表单控制器
+  final entryController = TextEditingController();
+  final enchController = TextEditingController();
+  final chanceController = TextEditingController();
+
+  final repository = ItemEnchantmentTemplateRepository();
+
+  /// 加载数据
+  Future<void> load() async {
+    loading.value = true;
+    try {
+      final data = await repository.getByEntry(entry.value);
+      items.value = data;
+      selectedIndex.value = null;
+      creating.value = false;
+      editing.value = false;
+      editingEnch = null;
+    } catch (e) {
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  /// 重置表单
+  void resetForm() {
+    entryController.text = entry.value.toString();
+    enchController.clear();
+    chanceController.text = '0';
+  }
+
+  /// 填充表单
+  void fillForm(ItemEnchantmentTemplate model) {
+    entryController.text = model.entry.toString();
+    enchController.text = model.ench.toString();
+    chanceController.text = model.chance.toString();
+  }
+
+  /// 从表单收集数据
+  ItemEnchantmentTemplate collectFromForm() {
+    final model = ItemEnchantmentTemplate();
+    model.entry = entry.value;
+    model.ench = _parseInt(enchController.text);
+    model.chance = _parseDouble(chanceController.text);
+    return model;
+  }
+
+  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
+  double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
+
+  /// 创建新记录
+  Future<void> create() async {
+    final maxEnch = items.value.fold<int>(0, (max, e) => e.ench > max ? e.ench : max);
+    resetForm();
+    enchController.text = (maxEnch + 1).toString();
+    creating.value = true;
+    editing.value = false;
+    selectedIndex.value = null;
+    editingEnch = null;
+  }
+
+  /// 编辑选中记录
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final model = items.value[index];
+    fillForm(model);
+    editing.value = true;
+    creating.value = false;
+    editingEnch = model.ench;
+  }
+
+  /// 复制记录
+  Future<void> copy(BuildContext context) async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final model = items.value[index];
+    try {
+      await repository.copy(model.entry, model.ench);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('复制成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 删除记录
+  Future<void> delete(BuildContext context) async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final model = items.value[index];
+
+    final confirmed = await showShadDialog<bool>(
+      context: context,
+      builder: (context) => ShadDialog.alert(
+        title: Text('确认删除'),
+        description: Text('确定要删除这条附魔记录吗？'),
+        actions: [
+          ShadButton.outline(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('取消'),
+          ),
+          ShadButton.destructive(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('删除'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await repository.delete(model.entry, model.ench);
+        await load();
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text('删除成功'));
+        ShadSonner.of(context).show(toast);
+      } catch (e) {
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text(e.toString()));
+        ShadSonner.of(context).show(toast);
+      }
+    }
+  }
+
+  /// 保存记录
+  Future<void> save(BuildContext context) async {
+    saving.value = true;
+    try {
+      final model = collectFromForm();
+      await repository.store(model);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('保存成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
+    }
+  }
+
+  /// 更新记录
+  Future<void> update(BuildContext context) async {
+    saving.value = true;
+    try {
+      final model = collectFromForm();
+      await repository.update(model, oldEnch: editingEnch);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('更新成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
+  }
+
+  /// 初始化
+  Future<void> initSignals({required int entry}) async {
+    this.entry.value = entry;
+    await load();
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  /// 清理资源
+  void dispose() {
+    entryController.dispose();
+    enchController.dispose();
+    chanceController.dispose();
+  }
+}

@@ -198,16 +198,7 @@ class ItemTemplateRepository with RepositoryMixin {
     try {
       var builder = laconic.table('$_table AS it');
       const fields = [
-        'it.entry',
-        'it.name',
-        'it.description',
-        'it.Quality',
-        'it.class',
-        'it.subclass',
-        'it.InventoryType',
-        'it.ItemLevel',
-        'it.RequiredLevel',
-        'it.displayid',
+        'it.*',
         'itl.Name AS localeName',
         'itl.Description AS localeDescription',
         'didi.InventoryIcon_1',
@@ -256,5 +247,26 @@ class ItemTemplateRepository with RepositoryMixin {
   /// 删除物品模板
   Future<void> destroyItemTemplate(int entry) async {
     await laconic.table(_table).where('entry', entry).delete();
+  }
+
+  /// 创建物品模板
+  Future<void> store(ItemTemplate template) async {
+    await laconic.table(_table).insert([template.toJson()]);
+  }
+
+  /// 更新物品模板
+  Future<void> update(ItemTemplate template) async {
+    var json = template.toJson();
+    json.remove('entry');
+    await laconic.table(_table).where('entry', template.entry).update(json);
+  }
+
+  /// 获取下一个可用的 entry（公开方法）
+  Future<int> getNextEntry() async {
+    var result = await laconic.table(_table).select([
+      'MAX(entry) as max_entry',
+    ]).first();
+    var maxEntry = result.toMap()['max_entry'] as int?;
+    return (maxEntry ?? 0) + 1;
   }
 }
