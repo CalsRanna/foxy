@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/page/quest/quest_request_items_locale_selector.dart';
 import 'package:foxy/page/quest/quest_request_items_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
@@ -29,32 +30,40 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = viewModel;
+
+    final rows = [
+      Row(spacing: 8, children: [
+        Expanded(child: FormItem(controller: vm.idController, label: '编号', readOnly: true)),
+        Expanded(child: FormItem(controller: vm.emoteOnCompleteController, label: '完成表情', placeholder: 'EmoteOnComplete')),
+        Expanded(child: FormItem(controller: vm.emoteOnIncompleteController, label: '未完成表情', placeholder: 'EmoteOnIncomplete')),
+        Expanded(child: SizedBox()),
+      ]),
+      Row(spacing: 8, children: [
+        Expanded(child: FormItem(
+          label: '完成文本',
+          child: QuestRequestItemsLocaleSelector(
+            questId: widget.questId,
+            controller: vm.completionTextController,
+            placeholder: 'CompletionText',
+            title: '完成文本',
+          ),
+        )),
+        Expanded(child: SizedBox()),
+        Expanded(child: SizedBox()),
+        Expanded(child: SizedBox()),
+      ]),
+    ];
+
     return SingleChildScrollView(
       padding: const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8,
+        spacing: 16,
         children: [
-          FormItem(
-            controller: viewModel.idController,
-            label: '编号',
-            readOnly: true,
-          ),
-          FormItem(
-            controller: viewModel.emoteOnCompleteController,
-            label: '完成表情',
-          ),
-          FormItem(
-            controller: viewModel.emoteOnIncompleteController,
-            label: '未完成表情',
-          ),
-          FormItem(
-            controller: viewModel.completionTextController,
-            label: '完成文本',
-          ),
-          FormItem(
-            controller: viewModel.localeControllerOf('CompletionText'),
-            label: '完成文本(中文)',
+          ShadCard(
+            padding: EdgeInsets.all(16),
+            child: Column(spacing: 8, children: rows),
           ),
           Row(
             spacing: 8,

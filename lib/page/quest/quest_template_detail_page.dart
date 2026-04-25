@@ -7,7 +7,6 @@ import 'package:foxy/page/quest/gameobject_queststarter_view.dart';
 import 'package:foxy/page/quest/quest_offer_reward_view.dart';
 import 'package:foxy/page/quest/quest_request_items_view.dart';
 import 'package:foxy/page/quest/quest_template_addon_view.dart';
-import 'package:foxy/page/quest/quest_template_locale_view.dart';
 import 'package:foxy/page/quest/quest_template_view.dart';
 import 'package:foxy/widget/tab.dart';
 
@@ -31,7 +30,6 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
       Text('模版补充'),
       Text('提交物品'),
       Text('发放奖励'),
-      Text('本地化'),
       Text('开始生物'),
       Text('结束生物'),
       Text('开始物体'),
@@ -43,7 +41,6 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
       QuestTemplateAddonView(questId: widget.questId ?? 0),
       QuestRequestItemsView(questId: widget.questId ?? 0),
       QuestOfferRewardView(questId: widget.questId ?? 0),
-      QuestTemplateLocaleView(questId: widget.questId ?? 0),
       CreatureQueststarterView(questId: widget.questId ?? 0),
       CreatureQuestenderView(questId: widget.questId ?? 0),
       GameobjectQueststarterView(questId: widget.questId ?? 0),

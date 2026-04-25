@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/model/quest_offer_reward.dart';
-import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/repository/quest_offer_reward_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -22,11 +21,6 @@ class QuestOfferRewardViewModel {
   final emoteDelay4Controller = TextEditingController();
   final rewardTextController = TextEditingController();
 
-  final _localeControllers = <String, TextEditingController>{};
-  TextEditingController localeControllerOf(String key) {
-    return _localeControllers.putIfAbsent(key, () => TextEditingController());
-  }
-
   int _originalId = 0;
 
   Future<void> initSignals({required int questId}) async {
@@ -41,18 +35,6 @@ class QuestOfferRewardViewModel {
       _applyToControllers(blank);
     }
     idController.text = questId.toString();
-
-    final localeRepository = QuestOfferRewardLocaleRepository();
-    final locales = await localeRepository.search(questId);
-    QuestOfferRewardLocale? zhCN;
-    for (final l in locales) {
-      if (l.locale == 'zhCN') {
-        zhCN = l;
-        break;
-      }
-    }
-    final target = zhCN ?? (QuestOfferRewardLocale()..id = questId);
-    _applyLocaleToControllers(target);
   }
 
   Future<void> save(BuildContext context) async {
@@ -65,10 +47,6 @@ class QuestOfferRewardViewModel {
         await repository.update(_originalId, model);
       }
       _originalId = model.id;
-
-      final locale = _collectLocaleFromControllers(model.id);
-      final localeRepository = QuestOfferRewardLocaleRepository();
-      await localeRepository.replaceAll(model.id, [locale]);
 
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('发放奖励数据已保存'));
@@ -97,10 +75,6 @@ class QuestOfferRewardViewModel {
     rewardTextController.text = model.rewardText;
   }
 
-  void _applyLocaleToControllers(QuestOfferRewardLocale locale) {
-    localeControllerOf('RewardText').text = locale.rewardText;
-  }
-
   QuestOfferReward _collectFromControllers() {
     final model = QuestOfferReward();
     model.id = questId.value;
@@ -116,14 +90,6 @@ class QuestOfferRewardViewModel {
     return model;
   }
 
-  QuestOfferRewardLocale _collectLocaleFromControllers(int id) {
-    final locale = QuestOfferRewardLocale();
-    locale.id = id;
-    locale.locale = 'zhCN';
-    locale.rewardText = localeControllerOf('RewardText').text;
-    return locale;
-  }
-
   int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
 
   void dispose() {
@@ -137,9 +103,5 @@ class QuestOfferRewardViewModel {
     emoteDelay3Controller.dispose();
     emoteDelay4Controller.dispose();
     rewardTextController.dispose();
-    for (final c in _localeControllers.values) {
-      c.dispose();
-    }
-    _localeControllers.clear();
   }
 }

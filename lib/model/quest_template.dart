@@ -12,6 +12,8 @@ class BriefQuestTemplate {
   // 来自 LEFT JOIN quest_template_locale
   String localeTitle = '';
   String questDescription = '';
+  // 来自 LEFT JOIN quest_template_locale
+  String localeDetails = '';
   int questType = 2;
   int questLevel = 1;
   int minLevel = 0;
@@ -23,6 +25,7 @@ class BriefQuestTemplate {
     logTitle = json['LogTitle']?.toString() ?? '';
     localeTitle = json['Title']?.toString() ?? '';
     questDescription = json['QuestDescription']?.toString() ?? '';
+    localeDetails = json['Details']?.toString() ?? '';
     questType = json['QuestType'] ?? 2;
     questLevel = json['QuestLevel'] ?? 1;
     minLevel = json['MinLevel'] ?? 0;
@@ -31,6 +34,10 @@ class BriefQuestTemplate {
   /// 优先本地化标题 > 英文标题
   String get displayTitle =>
       localeTitle.isNotEmpty ? localeTitle : logTitle;
+
+  /// 优先本地化描述 > 英文描述
+  String get displayDescription =>
+      localeDetails.isNotEmpty ? localeDetails : questDescription;
 }
 
 class QuestTemplate {

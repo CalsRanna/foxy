@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/model/quest_request_items.dart';
-import 'package:foxy/repository/quest_request_items_locale_repository.dart';
 import 'package:foxy/repository/quest_request_items_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -16,11 +15,6 @@ class QuestRequestItemsViewModel {
   final emoteOnIncompleteController = TextEditingController();
   final completionTextController = TextEditingController();
 
-  final _localeControllers = <String, TextEditingController>{};
-  TextEditingController localeControllerOf(String key) {
-    return _localeControllers.putIfAbsent(key, () => TextEditingController());
-  }
-
   int _originalId = 0;
 
   Future<void> initSignals({required int questId}) async {
@@ -35,18 +29,6 @@ class QuestRequestItemsViewModel {
       _applyToControllers(blank);
     }
     idController.text = questId.toString();
-
-    final localeRepository = QuestRequestItemsLocaleRepository();
-    final locales = await localeRepository.search(questId);
-    QuestRequestItemsLocale? zhCN;
-    for (final l in locales) {
-      if (l.locale == 'zhCN') {
-        zhCN = l;
-        break;
-      }
-    }
-    final target = zhCN ?? (QuestRequestItemsLocale()..id = questId);
-    _applyLocaleToControllers(target);
   }
 
   Future<void> save(BuildContext context) async {
@@ -59,10 +41,6 @@ class QuestRequestItemsViewModel {
         await repository.update(_originalId, model);
       }
       _originalId = model.id;
-
-      final locale = _collectLocaleFromControllers(model.id);
-      final localeRepository = QuestRequestItemsLocaleRepository();
-      await localeRepository.replaceAll(model.id, [locale]);
 
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('提交物品数据已保存'));
@@ -85,10 +63,6 @@ class QuestRequestItemsViewModel {
     completionTextController.text = model.completionText;
   }
 
-  void _applyLocaleToControllers(QuestRequestItemsLocale locale) {
-    localeControllerOf('CompletionText').text = locale.completionText;
-  }
-
   QuestRequestItems _collectFromControllers() {
     final model = QuestRequestItems();
     model.id = questId.value;
@@ -98,14 +72,6 @@ class QuestRequestItemsViewModel {
     return model;
   }
 
-  QuestRequestItemsLocale _collectLocaleFromControllers(int id) {
-    final locale = QuestRequestItemsLocale();
-    locale.id = id;
-    locale.locale = 'zhCN';
-    locale.completionText = localeControllerOf('CompletionText').text;
-    return locale;
-  }
-
   int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
 
   void dispose() {
@@ -113,9 +79,5 @@ class QuestRequestItemsViewModel {
     emoteOnCompleteController.dispose();
     emoteOnIncompleteController.dispose();
     completionTextController.dispose();
-    for (final c in _localeControllers.values) {
-      c.dispose();
-    }
-    _localeControllers.clear();
   }
 }
