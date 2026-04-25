@@ -14,6 +14,11 @@ import 'package:foxy/page/creature_template/pickpocketing_loot_template_view_mod
 import 'package:foxy/page/creature_template/skinning_loot_template_view_model.dart';
 import 'package:foxy/page/dashboard/dashboard_view_model.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/page/game_object/game_object_template_list_view_model.dart';
+import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
+import 'package:foxy/page/game_object/game_object_template_addon_view_model.dart';
+import 'package:foxy/page/game_object/game_object_quest_item_view_model.dart';
+import 'package:foxy/page/game_object/game_object_loot_template_view_model.dart';
 import 'package:foxy/page/item/disenchant_loot_template_view_model.dart';
 import 'package:foxy/page/item/item_enchantment_template_view_model.dart';
 import 'package:foxy/page/item/item_loot_template_view_model.dart';
@@ -61,6 +66,16 @@ class DI {
         .registerFactory(() => PickpocketingLootTemplateViewModel());
     GetIt.instance
         .registerFactory(() => SkinningLootTemplateViewModel());
+    GetIt.instance
+        .registerLazySingleton(() => GameObjectTemplateListViewModel());
+    GetIt.instance
+        .registerFactory(() => GameObjectTemplateDetailViewModel());
+    GetIt.instance
+        .registerFactory(() => GameObjectTemplateAddonViewModel());
+    GetIt.instance
+        .registerFactory(() => GameObjectQuestItemViewModel());
+    GetIt.instance
+        .registerFactory(() => GameObjectLootTemplateViewModel());
     GetIt.instance.registerLazySingleton(() => ItemTemplateListViewModel());
     GetIt.instance.registerFactory(() => ItemTemplateDetailViewModel());
     GetIt.instance.registerFactory(() => ItemLootTemplateViewModel());
