@@ -1,126 +1,198 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/model/smart_script.dart';
-import 'package:foxy/widget/card.dart';
+import 'package:foxy/constant/smart_script_constants.dart';
+import 'package:foxy/page/smart_script/smart_script_list_view_model.dart';
+import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/header.dart';
-import 'package:foxy/widget/input.dart';
 import 'package:foxy/widget/pagination.dart';
-import 'package:foxy/widget/table.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
-class SmartScriptListPage extends StatelessWidget {
+class SmartScriptListPage extends StatefulWidget {
   const SmartScriptListPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final children = [_Header(), _Filter(), _Table()];
-    return ListView(padding: EdgeInsets.all(16), children: children);
-  }
+  State<SmartScriptListPage> createState() => _SmartScriptListPageState();
 }
 
-class _Filter extends StatelessWidget {
-  const _Filter();
+class _SmartScriptListPageState extends State<SmartScriptListPage> {
+  final viewModel = GetIt.instance.get<SmartScriptListViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    final buttonChildren = [
-      TextButton(onPressed: () {}, child: Text('查询')),
-      const SizedBox(width: 8),
-      TextButton(onPressed: () => reset(), child: Text('重置')),
-    ];
-    final credentialChildren = [
-      Expanded(child: FoxyInput(placeholder: '编号（Entry）')),
-      const SizedBox(width: 16),
-      Expanded(child: FoxyInput(placeholder: '名称（Name）')),
-      const SizedBox(width: 16),
-      Expanded(child: FoxyInput(placeholder: '称号（Sub Name）')),
-      const SizedBox(width: 16),
-      Expanded(child: Row(children: buttonChildren)),
-    ];
-    final filter = Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(children: credentialChildren),
-    );
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: FoxyCard(child: filter),
-    );
-  }
-
-  Future<void> reset() async {}
-}
-
-class _Header extends StatelessWidget {
-  const _Header();
-
-  @override
-  Widget build(BuildContext context) {
-    const edgeInsets = EdgeInsets.only(bottom: 12);
-    return Padding(padding: edgeInsets, child: FoxyHeader('脚本列表'));
-  }
-}
-
-class _Pagination extends StatelessWidget {
-  const _Pagination();
-
-  @override
-  Widget build(BuildContext context) {
-    return FoxyPagination(total: 0, onChange: (page) => handleChange(page));
-  }
-
-  void handleChange(int page) {}
-}
-
-class _Table extends StatelessWidget {
-  const _Table();
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildData([]);
-  }
-
-  Widget _buildData(List<SmartScript> templates) {
-    final toolbarChildren = [
-      FilledButton(onPressed: () {}, child: Text('新增')),
-      const Spacer(),
-      _Pagination(),
-    ];
-    final toolbar = Row(children: toolbarChildren);
-    final header = _buildHeader();
-    final body = templates.map(_buildRow).toList();
-    final table = FoxyTable(header: header, body: body);
-    final column = Column(children: [toolbar, table]);
-    return FoxyCard(
-      child: Padding(padding: EdgeInsets.all(16), child: column),
-    );
-  }
-
-  FoxyTableHeader _buildHeader() {
-    return FoxyTableHeader(
-      children: [
-        FoxyTableCell(width: 80, child: Text('编号')),
-        FoxyTableCell(child: Text('备注')),
-        FoxyTableCell(width: 80, child: Text('类型')),
-        FoxyTableCell(width: 80, child: Text('ID')),
-        FoxyTableCell(width: 80, child: Text('链接')),
-        FoxyTableCell(width: 80, child: Text('事件类型')),
-        FoxyTableCell(width: 80, child: Text('动作类型')),
-        FoxyTableCell(width: 80, child: Text('目标类型')),
-      ],
-    );
-  }
-
-  FoxyTableRow _buildRow(SmartScript template) {
     final children = [
-      FoxyTableCell(width: 80, child: Text(template.entryOrGuid.toString())),
-      FoxyTableCell(child: Text(template.comment)),
-      FoxyTableCell(width: 80, child: Text(template.sourceType.toString())),
-      FoxyTableCell(width: 80, child: Text(template.id.toString())),
-      FoxyTableCell(width: 80, child: Text(template.link.toString())),
-      FoxyTableCell(width: 80, child: Text(template.eventType.toString())),
-      FoxyTableCell(width: 80, child: Text(template.actionType.toString())),
-      FoxyTableCell(width: 80, child: Text(template.targetType.toString())),
+      FoxyHeader('脚本列表'),
+      _buildFilter(),
+      Expanded(child: Watch((_) => _buildTable())),
     ];
-    return FoxyTableRow(children: children);
+    var column = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 16,
+      children: children,
+    );
+    return Padding(padding: const EdgeInsets.all(16.0), child: column);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.initSignals();
+  }
+
+  Widget _buildFilter() {
+    var entryInput = ShadInput(
+      controller: viewModel.entryOrGuidController,
+      placeholder: Text('实体编号（entryorguid）'),
+    );
+    var commentInput = ShadInput(
+      controller: viewModel.commentController,
+      placeholder: Text('备注（comment）'),
+    );
+    var searchButton = ShadButton(
+      onPressed: viewModel.search,
+      size: ShadButtonSize.sm,
+      child: Text('查询'),
+    );
+    var resetButton = ShadButton.ghost(
+      onPressed: viewModel.reset,
+      size: ShadButtonSize.sm,
+      child: Text('重置'),
+    );
+    var row = Row(spacing: 16, children: [searchButton, resetButton]);
+    final credentialChildren = [
+      Expanded(child: entryInput),
+      Expanded(child: commentInput),
+      Expanded(child: row),
+      Expanded(child: SizedBox()),
+    ];
+    return ShadCard(
+      padding: const EdgeInsets.all(16),
+      child: Row(spacing: 16, children: credentialChildren),
+    );
+  }
+
+  Widget _buildTable() {
+    var createButton = ShadButton(
+      leading: Icon(LucideIcons.plus),
+      onPressed: () => viewModel.navigateToDetail(),
+      child: Text('新增'),
+    );
+    final scripts = viewModel.scripts.value;
+    final page = viewModel.page.value;
+    final total = viewModel.total.value;
+    var pagination = FoxyPagination(
+      page: page,
+      pageSize: 50,
+      total: total,
+      onChange: viewModel.paginate,
+    );
+    final toolbarChildren = [createButton, const Spacer(), pagination];
+    final toolbar = Row(children: toolbarChildren);
+
+    final headers = ['编号', '源类型', 'ID', '链接', '事件类型', '动作类型', '目标类型', '备注'];
+
+    final fixedWidth = 120 + 180 + 80 + 80 + 180 + 180 + 180;
+
+    Widget layoutBuilder = LayoutBuilder(
+      builder: (context, constraints) {
+        var commentWidth = constraints.maxWidth - fixedWidth;
+        return FoxyShadTable(
+          builder: (context, vicinity) {
+            final script = scripts[vicinity.row];
+            return switch (vicinity.column) {
+              0 => ShadTableCell(child: Text(script.entryOrGuid.toString())),
+              1 => ShadTableCell(child: Text(kSourceTypes[script.sourceType] ?? script.sourceType.toString())),
+              2 => ShadTableCell(child: Text(script.id.toString())),
+              3 => ShadTableCell(child: Text(script.link.toString())),
+              4 => ShadTableCell(child: Text(kEventTypes[script.eventType] ?? script.eventType.toString())),
+              5 => ShadTableCell(child: Text(kActionTypes[script.actionType] ?? script.actionType.toString())),
+              6 => ShadTableCell(child: Text(kTargetTypes[script.targetType] ?? script.targetType.toString())),
+              7 => ShadTableCell(child: Text(script.comment, maxLines: 1, overflow: TextOverflow.ellipsis)),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+          columnCount: headers.length,
+          columnSpanExtent: (index) {
+            return switch (index) {
+              0 => FixedTableSpanExtent(120),
+              1 => FixedTableSpanExtent(180),
+              2 => FixedTableSpanExtent(80),
+              3 => FixedTableSpanExtent(80),
+              4 => FixedTableSpanExtent(180),
+              5 => FixedTableSpanExtent(180),
+              6 => FixedTableSpanExtent(180),
+              7 => FixedTableSpanExtent(commentWidth),
+              _ => null,
+            };
+          },
+          header: (context, index) {
+            return ShadTableCell.header(child: Text(headers[index]));
+          },
+          onRowDoubleTap: (row) {
+            final s = scripts[row];
+            viewModel.navigateToDetail(
+              entryOrGuid: s.entryOrGuid,
+              sourceType: s.sourceType,
+              id: s.id,
+              link: s.link,
+            );
+          },
+          onRowSecondaryTapDownWithDetails: (row, details) {
+            final s = scripts[row];
+            showFoxyContextMenu(
+              context: context,
+              position: details.globalPosition,
+              items: [
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.squarePen, size: 16),
+                  onPressed: () {
+                    viewModel.navigateToDetail(
+                      entryOrGuid: s.entryOrGuid,
+                      sourceType: s.sourceType,
+                      id: s.id,
+                      link: s.link,
+                    );
+                  },
+                  child: Text('编辑'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.copy, size: 16),
+                  onPressed: () {
+                    viewModel.copySmartScript(
+                      s.entryOrGuid,
+                      s.sourceType,
+                      s.id,
+                      s.link,
+                    );
+                  },
+                  child: Text('复制'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () {
+                    viewModel.deleteSmartScript(
+                      s.entryOrGuid,
+                      s.sourceType,
+                      s.id,
+                      s.link,
+                    );
+                  },
+                  child: Text('删除'),
+                ),
+              ],
+            );
+          },
+          pinnedRowCount: 1,
+          rowCount: scripts.length,
+        );
+      },
+    );
+
+    var children = [toolbar, Expanded(child: layoutBuilder)];
+    final column = Column(spacing: 16, children: children);
+    return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 }

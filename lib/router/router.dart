@@ -32,6 +32,9 @@ class FoxyRouter extends RootStackRouter {
       /// Creature Template
       AutoRoute(page: CreatureTemplateDetailRoute.page),
 
+      /// Smart Script
+      AutoRoute(page: SmartScriptDetailRoute.page),
+
       /// GameObject Template
       AutoRoute(page: GameObjectTemplateDetailRoute.page),
 
