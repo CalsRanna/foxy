@@ -1,16 +1,15 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:foxy/model/quest_template_addon.dart';
 import 'package:foxy/repository/quest_template_addon_repository.dart';
-import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-/// QuestTemplateAddon 子表 ViewModel（1:1 编辑模式）
-///
-/// 17 个字段使用显式 TextEditingController（字段少，无需 Map 模式）。
-/// search 即 find，不存在则进入创建模式。
 class QuestTemplateAddonViewModel {
-  final _repository = QuestTemplateAddonRepository();
+  final routerFacade = GetIt.instance.get<RouterFacade>();
+  final questId = signal(0);
+  final addon = signal(QuestTemplateAddon());
 
   final idController = TextEditingController();
   final maxLevelController = TextEditingController();
@@ -30,56 +29,48 @@ class QuestTemplateAddonViewModel {
   final providedItemCountController = TextEditingController();
   final specialFlagsController = TextEditingController();
 
-  final loading = signal(false);
-  final saving = signal(false);
-  final creating = signal(true);
-  final currentId = signal(0);
-
   int _originalId = 0;
 
-  /// 加载：find addon，存在则填充 + creating=false，不存在则 create + creating=true
-  Future<void> search(int questId) async {
-    loading.value = true;
-    try {
-      final existing = await _repository.find(questId);
-      if (existing != null) {
-        creating.value = false;
-        _originalId = existing.id;
-        currentId.value = existing.id;
-        _applyToControllers(existing);
-      } else {
-        creating.value = true;
-        final blank = await _repository.create(questId);
-        currentId.value = questId;
-        _applyToControllers(blank);
-      }
-    } finally {
-      loading.value = false;
+  Future<void> initSignals({required int questId}) async {
+    this.questId.value = questId;
+    final repository = QuestTemplateAddonRepository();
+    final existing = await repository.find(questId);
+    if (existing != null) {
+      _originalId = existing.id;
+      addon.value = existing;
+    } else {
+      final blank = await repository.create(questId);
+      addon.value = blank;
     }
+    _initControllers(addon.value);
   }
 
-  Future<void> onSave() async {
-    saving.value = true;
+  Future<void> save(BuildContext context) async {
     try {
       final model = _collectFromControllers();
-      if (creating.value) {
-        await _repository.store(model);
-        creating.value = false;
+      final repository = QuestTemplateAddonRepository();
+      if (_originalId == 0) {
+        await repository.store(model);
       } else {
-        await _repository.update(_originalId, model);
+        await repository.update(_originalId, model);
       }
       _originalId = model.id;
-      currentId.value = model.id;
-      DialogUtil.instance.success('保存成功');
+      addon.value = model;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('模版补充数据已保存'));
+      ShadSonner.of(context).show(toast);
     } catch (e) {
-      logger.e(e.toString());
-      DialogUtil.instance.error('保存失败: ${e.toString()}');
-    } finally {
-      saving.value = false;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
   }
 
-  void _applyToControllers(QuestTemplateAddon addon) {
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void _initControllers(QuestTemplateAddon addon) {
     idController.text = addon.id.toString();
     maxLevelController.text = addon.maxLevel.toString();
     allowableClassesController.text = addon.allowableClasses.toString();
@@ -101,7 +92,7 @@ class QuestTemplateAddonViewModel {
 
   QuestTemplateAddon _collectFromControllers() {
     final addon = QuestTemplateAddon();
-    addon.id = _parseInt(idController.text);
+    addon.id = questId.value;
     addon.maxLevel = _parseInt(maxLevelController.text);
     addon.allowableClasses = _parseInt(allowableClassesController.text);
     addon.sourceSpellId = _parseInt(sourceSpellIdController.text);
@@ -121,7 +112,7 @@ class QuestTemplateAddonViewModel {
     return addon;
   }
 
-  int _parseInt(String text) => int.tryParse(text) ?? 0;
+  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
 
   void dispose() {
     idController.dispose();
