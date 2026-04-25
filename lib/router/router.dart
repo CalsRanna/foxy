@@ -24,6 +24,7 @@ class FoxyRouter extends RootStackRouter {
       AutoRoute(page: ItemTemplateListRoute.page),
       AutoRoute(page: GameObjectTemplateListRoute.page),
       AutoRoute(page: QuestTemplateListRoute.page),
+      AutoRoute(page: QuestTemplateDetailRoute.page),
       AutoRoute(page: GossipMenuListRoute.page),
       AutoRoute(page: SmartScriptListRoute.page),
       AutoRoute(page: SettingRoute.page, children: settingChildren),
