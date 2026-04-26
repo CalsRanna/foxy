@@ -60,11 +60,11 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
       size: ShadButtonSize.sm,
       child: Text('重置'),
     );
-    final row = Row(spacing: 8, children: [searchBtn, resetBtn]);
+    final row = Row(spacing: 16, children: [searchBtn, resetBtn]);
     final children = [
       Expanded(child: idInput),
       Expanded(child: titleInput),
-      row,
+      Expanded(flex: 2, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
@@ -98,8 +98,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
 
     final table = LayoutBuilder(
       builder: (context, constraints) {
-        final descriptionWidth =
-            constraints.maxWidth - fixedTotal;
+        final descriptionWidth = constraints.maxWidth - fixedTotal;
         final columnExtents = [
           FixedTableSpanExtent(80),
           FixedTableSpanExtent(200),
@@ -151,8 +150,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () =>
-                      viewModel.navigateToDetail(id: item.id),
+                  onPressed: () => viewModel.navigateToDetail(id: item.id),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
@@ -174,7 +172,13 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
 
     return ShadCard(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Column(spacing: 16, children: [toolbar, Expanded(child: table)]),
+      child: Column(
+        spacing: 16,
+        children: [
+          toolbar,
+          Expanded(child: table),
+        ],
+      ),
     );
   }
 }
