@@ -53,10 +53,10 @@ class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
 
   Widget _buildTabs() {
     final tabs = const [Text('对话'), Text('文本'), Text('选项')];
-    final contents = [
-      GossipMenuView(viewModel: viewModel),
-      NpcTextView(parentViewModel: viewModel),
-      GossipMenuOptionView(parentViewModel: viewModel),
+    final contents = const [
+      GossipMenuView(),
+      NpcTextView(),
+      GossipMenuOptionView(),
     ];
     return FoxyTab(tabs: tabs, contents: contents);
   }

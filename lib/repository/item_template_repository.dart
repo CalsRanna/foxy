@@ -1,4 +1,3 @@
-import 'package:foxy/model/brief_item_template.dart';
 import 'package:foxy/model/item_template.dart';
 import 'package:foxy/model/item_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -8,18 +7,14 @@ class ItemTemplateRepository with RepositoryMixin {
   static const _localeTable = 'item_template_locale';
 
   Future<int> count({ItemTemplateFilterEntity? filter}) async {
-    try {
-      var builder = laconic.table('$_table AS it');
-      builder.select(['it.entry']);
-      builder = builder.leftJoin(
-        '$_localeTable AS itl',
-        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-      );
-      builder = _applyFilter(builder, filter);
-      return await builder.count();
-    } catch (e) {
-      return 0;
-    }
+    var builder = laconic.table('$_table AS it');
+    builder.select(['it.entry']);
+    builder = builder.leftJoin(
+      '$_localeTable AS itl',
+      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+    );
+    builder = _applyFilter(builder, filter);
+    return await builder.count();
   }
 
   Future<void> copyItemTemplate(int entry) async {
@@ -46,32 +41,28 @@ class ItemTemplateRepository with RepositoryMixin {
     int page = 1,
     ItemTemplateFilterEntity? filter,
   }) async {
-    try {
-      var offset = (page - 1) * kPageSize;
-      var builder = laconic.table('$_table AS it');
-      const fields = [
-        'it.entry',
-        'it.name',
-        'it.Quality',
-        'it.class',
-        'it.subclass',
-        'it.InventoryType',
-        'it.ItemLevel',
-        'it.RequiredLevel',
-        'itl.Name AS localeName',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        '$_localeTable AS itl',
-        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-      );
-      builder = _applyFilter(builder, filter);
-      builder = builder.limit(kPageSize).offset(offset);
-      var results = await builder.get();
-      return results.map((e) => BriefItemTemplate.fromJson(e.toMap())).toList();
-    } catch (e) {
-      return [];
-    }
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table AS it');
+    const fields = [
+      'it.entry',
+      'it.name',
+      'it.Quality',
+      'it.class',
+      'it.subclass',
+      'it.InventoryType',
+      'it.ItemLevel',
+      'it.RequiredLevel',
+      'itl.Name AS localeName',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      '$_localeTable AS itl',
+      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+    );
+    builder = _applyFilter(builder, filter);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results.map((e) => BriefItemTemplate.fromJson(e.toMap())).toList();
   }
 
   Future<ItemTemplate> getItemTemplate(int entry) async {

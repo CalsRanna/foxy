@@ -14,8 +14,7 @@ import 'package:signals/signals_flutter.dart';
 
 /// Tab 3：gossip_menu_option 双态（列表 / 表单）
 class GossipMenuOptionView extends StatefulWidget {
-  final GossipMenuDetailViewModel parentViewModel;
-  const GossipMenuOptionView({super.key, required this.parentViewModel});
+  const GossipMenuOptionView({super.key});
 
   @override
   State<GossipMenuOptionView> createState() => _GossipMenuOptionViewState();
@@ -23,17 +22,18 @@ class GossipMenuOptionView extends StatefulWidget {
 
 class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   final viewModel = GetIt.instance.get<GossipMenuOptionViewModel>();
+  final parentViewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
   late final VoidCallback _disposer;
 
   @override
   void initState() {
     super.initState();
-    final initialMenuId = widget.parentViewModel.menuId.value;
+    final initialMenuId = parentViewModel.menuId.value;
     if (initialMenuId != 0) {
       viewModel.search(initialMenuId);
     }
     _disposer = effect(() {
-      final menuId = widget.parentViewModel.menuId.value;
+      final menuId = parentViewModel.menuId.value;
       if (menuId != 0 && menuId != viewModel.currentMenuId.value) {
         viewModel.search(menuId);
       }

@@ -13,7 +13,7 @@ import 'package:signals/signals.dart';
 /// 任务模板列表 ViewModel（LazySingleton，保留搜索状态）
 class QuestTemplateListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
-  final _repository = QuestTemplateRepository();
+  final repository = QuestTemplateRepository();
 
   final idController = TextEditingController();
   final titleController = TextEditingController();
@@ -21,6 +21,7 @@ class QuestTemplateListViewModel {
   final templates = signal<List<BriefQuestTemplate>>([]);
   final page = signal(1);
   final total = signal(0);
+  final selectedRowIndex = signal(-1);
 
   Future<void> initSignals() async {
     await _refresh();
@@ -48,7 +49,7 @@ class QuestTemplateListViewModel {
     await _refresh();
   }
 
-  Future<void> onCopy(int id) async {
+  Future<void> copyQuestTemplate(int id) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -57,7 +58,7 @@ class QuestTemplateListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.copyQuestTemplate(id);
+      await repository.copyQuestTemplate(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -67,7 +68,7 @@ class QuestTemplateListViewModel {
     }
   }
 
-  Future<void> onDestroy(int id) async {
+  Future<void> deleteQuestTemplate(int id) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
@@ -77,7 +78,7 @@ class QuestTemplateListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.destroyQuestTemplate(id);
+      await repository.destroyQuestTemplate(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -99,11 +100,11 @@ class QuestTemplateListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    templates.value = await _repository.getBriefQuestTemplates(
+    templates.value = await repository.getBriefQuestTemplates(
       filter: filter,
       page: page.value,
     );
-    total.value = await _repository.count(filter: filter);
+    total.value = await repository.count(filter: filter);
   }
 
   QuestTemplateFilterEntity _buildFilter() {

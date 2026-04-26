@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_quality.dart';
-import 'package:foxy/model/brief_item_template.dart';
+import 'package:foxy/model/item_template.dart';
 import 'package:foxy/model/item_template_filter_entity.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';

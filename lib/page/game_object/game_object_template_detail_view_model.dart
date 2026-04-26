@@ -13,7 +13,7 @@ class GameObjectTemplateDetailViewModel {
   final nameController = TextEditingController();
   final castBarCaptionController = TextEditingController();
   final iconNameController = TextEditingController();
-  final typeController = TextEditingController();
+  final typeController = ShadSelectController<int>();
   final displayIdController = TextEditingController();
   final sizeController = TextEditingController();
   final unk1Controller = TextEditingController();
@@ -79,7 +79,7 @@ class GameObjectTemplateDetailViewModel {
     t.name = nameController.text;
     t.castBarCaption = castBarCaptionController.text;
     t.iconName = iconNameController.text;
-    t.type = _parseInt(typeController.text);
+    t.type = _getSelectValue(typeController);
     t.displayId = _parseInt(displayIdController.text);
     t.size = _parseDouble(sizeController.text);
     t.unk1 = unk1Controller.text;
@@ -114,6 +114,8 @@ class GameObjectTemplateDetailViewModel {
     return t;
   }
 
+  int _getSelectValue(ShadSelectController<int> controller) =>
+      controller.value.firstOrNull ?? 0;
   int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
   double _parseDouble(String text) => text.isEmpty ? 0.0 : double.parse(text);
 
@@ -122,8 +124,7 @@ class GameObjectTemplateDetailViewModel {
     nameController.dispose();
     castBarCaptionController.dispose();
     iconNameController.dispose();
-    typeController.dispose();
-    displayIdController.dispose();
+	    displayIdController.dispose();
     sizeController.dispose();
     unk1Controller.dispose();
     data0Controller.dispose();
@@ -168,8 +169,7 @@ class GameObjectTemplateDetailViewModel {
     nameController.text = template.name;
     castBarCaptionController.text = template.castBarCaption;
     iconNameController.text = template.iconName;
-    typeController.text = template.type.toString();
-    displayIdController.text = template.displayId.toString();
+	    displayIdController.text = template.displayId.toString();
     sizeController.text = template.size.toString();
     unk1Controller.text = template.unk1;
     data0Controller.text = template.data0.toString();

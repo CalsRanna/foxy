@@ -151,12 +151,12 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.onCopy(item.id),
+                  onPressed: () => viewModel.copyQuestTemplate(item.id),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.onDestroy(item.id),
+                  onPressed: () => viewModel.deleteQuestTemplate(item.id),
                   child: Text('删除'),
                 ),
               ],

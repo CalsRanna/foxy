@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/page/item/item_template_list_view_model.dart';
-import 'package:foxy/router/router.gr.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/header.dart';
@@ -24,7 +21,6 @@ class ItemTemplateListPage extends StatefulWidget {
 
 class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   final viewModel = GetIt.instance.get<ItemTemplateListViewModel>();
-  final routerFacade = GetIt.instance.get<RouterFacade>();
 
   @override
   void initState() {
@@ -64,7 +60,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   Widget _buildClassButtons() {
-    final selectedClassId = viewModel.selectedClassId;
+    final selectedClassId = viewModel.selectedClassId.value;
     final children = kItemClasses.asMap().entries.map((entry) {
       final isSelected = entry.key == selectedClassId;
       return ShadButton.raw(
@@ -83,10 +79,10 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   Widget _buildSubclassButtons() {
-    final selectedClassId = viewModel.selectedClassId;
+    final selectedClassId = viewModel.selectedClassId.value;
     if (selectedClassId < 0) return const SizedBox.shrink();
 
-    final selectedSubclass = viewModel.selectedSubclass;
+    final selectedSubclass = viewModel.selectedSubclass.value;
     final subclasses = viewModel.currentSubclasses;
     if (subclasses.isEmpty) return const SizedBox.shrink();
 
@@ -154,14 +150,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () {
-        routerFacade.navigateToDetail(
-          id: 'item_new',
-          label: '新建物品',
-          route: ItemTemplateDetailRoute(),
-          parentMenu: RouterMenu.itemTemplate,
-        );
-      },
+      onPressed: viewModel.navigateToNew,
       child: Text('新增'),
     );
     final templates = viewModel.templates.value;
@@ -273,12 +262,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   void _openDetail(int entry, String name) {
-    routerFacade.navigateToDetail(
-      id: 'item_$entry',
-      label: name,
-      route: ItemTemplateDetailRoute(entry: entry, name: name),
-      parentMenu: RouterMenu.itemTemplate,
-    );
+    viewModel.navigateToDetail(entry, name);
   }
 
   void _copyItem(int entry) {

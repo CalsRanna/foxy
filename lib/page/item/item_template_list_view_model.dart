@@ -1,10 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/constant/item_constants.dart';
-import 'package:foxy/model/brief_item_template.dart';
+import 'package:foxy/model/item_template.dart';
 import 'package:foxy/model/item_template_filter_entity.dart';
 import 'package:foxy/repository/item_template_repository.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
+import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ItemTemplateListViewModel {
@@ -12,27 +16,26 @@ class ItemTemplateListViewModel {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final repository = ItemTemplateRepository();
+  final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   final page = signal(1);
   final templates = signal(<BriefItemTemplate>[]);
   final total = signal(0);
-  int _selectedClassId = -1;
-  int _selectedSubclass = -1;
-
-  int get selectedClassId => _selectedClassId;
-  int get selectedSubclass => _selectedSubclass;
+  final selectedClassId = signal(-1);
+  final selectedSubclass = signal(-1);
+  final selectedRowIndex = signal(-1);
 
   /// 当前选中的类别名称
   String get selectedClassName {
-    return _selectedClassId >= 0 ? kItemClasses[_selectedClassId] : '';
+    return selectedClassId.value >= 0 ? kItemClasses[selectedClassId.value] : '';
   }
 
   /// 获取当前类别下的子类别列表
   List<String> get currentSubclasses {
-    if (_selectedClassId < 0 || _selectedClassId >= kItemSubclasses.length) {
+    if (selectedClassId.value < 0 || selectedClassId.value >= kItemSubclasses.length) {
       return [];
     }
-    return kItemSubclasses[_selectedClassId];
+    return kItemSubclasses[selectedClassId.value];
   }
 
   Future<void> initSignals() async {
@@ -62,8 +65,8 @@ class ItemTemplateListViewModel {
     entryController.clear();
     nameController.clear();
     descriptionController.clear();
-    _selectedClassId = -1;
-    _selectedSubclass = -1;
+    selectedClassId.value = -1;
+    selectedSubclass.value = -1;
     page.value = 1;
     templates.value = await repository.getBriefItemTemplates();
     total.value = await repository.count();
@@ -71,27 +74,27 @@ class ItemTemplateListViewModel {
 
   /// 选择类别
   void selectClass(int classId) {
-    _selectedClassId = classId;
-    _selectedSubclass = -1;
+    selectedClassId.value = classId;
+    selectedSubclass.value = -1;
     search();
   }
 
   /// 清除类别选择
   void clearClass() {
-    _selectedClassId = -1;
-    _selectedSubclass = -1;
+    selectedClassId.value = -1;
+    selectedSubclass.value = -1;
     search();
   }
 
   /// 选择子类别
   void selectSubclass(int subclass) {
-    _selectedSubclass = subclass;
+    selectedSubclass.value = subclass;
     search();
   }
 
   /// 清除子类别选择
   void clearSubclass() {
-    _selectedSubclass = -1;
+    selectedSubclass.value = -1;
     search();
   }
 
@@ -134,13 +137,31 @@ class ItemTemplateListViewModel {
     }
   }
 
+  void navigateToDetail(int entry, String name) {
+    _routerFacade.navigateToDetail(
+      id: 'item_$entry',
+      label: name,
+      route: ItemTemplateDetailRoute(entry: entry, name: name),
+      parentMenu: RouterMenu.itemTemplate,
+    );
+  }
+
+  void navigateToNew() {
+    _routerFacade.navigateToDetail(
+      id: 'item_new',
+      label: '新建物品',
+      route: ItemTemplateDetailRoute(),
+      parentMenu: RouterMenu.itemTemplate,
+    );
+  }
+
   Future<List<BriefItemTemplate>> _fetchItems() async {
     var filter = ItemTemplateFilterEntity()
       ..entry = entryController.text
       ..name = nameController.text
       ..description = descriptionController.text
-      ..classId = _selectedClassId
-      ..subclass = _selectedSubclass;
+      ..classId = selectedClassId.value
+      ..subclass = selectedSubclass.value;
     return repository.getBriefItemTemplates(page: page.value, filter: filter);
   }
 
@@ -149,8 +170,8 @@ class ItemTemplateListViewModel {
       ..entry = entryController.text
       ..name = nameController.text
       ..description = descriptionController.text
-      ..classId = _selectedClassId
-      ..subclass = _selectedSubclass;
+      ..classId = selectedClassId.value
+      ..subclass = selectedSubclass.value;
     return repository.count(filter: filter);
   }
 
