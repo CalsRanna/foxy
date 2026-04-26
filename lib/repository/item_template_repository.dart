@@ -10,35 +10,12 @@ class ItemTemplateRepository with RepositoryMixin {
   Future<int> count({ItemTemplateFilterEntity? filter}) async {
     try {
       var builder = laconic.table('$_table AS it');
+      builder.select(['it.entry']);
       builder = builder.leftJoin(
         '$_localeTable AS itl',
         (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
       );
-      if (filter != null) {
-        if (filter.entry.isNotEmpty) {
-          builder = builder.where('it.entry', filter.entry);
-        }
-        if (filter.name.isNotEmpty) {
-          builder = builder.whereAny(
-            ['it.name', 'itl.Name'],
-            '%${filter.name}%',
-            operator: 'like',
-          );
-        }
-        if (filter.description.isNotEmpty) {
-          builder = builder.whereAny(
-            ['it.description', 'itl.Description'],
-            '%${filter.description}%',
-            operator: 'like',
-          );
-        }
-        if (filter.classId >= 0) {
-          builder = builder.where('it.class', filter.classId);
-        }
-        if (filter.subclass >= 0) {
-          builder = builder.where('it.subclass', filter.subclass);
-        }
-      }
+      builder = _applyFilter(builder, filter);
       return await builder.count();
     } catch (e) {
       return 0;
@@ -88,31 +65,7 @@ class ItemTemplateRepository with RepositoryMixin {
         '$_localeTable AS itl',
         (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
       );
-      if (filter != null) {
-        if (filter.entry.isNotEmpty) {
-          builder = builder.where('it.entry', filter.entry);
-        }
-        if (filter.name.isNotEmpty) {
-          builder = builder.whereAny(
-            ['it.name', 'itl.Name'],
-            '%${filter.name}%',
-            operator: 'like',
-          );
-        }
-        if (filter.description.isNotEmpty) {
-          builder = builder.whereAny(
-            ['it.description', 'itl.Description'],
-            '%${filter.description}%',
-            operator: 'like',
-          );
-        }
-        if (filter.classId >= 0) {
-          builder = builder.where('it.class', filter.classId);
-        }
-        if (filter.subclass >= 0) {
-          builder = builder.where('it.subclass', filter.subclass);
-        }
-      }
+      builder = _applyFilter(builder, filter);
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
       return results.map((e) => BriefItemTemplate.fromJson(e.toMap())).toList();
@@ -159,5 +112,33 @@ class ItemTemplateRepository with RepositoryMixin {
     var json = template.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', template.entry).update(json);
+  }
+
+  dynamic _applyFilter(dynamic builder, ItemTemplateFilterEntity? filter) {
+    if (filter == null) return builder;
+    if (filter.entry.isNotEmpty) {
+      builder = builder.where('it.entry', filter.entry);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.whereAny(
+        ['it.name', 'itl.Name'],
+        '%${filter.name}%',
+        operator: 'like',
+      );
+    }
+    if (filter.description.isNotEmpty) {
+      builder = builder.whereAny(
+        ['it.description', 'itl.Description'],
+        '%${filter.description}%',
+        operator: 'like',
+      );
+    }
+    if (filter.classId >= 0) {
+      builder = builder.where('it.class', filter.classId);
+    }
+    if (filter.subclass >= 0) {
+      builder = builder.where('it.subclass', filter.subclass);
+    }
+    return builder;
   }
 }

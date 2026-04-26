@@ -30,7 +30,7 @@ import 'package:foxy/page/quest/quest_template_list_page.dart' as _i14;
 import 'package:foxy/page/scaffold/scaffold_page.dart' as _i15;
 import 'package:foxy/page/setting/basic_setting.dart' as _i1;
 import 'package:foxy/page/setting/database_setting.dart' as _i6;
-import 'package:foxy/page/setting/setting_paage.dart' as _i16;
+import 'package:foxy/page/setting/setting_page.dart' as _i16;
 import 'package:foxy/page/smart_script/smart_script_detail_page.dart' as _i17;
 import 'package:foxy/page/smart_script/smart_script_list_page.dart' as _i18;
 import 'package:foxy/page/spell/spell_detail_page.dart' as _i19;

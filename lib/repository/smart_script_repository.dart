@@ -8,12 +8,7 @@ class SmartScriptRepository with RepositoryMixin {
   Future<int> count({SmartScriptFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder.select(['entryorguid']);
-    if (filter?.entryOrGuid.isNotEmpty == true) {
-      builder = builder.where('entryorguid', filter!.entryOrGuid);
-    }
-    if (filter?.comment.isNotEmpty == true) {
-      builder = builder.where('comment', '%${filter!.comment}%');
-    }
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -47,12 +42,7 @@ class SmartScriptRepository with RepositoryMixin {
       'target_type',
     ];
     builder = builder.select(fields);
-    if (filter?.entryOrGuid.isNotEmpty == true) {
-      builder = builder.where('entryorguid', filter!.entryOrGuid);
-    }
-    if (filter?.comment.isNotEmpty == true) {
-      builder = builder.where('comment', '%${filter!.comment}%');
-    }
+    builder = _applyFilter(builder, filter);
     builder = builder.orderBy('entryorguid').orderBy('source_type').orderBy('id');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
@@ -122,5 +112,16 @@ class SmartScriptRepository with RepositoryMixin {
         .first();
     var maxId = result.toMap()['max_id'] as int?;
     return (maxId ?? 0) + 1;
+  }
+
+  dynamic _applyFilter(dynamic builder, SmartScriptFilterEntity? filter) {
+    if (filter == null) return builder;
+    if (filter.entryOrGuid.isNotEmpty) {
+      builder = builder.where('entryorguid', filter.entryOrGuid);
+    }
+    if (filter.comment.isNotEmpty) {
+      builder = builder.where('comment', '%${filter.comment}%');
+    }
+    return builder;
   }
 }

@@ -33,6 +33,7 @@ class GossipMenuRepository with RepositoryMixin {
   Future<int> count({GossipMenuFilterEntity? filter}) async {
     try {
       var builder = laconic.table('$_table AS gm');
+      builder.select(['gm.MenuID']);
       builder = builder.leftJoin(
         'npc_text AS nt',
         (join) => join.on('gm.TextID', 'nt.ID'),

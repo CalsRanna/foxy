@@ -20,6 +20,8 @@ class BriefSmartScript {
     actionType = json['action_type'] ?? 0;
     targetType = json['target_type'] ?? 0;
   }
+
+  String get displayName => comment;
 }
 
 class SmartScript {

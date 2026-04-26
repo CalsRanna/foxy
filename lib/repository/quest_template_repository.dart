@@ -28,17 +28,7 @@ class QuestTemplateRepository with RepositoryMixin {
       'quest_template_locale AS qtl',
       (join) => join.on('qt.ID', 'qtl.ID').on('qtl.locale', '"zhCN"'),
     );
-    if (filter?.id.isNotEmpty == true) {
-      var idValue = int.tryParse(filter!.id) ?? 0;
-      builder = builder.where('qt.ID', idValue);
-    }
-    if (filter?.title.isNotEmpty == true) {
-      builder = builder.whereAny(
-        ['qt.LogTitle', 'qtl.Title'],
-        '%${filter!.title}%',
-        operator: 'like',
-      );
-    }
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -67,17 +57,7 @@ class QuestTemplateRepository with RepositoryMixin {
       'quest_template_locale AS qtl',
       (join) => join.on('qt.ID', 'qtl.ID').on('qtl.locale', '"zhCN"'),
     );
-    if (filter?.id.isNotEmpty == true) {
-      var idValue = int.tryParse(filter!.id) ?? 0;
-      builder = builder.where('qt.ID', idValue);
-    }
-    if (filter?.title.isNotEmpty == true) {
-      builder = builder.whereAny(
-        ['qt.LogTitle', 'qtl.Title'],
-        '%${filter!.title}%',
-        operator: 'like',
-      );
-    }
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.limit(kPageSize).offset(offset).get();
     return results
@@ -100,5 +80,21 @@ class QuestTemplateRepository with RepositoryMixin {
     var json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', model.id).update(json);
+  }
+
+  dynamic _applyFilter(dynamic builder, QuestTemplateFilterEntity? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      var idValue = int.tryParse(filter.id) ?? 0;
+      builder = builder.where('qt.ID', idValue);
+    }
+    if (filter.title.isNotEmpty) {
+      builder = builder.whereAny(
+        ['qt.LogTitle', 'qtl.Title'],
+        '%${filter.title}%',
+        operator: 'like',
+      );
+    }
+    return builder;
   }
 }
