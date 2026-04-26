@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/model/spell.dart';
+import 'package:foxy/model/spell_filter_entity.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -209,21 +210,21 @@ class _DialogState extends State<_Dialog> {
                 0 => ShadTableCell(child: Text(item.id.toString())),
                 1 => ShadTableCell(
                   child: Text(
-                    item.name,
+                    item.nameLangZhCN,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 2 => ShadTableCell(
                   child: Text(
-                    item.subtext,
+                    item.nameSubtextLangZhCN,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 3 => ShadTableCell(
                   child: Text(
-                    item.description,
+                    item.descriptionLangZhCN,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -258,10 +259,18 @@ class _DialogState extends State<_Dialog> {
     setState(() => _loading = true);
     try {
       final repository = SpellRepository();
-      final id = _idController.text.isEmpty ? null : _idController.text;
-      final name = _nameController.text.isEmpty ? null : _nameController.text;
-      final items = await repository.search(id: id, name: name, page: _page);
-      final total = await repository.count(id: id, name: name);
+      final id = _idController.text.isEmpty ? '' : _idController.text;
+      final name = _nameController.text.isEmpty ? '' : _nameController.text;
+      final filter = SpellFilterEntity()..id = id..name = name;
+      final briefs = await repository.getBriefSpells(page: _page, filter: filter);
+      final total = await repository.count(filter: filter);
+      final items = briefs
+          .map((b) => Spell()
+            ..id = b.id
+            ..nameLangZhCN = b.name
+            ..nameSubtextLangZhCN = b.subtext
+            ..descriptionLangZhCN = b.description)
+          .toList();
       if (mounted) {
         setState(() {
           _items = items;

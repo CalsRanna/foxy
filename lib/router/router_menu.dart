@@ -34,7 +34,7 @@ enum RouterMenu {
       RouterMenu.smartScript => const SmartScriptListRoute(),
       RouterMenu.setting => const SettingRoute(),
       // 以下菜单暂未实现路由
-      RouterMenu.spell => const DashboardRoute(),
+      RouterMenu.spell => const SpellListRoute(),
       RouterMenu.more => const DashboardRoute(),
     };
   }
