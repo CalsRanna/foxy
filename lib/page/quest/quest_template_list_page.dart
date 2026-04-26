@@ -91,22 +91,10 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
     final toolbar = Row(children: [createBtn, const Spacer(), pagination]);
 
     final headers = ['编号', '标题', '描述', '类型', '等级', '最低等级'];
-    final fixedWidths = [80, 200, null, 80, 80, 80];
-    final fixedTotal = fixedWidths
-        .where((w) => w != null)
-        .fold<int>(0, (sum, w) => sum + w!);
 
     final table = LayoutBuilder(
       builder: (context, constraints) {
-        final descriptionWidth = constraints.maxWidth - fixedTotal;
-        final columnExtents = [
-          FixedTableSpanExtent(80),
-          FixedTableSpanExtent(200),
-          FixedTableSpanExtent(descriptionWidth),
-          FixedTableSpanExtent(80),
-          FixedTableSpanExtent(80),
-          FixedTableSpanExtent(80),
-        ];
+        final descriptionWidth = constraints.maxWidth - 720;
         return FoxyShadTable(
           columnCount: headers.length,
           rowCount: templates.length,
@@ -115,7 +103,15 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           columnSpanExtent: (index) {
-            return columnExtents[index];
+            return switch (index) {
+              0 => FixedTableSpanExtent(120),
+              1 => FixedTableSpanExtent(240),
+              2 => FixedTableSpanExtent(descriptionWidth),
+              3 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(120),
+              5 => FixedTableSpanExtent(120),
+              _ => null,
+            };
           },
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= templates.length) {

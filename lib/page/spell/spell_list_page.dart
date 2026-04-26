@@ -110,8 +110,8 @@ class _SpellListPageState extends State<SpellListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(80),
-              1 => FixedTableSpanExtent(flexWidth * 0.45),
-              2 => FixedTableSpanExtent(flexWidth * 0.25),
+              1 => FixedTableSpanExtent(flexWidth / 2),
+              2 => FixedTableSpanExtent(flexWidth / 2),
               3 => FixedTableSpanExtent(120),
               4 => FixedTableSpanExtent(120),
               _ => null,
