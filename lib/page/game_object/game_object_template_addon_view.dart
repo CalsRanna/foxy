@@ -38,9 +38,7 @@ class _GameObjectTemplateAddonViewState
       viewModel.initControllers(addonData);
 
       final entryInput = FormItem(
-        controller: TextEditingController(
-          text: widget.gameObjectId.toString(),
-        ),
+        controller: TextEditingController(text: widget.gameObjectId.toString()),
         label: '编号',
         placeholder: 'entry',
         readOnly: true,

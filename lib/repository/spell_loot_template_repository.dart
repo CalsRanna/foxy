@@ -25,9 +25,7 @@ class SpellLootTemplateRepository with RepositoryMixin {
       );
       builder = builder.where('slt.Entry', entry);
       var results = await builder.get();
-      return results
-          .map((e) => SpellLootTemplate.fromJson(e.toMap()))
-          .toList();
+      return results.map((e) => SpellLootTemplate.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
@@ -51,7 +49,9 @@ class SpellLootTemplateRepository with RepositoryMixin {
   }
 
   Future<void> update(
-      SpellLootTemplate oldData, SpellLootTemplate newData) async {
+    SpellLootTemplate oldData,
+    SpellLootTemplate newData,
+  ) async {
     var json = newData.toJson();
     json.remove('Entry');
     json.remove('Item');

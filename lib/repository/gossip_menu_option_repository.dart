@@ -38,9 +38,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
       );
       builder = builder.where('gmo.MenuID', menuId);
       final results = await builder.get();
-      return results
-          .map((e) => GossipMenuOption.fromJson(e.toMap()))
-          .toList();
+      return results.map((e) => GossipMenuOption.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
@@ -63,11 +61,9 @@ class GossipMenuOptionRepository with RepositoryMixin {
   /// 取指定 MenuID 下的下一个 OptionID
   Future<GossipMenuOption> create({required int menuId}) async {
     try {
-      final result = await laconic
-          .table(_table)
-          .where('MenuID', menuId)
-          .select(['MAX(OptionID) as max_id'])
-          .first();
+      final result = await laconic.table(_table).where('MenuID', menuId).select(
+        ['MAX(OptionID) as max_id'],
+      ).first();
       final maxId = result.toMap()['max_id'] as int?;
       final model = GossipMenuOption();
       model.menuId = menuId;
@@ -81,10 +77,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
     }
   }
 
-  Future<void> update(
-    Map<String, dynamic> id,
-    GossipMenuOption model,
-  ) async {
+  Future<void> update(Map<String, dynamic> id, GossipMenuOption model) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);

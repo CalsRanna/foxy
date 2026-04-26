@@ -216,23 +216,23 @@ class QuestTemplateDetailViewModel {
     itemDrop4Controller.text = t.itemDrop4.toString();
     itemDropQuantity4Controller.text = t.itemDropQuantity4.toString();
     rewardChoiceItemId1Controller.text = t.rewardChoiceItemId1.toString();
-    rewardChoiceItemQuantity1Controller.text =
-        t.rewardChoiceItemQuantity1.toString();
+    rewardChoiceItemQuantity1Controller.text = t.rewardChoiceItemQuantity1
+        .toString();
     rewardChoiceItemId2Controller.text = t.rewardChoiceItemId2.toString();
-    rewardChoiceItemQuantity2Controller.text =
-        t.rewardChoiceItemQuantity2.toString();
+    rewardChoiceItemQuantity2Controller.text = t.rewardChoiceItemQuantity2
+        .toString();
     rewardChoiceItemId3Controller.text = t.rewardChoiceItemId3.toString();
-    rewardChoiceItemQuantity3Controller.text =
-        t.rewardChoiceItemQuantity3.toString();
+    rewardChoiceItemQuantity3Controller.text = t.rewardChoiceItemQuantity3
+        .toString();
     rewardChoiceItemId4Controller.text = t.rewardChoiceItemId4.toString();
-    rewardChoiceItemQuantity4Controller.text =
-        t.rewardChoiceItemQuantity4.toString();
+    rewardChoiceItemQuantity4Controller.text = t.rewardChoiceItemQuantity4
+        .toString();
     rewardChoiceItemId5Controller.text = t.rewardChoiceItemId5.toString();
-    rewardChoiceItemQuantity5Controller.text =
-        t.rewardChoiceItemQuantity5.toString();
+    rewardChoiceItemQuantity5Controller.text = t.rewardChoiceItemQuantity5
+        .toString();
     rewardChoiceItemId6Controller.text = t.rewardChoiceItemId6.toString();
-    rewardChoiceItemQuantity6Controller.text =
-        t.rewardChoiceItemQuantity6.toString();
+    rewardChoiceItemQuantity6Controller.text = t.rewardChoiceItemQuantity6
+        .toString();
     poiContinentController.text = t.poiContinent.toString();
     poiXController.text = t.poiX.toString();
     poiYController.text = t.poiY.toString();
@@ -331,23 +331,29 @@ class QuestTemplateDetailViewModel {
     t.itemDrop4 = _parseInt(itemDrop4Controller.text);
     t.itemDropQuantity4 = _parseInt(itemDropQuantity4Controller.text);
     t.rewardChoiceItemId1 = _parseInt(rewardChoiceItemId1Controller.text);
-    t.rewardChoiceItemQuantity1 =
-        _parseInt(rewardChoiceItemQuantity1Controller.text);
+    t.rewardChoiceItemQuantity1 = _parseInt(
+      rewardChoiceItemQuantity1Controller.text,
+    );
     t.rewardChoiceItemId2 = _parseInt(rewardChoiceItemId2Controller.text);
-    t.rewardChoiceItemQuantity2 =
-        _parseInt(rewardChoiceItemQuantity2Controller.text);
+    t.rewardChoiceItemQuantity2 = _parseInt(
+      rewardChoiceItemQuantity2Controller.text,
+    );
     t.rewardChoiceItemId3 = _parseInt(rewardChoiceItemId3Controller.text);
-    t.rewardChoiceItemQuantity3 =
-        _parseInt(rewardChoiceItemQuantity3Controller.text);
+    t.rewardChoiceItemQuantity3 = _parseInt(
+      rewardChoiceItemQuantity3Controller.text,
+    );
     t.rewardChoiceItemId4 = _parseInt(rewardChoiceItemId4Controller.text);
-    t.rewardChoiceItemQuantity4 =
-        _parseInt(rewardChoiceItemQuantity4Controller.text);
+    t.rewardChoiceItemQuantity4 = _parseInt(
+      rewardChoiceItemQuantity4Controller.text,
+    );
     t.rewardChoiceItemId5 = _parseInt(rewardChoiceItemId5Controller.text);
-    t.rewardChoiceItemQuantity5 =
-        _parseInt(rewardChoiceItemQuantity5Controller.text);
+    t.rewardChoiceItemQuantity5 = _parseInt(
+      rewardChoiceItemQuantity5Controller.text,
+    );
     t.rewardChoiceItemId6 = _parseInt(rewardChoiceItemId6Controller.text);
-    t.rewardChoiceItemQuantity6 =
-        _parseInt(rewardChoiceItemQuantity6Controller.text);
+    t.rewardChoiceItemQuantity6 = _parseInt(
+      rewardChoiceItemQuantity6Controller.text,
+    );
     t.poiContinent = _parseInt(poiContinentController.text);
     t.poiX = _parseDouble(poiXController.text);
     t.poiY = _parseDouble(poiYController.text);
@@ -408,8 +414,7 @@ class QuestTemplateDetailViewModel {
 
   int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
   double _parseDouble(String text) => text.isEmpty ? 0.0 : double.parse(text);
-  int? _parseIntOrNull(String text) =>
-      text.isEmpty ? null : int.tryParse(text);
+  int? _parseIntOrNull(String text) => text.isEmpty ? null : int.tryParse(text);
 
   void dispose() {
     idController.dispose();

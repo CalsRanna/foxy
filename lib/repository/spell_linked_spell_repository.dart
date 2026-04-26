@@ -11,9 +11,7 @@ class SpellLinkedSpellRepository with RepositoryMixin {
           .where('spell_trigger', spellTrigger)
           .orWhere('spell_trigger', -spellTrigger)
           .get();
-      return results
-          .map((e) => SpellLinkedSpell.fromJson(e.toMap()))
-          .toList();
+      return results.map((e) => SpellLinkedSpell.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
@@ -37,7 +35,9 @@ class SpellLinkedSpellRepository with RepositoryMixin {
   }
 
   Future<void> update(
-      SpellLinkedSpell oldData, SpellLinkedSpell newData) async {
+    SpellLinkedSpell oldData,
+    SpellLinkedSpell newData,
+  ) async {
     var json = newData.toJson();
     json.remove('spell_trigger');
     json.remove('spell_effect');
@@ -58,10 +58,9 @@ class SpellLinkedSpellRepository with RepositoryMixin {
 
   Future<SpellLinkedSpell> copy(SpellLinkedSpell data) async {
     var json = data.toJson();
-    var maxEffectResult = await laconic
-        .table(_table)
-        .select(['MAX(spell_effect) AS maxEffect'])
-        .first();
+    var maxEffectResult = await laconic.table(_table).select([
+      'MAX(spell_effect) AS maxEffect',
+    ]).first();
     var maxEffect = (maxEffectResult.toMap()['maxEffect'] ?? 0) as int;
     json['spell_effect'] = maxEffect + 1;
     await laconic.table(_table).insert([json]);

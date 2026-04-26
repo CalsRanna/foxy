@@ -23,10 +23,6 @@ class SpellRank {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'first_spell_id': firstSpellId,
-      'spell_id': spellId,
-      'rank': rank,
-    };
+    return {'first_spell_id': firstSpellId, 'spell_id': spellId, 'rank': rank};
   }
 }

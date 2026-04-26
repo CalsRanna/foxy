@@ -183,9 +183,7 @@ class _DbcImportModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black.withValues(alpha: 0.5),
-      child: Center(
-        child: Watch((_) => _buildDialog(context)),
-      ),
+      child: Center(child: Watch((_) => _buildDialog(context))),
     );
   }
 
@@ -201,7 +199,9 @@ class _DbcImportModal extends StatelessWidget {
         onSubmit: (path) => dbcImportViewModel.setDbcPath(path),
       );
     }
-    return _ProgressDialog(progress: dbcImportViewModel.dbcImportProgress.value);
+    return _ProgressDialog(
+      progress: dbcImportViewModel.dbcImportProgress.value,
+    );
   }
 }
 
@@ -279,10 +279,7 @@ class _ProgressDialog extends StatelessWidget {
           const SizedBox(height: 16),
           const CircularProgressIndicator(),
           const SizedBox(height: 16),
-          Text(
-            progress,
-            style: const TextStyle(fontSize: 18),
-          ),
+          Text(progress, style: const TextStyle(fontSize: 18)),
           const SizedBox(height: 8),
         ],
       ),
@@ -310,10 +307,7 @@ class _ErrorDialog extends StatelessWidget {
           const SizedBox(height: 16),
           Align(
             alignment: Alignment.centerRight,
-            child: ShadButton(
-              onPressed: onRetry,
-              child: const Text('重试'),
-            ),
+            child: ShadButton(onPressed: onRetry, child: const Text('重试')),
           ),
         ],
       ),

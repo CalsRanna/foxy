@@ -9,11 +9,7 @@ class GameobjectQueststarterRepository with RepositoryMixin {
   /// 按 quest 搜索该任务下的所有任务给予者（带 gameobject_template JOIN，无 locale）
   Future<List<BriefGameobjectQueststarter>> search(int questId) async {
     try {
-      const fields = [
-        'gos.id',
-        'gos.quest',
-        'got.name',
-      ];
+      const fields = ['gos.id', 'gos.quest', 'got.name'];
       var builder = laconic.table('$_table AS gos');
       builder = builder.select(fields);
       builder = builder.leftJoin(
@@ -47,11 +43,9 @@ class GameobjectQueststarterRepository with RepositoryMixin {
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
   Future<GameobjectQueststarter> create(int questId) async {
     try {
-      final result = await laconic
-          .table(_table)
-          .where('quest', questId)
-          .select(['MAX(id) as max_id'])
-          .first();
+      final result = await laconic.table(_table).where('quest', questId).select(
+        ['MAX(id) as max_id'],
+      ).first();
       final maxId = result.toMap()['max_id'] as int?;
       final model = GameobjectQueststarter();
       model.quest = questId;

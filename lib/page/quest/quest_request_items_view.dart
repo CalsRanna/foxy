@@ -33,26 +33,52 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
     final vm = viewModel;
 
     final rows = [
-      Row(spacing: 8, children: [
-        Expanded(child: FormItem(controller: vm.idController, label: '编号', readOnly: true)),
-        Expanded(child: FormItem(controller: vm.emoteOnCompleteController, label: '完成表情', placeholder: 'EmoteOnComplete')),
-        Expanded(child: FormItem(controller: vm.emoteOnIncompleteController, label: '未完成表情', placeholder: 'EmoteOnIncomplete')),
-        Expanded(child: SizedBox()),
-      ]),
-      Row(spacing: 8, children: [
-        Expanded(child: FormItem(
-          label: '完成文本',
-          child: QuestRequestItemsLocaleSelector(
-            questId: widget.questId,
-            controller: vm.completionTextController,
-            placeholder: 'CompletionText',
-            title: '完成文本',
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: FormItem(
+              controller: vm.idController,
+              label: '编号',
+              readOnly: true,
+            ),
           ),
-        )),
-        Expanded(child: SizedBox()),
-        Expanded(child: SizedBox()),
-        Expanded(child: SizedBox()),
-      ]),
+          Expanded(
+            child: FormItem(
+              controller: vm.emoteOnCompleteController,
+              label: '完成表情',
+              placeholder: 'EmoteOnComplete',
+            ),
+          ),
+          Expanded(
+            child: FormItem(
+              controller: vm.emoteOnIncompleteController,
+              label: '未完成表情',
+              placeholder: 'EmoteOnIncomplete',
+            ),
+          ),
+          Expanded(child: SizedBox()),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: FormItem(
+              label: '完成文本',
+              child: QuestRequestItemsLocaleSelector(
+                questId: widget.questId,
+                controller: vm.completionTextController,
+                placeholder: 'CompletionText',
+                title: '完成文本',
+              ),
+            ),
+          ),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
+        ],
+      ),
     ];
 
     return SingleChildScrollView(

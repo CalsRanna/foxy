@@ -257,28 +257,38 @@ class _LocaleRow {
   final TextEditingController objectiveText4Controller;
 
   _LocaleRow()
-      : localeController = TextEditingController(),
-        titleController = TextEditingController(),
-        detailsController = TextEditingController(),
-        objectivesController = TextEditingController(),
-        endTextController = TextEditingController(),
-        completedTextController = TextEditingController(),
-        objectiveText1Controller = TextEditingController(),
-        objectiveText2Controller = TextEditingController(),
-        objectiveText3Controller = TextEditingController(),
-        objectiveText4Controller = TextEditingController();
+    : localeController = TextEditingController(),
+      titleController = TextEditingController(),
+      detailsController = TextEditingController(),
+      objectivesController = TextEditingController(),
+      endTextController = TextEditingController(),
+      completedTextController = TextEditingController(),
+      objectiveText1Controller = TextEditingController(),
+      objectiveText2Controller = TextEditingController(),
+      objectiveText3Controller = TextEditingController(),
+      objectiveText4Controller = TextEditingController();
 
   _LocaleRow.fromLocale(QuestTemplateLocale locale)
-      : localeController = TextEditingController(text: locale.locale),
-        titleController = TextEditingController(text: locale.title),
-        detailsController = TextEditingController(text: locale.details),
-        objectivesController = TextEditingController(text: locale.objectives),
-        endTextController = TextEditingController(text: locale.endText),
-        completedTextController = TextEditingController(text: locale.completedText),
-        objectiveText1Controller = TextEditingController(text: locale.objectiveText1),
-        objectiveText2Controller = TextEditingController(text: locale.objectiveText2),
-        objectiveText3Controller = TextEditingController(text: locale.objectiveText3),
-        objectiveText4Controller = TextEditingController(text: locale.objectiveText4);
+    : localeController = TextEditingController(text: locale.locale),
+      titleController = TextEditingController(text: locale.title),
+      detailsController = TextEditingController(text: locale.details),
+      objectivesController = TextEditingController(text: locale.objectives),
+      endTextController = TextEditingController(text: locale.endText),
+      completedTextController = TextEditingController(
+        text: locale.completedText,
+      ),
+      objectiveText1Controller = TextEditingController(
+        text: locale.objectiveText1,
+      ),
+      objectiveText2Controller = TextEditingController(
+        text: locale.objectiveText2,
+      ),
+      objectiveText3Controller = TextEditingController(
+        text: locale.objectiveText3,
+      ),
+      objectiveText4Controller = TextEditingController(
+        text: locale.objectiveText4,
+      );
 
   void dispose() {
     localeController.dispose();

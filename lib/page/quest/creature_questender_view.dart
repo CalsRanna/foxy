@@ -13,8 +13,7 @@ class CreatureQuestenderView extends StatefulWidget {
   const CreatureQuestenderView({super.key, required this.questId});
 
   @override
-  State<CreatureQuestenderView> createState() =>
-      _CreatureQuestenderViewState();
+  State<CreatureQuestenderView> createState() => _CreatureQuestenderViewState();
 }
 
 class _CreatureQuestenderViewState extends State<CreatureQuestenderView> {

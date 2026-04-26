@@ -70,7 +70,10 @@ class ItemEnchantmentTemplateViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final maxEnch = items.value.fold<int>(0, (max, e) => e.ench > max ? e.ench : max);
+    final maxEnch = items.value.fold<int>(
+      0,
+      (max, e) => e.ench > max ? e.ench : max,
+    );
     resetForm();
     enchController.text = (maxEnch + 1).toString();
     creating.value = true;

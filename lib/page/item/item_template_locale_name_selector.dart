@@ -225,12 +225,12 @@ class _LocaleRow {
   final TextEditingController nameController;
 
   _LocaleRow()
-      : localeController = TextEditingController(),
-        nameController = TextEditingController();
+    : localeController = TextEditingController(),
+      nameController = TextEditingController();
 
   _LocaleRow.fromLocale(ItemTemplateLocale locale)
-      : localeController = TextEditingController(text: locale.locale),
-        nameController = TextEditingController(text: locale.name);
+    : localeController = TextEditingController(text: locale.locale),
+      nameController = TextEditingController(text: locale.name);
 
   void dispose() {
     localeController.dispose();

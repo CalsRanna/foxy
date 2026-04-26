@@ -209,12 +209,12 @@ class _DialogState extends State<_Dialog> {
               return switch (vicinity.column) {
                 0 => ShadTableCell(child: Text(item.id.toString())),
                 1 => ShadTableCell(
-                    child: Text(
-                      text,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  child: Text(
+                    text,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                ),
                 _ => ShadTableCell(child: SizedBox()),
               };
             },

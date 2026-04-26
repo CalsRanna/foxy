@@ -21,10 +21,7 @@ class NpcText {
   }
 
   Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{
-      'ID': id,
-      'VerifiedBuild': verifiedBuild,
-    };
+    final result = <String, dynamic>{'ID': id, 'VerifiedBuild': verifiedBuild};
     for (var n = 0; n < 8; n++) {
       result.addAll(entries[n].toJson(n));
     }

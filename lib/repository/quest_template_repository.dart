@@ -60,9 +60,7 @@ class QuestTemplateRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.limit(kPageSize).offset(offset).get();
-    return results
-        .map((e) => BriefQuestTemplate.fromJson(e.toMap()))
-        .toList();
+    return results.map((e) => BriefQuestTemplate.fromJson(e.toMap())).toList();
   }
 
   Future<QuestTemplate> getQuestTemplate(int id) async {

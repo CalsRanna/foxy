@@ -59,14 +59,12 @@ class _SpellRankViewState extends State<SpellRankView> {
               return ShadTableCell(child: SizedBox());
             }
             final item = items[vicinity.row];
-            final firstDisplay =
-                item.firstSpellSubtext.isNotEmpty
-                    ? '${item.firstSpellName} - ${item.firstSpellSubtext}'
-                    : item.firstSpellName;
-            final spellDisplay =
-                item.spellSubtext.isNotEmpty
-                    ? '${item.spellName} - ${item.spellSubtext}'
-                    : item.spellName;
+            final firstDisplay = item.firstSpellSubtext.isNotEmpty
+                ? '${item.firstSpellName} - ${item.firstSpellSubtext}'
+                : item.firstSpellName;
+            final spellDisplay = item.spellSubtext.isNotEmpty
+                ? '${item.spellName} - ${item.spellSubtext}'
+                : item.spellName;
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(firstDisplay)),
               1 => ShadTableCell(child: Text(spellDisplay)),

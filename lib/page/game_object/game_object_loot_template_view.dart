@@ -55,27 +55,26 @@ class _GameObjectLootTemplateViewState
             ),
             ShadButton.ghost(
               leading: Icon(LucideIcons.squarePen, size: 16),
-              onPressed:
-                  selectedIndex != null ? () => viewModel.edit(context) : null,
+              onPressed: selectedIndex != null
+                  ? () => viewModel.edit(context)
+                  : null,
               size: ShadButtonSize.sm,
               child: Text('编辑'),
             ),
             ShadButton.ghost(
               leading: Icon(LucideIcons.copy, size: 16),
-              onPressed:
-                  selectedIndex != null
-                      ? () => viewModel.copy(context)
-                      : null,
+              onPressed: selectedIndex != null
+                  ? () => viewModel.copy(context)
+                  : null,
               size: ShadButtonSize.sm,
               child: Text('复制'),
             ),
             const Spacer(),
             ShadButton.destructive(
               leading: Icon(LucideIcons.trash, size: 16),
-              onPressed:
-                  selectedIndex != null
-                      ? () => viewModel.delete(context)
-                      : null,
+              onPressed: selectedIndex != null
+                  ? () => viewModel.delete(context)
+                  : null,
               size: ShadButtonSize.sm,
               child: Text('删除'),
             ),
@@ -101,18 +100,14 @@ class _GameObjectLootTemplateViewState
                         style: nameStyle,
                       ),
                     ),
-                    2 => ShadTableCell(
-                      child: Text(item.chance.toString()),
-                    ),
+                    2 => ShadTableCell(child: Text(item.chance.toString())),
                     3 => ShadTableCell(
                       child: Text('${item.minCount}-${item.maxCount}'),
                     ),
                     4 => ShadTableCell(
                       child: Text(item.questRequired ? '是' : '否'),
                     ),
-                    5 => ShadTableCell(
-                      child: Text(item.groupId.toString()),
-                    ),
+                    5 => ShadTableCell(child: Text(item.groupId.toString())),
                     _ => ShadTableCell(child: SizedBox()),
                   };
                 },

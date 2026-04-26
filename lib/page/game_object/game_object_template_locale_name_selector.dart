@@ -48,7 +48,9 @@ class _GameObjectTemplateLocaleNameSelectorState
 
   Future<void> _openLocaleDialog() async {
     if (widget.entry == null) return;
-    final locales = await repository.getGameObjectTemplateLocales(widget.entry!);
+    final locales = await repository.getGameObjectTemplateLocales(
+      widget.entry!,
+    );
     if (!mounted) return;
     await showShadDialog(
       context: context,
@@ -184,9 +186,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
               Expanded(
                 child: ShadInput(
                   controller: row.nameController,
-                  placeholder: Text(
-                    widget.isCaption ? '使用说明' : '名称',
-                  ),
+                  placeholder: Text(widget.isCaption ? '使用说明' : '名称'),
                 ),
               ),
               SizedBox(

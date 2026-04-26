@@ -93,10 +93,10 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
               return ShadTableCell(child: SizedBox());
             }
             final o = options[vicinity.row];
-            final iconName = kGossipOptionIcons[o.optionIcon]
-                    ?? o.optionIcon.toString();
-                final typeName = kGossipOptionTypes[o.optionType]
-                    ?? o.optionType.toString();
+            final iconName =
+                kGossipOptionIcons[o.optionIcon] ?? o.optionIcon.toString();
+            final typeName =
+                kGossipOptionTypes[o.optionType] ?? o.optionType.toString();
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(o.optionId.toString())),
               1 => ShadTableCell(child: Text(iconName)),
@@ -151,7 +151,10 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
         child: Column(
           spacing: 16,
-          children: [toolbar, SizedBox(height: 400, child: table)],
+          children: [
+            toolbar,
+            SizedBox(height: 400, child: table),
+          ],
         ),
       ),
     );

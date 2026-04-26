@@ -40,7 +40,9 @@ class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
 
   Widget _buildHeader() {
     final isNew = widget.entryOrGuid == null;
-    final label = isNew ? '新建脚本' : '脚本 ${widget.entryOrGuid}/${widget.sourceType}/${widget.id}/${widget.link}';
+    final label = isNew
+        ? '新建脚本'
+        : '脚本 ${widget.entryOrGuid}/${widget.sourceType}/${widget.id}/${widget.link}';
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(label, style: textStyle);
     return Padding(padding: EdgeInsets.only(bottom: 12), child: text);

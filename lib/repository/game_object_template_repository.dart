@@ -104,7 +104,10 @@ class GameObjectTemplateRepository with RepositoryMixin {
     await laconic.table(_localeTable).insert(jsons);
   }
 
-  dynamic _applyFilter(dynamic builder, GameObjectTemplateFilterEntity? filter) {
+  dynamic _applyFilter(
+    dynamic builder,
+    GameObjectTemplateFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
       builder = builder.where('gt.entry', filter.entry);

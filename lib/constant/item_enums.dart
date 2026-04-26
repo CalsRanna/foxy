@@ -102,12 +102,7 @@ const kItemStatTypeOptions = {
 };
 
 /// SocketColor 插槽颜色选项
-const kItemSocketColorOptions = {
-  1: '原石',
-  2: '红色',
-  4: '黄色',
-  8: '蓝色',
-};
+const kItemSocketColorOptions = {1: '原石', 2: '红色', 4: '黄色', 8: '蓝色'};
 
 /// SpellTrigger 法术触发类型选项
 const kItemSpellTriggerOptions = {

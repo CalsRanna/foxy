@@ -47,14 +47,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
     final toolbar = Row(children: [createButton, Spacer()]);
 
     final items = viewModel.items.value;
-    final headers = [
-      '区域',
-      '开始任务',
-      '结束任务',
-      '光环',
-      '开始任务掩码',
-      '结束任务掩码',
-    ];
+    final headers = ['区域', '开始任务', '结束任务', '光环', '开始任务掩码', '结束任务掩码'];
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
@@ -71,12 +64,8 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               1 => ShadTableCell(child: Text(item.questStart.toString())),
               2 => ShadTableCell(child: Text(item.questEnd.toString())),
               3 => ShadTableCell(child: Text(item.auraSpell.toString())),
-              4 => ShadTableCell(
-                child: Text(item.questStartStatus.toString()),
-              ),
-              5 => ShadTableCell(
-                child: Text(item.questEndStatus.toString()),
-              ),
+              4 => ShadTableCell(child: Text(item.questStartStatus.toString())),
+              5 => ShadTableCell(child: Text(item.questEndStatus.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },

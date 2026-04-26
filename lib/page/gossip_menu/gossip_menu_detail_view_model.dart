@@ -69,10 +69,10 @@ class GossipMenuDetailViewModel {
         _originalTextId = t.textId;
       } else {
         // 更新
-        await GossipMenuRepository().updateGossipMenu(
-          {'MenuID': _originalMenuId!, 'TextID': _originalTextId!},
-          t,
-        );
+        await GossipMenuRepository().updateGossipMenu({
+          'MenuID': _originalMenuId!,
+          'TextID': _originalTextId!,
+        }, t);
         template.value = t;
         _originalTextId = t.textId;
       }

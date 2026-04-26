@@ -23,10 +23,7 @@ class SpellCustomAttrRepository with RepositoryMixin {
   Future<void> update(SpellCustomAttr data) async {
     var json = data.toJson();
     json.remove('spell_id');
-    await laconic
-        .table(_table)
-        .where('spell_id', data.spellId)
-        .update(json);
+    await laconic.table(_table).where('spell_id', data.spellId).update(json);
   }
 
   Future<void> save(SpellCustomAttr data) async {

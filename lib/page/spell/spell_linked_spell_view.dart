@@ -150,9 +150,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormItem(
-            controller: TextEditingController(
-              text: widget.spellId.toString(),
-            ),
+            controller: TextEditingController(text: widget.spellId.toString()),
             label: '触发技能',
             placeholder: 'spell_trigger',
             readOnly: true,

@@ -32,8 +32,7 @@ class BriefQuestTemplate {
   }
 
   /// 优先本地化标题 > 英文标题
-  String get displayTitle =>
-      localeTitle.isNotEmpty ? localeTitle : logTitle;
+  String get displayTitle => localeTitle.isNotEmpty ? localeTitle : logTitle;
 
   /// 优先本地化描述 > 英文描述
   String get displayDescription =>

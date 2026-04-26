@@ -230,7 +230,9 @@ class _LocaleRow {
 
   _LocaleRow.fromLocale(QuestRequestItemsLocale locale)
     : localeController = TextEditingController(text: locale.locale),
-      completionTextController = TextEditingController(text: locale.completionText);
+      completionTextController = TextEditingController(
+        text: locale.completionText,
+      );
 
   void dispose() {
     localeController.dispose();

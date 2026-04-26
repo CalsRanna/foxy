@@ -13,9 +13,14 @@ class BriefSpell {
   BriefSpell.fromJson(Map<String, dynamic> json) {
     id = json['ID'] ?? 0;
     name = json['Name_lang_zhCN'] ?? json['Name_Lang_zhCN'] ?? '';
-    subtext = json['NameSubtext_lang_zhCN'] ?? json['NameSubtext_Lang_zhCN'] ?? '';
-    description = json['Description_lang_zhCN'] ?? json['Description_Lang_zhCN'] ?? '';
-    auraDescription = json['AuraDescription_lang_zhCN'] ?? json['AuraDescription_Lang_zhCN'] ?? '';
+    subtext =
+        json['NameSubtext_lang_zhCN'] ?? json['NameSubtext_Lang_zhCN'] ?? '';
+    description =
+        json['Description_lang_zhCN'] ?? json['Description_Lang_zhCN'] ?? '';
+    auraDescription =
+        json['AuraDescription_lang_zhCN'] ??
+        json['AuraDescription_Lang_zhCN'] ??
+        '';
     duration = '${json['Duration'] ?? ''}';
     textureFilename = json['TextureFilename'] ?? '';
   }
@@ -350,7 +355,8 @@ class Spell {
     // === 效果0 ===
     effect0 = json['Effect0'] ?? 0;
     effectDieSides0 = json['EffectDieSides0'] ?? 0;
-    effectRealPointsPerLevel0 = (json['EffectRealPointsPerLevel0'] as num?)?.toDouble() ?? 0.0;
+    effectRealPointsPerLevel0 =
+        (json['EffectRealPointsPerLevel0'] as num?)?.toDouble() ?? 0.0;
     effectBasePoints0 = json['EffectBasePoints0'] ?? 0;
     effectMechanic0 = json['EffectMechanic0'] ?? 0;
     effectAura0 = json['EffectAura0'] ?? 0;
@@ -364,17 +370,21 @@ class Spell {
     implicitTargetA0 = json['ImplicitTargetA0'] ?? 0;
     implicitTargetB0 = json['ImplicitTargetB0'] ?? 0;
     effectTriggerSpell0 = json['EffectTriggerSpell0'] ?? 0;
-    effectPointsPerCombo0 = (json['EffectPointsPerCombo0'] as num?)?.toDouble() ?? 0.0;
+    effectPointsPerCombo0 =
+        (json['EffectPointsPerCombo0'] as num?)?.toDouble() ?? 0.0;
     effectSpellClassMaskA0 = json['EffectSpellClassMaskA0'] ?? 0;
     effectSpellClassMaskB0 = json['EffectSpellClassMaskB0'] ?? 0;
     effectSpellClassMaskC0 = json['EffectSpellClassMaskC0'] ?? 0;
-    effectChainAmplitude0 = (json['EffectChainAmplitude0'] as num?)?.toDouble() ?? 0.0;
-    effectBonusCoefficient0 = (json['EffectBonusCoefficient0'] as num?)?.toDouble() ?? 0.0;
+    effectChainAmplitude0 =
+        (json['EffectChainAmplitude0'] as num?)?.toDouble() ?? 0.0;
+    effectBonusCoefficient0 =
+        (json['EffectBonusCoefficient0'] as num?)?.toDouble() ?? 0.0;
 
     // === 效果1 ===
     effect1 = json['Effect1'] ?? 0;
     effectDieSides1 = json['EffectDieSides1'] ?? 0;
-    effectRealPointsPerLevel1 = (json['EffectRealPointsPerLevel1'] as num?)?.toDouble() ?? 0.0;
+    effectRealPointsPerLevel1 =
+        (json['EffectRealPointsPerLevel1'] as num?)?.toDouble() ?? 0.0;
     effectBasePoints1 = json['EffectBasePoints1'] ?? 0;
     effectMechanic1 = json['EffectMechanic1'] ?? 0;
     effectAura1 = json['EffectAura1'] ?? 0;
@@ -388,17 +398,21 @@ class Spell {
     implicitTargetA1 = json['ImplicitTargetA1'] ?? 0;
     implicitTargetB1 = json['ImplicitTargetB1'] ?? 0;
     effectTriggerSpell1 = json['EffectTriggerSpell1'] ?? 0;
-    effectPointsPerCombo1 = (json['EffectPointsPerCombo1'] as num?)?.toDouble() ?? 0.0;
+    effectPointsPerCombo1 =
+        (json['EffectPointsPerCombo1'] as num?)?.toDouble() ?? 0.0;
     effectSpellClassMaskA1 = json['EffectSpellClassMaskA1'] ?? 0;
     effectSpellClassMaskB1 = json['EffectSpellClassMaskB1'] ?? 0;
     effectSpellClassMaskC1 = json['EffectSpellClassMaskC1'] ?? 0;
-    effectChainAmplitude1 = (json['EffectChainAmplitude1'] as num?)?.toDouble() ?? 0.0;
-    effectBonusCoefficient1 = (json['EffectBonusCoefficient1'] as num?)?.toDouble() ?? 0.0;
+    effectChainAmplitude1 =
+        (json['EffectChainAmplitude1'] as num?)?.toDouble() ?? 0.0;
+    effectBonusCoefficient1 =
+        (json['EffectBonusCoefficient1'] as num?)?.toDouble() ?? 0.0;
 
     // === 效果2 ===
     effect2 = json['Effect2'] ?? 0;
     effectDieSides2 = json['EffectDieSides2'] ?? 0;
-    effectRealPointsPerLevel2 = (json['EffectRealPointsPerLevel2'] as num?)?.toDouble() ?? 0.0;
+    effectRealPointsPerLevel2 =
+        (json['EffectRealPointsPerLevel2'] as num?)?.toDouble() ?? 0.0;
     effectBasePoints2 = json['EffectBasePoints2'] ?? 0;
     effectMechanic2 = json['EffectMechanic2'] ?? 0;
     effectAura2 = json['EffectAura2'] ?? 0;
@@ -412,12 +426,15 @@ class Spell {
     implicitTargetA2 = json['ImplicitTargetA2'] ?? 0;
     implicitTargetB2 = json['ImplicitTargetB2'] ?? 0;
     effectTriggerSpell2 = json['EffectTriggerSpell2'] ?? 0;
-    effectPointsPerCombo2 = (json['EffectPointsPerCombo2'] as num?)?.toDouble() ?? 0.0;
+    effectPointsPerCombo2 =
+        (json['EffectPointsPerCombo2'] as num?)?.toDouble() ?? 0.0;
     effectSpellClassMaskA2 = json['EffectSpellClassMaskA2'] ?? 0;
     effectSpellClassMaskB2 = json['EffectSpellClassMaskB2'] ?? 0;
     effectSpellClassMaskC2 = json['EffectSpellClassMaskC2'] ?? 0;
-    effectChainAmplitude2 = (json['EffectChainAmplitude2'] as num?)?.toDouble() ?? 0.0;
-    effectBonusCoefficient2 = (json['EffectBonusCoefficient2'] as num?)?.toDouble() ?? 0.0;
+    effectChainAmplitude2 =
+        (json['EffectChainAmplitude2'] as num?)?.toDouble() ?? 0.0;
+    effectBonusCoefficient2 =
+        (json['EffectBonusCoefficient2'] as num?)?.toDouble() ?? 0.0;
 
     // === 装备限制 ===
     equippedItemClass = json['EquippedItemClass'] ?? 0;

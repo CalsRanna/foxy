@@ -187,9 +187,7 @@ class _ProspectingLootTemplateViewState
         children: [
           // 物品ID（只读）
           FormItem(
-            controller: TextEditingController(
-              text: widget.entry.toString(),
-            ),
+            controller: TextEditingController(text: widget.entry.toString()),
             label: '物品ID',
             placeholder: 'Entry',
             readOnly: true,

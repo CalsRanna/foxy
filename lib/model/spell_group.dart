@@ -19,9 +19,6 @@ class SpellGroup {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'spell_id': spellId,
-    };
+    return {'id': id, 'spell_id': spellId};
   }
 }
