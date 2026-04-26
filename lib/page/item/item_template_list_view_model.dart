@@ -4,7 +4,7 @@ import 'package:foxy/model/brief_item_template.dart';
 import 'package:foxy/model/item_template_filter_entity.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:signals/signals.dart';
 
 class ItemTemplateListViewModel {

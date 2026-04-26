@@ -6,7 +6,7 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -87,7 +87,9 @@ class SmartScriptListViewModel {
     final routerFacade = GetIt.instance.get<RouterFacade>();
     final isNew = entryOrGuid == null;
     final label = isNew ? '新建脚本' : '脚本 $entryOrGuid/$sourceType/$id/$link';
-    final detailId = isNew ? 'smart_new' : 'smart_${entryOrGuid}_${sourceType}_${id}_$link';
+    final detailId = isNew
+        ? 'smart_new'
+        : 'smart_${entryOrGuid}_${sourceType}_${id}_$link';
     routerFacade.navigateToDetail(
       id: detailId,
       label: label,

@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/model/gossip_menu_option.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
@@ -77,10 +77,10 @@ class GossipMenuOptionViewModel {
       if (creating.value) {
         await _repository.store(model);
       } else {
-        await _repository.update(
-          {'MenuID': _originalMenuId, 'OptionID': _originalOptionId},
-          model,
-        );
+        await _repository.update({
+          'MenuID': _originalMenuId,
+          'OptionID': _originalOptionId,
+        }, model);
       }
       DialogUtil.instance.success('保存成功');
       creating.value = false;
@@ -189,8 +189,7 @@ class GossipMenuOptionViewModel {
     o.boxCoded = int.tryParse(boxCodedController.text) ?? 0;
     o.boxMoney = int.tryParse(boxMoneyController.text) ?? 0;
     o.boxText = boxTextController.text;
-    o.boxBroadcastTextId =
-        int.tryParse(boxBroadcastTextIdController.text) ?? 0;
+    o.boxBroadcastTextId = int.tryParse(boxBroadcastTextIdController.text) ?? 0;
     o.actionMenuId = int.tryParse(actionMenuIdController.text) ?? 0;
     o.actionPoiId = int.tryParse(actionPoiIdController.text) ?? 0;
     o.verifiedBuild = int.tryParse(verifiedBuildController.text) ?? 0;

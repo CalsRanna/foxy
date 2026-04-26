@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -127,9 +128,29 @@ class DbcImportViewModel {
               dbcImportProgress.value = '导入中：$fileName ($processed 行)';
             }
           case (String fileName, String tag) when tag == 'skip' || tag == 'err':
-            await _appendTimingLine(fileName, tag == 'skip' ? 'SKIP' : 'ERR', 0, 0, 0, 0);
-          case (String fileName, int parseUs, int convertUs, int insertUs, int startedAt):
-            await _appendTimingLine(fileName, 'OK', parseUs, convertUs, insertUs, startedAt);
+            await _appendTimingLine(
+              fileName,
+              tag == 'skip' ? 'SKIP' : 'ERR',
+              0,
+              0,
+              0,
+              0,
+            );
+          case (
+            String fileName,
+            int parseUs,
+            int convertUs,
+            int insertUs,
+            int startedAt,
+          ):
+            await _appendTimingLine(
+              fileName,
+              'OK',
+              parseUs,
+              convertUs,
+              insertUs,
+              startedAt,
+            );
           case (bool success, int imported, int skipped, List errs):
             await _appendTimingSummary(imported, skipped, errs.length);
             if (success) {
@@ -137,7 +158,8 @@ class DbcImportViewModel {
               dbcImported.value = true;
             } else {
               final top = errs.take(3).join('\n');
-              dbcImportError.value = '导入完成，但部分文件失败：\n$top'
+              dbcImportError.value =
+                  '导入完成，但部分文件失败：\n$top'
                   '${errs.length > 3 ? '\n...等 ${errs.length} 个错误' : ''}';
               dbcImportProgress.value = '';
             }
@@ -151,27 +173,43 @@ class DbcImportViewModel {
     }
   }
 
-  String get _timingLogPath => p.join(Directory.current.path, 'dbc_import_timing.log');
+  String get _timingLogPath =>
+      p.join(Directory.current.path, 'dbc_import_timing.log');
 
   Future<void> _writeTimingHeader() async {
-    final line = '${'Time'.padRight(22)} ${'File'.padRight(28)} ${'Result'.padRight(8)} ${'Parse(ms)'.padRight(10)} ${'Convert(ms)'.padRight(12)} ${'Insert(ms)'.padRight(10)} Total(ms)';
+    final line =
+        '${'Time'.padRight(22)} ${'File'.padRight(28)} ${'Result'.padRight(8)} ${'Parse(ms)'.padRight(10)} ${'Convert(ms)'.padRight(12)} ${'Insert(ms)'.padRight(10)} Total(ms)';
     await File(_timingLogPath).writeAsString('$line\n');
   }
 
-  Future<void> _appendTimingLine(String file, String result, int parseUs, int convertUs, int insertUs, int startedAt) async {
-    final ts = DateTime.fromMicrosecondsSinceEpoch(startedAt).toIso8601String().padRight(22);
+  Future<void> _appendTimingLine(
+    String file,
+    String result,
+    int parseUs,
+    int convertUs,
+    int insertUs,
+    int startedAt,
+  ) async {
+    final ts = DateTime.fromMicrosecondsSinceEpoch(
+      startedAt,
+    ).toIso8601String().padRight(22);
     final parseMs = (parseUs ~/ 1000).toString();
     final convertMs = (convertUs ~/ 1000).toString();
     final insertMs = (insertUs ~/ 1000).toString();
     final totalMs = ((parseUs + convertUs + insertUs) ~/ 1000).toString();
-    final line = '$ts ${file.padRight(28)} ${result.padRight(8)} ${parseMs.padRight(10)} ${convertMs.padRight(12)} ${insertMs.padRight(10)} $totalMs';
+    final line =
+        '$ts ${file.padRight(28)} ${result.padRight(8)} ${parseMs.padRight(10)} ${convertMs.padRight(12)} ${insertMs.padRight(10)} $totalMs';
     await File(_timingLogPath).writeAsString('$line\n', mode: FileMode.append);
   }
 
-  Future<void> _appendTimingSummary(int imported, int skipped, int errors) async {
+  Future<void> _appendTimingSummary(
+    int imported,
+    int skipped,
+    int errors,
+  ) async {
     final line = '\nImported: $imported, Skipped: $skipped, Errors: $errors';
     await File(_timingLogPath).writeAsString('$line\n', mode: FileMode.append);
-    print('DBC import timing log: $_timingLogPath');
+    logger.i('DBC import timing log: $_timingLogPath');
   }
 
   // ========== 配置持久化 ==========
@@ -259,7 +297,12 @@ final _dbcEntries = [
 ];
 
 typedef _FieldDef = ({int index, String name, String type});
-typedef _FileDef = ({String name, String tableName, String format, List<_FieldDef> fields});
+typedef _FileDef = ({
+  String name,
+  String tableName,
+  String format,
+  List<_FieldDef> fields,
+});
 typedef _WorkerArgs = ({
   SendPort sendPort,
   String dbcPath,
@@ -315,16 +358,29 @@ const _batchSize = 200;
 
 /// 整个 DBC 导入流程在后台 isolate 中执行，包含 DB 连接、建表和写入。
 Future<void> _importWorker(_WorkerArgs args) async {
-  final (:sendPort, :dbcPath, :host, :port, :database, :username, :password, :files) = args;
+  final (
+    :sendPort,
+    :dbcPath,
+    :host,
+    :port,
+    :database,
+    :username,
+    :password,
+    :files,
+  ) = args;
 
   try {
-    final laconic = Laconic(MysqlDriver(MysqlConfig(
-      host: host,
-      port: port,
-      database: database,
-      username: username,
-      password: password,
-    )));
+    final laconic = Laconic(
+      MysqlDriver(
+        MysqlConfig(
+          host: host,
+          port: port,
+          database: database,
+          username: username,
+          password: password,
+        ),
+      ),
+    );
 
     // 建表
     for (final file in files) {
@@ -335,22 +391,37 @@ Future<void> _importWorker(_WorkerArgs args) async {
     final pool = Pool(_maxConcurrent);
     var imported = 0, skipped = 0;
     final errors = <String>[];
-    await Future.wait(files.map((file) => pool.withResource(() async {
-      try {
-        final result = await _workerImportFile(sendPort, laconic, dbcPath, file);
-        if (result.done) {
-          imported++;
-          sendPort.send((file.name, result.parseUs, result.convertUs, result.insertUs, result.startedAt));
-        } else {
-          skipped++;
-          sendPort.send((file.name, 'skip'));
-        }
-      } catch (e) {
-        errors.add('${file.name}: $e');
-        sendPort.send((file.name, 'err'));
-      }
-      sendPort.send((imported + skipped + errors.length, files.length));
-    })));
+    await Future.wait(
+      files.map(
+        (file) => pool.withResource(() async {
+          try {
+            final result = await _workerImportFile(
+              sendPort,
+              laconic,
+              dbcPath,
+              file,
+            );
+            if (result.done) {
+              imported++;
+              sendPort.send((
+                file.name,
+                result.parseUs,
+                result.convertUs,
+                result.insertUs,
+                result.startedAt,
+              ));
+            } else {
+              skipped++;
+              sendPort.send((file.name, 'skip'));
+            }
+          } catch (e) {
+            errors.add('${file.name}: $e');
+            sendPort.send((file.name, 'err'));
+          }
+          sendPort.send((imported + skipped + errors.length, files.length));
+        }),
+      ),
+    );
 
     sendPort.send((errors.isEmpty, imported, skipped, errors));
   } catch (e) {
@@ -364,16 +435,23 @@ Future<void> _workerCreateTable(Laconic laconic, _FileDef file) async {
     columns.add('`${field.name}` ${_sqlTypeFromString(field.type)}');
   }
   if (columns.isEmpty) return;
-  final sql = 'CREATE TABLE IF NOT EXISTS ${file.tableName} (\n'
+  final sql =
+      'CREATE TABLE IF NOT EXISTS ${file.tableName} (\n'
       '  ${columns.join(',\n  ')}\n'
       ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4';
   await laconic.statement(sql);
 }
 
-Future<({bool done, int parseUs, int convertUs, int insertUs, int startedAt})> _workerImportFile(
-    SendPort sendPort, Laconic laconic, String dbcPath, _FileDef file) async {
+Future<({bool done, int parseUs, int convertUs, int insertUs, int startedAt})>
+_workerImportFile(
+  SendPort sendPort,
+  Laconic laconic,
+  String dbcPath,
+  _FileDef file,
+) async {
   final count = await laconic.table(file.tableName).count();
-  if (count > 0) return (done: false, parseUs: 0, convertUs: 0, insertUs: 0, startedAt: 0);
+  if (count > 0)
+    return (done: false, parseUs: 0, convertUs: 0, insertUs: 0, startedAt: 0);
 
   final path = '$dbcPath\\${file.name}.dbc';
   if (!File(path).existsSync()) {
@@ -426,5 +504,11 @@ Future<({bool done, int parseUs, int convertUs, int insertUs, int startedAt})> _
     }
   });
 
-  return (done: true, parseUs: parseUs, convertUs: convertUs, insertUs: insertUs, startedAt: startedAt);
+  return (
+    done: true,
+    parseUs: parseUs,
+    convertUs: convertUs,
+    insertUs: insertUs,
+    startedAt: startedAt,
+  );
 }

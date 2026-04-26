@@ -9,7 +9,7 @@ import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -40,7 +40,7 @@ class BootstrapViewModel {
       );
       var laconic = Laconic(
         MysqlDriver(config),
-        listen: (query) => logger.d(query.rawSql),
+        listen: (query) => logger.d(query.sql),
       );
       var foxyViewModel = GetIt.instance.get<FoxyViewModel>();
       foxyViewModel.initSignals(laconic);

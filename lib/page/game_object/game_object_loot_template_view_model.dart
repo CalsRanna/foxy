@@ -4,7 +4,7 @@ import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
@@ -86,8 +86,7 @@ class GameObjectLootTemplateViewModel {
   }
 
   int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
-  double _parseDouble(String text) =>
-      text.isEmpty ? 0.0 : double.parse(text);
+  double _parseDouble(String text) => text.isEmpty ? 0.0 : double.parse(text);
   int _getSelectValue(ShadSelectController<int> controller) =>
       controller.value.firstOrNull ?? 0;
 
@@ -230,14 +229,8 @@ class GameObjectLootTemplateViewModel {
               placeholder: '物品ID',
             ),
           ),
-          ShadInput(
-            controller: referenceController,
-            placeholder: Text('关联ID'),
-          ),
-          ShadInput(
-            controller: chanceController,
-            placeholder: Text('掉落几率'),
-          ),
+          ShadInput(controller: referenceController, placeholder: Text('关联ID')),
+          ShadInput(controller: chanceController, placeholder: Text('掉落几率')),
           FormItem(
             label: '需要任务',
             child: FoxyShadSelect<int>(
@@ -246,14 +239,8 @@ class GameObjectLootTemplateViewModel {
               placeholder: const Text('QuestRequired'),
             ),
           ),
-          ShadInput(
-            controller: lootModeController,
-            placeholder: Text('掉落模式'),
-          ),
-          ShadInput(
-            controller: groupIdController,
-            placeholder: Text('组ID'),
-          ),
+          ShadInput(controller: lootModeController, placeholder: Text('掉落模式')),
+          ShadInput(controller: groupIdController, placeholder: Text('组ID')),
           Row(
             spacing: 12,
             children: [
@@ -271,10 +258,7 @@ class GameObjectLootTemplateViewModel {
               ),
             ],
           ),
-          ShadInput(
-            controller: commentController,
-            placeholder: Text('备注'),
-          ),
+          ShadInput(controller: commentController, placeholder: Text('备注')),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             spacing: 12,
@@ -286,9 +270,7 @@ class GameObjectLootTemplateViewModel {
               ShadButton(
                 onPressed: saving.value
                     ? null
-                    : () => isNew
-                        ? save(dialogContext)
-                        : update(dialogContext),
+                    : () => isNew ? save(dialogContext) : update(dialogContext),
                 child: Text('保存'),
               ),
             ],

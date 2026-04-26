@@ -4,7 +4,7 @@ import 'package:foxy/model/npc_text_locale.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:signals/signals.dart';
 
 /// Tab 2 (npc_text) ViewModel
