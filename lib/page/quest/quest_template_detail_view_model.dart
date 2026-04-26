@@ -149,9 +149,9 @@ class QuestTemplateDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.store(t);
+        await _repository.storeQuestTemplate(t);
       } else {
-        await _repository.update(entry.value, t);
+        await _repository.updateQuestTemplate(entry.value, t);
       }
       template.value = t;
       entry.value = t.id;
@@ -173,7 +173,7 @@ class QuestTemplateDetailViewModel {
   Future<void> initSignals({int? questId}) async {
     if (questId == null) return;
     entry.value = questId;
-    template.value = await _repository.find(questId) ?? QuestTemplate();
+    template.value = await _repository.getQuestTemplate(questId) ?? QuestTemplate();
     _initControllers(template.value);
   }
 

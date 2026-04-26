@@ -58,7 +58,7 @@ class GossipMenuListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.copy({'MenuID': menuId, 'TextID': textId});
+      await _repository.copyGossipMenu({'MenuID': menuId, 'TextID': textId});
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -80,7 +80,7 @@ class GossipMenuListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.destroy({'MenuID': menuId, 'TextID': textId});
+      await _repository.destroyGossipMenu({'MenuID': menuId, 'TextID': textId});
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -104,7 +104,7 @@ class GossipMenuListViewModel {
     loading.value = true;
     try {
       final filter = _buildFilter();
-      items.value = await _repository.paginate(
+      items.value = await _repository.getBriefGossipMenus(
         filter: filter,
         page: page.value,
       );

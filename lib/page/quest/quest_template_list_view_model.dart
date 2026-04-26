@@ -58,7 +58,7 @@ class QuestTemplateListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.copy(id);
+      await _repository.copyQuestTemplate(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -78,7 +78,7 @@ class QuestTemplateListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.destroy(id);
+      await _repository.destroyQuestTemplate(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -102,7 +102,7 @@ class QuestTemplateListViewModel {
     loading.value = true;
     try {
       final filter = _buildFilter();
-      items.value = await _repository.paginate(
+      items.value = await _repository.getBriefQuestTemplates(
         filter: filter,
         page: page.value,
       );
