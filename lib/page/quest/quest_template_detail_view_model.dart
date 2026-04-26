@@ -8,7 +8,6 @@ import 'package:signals/signals.dart';
 
 class QuestTemplateDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final _repository = QuestTemplateRepository();
 
   final entry = signal(0);
   final template = signal(QuestTemplate());
@@ -148,10 +147,11 @@ class QuestTemplateDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
+      final repository = QuestTemplateRepository();
       if (t.id == 0) {
-        await _repository.storeQuestTemplate(t);
+        await repository.storeQuestTemplate(t);
       } else {
-        await _repository.updateQuestTemplate(entry.value, t);
+        await repository.updateQuestTemplate(t);
       }
       template.value = t;
       entry.value = t.id;
@@ -172,8 +172,7 @@ class QuestTemplateDetailViewModel {
 
   Future<void> initSignals({int? questId}) async {
     if (questId == null) return;
-    entry.value = questId;
-    template.value = await _repository.getQuestTemplate(questId) ?? QuestTemplate();
+    template.value = await QuestTemplateRepository().getQuestTemplate(questId);
     _initControllers(template.value);
   }
 
