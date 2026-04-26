@@ -35,7 +35,7 @@ class GossipMenuDetailViewModel {
     try {
       if (menuId == null) {
         creating.value = true;
-        final suggested = await _repository.create();
+        final suggested = await _repository.getNextMenuId();
         this.menuId.value = suggested.menuId;
         this.textId.value = 0;
         menuIdController.text = suggested.menuId.toString();
@@ -44,7 +44,7 @@ class GossipMenuDetailViewModel {
         creating.value = false;
         _originalMenuId = menuId;
         _originalTextId = textId ?? 0;
-        final existing = await _repository.find({
+        final existing = await _repository.getGossipMenu({
           'MenuID': menuId,
           'TextID': textId ?? 0,
         });
@@ -72,10 +72,10 @@ class GossipMenuDetailViewModel {
         ..menuId = newMenuId
         ..textId = newTextId;
       if (creating.value) {
-        await _repository.store(model);
+        await _repository.storeGossipMenu(model);
         creating.value = false;
       } else {
-        await _repository.update(
+        await _repository.updateGossipMenu(
           {'MenuID': _originalMenuId, 'TextID': _originalTextId},
           model,
         );

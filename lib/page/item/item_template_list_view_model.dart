@@ -144,7 +144,7 @@ class ItemTemplateListViewModel {
       ..description = descriptionController.text
       ..classId = selectedClassId.value
       ..subclass = selectedSubclass.value;
-    return repository.countWithFilter(filter: filter);
+    return repository.count(filter: filter);
   }
 
   Future<void> _refresh() async {

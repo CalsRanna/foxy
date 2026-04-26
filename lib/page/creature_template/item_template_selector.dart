@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_quality.dart';
-import 'package:foxy/model/item_template.dart';
+import 'package:foxy/model/brief_item_template.dart';
+import 'package:foxy/model/item_template_filter_entity.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -63,7 +64,7 @@ class _DialogState extends State<_Dialog> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  List<ItemTemplate> _items = [];
+  List<BriefItemTemplate> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;
@@ -265,24 +266,15 @@ class _DialogState extends State<_Dialog> {
     setState(() => _loading = true);
     try {
       final repository = ItemTemplateRepository();
-      final entry = _entryController.text.isEmpty
-          ? null
-          : _entryController.text;
-      final name = _nameController.text.isEmpty ? null : _nameController.text;
-      final description = _descriptionController.text.isEmpty
-          ? null
-          : _descriptionController.text;
-      final items = await repository.search(
-        entry: entry,
-        name: name,
-        description: description,
+      final filter = ItemTemplateFilterEntity()
+        ..entry = _entryController.text
+        ..name = _nameController.text
+        ..description = _descriptionController.text;
+      final items = await repository.getBriefItemTemplates(
+        filter: filter,
         page: _page,
       );
-      final total = await repository.count(
-        entry: entry,
-        name: name,
-        description: description,
-      );
+      final total = await repository.count(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

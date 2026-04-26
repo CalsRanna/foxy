@@ -147,10 +147,7 @@ class ItemTemplateDetailViewModel {
   Future<void> initSignals({int? entry}) async {
     if (entry == null || entry <= 0) return;
     final repository = ItemTemplateRepository();
-    final result = await repository.find(entry);
-    if (result != null) {
-      template.value = result;
-    }
+    template.value = await repository.getItemTemplate(entry);
     _initControllers(template.value);
     statsCount.value = template.value.statsCount;
   }
@@ -421,9 +418,9 @@ class ItemTemplateDetailViewModel {
       final t = _collectFromControllers();
       final repository = ItemTemplateRepository();
       if (t.entry == 0) {
-        await repository.store(t);
+        await repository.storeItemTemplate(t);
       } else {
-        await repository.update(t);
+        await repository.updateItemTemplate(t);
       }
       template.value = t;
       if (!context.mounted) return;
