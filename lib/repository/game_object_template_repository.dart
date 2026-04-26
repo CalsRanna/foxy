@@ -30,16 +30,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
       'gameobject_template_locale AS gtl',
       (join) => join.on('gt.entry', 'gtl.entry').on('gtl.locale', '"zhCN"'),
     );
-    if (filter?.entry.isNotEmpty == true) {
-      builder = builder.where('gt.entry', filter!.entry);
-    }
-    if (filter?.name.isNotEmpty == true) {
-      builder = builder.whereAny(
-        ['gt.name', 'gtl.name'],
-        '%${filter!.name}%',
-        operator: 'like',
-      );
-    }
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -65,16 +56,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
       'gameobject_template_locale AS gtl',
       (join) => join.on('gt.entry', 'gtl.entry').on('gtl.locale', '"zhCN"'),
     );
-    if (filter?.entry.isNotEmpty == true) {
-      builder = builder.where('gt.entry', filter!.entry);
-    }
-    if (filter?.name.isNotEmpty == true) {
-      builder = builder.whereAny(
-        ['gt.name', 'gtl.name'],
-        '%${filter!.name}%',
-        operator: 'like',
-      );
-    }
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -120,5 +102,20 @@ class GameObjectTemplateRepository with RepositoryMixin {
       return json;
     }).toList();
     await laconic.table(_localeTable).insert(jsons);
+  }
+
+  dynamic _applyFilter(dynamic builder, GameObjectTemplateFilterEntity? filter) {
+    if (filter == null) return builder;
+    if (filter.entry.isNotEmpty) {
+      builder = builder.where('gt.entry', filter.entry);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.whereAny(
+        ['gt.name', 'gtl.name'],
+        '%${filter.name}%',
+        operator: 'like',
+      );
+    }
+    return builder;
   }
 }

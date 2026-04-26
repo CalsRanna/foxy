@@ -34,23 +34,7 @@ class CreatureTemplateRepository with RepositoryMixin {
       'creature_template_locale AS ctl',
       (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
     );
-    if (filter?.entry.isNotEmpty == true) {
-      builder = builder.where('ct.entry', filter!.entry);
-    }
-    if (filter?.name.isNotEmpty == true) {
-      builder = builder.whereAny(
-        ['ct.name', 'ctl.Name'],
-        '%${filter!.name}%',
-        operator: 'like',
-      );
-    }
-    if (filter?.subName.isNotEmpty == true) {
-      builder = builder.whereAny(
-        ['ct.subname', 'ctl.Title'],
-        '%${filter!.subName}%',
-        operator: 'like',
-      );
-    }
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -78,23 +62,7 @@ class CreatureTemplateRepository with RepositoryMixin {
       'creature_template_locale AS ctl',
       (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
     );
-    if (filter?.entry.isNotEmpty == true) {
-      builder = builder.where('ct.entry', filter!.entry);
-    }
-    if (filter?.name.isNotEmpty == true) {
-      builder = builder.whereAny(
-        ['ct.name', 'ctl.Name'],
-        '%${filter!.name}%',
-        operator: 'like',
-      );
-    }
-    if (filter?.subName.isNotEmpty == true) {
-      builder = builder.whereAny(
-        ['ct.subname', 'ctl.Title'],
-        '%${filter!.subName}%',
-        operator: 'like',
-      );
-    }
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.limit(kPageSize).offset(offset).get();
     return results
@@ -148,5 +116,27 @@ class CreatureTemplateRepository with RepositoryMixin {
       return json;
     }).toList();
     await laconic.table(_localeTable).insert(jsons);
+  }
+
+  dynamic _applyFilter(dynamic builder, CreatureTemplateFilterEntity? filter) {
+    if (filter == null) return builder;
+    if (filter.entry.isNotEmpty) {
+      builder = builder.where('ct.entry', filter.entry);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.whereAny(
+        ['ct.name', 'ctl.Name'],
+        '%${filter.name}%',
+        operator: 'like',
+      );
+    }
+    if (filter.subName.isNotEmpty) {
+      builder = builder.whereAny(
+        ['ct.subname', 'ctl.Title'],
+        '%${filter.subName}%',
+        operator: 'like',
+      );
+    }
+    return builder;
   }
 }

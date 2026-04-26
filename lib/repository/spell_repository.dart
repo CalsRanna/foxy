@@ -6,13 +6,9 @@ class SpellRepository with RepositoryMixin {
   final String _table = 'foxy.dbc_spell';
 
   Future<int> count({SpellFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    if (filter?.id.isNotEmpty == true) {
-      builder = builder.where('ID', filter!.id);
-    }
-    if (filter?.name.isNotEmpty == true) {
-      builder = builder.where('Name_Lang_zhCN', '%${filter!.name}%');
-    }
+    var builder = laconic.table('$_table AS ds');
+    builder.select(['ds.ID']);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -52,12 +48,7 @@ class SpellRepository with RepositoryMixin {
       'foxy.dbc_spell_icon AS dsi',
       (join) => join.on('ds.SpellIconID', 'dsi.ID'),
     );
-    if (filter?.id.isNotEmpty == true) {
-      builder = builder.where('ds.ID', filter!.id);
-    }
-    if (filter?.name.isNotEmpty == true) {
-      builder = builder.where('ds.Name_Lang_zhCN', '%${filter!.name}%');
-    }
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefSpell.fromJson(e.toMap())).toList();
@@ -86,5 +77,16 @@ class SpellRepository with RepositoryMixin {
     ]).first();
     var maxId = result.toMap()['max_id'] as int?;
     return (maxId ?? 0) + 1;
+  }
+
+  dynamic _applyFilter(dynamic builder, SpellFilterEntity? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ds.ID', filter.id);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.where('ds.Name_Lang_zhCN', '%${filter.name}%');
+    }
+    return builder;
   }
 }
