@@ -36,8 +36,7 @@ class CreatureTemplateDetailViewModel {
   final unitFlag2Controller = TextEditingController();
 
   /// Immune
-  final mechanicImmuneMaskController = TextEditingController();
-  final spellSchoolImmuneMaskController = TextEditingController();
+  final creatureImmunitiesIdController = TextEditingController();
 
   /// Modifier
   final expController = ShadSelectController<int>();
@@ -53,6 +52,8 @@ class CreatureTemplateDetailViewModel {
   final experienceModifierController = TextEditingController();
   final speedWalkController = TextEditingController();
   final speedRunController = TextEditingController();
+  final speedSwimController = TextEditingController();
+  final speedFlightController = TextEditingController();
 
   /// Loot
   final minGoldController = TextEditingController();
@@ -68,24 +69,11 @@ class CreatureTemplateDetailViewModel {
   final difficultyEntry2Controller = TextEditingController();
   final difficultyEntry3Controller = TextEditingController();
 
-  /// Model
-  final modelId1Controller = TextEditingController();
-  final modelId2Controller = TextEditingController();
-  final modelId3Controller = TextEditingController();
-  final modelId4Controller = TextEditingController();
-  final scaleController = TextEditingController();
-
   /// Movement
   final movementIdController = TextEditingController();
   final movementTypeController = ShadSelectController<int>();
   final hoverHeightController = TextEditingController();
-  final inhabitTypeController = TextEditingController();
-
-  /// Trainer
-  final trainerTypeController = ShadSelectController<int>();
-  final trainerSpellController = TextEditingController();
-  final trainerClassController = ShadSelectController<int>();
-  final trainerRaceController = ShadSelectController<int>();
+  final detectionRangeController = TextEditingController();
 
   /// Other
   final aiNameController = TextEditingController();
@@ -154,8 +142,7 @@ class CreatureTemplateDetailViewModel {
     t.unitFlags2 = _parseInt(unitFlag2Controller.text);
 
     /// Immune
-    t.mechanicImmuneMask = _parseInt(mechanicImmuneMaskController.text);
-    t.spellSchoolImmuneMask = _parseInt(spellSchoolImmuneMaskController.text);
+    t.creatureImmunitiesId = _parseInt(creatureImmunitiesIdController.text);
 
     /// Modifier
     t.exp = _getSelectValue(expController);
@@ -171,6 +158,8 @@ class CreatureTemplateDetailViewModel {
     t.experienceModifier = _parseDouble(experienceModifierController.text);
     t.speedWalk = _parseDouble(speedWalkController.text);
     t.speedRun = _parseDouble(speedRunController.text);
+    t.speedSwim = _parseDouble(speedSwimController.text);
+    t.speedFlight = _parseDouble(speedFlightController.text);
 
     /// Loot
     t.minGold = _parseInt(minGoldController.text);
@@ -186,24 +175,11 @@ class CreatureTemplateDetailViewModel {
     t.difficultyEntry2 = _parseInt(difficultyEntry2Controller.text);
     t.difficultyEntry3 = _parseInt(difficultyEntry3Controller.text);
 
-    /// Model
-    t.modelId1 = _parseInt(modelId1Controller.text);
-    t.modelId2 = _parseInt(modelId2Controller.text);
-    t.modelId3 = _parseInt(modelId3Controller.text);
-    t.modelId4 = _parseInt(modelId4Controller.text);
-    t.scale = _parseDouble(scaleController.text);
-
     /// Movement
     t.movementId = _parseInt(movementIdController.text);
     t.movementType = _getSelectValue(movementTypeController);
     t.hoverHeight = _parseDouble(hoverHeightController.text);
-    t.inhabitType = _parseInt(inhabitTypeController.text);
-
-    /// Trainer
-    t.trainerType = _getSelectValue(trainerTypeController);
-    t.trainerSpell = _parseInt(trainerSpellController.text);
-    t.trainerClass = _getSelectValue(trainerClassController);
-    t.trainerRace = _getSelectValue(trainerRaceController);
+    t.detectionRange = _parseDouble(detectionRangeController.text);
 
     /// Other
     t.aiName = aiNameController.text;
@@ -246,8 +222,7 @@ class CreatureTemplateDetailViewModel {
     unitFlag2Controller.dispose();
 
     /// Immune
-    mechanicImmuneMaskController.dispose();
-    spellSchoolImmuneMaskController.dispose();
+    creatureImmunitiesIdController.dispose();
 
     /// Modifier
     expController.dispose();
@@ -263,6 +238,8 @@ class CreatureTemplateDetailViewModel {
     experienceModifierController.dispose();
     speedWalkController.dispose();
     speedRunController.dispose();
+    speedSwimController.dispose();
+    speedFlightController.dispose();
 
     /// Loot
     minGoldController.dispose();
@@ -278,24 +255,11 @@ class CreatureTemplateDetailViewModel {
     difficultyEntry2Controller.dispose();
     difficultyEntry3Controller.dispose();
 
-    /// Model
-    modelId1Controller.dispose();
-    modelId2Controller.dispose();
-    modelId3Controller.dispose();
-    modelId4Controller.dispose();
-    scaleController.dispose();
-
     /// Movement
     movementIdController.dispose();
     movementTypeController.dispose();
     hoverHeightController.dispose();
-    inhabitTypeController.dispose();
-
-    /// Trainer
-    trainerTypeController.dispose();
-    trainerSpellController.dispose();
-    trainerClassController.dispose();
-    trainerRaceController.dispose();
+    detectionRangeController.dispose();
 
     /// Other
     aiNameController.dispose();
@@ -339,9 +303,8 @@ class CreatureTemplateDetailViewModel {
     unitFlag2Controller.text = template.unitFlags2.toString();
 
     /// Immune
-    mechanicImmuneMaskController.text = template.mechanicImmuneMask.toString();
-    spellSchoolImmuneMaskController.text = template.spellSchoolImmuneMask
-        .toString();
+    creatureImmunitiesIdController.text =
+        template.creatureImmunitiesId.toString();
 
     /// Modifier
     expController.value = {template.exp};
@@ -357,6 +320,8 @@ class CreatureTemplateDetailViewModel {
     experienceModifierController.text = template.experienceModifier.toString();
     speedWalkController.text = template.speedWalk.toString();
     speedRunController.text = template.speedRun.toString();
+    speedSwimController.text = template.speedSwim.toString();
+    speedFlightController.text = template.speedFlight.toString();
 
     /// Loot
     minGoldController.text = template.minGold.toString();
@@ -372,24 +337,11 @@ class CreatureTemplateDetailViewModel {
     difficultyEntry2Controller.text = template.difficultyEntry2.toString();
     difficultyEntry3Controller.text = template.difficultyEntry3.toString();
 
-    /// Model
-    modelId1Controller.text = template.modelId1.toString();
-    modelId2Controller.text = template.modelId2.toString();
-    modelId3Controller.text = template.modelId3.toString();
-    modelId4Controller.text = template.modelId4.toString();
-    scaleController.text = template.scale.toString();
-
-    ///Movement
+    /// Movement
     movementIdController.text = template.movementId.toString();
     movementTypeController.value = {template.movementType};
     hoverHeightController.text = template.hoverHeight.toString();
-    inhabitTypeController.text = template.inhabitType.toString();
-
-    /// Trainer
-    trainerTypeController.value = {template.trainerType};
-    trainerSpellController.text = template.trainerSpell.toString();
-    trainerClassController.value = {template.trainerClass};
-    trainerRaceController.value = {template.trainerRace};
+    detectionRangeController.text = template.detectionRange.toString();
 
     /// Other
     aiNameController.text = template.aiName;

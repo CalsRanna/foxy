@@ -12,10 +12,10 @@ class BriefSpell {
 
   BriefSpell.fromJson(Map<String, dynamic> json) {
     id = json['ID'] ?? 0;
-    name = json['Name_Lang_zhCN'] ?? '';
-    subtext = json['NameSubtext_Lang_zhCN'] ?? '';
-    description = json['Description_Lang_zhCN'] ?? '';
-    auraDescription = json['AuraDescription_Lang_zhCN'] ?? '';
+    name = json['Name_lang_zhCN'] ?? json['Name_Lang_zhCN'] ?? '';
+    subtext = json['NameSubtext_lang_zhCN'] ?? json['NameSubtext_Lang_zhCN'] ?? '';
+    description = json['Description_lang_zhCN'] ?? json['Description_Lang_zhCN'] ?? '';
+    auraDescription = json['AuraDescription_lang_zhCN'] ?? json['AuraDescription_Lang_zhCN'] ?? '';
     duration = '${json['Duration'] ?? ''}';
     textureFilename = json['TextureFilename'] ?? '';
   }

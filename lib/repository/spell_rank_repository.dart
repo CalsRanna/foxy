@@ -18,10 +18,10 @@ class SpellRankRepository with RepositoryMixin {
       var builder = laconic.table('$_table AS sr');
       const fields = [
         'sr.*',
-        'fds.Name_Lang_zhCN as First_Spell_Name_Lang_zhCN',
-        'fds.NameSubtext_Lang_zhCN as First_Spell_NameSubtext_Lang_zhCN',
-        'ds.Name_Lang_zhCN as Spell_Name_Lang_zhCN',
-        'ds.NameSubtext_Lang_zhCN as Spell_NameSubtext_Lang_zhCN',
+        'fds.Name_lang_zhCN as First_Spell_Name_Lang_zhCN',
+        'fds.NameSubtext_lang_zhCN as First_Spell_NameSubtext_Lang_zhCN',
+        'ds.Name_lang_zhCN as Spell_Name_Lang_zhCN',
+        'ds.NameSubtext_lang_zhCN as Spell_NameSubtext_Lang_zhCN',
       ];
       builder = builder.select(fields);
       builder = builder.leftJoin(

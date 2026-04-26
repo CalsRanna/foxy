@@ -32,11 +32,11 @@ class ItemTemplate {
   int stackable = 1;
 
   // --- 分类与容器 ---
-  String totemCategory = ''; // DB 列名为 `TotemCategory`
+  int totemCategory = 0; // DB 列名为 `TotemCategory`
   int foodType = 0; // DB 列名为 `FoodType`
   int bagFamily = 0; // DB 列名为 `BagFamily`
   int containerSlots = 0; // DB 列名为 `ContainerSlots`
-  String itemLimitCategory = ''; // DB 列名为 `ItemLimitCategory`
+  int itemLimitCategory = 0; // DB 列名为 `ItemLimitCategory`
 
   // --- 任务与限时 ---
   int startquest = 0;
@@ -55,11 +55,11 @@ class ItemTemplate {
   int rangedModRange = 0; // DB 列名为 `RangedModRange`
   double armorDamageModifier = 0.0;
   int dmgType1 = 0; // DB 列名为 `dmg_type1`
-  int dmgMin1 = 0; // DB 列名为 `dmg_min1`
-  int dmgMax1 = 0; // DB 列名为 `dmg_max1`
+  double dmgMin1 = 0; // DB 列名为 `dmg_min1`
+  double dmgMax1 = 0; // DB 列名为 `dmg_max1`
   int dmgType2 = 0; // DB 列名为 `dmg_type2`
-  int dmgMin2 = 0; // DB 列名为 `dmg_min2`
-  int dmgMax2 = 0; // DB 列名为 `dmg_max2`
+  double dmgMin2 = 0; // DB 列名为 `dmg_min2`
+  double dmgMax2 = 0; // DB 列名为 `dmg_max2`
   int ammoType = 0; // DB 列名为 `ammo_type`
   int armor = 0;
   int block = 0;
@@ -171,12 +171,12 @@ class ItemTemplate {
     stackable = json['stackable'] ?? 1;
 
     // --- 分类与容器 ---
-    totemCategory = json['TotemCategory'] ?? json['totemCategory'] ?? '';
+    totemCategory = json['TotemCategory'] ?? json['totemCategory'] ?? 0;
     foodType = json['FoodType'] ?? json['foodType'] ?? 0;
     bagFamily = json['BagFamily'] ?? json['bagFamily'] ?? 0;
     containerSlots = json['ContainerSlots'] ?? json['containerSlots'] ?? 0;
     itemLimitCategory =
-        json['ItemLimitCategory'] ?? json['itemLimitCategory'] ?? '';
+        json['ItemLimitCategory'] ?? json['itemLimitCategory'] ?? 0;
 
     // --- 任务与限时 ---
     startquest = json['startquest'] ?? 0;
@@ -197,11 +197,11 @@ class ItemTemplate {
         (json['ArmorDamageModifier'] ?? json['armorDamageModifier'] ?? 0.0)
             as double;
     dmgType1 = json['dmg_type1'] ?? json['dmgType1'] ?? 0;
-    dmgMin1 = json['dmg_min1'] ?? json['dmgMin1'] ?? 0;
-    dmgMax1 = json['dmg_max1'] ?? json['dmgMax1'] ?? 0;
+    dmgMin1 = (json['dmg_min1'] ?? json['dmgMin1'] ?? 0).toDouble();
+    dmgMax1 = (json['dmg_max1'] ?? json['dmgMax1'] ?? 0).toDouble();
     dmgType2 = json['dmg_type2'] ?? json['dmgType2'] ?? 0;
-    dmgMin2 = json['dmg_min2'] ?? json['dmgMin2'] ?? 0;
-    dmgMax2 = json['dmg_max2'] ?? json['dmgMax2'] ?? 0;
+    dmgMin2 = (json['dmg_min2'] ?? json['dmgMin2'] ?? 0).toDouble();
+    dmgMax2 = (json['dmg_max2'] ?? json['dmgMax2'] ?? 0).toDouble();
     ammoType = json['ammo_type'] ?? json['ammoType'] ?? 0;
     armor = json['armor'] ?? 0;
     block = json['block'] ?? 0;

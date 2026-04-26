@@ -178,11 +178,11 @@ class ItemTemplateDetailViewModel {
     buyCountController.text = template.buyCount.toString();
     maxcountController.text = template.maxcount.toString();
     stackableController.text = template.stackable.toString();
-    totemCategoryController.text = template.totemCategory;
+    totemCategoryController.text = template.totemCategory.toString();
     foodTypeController.value = {template.foodType};
     bagFamilyController.text = template.bagFamily.toString();
     containerSlotsController.text = template.containerSlots.toString();
-    itemLimitCategoryController.text = template.itemLimitCategory;
+    itemLimitCategoryController.text = template.itemLimitCategory.toString();
     startquestController.text = template.startquest.toString();
     durationController.text = template.duration.toString();
     disenchantIdController.text = template.disenchantId.toString();
@@ -310,11 +310,11 @@ class ItemTemplateDetailViewModel {
     t.buyCount = _parseInt(buyCountController.text);
     t.maxcount = _parseInt(maxcountController.text);
     t.stackable = _parseInt(stackableController.text);
-    t.totemCategory = totemCategoryController.text;
+    t.totemCategory = _parseInt(totemCategoryController.text);
     t.foodType = _getSelectValue(foodTypeController);
     t.bagFamily = _parseInt(bagFamilyController.text);
     t.containerSlots = _parseInt(containerSlotsController.text);
-    t.itemLimitCategory = itemLimitCategoryController.text;
+    t.itemLimitCategory = _parseInt(itemLimitCategoryController.text);
     t.startquest = _parseInt(startquestController.text);
     t.duration = _parseInt(durationController.text);
     t.disenchantId = _parseInt(disenchantIdController.text);
@@ -332,11 +332,11 @@ class ItemTemplateDetailViewModel {
     t.armorDamageModifier =
         _parseDouble(armorDamageModifierController.text);
     t.dmgType1 = _getSelectValue(dmgType1Controller);
-    t.dmgMin1 = _parseInt(dmgMin1Controller.text);
-    t.dmgMax1 = _parseInt(dmgMax1Controller.text);
+    t.dmgMin1 = _parseDouble(dmgMin1Controller.text);
+    t.dmgMax1 = _parseDouble(dmgMax1Controller.text);
     t.dmgType2 = _getSelectValue(dmgType2Controller);
-    t.dmgMin2 = _parseInt(dmgMin2Controller.text);
-    t.dmgMax2 = _parseInt(dmgMax2Controller.text);
+    t.dmgMin2 = _parseDouble(dmgMin2Controller.text);
+    t.dmgMax2 = _parseDouble(dmgMax2Controller.text);
     t.ammoType = _getSelectValue(ammoTypeController);
     t.armor = _parseInt(armorController.text);
     t.block = _parseInt(blockController.text);

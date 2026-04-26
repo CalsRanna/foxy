@@ -22,7 +22,6 @@ class SpellGroup {
     return {
       'id': id,
       'spell_id': spellId,
-      'special_flag': specialFlag,
     };
   }
 }
