@@ -64,7 +64,7 @@ lib/
    - 使用 `Watch` 组件监听状态变化
    - **导入规范**（强制）：
      - DetailViewModel 中使用：`import 'package:signals/signals.dart';`
-     - ListViewModel 中使用：`import 'package:signals_flutter/signals_core.dart';`
+     - ListViewModel 中使用：`import 'package:signals/signals.dart';`
      - Page 中使用（需要 Watch 组件）：`import 'package:signals/signals_flutter.dart';`
 
 3. **表单控制**：TextEditingController
@@ -176,7 +176,7 @@ class CreatureTemplateDetailViewModel {
 import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
-import 'package:signals_flutter/signals_core.dart';  // ✅ ListViewModel 使用此导入
+import 'package:signals/signals.dart';  // ✅ ListViewModel 使用此导入
 
 class CreatureTemplateListViewModel {
   // ✅ ListViewModel 推荐使用成员变量（多次使用）

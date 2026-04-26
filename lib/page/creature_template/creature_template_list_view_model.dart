@@ -8,7 +8,7 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_core.dart';
+import 'package:signals/signals.dart';
 
 class CreatureTemplateListViewModel {
   final entryController = TextEditingController();
