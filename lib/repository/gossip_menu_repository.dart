@@ -56,7 +56,7 @@ class GossipMenuRepository with RepositoryMixin {
     await builder.delete();
   }
 
-  Future<List<GossipMenu>> getBriefGossipMenus({
+  Future<List<BriefGossipMenu>> getBriefGossipMenus({
     int page = 1,
     GossipMenuFilterEntity? filter,
   }) async {
@@ -83,7 +83,7 @@ class GossipMenuRepository with RepositoryMixin {
       builder = _applyFilter(builder, filter);
       builder = builder.limit(kPageSize).offset(offset);
       final results = await builder.get();
-      return results.map((e) => GossipMenu.fromJson(e.toMap())).toList();
+      return results.map((e) => BriefGossipMenu.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }

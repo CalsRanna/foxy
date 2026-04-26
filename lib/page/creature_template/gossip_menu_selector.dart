@@ -62,7 +62,7 @@ class _DialogState extends State<_Dialog> {
   final _menuIdController = TextEditingController();
   final _textController = TextEditingController();
 
-  List<GossipMenu> _items = [];
+  List<BriefGossipMenu> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;
