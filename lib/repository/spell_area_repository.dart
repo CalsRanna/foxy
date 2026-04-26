@@ -6,20 +6,21 @@ class SpellAreaRepository with RepositoryMixin {
 
   Future<List<SpellArea>> getBySpell(int spell) async {
     try {
-      var results = await laconic
-          .table(_table)
-          .where('spell', spell)
-          .get();
-      return results
-          .map((e) => SpellArea.fromJson(e.toMap()))
-          .toList();
+      var results = await laconic.table(_table).where('spell', spell).get();
+      return results.map((e) => SpellArea.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
   }
 
-  Future<SpellArea?> find(int spell, int area, int questStart, int auraSpell,
-      int racemask, int gender) async {
+  Future<SpellArea?> find(
+    int spell,
+    int area,
+    int questStart,
+    int auraSpell,
+    int racemask,
+    int gender,
+  ) async {
     try {
       var result = await laconic
           .table(_table)
@@ -59,8 +60,14 @@ class SpellAreaRepository with RepositoryMixin {
         .update(json);
   }
 
-  Future<void> delete(int spell, int area, int questStart, int auraSpell,
-      int racemask, int gender) async {
+  Future<void> delete(
+    int spell,
+    int area,
+    int questStart,
+    int auraSpell,
+    int racemask,
+    int gender,
+  ) async {
     await laconic
         .table(_table)
         .where('spell', spell)

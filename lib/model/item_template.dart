@@ -88,7 +88,10 @@ class ItemTemplate {
   List<double> spellPpmRates = List.filled(5, 0.0); // spellppmRate_1..5
   List<int> spellCooldowns = List.filled(5, 0); // spellcooldown_1..5
   List<int> spellCategories = List.filled(5, 0); // spellcategory_1..5
-  List<int> spellCategoryCooldowns = List.filled(5, 0); // spellcategorycooldown_1..5
+  List<int> spellCategoryCooldowns = List.filled(
+    5,
+    0,
+  ); // spellcategorycooldown_1..5
 
   // --- 使用限制 ---
   int allowableClass = -1; // DB 列名为 `Allowableclass`，-1 表示所有职业
@@ -232,15 +235,18 @@ class ItemTemplate {
       spellIds[i] = json['spellid_${i + 1}'] ?? 0;
       spellTriggers[i] = json['spelltrigger_${i + 1}'] ?? 0;
       spellCharges[i] = json['spellcharges_${i + 1}'] ?? 0;
-      spellPpmRates[i] =
-          (json['spellppmRate_${i + 1}'] ?? 0.0) as double;
+      spellPpmRates[i] = (json['spellppmRate_${i + 1}'] ?? 0.0) as double;
       spellCooldowns[i] = json['spellcooldown_${i + 1}'] ?? 0;
       spellCategories[i] = json['spellcategory_${i + 1}'] ?? 0;
       spellCategoryCooldowns[i] = json['spellcategorycooldown_${i + 1}'] ?? 0;
     }
 
     // --- 使用限制 ---
-    allowableClass = json['Allowableclass'] ?? json['AllowableClass'] ?? json['allowableClass'] ?? -1;
+    allowableClass =
+        json['Allowableclass'] ??
+        json['AllowableClass'] ??
+        json['allowableClass'] ??
+        -1;
     allowableRace = json['AllowableRace'] ?? json['allowableRace'] ?? -1;
     itemLevel = json['ItemLevel'] ?? json['itemLevel'] ?? 0;
     requiredLevel = json['RequiredLevel'] ?? json['requiredLevel'] ?? 0;
@@ -253,7 +259,9 @@ class ItemTemplate {
     requiredCityRank =
         json['RequiredCityRank'] ?? json['requiredCityRank'] ?? 0;
     requiredReputationFaction =
-        json['RequiredReputationFaction'] ?? json['requiredReputationFaction'] ?? 0;
+        json['RequiredReputationFaction'] ??
+        json['requiredReputationFaction'] ??
+        0;
     requiredReputationRank =
         json['RequiredReputationRank'] ?? json['requiredReputationRank'] ?? 0;
     requiredDisenchantSkill =

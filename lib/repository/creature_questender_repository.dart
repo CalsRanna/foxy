@@ -9,12 +9,7 @@ class CreatureQuestenderRepository with RepositoryMixin {
   /// 按 quest 搜索该任务下的所有任务结束者（带 creature_template + locale JOIN）
   Future<List<BriefCreatureQuestender>> search(int questId) async {
     try {
-      const fields = [
-        'cqe.id',
-        'cqe.quest',
-        'ct.name',
-        'ctl.Name',
-      ];
+      const fields = ['cqe.id', 'cqe.quest', 'ct.name', 'ctl.Name'];
       var builder = laconic.table('$_table AS cqe');
       builder = builder.select(fields);
       builder = builder.leftJoin(
@@ -52,11 +47,9 @@ class CreatureQuestenderRepository with RepositoryMixin {
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
   Future<CreatureQuestender> create(int questId) async {
     try {
-      final result = await laconic
-          .table(_table)
-          .where('quest', questId)
-          .select(['MAX(id) as max_id'])
-          .first();
+      final result = await laconic.table(_table).where('quest', questId).select(
+        ['MAX(id) as max_id'],
+      ).first();
       final maxId = result.toMap()['max_id'] as int?;
       final model = CreatureQuestender();
       model.quest = questId;
@@ -74,10 +67,7 @@ class CreatureQuestenderRepository with RepositoryMixin {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
-  Future<void> update(
-    Map<String, dynamic> id,
-    CreatureQuestender model,
-  ) async {
+  Future<void> update(Map<String, dynamic> id, CreatureQuestender model) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);

@@ -101,7 +101,10 @@ class SmartScriptDetailViewModel {
     int? id,
     int? link,
   }) async {
-    if (entryOrGuid == null || sourceType == null || id == null || link == null) {
+    if (entryOrGuid == null ||
+        sourceType == null ||
+        id == null ||
+        link == null) {
       isNew.value = true;
       return;
     }

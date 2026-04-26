@@ -178,10 +178,7 @@ class GameObjectQuestItemViewModel {
               placeholder: Text('游戏对象编号'),
             ),
           ),
-          ShadInput(
-            controller: idxController,
-            placeholder: Text('索引'),
-          ),
+          ShadInput(controller: idxController, placeholder: Text('索引')),
           SizedBox(
             height: 100,
             child: ItemTemplateSelector(
@@ -204,9 +201,7 @@ class GameObjectQuestItemViewModel {
               ShadButton(
                 onPressed: saving.value
                     ? null
-                    : () => isNew
-                        ? save(dialogContext)
-                        : update(dialogContext),
+                    : () => isNew ? save(dialogContext) : update(dialogContext),
                 child: Text('保存'),
               ),
             ],

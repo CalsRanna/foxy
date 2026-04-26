@@ -254,7 +254,10 @@ class _DialogState extends State<_Dialog> {
       final filter = GossipMenuFilterEntity()
         ..menuId = _menuIdController.text
         ..text = _textController.text;
-      final items = await repository.getBriefGossipMenus(filter: filter, page: _page);
+      final items = await repository.getBriefGossipMenus(
+        filter: filter,
+        page: _page,
+      );
       final total = await repository.count(filter: filter);
       if (mounted) {
         setState(() {

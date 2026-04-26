@@ -69,10 +69,14 @@ class ItemTemplateDetailViewModel {
 
   /// Card 6: Stats (dynamic)
   final statsCountController = TextEditingController();
-  final List<ShadSelectController<int>> statTypeControllers =
-      List.generate(10, (_) => ShadSelectController<int>());
-  final List<TextEditingController> statValueControllers =
-      List.generate(10, (_) => TextEditingController());
+  final List<ShadSelectController<int>> statTypeControllers = List.generate(
+    10,
+    (_) => ShadSelectController<int>(),
+  );
+  final List<TextEditingController> statValueControllers = List.generate(
+    10,
+    (_) => TextEditingController(),
+  );
 
   /// Card 7: Resistances
   final holyResController = TextEditingController();
@@ -83,18 +87,30 @@ class ItemTemplateDetailViewModel {
   final arcaneResController = TextEditingController();
 
   /// Card 8: Spells (5 slots)
-  final List<TextEditingController> spellIdControllers =
-      List.generate(5, (_) => TextEditingController());
-  final List<ShadSelectController<int>> spellTriggerControllers =
-      List.generate(5, (_) => ShadSelectController<int>());
-  final List<TextEditingController> spellChargeControllers =
-      List.generate(5, (_) => TextEditingController());
-  final List<TextEditingController> spellPpmRateControllers =
-      List.generate(5, (_) => TextEditingController());
-  final List<TextEditingController> spellCooldownControllers =
-      List.generate(5, (_) => TextEditingController());
-  final List<TextEditingController> spellCategoryControllers =
-      List.generate(5, (_) => TextEditingController());
+  final List<TextEditingController> spellIdControllers = List.generate(
+    5,
+    (_) => TextEditingController(),
+  );
+  final List<ShadSelectController<int>> spellTriggerControllers = List.generate(
+    5,
+    (_) => ShadSelectController<int>(),
+  );
+  final List<TextEditingController> spellChargeControllers = List.generate(
+    5,
+    (_) => TextEditingController(),
+  );
+  final List<TextEditingController> spellPpmRateControllers = List.generate(
+    5,
+    (_) => TextEditingController(),
+  );
+  final List<TextEditingController> spellCooldownControllers = List.generate(
+    5,
+    (_) => TextEditingController(),
+  );
+  final List<TextEditingController> spellCategoryControllers = List.generate(
+    5,
+    (_) => TextEditingController(),
+  );
   final List<TextEditingController> spellCategoryCooldownControllers =
       List.generate(5, (_) => TextEditingController());
 
@@ -116,10 +132,14 @@ class ItemTemplateDetailViewModel {
   final lockidController = TextEditingController();
   final gemPropertiesController = TextEditingController();
   final socketBonusController = TextEditingController();
-  final List<ShadSelectController<int>> socketColorControllers =
-      List.generate(3, (_) => ShadSelectController<int>());
-  final List<TextEditingController> socketContentControllers =
-      List.generate(3, (_) => TextEditingController());
+  final List<ShadSelectController<int>> socketColorControllers = List.generate(
+    3,
+    (_) => ShadSelectController<int>(),
+  );
+  final List<TextEditingController> socketContentControllers = List.generate(
+    3,
+    (_) => TextEditingController(),
+  );
 
   /// Card 11: Page/Misc
   final mapIdController = TextEditingController();
@@ -160,8 +180,8 @@ class ItemTemplateDetailViewModel {
     qualityController.value = {template.quality};
     classNameController.value = {template.className};
     subclassController.value = {template.subclass};
-    soundOverrideSubclassController.text =
-        template.soundOverrideSubclass.toString();
+    soundOverrideSubclassController.text = template.soundOverrideSubclass
+        .toString();
     materialController.value = {template.material};
     displayIdController.text = template.displayId.toString();
     inventoryTypeController.value = {template.inventoryType};
@@ -197,8 +217,8 @@ class ItemTemplateDetailViewModel {
     /// Card 4: Damage/Armor
     delayController.text = template.delay.toString();
     rangedModRangeController.text = template.rangedModRange.toString();
-    armorDamageModifierController.text =
-        template.armorDamageModifier.toString();
+    armorDamageModifierController.text = template.armorDamageModifier
+        .toString();
     dmgType1Controller.value = {template.dmgType1};
     dmgMin1Controller.text = template.dmgMin1.toString();
     dmgMax1Controller.text = template.dmgMax1.toString();
@@ -210,8 +230,8 @@ class ItemTemplateDetailViewModel {
     blockController.text = template.block.toString();
 
     /// Card 5: Scaling Stats
-    scalingStatDistributionController.text =
-        template.scalingStatDistribution.toString();
+    scalingStatDistributionController.text = template.scalingStatDistribution
+        .toString();
     scalingStatValueController.text = template.scalingStatValue.toString();
 
     /// Card 6: Stats (dynamic)
@@ -236,12 +256,11 @@ class ItemTemplateDetailViewModel {
       spellTriggerControllers[i].value = {template.spellTriggers[i]};
       spellChargeControllers[i].text = template.spellCharges[i].toString();
       spellPpmRateControllers[i].text = template.spellPpmRates[i].toString();
-      spellCooldownControllers[i].text =
-          template.spellCooldowns[i].toString();
-      spellCategoryControllers[i].text =
-          template.spellCategories[i].toString();
-      spellCategoryCooldownControllers[i].text =
-          template.spellCategoryCooldowns[i].toString();
+      spellCooldownControllers[i].text = template.spellCooldowns[i].toString();
+      spellCategoryControllers[i].text = template.spellCategories[i].toString();
+      spellCategoryCooldownControllers[i].text = template
+          .spellCategoryCooldowns[i]
+          .toString();
     }
 
     /// Card 9: Requirements
@@ -252,15 +271,15 @@ class ItemTemplateDetailViewModel {
     requiredSkillController.text = template.requiredSkill.toString();
     requiredSkillRankController.text = template.requiredSkillRank.toString();
     requiredSpellController.text = template.requiredSpell.toString();
-    requiredHonorRankController.text =
-        template.requiredHonorRank.toString();
+    requiredHonorRankController.text = template.requiredHonorRank.toString();
     requiredCityRankController.text = template.requiredCityRank.toString();
-    requiredReputationFactionController.text =
-        template.requiredReputationFaction.toString();
-    requiredReputationRankController.text =
-        template.requiredReputationRank.toString();
-    requiredDisenchantSkillController.text =
-        template.requiredDisenchantSkill.toString();
+    requiredReputationFactionController.text = template
+        .requiredReputationFaction
+        .toString();
+    requiredReputationRankController.text = template.requiredReputationRank
+        .toString();
+    requiredDisenchantSkillController.text = template.requiredDisenchantSkill
+        .toString();
 
     /// Card 10: Socket/Gem
     lockidController.text = template.lockid.toString();
@@ -268,8 +287,7 @@ class ItemTemplateDetailViewModel {
     socketBonusController.text = template.socketBonus.toString();
     for (var i = 0; i < 3; i++) {
       socketColorControllers[i].value = {template.socketColors[i]};
-      socketContentControllers[i].text =
-          template.socketContents[i].toString();
+      socketContentControllers[i].text = template.socketContents[i].toString();
     }
 
     /// Card 11: Page/Misc
@@ -329,8 +347,7 @@ class ItemTemplateDetailViewModel {
     /// Card 4: Damage/Armor
     t.delay = _parseInt(delayController.text);
     t.rangedModRange = _parseInt(rangedModRangeController.text);
-    t.armorDamageModifier =
-        _parseDouble(armorDamageModifierController.text);
+    t.armorDamageModifier = _parseDouble(armorDamageModifierController.text);
     t.dmgType1 = _getSelectValue(dmgType1Controller);
     t.dmgMin1 = _parseDouble(dmgMin1Controller.text);
     t.dmgMax1 = _parseDouble(dmgMax1Controller.text);
@@ -342,8 +359,9 @@ class ItemTemplateDetailViewModel {
     t.block = _parseInt(blockController.text);
 
     /// Card 5: Scaling Stats
-    t.scalingStatDistribution =
-        _parseInt(scalingStatDistributionController.text);
+    t.scalingStatDistribution = _parseInt(
+      scalingStatDistributionController.text,
+    );
     t.scalingStatValue = _parseInt(scalingStatValueController.text);
 
     /// Card 6: Stats (dynamic)
@@ -369,8 +387,9 @@ class ItemTemplateDetailViewModel {
       t.spellPpmRates[i] = _parseDouble(spellPpmRateControllers[i].text);
       t.spellCooldowns[i] = _parseInt(spellCooldownControllers[i].text);
       t.spellCategories[i] = _parseInt(spellCategoryControllers[i].text);
-      t.spellCategoryCooldowns[i] =
-          _parseInt(spellCategoryCooldownControllers[i].text);
+      t.spellCategoryCooldowns[i] = _parseInt(
+        spellCategoryCooldownControllers[i].text,
+      );
     }
 
     /// Card 9: Requirements
@@ -383,12 +402,13 @@ class ItemTemplateDetailViewModel {
     t.requiredSpell = _parseInt(requiredSpellController.text);
     t.requiredHonorRank = _parseInt(requiredHonorRankController.text);
     t.requiredCityRank = _parseInt(requiredCityRankController.text);
-    t.requiredReputationFaction =
-        _parseInt(requiredReputationFactionController.text);
-    t.requiredReputationRank =
-        _parseInt(requiredReputationRankController.text);
-    t.requiredDisenchantSkill =
-        _parseInt(requiredDisenchantSkillController.text);
+    t.requiredReputationFaction = _parseInt(
+      requiredReputationFactionController.text,
+    );
+    t.requiredReputationRank = _parseInt(requiredReputationRankController.text);
+    t.requiredDisenchantSkill = _parseInt(
+      requiredDisenchantSkillController.text,
+    );
 
     /// Card 10: Socket/Gem
     t.lockid = _parseInt(lockidController.text);
@@ -439,8 +459,7 @@ class ItemTemplateDetailViewModel {
   }
 
   int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
-  double _parseDouble(String text) =>
-      text.isEmpty ? 0.0 : double.parse(text);
+  double _parseDouble(String text) => text.isEmpty ? 0.0 : double.parse(text);
   int _getSelectValue(ShadSelectController<int> controller) =>
       controller.value.firstOrNull ?? 0;
 

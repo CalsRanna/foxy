@@ -63,10 +63,9 @@ class SpellGroupRepository with RepositoryMixin {
 
   Future<SpellGroup> copy(SpellGroup data) async {
     var json = data.toJson();
-    var maxIdResult = await laconic
-        .table(_table)
-        .select(['MAX(id) AS maxId'])
-        .first();
+    var maxIdResult = await laconic.table(_table).select([
+      'MAX(id) AS maxId',
+    ]).first();
     var maxId = (maxIdResult.toMap()['maxId'] ?? 0) as int;
     json['id'] = maxId + 1;
     await laconic.table(_table).insert([json]);
@@ -74,10 +73,9 @@ class SpellGroupRepository with RepositoryMixin {
   }
 
   Future<int> getNextId() async {
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(id) AS maxId'])
-        .first();
+    var maxResult = await laconic.table(_table).select([
+      'MAX(id) AS maxId',
+    ]).first();
     var maxId = (maxResult.toMap()['maxId'] ?? 0) as int;
     return maxId + 1;
   }

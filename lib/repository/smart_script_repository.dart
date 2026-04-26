@@ -18,7 +18,9 @@ class SmartScriptRepository with RepositoryMixin {
     int id,
     int link,
   ) async {
-    await laconic.table(_table).where('entryorguid', entryOrGuid)
+    await laconic
+        .table(_table)
+        .where('entryorguid', entryOrGuid)
         .where('source_type', sourceType)
         .where('id', id)
         .where('link', link)
@@ -43,12 +45,13 @@ class SmartScriptRepository with RepositoryMixin {
     ];
     builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('entryorguid').orderBy('source_type').orderBy('id');
+    builder = builder
+        .orderBy('entryorguid')
+        .orderBy('source_type')
+        .orderBy('id');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results
-        .map((e) => BriefSmartScript.fromJson(e.toMap()))
-        .toList();
+    return results.map((e) => BriefSmartScript.fromJson(e.toMap())).toList();
   }
 
   Future<SmartScript> getSmartScript(
@@ -57,7 +60,8 @@ class SmartScriptRepository with RepositoryMixin {
     int id,
     int link,
   ) async {
-    var result = await laconic.table(_table)
+    var result = await laconic
+        .table(_table)
         .where('entryorguid', entryOrGuid)
         .where('source_type', sourceType)
         .where('id', id)
@@ -83,7 +87,8 @@ class SmartScriptRepository with RepositoryMixin {
     json.remove('source_type');
     json.remove('id');
     json.remove('link');
-    await laconic.table(_table)
+    await laconic
+        .table(_table)
         .where('entryorguid', entryOrGuid)
         .where('source_type', sourceType)
         .where('id', id)
@@ -105,9 +110,10 @@ class SmartScriptRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId(int entryOrGuid, int sourceType) async {
-    var result = await laconic.table(_table).select([
-      'MAX(id) as max_id',
-    ]).where('entryorguid', entryOrGuid)
+    var result = await laconic
+        .table(_table)
+        .select(['MAX(id) as max_id'])
+        .where('entryorguid', entryOrGuid)
         .where('source_type', sourceType)
         .first();
     var maxId = result.toMap()['max_id'] as int?;

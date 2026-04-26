@@ -11,9 +11,6 @@ class SpellCustomAttr {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'spell_id': spellId,
-      'attributes': attributes,
-    };
+    return {'spell_id': spellId, 'attributes': attributes};
   }
 }

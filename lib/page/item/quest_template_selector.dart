@@ -254,7 +254,10 @@ class _DialogState extends State<_Dialog> {
       if (_nameController.text.isNotEmpty) {
         filter.title = _nameController.text;
       }
-      final items = await repository.getBriefQuestTemplates(filter: filter, page: _page);
+      final items = await repository.getBriefQuestTemplates(
+        filter: filter,
+        page: _page,
+      );
       final total = await repository.count(filter: filter);
       if (mounted) {
         setState(() {

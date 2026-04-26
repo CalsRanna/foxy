@@ -33,6 +33,5 @@ class BriefCreatureQuestender {
     localeName = json['Name']?.toString() ?? '';
   }
 
-  String get displayName =>
-      localeName.isNotEmpty ? localeName : name;
+  String get displayName => localeName.isNotEmpty ? localeName : name;
 }

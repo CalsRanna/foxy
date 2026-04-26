@@ -119,11 +119,7 @@ class _NpcTextViewState extends State<NpcTextView> {
     for (var i = 0; i < 6; i++) {
       emotes.add(
         Expanded(
-          child: _field(
-            '表演',
-            'em${n}_$i',
-            viewModel.controllerOf('em${n}_$i'),
-          ),
+          child: _field('表演', 'em${n}_$i', viewModel.controllerOf('em${n}_$i')),
         ),
       );
     }

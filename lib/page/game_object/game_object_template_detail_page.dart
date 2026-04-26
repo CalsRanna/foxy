@@ -27,12 +27,7 @@ class _GameObjectTemplateDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('游戏对象模板'),
-      Text('模版补充'),
-      Text('任务物品'),
-      Text('物品掉落'),
-    ];
+    var tabs = [Text('游戏对象模板'), Text('模版补充'), Text('任务物品'), Text('物品掉落')];
 
     var tabContents = [
       GameObjectTemplateView(entry: widget.entry ?? 0),
@@ -42,10 +37,7 @@ class _GameObjectTemplateDetailPageState
     ];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

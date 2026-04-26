@@ -59,15 +59,14 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
               return ShadTableCell(child: SizedBox());
             }
             final item = items[vicinity.row];
-            final displayName =
-                item.localeName.isNotEmpty ? item.localeName : item.itemName;
+            final displayName = item.localeName.isNotEmpty
+                ? item.localeName
+                : item.itemName;
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.item.toString())),
               1 => ShadTableCell(child: Text(displayName)),
               2 => ShadTableCell(child: Text(item.reference.toString())),
-              3 => ShadTableCell(
-                child: Text('${item.chance.toString()}%'),
-              ),
+              3 => ShadTableCell(child: Text('${item.chance.toString()}%')),
               4 => ShadTableCell(
                 child: Text(item.questRequired == 1 ? '需要' : '不需要'),
               ),

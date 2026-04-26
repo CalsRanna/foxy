@@ -17,16 +17,14 @@ class FeatureRepository {
   }
 
   Future<void> updatePinned(int id, bool pinned) async {
-    await _laconic
-        .table('foxy.features')
-        .where('id', id)
-        .update({'is_pinned': pinned ? 1 : 0});
+    await _laconic.table('foxy.features').where('id', id).update({
+      'is_pinned': pinned ? 1 : 0,
+    });
   }
 
   Future<void> updateFavorite(int id, bool favorite) async {
-    await _laconic
-        .table('foxy.features')
-        .where('id', id)
-        .update({'is_favorite': favorite ? 1 : 0});
+    await _laconic.table('foxy.features').where('id', id).update({
+      'is_favorite': favorite ? 1 : 0,
+    });
   }
 }

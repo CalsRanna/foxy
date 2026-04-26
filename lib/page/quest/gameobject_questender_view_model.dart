@@ -70,7 +70,10 @@ class GameobjectQuestenderViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
 
     final item = items.value[index];
-    final existing = await repository.find({'id': item.id, 'quest': item.quest});
+    final existing = await repository.find({
+      'id': item.id,
+      'quest': item.quest,
+    });
     if (existing == null) return;
     fillForm(existing);
     _originalId = item.id;
@@ -101,7 +104,10 @@ class GameobjectQuestenderViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.update({'id': _originalId, 'quest': _originalQuest}, model);
+      await repository.update({
+        'id': _originalId,
+        'quest': _originalQuest,
+      }, model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

@@ -19,11 +19,11 @@ class ItemTemplateLocaleRepository with RepositoryMixin {
   }
 
   /// 删除-然后-重新插入模式（replaceAll）
-  Future<void> replaceAll(
-      int id, List<ItemTemplateLocale> locales) async {
+  Future<void> replaceAll(int id, List<ItemTemplateLocale> locales) async {
     await laconic.table(_table).where('ID', id).delete();
     if (locales.isNotEmpty) {
-      await laconic.table(_table)
+      await laconic
+          .table(_table)
           .insert(locales.map((l) => l.toJson()).toList());
     }
   }

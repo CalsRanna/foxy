@@ -102,10 +102,7 @@ class _DialogState extends State<_Dialog> {
   }
 
   Widget _buildFilter() {
-    var idInput = ShadInput(
-      controller: _idController,
-      placeholder: Text('编号'),
-    );
+    var idInput = ShadInput(controller: _idController, placeholder: Text('编号'));
     var searchButton = ShadButton(
       onPressed: _doSearch,
       size: ShadButtonSize.sm,

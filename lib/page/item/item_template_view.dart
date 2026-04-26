@@ -935,43 +935,38 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
             child: Column(
               spacing: 8,
               children: [
-                Row(
-                  spacing: 8,
-                  children: [Expanded(child: statsCountInput)],
-                ),
-                Watch(
-                  (_) {
-                    final count = viewModel.statsCount.value;
-                    final rows = <Row>[];
-                    for (var i = 0; i < count && i < 10; i++) {
-                      rows.add(
-                        Row(
-                          spacing: 8,
-                          children: [
-                            Expanded(
-                              child: FormItem(
-                                label: '属性类型${i + 1}',
-                                child: FoxyShadSelect<int>(
-                                  controller: viewModel.statTypeControllers[i],
-                                  options: kItemStatTypeOptions,
-                                  placeholder: Text('stat_type_${i + 1}'),
-                                ),
+                Row(spacing: 8, children: [Expanded(child: statsCountInput)]),
+                Watch((_) {
+                  final count = viewModel.statsCount.value;
+                  final rows = <Row>[];
+                  for (var i = 0; i < count && i < 10; i++) {
+                    rows.add(
+                      Row(
+                        spacing: 8,
+                        children: [
+                          Expanded(
+                            child: FormItem(
+                              label: '属性类型${i + 1}',
+                              child: FoxyShadSelect<int>(
+                                controller: viewModel.statTypeControllers[i],
+                                options: kItemStatTypeOptions,
+                                placeholder: Text('stat_type_${i + 1}'),
                               ),
                             ),
-                            Expanded(
-                              child: FormItem(
-                                controller: viewModel.statValueControllers[i],
-                                label: '属性值${i + 1}',
-                                placeholder: 'stat_value_${i + 1}',
-                              ),
+                          ),
+                          Expanded(
+                            child: FormItem(
+                              controller: viewModel.statValueControllers[i],
+                              label: '属性值${i + 1}',
+                              placeholder: 'stat_value_${i + 1}',
                             ),
-                          ],
-                        ),
-                      );
-                    }
-                    return Column(spacing: 8, children: rows);
-                  },
-                ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return Column(spacing: 8, children: rows);
+                }),
               ],
             ),
           ),
@@ -1019,8 +1014,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                                   controller:
                                       viewModel.spellTriggerControllers[i],
                                   options: kItemSpellTriggerOptions,
-                                  placeholder:
-                                      Text('spelltrigger_${i + 1}'),
+                                  placeholder: Text('spelltrigger_${i + 1}'),
                                 ),
                               ),
                             ),
@@ -1033,7 +1027,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                             ),
                             Expanded(
                               child: FormItem(
-                                controller: viewModel.spellPpmRateControllers[i],
+                                controller:
+                                    viewModel.spellPpmRateControllers[i],
                                 label: 'PPM率',
                                 placeholder: 'spellppmRate_${i + 1}',
                               ),
@@ -1061,12 +1056,10 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                             ),
                             Expanded(
                               child: FormItem(
-                                controller:
-                                    viewModel
-                                        .spellCategoryCooldownControllers[i],
+                                controller: viewModel
+                                    .spellCategoryCooldownControllers[i],
                                 label: '类别冷却',
-                                placeholder:
-                                    'spellcategorycooldown_${i + 1}',
+                                placeholder: 'spellcategorycooldown_${i + 1}',
                               ),
                             ),
                             Expanded(child: SizedBox()),

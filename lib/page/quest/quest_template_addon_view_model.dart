@@ -82,8 +82,10 @@ class QuestTemplateAddonViewModel {
     rewardMailDelayController.text = addon.rewardMailDelay.toString();
     requiredSkillIdController.text = addon.requiredSkillId.toString();
     requiredSkillPointsController.text = addon.requiredSkillPoints.toString();
-    requiredMinRepFactionController.text = addon.requiredMinRepFaction.toString();
-    requiredMaxRepFactionController.text = addon.requiredMaxRepFaction.toString();
+    requiredMinRepFactionController.text = addon.requiredMinRepFaction
+        .toString();
+    requiredMaxRepFactionController.text = addon.requiredMaxRepFaction
+        .toString();
     requiredMinRepValueController.text = addon.requiredMinRepValue.toString();
     requiredMaxRepValueController.text = addon.requiredMaxRepValue.toString();
     providedItemCountController.text = addon.providedItemCount.toString();
@@ -103,8 +105,12 @@ class QuestTemplateAddonViewModel {
     addon.rewardMailDelay = _parseInt(rewardMailDelayController.text);
     addon.requiredSkillId = _parseInt(requiredSkillIdController.text);
     addon.requiredSkillPoints = _parseInt(requiredSkillPointsController.text);
-    addon.requiredMinRepFaction = _parseInt(requiredMinRepFactionController.text);
-    addon.requiredMaxRepFaction = _parseInt(requiredMaxRepFactionController.text);
+    addon.requiredMinRepFaction = _parseInt(
+      requiredMinRepFactionController.text,
+    );
+    addon.requiredMaxRepFaction = _parseInt(
+      requiredMaxRepFactionController.text,
+    );
     addon.requiredMinRepValue = _parseInt(requiredMinRepValueController.text);
     addon.requiredMaxRepValue = _parseInt(requiredMaxRepValueController.text);
     addon.providedItemCount = _parseInt(providedItemCountController.text);

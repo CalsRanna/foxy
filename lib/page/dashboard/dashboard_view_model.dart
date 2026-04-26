@@ -16,11 +16,14 @@ class DashboardViewModel {
   final softwareVersion = signal('');
 
   void navigateToMenu(RouterMenu menu) {
-    final feature = featureViewModel.allFeatures.value.where(
-      (f) => f.routerMenu == menu.name,
-    ).firstOrNull;
+    final feature = featureViewModel.allFeatures.value
+        .where((f) => f.routerMenu == menu.name)
+        .firstOrNull;
     final isPinned = feature?.isPinned ?? true;
-    routerFacade.navigateToMenu(menu, parentMenu: isPinned ? null : RouterMenu.more);
+    routerFacade.navigateToMenu(
+      menu,
+      parentMenu: isPinned ? null : RouterMenu.more,
+    );
   }
 
   Future<void> initSignals() async {

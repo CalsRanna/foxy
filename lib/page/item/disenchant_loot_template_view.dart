@@ -15,10 +15,7 @@ import 'package:signals/signals_flutter.dart';
 class DisenchantLootTemplateView extends StatefulWidget {
   final int entry;
 
-  const DisenchantLootTemplateView({
-    super.key,
-    this.entry = 0,
-  });
+  const DisenchantLootTemplateView({super.key, this.entry = 0});
 
   @override
   State<DisenchantLootTemplateView> createState() =>

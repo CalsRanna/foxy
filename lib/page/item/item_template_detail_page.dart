@@ -16,8 +16,7 @@ class ItemTemplateDetailPage extends StatefulWidget {
   const ItemTemplateDetailPage({super.key, this.entry, this.name});
 
   @override
-  State<ItemTemplateDetailPage> createState() =>
-      _ItemTemplateDetailPageState();
+  State<ItemTemplateDetailPage> createState() => _ItemTemplateDetailPageState();
 }
 
 class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
@@ -41,10 +40,7 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
       MillingLootTemplateView(entry: widget.entry ?? 0),
     ];
 
-    var tabBar = FoxyTab(
-      tabs: tabs,
-      contents: tabContents,
-    );
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

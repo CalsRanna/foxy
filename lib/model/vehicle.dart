@@ -64,26 +64,19 @@ class Vehicle {
         (json['CameraFadeDistScalarMin'] as num?)?.toDouble() ?? 0;
     cameraFadeDistScalarMax =
         (json['CameraFadeDistScalarMax'] as num?)?.toDouble() ?? 0;
-    cameraPitchOffset =
-        (json['CameraPitchOffset'] as num?)?.toDouble() ?? 0;
-    facingLimitRight =
-        (json['FacingLimitRight'] as num?)?.toDouble() ?? 0;
-    facingLimitLeft =
-        (json['FacingLimitLeft'] as num?)?.toDouble() ?? 0;
+    cameraPitchOffset = (json['CameraPitchOffset'] as num?)?.toDouble() ?? 0;
+    facingLimitRight = (json['FacingLimitRight'] as num?)?.toDouble() ?? 0;
+    facingLimitLeft = (json['FacingLimitLeft'] as num?)?.toDouble() ?? 0;
     msslTrgtTurnLingering =
         (json['MsslTrgtTurnLingering'] as num?)?.toDouble() ?? 0;
     msslTrgtPitchLingering =
         (json['MsslTrgtPitchLingering'] as num?)?.toDouble() ?? 0;
     msslTrgtMouseLingering =
         (json['MsslTrgtMouseLingering'] as num?)?.toDouble() ?? 0;
-    msslTrgtEndOpacity =
-        (json['MsslTrgtEndOpacity'] as num?)?.toDouble() ?? 0;
-    msslTrgtArcSpeed =
-        (json['MsslTrgtArcSpeed'] as num?)?.toDouble() ?? 0;
-    msslTrgtArcRepeat =
-        (json['MsslTrgtArcRepeat'] as num?)?.toDouble() ?? 0;
-    msslTrgtArcWidth =
-        (json['MsslTrgtArcWidth'] as num?)?.toDouble() ?? 0;
+    msslTrgtEndOpacity = (json['MsslTrgtEndOpacity'] as num?)?.toDouble() ?? 0;
+    msslTrgtArcSpeed = (json['MsslTrgtArcSpeed'] as num?)?.toDouble() ?? 0;
+    msslTrgtArcRepeat = (json['MsslTrgtArcRepeat'] as num?)?.toDouble() ?? 0;
+    msslTrgtArcWidth = (json['MsslTrgtArcWidth'] as num?)?.toDouble() ?? 0;
     msslTrgtImpactRadius0 =
         (json['MsslTrgtImpactRadius0'] as num?)?.toDouble() ?? 0;
     msslTrgtImpactRadius1 =
@@ -92,8 +85,7 @@ class Vehicle {
     msslTrgtImpactTexture = json['MsslTrgtImpactTexture'] ?? '';
     msslTrgtImpactModel0 = json['MsslTrgtImpactModel0'] ?? '';
     msslTrgtImpactModel1 = json['MsslTrgtImpactModel1'] ?? '';
-    cameraYawOffset =
-        (json['CameraYawOffset'] as num?)?.toDouble() ?? 0;
+    cameraYawOffset = (json['CameraYawOffset'] as num?)?.toDouble() ?? 0;
     uiLocomotionType = json['UiLocomotionType'] ?? 0;
     msslTrgtImpactTexRadius =
         (json['MsslTrgtImpactTexRadius'] as num?)?.toDouble() ?? 0;

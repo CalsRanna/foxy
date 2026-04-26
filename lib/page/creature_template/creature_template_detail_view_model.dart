@@ -303,8 +303,8 @@ class CreatureTemplateDetailViewModel {
     unitFlag2Controller.text = template.unitFlags2.toString();
 
     /// Immune
-    creatureImmunitiesIdController.text =
-        template.creatureImmunitiesId.toString();
+    creatureImmunitiesIdController.text = template.creatureImmunitiesId
+        .toString();
 
     /// Modifier
     expController.value = {template.exp};

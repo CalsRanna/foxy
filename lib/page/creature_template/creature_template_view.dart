@@ -430,6 +430,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '探测范围',
       placeholder: 'detection_range',
     );
+
     /// 5. 移动属性
     final movementRows = [
       Row(

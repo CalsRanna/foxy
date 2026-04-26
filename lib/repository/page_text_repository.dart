@@ -37,8 +37,7 @@ class PageTextRepository with RepositoryMixin {
   /// 根据主键查找
   Future<PageText?> find(int id) async {
     try {
-      var result =
-          await laconic.table(_table).where('ID', id).first();
+      var result = await laconic.table(_table).where('ID', id).first();
       return PageText.fromJson(result.toMap());
     } catch (e) {
       return null;

@@ -152,9 +152,7 @@ class _SpellGroupViewState extends State<SpellGroupView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormItem(
-            controller: TextEditingController(
-              text: widget.spellId.toString(),
-            ),
+            controller: TextEditingController(text: widget.spellId.toString()),
             label: '法术ID',
             placeholder: 'spell_id',
             readOnly: true,

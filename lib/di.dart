@@ -79,20 +79,15 @@ class DI {
     GetIt.instance.registerFactory(() => CreatureLootTemplateViewModel());
     GetIt.instance.registerFactory(() => NpcTrainerViewModel());
     GetIt.instance.registerFactory(() => NpcVendorViewModel());
-    GetIt.instance
-        .registerFactory(() => PickpocketingLootTemplateViewModel());
-    GetIt.instance
-        .registerFactory(() => SkinningLootTemplateViewModel());
-    GetIt.instance
-        .registerLazySingleton(() => GameObjectTemplateListViewModel());
-    GetIt.instance
-        .registerFactory(() => GameObjectTemplateDetailViewModel());
-    GetIt.instance
-        .registerFactory(() => GameObjectTemplateAddonViewModel());
-    GetIt.instance
-        .registerFactory(() => GameObjectQuestItemViewModel());
-    GetIt.instance
-        .registerFactory(() => GameObjectLootTemplateViewModel());
+    GetIt.instance.registerFactory(() => PickpocketingLootTemplateViewModel());
+    GetIt.instance.registerFactory(() => SkinningLootTemplateViewModel());
+    GetIt.instance.registerLazySingleton(
+      () => GameObjectTemplateListViewModel(),
+    );
+    GetIt.instance.registerFactory(() => GameObjectTemplateDetailViewModel());
+    GetIt.instance.registerFactory(() => GameObjectTemplateAddonViewModel());
+    GetIt.instance.registerFactory(() => GameObjectQuestItemViewModel());
+    GetIt.instance.registerFactory(() => GameObjectLootTemplateViewModel());
     GetIt.instance.registerLazySingleton(() => ItemTemplateListViewModel());
     GetIt.instance.registerFactory(() => ItemTemplateDetailViewModel());
     GetIt.instance.registerFactory(() => ItemLootTemplateViewModel());
