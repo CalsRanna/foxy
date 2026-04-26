@@ -5,7 +5,7 @@ import 'package:foxy/model/item_template_filter_entity.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger.dart';
-import 'package:signals_flutter/signals_core.dart';
+import 'package:signals/signals.dart';
 
 class ItemTemplateListViewModel {
   final entryController = TextEditingController();
@@ -69,7 +69,7 @@ class ItemTemplateListViewModel {
   /// 选择类别
   void selectClass(int classId) {
     selectedClassId.value = classId;
-    selectedSubclass.value = -1;  // 重置子类别选择
+    selectedSubclass.value = -1; // 重置子类别选择
   }
 
   /// 清除类别选择
@@ -134,10 +134,7 @@ class ItemTemplateListViewModel {
       ..description = descriptionController.text
       ..classId = selectedClassId.value
       ..subclass = selectedSubclass.value;
-    return repository.getBriefItemTemplates(
-      page: page.value,
-      filter: filter,
-    );
+    return repository.getBriefItemTemplates(page: page.value, filter: filter);
   }
 
   Future<int> _count() async {
