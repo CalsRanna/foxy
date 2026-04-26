@@ -18,10 +18,9 @@ class GossipMenuListViewModel {
   final menuIdController = TextEditingController();
   final textController = TextEditingController();
 
-  final items = signal<List<BriefGossipMenu>>([]);
+  final templates = signal<List<BriefGossipMenu>>([]);
   final page = signal(1);
   final total = signal(0);
-  final loading = signal(false);
 
   Future<void> initSignals() async {
     await _refresh();
@@ -101,17 +100,12 @@ class GossipMenuListViewModel {
   }
 
   Future<void> _refresh() async {
-    loading.value = true;
-    try {
-      final filter = _buildFilter();
-      items.value = await _repository.getBriefGossipMenus(
-        filter: filter,
-        page: page.value,
-      );
-      total.value = await _repository.count(filter: filter);
-    } finally {
-      loading.value = false;
-    }
+    final filter = _buildFilter();
+    templates.value = await _repository.getBriefGossipMenus(
+      filter: filter,
+      page: page.value,
+    );
+    total.value = await _repository.count(filter: filter);
   }
 
   GossipMenuFilterEntity _buildFilter() {

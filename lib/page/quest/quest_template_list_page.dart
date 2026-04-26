@@ -73,7 +73,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
   }
 
   Widget _buildTable() {
-    final items = viewModel.items.value;
+    final templates = viewModel.templates.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
 
@@ -110,7 +110,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
         ];
         return FoxyShadTable(
           columnCount: headers.length,
-          rowCount: items.length,
+          rowCount: templates.length,
           pinnedRowCount: 1,
           header: (context, index) {
             return ShadTableCell.header(child: Text(headers[index]));
@@ -119,10 +119,10 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
             return columnExtents[index];
           },
           builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
+            if (vicinity.row < 0 || vicinity.row >= templates.length) {
               return ShadTableCell(child: SizedBox());
             }
-            final item = items[vicinity.row];
+            final item = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.displayTitle)),
@@ -140,11 +140,11 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
             };
           },
           onRowDoubleTap: (row) {
-            final item = items[row];
+            final item = templates[row];
             viewModel.navigateToDetail(id: item.id);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
-            final item = items[row];
+            final item = templates[row];
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,

@@ -12,10 +12,10 @@ import 'package:foxy/widget/tab.dart';
 
 @RoutePage()
 class QuestTemplateDetailPage extends StatefulWidget {
-  final int? questId;
+  final int? entry;
   final String? name;
 
-  const QuestTemplateDetailPage({super.key, this.questId, this.name});
+  const QuestTemplateDetailPage({super.key, this.entry, this.name});
 
   @override
   State<QuestTemplateDetailPage> createState() =>
@@ -37,14 +37,14 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
     ];
 
     var tabContents = [
-      QuestTemplateView(questId: widget.questId ?? 0),
-      QuestTemplateAddonView(questId: widget.questId ?? 0),
-      QuestRequestItemsView(questId: widget.questId ?? 0),
-      QuestOfferRewardView(questId: widget.questId ?? 0),
-      CreatureQueststarterView(questId: widget.questId ?? 0),
-      CreatureQuestenderView(questId: widget.questId ?? 0),
-      GameobjectQueststarterView(questId: widget.questId ?? 0),
-      GameobjectQuestenderView(questId: widget.questId ?? 0),
+      QuestTemplateView(questId: widget.entry ?? 0),
+      QuestTemplateAddonView(questId: widget.entry ?? 0),
+      QuestRequestItemsView(questId: widget.entry ?? 0),
+      QuestOfferRewardView(questId: widget.entry ?? 0),
+      CreatureQueststarterView(questId: widget.entry ?? 0),
+      CreatureQuestenderView(questId: widget.entry ?? 0),
+      GameobjectQueststarterView(questId: widget.entry ?? 0),
+      GameobjectQuestenderView(questId: widget.entry ?? 0),
     ];
 
     var tabBar = FoxyTab(tabs: tabs, contents: tabContents);

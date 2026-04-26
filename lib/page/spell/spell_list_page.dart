@@ -78,7 +78,7 @@ class _SpellListPageState extends State<SpellListPage> {
       onPressed: () => viewModel.navigateSpellDetailPage(context),
       child: Text('新增'),
     );
-    final spells = viewModel.spells.value;
+    final templates = viewModel.templates.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -96,7 +96,7 @@ class _SpellListPageState extends State<SpellListPage> {
         var flexWidth = constraints.maxWidth - 320;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final spell = spells[vicinity.row];
+            final spell = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(spell.id.toString())),
               1 => ShadTableCell(child: Text(spell.displayName)),
@@ -123,8 +123,8 @@ class _SpellListPageState extends State<SpellListPage> {
           onRowDoubleTap: (row) {
             viewModel.navigateSpellDetailPage(
               context,
-              id: spells[row].id,
-              name: spells[row].displayName,
+              id: templates[row].id,
+              name: templates[row].displayName,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -137,8 +137,8 @@ class _SpellListPageState extends State<SpellListPage> {
                   onPressed: () {
                     viewModel.navigateSpellDetailPage(
                       context,
-                      id: spells[row].id,
-                      name: spells[row].displayName,
+                      id: templates[row].id,
+                      name: templates[row].displayName,
                     );
                   },
                   child: Text('编辑'),
@@ -146,14 +146,14 @@ class _SpellListPageState extends State<SpellListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copySpell(spells[row].id);
+                    viewModel.copySpell(templates[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteSpell(spells[row].id);
+                    viewModel.deleteSpell(templates[row].id);
                   },
                   child: Text('删除'),
                 ),
@@ -161,7 +161,7 @@ class _SpellListPageState extends State<SpellListPage> {
             );
           },
           pinnedRowCount: 1,
-          rowCount: spells.length,
+          rowCount: templates.length,
         );
       },
     );

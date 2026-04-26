@@ -18,10 +18,9 @@ class QuestTemplateListViewModel {
   final idController = TextEditingController();
   final titleController = TextEditingController();
 
-  final items = signal<List<BriefQuestTemplate>>([]);
+  final templates = signal<List<BriefQuestTemplate>>([]);
   final page = signal(1);
   final total = signal(0);
-  final loading = signal(false);
 
   Future<void> initSignals() async {
     await _refresh();
@@ -93,23 +92,18 @@ class QuestTemplateListViewModel {
     _routerFacade.navigateToDetail(
       id: id?.toString() ?? 'new',
       label: id != null ? '任务 $id' : '新建任务',
-      route: QuestTemplateDetailRoute(questId: id),
+      route: QuestTemplateDetailRoute(entry: id),
       parentMenu: RouterMenu.questTemplate,
     );
   }
 
   Future<void> _refresh() async {
-    loading.value = true;
-    try {
-      final filter = _buildFilter();
-      items.value = await _repository.getBriefQuestTemplates(
-        filter: filter,
-        page: page.value,
-      );
-      total.value = await _repository.count(filter: filter);
-    } finally {
-      loading.value = false;
-    }
+    final filter = _buildFilter();
+    templates.value = await _repository.getBriefQuestTemplates(
+      filter: filter,
+      page: page.value,
+    );
+    total.value = await _repository.count(filter: filter);
   }
 
   QuestTemplateFilterEntity _buildFilter() {
