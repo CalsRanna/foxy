@@ -49,7 +49,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
       'gt.name',
       'gt.type',
       'gt.size',
-      'gtl.name',
+      'gtl.name AS Name',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
