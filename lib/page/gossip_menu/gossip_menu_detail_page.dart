@@ -6,6 +6,7 @@ import 'package:foxy/page/gossip_menu/gossip_menu_view.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:get_it/get_it.dart';
+import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class GossipMenuDetailPage extends StatefulWidget {
@@ -58,6 +59,6 @@ class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
       NpcTextView(),
       GossipMenuOptionView(),
     ];
-    return FoxyTab(tabs: tabs, contents: contents);
+    return Watch((_) => FoxyTab(tabs: tabs, contents: contents));
   }
 }

@@ -85,11 +85,15 @@ class GameObjectTemplateListViewModel {
     );
   }
 
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    var filter = GameObjectTemplateFilterEntity()
+  GameObjectTemplateFilterEntity _buildFilter() {
+    return GameObjectTemplateFilterEntity()
       ..entry = entryController.text
       ..name = nameController.text;
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefGameObjectTemplates(
       page: page,
       filter: filter,
@@ -107,9 +111,7 @@ class GameObjectTemplateListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    var filter = GameObjectTemplateFilterEntity()
-      ..entry = entryController.text
-      ..name = nameController.text;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefGameObjectTemplates(
       page: page.value,
       filter: filter,
@@ -118,9 +120,7 @@ class GameObjectTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
-    var filter = GameObjectTemplateFilterEntity()
-      ..entry = entryController.text
-      ..name = nameController.text;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefGameObjectTemplates(
       page: page.value,
       filter: filter,

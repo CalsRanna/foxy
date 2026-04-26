@@ -216,7 +216,10 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            _openDetail(templates[row].entry, templates[row].displayName);
+            viewModel.navigateToDetail(
+              templates[row].entry,
+              templates[row].displayName,
+            );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -226,7 +229,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    _openDetail(
+                    viewModel.navigateToDetail(
                       templates[row].entry,
                       templates[row].displayName,
                     );
@@ -236,14 +239,14 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    _copyItem(templates[row].entry);
+                    viewModel.copyItemTemplate(templates[row].entry);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    _deleteItem(templates[row].entry);
+                    viewModel.deleteItemTemplate(templates[row].entry);
                   },
                   child: Text('删除'),
                 ),
@@ -261,15 +264,4 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 
-  void _openDetail(int entry, String name) {
-    viewModel.navigateToDetail(entry, name);
-  }
-
-  void _copyItem(int entry) {
-    viewModel.copyItemTemplate(entry);
-  }
-
-  void _deleteItem(int entry) {
-    viewModel.deleteItemTemplate(entry);
-  }
 }

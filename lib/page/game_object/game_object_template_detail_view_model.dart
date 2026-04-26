@@ -124,7 +124,7 @@ class GameObjectTemplateDetailViewModel {
     nameController.dispose();
     castBarCaptionController.dispose();
     iconNameController.dispose();
-	    displayIdController.dispose();
+    displayIdController.dispose();
     sizeController.dispose();
     unk1Controller.dispose();
     data0Controller.dispose();
@@ -169,7 +169,7 @@ class GameObjectTemplateDetailViewModel {
     nameController.text = template.name;
     castBarCaptionController.text = template.castBarCaption;
     iconNameController.text = template.iconName;
-	    displayIdController.text = template.displayId.toString();
+    displayIdController.text = template.displayId.toString();
     sizeController.text = template.size.toString();
     unk1Controller.text = template.unk1;
     data0Controller.text = template.data0.toString();

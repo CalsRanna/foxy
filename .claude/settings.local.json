@@ -42,7 +42,8 @@
       "Bash(xxd \"D:/Simulators/AzerothCore/code/env/dist/dbc/Achievement.dbc\")",
       "Bash(python -c ' *)",
       "Bash(sort -k3 -rn)",
-      "Bash(xxd /Users/cals/Code/foxy/tool/db_inspect.dart)"
+      "Bash(xxd /Users/cals/Code/foxy/tool/db_inspect.dart)",
+      "Skill(code-review:code-review)"
     ],
     "deny": []
   }
