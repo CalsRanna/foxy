@@ -93,11 +93,9 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
 
     final headers = ['编号', '源类型', 'ID', '链接', '事件类型', '动作类型', '目标类型', '备注'];
 
-    final fixedWidth = 120 + 180 + 80 + 80 + 180 + 180 + 180;
-
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var commentWidth = constraints.maxWidth - fixedWidth;
+        var commentWidth = constraints.maxWidth - 960;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final script = templates[vicinity.row];
@@ -142,12 +140,12 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(180),
-              2 => FixedTableSpanExtent(80),
-              3 => FixedTableSpanExtent(80),
-              4 => FixedTableSpanExtent(180),
-              5 => FixedTableSpanExtent(180),
-              6 => FixedTableSpanExtent(180),
+              1 => FixedTableSpanExtent(240),
+              2 => FixedTableSpanExtent(120),
+              3 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(120),
+              5 => FixedTableSpanExtent(120),
+              6 => FixedTableSpanExtent(120),
               7 => FixedTableSpanExtent(commentWidth),
               _ => null,
             };

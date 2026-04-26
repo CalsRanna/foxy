@@ -95,7 +95,7 @@ class _GameObjectTemplateListPageState
     final headers = ['编号', '名称', '类型', '尺寸'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 320;
+        var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final template = templates[vicinity.row];
@@ -112,8 +112,8 @@ class _GameObjectTemplateListPageState
             return switch (index) {
               0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(width),
-              2 => FixedTableSpanExtent(100),
-              3 => FixedTableSpanExtent(100),
+              2 => FixedTableSpanExtent(120),
+              3 => FixedTableSpanExtent(120),
               _ => null,
             };
           },
