@@ -34,7 +34,10 @@
       "Bash(python3 *)",
       "Bash(dart analyze *)",
       "Bash(dart format *)",
-      "Bash(git ls-tree *)"
+      "Bash(git ls-tree *)",
+      "Bash(dart pub *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['packages'].get\\('lucide_icons_flutter', {}\\)\\)\")",
+      "Bash(git status *)"
     ],
     "deny": []
   }

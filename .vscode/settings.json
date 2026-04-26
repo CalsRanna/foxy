@@ -13,6 +13,7 @@
     "maxlevel",
     "mingold",
     "minlevel",
+    "modelid",
     "npcflag",
     "Pickpocketing",
     "pickpocketloot",
@@ -22,7 +23,8 @@
     "skinloot",
     "sonner",
     "sublist",
-    "unmaximize"
+    "unmaximize",
+    "VARCHAR"
   ],
   "editor.formatOnSave": true
 }

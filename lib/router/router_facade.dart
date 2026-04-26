@@ -106,10 +106,15 @@ class RouterFacade {
           )
         : menu.toNode();
 
-    // 构建路径：dashboard (如果不是 dashboard) + 当前菜单
-    final nodes = menu == RouterMenu.dashboard
-        ? [node]
-        : [RouterMenu.dashboard.toNode(), node];
+    // 构建路径：dashboard + [父级菜单] + 当前菜单
+    final List<RouterNode> nodes;
+    if (menu == RouterMenu.dashboard) {
+      nodes = [node];
+    } else if (parentMenu != null) {
+      nodes = [RouterMenu.dashboard.toNode(), parentMenu.toNode(), node];
+    } else {
+      nodes = [RouterMenu.dashboard.toNode(), node];
+    }
 
     path.value = nodes;
     _router?.navigate(node.route);

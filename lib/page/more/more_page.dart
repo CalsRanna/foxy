@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/model/feature.dart';
 import 'package:foxy/page/more/more_view_model.dart';
+import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/feature_card.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -84,136 +87,40 @@ class _MorePageState extends State<MorePage> {
         itemCount: modules.length,
         itemBuilder: (context, index) {
           final module = modules[index];
-          final column = index % 4;
-          final row = index ~/ 4;
-          return _ModuleCard(
-            module: module,
-            showRightBorder: column < 3,
-            showTopBorder: row == 0,
+          return FeatureCard(
+            feature: module,
             onTap: () => viewModel.navigateToModule(module),
+            onSecondaryTap: (position) =>
+                _showContextMenu(context, module, position),
           );
         },
       );
     });
   }
-}
 
-class _ModuleCard extends StatefulWidget {
-  final ModuleItem module;
-  final bool showRightBorder;
-  final bool showTopBorder;
-  final VoidCallback onTap;
-
-  const _ModuleCard({
-    required this.module,
-    required this.showRightBorder,
-    required this.showTopBorder,
-    required this.onTap,
-  });
-
-  @override
-  State<_ModuleCard> createState() => _ModuleCardState();
-}
-
-class _ModuleCardState extends State<_ModuleCard> {
-  bool hover = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final outline = colorScheme.outline;
-    final surface = colorScheme.surface;
-
-    final border = Border(
-      right: widget.showRightBorder
-          ? BorderSide(color: outline.withValues(alpha: 0.2))
-          : BorderSide.none,
-      top: widget.showTopBorder
-          ? BorderSide(color: outline.withValues(alpha: 0.2))
-          : BorderSide.none,
-    );
-    final boxShadow = hover
-        ? [
-            BoxShadow(
-              blurRadius: 8,
-              color: outline.withValues(alpha: 0.15),
-              spreadRadius: 4,
-            ),
-          ]
-        : [
-            BoxShadow(
-              blurRadius: 8,
-              color: outline.withValues(alpha: 0.1),
-              spreadRadius: 8,
-            ),
-          ];
-
-    final content = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildHeader(),
-        const SizedBox(height: 16),
-        _buildDescription(),
-      ],
-    );
-
-    final container = Container(
-      decoration: BoxDecoration(
-        border: border,
-        boxShadow: boxShadow,
-        color: surface,
-      ),
-      padding: const EdgeInsets.all(16),
-      child: content,
-    );
-
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => hover = true),
-      onExit: (_) => setState(() => hover = false),
-      child: GestureDetector(onTap: widget.onTap, child: container),
-    );
-  }
-
-  Widget _buildHeader() {
-    final icon = Icon(widget.module.icon, size: 32);
-    final name = Text(
-      widget.module.name,
-      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-    );
-    final tag = Text(
-      widget.module.category.name.toUpperCase(),
-      style: const TextStyle(
-        fontSize: 10,
-        fontWeight: FontWeight.w400,
-        height: 1.5,
-      ),
-    );
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        icon,
-        const SizedBox(width: 16),
-        Expanded(child: name),
-        tag,
-      ],
-    );
-  }
-
-  Widget _buildDescription() {
-    return SizedBox(
-      height: 72,
-      child: Text(
-        widget.module.description,
-        style: TextStyle(
-          fontSize: 13,
-          color: Theme.of(context)
-              .colorScheme
-              .onSurface
-              .withValues(alpha: 0.6),
+  void _showContextMenu(
+      BuildContext context, Feature feature, Offset position) {
+    showFoxyContextMenu(
+      context: context,
+      position: position,
+      items: [
+        ShadContextMenuItem(
+          leading: Icon(
+            feature.isPinned ? LucideIcons.pinOff : LucideIcons.pin,
+            size: 16,
+          ),
+          onPressed: () => viewModel.togglePinned(feature),
+          child: Text(feature.isPinned ? '取消固定' : '钉到侧边栏'),
         ),
-      ),
+        ShadContextMenuItem(
+          leading: Icon(
+            feature.isFavorite ? LucideIcons.starOff : LucideIcons.star,
+            size: 16,
+          ),
+          onPressed: () => viewModel.toggleFavorite(feature),
+          child: Text(feature.isFavorite ? '取消收藏' : '收藏到首页'),
+        ),
+      ],
     );
   }
 }
