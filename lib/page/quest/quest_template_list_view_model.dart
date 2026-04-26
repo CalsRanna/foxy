@@ -12,7 +12,6 @@ import 'package:signals/signals.dart';
 
 /// 任务模板列表 ViewModel（LazySingleton，保留搜索状态）
 class QuestTemplateListViewModel {
-  final _routerFacade = GetIt.instance.get<RouterFacade>();
   final repository = QuestTemplateRepository();
 
   final idController = TextEditingController();
@@ -90,7 +89,8 @@ class QuestTemplateListViewModel {
 
   /// 导航到详情页（null 表示新建）
   void navigateToDetail({int? id}) {
-    _routerFacade.navigateToDetail(
+    final routerFacade = GetIt.instance.get<RouterFacade>();
+    routerFacade.navigateToDetail(
       id: id?.toString() ?? 'new',
       label: id != null ? '任务 $id' : '新建任务',
       route: QuestTemplateDetailRoute(entry: id),

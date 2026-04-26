@@ -87,12 +87,16 @@ class CreatureTemplateListViewModel {
     );
   }
 
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    var filter = CreatureTemplateFilterEntity()
+  CreatureTemplateFilterEntity _buildFilter() {
+    return CreatureTemplateFilterEntity()
       ..entry = entryController.text
       ..name = nameController.text
       ..subName = subNameController.text;
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefCreatureTemplates(
       page: page,
       filter: filter,
@@ -111,10 +115,7 @@ class CreatureTemplateListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    var filter = CreatureTemplateFilterEntity()
-      ..entry = entryController.text
-      ..name = nameController.text
-      ..subName = subNameController.text;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefCreatureTemplates(
       page: page.value,
       filter: filter,
@@ -123,10 +124,7 @@ class CreatureTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
-    var filter = CreatureTemplateFilterEntity()
-      ..entry = entryController.text
-      ..name = nameController.text
-      ..subName = subNameController.text;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefCreatureTemplates(
       page: page.value,
       filter: filter,

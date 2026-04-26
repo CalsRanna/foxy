@@ -150,13 +150,13 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.onCopy(item.menuId, item.textId),
+                  onPressed: () => viewModel.copyGossipMenu(item.menuId, item.textId),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () =>
-                      viewModel.onDestroy(item.menuId, item.textId),
+                      viewModel.deleteGossipMenu(item.menuId, item.textId),
                   child: Text('删除'),
                 ),
               ],

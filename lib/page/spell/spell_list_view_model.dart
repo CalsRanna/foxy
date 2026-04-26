@@ -8,7 +8,7 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_core.dart';
+import 'package:signals/signals.dart';
 
 class SpellListViewModel {
   final idController = TextEditingController();
@@ -81,11 +81,15 @@ class SpellListViewModel {
     );
   }
 
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    var filter = SpellFilterEntity()
+  SpellFilterEntity _buildFilter() {
+    return SpellFilterEntity()
       ..id = idController.text
       ..name = nameController.text;
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefSpells(
       page: page,
       filter: filter,
@@ -103,9 +107,7 @@ class SpellListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    var filter = SpellFilterEntity()
-      ..id = idController.text
-      ..name = nameController.text;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefSpells(
       page: page.value,
       filter: filter,
@@ -114,9 +116,7 @@ class SpellListViewModel {
   }
 
   Future<void> _refresh() async {
-    var filter = SpellFilterEntity()
-      ..id = idController.text
-      ..name = nameController.text;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefSpells(
       page: page.value,
       filter: filter,

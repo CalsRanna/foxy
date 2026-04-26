@@ -8,11 +8,10 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_core.dart';
+import 'package:signals/signals.dart';
 
 /// 对话菜单列表 ViewModel（LazySingleton，保留搜索状态）
 class GossipMenuListViewModel {
-  final _routerFacade = GetIt.instance.get<RouterFacade>();
   final repository = GossipMenuRepository();
 
   final menuIdController = TextEditingController();
@@ -49,7 +48,7 @@ class GossipMenuListViewModel {
     await _refresh();
   }
 
-  Future<void> onCopy(int menuId, int textId) async {
+  Future<void> copyGossipMenu(int menuId, int textId) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -68,7 +67,7 @@ class GossipMenuListViewModel {
     }
   }
 
-  Future<void> onDestroy(int menuId, int textId) async {
+  Future<void> deleteGossipMenu(int menuId, int textId) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
@@ -92,7 +91,8 @@ class GossipMenuListViewModel {
 
   /// 导航到详情页（null 表示新建）
   void navigateToDetail({int? menuId, int? textId}) {
-    _routerFacade.navigateToDetail(
+    final routerFacade = GetIt.instance.get<RouterFacade>();
+    routerFacade.navigateToDetail(
       id: menuId?.toString() ?? 'new',
       label: menuId != null ? '对话 $menuId' : '新建对话',
       route: GossipMenuDetailRoute(menuId: menuId, textId: textId),

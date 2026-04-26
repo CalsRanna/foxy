@@ -16,7 +16,6 @@ class ItemTemplateListViewModel {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final repository = ItemTemplateRepository();
-  final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   final page = signal(1);
   final templates = signal(<BriefItemTemplate>[]);
@@ -138,7 +137,8 @@ class ItemTemplateListViewModel {
   }
 
   void navigateToDetail(int entry, String name) {
-    _routerFacade.navigateToDetail(
+    final routerFacade = GetIt.instance.get<RouterFacade>();
+    routerFacade.navigateToDetail(
       id: 'item_$entry',
       label: name,
       route: ItemTemplateDetailRoute(entry: entry, name: name),
@@ -147,7 +147,8 @@ class ItemTemplateListViewModel {
   }
 
   void navigateToNew() {
-    _routerFacade.navigateToDetail(
+    final routerFacade = GetIt.instance.get<RouterFacade>();
+    routerFacade.navigateToDetail(
       id: 'item_new',
       label: '新建物品',
       route: ItemTemplateDetailRoute(),

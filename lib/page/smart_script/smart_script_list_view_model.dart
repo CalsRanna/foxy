@@ -8,7 +8,7 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals_flutter/signals_core.dart';
+import 'package:signals/signals.dart';
 
 class SmartScriptListViewModel {
   final entryOrGuidController = TextEditingController();
@@ -104,11 +104,15 @@ class SmartScriptListViewModel {
     );
   }
 
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    var filter = SmartScriptFilterEntity()
+  SmartScriptFilterEntity _buildFilter() {
+    return SmartScriptFilterEntity()
       ..entryOrGuid = entryOrGuidController.text
       ..comment = commentController.text;
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefSmartScripts(
       page: page,
       filter: filter,
@@ -126,9 +130,7 @@ class SmartScriptListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    var filter = SmartScriptFilterEntity()
-      ..entryOrGuid = entryOrGuidController.text
-      ..comment = commentController.text;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefSmartScripts(
       page: page.value,
       filter: filter,
@@ -137,9 +139,7 @@ class SmartScriptListViewModel {
   }
 
   Future<void> _refresh() async {
-    var filter = SmartScriptFilterEntity()
-      ..entryOrGuid = entryOrGuidController.text
-      ..comment = commentController.text;
+    final filter = _buildFilter();
     templates.value = await repository.getBriefSmartScripts(
       page: page.value,
       filter: filter,

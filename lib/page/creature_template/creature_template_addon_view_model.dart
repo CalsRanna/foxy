@@ -19,25 +19,15 @@ class CreatureTemplateAddonViewModel {
   final visibilityDistanceTypeController = TextEditingController();
   final aurasController = TextEditingController();
 
-  final loading = signal(false);
-  final saving = signal(false);
   final addon = signal(CreatureTemplateAddon());
 
   /// 从数据库加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final repository = CreatureTemplateAddonRepository();
-      final data = await repository.find(creatureId.value);
-      // 只有当数据不为空时才更新 addon.value
-      if (data != null) {
-        addon.value = data;
-      }
-    } catch (e) {
-      // 重新抛出异常，让调用者处理
-      rethrow;
-    } finally {
-      loading.value = false;
+    final repository = CreatureTemplateAddonRepository();
+    final data = await repository.find(creatureId.value);
+    if (data != null) {
+      addon.value = data;
+      initControllers(data);
     }
   }
 
