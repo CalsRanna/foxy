@@ -8,7 +8,7 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals/signals.dart';
+import 'package:signals_flutter/signals_core.dart';
 
 class SmartScriptListViewModel {
   final entryOrGuidController = TextEditingController();
@@ -18,6 +18,7 @@ class SmartScriptListViewModel {
   final page = signal(1);
   final templates = signal(<BriefSmartScript>[]);
   final total = signal(0);
+  final selectedRowIndex = signal(-1);
 
   Future<void> copySmartScript(
     int entryOrGuid,

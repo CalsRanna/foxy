@@ -7,8 +7,11 @@ import 'package:foxy/page/quest/gameobject_queststarter_view.dart';
 import 'package:foxy/page/quest/quest_offer_reward_view.dart';
 import 'package:foxy/page/quest/quest_request_items_view.dart';
 import 'package:foxy/page/quest/quest_template_addon_view.dart';
+import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_view.dart';
 import 'package:foxy/widget/tab.dart';
+import 'package:get_it/get_it.dart';
+import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class QuestTemplateDetailPage extends StatefulWidget {
@@ -23,6 +26,20 @@ class QuestTemplateDetailPage extends StatefulWidget {
 }
 
 class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
+  final viewModel = GetIt.instance.get<QuestTemplateDetailViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.initSignals(questId: widget.entry);
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var tabs = [
@@ -47,7 +64,9 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
       GameobjectQuestenderView(questId: widget.entry ?? 0),
     ];
 
-    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
+    var tabBar = Watch((_) {
+      return FoxyTab(tabs: tabs, contents: tabContents);
+    });
 
     return ListView(
       padding: const EdgeInsets.all(16),

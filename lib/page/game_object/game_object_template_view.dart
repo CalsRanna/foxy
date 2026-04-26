@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
 import 'package:foxy/page/game_object/game_object_template_locale_name_selector.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -76,9 +78,12 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
 
     /// 类型与外观
     final typeInput = FormItem(
-      controller: viewModel.typeController,
       label: '类型',
-      placeholder: 'type',
+      child: FoxyShadSelect<int>(
+        controller: viewModel.typeController,
+        options: kGameObjectTypeOptions,
+        placeholder: const Text('类型'),
+      ),
     );
     final displayIdInput = FormItem(
       controller: viewModel.displayIdController,

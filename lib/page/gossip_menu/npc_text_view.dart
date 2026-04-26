@@ -7,9 +7,7 @@ import 'package:signals/signals_flutter.dart';
 
 /// Tab 2：npc_text 主表 + npc_text_locale (zhCN)
 class NpcTextView extends StatefulWidget {
-  final GossipMenuDetailViewModel parentViewModel;
-
-  const NpcTextView({super.key, required this.parentViewModel});
+  const NpcTextView({super.key});
 
   @override
   State<NpcTextView> createState() => _NpcTextViewState();
@@ -17,6 +15,7 @@ class NpcTextView extends StatefulWidget {
 
 class _NpcTextViewState extends State<NpcTextView> {
   final viewModel = GetIt.instance.get<NpcTextViewModel>();
+  final parentViewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
 
   /// 本地 UI 状态：哪些 locale 输入框展开
   final _expandedLocales = <String>{};
@@ -26,9 +25,9 @@ class _NpcTextViewState extends State<NpcTextView> {
   @override
   void initState() {
     super.initState();
-    viewModel.load(widget.parentViewModel.textId.value);
+    viewModel.load(parentViewModel.textId.value);
     _disposer = effect(() {
-      final newTextId = widget.parentViewModel.textId.value;
+      final newTextId = parentViewModel.textId.value;
       viewModel.load(newTextId);
     });
   }
@@ -193,7 +192,7 @@ class _NpcTextViewState extends State<NpcTextView> {
       );
     });
     final backBtn = ShadButton.outline(
-      onPressed: widget.parentViewModel.pop,
+      onPressed: parentViewModel.pop,
       child: Text('返回'),
     );
     return ShadCard(

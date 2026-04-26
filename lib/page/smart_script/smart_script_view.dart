@@ -5,18 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class SmartScriptView extends StatefulWidget {
-  final int? entryOrGuid;
-  final int? sourceType;
-  final int? id;
-  final int? link;
-
-  const SmartScriptView({
-    super.key,
-    this.entryOrGuid,
-    this.sourceType,
-    this.id,
-    this.link,
-  });
+  const SmartScriptView({super.key});
 
   @override
   State<SmartScriptView> createState() => _SmartScriptViewState();
@@ -24,23 +13,6 @@ class SmartScriptView extends StatefulWidget {
 
 class _SmartScriptViewState extends State<SmartScriptView> {
   final viewModel = GetIt.instance.get<SmartScriptDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(
-      entryOrGuid: widget.entryOrGuid,
-      sourceType: widget.sourceType,
-      id: widget.id,
-      link: widget.link,
-    );
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

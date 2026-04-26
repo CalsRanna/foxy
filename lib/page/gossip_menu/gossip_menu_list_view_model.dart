@@ -8,12 +8,12 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals/signals.dart';
+import 'package:signals_flutter/signals_core.dart';
 
 /// 对话菜单列表 ViewModel（LazySingleton，保留搜索状态）
 class GossipMenuListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
-  final _repository = GossipMenuRepository();
+  final repository = GossipMenuRepository();
 
   final menuIdController = TextEditingController();
   final textController = TextEditingController();
@@ -21,6 +21,7 @@ class GossipMenuListViewModel {
   final templates = signal<List<BriefGossipMenu>>([]);
   final page = signal(1);
   final total = signal(0);
+  final selectedRowIndex = signal(-1);
 
   Future<void> initSignals() async {
     await _refresh();
@@ -57,7 +58,7 @@ class GossipMenuListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.copyGossipMenu({'MenuID': menuId, 'TextID': textId});
+      await repository.copyGossipMenu({'MenuID': menuId, 'TextID': textId});
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -79,7 +80,7 @@ class GossipMenuListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.destroyGossipMenu({'MenuID': menuId, 'TextID': textId});
+      await repository.destroyGossipMenu({'MenuID': menuId, 'TextID': textId});
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -101,11 +102,11 @@ class GossipMenuListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    templates.value = await _repository.getBriefGossipMenus(
+    templates.value = await repository.getBriefGossipMenus(
       filter: filter,
       page: page.value,
     );
-    total.value = await _repository.count(filter: filter);
+    total.value = await repository.count(filter: filter);
   }
 
   GossipMenuFilterEntity _buildFilter() {

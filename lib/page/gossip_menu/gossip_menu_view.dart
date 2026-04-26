@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/npc_text_selector.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// Tab 1：gossip_menu 主表（MenuID + TextID）
 class GossipMenuView extends StatelessWidget {
-  final GossipMenuDetailViewModel viewModel;
-
-  const GossipMenuView({super.key, required this.viewModel});
+  const GossipMenuView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
     final menuIdLabel = const Text('编号 (MenuID)');
     final menuIdInput = ShadInput(
       controller: viewModel.menuIdController,

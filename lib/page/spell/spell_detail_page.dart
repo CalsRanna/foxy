@@ -11,12 +11,14 @@ import 'package:foxy/page/spell/spell_rank_view.dart';
 import 'package:foxy/page/spell/spell_view.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:get_it/get_it.dart';
+import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class SpellDetailPage extends StatefulWidget {
   final int? id;
+  final String? name;
 
-  const SpellDetailPage({super.key, this.id});
+  const SpellDetailPage({super.key, this.id, this.name});
 
   @override
   State<SpellDetailPage> createState() => _SpellDetailPageState();
@@ -51,7 +53,9 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
       SpellLootTemplateView(spellId: spellId),
     ];
 
-    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
+    var tabBar = Watch((_) {
+      return FoxyTab(tabs: tabs, contents: tabContents);
+    });
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -60,7 +64,9 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
   }
 
   Widget _buildHeader() {
-    var label = widget.id != null ? '法术 ${widget.id}' : '新建法术';
+    var label = widget.name?.isNotEmpty == true
+        ? widget.name!
+        : (widget.id != null ? '法术 ${widget.id}' : '新建法术');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(label, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);
