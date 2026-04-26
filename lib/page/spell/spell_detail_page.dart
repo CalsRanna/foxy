@@ -1,6 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/page/spell/spell_area_view.dart';
+import 'package:foxy/page/spell/spell_bonus_data_view.dart';
+import 'package:foxy/page/spell/spell_custom_attr_view.dart';
 import 'package:foxy/page/spell/spell_detail_view_model.dart';
+import 'package:foxy/page/spell/spell_group_view.dart';
+import 'package:foxy/page/spell/spell_linked_spell_view.dart';
+import 'package:foxy/page/spell/spell_loot_template_view.dart';
+import 'package:foxy/page/spell/spell_rank_view.dart';
 import 'package:foxy/page/spell/spell_view.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:get_it/get_it.dart';
@@ -20,6 +27,8 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    var spellId = widget.id ?? 0;
+
     var tabs = [
       Text('基本信息'),
       Text('奖励系数'),
@@ -33,13 +42,13 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
 
     var tabContents = [
       SpellView(id: widget.id),
-      _placeholderTab('奖励系数功能开发中...'),
-      _placeholderTab('自定义属性功能开发中...'),
-      _placeholderTab('区域技能功能开发中...'),
-      _placeholderTab('技能组功能开发中...'),
-      _placeholderTab('链接技能功能开发中...'),
-      _placeholderTab('技能排行功能开发中...'),
-      _placeholderTab('技能掉落功能开发中...'),
+      SpellBonusDataView(spellId: spellId),
+      SpellCustomAttrView(spellId: spellId),
+      SpellAreaView(spellId: spellId),
+      SpellGroupView(spellId: spellId),
+      SpellLinkedSpellView(spellId: spellId),
+      SpellRankView(spellId: spellId),
+      SpellLootTemplateView(spellId: spellId),
     ];
 
     var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
@@ -56,12 +65,5 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
     var text = Text(label, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);
     return Padding(padding: edgeInsets, child: text);
-  }
-
-  Widget _placeholderTab(String message) {
-    return Padding(
-      padding: EdgeInsets.all(32),
-      child: Center(child: Text(message)),
-    );
   }
 }

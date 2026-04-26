@@ -35,6 +35,13 @@ import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_list_view_model.dart';
 import 'package:foxy/page/spell/spell_list_view_model.dart';
 import 'package:foxy/page/spell/spell_detail_view_model.dart';
+import 'package:foxy/page/spell/spell_bonus_data_view_model.dart';
+import 'package:foxy/page/spell/spell_custom_attr_view_model.dart';
+import 'package:foxy/page/spell/spell_area_view_model.dart';
+import 'package:foxy/page/spell/spell_group_view_model.dart';
+import 'package:foxy/page/spell/spell_linked_spell_view_model.dart';
+import 'package:foxy/page/spell/spell_rank_view_model.dart';
+import 'package:foxy/page/spell/spell_loot_template_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/page/quest/creature_questender_view_model.dart';
 import 'package:foxy/page/quest/creature_queststarter_view_model.dart';
@@ -105,5 +112,12 @@ class DI {
     GetIt.instance.registerFactory(() => SmartScriptDetailViewModel());
     GetIt.instance.registerLazySingleton(() => SpellListViewModel());
     GetIt.instance.registerFactory(() => SpellDetailViewModel());
+    GetIt.instance.registerFactory(() => SpellBonusDataViewModel());
+    GetIt.instance.registerFactory(() => SpellCustomAttrViewModel());
+    GetIt.instance.registerFactory(() => SpellAreaViewModel());
+    GetIt.instance.registerFactory(() => SpellGroupViewModel());
+    GetIt.instance.registerFactory(() => SpellLinkedSpellViewModel());
+    GetIt.instance.registerFactory(() => SpellRankViewModel());
+    GetIt.instance.registerFactory(() => SpellLootTemplateViewModel());
   }
 }
