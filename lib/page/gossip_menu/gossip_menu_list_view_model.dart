@@ -18,7 +18,7 @@ class GossipMenuListViewModel {
   final menuIdController = TextEditingController();
   final textController = TextEditingController();
 
-  final items = signal<List<GossipMenu>>([]);
+  final items = signal<List<BriefGossipMenu>>([]);
   final page = signal(1);
   final total = signal(0);
   final loading = signal(false);
