@@ -6,7 +6,6 @@ import 'package:foxy/page/gossip_menu/gossip_menu_view.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class GossipMenuDetailPage extends StatefulWidget {
@@ -43,22 +42,17 @@ class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
   }
 
   Widget _buildHeader() {
-    return Watch((_) {
-      final label = viewModel.creating.value
-          ? '新建对话'
-          : '对话 ${viewModel.menuId.value} / 文本 ${viewModel.textId.value}';
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Text(
-          label,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-      );
-    });
+    final label = widget.menuId != null
+        ? '对话 ${widget.menuId} / 文本 ${widget.textId ?? 0}'
+        : '新建对话';
+    var textStyle = const TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
+    var text = Text(label, style: textStyle);
+    var edgeInsets = const EdgeInsets.only(bottom: 12);
+    return Padding(padding: edgeInsets, child: text);
   }
 
   Widget _buildTabs() {
-    final tabs = [Text('对话'), Text('文本'), Text('选项')];
+    final tabs = const [Text('对话'), Text('文本'), Text('选项')];
     final contents = [
       GossipMenuView(viewModel: viewModel),
       NpcTextView(parentViewModel: viewModel),
