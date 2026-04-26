@@ -47,17 +47,26 @@ class _MorePageState extends State<MorePage> {
       placeholder: const Text('搜索模块名称'),
       onChanged: (_) => viewModel.search(),
     );
+    var searchButton = ShadButton(
+      onPressed: viewModel.search,
+      size: ShadButtonSize.sm,
+      child: const Text('查询'),
+    );
     var resetButton = ShadButton.ghost(
       onPressed: viewModel.reset,
       size: ShadButtonSize.sm,
       child: const Text('重置'),
     );
+    var buttonsRow = Row(spacing: 16, children: [searchButton, resetButton]);
     return ShadCard(
       padding: const EdgeInsets.all(16),
-      child: Row(spacing: 16, children: [
-        Expanded(child: searchInput),
-        resetButton,
-      ]),
+      child: Row(
+        spacing: 16,
+        children: [
+          Expanded(child: searchInput),
+          Expanded(flex: 3, child: buttonsRow),
+        ],
+      ),
     );
   }
 
@@ -69,10 +78,9 @@ class _MorePageState extends State<MorePage> {
           child: Text(
             '没有匹配的模块',
             style: TextStyle(
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.5),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
         );
@@ -99,7 +107,10 @@ class _MorePageState extends State<MorePage> {
   }
 
   void _showContextMenu(
-      BuildContext context, Feature feature, Offset position) {
+    BuildContext context,
+    Feature feature,
+    Offset position,
+  ) {
     showFoxyContextMenu(
       context: context,
       position: position,

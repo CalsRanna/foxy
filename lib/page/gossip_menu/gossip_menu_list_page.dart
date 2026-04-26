@@ -60,11 +60,11 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
       size: ShadButtonSize.sm,
       child: Text('重置'),
     );
-    final row = Row(spacing: 8, children: [searchBtn, resetBtn]);
+    final row = Row(spacing: 16, children: [searchBtn, resetBtn]);
     final children = [
       Expanded(child: menuIdInput),
       Expanded(child: textInput),
-      row,
+      Expanded(flex: 2, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
@@ -155,7 +155,8 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.onDestroy(item.menuId, item.textId),
+                  onPressed: () =>
+                      viewModel.onDestroy(item.menuId, item.textId),
                   child: Text('删除'),
                 ),
               ],
@@ -167,7 +168,13 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
 
     return ShadCard(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Column(spacing: 16, children: [toolbar, Expanded(child: table)]),
+      child: Column(
+        spacing: 16,
+        children: [
+          toolbar,
+          Expanded(child: table),
+        ],
+      ),
     );
   }
 }

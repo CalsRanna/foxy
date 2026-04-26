@@ -65,8 +65,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
     final credentialChildren = [
       Expanded(child: entryInput),
       Expanded(child: commentInput),
-      Expanded(child: row),
-      Expanded(child: SizedBox()),
+      Expanded(flex: 2, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
@@ -104,13 +103,38 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
             final script = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(script.entryOrGuid.toString())),
-              1 => ShadTableCell(child: Text(kSourceTypes[script.sourceType] ?? script.sourceType.toString())),
+              1 => ShadTableCell(
+                child: Text(
+                  kSourceTypes[script.sourceType] ??
+                      script.sourceType.toString(),
+                ),
+              ),
               2 => ShadTableCell(child: Text(script.id.toString())),
               3 => ShadTableCell(child: Text(script.link.toString())),
-              4 => ShadTableCell(child: Text(kEventTypes[script.eventType] ?? script.eventType.toString())),
-              5 => ShadTableCell(child: Text(kActionTypes[script.actionType] ?? script.actionType.toString())),
-              6 => ShadTableCell(child: Text(kTargetTypes[script.targetType] ?? script.targetType.toString())),
-              7 => ShadTableCell(child: Text(script.comment, maxLines: 1, overflow: TextOverflow.ellipsis)),
+              4 => ShadTableCell(
+                child: Text(
+                  kEventTypes[script.eventType] ?? script.eventType.toString(),
+                ),
+              ),
+              5 => ShadTableCell(
+                child: Text(
+                  kActionTypes[script.actionType] ??
+                      script.actionType.toString(),
+                ),
+              ),
+              6 => ShadTableCell(
+                child: Text(
+                  kTargetTypes[script.targetType] ??
+                      script.targetType.toString(),
+                ),
+              ),
+              7 => ShadTableCell(
+                child: Text(
+                  script.comment,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },

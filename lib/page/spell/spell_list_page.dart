@@ -64,7 +64,7 @@ class _SpellListPageState extends State<SpellListPage> {
     final credentialChildren = [
       Expanded(child: idInput),
       Expanded(child: nameInput),
-      Expanded(child: row),
+      Expanded(flex: 2, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),

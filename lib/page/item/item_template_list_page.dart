@@ -141,12 +141,12 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       size: ShadButtonSize.sm,
       child: Text('重置'),
     );
-    var row = Row(spacing: 8, children: [searchButton, resetButton]);
+    var row = Row(spacing: 16, children: [searchButton, resetButton]);
     final children = [
       Expanded(child: entryInput),
       Expanded(child: nameInput),
       Expanded(child: descriptionInput),
-      row,
+      Expanded(child: row),
     ];
     return Row(spacing: 16, children: children);
   }
@@ -237,7 +237,10 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    _openDetail(templates[row].entry, templates[row].displayName);
+                    _openDetail(
+                      templates[row].entry,
+                      templates[row].displayName,
+                    );
                   },
                   child: Text('编辑'),
                 ),
