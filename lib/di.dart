@@ -33,6 +33,7 @@ import 'package:foxy/page/gossip_menu/gossip_menu_list_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view_model.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
+import 'package:foxy/page/scaffold/dbc_import_view_model.dart';
 import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_list_view_model.dart';
 import 'package:foxy/page/spell/spell_list_view_model.dart';
@@ -64,6 +65,7 @@ class DI {
     GetIt.instance.registerSingleton(FeatureViewModel());
     GetIt.instance.registerFactory(() => BootstrapViewModel());
     GetIt.instance.registerSingleton(ScaffoldViewModel());
+    GetIt.instance.registerSingleton(DbcImportViewModel());
     GetIt.instance.registerFactory(() => DashboardViewModel());
     GetIt.instance.registerLazySingleton(() => MoreViewModel());
     GetIt.instance.registerLazySingleton(() => CreatureTemplateListViewModel());

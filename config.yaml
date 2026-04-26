@@ -3,3 +3,4 @@ port: "3306"
 database: acore_world
 username: acore
 password: acore
+dbc_path: D:\Simulators\AzerothCore\code\env\dist\dbc

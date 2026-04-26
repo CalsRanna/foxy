@@ -37,7 +37,11 @@
       "Bash(git ls-tree *)",
       "Bash(dart pub *)",
       "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['packages'].get\\('lucide_icons_flutter', {}\\)\\)\")",
-      "Bash(git status *)"
+      "Bash(git status *)",
+      "mcp__dart-mcp-server__read_package_uris",
+      "Bash(xxd \"D:/Simulators/AzerothCore/code/env/dist/dbc/Achievement.dbc\")",
+      "Bash(python -c ' *)",
+      "Bash(sort -k3 -rn)"
     ],
     "deny": []
   }

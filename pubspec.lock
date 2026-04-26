@@ -153,14 +153,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  charcode:
-    dependency: transitive
-    description:
-      name: charcode
-      sha256: fb0f1107cac15a5ea6ef0a6ef71a807b9e4267c713bb93e00e92d737cc8dbd8a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.0"
   checked_yaml:
     dependency: transitive
     description:
@@ -201,6 +193,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      sha256: "28bb3ae56f117b5aec029d702a90f57d285cd975c3c5c281eaca38dbc47c5937"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.5+2"
   crypto:
     dependency: transitive
     description:
@@ -265,6 +265,70 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
+  file_selector:
+    dependency: "direct main"
+    description:
+      name: file_selector
+      sha256: bd15e43e9268db636b53eeaca9f56324d1622af30e5c34d6e267649758c84d9a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
+  file_selector_android:
+    dependency: transitive
+    description:
+      name: file_selector_android
+      sha256: bf7ab65776d7e176280c853679e7742668586ba1663f7f1561e897fadad6c3ba
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.2+5"
+  file_selector_ios:
+    dependency: transitive
+    description:
+      name: file_selector_ios
+      sha256: e2ecf2885c121691ce13b60db3508f53c01f869fb6e8dc5c1cfa771e4c46aeca
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.3+5"
+  file_selector_linux:
+    dependency: transitive
+    description:
+      name: file_selector_linux
+      sha256: "2567f398e06ac72dcf2e98a0c95df2a9edd03c2c2e0cacd4780f20cdf56263a0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.4"
+  file_selector_macos:
+    dependency: transitive
+    description:
+      name: file_selector_macos
+      sha256: "5e0bbe9c312416f1787a68259ea1505b52f258c587f12920422671807c4d618a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.5"
+  file_selector_platform_interface:
+    dependency: transitive
+    description:
+      name: file_selector_platform_interface
+      sha256: "35e0bd61ebcdb91a3505813b055b09b79dfdc7d0aee9c09a7ba59ae4bb13dc85"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.7.0"
+  file_selector_web:
+    dependency: transitive
+    description:
+      name: file_selector_web
+      sha256: c4c0ea4224d97a60a7067eca0c8fd419e708ff830e0c83b11a48faf566cec3e7
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.4+2"
+  file_selector_windows:
+    dependency: transitive
+    description:
+      name: file_selector_windows
+      sha256: "62197474ae75893a62df75939c777763d39c2bc5f73ce5b88497208bc269abfd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.3+5"
   fixnum:
     dependency: transitive
     description:
@@ -433,10 +497,18 @@ packages:
     dependency: "direct main"
     description:
       name: laconic
-      sha256: ce276ecc5250b53cc727b3ef429e197594507bae9787810133fba639f5cbbd6b
+      sha256: "95c8f2bac5b0d9271b2d7afacd9df0500b0888dc0793acafe0317ce9b5beb406"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "2.2.0"
+  laconic_mysql:
+    dependency: "direct main"
+    description:
+      name: laconic_mysql
+      sha256: e8a9515cf99fcc84cdd3214b9886423a9304290e15755f6c666b22575e921b92
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -654,21 +726,13 @@ packages:
     source: hosted
     version: "2.1.8"
   pool:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: pool
       sha256: "978783255c543aa3586a1b3c21f6e9d720eb315376a915872c61ef8b5c20177d"
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
-  postgres:
-    dependency: transitive
-    description:
-      name: postgres
-      sha256: fefbbfe749c6130e5096588b9c4459173684c695952cd7636ab19be76f255469
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.5.9"
   preact_signals:
     dependency: transitive
     description:
@@ -858,14 +922,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.1"
-  sqlite3:
-    dependency: transitive
-    description:
-      name: sqlite3
-      sha256: "3145bd74dcdb4fd6f5c6dda4d4e4490a8087d7f286a14dee5d37087290f0f8a2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.9.4"
   stack_trace:
     dependency: transitive
     description:
@@ -1066,6 +1122,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "15.0.2"
+  warcrafty:
+    dependency: "direct main"
+    description:
+      name: warcrafty
+      sha256: c7089f995a5c4fc3c291950e9a3838dc642f1e4e8221e65ac9bc3350a25a458f
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   watcher:
     dependency: transitive
     description:
@@ -1155,5 +1219,5 @@ packages:
     source: hosted
     version: "2.2.2"
 sdks:
-  dart: ">=3.9.2 <4.0.0"
-  flutter: ">=3.35.0"
+  dart: ">=3.10.0 <4.0.0"
+  flutter: ">=3.38.0"

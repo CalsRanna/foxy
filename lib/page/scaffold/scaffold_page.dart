@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
+import 'package:foxy/page/scaffold/dbc_import_view_model.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
@@ -12,7 +14,6 @@ import 'package:foxy/widget/window_button.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 @RoutePage()
@@ -21,84 +22,6 @@ class ScaffoldPage extends StatefulWidget {
 
   @override
   State<ScaffoldPage> createState() => _ScaffoldPageState();
-}
-
-class _Drawer extends StatelessWidget {
-  const _Drawer();
-
-  @override
-  Widget build(BuildContext context) {
-    var syncAll = ListTile(
-      leading: Icon(LucideIcons.folder),
-      onTap: () {},
-      subtitle: Text('包含 dbc 和 mpq 文件'),
-      title: Text('同步所有文件'),
-      trailing: _Shortcut('S'),
-    );
-    var syncDbc = ListTile(
-      leading: Icon(LucideIcons.database),
-      onTap: () {},
-      title: Text('同步 dbc 文件'),
-      trailing: _Shortcut('D'),
-    );
-    var syncMpq = ListTile(
-      leading: Icon(LucideIcons.package),
-      onTap: () {},
-      title: Text('同步 mpq 文件'),
-      trailing: _Shortcut('M'),
-    );
-    var setting = ListTile(
-      leading: Icon(LucideIcons.settings),
-      onTap: () => navigateSetting(context),
-      title: Text('设置'),
-      trailing: _Shortcut(','),
-    );
-    var exitTile = ListTile(
-      leading: Icon(LucideIcons.logOut),
-      onTap: exitApp,
-      title: Text('退出'),
-      trailing: _Shortcut('Q'),
-    );
-    var github = IconButton(
-      icon: Icon(LucideIcons.github, size: 20),
-      onPressed: launchGithub,
-    );
-    var headerChildren = [
-      Text('Foxy'.toUpperCase(), style: TextStyle(fontSize: 32)),
-      const SizedBox(height: 8),
-      Text('「做最好的魔兽世界编辑器」'),
-      const SizedBox(height: 8),
-      github,
-    ];
-    var column = Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: headerChildren,
-    );
-    var header = DrawerHeader(margin: EdgeInsets.zero, child: column);
-    var children = [
-      header,
-      syncAll,
-      syncDbc,
-      syncMpq,
-      Divider(height: 1),
-      setting,
-      exitTile,
-    ];
-    return Drawer(child: ListView(children: children));
-  }
-
-  void exitApp() {
-    _ExitAppAction().invoke(_ExitAppIntent());
-  }
-
-  void launchGithub() {
-    final uri = Uri.parse('https://github.com/CalsRanna/foxy');
-    launchUrl(uri, mode: LaunchMode.externalApplication);
-  }
-
-  void navigateSetting(BuildContext context) {
-    _NavigateSettingAction().invoke(_NavigateSettingIntent());
-  }
 }
 
 class _ExitAppAction extends CallbackAction<_ExitAppIntent> {
@@ -117,7 +40,6 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
   static Object? handleInvoke(_NavigateSettingIntent intent) {
     final context = primaryFocus?.context;
     if (context == null) return null;
-    Scaffold.of(context).closeDrawer();
     AutoRouter.of(context).push(const BasicSettingRoute());
     return null;
   }
@@ -127,7 +49,16 @@ class _NavigateSettingIntent extends Intent {}
 
 class _ScaffoldPageState extends State<ScaffoldPage> {
   final viewModel = GetIt.instance.get<ScaffoldViewModel>();
+  final dbcImportViewModel = GetIt.instance.get<DbcImportViewModel>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      dbcImportViewModel.checkAndImport();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,17 +75,26 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
     );
-    var scaffold = Scaffold(body: topWorkspace, drawer: _Drawer());
+    var scaffold = Scaffold(body: topWorkspace);
     if (kIsWeb) return scaffold;
     if (Platform.isAndroid || Platform.isIOS) return scaffold;
-    var actions = Actions(
+    var wrapped = Actions(
       actions: _ShortcutManager.instance.actions,
-      child: scaffold,
+      child: Shortcuts(
+        shortcuts: _ShortcutManager.instance.shortcuts,
+        child: scaffold,
+      ),
     );
-    return Shortcuts(
-      shortcuts: _ShortcutManager.instance.shortcuts,
-      child: actions,
-    );
+
+    return Watch((_) {
+      if (dbcImportViewModel.dbcImported.value) return wrapped;
+      return Stack(
+        children: [
+          wrapped,
+          _DbcImportModal(dbcImportViewModel: dbcImportViewModel),
+        ],
+      );
+    });
   }
 
   Widget _buildBreadcrumb() {
@@ -211,8 +151,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 
   Widget _buildLeftBarTile(RouterMenu menu) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
     final active = viewModel.activeMenu == menu;
     final backgroundColor = active ? colorScheme.primary : null;
     final iconColor = active ? Colors.white : colorScheme.onSurface;
@@ -235,15 +174,150 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 }
 
-class _Shortcut extends StatelessWidget {
-  final String keyboardKey;
-  const _Shortcut(this.keyboardKey);
+/// DBC 导入模态遮罩层
+class _DbcImportModal extends StatelessWidget {
+  final DbcImportViewModel dbcImportViewModel;
+  const _DbcImportModal({required this.dbcImportViewModel});
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid || Platform.isIOS) return SizedBox();
-    if (Platform.isMacOS) return Text('⌘ $keyboardKey');
-    return Text('Ctrl + $keyboardKey');
+    return Container(
+      color: Colors.black.withValues(alpha: 0.5),
+      child: Center(
+        child: Watch((_) => _buildDialog(context)),
+      ),
+    );
+  }
+
+  Widget _buildDialog(BuildContext context) {
+    if (dbcImportViewModel.dbcImportError.value != null) {
+      return _ErrorDialog(
+        error: dbcImportViewModel.dbcImportError.value!,
+        onRetry: dbcImportViewModel.retryImport,
+      );
+    }
+    if (dbcImportViewModel.dbcPath.value == null) {
+      return _PathSelectionDialog(
+        onSubmit: (path) => dbcImportViewModel.setDbcPath(path),
+      );
+    }
+    return _ProgressDialog(progress: dbcImportViewModel.dbcImportProgress.value);
+  }
+}
+
+/// 路径选择对话框
+class _PathSelectionDialog extends StatelessWidget {
+  final ValueChanged<String> onSubmit;
+  const _PathSelectionDialog({required this.onSubmit});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = TextEditingController();
+
+    return ShadDialog(
+      closeIcon: const SizedBox.shrink(),
+      constraints: const BoxConstraints(maxWidth: 500),
+      title: const Text('DBC 文件路径'),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('请选择魔兽世界 DBC 文件所在目录（包含 Spell.dbc、Faction.dbc 等文件的文件夹）：'),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: ShadInput(
+                  controller: controller,
+                  placeholder: const Text('选择或输入 DBC 目录路径'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              ShadButton(
+                onPressed: () async {
+                  final dir = await getDirectoryPath();
+                  if (dir != null) {
+                    controller.text = dir;
+                  }
+                },
+                child: const Text('浏览'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ShadButton(
+              onPressed: () {
+                final path = controller.text.trim();
+                if (path.isEmpty) return;
+                onSubmit(path);
+              },
+              child: const Text('确认'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 导入进度对话框
+class _ProgressDialog extends StatelessWidget {
+  final String progress;
+  const _ProgressDialog({required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    return ShadDialog(
+      closeIcon: const SizedBox.shrink(),
+      constraints: const BoxConstraints(maxWidth: 400),
+      title: const Text('正在导入 DBC 数据'),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 16),
+          const CircularProgressIndicator(),
+          const SizedBox(height: 16),
+          Text(
+            progress,
+            style: const TextStyle(fontSize: 18),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+/// 导入错误对话框
+class _ErrorDialog extends StatelessWidget {
+  final String error;
+  final VoidCallback onRetry;
+  const _ErrorDialog({required this.error, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return ShadDialog(
+      closeIcon: const SizedBox.shrink(),
+      constraints: const BoxConstraints(maxWidth: 500),
+      title: const Text('DBC 导入失败'),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(error),
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ShadButton(
+              onPressed: onRetry,
+              child: const Text('重试'),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -254,63 +328,21 @@ class _ShortcutManager {
 
   Map<Type, Action<Intent>> get actions {
     return {
-      _SyncAllFilesIntent: _SyncAllFilesAction(),
-      _SyncDbcFilesIntent: _SyncDbcFilesAction(),
-      _SyncMpqFileIntent: _SyncMpqFileAction(),
       _NavigateSettingIntent: _NavigateSettingAction(),
       _ExitAppIntent: _ExitAppAction(),
     };
   }
 
   Map<ShortcutActivator, Intent> get shortcuts {
-    final keyS = LogicalKeyboardKey.keyS;
-    final keyD = LogicalKeyboardKey.keyD;
-    final keyM = LogicalKeyboardKey.keyM;
     final comma = LogicalKeyboardKey.comma;
     final keyQ = LogicalKeyboardKey.keyQ;
     final control = Platform.isMacOS ? false : true;
     final meta = Platform.isMacOS ? true : false;
-    final keySActivator = SingleActivator(keyS, control: control, meta: meta);
-    final keyDActivator = SingleActivator(keyD, control: control, meta: meta);
-    final keyMActivator = SingleActivator(keyM, control: control, meta: meta);
     final commaActivator = SingleActivator(comma, control: control, meta: meta);
     final keyQActivator = SingleActivator(keyQ, control: control, meta: meta);
     return {
-      keySActivator: _SyncAllFilesIntent(),
-      keyDActivator: _SyncDbcFilesIntent(),
-      keyMActivator: _SyncMpqFileIntent(),
       commaActivator: _NavigateSettingIntent(),
       keyQActivator: _ExitAppIntent(),
     };
   }
 }
-
-class _SyncAllFilesAction extends CallbackAction<_SyncAllFilesIntent> {
-  _SyncAllFilesAction() : super(onInvoke: handleInvoke);
-
-  static Object? handleInvoke(_SyncAllFilesIntent intent) {
-    return null;
-  }
-}
-
-class _SyncAllFilesIntent extends Intent {}
-
-class _SyncDbcFilesAction extends CallbackAction<_SyncDbcFilesIntent> {
-  _SyncDbcFilesAction() : super(onInvoke: handleInvoke);
-
-  static Object? handleInvoke(_SyncDbcFilesIntent intent) {
-    return null;
-  }
-}
-
-class _SyncDbcFilesIntent extends Intent {}
-
-class _SyncMpqFileAction extends CallbackAction<_SyncMpqFileIntent> {
-  _SyncMpqFileAction() : super(onInvoke: handleInvoke);
-
-  static Object? handleInvoke(_SyncMpqFileIntent intent) {
-    return null;
-  }
-}
-
-class _SyncMpqFileIntent extends Intent {}

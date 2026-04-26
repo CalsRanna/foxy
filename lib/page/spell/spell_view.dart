@@ -64,15 +64,15 @@ class _SpellViewState extends State<SpellView> {
       label: '激活图标',
       placeholder: 'ActiveIconID',
     );
+    final spellVisualID0Input = FormItem(
+      controller: vm.spellVisualID0Controller,
+      label: '视觉效果1',
+      placeholder: 'SpellVisualID0',
+    );
     final spellVisualID1Input = FormItem(
       controller: vm.spellVisualID1Controller,
-      label: '视觉效果1',
-      placeholder: 'SpellVisualID_1',
-    );
-    final spellVisualID2Input = FormItem(
-      controller: vm.spellVisualID2Controller,
       label: '视觉效果2',
-      placeholder: 'SpellVisualID_2',
+      placeholder: 'SpellVisualID1',
     );
 
     // === 分类/类型 ===
@@ -356,196 +356,356 @@ class _SpellViewState extends State<SpellView> {
       label: '法术分类集',
       placeholder: 'SpellClassSet',
     );
+    final spellClassMask0Input = FormItem(
+      controller: vm.spellClassMask0Controller,
+      label: '分类掩码1',
+      placeholder: 'SpellClassMask0',
+    );
     final spellClassMask1Input = FormItem(
       controller: vm.spellClassMask1Controller,
-      label: '分类掩码1',
-      placeholder: 'SpellClassMask_1',
+      label: '分类掩码2',
+      placeholder: 'SpellClassMask1',
     );
     final spellClassMask2Input = FormItem(
       controller: vm.spellClassMask2Controller,
-      label: '分类掩码2',
-      placeholder: 'SpellClassMask_2',
-    );
-    final spellClassMask3Input = FormItem(
-      controller: vm.spellClassMask3Controller,
       label: '分类掩码3',
-      placeholder: 'SpellClassMask_3',
+      placeholder: 'SpellClassMask2',
+    );
+
+    // === 效果0 ===
+    final effect0Input = FormItem(
+      controller: vm.effect0Controller,
+      label: '效果0类型',
+      placeholder: 'Effect0',
+    );
+    final effectBasePoints0Input = FormItem(
+      controller: vm.effectBasePoints0Controller,
+      label: '效果0基础值',
+      placeholder: 'EffectBasePoints0',
+    );
+    final effectDieSides0Input = FormItem(
+      controller: vm.effectDieSides0Controller,
+      label: '效果0波动值',
+      placeholder: 'EffectDieSides0',
+    );
+    final effectRealPointsPerLevel0Input = FormItem(
+      controller: vm.effectRealPointsPerLevel0Controller,
+      label: '效果0每级加成',
+      placeholder: 'EffectRealPointsPerLevel0',
+    );
+    final effectMechanic0Input = FormItem(
+      controller: vm.effectMechanic0Controller,
+      label: '效果0机制',
+      placeholder: 'EffectMechanic0',
+    );
+    final effectAura0Input = FormItem(
+      controller: vm.effectAura0Controller,
+      label: '效果0光环',
+      placeholder: 'EffectAura0',
+    );
+    final effectAuraPeriod0Input = FormItem(
+      controller: vm.effectAuraPeriod0Controller,
+      label: '效果0光环周期',
+      placeholder: 'EffectAuraPeriod0',
+    );
+    final effectAmplitude0Input = FormItem(
+      controller: vm.effectAmplitude0Controller,
+      label: '效果0振幅',
+      placeholder: 'EffectAmplitude0',
+    );
+    final implicitTargetA0Input = FormItem(
+      controller: vm.implicitTargetA0Controller,
+      label: '效果0目标A',
+      placeholder: 'ImplicitTargetA0',
+    );
+    final implicitTargetB0Input = FormItem(
+      controller: vm.implicitTargetB0Controller,
+      label: '效果0目标B',
+      placeholder: 'ImplicitTargetB0',
+    );
+    final effectMiscValue0Input = FormItem(
+      controller: vm.effectMiscValue0Controller,
+      label: '效果0杂项值',
+      placeholder: 'EffectMiscValue0',
+    );
+    final effectMiscValueB0Input = FormItem(
+      controller: vm.effectMiscValueB0Controller,
+      label: '效果0杂项值B',
+      placeholder: 'EffectMiscValueB0',
+    );
+    final effectRadiusIndex0Input = FormItem(
+      controller: vm.effectRadiusIndex0Controller,
+      label: '效果0半径',
+      placeholder: 'EffectRadiusIndex0',
+    );
+    final effectChainAmplitude0Input = FormItem(
+      controller: vm.effectChainAmplitude0Controller,
+      label: '效果0连锁振幅',
+      placeholder: 'EffectChainAmplitude0',
+    );
+    final effectBonusCoefficient0Input = FormItem(
+      controller: vm.effectBonusCoefficient0Controller,
+      label: '效果0加成系数',
+      placeholder: 'EffectBonusCoefficient0',
+    );
+    final effectItemType0Input = FormItem(
+      controller: vm.effectItemType0Controller,
+      label: '效果0物品类型',
+      placeholder: 'EffectItemType0',
+    );
+    final effectTriggerSpell0Input = FormItem(
+      controller: vm.effectTriggerSpell0Controller,
+      label: '效果0触发法术',
+      placeholder: 'EffectTriggerSpell0',
+    );
+    final effectChainTargets0Input = FormItem(
+      controller: vm.effectChainTargets0Controller,
+      label: '效果0连锁目标',
+      placeholder: 'EffectChainTargets0',
+    );
+    final effectPointsPerCombo0Input = FormItem(
+      controller: vm.effectPointsPerCombo0Controller,
+      label: '效果0连击点数',
+      placeholder: 'EffectPointsPerCombo0',
+    );
+    final effectSpellClassMaskA0Input = FormItem(
+      controller: vm.effectSpellClassMaskA0Controller,
+      label: '效果0分类掩码A',
+      placeholder: 'EffectSpellClassMaskA0',
+    );
+    final effectSpellClassMaskB0Input = FormItem(
+      controller: vm.effectSpellClassMaskB0Controller,
+      label: '效果0分类掩码B',
+      placeholder: 'EffectSpellClassMaskB0',
+    );
+    final effectSpellClassMaskC0Input = FormItem(
+      controller: vm.effectSpellClassMaskC0Controller,
+      label: '效果0分类掩码C',
+      placeholder: 'EffectSpellClassMaskC0',
     );
 
     // === 效果1 ===
     final effect1Input = FormItem(
       controller: vm.effect1Controller,
       label: '效果1类型',
-      placeholder: 'Effect_1',
+      placeholder: 'Effect1',
     );
     final effectBasePoints1Input = FormItem(
       controller: vm.effectBasePoints1Controller,
       label: '效果1基础值',
-      placeholder: 'EffectBasePoints_1',
+      placeholder: 'EffectBasePoints1',
     );
     final effectDieSides1Input = FormItem(
       controller: vm.effectDieSides1Controller,
       label: '效果1波动值',
-      placeholder: 'EffectDieSides_1',
+      placeholder: 'EffectDieSides1',
+    );
+    final effectRealPointsPerLevel1Input = FormItem(
+      controller: vm.effectRealPointsPerLevel1Controller,
+      label: '效果1每级加成',
+      placeholder: 'EffectRealPointsPerLevel1',
+    );
+    final effectMechanic1Input = FormItem(
+      controller: vm.effectMechanic1Controller,
+      label: '效果1机制',
+      placeholder: 'EffectMechanic1',
     );
     final effectAura1Input = FormItem(
       controller: vm.effectAura1Controller,
       label: '效果1光环',
-      placeholder: 'EffectAura_1',
+      placeholder: 'EffectAura1',
     );
     final effectAuraPeriod1Input = FormItem(
       controller: vm.effectAuraPeriod1Controller,
       label: '效果1光环周期',
-      placeholder: 'EffectAuraPeriod_1',
+      placeholder: 'EffectAuraPeriod1',
+    );
+    final effectAmplitude1Input = FormItem(
+      controller: vm.effectAmplitude1Controller,
+      label: '效果1振幅',
+      placeholder: 'EffectAmplitude1',
     );
     final implicitTargetA1Input = FormItem(
       controller: vm.implicitTargetA1Controller,
       label: '效果1目标A',
-      placeholder: 'ImplicitTargetA_1',
+      placeholder: 'ImplicitTargetA1',
     );
     final implicitTargetB1Input = FormItem(
       controller: vm.implicitTargetB1Controller,
       label: '效果1目标B',
-      placeholder: 'ImplicitTargetB_1',
+      placeholder: 'ImplicitTargetB1',
     );
     final effectMiscValue1Input = FormItem(
       controller: vm.effectMiscValue1Controller,
       label: '效果1杂项值',
-      placeholder: 'EffectMiscValue_1',
+      placeholder: 'EffectMiscValue1',
     );
-    final effectTriggerSpell1Input = FormItem(
-      controller: vm.effectTriggerSpell1Controller,
-      label: '效果1触发法术',
-      placeholder: 'EffectTriggerSpell_1',
-    );
-    final effectChainTargets1Input = FormItem(
-      controller: vm.effectChainTargets1Controller,
-      label: '效果1连锁目标',
-      placeholder: 'EffectChainTargets_1',
+    final effectMiscValueB1Input = FormItem(
+      controller: vm.effectMiscValueB1Controller,
+      label: '效果1杂项值B',
+      placeholder: 'EffectMiscValueB1',
     );
     final effectRadiusIndex1Input = FormItem(
       controller: vm.effectRadiusIndex1Controller,
       label: '效果1半径',
-      placeholder: 'EffectRadiusIndex_1',
+      placeholder: 'EffectRadiusIndex1',
+    );
+    final effectChainAmplitude1Input = FormItem(
+      controller: vm.effectChainAmplitude1Controller,
+      label: '效果1连锁振幅',
+      placeholder: 'EffectChainAmplitude1',
+    );
+    final effectBonusCoefficient1Input = FormItem(
+      controller: vm.effectBonusCoefficient1Controller,
+      label: '效果1加成系数',
+      placeholder: 'EffectBonusCoefficient1',
+    );
+    final effectItemType1Input = FormItem(
+      controller: vm.effectItemType1Controller,
+      label: '效果1物品类型',
+      placeholder: 'EffectItemType1',
+    );
+    final effectTriggerSpell1Input = FormItem(
+      controller: vm.effectTriggerSpell1Controller,
+      label: '效果1触发法术',
+      placeholder: 'EffectTriggerSpell1',
+    );
+    final effectChainTargets1Input = FormItem(
+      controller: vm.effectChainTargets1Controller,
+      label: '效果1连锁目标',
+      placeholder: 'EffectChainTargets1',
     );
     final effectPointsPerCombo1Input = FormItem(
       controller: vm.effectPointsPerCombo1Controller,
       label: '效果1连击点数',
-      placeholder: 'EffectPointsPerCombo_1',
+      placeholder: 'EffectPointsPerCombo1',
+    );
+    final effectSpellClassMaskA1Input = FormItem(
+      controller: vm.effectSpellClassMaskA1Controller,
+      label: '效果1分类掩码A',
+      placeholder: 'EffectSpellClassMaskA1',
+    );
+    final effectSpellClassMaskB1Input = FormItem(
+      controller: vm.effectSpellClassMaskB1Controller,
+      label: '效果1分类掩码B',
+      placeholder: 'EffectSpellClassMaskB1',
+    );
+    final effectSpellClassMaskC1Input = FormItem(
+      controller: vm.effectSpellClassMaskC1Controller,
+      label: '效果1分类掩码C',
+      placeholder: 'EffectSpellClassMaskC1',
     );
 
     // === 效果2 ===
     final effect2Input = FormItem(
       controller: vm.effect2Controller,
       label: '效果2类型',
-      placeholder: 'Effect_2',
+      placeholder: 'Effect2',
     );
     final effectBasePoints2Input = FormItem(
       controller: vm.effectBasePoints2Controller,
       label: '效果2基础值',
-      placeholder: 'EffectBasePoints_2',
+      placeholder: 'EffectBasePoints2',
     );
     final effectDieSides2Input = FormItem(
       controller: vm.effectDieSides2Controller,
       label: '效果2波动值',
-      placeholder: 'EffectDieSides_2',
+      placeholder: 'EffectDieSides2',
+    );
+    final effectRealPointsPerLevel2Input = FormItem(
+      controller: vm.effectRealPointsPerLevel2Controller,
+      label: '效果2每级加成',
+      placeholder: 'EffectRealPointsPerLevel2',
+    );
+    final effectMechanic2Input = FormItem(
+      controller: vm.effectMechanic2Controller,
+      label: '效果2机制',
+      placeholder: 'EffectMechanic2',
     );
     final effectAura2Input = FormItem(
       controller: vm.effectAura2Controller,
       label: '效果2光环',
-      placeholder: 'EffectAura_2',
+      placeholder: 'EffectAura2',
     );
     final effectAuraPeriod2Input = FormItem(
       controller: vm.effectAuraPeriod2Controller,
       label: '效果2光环周期',
-      placeholder: 'EffectAuraPeriod_2',
+      placeholder: 'EffectAuraPeriod2',
+    );
+    final effectAmplitude2Input = FormItem(
+      controller: vm.effectAmplitude2Controller,
+      label: '效果2振幅',
+      placeholder: 'EffectAmplitude2',
     );
     final implicitTargetA2Input = FormItem(
       controller: vm.implicitTargetA2Controller,
       label: '效果2目标A',
-      placeholder: 'ImplicitTargetA_2',
+      placeholder: 'ImplicitTargetA2',
     );
     final implicitTargetB2Input = FormItem(
       controller: vm.implicitTargetB2Controller,
       label: '效果2目标B',
-      placeholder: 'ImplicitTargetB_2',
+      placeholder: 'ImplicitTargetB2',
     );
-    final effectTriggerSpell2Input = FormItem(
-      controller: vm.effectTriggerSpell2Controller,
-      label: '效果2触发法术',
-      placeholder: 'EffectTriggerSpell_2',
+    final effectMiscValue2Input = FormItem(
+      controller: vm.effectMiscValue2Controller,
+      label: '效果2杂项值',
+      placeholder: 'EffectMiscValue2',
     );
-    final effectChainTargets2Input = FormItem(
-      controller: vm.effectChainTargets2Controller,
-      label: '效果2连锁目标',
-      placeholder: 'EffectChainTargets_2',
+    final effectMiscValueB2Input = FormItem(
+      controller: vm.effectMiscValueB2Controller,
+      label: '效果2杂项值B',
+      placeholder: 'EffectMiscValueB2',
     );
     final effectRadiusIndex2Input = FormItem(
       controller: vm.effectRadiusIndex2Controller,
       label: '效果2半径',
-      placeholder: 'EffectRadiusIndex_2',
+      placeholder: 'EffectRadiusIndex2',
+    );
+    final effectChainAmplitude2Input = FormItem(
+      controller: vm.effectChainAmplitude2Controller,
+      label: '效果2连锁振幅',
+      placeholder: 'EffectChainAmplitude2',
+    );
+    final effectBonusCoefficient2Input = FormItem(
+      controller: vm.effectBonusCoefficient2Controller,
+      label: '效果2加成系数',
+      placeholder: 'EffectBonusCoefficient2',
+    );
+    final effectItemType2Input = FormItem(
+      controller: vm.effectItemType2Controller,
+      label: '效果2物品类型',
+      placeholder: 'EffectItemType2',
+    );
+    final effectTriggerSpell2Input = FormItem(
+      controller: vm.effectTriggerSpell2Controller,
+      label: '效果2触发法术',
+      placeholder: 'EffectTriggerSpell2',
+    );
+    final effectChainTargets2Input = FormItem(
+      controller: vm.effectChainTargets2Controller,
+      label: '效果2连锁目标',
+      placeholder: 'EffectChainTargets2',
     );
     final effectPointsPerCombo2Input = FormItem(
       controller: vm.effectPointsPerCombo2Controller,
       label: '效果2连击点数',
-      placeholder: 'EffectPointsPerCombo_2',
+      placeholder: 'EffectPointsPerCombo2',
     );
-
-    // === 效果3 ===
-    final effect3Input = FormItem(
-      controller: vm.effect3Controller,
-      label: '效果3类型',
-      placeholder: 'Effect_3',
+    final effectSpellClassMaskA2Input = FormItem(
+      controller: vm.effectSpellClassMaskA2Controller,
+      label: '效果2分类掩码A',
+      placeholder: 'EffectSpellClassMaskA2',
     );
-    final effectBasePoints3Input = FormItem(
-      controller: vm.effectBasePoints3Controller,
-      label: '效果3基础值',
-      placeholder: 'EffectBasePoints_3',
+    final effectSpellClassMaskB2Input = FormItem(
+      controller: vm.effectSpellClassMaskB2Controller,
+      label: '效果2分类掩码B',
+      placeholder: 'EffectSpellClassMaskB2',
     );
-    final effectDieSides3Input = FormItem(
-      controller: vm.effectDieSides3Controller,
-      label: '效果3波动值',
-      placeholder: 'EffectDieSides_3',
-    );
-    final effectAura3Input = FormItem(
-      controller: vm.effectAura3Controller,
-      label: '效果3光环',
-      placeholder: 'EffectAura_3',
-    );
-    final effectAuraPeriod3Input = FormItem(
-      controller: vm.effectAuraPeriod3Controller,
-      label: '效果3光环周期',
-      placeholder: 'EffectAuraPeriod_3',
-    );
-    final implicitTargetA3Input = FormItem(
-      controller: vm.implicitTargetA3Controller,
-      label: '效果3目标A',
-      placeholder: 'ImplicitTargetA_3',
-    );
-    final implicitTargetB3Input = FormItem(
-      controller: vm.implicitTargetB3Controller,
-      label: '效果3目标B',
-      placeholder: 'ImplicitTargetB_3',
-    );
-    final effectTriggerSpell3Input = FormItem(
-      controller: vm.effectTriggerSpell3Controller,
-      label: '效果3触发法术',
-      placeholder: 'EffectTriggerSpell_3',
-    );
-    final effectChainTargets3Input = FormItem(
-      controller: vm.effectChainTargets3Controller,
-      label: '效果3连锁目标',
-      placeholder: 'EffectChainTargets_3',
-    );
-    final effectRadiusIndex3Input = FormItem(
-      controller: vm.effectRadiusIndex3Controller,
-      label: '效果3半径',
-      placeholder: 'EffectRadiusIndex_3',
-    );
-    final effectPointsPerCombo3Input = FormItem(
-      controller: vm.effectPointsPerCombo3Controller,
-      label: '效果3连击点数',
-      placeholder: 'EffectPointsPerCombo_3',
+    final effectSpellClassMaskC2Input = FormItem(
+      controller: vm.effectSpellClassMaskC2Controller,
+      label: '效果2分类掩码C',
+      placeholder: 'EffectSpellClassMaskC2',
     );
 
     // === 装备限制 ===
@@ -566,65 +726,65 @@ class _SpellViewState extends State<SpellView> {
     );
 
     // === 图腾/施法材料 ===
+    final requiredTotemCategoryID0Input = FormItem(
+      controller: vm.requiredTotemCategoryID0Controller,
+      label: '图腾1类型',
+      placeholder: 'RequiredTotemCategoryID0',
+    );
+    final totem0Input = FormItem(
+      controller: vm.totem0Controller,
+      label: '图腾1',
+      placeholder: 'Totem0',
+    );
     final requiredTotemCategoryID1Input = FormItem(
       controller: vm.requiredTotemCategoryID1Controller,
-      label: '图腾1类型',
-      placeholder: 'RequiredTotemCategoryID_1',
+      label: '图腾2类型',
+      placeholder: 'RequiredTotemCategoryID1',
     );
     final totem1Input = FormItem(
       controller: vm.totem1Controller,
-      label: '图腾1',
-      placeholder: 'Totem_1',
-    );
-    final requiredTotemCategoryID2Input = FormItem(
-      controller: vm.requiredTotemCategoryID2Controller,
-      label: '图腾2类型',
-      placeholder: 'RequiredTotemCategoryID_2',
-    );
-    final totem2Input = FormItem(
-      controller: vm.totem2Controller,
       label: '图腾2',
-      placeholder: 'Totem_2',
+      placeholder: 'Totem1',
+    );
+    final reagent0Input = FormItem(
+      controller: vm.reagent0Controller,
+      label: '施法材料1',
+      placeholder: 'Reagent0',
+    );
+    final reagentCount0Input = FormItem(
+      controller: vm.reagentCount0Controller,
+      label: '材料1数量',
+      placeholder: 'ReagentCount0',
     );
     final reagent1Input = FormItem(
       controller: vm.reagent1Controller,
-      label: '施法材料1',
-      placeholder: 'Reagent_1',
+      label: '施法材料2',
+      placeholder: 'Reagent1',
     );
     final reagentCount1Input = FormItem(
       controller: vm.reagentCount1Controller,
-      label: '材料1数量',
-      placeholder: 'ReagentCount_1',
+      label: '材料2数量',
+      placeholder: 'ReagentCount1',
     );
     final reagent2Input = FormItem(
       controller: vm.reagent2Controller,
-      label: '施法材料2',
-      placeholder: 'Reagent_2',
+      label: '施法材料3',
+      placeholder: 'Reagent2',
     );
     final reagentCount2Input = FormItem(
       controller: vm.reagentCount2Controller,
-      label: '材料2数量',
-      placeholder: 'ReagentCount_2',
+      label: '材料3数量',
+      placeholder: 'ReagentCount2',
     );
     final reagent3Input = FormItem(
       controller: vm.reagent3Controller,
-      label: '施法材料3',
-      placeholder: 'Reagent_3',
+      label: '施法材料4',
+      placeholder: 'Reagent3',
     );
     final reagentCount3Input = FormItem(
       controller: vm.reagentCount3Controller,
-      label: '材料3数量',
-      placeholder: 'ReagentCount_3',
-    );
-    final reagent4Input = FormItem(
-      controller: vm.reagent4Controller,
-      label: '施法材料4',
-      placeholder: 'Reagent_4',
-    );
-    final reagentCount4Input = FormItem(
-      controller: vm.reagentCount4Controller,
       label: '材料4数量',
-      placeholder: 'ReagentCount_4',
+      placeholder: 'ReagentCount3',
     );
 
     // === 其他高级属性 ===
@@ -673,15 +833,15 @@ class _SpellViewState extends State<SpellView> {
       label: '姿态栏顺序',
       placeholder: 'StanceBarOrder',
     );
-    final shapeshiftMaskInput = FormItem(
-      controller: vm.shapeshiftMaskController,
+    final shapeshiftMask0Input = FormItem(
+      controller: vm.shapeshiftMask0Controller,
       label: '变形掩码',
-      placeholder: 'ShapeshiftMask',
+      placeholder: 'ShapeshiftMask0',
     );
-    final shapeshiftExcludeInput = FormItem(
-      controller: vm.shapeshiftExcludeController,
+    final shapeshiftExclude0Input = FormItem(
+      controller: vm.shapeshiftExclude0Controller,
       label: '变形排除',
-      placeholder: 'ShapeshiftExclude',
+      placeholder: 'ShapeshiftExclude0',
     );
 
     final basicRows = [
@@ -702,8 +862,8 @@ class _SpellViewState extends State<SpellView> {
         children: [
           Expanded(child: spellIconIDInput),
           Expanded(child: activeIconIDInput),
+          Expanded(child: spellVisualID0Input),
           Expanded(child: spellVisualID1Input),
-          Expanded(child: spellVisualID2Input),
         ],
       ),
     ];
@@ -866,9 +1026,66 @@ class _SpellViewState extends State<SpellView> {
         spacing: 8,
         children: [
           Expanded(child: spellClassSetInput),
+          Expanded(child: spellClassMask0Input),
           Expanded(child: spellClassMask1Input),
           Expanded(child: spellClassMask2Input),
-          Expanded(child: spellClassMask3Input),
+        ],
+      ),
+    ];
+
+    final effect0Rows = [
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effect0Input),
+          Expanded(child: effectBasePoints0Input),
+          Expanded(child: effectDieSides0Input),
+          Expanded(child: effectRealPointsPerLevel0Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectMechanic0Input),
+          Expanded(child: effectChainTargets0Input),
+          Expanded(child: effectAura0Input),
+          Expanded(child: effectAuraPeriod0Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectAmplitude0Input),
+          Expanded(child: implicitTargetA0Input),
+          Expanded(child: implicitTargetB0Input),
+          Expanded(child: effectMiscValue0Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectMiscValueB0Input),
+          Expanded(child: effectRadiusIndex0Input),
+          Expanded(child: effectChainAmplitude0Input),
+          Expanded(child: effectBonusCoefficient0Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectItemType0Input),
+          Expanded(child: effectTriggerSpell0Input),
+          Expanded(child: effectChainTargets0Input),
+          Expanded(child: effectPointsPerCombo0Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectSpellClassMaskA0Input),
+          Expanded(child: effectSpellClassMaskB0Input),
+          Expanded(child: effectSpellClassMaskC0Input),
+          Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -880,13 +1097,22 @@ class _SpellViewState extends State<SpellView> {
           Expanded(child: effect1Input),
           Expanded(child: effectBasePoints1Input),
           Expanded(child: effectDieSides1Input),
-          Expanded(child: effectAura1Input),
+          Expanded(child: effectRealPointsPerLevel1Input),
         ],
       ),
       Row(
         spacing: 8,
         children: [
+          Expanded(child: effectMechanic1Input),
+          Expanded(child: effectChainTargets1Input),
+          Expanded(child: effectAura1Input),
           Expanded(child: effectAuraPeriod1Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectAmplitude1Input),
           Expanded(child: implicitTargetA1Input),
           Expanded(child: implicitTargetB1Input),
           Expanded(child: effectMiscValue1Input),
@@ -895,10 +1121,28 @@ class _SpellViewState extends State<SpellView> {
       Row(
         spacing: 8,
         children: [
+          Expanded(child: effectMiscValueB1Input),
+          Expanded(child: effectRadiusIndex1Input),
+          Expanded(child: effectChainAmplitude1Input),
+          Expanded(child: effectBonusCoefficient1Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectItemType1Input),
           Expanded(child: effectTriggerSpell1Input),
           Expanded(child: effectChainTargets1Input),
-          Expanded(child: effectRadiusIndex1Input),
           Expanded(child: effectPointsPerCombo1Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectSpellClassMaskA1Input),
+          Expanded(child: effectSpellClassMaskB1Input),
+          Expanded(child: effectSpellClassMaskC1Input),
+          Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -910,55 +1154,52 @@ class _SpellViewState extends State<SpellView> {
           Expanded(child: effect2Input),
           Expanded(child: effectBasePoints2Input),
           Expanded(child: effectDieSides2Input),
-          Expanded(child: effectAura2Input),
+          Expanded(child: effectRealPointsPerLevel2Input),
         ],
       ),
       Row(
         spacing: 8,
         children: [
+          Expanded(child: effectMechanic2Input),
+          Expanded(child: effectChainTargets2Input),
+          Expanded(child: effectAura2Input),
           Expanded(child: effectAuraPeriod2Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectAmplitude2Input),
           Expanded(child: implicitTargetA2Input),
           Expanded(child: implicitTargetB2Input),
-          Expanded(child: SizedBox()),
+          Expanded(child: effectMiscValue2Input),
         ],
       ),
       Row(
         spacing: 8,
         children: [
+          Expanded(child: effectMiscValueB2Input),
+          Expanded(child: effectRadiusIndex2Input),
+          Expanded(child: effectChainAmplitude2Input),
+          Expanded(child: effectBonusCoefficient2Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: effectItemType2Input),
           Expanded(child: effectTriggerSpell2Input),
           Expanded(child: effectChainTargets2Input),
-          Expanded(child: effectRadiusIndex2Input),
           Expanded(child: effectPointsPerCombo2Input),
         ],
       ),
-    ];
-
-    final effect3Rows = [
       Row(
         spacing: 8,
         children: [
-          Expanded(child: effect3Input),
-          Expanded(child: effectBasePoints3Input),
-          Expanded(child: effectDieSides3Input),
-          Expanded(child: effectAura3Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectAuraPeriod3Input),
-          Expanded(child: implicitTargetA3Input),
-          Expanded(child: implicitTargetB3Input),
+          Expanded(child: effectSpellClassMaskA2Input),
+          Expanded(child: effectSpellClassMaskB2Input),
+          Expanded(child: effectSpellClassMaskC2Input),
           Expanded(child: SizedBox()),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectTriggerSpell3Input),
-          Expanded(child: effectChainTargets3Input),
-          Expanded(child: effectRadiusIndex3Input),
-          Expanded(child: effectPointsPerCombo3Input),
         ],
       ),
     ];
@@ -979,10 +1220,10 @@ class _SpellViewState extends State<SpellView> {
       Row(
         spacing: 8,
         children: [
+          Expanded(child: requiredTotemCategoryID0Input),
+          Expanded(child: totem0Input),
           Expanded(child: requiredTotemCategoryID1Input),
           Expanded(child: totem1Input),
-          Expanded(child: requiredTotemCategoryID2Input),
-          Expanded(child: totem2Input),
         ],
       ),
     ];
@@ -991,19 +1232,19 @@ class _SpellViewState extends State<SpellView> {
       Row(
         spacing: 8,
         children: [
+          Expanded(child: reagent0Input),
+          Expanded(child: reagentCount0Input),
           Expanded(child: reagent1Input),
           Expanded(child: reagentCount1Input),
-          Expanded(child: reagent2Input),
-          Expanded(child: reagentCount2Input),
         ],
       ),
       Row(
         spacing: 8,
         children: [
+          Expanded(child: reagent2Input),
+          Expanded(child: reagentCount2Input),
           Expanded(child: reagent3Input),
           Expanded(child: reagentCount3Input),
-          Expanded(child: reagent4Input),
-          Expanded(child: reagentCount4Input),
         ],
       ),
     ];
@@ -1031,8 +1272,8 @@ class _SpellViewState extends State<SpellView> {
         spacing: 8,
         children: [
           Expanded(child: stanceBarOrderInput),
-          Expanded(child: shapeshiftMaskInput),
-          Expanded(child: shapeshiftExcludeInput),
+          Expanded(child: shapeshiftMask0Input),
+          Expanded(child: shapeshiftExclude0Input),
           Expanded(child: SizedBox()),
         ],
       ),
@@ -1044,43 +1285,24 @@ class _SpellViewState extends State<SpellView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          // 基础文本
           section('基础文本', basicRows),
-          // 图标视觉
           section('图标视觉', visualRows),
-          // 分类类型
           section('分类类型', categoryRows),
-          // 施法参数
           section('施法参数', castingRows),
-          // 冷却恢复
           section('冷却恢复', recoveryRows),
-          // 目标
           section('目标', targetRows),
-          // 状态
           section('状态', stateRows),
-          // 需求
           section('需求', requiredRows),
-          // 能量消耗
           section('能量消耗', powerRows),
-          // 标志位
           section('标志位', attributeFlagRows),
-          // 触发
           section('触发', procRows),
-          // 法术分类掩码
           section('法术分类掩码', spellClassRows),
-          // 效果1
+          section('效果0', effect0Rows),
           section('效果1', effect1Rows),
-          // 效果2
           section('效果2', effect2Rows),
-          // 效果3
-          section('效果3', effect3Rows),
-          // 装备限制
           section('装备限制', equipRows),
-          // 图腾
           section('图腾', totemRows),
-          // 施法材料
           section('施法材料', reagentRows),
-          // 其他高级属性
           section('其他高级属性', otherRows),
           Row(
             children: [
