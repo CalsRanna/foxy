@@ -13,7 +13,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table('$_table AS ssd');
-      builder = builder.select(['ssd.ID', 'ssd.Name_Lang_zhCN']);
+      builder = builder.select(['ssd.ID', 'ssd.Name_lang_zhCN']);
       if (id != null && id.isNotEmpty) {
         builder = builder.where('ssd.ID', id);
       }
@@ -25,7 +25,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
         var map = e.toMap();
         var model = ItemEnchantmentTemplate();
         model.entry = (map['ID'] as int?) ?? 0;
-        model.name = (map['Name_Lang_zhCN'] as String?) ?? '';
+        model.name = (map['Name_lang_zhCN'] as String?) ?? '';
         return model;
       }).toList();
     } catch (e) {

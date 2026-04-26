@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/page/creature_template/creature_display_info_selector.dart';
 import 'package:foxy/page/creature_template/creature_spell_data_selector.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
@@ -180,41 +179,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       ),
     ];
 
-    /// 外观模型输入
-    final modelId1Input = FormItem(
-      label: '模型1',
-      child: CreatureDisplayInfoSelector(
-        controller: viewModel.modelId1Controller,
-        placeholder: 'modelid1',
-      ),
-    );
-    final modelId2Input = FormItem(
-      label: '模型2',
-      child: CreatureDisplayInfoSelector(
-        controller: viewModel.modelId2Controller,
-        placeholder: 'modelid2',
-      ),
-    );
-    final modelId3Input = FormItem(
-      label: '模型3',
-      child: CreatureDisplayInfoSelector(
-        controller: viewModel.modelId3Controller,
-        placeholder: 'modelid3',
-      ),
-    );
-    final modelId4Input = FormItem(
-      label: '模型4',
-      child: CreatureDisplayInfoSelector(
-        controller: viewModel.modelId4Controller,
-        placeholder: 'modelid4',
-      ),
-    );
-    final scaleInput = FormItem(
-      controller: viewModel.scaleController,
-      label: '缩放',
-      placeholder: 'scale',
-    );
-
     /// 类型阵营输入
     final expInput = FormItem(
       label: '属性扩展',
@@ -242,28 +206,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
           Expanded(child: regenerateHealthInput),
           Expanded(child: expInput),
           Expanded(child: gossipMenuIdInput),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    /// 3. 外观模型 (5个字段)
-    final modelRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: modelId1Input),
-          Expanded(child: modelId2Input),
-          Expanded(child: modelId3Input),
-          Expanded(child: modelId4Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: scaleInput),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
           Expanded(child: SizedBox()),
         ],
       ),
@@ -389,6 +331,16 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '奔跑速度',
       placeholder: 'speed_run',
     );
+    final speedSwimInput = FormItem(
+      controller: viewModel.speedSwimController,
+      label: '游泳速度',
+      placeholder: 'speed_swim',
+    );
+    final speedFlightInput = FormItem(
+      controller: viewModel.speedFlightController,
+      label: '飞行速度',
+      placeholder: 'speed_flight',
+    );
 
     /// 4. 战斗属性 (11个字段)
     final combatRows = [
@@ -473,48 +425,12 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '盘旋高度',
       placeholder: 'HoverHeight',
     );
-    final inhabitTypeInput = FormItem(
-      label: '栖息类型',
-      child: FlagPicker(
-        controller: viewModel.inhabitTypeController,
-        flags: kInhabitTypeOptions,
-        title: '栖息类型',
-        placeholder: 'InhabitType',
-      ),
+    final detectionRangeInput = FormItem(
+      controller: viewModel.detectionRangeController,
+      label: '探测范围',
+      placeholder: 'detection_range',
     );
-
-    /// 训练师属性输入
-    final trainerTypeInput = FormItem(
-      label: '训练师类型',
-      child: FoxyShadSelect<int>(
-        controller: viewModel.trainerTypeController,
-        options: kTrainerTypeOptions,
-        placeholder: const Text('trainer_type'),
-      ),
-    );
-    final trainerSpellInput = FormItem(
-      controller: viewModel.trainerSpellController,
-      label: '训练师法术',
-      placeholder: 'trainer_spell',
-    );
-    final trainerClassInput = FormItem(
-      label: '训练师职业',
-      child: FoxyShadSelect<int>(
-        controller: viewModel.trainerClassController,
-        options: kTrainerClassOptions,
-        placeholder: const Text('trainer_class'),
-      ),
-    );
-    final trainerRaceInput = FormItem(
-      label: '训练师种族',
-      child: FoxyShadSelect<int>(
-        controller: viewModel.trainerRaceController,
-        options: kTrainerRaceOptions,
-        placeholder: const Text('trainer_race'),
-      ),
-    );
-
-    /// 5. 移动属性 (7个字段)
+    /// 5. 移动属性
     final movementRows = [
       Row(
         spacing: 8,
@@ -528,48 +444,31 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       Row(
         spacing: 8,
         children: [
+          Expanded(child: speedSwimInput),
+          Expanded(child: speedFlightInput),
+          Expanded(child: detectionRangeInput),
           Expanded(child: hoverHeightInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
           Expanded(child: vehicleIdInput),
-          Expanded(child: inhabitTypeInput),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
           Expanded(child: SizedBox()),
         ],
       ),
     ];
 
-    /// 8. 训练师属性 (4个字段，根据npcFlag条件显示)
-    final trainerRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: trainerTypeInput),
-          Expanded(child: trainerSpellInput),
-          Expanded(child: trainerClassInput),
-          Expanded(child: trainerRaceInput),
-        ],
-      ),
-    ];
-
     /// 免疫输入
-    final mechanicImmuneMaskInput = FormItem(
-      label: '免疫机制',
-      child: FlagPicker(
-        controller: viewModel.mechanicImmuneMaskController,
-        flags: kMechanicImmuneMaskOptions,
-        title: '免疫机制',
-        placeholder: 'mechanic_immune_mask',
-      ),
-    );
-    final spellSchoolImmuneMaskInput = FormItem(
-      label: '免疫法术类型',
-      child: FlagPicker(
-        controller: viewModel.spellSchoolImmuneMaskController,
-        flags: kSpellSchoolImmuneMaskOptions,
-        title: '免疫法术类型',
-        placeholder: 'spell_school_immune_mask',
-      ),
+    final creatureImmunitiesIdInput = FormItem(
+      controller: viewModel.creatureImmunitiesIdController,
+      label: '免疫ID',
+      placeholder: 'CreatureImmunitiesId',
     );
 
-    /// 6. 标识免疫 (8个字段)
+    /// 6. 标识免疫
     final flagImmuneRows = [
       Row(
         spacing: 8,
@@ -585,8 +484,8 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
         children: [
           Expanded(child: dynamicFlagInput),
           Expanded(child: extraFlagInput),
-          Expanded(child: mechanicImmuneMaskInput),
-          Expanded(child: spellSchoolImmuneMaskInput),
+          Expanded(child: creatureImmunitiesIdInput),
+          Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -708,16 +607,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
             padding: EdgeInsets.all(16),
             child: Column(spacing: 8, children: typeRows),
           ),
-          // 外观模型
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('外观模型'),
-          ),
-
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: modelRows),
-          ),
           // 战斗属性
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -737,16 +626,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
           ShadCard(
             padding: EdgeInsets.all(16),
             child: Column(spacing: 8, children: movementRows),
-          ),
-          // 训练师属性
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('训练师属性'),
-          ),
-
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: trainerRows),
           ),
           // 标识免疫
           Padding(

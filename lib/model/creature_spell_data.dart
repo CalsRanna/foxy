@@ -1,10 +1,14 @@
 /// 宠物技能数据
 class CreatureSpellData {
   int id = 0;
+  int spells0 = 0;
   int spells1 = 0;
   int spells2 = 0;
   int spells3 = 0;
-  int spells4 = 0;
+  int availability0 = 0;
+  int availability1 = 0;
+  int availability2 = 0;
+  int availability3 = 0;
   String spellName1 = '';
   String spellName2 = '';
   String spellName3 = '';
@@ -14,10 +18,14 @@ class CreatureSpellData {
 
   CreatureSpellData.fromJson(Map<String, dynamic> json) {
     id = json['ID'] ?? json['id'] ?? 0;
-    spells1 = json['Spells_1'] ?? json['Spells1'] ?? json['spells1'] ?? 0;
-    spells2 = json['Spells_2'] ?? json['Spells2'] ?? json['spells2'] ?? 0;
-    spells3 = json['Spells_3'] ?? json['Spells3'] ?? json['spells3'] ?? 0;
-    spells4 = json['Spells_4'] ?? json['Spells4'] ?? json['spells4'] ?? 0;
+    spells0 = json['Spells0'] ?? 0;
+    spells1 = json['Spells1'] ?? 0;
+    spells2 = json['Spells2'] ?? 0;
+    spells3 = json['Spells3'] ?? 0;
+    availability0 = json['Availability0'] ?? 0;
+    availability1 = json['Availability1'] ?? 0;
+    availability2 = json['Availability2'] ?? 0;
+    availability3 = json['Availability3'] ?? 0;
     spellName1 = json['SpellName1'] ?? '';
     spellName2 = json['SpellName2'] ?? '';
     spellName3 = json['SpellName3'] ?? '';
@@ -27,10 +35,14 @@ class CreatureSpellData {
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
-      'Spells_1': spells1,
-      'Spells_2': spells2,
-      'Spells_3': spells3,
-      'Spells_4': spells4,
+      'Spells0': spells0,
+      'Spells1': spells1,
+      'Spells2': spells2,
+      'Spells3': spells3,
+      'Availability0': availability0,
+      'Availability1': availability1,
+      'Availability2': availability2,
+      'Availability3': availability3,
     };
   }
 }

@@ -10,8 +10,8 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
       var builder = laconic.table('$_table AS cts');
       const fields = [
         'cts.*',
-        'ds.Name_Lang_zhCN as spellName',
-        'ds.NameSubtext_Lang_zhCN as spellSubtext',
+        'ds.Name_lang_zhCN as spellName',
+        'ds.NameSubtext_lang_zhCN as spellSubtext',
       ];
       builder = builder.select(fields);
       builder = builder.leftJoin(

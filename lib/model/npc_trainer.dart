@@ -6,6 +6,7 @@ class NpcTrainer {
   int reqSkillLine = 0;
   int reqSkillRank = 0;
   int reqLevel = 0;
+  int reqSpell = 0;
 
   // 关联字段（技能信息）
   String spellName = '';
@@ -20,6 +21,7 @@ class NpcTrainer {
     reqSkillLine = json['ReqSkillLine'] ?? json['reqSkillLine'] ?? 0;
     reqSkillRank = json['ReqSkillRank'] ?? json['reqSkillRank'] ?? 0;
     reqLevel = json['ReqLevel'] ?? json['reqLevel'] ?? 0;
+    reqSpell = json['ReqSpell'] ?? json['reqSpell'] ?? 0;
     // 关联字段
     spellName = json['spellName'] ?? '';
     spellSubtext = json['spellSubtext'] ?? '';
@@ -33,6 +35,7 @@ class NpcTrainer {
       'ReqSkillLine': reqSkillLine,
       'ReqSkillRank': reqSkillRank,
       'ReqLevel': reqLevel,
+      'ReqSpell': reqSpell,
     };
   }
 }

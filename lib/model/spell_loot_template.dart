@@ -26,7 +26,7 @@ class SpellLootTemplate {
     chance = (json['Chance'] ?? json['chance'] ?? 0.0).toDouble();
     questRequired = json['QuestRequired'] ?? json['questRequired'] ?? 0;
     lootMode = json['LootMode'] ?? json['lootMode'] ?? 0;
-    groupId = json['GroudId'] ?? json['groupId'] ?? 0;
+    groupId = json['GroupId'] ?? json['GroudId'] ?? json['groupId'] ?? 0;
     minCount = json['MinCount'] ?? json['minCount'] ?? 0;
     maxCount = json['MaxCount'] ?? json['maxCount'] ?? 0;
     comment = json['Comment'] ?? json['comment'] ?? '';
@@ -44,7 +44,7 @@ class SpellLootTemplate {
       'Chance': chance,
       'QuestRequired': questRequired,
       'LootMode': lootMode,
-      'GroudId': groupId,
+      'GroupId': groupId,
       'MinCount': minCount,
       'MaxCount': maxCount,
       'Comment': comment,

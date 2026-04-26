@@ -11,19 +11,19 @@ class CreatureSpellDataRepository with RepositoryMixin {
       var builder = laconic.table('$_table AS dcsd');
       builder = builder.leftJoin(
         '$_spellTable AS ds_1',
-        (join) => join.on('dcsd.Spells_1', 'ds_1.ID'),
+        (join) => join.on('dcsd.Spells0', 'ds_1.ID'),
       );
       builder = builder.leftJoin(
         '$_spellTable AS ds_2',
-        (join) => join.on('dcsd.Spells_2', 'ds_2.ID'),
+        (join) => join.on('dcsd.Spells1', 'ds_2.ID'),
       );
       builder = builder.leftJoin(
         '$_spellTable AS ds_3',
-        (join) => join.on('dcsd.Spells_3', 'ds_3.ID'),
+        (join) => join.on('dcsd.Spells2', 'ds_3.ID'),
       );
       builder = builder.leftJoin(
         '$_spellTable AS ds_4',
-        (join) => join.on('dcsd.Spells_4', 'ds_4.ID'),
+        (join) => join.on('dcsd.Spells3', 'ds_4.ID'),
       );
       if (id != null && id.isNotEmpty) {
         builder = builder.where('dcsd.ID', id);
@@ -31,10 +31,10 @@ class CreatureSpellDataRepository with RepositoryMixin {
       if (spell != null && spell.isNotEmpty) {
         builder = builder.whereAny(
           [
-            'ds_1.Name_Lang_zhCN',
-            'ds_2.Name_Lang_zhCN',
-            'ds_3.Name_Lang_zhCN',
-            'ds_4.Name_Lang_zhCN',
+            'ds_1.Name_lang_zhCN',
+            'ds_2.Name_lang_zhCN',
+            'ds_3.Name_lang_zhCN',
+            'ds_4.Name_lang_zhCN',
           ],
           '%$spell%',
           operator: 'like',
@@ -56,32 +56,36 @@ class CreatureSpellDataRepository with RepositoryMixin {
       var offset = (page - 1) * kPageSize;
       const fields = [
         'dcsd.ID',
-        'dcsd.Spells_1',
-        'dcsd.Spells_2',
-        'dcsd.Spells_3',
-        'dcsd.Spells_4',
-        'ds_1.Name_Lang_zhCN AS SpellName1',
-        'ds_2.Name_Lang_zhCN AS SpellName2',
-        'ds_3.Name_Lang_zhCN AS SpellName3',
-        'ds_4.Name_Lang_zhCN AS SpellName4',
+        'dcsd.Spells0',
+        'dcsd.Spells1',
+        'dcsd.Spells2',
+        'dcsd.Spells3',
+        'dcsd.Availability0',
+        'dcsd.Availability1',
+        'dcsd.Availability2',
+        'dcsd.Availability3',
+        'ds_1.Name_lang_zhCN AS SpellName1',
+        'ds_2.Name_lang_zhCN AS SpellName2',
+        'ds_3.Name_lang_zhCN AS SpellName3',
+        'ds_4.Name_lang_zhCN AS SpellName4',
       ];
       var builder = laconic.table('$_table AS dcsd');
       builder = builder.select(fields);
       builder = builder.leftJoin(
         '$_spellTable AS ds_1',
-        (join) => join.on('dcsd.Spells_1', 'ds_1.ID'),
+        (join) => join.on('dcsd.Spells0', 'ds_1.ID'),
       );
       builder = builder.leftJoin(
         '$_spellTable AS ds_2',
-        (join) => join.on('dcsd.Spells_2', 'ds_2.ID'),
+        (join) => join.on('dcsd.Spells1', 'ds_2.ID'),
       );
       builder = builder.leftJoin(
         '$_spellTable AS ds_3',
-        (join) => join.on('dcsd.Spells_3', 'ds_3.ID'),
+        (join) => join.on('dcsd.Spells2', 'ds_3.ID'),
       );
       builder = builder.leftJoin(
         '$_spellTable AS ds_4',
-        (join) => join.on('dcsd.Spells_4', 'ds_4.ID'),
+        (join) => join.on('dcsd.Spells3', 'ds_4.ID'),
       );
       if (id != null && id.isNotEmpty) {
         builder = builder.where('dcsd.ID', id);
@@ -89,10 +93,10 @@ class CreatureSpellDataRepository with RepositoryMixin {
       if (spell != null && spell.isNotEmpty) {
         builder = builder.whereAny(
           [
-            'ds_1.Name_Lang_zhCN',
-            'ds_2.Name_Lang_zhCN',
-            'ds_3.Name_Lang_zhCN',
-            'ds_4.Name_Lang_zhCN',
+            'ds_1.Name_lang_zhCN',
+            'ds_2.Name_lang_zhCN',
+            'ds_3.Name_lang_zhCN',
+            'ds_4.Name_lang_zhCN',
           ],
           '%$spell%',
           operator: 'like',

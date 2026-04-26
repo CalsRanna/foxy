@@ -9,7 +9,24 @@ class ItemExtendedCostRepository with RepositoryMixin {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table);
-      const fields = ['ID', 'HonorPoints', 'ArenaPoints', 'ArenaBracket'];
+      const fields = [
+        'ID',
+        'HonorPoints',
+        'ArenaPoints',
+        'ArenaBracket',
+        'ItemID0',
+        'ItemID1',
+        'ItemID2',
+        'ItemID3',
+        'ItemID4',
+        'ItemCount0',
+        'ItemCount1',
+        'ItemCount2',
+        'ItemCount3',
+        'ItemCount4',
+        'RequiredArenaRating',
+        'ItemPurchaseGroup',
+      ];
       builder = builder.select(fields);
       if (id != null && id.isNotEmpty) {
         builder = builder.where('ID', id);

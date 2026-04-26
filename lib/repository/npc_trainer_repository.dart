@@ -10,8 +10,8 @@ class NpcTrainerRepository with RepositoryMixin {
       var builder = laconic.table('$_table AS nt');
       const fields = [
         'nt.*',
-        'ds.Name_Lang_zhCN as spellName',
-        'ds.NameSubtext_Lang_zhCN as spellSubtext',
+        'ds.Name_lang_zhCN as spellName',
+        'ds.NameSubtext_lang_zhCN as spellSubtext',
       ];
       builder = builder.select(fields);
       builder = builder.leftJoin(

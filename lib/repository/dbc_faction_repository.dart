@@ -13,7 +13,7 @@ class DbcFactionRepository with RepositoryMixin {
       }
       if (name != null && name.isNotEmpty) {
         builder = builder.where(
-          'Name_Lang_zhCN',
+          'Name_lang_zhCN',
           '%$name%',
           comparator: 'like',
         );
@@ -34,15 +34,15 @@ class DbcFactionRepository with RepositoryMixin {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table).select([
         'ID',
-        'Name_Lang_zhCN',
-        'Description_Lang_zhCN',
+        'Name_lang_zhCN',
+        'Description_lang_zhCN',
       ]);
       if (id != null && id.isNotEmpty) {
         builder = builder.where('ID', id);
       }
       if (name != null && name.isNotEmpty) {
         builder = builder.where(
-          'Name_Lang_zhCN',
+          'Name_lang_zhCN',
           '%$name%',
           comparator: 'like',
         );
@@ -60,7 +60,7 @@ class DbcFactionRepository with RepositoryMixin {
     try {
       var result = await laconic
           .table(_table)
-          .select(['ID', 'Name_Lang_zhCN', 'Description_Lang_zhCN'])
+          .select(['ID', 'Name_lang_zhCN', 'Description_lang_zhCN'])
           .where('ID', id)
           .first();
       return DbcFaction.fromJson(result.toMap());

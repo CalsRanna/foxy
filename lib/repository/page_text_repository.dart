@@ -9,7 +9,7 @@ class PageTextRepository with RepositoryMixin {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table);
-      builder = builder.select(['ID', 'Text']);
+      builder = builder.select(['ID', 'Text', 'NextPageID', 'VerifiedBuild']);
       if (id != null && id.isNotEmpty) {
         builder = builder.where('ID', id);
       }
