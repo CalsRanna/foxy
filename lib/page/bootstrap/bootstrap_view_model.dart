@@ -12,6 +12,7 @@ import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
+import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:signals/signals.dart';
@@ -37,8 +38,8 @@ class BootstrapViewModel {
         port: int.parse(portController.text),
         username: usernameController.text,
       );
-      var laconic = Laconic.mysql(
-        config,
+      var laconic = Laconic(
+        MysqlDriver(config),
         listen: (query) => logger.d(query.rawSql),
       );
       var foxyViewModel = GetIt.instance.get<FoxyViewModel>();

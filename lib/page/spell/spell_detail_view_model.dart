@@ -14,16 +14,16 @@ class SpellDetailViewModel {
   final nameSubtextLangZhCNController = TextEditingController();
   final descriptionLangZhCNController = TextEditingController();
   final auraDescriptionLangZhCNController = TextEditingController();
-  final nameLangMaskController = TextEditingController();
-  final nameSubtextLangMaskController = TextEditingController();
-  final descriptionLangMaskController = TextEditingController();
-  final auraDescriptionLangMaskController = TextEditingController();
+  final nameLangFlagsController = TextEditingController();
+  final nameSubtextLangFlagsController = TextEditingController();
+  final descriptionLangFlagsController = TextEditingController();
+  final auraDescriptionLangFlagsController = TextEditingController();
 
   // === 图标/视觉 ===
   final spellIconIDController = TextEditingController();
   final activeIconIDController = TextEditingController();
+  final spellVisualID0Controller = TextEditingController();
   final spellVisualID1Controller = TextEditingController();
-  final spellVisualID2Controller = TextEditingController();
 
   // === 分类/类型 ===
   final categoryController = TextEditingController();
@@ -98,9 +98,33 @@ class SpellDetailViewModel {
 
   // === 法术分类 ===
   final spellClassSetController = TextEditingController();
+  final spellClassMask0Controller = TextEditingController();
   final spellClassMask1Controller = TextEditingController();
   final spellClassMask2Controller = TextEditingController();
-  final spellClassMask3Controller = TextEditingController();
+
+  // === 效果0 ===
+  final effect0Controller = TextEditingController();
+  final effectBasePoints0Controller = TextEditingController();
+  final effectDieSides0Controller = TextEditingController();
+  final effectRealPointsPerLevel0Controller = TextEditingController();
+  final effectMechanic0Controller = TextEditingController();
+  final effectChainTargets0Controller = TextEditingController();
+  final effectAura0Controller = TextEditingController();
+  final effectAuraPeriod0Controller = TextEditingController();
+  final effectAmplitude0Controller = TextEditingController();
+  final implicitTargetA0Controller = TextEditingController();
+  final implicitTargetB0Controller = TextEditingController();
+  final effectMiscValue0Controller = TextEditingController();
+  final effectMiscValueB0Controller = TextEditingController();
+  final effectRadiusIndex0Controller = TextEditingController();
+  final effectChainAmplitude0Controller = TextEditingController();
+  final effectBonusCoefficient0Controller = TextEditingController();
+  final effectItemType0Controller = TextEditingController();
+  final effectTriggerSpell0Controller = TextEditingController();
+  final effectPointsPerCombo0Controller = TextEditingController();
+  final effectSpellClassMaskA0Controller = TextEditingController();
+  final effectSpellClassMaskB0Controller = TextEditingController();
+  final effectSpellClassMaskC0Controller = TextEditingController();
 
   // === 效果1 ===
   final effect1Controller = TextEditingController();
@@ -111,23 +135,20 @@ class SpellDetailViewModel {
   final effectChainTargets1Controller = TextEditingController();
   final effectAura1Controller = TextEditingController();
   final effectAuraPeriod1Controller = TextEditingController();
+  final effectAmplitude1Controller = TextEditingController();
   final implicitTargetA1Controller = TextEditingController();
   final implicitTargetB1Controller = TextEditingController();
   final effectMiscValue1Controller = TextEditingController();
   final effectMiscValueB1Controller = TextEditingController();
   final effectRadiusIndex1Controller = TextEditingController();
-  final effectMultipleValue1Controller = TextEditingController();
-  final effectBonusMultiplier1Controller = TextEditingController();
   final effectChainAmplitude1Controller = TextEditingController();
+  final effectBonusCoefficient1Controller = TextEditingController();
   final effectItemType1Controller = TextEditingController();
   final effectTriggerSpell1Controller = TextEditingController();
   final effectPointsPerCombo1Controller = TextEditingController();
   final effectSpellClassMaskA1Controller = TextEditingController();
-  final effectSpellClassMaskA2Controller = TextEditingController();
-  final effectSpellClassMaskA3Controller = TextEditingController();
   final effectSpellClassMaskB1Controller = TextEditingController();
-  final effectSpellClassMaskB2Controller = TextEditingController();
-  final effectSpellClassMaskB3Controller = TextEditingController();
+  final effectSpellClassMaskC1Controller = TextEditingController();
 
   // === 效果2 ===
   final effect2Controller = TextEditingController();
@@ -138,41 +159,20 @@ class SpellDetailViewModel {
   final effectChainTargets2Controller = TextEditingController();
   final effectAura2Controller = TextEditingController();
   final effectAuraPeriod2Controller = TextEditingController();
+  final effectAmplitude2Controller = TextEditingController();
   final implicitTargetA2Controller = TextEditingController();
   final implicitTargetB2Controller = TextEditingController();
   final effectMiscValue2Controller = TextEditingController();
   final effectMiscValueB2Controller = TextEditingController();
   final effectRadiusIndex2Controller = TextEditingController();
-  final effectMultipleValue2Controller = TextEditingController();
-  final effectBonusMultiplier2Controller = TextEditingController();
   final effectChainAmplitude2Controller = TextEditingController();
+  final effectBonusCoefficient2Controller = TextEditingController();
   final effectItemType2Controller = TextEditingController();
   final effectTriggerSpell2Controller = TextEditingController();
   final effectPointsPerCombo2Controller = TextEditingController();
-  final effectSpellClassMaskC1Controller = TextEditingController();
+  final effectSpellClassMaskA2Controller = TextEditingController();
+  final effectSpellClassMaskB2Controller = TextEditingController();
   final effectSpellClassMaskC2Controller = TextEditingController();
-  final effectSpellClassMaskC3Controller = TextEditingController();
-
-  // === 效果3 ===
-  final effect3Controller = TextEditingController();
-  final effectBasePoints3Controller = TextEditingController();
-  final effectDieSides3Controller = TextEditingController();
-  final effectRealPointsPerLevel3Controller = TextEditingController();
-  final effectMechanic3Controller = TextEditingController();
-  final effectChainTargets3Controller = TextEditingController();
-  final effectAura3Controller = TextEditingController();
-  final effectAuraPeriod3Controller = TextEditingController();
-  final implicitTargetA3Controller = TextEditingController();
-  final implicitTargetB3Controller = TextEditingController();
-  final effectMiscValue3Controller = TextEditingController();
-  final effectMiscValueB3Controller = TextEditingController();
-  final effectRadiusIndex3Controller = TextEditingController();
-  final effectMultipleValue3Controller = TextEditingController();
-  final effectBonusMultiplier3Controller = TextEditingController();
-  final effectChainAmplitude3Controller = TextEditingController();
-  final effectItemType3Controller = TextEditingController();
-  final effectTriggerSpell3Controller = TextEditingController();
-  final effectPointsPerCombo3Controller = TextEditingController();
 
   // === 装备限制 ===
   final equippedItemClassController = TextEditingController();
@@ -180,10 +180,11 @@ class SpellDetailViewModel {
   final equippedItemInvTypesController = TextEditingController();
 
   // === 图腾/施法材料 ===
+  final requiredTotemCategoryID0Controller = TextEditingController();
+  final totem0Controller = TextEditingController();
   final requiredTotemCategoryID1Controller = TextEditingController();
   final totem1Controller = TextEditingController();
-  final requiredTotemCategoryID2Controller = TextEditingController();
-  final totem2Controller = TextEditingController();
+  final reagent0Controller = TextEditingController();
   final reagent1Controller = TextEditingController();
   final reagent2Controller = TextEditingController();
   final reagent3Controller = TextEditingController();
@@ -191,7 +192,7 @@ class SpellDetailViewModel {
   final reagent5Controller = TextEditingController();
   final reagent6Controller = TextEditingController();
   final reagent7Controller = TextEditingController();
-  final reagent8Controller = TextEditingController();
+  final reagentCount0Controller = TextEditingController();
   final reagentCount1Controller = TextEditingController();
   final reagentCount2Controller = TextEditingController();
   final reagentCount3Controller = TextEditingController();
@@ -199,7 +200,6 @@ class SpellDetailViewModel {
   final reagentCount5Controller = TextEditingController();
   final reagentCount6Controller = TextEditingController();
   final reagentCount7Controller = TextEditingController();
-  final reagentCount8Controller = TextEditingController();
 
   // === 其他高级属性 ===
   final casterAuraSpellController = TextEditingController();
@@ -215,10 +215,8 @@ class SpellDetailViewModel {
   final requiredAuraVisionController = TextEditingController();
   final targetAuraSpellController = TextEditingController();
   final stanceBarOrderController = TextEditingController();
-  final shapeshiftMaskController = TextEditingController();
-  final shapeshiftExcludeController = TextEditingController();
-  final unk13Controller = TextEditingController();
-  final unk15Controller = TextEditingController();
+  final shapeshiftMask0Controller = TextEditingController();
+  final shapeshiftExclude0Controller = TextEditingController();
 
   final id = signal(0);
   final template = signal(Spell());
@@ -255,16 +253,16 @@ class SpellDetailViewModel {
     t.nameSubtextLangZhCN = nameSubtextLangZhCNController.text;
     t.descriptionLangZhCN = descriptionLangZhCNController.text;
     t.auraDescriptionLangZhCN = auraDescriptionLangZhCNController.text;
-    t.nameLangMask = _parseInt(nameLangMaskController.text);
-    t.nameSubtextLangMask = _parseInt(nameSubtextLangMaskController.text);
-    t.descriptionLangMask = _parseInt(descriptionLangMaskController.text);
-    t.auraDescriptionLangMask = _parseInt(auraDescriptionLangMaskController.text);
+    t.nameLangFlags = _parseInt(nameLangFlagsController.text);
+    t.nameSubtextLangFlags = _parseInt(nameSubtextLangFlagsController.text);
+    t.descriptionLangFlags = _parseInt(descriptionLangFlagsController.text);
+    t.auraDescriptionLangFlags = _parseInt(auraDescriptionLangFlagsController.text);
 
     // === 图标/视觉 ===
     t.spellIconID = _parseInt(spellIconIDController.text);
     t.activeIconID = _parseInt(activeIconIDController.text);
+    t.spellVisualID0 = _parseInt(spellVisualID0Controller.text);
     t.spellVisualID1 = _parseInt(spellVisualID1Controller.text);
-    t.spellVisualID2 = _parseInt(spellVisualID2Controller.text);
 
     // === 分类/类型 ===
     t.category = _parseInt(categoryController.text);
@@ -317,7 +315,7 @@ class SpellDetailViewModel {
     t.manaCostPct = _parseInt(manaCostPctController.text);
     t.manaCostPerLevel = _parseInt(manaCostPerLevelController.text);
     t.manaPerSecond = _parseInt(manaPerSecondController.text);
-    t.manaPerSecondPerLevel = _parseDouble(manaPerSecondPerLevelController.text);
+    t.manaPerSecondPerLevel = _parseInt(manaPerSecondPerLevelController.text);
 
     // === 标志位 ===
     t.interruptFlags = _parseInt(interruptFlagsController.text);
@@ -339,9 +337,33 @@ class SpellDetailViewModel {
 
     // === 法术分类 ===
     t.spellClassSet = _parseInt(spellClassSetController.text);
+    t.spellClassMask0 = _parseInt(spellClassMask0Controller.text);
     t.spellClassMask1 = _parseInt(spellClassMask1Controller.text);
     t.spellClassMask2 = _parseInt(spellClassMask2Controller.text);
-    t.spellClassMask3 = _parseInt(spellClassMask3Controller.text);
+
+    // === 效果0 ===
+    t.effect0 = _parseInt(effect0Controller.text);
+    t.effectBasePoints0 = _parseInt(effectBasePoints0Controller.text);
+    t.effectDieSides0 = _parseInt(effectDieSides0Controller.text);
+    t.effectRealPointsPerLevel0 = _parseDouble(effectRealPointsPerLevel0Controller.text);
+    t.effectMechanic0 = _parseInt(effectMechanic0Controller.text);
+    t.effectChainTargets0 = _parseInt(effectChainTargets0Controller.text);
+    t.effectAura0 = _parseInt(effectAura0Controller.text);
+    t.effectAuraPeriod0 = _parseInt(effectAuraPeriod0Controller.text);
+    t.effectAmplitude0 = _parseDouble(effectAmplitude0Controller.text);
+    t.implicitTargetA0 = _parseInt(implicitTargetA0Controller.text);
+    t.implicitTargetB0 = _parseInt(implicitTargetB0Controller.text);
+    t.effectMiscValue0 = _parseInt(effectMiscValue0Controller.text);
+    t.effectMiscValueB0 = _parseInt(effectMiscValueB0Controller.text);
+    t.effectRadiusIndex0 = _parseInt(effectRadiusIndex0Controller.text);
+    t.effectChainAmplitude0 = _parseDouble(effectChainAmplitude0Controller.text);
+    t.effectBonusCoefficient0 = _parseDouble(effectBonusCoefficient0Controller.text);
+    t.effectItemType0 = _parseInt(effectItemType0Controller.text);
+    t.effectTriggerSpell0 = _parseInt(effectTriggerSpell0Controller.text);
+    t.effectPointsPerCombo0 = _parseDouble(effectPointsPerCombo0Controller.text);
+    t.effectSpellClassMaskA0 = _parseInt(effectSpellClassMaskA0Controller.text);
+    t.effectSpellClassMaskB0 = _parseInt(effectSpellClassMaskB0Controller.text);
+    t.effectSpellClassMaskC0 = _parseInt(effectSpellClassMaskC0Controller.text);
 
     // === 效果1 ===
     t.effect1 = _parseInt(effect1Controller.text);
@@ -351,24 +373,21 @@ class SpellDetailViewModel {
     t.effectMechanic1 = _parseInt(effectMechanic1Controller.text);
     t.effectChainTargets1 = _parseInt(effectChainTargets1Controller.text);
     t.effectAura1 = _parseInt(effectAura1Controller.text);
-    t.effectAuraPeriod1 = _parseDouble(effectAuraPeriod1Controller.text);
+    t.effectAuraPeriod1 = _parseInt(effectAuraPeriod1Controller.text);
+    t.effectAmplitude1 = _parseDouble(effectAmplitude1Controller.text);
     t.implicitTargetA1 = _parseInt(implicitTargetA1Controller.text);
     t.implicitTargetB1 = _parseInt(implicitTargetB1Controller.text);
     t.effectMiscValue1 = _parseInt(effectMiscValue1Controller.text);
     t.effectMiscValueB1 = _parseInt(effectMiscValueB1Controller.text);
     t.effectRadiusIndex1 = _parseInt(effectRadiusIndex1Controller.text);
-    t.effectMultipleValue1 = _parseDouble(effectMultipleValue1Controller.text);
-    t.effectBonusMultiplier1 = _parseDouble(effectBonusMultiplier1Controller.text);
     t.effectChainAmplitude1 = _parseDouble(effectChainAmplitude1Controller.text);
+    t.effectBonusCoefficient1 = _parseDouble(effectBonusCoefficient1Controller.text);
     t.effectItemType1 = _parseInt(effectItemType1Controller.text);
     t.effectTriggerSpell1 = _parseInt(effectTriggerSpell1Controller.text);
-    t.effectPointsPerCombo1 = _parseInt(effectPointsPerCombo1Controller.text);
+    t.effectPointsPerCombo1 = _parseDouble(effectPointsPerCombo1Controller.text);
     t.effectSpellClassMaskA1 = _parseInt(effectSpellClassMaskA1Controller.text);
-    t.effectSpellClassMaskA2 = _parseInt(effectSpellClassMaskA2Controller.text);
-    t.effectSpellClassMaskA3 = _parseInt(effectSpellClassMaskA3Controller.text);
     t.effectSpellClassMaskB1 = _parseInt(effectSpellClassMaskB1Controller.text);
-    t.effectSpellClassMaskB2 = _parseInt(effectSpellClassMaskB2Controller.text);
-    t.effectSpellClassMaskB3 = _parseInt(effectSpellClassMaskB3Controller.text);
+    t.effectSpellClassMaskC1 = _parseInt(effectSpellClassMaskC1Controller.text);
 
     // === 效果2 ===
     t.effect2 = _parseInt(effect2Controller.text);
@@ -378,42 +397,21 @@ class SpellDetailViewModel {
     t.effectMechanic2 = _parseInt(effectMechanic2Controller.text);
     t.effectChainTargets2 = _parseInt(effectChainTargets2Controller.text);
     t.effectAura2 = _parseInt(effectAura2Controller.text);
-    t.effectAuraPeriod2 = _parseDouble(effectAuraPeriod2Controller.text);
+    t.effectAuraPeriod2 = _parseInt(effectAuraPeriod2Controller.text);
+    t.effectAmplitude2 = _parseDouble(effectAmplitude2Controller.text);
     t.implicitTargetA2 = _parseInt(implicitTargetA2Controller.text);
     t.implicitTargetB2 = _parseInt(implicitTargetB2Controller.text);
     t.effectMiscValue2 = _parseInt(effectMiscValue2Controller.text);
     t.effectMiscValueB2 = _parseInt(effectMiscValueB2Controller.text);
     t.effectRadiusIndex2 = _parseInt(effectRadiusIndex2Controller.text);
-    t.effectMultipleValue2 = _parseDouble(effectMultipleValue2Controller.text);
-    t.effectBonusMultiplier2 = _parseDouble(effectBonusMultiplier2Controller.text);
     t.effectChainAmplitude2 = _parseDouble(effectChainAmplitude2Controller.text);
+    t.effectBonusCoefficient2 = _parseDouble(effectBonusCoefficient2Controller.text);
     t.effectItemType2 = _parseInt(effectItemType2Controller.text);
     t.effectTriggerSpell2 = _parseInt(effectTriggerSpell2Controller.text);
-    t.effectPointsPerCombo2 = _parseInt(effectPointsPerCombo2Controller.text);
-    t.effectSpellClassMaskC1 = _parseInt(effectSpellClassMaskC1Controller.text);
+    t.effectPointsPerCombo2 = _parseDouble(effectPointsPerCombo2Controller.text);
+    t.effectSpellClassMaskA2 = _parseInt(effectSpellClassMaskA2Controller.text);
+    t.effectSpellClassMaskB2 = _parseInt(effectSpellClassMaskB2Controller.text);
     t.effectSpellClassMaskC2 = _parseInt(effectSpellClassMaskC2Controller.text);
-    t.effectSpellClassMaskC3 = _parseInt(effectSpellClassMaskC3Controller.text);
-
-    // === 效果3 ===
-    t.effect3 = _parseInt(effect3Controller.text);
-    t.effectBasePoints3 = _parseInt(effectBasePoints3Controller.text);
-    t.effectDieSides3 = _parseInt(effectDieSides3Controller.text);
-    t.effectRealPointsPerLevel3 = _parseDouble(effectRealPointsPerLevel3Controller.text);
-    t.effectMechanic3 = _parseInt(effectMechanic3Controller.text);
-    t.effectChainTargets3 = _parseInt(effectChainTargets3Controller.text);
-    t.effectAura3 = _parseInt(effectAura3Controller.text);
-    t.effectAuraPeriod3 = _parseDouble(effectAuraPeriod3Controller.text);
-    t.implicitTargetA3 = _parseInt(implicitTargetA3Controller.text);
-    t.implicitTargetB3 = _parseInt(implicitTargetB3Controller.text);
-    t.effectMiscValue3 = _parseInt(effectMiscValue3Controller.text);
-    t.effectMiscValueB3 = _parseInt(effectMiscValueB3Controller.text);
-    t.effectRadiusIndex3 = _parseInt(effectRadiusIndex3Controller.text);
-    t.effectMultipleValue3 = _parseDouble(effectMultipleValue3Controller.text);
-    t.effectBonusMultiplier3 = _parseDouble(effectBonusMultiplier3Controller.text);
-    t.effectChainAmplitude3 = _parseDouble(effectChainAmplitude3Controller.text);
-    t.effectItemType3 = _parseInt(effectItemType3Controller.text);
-    t.effectTriggerSpell3 = _parseInt(effectTriggerSpell3Controller.text);
-    t.effectPointsPerCombo3 = _parseInt(effectPointsPerCombo3Controller.text);
 
     // === 装备限制 ===
     t.equippedItemClass = _parseInt(equippedItemClassController.text);
@@ -421,10 +419,11 @@ class SpellDetailViewModel {
     t.equippedItemInvTypes = _parseInt(equippedItemInvTypesController.text);
 
     // === 图腾/施法材料 ===
+    t.requiredTotemCategoryID0 = _parseInt(requiredTotemCategoryID0Controller.text);
+    t.totem0 = _parseInt(totem0Controller.text);
     t.requiredTotemCategoryID1 = _parseInt(requiredTotemCategoryID1Controller.text);
     t.totem1 = _parseInt(totem1Controller.text);
-    t.requiredTotemCategoryID2 = _parseInt(requiredTotemCategoryID2Controller.text);
-    t.totem2 = _parseInt(totem2Controller.text);
+    t.reagent0 = _parseInt(reagent0Controller.text);
     t.reagent1 = _parseInt(reagent1Controller.text);
     t.reagent2 = _parseInt(reagent2Controller.text);
     t.reagent3 = _parseInt(reagent3Controller.text);
@@ -432,7 +431,7 @@ class SpellDetailViewModel {
     t.reagent5 = _parseInt(reagent5Controller.text);
     t.reagent6 = _parseInt(reagent6Controller.text);
     t.reagent7 = _parseInt(reagent7Controller.text);
-    t.reagent8 = _parseInt(reagent8Controller.text);
+    t.reagentCount0 = _parseInt(reagentCount0Controller.text);
     t.reagentCount1 = _parseInt(reagentCount1Controller.text);
     t.reagentCount2 = _parseInt(reagentCount2Controller.text);
     t.reagentCount3 = _parseInt(reagentCount3Controller.text);
@@ -440,7 +439,6 @@ class SpellDetailViewModel {
     t.reagentCount5 = _parseInt(reagentCount5Controller.text);
     t.reagentCount6 = _parseInt(reagentCount6Controller.text);
     t.reagentCount7 = _parseInt(reagentCount7Controller.text);
-    t.reagentCount8 = _parseInt(reagentCount8Controller.text);
 
     // === 其他高级属性 ===
     t.casterAuraSpell = _parseInt(casterAuraSpellController.text);
@@ -456,10 +454,8 @@ class SpellDetailViewModel {
     t.requiredAuraVision = _parseInt(requiredAuraVisionController.text);
     t.targetAuraSpell = _parseInt(targetAuraSpellController.text);
     t.stanceBarOrder = _parseInt(stanceBarOrderController.text);
-    t.shapeshiftMask = _parseInt(shapeshiftMaskController.text);
-    t.shapeshiftExclude = _parseInt(shapeshiftExcludeController.text);
-    t.unk13 = _parseInt(unk13Controller.text);
-    t.unk15 = _parseInt(unk15Controller.text);
+    t.shapeshiftMask0 = _parseInt(shapeshiftMask0Controller.text);
+    t.shapeshiftExclude0 = _parseInt(shapeshiftExclude0Controller.text);
 
     return t;
   }
@@ -473,16 +469,16 @@ class SpellDetailViewModel {
     nameSubtextLangZhCNController.dispose();
     descriptionLangZhCNController.dispose();
     auraDescriptionLangZhCNController.dispose();
-    nameLangMaskController.dispose();
-    nameSubtextLangMaskController.dispose();
-    descriptionLangMaskController.dispose();
-    auraDescriptionLangMaskController.dispose();
+    nameLangFlagsController.dispose();
+    nameSubtextLangFlagsController.dispose();
+    descriptionLangFlagsController.dispose();
+    auraDescriptionLangFlagsController.dispose();
 
     // === 图标/视觉 ===
     spellIconIDController.dispose();
     activeIconIDController.dispose();
+    spellVisualID0Controller.dispose();
     spellVisualID1Controller.dispose();
-    spellVisualID2Controller.dispose();
 
     // === 分类/类型 ===
     categoryController.dispose();
@@ -557,9 +553,33 @@ class SpellDetailViewModel {
 
     // === 法术分类 ===
     spellClassSetController.dispose();
+    spellClassMask0Controller.dispose();
     spellClassMask1Controller.dispose();
     spellClassMask2Controller.dispose();
-    spellClassMask3Controller.dispose();
+
+    // === 效果0 ===
+    effect0Controller.dispose();
+    effectBasePoints0Controller.dispose();
+    effectDieSides0Controller.dispose();
+    effectRealPointsPerLevel0Controller.dispose();
+    effectMechanic0Controller.dispose();
+    effectChainTargets0Controller.dispose();
+    effectAura0Controller.dispose();
+    effectAuraPeriod0Controller.dispose();
+    effectAmplitude0Controller.dispose();
+    implicitTargetA0Controller.dispose();
+    implicitTargetB0Controller.dispose();
+    effectMiscValue0Controller.dispose();
+    effectMiscValueB0Controller.dispose();
+    effectRadiusIndex0Controller.dispose();
+    effectChainAmplitude0Controller.dispose();
+    effectBonusCoefficient0Controller.dispose();
+    effectItemType0Controller.dispose();
+    effectTriggerSpell0Controller.dispose();
+    effectPointsPerCombo0Controller.dispose();
+    effectSpellClassMaskA0Controller.dispose();
+    effectSpellClassMaskB0Controller.dispose();
+    effectSpellClassMaskC0Controller.dispose();
 
     // === 效果1 ===
     effect1Controller.dispose();
@@ -570,23 +590,20 @@ class SpellDetailViewModel {
     effectChainTargets1Controller.dispose();
     effectAura1Controller.dispose();
     effectAuraPeriod1Controller.dispose();
+    effectAmplitude1Controller.dispose();
     implicitTargetA1Controller.dispose();
     implicitTargetB1Controller.dispose();
     effectMiscValue1Controller.dispose();
     effectMiscValueB1Controller.dispose();
     effectRadiusIndex1Controller.dispose();
-    effectMultipleValue1Controller.dispose();
-    effectBonusMultiplier1Controller.dispose();
     effectChainAmplitude1Controller.dispose();
+    effectBonusCoefficient1Controller.dispose();
     effectItemType1Controller.dispose();
     effectTriggerSpell1Controller.dispose();
     effectPointsPerCombo1Controller.dispose();
     effectSpellClassMaskA1Controller.dispose();
-    effectSpellClassMaskA2Controller.dispose();
-    effectSpellClassMaskA3Controller.dispose();
     effectSpellClassMaskB1Controller.dispose();
-    effectSpellClassMaskB2Controller.dispose();
-    effectSpellClassMaskB3Controller.dispose();
+    effectSpellClassMaskC1Controller.dispose();
 
     // === 效果2 ===
     effect2Controller.dispose();
@@ -597,41 +614,20 @@ class SpellDetailViewModel {
     effectChainTargets2Controller.dispose();
     effectAura2Controller.dispose();
     effectAuraPeriod2Controller.dispose();
+    effectAmplitude2Controller.dispose();
     implicitTargetA2Controller.dispose();
     implicitTargetB2Controller.dispose();
     effectMiscValue2Controller.dispose();
     effectMiscValueB2Controller.dispose();
     effectRadiusIndex2Controller.dispose();
-    effectMultipleValue2Controller.dispose();
-    effectBonusMultiplier2Controller.dispose();
     effectChainAmplitude2Controller.dispose();
+    effectBonusCoefficient2Controller.dispose();
     effectItemType2Controller.dispose();
     effectTriggerSpell2Controller.dispose();
     effectPointsPerCombo2Controller.dispose();
-    effectSpellClassMaskC1Controller.dispose();
+    effectSpellClassMaskA2Controller.dispose();
+    effectSpellClassMaskB2Controller.dispose();
     effectSpellClassMaskC2Controller.dispose();
-    effectSpellClassMaskC3Controller.dispose();
-
-    // === 效果3 ===
-    effect3Controller.dispose();
-    effectBasePoints3Controller.dispose();
-    effectDieSides3Controller.dispose();
-    effectRealPointsPerLevel3Controller.dispose();
-    effectMechanic3Controller.dispose();
-    effectChainTargets3Controller.dispose();
-    effectAura3Controller.dispose();
-    effectAuraPeriod3Controller.dispose();
-    implicitTargetA3Controller.dispose();
-    implicitTargetB3Controller.dispose();
-    effectMiscValue3Controller.dispose();
-    effectMiscValueB3Controller.dispose();
-    effectRadiusIndex3Controller.dispose();
-    effectMultipleValue3Controller.dispose();
-    effectBonusMultiplier3Controller.dispose();
-    effectChainAmplitude3Controller.dispose();
-    effectItemType3Controller.dispose();
-    effectTriggerSpell3Controller.dispose();
-    effectPointsPerCombo3Controller.dispose();
 
     // === 装备限制 ===
     equippedItemClassController.dispose();
@@ -639,10 +635,11 @@ class SpellDetailViewModel {
     equippedItemInvTypesController.dispose();
 
     // === 图腾/施法材料 ===
+    requiredTotemCategoryID0Controller.dispose();
+    totem0Controller.dispose();
     requiredTotemCategoryID1Controller.dispose();
     totem1Controller.dispose();
-    requiredTotemCategoryID2Controller.dispose();
-    totem2Controller.dispose();
+    reagent0Controller.dispose();
     reagent1Controller.dispose();
     reagent2Controller.dispose();
     reagent3Controller.dispose();
@@ -650,7 +647,7 @@ class SpellDetailViewModel {
     reagent5Controller.dispose();
     reagent6Controller.dispose();
     reagent7Controller.dispose();
-    reagent8Controller.dispose();
+    reagentCount0Controller.dispose();
     reagentCount1Controller.dispose();
     reagentCount2Controller.dispose();
     reagentCount3Controller.dispose();
@@ -658,7 +655,6 @@ class SpellDetailViewModel {
     reagentCount5Controller.dispose();
     reagentCount6Controller.dispose();
     reagentCount7Controller.dispose();
-    reagentCount8Controller.dispose();
 
     // === 其他高级属性 ===
     casterAuraSpellController.dispose();
@@ -674,10 +670,8 @@ class SpellDetailViewModel {
     requiredAuraVisionController.dispose();
     targetAuraSpellController.dispose();
     stanceBarOrderController.dispose();
-    shapeshiftMaskController.dispose();
-    shapeshiftExcludeController.dispose();
-    unk13Controller.dispose();
-    unk15Controller.dispose();
+    shapeshiftMask0Controller.dispose();
+    shapeshiftExclude0Controller.dispose();
   }
 
   Future<void> initSignals({int? id}) async {
@@ -692,16 +686,16 @@ class SpellDetailViewModel {
     nameSubtextLangZhCNController.text = template.nameSubtextLangZhCN;
     descriptionLangZhCNController.text = template.descriptionLangZhCN;
     auraDescriptionLangZhCNController.text = template.auraDescriptionLangZhCN;
-    nameLangMaskController.text = template.nameLangMask.toString();
-    nameSubtextLangMaskController.text = template.nameSubtextLangMask.toString();
-    descriptionLangMaskController.text = template.descriptionLangMask.toString();
-    auraDescriptionLangMaskController.text = template.auraDescriptionLangMask.toString();
+    nameLangFlagsController.text = template.nameLangFlags.toString();
+    nameSubtextLangFlagsController.text = template.nameSubtextLangFlags.toString();
+    descriptionLangFlagsController.text = template.descriptionLangFlags.toString();
+    auraDescriptionLangFlagsController.text = template.auraDescriptionLangFlags.toString();
 
     // === 图标/视觉 ===
     spellIconIDController.text = template.spellIconID.toString();
     activeIconIDController.text = template.activeIconID.toString();
+    spellVisualID0Controller.text = template.spellVisualID0.toString();
     spellVisualID1Controller.text = template.spellVisualID1.toString();
-    spellVisualID2Controller.text = template.spellVisualID2.toString();
 
     // === 分类/类型 ===
     categoryController.text = template.category.toString();
@@ -776,9 +770,33 @@ class SpellDetailViewModel {
 
     // === 法术分类 ===
     spellClassSetController.text = template.spellClassSet.toString();
+    spellClassMask0Controller.text = template.spellClassMask0.toString();
     spellClassMask1Controller.text = template.spellClassMask1.toString();
     spellClassMask2Controller.text = template.spellClassMask2.toString();
-    spellClassMask3Controller.text = template.spellClassMask3.toString();
+
+    // === 效果0 ===
+    effect0Controller.text = template.effect0.toString();
+    effectBasePoints0Controller.text = template.effectBasePoints0.toString();
+    effectDieSides0Controller.text = template.effectDieSides0.toString();
+    effectRealPointsPerLevel0Controller.text = template.effectRealPointsPerLevel0.toString();
+    effectMechanic0Controller.text = template.effectMechanic0.toString();
+    effectChainTargets0Controller.text = template.effectChainTargets0.toString();
+    effectAura0Controller.text = template.effectAura0.toString();
+    effectAuraPeriod0Controller.text = template.effectAuraPeriod0.toString();
+    effectAmplitude0Controller.text = template.effectAmplitude0.toString();
+    implicitTargetA0Controller.text = template.implicitTargetA0.toString();
+    implicitTargetB0Controller.text = template.implicitTargetB0.toString();
+    effectMiscValue0Controller.text = template.effectMiscValue0.toString();
+    effectMiscValueB0Controller.text = template.effectMiscValueB0.toString();
+    effectRadiusIndex0Controller.text = template.effectRadiusIndex0.toString();
+    effectChainAmplitude0Controller.text = template.effectChainAmplitude0.toString();
+    effectBonusCoefficient0Controller.text = template.effectBonusCoefficient0.toString();
+    effectItemType0Controller.text = template.effectItemType0.toString();
+    effectTriggerSpell0Controller.text = template.effectTriggerSpell0.toString();
+    effectPointsPerCombo0Controller.text = template.effectPointsPerCombo0.toString();
+    effectSpellClassMaskA0Controller.text = template.effectSpellClassMaskA0.toString();
+    effectSpellClassMaskB0Controller.text = template.effectSpellClassMaskB0.toString();
+    effectSpellClassMaskC0Controller.text = template.effectSpellClassMaskC0.toString();
 
     // === 效果1 ===
     effect1Controller.text = template.effect1.toString();
@@ -789,23 +807,20 @@ class SpellDetailViewModel {
     effectChainTargets1Controller.text = template.effectChainTargets1.toString();
     effectAura1Controller.text = template.effectAura1.toString();
     effectAuraPeriod1Controller.text = template.effectAuraPeriod1.toString();
+    effectAmplitude1Controller.text = template.effectAmplitude1.toString();
     implicitTargetA1Controller.text = template.implicitTargetA1.toString();
     implicitTargetB1Controller.text = template.implicitTargetB1.toString();
     effectMiscValue1Controller.text = template.effectMiscValue1.toString();
     effectMiscValueB1Controller.text = template.effectMiscValueB1.toString();
     effectRadiusIndex1Controller.text = template.effectRadiusIndex1.toString();
-    effectMultipleValue1Controller.text = template.effectMultipleValue1.toString();
-    effectBonusMultiplier1Controller.text = template.effectBonusMultiplier1.toString();
     effectChainAmplitude1Controller.text = template.effectChainAmplitude1.toString();
+    effectBonusCoefficient1Controller.text = template.effectBonusCoefficient1.toString();
     effectItemType1Controller.text = template.effectItemType1.toString();
     effectTriggerSpell1Controller.text = template.effectTriggerSpell1.toString();
     effectPointsPerCombo1Controller.text = template.effectPointsPerCombo1.toString();
     effectSpellClassMaskA1Controller.text = template.effectSpellClassMaskA1.toString();
-    effectSpellClassMaskA2Controller.text = template.effectSpellClassMaskA2.toString();
-    effectSpellClassMaskA3Controller.text = template.effectSpellClassMaskA3.toString();
     effectSpellClassMaskB1Controller.text = template.effectSpellClassMaskB1.toString();
-    effectSpellClassMaskB2Controller.text = template.effectSpellClassMaskB2.toString();
-    effectSpellClassMaskB3Controller.text = template.effectSpellClassMaskB3.toString();
+    effectSpellClassMaskC1Controller.text = template.effectSpellClassMaskC1.toString();
 
     // === 效果2 ===
     effect2Controller.text = template.effect2.toString();
@@ -816,41 +831,20 @@ class SpellDetailViewModel {
     effectChainTargets2Controller.text = template.effectChainTargets2.toString();
     effectAura2Controller.text = template.effectAura2.toString();
     effectAuraPeriod2Controller.text = template.effectAuraPeriod2.toString();
+    effectAmplitude2Controller.text = template.effectAmplitude2.toString();
     implicitTargetA2Controller.text = template.implicitTargetA2.toString();
     implicitTargetB2Controller.text = template.implicitTargetB2.toString();
     effectMiscValue2Controller.text = template.effectMiscValue2.toString();
     effectMiscValueB2Controller.text = template.effectMiscValueB2.toString();
     effectRadiusIndex2Controller.text = template.effectRadiusIndex2.toString();
-    effectMultipleValue2Controller.text = template.effectMultipleValue2.toString();
-    effectBonusMultiplier2Controller.text = template.effectBonusMultiplier2.toString();
     effectChainAmplitude2Controller.text = template.effectChainAmplitude2.toString();
+    effectBonusCoefficient2Controller.text = template.effectBonusCoefficient2.toString();
     effectItemType2Controller.text = template.effectItemType2.toString();
     effectTriggerSpell2Controller.text = template.effectTriggerSpell2.toString();
     effectPointsPerCombo2Controller.text = template.effectPointsPerCombo2.toString();
-    effectSpellClassMaskC1Controller.text = template.effectSpellClassMaskC1.toString();
+    effectSpellClassMaskA2Controller.text = template.effectSpellClassMaskA2.toString();
+    effectSpellClassMaskB2Controller.text = template.effectSpellClassMaskB2.toString();
     effectSpellClassMaskC2Controller.text = template.effectSpellClassMaskC2.toString();
-    effectSpellClassMaskC3Controller.text = template.effectSpellClassMaskC3.toString();
-
-    // === 效果3 ===
-    effect3Controller.text = template.effect3.toString();
-    effectBasePoints3Controller.text = template.effectBasePoints3.toString();
-    effectDieSides3Controller.text = template.effectDieSides3.toString();
-    effectRealPointsPerLevel3Controller.text = template.effectRealPointsPerLevel3.toString();
-    effectMechanic3Controller.text = template.effectMechanic3.toString();
-    effectChainTargets3Controller.text = template.effectChainTargets3.toString();
-    effectAura3Controller.text = template.effectAura3.toString();
-    effectAuraPeriod3Controller.text = template.effectAuraPeriod3.toString();
-    implicitTargetA3Controller.text = template.implicitTargetA3.toString();
-    implicitTargetB3Controller.text = template.implicitTargetB3.toString();
-    effectMiscValue3Controller.text = template.effectMiscValue3.toString();
-    effectMiscValueB3Controller.text = template.effectMiscValueB3.toString();
-    effectRadiusIndex3Controller.text = template.effectRadiusIndex3.toString();
-    effectMultipleValue3Controller.text = template.effectMultipleValue3.toString();
-    effectBonusMultiplier3Controller.text = template.effectBonusMultiplier3.toString();
-    effectChainAmplitude3Controller.text = template.effectChainAmplitude3.toString();
-    effectItemType3Controller.text = template.effectItemType3.toString();
-    effectTriggerSpell3Controller.text = template.effectTriggerSpell3.toString();
-    effectPointsPerCombo3Controller.text = template.effectPointsPerCombo3.toString();
 
     // === 装备限制 ===
     equippedItemClassController.text = template.equippedItemClass.toString();
@@ -858,10 +852,11 @@ class SpellDetailViewModel {
     equippedItemInvTypesController.text = template.equippedItemInvTypes.toString();
 
     // === 图腾/施法材料 ===
+    requiredTotemCategoryID0Controller.text = template.requiredTotemCategoryID0.toString();
+    totem0Controller.text = template.totem0.toString();
     requiredTotemCategoryID1Controller.text = template.requiredTotemCategoryID1.toString();
     totem1Controller.text = template.totem1.toString();
-    requiredTotemCategoryID2Controller.text = template.requiredTotemCategoryID2.toString();
-    totem2Controller.text = template.totem2.toString();
+    reagent0Controller.text = template.reagent0.toString();
     reagent1Controller.text = template.reagent1.toString();
     reagent2Controller.text = template.reagent2.toString();
     reagent3Controller.text = template.reagent3.toString();
@@ -869,7 +864,7 @@ class SpellDetailViewModel {
     reagent5Controller.text = template.reagent5.toString();
     reagent6Controller.text = template.reagent6.toString();
     reagent7Controller.text = template.reagent7.toString();
-    reagent8Controller.text = template.reagent8.toString();
+    reagentCount0Controller.text = template.reagentCount0.toString();
     reagentCount1Controller.text = template.reagentCount1.toString();
     reagentCount2Controller.text = template.reagentCount2.toString();
     reagentCount3Controller.text = template.reagentCount3.toString();
@@ -877,7 +872,6 @@ class SpellDetailViewModel {
     reagentCount5Controller.text = template.reagentCount5.toString();
     reagentCount6Controller.text = template.reagentCount6.toString();
     reagentCount7Controller.text = template.reagentCount7.toString();
-    reagentCount8Controller.text = template.reagentCount8.toString();
 
     // === 其他高级属性 ===
     casterAuraSpellController.text = template.casterAuraSpell.toString();
@@ -893,9 +887,7 @@ class SpellDetailViewModel {
     requiredAuraVisionController.text = template.requiredAuraVision.toString();
     targetAuraSpellController.text = template.targetAuraSpell.toString();
     stanceBarOrderController.text = template.stanceBarOrder.toString();
-    shapeshiftMaskController.text = template.shapeshiftMask.toString();
-    shapeshiftExcludeController.text = template.shapeshiftExclude.toString();
-    unk13Controller.text = template.unk13.toString();
-    unk15Controller.text = template.unk15.toString();
+    shapeshiftMask0Controller.text = template.shapeshiftMask0.toString();
+    shapeshiftExclude0Controller.text = template.shapeshiftExclude0.toString();
   }
 }

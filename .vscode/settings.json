@@ -5,6 +5,7 @@
     "creature_questitem",
     "dmgschool",
     "dynamicflags",
+    "entryorguid",
     "hugeicons",
     "lootid",
     "LTRB",
@@ -23,8 +24,10 @@
     "skinloot",
     "sonner",
     "sublist",
+    "TINYINT",
     "unmaximize",
-    "VARCHAR"
+    "VARCHAR",
+    "warcrafty"
   ],
   "editor.formatOnSave": true
 }
