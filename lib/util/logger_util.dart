@@ -50,8 +50,15 @@ class _PlainPrinter extends LogPrinter {
     final level = event.level.name.toUpperCase();
     final time = event.time.toString().substring(0, 19);
     var message = '[$level][$time] ${event.message}';
-    if (event.stackTrace == null) return [message];
-    message += '\n${event.stackTrace}';
+    if (event.error != null) {
+      message += '\nError: ${event.error}';
+    }
+    if (event.error is Error) {
+      message += '\n${(event.error as Error).stackTrace}';
+    }
+    if (event.stackTrace != null) {
+      message += '\n${event.stackTrace}';
+    }
     return [message];
   }
 }

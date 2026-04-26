@@ -195,7 +195,7 @@ class ItemTemplate {
 
     // --- 武器与伤害 ---
     delay = json['delay'] ?? 0;
-    rangedModRange = json['RangedModRange'] ?? json['rangedModRange'] ?? 0;
+    rangedModRange = ((json['RangedModRange'] ?? json['rangedModRange'] ?? 0) as num).toInt();
     armorDamageModifier =
         (json['ArmorDamageModifier'] ?? json['armorDamageModifier'] ?? 0.0)
             as double;
@@ -282,7 +282,7 @@ class ItemTemplate {
     }
 
     // --- 图标（joined）---
-    inventoryIcon = json['InventoryIcon_1'] ?? json['inventoryIcon'] ?? '';
+    inventoryIcon = json['InventoryIcon1'] ?? json['inventoryIcon'] ?? '';
 
     // --- 书页信息 ---
     pageText = json['PageText'] ?? json['pageText'] ?? 0;

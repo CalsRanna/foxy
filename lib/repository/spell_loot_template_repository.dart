@@ -12,7 +12,7 @@ class SpellLootTemplateRepository with RepositoryMixin {
         'it.name',
         'itl.Name as localeName',
         'it.Quality',
-        'didi.InventoryIcon_1',
+        'didi.InventoryIcon1',
       ];
       builder = builder.select(fields);
       builder = builder.leftJoin(
