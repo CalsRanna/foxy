@@ -96,8 +96,15 @@ class RouterFacade {
   }
 
   /// 导航到顶级菜单页面（侧边栏点击）
-  void navigateToMenu(RouterMenu menu) {
-    final node = menu.toNode();
+  void navigateToMenu(RouterMenu menu, {RouterMenu? parentMenu}) {
+    final node = parentMenu != null
+        ? RouterNode(
+            menu: menu,
+            label: menu.label,
+            route: menu.route,
+            parentMenu: parentMenu,
+          )
+        : menu.toNode();
 
     // 构建路径：dashboard (如果不是 dashboard) + 当前菜单
     final nodes = menu == RouterMenu.dashboard

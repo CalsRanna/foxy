@@ -1,4 +1,5 @@
 import 'package:foxy/page/bootstrap/bootstrap_view_model.dart';
+import 'package:foxy/page/more/more_view_model.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view_model.dart';
 import 'package:foxy/page/creature_template/creature_loot_template_view_model.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view_model.dart';
@@ -62,6 +63,7 @@ class DI {
     GetIt.instance.registerFactory(() => BootstrapViewModel());
     GetIt.instance.registerSingleton(ScaffoldViewModel());
     GetIt.instance.registerFactory(() => DashboardViewModel());
+    GetIt.instance.registerLazySingleton(() => MoreViewModel());
     GetIt.instance.registerLazySingleton(() => CreatureTemplateListViewModel());
     GetIt.instance.registerFactory(() => CreatureTemplateDetailViewModel());
     GetIt.instance.registerFactory(() => CreatureTemplateAddonViewModel());
