@@ -9,8 +9,8 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i19;
-import 'package:flutter/material.dart' as _i20;
+import 'package:auto_route/auto_route.dart' as _i21;
+import 'package:flutter/material.dart' as _i22;
 import 'package:foxy/page/bootstrap/bootstrap_page.dart' as _i2;
 import 'package:foxy/page/creature_template/creature_template_detail_page.dart'
     as _i3;
@@ -33,16 +33,18 @@ import 'package:foxy/page/setting/database_setting.dart' as _i6;
 import 'package:foxy/page/setting/setting.dart' as _i16;
 import 'package:foxy/page/smart_script/smart_script_detail_page.dart' as _i17;
 import 'package:foxy/page/smart_script/smart_script_list.dart' as _i18;
+import 'package:foxy/page/spell/spell_detail_page.dart' as _i19;
+import 'package:foxy/page/spell/spell_list_page.dart' as _i20;
 
 /// generated route for
 /// [_i1.BasicSettingPage]
-class BasicSettingRoute extends _i19.PageRouteInfo<void> {
-  const BasicSettingRoute({List<_i19.PageRouteInfo>? children})
+class BasicSettingRoute extends _i21.PageRouteInfo<void> {
+  const BasicSettingRoute({List<_i21.PageRouteInfo>? children})
     : super(BasicSettingRoute.name, initialChildren: children);
 
   static const String name = 'BasicSettingRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i1.BasicSettingPage();
@@ -52,13 +54,13 @@ class BasicSettingRoute extends _i19.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.BootstrapPage]
-class BootstrapRoute extends _i19.PageRouteInfo<void> {
-  const BootstrapRoute({List<_i19.PageRouteInfo>? children})
+class BootstrapRoute extends _i21.PageRouteInfo<void> {
+  const BootstrapRoute({List<_i21.PageRouteInfo>? children})
     : super(BootstrapRoute.name, initialChildren: children);
 
   static const String name = 'BootstrapRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i2.BootstrapPage();
@@ -69,12 +71,12 @@ class BootstrapRoute extends _i19.PageRouteInfo<void> {
 /// generated route for
 /// [_i3.CreatureTemplateDetailPage]
 class CreatureTemplateDetailRoute
-    extends _i19.PageRouteInfo<CreatureTemplateDetailRouteArgs> {
+    extends _i21.PageRouteInfo<CreatureTemplateDetailRouteArgs> {
   CreatureTemplateDetailRoute({
-    _i20.Key? key,
+    _i22.Key? key,
     int? entry,
     String? name,
-    List<_i19.PageRouteInfo>? children,
+    List<_i21.PageRouteInfo>? children,
   }) : super(
          CreatureTemplateDetailRoute.name,
          args: CreatureTemplateDetailRouteArgs(
@@ -87,7 +89,7 @@ class CreatureTemplateDetailRoute
 
   static const String name = 'CreatureTemplateDetailRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<CreatureTemplateDetailRouteArgs>(
@@ -105,7 +107,7 @@ class CreatureTemplateDetailRoute
 class CreatureTemplateDetailRouteArgs {
   const CreatureTemplateDetailRouteArgs({this.key, this.entry, this.name});
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   final int? entry;
 
@@ -129,13 +131,13 @@ class CreatureTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i4.CreatureTemplateListPage]
-class CreatureTemplateListRoute extends _i19.PageRouteInfo<void> {
-  const CreatureTemplateListRoute({List<_i19.PageRouteInfo>? children})
+class CreatureTemplateListRoute extends _i21.PageRouteInfo<void> {
+  const CreatureTemplateListRoute({List<_i21.PageRouteInfo>? children})
     : super(CreatureTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'CreatureTemplateListRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i4.CreatureTemplateListPage();
@@ -145,13 +147,13 @@ class CreatureTemplateListRoute extends _i19.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i5.DashboardPage]
-class DashboardRoute extends _i19.PageRouteInfo<void> {
-  const DashboardRoute({List<_i19.PageRouteInfo>? children})
+class DashboardRoute extends _i21.PageRouteInfo<void> {
+  const DashboardRoute({List<_i21.PageRouteInfo>? children})
     : super(DashboardRoute.name, initialChildren: children);
 
   static const String name = 'DashboardRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i5.DashboardPage();
@@ -161,13 +163,13 @@ class DashboardRoute extends _i19.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i6.DatabaseSettingPage]
-class DatabaseSettingRoute extends _i19.PageRouteInfo<void> {
-  const DatabaseSettingRoute({List<_i19.PageRouteInfo>? children})
+class DatabaseSettingRoute extends _i21.PageRouteInfo<void> {
+  const DatabaseSettingRoute({List<_i21.PageRouteInfo>? children})
     : super(DatabaseSettingRoute.name, initialChildren: children);
 
   static const String name = 'DatabaseSettingRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i6.DatabaseSettingPage();
@@ -178,12 +180,12 @@ class DatabaseSettingRoute extends _i19.PageRouteInfo<void> {
 /// generated route for
 /// [_i7.GameObjectTemplateDetailPage]
 class GameObjectTemplateDetailRoute
-    extends _i19.PageRouteInfo<GameObjectTemplateDetailRouteArgs> {
+    extends _i21.PageRouteInfo<GameObjectTemplateDetailRouteArgs> {
   GameObjectTemplateDetailRoute({
-    _i20.Key? key,
+    _i22.Key? key,
     int? entry,
     String? name,
-    List<_i19.PageRouteInfo>? children,
+    List<_i21.PageRouteInfo>? children,
   }) : super(
          GameObjectTemplateDetailRoute.name,
          args: GameObjectTemplateDetailRouteArgs(
@@ -196,7 +198,7 @@ class GameObjectTemplateDetailRoute
 
   static const String name = 'GameObjectTemplateDetailRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<GameObjectTemplateDetailRouteArgs>(
@@ -214,7 +216,7 @@ class GameObjectTemplateDetailRoute
 class GameObjectTemplateDetailRouteArgs {
   const GameObjectTemplateDetailRouteArgs({this.key, this.entry, this.name});
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   final int? entry;
 
@@ -238,13 +240,13 @@ class GameObjectTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i8.GameObjectTemplateListPage]
-class GameObjectTemplateListRoute extends _i19.PageRouteInfo<void> {
-  const GameObjectTemplateListRoute({List<_i19.PageRouteInfo>? children})
+class GameObjectTemplateListRoute extends _i21.PageRouteInfo<void> {
+  const GameObjectTemplateListRoute({List<_i21.PageRouteInfo>? children})
     : super(GameObjectTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'GameObjectTemplateListRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i8.GameObjectTemplateListPage();
@@ -255,12 +257,12 @@ class GameObjectTemplateListRoute extends _i19.PageRouteInfo<void> {
 /// generated route for
 /// [_i9.GossipMenuDetailPage]
 class GossipMenuDetailRoute
-    extends _i19.PageRouteInfo<GossipMenuDetailRouteArgs> {
+    extends _i21.PageRouteInfo<GossipMenuDetailRouteArgs> {
   GossipMenuDetailRoute({
-    _i20.Key? key,
+    _i22.Key? key,
     int? menuId,
     int? textId,
-    List<_i19.PageRouteInfo>? children,
+    List<_i21.PageRouteInfo>? children,
   }) : super(
          GossipMenuDetailRoute.name,
          args: GossipMenuDetailRouteArgs(
@@ -273,7 +275,7 @@ class GossipMenuDetailRoute
 
   static const String name = 'GossipMenuDetailRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<GossipMenuDetailRouteArgs>(
@@ -291,7 +293,7 @@ class GossipMenuDetailRoute
 class GossipMenuDetailRouteArgs {
   const GossipMenuDetailRouteArgs({this.key, this.menuId, this.textId});
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   final int? menuId;
 
@@ -315,13 +317,13 @@ class GossipMenuDetailRouteArgs {
 
 /// generated route for
 /// [_i10.GossipMenuListPage]
-class GossipMenuListRoute extends _i19.PageRouteInfo<void> {
-  const GossipMenuListRoute({List<_i19.PageRouteInfo>? children})
+class GossipMenuListRoute extends _i21.PageRouteInfo<void> {
+  const GossipMenuListRoute({List<_i21.PageRouteInfo>? children})
     : super(GossipMenuListRoute.name, initialChildren: children);
 
   static const String name = 'GossipMenuListRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i10.GossipMenuListPage();
@@ -332,12 +334,12 @@ class GossipMenuListRoute extends _i19.PageRouteInfo<void> {
 /// generated route for
 /// [_i11.ItemTemplateDetailPage]
 class ItemTemplateDetailRoute
-    extends _i19.PageRouteInfo<ItemTemplateDetailRouteArgs> {
+    extends _i21.PageRouteInfo<ItemTemplateDetailRouteArgs> {
   ItemTemplateDetailRoute({
-    _i20.Key? key,
+    _i22.Key? key,
     int? entry,
     String? name,
-    List<_i19.PageRouteInfo>? children,
+    List<_i21.PageRouteInfo>? children,
   }) : super(
          ItemTemplateDetailRoute.name,
          args: ItemTemplateDetailRouteArgs(key: key, entry: entry, name: name),
@@ -346,7 +348,7 @@ class ItemTemplateDetailRoute
 
   static const String name = 'ItemTemplateDetailRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ItemTemplateDetailRouteArgs>(
@@ -364,7 +366,7 @@ class ItemTemplateDetailRoute
 class ItemTemplateDetailRouteArgs {
   const ItemTemplateDetailRouteArgs({this.key, this.entry, this.name});
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   final int? entry;
 
@@ -388,13 +390,13 @@ class ItemTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i12.ItemTemplateListPage]
-class ItemTemplateListRoute extends _i19.PageRouteInfo<void> {
-  const ItemTemplateListRoute({List<_i19.PageRouteInfo>? children})
+class ItemTemplateListRoute extends _i21.PageRouteInfo<void> {
+  const ItemTemplateListRoute({List<_i21.PageRouteInfo>? children})
     : super(ItemTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'ItemTemplateListRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i12.ItemTemplateListPage();
@@ -405,12 +407,12 @@ class ItemTemplateListRoute extends _i19.PageRouteInfo<void> {
 /// generated route for
 /// [_i13.QuestTemplateDetailPage]
 class QuestTemplateDetailRoute
-    extends _i19.PageRouteInfo<QuestTemplateDetailRouteArgs> {
+    extends _i21.PageRouteInfo<QuestTemplateDetailRouteArgs> {
   QuestTemplateDetailRoute({
-    _i20.Key? key,
+    _i22.Key? key,
     int? questId,
     String? name,
-    List<_i19.PageRouteInfo>? children,
+    List<_i21.PageRouteInfo>? children,
   }) : super(
          QuestTemplateDetailRoute.name,
          args: QuestTemplateDetailRouteArgs(
@@ -423,7 +425,7 @@ class QuestTemplateDetailRoute
 
   static const String name = 'QuestTemplateDetailRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<QuestTemplateDetailRouteArgs>(
@@ -441,7 +443,7 @@ class QuestTemplateDetailRoute
 class QuestTemplateDetailRouteArgs {
   const QuestTemplateDetailRouteArgs({this.key, this.questId, this.name});
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   final int? questId;
 
@@ -465,13 +467,13 @@ class QuestTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i14.QuestTemplateListPage]
-class QuestTemplateListRoute extends _i19.PageRouteInfo<void> {
-  const QuestTemplateListRoute({List<_i19.PageRouteInfo>? children})
+class QuestTemplateListRoute extends _i21.PageRouteInfo<void> {
+  const QuestTemplateListRoute({List<_i21.PageRouteInfo>? children})
     : super(QuestTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'QuestTemplateListRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i14.QuestTemplateListPage();
@@ -481,13 +483,13 @@ class QuestTemplateListRoute extends _i19.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i15.ScaffoldPage]
-class ScaffoldRoute extends _i19.PageRouteInfo<void> {
-  const ScaffoldRoute({List<_i19.PageRouteInfo>? children})
+class ScaffoldRoute extends _i21.PageRouteInfo<void> {
+  const ScaffoldRoute({List<_i21.PageRouteInfo>? children})
     : super(ScaffoldRoute.name, initialChildren: children);
 
   static const String name = 'ScaffoldRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i15.ScaffoldPage();
@@ -497,13 +499,13 @@ class ScaffoldRoute extends _i19.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i16.SettingPage]
-class SettingRoute extends _i19.PageRouteInfo<void> {
-  const SettingRoute({List<_i19.PageRouteInfo>? children})
+class SettingRoute extends _i21.PageRouteInfo<void> {
+  const SettingRoute({List<_i21.PageRouteInfo>? children})
     : super(SettingRoute.name, initialChildren: children);
 
   static const String name = 'SettingRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i16.SettingPage();
@@ -514,14 +516,14 @@ class SettingRoute extends _i19.PageRouteInfo<void> {
 /// generated route for
 /// [_i17.SmartScriptDetailPage]
 class SmartScriptDetailRoute
-    extends _i19.PageRouteInfo<SmartScriptDetailRouteArgs> {
+    extends _i21.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
-    _i20.Key? key,
+    _i22.Key? key,
     int? entryOrGuid,
     int? sourceType,
     int? id,
     int? link,
-    List<_i19.PageRouteInfo>? children,
+    List<_i21.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
          args: SmartScriptDetailRouteArgs(
@@ -536,7 +538,7 @@ class SmartScriptDetailRoute
 
   static const String name = 'SmartScriptDetailRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SmartScriptDetailRouteArgs>(
@@ -562,7 +564,7 @@ class SmartScriptDetailRouteArgs {
     this.link,
   });
 
-  final _i20.Key? key;
+  final _i22.Key? key;
 
   final int? entryOrGuid;
 
@@ -599,16 +601,78 @@ class SmartScriptDetailRouteArgs {
 
 /// generated route for
 /// [_i18.SmartScriptListPage]
-class SmartScriptListRoute extends _i19.PageRouteInfo<void> {
-  const SmartScriptListRoute({List<_i19.PageRouteInfo>? children})
+class SmartScriptListRoute extends _i21.PageRouteInfo<void> {
+  const SmartScriptListRoute({List<_i21.PageRouteInfo>? children})
     : super(SmartScriptListRoute.name, initialChildren: children);
 
   static const String name = 'SmartScriptListRoute';
 
-  static _i19.PageInfo page = _i19.PageInfo(
+  static _i21.PageInfo page = _i21.PageInfo(
     name,
     builder: (data) {
       return const _i18.SmartScriptListPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i19.SpellDetailPage]
+class SpellDetailRoute extends _i21.PageRouteInfo<SpellDetailRouteArgs> {
+  SpellDetailRoute({_i22.Key? key, int? id, List<_i21.PageRouteInfo>? children})
+    : super(
+        SpellDetailRoute.name,
+        args: SpellDetailRouteArgs(key: key, id: id),
+        initialChildren: children,
+      );
+
+  static const String name = 'SpellDetailRoute';
+
+  static _i21.PageInfo page = _i21.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SpellDetailRouteArgs>(
+        orElse: () => const SpellDetailRouteArgs(),
+      );
+      return _i19.SpellDetailPage(key: args.key, id: args.id);
+    },
+  );
+}
+
+class SpellDetailRouteArgs {
+  const SpellDetailRouteArgs({this.key, this.id});
+
+  final _i22.Key? key;
+
+  final int? id;
+
+  @override
+  String toString() {
+    return 'SpellDetailRouteArgs{key: $key, id: $id}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! SpellDetailRouteArgs) return false;
+    return key == other.key && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ id.hashCode;
+}
+
+/// generated route for
+/// [_i20.SpellListPage]
+class SpellListRoute extends _i21.PageRouteInfo<void> {
+  const SpellListRoute({List<_i21.PageRouteInfo>? children})
+    : super(SpellListRoute.name, initialChildren: children);
+
+  static const String name = 'SpellListRoute';
+
+  static _i21.PageInfo page = _i21.PageInfo(
+    name,
+    builder: (data) {
+      return const _i20.SpellListPage();
     },
   );
 }
