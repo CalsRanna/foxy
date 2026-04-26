@@ -80,7 +80,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
       onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
-    final scripts = viewModel.scripts.value;
+    final templates = viewModel.templates.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -101,7 +101,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
         var commentWidth = constraints.maxWidth - fixedWidth;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final script = scripts[vicinity.row];
+            final script = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(script.entryOrGuid.toString())),
               1 => ShadTableCell(child: Text(kSourceTypes[script.sourceType] ?? script.sourceType.toString())),
@@ -132,7 +132,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            final s = scripts[row];
+            final s = templates[row];
             viewModel.navigateToDetail(
               entryOrGuid: s.entryOrGuid,
               sourceType: s.sourceType,
@@ -141,7 +141,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
-            final s = scripts[row];
+            final s = templates[row];
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,
@@ -186,7 +186,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
             );
           },
           pinnedRowCount: 1,
-          rowCount: scripts.length,
+          rowCount: templates.length,
         );
       },
     );

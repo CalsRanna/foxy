@@ -14,26 +14,29 @@ class ItemTemplateListViewModel {
   final repository = ItemTemplateRepository();
 
   final page = signal(1);
-  final items = signal(<BriefItemTemplate>[]);
+  final templates = signal(<BriefItemTemplate>[]);
   final total = signal(0);
-  final selectedClassId = signal(-1);
-  final selectedSubclass = signal(-1);
+  int _selectedClassId = -1;
+  int _selectedSubclass = -1;
+
+  int get selectedClassId => _selectedClassId;
+  int get selectedSubclass => _selectedSubclass;
 
   /// 当前选中的类别名称
   String get selectedClassName {
-    final classId = selectedClassId.value;
-    return classId >= 0 ? kItemClasses[classId] : '';
+    return _selectedClassId >= 0 ? kItemClasses[_selectedClassId] : '';
   }
 
   /// 获取当前类别下的子类别列表
   List<String> get currentSubclasses {
-    final classId = selectedClassId.value;
-    if (classId < 0 || classId >= kItemSubclasses.length) return [];
-    return kItemSubclasses[classId];
+    if (_selectedClassId < 0 || _selectedClassId >= kItemSubclasses.length) {
+      return [];
+    }
+    return kItemSubclasses[_selectedClassId];
   }
 
   Future<void> initSignals() async {
-    items.value = await repository.getBriefItemTemplates();
+    templates.value = await repository.getBriefItemTemplates();
     total.value = await repository.count();
   }
 
@@ -45,13 +48,13 @@ class ItemTemplateListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    items.value = await _fetchItems();
+    templates.value = await _fetchItems();
     total.value = await _count();
   }
 
   Future<void> paginate(int page) async {
     this.page.value = page;
-    items.value = await _fetchItems();
+    templates.value = await _fetchItems();
     total.value = await _count();
   }
 
@@ -59,33 +62,37 @@ class ItemTemplateListViewModel {
     entryController.clear();
     nameController.clear();
     descriptionController.clear();
-    selectedClassId.value = -1;
-    selectedSubclass.value = -1;
+    _selectedClassId = -1;
+    _selectedSubclass = -1;
     page.value = 1;
-    items.value = await repository.getBriefItemTemplates();
+    templates.value = await repository.getBriefItemTemplates();
     total.value = await repository.count();
   }
 
   /// 选择类别
   void selectClass(int classId) {
-    selectedClassId.value = classId;
-    selectedSubclass.value = -1; // 重置子类别选择
+    _selectedClassId = classId;
+    _selectedSubclass = -1;
+    search();
   }
 
   /// 清除类别选择
   void clearClass() {
-    selectedClassId.value = -1;
-    selectedSubclass.value = -1;
+    _selectedClassId = -1;
+    _selectedSubclass = -1;
+    search();
   }
 
   /// 选择子类别
   void selectSubclass(int subclass) {
-    selectedSubclass.value = subclass;
+    _selectedSubclass = subclass;
+    search();
   }
 
   /// 清除子类别选择
   void clearSubclass() {
-    selectedSubclass.value = -1;
+    _selectedSubclass = -1;
+    search();
   }
 
   Future<void> copyItemTemplate(int entry) async {
@@ -132,8 +139,8 @@ class ItemTemplateListViewModel {
       ..entry = entryController.text
       ..name = nameController.text
       ..description = descriptionController.text
-      ..classId = selectedClassId.value
-      ..subclass = selectedSubclass.value;
+      ..classId = _selectedClassId
+      ..subclass = _selectedSubclass;
     return repository.getBriefItemTemplates(page: page.value, filter: filter);
   }
 
@@ -142,13 +149,13 @@ class ItemTemplateListViewModel {
       ..entry = entryController.text
       ..name = nameController.text
       ..description = descriptionController.text
-      ..classId = selectedClassId.value
-      ..subclass = selectedSubclass.value;
+      ..classId = _selectedClassId
+      ..subclass = _selectedSubclass;
     return repository.count(filter: filter);
   }
 
   Future<void> _refresh() async {
-    items.value = await _fetchItems();
+    templates.value = await _fetchItems();
     total.value = await _count();
   }
 }

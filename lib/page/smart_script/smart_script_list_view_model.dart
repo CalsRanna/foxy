@@ -16,7 +16,7 @@ class SmartScriptListViewModel {
   final repository = SmartScriptRepository();
 
   final page = signal(1);
-  final scripts = signal(<BriefSmartScript>[]);
+  final templates = signal(<BriefSmartScript>[]);
   final total = signal(0);
 
   Future<void> copySmartScript(
@@ -74,7 +74,7 @@ class SmartScriptListViewModel {
   }
 
   Future<void> initSignals() async {
-    scripts.value = await repository.getBriefSmartScripts();
+    templates.value = await repository.getBriefSmartScripts();
     total.value = await repository.count();
   }
 
@@ -106,7 +106,7 @@ class SmartScriptListViewModel {
     var filter = SmartScriptFilterEntity()
       ..entryOrGuid = entryOrGuidController.text
       ..comment = commentController.text;
-    scripts.value = await repository.getBriefSmartScripts(
+    templates.value = await repository.getBriefSmartScripts(
       page: page,
       filter: filter,
     );
@@ -117,7 +117,7 @@ class SmartScriptListViewModel {
     entryOrGuidController.clear();
     commentController.clear();
     page.value = 1;
-    scripts.value = await repository.getBriefSmartScripts();
+    templates.value = await repository.getBriefSmartScripts();
     total.value = await repository.count();
   }
 
@@ -126,7 +126,7 @@ class SmartScriptListViewModel {
     var filter = SmartScriptFilterEntity()
       ..entryOrGuid = entryOrGuidController.text
       ..comment = commentController.text;
-    scripts.value = await repository.getBriefSmartScripts(
+    templates.value = await repository.getBriefSmartScripts(
       page: page.value,
       filter: filter,
     );
@@ -137,7 +137,7 @@ class SmartScriptListViewModel {
     var filter = SmartScriptFilterEntity()
       ..entryOrGuid = entryOrGuidController.text
       ..comment = commentController.text;
-    scripts.value = await repository.getBriefSmartScripts(
+    templates.value = await repository.getBriefSmartScripts(
       page: page.value,
       filter: filter,
     );

@@ -73,7 +73,7 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
   }
 
   Widget _buildTable() {
-    final items = viewModel.items.value;
+    final templates = viewModel.templates.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
 
@@ -96,7 +96,7 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
         final width = constraints.maxWidth - 240;
         return FoxyShadTable(
           columnCount: headers.length,
-          rowCount: items.length,
+          rowCount: templates.length,
           pinnedRowCount: 1,
           header: (context, index) {
             return ShadTableCell.header(child: Text(headers[index]));
@@ -110,10 +110,10 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
             };
           },
           builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
+            if (vicinity.row < 0 || vicinity.row >= templates.length) {
               return ShadTableCell(child: SizedBox());
             }
-            final item = items[vicinity.row];
+            final item = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.menuId.toString())),
               1 => ShadTableCell(child: Text(item.textId.toString())),
@@ -128,14 +128,14 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
             };
           },
           onRowDoubleTap: (row) {
-            final item = items[row];
+            final item = templates[row];
             viewModel.navigateToDetail(
               menuId: item.menuId,
               textId: item.textId,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
-            final item = items[row];
+            final item = templates[row];
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,

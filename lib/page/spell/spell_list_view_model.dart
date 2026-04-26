@@ -16,7 +16,7 @@ class SpellListViewModel {
   final repository = SpellRepository();
 
   final page = signal(1);
-  final spells = signal(<BriefSpell>[]);
+  final templates = signal(<BriefSpell>[]);
   final total = signal(0);
 
   Future<void> copySpell(int id) async {
@@ -64,7 +64,7 @@ class SpellListViewModel {
   }
 
   Future<void> initSignals() async {
-    spells.value = await repository.getBriefSpells();
+    templates.value = await repository.getBriefSpells();
     total.value = await repository.count();
   }
 
@@ -85,7 +85,7 @@ class SpellListViewModel {
     var filter = SpellFilterEntity()
       ..id = idController.text
       ..name = nameController.text;
-    spells.value = await repository.getBriefSpells(page: page, filter: filter);
+    templates.value = await repository.getBriefSpells(page: page, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -93,7 +93,7 @@ class SpellListViewModel {
     idController.clear();
     nameController.clear();
     page.value = 1;
-    spells.value = await repository.getBriefSpells();
+    templates.value = await repository.getBriefSpells();
     total.value = await repository.count();
   }
 
@@ -102,7 +102,7 @@ class SpellListViewModel {
     var filter = SpellFilterEntity()
       ..id = idController.text
       ..name = nameController.text;
-    spells.value = await repository.getBriefSpells(
+    templates.value = await repository.getBriefSpells(
       page: page.value,
       filter: filter,
     );
@@ -113,7 +113,7 @@ class SpellListViewModel {
     var filter = SpellFilterEntity()
       ..id = idController.text
       ..name = nameController.text;
-    spells.value = await repository.getBriefSpells(
+    templates.value = await repository.getBriefSpells(
       page: page.value,
       filter: filter,
     );

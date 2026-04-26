@@ -36,7 +36,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('物品列表'),
-      _buildFilter(),
+      Watch((_) => _buildFilter()),
       Expanded(child: Watch((_) => _buildTable())),
     ];
     var column = Column(
@@ -64,7 +64,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   Widget _buildClassButtons() {
-    final selectedClassId = viewModel.selectedClassId.watch(context);
+    final selectedClassId = viewModel.selectedClassId;
     final children = kItemClasses.asMap().entries.map((entry) {
       final isSelected = entry.key == selectedClassId;
       return ShadButton.raw(
@@ -83,10 +83,10 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   Widget _buildSubclassButtons() {
-    final selectedClassId = viewModel.selectedClassId.watch(context);
+    final selectedClassId = viewModel.selectedClassId;
     if (selectedClassId < 0) return const SizedBox.shrink();
 
-    final selectedSubclass = viewModel.selectedSubclass.watch(context);
+    final selectedSubclass = viewModel.selectedSubclass;
     final subclasses = viewModel.currentSubclasses;
     if (subclasses.isEmpty) return const SizedBox.shrink();
 
@@ -164,7 +164,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       },
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final templates = viewModel.templates.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -182,10 +182,10 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
         var width = constraints.maxWidth - 720;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
+            if (vicinity.row < 0 || vicinity.row >= templates.length) {
               return ShadTableCell(child: SizedBox());
             }
-            final item = items[vicinity.row];
+            final item = templates[vicinity.row];
             final qualityColor =
                 kItemQualityColors[item.quality] ?? Colors.black;
             return switch (vicinity.column) {
@@ -227,7 +227,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            _openDetail(items[row].entry, items[row].displayName);
+            _openDetail(templates[row].entry, templates[row].displayName);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -237,21 +237,21 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    _openDetail(items[row].entry, items[row].displayName);
+                    _openDetail(templates[row].entry, templates[row].displayName);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    _copyItem(items[row].entry);
+                    _copyItem(templates[row].entry);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    _deleteItem(items[row].entry);
+                    _deleteItem(templates[row].entry);
                   },
                   child: Text('删除'),
                 ),
@@ -259,7 +259,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: templates.length,
         );
       },
     );

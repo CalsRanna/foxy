@@ -410,16 +410,12 @@ class QuestTemplateDetailRoute
     extends _i21.PageRouteInfo<QuestTemplateDetailRouteArgs> {
   QuestTemplateDetailRoute({
     _i22.Key? key,
-    int? questId,
+    int? entry,
     String? name,
     List<_i21.PageRouteInfo>? children,
   }) : super(
          QuestTemplateDetailRoute.name,
-         args: QuestTemplateDetailRouteArgs(
-           key: key,
-           questId: questId,
-           name: name,
-         ),
+         args: QuestTemplateDetailRouteArgs(key: key, entry: entry, name: name),
          initialChildren: children,
        );
 
@@ -433,7 +429,7 @@ class QuestTemplateDetailRoute
       );
       return _i13.QuestTemplateDetailPage(
         key: args.key,
-        questId: args.questId,
+        entry: args.entry,
         name: args.name,
       );
     },
@@ -441,28 +437,28 @@ class QuestTemplateDetailRoute
 }
 
 class QuestTemplateDetailRouteArgs {
-  const QuestTemplateDetailRouteArgs({this.key, this.questId, this.name});
+  const QuestTemplateDetailRouteArgs({this.key, this.entry, this.name});
 
   final _i22.Key? key;
 
-  final int? questId;
+  final int? entry;
 
   final String? name;
 
   @override
   String toString() {
-    return 'QuestTemplateDetailRouteArgs{key: $key, questId: $questId, name: $name}';
+    return 'QuestTemplateDetailRouteArgs{key: $key, entry: $entry, name: $name}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! QuestTemplateDetailRouteArgs) return false;
-    return key == other.key && questId == other.questId && name == other.name;
+    return key == other.key && entry == other.entry && name == other.name;
   }
 
   @override
-  int get hashCode => key.hashCode ^ questId.hashCode ^ name.hashCode;
+  int get hashCode => key.hashCode ^ entry.hashCode ^ name.hashCode;
 }
 
 /// generated route for
