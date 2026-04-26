@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/model/quest_request_items.dart';
 import 'package:foxy/repository/quest_request_items_locale_repository.dart';
-import 'package:foxy/widget/form_item.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class QuestRequestItemsLocaleSelector extends StatefulWidget {

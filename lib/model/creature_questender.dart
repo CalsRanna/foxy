@@ -1,5 +1,5 @@
-/// creature_questender 模型
-/// 复合主键 (id, quest)
+// creature_questender 模型
+// 复合主键 (id, quest)
 
 class CreatureQuestender {
   int id = 0;

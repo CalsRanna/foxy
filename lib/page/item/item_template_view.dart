@@ -42,12 +42,12 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     super.dispose();
   }
 
-  /// Convert kItemClasses List<String> to Map<int, String>
+  // Convert kItemClasses List<String> to Map<int, String>
   Map<int, String> get _itemClassOptions {
     return kItemClasses.asMap().map((k, v) => MapEntry(k, v));
   }
 
-  /// Get subclass options based on selected class
+  // Get subclass options based on selected class
   Map<int, String> get _currentSubclassOptions {
     final classId = viewModel.classNameController.value.firstOrNull ?? 0;
     if (classId < 0 || classId >= kItemSubclasses.length) return {};
@@ -55,17 +55,17 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     return subclasses.asMap().map((k, v) => MapEntry(k, v));
   }
 
-  /// Convert kItemInventoryTypes List<String> to Map<int, String>
+  // Convert kItemInventoryTypes List<String> to Map<int, String>
   Map<int, String> get _inventoryTypeOptions {
     return kItemInventoryTypes.asMap().map((k, v) => MapEntry(k, v));
   }
 
-  /// Ammo type options
+  // Ammo type options
   Map<int, String> get _ammoTypeOptions {
     return {0: '无', 2: '箭', 3: '子弹'};
   }
 
-  /// Page material options
+  // Page material options
   Map<int, String> get _pageMaterialOptions {
     return {
       0: '纸质',
@@ -79,7 +79,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     };
   }
 
-  /// Language options
+  // Language options
   Map<int, String> get _languageOptions {
     return {
       0: '通用语',
