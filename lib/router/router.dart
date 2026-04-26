@@ -47,6 +47,9 @@ class FoxyRouter extends RootStackRouter {
 
       /// Item Template
       AutoRoute(page: ItemTemplateDetailRoute.page),
+
+      /// More
+      AutoRoute(page: MoreRoute.page),
     ];
     return [
       AutoRoute(page: BootstrapRoute.page, initial: true),
