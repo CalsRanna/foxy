@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -269,10 +270,14 @@ class CreatureTemplateDetailViewModel {
 
   Future<void> initSignals({int? entry}) async {
     if (entry == null) return;
-    template.value = await CreatureTemplateRepository().getCreatureTemplate(
-      entry,
-    );
-    _initControllers(template.value);
+    try {
+      template.value = await CreatureTemplateRepository().getCreatureTemplate(
+        entry,
+      );
+      _initControllers(template.value);
+    } catch (e, s) {
+      logger.e('加载生物模板(entry=$entry)失败', error: e, stackTrace: s);
+    }
   }
 
   void _initControllers(CreatureTemplate template) {

@@ -66,7 +66,7 @@ class LootTemplateRepository with RepositoryMixin {
         'it.name',
         'itl.Name AS localeName',
         'it.Quality',
-        'didi.InventoryIcon_1',
+        'didi.InventoryIcon1',
       ];
       builder = builder.select(fields);
       builder = builder.leftJoin(

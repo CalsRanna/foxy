@@ -33,7 +33,7 @@ class SpellLootTemplate {
     itemName = json['name'] ?? '';
     localeName = json['localeName'] ?? '';
     quality = json['Quality'] ?? 0;
-    icon = json['InventoryIcon_1'] ?? '';
+    icon = json['InventoryIcon1'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/model/item_template.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -166,10 +167,14 @@ class ItemTemplateDetailViewModel {
 
   Future<void> initSignals({int? entry}) async {
     if (entry == null || entry <= 0) return;
-    final repository = ItemTemplateRepository();
-    template.value = await repository.getItemTemplate(entry);
-    _initControllers(template.value);
-    statsCount.value = template.value.statsCount;
+    try {
+      final repository = ItemTemplateRepository();
+      template.value = await repository.getItemTemplate(entry);
+      _initControllers(template.value);
+      statsCount.value = template.value.statsCount;
+    } catch (e, s) {
+      logger.e('加载物品模板(entry=$entry)失败', error: e, stackTrace: s);
+    }
   }
 
   void _initControllers(ItemTemplate template) {
