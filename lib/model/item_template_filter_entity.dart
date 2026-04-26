@@ -1,37 +1,28 @@
-/// 物品模板筛选实体
 class ItemTemplateFilterEntity {
   String entry = '';
   String name = '';
   String description = '';
-  int classId = -1;  // -1 表示未选择类别
-  int subclass = -1; // -1 表示未选择子类别
+  int classId = -1;
+  int subclass = -1;
 
   ItemTemplateFilterEntity();
 
-  /// 检查是否有筛选条件
-  bool get hasFilter {
-    return entry.isNotEmpty ||
-        name.isNotEmpty ||
-        description.isNotEmpty ||
-        classId >= 0 ||
-        subclass >= 0;
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'name': name,
+      'description': description,
+      'classId': classId,
+      'subclass': subclass,
+    };
   }
 
-  /// 重置筛选条件
-  void reset() {
-    entry = '';
-    name = '';
-    description = '';
-    classId = -1;
-    subclass = -1;
-  }
-
-  ItemTemplateFilterEntity copy() {
+  factory ItemTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
     return ItemTemplateFilterEntity()
-      ..entry = entry
-      ..name = name
-      ..description = description
-      ..classId = classId
-      ..subclass = subclass;
+      ..entry = json['entry'] ?? ''
+      ..name = json['name'] ?? ''
+      ..description = json['description'] ?? ''
+      ..classId = json['classId'] ?? -1
+      ..subclass = json['subclass'] ?? -1;
   }
 }
