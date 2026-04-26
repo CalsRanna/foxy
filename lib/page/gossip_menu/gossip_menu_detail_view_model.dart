@@ -2,99 +2,101 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/model/gossip_menu.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-/// 对话菜单详情页父 ViewModel（Factory）
 class GossipMenuDetailViewModel {
-  final _routerFacade = GetIt.instance.get<RouterFacade>();
-  final _repository = GossipMenuRepository();
+  final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final menuIdController = TextEditingController();
   final textIdController = TextEditingController();
 
-  /// 共享 signal：子 Tab 监听 textId 变化触发自身加载
   final menuId = signal(0);
   final textId = signal(0);
+  final template = signal(GossipMenu());
 
-  /// 是否为新建模式
-  final creating = signal(true);
+  int? _originalMenuId;
+  int? _originalTextId;
 
-  /// 当前正在编辑的主表记录（用于更新时作为 old key）
-  int _originalMenuId = 0;
-  int _originalTextId = 0;
-
-  final loading = signal(false);
-  final saving = signal(false);
-
-  /// 初始化：创建模式 (menuId == null) 或编辑模式
   Future<void> initSignals({int? menuId, int? textId}) async {
-    loading.value = true;
-    try {
-      if (menuId == null) {
-        creating.value = true;
-        final suggested = await _repository.getNextMenuId();
-        this.menuId.value = suggested.menuId;
-        this.textId.value = 0;
-        menuIdController.text = suggested.menuId.toString();
-        textIdController.text = '0';
+    if (menuId == null) {
+      // 新建：自动获取下一个 MenuID
+      final next = await GossipMenuRepository().getNextMenuId();
+      this.menuId.value = next.menuId;
+      this.textId.value = 0;
+      template.value = next;
+      _originalMenuId = null;
+      _originalTextId = null;
+      menuIdController.text = this.menuId.value.toString();
+      textIdController.text = '0';
+    } else {
+      // 编辑：从数据库加载
+      final existing = await GossipMenuRepository().getGossipMenu({
+        'MenuID': menuId,
+        'TextID': textId ?? 0,
+      });
+      if (existing != null) {
+        this.menuId.value = existing.menuId;
+        this.textId.value = existing.textId;
+        template.value = existing;
       } else {
-        creating.value = false;
-        _originalMenuId = menuId;
-        _originalTextId = textId ?? 0;
-        final existing = await _repository.getGossipMenu({
-          'MenuID': menuId,
-          'TextID': textId ?? 0,
-        });
-        if (existing != null) {
-          this.menuId.value = existing.menuId;
-          this.textId.value = existing.textId;
-        } else {
-          this.menuId.value = menuId;
-          this.textId.value = textId ?? 0;
-        }
-        menuIdController.text = this.menuId.value.toString();
-        textIdController.text = this.textId.value.toString();
+        this.menuId.value = menuId;
+        this.textId.value = textId ?? 0;
+        template.value = GossipMenu()
+          ..menuId = menuId
+          ..textId = textId ?? 0;
       }
-    } finally {
-      loading.value = false;
+      _originalMenuId = menuId;
+      _originalTextId = textId ?? 0;
+      menuIdController.text = this.menuId.value.toString();
+      textIdController.text = this.textId.value.toString();
     }
   }
 
-  Future<void> onSave() async {
-    saving.value = true;
+  Future<void> save(BuildContext context) async {
     try {
-      final newMenuId = int.tryParse(menuIdController.text) ?? 0;
-      final newTextId = int.tryParse(textIdController.text) ?? 0;
-      final model = GossipMenu()
-        ..menuId = newMenuId
-        ..textId = newTextId;
-      if (creating.value) {
-        await _repository.storeGossipMenu(model);
-        creating.value = false;
+      final t = _collectFromControllers();
+      if (_originalMenuId == null) {
+        // 新建
+        if (t.menuId == 0) {
+          final next = await GossipMenuRepository().getNextMenuId();
+          t.menuId = next.menuId;
+        }
+        await GossipMenuRepository().storeGossipMenu(t);
+        template.value = t;
+        _originalMenuId = t.menuId;
+        _originalTextId = t.textId;
       } else {
-        await _repository.updateGossipMenu(
-          {'MenuID': _originalMenuId, 'TextID': _originalTextId},
-          model,
+        // 更新
+        await GossipMenuRepository().updateGossipMenu(
+          {'MenuID': _originalMenuId!, 'TextID': _originalTextId!},
+          t,
         );
+        template.value = t;
+        _originalTextId = t.textId;
       }
-      _originalMenuId = newMenuId;
-      _originalTextId = newTextId;
-      menuId.value = newMenuId;
-      textId.value = newTextId;
-      DialogUtil.instance.success('保存成功');
+      menuId.value = t.menuId;
+      textId.value = t.textId;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('对话菜单数据已保存'));
+      ShadSonner.of(context).show(toast);
     } catch (e) {
-      logger.e(e.toString());
-      DialogUtil.instance.error('保存失败: ${e.toString()}');
-    } finally {
-      saving.value = false;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
   }
 
   void pop() {
-    _routerFacade.goBack();
+    routerFacade.goBack();
+  }
+
+  GossipMenu _collectFromControllers() {
+    final t = GossipMenu()
+      ..menuId = int.tryParse(menuIdController.text) ?? 0
+      ..textId = int.tryParse(textIdController.text) ?? 0;
+    return t;
   }
 
   void dispose() {
