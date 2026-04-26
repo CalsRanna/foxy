@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/database/migration_runner.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/repository/setting_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger.dart';
 import 'package:get_it/get_it.dart';
@@ -59,6 +61,12 @@ class BootstrapViewModel {
         hasLocaleTables: hasLocaleTables,
         localeEnabled: localeEnabled,
       );
+
+      // 运行数据库迁移
+      await MigrationRunner(laconic).run();
+
+      // 加载 features 数据
+      await GetIt.instance.get<FeatureViewModel>().load();
 
       await _updateConfig();
       DialogUtil.instance.dismiss();

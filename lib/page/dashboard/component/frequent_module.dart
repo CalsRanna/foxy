@@ -1,8 +1,9 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:foxy/widget/card.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:foxy/widget/feature_card.dart';
+import 'package:get_it/get_it.dart';
 
 class FrequentModuleComponent extends StatelessWidget {
   final void Function(RouterMenu menu)? onMenuTap;
@@ -13,223 +14,73 @@ class FrequentModuleComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     const textStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
     const title = Text('常用功能', style: textStyle);
-    final creature = _Tile(
-      category: _Category.database,
-      description: '所有生物的相关数据,包含NPC和怪物。',
-      icon: Icon(LucideIcons.pawPrint),
-      name: '生物',
-      onTap: () => onMenuTap?.call(RouterMenu.creatureTemplate),
-      positions: [_Position.right],
-    );
-    final item = _Tile(
-      category: _Category.database,
-      description: '包含装备，物品信息。',
-      icon: Icon(LucideIcons.swords),
-      name: '物品',
-      onTap: () => onMenuTap?.call(RouterMenu.itemTemplate),
-      positions: [_Position.right],
-    );
-    final quest = _Tile(
-      category: _Category.database,
-      description: '任务模板及其它关联的数据，比如奖励，任务对话等等。',
-      icon: Icon(LucideIcons.badgeQuestionMark),
-      name: '任务',
-      onTap: () => onMenuTap?.call(RouterMenu.questTemplate),
-      positions: [],
-    );
-    final spell = _Tile(
-      category: _Category.dbc,
-      description: '角色拥有的法术技能。',
-      icon: Icon(LucideIcons.shell),
-      name: '法术',
-      onTap: () => onMenuTap?.call(RouterMenu.spell),
-    );
-    final gameObject = _Tile(
-      category: _Category.database,
-      description: '所有可交互的物体，比如陷阱，宝箱等等。',
-      icon: Icon(LucideIcons.mapPin),
-      name: '游戏对象',
-      onTap: () => onMenuTap?.call(RouterMenu.gameObjectTemplate),
-    );
-    final gossip = _Tile(
-      category: _Category.database,
-      description: '和NPC交谈时，对话框中的面板内容及对话选项。',
-      icon: Icon(LucideIcons.messageCircle),
-      name: '对话',
-      onTap: () => onMenuTap?.call(RouterMenu.gossipMenu),
-    );
-    final smartScript = _Tile(
-      category: _Category.database,
-      description: '主要是一些简单的脚本，不需要复杂的代码逻辑。',
-      icon: Icon(LucideIcons.code),
-      name: '内建脚本',
-      onTap: () => onMenuTap?.call(RouterMenu.smartScript),
-      positions: [_Position.top],
-    );
-    final talent = _Tile(
-      category: _Category.dbc,
-      description: '天赋树中的信息，配合法术一起使用。',
-      icon: Icon(LucideIcons.sparkles),
-      name: '天赋',
-      onTap: () => onMenuTap?.call(RouterMenu.dashboard), // TODO: 添加 talent 菜单
-    );
-    final itemSet = _Tile(
-      category: _Category.dbc,
-      description: '套装数据，包含组成部分，套装奖励效果等等。',
-      icon: Icon(LucideIcons.layers),
-      name: '套装',
-      onTap: () => onMenuTap?.call(RouterMenu.dashboard), // TODO: 添加 itemSet 菜单
-      positions: [_Position.top],
-    );
-    final row1 = Row(
-      children: [
-        Expanded(child: creature),
-        Expanded(child: item),
-        Expanded(child: quest),
-      ],
-    );
-    final row2 = Row(
-      children: [
-        Expanded(child: spell),
-        Expanded(child: gossip),
-        Expanded(child: smartScript),
-      ],
-    );
-    final row3 = Row(
-      children: [
-        Expanded(child: gameObject),
-        Expanded(child: talent),
-        Expanded(child: itemSet),
-      ],
-    );
-    final children = [row1, row2, row3];
-    final column = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
-    );
-    return FoxyCard(title: title, child: column);
-  }
-}
-
-enum _Category { database, dbc }
-
-enum _Position { right, top }
-
-class _Tag extends StatelessWidget {
-  final _Category category;
-
-  const _Tag({required this.category});
-
-  @override
-  Widget build(BuildContext context) {
-    const style = TextStyle(
-      fontSize: 10,
-      fontWeight: FontWeight.w400,
-      height: 1.5,
-    );
-    return Text(category.name.toUpperCase(), style: style);
-  }
-}
-
-class _Tile extends StatefulWidget {
-  final _Category category;
-  final String description;
-  final Widget icon;
-  final String name;
-  final void Function()? onTap;
-  final List<_Position> positions;
-
-  const _Tile({
-    this.category = _Category.database,
-    required this.description,
-    required this.icon,
-    required this.name,
-    this.onTap,
-    this.positions = _Position.values,
-  });
-
-  @override
-  State<_Tile> createState() => _TileState();
-}
-
-class _TileState extends State<_Tile> {
-  bool hover = false;
-  @override
-  Widget build(BuildContext context) {
+    final featureViewModel = GetIt.instance.get<FeatureViewModel>();
+    final features = featureViewModel.favoriteFeatures;
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final outline = colorScheme.outline;
-    final surface = colorScheme.surface;
-    final titleChildren = [Text(widget.name), _Tag(category: widget.category)];
-    final column = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: titleChildren,
-    );
-    final children = [
-      widget.icon,
-      const SizedBox(width: 16),
-      Expanded(child: column),
-    ];
-    final title = Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: children,
-    );
-    var description = SizedBox(height: 72, child: Text(widget.description));
-    final containerColumn = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [title, const SizedBox(height: 16), description],
-    );
-    final border = _getBorder(outline);
-    final shadow = _getShadow(outline);
-    final boxDecoration = BoxDecoration(
-      border: border,
-      boxShadow: shadow,
-      color: surface,
-    );
-    final container = Container(
-      decoration: boxDecoration,
-      padding: const EdgeInsets.all(16),
-      child: containerColumn,
-    );
-    final detector = GestureDetector(onTap: widget.onTap, child: container);
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: handleEnter,
-      onExit: handleExit,
-      child: detector,
-    );
-  }
+    final outline = theme.colorScheme.outline.withValues(alpha: 0.2);
+    final kTotalColumns = 3;
 
-  void handleEnter(PointerEnterEvent event) {
-    setState(() {
-      hover = true;
-    });
-  }
+    if (features.isEmpty) {
+      return FoxyCard(
+        title: title,
+        child: const Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            '还没有收藏的功能，在"更多功能"中右键卡片即可收藏。',
+            style: TextStyle(fontSize: 13),
+          ),
+        ),
+      );
+    }
 
-  void handleExit(PointerExitEvent event) {
-    setState(() {
-      hover = false;
-    });
-  }
+    final totalRows = (features.length + kTotalColumns - 1) ~/ kTotalColumns;
 
-  Border _getBorder(Color outline) {
-    BorderSide side = BorderSide(color: outline.withValues(alpha: 0.2));
-    final positions = widget.positions;
-    final showRight = positions.contains(_Position.right);
-    final showTop = positions.contains(_Position.top);
-    return Border(
-      right: showRight ? side : BorderSide.none,
-      top: showTop ? side : BorderSide.none,
+    final tiles = features.map((feature) {
+      final index = features.indexOf(feature);
+      final col = index % kTotalColumns;
+      final row = index ~/ kTotalColumns;
+
+      final border = Border(
+        right: col < kTotalColumns - 1
+            ? BorderSide(color: outline)
+            : BorderSide.none,
+        bottom: row < totalRows - 1
+            ? BorderSide(color: outline)
+            : BorderSide.none,
+      );
+
+      return Expanded(
+        child: FeatureCard(
+          seamless: true,
+          feature: feature,
+          border: border,
+          onTap: () {
+            final menu = RouterMenu.values.byName(feature.routerMenu);
+            onMenuTap?.call(menu);
+          },
+        ),
+      );
+    }).toList();
+
+    // 按每行 3 个分组，不足的用空白占位
+    final rows = <Widget>[];
+    for (var i = 0; i < tiles.length; i += kTotalColumns) {
+      final end = (i + kTotalColumns > tiles.length)
+          ? tiles.length
+          : i + kTotalColumns;
+      final rowWidgets = List<Widget>.from(tiles.sublist(i, end));
+      while (rowWidgets.length < kTotalColumns) {
+        rowWidgets.add(const Expanded(child: SizedBox()));
+      }
+      rows.add(Row(children: rowWidgets));
+    }
+
+    return FoxyCard(
+      title: title,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: rows,
+      ),
     );
-  }
-
-  List<BoxShadow> _getShadow(Color outline) {
-    if (!hover) return [];
-    final shadow = BoxShadow(
-      blurRadius: 8,
-      color: outline.withValues(alpha: 0.1),
-      spreadRadius: 8,
-    );
-    return [shadow];
   }
 }

@@ -85,7 +85,10 @@ class SpellListViewModel {
     var filter = SpellFilterEntity()
       ..id = idController.text
       ..name = nameController.text;
-    templates.value = await repository.getBriefSpells(page: page, filter: filter);
+    templates.value = await repository.getBriefSpells(
+      page: page,
+      filter: filter,
+    );
     total.value = await repository.count(filter: filter);
   }
 
