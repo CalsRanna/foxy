@@ -94,6 +94,7 @@ class GameObjectLootTemplateViewModel {
   Future<void> create(BuildContext dialogContext) async {
     resetForm();
     final nextItemId = await repository.getNextItemId(gameObjectId.value);
+    if (!dialogContext.mounted) return;
     itemController.text = nextItemId.toString();
     await showShadDialog(
       context: dialogContext,

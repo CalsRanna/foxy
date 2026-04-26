@@ -1,5 +1,5 @@
-/// gameobject_queststarter 模型
-/// 复合主键 (id, quest)
+// gameobject_queststarter 模型
+// 复合主键 (id, quest)
 
 class GameobjectQueststarter {
   int id = 0;

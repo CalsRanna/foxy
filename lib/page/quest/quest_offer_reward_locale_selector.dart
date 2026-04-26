@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/model/quest_offer_reward.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
-import 'package:foxy/widget/form_item.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class QuestOfferRewardLocaleSelector extends StatefulWidget {

@@ -58,6 +58,7 @@ class GameObjectQuestItemViewModel {
   Future<void> create(BuildContext dialogContext) async {
     resetForm();
     final nextIdx = await repository.getNextIdx(gameObjectEntry.value);
+    if (!dialogContext.mounted) return;
     idxController.text = nextIdx.toString();
     await showShadDialog(
       context: dialogContext,
