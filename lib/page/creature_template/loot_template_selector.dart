@@ -135,10 +135,12 @@ class _DialogState extends State<_Dialog> {
       onPressed: () => Navigator.of(context).pop(_selectedId),
       child: Text('确定'),
     );
-    var children = [_buildFilter(), _buildPagination(), _buildTable()];
+    var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text(widget.title),
-      actions: [cancelButton, confirmButton],
+      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
+      actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
       child: Column(spacing: 8, children: children),
     );
@@ -188,13 +190,8 @@ class _DialogState extends State<_Dialog> {
 
   Widget _buildPagination() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        if (_loading)
-          SizedBox.square(
-            dimension: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
         FoxyPagination(
           page: _page,
           pageSize: 50,
