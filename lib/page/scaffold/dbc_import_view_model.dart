@@ -450,8 +450,9 @@ _workerImportFile(
   _FileDef file,
 ) async {
   final count = await laconic.table(file.tableName).count();
-  if (count > 0)
+  if (count > 0) {
     return (done: false, parseUs: 0, convertUs: 0, insertUs: 0, startedAt: 0);
+  }
 
   final path = '$dbcPath\\${file.name}.dbc';
   if (!File(path).existsSync()) {
