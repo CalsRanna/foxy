@@ -122,17 +122,26 @@ class _ItemExtendedCostSelectorDialogState
     return ShadDialog(
       title: Text('选择扩展价格'),
       actions: [
-        ShadButton.outline(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text('取消'),
-        ),
-        ShadButton(
-          onPressed: _selectedId != null
-              ? () => Navigator.of(context).pop(_selectedId)
-              : null,
-          child: Text('确定'),
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [
+            ShadButton.outline(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('取消'),
+            ),
+            ShadButton(
+              onPressed: _selectedId != null
+                  ? () => Navigator.of(context).pop(_selectedId)
+                  : null,
+              child: Text('确定'),
+            ),
+          ],
         ),
       ],
+      actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
+      actionsMainAxisSize: MainAxisSize.max,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -189,7 +198,14 @@ class _ItemExtendedCostSelectorDialogState
     return Row(
       children: [
         Text('共 $_total 条记录'),
-        Spacer(),
+      ],
+    );
+  }
+
+  Widget _buildPagination() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
         FoxyPagination(
           page: _page,
           pageSize: 50,
