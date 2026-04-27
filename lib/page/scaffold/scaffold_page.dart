@@ -55,9 +55,19 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      dbcImportViewModel.checkAndImport();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await dbcImportViewModel.checkAndImport();
+      if (!mounted) return;
+      _showDbcDialog();
     });
+  }
+
+  void _showDbcDialog() {
+    showShadDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => _DbcImportDialog(vm: dbcImportViewModel),
+    );
   }
 
   @override
@@ -78,23 +88,13 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     var scaffold = Scaffold(body: topWorkspace);
     if (kIsWeb) return scaffold;
     if (Platform.isAndroid || Platform.isIOS) return scaffold;
-    var wrapped = Actions(
+    return Actions(
       actions: _ShortcutManager.instance.actions,
       child: Shortcuts(
         shortcuts: _ShortcutManager.instance.shortcuts,
         child: scaffold,
       ),
     );
-
-    return Watch((_) {
-      if (dbcImportViewModel.dbcImported.value) return wrapped;
-      return Stack(
-        children: [
-          wrapped,
-          _DbcImportModal(dbcImportViewModel: dbcImportViewModel),
-        ],
-      );
-    });
   }
 
   Widget _buildBreadcrumb() {
@@ -176,155 +176,6 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
 
 const _kDbcDialogWidth = 480.0;
 
-/// DBC 导入模态遮罩层
-class _DbcImportModal extends StatelessWidget {
-  final DbcImportViewModel dbcImportViewModel;
-  const _DbcImportModal({required this.dbcImportViewModel});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black.withValues(alpha: 0.6),
-      child: Center(child: Watch((_) => _buildDialog(context))),
-    );
-  }
-
-  Widget _buildDialog(BuildContext context) {
-    if (dbcImportViewModel.dbcImportError.value != null) {
-      return _ErrorDialog(
-        error: dbcImportViewModel.dbcImportError.value!,
-        onRetry: dbcImportViewModel.retryImport,
-      );
-    }
-    if (dbcImportViewModel.dbcPath.value == null) {
-      return _PathSelectionDialog(
-        onSubmit: (path) => dbcImportViewModel.setDbcPath(path),
-      );
-    }
-    return _ProgressDialog(
-      progress: dbcImportViewModel.dbcImportProgress.value,
-    );
-  }
-}
-
-/// 路径选择对话框
-class _PathSelectionDialog extends StatefulWidget {
-  final ValueChanged<String> onSubmit;
-  const _PathSelectionDialog({required this.onSubmit});
-
-  @override
-  State<_PathSelectionDialog> createState() => _PathSelectionDialogState();
-}
-
-class _PathSelectionDialogState extends State<_PathSelectionDialog> {
-  final _controller = TextEditingController();
-  final _focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _focusNode.requestFocus();
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    final descStyle = theme.textTheme.muted.copyWith(fontSize: 13);
-
-    return SizedBox(
-      width: _kDbcDialogWidth,
-      child: ShadDialog(
-        closeIcon: const SizedBox.shrink(),
-        constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
-        title: Row(
-          spacing: 10,
-          children: [
-            Icon(LucideIcons.folderOpen, size: 20),
-            const Text('导入 DBC 数据'),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 18,
-          children: [
-            Text(
-              '请选择魔兽世界客户端中 DBC 文件的所在目录\n（包含 Spell.dbc、Faction.dbc 等 .dbc 文件的文件夹）',
-              style: descStyle,
-            ),
-            ShadInput(
-              controller: _controller,
-              focusNode: _focusNode,
-              placeholder: const Text('选择或输入 DBC 目录路径...'),
-              leading: const Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Icon(LucideIcons.folderSearch, size: 16),
-              ),
-              trailing: ShadButton.ghost(
-                height: 28,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                onPressed: _controller.text.isEmpty
-                    ? null
-                    : () => _controller.clear(),
-                child: const Icon(LucideIcons.x, size: 14),
-              ),
-              onSubmitted: (_) => _submit(),
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                ShadButton.outline(
-                  onPressed: () async {
-                    final dir = await getDirectoryPath();
-                    if (dir != null) {
-                      _controller.text = dir;
-                    }
-                  },
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 6,
-                    children: [
-                      Icon(LucideIcons.folderOpen, size: 15),
-                      Text('浏览...'),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                ShadButton(
-                  onPressed: _submit,
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 6,
-                    children: [
-                      Icon(LucideIcons.play, size: 15),
-                      Text('开始导入'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _submit() {
-    final path = _controller.text.trim();
-    if (path.isEmpty) return;
-    widget.onSubmit(path);
-  }
-}
-
 /// 解析进度文本，返回 (进度比例, 当前文件, 行数)
 (double? ratio, String currentFile, String detail) _parseProgress(String text) {
   if (text.isEmpty) return (null, '', '');
@@ -349,131 +200,251 @@ class _PathSelectionDialogState extends State<_PathSelectionDialog> {
   return (null, text, '');
 }
 
-/// 导入进度对话框
-class _ProgressDialog extends StatelessWidget {
-  final String progress;
-  const _ProgressDialog({required this.progress});
+/// DBC 导入对话框，使用 showShadDialog 自带遮罩，不可关闭
+class _DbcImportDialog extends StatefulWidget {
+  final DbcImportViewModel vm;
+  const _DbcImportDialog({required this.vm});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    final (ratio, file, detail) = _parseProgress(progress);
-    final mutedStyle = theme.textTheme.muted.copyWith(fontSize: 12);
-
-    return SizedBox(
-      width: _kDbcDialogWidth,
-      child: ShadDialog(
-        closeIcon: const SizedBox.shrink(),
-        constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
-        title: Row(
-          spacing: 10,
-          children: [
-            const SizedBox.square(
-              dimension: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-            const Text('正在导入 DBC 数据'),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 14,
-          children: [
-            if (ratio != null) ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('总体进度', style: mutedStyle),
-                  Text('${(ratio * 100).toStringAsFixed(0)}%', style: mutedStyle),
-                ],
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: ratio,
-                  minHeight: 6,
-                ),
-              ),
-            ],
-            if (file.isNotEmpty) ...[
-              Row(
-                spacing: 8,
-                children: [
-                  Icon(LucideIcons.fileInput, size: 15, color: theme.colorScheme.mutedForeground),
-                  Expanded(
-                    child: Text(file, style: const TextStyle(fontSize: 13)),
-                  ),
-                ],
-              ),
-              if (detail.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(left: 23),
-                  child: Text(detail, style: mutedStyle),
-                ),
-            ],
-            if (ratio == null && file.isEmpty && detail.isEmpty)
-              Text(progress, style: const TextStyle(fontSize: 13)),
-          ],
-        ),
-      ),
-    );
-  }
+  State<_DbcImportDialog> createState() => _DbcImportDialogState();
 }
 
-/// 导入错误对话框
-class _ErrorDialog extends StatelessWidget {
-  final String error;
-  final VoidCallback onRetry;
-  const _ErrorDialog({required this.error, required this.onRetry});
+class _DbcImportDialogState extends State<_DbcImportDialog> {
+  DbcImportViewModel get _vm => widget.vm;
+  final _pathController = TextEditingController();
+  final _pathFocus = FocusNode();
+  void Function()? _unsub;
+
+  @override
+  void initState() {
+    super.initState();
+    _unsub = _vm.dbcImported.subscribe(_onImportedChanged);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _pathFocus.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _unsub?.call();
+    _pathController.dispose();
+    _pathFocus.dispose();
+    super.dispose();
+  }
+
+  void _onImportedChanged(bool imported) {
+    if (imported && mounted) {
+      _unsub?.call();
+      _unsub = null;
+      Navigator.of(context).maybePop();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
     return SizedBox(
       width: _kDbcDialogWidth,
-      child: ShadDialog(
-        closeIcon: const SizedBox.shrink(),
-        constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
-        title: Row(
-          spacing: 10,
-          children: [
-            Icon(LucideIcons.triangleAlert, size: 20, color: theme.colorScheme.destructive),
-            const Text('DBC 导入失败'),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 16,
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.destructive.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: theme.colorScheme.destructive.withValues(alpha: 0.2),
-                ),
-              ),
-              child: SelectableText(error, style: const TextStyle(fontSize: 13)),
+      child: Watch((_) => _buildBody()),
+    );
+  }
+
+  Widget _buildBody() {
+    final error = _vm.dbcImportError.value;
+    final path = _vm.dbcPath.value;
+    final progress = _vm.dbcImportProgress.value;
+
+    if (error != null) {
+      return _buildErrorBody(error);
+    }
+    if (path == null) {
+      return _buildPathBody();
+    }
+    return _buildProgressBody(progress);
+  }
+
+  Widget _buildPathBody() {
+    final theme = ShadTheme.of(context);
+    final descStyle = theme.textTheme.muted.copyWith(fontSize: 13);
+
+    return ShadDialog(
+      closeIcon: const SizedBox.shrink(),
+      constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
+      title: Row(
+        spacing: 10,
+        children: [
+          Icon(LucideIcons.folderOpen, size: 20),
+          const Text('导入 DBC 数据'),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 18,
+        children: [
+          Text(
+            '请选择魔兽世界客户端中 DBC 文件的所在目录\n（包含 Spell.dbc、Faction.dbc 等 .dbc 文件的文件夹）',
+            style: descStyle,
+          ),
+          ShadInput(
+            controller: _pathController,
+            focusNode: _pathFocus,
+            placeholder: const Text('选择或输入 DBC 目录路径...'),
+            leading: const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Icon(LucideIcons.folderSearch, size: 16),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ShadButton(
-                onPressed: onRetry,
+            trailing: ShadButton.ghost(
+              height: 28,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              onPressed: _pathController.text.isEmpty
+                  ? null
+                  : () => _pathController.clear(),
+              child: const Icon(LucideIcons.x, size: 14),
+            ),
+            onSubmitted: (_) => _submitPath(),
+          ),
+          Row(
+            spacing: 8,
+            children: [
+              ShadButton.outline(
+                onPressed: () async {
+                  final dir = await getDirectoryPath();
+                  if (dir != null) _pathController.text = dir;
+                },
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   spacing: 6,
                   children: [
-                    Icon(LucideIcons.rotateCw, size: 15),
-                    Text('重试'),
+                    Icon(LucideIcons.folderOpen, size: 15),
+                    Text('浏览...'),
                   ],
                 ),
               ),
+              const Spacer(),
+              ShadButton(
+                onPressed: _submitPath,
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 6,
+                  children: [
+                    Icon(LucideIcons.play, size: 15),
+                    Text('开始导入'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _submitPath() {
+    final path = _pathController.text.trim();
+    if (path.isEmpty) return;
+    _vm.setDbcPath(path);
+  }
+
+  Widget _buildProgressBody(String progress) {
+    final theme = ShadTheme.of(context);
+    final (ratio, file, detail) = _parseProgress(progress);
+    final mutedStyle = theme.textTheme.muted.copyWith(fontSize: 12);
+
+    return ShadDialog(
+      closeIcon: const SizedBox.shrink(),
+      constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
+      title: Row(
+        spacing: 10,
+        children: [
+          const SizedBox.square(
+            dimension: 20,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+          const Text('正在导入 DBC 数据'),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 14,
+        children: [
+          if (ratio != null) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('总体进度', style: mutedStyle),
+                Text('${(ratio * 100).toStringAsFixed(0)}%', style: mutedStyle),
+              ],
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(value: ratio, minHeight: 6),
             ),
           ],
-        ),
+          if (file.isNotEmpty) ...[
+            Row(
+              spacing: 8,
+              children: [
+                Icon(LucideIcons.fileInput, size: 15, color: theme.colorScheme.mutedForeground),
+                Expanded(child: Text(file, style: const TextStyle(fontSize: 13))),
+              ],
+            ),
+            if (detail.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 23),
+                child: Text(detail, style: mutedStyle),
+              ),
+          ],
+          if (ratio == null && file.isEmpty && detail.isEmpty)
+            Text(progress, style: const TextStyle(fontSize: 13)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorBody(String error) {
+    final theme = ShadTheme.of(context);
+    return ShadDialog(
+      closeIcon: const SizedBox.shrink(),
+      constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
+      title: Row(
+        spacing: 10,
+        children: [
+          Icon(LucideIcons.triangleAlert, size: 20, color: theme.colorScheme.destructive),
+          const Text('DBC 导入失败'),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.destructive.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                color: theme.colorScheme.destructive.withValues(alpha: 0.2),
+              ),
+            ),
+            child: SelectableText(error, style: const TextStyle(fontSize: 13)),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ShadButton(
+              onPressed: _vm.retryImport,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 6,
+                children: [
+                  Icon(LucideIcons.rotateCw, size: 15),
+                  Text('重试'),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
