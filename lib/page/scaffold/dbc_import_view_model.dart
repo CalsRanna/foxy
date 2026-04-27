@@ -163,6 +163,7 @@ class DbcImportViewModel {
                   '${errs.length > 3 ? '\n...等 ${errs.length} 个错误' : ''}';
               dbcImportProgress.value = '';
             }
+            receivePort.close();
           default:
             break;
         }

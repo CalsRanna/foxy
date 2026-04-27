@@ -7,7 +7,8 @@
         {
             "name": "foxy",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "vmAdditionalArgs": ["--pause-isolates-on-start=false"]
         },
         {
             "name": "foxy (profile mode)",
