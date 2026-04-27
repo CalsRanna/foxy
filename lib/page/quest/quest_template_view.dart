@@ -3,6 +3,7 @@ import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_locale_selector.dart';
 import 'package:foxy/page/quest/area_table_or_quest_sort_selector.dart';
 import 'package:foxy/page/quest_info/quest_info_selector.dart';
+import 'package:foxy/page/creature_template/char_title_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -405,9 +406,11 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         children: [
           Expanded(
             child: FormItem(
-              controller: vm.rewardTitleController,
               label: '奖励头衔',
-              placeholder: 'RewardTitle',
+              child: CharTitleSelector(
+                controller: vm.rewardTitleController,
+                placeholder: 'RewardTitle',
+              ),
             ),
           ),
           Expanded(
