@@ -16,12 +16,12 @@ class FoxyTab extends StatefulWidget {
   State<FoxyTab> createState() => _FoxyTabState();
 }
 
-class FoxyTabItem extends StatelessWidget {
+class _FoxyTabItem extends StatelessWidget {
   final bool active;
   final bool disabled;
   final void Function()? onTap;
   final Widget child;
-  const FoxyTabItem({
+  const _FoxyTabItem({
     super.key,
     this.active = false,
     this.disabled = false,
@@ -177,13 +177,13 @@ class _FoxyTabState extends State<FoxyTab> {
     }
   }
 
-  FoxyTabItem _buildItem(int i) {
-    final isDisabled = widget.disabledIndexes.contains(i);
-    return FoxyTabItem(
+  _FoxyTabItem _buildItem(int i) {
+    final disabled = widget.disabledIndexes.contains(i);
+    return _FoxyTabItem(
       key: keys[i],
       active: i == index,
-      disabled: isDisabled,
-      onTap: isDisabled ? null : () => handleTap(i),
+      disabled: disabled,
+      onTap: disabled ? null : () => handleTap(i),
       child: widget.tabs[i],
     );
   }
