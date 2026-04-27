@@ -1,0 +1,102 @@
+import 'package:flutter/material.dart';
+import 'package:foxy/model/player_create_info.dart';
+import 'package:foxy/repository/player_create_info_repository.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals.dart';
+
+class PlayerCreateInfoActionViewModel {
+  final routerFacade = GetIt.instance.get<RouterFacade>();
+  final repository = PlayerCreateInfoRepository();
+
+  final actions = signal<List<PlayerCreateInfoAction>>([]);
+  int? _race;
+  int? _class_;
+  int? _oldButton;
+
+  final buttonController = TextEditingController();
+  final actionController = TextEditingController();
+  final typeController = TextEditingController();
+
+  Future<void> initSignals({int? race, int? class_}) async {
+    _race = race;
+    _class_ = class_;
+    if (race == null || class_ == null) return;
+    actions.value = await repository.getActions(race, class_);
+  }
+
+  void create() {
+    _oldButton = null;
+    buttonController.clear();
+    actionController.clear();
+    typeController.clear();
+  }
+
+  void edit(int index) {
+    if (index >= actions.value.length) return;
+    final item = actions.value[index];
+    _oldButton = item.button;
+    buttonController.text = item.button.toString();
+    actionController.text = item.action.toString();
+    typeController.text = item.type.toString();
+  }
+
+  Future<void> save(BuildContext context) async {
+    if (_race == null || _class_ == null) return;
+    try {
+      final item = _collect();
+      await repository.storeAction(item);
+      actions.value = await repository.getActions(_race!, _class_!);
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
+    } catch (e) {
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+    }
+  }
+
+  Future<void> update(BuildContext context) async {
+    if (_race == null || _class_ == null) return;
+    try {
+      final item = _collect();
+      await repository.updateAction(item, oldButton: _oldButton);
+      actions.value = await repository.getActions(_race!, _class_!);
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
+    } catch (e) {
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+    }
+  }
+
+  Future<void> onDelete(BuildContext context, PlayerCreateInfoAction item) async {
+    if (_race == null || _class_ == null) return;
+    try {
+      await repository.deleteAction(_race!, _class_!, item.button);
+      actions.value = await repository.getActions(_race!, _class_!);
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
+    } catch (e) {
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+    }
+  }
+
+  PlayerCreateInfoAction _collect() {
+    return PlayerCreateInfoAction()
+      ..race = _race ?? 0
+      ..class_ = _class_ ?? 0
+      ..button = _parseInt(buttonController.text)
+      ..action = _parseInt(actionController.text)
+      ..type = _parseInt(typeController.text);
+  }
+
+  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
+
+  void dispose() {
+    buttonController.dispose();
+    actionController.dispose();
+    typeController.dispose();
+  }
+}

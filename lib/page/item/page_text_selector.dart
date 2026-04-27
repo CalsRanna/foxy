@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/model/page_text.dart';
+import 'package:foxy/model/page_text_filter_entity.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -236,9 +237,11 @@ class _DialogState extends State<_Dialog> {
     setState(() => _loading = true);
     try {
       final repository = PageTextRepository();
-      final id = _idController.text.isEmpty ? null : _idController.text;
-      final items = await repository.search(id: id, page: _page);
-      final total = await repository.count(id: id);
+      final filter = PageTextFilterEntity()
+        ..id = _idController.text
+        ..text = '';
+      final items = await repository.search(filter: filter, page: _page);
+      final total = await repository.count(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;
