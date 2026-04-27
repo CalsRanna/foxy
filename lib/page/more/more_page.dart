@@ -90,7 +90,7 @@ class _MorePageState extends State<MorePage> {
           crossAxisCount: 4,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
-          childAspectRatio: 2.0,
+          childAspectRatio: 3 / 2,
         ),
         itemCount: modules.length,
         itemBuilder: (context, index) {
