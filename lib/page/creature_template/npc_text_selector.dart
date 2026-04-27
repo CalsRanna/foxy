@@ -64,7 +64,6 @@ class _DialogState extends State<_Dialog> {
   int _total = 0;
   int _page = 1;
   int? _selectedId;
-  bool _loading = false;
 
   @override
   void initState() {
@@ -239,7 +238,6 @@ class _DialogState extends State<_Dialog> {
   }
 
   Future<void> _search() async {
-    setState(() => _loading = true);
     try {
       final repo = NpcTextRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
@@ -253,7 +251,6 @@ class _DialogState extends State<_Dialog> {
         });
       }
     } finally {
-      if (mounted) setState(() => _loading = false);
     }
   }
 }

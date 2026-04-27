@@ -67,7 +67,6 @@ class _DialogState extends State<_Dialog> {
   int _total = 0;
   int _page = 1;
   int? _selectedId;
-  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +247,6 @@ class _DialogState extends State<_Dialog> {
   }
 
   Future<void> _search() async {
-    setState(() => _loading = true);
     try {
       final repository = CreatureTemplateRepository();
       final filter = CreatureTemplateFilterEntity()
@@ -266,7 +264,6 @@ class _DialogState extends State<_Dialog> {
         });
       }
     } finally {
-      if (mounted) setState(() => _loading = false);
     }
   }
 }
