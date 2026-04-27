@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/creature_template.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -89,14 +91,14 @@ class CreatureTemplateDetailViewModel {
     try {
       final t = _collectFromControllers();
       final repository = CreatureTemplateRepository();
-      if (t.entry == 0) {
-        // 新建
+      final isNew = t.entry == 0;
+      if (isNew) {
         await repository.storeCreatureTemplate(t);
       } else {
-        // 更新
         await repository.updateCreatureTemplate(t);
       }
       template.value = t;
+      _logActivity(isNew ? ActivityActionType.create : ActivityActionType.update, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -362,5 +364,16 @@ class CreatureTemplateDetailViewModel {
     aiNameController.text = template.aiName;
     scriptNameController.text = template.scriptName;
     verifiedBuildController.text = template.verifiedBuild.toString();
+  }
+
+  void _logActivity(ActivityActionType action, CreatureTemplate t) {
+    final log = ActivityLog(
+      module: 'creature_template',
+      actionType: action,
+      entityId: t.entry,
+      entityName: t.name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 }

@@ -13,7 +13,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
         'it.name',
         'itl.Name AS localeName',
         'it.Quality',
-        'didi.InventoryIcon1',
+        'didi.InventoryIcon0',
       ];
       builder = builder.select(fields);
       builder = builder.leftJoin(

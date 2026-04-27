@@ -41,7 +41,7 @@ class LootTemplate {
     itemName = json['name'] ?? '';
     itemLocaleName = json['localeName'] ?? '';
     itemQuality = json['Quality'] ?? 0;
-    itemIcon = json['InventoryIcon1'] ?? '';
+    itemIcon = json['InventoryIcon0'] ?? '';
     // 聚合字段
     itemCount = json['ItemCount'] ?? 0;
   }

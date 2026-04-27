@@ -15,15 +15,15 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
         'it1.name as name_1',
         'itl1.Name as localeName_1',
         'it1.Quality as Quality_1',
-        'didi1.InventoryIcon1 as Icon_1',
+        'didi1.InventoryIcon0 as Icon_1',
         'it2.name as name_2',
         'itl2.Name as localeName_2',
         'it2.Quality as Quality_2',
-        'didi2.InventoryIcon1 as Icon_2',
+        'didi2.InventoryIcon0 as Icon_2',
         'it3.name as name_3',
         'itl3.Name as localeName_3',
         'it3.Quality as Quality_3',
-        'didi3.InventoryIcon1 as Icon_3',
+        'didi3.InventoryIcon0 as Icon_3',
       ];
 
       builder = builder.select(fields);

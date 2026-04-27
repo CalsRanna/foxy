@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/creature_template.dart';
 import 'package:foxy/model/creature_template_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -31,6 +33,7 @@ class CreatureTemplateListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyCreatureTemplate(entry);
+      _logActivity(ActivityActionType.copy, entry);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -51,6 +54,7 @@ class CreatureTemplateListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyCreatureTemplate(entry);
+      _logActivity(ActivityActionType.delete, entry);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -130,5 +134,19 @@ class CreatureTemplateListViewModel {
       filter: filter,
     );
     total.value = await repository.count(filter: filter);
+  }
+
+  void _logActivity(ActivityActionType action, int entry) {
+    final templates = this.templates.value;
+    final template = templates.where((t) => t.entry == entry).firstOrNull;
+    final name = template?.name ?? '';
+    final log = ActivityLog(
+      module: 'creature_template',
+      actionType: action,
+      entityId: entry,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 }
