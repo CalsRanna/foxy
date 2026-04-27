@@ -67,6 +67,16 @@ import 'package:foxy/page/quest/quest_request_items_view_model.dart';
 import 'package:foxy/page/quest/quest_template_addon_view_model.dart';
 import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_list_view_model.dart';
+import 'package:foxy/page/area_table/area_table_list_view_model.dart';
+import 'package:foxy/page/area_table/area_table_detail_view_model.dart';
+import 'package:foxy/page/emote_text/emote_text_list_view_model.dart';
+import 'package:foxy/page/emote_text/emote_text_detail_view_model.dart';
+import 'package:foxy/page/quest_faction_reward/quest_faction_reward_list_view_model.dart';
+import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_view_model.dart';
+import 'package:foxy/page/quest_sort/quest_sort_list_view_model.dart';
+import 'package:foxy/page/quest_sort/quest_sort_detail_view_model.dart';
+import 'package:foxy/page/quest_info/quest_info_list_view_model.dart';
+import 'package:foxy/page/quest_info/quest_info_detail_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 
@@ -150,5 +160,17 @@ class DI {
     GetIt.instance.registerFactory(
       () => PlayerCreateInfoSpellCustomViewModel(),
     );
+
+    // Batch 1 DBC 模块
+    GetIt.instance.registerLazySingleton(() => AreaTableListViewModel());
+    GetIt.instance.registerFactory(() => AreaTableDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => EmoteTextListViewModel());
+    GetIt.instance.registerFactory(() => EmoteTextDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => QuestFactionRewardListViewModel());
+    GetIt.instance.registerFactory(() => QuestFactionRewardDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => QuestSortListViewModel());
+    GetIt.instance.registerFactory(() => QuestSortDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => QuestInfoListViewModel());
+    GetIt.instance.registerFactory(() => QuestInfoDetailViewModel());
   }
 }

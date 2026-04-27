@@ -19,7 +19,12 @@ enum RouterMenu {
   referenceLootTemplate(label: '关联掉落', icon: LucideIcons.list),
   pageText(label: '页面文本', icon: LucideIcons.bookOpen),
   condition(label: '条件', icon: LucideIcons.listFilter),
-  playerCreateInfo(label: '出生信息', icon: LucideIcons.userPlus);
+  playerCreateInfo(label: '出生信息', icon: LucideIcons.userPlus),
+  areaTable(label: '区域', icon: LucideIcons.map),
+  emoteText(label: '表情文本', icon: LucideIcons.laugh),
+  questFactionReward(label: '任务声望', icon: LucideIcons.trophy),
+  questSort(label: '任务排序', icon: LucideIcons.arrowUpDown),
+  questInfo(label: '任务信息', icon: LucideIcons.info);
 
   final String label;
   final IconData icon;
@@ -45,6 +50,11 @@ enum RouterMenu {
       RouterMenu.pageText => const TextContentListRoute(),
       RouterMenu.condition => const ConditionListRoute(),
       RouterMenu.playerCreateInfo => const PlayerCreateInfoListRoute(),
+      RouterMenu.areaTable => const AreaTableListRoute(),
+      RouterMenu.emoteText => const EmoteTextListRoute(),
+      RouterMenu.questFactionReward => const QuestFactionRewardListRoute(),
+      RouterMenu.questSort => const QuestSortListRoute(),
+      RouterMenu.questInfo => const QuestInfoListRoute(),
     };
   }
 

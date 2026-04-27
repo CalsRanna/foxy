@@ -60,6 +60,26 @@ class FoxyRouter extends RootStackRouter {
       AutoRoute(page: ConditionListRoute.page),
       AutoRoute(page: ConditionDetailRoute.page),
 
+      /// AreaTable
+      AutoRoute(page: AreaTableListRoute.page),
+      AutoRoute(page: AreaTableDetailRoute.page),
+
+      /// EmoteText
+      AutoRoute(page: EmoteTextListRoute.page),
+      AutoRoute(page: EmoteTextDetailRoute.page),
+
+      /// QuestFactionReward
+      AutoRoute(page: QuestFactionRewardListRoute.page),
+      AutoRoute(page: QuestFactionRewardDetailRoute.page),
+
+      /// QuestSort
+      AutoRoute(page: QuestSortListRoute.page),
+      AutoRoute(page: QuestSortDetailRoute.page),
+
+      /// QuestInfo
+      AutoRoute(page: QuestInfoListRoute.page),
+      AutoRoute(page: QuestInfoDetailRoute.page),
+
       /// Player Create Info
       AutoRoute(page: PlayerCreateInfoListRoute.page),
       AutoRoute(page: PlayerCreateInfoDetailRoute.page),
