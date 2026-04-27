@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/model/spell.dart';
 import 'package:foxy/page/spell/spell_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -21,12 +22,6 @@ class _SpellListPageState extends State<SpellListPage> {
   final viewModel = GetIt.instance.get<SpellListViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('法术列表'),
@@ -39,6 +34,12 @@ class _SpellListPageState extends State<SpellListPage> {
       children: children,
     );
     return Padding(padding: const EdgeInsets.all(16.0), child: column);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.initSignals();
   }
 
   Widget _buildFilter() {
@@ -72,6 +73,24 @@ class _SpellListPageState extends State<SpellListPage> {
     );
   }
 
+  Widget _buildIconAndName(BriefSpell spell) {
+    final icon = spell.textureFilename
+        .toLowerCase()
+        .replaceAll('\\', '/')
+        .replaceAll('interface/icons', 'asset/icon');
+    var image = Image.asset(
+      '$icon.png',
+      height: 40,
+      width: 40,
+      fit: BoxFit.cover,
+    );
+    var children = [
+      ClipRRect(borderRadius: BorderRadius.circular(6), child: image),
+      Text(spell.displayName),
+    ];
+    return Row(children: children);
+  }
+
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
@@ -90,19 +109,18 @@ class _SpellListPageState extends State<SpellListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '名称', '子名称', '持续时间', '图标'];
+    final headers = ['编号', '名称', '子名称', '持续时间'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var flexWidth = constraints.maxWidth - 320;
+        var flexWidth = constraints.maxWidth - 200;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final spell = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(spell.id.toString())),
-              1 => ShadTableCell(child: Text(spell.displayName)),
+              1 => ShadTableCell(child: _buildIconAndName(spell)),
               2 => ShadTableCell(child: Text(spell.displaySubtext)),
               3 => ShadTableCell(child: Text(spell.duration)),
-              4 => ShadTableCell(child: Text(spell.textureFilename)),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -113,7 +131,6 @@ class _SpellListPageState extends State<SpellListPage> {
               1 => FixedTableSpanExtent(flexWidth / 2),
               2 => FixedTableSpanExtent(flexWidth / 2),
               3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
               _ => null,
             };
           },
