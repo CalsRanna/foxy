@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/input.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 @RoutePage()
 class DatabaseSettingPage extends StatefulWidget {
@@ -61,7 +61,7 @@ class _DatabaseSettingPageState extends State<DatabaseSettingPage> {
       children: [
         Text(label),
         const SizedBox(height: 8),
-        FoxyInput(controller: controller),
+        ShadInput(controller: controller, placeholder: Text(label)),
       ],
     );
   }
