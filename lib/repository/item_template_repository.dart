@@ -53,11 +53,16 @@ class ItemTemplateRepository with RepositoryMixin {
       'it.ItemLevel',
       'it.RequiredLevel',
       'itl.Name AS localeName',
+      'didi.InventoryIcon1',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
       '$_localeTable AS itl',
       (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info AS didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
     );
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
