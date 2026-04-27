@@ -1,6 +1,18 @@
 import 'package:foxy/page/bootstrap/bootstrap_view_model.dart';
 import 'package:foxy/page/more/more_view_model.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view_model.dart';
+import 'package:foxy/page/reference_loot_template/reference_loot_template_list_view_model.dart';
+import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_view_model.dart';
+import 'package:foxy/page/page_text/page_text_list_view_model.dart';
+import 'package:foxy/page/page_text/page_text_detail_view_model.dart';
+import 'package:foxy/page/page_text/page_text_locale_view_model.dart';
+import 'package:foxy/page/condition/condition_list_view_model.dart';
+import 'package:foxy/page/condition/condition_detail_view_model.dart';
+import 'package:foxy/page/player_create_info/player_create_info_list_view_model.dart';
+import 'package:foxy/page/player_create_info/player_create_info_detail_view_model.dart';
+import 'package:foxy/page/player_create_info/player_create_info_action_view_model.dart';
+import 'package:foxy/page/player_create_info/player_create_info_item_view_model.dart';
+import 'package:foxy/page/player_create_info/player_create_info_spell_custom_view_model.dart';
 import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:foxy/page/creature_template/creature_loot_template_view_model.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view_model.dart';
@@ -120,5 +132,23 @@ class DI {
     GetIt.instance.registerFactory(() => SpellLinkedSpellViewModel());
     GetIt.instance.registerFactory(() => SpellRankViewModel());
     GetIt.instance.registerFactory(() => SpellLootTemplateViewModel());
+
+    // 阶段 3.1 高级数据库模块
+    GetIt.instance.registerLazySingleton(
+      () => ReferenceLootTemplateListViewModel(),
+    );
+    GetIt.instance.registerFactory(() => ReferenceLootTemplateDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => PageTextListViewModel());
+    GetIt.instance.registerFactory(() => PageTextDetailViewModel());
+    GetIt.instance.registerFactory(() => PageTextLocaleViewModel());
+    GetIt.instance.registerLazySingleton(() => ConditionListViewModel());
+    GetIt.instance.registerFactory(() => ConditionDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => PlayerCreateInfoListViewModel());
+    GetIt.instance.registerFactory(() => PlayerCreateInfoDetailViewModel());
+    GetIt.instance.registerFactory(() => PlayerCreateInfoActionViewModel());
+    GetIt.instance.registerFactory(() => PlayerCreateInfoItemViewModel());
+    GetIt.instance.registerFactory(
+      () => PlayerCreateInfoSpellCustomViewModel(),
+    );
   }
 }

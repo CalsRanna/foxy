@@ -48,6 +48,22 @@ class FoxyRouter extends RootStackRouter {
       /// Item Template
       AutoRoute(page: ItemTemplateDetailRoute.page),
 
+      /// Reference Loot Template
+      AutoRoute(page: ReferenceLootTemplateListRoute.page),
+      AutoRoute(page: ReferenceLootTemplateDetailRoute.page),
+
+      /// Page Text
+      AutoRoute(page: TextContentListRoute.page),
+      AutoRoute(page: TextContentDetailRoute.page),
+
+      /// Condition
+      AutoRoute(page: ConditionListRoute.page),
+      AutoRoute(page: ConditionDetailRoute.page),
+
+      /// Player Create Info
+      AutoRoute(page: PlayerCreateInfoListRoute.page),
+      AutoRoute(page: PlayerCreateInfoDetailRoute.page),
+
       /// More
       AutoRoute(page: MoreRoute.page),
     ];

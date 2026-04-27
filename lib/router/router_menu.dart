@@ -15,7 +15,11 @@ enum RouterMenu {
   smartScript(label: '内建脚本', icon: LucideIcons.code),
   spell(label: '法术列表', icon: LucideIcons.shell),
   more(label: '更多', icon: LucideIcons.ellipsis),
-  setting(label: '设置', icon: LucideIcons.settings);
+  setting(label: '设置', icon: LucideIcons.settings),
+  referenceLootTemplate(label: '关联掉落', icon: LucideIcons.list),
+  pageText(label: '页面文本', icon: LucideIcons.bookOpen),
+  condition(label: '条件', icon: LucideIcons.listFilter),
+  playerCreateInfo(label: '出生信息', icon: LucideIcons.userPlus);
 
   final String label;
   final IconData icon;
@@ -36,6 +40,11 @@ enum RouterMenu {
       // 以下菜单暂未实现路由
       RouterMenu.spell => const SpellListRoute(),
       RouterMenu.more => const MoreRoute(),
+      RouterMenu.referenceLootTemplate =>
+          const ReferenceLootTemplateListRoute(),
+      RouterMenu.pageText => const TextContentListRoute(),
+      RouterMenu.condition => const ConditionListRoute(),
+      RouterMenu.playerCreateInfo => const PlayerCreateInfoListRoute(),
     };
   }
 
