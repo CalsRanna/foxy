@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_detail_view_model.dart';
+import 'package:foxy/page/spell/spell_icon_selector.dart';
+import 'package:foxy/page/spell/spell_duration_selector.dart';
+import 'package:foxy/page/spell/spell_range_selector.dart';
+import 'package:foxy/page/area_table/area_table_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -55,14 +59,18 @@ class _SpellViewState extends State<SpellView> {
 
     // === 图标/视觉 ===
     final spellIconIDInput = FormItem(
-      controller: vm.spellIconIDController,
       label: '图标',
-      placeholder: 'SpellIconID',
+      child: SpellIconSelector(
+        controller: vm.spellIconIDController,
+        placeholder: 'SpellIconID',
+      ),
     );
     final activeIconIDInput = FormItem(
-      controller: vm.activeIconIDController,
       label: '激活图标',
-      placeholder: 'ActiveIconID',
+      child: SpellIconSelector(
+        controller: vm.activeIconIDController,
+        placeholder: 'ActiveIconID',
+      ),
     );
     final spellVisualID0Input = FormItem(
       controller: vm.spellVisualID0Controller,
@@ -114,14 +122,18 @@ class _SpellViewState extends State<SpellView> {
       placeholder: 'CastingTimeIndex',
     );
     final durationIndexInput = FormItem(
-      controller: vm.durationIndexController,
       label: '持续时间',
-      placeholder: 'DurationIndex',
+      child: SpellDurationSelector(
+        controller: vm.durationIndexController,
+        placeholder: 'DurationIndex',
+      ),
     );
     final rangeIndexInput = FormItem(
-      controller: vm.rangeIndexController,
       label: '施法范围',
-      placeholder: 'RangeIndex',
+      child: SpellRangeSelector(
+        controller: vm.rangeIndexController,
+        placeholder: 'RangeIndex',
+      ),
     );
     final spellDescVarIDInput = FormItem(
       controller: vm.spellDescriptionVariableIDController,
@@ -219,9 +231,11 @@ class _SpellViewState extends State<SpellView> {
 
     // === 需求 ===
     final requiredAreasIDInput = FormItem(
-      controller: vm.requiredAreasIDController,
       label: '需求区域',
-      placeholder: 'RequiredAreasID',
+      child: AreaTableSelector(
+        controller: vm.requiredAreasIDController,
+        placeholder: 'RequiredAreasID',
+      ),
     );
     final requiresSpellFocusInput = FormItem(
       controller: vm.requiresSpellFocusController,
