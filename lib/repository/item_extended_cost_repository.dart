@@ -1,36 +1,19 @@
 import 'package:foxy/model/item_extended_cost.dart';
+import 'package:foxy/model/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemExtendedCostRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
 
   /// 搜索扩展价格
-  Future<List<ItemExtendedCost>> search({String? id, int page = 1}) async {
+  Future<List<ItemExtendedCost>> search({
+    required ItemExtendedCostFilterEntity filter,
+    required int page,
+  }) async {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table);
-      const fields = [
-        'ID',
-        'HonorPoints',
-        'ArenaPoints',
-        'ArenaBracket',
-        'ItemID0',
-        'ItemID1',
-        'ItemID2',
-        'ItemID3',
-        'ItemID4',
-        'ItemCount0',
-        'ItemCount1',
-        'ItemCount2',
-        'ItemCount3',
-        'ItemCount4',
-        'RequiredArenaRating',
-        'ItemPurchaseGroup',
-      ];
-      builder = builder.select(fields);
-      if (id != null && id.isNotEmpty) {
-        builder = builder.where('ID', id);
-      }
+      builder = _applyFilter(builder, filter);
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
       return results.map((e) => ItemExtendedCost.fromJson(e.toMap())).toList();
@@ -40,12 +23,10 @@ class ItemExtendedCostRepository with RepositoryMixin {
   }
 
   /// 计数
-  Future<int> count({String? id}) async {
+  Future<int> count({required ItemExtendedCostFilterEntity filter}) async {
     try {
       var builder = laconic.table(_table);
-      if (id != null && id.isNotEmpty) {
-        builder = builder.where('ID', id);
-      }
+      builder = _applyFilter(builder, filter);
       return await builder.count();
     } catch (e) {
       return 0;
@@ -60,5 +41,43 @@ class ItemExtendedCostRepository with RepositoryMixin {
     } catch (e) {
       return null;
     }
+  }
+
+  Future<void> store(ItemExtendedCost data) async {
+    await laconic.table(_table).insert([data.toJson()]);
+  }
+
+  Future<void> update(ItemExtendedCost data) async {
+    var json = data.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', data.id).update(json);
+  }
+
+  Future<void> destroy(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<void> copy(int id) async {
+    var source = await find(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
+  }
+
+  dynamic _applyFilter(dynamic builder, ItemExtendedCostFilterEntity filter) {
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
+    }
+    return builder;
   }
 }

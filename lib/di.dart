@@ -77,6 +77,16 @@ import 'package:foxy/page/quest_sort/quest_sort_list_view_model.dart';
 import 'package:foxy/page/quest_sort/quest_sort_detail_view_model.dart';
 import 'package:foxy/page/quest_info/quest_info_list_view_model.dart';
 import 'package:foxy/page/quest_info/quest_info_detail_view_model.dart';
+import 'package:foxy/page/item_extended_cost/item_extended_cost_list_view_model.dart';
+import 'package:foxy/page/item_extended_cost/item_extended_cost_detail_view_model.dart';
+import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_list_view_model.dart';
+import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart';
+import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_list_view_model.dart';
+import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart';
+import 'package:foxy/page/gem_property/gem_property_list_view_model.dart';
+import 'package:foxy/page/gem_property/gem_property_detail_view_model.dart';
+import 'package:foxy/page/glyph_property/glyph_property_list_view_model.dart';
+import 'package:foxy/page/glyph_property/glyph_property_detail_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 
@@ -172,5 +182,17 @@ class DI {
     GetIt.instance.registerFactory(() => QuestSortDetailViewModel());
     GetIt.instance.registerLazySingleton(() => QuestInfoListViewModel());
     GetIt.instance.registerFactory(() => QuestInfoDetailViewModel());
+
+    // Batch 2 DBC 模块
+    GetIt.instance.registerLazySingleton(() => ItemExtendedCostListViewModel());
+    GetIt.instance.registerFactory(() => ItemExtendedCostDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => ScalingStatDistributionListViewModel());
+    GetIt.instance.registerFactory(() => ScalingStatDistributionDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => SpellItemEnchantmentListViewModel());
+    GetIt.instance.registerFactory(() => SpellItemEnchantmentDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => GemPropertyListViewModel());
+    GetIt.instance.registerFactory(() => GemPropertyDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => GlyphPropertyListViewModel());
+    GetIt.instance.registerFactory(() => GlyphPropertyDetailViewModel());
   }
 }
