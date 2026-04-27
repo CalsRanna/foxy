@@ -39,7 +39,7 @@ class _DashboardPageRoute extends State<DashboardPage> {
     final leftChildren = [
       FrequentModuleComponent(onMenuTap: viewModel.navigateToMenu),
       SizedBox(height: 16),
-      Trend(),
+      Watch((_) => Trend(activities: viewModel.recentActivities.value)),
     ];
     final leftColumn = Column(children: leftChildren);
     final rightChildren = [

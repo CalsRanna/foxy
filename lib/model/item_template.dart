@@ -282,7 +282,7 @@ class ItemTemplate {
     }
 
     // --- 图标（joined）---
-    inventoryIcon = json['InventoryIcon1'] ?? json['inventoryIcon'] ?? '';
+    inventoryIcon = json['InventoryIcon0'] ?? json['inventoryIcon'] ?? '';
 
     // --- 书页信息 ---
     pageText = json['PageText'] ?? json['pageText'] ?? 0;
@@ -457,7 +457,7 @@ class BriefItemTemplate {
     inventoryType = json['InventoryType'] ?? json['inventoryType'] ?? 0;
     itemLevel = json['ItemLevel'] ?? json['itemLevel'] ?? 0;
     requiredLevel = json['RequiredLevel'] ?? json['requiredLevel'] ?? 0;
-    inventoryIcon = json['InventoryIcon1'] ?? json['inventoryIcon'] ?? '';
+    inventoryIcon = json['InventoryIcon0'] ?? json['inventoryIcon'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

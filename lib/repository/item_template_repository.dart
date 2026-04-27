@@ -53,7 +53,7 @@ class ItemTemplateRepository with RepositoryMixin {
       'it.ItemLevel',
       'it.RequiredLevel',
       'itl.Name AS localeName',
-      'didi.InventoryIcon1',
+      'didi.InventoryIcon0',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
@@ -76,7 +76,7 @@ class ItemTemplateRepository with RepositoryMixin {
       'it.*',
       'itl.Name AS localeName',
       'itl.Description AS localeDescription',
-      'didi.InventoryIcon1',
+      'didi.InventoryIcon0',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(

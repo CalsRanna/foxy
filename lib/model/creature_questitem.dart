@@ -26,7 +26,7 @@ class CreatureQuestItem {
     itemName = json['name'] ?? '';
     itemLocaleName = json['localeName'] ?? '';
     itemQuality = json['Quality'] ?? 0;
-    itemIcon = json['InventoryIcon1'] ?? '';
+    itemIcon = json['InventoryIcon0'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
