@@ -97,7 +97,7 @@ class _DialogState extends State<_Dialog> {
   @override
   void initState() {
     super.initState();
-    if (widget.initialValue != 0) {
+    if (widget.initialValue != null && widget.initialValue != 0) {
       _menuIdController.text = widget.initialValue?.toString() ?? '';
       _selectedId = widget.initialValue;
     }

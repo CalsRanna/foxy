@@ -75,14 +75,16 @@ class PageTextRepository with RepositoryMixin {
   }
 
   Future<void> saveLocales(int id, List<PageTextLocale> locales) async {
-    await laconic.table(_localeTable).where('ID', id).delete();
-    if (locales.isEmpty) return;
-    var jsons = locales.map((e) {
-      var json = e.toJson();
-      json['ID'] = id;
-      return json;
-    }).toList();
-    await laconic.table(_localeTable).insert(jsons);
+    await laconic.transaction(() async {
+      await laconic.table(_localeTable).where('ID', id).delete();
+      if (locales.isEmpty) return;
+      var jsons = locales.map((e) {
+        var json = e.toJson();
+        json['ID'] = id;
+        return json;
+      }).toList();
+      await laconic.table(_localeTable).insert(jsons);
+    });
   }
 
   dynamic _applyFilter(dynamic builder, PageTextFilterEntity filter) {

@@ -412,8 +412,18 @@ class QuestTemplateDetailViewModel {
     return t;
   }
 
-  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
-  double _parseDouble(String text) => text.isEmpty ? 0.0 : double.parse(text);
+  int _parseInt(String text) {
+    if (text.isEmpty) return 0;
+    final value = int.tryParse(text);
+    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
+    return value;
+  }
+  double _parseDouble(String text) {
+    if (text.isEmpty) return 0.0;
+    final value = double.tryParse(text);
+    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
+    return value;
+  }
   int? _parseIntOrNull(String text) => text.isEmpty ? null : int.tryParse(text);
 
   void dispose() {

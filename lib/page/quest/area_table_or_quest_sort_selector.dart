@@ -117,7 +117,7 @@ class _DialogState extends State<_Dialog> {
   void initState() {
     super.initState();
     _currentMode = widget.mode;
-    if (widget.initialValue != 0) {
+    if (widget.initialValue != null && widget.initialValue != 0) {
       _idController.text = widget.initialValue?.toString() ?? '';
       _selectedId = widget.initialValue;
     }

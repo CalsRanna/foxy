@@ -108,14 +108,16 @@ class CreatureTemplateRepository with RepositoryMixin {
     int entry,
     List<CreatureTemplateLocale> locales,
   ) async {
-    await laconic.table(_localeTable).where('entry', entry).delete();
-    if (locales.isEmpty) return;
-    var jsons = locales.map((e) {
-      var json = e.toJson();
-      json['entry'] = entry;
-      return json;
-    }).toList();
-    await laconic.table(_localeTable).insert(jsons);
+    await laconic.transaction(() async {
+      await laconic.table(_localeTable).where('entry', entry).delete();
+      if (locales.isEmpty) return;
+      var jsons = locales.map((e) {
+        var json = e.toJson();
+        json['entry'] = entry;
+        return json;
+      }).toList();
+      await laconic.table(_localeTable).insert(jsons);
+    });
   }
 
   dynamic _applyFilter(dynamic builder, CreatureTemplateFilterEntity? filter) {
