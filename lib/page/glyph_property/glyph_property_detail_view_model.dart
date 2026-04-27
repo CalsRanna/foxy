@@ -1,0 +1,95 @@
+import 'package:flutter/widgets.dart';
+import 'package:foxy/model/glyph_property.dart';
+import 'package:foxy/repository/glyph_property_repository.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/logger_util.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals.dart';
+
+class GlyphPropertyDetailViewModel {
+  final routerFacade = GetIt.instance.get<RouterFacade>();
+
+  /// Basic
+  final idController = TextEditingController();
+
+  /// Property
+  final spellIdController = TextEditingController();
+  final glyphSlotFlagsController = TextEditingController();
+  final spellIconIdController = TextEditingController();
+
+  final table = signal(GlyphProperty());
+
+  /// 保存到数据库
+  Future<void> save(BuildContext context) async {
+    try {
+      final t = _collectFromControllers();
+      final repository = GlyphPropertyRepository();
+      if (t.id == 0) {
+        await repository.store(t);
+      } else {
+        await repository.update(t);
+      }
+      table.value = t;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('雕文属性数据已保存'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  /// 从所有 Controller 收集数据构建 GlyphProperty
+  GlyphProperty _collectFromControllers() {
+    final t = GlyphProperty();
+
+    /// Basic
+    t.id = _parseInt(idController.text);
+
+    /// Property
+    t.spellId = _parseInt(spellIdController.text);
+    t.glyphSlotFlags = _parseInt(glyphSlotFlagsController.text);
+    t.spellIconId = _parseInt(spellIconIdController.text);
+
+    return t;
+  }
+
+  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
+
+  void dispose() {
+    /// Basic
+    idController.dispose();
+
+    /// Property
+    spellIdController.dispose();
+    glyphSlotFlagsController.dispose();
+    spellIconIdController.dispose();
+  }
+
+  Future<void> initSignals({int? id}) async {
+    if (id == null) return;
+    try {
+      table.value = (await GlyphPropertyRepository().find(id))!;
+      _initControllers(table.value);
+    } catch (e, s) {
+      logger.e('加载雕文属性(id=$id)失败', error: e, stackTrace: s);
+    }
+  }
+
+  void _initControllers(GlyphProperty glyphProperty) {
+    /// Basic
+    idController.text = glyphProperty.id.toString();
+
+    /// Property
+    spellIdController.text = glyphProperty.spellId.toString();
+    glyphSlotFlagsController.text = glyphProperty.glyphSlotFlags.toString();
+    spellIconIdController.text = glyphProperty.spellIconId.toString();
+  }
+}

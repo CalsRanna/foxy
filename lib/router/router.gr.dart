@@ -9,9 +9,9 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i40;
-import 'package:collection/collection.dart' as _i42;
-import 'package:flutter/material.dart' as _i41;
+import 'package:auto_route/auto_route.dart' as _i50;
+import 'package:collection/collection.dart' as _i52;
+import 'package:flutter/material.dart' as _i51;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i1;
 import 'package:foxy/page/area_table/area_table_list_page.dart' as _i2;
 import 'package:foxy/page/bootstrap/bootstrap_page.dart' as _i4;
@@ -28,48 +28,65 @@ import 'package:foxy/page/game_object/game_object_template_detail_page.dart'
     as _i13;
 import 'package:foxy/page/game_object/game_object_template_list_page.dart'
     as _i14;
-import 'package:foxy/page/gossip_menu/gossip_menu_detail_page.dart' as _i15;
-import 'package:foxy/page/gossip_menu/gossip_menu_list_page.dart' as _i16;
-import 'package:foxy/page/item/item_template_detail_page.dart' as _i17;
-import 'package:foxy/page/item/item_template_list_page.dart' as _i18;
-import 'package:foxy/page/more/more_page.dart' as _i19;
-import 'package:foxy/page/page_text/page_text_detail_page.dart' as _i38;
-import 'package:foxy/page/page_text/page_text_list_page.dart' as _i39;
-import 'package:foxy/page/player_create_info/player_create_info_detail_page.dart'
-    as _i20;
-import 'package:foxy/page/player_create_info/player_create_info_list_page.dart'
+import 'package:foxy/page/gem_property/gem_property_detail_page.dart' as _i15;
+import 'package:foxy/page/gem_property/gem_property_list_page.dart' as _i16;
+import 'package:foxy/page/glyph_property/glyph_property_detail_page.dart'
+    as _i17;
+import 'package:foxy/page/glyph_property/glyph_property_list_page.dart' as _i18;
+import 'package:foxy/page/gossip_menu/gossip_menu_detail_page.dart' as _i19;
+import 'package:foxy/page/gossip_menu/gossip_menu_list_page.dart' as _i20;
+import 'package:foxy/page/item/item_template_detail_page.dart' as _i23;
+import 'package:foxy/page/item/item_template_list_page.dart' as _i24;
+import 'package:foxy/page/item_extended_cost/item_extended_cost_detail_page.dart'
     as _i21;
-import 'package:foxy/page/quest/quest_template_detail_page.dart' as _i28;
-import 'package:foxy/page/quest/quest_template_list_page.dart' as _i29;
-import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_page.dart'
+import 'package:foxy/page/item_extended_cost/item_extended_cost_list_page.dart'
     as _i22;
+import 'package:foxy/page/more/more_page.dart' as _i25;
+import 'package:foxy/page/page_text/page_text_detail_page.dart' as _i48;
+import 'package:foxy/page/page_text/page_text_list_page.dart' as _i49;
+import 'package:foxy/page/player_create_info/player_create_info_detail_page.dart'
+    as _i26;
+import 'package:foxy/page/player_create_info/player_create_info_list_page.dart'
+    as _i27;
+import 'package:foxy/page/quest/quest_template_detail_page.dart' as _i34;
+import 'package:foxy/page/quest/quest_template_list_page.dart' as _i35;
+import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_page.dart'
+    as _i28;
 import 'package:foxy/page/quest_faction_reward/quest_faction_reward_list_page.dart'
-    as _i23;
-import 'package:foxy/page/quest_info/quest_info_detail_page.dart' as _i24;
-import 'package:foxy/page/quest_info/quest_info_list_page.dart' as _i25;
-import 'package:foxy/page/quest_sort/quest_sort_detail_page.dart' as _i26;
-import 'package:foxy/page/quest_sort/quest_sort_list_page.dart' as _i27;
+    as _i29;
+import 'package:foxy/page/quest_info/quest_info_detail_page.dart' as _i30;
+import 'package:foxy/page/quest_info/quest_info_list_page.dart' as _i31;
+import 'package:foxy/page/quest_sort/quest_sort_detail_page.dart' as _i32;
+import 'package:foxy/page/quest_sort/quest_sort_list_page.dart' as _i33;
 import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_page.dart'
-    as _i30;
+    as _i36;
 import 'package:foxy/page/reference_loot_template/reference_loot_template_list_page.dart'
-    as _i31;
-import 'package:foxy/page/scaffold/scaffold_page.dart' as _i32;
+    as _i37;
+import 'package:foxy/page/scaffold/scaffold_page.dart' as _i38;
+import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_page.dart'
+    as _i39;
+import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_list_page.dart'
+    as _i40;
 import 'package:foxy/page/setting/basic_setting.dart' as _i3;
 import 'package:foxy/page/setting/database_setting.dart' as _i10;
-import 'package:foxy/page/setting/setting_page.dart' as _i33;
-import 'package:foxy/page/smart_script/smart_script_detail_page.dart' as _i34;
-import 'package:foxy/page/smart_script/smart_script_list_page.dart' as _i35;
-import 'package:foxy/page/spell/spell_detail_page.dart' as _i36;
-import 'package:foxy/page/spell/spell_list_page.dart' as _i37;
+import 'package:foxy/page/setting/setting_page.dart' as _i41;
+import 'package:foxy/page/smart_script/smart_script_detail_page.dart' as _i42;
+import 'package:foxy/page/smart_script/smart_script_list_page.dart' as _i43;
+import 'package:foxy/page/spell/spell_detail_page.dart' as _i44;
+import 'package:foxy/page/spell/spell_list_page.dart' as _i47;
+import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_page.dart'
+    as _i45;
+import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_list_page.dart'
+    as _i46;
 
 /// generated route for
 /// [_i1.AreaTableDetailPage]
 class AreaTableDetailRoute
-    extends _i40.PageRouteInfo<AreaTableDetailRouteArgs> {
+    extends _i50.PageRouteInfo<AreaTableDetailRouteArgs> {
   AreaTableDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? id,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          AreaTableDetailRoute.name,
          args: AreaTableDetailRouteArgs(key: key, id: id),
@@ -78,7 +95,7 @@ class AreaTableDetailRoute
 
   static const String name = 'AreaTableDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<AreaTableDetailRouteArgs>(
@@ -92,7 +109,7 @@ class AreaTableDetailRoute
 class AreaTableDetailRouteArgs {
   const AreaTableDetailRouteArgs({this.key, this.id});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? id;
 
@@ -114,13 +131,13 @@ class AreaTableDetailRouteArgs {
 
 /// generated route for
 /// [_i2.AreaTableListPage]
-class AreaTableListRoute extends _i40.PageRouteInfo<void> {
-  const AreaTableListRoute({List<_i40.PageRouteInfo>? children})
+class AreaTableListRoute extends _i50.PageRouteInfo<void> {
+  const AreaTableListRoute({List<_i50.PageRouteInfo>? children})
     : super(AreaTableListRoute.name, initialChildren: children);
 
   static const String name = 'AreaTableListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       return const _i2.AreaTableListPage();
@@ -130,13 +147,13 @@ class AreaTableListRoute extends _i40.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.BasicSettingPage]
-class BasicSettingRoute extends _i40.PageRouteInfo<void> {
-  const BasicSettingRoute({List<_i40.PageRouteInfo>? children})
+class BasicSettingRoute extends _i50.PageRouteInfo<void> {
+  const BasicSettingRoute({List<_i50.PageRouteInfo>? children})
     : super(BasicSettingRoute.name, initialChildren: children);
 
   static const String name = 'BasicSettingRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       return const _i3.BasicSettingPage();
@@ -146,13 +163,13 @@ class BasicSettingRoute extends _i40.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.BootstrapPage]
-class BootstrapRoute extends _i40.PageRouteInfo<void> {
-  const BootstrapRoute({List<_i40.PageRouteInfo>? children})
+class BootstrapRoute extends _i50.PageRouteInfo<void> {
+  const BootstrapRoute({List<_i50.PageRouteInfo>? children})
     : super(BootstrapRoute.name, initialChildren: children);
 
   static const String name = 'BootstrapRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       return const _i4.BootstrapPage();
@@ -163,11 +180,11 @@ class BootstrapRoute extends _i40.PageRouteInfo<void> {
 /// generated route for
 /// [_i5.ConditionDetailPage]
 class ConditionDetailRoute
-    extends _i40.PageRouteInfo<ConditionDetailRouteArgs> {
+    extends _i50.PageRouteInfo<ConditionDetailRouteArgs> {
   ConditionDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     Map<String, dynamic>? credential,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          ConditionDetailRoute.name,
          args: ConditionDetailRouteArgs(key: key, credential: credential),
@@ -176,7 +193,7 @@ class ConditionDetailRoute
 
   static const String name = 'ConditionDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ConditionDetailRouteArgs>(
@@ -193,7 +210,7 @@ class ConditionDetailRoute
 class ConditionDetailRouteArgs {
   const ConditionDetailRouteArgs({this.key, this.credential});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final Map<String, dynamic>? credential;
 
@@ -207,7 +224,7 @@ class ConditionDetailRouteArgs {
     if (identical(this, other)) return true;
     if (other is! ConditionDetailRouteArgs) return false;
     return key == other.key &&
-        const _i42.MapEquality<String, dynamic>().equals(
+        const _i52.MapEquality<String, dynamic>().equals(
           credential,
           other.credential,
         );
@@ -215,18 +232,18 @@ class ConditionDetailRouteArgs {
 
   @override
   int get hashCode =>
-      key.hashCode ^ const _i42.MapEquality<String, dynamic>().hash(credential);
+      key.hashCode ^ const _i52.MapEquality<String, dynamic>().hash(credential);
 }
 
 /// generated route for
 /// [_i6.ConditionListPage]
-class ConditionListRoute extends _i40.PageRouteInfo<void> {
-  const ConditionListRoute({List<_i40.PageRouteInfo>? children})
+class ConditionListRoute extends _i50.PageRouteInfo<void> {
+  const ConditionListRoute({List<_i50.PageRouteInfo>? children})
     : super(ConditionListRoute.name, initialChildren: children);
 
   static const String name = 'ConditionListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       return const _i6.ConditionListPage();
@@ -237,12 +254,12 @@ class ConditionListRoute extends _i40.PageRouteInfo<void> {
 /// generated route for
 /// [_i7.CreatureTemplateDetailPage]
 class CreatureTemplateDetailRoute
-    extends _i40.PageRouteInfo<CreatureTemplateDetailRouteArgs> {
+    extends _i50.PageRouteInfo<CreatureTemplateDetailRouteArgs> {
   CreatureTemplateDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? entry,
     String? name,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          CreatureTemplateDetailRoute.name,
          args: CreatureTemplateDetailRouteArgs(
@@ -255,7 +272,7 @@ class CreatureTemplateDetailRoute
 
   static const String name = 'CreatureTemplateDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<CreatureTemplateDetailRouteArgs>(
@@ -273,7 +290,7 @@ class CreatureTemplateDetailRoute
 class CreatureTemplateDetailRouteArgs {
   const CreatureTemplateDetailRouteArgs({this.key, this.entry, this.name});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? entry;
 
@@ -297,13 +314,13 @@ class CreatureTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i8.CreatureTemplateListPage]
-class CreatureTemplateListRoute extends _i40.PageRouteInfo<void> {
-  const CreatureTemplateListRoute({List<_i40.PageRouteInfo>? children})
+class CreatureTemplateListRoute extends _i50.PageRouteInfo<void> {
+  const CreatureTemplateListRoute({List<_i50.PageRouteInfo>? children})
     : super(CreatureTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'CreatureTemplateListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       return const _i8.CreatureTemplateListPage();
@@ -313,13 +330,13 @@ class CreatureTemplateListRoute extends _i40.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i9.DashboardPage]
-class DashboardRoute extends _i40.PageRouteInfo<void> {
-  const DashboardRoute({List<_i40.PageRouteInfo>? children})
+class DashboardRoute extends _i50.PageRouteInfo<void> {
+  const DashboardRoute({List<_i50.PageRouteInfo>? children})
     : super(DashboardRoute.name, initialChildren: children);
 
   static const String name = 'DashboardRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       return const _i9.DashboardPage();
@@ -329,13 +346,13 @@ class DashboardRoute extends _i40.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i10.DatabaseSettingPage]
-class DatabaseSettingRoute extends _i40.PageRouteInfo<void> {
-  const DatabaseSettingRoute({List<_i40.PageRouteInfo>? children})
+class DatabaseSettingRoute extends _i50.PageRouteInfo<void> {
+  const DatabaseSettingRoute({List<_i50.PageRouteInfo>? children})
     : super(DatabaseSettingRoute.name, initialChildren: children);
 
   static const String name = 'DatabaseSettingRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       return const _i10.DatabaseSettingPage();
@@ -346,11 +363,11 @@ class DatabaseSettingRoute extends _i40.PageRouteInfo<void> {
 /// generated route for
 /// [_i11.EmoteTextDetailPage]
 class EmoteTextDetailRoute
-    extends _i40.PageRouteInfo<EmoteTextDetailRouteArgs> {
+    extends _i50.PageRouteInfo<EmoteTextDetailRouteArgs> {
   EmoteTextDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? id,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          EmoteTextDetailRoute.name,
          args: EmoteTextDetailRouteArgs(key: key, id: id),
@@ -359,7 +376,7 @@ class EmoteTextDetailRoute
 
   static const String name = 'EmoteTextDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<EmoteTextDetailRouteArgs>(
@@ -373,7 +390,7 @@ class EmoteTextDetailRoute
 class EmoteTextDetailRouteArgs {
   const EmoteTextDetailRouteArgs({this.key, this.id});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? id;
 
@@ -395,13 +412,13 @@ class EmoteTextDetailRouteArgs {
 
 /// generated route for
 /// [_i12.EmoteTextListPage]
-class EmoteTextListRoute extends _i40.PageRouteInfo<void> {
-  const EmoteTextListRoute({List<_i40.PageRouteInfo>? children})
+class EmoteTextListRoute extends _i50.PageRouteInfo<void> {
+  const EmoteTextListRoute({List<_i50.PageRouteInfo>? children})
     : super(EmoteTextListRoute.name, initialChildren: children);
 
   static const String name = 'EmoteTextListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       return const _i12.EmoteTextListPage();
@@ -412,12 +429,12 @@ class EmoteTextListRoute extends _i40.PageRouteInfo<void> {
 /// generated route for
 /// [_i13.GameObjectTemplateDetailPage]
 class GameObjectTemplateDetailRoute
-    extends _i40.PageRouteInfo<GameObjectTemplateDetailRouteArgs> {
+    extends _i50.PageRouteInfo<GameObjectTemplateDetailRouteArgs> {
   GameObjectTemplateDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? entry,
     String? name,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          GameObjectTemplateDetailRoute.name,
          args: GameObjectTemplateDetailRouteArgs(
@@ -430,7 +447,7 @@ class GameObjectTemplateDetailRoute
 
   static const String name = 'GameObjectTemplateDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<GameObjectTemplateDetailRouteArgs>(
@@ -448,7 +465,7 @@ class GameObjectTemplateDetailRoute
 class GameObjectTemplateDetailRouteArgs {
   const GameObjectTemplateDetailRouteArgs({this.key, this.entry, this.name});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? entry;
 
@@ -472,13 +489,13 @@ class GameObjectTemplateDetailRouteArgs {
 
 /// generated route for
 /// [_i14.GameObjectTemplateListPage]
-class GameObjectTemplateListRoute extends _i40.PageRouteInfo<void> {
-  const GameObjectTemplateListRoute({List<_i40.PageRouteInfo>? children})
+class GameObjectTemplateListRoute extends _i50.PageRouteInfo<void> {
+  const GameObjectTemplateListRoute({List<_i50.PageRouteInfo>? children})
     : super(GameObjectTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'GameObjectTemplateListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       return const _i14.GameObjectTemplateListPage();
@@ -487,14 +504,146 @@ class GameObjectTemplateListRoute extends _i40.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i15.GossipMenuDetailPage]
+/// [_i15.GemPropertyDetailPage]
+class GemPropertyDetailRoute
+    extends _i50.PageRouteInfo<GemPropertyDetailRouteArgs> {
+  GemPropertyDetailRoute({
+    _i51.Key? key,
+    int? id,
+    List<_i50.PageRouteInfo>? children,
+  }) : super(
+         GemPropertyDetailRoute.name,
+         args: GemPropertyDetailRouteArgs(key: key, id: id),
+         initialChildren: children,
+       );
+
+  static const String name = 'GemPropertyDetailRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<GemPropertyDetailRouteArgs>(
+        orElse: () => const GemPropertyDetailRouteArgs(),
+      );
+      return _i15.GemPropertyDetailPage(key: args.key, id: args.id);
+    },
+  );
+}
+
+class GemPropertyDetailRouteArgs {
+  const GemPropertyDetailRouteArgs({this.key, this.id});
+
+  final _i51.Key? key;
+
+  final int? id;
+
+  @override
+  String toString() {
+    return 'GemPropertyDetailRouteArgs{key: $key, id: $id}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! GemPropertyDetailRouteArgs) return false;
+    return key == other.key && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ id.hashCode;
+}
+
+/// generated route for
+/// [_i16.GemPropertyListPage]
+class GemPropertyListRoute extends _i50.PageRouteInfo<void> {
+  const GemPropertyListRoute({List<_i50.PageRouteInfo>? children})
+    : super(GemPropertyListRoute.name, initialChildren: children);
+
+  static const String name = 'GemPropertyListRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      return const _i16.GemPropertyListPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i17.GlyphPropertyDetailPage]
+class GlyphPropertyDetailRoute
+    extends _i50.PageRouteInfo<GlyphPropertyDetailRouteArgs> {
+  GlyphPropertyDetailRoute({
+    _i51.Key? key,
+    int? id,
+    List<_i50.PageRouteInfo>? children,
+  }) : super(
+         GlyphPropertyDetailRoute.name,
+         args: GlyphPropertyDetailRouteArgs(key: key, id: id),
+         initialChildren: children,
+       );
+
+  static const String name = 'GlyphPropertyDetailRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<GlyphPropertyDetailRouteArgs>(
+        orElse: () => const GlyphPropertyDetailRouteArgs(),
+      );
+      return _i17.GlyphPropertyDetailPage(key: args.key, id: args.id);
+    },
+  );
+}
+
+class GlyphPropertyDetailRouteArgs {
+  const GlyphPropertyDetailRouteArgs({this.key, this.id});
+
+  final _i51.Key? key;
+
+  final int? id;
+
+  @override
+  String toString() {
+    return 'GlyphPropertyDetailRouteArgs{key: $key, id: $id}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! GlyphPropertyDetailRouteArgs) return false;
+    return key == other.key && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ id.hashCode;
+}
+
+/// generated route for
+/// [_i18.GlyphPropertyListPage]
+class GlyphPropertyListRoute extends _i50.PageRouteInfo<void> {
+  const GlyphPropertyListRoute({List<_i50.PageRouteInfo>? children})
+    : super(GlyphPropertyListRoute.name, initialChildren: children);
+
+  static const String name = 'GlyphPropertyListRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      return const _i18.GlyphPropertyListPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i19.GossipMenuDetailPage]
 class GossipMenuDetailRoute
-    extends _i40.PageRouteInfo<GossipMenuDetailRouteArgs> {
+    extends _i50.PageRouteInfo<GossipMenuDetailRouteArgs> {
   GossipMenuDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? menuId,
     int? textId,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          GossipMenuDetailRoute.name,
          args: GossipMenuDetailRouteArgs(
@@ -507,13 +656,13 @@ class GossipMenuDetailRoute
 
   static const String name = 'GossipMenuDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<GossipMenuDetailRouteArgs>(
         orElse: () => const GossipMenuDetailRouteArgs(),
       );
-      return _i15.GossipMenuDetailPage(
+      return _i19.GossipMenuDetailPage(
         key: args.key,
         menuId: args.menuId,
         textId: args.textId,
@@ -525,7 +674,7 @@ class GossipMenuDetailRoute
 class GossipMenuDetailRouteArgs {
   const GossipMenuDetailRouteArgs({this.key, this.menuId, this.textId});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? menuId;
 
@@ -548,30 +697,96 @@ class GossipMenuDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i16.GossipMenuListPage]
-class GossipMenuListRoute extends _i40.PageRouteInfo<void> {
-  const GossipMenuListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i20.GossipMenuListPage]
+class GossipMenuListRoute extends _i50.PageRouteInfo<void> {
+  const GossipMenuListRoute({List<_i50.PageRouteInfo>? children})
     : super(GossipMenuListRoute.name, initialChildren: children);
 
   static const String name = 'GossipMenuListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i16.GossipMenuListPage();
+      return const _i20.GossipMenuListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i17.ItemTemplateDetailPage]
+/// [_i21.ItemExtendedCostDetailPage]
+class ItemExtendedCostDetailRoute
+    extends _i50.PageRouteInfo<ItemExtendedCostDetailRouteArgs> {
+  ItemExtendedCostDetailRoute({
+    _i51.Key? key,
+    int? id,
+    List<_i50.PageRouteInfo>? children,
+  }) : super(
+         ItemExtendedCostDetailRoute.name,
+         args: ItemExtendedCostDetailRouteArgs(key: key, id: id),
+         initialChildren: children,
+       );
+
+  static const String name = 'ItemExtendedCostDetailRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ItemExtendedCostDetailRouteArgs>(
+        orElse: () => const ItemExtendedCostDetailRouteArgs(),
+      );
+      return _i21.ItemExtendedCostDetailPage(key: args.key, id: args.id);
+    },
+  );
+}
+
+class ItemExtendedCostDetailRouteArgs {
+  const ItemExtendedCostDetailRouteArgs({this.key, this.id});
+
+  final _i51.Key? key;
+
+  final int? id;
+
+  @override
+  String toString() {
+    return 'ItemExtendedCostDetailRouteArgs{key: $key, id: $id}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ItemExtendedCostDetailRouteArgs) return false;
+    return key == other.key && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ id.hashCode;
+}
+
+/// generated route for
+/// [_i22.ItemExtendedCostListPage]
+class ItemExtendedCostListRoute extends _i50.PageRouteInfo<void> {
+  const ItemExtendedCostListRoute({List<_i50.PageRouteInfo>? children})
+    : super(ItemExtendedCostListRoute.name, initialChildren: children);
+
+  static const String name = 'ItemExtendedCostListRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      return const _i22.ItemExtendedCostListPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i23.ItemTemplateDetailPage]
 class ItemTemplateDetailRoute
-    extends _i40.PageRouteInfo<ItemTemplateDetailRouteArgs> {
+    extends _i50.PageRouteInfo<ItemTemplateDetailRouteArgs> {
   ItemTemplateDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? entry,
     String? name,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          ItemTemplateDetailRoute.name,
          args: ItemTemplateDetailRouteArgs(key: key, entry: entry, name: name),
@@ -580,13 +795,13 @@ class ItemTemplateDetailRoute
 
   static const String name = 'ItemTemplateDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ItemTemplateDetailRouteArgs>(
         orElse: () => const ItemTemplateDetailRouteArgs(),
       );
-      return _i17.ItemTemplateDetailPage(
+      return _i23.ItemTemplateDetailPage(
         key: args.key,
         entry: args.entry,
         name: args.name,
@@ -598,7 +813,7 @@ class ItemTemplateDetailRoute
 class ItemTemplateDetailRouteArgs {
   const ItemTemplateDetailRouteArgs({this.key, this.entry, this.name});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? entry;
 
@@ -621,47 +836,47 @@ class ItemTemplateDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i18.ItemTemplateListPage]
-class ItemTemplateListRoute extends _i40.PageRouteInfo<void> {
-  const ItemTemplateListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i24.ItemTemplateListPage]
+class ItemTemplateListRoute extends _i50.PageRouteInfo<void> {
+  const ItemTemplateListRoute({List<_i50.PageRouteInfo>? children})
     : super(ItemTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'ItemTemplateListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i18.ItemTemplateListPage();
+      return const _i24.ItemTemplateListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i19.MorePage]
-class MoreRoute extends _i40.PageRouteInfo<void> {
-  const MoreRoute({List<_i40.PageRouteInfo>? children})
+/// [_i25.MorePage]
+class MoreRoute extends _i50.PageRouteInfo<void> {
+  const MoreRoute({List<_i50.PageRouteInfo>? children})
     : super(MoreRoute.name, initialChildren: children);
 
   static const String name = 'MoreRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i19.MorePage();
+      return const _i25.MorePage();
     },
   );
 }
 
 /// generated route for
-/// [_i20.PlayerCreateInfoDetailPage]
+/// [_i26.PlayerCreateInfoDetailPage]
 class PlayerCreateInfoDetailRoute
-    extends _i40.PageRouteInfo<PlayerCreateInfoDetailRouteArgs> {
+    extends _i50.PageRouteInfo<PlayerCreateInfoDetailRouteArgs> {
   PlayerCreateInfoDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? race,
     int? playerClass,
     String? label,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          PlayerCreateInfoDetailRoute.name,
          args: PlayerCreateInfoDetailRouteArgs(
@@ -675,13 +890,13 @@ class PlayerCreateInfoDetailRoute
 
   static const String name = 'PlayerCreateInfoDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<PlayerCreateInfoDetailRouteArgs>(
         orElse: () => const PlayerCreateInfoDetailRouteArgs(),
       );
-      return _i20.PlayerCreateInfoDetailPage(
+      return _i26.PlayerCreateInfoDetailPage(
         key: args.key,
         race: args.race,
         playerClass: args.playerClass,
@@ -699,7 +914,7 @@ class PlayerCreateInfoDetailRouteArgs {
     this.label,
   });
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? race;
 
@@ -728,29 +943,29 @@ class PlayerCreateInfoDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i21.PlayerCreateInfoListPage]
-class PlayerCreateInfoListRoute extends _i40.PageRouteInfo<void> {
-  const PlayerCreateInfoListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i27.PlayerCreateInfoListPage]
+class PlayerCreateInfoListRoute extends _i50.PageRouteInfo<void> {
+  const PlayerCreateInfoListRoute({List<_i50.PageRouteInfo>? children})
     : super(PlayerCreateInfoListRoute.name, initialChildren: children);
 
   static const String name = 'PlayerCreateInfoListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i21.PlayerCreateInfoListPage();
+      return const _i27.PlayerCreateInfoListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i22.QuestFactionRewardDetailPage]
+/// [_i28.QuestFactionRewardDetailPage]
 class QuestFactionRewardDetailRoute
-    extends _i40.PageRouteInfo<QuestFactionRewardDetailRouteArgs> {
+    extends _i50.PageRouteInfo<QuestFactionRewardDetailRouteArgs> {
   QuestFactionRewardDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? id,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          QuestFactionRewardDetailRoute.name,
          args: QuestFactionRewardDetailRouteArgs(key: key, id: id),
@@ -759,13 +974,13 @@ class QuestFactionRewardDetailRoute
 
   static const String name = 'QuestFactionRewardDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<QuestFactionRewardDetailRouteArgs>(
         orElse: () => const QuestFactionRewardDetailRouteArgs(),
       );
-      return _i22.QuestFactionRewardDetailPage(key: args.key, id: args.id);
+      return _i28.QuestFactionRewardDetailPage(key: args.key, id: args.id);
     },
   );
 }
@@ -773,7 +988,7 @@ class QuestFactionRewardDetailRoute
 class QuestFactionRewardDetailRouteArgs {
   const QuestFactionRewardDetailRouteArgs({this.key, this.id});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? id;
 
@@ -794,29 +1009,29 @@ class QuestFactionRewardDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i23.QuestFactionRewardListPage]
-class QuestFactionRewardListRoute extends _i40.PageRouteInfo<void> {
-  const QuestFactionRewardListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i29.QuestFactionRewardListPage]
+class QuestFactionRewardListRoute extends _i50.PageRouteInfo<void> {
+  const QuestFactionRewardListRoute({List<_i50.PageRouteInfo>? children})
     : super(QuestFactionRewardListRoute.name, initialChildren: children);
 
   static const String name = 'QuestFactionRewardListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i23.QuestFactionRewardListPage();
+      return const _i29.QuestFactionRewardListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i24.QuestInfoDetailPage]
+/// [_i30.QuestInfoDetailPage]
 class QuestInfoDetailRoute
-    extends _i40.PageRouteInfo<QuestInfoDetailRouteArgs> {
+    extends _i50.PageRouteInfo<QuestInfoDetailRouteArgs> {
   QuestInfoDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? id,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          QuestInfoDetailRoute.name,
          args: QuestInfoDetailRouteArgs(key: key, id: id),
@@ -825,13 +1040,13 @@ class QuestInfoDetailRoute
 
   static const String name = 'QuestInfoDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<QuestInfoDetailRouteArgs>(
         orElse: () => const QuestInfoDetailRouteArgs(),
       );
-      return _i24.QuestInfoDetailPage(key: args.key, id: args.id);
+      return _i30.QuestInfoDetailPage(key: args.key, id: args.id);
     },
   );
 }
@@ -839,7 +1054,7 @@ class QuestInfoDetailRoute
 class QuestInfoDetailRouteArgs {
   const QuestInfoDetailRouteArgs({this.key, this.id});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? id;
 
@@ -860,29 +1075,29 @@ class QuestInfoDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i25.QuestInfoListPage]
-class QuestInfoListRoute extends _i40.PageRouteInfo<void> {
-  const QuestInfoListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i31.QuestInfoListPage]
+class QuestInfoListRoute extends _i50.PageRouteInfo<void> {
+  const QuestInfoListRoute({List<_i50.PageRouteInfo>? children})
     : super(QuestInfoListRoute.name, initialChildren: children);
 
   static const String name = 'QuestInfoListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i25.QuestInfoListPage();
+      return const _i31.QuestInfoListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i26.QuestSortDetailPage]
+/// [_i32.QuestSortDetailPage]
 class QuestSortDetailRoute
-    extends _i40.PageRouteInfo<QuestSortDetailRouteArgs> {
+    extends _i50.PageRouteInfo<QuestSortDetailRouteArgs> {
   QuestSortDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? id,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          QuestSortDetailRoute.name,
          args: QuestSortDetailRouteArgs(key: key, id: id),
@@ -891,13 +1106,13 @@ class QuestSortDetailRoute
 
   static const String name = 'QuestSortDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<QuestSortDetailRouteArgs>(
         orElse: () => const QuestSortDetailRouteArgs(),
       );
-      return _i26.QuestSortDetailPage(key: args.key, id: args.id);
+      return _i32.QuestSortDetailPage(key: args.key, id: args.id);
     },
   );
 }
@@ -905,7 +1120,7 @@ class QuestSortDetailRoute
 class QuestSortDetailRouteArgs {
   const QuestSortDetailRouteArgs({this.key, this.id});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? id;
 
@@ -926,30 +1141,30 @@ class QuestSortDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i27.QuestSortListPage]
-class QuestSortListRoute extends _i40.PageRouteInfo<void> {
-  const QuestSortListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i33.QuestSortListPage]
+class QuestSortListRoute extends _i50.PageRouteInfo<void> {
+  const QuestSortListRoute({List<_i50.PageRouteInfo>? children})
     : super(QuestSortListRoute.name, initialChildren: children);
 
   static const String name = 'QuestSortListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i27.QuestSortListPage();
+      return const _i33.QuestSortListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i28.QuestTemplateDetailPage]
+/// [_i34.QuestTemplateDetailPage]
 class QuestTemplateDetailRoute
-    extends _i40.PageRouteInfo<QuestTemplateDetailRouteArgs> {
+    extends _i50.PageRouteInfo<QuestTemplateDetailRouteArgs> {
   QuestTemplateDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? entry,
     String? name,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          QuestTemplateDetailRoute.name,
          args: QuestTemplateDetailRouteArgs(key: key, entry: entry, name: name),
@@ -958,13 +1173,13 @@ class QuestTemplateDetailRoute
 
   static const String name = 'QuestTemplateDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<QuestTemplateDetailRouteArgs>(
         orElse: () => const QuestTemplateDetailRouteArgs(),
       );
-      return _i28.QuestTemplateDetailPage(
+      return _i34.QuestTemplateDetailPage(
         key: args.key,
         entry: args.entry,
         name: args.name,
@@ -976,7 +1191,7 @@ class QuestTemplateDetailRoute
 class QuestTemplateDetailRouteArgs {
   const QuestTemplateDetailRouteArgs({this.key, this.entry, this.name});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? entry;
 
@@ -999,31 +1214,31 @@ class QuestTemplateDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i29.QuestTemplateListPage]
-class QuestTemplateListRoute extends _i40.PageRouteInfo<void> {
-  const QuestTemplateListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i35.QuestTemplateListPage]
+class QuestTemplateListRoute extends _i50.PageRouteInfo<void> {
+  const QuestTemplateListRoute({List<_i50.PageRouteInfo>? children})
     : super(QuestTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'QuestTemplateListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i29.QuestTemplateListPage();
+      return const _i35.QuestTemplateListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i30.ReferenceLootTemplateDetailPage]
+/// [_i36.ReferenceLootTemplateDetailPage]
 class ReferenceLootTemplateDetailRoute
-    extends _i40.PageRouteInfo<ReferenceLootTemplateDetailRouteArgs> {
+    extends _i50.PageRouteInfo<ReferenceLootTemplateDetailRouteArgs> {
   ReferenceLootTemplateDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? entry,
     int? item,
     String? label,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          ReferenceLootTemplateDetailRoute.name,
          args: ReferenceLootTemplateDetailRouteArgs(
@@ -1037,13 +1252,13 @@ class ReferenceLootTemplateDetailRoute
 
   static const String name = 'ReferenceLootTemplateDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ReferenceLootTemplateDetailRouteArgs>(
         orElse: () => const ReferenceLootTemplateDetailRouteArgs(),
       );
-      return _i30.ReferenceLootTemplateDetailPage(
+      return _i36.ReferenceLootTemplateDetailPage(
         key: args.key,
         entry: args.entry,
         item: args.item,
@@ -1061,7 +1276,7 @@ class ReferenceLootTemplateDetailRouteArgs {
     this.label,
   });
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? entry;
 
@@ -1090,64 +1305,130 @@ class ReferenceLootTemplateDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i31.ReferenceLootTemplateListPage]
-class ReferenceLootTemplateListRoute extends _i40.PageRouteInfo<void> {
-  const ReferenceLootTemplateListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i37.ReferenceLootTemplateListPage]
+class ReferenceLootTemplateListRoute extends _i50.PageRouteInfo<void> {
+  const ReferenceLootTemplateListRoute({List<_i50.PageRouteInfo>? children})
     : super(ReferenceLootTemplateListRoute.name, initialChildren: children);
 
   static const String name = 'ReferenceLootTemplateListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i31.ReferenceLootTemplateListPage();
+      return const _i37.ReferenceLootTemplateListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i32.ScaffoldPage]
-class ScaffoldRoute extends _i40.PageRouteInfo<void> {
-  const ScaffoldRoute({List<_i40.PageRouteInfo>? children})
+/// [_i38.ScaffoldPage]
+class ScaffoldRoute extends _i50.PageRouteInfo<void> {
+  const ScaffoldRoute({List<_i50.PageRouteInfo>? children})
     : super(ScaffoldRoute.name, initialChildren: children);
 
   static const String name = 'ScaffoldRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i32.ScaffoldPage();
+      return const _i38.ScaffoldPage();
     },
   );
 }
 
 /// generated route for
-/// [_i33.SettingPage]
-class SettingRoute extends _i40.PageRouteInfo<void> {
-  const SettingRoute({List<_i40.PageRouteInfo>? children})
+/// [_i39.ScalingStatDistributionDetailPage]
+class ScalingStatDistributionDetailRoute
+    extends _i50.PageRouteInfo<ScalingStatDistributionDetailRouteArgs> {
+  ScalingStatDistributionDetailRoute({
+    _i51.Key? key,
+    int? id,
+    List<_i50.PageRouteInfo>? children,
+  }) : super(
+         ScalingStatDistributionDetailRoute.name,
+         args: ScalingStatDistributionDetailRouteArgs(key: key, id: id),
+         initialChildren: children,
+       );
+
+  static const String name = 'ScalingStatDistributionDetailRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ScalingStatDistributionDetailRouteArgs>(
+        orElse: () => const ScalingStatDistributionDetailRouteArgs(),
+      );
+      return _i39.ScalingStatDistributionDetailPage(key: args.key, id: args.id);
+    },
+  );
+}
+
+class ScalingStatDistributionDetailRouteArgs {
+  const ScalingStatDistributionDetailRouteArgs({this.key, this.id});
+
+  final _i51.Key? key;
+
+  final int? id;
+
+  @override
+  String toString() {
+    return 'ScalingStatDistributionDetailRouteArgs{key: $key, id: $id}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! ScalingStatDistributionDetailRouteArgs) return false;
+    return key == other.key && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ id.hashCode;
+}
+
+/// generated route for
+/// [_i40.ScalingStatDistributionListPage]
+class ScalingStatDistributionListRoute extends _i50.PageRouteInfo<void> {
+  const ScalingStatDistributionListRoute({List<_i50.PageRouteInfo>? children})
+    : super(ScalingStatDistributionListRoute.name, initialChildren: children);
+
+  static const String name = 'ScalingStatDistributionListRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      return const _i40.ScalingStatDistributionListPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i41.SettingPage]
+class SettingRoute extends _i50.PageRouteInfo<void> {
+  const SettingRoute({List<_i50.PageRouteInfo>? children})
     : super(SettingRoute.name, initialChildren: children);
 
   static const String name = 'SettingRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i33.SettingPage();
+      return const _i41.SettingPage();
     },
   );
 }
 
 /// generated route for
-/// [_i34.SmartScriptDetailPage]
+/// [_i42.SmartScriptDetailPage]
 class SmartScriptDetailRoute
-    extends _i40.PageRouteInfo<SmartScriptDetailRouteArgs> {
+    extends _i50.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? entryOrGuid,
     int? sourceType,
     int? id,
     int? link,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
          args: SmartScriptDetailRouteArgs(
@@ -1162,13 +1443,13 @@ class SmartScriptDetailRoute
 
   static const String name = 'SmartScriptDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SmartScriptDetailRouteArgs>(
         orElse: () => const SmartScriptDetailRouteArgs(),
       );
-      return _i34.SmartScriptDetailPage(
+      return _i42.SmartScriptDetailPage(
         key: args.key,
         entryOrGuid: args.entryOrGuid,
         sourceType: args.sourceType,
@@ -1188,7 +1469,7 @@ class SmartScriptDetailRouteArgs {
     this.link,
   });
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? entryOrGuid;
 
@@ -1224,29 +1505,29 @@ class SmartScriptDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i35.SmartScriptListPage]
-class SmartScriptListRoute extends _i40.PageRouteInfo<void> {
-  const SmartScriptListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i43.SmartScriptListPage]
+class SmartScriptListRoute extends _i50.PageRouteInfo<void> {
+  const SmartScriptListRoute({List<_i50.PageRouteInfo>? children})
     : super(SmartScriptListRoute.name, initialChildren: children);
 
   static const String name = 'SmartScriptListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i35.SmartScriptListPage();
+      return const _i43.SmartScriptListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i36.SpellDetailPage]
-class SpellDetailRoute extends _i40.PageRouteInfo<SpellDetailRouteArgs> {
+/// [_i44.SpellDetailPage]
+class SpellDetailRoute extends _i50.PageRouteInfo<SpellDetailRouteArgs> {
   SpellDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? id,
     String? name,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          SpellDetailRoute.name,
          args: SpellDetailRouteArgs(key: key, id: id, name: name),
@@ -1255,13 +1536,13 @@ class SpellDetailRoute extends _i40.PageRouteInfo<SpellDetailRouteArgs> {
 
   static const String name = 'SpellDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SpellDetailRouteArgs>(
         orElse: () => const SpellDetailRouteArgs(),
       );
-      return _i36.SpellDetailPage(key: args.key, id: args.id, name: args.name);
+      return _i44.SpellDetailPage(key: args.key, id: args.id, name: args.name);
     },
   );
 }
@@ -1269,7 +1550,7 @@ class SpellDetailRoute extends _i40.PageRouteInfo<SpellDetailRouteArgs> {
 class SpellDetailRouteArgs {
   const SpellDetailRouteArgs({this.key, this.id, this.name});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? id;
 
@@ -1292,30 +1573,96 @@ class SpellDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i37.SpellListPage]
-class SpellListRoute extends _i40.PageRouteInfo<void> {
-  const SpellListRoute({List<_i40.PageRouteInfo>? children})
-    : super(SpellListRoute.name, initialChildren: children);
+/// [_i45.SpellItemEnchantmentDetailPage]
+class SpellItemEnchantmentDetailRoute
+    extends _i50.PageRouteInfo<SpellItemEnchantmentDetailRouteArgs> {
+  SpellItemEnchantmentDetailRoute({
+    _i51.Key? key,
+    int? id,
+    List<_i50.PageRouteInfo>? children,
+  }) : super(
+         SpellItemEnchantmentDetailRoute.name,
+         args: SpellItemEnchantmentDetailRouteArgs(key: key, id: id),
+         initialChildren: children,
+       );
 
-  static const String name = 'SpellListRoute';
+  static const String name = 'SpellItemEnchantmentDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i37.SpellListPage();
+      final args = data.argsAs<SpellItemEnchantmentDetailRouteArgs>(
+        orElse: () => const SpellItemEnchantmentDetailRouteArgs(),
+      );
+      return _i45.SpellItemEnchantmentDetailPage(key: args.key, id: args.id);
+    },
+  );
+}
+
+class SpellItemEnchantmentDetailRouteArgs {
+  const SpellItemEnchantmentDetailRouteArgs({this.key, this.id});
+
+  final _i51.Key? key;
+
+  final int? id;
+
+  @override
+  String toString() {
+    return 'SpellItemEnchantmentDetailRouteArgs{key: $key, id: $id}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! SpellItemEnchantmentDetailRouteArgs) return false;
+    return key == other.key && id == other.id;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ id.hashCode;
+}
+
+/// generated route for
+/// [_i46.SpellItemEnchantmentListPage]
+class SpellItemEnchantmentListRoute extends _i50.PageRouteInfo<void> {
+  const SpellItemEnchantmentListRoute({List<_i50.PageRouteInfo>? children})
+    : super(SpellItemEnchantmentListRoute.name, initialChildren: children);
+
+  static const String name = 'SpellItemEnchantmentListRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      return const _i46.SpellItemEnchantmentListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i38.TextContentDetailPage]
+/// [_i47.SpellListPage]
+class SpellListRoute extends _i50.PageRouteInfo<void> {
+  const SpellListRoute({List<_i50.PageRouteInfo>? children})
+    : super(SpellListRoute.name, initialChildren: children);
+
+  static const String name = 'SpellListRoute';
+
+  static _i50.PageInfo page = _i50.PageInfo(
+    name,
+    builder: (data) {
+      return const _i47.SpellListPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i48.TextContentDetailPage]
 class TextContentDetailRoute
-    extends _i40.PageRouteInfo<TextContentDetailRouteArgs> {
+    extends _i50.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
-    _i41.Key? key,
+    _i51.Key? key,
     int? id,
     String? label,
-    List<_i40.PageRouteInfo>? children,
+    List<_i50.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
          args: TextContentDetailRouteArgs(key: key, id: id, label: label),
@@ -1324,13 +1671,13 @@ class TextContentDetailRoute
 
   static const String name = 'TextContentDetailRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<TextContentDetailRouteArgs>(
         orElse: () => const TextContentDetailRouteArgs(),
       );
-      return _i38.TextContentDetailPage(
+      return _i48.TextContentDetailPage(
         key: args.key,
         id: args.id,
         label: args.label,
@@ -1342,7 +1689,7 @@ class TextContentDetailRoute
 class TextContentDetailRouteArgs {
   const TextContentDetailRouteArgs({this.key, this.id, this.label});
 
-  final _i41.Key? key;
+  final _i51.Key? key;
 
   final int? id;
 
@@ -1365,17 +1712,17 @@ class TextContentDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i39.TextContentListPage]
-class TextContentListRoute extends _i40.PageRouteInfo<void> {
-  const TextContentListRoute({List<_i40.PageRouteInfo>? children})
+/// [_i49.TextContentListPage]
+class TextContentListRoute extends _i50.PageRouteInfo<void> {
+  const TextContentListRoute({List<_i50.PageRouteInfo>? children})
     : super(TextContentListRoute.name, initialChildren: children);
 
   static const String name = 'TextContentListRoute';
 
-  static _i40.PageInfo page = _i40.PageInfo(
+  static _i50.PageInfo page = _i50.PageInfo(
     name,
     builder: (data) {
-      return const _i39.TextContentListPage();
+      return const _i49.TextContentListPage();
     },
   );
 }

@@ -24,7 +24,12 @@ enum RouterMenu {
   emoteText(label: '表情文本', icon: LucideIcons.laugh),
   questFactionReward(label: '任务声望', icon: LucideIcons.trophy),
   questSort(label: '任务排序', icon: LucideIcons.arrowUpDown),
-  questInfo(label: '任务信息', icon: LucideIcons.info);
+  questInfo(label: '任务信息', icon: LucideIcons.info),
+  itemExtendedCost(label: '扩展价格', icon: LucideIcons.coins),
+  scalingStatDistribution(label: '属性缩放分布', icon: LucideIcons.arrowUpDown),
+  spellItemEnchantment(label: '法术附魔', icon: LucideIcons.wand),
+  gemProperty(label: '宝石属性', icon: LucideIcons.gem),
+  glyphProperty(label: '雕文属性', icon: LucideIcons.triangle);
 
   final String label;
   final IconData icon;
@@ -55,6 +60,11 @@ enum RouterMenu {
       RouterMenu.questFactionReward => const QuestFactionRewardListRoute(),
       RouterMenu.questSort => const QuestSortListRoute(),
       RouterMenu.questInfo => const QuestInfoListRoute(),
+      RouterMenu.itemExtendedCost => const ItemExtendedCostListRoute(),
+      RouterMenu.scalingStatDistribution => const ScalingStatDistributionListRoute(),
+      RouterMenu.spellItemEnchantment => const SpellItemEnchantmentListRoute(),
+      RouterMenu.gemProperty => const GemPropertyListRoute(),
+      RouterMenu.glyphProperty => const GlyphPropertyListRoute(),
     };
   }
 

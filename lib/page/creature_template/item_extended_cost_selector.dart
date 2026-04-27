@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/model/item_extended_cost.dart';
+import 'package:foxy/model/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -88,9 +89,9 @@ class _ItemExtendedCostSelectorDialogState
     setState(() => _loading = true);
     try {
       final repository = ItemExtendedCostRepository();
-      final id = _idController.text.isEmpty ? null : _idController.text;
-      final items = await repository.search(id: id, page: _page);
-      final total = await repository.count(id: id);
+      final filter = ItemExtendedCostFilterEntity()..id = _idController.text;
+      final items = await repository.search(filter: filter, page: _page);
+      final total = await repository.count(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

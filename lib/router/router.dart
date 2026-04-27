@@ -80,6 +80,26 @@ class FoxyRouter extends RootStackRouter {
       AutoRoute(page: QuestInfoListRoute.page),
       AutoRoute(page: QuestInfoDetailRoute.page),
 
+      /// Item Extended Cost
+      AutoRoute(page: ItemExtendedCostListRoute.page),
+      AutoRoute(page: ItemExtendedCostDetailRoute.page),
+
+      /// Scaling Stat Distribution
+      AutoRoute(page: ScalingStatDistributionListRoute.page),
+      AutoRoute(page: ScalingStatDistributionDetailRoute.page),
+
+      /// Spell Item Enchantment
+      AutoRoute(page: SpellItemEnchantmentListRoute.page),
+      AutoRoute(page: SpellItemEnchantmentDetailRoute.page),
+
+      /// Gem Property
+      AutoRoute(page: GemPropertyListRoute.page),
+      AutoRoute(page: GemPropertyDetailRoute.page),
+
+      /// Glyph Property
+      AutoRoute(page: GlyphPropertyListRoute.page),
+      AutoRoute(page: GlyphPropertyDetailRoute.page),
+
       /// Player Create Info
       AutoRoute(page: PlayerCreateInfoListRoute.page),
       AutoRoute(page: PlayerCreateInfoDetailRoute.page),
