@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_quality.dart';
+import 'package:foxy/model/item_template.dart';
 import 'package:foxy/page/item/item_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -147,6 +148,35 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     return Row(spacing: 16, children: children);
   }
 
+  Widget _buildIconAndName(BriefItemTemplate item, Color qualityColor) {
+    final icon = item.inventoryIcon
+        .toString()
+        .toLowerCase()
+        .replaceAll('\\', '/')
+        .replaceAll('interface/icons', 'asset/icon');
+    var image = Image.asset(
+      '$icon.png',
+      height: 24,
+      width: 24,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) =>
+          const SizedBox(width: 24, height: 24),
+    );
+    var children = [
+      ClipRRect(borderRadius: BorderRadius.circular(4), child: image),
+      const SizedBox(width: 8),
+      Expanded(
+        child: Text(
+          item.displayName,
+          style: TextStyle(color: qualityColor),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ];
+    return Row(children: children);
+  }
+
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
@@ -180,12 +210,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.entry.toString())),
               1 => ShadTableCell(
-                child: Text(
-                  item.displayName,
-                  style: TextStyle(color: qualityColor),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                child: _buildIconAndName(item, qualityColor),
               ),
               2 => ShadTableCell(child: Text(getItemClassName(item.classId))),
               3 => ShadTableCell(

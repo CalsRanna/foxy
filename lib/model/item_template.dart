@@ -440,6 +440,7 @@ class BriefItemTemplate {
   int inventoryType = 0;
   int itemLevel = 0;
   int requiredLevel = 0;
+  String inventoryIcon = '';
 
   BriefItemTemplate();
 
@@ -456,6 +457,7 @@ class BriefItemTemplate {
     inventoryType = json['InventoryType'] ?? json['inventoryType'] ?? 0;
     itemLevel = json['ItemLevel'] ?? json['itemLevel'] ?? 0;
     requiredLevel = json['RequiredLevel'] ?? json['requiredLevel'] ?? 0;
+    inventoryIcon = json['InventoryIcon1'] ?? json['inventoryIcon'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
