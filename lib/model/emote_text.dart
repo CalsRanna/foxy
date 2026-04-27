@@ -1,0 +1,69 @@
+class EmoteText {
+  int id = 0;
+  String name = '';
+  int emoteId = 0;
+  int emoteText0 = 0;
+  int emoteText1 = 0;
+  int emoteText2 = 0;
+  int emoteText3 = 0;
+  int emoteText4 = 0;
+  int emoteText5 = 0;
+  int emoteText6 = 0;
+  int emoteText7 = 0;
+  int emoteText8 = 0;
+  int emoteText9 = 0;
+  int emoteText10 = 0;
+  int emoteText11 = 0;
+  int emoteText12 = 0;
+  int emoteText13 = 0;
+  int emoteText14 = 0;
+  int emoteText15 = 0;
+
+  EmoteText();
+
+  EmoteText.fromJson(Map<String, dynamic> json) {
+    id = json['ID'] ?? 0;
+    name = json['Name'] ?? '';
+    emoteId = json['EmoteID'] ?? 0;
+    emoteText0 = json['EmoteText0'] ?? 0;
+    emoteText1 = json['EmoteText1'] ?? 0;
+    emoteText2 = json['EmoteText2'] ?? 0;
+    emoteText3 = json['EmoteText3'] ?? 0;
+    emoteText4 = json['EmoteText4'] ?? 0;
+    emoteText5 = json['EmoteText5'] ?? 0;
+    emoteText6 = json['EmoteText6'] ?? 0;
+    emoteText7 = json['EmoteText7'] ?? 0;
+    emoteText8 = json['EmoteText8'] ?? 0;
+    emoteText9 = json['EmoteText9'] ?? 0;
+    emoteText10 = json['EmoteText10'] ?? 0;
+    emoteText11 = json['EmoteText11'] ?? 0;
+    emoteText12 = json['EmoteText12'] ?? 0;
+    emoteText13 = json['EmoteText13'] ?? 0;
+    emoteText14 = json['EmoteText14'] ?? 0;
+    emoteText15 = json['EmoteText15'] ?? 0;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Name': name,
+      'EmoteID': emoteId,
+      'EmoteText0': emoteText0,
+      'EmoteText1': emoteText1,
+      'EmoteText2': emoteText2,
+      'EmoteText3': emoteText3,
+      'EmoteText4': emoteText4,
+      'EmoteText5': emoteText5,
+      'EmoteText6': emoteText6,
+      'EmoteText7': emoteText7,
+      'EmoteText8': emoteText8,
+      'EmoteText9': emoteText9,
+      'EmoteText10': emoteText10,
+      'EmoteText11': emoteText11,
+      'EmoteText12': emoteText12,
+      'EmoteText13': emoteText13,
+      'EmoteText14': emoteText14,
+      'EmoteText15': emoteText15,
+    };
+  }
+}
