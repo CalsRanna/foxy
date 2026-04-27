@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
+import 'package:foxy/page/creature_template/broadcast_text_selector.dart';
 import 'package:foxy/page/creature_template/gossip_menu_selector.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
@@ -222,9 +223,12 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
             ),
           ),
           Expanded(
-            child: _textField(
+            child: _labeled(
               '广播文本编号',
-              viewModel.optionBroadcastTextIdController,
+              BroadcastTextSelector(
+                controller: viewModel.optionBroadcastTextIdController,
+                placeholder: 'broadcast_text_id',
+              ),
             ),
           ),
         ],
@@ -235,9 +239,12 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
           Expanded(child: _textField('BoxMoney', viewModel.boxMoneyController)),
           Expanded(child: _textField('BoxCoded', viewModel.boxCodedController)),
           Expanded(
-            child: _textField(
+            child: _labeled(
               'BoxBroadcastTextID',
-              viewModel.boxBroadcastTextIdController,
+              BroadcastTextSelector(
+                controller: viewModel.boxBroadcastTextIdController,
+                placeholder: 'box_broadcast_text_id',
+              ),
             ),
           ),
         ],

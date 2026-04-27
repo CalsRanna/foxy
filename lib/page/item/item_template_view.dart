@@ -3,15 +3,19 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_enums.dart';
 import 'package:foxy/constant/item_flags.dart';
-import 'package:foxy/page/creature_template/creature_display_info_selector.dart';
 import 'package:foxy/page/creature_template/spell_selector.dart';
-import 'package:foxy/page/item/item_enchantment_template_selector.dart';
+import 'package:foxy/page/item/item_display_info_selector.dart';
+import 'package:foxy/page/item/item_random_properties_selector.dart';
+import 'package:foxy/page/item/item_random_suffix_selector.dart';
 import 'package:foxy/page/item/item_template_detail_view_model.dart';
 import 'package:foxy/page/item/item_template_locale_description_selector.dart';
 import 'package:foxy/page/item/item_template_locale_name_selector.dart';
 import 'package:foxy/page/item/page_text_selector.dart';
 import 'package:foxy/page/item/quest_template_selector.dart';
 import 'package:foxy/page/item/scaling_stat_distribution_selector.dart';
+import 'package:foxy/page/creature_template/map_selector.dart';
+import 'package:foxy/page/area_table/area_table_selector.dart';
+import 'package:foxy/page/item/lock_selector.dart';
 import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
@@ -167,7 +171,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final displayIdInput = FormItem(
       label: '外观模型',
-      child: CreatureDisplayInfoSelector(
+      child: ItemDisplayInfoSelector(
         controller: viewModel.displayIdController,
         placeholder: 'displayid',
       ),
@@ -235,14 +239,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final randomPropertyInput = FormItem(
       label: '随机属性',
-      child: ItemEnchantmentTemplateSelector(
+      child: ItemRandomPropertiesSelector(
         controller: viewModel.randomPropertyController,
         placeholder: 'RandomProperty',
       ),
     );
     final randomSuffixInput = FormItem(
       label: '随机后缀',
-      child: ItemEnchantmentTemplateSelector(
+      child: ItemRandomSuffixSelector(
         controller: viewModel.randomSuffixController,
         placeholder: 'RandomSuffix',
       ),
@@ -687,14 +691,18 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       placeholder: 'RequiredDisenchantSkill',
     );
     final mapIdInput = FormItem(
-      controller: viewModel.mapIdController,
       label: '地图',
-      placeholder: 'Map',
+      child: MapSelector(
+        controller: viewModel.mapIdController,
+        placeholder: 'Map',
+      ),
     );
     final areaInput = FormItem(
-      controller: viewModel.areaController,
       label: '区域',
-      placeholder: 'area',
+      child: AreaTableSelector(
+        controller: viewModel.areaController,
+        placeholder: 'area',
+      ),
     );
     final holidayIdInput = FormItem(
       controller: viewModel.holidayIdController,
@@ -702,9 +710,11 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       placeholder: 'HolidayId',
     );
     final lockidInput = FormItem(
-      controller: viewModel.lockidController,
       label: '锁定ID',
-      placeholder: 'lockid',
+      child: LockSelector(
+        controller: viewModel.lockidController,
+        placeholder: 'lockid',
+      ),
     );
 
     final requirementRows = [

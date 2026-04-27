@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view_model.dart';
+import 'package:foxy/page/creature_template/broadcast_text_selector.dart';
+import 'package:foxy/page/emote_text/emote_selector.dart';
+import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -105,10 +108,13 @@ class _NpcTextViewState extends State<NpcTextView> {
           Expanded(child: _fieldWithLocale('文本', 'text${n}_0', 'Text${n}_0')),
           Expanded(child: _fieldWithLocale('文本', 'text${n}_1', 'Text${n}_1')),
           Expanded(
-            child: _field(
-              '广播文本',
-              'BroadcastTextID$n',
-              viewModel.controllerOf('BroadcastTextID$n'),
+            child: FormItem(
+              label: '广播文本',
+              placeholder: 'BroadcastTextID$n',
+              child: BroadcastTextSelector(
+                controller: viewModel.controllerOf('BroadcastTextID$n'),
+                placeholder: 'BroadcastTextID$n',
+              ),
             ),
           ),
         ],
@@ -118,7 +124,14 @@ class _NpcTextViewState extends State<NpcTextView> {
     for (var i = 0; i < 6; i++) {
       emotes.add(
         Expanded(
-          child: _field('表演', 'em${n}_$i', viewModel.controllerOf('em${n}_$i')),
+          child: FormItem(
+            label: '表演',
+            placeholder: 'em${n}_$i',
+            child: EmoteSelector(
+              controller: viewModel.controllerOf('em${n}_$i'),
+              placeholder: 'em${n}_$i',
+            ),
+          ),
         ),
       );
     }

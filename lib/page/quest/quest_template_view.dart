@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_locale_selector.dart';
+import 'package:foxy/page/quest/area_table_or_quest_sort_selector.dart';
+import 'package:foxy/page/quest_info/quest_info_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -72,16 +74,21 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         children: [
           Expanded(
             child: FormItem(
-              controller: vm.questSortIdController,
               label: '任务分类',
-              placeholder: 'QuestSortID',
+              child: AreaTableOrQuestSortSelector(
+                controller: vm.questSortIdController,
+                placeholder: 'QuestSortID',
+                mode: 'QuestSort',
+              ),
             ),
           ),
           Expanded(
             child: FormItem(
-              controller: vm.questInfoIdController,
               label: '任务信息',
-              placeholder: 'QuestInfoID',
+              child: QuestInfoSelector(
+                controller: vm.questInfoIdController,
+                placeholder: 'QuestInfoID',
+              ),
             ),
           ),
           Expanded(
