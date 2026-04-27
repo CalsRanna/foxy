@@ -78,7 +78,6 @@ class _DialogState extends State<_Dialog> {
   int _total = 0;
   int _page = 1;
   int? _selectedId;
-  bool _loading = false;
   late String _currentMode;
 
   @override
@@ -323,7 +322,6 @@ class _DialogState extends State<_Dialog> {
   }
 
   Future<void> _search() async {
-    setState(() => _loading = true);
     try {
       if (_currentMode == 'AreaTable') {
         final repository = AreaTableRepository();
@@ -355,7 +353,6 @@ class _DialogState extends State<_Dialog> {
         }
       }
     } finally {
-      if (mounted) setState(() => _loading = false);
     }
   }
 }

@@ -70,7 +70,6 @@ class _ItemExtendedCostSelectorDialogState
   int _total = 0;
   int _page = 1;
   int? _selectedId;
-  bool _loading = false;
 
   @override
   void initState() {
@@ -86,7 +85,6 @@ class _ItemExtendedCostSelectorDialogState
   }
 
   Future<void> _search() async {
-    setState(() => _loading = true);
     try {
       final repository = ItemExtendedCostRepository();
       final filter = ItemExtendedCostFilterEntity()..id = _idController.text;
@@ -99,7 +97,6 @@ class _ItemExtendedCostSelectorDialogState
         });
       }
     } finally {
-      if (mounted) setState(() => _loading = false);
     }
   }
 
@@ -155,9 +152,7 @@ class _ItemExtendedCostSelectorDialogState
               maxWidth: 720,
               maxHeight: tableMaxHeight,
             ),
-            child: _loading
-                ? Center(child: CircularProgressIndicator())
-                : _buildTable(),
+            child: _buildTable(),
           ),
         ],
       ),
