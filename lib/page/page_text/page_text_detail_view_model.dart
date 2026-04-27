@@ -53,7 +53,11 @@ class PageTextDetailViewModel {
 
   Future<void> update(BuildContext context) async {
     final id = pageText.value?.id ?? 0;
-    if (id == 0) return;
+    if (id == 0) {
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text('记录未加载，无法更新')));
+      return;
+    }
     try {
       final data = _collect();
       await repository.update(id, data);
@@ -77,7 +81,12 @@ class PageTextDetailViewModel {
     return pt;
   }
 
-  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
+  int _parseInt(String text) {
+    if (text.isEmpty) return 0;
+    final value = int.tryParse(text);
+    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
+    return value;
+  }
 
   void dispose() {
     idController.dispose();

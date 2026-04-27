@@ -64,7 +64,12 @@ class GameObjectTemplateAddonViewModel {
     return data;
   }
 
-  int _parseInt(String text) => text.isEmpty ? 0 : int.parse(text);
+  int _parseInt(String text) {
+    if (text.isEmpty) return 0;
+    final value = int.tryParse(text);
+    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
+    return value;
+  }
 
   void initControllers(GameObjectTemplateAddon data) {
     factionController.text = data.faction.toString();

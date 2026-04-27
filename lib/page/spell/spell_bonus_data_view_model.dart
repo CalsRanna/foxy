@@ -64,7 +64,12 @@ class SpellBonusDataViewModel {
     return data;
   }
 
-  double _parseDouble(String text) => text.isEmpty ? 0.0 : double.parse(text);
+  double _parseDouble(String text) {
+    if (text.isEmpty) return 0.0;
+    final value = double.tryParse(text);
+    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
+    return value;
+  }
 
   void initControllers(SpellBonusData data) {
     directBonusController.text = data.directBonus.toString();
