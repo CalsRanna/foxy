@@ -1,0 +1,9 @@
+icons_launcher:
+  image_path: "asset/image/icon.png"
+  platforms:
+    macos:
+      enable: true
+    windows:
+      enable: true
+    linux:
+      enable: true

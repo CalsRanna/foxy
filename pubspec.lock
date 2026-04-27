@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      sha256: a96e8b390886ee8abb49b7bd3ac8df6f451c621619f52a26e815fdcf568959ff
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.9"
   args:
     dependency: transitive
     description:
@@ -461,6 +469,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  icons_launcher:
+    dependency: "direct dev"
+    description:
+      name: icons_launcher
+      sha256: b42b2f9b10e58d6a973f71293f00a1f0572595e5e50d676c53048e464f78cb7d
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: f9881ff4998044947ec38d098bc7c8316ae1186fa786eddffdb867b9bc94dfce
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.8.0"
   intl:
     dependency: transitive
     description:
@@ -733,6 +757,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.2"
+  posix:
+    dependency: transitive
+    description:
+      name: posix
+      sha256: "185ef7606574f789b40f289c233efa52e96dead518aed988e040a10737febb07"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.5.0"
   preact_signals:
     dependency: transitive
     description:
@@ -1018,6 +1050,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.11"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: f63cbc48103236abf48e345e07a03ce5757ea86285ed313a6a032596ed9301e2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.1"
   url_launcher:
     dependency: "direct main"
     description:
