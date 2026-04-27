@@ -45,7 +45,10 @@
       "Bash(xxd /Users/cals/Code/foxy/tool/db_inspect.dart)",
       "Skill(code-review:code-review)",
       "Read(//opt/homebrew/**)",
-      "Read(//usr/local/**)"
+      "Read(//usr/local/**)",
+      "Bash(brew list *)",
+      "Bash(echo \"EXIT CODE: $?\")",
+      "Read(//tmp/**)"
     ],
     "deny": []
   }
