@@ -20,7 +20,6 @@ class SpellListViewModel {
   final page = signal(1);
   final spells = signal(<BriefSpell>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copySpell(int id) async {
     try {

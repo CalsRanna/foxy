@@ -6,8 +6,8 @@ class QuestSortRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_sort';
 
   Future<List<QuestSort>> getQuestSorts({
-    required QuestSortFilterEntity filter,
-    required int page,
+    int page = 1,
+    QuestSortFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -17,19 +17,15 @@ class QuestSortRepository with RepositoryMixin {
     return results.map((e) => QuestSort.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countQuestSorts({required QuestSortFilterEntity filter}) async {
+  Future<int> countQuestSorts({QuestSortFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
   Future<QuestSort?> getQuestSort(int id) async {
-    try {
-      var result = await laconic.table(_table).where('ID', id).first();
-      return QuestSort.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('ID', id).first();
+    return QuestSort.fromJson(result.toMap());
   }
 
   Future<void> storeQuestSort(QuestSort data) async {
@@ -66,7 +62,8 @@ class QuestSortRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, QuestSortFilterEntity filter) {
+  dynamic _applyFilter(dynamic builder, QuestSortFilterEntity? filter) {
+    if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

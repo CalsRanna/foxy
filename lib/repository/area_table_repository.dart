@@ -6,8 +6,8 @@ class AreaTableRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_area_table';
 
   Future<List<AreaTable>> getAreaTables({
-    required AreaTableFilterEntity filter,
-    required int page,
+    int page = 1,
+    AreaTableFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -17,19 +17,15 @@ class AreaTableRepository with RepositoryMixin {
     return results.map((e) => AreaTable.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countAreaTables({required AreaTableFilterEntity filter}) async {
+  Future<int> countAreaTables({AreaTableFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
   Future<AreaTable?> getAreaTable(int id) async {
-    try {
-      var result = await laconic.table(_table).where('ID', id).first();
-      return AreaTable.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('ID', id).first();
+    return AreaTable.fromJson(result.toMap());
   }
 
   Future<void> storeAreaTable(AreaTable area) async {
@@ -66,7 +62,8 @@ class AreaTableRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, AreaTableFilterEntity filter) {
+  dynamic _applyFilter(dynamic builder, AreaTableFilterEntity? filter) {
+    if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

@@ -21,7 +21,6 @@ class CreatureTemplateListViewModel {
   final page = signal(1);
   final templates = signal(<BriefCreatureTemplate>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyCreatureTemplate(int entry) async {
     try {

@@ -18,7 +18,6 @@ class EmoteTextListViewModel {
   final page = signal(1);
   final emotes = signal(<EmoteText>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyEmoteText(int id) async {
     try {

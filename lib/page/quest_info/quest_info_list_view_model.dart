@@ -18,7 +18,6 @@ class QuestInfoListViewModel {
   final page = signal(1);
   final infos = signal(<QuestInfo>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyQuestInfo(int id) async {
     try {

@@ -18,7 +18,6 @@ class SpellItemEnchantmentListViewModel {
   final page = signal(1);
   final enchantments = signal(<SpellItemEnchantment>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copySpellItemEnchantment(int id) async {
     try {

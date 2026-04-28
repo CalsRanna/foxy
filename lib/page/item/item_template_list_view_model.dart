@@ -24,7 +24,6 @@ class ItemTemplateListViewModel {
   final total = signal(0);
   final selectedClassId = signal(-1);
   final selectedSubclass = signal(-1);
-  final selectedRowIndex = signal(-1);
 
   /// 当前选中的类别名称
   String get selectedClassName {

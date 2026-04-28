@@ -18,7 +18,6 @@ class QuestSortListViewModel {
   final page = signal(1);
   final sorts = signal(<QuestSort>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyQuestSort(int id) async {
     try {

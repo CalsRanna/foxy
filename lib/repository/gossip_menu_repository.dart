@@ -21,22 +21,18 @@ class GossipMenuRepository with RepositoryMixin {
   }
 
   Future<int> countGossipMenus({GossipMenuFilterEntity? filter}) async {
-    try {
-      var builder = laconic.table('$_table AS gm');
-      builder.select(['gm.MenuID']);
-      builder = builder.leftJoin(
-        'npc_text AS nt',
-        (join) => join.on('gm.TextID', 'nt.ID'),
-      );
-      builder = builder.leftJoin(
-        'npc_text_locale AS ntl',
-        (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
-      );
-      builder = _applyFilter(builder, filter);
-      return await builder.count();
-    } catch (e) {
-      return 0;
-    }
+    var builder = laconic.table('$_table AS gm');
+    builder.select(['gm.MenuID']);
+    builder = builder.leftJoin(
+      'npc_text AS nt',
+      (join) => join.on('gm.TextID', 'nt.ID'),
+    );
+    builder = builder.leftJoin(
+      'npc_text_locale AS ntl',
+      (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
+    );
+    builder = _applyFilter(builder, filter);
+    return await builder.count();
   }
 
   Future<void> destroyGossipMenu(Map<String, dynamic> id) async {
@@ -51,46 +47,38 @@ class GossipMenuRepository with RepositoryMixin {
     int page = 1,
     GossipMenuFilterEntity? filter,
   }) async {
-    try {
-      final offset = (page - 1) * kPageSize;
-      var builder = laconic.table('$_table AS gm');
-      const fields = [
-        'gm.MenuID',
-        'gm.TextID',
-        'nt.text0_0',
-        'nt.text0_1',
-        'ntl.Text0_0',
-        'ntl.Text0_1',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'npc_text AS nt',
-        (join) => join.on('gm.TextID', 'nt.ID'),
-      );
-      builder = builder.leftJoin(
-        'npc_text_locale AS ntl',
-        (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
-      );
-      builder = _applyFilter(builder, filter);
-      builder = builder.limit(kPageSize).offset(offset);
-      final results = await builder.get();
-      return results.map((e) => BriefGossipMenu.fromJson(e.toMap())).toList();
-    } catch (e) {
-      return [];
-    }
+    final offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table AS gm');
+    const fields = [
+      'gm.MenuID',
+      'gm.TextID',
+      'nt.text0_0',
+      'nt.text0_1',
+      'ntl.Text0_0',
+      'ntl.Text0_1',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'npc_text AS nt',
+      (join) => join.on('gm.TextID', 'nt.ID'),
+    );
+    builder = builder.leftJoin(
+      'npc_text_locale AS ntl',
+      (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
+    );
+    builder = _applyFilter(builder, filter);
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results.map((e) => BriefGossipMenu.fromJson(e.toMap())).toList();
   }
 
   Future<GossipMenu?> getGossipMenu(Map<String, dynamic> id) async {
-    try {
-      var builder = laconic.table(_table);
-      id.forEach((k, v) {
-        builder = builder.where(k, v);
-      });
-      final result = await builder.first();
-      return GossipMenu.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var builder = laconic.table(_table);
+    id.forEach((k, v) {
+      builder = builder.where(k, v);
+    });
+    final result = await builder.first();
+    return GossipMenu.fromJson(result.toMap());
   }
 
   Future<void> storeGossipMenu(GossipMenu model) async {

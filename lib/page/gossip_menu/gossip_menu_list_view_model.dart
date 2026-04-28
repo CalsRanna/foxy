@@ -22,10 +22,10 @@ class GossipMenuListViewModel {
   final menus = signal<List<BriefGossipMenu>>([]);
   final page = signal(1);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> initSignals() async {
-    await _refresh();
+    menus.value = await repository.getBriefGossipMenus();
+    total.value = await repository.countGossipMenus();
   }
 
   void dispose() {
@@ -47,7 +47,8 @@ class GossipMenuListViewModel {
     menuIdController.clear();
     textController.clear();
     page.value = 1;
-    await _refresh();
+    menus.value = await repository.getBriefGossipMenus();
+    total.value = await repository.countGossipMenus();
   }
 
   Future<void> copyGossipMenu(int menuId, int textId) async {

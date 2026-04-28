@@ -17,7 +17,6 @@ class QuestFactionRewardListViewModel {
   final page = signal(1);
   final rewards = signal(<QuestFactionReward>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyQuestFactionReward(int id) async {
     try {

@@ -6,8 +6,8 @@ class GemPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_gem_properties';
 
   Future<List<GemProperty>> getGemProperties({
-    required GemPropertyFilterEntity filter,
-    required int page,
+    int page = 1,
+    GemPropertyFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -17,19 +17,15 @@ class GemPropertyRepository with RepositoryMixin {
     return results.map((e) => GemProperty.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countGemProperties({required GemPropertyFilterEntity filter}) async {
+  Future<int> countGemProperties({GemPropertyFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
   Future<GemProperty?> getGemProperty(int id) async {
-    try {
-      var result = await laconic.table(_table).where('ID', id).first();
-      return GemProperty.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('ID', id).first();
+    return GemProperty.fromJson(result.toMap());
   }
 
   Future<void> storeGemProperty(GemProperty gemProperty) async {
@@ -66,7 +62,8 @@ class GemPropertyRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, GemPropertyFilterEntity filter) {
+  dynamic _applyFilter(dynamic builder, GemPropertyFilterEntity? filter) {
+    if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }
