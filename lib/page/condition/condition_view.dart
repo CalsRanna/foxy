@@ -29,8 +29,6 @@ class _ConditionViewState extends State<ConditionView> {
 
   @override
   Widget build(BuildContext context) {
-    final isNew = widget.credential == null;
-
     // 来源信息
     final sourceTypeInput = FormItem(
       controller: viewModel.sourceTypeOrReferenceIdController,
@@ -167,7 +165,7 @@ class _ConditionViewState extends State<ConditionView> {
           Row(
             children: [
               ShadButton(
-                onPressed: () => isNew ? viewModel.save(context) : viewModel.update(context),
+                onPressed: () => viewModel.save(context),
                 child: Text('保存'),
               ),
               SizedBox(width: 8),
