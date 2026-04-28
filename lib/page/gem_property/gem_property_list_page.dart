@@ -70,7 +70,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final items = viewModel.properties.value;
@@ -115,7 +115,6 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               id: items[row].id,
             );
           },
@@ -128,7 +127,6 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
                       id: items[row].id,
                     );
                   },

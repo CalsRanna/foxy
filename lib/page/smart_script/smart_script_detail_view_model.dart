@@ -4,13 +4,14 @@ import 'package:foxy/model/smart_script.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class SmartScriptDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final _repository = SmartScriptRepository();
+  final repository = SmartScriptRepository();
 
   final script = signal(SmartScript());
   final isNew = signal(true);
@@ -61,7 +62,7 @@ class SmartScriptDetailViewModel {
       final t = _collectFromControllers();
       final action = isNew.value ? ActivityActionType.create : ActivityActionType.update;
       if (isNew.value) {
-        await _repository.storeSmartScript(t);
+        await repository.storeSmartScript(t);
         _origEntryOrGuid = t.entryOrGuid;
         _origSourceType = t.sourceType;
         _origId = t.id;
@@ -69,7 +70,7 @@ class SmartScriptDetailViewModel {
         isNew.value = false;
         script.value = t;
       } else {
-        await _repository.updateSmartScript(
+        await repository.updateSmartScript(
           _origEntryOrGuid!,
           _origSourceType!,
           _origId!,
@@ -117,13 +118,17 @@ class SmartScriptDetailViewModel {
     _origId = id;
     _origLink = link;
     isNew.value = false;
-    script.value = await _repository.getSmartScript(
-      entryOrGuid,
-      sourceType,
-      id,
-      link,
-    );
-    _initControllers(script.value);
+    try {
+      script.value = await repository.getSmartScript(
+        entryOrGuid,
+        sourceType,
+        id,
+        link,
+      );
+      _initControllers(script.value);
+    } catch (e, s) {
+      logger.e('加载脚本(entryOrGuid=$entryOrGuid, id=$id)失败', error: e, stackTrace: s);
+    }
   }
 
   void _initControllers(SmartScript t) {

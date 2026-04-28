@@ -126,7 +126,7 @@ class SmartScriptRepository with RepositoryMixin {
       builder = builder.where('entryorguid', filter.entryOrGuid);
     }
     if (filter.comment.isNotEmpty) {
-      builder = builder.where('comment', '%${filter.comment}%');
+      builder = builder.where('comment', '%${filter.comment}%', operator: 'like');
     }
     return builder;
   }

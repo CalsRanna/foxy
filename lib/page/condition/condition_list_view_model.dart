@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/condition.dart';
 import 'package:foxy/model/condition_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -19,7 +21,7 @@ class ConditionListViewModel {
   final conditions = signal<List<Condition>>([]);
   final total = signal(0);
 
-  final _routerFacade = GetIt.instance.get<RouterFacade>();
+  final routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
     conditions.value = await _search();
@@ -44,7 +46,7 @@ class ConditionListViewModel {
     await _refresh();
   }
 
-  void navigateToDetail(BuildContext context, {Condition? condition}) {
+  void navigateToDetail({Condition? condition}) {
     final id = condition != null
         ? 'condition_${condition.sourceTypeOrReferenceId}_${condition.sourceEntry}'
         : 'condition_new';
@@ -55,7 +57,7 @@ class ConditionListViewModel {
     // 将 Condition 对象序列化为查询参数
     final credential = condition?.toJson();
 
-    _routerFacade.navigateToDetail(
+    routerFacade.navigateToDetail(
       id: id,
       label: label,
       route: ConditionDetailRoute(credential: credential),
@@ -73,6 +75,7 @@ class ConditionListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyCondition(condition.buildCredential());
+      _logActivity(ActivityActionType.copy, condition);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -93,6 +96,7 @@ class ConditionListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyCondition(condition.buildCredential());
+      _logActivity(ActivityActionType.delete, condition);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -119,6 +123,17 @@ class ConditionListViewModel {
   Future<void> _refresh() async {
     conditions.value = await _search();
     total.value = await _count();
+  }
+
+  void _logActivity(ActivityActionType action, Condition c) {
+    final log = ActivityLog(
+      module: 'conditions',
+      actionType: action,
+      entityId: c.sourceTypeOrReferenceId,
+      entityName: c.comment,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {

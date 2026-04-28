@@ -65,7 +65,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final infos = viewModel.infos.value;
@@ -108,7 +108,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
             };
           },
           header: (context, index) => ShadTableCell.header(child: Text(headers[index])),
-          onRowDoubleTap: (row) => viewModel.navigateToDetail(context, info: infos[row]),
+          onRowDoubleTap: (row) => viewModel.navigateToDetail(info: infos[row]),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
@@ -116,7 +116,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(context, info: infos[row]),
+                  onPressed: () => viewModel.navigateToDetail(info: infos[row]),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(

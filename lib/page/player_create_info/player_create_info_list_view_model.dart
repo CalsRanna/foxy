@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/player_create_info.dart';
 import 'package:foxy/model/player_create_info_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -44,7 +46,7 @@ class PlayerCreateInfoListViewModel {
     await _refresh();
   }
 
-  void navigateToDetail(BuildContext context, {PlayerCreateInfo? info}) {
+  void navigateToDetail({PlayerCreateInfo? info}) {
     final id = info != null ? 'pci_${info.race}_${info.class_}' : 'pci_new';
     final label = info != null ? '种族${info.race}-职业${info.class_}' : '新建出生信息';
     _routerFacade.navigateToDetail(
@@ -69,6 +71,7 @@ class PlayerCreateInfoListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyPlayerCreateInfo(info.buildCredential());
+      _logActivity(ActivityActionType.copy, info.race);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -89,6 +92,7 @@ class PlayerCreateInfoListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyPlayerCreateInfo(info.buildCredential());
+      _logActivity(ActivityActionType.delete, info.race);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -96,6 +100,17 @@ class PlayerCreateInfoListViewModel {
       logger.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final log = ActivityLog(
+      module: 'player_create_info',
+      actionType: action,
+      entityId: id,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   PlayerCreateInfoFilterEntity _buildFilter() {

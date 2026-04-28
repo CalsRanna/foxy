@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/emote_text.dart';
 import 'package:foxy/model/emote_text_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -29,6 +31,7 @@ class EmoteTextListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyEmoteText(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,6 +52,7 @@ class EmoteTextListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyEmoteText(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -58,18 +62,31 @@ class EmoteTextListViewModel {
     }
   }
 
+  void _logActivity(ActivityActionType action, int id) {
+    final templates = emotes.value;
+    final template = templates.where((t) => t.id == id).firstOrNull;
+    final name = template?.name ?? '';
+    final log = ActivityLog(
+      module: 'emote_text',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
+  }
+
   void dispose() {
     entryController.dispose();
     nameController.dispose();
   }
 
   Future<void> initSignals() async {
-    final filter = EmoteTextFilterEntity();
-    emotes.value = await repository.getEmoteTexts(page: 1, filter: filter);
-    total.value = await repository.countEmoteTexts(filter: filter);
+    emotes.value = await repository.getEmoteTexts(page: 1);
+    total.value = await repository.countEmoteTexts();
   }
 
-  void navigateToDetail(BuildContext context, {int? id, String? name}) {
+  void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建表情文本';
     final routeId = id != null ? 'emote_text_$id' : 'emote_text_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
@@ -96,9 +113,8 @@ class EmoteTextListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    final filter = EmoteTextFilterEntity();
-    emotes.value = await repository.getEmoteTexts(page: 1, filter: filter);
-    total.value = await repository.countEmoteTexts(filter: filter);
+    emotes.value = await repository.getEmoteTexts(page: 1);
+    total.value = await repository.countEmoteTexts();
   }
 
   Future<void> search() async {

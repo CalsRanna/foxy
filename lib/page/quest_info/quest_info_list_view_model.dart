@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/quest_info.dart';
 import 'package:foxy/model/quest_info_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -29,6 +31,7 @@ class QuestInfoListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyQuestInfo(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,6 +52,7 @@ class QuestInfoListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyQuestInfo(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -56,6 +60,20 @@ class QuestInfoListViewModel {
       logger.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final infos = this.infos.value;
+    final info = infos.where((i) => i.id == id).firstOrNull;
+    final name = info?.infoNameLangZhCn ?? '';
+    final log = ActivityLog(
+      module: 'quest_info',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {
@@ -69,7 +87,7 @@ class QuestInfoListViewModel {
     total.value = await repository.countQuestInfos(filter: filter);
   }
 
-  void navigateToDetail(BuildContext context, {int? id, String? name}) {
+  void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建任务信息';
     final routeId = id != null ? 'quest_info_$id' : 'quest_info_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();

@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/glyph_property.dart';
 import 'package:foxy/model/glyph_property_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -28,6 +30,7 @@ class GlyphPropertyListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyGlyphProperty(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,6 +51,7 @@ class GlyphPropertyListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyGlyphProperty(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -55,6 +59,17 @@ class GlyphPropertyListViewModel {
       logger.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final log = ActivityLog(
+      module: 'glyph_property',
+      actionType: action,
+      entityId: id,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {
@@ -67,7 +82,7 @@ class GlyphPropertyListViewModel {
     total.value = await repository.countGlyphProperties(filter: filter);
   }
 
-  void navigateToDetail(BuildContext context, {int? id}) {
+  void navigateToDetail({int? id}) {
     final label = id != null ? '雕文属性 #$id' : '新建雕文属性';
     final routeId = id != null ? 'glyph_property_$id' : 'glyph_property_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();

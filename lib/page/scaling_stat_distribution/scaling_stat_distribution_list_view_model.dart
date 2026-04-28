@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/scaling_stat_distribution.dart';
 import 'package:foxy/model/scaling_stat_distribution_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -28,6 +30,7 @@ class ScalingStatDistributionListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyScalingStatDistribution(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,6 +51,7 @@ class ScalingStatDistributionListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyScalingStatDistribution(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -55,6 +59,17 @@ class ScalingStatDistributionListViewModel {
       logger.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final log = ActivityLog(
+      module: 'scaling_stat_distribution',
+      actionType: action,
+      entityId: id,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {
@@ -67,7 +82,7 @@ class ScalingStatDistributionListViewModel {
     total.value = await repository.countScalingStatDistributions(filter: filter);
   }
 
-  void navigateToDetail(BuildContext context, {int? id}) {
+  void navigateToDetail({int? id}) {
     final label = id != null ? '属性缩放分布 #$id' : '新建属性缩放分布';
     final routeId = id != null ? 'scaling_stat_distribution_$id' : 'scaling_stat_distribution_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();

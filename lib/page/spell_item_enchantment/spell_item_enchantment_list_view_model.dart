@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/spell_item_enchantment.dart';
 import 'package:foxy/model/spell_item_enchantment_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -29,6 +31,7 @@ class SpellItemEnchantmentListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copySpellItemEnchantment(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,6 +52,7 @@ class SpellItemEnchantmentListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroySpellItemEnchantment(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -56,6 +60,20 @@ class SpellItemEnchantmentListViewModel {
       logger.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final enchantments = this.enchantments.value;
+    final enchantment = enchantments.where((e) => e.id == id).firstOrNull;
+    final name = enchantment?.nameLangZhCn ?? '';
+    final log = ActivityLog(
+      module: 'spell_item_enchantment',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {
@@ -69,7 +87,7 @@ class SpellItemEnchantmentListViewModel {
     total.value = await repository.countSpellItemEnchantments(filter: filter);
   }
 
-  void navigateToDetail(BuildContext context, {int? id, String? name}) {
+  void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建法术附魔';
     final routeId = id != null ? 'spell_item_enchantment_$id' : 'spell_item_enchantment_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();

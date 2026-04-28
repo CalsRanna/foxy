@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/loot_template.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -43,8 +45,7 @@ class ReferenceLootTemplateListViewModel {
     await _refresh();
   }
 
-  void navigateToDetail(
-    BuildContext context, {
+  void navigateToDetail({
     int? entry,
     int? item,
     String? label,
@@ -73,6 +74,7 @@ class ReferenceLootTemplateListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyLootTemplate(entry, item);
+      _logActivity(ActivityActionType.copy, entry);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -93,6 +95,7 @@ class ReferenceLootTemplateListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyLootTemplate(entry, item);
+      _logActivity(ActivityActionType.delete, entry);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -100,6 +103,20 @@ class ReferenceLootTemplateListViewModel {
       logger.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
+  }
+
+  void _logActivity(ActivityActionType action, int entry) {
+    final templates = this.templates.value;
+    final t = templates.where((t) => t.entry == entry).firstOrNull;
+    final name = t?.item.toString() ?? '';
+    final log = ActivityLog(
+      module: 'reference_loot_template',
+      actionType: action,
+      entityId: entry,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   Future<List<LootTemplate>> _searchEntries() async {

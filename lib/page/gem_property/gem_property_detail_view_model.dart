@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/gem_property.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -34,6 +36,7 @@ class GemPropertyDetailViewModel {
         await repository.updateGemProperty(t);
       }
       property.value = t;
+      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('宝石属性数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -69,6 +72,17 @@ class GemPropertyDetailViewModel {
     final value = int.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
+  }
+
+  void _logActivity(ActivityActionType action, GemProperty t) {
+    final log = ActivityLog(
+      module: 'gem_property',
+      actionType: action,
+      entityId: t.id,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {

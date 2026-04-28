@@ -75,7 +75,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final infos = viewModel.infos.value;
@@ -116,7 +116,6 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               id: infos[row].id,
               name: infos[row].infoNameLangZhCn,
             );
@@ -130,7 +129,6 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
                       id: infos[row].id,
                       name: infos[row].infoNameLangZhCn,
                     );
