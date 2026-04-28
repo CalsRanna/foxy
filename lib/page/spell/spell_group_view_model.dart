@@ -23,7 +23,7 @@ class SpellGroupViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getBySpellId(spellId.value);
+      final data = await repository.getSpellGroups(spellId.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -77,7 +77,7 @@ class SpellGroupViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final group = items.value[index];
     try {
-      await repository.copy(group);
+      await repository.copySpellGroup(group);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -112,7 +112,7 @@ class SpellGroupViewModel {
     );
     if (confirmed == true) {
       try {
-        await repository.delete(group.id, group.spellId);
+        await repository.destroySpellGroup(group.id, group.spellId);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -129,7 +129,7 @@ class SpellGroupViewModel {
     saving.value = true;
     try {
       final data = collectFromForm();
-      await repository.store(data);
+      await repository.storeSpellGroup(data);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -150,7 +150,7 @@ class SpellGroupViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await repository.update(oldData, newData);
+      await repository.updateSpellGroup(oldData, newData);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

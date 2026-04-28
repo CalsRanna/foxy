@@ -3,7 +3,7 @@ import 'package:foxy/model/player_create_info_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class PlayerCreateInfoRepository with RepositoryMixin {
-  Future<List<PlayerCreateInfo>> search({
+  Future<List<PlayerCreateInfo>> getPlayerCreateInfos({
     required PlayerCreateInfoFilterEntity filter,
     required int page,
   }) async {
@@ -15,13 +15,13 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     return results.map((e) => PlayerCreateInfo.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required PlayerCreateInfoFilterEntity filter}) async {
+  Future<int> countPlayerCreateInfos({required PlayerCreateInfoFilterEntity filter}) async {
     var builder = laconic.table('playercreateinfo');
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<PlayerCreateInfo> find(int race, int class_) async {
+  Future<PlayerCreateInfo> getPlayerCreateInfo(int race, int class_) async {
     var result = await laconic.table('playercreateinfo')
         .where('race', race)
         .where('class', class_)
@@ -29,11 +29,11 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     return PlayerCreateInfo.fromJson(result.toMap());
   }
 
-  Future<void> store(PlayerCreateInfo info) async {
+  Future<void> storePlayerCreateInfo(PlayerCreateInfo info) async {
     await laconic.table('playercreateinfo').insert([info.toJson()]);
   }
 
-  Future<void> update(Map<String, dynamic> credential, PlayerCreateInfo info) async {
+  Future<void> updatePlayerCreateInfo(Map<String, dynamic> credential, PlayerCreateInfo info) async {
     var json = info.toJson();
     json.remove('race');
     json.remove('class');
@@ -44,7 +44,7 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> destroy(Map<String, dynamic> credential) async {
+  Future<void> destroyPlayerCreateInfo(Map<String, dynamic> credential) async {
     var builder = laconic.table('playercreateinfo');
     for (final entry in credential.entries) {
       builder = builder.where(entry.key, entry.value);
@@ -52,8 +52,8 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     await builder.delete();
   }
 
-  Future<void> copy(Map<String, dynamic> credential) async {
-    var source = await find(credential['race'] as int, credential['class'] as int);
+  Future<void> copyPlayerCreateInfo(Map<String, dynamic> credential) async {
+    var source = await getPlayerCreateInfo(credential['race'] as int, credential['class'] as int);
     var json = source.toJson();
     json['class'] = (json['class'] as int) + 1;
     await laconic.table('playercreateinfo').insert([json]);

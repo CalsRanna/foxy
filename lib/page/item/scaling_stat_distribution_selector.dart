@@ -234,8 +234,8 @@ class _DialogState extends State<_Dialog> {
     try {
       final repository = ScalingStatDistributionRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
-      final items = await repository.search(id: id, page: _page);
-      final total = await repository.count(id: id);
+      final items = await repository.getScalingStatDistributions(id: id, page: _page);
+      final total = await repository.countScalingStatDistributions(id: id);
       if (mounted) {
         setState(() {
           _items = items;

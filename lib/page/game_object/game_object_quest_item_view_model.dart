@@ -24,7 +24,7 @@ class GameObjectQuestItemViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      items.value = await repository.getByEntry(gameObjectEntry.value);
+      items.value = await repository.getGameObjectQuestItems(gameObjectEntry.value);
     } catch (e) {
       rethrow;
     } finally {
@@ -87,7 +87,7 @@ class GameObjectQuestItemViewModel {
     try {
       final item = items.value[index];
       DialogUtil.instance.loading();
-      await repository.copy(item.gameObjectEntry, item.idx);
+      await repository.copyGameObjectQuestItem(item.gameObjectEntry, item.idx);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await load();
@@ -109,7 +109,7 @@ class GameObjectQuestItemViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.delete(item.gameObjectEntry, item.idx);
+      await repository.destroyGameObjectQuestItem(item.gameObjectEntry, item.idx);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await load();
@@ -122,7 +122,7 @@ class GameObjectQuestItemViewModel {
     saving.value = true;
     try {
       final questItem = collectFromForm();
-      await repository.store(questItem);
+      await repository.storeGameObjectQuestItem(questItem);
       await load();
       if (dialogContext.mounted) Navigator.of(dialogContext).pop();
     } catch (e) {
@@ -136,7 +136,7 @@ class GameObjectQuestItemViewModel {
     saving.value = true;
     try {
       final questItem = collectFromForm();
-      await repository.update(questItem);
+      await repository.updateGameObjectQuestItem(questItem);
       await load();
       if (dialogContext.mounted) Navigator.of(dialogContext).pop();
     } catch (e) {

@@ -7,7 +7,7 @@ class QuestRequestItemsLocaleRepository with RepositoryMixin {
   static const _table = 'quest_request_items_locale';
 
   /// 按 ID 查询该 QuestRequestItems 的所有 locale
-  Future<List<QuestRequestItemsLocale>> search(int id) async {
+  Future<List<QuestRequestItemsLocale>> getQuestRequestItemsLocales(int id) async {
     try {
       final results = await laconic.table(_table).where('ID', id).get();
       return results

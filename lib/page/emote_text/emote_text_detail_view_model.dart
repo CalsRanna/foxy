@@ -43,9 +43,9 @@ class EmoteTextDetailViewModel {
       final t = _collectFromControllers();
       final repository = EmoteTextRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeEmoteText(t);
       } else {
-        await repository.update(t);
+        await repository.updateEmoteText(t);
       }
       emote.value = t;
       if (!context.mounted) return;
@@ -130,7 +130,7 @@ class EmoteTextDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      emote.value = (await EmoteTextRepository().find(id))!;
+      emote.value = (await EmoteTextRepository().getEmoteText(id))!;
       _initControllers(emote.value);
     } catch (e, s) {
       logger.e('加载表情文本(id=$id)失败', error: e, stackTrace: s);

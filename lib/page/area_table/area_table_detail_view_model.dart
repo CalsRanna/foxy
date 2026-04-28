@@ -46,9 +46,9 @@ class AreaTableDetailViewModel {
       final t = _collectFromControllers();
       final repository = AreaTableRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeAreaTable(t);
       } else {
-        await repository.update(t);
+        await repository.updateAreaTable(t);
       }
       area.value = t;
       if (!context.mounted) return;
@@ -147,7 +147,7 @@ class AreaTableDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      area.value = (await AreaTableRepository().find(id))!;
+      area.value = (await AreaTableRepository().getAreaTable(id))!;
       _initControllers(area.value);
     } catch (e, s) {
       logger.e('加载区域(id=$id)失败', error: e, stackTrace: s);

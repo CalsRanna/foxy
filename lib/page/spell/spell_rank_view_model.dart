@@ -24,7 +24,7 @@ class SpellRankViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getBySpellId(spellId.value);
+      final data = await repository.getSpellRanks(spellId.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -85,7 +85,7 @@ class SpellRankViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final rank = items.value[index];
     try {
-      await repository.copy(rank);
+      await repository.copySpellRank(rank);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -120,7 +120,7 @@ class SpellRankViewModel {
     );
     if (confirmed == true) {
       try {
-        await repository.delete(rank.firstSpellId, rank.rank);
+        await repository.destroySpellRank(rank.firstSpellId, rank.rank);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -137,7 +137,7 @@ class SpellRankViewModel {
     saving.value = true;
     try {
       final data = collectFromForm();
-      await repository.store(data);
+      await repository.storeSpellRank(data);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -158,7 +158,7 @@ class SpellRankViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await repository.update(oldData, newData);
+      await repository.updateSpellRank(oldData, newData);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

@@ -5,7 +5,7 @@ class VehicleRepository with RepositoryMixin {
   // DBC 表在 foxy 数据库中
   final String _table = 'foxy.dbc_vehicle';
 
-  Future<int> count({String? id}) async {
+  Future<int> countVehicles({String? id}) async {
     try {
       var builder = laconic.table(_table);
       if (id != null && id.isNotEmpty) {
@@ -18,7 +18,7 @@ class VehicleRepository with RepositoryMixin {
     }
   }
 
-  Future<List<Vehicle>> search({String? id, int page = 1}) async {
+  Future<List<Vehicle>> getVehicles({String? id, int page = 1}) async {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table);

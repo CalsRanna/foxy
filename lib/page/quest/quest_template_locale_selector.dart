@@ -46,7 +46,7 @@ class _QuestTemplateLocaleSelectorState
 
   Future<void> _openLocaleDialog() async {
     if (widget.questId == null) return;
-    final locales = await repository.search(widget.questId!);
+    final locales = await repository.getQuestTemplateLocales(widget.questId!);
     if (!mounted) return;
     await showShadDialog(
       context: context,

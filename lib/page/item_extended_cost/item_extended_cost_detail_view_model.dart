@@ -42,9 +42,9 @@ class ItemExtendedCostDetailViewModel {
       final t = _collectFromControllers();
       final repository = ItemExtendedCostRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeItemExtendedCost(t);
       } else {
-        await repository.update(t);
+        await repository.updateItemExtendedCost(t);
       }
       cost.value = t;
       if (!context.mounted) return;
@@ -127,7 +127,7 @@ class ItemExtendedCostDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      cost.value = (await ItemExtendedCostRepository().find(id))!;
+      cost.value = (await ItemExtendedCostRepository().getItemExtendedCost(id))!;
       _initControllers(cost.value);
     } catch (e, s) {
       logger.e('加载扩展价格(id=$id)失败', error: e, stackTrace: s);

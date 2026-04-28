@@ -7,7 +7,7 @@ class ItemTemplateLocaleRepository with RepositoryMixin {
   static const _table = 'item_template_locale';
 
   /// 按 ID 查询该 ItemTemplate 的所有 locale
-  Future<List<ItemTemplateLocale>> search(int id) async {
+  Future<List<ItemTemplateLocale>> getItemTemplateLocales(int id) async {
     try {
       final results = await laconic.table(_table).where('ID', id).get();
       return results

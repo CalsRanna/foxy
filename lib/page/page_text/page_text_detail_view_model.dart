@@ -24,7 +24,7 @@ class PageTextDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      page.value = await repository.find(id);
+      page.value = await repository.getPageText(id);
       _initControllers(page.value!);
       locales.value = await repository.getLocales(id);
     } catch (e, s) {
@@ -43,7 +43,7 @@ class PageTextDetailViewModel {
     saving.value = true;
     try {
       final data = _collect();
-      await repository.store(data);
+      await repository.storePageText(data);
       page.value = data;
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('页面文本已保存')));
@@ -64,7 +64,7 @@ class PageTextDetailViewModel {
     }
     try {
       final data = _collect();
-      await repository.update(id, data);
+      await repository.updatePageText(id, data);
       page.value = data;
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));

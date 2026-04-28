@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GameObjectTemplateAddonRepository with RepositoryMixin {
   static const _table = 'gameobject_template_addon';
 
-  Future<GameObjectTemplateAddon?> find(int entry) async {
+  Future<GameObjectTemplateAddon?> getGameObjectTemplateAddon(int entry) async {
     try {
       var result = await laconic.table(_table).where('entry', entry).first();
       return GameObjectTemplateAddon.fromJson(result.toMap());
@@ -13,22 +13,22 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(GameObjectTemplateAddon addon) async {
+  Future<void> storeGameObjectTemplateAddon(GameObjectTemplateAddon addon) async {
     await laconic.table(_table).insert([addon.toJson()]);
   }
 
-  Future<void> update(GameObjectTemplateAddon addon) async {
+  Future<void> updateGameObjectTemplateAddon(GameObjectTemplateAddon addon) async {
     var json = addon.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', addon.entry).update(json);
   }
 
-  Future<void> save(GameObjectTemplateAddon addon) async {
-    var existing = await find(addon.entry);
+  Future<void> saveGameObjectTemplateAddon(GameObjectTemplateAddon addon) async {
+    var existing = await getGameObjectTemplateAddon(addon.entry);
     if (existing != null) {
-      await update(addon);
+      await updateGameObjectTemplateAddon(addon);
     } else {
-      await store(addon);
+      await storeGameObjectTemplateAddon(addon);
     }
   }
 }

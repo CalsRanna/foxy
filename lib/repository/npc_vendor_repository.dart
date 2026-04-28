@@ -5,7 +5,7 @@ class NpcVendorRepository with RepositoryMixin {
   static const _table = 'npc_vendor';
 
   /// 获取指定NPC的所有商品（带物品信息）
-  Future<List<NpcVendor>> getByEntry(int entry) async {
+  Future<List<NpcVendor>> getNpcVendors(int entry) async {
     try {
       var builder = laconic.table('$_table AS nv');
       const fields = [
@@ -38,7 +38,7 @@ class NpcVendorRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<NpcVendor?> find(int entry, int slot) async {
+  Future<NpcVendor?> getNpcVendor(int entry, int slot) async {
     try {
       var result = await laconic
           .table(_table)
@@ -52,12 +52,12 @@ class NpcVendorRepository with RepositoryMixin {
   }
 
   /// 新增商品
-  Future<void> store(NpcVendor vendor) async {
+  Future<void> storeNpcVendor(NpcVendor vendor) async {
     await laconic.table(_table).insert([vendor.toJson()]);
   }
 
   /// 更新商品
-  Future<void> update(NpcVendor vendor, {int? oldSlot}) async {
+  Future<void> updateNpcVendor(NpcVendor vendor, {int? oldSlot}) async {
     var json = vendor.toJson();
     json.remove('entry');
     if (oldSlot == null) json.remove('slot');
@@ -69,7 +69,7 @@ class NpcVendorRepository with RepositoryMixin {
   }
 
   /// 删除商品
-  Future<void> delete(int entry, int slot) async {
+  Future<void> destroyNpcVendor(int entry, int slot) async {
     await laconic
         .table(_table)
         .where('entry', entry)
@@ -78,7 +78,7 @@ class NpcVendorRepository with RepositoryMixin {
   }
 
   /// 复制商品
-  Future<NpcVendor> copy(int entry, int slot) async {
+  Future<NpcVendor> copyNpcVendor(int entry, int slot) async {
     // 获取最大slot
     var maxSlotResult = await laconic
         .table(_table)
@@ -88,7 +88,7 @@ class NpcVendorRepository with RepositoryMixin {
     var maxSlot = (maxSlotResult.toMap()['maxSlot'] ?? 0) as int;
 
     // 获取源记录
-    var source = await find(entry, slot);
+    var source = await getNpcVendor(entry, slot);
     if (source == null) {
       throw Exception('源记录不存在');
     }
@@ -97,7 +97,7 @@ class NpcVendorRepository with RepositoryMixin {
     var newVendor = NpcVendor.fromJson(source.toJson());
     newVendor.slot = maxSlot + 1;
 
-    await store(newVendor);
+    await storeNpcVendor(newVendor);
     return newVendor;
   }
 

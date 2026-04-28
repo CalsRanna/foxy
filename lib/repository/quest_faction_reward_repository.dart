@@ -5,7 +5,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class QuestFactionRewardRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_faction_reward';
 
-  Future<List<QuestFactionReward>> search({
+  Future<List<QuestFactionReward>> getQuestFactionRewards({
     required QuestFactionRewardFilterEntity filter,
     required int page,
   }) async {
@@ -17,13 +17,13 @@ class QuestFactionRewardRepository with RepositoryMixin {
     return results.map((e) => QuestFactionReward.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required QuestFactionRewardFilterEntity filter}) async {
+  Future<int> countQuestFactionRewards({required QuestFactionRewardFilterEntity filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<QuestFactionReward?> find(int id) async {
+  Future<QuestFactionReward?> getQuestFactionReward(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return QuestFactionReward.fromJson(result.toMap());
@@ -32,22 +32,22 @@ class QuestFactionRewardRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(QuestFactionReward data) async {
+  Future<void> storeQuestFactionReward(QuestFactionReward data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> update(QuestFactionReward data) async {
+  Future<void> updateQuestFactionReward(QuestFactionReward data) async {
     var json = data.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', data.id).update(json);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroyQuestFactionReward(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    var source = await find(id);
+  Future<void> copyQuestFactionReward(int id) async {
+    var source = await getQuestFactionReward(id);
     if (source == null) return;
     var json = source.toJson();
     var nextId = await _getNextId();

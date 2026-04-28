@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CharTitleRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_char_titles';
 
-  Future<List<CharTitle>> search({
+  Future<List<CharTitle>> getCharTitles({
     String? id,
     String? name,
     required int page,
@@ -17,7 +17,7 @@ class CharTitleRepository with RepositoryMixin {
     return results.map((e) => CharTitle.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({String? id, String? name}) async {
+  Future<int> countCharTitles({String? id, String? name}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id, name: name);
     return builder.count();

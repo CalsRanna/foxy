@@ -80,7 +80,7 @@ class SmartScriptListViewModel {
 
   Future<void> initSignals() async {
     scripts.value = await repository.getBriefSmartScripts();
-    total.value = await repository.count();
+    total.value = await repository.countSmartScripts();
   }
 
   void navigateToDetail({
@@ -124,7 +124,7 @@ class SmartScriptListViewModel {
     commentController.clear();
     page.value = 1;
     scripts.value = await repository.getBriefSmartScripts();
-    total.value = await repository.count();
+    total.value = await repository.countSmartScripts();
   }
 
   Future<void> search() async {
@@ -138,7 +138,7 @@ class SmartScriptListViewModel {
       page: page.value,
       filter: filter,
     );
-    total.value = await repository.count(filter: filter);
+    total.value = await repository.countSmartScripts(filter: filter);
   }
 
   void _logActivity(
@@ -164,6 +164,6 @@ class SmartScriptListViewModel {
       entityName: name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().store(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

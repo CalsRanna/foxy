@@ -72,7 +72,7 @@ class CreatureTemplateListViewModel {
 
   Future<void> initSignals() async {
     templates.value = await repository.getBriefCreatureTemplates();
-    total.value = await repository.count();
+    total.value = await repository.countCreatureTemplates();
   }
 
   void navigateCreatureTemplateDetailPage(
@@ -109,7 +109,7 @@ class CreatureTemplateListViewModel {
     subNameController.clear();
     page.value = 1;
     templates.value = await repository.getBriefCreatureTemplates();
-    total.value = await repository.count();
+    total.value = await repository.countCreatureTemplates();
   }
 
   Future<void> search() async {
@@ -123,7 +123,7 @@ class CreatureTemplateListViewModel {
       page: page.value,
       filter: filter,
     );
-    total.value = await repository.count(filter: filter);
+    total.value = await repository.countCreatureTemplates(filter: filter);
   }
 
   void _logActivity(ActivityActionType action, int entry) {
@@ -137,6 +137,6 @@ class CreatureTemplateListViewModel {
       entityName: name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().store(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

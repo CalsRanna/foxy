@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellGroupRepository with RepositoryMixin {
   static const _table = 'spell_group';
 
-  Future<List<SpellGroup>> getBySpellId(int spellId) async {
+  Future<List<SpellGroup>> getSpellGroups(int spellId) async {
     try {
       var builder = laconic.table('$_table AS sg');
       const fields = [
@@ -25,7 +25,7 @@ class SpellGroupRepository with RepositoryMixin {
     }
   }
 
-  Future<SpellGroup?> find(int id, int spellId) async {
+  Future<SpellGroup?> getSpellGroup(int id, int spellId) async {
     try {
       var result = await laconic
           .table(_table)
@@ -38,11 +38,11 @@ class SpellGroupRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(SpellGroup data) async {
+  Future<void> storeSpellGroup(SpellGroup data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> update(SpellGroup oldData, SpellGroup newData) async {
+  Future<void> updateSpellGroup(SpellGroup oldData, SpellGroup newData) async {
     var json = newData.toJson();
     json.remove('id');
     json.remove('spell_id');
@@ -53,7 +53,7 @@ class SpellGroupRepository with RepositoryMixin {
         .update(json);
   }
 
-  Future<void> delete(int id, int spellId) async {
+  Future<void> destroySpellGroup(int id, int spellId) async {
     await laconic
         .table(_table)
         .where('id', id)
@@ -61,7 +61,7 @@ class SpellGroupRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellGroup> copy(SpellGroup data) async {
+  Future<SpellGroup> copySpellGroup(SpellGroup data) async {
     var json = data.toJson();
     var maxIdResult = await laconic.table(_table).select([
       'MAX(id) AS maxId',

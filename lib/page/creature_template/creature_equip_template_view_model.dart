@@ -28,7 +28,7 @@ class CreatureEquipTemplateViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getByEntry(creatureId.value);
+      final data = await repository.getCreatureEquipTemplates(creatureId.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -99,7 +99,7 @@ class CreatureEquipTemplateViewModel {
 
     final equip = items.value[index];
     try {
-      await repository.copy(equip.creatureID, equip.id);
+      await repository.copyCreatureEquipTemplate(equip.creatureID, equip.id);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -138,7 +138,7 @@ class CreatureEquipTemplateViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.delete(equip.creatureID, equip.id);
+        await repository.destroyCreatureEquipTemplate(equip.creatureID, equip.id);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -156,7 +156,7 @@ class CreatureEquipTemplateViewModel {
     saving.value = true;
     try {
       final equip = collectFromForm();
-      await repository.store(equip);
+      await repository.storeCreatureEquipTemplate(equip);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -175,7 +175,7 @@ class CreatureEquipTemplateViewModel {
     saving.value = true;
     try {
       final equip = collectFromForm();
-      await repository.update(equip);
+      await repository.updateCreatureEquipTemplate(equip);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

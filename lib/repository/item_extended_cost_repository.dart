@@ -6,7 +6,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
 
   /// 搜索扩展价格
-  Future<List<ItemExtendedCost>> search({
+  Future<List<ItemExtendedCost>> getItemExtendedCosts({
     required ItemExtendedCostFilterEntity filter,
     required int page,
   }) async {
@@ -23,7 +23,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
   }
 
   /// 计数
-  Future<int> count({required ItemExtendedCostFilterEntity filter}) async {
+  Future<int> countItemExtendedCosts({required ItemExtendedCostFilterEntity filter}) async {
     try {
       var builder = laconic.table(_table);
       builder = _applyFilter(builder, filter);
@@ -34,7 +34,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
   }
 
   /// 根据ID获取单个扩展价格
-  Future<ItemExtendedCost?> find(int id) async {
+  Future<ItemExtendedCost?> getItemExtendedCost(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return ItemExtendedCost.fromJson(result.toMap());
@@ -43,22 +43,22 @@ class ItemExtendedCostRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(ItemExtendedCost data) async {
+  Future<void> storeItemExtendedCost(ItemExtendedCost data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> update(ItemExtendedCost data) async {
+  Future<void> updateItemExtendedCost(ItemExtendedCost data) async {
     var json = data.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', data.id).update(json);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroyItemExtendedCost(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    var source = await find(id);
+  Future<void> copyItemExtendedCost(int id) async {
+    var source = await getItemExtendedCost(id);
     if (source == null) return;
     var json = source.toJson();
     var nextId = await _getNextId();

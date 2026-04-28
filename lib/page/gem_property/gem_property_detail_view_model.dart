@@ -29,9 +29,9 @@ class GemPropertyDetailViewModel {
       final t = _collectFromControllers();
       final repository = GemPropertyRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeGemProperty(t);
       } else {
-        await repository.update(t);
+        await repository.updateGemProperty(t);
       }
       property.value = t;
       if (!context.mounted) return;
@@ -82,7 +82,7 @@ class GemPropertyDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      property.value = (await GemPropertyRepository().find(id))!;
+      property.value = (await GemPropertyRepository().getGemProperty(id))!;
       _initControllers(property.value);
     } catch (e, s) {
       logger.e('加载宝石属性(id=$id)失败', error: e, stackTrace: s);

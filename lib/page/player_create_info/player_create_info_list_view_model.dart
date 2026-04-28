@@ -68,7 +68,7 @@ class PlayerCreateInfoListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(info.buildCredential());
+      await repository.copyPlayerCreateInfo(info.buildCredential());
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -88,7 +88,7 @@ class PlayerCreateInfoListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(info.buildCredential());
+      await repository.destroyPlayerCreateInfo(info.buildCredential());
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -105,11 +105,11 @@ class PlayerCreateInfoListViewModel {
   }
 
   Future<List<PlayerCreateInfo>> _search() async {
-    return repository.search(filter: _buildFilter(), page: page.value);
+    return repository.getPlayerCreateInfos(filter: _buildFilter(), page: page.value);
   }
 
   Future<int> _count() async {
-    return repository.count(filter: _buildFilter());
+    return repository.countPlayerCreateInfos(filter: _buildFilter());
   }
 
   Future<void> _refresh() async {

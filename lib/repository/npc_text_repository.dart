@@ -7,11 +7,11 @@ class NpcTextRepository with RepositoryMixin {
   static const _table = 'npc_text';
 
   /// 搜索（用于 NpcTextSelector）
-  Future<List<NpcText>> search({String? id, String? text, int page = 1}) async {
-    return paginate(id: id, text: text, page: page);
+  Future<List<NpcText>> getNpcTexts({String? id, String? text, int page = 1}) async {
+    return getNpcTextsPaginated(id: id, text: text, page: page);
   }
 
-  Future<List<NpcText>> paginate({
+  Future<List<NpcText>> getNpcTextsPaginated({
     String? id,
     String? text,
     required int page,
@@ -37,7 +37,7 @@ class NpcTextRepository with RepositoryMixin {
     }
   }
 
-  Future<int> count({String? id, String? text}) async {
+  Future<int> countNpcTexts({String? id, String? text}) async {
     try {
       var builder = laconic.table(_table);
       if (id != null && id.isNotEmpty) {
@@ -57,7 +57,7 @@ class NpcTextRepository with RepositoryMixin {
   }
 
   /// 按 ID 查找
-  Future<NpcText?> find(int id) async {
+  Future<NpcText?> getNpcText(int id) async {
     try {
       final result = await laconic.table(_table).where('ID', id).first();
       return NpcText.fromJson(result.toMap());
@@ -67,7 +67,7 @@ class NpcTextRepository with RepositoryMixin {
   }
 
   /// create：返回下一个可用 ID 的空白对象（不落库）
-  Future<NpcText> create() async {
+  Future<NpcText> createNpcText() async {
     try {
       final result = await laconic.table(_table).select([
         'MAX(ID) as max_id',
@@ -83,25 +83,25 @@ class NpcTextRepository with RepositoryMixin {
     }
   }
 
-  Future<void> update(int id, NpcText model) async {
+  Future<void> updateNpcText(int id, NpcText model) async {
     final json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);
   }
 
-  Future<void> store(NpcText model) async {
+  Future<void> storeNpcText(NpcText model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroyNpcText(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    final original = await find(id);
+  Future<void> copyNpcText(int id) async {
+    final original = await getNpcText(id);
     if (original == null) return;
-    final next = await create();
+    final next = await createNpcText();
     original.id = next.id;
-    await store(original);
+    await storeNpcText(original);
   }
 }

@@ -32,7 +32,7 @@ class NpcVendorViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getByEntry(entry.value);
+      final data = await repository.getNpcVendors(entry.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -108,7 +108,7 @@ class NpcVendorViewModel {
 
     final vendor = items.value[index];
     try {
-      await repository.copy(vendor.entry, vendor.slot);
+      await repository.copyNpcVendor(vendor.entry, vendor.slot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -147,7 +147,7 @@ class NpcVendorViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.delete(vendor.entry, vendor.slot);
+        await repository.destroyNpcVendor(vendor.entry, vendor.slot);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -165,7 +165,7 @@ class NpcVendorViewModel {
     saving.value = true;
     try {
       final vendor = collectFromForm();
-      await repository.store(vendor);
+      await repository.storeNpcVendor(vendor);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -184,7 +184,7 @@ class NpcVendorViewModel {
     saving.value = true;
     try {
       final vendor = collectFromForm();
-      await repository.update(vendor, oldSlot: _editingSlot);
+      await repository.updateNpcVendor(vendor, oldSlot: _editingSlot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

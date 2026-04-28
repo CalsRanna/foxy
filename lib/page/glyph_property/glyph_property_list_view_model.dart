@@ -28,7 +28,7 @@ class GlyphPropertyListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copyGlyphProperty(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class GlyphPropertyListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroyGlyphProperty(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -64,8 +64,8 @@ class GlyphPropertyListViewModel {
 
   Future<void> initSignals() async {
     final filter = GlyphPropertyFilterEntity();
-    properties.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    properties.value = await repository.getGlyphProperties(page: 1, filter: filter);
+    total.value = await repository.countGlyphProperties(filter: filter);
   }
 
   void navigateToDetail(BuildContext context, {int? id}) {
@@ -94,8 +94,8 @@ class GlyphPropertyListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = GlyphPropertyFilterEntity();
-    properties.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    properties.value = await repository.getGlyphProperties(page: 1, filter: filter);
+    total.value = await repository.countGlyphProperties(filter: filter);
   }
 
   Future<void> search() async {
@@ -105,7 +105,7 @@ class GlyphPropertyListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    properties.value = await repository.search(page: page.value, filter: filter);
-    total.value = await repository.count(filter: filter);
+    properties.value = await repository.getGlyphProperties(page: page.value, filter: filter);
+    total.value = await repository.countGlyphProperties(filter: filter);
   }
 }

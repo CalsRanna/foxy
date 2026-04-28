@@ -30,7 +30,7 @@ class NpcTrainerViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getByEntry(id.value);
+      final data = await repository.getNpcTrainers(id.value);
       items.value = data;
       selectedIndex.value = null;
       creating.value = false;
@@ -105,7 +105,7 @@ class NpcTrainerViewModel {
 
     final trainer = items.value[index];
     try {
-      await repository.copy(trainer.id, trainer.spellID);
+      await repository.copyNpcTrainer(trainer.id, trainer.spellID);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -144,7 +144,7 @@ class NpcTrainerViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.delete(trainer.id, trainer.spellID);
+        await repository.destroyNpcTrainer(trainer.id, trainer.spellID);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -162,7 +162,7 @@ class NpcTrainerViewModel {
     saving.value = true;
     try {
       final trainer = collectFromForm();
-      await repository.store(trainer);
+      await repository.storeNpcTrainer(trainer);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -181,7 +181,7 @@ class NpcTrainerViewModel {
     saving.value = true;
     try {
       final trainer = collectFromForm();
-      await repository.update(trainer);
+      await repository.updateNpcTrainer(trainer);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

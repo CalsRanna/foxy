@@ -30,7 +30,7 @@ class GossipMenuRepository with RepositoryMixin {
     }
   }
 
-  Future<int> count({GossipMenuFilterEntity? filter}) async {
+  Future<int> countGossipMenus({GossipMenuFilterEntity? filter}) async {
     try {
       var builder = laconic.table('$_table AS gm');
       builder.select(['gm.MenuID']);

@@ -50,9 +50,9 @@ class ScalingStatDistributionDetailViewModel {
       final t = _collectFromControllers();
       final repository = ScalingStatDistributionSoloRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeScalingStatDistribution(t);
       } else {
-        await repository.update(t);
+        await repository.updateScalingStatDistribution(t);
       }
       distribution.value = t;
       if (!context.mounted) return;
@@ -137,7 +137,7 @@ class ScalingStatDistributionDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      distribution.value = (await ScalingStatDistributionSoloRepository().find(id))!;
+      distribution.value = (await ScalingStatDistributionSoloRepository().getScalingStatDistribution(id))!;
       _initControllers(distribution.value);
     } catch (e, s) {
       logger.e('加载属性缩放分布(id=$id)失败', error: e, stackTrace: s);

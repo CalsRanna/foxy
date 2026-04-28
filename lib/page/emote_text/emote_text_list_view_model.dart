@@ -29,7 +29,7 @@ class EmoteTextListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copyEmoteText(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,7 +49,7 @@ class EmoteTextListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroyEmoteText(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -66,8 +66,8 @@ class EmoteTextListViewModel {
 
   Future<void> initSignals() async {
     final filter = EmoteTextFilterEntity();
-    emotes.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    emotes.value = await repository.getEmoteTexts(page: 1, filter: filter);
+    total.value = await repository.countEmoteTexts(filter: filter);
   }
 
   void navigateToDetail(BuildContext context, {int? id, String? name}) {
@@ -98,8 +98,8 @@ class EmoteTextListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = EmoteTextFilterEntity();
-    emotes.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    emotes.value = await repository.getEmoteTexts(page: 1, filter: filter);
+    total.value = await repository.countEmoteTexts(filter: filter);
   }
 
   Future<void> search() async {
@@ -109,7 +109,7 @@ class EmoteTextListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    emotes.value = await repository.search(page: page.value, filter: filter);
-    total.value = await repository.count(filter: filter);
+    emotes.value = await repository.getEmoteTexts(page: page.value, filter: filter);
+    total.value = await repository.countEmoteTexts(filter: filter);
   }
 }

@@ -6,7 +6,7 @@ class ItemTemplateRepository with RepositoryMixin {
   static const _table = 'item_template';
   static const _localeTable = 'item_template_locale';
 
-  Future<int> count({ItemTemplateFilterEntity? filter}) async {
+  Future<int> countItemTemplates({ItemTemplateFilterEntity? filter}) async {
     var builder = laconic.table('$_table AS it');
     builder.select(['it.entry']);
     builder = builder.leftJoin(

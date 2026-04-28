@@ -5,7 +5,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   static const _table = 'creature_equip_template';
 
   /// 获取指定生物的所有装备模板（带物品信息）
-  Future<List<CreatureEquipTemplate>> getByEntry(int creatureID) async {
+  Future<List<CreatureEquipTemplate>> getCreatureEquipTemplates(int creatureID) async {
     try {
       var builder = laconic.table('$_table AS cet');
 
@@ -82,7 +82,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureEquipTemplate?> find(int creatureID, int id) async {
+  Future<CreatureEquipTemplate?> getCreatureEquipTemplate(int creatureID, int id) async {
     try {
       var result = await laconic
           .table(_table)
@@ -96,12 +96,12 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   }
 
   /// 新增装备模板
-  Future<void> store(CreatureEquipTemplate equip) async {
+  Future<void> storeCreatureEquipTemplate(CreatureEquipTemplate equip) async {
     await laconic.table(_table).insert([equip.toJson()]);
   }
 
   /// 更新装备模板
-  Future<void> update(CreatureEquipTemplate equip) async {
+  Future<void> updateCreatureEquipTemplate(CreatureEquipTemplate equip) async {
     var json = equip.toJson();
     json.remove('CreatureID');
     json.remove('ID');
@@ -113,7 +113,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   }
 
   /// 删除装备模板
-  Future<void> delete(int creatureID, int id) async {
+  Future<void> destroyCreatureEquipTemplate(int creatureID, int id) async {
     await laconic
         .table(_table)
         .where('CreatureID', creatureID)
@@ -122,7 +122,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   }
 
   /// 复制装备模板
-  Future<CreatureEquipTemplate> copy(int creatureID, int id) async {
+  Future<CreatureEquipTemplate> copyCreatureEquipTemplate(int creatureID, int id) async {
     // 获取最大ID
     var maxIdResult = await laconic
         .table(_table)
@@ -132,7 +132,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
     var maxId = (maxIdResult.toMap()['maxId'] ?? 0) as int;
 
     // 获取源记录
-    var source = await find(creatureID, id);
+    var source = await getCreatureEquipTemplate(creatureID, id);
     if (source == null) {
       throw Exception('源记录不存在');
     }
@@ -141,7 +141,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
     var newEquip = CreatureEquipTemplate.fromJson(source.toJson());
     newEquip.id = maxId + 1;
 
-    await store(newEquip);
+    await storeCreatureEquipTemplate(newEquip);
     return newEquip;
   }
 

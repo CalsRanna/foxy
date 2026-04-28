@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellRankRepository with RepositoryMixin {
   static const _table = 'spell_ranks';
 
-  Future<List<SpellRank>> getBySpellId(int spellId) async {
+  Future<List<SpellRank>> getSpellRanks(int spellId) async {
     try {
       var firstResult = await laconic
           .table(_table)
@@ -41,7 +41,7 @@ class SpellRankRepository with RepositoryMixin {
     }
   }
 
-  Future<SpellRank?> find(int firstSpellId, int rank) async {
+  Future<SpellRank?> getSpellRank(int firstSpellId, int rank) async {
     try {
       var result = await laconic
           .table(_table)
@@ -54,13 +54,13 @@ class SpellRankRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(SpellRank data) async {
+  Future<void> storeSpellRank(SpellRank data) async {
     var json = data.toJson();
     json['`rank`'] = json.remove('rank');
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> update(SpellRank oldData, SpellRank newData) async {
+  Future<void> updateSpellRank(SpellRank oldData, SpellRank newData) async {
     var json = newData.toJson();
     json.remove('first_spell_id');
     json['`rank`'] = json.remove('rank');
@@ -71,7 +71,7 @@ class SpellRankRepository with RepositoryMixin {
         .update(json);
   }
 
-  Future<void> delete(int firstSpellId, int rank) async {
+  Future<void> destroySpellRank(int firstSpellId, int rank) async {
     await laconic
         .table(_table)
         .where('first_spell_id', firstSpellId)
@@ -79,7 +79,7 @@ class SpellRankRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellRank> copy(SpellRank data) async {
+  Future<SpellRank> copySpellRank(SpellRank data) async {
     var json = data.toJson();
     var maxSpellIdResult = await laconic
         .table(_table)

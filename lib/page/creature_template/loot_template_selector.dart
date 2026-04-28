@@ -291,11 +291,11 @@ class _DialogState extends State<_Dialog> {
       final entry = _entryController.text.isEmpty
           ? null
           : _entryController.text;
-      final items = await repository.searchDistinctEntries(
+      final items = await repository.getLootTemplateDistinctEntries(
         entry: entry,
         page: _page,
       );
-      final total = await repository.count(entry: entry);
+      final total = await repository.countLootTemplates(entry: entry);
       if (mounted) {
         setState(() {
           _items = items;

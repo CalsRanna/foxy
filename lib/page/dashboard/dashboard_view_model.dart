@@ -41,6 +41,6 @@ class DashboardViewModel {
   }
 
   Future<void> _loadRecentActivities() async {
-    recentActivities.value = await _activityRepo.getRecent();
+    recentActivities.value = await _activityRepo.getRecentActivityLogs();
   }
 }

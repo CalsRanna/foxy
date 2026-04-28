@@ -26,7 +26,7 @@ class CreatureTemplateResistanceViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getByEntry(creatureId.value);
+      final data = await repository.getCreatureTemplateResistances(creatureId.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -91,7 +91,7 @@ class CreatureTemplateResistanceViewModel {
 
     final resistance = items.value[index];
     try {
-      await repository.copy(resistance.creatureID, resistance.school);
+      await repository.copyCreatureTemplateResistance(resistance.creatureID, resistance.school);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -130,7 +130,7 @@ class CreatureTemplateResistanceViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.delete(resistance.creatureID, resistance.school);
+        await repository.destroyCreatureTemplateResistance(resistance.creatureID, resistance.school);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -148,7 +148,7 @@ class CreatureTemplateResistanceViewModel {
     saving.value = true;
     try {
       final resistance = collectFromForm();
-      await repository.store(resistance);
+      await repository.storeCreatureTemplateResistance(resistance);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -167,7 +167,7 @@ class CreatureTemplateResistanceViewModel {
     saving.value = true;
     try {
       final resistance = collectFromForm();
-      await repository.update(resistance);
+      await repository.updateCreatureTemplateResistance(resistance);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

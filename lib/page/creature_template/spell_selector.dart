@@ -263,7 +263,7 @@ class _DialogState extends State<_Dialog> {
         page: _page,
         filter: filter,
       );
-      final total = await repository.count(filter: filter);
+      final total = await repository.countSpells(filter: filter);
       final items = briefs
           .map(
             (b) => Spell()

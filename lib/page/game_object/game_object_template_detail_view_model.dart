@@ -227,6 +227,6 @@ class GameObjectTemplateDetailViewModel {
       entityName: t.name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().store(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

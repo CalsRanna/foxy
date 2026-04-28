@@ -28,7 +28,7 @@ class GemPropertyListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copyGemProperty(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class GemPropertyListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroyGemProperty(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -64,8 +64,8 @@ class GemPropertyListViewModel {
 
   Future<void> initSignals() async {
     final filter = GemPropertyFilterEntity();
-    properties.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    properties.value = await repository.getGemProperties(page: 1, filter: filter);
+    total.value = await repository.countGemProperties(filter: filter);
   }
 
   void navigateToDetail(BuildContext context, {int? id}) {
@@ -94,8 +94,8 @@ class GemPropertyListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = GemPropertyFilterEntity();
-    properties.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    properties.value = await repository.getGemProperties(page: 1, filter: filter);
+    total.value = await repository.countGemProperties(filter: filter);
   }
 
   Future<void> search() async {
@@ -105,7 +105,7 @@ class GemPropertyListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    properties.value = await repository.search(page: page.value, filter: filter);
-    total.value = await repository.count(filter: filter);
+    properties.value = await repository.getGemProperties(page: page.value, filter: filter);
+    total.value = await repository.countGemProperties(filter: filter);
   }
 }

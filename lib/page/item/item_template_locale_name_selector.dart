@@ -46,7 +46,7 @@ class _ItemTemplateLocaleNameSelectorState
 
   Future<void> _openLocaleDialog() async {
     if (widget.entry == null) return;
-    final locales = await repository.search(widget.entry!);
+    final locales = await repository.getItemTemplateLocales(widget.entry!);
     if (!mounted) return;
     await showShadDialog(
       context: context,

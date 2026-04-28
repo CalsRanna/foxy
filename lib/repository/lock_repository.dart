@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class LockRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_lock';
 
-  Future<List<Lock>> search({
+  Future<List<Lock>> getLocks({
     String? id,
     required int page,
   }) async {
@@ -16,7 +16,7 @@ class LockRepository with RepositoryMixin {
     return results.map((e) => Lock.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({String? id}) async {
+  Future<int> countLocks({String? id}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id);
     return builder.count();

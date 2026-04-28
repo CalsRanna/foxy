@@ -54,9 +54,9 @@ class SpellItemEnchantmentDetailViewModel {
       final t = _collectFromControllers();
       final repository = SpellItemEnchantmentSoloRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeSpellItemEnchantment(t);
       } else {
-        await repository.update(t);
+        await repository.updateSpellItemEnchantment(t);
       }
       enchantment.value = t;
       if (!context.mounted) return;
@@ -164,7 +164,7 @@ class SpellItemEnchantmentDetailViewModel {
     if (id == null) return;
     try {
       enchantment.value =
-          (await SpellItemEnchantmentSoloRepository().find(id))!;
+          (await SpellItemEnchantmentSoloRepository().getSpellItemEnchantment(id))!;
       _initControllers(enchantment.value);
     } catch (e, s) {
       logger.e('加载法术附魔(id=$id)失败', error: e, stackTrace: s);

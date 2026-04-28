@@ -29,7 +29,7 @@ class ItemEnchantmentTemplateViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getByEntry(entry.value);
+      final data = await repository.getItemEnchantmentTemplatesByEntry(entry.value);
       items.value = data;
       selectedIndex.value = null;
       creating.value = false;
@@ -106,7 +106,7 @@ class ItemEnchantmentTemplateViewModel {
 
     final model = items.value[index];
     try {
-      await repository.copy(model.entry, model.ench);
+      await repository.copyItemEnchantmentTemplate(model.entry, model.ench);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -145,7 +145,7 @@ class ItemEnchantmentTemplateViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.delete(model.entry, model.ench);
+        await repository.destroyItemEnchantmentTemplate(model.entry, model.ench);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -163,7 +163,7 @@ class ItemEnchantmentTemplateViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.store(model);
+      await repository.storeItemEnchantmentTemplate(model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -182,7 +182,7 @@ class ItemEnchantmentTemplateViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.update(model, oldEnch: editingEnch);
+      await repository.updateItemEnchantmentTemplate(model, oldEnch: editingEnch);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

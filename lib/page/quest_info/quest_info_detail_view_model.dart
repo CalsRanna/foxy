@@ -23,9 +23,9 @@ class QuestInfoDetailViewModel {
       final t = _collectFromControllers();
       final repository = QuestInfoRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeQuestInfo(t);
       } else {
-        await repository.update(t);
+        await repository.updateQuestInfo(t);
       }
       info.value = t;
       if (!context.mounted) return;
@@ -68,7 +68,7 @@ class QuestInfoDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      info.value = (await QuestInfoRepository().find(id))!;
+      info.value = (await QuestInfoRepository().getQuestInfo(id))!;
       _initControllers(info.value);
     } catch (e, s) {
       logger.e('加载任务信息(id=$id)失败', error: e, stackTrace: s);

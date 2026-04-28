@@ -28,7 +28,7 @@ class ScalingStatDistributionListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copyScalingStatDistribution(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class ScalingStatDistributionListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroyScalingStatDistribution(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -64,8 +64,8 @@ class ScalingStatDistributionListViewModel {
 
   Future<void> initSignals() async {
     final filter = ScalingStatDistributionFilterEntity();
-    distributions.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    distributions.value = await repository.getScalingStatDistributions(page: 1, filter: filter);
+    total.value = await repository.countScalingStatDistributions(filter: filter);
   }
 
   void navigateToDetail(BuildContext context, {int? id}) {
@@ -94,8 +94,8 @@ class ScalingStatDistributionListViewModel {
     idController.clear();
     page.value = 1;
     final filter = ScalingStatDistributionFilterEntity();
-    distributions.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    distributions.value = await repository.getScalingStatDistributions(page: 1, filter: filter);
+    total.value = await repository.countScalingStatDistributions(filter: filter);
   }
 
   Future<void> search() async {
@@ -105,7 +105,7 @@ class ScalingStatDistributionListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    distributions.value = await repository.search(page: page.value, filter: filter);
-    total.value = await repository.count(filter: filter);
+    distributions.value = await repository.getScalingStatDistributions(page: page.value, filter: filter);
+    total.value = await repository.countScalingStatDistributions(filter: filter);
   }
 }

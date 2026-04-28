@@ -253,7 +253,7 @@ class _DialogState extends State<_Dialog> {
         filter: filter,
         page: _page,
       );
-      final total = await repository.count(filter: filter);
+      final total = await repository.countQuestTemplates(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

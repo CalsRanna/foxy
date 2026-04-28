@@ -5,7 +5,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class ScalingStatDistributionSoloRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
 
-  Future<List<ScalingStatDistribution>> search({
+  Future<List<ScalingStatDistribution>> getScalingStatDistributions({
     required ScalingStatDistributionFilterEntity filter,
     required int page,
   }) async {
@@ -17,13 +17,13 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     return results.map((e) => ScalingStatDistribution.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required ScalingStatDistributionFilterEntity filter}) async {
+  Future<int> countScalingStatDistributions({required ScalingStatDistributionFilterEntity filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<ScalingStatDistribution?> find(int id) async {
+  Future<ScalingStatDistribution?> getScalingStatDistribution(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return ScalingStatDistribution.fromJson(result.toMap());
@@ -32,22 +32,22 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(ScalingStatDistribution item) async {
+  Future<void> storeScalingStatDistribution(ScalingStatDistribution item) async {
     await laconic.table(_table).insert([item.toJson()]);
   }
 
-  Future<void> update(ScalingStatDistribution item) async {
+  Future<void> updateScalingStatDistribution(ScalingStatDistribution item) async {
     var json = item.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', item.id).update(json);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroyScalingStatDistribution(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    var source = await find(id);
+  Future<void> copyScalingStatDistribution(int id) async {
+    var source = await getScalingStatDistribution(id);
     if (source == null) return;
     var json = source.toJson();
     var nextId = await _getNextId();

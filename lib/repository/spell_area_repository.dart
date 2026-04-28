@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellAreaRepository with RepositoryMixin {
   static const _table = 'spell_area';
 
-  Future<List<SpellArea>> getBySpell(int spell) async {
+  Future<List<SpellArea>> getSpellAreas(int spell) async {
     try {
       var results = await laconic.table(_table).where('spell', spell).get();
       return results.map((e) => SpellArea.fromJson(e.toMap())).toList();
@@ -13,7 +13,7 @@ class SpellAreaRepository with RepositoryMixin {
     }
   }
 
-  Future<SpellArea?> find(
+  Future<SpellArea?> getSpellArea(
     int spell,
     int area,
     int questStart,
@@ -37,11 +37,11 @@ class SpellAreaRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(SpellArea data) async {
+  Future<void> storeSpellArea(SpellArea data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> update(SpellArea oldData, SpellArea newData) async {
+  Future<void> updateSpellArea(SpellArea oldData, SpellArea newData) async {
     var json = newData.toJson();
     json.remove('spell');
     json.remove('area');
@@ -60,7 +60,7 @@ class SpellAreaRepository with RepositoryMixin {
         .update(json);
   }
 
-  Future<void> delete(
+  Future<void> destroySpellArea(
     int spell,
     int area,
     int questStart,
@@ -79,7 +79,7 @@ class SpellAreaRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellArea> copy(SpellArea data) async {
+  Future<SpellArea> copySpellArea(SpellArea data) async {
     var json = data.toJson();
     var maxAreaResult = await laconic
         .table(_table)

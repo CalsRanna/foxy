@@ -6,7 +6,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   final String _table = 'foxy.dbc_creature_display_info';
   final String _modelDataTable = 'foxy.dbc_creature_model_data';
 
-  Future<int> count({String? id, String? modelName}) async {
+  Future<int> countCreatureDisplayInfos({String? id, String? modelName}) async {
     try {
       var builder = laconic.table('$_table AS cdi');
       builder = builder.leftJoin(
@@ -30,7 +30,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<List<CreatureDisplayInfo>> search({
+  Future<List<CreatureDisplayInfo>> getCreatureDisplayInfos({
     String? id,
     String? modelName,
     int page = 1,

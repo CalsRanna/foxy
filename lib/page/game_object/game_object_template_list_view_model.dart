@@ -70,7 +70,7 @@ class GameObjectTemplateListViewModel {
 
   Future<void> initSignals() async {
     templates.value = await repository.getBriefGameObjectTemplates();
-    total.value = await repository.count();
+    total.value = await repository.countGameObjectTemplates();
   }
 
   void navigateGameObjectTemplateDetailPage(
@@ -105,7 +105,7 @@ class GameObjectTemplateListViewModel {
     nameController.clear();
     page.value = 1;
     templates.value = await repository.getBriefGameObjectTemplates();
-    total.value = await repository.count();
+    total.value = await repository.countGameObjectTemplates();
   }
 
   Future<void> search() async {
@@ -119,7 +119,7 @@ class GameObjectTemplateListViewModel {
       page: page.value,
       filter: filter,
     );
-    total.value = await repository.count(filter: filter);
+    total.value = await repository.countGameObjectTemplates(filter: filter);
   }
 
   void _logActivity(ActivityActionType action, int entry) {
@@ -133,6 +133,6 @@ class GameObjectTemplateListViewModel {
       entityName: name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().store(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

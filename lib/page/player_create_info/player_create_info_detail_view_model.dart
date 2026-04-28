@@ -26,7 +26,7 @@ class PlayerCreateInfoDetailViewModel {
   Future<void> initSignals({int? race, int? playerClass}) async {
     if (race == null || playerClass == null) return;
     try {
-      final result = await repository.find(race, playerClass);
+      final result = await repository.getPlayerCreateInfo(race, playerClass);
       info.value = result;
       _initControllers(result);
     } catch (e, s) {
@@ -49,7 +49,7 @@ class PlayerCreateInfoDetailViewModel {
     saving.value = true;
     try {
       final data = _collect();
-      await repository.store(data);
+      await repository.storePlayerCreateInfo(data);
       info.value = data;
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('出生信息已保存')));
@@ -66,7 +66,7 @@ class PlayerCreateInfoDetailViewModel {
     if (current == null) return;
     try {
       final data = _collect();
-      await repository.update(current.buildCredential(), data);
+      await repository.updatePlayerCreateInfo(current.buildCredential(), data);
       info.value = data;
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));

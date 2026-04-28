@@ -36,7 +36,7 @@ class GameObjectLootTemplateViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      items.value = await repository.getByEntry(gameObjectId.value);
+      items.value = await repository.getLootTemplates(gameObjectId.value);
     } catch (e) {
       rethrow;
     } finally {
@@ -127,7 +127,7 @@ class GameObjectLootTemplateViewModel {
     try {
       final item = items.value[index];
       DialogUtil.instance.loading();
-      await repository.copy(item.entry, item.item);
+      await repository.copyLootTemplate(item.entry, item.item);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await load();
@@ -150,7 +150,7 @@ class GameObjectLootTemplateViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.delete(item.entry, item.item);
+      await repository.destroyLootTemplate(item.entry, item.item);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await load();
@@ -164,7 +164,7 @@ class GameObjectLootTemplateViewModel {
     saving.value = true;
     try {
       final loot = collectFromForm();
-      await repository.store(loot);
+      await repository.storeLootTemplate(loot);
       await load();
       if (dialogContext.mounted) Navigator.of(dialogContext).pop();
     } catch (e) {
@@ -178,7 +178,7 @@ class GameObjectLootTemplateViewModel {
     saving.value = true;
     try {
       final loot = collectFromForm();
-      await repository.update(loot, oldItem: editingItem);
+      await repository.updateLootTemplate(loot, oldItem: editingItem);
       await load();
       if (dialogContext.mounted) Navigator.of(dialogContext).pop();
     } catch (e) {

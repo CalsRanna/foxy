@@ -6,7 +6,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   final String _table = 'foxy.dbc_scaling_stat_distribution';
 
   /// 搜索（分页）
-  Future<List<ItemEnchantmentTemplate>> search({
+  Future<List<ItemEnchantmentTemplate>> getScalingStatDistributions({
     String? id,
     int page = 1,
   }) async {
@@ -34,7 +34,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   }
 
   /// 计数
-  Future<int> count({String? id}) async {
+  Future<int> countScalingStatDistributions({String? id}) async {
     try {
       var builder = laconic.table('$_table AS ssd');
       if (id != null && id.isNotEmpty) {

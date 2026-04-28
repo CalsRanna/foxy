@@ -5,7 +5,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
   static const _table = 'creature_onkill_reputation';
 
   /// 获取指定生物的击杀声望
-  Future<CreatureOnKillReputation?> getByEntry(int creatureID) async {
+  Future<CreatureOnKillReputation?> getCreatureOnKillReputation(int creatureID) async {
     try {
       var builder = laconic.table(_table);
       builder = builder.select(['*']);
@@ -17,26 +17,13 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
     }
   }
 
-  /// 查找单条记录
-  Future<CreatureOnKillReputation?> find(int creatureID) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('creature_id', creatureID)
-          .first();
-      return CreatureOnKillReputation.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
-  }
-
   /// 新增击杀声望
-  Future<void> store(CreatureOnKillReputation rep) async {
+  Future<void> storeCreatureOnKillReputation(CreatureOnKillReputation rep) async {
     await laconic.table(_table).insert([rep.toJson()]);
   }
 
   /// 更新击杀声望
-  Future<void> update(CreatureOnKillReputation rep) async {
+  Future<void> updateCreatureOnKillReputation(CreatureOnKillReputation rep) async {
     var json = rep.toJson();
     json.remove('creature_id');
     await laconic
@@ -46,12 +33,12 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
   }
 
   /// 保存（新增或更新）
-  Future<void> save(CreatureOnKillReputation rep) async {
-    var existing = await find(rep.creatureID);
+  Future<void> saveCreatureOnKillReputation(CreatureOnKillReputation rep) async {
+    var existing = await getCreatureOnKillReputation(rep.creatureID);
     if (existing == null) {
-      await store(rep);
+      await storeCreatureOnKillReputation(rep);
     } else {
-      await update(rep);
+      await updateCreatureOnKillReputation(rep);
     }
   }
 }

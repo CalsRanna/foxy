@@ -30,7 +30,7 @@ class SpellAreaViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getBySpell(spellId.value);
+      final data = await repository.getSpellAreas(spellId.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -103,7 +103,7 @@ class SpellAreaViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final area = items.value[index];
     try {
-      await repository.copy(area);
+      await repository.copySpellArea(area);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -138,7 +138,7 @@ class SpellAreaViewModel {
     );
     if (confirmed == true) {
       try {
-        await repository.delete(
+        await repository.destroySpellArea(
           area.spell,
           area.area,
           area.questStart,
@@ -162,7 +162,7 @@ class SpellAreaViewModel {
     saving.value = true;
     try {
       final data = collectFromForm();
-      await repository.store(data);
+      await repository.storeSpellArea(data);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -183,7 +183,7 @@ class SpellAreaViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await repository.update(oldData, newData);
+      await repository.updateSpellArea(oldData, newData);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

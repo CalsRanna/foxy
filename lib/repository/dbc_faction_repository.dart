@@ -5,7 +5,7 @@ class DbcFactionRepository with RepositoryMixin {
   // DBC 表在 foxy 数据库中
   final String _table = 'foxy.dbc_faction';
 
-  Future<int> count({String? id, String? name}) async {
+  Future<int> countDbcFactions({String? id, String? name}) async {
     try {
       var builder = laconic.table(_table);
       if (id != null && id.isNotEmpty) {
@@ -25,7 +25,7 @@ class DbcFactionRepository with RepositoryMixin {
     }
   }
 
-  Future<List<DbcFaction>> search({
+  Future<List<DbcFaction>> getDbcFactions({
     String? id,
     String? name,
     int page = 1,

@@ -5,7 +5,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   static const _table = 'item_enchantment_template';
 
   /// 搜索附魔模板（按 entry 搜索，带分页）
-  Future<List<ItemEnchantmentTemplate>> search({
+  Future<List<ItemEnchantmentTemplate>> getItemEnchantmentTemplates({
     String? entry,
     int page = 1,
   }) async {
@@ -66,7 +66,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 计数
-  Future<int> count({String? entry}) async {
+  Future<int> countItemEnchantmentTemplates({String? entry}) async {
     try {
       var builder = laconic.table('$_table AS iet');
       builder = builder.leftJoin(
@@ -84,7 +84,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 获取指定 entry 的所有附魔项（带 DBC 名称）
-  Future<List<ItemEnchantmentTemplate>> getByEntry(int entry) async {
+  Future<List<ItemEnchantmentTemplate>> getItemEnchantmentTemplatesByEntry(int entry) async {
     try {
       var builder = laconic.table('$_table AS iet');
       builder = builder.select([
@@ -138,7 +138,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<ItemEnchantmentTemplate?> find(int entry, int ench) async {
+  Future<ItemEnchantmentTemplate?> getItemEnchantmentTemplate(int entry, int ench) async {
     try {
       var result = await laconic
           .table(_table)
@@ -152,12 +152,12 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 新增
-  Future<void> store(ItemEnchantmentTemplate model) async {
+  Future<void> storeItemEnchantmentTemplate(ItemEnchantmentTemplate model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   /// 更新
-  Future<void> update(ItemEnchantmentTemplate model, {int? oldEnch}) async {
+  Future<void> updateItemEnchantmentTemplate(ItemEnchantmentTemplate model, {int? oldEnch}) async {
     var json = model.toJson();
     json.remove('entry');
     if (oldEnch == null) json.remove('ench');
@@ -169,7 +169,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 删除
-  Future<void> delete(int entry, int ench) async {
+  Future<void> destroyItemEnchantmentTemplate(int entry, int ench) async {
     await laconic
         .table(_table)
         .where('entry', entry)
@@ -178,7 +178,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 复制：取新 ench = MAX+1
-  Future<ItemEnchantmentTemplate> copy(int entry, int ench) async {
+  Future<ItemEnchantmentTemplate> copyItemEnchantmentTemplate(int entry, int ench) async {
     // 获取最大 ench
     var maxResult = await laconic
         .table(_table)
@@ -188,7 +188,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     var maxEnch = (maxResult.toMap()['maxEnch'] ?? 0) as int;
 
     // 获取源记录
-    var source = await find(entry, ench);
+    var source = await getItemEnchantmentTemplate(entry, ench);
     if (source == null) {
       throw Exception('源记录不存在');
     }
@@ -197,7 +197,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     var newModel = ItemEnchantmentTemplate.fromJson(source.toJson());
     newModel.ench = maxEnch + 1;
 
-    await store(newModel);
+    await storeItemEnchantmentTemplate(newModel);
     return newModel;
   }
 }

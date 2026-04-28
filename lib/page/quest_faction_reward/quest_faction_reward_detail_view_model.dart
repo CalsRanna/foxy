@@ -35,9 +35,9 @@ class QuestFactionRewardDetailViewModel {
       final t = _collectFromControllers();
       final repository = QuestFactionRewardRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeQuestFactionReward(t);
       } else {
-        await repository.update(t);
+        await repository.updateQuestFactionReward(t);
       }
       reward.value = t;
       if (!context.mounted) return;
@@ -106,7 +106,7 @@ class QuestFactionRewardDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      reward.value = (await QuestFactionRewardRepository().find(id))!;
+      reward.value = (await QuestFactionRewardRepository().getQuestFactionReward(id))!;
       _initControllers(reward.value);
     } catch (e, s) {
       logger.e('加载任务声望(id=$id)失败', error: e, stackTrace: s);

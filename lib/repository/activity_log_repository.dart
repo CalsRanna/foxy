@@ -8,11 +8,11 @@ class ActivityLogRepository {
 
   static const String _table = 'foxy.activity_log';
 
-  Future<void> store(ActivityLog log) async {
+  Future<void> storeActivityLog(ActivityLog log) async {
     await _laconic.table(_table).insert([log.toJson()]);
   }
 
-  Future<List<ActivityLog>> getRecent({int limit = 20}) async {
+  Future<List<ActivityLog>> getRecentActivityLogs({int limit = 20}) async {
     final rows = await _laconic
         .table(_table)
         .select(['*'])

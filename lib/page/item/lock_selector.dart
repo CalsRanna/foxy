@@ -232,8 +232,8 @@ class _DialogState extends State<_Dialog> {
     try {
       final repository = LockRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
-      final items = await repository.search(id: id, page: _page);
-      final total = await repository.count(id: id);
+      final items = await repository.getLocks(id: id, page: _page);
+      final total = await repository.countLocks(id: id);
       if (mounted) {
         setState(() {
           _items = items;

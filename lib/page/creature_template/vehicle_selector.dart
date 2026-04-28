@@ -233,8 +233,8 @@ class _DialogState extends State<_Dialog> {
     try {
       final repository = VehicleRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
-      final items = await repository.search(id: id, page: _page);
-      final total = await repository.count(id: id);
+      final items = await repository.getVehicles(id: id, page: _page);
+      final total = await repository.countVehicles(id: id);
       if (mounted) {
         setState(() {
           _items = items;

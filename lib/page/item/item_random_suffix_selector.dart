@@ -247,12 +247,12 @@ class _DialogState extends State<_Dialog> {
       final repository = ItemRandomSuffixRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
       final name = _nameController.text.isEmpty ? null : _nameController.text;
-      final items = await repository.search(
+      final items = await repository.getItemRandomSuffixes(
         id: id,
         name: name,
         page: _page,
       );
-      final total = await repository.count(id: id, name: name);
+      final total = await repository.countItemRandomSuffixes(id: id, name: name);
       if (mounted) {
         setState(() {
           _items = items;

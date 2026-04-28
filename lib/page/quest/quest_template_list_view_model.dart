@@ -108,7 +108,7 @@ class QuestTemplateListViewModel {
       filter: filter,
       page: page.value,
     );
-    total.value = await repository.count(filter: filter);
+    total.value = await repository.countQuestTemplates(filter: filter);
   }
 
   QuestTemplateFilterEntity _buildFilter() {
@@ -128,6 +128,6 @@ class QuestTemplateListViewModel {
       entityName: name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().store(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

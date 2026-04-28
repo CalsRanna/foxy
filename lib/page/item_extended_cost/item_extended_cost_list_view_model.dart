@@ -28,7 +28,7 @@ class ItemExtendedCostListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copyItemExtendedCost(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class ItemExtendedCostListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroyItemExtendedCost(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -64,8 +64,8 @@ class ItemExtendedCostListViewModel {
 
   Future<void> initSignals() async {
     final filter = ItemExtendedCostFilterEntity();
-    costs.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    costs.value = await repository.getItemExtendedCosts(page: 1, filter: filter);
+    total.value = await repository.countItemExtendedCosts(filter: filter);
   }
 
   void navigateToDetail(BuildContext context, {int? id}) {
@@ -94,8 +94,8 @@ class ItemExtendedCostListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = ItemExtendedCostFilterEntity();
-    costs.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    costs.value = await repository.getItemExtendedCosts(page: 1, filter: filter);
+    total.value = await repository.countItemExtendedCosts(filter: filter);
   }
 
   Future<void> search() async {
@@ -105,7 +105,7 @@ class ItemExtendedCostListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    costs.value = await repository.search(page: page.value, filter: filter);
-    total.value = await repository.count(filter: filter);
+    costs.value = await repository.getItemExtendedCosts(page: page.value, filter: filter);
+    total.value = await repository.countItemExtendedCosts(filter: filter);
   }
 }

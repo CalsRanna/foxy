@@ -35,7 +35,7 @@ class MillingLootTemplateViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getByEntry(entry.value);
+      final data = await repository.getLootTemplates(entry.value);
       items.value = data;
       selectedIndex.value = null;
       creating.value = false;
@@ -128,7 +128,7 @@ class MillingLootTemplateViewModel {
 
     final loot = items.value[index];
     try {
-      await repository.copy(loot.entry, loot.item);
+      await repository.copyLootTemplate(loot.entry, loot.item);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -167,7 +167,7 @@ class MillingLootTemplateViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.delete(loot.entry, loot.item);
+        await repository.destroyLootTemplate(loot.entry, loot.item);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -185,7 +185,7 @@ class MillingLootTemplateViewModel {
     saving.value = true;
     try {
       final loot = collectFromForm();
-      await repository.store(loot);
+      await repository.storeLootTemplate(loot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -204,7 +204,7 @@ class MillingLootTemplateViewModel {
     saving.value = true;
     try {
       final loot = collectFromForm();
-      await repository.update(loot, oldItem: editingItem);
+      await repository.updateLootTemplate(loot, oldItem: editingItem);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

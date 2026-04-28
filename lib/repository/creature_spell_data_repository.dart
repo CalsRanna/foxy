@@ -6,7 +6,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
   final String _table = 'foxy.dbc_creature_spell_data';
   final String _spellTable = 'foxy.dbc_spell';
 
-  Future<int> count({String? id, String? spell}) async {
+  Future<int> countCreatureSpellDatas({String? id, String? spell}) async {
     try {
       var builder = laconic.table('$_table AS dcsd');
       builder = builder.leftJoin(
@@ -47,7 +47,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
     }
   }
 
-  Future<List<CreatureSpellData>> search({
+  Future<List<CreatureSpellData>> getCreatureSpellDatas({
     String? id,
     String? spell,
     int page = 1,

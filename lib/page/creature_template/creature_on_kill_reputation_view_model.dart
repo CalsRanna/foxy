@@ -30,7 +30,7 @@ class CreatureOnKillReputationViewModel {
     loading.value = true;
     try {
       final repository = CreatureOnKillReputationRepository();
-      final data = await repository.find(creatureId.value);
+      final data = await repository.getCreatureOnKillReputation(creatureId.value);
       if (data != null) {
         reputation.value = data;
       }
@@ -47,7 +47,7 @@ class CreatureOnKillReputationViewModel {
     try {
       final repData = _collectFromControllers();
       final repository = CreatureOnKillReputationRepository();
-      await repository.save(repData);
+      await repository.saveCreatureOnKillReputation(repData);
       reputation.value = repData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('击杀声望数据已保存'));

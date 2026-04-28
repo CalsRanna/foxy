@@ -247,8 +247,8 @@ class _DialogState extends State<_Dialog> {
       final entry = _entryController.text.isEmpty
           ? null
           : _entryController.text;
-      final items = await repository.search(entry: entry, page: _page);
-      final total = await repository.count(entry: entry);
+      final items = await repository.getItemEnchantmentTemplates(entry: entry, page: _page);
+      final total = await repository.countItemEnchantmentTemplates(entry: entry);
       if (mounted) {
         setState(() {
           _items = items;

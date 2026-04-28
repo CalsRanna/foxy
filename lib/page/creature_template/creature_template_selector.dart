@@ -256,7 +256,7 @@ class _DialogState extends State<_Dialog> {
         page: _page,
         filter: filter,
       );
-      final total = await repository.count(filter: filter);
+      final total = await repository.countCreatureTemplates(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

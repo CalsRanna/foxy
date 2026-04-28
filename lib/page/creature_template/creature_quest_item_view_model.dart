@@ -26,7 +26,7 @@ class CreatureQuestItemViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getByEntry(creatureEntry.value);
+      final data = await repository.getCreatureQuestItems(creatureEntry.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -91,7 +91,7 @@ class CreatureQuestItemViewModel {
 
     final questItem = items.value[index];
     try {
-      await repository.copy(questItem.creatureEntry, questItem.idx);
+      await repository.copyCreatureQuestItem(questItem.creatureEntry, questItem.idx);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -130,7 +130,7 @@ class CreatureQuestItemViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.delete(questItem.creatureEntry, questItem.idx);
+        await repository.destroyCreatureQuestItem(questItem.creatureEntry, questItem.idx);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -148,7 +148,7 @@ class CreatureQuestItemViewModel {
     saving.value = true;
     try {
       final questItem = collectFromForm();
-      await repository.store(questItem);
+      await repository.storeCreatureQuestItem(questItem);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -167,7 +167,7 @@ class CreatureQuestItemViewModel {
     saving.value = true;
     try {
       final questItem = collectFromForm();
-      await repository.update(questItem);
+      await repository.updateCreatureQuestItem(questItem);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));
