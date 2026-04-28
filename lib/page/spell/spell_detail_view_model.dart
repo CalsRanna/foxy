@@ -4,6 +4,7 @@ import 'package:foxy/model/spell.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -736,8 +737,12 @@ class SpellDetailViewModel {
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
-    spell.value = await SpellRepository().getSpell(id);
-    _initControllers(spell.value);
+    try {
+      spell.value = await SpellRepository().getSpell(id);
+      _initControllers(spell.value);
+    } catch (e, s) {
+      logger.e('加载法术(id=$id)失败', error: e, stackTrace: s);
+    }
   }
 
   void _initControllers(Spell template) {

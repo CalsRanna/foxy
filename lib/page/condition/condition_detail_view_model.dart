@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/condition.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -70,6 +72,7 @@ class ConditionDetailViewModel {
       final data = _collect();
       await repository.storeCondition(data);
       condition.value = data;
+      _logActivity(ActivityActionType.create, data);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('条件已保存')));
     } catch (e) {
@@ -86,15 +89,20 @@ class ConditionDetailViewModel {
       final data = _collect();
       await repository.updateCondition(_originalCredential!, data);
       condition.value = data;
+      _logActivity(ActivityActionType.update, data);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
     } catch (e) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+    } finally {
+      saving.value = false;
     }
   }
 
-  void pop() => routerFacade.goBack();
+  void pop() {
+    routerFacade.goBack();
+  }
 
   Condition _collect() {
     final c = Condition();
@@ -121,6 +129,17 @@ class ConditionDetailViewModel {
     final value = int.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
+  }
+
+  void _logActivity(ActivityActionType action, Condition c) {
+    final log = ActivityLog(
+      module: 'conditions',
+      actionType: action,
+      entityId: c.sourceTypeOrReferenceId,
+      entityName: c.comment,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {

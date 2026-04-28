@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/emote_text.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -48,6 +50,7 @@ class EmoteTextDetailViewModel {
         await repository.updateEmoteText(t);
       }
       emote.value = t;
+      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('表情文本数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -100,6 +103,17 @@ class EmoteTextDetailViewModel {
     final value = int.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
+  }
+
+  void _logActivity(ActivityActionType action, EmoteText t) {
+    final log = ActivityLog(
+      module: 'emote_text',
+      actionType: action,
+      entityId: t.id,
+      entityName: t.name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {

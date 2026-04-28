@@ -79,7 +79,7 @@ class _ReferenceLootTemplateListPageState
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final templates = viewModel.templates.value;
@@ -141,7 +141,6 @@ class _ReferenceLootTemplateListPageState
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               entry: templates[row].entry,
               item: templates[row].item,
               label: '${templates[row].entry}-${templates[row].item}',
@@ -156,7 +155,6 @@ class _ReferenceLootTemplateListPageState
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
                       entry: templates[row].entry,
                       item: templates[row].item,
                       label: '${templates[row].entry}-${templates[row].item}',

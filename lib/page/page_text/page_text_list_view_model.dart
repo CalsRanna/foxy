@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/page_text.dart';
 import 'package:foxy/model/page_text_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -44,7 +46,7 @@ class PageTextListViewModel {
     await _refresh();
   }
 
-  void navigateToDetail(BuildContext context, {int? id, String? label}) {
+  void navigateToDetail({int? id, String? label}) {
     final routeId = id != null ? 'page_text_$id' : 'page_text_new';
     final name = label?.isNotEmpty == true ? label! : '新建页面文本';
     _routerFacade.navigateToDetail(
@@ -65,6 +67,7 @@ class PageTextListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyPageText(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -85,6 +88,7 @@ class PageTextListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyPageText(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -92,6 +96,20 @@ class PageTextListViewModel {
       logger.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final pages = this.pages.value;
+    final page = pages.where((p) => p.id == id).firstOrNull;
+    final name = page?.text ?? '';
+    final log = ActivityLog(
+      module: 'page_text',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   PageTextFilterEntity _buildFilter() {

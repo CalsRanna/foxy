@@ -71,7 +71,7 @@ class _ScalingStatDistributionListPageState extends State<ScalingStatDistributio
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final items = viewModel.distributions.value;
@@ -109,7 +109,6 @@ class _ScalingStatDistributionListPageState extends State<ScalingStatDistributio
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               id: items[row].id,
             );
           },
@@ -122,7 +121,6 @@ class _ScalingStatDistributionListPageState extends State<ScalingStatDistributio
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
                       id: items[row].id,
                     );
                   },

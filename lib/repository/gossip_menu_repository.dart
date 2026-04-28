@@ -5,9 +5,8 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GossipMenuRepository with RepositoryMixin {
   static const _table = 'gossip_menu';
 
-  Future<void> copyGossipMenu(Map<String, dynamic> id) async {
-    final original = await getGossipMenu(id);
-    if (original == null) return;
+  Future<void> copyGossipMenu(int menuId, int textId) async {
+    final original = await getGossipMenu(menuId, textId);
     original.menuId = await getNextMenuId();
     await storeGossipMenu(original);
   }
@@ -35,12 +34,12 @@ class GossipMenuRepository with RepositoryMixin {
     return await builder.count();
   }
 
-  Future<void> destroyGossipMenu(Map<String, dynamic> id) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
-    await builder.delete();
+  Future<void> destroyGossipMenu(int menuId, int textId) async {
+    await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('TextID', textId)
+        .delete();
   }
 
   Future<List<BriefGossipMenu>> getBriefGossipMenus({
@@ -72,36 +71,35 @@ class GossipMenuRepository with RepositoryMixin {
     return results.map((e) => BriefGossipMenu.fromJson(e.toMap())).toList();
   }
 
-  Future<GossipMenu?> getGossipMenu(Map<String, dynamic> id) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
-    final result = await builder.first();
+  Future<GossipMenu> getGossipMenu(int menuId, int textId) async {
+    final result = await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('TextID', textId)
+        .first();
     return GossipMenu.fromJson(result.toMap());
   }
 
   Future<void> storeGossipMenu(GossipMenu model) async {
     var json = model.toJson();
-    if (json['MenuID'] == 0) {
-      json['MenuID'] = await getNextMenuId();
-    }
+    var newMenuId = await getNextMenuId();
+    json['MenuID'] = newMenuId;
     await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateGossipMenu(
-    Map<String, dynamic> id,
+    int menuId,
+    int textId,
     GossipMenu model,
   ) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
     final json = model.toJson();
-    for (final k in id.keys) {
-      json.remove(k);
-    }
-    await builder.update(json);
+    json.remove('MenuID');
+    json.remove('TextID');
+    await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('TextID', textId)
+        .update(json);
   }
 
   dynamic _applyFilter(dynamic builder, GossipMenuFilterEntity? filter) {

@@ -75,7 +75,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final emotes = viewModel.emotes.value;
@@ -118,7 +118,6 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               id: emotes[row].id,
               name: emotes[row].name,
             );
@@ -132,7 +131,6 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
                       id: emotes[row].id,
                       name: emotes[row].name,
                     );

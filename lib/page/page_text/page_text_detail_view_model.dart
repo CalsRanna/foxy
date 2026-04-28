@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/page_text.dart';
 import 'package:foxy/model/page_text_locale.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -45,6 +47,7 @@ class PageTextDetailViewModel {
       final data = _collect();
       await repository.storePageText(data);
       page.value = data;
+      _logActivity(ActivityActionType.create, data);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('页面文本已保存')));
     } catch (e) {
@@ -66,6 +69,7 @@ class PageTextDetailViewModel {
       final data = _collect();
       await repository.updatePageText(id, data);
       page.value = data;
+      _logActivity(ActivityActionType.update, data);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
     } catch (e) {
@@ -75,6 +79,17 @@ class PageTextDetailViewModel {
   }
 
   void pop() => routerFacade.goBack();
+
+  void _logActivity(ActivityActionType action, PageText t) {
+    final log = ActivityLog(
+      module: 'page_text',
+      actionType: action,
+      entityId: t.id,
+      entityName: t.text,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
+  }
 
   PageText _collect() {
     final pt = PageText();

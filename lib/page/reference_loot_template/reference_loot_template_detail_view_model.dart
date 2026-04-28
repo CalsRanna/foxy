@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/loot_template.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -62,6 +64,7 @@ class ReferenceLootTemplateDetailViewModel {
       final data = _collectFromControllers();
       await repository.storeLootTemplate(data);
       template.value = data;
+      _logActivity(ActivityActionType.create, data);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('关联掉落已保存'));
       ShadSonner.of(context).show(toast);
@@ -83,6 +86,7 @@ class ReferenceLootTemplateDetailViewModel {
       final data = _collectFromControllers();
       await repository.updateLootTemplate(data, oldItem: oItem);
       template.value = data;
+      _logActivity(ActivityActionType.update, data);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));
       ShadSonner.of(context).show(toast);
@@ -119,6 +123,17 @@ class ReferenceLootTemplateDetailViewModel {
     return value;
   }
   double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
+
+  void _logActivity(ActivityActionType action, LootTemplate t) {
+    final log = ActivityLog(
+      module: 'reference_loot_template',
+      actionType: action,
+      entityId: t.entry,
+      entityName: t.item.toString(),
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
+  }
 
   void dispose() {
     entryController.dispose();

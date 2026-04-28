@@ -72,7 +72,7 @@ class _TextContentListPageState extends State<TextContentListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final pages = viewModel.pages.value;
@@ -114,7 +114,6 @@ class _TextContentListPageState extends State<TextContentListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               id: pages[row].id,
               label: pages[row].displayText,
             );
@@ -126,7 +125,7 @@ class _TextContentListPageState extends State<TextContentListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(context, id: pages[row].id, label: pages[row].displayText),
+                  onPressed: () => viewModel.navigateToDetail(id: pages[row].id, label: pages[row].displayText),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(

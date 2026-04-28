@@ -67,7 +67,7 @@ class QuestFactionRewardListViewModel {
     total.value = await repository.countQuestFactionRewards(filter: filter);
   }
 
-  void navigateToDetail(BuildContext context, {int? id}) {
+  void navigateToDetail({int? id}) {
     final label = id != null ? '#$id' : '新建任务声望';
     final routeId = id != null ? 'quest_faction_reward_$id' : 'quest_faction_reward_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();

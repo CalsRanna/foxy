@@ -71,7 +71,7 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final rewards = viewModel.rewards.value;
@@ -110,7 +110,6 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               id: rewards[row].id,
             );
           },
@@ -123,7 +122,6 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
                       id: rewards[row].id,
                     );
                   },

@@ -75,7 +75,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final sorts = viewModel.sorts.value;
@@ -116,7 +116,6 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               id: sorts[row].id,
               name: sorts[row].sortNameLangZhCn,
             );
@@ -130,7 +129,6 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
                       id: sorts[row].id,
                       name: sorts[row].sortNameLangZhCn,
                     );

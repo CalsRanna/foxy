@@ -4,15 +4,14 @@ import 'package:foxy/model/gossip_menu.dart';
 import 'package:foxy/model/gossip_menu_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-/// 对话菜单列表 ViewModel（LazySingleton，保留搜索状态）
 class GossipMenuListViewModel {
   final repository = GossipMenuRepository();
 
@@ -60,7 +59,7 @@ class GossipMenuListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copyGossipMenu({'MenuID': menuId, 'TextID': textId});
+      await repository.copyGossipMenu(menuId, textId);
       _logActivity(ActivityActionType.copy, menuId, textId);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
@@ -83,7 +82,7 @@ class GossipMenuListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroyGossipMenu({'MenuID': menuId, 'TextID': textId});
+      await repository.destroyGossipMenu(menuId, textId);
       _logActivity(ActivityActionType.delete, menuId, textId);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');

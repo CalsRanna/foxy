@@ -77,7 +77,7 @@ class _SpellItemEnchantmentListPageState
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final items = viewModel.enchantments.value;
@@ -120,7 +120,6 @@ class _SpellItemEnchantmentListPageState
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               id: items[row].id,
               name: items[row].nameLangZhCn,
             );
@@ -134,7 +133,6 @@ class _SpellItemEnchantmentListPageState
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
                       id: items[row].id,
                       name: items[row].nameLangZhCn,
                     );

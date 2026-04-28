@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/quest_sort.dart';
 import 'package:foxy/model/quest_sort_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -29,6 +31,7 @@ class QuestSortListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyQuestSort(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,6 +52,7 @@ class QuestSortListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyQuestSort(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -56,6 +60,20 @@ class QuestSortListViewModel {
       logger.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final sorts = this.sorts.value;
+    final sort = sorts.where((s) => s.id == id).firstOrNull;
+    final name = sort?.sortNameLangZhCn ?? '';
+    final log = ActivityLog(
+      module: 'quest_sort',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {
@@ -69,7 +87,7 @@ class QuestSortListViewModel {
     total.value = await repository.countQuestSorts(filter: filter);
   }
 
-  void navigateToDetail(BuildContext context, {int? id, String? name}) {
+  void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建任务排序';
     final routeId = id != null ? 'quest_sort_$id' : 'quest_sort_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();

@@ -65,7 +65,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final conditions = viewModel.conditions.value;
@@ -113,7 +113,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
             };
           },
           header: (context, index) => ShadTableCell.header(child: Text(headers[index])),
-          onRowDoubleTap: (row) => viewModel.navigateToDetail(context, condition: conditions[row]),
+          onRowDoubleTap: (row) => viewModel.navigateToDetail(condition: conditions[row]),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
@@ -121,7 +121,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(context, condition: conditions[row]),
+                  onPressed: () => viewModel.navigateToDetail(condition: conditions[row]),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(

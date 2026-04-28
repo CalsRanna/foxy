@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/player_create_info.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -51,6 +53,7 @@ class PlayerCreateInfoDetailViewModel {
       final data = _collect();
       await repository.storePlayerCreateInfo(data);
       info.value = data;
+      _logActivity(ActivityActionType.create, data);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('出生信息已保存')));
     } catch (e) {
@@ -68,6 +71,7 @@ class PlayerCreateInfoDetailViewModel {
       final data = _collect();
       await repository.updatePlayerCreateInfo(current.buildCredential(), data);
       info.value = data;
+      _logActivity(ActivityActionType.update, data);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
     } catch (e) {
@@ -77,6 +81,17 @@ class PlayerCreateInfoDetailViewModel {
   }
 
   void pop() => routerFacade.goBack();
+
+  void _logActivity(ActivityActionType action, PlayerCreateInfo t) {
+    final log = ActivityLog(
+      module: 'player_create_info',
+      actionType: action,
+      entityId: t.race,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
+  }
 
   PlayerCreateInfo _collect() {
     final i = PlayerCreateInfo();
