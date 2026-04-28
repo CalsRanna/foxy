@@ -69,29 +69,19 @@ class ConditionDetailViewModel {
   Future<void> save(BuildContext context) async {
     saving.value = true;
     try {
-      final data = _collect();
-      await repository.storeCondition(data);
+      final data = _collectFromControllers();
+      if (_originalCredential == null) {
+        await repository.storeCondition(data);
+      } else {
+        await repository.updateCondition(_originalCredential!, data);
+      }
       condition.value = data;
-      _logActivity(ActivityActionType.create, data);
+      _logActivity(
+        _originalCredential == null ? ActivityActionType.create : ActivityActionType.update,
+        data,
+      );
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('条件已保存')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
-    } finally {
-      saving.value = false;
-    }
-  }
-
-  Future<void> update(BuildContext context) async {
-    if (_originalCredential == null) return;
-    try {
-      final data = _collect();
-      await repository.updateCondition(_originalCredential!, data);
-      condition.value = data;
-      _logActivity(ActivityActionType.update, data);
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
     } catch (e) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
@@ -104,7 +94,7 @@ class ConditionDetailViewModel {
     routerFacade.goBack();
   }
 
-  Condition _collect() {
+  Condition _collectFromControllers() {
     final c = Condition();
     c.sourceTypeOrReferenceId = _parseInt(sourceTypeOrReferenceIdController.text);
     c.sourceGroup = _parseInt(sourceGroupController.text);
