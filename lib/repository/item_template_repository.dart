@@ -92,16 +92,11 @@ class ItemTemplateRepository with RepositoryMixin {
     return ItemTemplate.fromJson(result.toMap());
   }
 
-  Future<int> getNextEntry() async {
-    var result = await laconic.table(_table).select([
-      'MAX(entry) as max_entry',
-    ]).first();
-    var maxEntry = result.toMap()['max_entry'] as int?;
-    return (maxEntry ?? 0) + 1;
-  }
-
   Future<void> storeItemTemplate(ItemTemplate template) async {
-    await laconic.table(_table).insert([template.toJson()]);
+    var json = template.toJson();
+    var newEntry = await _getNextEntry();
+    json['entry'] = newEntry;
+    await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateItemTemplate(ItemTemplate template) async {

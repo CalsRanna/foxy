@@ -59,7 +59,7 @@ class QuestTemplateRepository with RepositoryMixin {
     );
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.limit(kPageSize).offset(offset).get();
+    var results = await builder.get();
     return results.map((e) => BriefQuestTemplate.fromJson(e.toMap())).toList();
   }
 
@@ -70,7 +70,8 @@ class QuestTemplateRepository with RepositoryMixin {
 
   Future<void> storeQuestTemplate(QuestTemplate model) async {
     var json = model.toJson();
-    json.remove('ID');
+    var newId = await _getNextId();
+    json['ID'] = newId;
     await laconic.table(_table).insert([json]);
   }
 

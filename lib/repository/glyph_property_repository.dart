@@ -33,7 +33,10 @@ class GlyphPropertyRepository with RepositoryMixin {
   }
 
   Future<void> storeGlyphProperty(GlyphProperty glyphProperty) async {
-    await laconic.table(_table).insert([glyphProperty.toJson()]);
+    var json = glyphProperty.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateGlyphProperty(GlyphProperty glyphProperty) async {

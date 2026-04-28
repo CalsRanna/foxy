@@ -8,26 +8,16 @@ class GossipMenuRepository with RepositoryMixin {
   Future<void> copyGossipMenu(Map<String, dynamic> id) async {
     final original = await getGossipMenu(id);
     if (original == null) return;
-    final next = await getNextMenuId();
-    original.menuId = next.menuId;
+    original.menuId = await getNextMenuId();
     await storeGossipMenu(original);
   }
 
-  Future<GossipMenu> getNextMenuId() async {
-    try {
-      final result = await laconic.table(_table).select([
-        'MAX(MenuID) as max_id',
-      ]).first();
-      final maxId = result.toMap()['max_id'] as int?;
-      final model = GossipMenu();
-      model.menuId = (maxId ?? 0) + 1;
-      model.textId = 0;
-      return model;
-    } catch (e) {
-      final model = GossipMenu();
-      model.menuId = 1;
-      return model;
-    }
+  Future<int> getNextMenuId() async {
+    final result = await laconic.table(_table).select([
+      'MAX(MenuID) as max_id',
+    ]).first();
+    final maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
   }
 
   Future<int> countGossipMenus({GossipMenuFilterEntity? filter}) async {
@@ -104,7 +94,11 @@ class GossipMenuRepository with RepositoryMixin {
   }
 
   Future<void> storeGossipMenu(GossipMenu model) async {
-    await laconic.table(_table).insert([model.toJson()]);
+    var json = model.toJson();
+    if (json['MenuID'] == 0) {
+      json['MenuID'] = await getNextMenuId();
+    }
+    await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateGossipMenu(

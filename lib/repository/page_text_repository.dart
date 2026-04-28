@@ -41,7 +41,10 @@ class PageTextRepository with RepositoryMixin {
   }
 
   Future<void> storePageText(PageText pageText) async {
-    await laconic.table(_table).insert([pageText.toJson()]);
+    var json = pageText.toJson();
+    var newId = await _getNextId();
+    json['ID'] = newId;
+    await laconic.table(_table).insert([json]);
   }
 
   Future<void> updatePageText(int id, PageText pageText) async {

@@ -33,7 +33,10 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellItemEnchantment(SpellItemEnchantment entry) async {
-    await laconic.table(_table).insert([entry.toJson()]);
+    var json = entry.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateSpellItemEnchantment(SpellItemEnchantment entry) async {
