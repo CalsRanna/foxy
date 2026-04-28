@@ -68,7 +68,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final infos = viewModel.infos.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(page: page, pageSize: 50, total: total, onChange: viewModel.paginate);
@@ -80,16 +80,16 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
       builder: (context, constraints) {
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final item = items[vicinity.row];
+            final info = infos[vicinity.row];
             return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.race.toString())),
-              1 => ShadTableCell(child: Text(item.class_.toString())),
-              2 => ShadTableCell(child: Text(item.map.toString())),
-              3 => ShadTableCell(child: Text(item.zone.toString())),
-              4 => ShadTableCell(child: Text(item.positionX.toStringAsFixed(2))),
-              5 => ShadTableCell(child: Text(item.positionY.toStringAsFixed(2))),
-              6 => ShadTableCell(child: Text(item.positionZ.toStringAsFixed(2))),
-              7 => ShadTableCell(child: Text(item.orientation.toStringAsFixed(2))),
+              0 => ShadTableCell(child: Text(info.race.toString())),
+              1 => ShadTableCell(child: Text(info.class_.toString())),
+              2 => ShadTableCell(child: Text(info.map.toString())),
+              3 => ShadTableCell(child: Text(info.zone.toString())),
+              4 => ShadTableCell(child: Text(info.positionX.toStringAsFixed(2))),
+              5 => ShadTableCell(child: Text(info.positionY.toStringAsFixed(2))),
+              6 => ShadTableCell(child: Text(info.positionZ.toStringAsFixed(2))),
+              7 => ShadTableCell(child: Text(info.orientation.toStringAsFixed(2))),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -108,7 +108,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
             };
           },
           header: (context, index) => ShadTableCell.header(child: Text(headers[index])),
-          onRowDoubleTap: (row) => viewModel.navigateToDetail(context, info: items[row]),
+          onRowDoubleTap: (row) => viewModel.navigateToDetail(context, info: infos[row]),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
@@ -116,24 +116,24 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(context, info: items[row]),
+                  onPressed: () => viewModel.navigateToDetail(context, info: infos[row]),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyPlayerCreateInfo(items[row]),
+                  onPressed: () => viewModel.copyPlayerCreateInfo(infos[row]),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.deletePlayerCreateInfo(items[row]),
+                  onPressed: () => viewModel.deletePlayerCreateInfo(infos[row]),
                   child: Text('删除'),
                 ),
               ],
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: infos.length,
         );
       },
     );

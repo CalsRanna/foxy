@@ -74,7 +74,7 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final rewards = viewModel.rewards.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -92,7 +92,7 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final item = items[vicinity.row];
+            final item = rewards[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
               _ => ShadTableCell(child: SizedBox()),
@@ -111,7 +111,7 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               context,
-              id: items[row].id,
+              id: rewards[row].id,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -124,7 +124,7 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
                   onPressed: () {
                     viewModel.navigateToDetail(
                       context,
-                      id: items[row].id,
+                      id: rewards[row].id,
                     );
                   },
                   child: Text('编辑'),
@@ -132,14 +132,14 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyQuestFactionReward(items[row].id);
+                    viewModel.copyQuestFactionReward(rewards[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteQuestFactionReward(items[row].id);
+                    viewModel.deleteQuestFactionReward(rewards[row].id);
                   },
                   child: Text('删除'),
                 ),
@@ -147,7 +147,7 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: rewards.length,
         );
       },
     );

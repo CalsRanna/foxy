@@ -18,7 +18,7 @@ class GlyphPropertyDetailViewModel {
   final glyphSlotFlagsController = TextEditingController();
   final spellIconIdController = TextEditingController();
 
-  final table = signal(GlyphProperty());
+  final property = signal(GlyphProperty());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -32,7 +32,7 @@ class GlyphPropertyDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      property.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('雕文属性数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -85,8 +85,8 @@ class GlyphPropertyDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value = (await GlyphPropertyRepository().find(id))!;
-      _initControllers(table.value);
+      property.value = (await GlyphPropertyRepository().find(id))!;
+      _initControllers(property.value);
     } catch (e, s) {
       logger.e('加载雕文属性(id=$id)失败', error: e, stackTrace: s);
     }

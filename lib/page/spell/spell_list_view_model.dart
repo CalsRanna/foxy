@@ -18,7 +18,7 @@ class SpellListViewModel {
   final repository = SpellRepository();
 
   final page = signal(1);
-  final templates = signal(<BriefSpell>[]);
+  final spells = signal(<BriefSpell>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -69,7 +69,7 @@ class SpellListViewModel {
   }
 
   Future<void> initSignals() async {
-    templates.value = await repository.getBriefSpells();
+    spells.value = await repository.getBriefSpells();
     total.value = await repository.count();
   }
 
@@ -100,7 +100,7 @@ class SpellListViewModel {
     idController.clear();
     nameController.clear();
     page.value = 1;
-    templates.value = await repository.getBriefSpells();
+    spells.value = await repository.getBriefSpells();
     total.value = await repository.count();
   }
 
@@ -111,7 +111,7 @@ class SpellListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    templates.value = await repository.getBriefSpells(
+    spells.value = await repository.getBriefSpells(
       page: page.value,
       filter: filter,
     );
@@ -119,7 +119,7 @@ class SpellListViewModel {
   }
 
   void _logActivity(ActivityActionType action, int id) {
-    final templates = this.templates.value;
+    final templates = spells.value;
     final template = templates.where((t) => t.id == id).firstOrNull;
     final name = template?.name ?? '';
     final log = ActivityLog(

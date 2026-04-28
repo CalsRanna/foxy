@@ -13,7 +13,7 @@ class QuestInfoDetailViewModel {
   final idController = TextEditingController();
   final nameController = TextEditingController();
 
-  final table = signal(QuestInfo());
+  final info = signal(QuestInfo());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -27,7 +27,7 @@ class QuestInfoDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      info.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('任务信息数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -68,8 +68,8 @@ class QuestInfoDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value = (await QuestInfoRepository().find(id))!;
-      _initControllers(table.value);
+      info.value = (await QuestInfoRepository().find(id))!;
+      _initControllers(info.value);
     } catch (e, s) {
       logger.e('加载任务信息(id=$id)失败', error: e, stackTrace: s);
     }

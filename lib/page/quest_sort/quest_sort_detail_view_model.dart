@@ -13,7 +13,7 @@ class QuestSortDetailViewModel {
   final idController = TextEditingController();
   final nameController = TextEditingController();
 
-  final table = signal(QuestSort());
+  final sort = signal(QuestSort());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -27,7 +27,7 @@ class QuestSortDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      sort.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('任务排序数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -68,8 +68,8 @@ class QuestSortDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value = (await QuestSortRepository().find(id))!;
-      _initControllers(table.value);
+      sort.value = (await QuestSortRepository().find(id))!;
+      _initControllers(sort.value);
     } catch (e, s) {
       logger.e('加载任务排序(id=$id)失败', error: e, stackTrace: s);
     }

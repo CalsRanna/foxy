@@ -15,7 +15,7 @@ class ScalingStatDistributionListViewModel {
   final repository = ScalingStatDistributionSoloRepository();
 
   final page = signal(1);
-  final items = signal(<ScalingStatDistribution>[]);
+  final distributions = signal(<ScalingStatDistribution>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -64,7 +64,7 @@ class ScalingStatDistributionListViewModel {
 
   Future<void> initSignals() async {
     final filter = ScalingStatDistributionFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    distributions.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -94,7 +94,7 @@ class ScalingStatDistributionListViewModel {
     idController.clear();
     page.value = 1;
     final filter = ScalingStatDistributionFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    distributions.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -105,7 +105,7 @@ class ScalingStatDistributionListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    items.value = await repository.search(page: page.value, filter: filter);
+    distributions.value = await repository.search(page: page.value, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 }

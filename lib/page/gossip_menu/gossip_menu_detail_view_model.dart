@@ -16,7 +16,7 @@ class GossipMenuDetailViewModel {
 
   final menuId = signal(0);
   final textId = signal(0);
-  final template = signal(GossipMenu());
+  final menu = signal(GossipMenu());
   final saving = signal(false);
 
   int? _originalMenuId;
@@ -28,7 +28,7 @@ class GossipMenuDetailViewModel {
       final next = await GossipMenuRepository().getNextMenuId();
       this.menuId.value = next.menuId;
       this.textId.value = 0;
-      template.value = next;
+      menu.value = next;
       _originalMenuId = null;
       _originalTextId = null;
       menuIdController.text = this.menuId.value.toString();
@@ -42,11 +42,11 @@ class GossipMenuDetailViewModel {
       if (existing != null) {
         this.menuId.value = existing.menuId;
         this.textId.value = existing.textId;
-        template.value = existing;
+        menu.value = existing;
       } else {
         this.menuId.value = menuId;
         this.textId.value = textId ?? 0;
-        template.value = GossipMenu()
+        menu.value = GossipMenu()
           ..menuId = menuId
           ..textId = textId ?? 0;
       }
@@ -68,7 +68,7 @@ class GossipMenuDetailViewModel {
           t.menuId = next.menuId;
         }
         await GossipMenuRepository().storeGossipMenu(t);
-        template.value = t;
+        menu.value = t;
         _logActivity(ActivityActionType.create, t);
         _originalMenuId = t.menuId;
         _originalTextId = t.textId;
@@ -78,7 +78,7 @@ class GossipMenuDetailViewModel {
           'MenuID': _originalMenuId!,
           'TextID': _originalTextId!,
         }, t);
-        template.value = t;
+        menu.value = t;
         _logActivity(ActivityActionType.update, t);
         _originalTextId = t.textId;
       }

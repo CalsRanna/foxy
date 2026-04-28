@@ -80,7 +80,7 @@ class _SpellItemEnchantmentListPageState
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final items = viewModel.enchantments.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(

@@ -15,7 +15,7 @@ class ItemExtendedCostListViewModel {
   final repository = ItemExtendedCostRepository();
 
   final page = signal(1);
-  final items = signal(<ItemExtendedCost>[]);
+  final costs = signal(<ItemExtendedCost>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -64,7 +64,7 @@ class ItemExtendedCostListViewModel {
 
   Future<void> initSignals() async {
     final filter = ItemExtendedCostFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    costs.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -94,7 +94,7 @@ class ItemExtendedCostListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = ItemExtendedCostFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    costs.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -105,7 +105,7 @@ class ItemExtendedCostListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    items.value = await repository.search(page: page.value, filter: filter);
+    costs.value = await repository.search(page: page.value, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 }

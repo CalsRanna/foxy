@@ -78,7 +78,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final sorts = viewModel.sorts.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -96,7 +96,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final item = items[vicinity.row];
+            final item = sorts[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.sortNameLangZhCn)),
@@ -117,8 +117,8 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               context,
-              id: items[row].id,
-              name: items[row].sortNameLangZhCn,
+              id: sorts[row].id,
+              name: sorts[row].sortNameLangZhCn,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -131,8 +131,8 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
                   onPressed: () {
                     viewModel.navigateToDetail(
                       context,
-                      id: items[row].id,
-                      name: items[row].sortNameLangZhCn,
+                      id: sorts[row].id,
+                      name: sorts[row].sortNameLangZhCn,
                     );
                   },
                   child: Text('编辑'),
@@ -140,14 +140,14 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyQuestSort(items[row].id);
+                    viewModel.copyQuestSort(sorts[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteQuestSort(items[row].id);
+                    viewModel.deleteQuestSort(sorts[row].id);
                   },
                   child: Text('删除'),
                 ),
@@ -155,7 +155,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: sorts.length,
         );
       },
     );

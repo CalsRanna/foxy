@@ -68,7 +68,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final conditions = viewModel.conditions.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(page: page, pageSize: 50, total: total, onChange: viewModel.paginate);
@@ -81,18 +81,18 @@ class _ConditionListPageState extends State<ConditionListPage> {
       builder: (context, constraints) {
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final item = items[vicinity.row];
+            final condition = conditions[vicinity.row];
             return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.sourceTypeOrReferenceId.toString())),
-              1 => ShadTableCell(child: Text(item.sourceGroup.toString())),
-              2 => ShadTableCell(child: Text(item.sourceEntry.toString())),
-              3 => ShadTableCell(child: Text(item.sourceId.toString())),
-              4 => ShadTableCell(child: Text(item.elseGroup.toString())),
-              5 => ShadTableCell(child: Text(item.conditionTypeOrReference.toString())),
-              6 => ShadTableCell(child: Text(item.conditionTarget.toString())),
-              7 => ShadTableCell(child: Text(item.conditionValue1.toString())),
-              8 => ShadTableCell(child: Text(item.conditionValue2.toString())),
-              9 => ShadTableCell(child: Text(item.conditionValue3.toString())),
+              0 => ShadTableCell(child: Text(condition.sourceTypeOrReferenceId.toString())),
+              1 => ShadTableCell(child: Text(condition.sourceGroup.toString())),
+              2 => ShadTableCell(child: Text(condition.sourceEntry.toString())),
+              3 => ShadTableCell(child: Text(condition.sourceId.toString())),
+              4 => ShadTableCell(child: Text(condition.elseGroup.toString())),
+              5 => ShadTableCell(child: Text(condition.conditionTypeOrReference.toString())),
+              6 => ShadTableCell(child: Text(condition.conditionTarget.toString())),
+              7 => ShadTableCell(child: Text(condition.conditionValue1.toString())),
+              8 => ShadTableCell(child: Text(condition.conditionValue2.toString())),
+              9 => ShadTableCell(child: Text(condition.conditionValue3.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -113,7 +113,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
             };
           },
           header: (context, index) => ShadTableCell.header(child: Text(headers[index])),
-          onRowDoubleTap: (row) => viewModel.navigateToDetail(context, condition: items[row]),
+          onRowDoubleTap: (row) => viewModel.navigateToDetail(context, condition: conditions[row]),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
@@ -121,24 +121,24 @@ class _ConditionListPageState extends State<ConditionListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(context, condition: items[row]),
+                  onPressed: () => viewModel.navigateToDetail(context, condition: conditions[row]),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyCondition(items[row]),
+                  onPressed: () => viewModel.copyCondition(conditions[row]),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.deleteCondition(items[row]),
+                  onPressed: () => viewModel.deleteCondition(conditions[row]),
                   child: Text('删除'),
                 ),
               ],
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: conditions.length,
         );
       },
     );

@@ -73,7 +73,7 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
   }
 
   Widget _buildTable() {
-    final templates = viewModel.templates.value;
+    final templates = viewModel.menus.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
 

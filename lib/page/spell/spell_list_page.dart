@@ -97,7 +97,7 @@ class _SpellListPageState extends State<SpellListPage> {
       onPressed: () => viewModel.navigateSpellDetailPage(context),
       child: Text('新增'),
     );
-    final templates = viewModel.templates.value;
+    final templates = viewModel.spells.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(

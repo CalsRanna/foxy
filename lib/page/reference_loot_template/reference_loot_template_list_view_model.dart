@@ -15,13 +15,13 @@ class ReferenceLootTemplateListViewModel {
   final repository = LootTemplateRepository(LootTableType.reference);
 
   final page = signal(1);
-  final items = signal<List<LootTemplate>>([]);
+  final templates = signal<List<LootTemplate>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    items.value = await _searchEntries();
+    templates.value = await _searchEntries();
     total.value = await _countEntries();
   }
 
@@ -34,7 +34,7 @@ class ReferenceLootTemplateListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    items.value = await _searchEntries();
+    templates.value = await _searchEntries();
     total.value = await _countEntries();
   }
 
@@ -124,7 +124,7 @@ class ReferenceLootTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
-    items.value = await _searchEntries();
+    templates.value = await _searchEntries();
     total.value = await _countEntries();
   }
 

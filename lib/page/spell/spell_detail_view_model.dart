@@ -221,7 +221,7 @@ class SpellDetailViewModel {
   final shapeshiftExclude0Controller = TextEditingController();
 
   final id = signal(0);
-  final template = signal(Spell());
+  final spell = signal(Spell());
   final saving = signal(false);
 
   Future<void> save(BuildContext context) async {
@@ -234,7 +234,7 @@ class SpellDetailViewModel {
       } else {
         await repository.updateSpell(t);
       }
-      template.value = t;
+      spell.value = t;
       _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('法术数据已保存'));
@@ -736,8 +736,8 @@ class SpellDetailViewModel {
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
-    template.value = await SpellRepository().getSpell(id);
-    _initControllers(template.value);
+    spell.value = await SpellRepository().getSpell(id);
+    _initControllers(spell.value);
   }
 
   void _initControllers(Spell template) {

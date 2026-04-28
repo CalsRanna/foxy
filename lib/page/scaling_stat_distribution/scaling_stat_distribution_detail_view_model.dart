@@ -40,7 +40,7 @@ class ScalingStatDistributionDetailViewModel {
   /// Other
   final maxlevelController = TextEditingController();
 
-  final table = signal(ScalingStatDistribution());
+  final distribution = signal(ScalingStatDistribution());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -54,7 +54,7 @@ class ScalingStatDistributionDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      distribution.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('属性缩放分布数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -137,8 +137,8 @@ class ScalingStatDistributionDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value = (await ScalingStatDistributionSoloRepository().find(id))!;
-      _initControllers(table.value);
+      distribution.value = (await ScalingStatDistributionSoloRepository().find(id))!;
+      _initControllers(distribution.value);
     } catch (e, s) {
       logger.e('加载属性缩放分布(id=$id)失败', error: e, stackTrace: s);
     }

@@ -73,7 +73,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final items = viewModel.properties.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(

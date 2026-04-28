@@ -16,13 +16,13 @@ class PlayerCreateInfoListViewModel {
   final repository = PlayerCreateInfoRepository();
 
   final page = signal(1);
-  final items = signal<List<PlayerCreateInfo>>([]);
+  final infos = signal<List<PlayerCreateInfo>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    items.value = await _search();
+    infos.value = await _search();
     total.value = await _count();
   }
 
@@ -35,7 +35,7 @@ class PlayerCreateInfoListViewModel {
     raceController.clear();
     classController.clear();
     page.value = 1;
-    items.value = await _search();
+    infos.value = await _search();
     total.value = await _count();
   }
 
@@ -113,7 +113,7 @@ class PlayerCreateInfoListViewModel {
   }
 
   Future<void> _refresh() async {
-    items.value = await _search();
+    infos.value = await _search();
     total.value = await _count();
   }
 

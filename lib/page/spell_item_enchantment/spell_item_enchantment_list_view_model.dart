@@ -16,7 +16,7 @@ class SpellItemEnchantmentListViewModel {
   final repository = SpellItemEnchantmentSoloRepository();
 
   final page = signal(1);
-  final items = signal(<SpellItemEnchantment>[]);
+  final enchantments = signal(<SpellItemEnchantment>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -66,7 +66,7 @@ class SpellItemEnchantmentListViewModel {
 
   Future<void> initSignals() async {
     final filter = SpellItemEnchantmentFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    enchantments.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -98,7 +98,7 @@ class SpellItemEnchantmentListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = SpellItemEnchantmentFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    enchantments.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -109,7 +109,7 @@ class SpellItemEnchantmentListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    items.value = await repository.search(page: page.value, filter: filter);
+    enchantments.value = await repository.search(page: page.value, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 }

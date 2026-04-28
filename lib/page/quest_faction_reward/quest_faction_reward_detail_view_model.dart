@@ -25,7 +25,7 @@ class QuestFactionRewardDetailViewModel {
   final difficulty8Controller = TextEditingController();
   final difficulty9Controller = TextEditingController();
 
-  final table = signal(QuestFactionReward());
+  final reward = signal(QuestFactionReward());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -39,7 +39,7 @@ class QuestFactionRewardDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      reward.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('任务声望数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -106,8 +106,8 @@ class QuestFactionRewardDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value = (await QuestFactionRewardRepository().find(id))!;
-      _initControllers(table.value);
+      reward.value = (await QuestFactionRewardRepository().find(id))!;
+      _initControllers(reward.value);
     } catch (e, s) {
       logger.e('加载任务声望(id=$id)失败', error: e, stackTrace: s);
     }

@@ -75,7 +75,7 @@ class _TextContentListPageState extends State<TextContentListPage> {
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final pages = viewModel.pages.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -92,11 +92,11 @@ class _TextContentListPageState extends State<TextContentListPage> {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final item = items[vicinity.row];
+            final pageText = pages[vicinity.row];
             return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.displayText)),
-              2 => ShadTableCell(child: Text(item.nextPageId.toString())),
+              0 => ShadTableCell(child: Text(pageText.id.toString())),
+              1 => ShadTableCell(child: Text(pageText.displayText)),
+              2 => ShadTableCell(child: Text(pageText.nextPageId.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -115,8 +115,8 @@ class _TextContentListPageState extends State<TextContentListPage> {
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               context,
-              id: items[row].id,
-              label: items[row].displayText,
+              id: pages[row].id,
+              label: pages[row].displayText,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -126,24 +126,24 @@ class _TextContentListPageState extends State<TextContentListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(context, id: items[row].id, label: items[row].displayText),
+                  onPressed: () => viewModel.navigateToDetail(context, id: pages[row].id, label: pages[row].displayText),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyPageText(items[row].id),
+                  onPressed: () => viewModel.copyPageText(pages[row].id),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.deletePageText(items[row].id),
+                  onPressed: () => viewModel.deletePageText(pages[row].id),
                   child: Text('删除'),
                 ),
               ],
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: pages.length,
         );
       },
     );

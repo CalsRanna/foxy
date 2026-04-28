@@ -16,13 +16,13 @@ class PageTextListViewModel {
   final repository = PageTextRepository();
 
   final page = signal(1);
-  final items = signal<List<PageText>>([]);
+  final pages = signal<List<PageText>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    items.value = await repository.search(filter: _buildFilter(), page: page.value);
+    pages.value = await repository.search(filter: _buildFilter(), page: page.value);
     total.value = await repository.count(filter: _buildFilter());
   }
 
@@ -35,7 +35,7 @@ class PageTextListViewModel {
     idController.clear();
     textController.clear();
     page.value = 1;
-    items.value = await repository.search(filter: _buildFilter(), page: page.value);
+    pages.value = await repository.search(filter: _buildFilter(), page: page.value);
     total.value = await repository.count(filter: _buildFilter());
   }
 
@@ -101,7 +101,7 @@ class PageTextListViewModel {
   }
 
   Future<void> _refresh() async {
-    items.value = await repository.search(filter: _buildFilter(), page: page.value);
+    pages.value = await repository.search(filter: _buildFilter(), page: page.value);
     total.value = await repository.count(filter: _buildFilter());
   }
 
