@@ -4,13 +4,18 @@ import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// Tab 1：gossip_menu 主表（MenuID + TextID）
-class GossipMenuView extends StatelessWidget {
+class GossipMenuView extends StatefulWidget {
   const GossipMenuView({super.key});
 
   @override
+  State<GossipMenuView> createState() => _GossipMenuViewState();
+}
+
+class _GossipMenuViewState extends State<GossipMenuView> {
+  final viewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
+
+  @override
   Widget build(BuildContext context) {
-    final viewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
     final menuIdLabel = const Text('编号 (MenuID)');
     final menuIdInput = ShadInput(
       controller: viewModel.menuIdController,
@@ -49,13 +54,13 @@ class GossipMenuView extends StatelessWidget {
       onPressed: () => viewModel.save(context),
       child: const Text('保存'),
     );
-    final backBtn = ShadButton.outline(
+    final cancelBtn = ShadButton.ghost(
       onPressed: viewModel.pop,
-      child: const Text('返回'),
+      child: const Text('取消'),
     );
     final actions = ShadCard(
       padding: const EdgeInsets.all(16),
-      child: Row(spacing: 8, children: [saveBtn, backBtn]),
+      child: Row(spacing: 8, children: [saveBtn, cancelBtn]),
     );
 
     return Padding(

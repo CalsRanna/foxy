@@ -25,3 +25,19 @@ class GemProperty {
     };
   }
 }
+
+class BriefGemProperty {
+  int id = 0;
+  int enchantId = 0;
+  int maxcountInv = 0;
+  int type = 0;
+
+  BriefGemProperty();
+
+  BriefGemProperty.fromJson(Map<String, dynamic> json) {
+    id = json['ID'] ?? 0;
+    enchantId = json['Enchant_ID'] ?? 0;
+    maxcountInv = json['Maxcount_inv'] ?? 0;
+    type = json['Type'] ?? 0;
+  }
+}

@@ -4,8 +4,8 @@ import 'package:foxy/model/creature_template_locale.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureTemplateRepository with RepositoryMixin {
-  final String _table = 'creature_template';
-  final String _localeTable = 'creature_template_locale';
+  static const _table = 'creature_template';
+  static const _localeTable = 'creature_template_locale';
 
   Future<void> copyCreatureTemplate(int entry) async {
     var template = await getCreatureTemplate(entry);

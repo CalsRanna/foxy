@@ -3,7 +3,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureSpellDataRepository with RepositoryMixin {
   // DBC 表在 foxy 数据库中
-  final String _table = 'foxy.dbc_creature_spell_data';
+  static const _table = 'foxy.dbc_creature_spell_data';
   final String _spellTable = 'foxy.dbc_spell';
 
   Future<int> countCreatureSpellDatas({String? id, String? spell}) async {

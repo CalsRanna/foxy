@@ -3,7 +3,7 @@ import 'package:foxy/model/spell_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellRepository with RepositoryMixin {
-  final String _table = 'foxy.dbc_spell';
+  static const _table = 'foxy.dbc_spell';
 
   Future<int> countSpells({SpellFilterEntity? filter}) async {
     var builder = laconic.table('$_table AS ds');

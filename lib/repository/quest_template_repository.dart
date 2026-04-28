@@ -3,7 +3,7 @@ import 'package:foxy/model/quest_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class QuestTemplateRepository with RepositoryMixin {
-  final String _table = 'quest_template';
+  static const _table = 'quest_template';
 
   Future<void> copyQuestTemplate(int id) async {
     var template = await getQuestTemplate(id);

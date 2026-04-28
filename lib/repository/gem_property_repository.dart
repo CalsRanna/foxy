@@ -17,6 +17,20 @@ class GemPropertyRepository with RepositoryMixin {
     return results.map((e) => GemProperty.fromJson(e.toMap())).toList();
   }
 
+  Future<List<BriefGemProperty>> getBriefGemProperties({
+    int page = 1,
+    GemPropertyFilterEntity? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    const fields = ['ID', 'Enchant_ID', 'Maxcount_inv', 'Type'];
+    builder = builder.select(fields);
+    builder = _applyFilter(builder, filter);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results.map((e) => BriefGemProperty.fromJson(e.toMap())).toList();
+  }
+
   Future<int> countGemProperties({GemPropertyFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);

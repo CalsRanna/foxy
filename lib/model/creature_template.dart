@@ -141,10 +141,6 @@ class CreatureTemplate {
     creatureImmunitiesId = json['CreatureImmunitiesId'] ?? 0;
   }
 
-  CreatureTemplate copyWith({int? entry}) {
-    return CreatureTemplate()..entry = entry ?? this.entry;
-  }
-
   Map<String, dynamic> toJson() {
     return {
       'AIName': aiName,

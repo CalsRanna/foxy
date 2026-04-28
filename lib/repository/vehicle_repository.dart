@@ -3,7 +3,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 
 class VehicleRepository with RepositoryMixin {
   // DBC 表在 foxy 数据库中
-  final String _table = 'foxy.dbc_vehicle';
+  static const _table = 'foxy.dbc_vehicle';
 
   Future<int> countVehicles({String? id}) async {
     try {

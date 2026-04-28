@@ -72,7 +72,7 @@ class SpellListViewModel {
     total.value = await repository.countSpells();
   }
 
-  void navigateSpellDetailPage(BuildContext context, {int? id, String? name}) {
+  void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建法术';
     final detailId = id != null ? 'spell_$id' : 'spell_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();

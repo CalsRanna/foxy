@@ -74,8 +74,7 @@ class CreatureTemplateListViewModel {
     total.value = await repository.countCreatureTemplates();
   }
 
-  void navigateCreatureTemplateDetailPage(
-    BuildContext context, {
+  void navigateToDetail({
     int? entry,
     String? name,
   }) {

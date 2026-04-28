@@ -3,7 +3,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 
 class DbcFactionRepository with RepositoryMixin {
   // DBC 表在 foxy 数据库中
-  final String _table = 'foxy.dbc_faction';
+  static const _table = 'foxy.dbc_faction';
 
   Future<int> countDbcFactions({String? id, String? name}) async {
     try {

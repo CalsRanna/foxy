@@ -3,7 +3,7 @@ import 'package:foxy/model/smart_script_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SmartScriptRepository with RepositoryMixin {
-  final String _table = 'smart_scripts';
+  static const _table = 'smart_scripts';
 
   Future<int> countSmartScripts({SmartScriptFilterEntity? filter}) async {
     var builder = laconic.table(_table);

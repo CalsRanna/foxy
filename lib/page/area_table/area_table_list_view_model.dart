@@ -18,7 +18,7 @@ class AreaTableListViewModel {
   final repository = AreaTableRepository();
 
   final page = signal(1);
-  final areas = signal(<AreaTable>[]);
+  final areas = signal(<BriefAreaTable>[]);
   final total = signal(0);
 
   Future<void> copyAreaTable(int id) async {
@@ -68,11 +68,11 @@ class AreaTableListViewModel {
   }
 
   Future<void> initSignals() async {
-    areas.value = await repository.getAreaTables();
+    areas.value = await repository.getBriefAreaTables();
     total.value = await repository.countAreaTables();
   }
 
-  void navigateToDetail(BuildContext context, {int? id, String? name}) {
+  void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建区域';
     final routeId = id != null ? 'area_$id' : 'area_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
@@ -99,7 +99,7 @@ class AreaTableListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    areas.value = await repository.getAreaTables();
+    areas.value = await repository.getBriefAreaTables();
     total.value = await repository.countAreaTables();
   }
 
@@ -110,7 +110,7 @@ class AreaTableListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    areas.value = await repository.getAreaTables(page: page.value, filter: filter);
+    areas.value = await repository.getBriefAreaTables(page: page.value, filter: filter);
     total.value = await repository.countAreaTables(filter: filter);
   }
 

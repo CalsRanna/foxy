@@ -3,7 +3,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 
 class ScalingStatDistributionRepository with RepositoryMixin {
   // DBC 表在 foxy 数据库中
-  final String _table = 'foxy.dbc_scaling_stat_distribution';
+  static const _table = 'foxy.dbc_scaling_stat_distribution';
 
   /// 搜索（分页）
   Future<List<ItemEnchantmentTemplate>> getScalingStatDistributions({
