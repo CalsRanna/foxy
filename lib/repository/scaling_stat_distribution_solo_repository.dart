@@ -33,7 +33,10 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
   }
 
   Future<void> storeScalingStatDistribution(ScalingStatDistribution item) async {
-    await laconic.table(_table).insert([item.toJson()]);
+    var json = item.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateScalingStatDistribution(ScalingStatDistribution item) async {

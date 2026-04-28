@@ -33,7 +33,10 @@ class QuestFactionRewardRepository with RepositoryMixin {
   }
 
   Future<void> storeQuestFactionReward(QuestFactionReward data) async {
-    await laconic.table(_table).insert([data.toJson()]);
+    var json = data.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateQuestFactionReward(QuestFactionReward data) async {

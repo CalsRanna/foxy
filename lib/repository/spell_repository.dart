@@ -61,7 +61,8 @@ class SpellRepository with RepositoryMixin {
 
   Future<void> storeSpell(Spell template) async {
     var json = template.toJson();
-    json.remove('ID');
+    var newId = await _getNextId();
+    json['ID'] = newId;
     await laconic.table(_table).insert([json]);
   }
 

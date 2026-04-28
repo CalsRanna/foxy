@@ -71,7 +71,8 @@ class GameObjectTemplateRepository with RepositoryMixin {
 
   Future<void> storeGameObjectTemplate(GameObjectTemplate template) async {
     var json = template.toJson();
-    json.remove('entry');
+    var newEntry = await _getNextEntry();
+    json['entry'] = newEntry;
     await laconic.table(_table).insert([json]);
   }
 

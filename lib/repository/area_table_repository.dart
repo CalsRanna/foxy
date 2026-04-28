@@ -33,7 +33,10 @@ class AreaTableRepository with RepositoryMixin {
   }
 
   Future<void> storeAreaTable(AreaTable area) async {
-    await laconic.table(_table).insert([area.toJson()]);
+    var json = area.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateAreaTable(AreaTable area) async {

@@ -64,7 +64,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     );
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.limit(kPageSize).offset(offset).get();
+    var results = await builder.get();
     return results
         .map((e) => BriefCreatureTemplate.fromJson(e.toMap()))
         .toList();
@@ -77,7 +77,8 @@ class CreatureTemplateRepository with RepositoryMixin {
 
   Future<void> storeCreatureTemplate(CreatureTemplate template) async {
     var json = template.toJson();
-    json.remove('entry');
+    var newEntry = await _getNextEntry();
+    json['entry'] = newEntry;
     // 处理 MySQL 保留字
     if (json.containsKey('rank')) {
       json['`rank`'] = json.remove('rank');

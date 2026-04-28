@@ -33,7 +33,10 @@ class GemPropertyRepository with RepositoryMixin {
   }
 
   Future<void> storeGemProperty(GemProperty gemProperty) async {
-    await laconic.table(_table).insert([gemProperty.toJson()]);
+    var json = gemProperty.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
   }
 
   Future<void> updateGemProperty(GemProperty gemProperty) async {

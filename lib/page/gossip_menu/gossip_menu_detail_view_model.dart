@@ -25,13 +25,15 @@ class GossipMenuDetailViewModel {
   Future<void> initSignals({int? menuId, int? textId}) async {
     if (menuId == null) {
       // 新建：自动获取下一个 MenuID
-      final next = await GossipMenuRepository().getNextMenuId();
-      this.menuId.value = next.menuId;
+      final nextMenuId = await GossipMenuRepository().getNextMenuId();
+      this.menuId.value = nextMenuId;
       this.textId.value = 0;
-      menu.value = next;
+      menu.value = GossipMenu()
+        ..menuId = nextMenuId
+        ..textId = 0;
       _originalMenuId = null;
       _originalTextId = null;
-      menuIdController.text = this.menuId.value.toString();
+      menuIdController.text = nextMenuId.toString();
       textIdController.text = '0';
     } else {
       // 编辑：从数据库加载
@@ -64,8 +66,7 @@ class GossipMenuDetailViewModel {
       if (_originalMenuId == null) {
         // 新建
         if (t.menuId == 0) {
-          final next = await GossipMenuRepository().getNextMenuId();
-          t.menuId = next.menuId;
+          t.menuId = await GossipMenuRepository().getNextMenuId();
         }
         await GossipMenuRepository().storeGossipMenu(t);
         menu.value = t;
