@@ -28,8 +28,7 @@ class PageTextListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    items.value = await repository.search(filter: _buildFilter(), page: page.value);
-    total.value = await repository.count(filter: _buildFilter());
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -42,8 +41,7 @@ class PageTextListViewModel {
 
   Future<void> paginate(int newPage) async {
     page.value = newPage;
-    items.value = await repository.search(filter: _buildFilter(), page: page.value);
-    total.value = await repository.count(filter: _buildFilter());
+    await _refresh();
   }
 
   void navigateToDetail(BuildContext context, {int? id, String? label}) {
@@ -57,7 +55,7 @@ class PageTextListViewModel {
     );
   }
 
-  Future<void> onCopy(int id) async {
+  Future<void> copyPageText(int id) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -76,7 +74,7 @@ class PageTextListViewModel {
     }
   }
 
-  Future<void> onDelete(int id) async {
+  Future<void> deletePageText(int id) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',

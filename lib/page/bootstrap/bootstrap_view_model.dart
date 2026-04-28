@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:foxy/database/migration_runner.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/repository/setting_repository.dart';

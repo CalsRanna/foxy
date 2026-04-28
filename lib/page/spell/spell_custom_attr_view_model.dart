@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:foxy/model/spell_custom_attr.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';
 import 'package:foxy/router/router_facade.dart';

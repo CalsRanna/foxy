@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/gossip_menu.dart';
 import 'package:foxy/model/gossip_menu_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -58,6 +60,7 @@ class GossipMenuListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyGossipMenu({'MenuID': menuId, 'TextID': textId});
+      _logActivity(ActivityActionType.copy, menuId, textId);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -80,6 +83,7 @@ class GossipMenuListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyGossipMenu({'MenuID': menuId, 'TextID': textId});
+      _logActivity(ActivityActionType.delete, menuId, textId);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -113,5 +117,19 @@ class GossipMenuListViewModel {
     return GossipMenuFilterEntity()
       ..menuId = menuIdController.text
       ..text = textController.text;
+  }
+
+  void _logActivity(ActivityActionType action, int menuId, int textId) {
+    final templates = this.templates.value;
+    final template = templates.where((t) => t.menuId == menuId && t.textId == textId).firstOrNull;
+    final name = template?.text ?? '';
+    final log = ActivityLog(
+      module: 'gossip_menu',
+      actionType: action,
+      entityId: menuId,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 }

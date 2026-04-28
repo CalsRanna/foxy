@@ -27,8 +27,7 @@ class ReferenceLootTemplateListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    items.value = await _searchEntries();
-    total.value = await _countEntries();
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -41,8 +40,7 @@ class ReferenceLootTemplateListViewModel {
 
   Future<void> paginate(int newPage) async {
     page.value = newPage;
-    items.value = await _searchEntries();
-    total.value = await _countEntries();
+    await _refresh();
   }
 
   void navigateToDetail(
@@ -65,7 +63,7 @@ class ReferenceLootTemplateListViewModel {
     );
   }
 
-  Future<void> onCopy(int entry, int item) async {
+  Future<void> copyReferenceLootTemplate(int entry, int item) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -84,7 +82,7 @@ class ReferenceLootTemplateListViewModel {
     }
   }
 
-  Future<void> onDelete(int entry, int item) async {
+  Future<void> deleteReferenceLootTemplate(int entry, int item) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',

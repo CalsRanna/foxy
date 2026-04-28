@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/spell.dart';
 import 'package:foxy/model/spell_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -30,6 +32,7 @@ class SpellListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copySpell(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -50,6 +53,7 @@ class SpellListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroySpell(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -89,12 +93,7 @@ class SpellListViewModel {
 
   Future<void> paginate(int page) async {
     this.page.value = page;
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefSpells(
-      page: page,
-      filter: filter,
-    );
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -107,12 +106,7 @@ class SpellListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefSpells(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> _refresh() async {
@@ -122,5 +116,19 @@ class SpellListViewModel {
       filter: filter,
     );
     total.value = await repository.count(filter: filter);
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final templates = this.templates.value;
+    final template = templates.where((t) => t.id == id).firstOrNull;
+    final name = template?.name ?? '';
+    final log = ActivityLog(
+      module: 'spell',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 }

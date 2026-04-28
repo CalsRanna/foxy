@@ -19,9 +19,11 @@ class GlyphPropertyDetailViewModel {
   final spellIconIdController = TextEditingController();
 
   final table = signal(GlyphProperty());
+  final saving = signal(false);
 
   /// 保存到数据库
   Future<void> save(BuildContext context) async {
+    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = GlyphPropertyRepository();
@@ -38,6 +40,8 @@ class GlyphPropertyDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
     }
   }
 

@@ -148,14 +148,14 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.onCopy(items[row].id);
+                    viewModel.copyAreaTable(items[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.onDelete(items[row].id);
+                    viewModel.deleteAreaTable(items[row].id);
                   },
                   child: Text('删除'),
                 ),

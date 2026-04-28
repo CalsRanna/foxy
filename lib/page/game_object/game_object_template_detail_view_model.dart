@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/game_object_template.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -45,19 +47,23 @@ class GameObjectTemplateDetailViewModel {
   final scriptNameController = TextEditingController();
   final verifiedBuildController = TextEditingController();
 
+  final saving = signal(false);
   final entry = signal(0);
   final template = signal(GameObjectTemplate());
 
   Future<void> save(BuildContext context) async {
+    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = GameObjectTemplateRepository();
-      if (t.entry == 0) {
+      final isNew = t.entry == 0;
+      if (isNew) {
         await repository.storeGameObjectTemplate(t);
       } else {
         await repository.updateGameObjectTemplate(t);
       }
       template.value = t;
+      _logActivity(isNew ? ActivityActionType.create : ActivityActionType.update, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -65,6 +71,8 @@ class GameObjectTemplateDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
     }
   }
 
@@ -209,5 +217,16 @@ class GameObjectTemplateDetailViewModel {
     aiNameController.text = template.aiName;
     scriptNameController.text = template.scriptName;
     verifiedBuildController.text = template.verifiedBuild.toString();
+  }
+
+  void _logActivity(ActivityActionType action, GameObjectTemplate t) {
+    final log = ActivityLog(
+      module: 'gameobject_template',
+      actionType: action,
+      entityId: t.entry,
+      entityName: t.name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 }

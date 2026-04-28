@@ -140,14 +140,14 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.onCopy(items[row].id);
+                    viewModel.copyQuestSort(items[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.onDelete(items[row].id);
+                    viewModel.deleteQuestSort(items[row].id);
                   },
                   child: Text('删除'),
                 ),

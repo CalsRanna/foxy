@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/item_template.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -156,6 +158,7 @@ class ItemTemplateDetailViewModel {
   final entry = signal(0);
   final template = signal(ItemTemplate());
   final statsCount = signal(0);
+  final saving = signal(false);
 
   /// Computed conditions
   bool get hasEnchantment =>
@@ -439,6 +442,7 @@ class ItemTemplateDetailViewModel {
 
   /// 保存模板到数据库
   Future<void> save(BuildContext context) async {
+    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = ItemTemplateRepository();
@@ -448,6 +452,7 @@ class ItemTemplateDetailViewModel {
         await repository.updateItemTemplate(t);
       }
       template.value = t;
+      _logActivity(t.entry == 0 ? ActivityActionType.create : ActivityActionType.update, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -455,6 +460,8 @@ class ItemTemplateDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
     }
   }
 
@@ -477,6 +484,17 @@ class ItemTemplateDetailViewModel {
   }
   int _getSelectValue(ShadSelectController<int> controller) =>
       controller.value.firstOrNull ?? 0;
+
+  void _logActivity(ActivityActionType action, ItemTemplate t) {
+    final log = ActivityLog(
+      module: 'item_template',
+      actionType: action,
+      entityId: t.entry,
+      entityName: t.name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
+  }
 
   void dispose() {
     /// Card 1: Basic Info

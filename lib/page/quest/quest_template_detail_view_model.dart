@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/quest_template.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -11,6 +13,7 @@ class QuestTemplateDetailViewModel {
 
   final entry = signal(0);
   final template = signal(QuestTemplate());
+  final saving = signal(false);
 
   /// Basic
   final idController = TextEditingController();
@@ -145,6 +148,7 @@ class QuestTemplateDetailViewModel {
 
   /// 保存模板到数据库
   Future<void> save(BuildContext context) async {
+    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = QuestTemplateRepository();
@@ -155,6 +159,7 @@ class QuestTemplateDetailViewModel {
       }
       template.value = t;
       entry.value = t.id;
+      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -162,6 +167,8 @@ class QuestTemplateDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
     }
   }
 
@@ -425,6 +432,17 @@ class QuestTemplateDetailViewModel {
     return value;
   }
   int? _parseIntOrNull(String text) => text.isEmpty ? null : int.tryParse(text);
+
+  void _logActivity(ActivityActionType action, QuestTemplate t) {
+    final log = ActivityLog(
+      module: 'quest_template',
+      actionType: action,
+      entityId: t.id,
+      entityName: t.logTitle,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
+  }
 
   void dispose() {
     idController.dispose();

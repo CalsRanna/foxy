@@ -126,12 +126,12 @@ class _ConditionListPageState extends State<ConditionListPage> {
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.onCopy(items[row]),
+                  onPressed: () => viewModel.copyCondition(items[row]),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.onDelete(items[row]),
+                  onPressed: () => viewModel.deleteCondition(items[row]),
                   child: Text('删除'),
                 ),
               ],

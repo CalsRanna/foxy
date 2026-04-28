@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_queststarter.dart';
 import 'package:foxy/repository/creature_queststarter_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';

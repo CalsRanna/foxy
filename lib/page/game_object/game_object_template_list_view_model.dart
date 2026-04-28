@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/game_object_template.dart';
 import 'package:foxy/model/game_object_template_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -32,6 +34,7 @@ class GameObjectTemplateListViewModel {
       await repository.copyGameObjectTemplate(entry);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
+      _logActivity(ActivityActionType.copy, entry);
       await _refresh();
     } catch (e) {
       logger.e(e.toString());
@@ -52,6 +55,7 @@ class GameObjectTemplateListViewModel {
       await repository.destroyGameObjectTemplate(entry);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
+      _logActivity(ActivityActionType.delete, entry);
       await _refresh();
     } catch (e) {
       logger.e(e.toString());
@@ -93,12 +97,7 @@ class GameObjectTemplateListViewModel {
 
   Future<void> paginate(int page) async {
     this.page.value = page;
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefGameObjectTemplates(
-      page: page,
-      filter: filter,
-    );
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -111,12 +110,7 @@ class GameObjectTemplateListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefGameObjectTemplates(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> _refresh() async {
@@ -126,5 +120,19 @@ class GameObjectTemplateListViewModel {
       filter: filter,
     );
     total.value = await repository.count(filter: filter);
+  }
+
+  void _logActivity(ActivityActionType action, int entry) {
+    final all = templates.value;
+    final template = all.where((t) => t.entry == entry).firstOrNull;
+    final name = template?.name ?? '';
+    final log = ActivityLog(
+      module: 'gameobject_template',
+      actionType: action,
+      entityId: entry,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 }

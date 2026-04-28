@@ -28,8 +28,7 @@ class PlayerCreateInfoListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    items.value = await _search();
-    total.value = await _count();
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -42,8 +41,7 @@ class PlayerCreateInfoListViewModel {
 
   Future<void> paginate(int newPage) async {
     page.value = newPage;
-    items.value = await _search();
-    total.value = await _count();
+    await _refresh();
   }
 
   void navigateToDetail(BuildContext context, {PlayerCreateInfo? info}) {
@@ -61,7 +59,7 @@ class PlayerCreateInfoListViewModel {
     );
   }
 
-  Future<void> onCopy(PlayerCreateInfo info) async {
+  Future<void> copyPlayerCreateInfo(PlayerCreateInfo info) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -80,7 +78,7 @@ class PlayerCreateInfoListViewModel {
     }
   }
 
-  Future<void> onDelete(PlayerCreateInfo info) async {
+  Future<void> deletePlayerCreateInfo(PlayerCreateInfo info) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',

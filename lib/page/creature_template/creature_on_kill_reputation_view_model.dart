@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_onkill_reputation.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';

@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/smart_script.dart';
 import 'package:foxy/model/smart_script_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -35,6 +37,7 @@ class SmartScriptListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copySmartScript(entryOrGuid, sourceType, id, link);
+      _logActivity(ActivityActionType.copy, entryOrGuid, sourceType, id, link);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -60,6 +63,7 @@ class SmartScriptListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroySmartScript(entryOrGuid, sourceType, id, link);
+      _logActivity(ActivityActionType.delete, entryOrGuid, sourceType, id, link);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -112,12 +116,7 @@ class SmartScriptListViewModel {
 
   Future<void> paginate(int page) async {
     this.page.value = page;
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefSmartScripts(
-      page: page,
-      filter: filter,
-    );
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -130,12 +129,7 @@ class SmartScriptListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefSmartScripts(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> _refresh() async {
@@ -145,5 +139,31 @@ class SmartScriptListViewModel {
       filter: filter,
     );
     total.value = await repository.count(filter: filter);
+  }
+
+  void _logActivity(
+    ActivityActionType action,
+    int entryOrGuid,
+    int sourceType,
+    int id,
+    int link,
+  ) {
+    final templates = this.templates.value;
+    final template = templates.where(
+      (t) =>
+          t.entryOrGuid == entryOrGuid &&
+          t.sourceType == sourceType &&
+          t.id == id &&
+          t.link == link,
+    ).firstOrNull;
+    final name = template?.comment ?? '';
+    final log = ActivityLog(
+      module: 'smart_script',
+      actionType: action,
+      entityId: entryOrGuid,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 }

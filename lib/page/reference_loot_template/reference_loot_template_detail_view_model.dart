@@ -25,6 +25,7 @@ class ReferenceLootTemplateDetailViewModel {
   final loot = signal<LootTemplate?>(null);
   final originalEntry = signal<int?>(null);
   final originalItem = signal<int?>(null);
+  final saving = signal(false);
 
   Future<void> initSignals({int? entry, int? item}) async {
     if (entry == null || item == null) return;
@@ -56,6 +57,7 @@ class ReferenceLootTemplateDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
+    saving.value = true;
     try {
       final data = _collectFromControllers();
       await repository.store(data);
@@ -67,6 +69,8 @@ class ReferenceLootTemplateDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
     }
   }
 
