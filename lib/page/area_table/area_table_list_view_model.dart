@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/area_table.dart';
 import 'package:foxy/model/area_table_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -18,7 +20,6 @@ class AreaTableListViewModel {
   final page = signal(1);
   final areas = signal(<AreaTable>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyAreaTable(int id) async {
     try {
@@ -30,6 +31,7 @@ class AreaTableListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyAreaTable(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -50,6 +52,7 @@ class AreaTableListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyAreaTable(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -65,9 +68,8 @@ class AreaTableListViewModel {
   }
 
   Future<void> initSignals() async {
-    final filter = AreaTableFilterEntity();
-    areas.value = await repository.getAreaTables(page: 1, filter: filter);
-    total.value = await repository.countAreaTables(filter: filter);
+    areas.value = await repository.getAreaTables();
+    total.value = await repository.countAreaTables();
   }
 
   void navigateToDetail(BuildContext context, {int? id, String? name}) {
@@ -97,9 +99,8 @@ class AreaTableListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    final filter = AreaTableFilterEntity();
-    areas.value = await repository.getAreaTables(page: 1, filter: filter);
-    total.value = await repository.countAreaTables(filter: filter);
+    areas.value = await repository.getAreaTables();
+    total.value = await repository.countAreaTables();
   }
 
   Future<void> search() async {
@@ -111,5 +112,19 @@ class AreaTableListViewModel {
     final filter = _buildFilter();
     areas.value = await repository.getAreaTables(page: page.value, filter: filter);
     total.value = await repository.countAreaTables(filter: filter);
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final areas = this.areas.value;
+    final area = areas.where((a) => a.id == id).firstOrNull;
+    final name = area?.areaNameLangZhCn ?? '';
+    final log = ActivityLog(
+      module: 'area_table',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

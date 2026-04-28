@@ -6,8 +6,8 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_item_enchantment';
 
   Future<List<SpellItemEnchantment>> getSpellItemEnchantments({
-    required SpellItemEnchantmentFilterEntity filter,
-    required int page,
+    int page = 1,
+    SpellItemEnchantmentFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -17,19 +17,15 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
     return results.map((e) => SpellItemEnchantment.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countSpellItemEnchantments({required SpellItemEnchantmentFilterEntity filter}) async {
+  Future<int> countSpellItemEnchantments({SpellItemEnchantmentFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
   Future<SpellItemEnchantment?> getSpellItemEnchantment(int id) async {
-    try {
-      var result = await laconic.table(_table).where('ID', id).first();
-      return SpellItemEnchantment.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('ID', id).first();
+    return SpellItemEnchantment.fromJson(result.toMap());
   }
 
   Future<void> storeSpellItemEnchantment(SpellItemEnchantment entry) async {
@@ -66,7 +62,8 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, SpellItemEnchantmentFilterEntity filter) {
+  dynamic _applyFilter(dynamic builder, SpellItemEnchantmentFilterEntity? filter) {
+    if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

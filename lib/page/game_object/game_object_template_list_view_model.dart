@@ -20,7 +20,6 @@ class GameObjectTemplateListViewModel {
   final page = signal(1);
   final templates = signal(<BriefGameObjectTemplate>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyGameObjectTemplate(int entry) async {
     try {

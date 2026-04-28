@@ -20,7 +20,6 @@ class SmartScriptListViewModel {
   final page = signal(1);
   final scripts = signal(<BriefSmartScript>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copySmartScript(
     int entryOrGuid,

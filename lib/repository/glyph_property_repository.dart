@@ -6,8 +6,8 @@ class GlyphPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_glyph_properties';
 
   Future<List<GlyphProperty>> getGlyphProperties({
-    required GlyphPropertyFilterEntity filter,
-    required int page,
+    int page = 1,
+    GlyphPropertyFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -17,19 +17,15 @@ class GlyphPropertyRepository with RepositoryMixin {
     return results.map((e) => GlyphProperty.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countGlyphProperties({required GlyphPropertyFilterEntity filter}) async {
+  Future<int> countGlyphProperties({GlyphPropertyFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
   Future<GlyphProperty?> getGlyphProperty(int id) async {
-    try {
-      var result = await laconic.table(_table).where('ID', id).first();
-      return GlyphProperty.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('ID', id).first();
+    return GlyphProperty.fromJson(result.toMap());
   }
 
   Future<void> storeGlyphProperty(GlyphProperty glyphProperty) async {
@@ -66,7 +62,8 @@ class GlyphPropertyRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, GlyphPropertyFilterEntity filter) {
+  dynamic _applyFilter(dynamic builder, GlyphPropertyFilterEntity? filter) {
+    if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

@@ -17,7 +17,6 @@ class GlyphPropertyListViewModel {
   final page = signal(1);
   final properties = signal(<GlyphProperty>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyGlyphProperty(int id) async {
     try {

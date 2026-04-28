@@ -6,8 +6,8 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
 
   Future<List<ScalingStatDistribution>> getScalingStatDistributions({
-    required ScalingStatDistributionFilterEntity filter,
-    required int page,
+    int page = 1,
+    ScalingStatDistributionFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -17,19 +17,15 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     return results.map((e) => ScalingStatDistribution.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countScalingStatDistributions({required ScalingStatDistributionFilterEntity filter}) async {
+  Future<int> countScalingStatDistributions({ScalingStatDistributionFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
   Future<ScalingStatDistribution?> getScalingStatDistribution(int id) async {
-    try {
-      var result = await laconic.table(_table).where('ID', id).first();
-      return ScalingStatDistribution.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('ID', id).first();
+    return ScalingStatDistribution.fromJson(result.toMap());
   }
 
   Future<void> storeScalingStatDistribution(ScalingStatDistribution item) async {
@@ -66,7 +62,8 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, ScalingStatDistributionFilterEntity filter) {
+  dynamic _applyFilter(dynamic builder, ScalingStatDistributionFilterEntity? filter) {
+    if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

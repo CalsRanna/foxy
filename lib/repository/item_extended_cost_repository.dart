@@ -5,42 +5,27 @@ import 'package:foxy/repository/repository_mixin.dart';
 class ItemExtendedCostRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
 
-  /// 搜索扩展价格
   Future<List<ItemExtendedCost>> getItemExtendedCosts({
-    required ItemExtendedCostFilterEntity filter,
-    required int page,
+    int page = 1,
+    ItemExtendedCostFilterEntity? filter,
   }) async {
-    try {
-      var offset = (page - 1) * kPageSize;
-      var builder = laconic.table(_table);
-      builder = _applyFilter(builder, filter);
-      builder = builder.limit(kPageSize).offset(offset);
-      var results = await builder.get();
-      return results.map((e) => ItemExtendedCost.fromJson(e.toMap())).toList();
-    } catch (e) {
-      return [];
-    }
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results.map((e) => ItemExtendedCost.fromJson(e.toMap())).toList();
   }
 
-  /// 计数
-  Future<int> countItemExtendedCosts({required ItemExtendedCostFilterEntity filter}) async {
-    try {
-      var builder = laconic.table(_table);
-      builder = _applyFilter(builder, filter);
-      return await builder.count();
-    } catch (e) {
-      return 0;
-    }
+  Future<int> countItemExtendedCosts({ItemExtendedCostFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return await builder.count();
   }
 
-  /// 根据ID获取单个扩展价格
   Future<ItemExtendedCost?> getItemExtendedCost(int id) async {
-    try {
-      var result = await laconic.table(_table).where('ID', id).first();
-      return ItemExtendedCost.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('ID', id).first();
+    return ItemExtendedCost.fromJson(result.toMap());
   }
 
   Future<void> storeItemExtendedCost(ItemExtendedCost data) async {
@@ -77,7 +62,8 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, ItemExtendedCostFilterEntity filter) {
+  dynamic _applyFilter(dynamic builder, ItemExtendedCostFilterEntity? filter) {
+    if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

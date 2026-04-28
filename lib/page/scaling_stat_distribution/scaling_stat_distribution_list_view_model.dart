@@ -17,7 +17,6 @@ class ScalingStatDistributionListViewModel {
   final page = signal(1);
   final distributions = signal(<ScalingStatDistribution>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyScalingStatDistribution(int id) async {
     try {

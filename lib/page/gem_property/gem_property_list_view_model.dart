@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/gem_property.dart';
 import 'package:foxy/model/gem_property_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -17,7 +19,6 @@ class GemPropertyListViewModel {
   final page = signal(1);
   final properties = signal(<GemProperty>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyGemProperty(int id) async {
     try {
@@ -29,6 +30,7 @@ class GemPropertyListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyGemProperty(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,6 +51,7 @@ class GemPropertyListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyGemProperty(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -63,9 +66,8 @@ class GemPropertyListViewModel {
   }
 
   Future<void> initSignals() async {
-    final filter = GemPropertyFilterEntity();
-    properties.value = await repository.getGemProperties(page: 1, filter: filter);
-    total.value = await repository.countGemProperties(filter: filter);
+    properties.value = await repository.getGemProperties();
+    total.value = await repository.countGemProperties();
   }
 
   void navigateToDetail(BuildContext context, {int? id}) {
@@ -93,9 +95,8 @@ class GemPropertyListViewModel {
   Future<void> reset() async {
     entryController.clear();
     page.value = 1;
-    final filter = GemPropertyFilterEntity();
-    properties.value = await repository.getGemProperties(page: 1, filter: filter);
-    total.value = await repository.countGemProperties(filter: filter);
+    properties.value = await repository.getGemProperties();
+    total.value = await repository.countGemProperties();
   }
 
   Future<void> search() async {
@@ -107,5 +108,16 @@ class GemPropertyListViewModel {
     final filter = _buildFilter();
     properties.value = await repository.getGemProperties(page: page.value, filter: filter);
     total.value = await repository.countGemProperties(filter: filter);
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final log = ActivityLog(
+      module: 'gem_property',
+      actionType: action,
+      entityId: id,
+      entityName: id.toString(),
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

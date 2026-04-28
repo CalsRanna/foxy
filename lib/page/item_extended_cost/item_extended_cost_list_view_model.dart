@@ -17,7 +17,6 @@ class ItemExtendedCostListViewModel {
   final page = signal(1);
   final costs = signal(<ItemExtendedCost>[]);
   final total = signal(0);
-  final selectedRowIndex = signal(-1);
 
   Future<void> copyItemExtendedCost(int id) async {
     try {
