@@ -20,9 +20,11 @@ class GemPropertyDetailViewModel {
   final typeController = TextEditingController();
 
   final table = signal(GemProperty());
+  final saving = signal(false);
 
   /// 保存到数据库
   Future<void> save(BuildContext context) async {
+    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = GemPropertyRepository();
@@ -39,6 +41,8 @@ class GemPropertyDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
     }
   }
 

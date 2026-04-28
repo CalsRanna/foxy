@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:foxy/model/gameobject_questender.dart';
 import 'package:foxy/repository/gameobject_questender_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';

@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/quest_template.dart';
 import 'package:foxy/model/quest_template_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -58,6 +60,7 @@ class QuestTemplateListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyQuestTemplate(id);
+      _logActivity(ActivityActionType.copy, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -78,6 +81,7 @@ class QuestTemplateListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyQuestTemplate(id);
+      _logActivity(ActivityActionType.delete, id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -111,5 +115,19 @@ class QuestTemplateListViewModel {
     return QuestTemplateFilterEntity()
       ..id = idController.text
       ..title = titleController.text;
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final templates = this.templates.value;
+    final template = templates.where((t) => t.id == id).firstOrNull;
+    final name = template?.logTitle ?? '';
+    final log = ActivityLog(
+      module: 'quest_template',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/constant/item_constants.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/item_template.dart';
 import 'package:foxy/model/item_template_filter_entity.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -50,14 +52,12 @@ class ItemTemplateListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    templates.value = await _fetchItems();
-    total.value = await _count();
+    await _refresh();
   }
 
   Future<void> paginate(int page) async {
     this.page.value = page;
-    templates.value = await _fetchItems();
-    total.value = await _count();
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -107,6 +107,7 @@ class ItemTemplateListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.copyItemTemplate(entry);
+      _logActivity(ActivityActionType.copy, entry);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -127,6 +128,7 @@ class ItemTemplateListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroyItemTemplate(entry);
+      _logActivity(ActivityActionType.delete, entry);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -179,5 +181,19 @@ class ItemTemplateListViewModel {
   Future<void> _refresh() async {
     templates.value = await _fetchItems();
     total.value = await _count();
+  }
+
+  void _logActivity(ActivityActionType action, int entry) {
+    final templates = this.templates.value;
+    final template = templates.where((t) => t.entry == entry).firstOrNull;
+    final name = template?.name ?? '';
+    final log = ActivityLog(
+      module: 'item_template',
+      actionType: action,
+      entityId: entry,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 }

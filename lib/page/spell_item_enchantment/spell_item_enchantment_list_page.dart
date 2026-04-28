@@ -144,14 +144,14 @@ class _SpellItemEnchantmentListPageState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.onCopy(items[row].id);
+                    viewModel.copySpellItemEnchantment(items[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.onDelete(items[row].id);
+                    viewModel.deleteSpellItemEnchantment(items[row].id);
                   },
                   child: Text('删除'),
                 ),

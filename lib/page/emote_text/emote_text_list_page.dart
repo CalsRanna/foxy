@@ -142,14 +142,14 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.onCopy(items[row].id);
+                    viewModel.copyEmoteText(items[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.onDelete(items[row].id);
+                    viewModel.deleteEmoteText(items[row].id);
                   },
                   child: Text('删除'),
                 ),

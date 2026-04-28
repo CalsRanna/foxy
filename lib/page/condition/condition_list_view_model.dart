@@ -28,8 +28,7 @@ class ConditionListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    items.value = await _search();
-    total.value = await _count();
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -42,8 +41,7 @@ class ConditionListViewModel {
 
   Future<void> paginate(int newPage) async {
     page.value = newPage;
-    items.value = await _search();
-    total.value = await _count();
+    await _refresh();
   }
 
   void navigateToDetail(BuildContext context, {Condition? condition}) {
@@ -65,7 +63,7 @@ class ConditionListViewModel {
     );
   }
 
-  Future<void> onCopy(Condition condition) async {
+  Future<void> copyCondition(Condition condition) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -84,7 +82,7 @@ class ConditionListViewModel {
     }
   }
 
-  Future<void> onDelete(Condition condition) async {
+  Future<void> deleteCondition(Condition condition) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',

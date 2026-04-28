@@ -137,14 +137,14 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.onCopy(items[row].id);
+                    viewModel.copyGemProperty(items[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.onDelete(items[row].id);
+                    viewModel.deleteGemProperty(items[row].id);
                   },
                   child: Text('删除'),
                 ),

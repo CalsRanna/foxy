@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:foxy/model/item_enchantment_template.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';

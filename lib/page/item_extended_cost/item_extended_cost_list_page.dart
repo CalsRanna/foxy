@@ -139,14 +139,14 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.onCopy(items[row].id);
+                    viewModel.copyItemExtendedCost(items[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.onDelete(items[row].id);
+                    viewModel.deleteItemExtendedCost(items[row].id);
                   },
                   child: Text('删除'),
                 ),

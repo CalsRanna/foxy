@@ -131,12 +131,12 @@ class _TextContentListPageState extends State<TextContentListPage> {
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.onCopy(items[row].id),
+                  onPressed: () => viewModel.copyPageText(items[row].id),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.onDelete(items[row].id),
+                  onPressed: () => viewModel.deletePageText(items[row].id),
                   child: Text('删除'),
                 ),
               ],

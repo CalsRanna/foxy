@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/model/creature_template_addon.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';

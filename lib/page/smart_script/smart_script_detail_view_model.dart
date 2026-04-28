@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/smart_script.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -57,6 +59,7 @@ class SmartScriptDetailViewModel {
     saving.value = true;
     try {
       final t = _collectFromControllers();
+      final action = isNew.value ? ActivityActionType.create : ActivityActionType.update;
       if (isNew.value) {
         await _repository.storeSmartScript(t);
         _origEntryOrGuid = t.entryOrGuid;
@@ -79,6 +82,7 @@ class SmartScriptDetailViewModel {
         _origLink = t.link;
         script.value = t;
       }
+      _logActivity(action, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('脚本数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -207,6 +211,17 @@ class SmartScriptDetailViewModel {
     final value = double.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
+  }
+
+  void _logActivity(ActivityActionType action, SmartScript t) {
+    final log = ActivityLog(
+      module: 'smart_script',
+      actionType: action,
+      entityId: t.entryOrGuid,
+      entityName: t.comment,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 
   void dispose() {

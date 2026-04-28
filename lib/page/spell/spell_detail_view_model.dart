@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/spell.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -220,8 +222,10 @@ class SpellDetailViewModel {
 
   final id = signal(0);
   final template = signal(Spell());
+  final saving = signal(false);
 
   Future<void> save(BuildContext context) async {
+    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = SpellRepository();
@@ -231,6 +235,7 @@ class SpellDetailViewModel {
         await repository.updateSpell(t);
       }
       template.value = t;
+      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('法术数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -238,6 +243,8 @@ class SpellDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
     }
   }
 
@@ -503,6 +510,17 @@ class SpellDetailViewModel {
     final value = double.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
+  }
+
+  void _logActivity(ActivityActionType action, Spell t) {
+    final log = ActivityLog(
+      module: 'spell',
+      actionType: action,
+      entityId: t.id,
+      entityName: t.nameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 
   void dispose() {

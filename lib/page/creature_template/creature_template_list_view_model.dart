@@ -100,12 +100,7 @@ class CreatureTemplateListViewModel {
 
   Future<void> paginate(int page) async {
     this.page.value = page;
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefCreatureTemplates(
-      page: page,
-      filter: filter,
-    );
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -119,12 +114,7 @@ class CreatureTemplateListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefCreatureTemplates(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> _refresh() async {

@@ -19,7 +19,7 @@ class GlyphPropertyListViewModel {
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
-  Future<void> onCopy(int id) async {
+  Future<void> copyGlyphProperty(int id) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -38,7 +38,7 @@ class GlyphPropertyListViewModel {
     }
   }
 
-  Future<void> onDelete(int id) async {
+  Future<void> deleteGlyphProperty(int id) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
@@ -87,9 +87,7 @@ class GlyphPropertyListViewModel {
 
   Future<void> paginate(int page) async {
     this.page.value = page;
-    final filter = _buildFilter();
-    items.value = await repository.search(page: page, filter: filter);
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> reset() async {
@@ -102,9 +100,7 @@ class GlyphPropertyListViewModel {
 
   Future<void> search() async {
     page.value = 1;
-    final filter = _buildFilter();
-    items.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    await _refresh();
   }
 
   Future<void> _refresh() async {

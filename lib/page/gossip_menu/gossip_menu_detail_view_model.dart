@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/model/activity_log.dart';
 import 'package:foxy/model/gossip_menu.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -15,6 +17,7 @@ class GossipMenuDetailViewModel {
   final menuId = signal(0);
   final textId = signal(0);
   final template = signal(GossipMenu());
+  final saving = signal(false);
 
   int? _originalMenuId;
   int? _originalTextId;
@@ -55,6 +58,7 @@ class GossipMenuDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
+    saving.value = true;
     try {
       final t = _collectFromControllers();
       if (_originalMenuId == null) {
@@ -65,6 +69,7 @@ class GossipMenuDetailViewModel {
         }
         await GossipMenuRepository().storeGossipMenu(t);
         template.value = t;
+        _logActivity(ActivityActionType.create, t);
         _originalMenuId = t.menuId;
         _originalTextId = t.textId;
       } else {
@@ -74,6 +79,7 @@ class GossipMenuDetailViewModel {
           'TextID': _originalTextId!,
         }, t);
         template.value = t;
+        _logActivity(ActivityActionType.update, t);
         _originalTextId = t.textId;
       }
       menuId.value = t.menuId;
@@ -85,6 +91,8 @@ class GossipMenuDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
     }
   }
 
@@ -97,6 +105,17 @@ class GossipMenuDetailViewModel {
       ..menuId = int.tryParse(menuIdController.text) ?? 0
       ..textId = int.tryParse(textIdController.text) ?? 0;
     return t;
+  }
+
+  void _logActivity(ActivityActionType action, GossipMenu t) {
+    final log = ActivityLog(
+      module: 'gossip_menu',
+      actionType: action,
+      entityId: t.menuId,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().store(log);
   }
 
   void dispose() {
