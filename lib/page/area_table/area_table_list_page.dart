@@ -75,7 +75,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final areas = viewModel.areas.value;
@@ -96,6 +96,9 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
+            if (vicinity.row < 0 || vicinity.row >= areas.length) {
+              return ShadTableCell(child: SizedBox());
+            }
             final item = areas[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
@@ -124,7 +127,6 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
               id: areas[row].id,
               name: areas[row].areaNameLangZhCn,
             );
@@ -138,7 +140,6 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
                       id: areas[row].id,
                       name: areas[row].areaNameLangZhCn,
                     );

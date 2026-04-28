@@ -95,10 +95,6 @@ class GameObjectTemplate {
     verifiedBuild = json['VerifiedBuild'] ?? 0;
   }
 
-  GameObjectTemplate copyWith({int? entry}) {
-    return GameObjectTemplate()..entry = entry ?? this.entry;
-  }
-
   Map<String, dynamic> toJson() {
     return {
       'entry': entry,

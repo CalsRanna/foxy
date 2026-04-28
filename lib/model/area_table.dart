@@ -40,8 +40,8 @@ class AreaTable {
     liquidTypeId1 = json['LiquidTypeID1'] ?? 0;
     liquidTypeId2 = json['LiquidTypeID2'] ?? 0;
     liquidTypeId3 = json['LiquidTypeID3'] ?? 0;
-    minElevation = (json['MinElevation'] ?? 0).toDouble();
-    ambientMultiplier = (json['Ambient_multiplier'] ?? 0).toDouble();
+    minElevation = (json['MinElevation'] as num?)?.toDouble() ?? 0.0;
+    ambientMultiplier = (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0;
     lightId = json['LightID'] ?? 0;
   }
 
@@ -68,5 +68,25 @@ class AreaTable {
       'Ambient_multiplier': ambientMultiplier,
       'LightID': lightId,
     };
+  }
+}
+
+class BriefAreaTable {
+  int id = 0;
+  String areaNameLangZhCn = '';
+  int continentId = 0;
+  double minElevation = 0.0;
+  int zoneMusic = 0;
+  int explorationLevel = 0;
+
+  BriefAreaTable();
+
+  BriefAreaTable.fromJson(Map<String, dynamic> json) {
+    id = json['ID'] ?? 0;
+    areaNameLangZhCn = json['AreaName_lang_zhCN'] ?? '';
+    continentId = json['ContinentID'] ?? 0;
+    minElevation = (json['MinElevation'] as num?)?.toDouble() ?? 0.0;
+    zoneMusic = json['ZoneMusic'] ?? 0;
+    explorationLevel = json['ExplorationLevel'] ?? 0;
   }
 }

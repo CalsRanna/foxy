@@ -3,7 +3,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureDisplayInfoRepository with RepositoryMixin {
   // DBC 表在 foxy 数据库中
-  final String _table = 'foxy.dbc_creature_display_info';
+  static const _table = 'foxy.dbc_creature_display_info';
   final String _modelDataTable = 'foxy.dbc_creature_model_data';
 
   Future<int> countCreatureDisplayInfos({String? id, String? modelName}) async {

@@ -4,8 +4,8 @@ import 'package:foxy/model/game_object_template_locale.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GameObjectTemplateRepository with RepositoryMixin {
-  final String _table = 'gameobject_template';
-  final String _localeTable = 'gameobject_template_locale';
+  static const _table = 'gameobject_template';
+  static const _localeTable = 'gameobject_template_locale';
 
   Future<void> copyGameObjectTemplate(int entry) async {
     var template = await getGameObjectTemplate(entry);

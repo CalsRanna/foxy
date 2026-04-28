@@ -699,7 +699,4 @@ class Spell {
     };
   }
 
-  Spell copyWith({int? id}) {
-    return Spell()..id = id ?? this.id;
-  }
 }

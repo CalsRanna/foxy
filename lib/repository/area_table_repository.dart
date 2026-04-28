@@ -17,6 +17,27 @@ class AreaTableRepository with RepositoryMixin {
     return results.map((e) => AreaTable.fromJson(e.toMap())).toList();
   }
 
+  Future<List<BriefAreaTable>> getBriefAreaTables({
+    int page = 1,
+    AreaTableFilterEntity? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    const fields = [
+      'ID',
+      'AreaName_lang_zhCN',
+      'ContinentID',
+      'MinElevation',
+      'ZoneMusic',
+      'ExplorationLevel',
+    ];
+    builder = builder.select(fields);
+    builder = _applyFilter(builder, filter);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results.map((e) => BriefAreaTable.fromJson(e.toMap())).toList();
+  }
+
   Future<int> countAreaTables({AreaTableFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);

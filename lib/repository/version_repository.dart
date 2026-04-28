@@ -2,7 +2,7 @@ import 'package:foxy/model/version_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class VersionRepository with RepositoryMixin {
-  final String _table = 'version';
+  static const _table = 'version';
   Future<void> connect() async {
     await laconic.statement('select version()');
   }

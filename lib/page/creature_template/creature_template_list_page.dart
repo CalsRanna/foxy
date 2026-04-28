@@ -81,7 +81,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateCreatureTemplateDetailPage(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final templates = viewModel.templates.value;
@@ -102,6 +102,9 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
+            if (vicinity.row < 0 || vicinity.row >= templates.length) {
+              return ShadTableCell(child: SizedBox());
+            }
             final template = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(template.entry.toString())),
@@ -127,8 +130,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateCreatureTemplateDetailPage(
-              context,
+            viewModel.navigateToDetail(
               entry: templates[row].entry,
               name: templates[row].displayName,
             );
@@ -141,8 +143,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateCreatureTemplateDetailPage(
-                      context,
+                    viewModel.navigateToDetail(
                       entry: templates[row].entry,
                       name: templates[row].displayName,
                     );

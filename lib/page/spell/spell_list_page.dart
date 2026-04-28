@@ -94,7 +94,7 @@ class _SpellListPageState extends State<SpellListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateSpellDetailPage(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final templates = viewModel.spells.value;
@@ -115,6 +115,9 @@ class _SpellListPageState extends State<SpellListPage> {
         var flexWidth = constraints.maxWidth - 200;
         return FoxyShadTable(
           builder: (context, vicinity) {
+            if (vicinity.row < 0 || vicinity.row >= templates.length) {
+              return ShadTableCell(child: SizedBox());
+            }
             final spell = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(spell.id.toString())),
@@ -138,8 +141,7 @@ class _SpellListPageState extends State<SpellListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateSpellDetailPage(
-              context,
+            viewModel.navigateToDetail(
               id: templates[row].id,
               name: templates[row].displayName,
             );
@@ -152,8 +154,7 @@ class _SpellListPageState extends State<SpellListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateSpellDetailPage(
-                      context,
+                    viewModel.navigateToDetail(
                       id: templates[row].id,
                       name: templates[row].displayName,
                     );
