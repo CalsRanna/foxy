@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class ItemRandomSuffixRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_random_suffix';
 
-  Future<List<ItemRandomSuffix>> search({
+  Future<List<ItemRandomSuffix>> getItemRandomSuffixes({
     String? id,
     String? name,
     required int page,
@@ -17,7 +17,7 @@ class ItemRandomSuffixRepository with RepositoryMixin {
     return results.map((e) => ItemRandomSuffix.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({String? id, String? name}) async {
+  Future<int> countItemRandomSuffixes({String? id, String? name}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id, name: name);
     return builder.count();

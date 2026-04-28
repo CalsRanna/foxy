@@ -19,7 +19,7 @@ class SpellCustomAttrViewModel {
     loading.value = true;
     try {
       final repository = SpellCustomAttrRepository();
-      final data = await repository.find(spellId.value);
+      final data = await repository.getSpellCustomAttr(spellId.value);
       if (data != null) {
         customAttr.value = data;
       }
@@ -34,7 +34,7 @@ class SpellCustomAttrViewModel {
     try {
       final data = _collectFromControllers();
       final repository = SpellCustomAttrRepository();
-      await repository.save(data);
+      await repository.saveSpellCustomAttr(data);
       customAttr.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('自定义属性已保存'));

@@ -8,7 +8,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
   static const _localeTable = 'gossip_menu_option_locale';
 
   /// 按 MenuID 搜索该菜单下的所有选项（带 locale JOIN）
-  Future<List<GossipMenuOption>> search({required int menuId}) async {
+  Future<List<GossipMenuOption>> getGossipMenuOptions({required int menuId}) async {
     try {
       const fields = [
         'gmo.MenuID',
@@ -45,7 +45,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
   }
 
   /// 按复合键查找
-  Future<GossipMenuOption?> find(Map<String, dynamic> id) async {
+  Future<GossipMenuOption?> getGossipMenuOption(Map<String, dynamic> id) async {
     try {
       var builder = laconic.table(_table);
       id.forEach((k, v) {
@@ -59,7 +59,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
   }
 
   /// 取指定 MenuID 下的下一个 OptionID
-  Future<GossipMenuOption> create({required int menuId}) async {
+  Future<GossipMenuOption> createGossipMenuOption({required int menuId}) async {
     try {
       final result = await laconic.table(_table).where('MenuID', menuId).select(
         ['MAX(OptionID) as max_id'],
@@ -77,7 +77,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
     }
   }
 
-  Future<void> update(Map<String, dynamic> id, GossipMenuOption model) async {
+  Future<void> updateGossipMenuOption(Map<String, dynamic> id, GossipMenuOption model) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);
@@ -89,11 +89,11 @@ class GossipMenuOptionRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> store(GossipMenuOption model) async {
+  Future<void> storeGossipMenuOption(GossipMenuOption model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
-  Future<void> destroy(Map<String, dynamic> id) async {
+  Future<void> destroyGossipMenuOption(Map<String, dynamic> id) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);
@@ -101,11 +101,11 @@ class GossipMenuOptionRepository with RepositoryMixin {
     await builder.delete();
   }
 
-  Future<void> copy(Map<String, dynamic> id) async {
-    final original = await find(id);
+  Future<void> copyGossipMenuOption(Map<String, dynamic> id) async {
+    final original = await getGossipMenuOption(id);
     if (original == null) return;
-    final next = await create(menuId: original.menuId);
+    final next = await createGossipMenuOption(menuId: original.menuId);
     original.optionId = next.optionId;
-    await store(original);
+    await storeGossipMenuOption(original);
   }
 }

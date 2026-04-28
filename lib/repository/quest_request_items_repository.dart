@@ -9,7 +9,7 @@ class QuestRequestItemsRepository with RepositoryMixin {
   static const _table = 'quest_request_items';
 
   /// 根据 ID 查找
-  Future<QuestRequestItems?> find(int id) async {
+  Future<QuestRequestItems?> getQuestRequestItems(int id) async {
     try {
       final result = await laconic.table(_table).where('ID', id).first();
       return QuestRequestItems.fromJson(result.toMap());
@@ -19,19 +19,19 @@ class QuestRequestItemsRepository with RepositoryMixin {
   }
 
   /// 创建：返回与 quest_template ID 关联的空白对象（不落库）
-  Future<QuestRequestItems> create(int id) async {
+  Future<QuestRequestItems> createQuestRequestItems(int id) async {
     final model = QuestRequestItems();
     model.id = id;
     return model;
   }
 
   /// 存储（insert）
-  Future<void> store(QuestRequestItems model) async {
+  Future<void> storeQuestRequestItems(QuestRequestItems model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   /// 更新（根据 ID）
-  Future<void> update(int id, QuestRequestItems model) async {
+  Future<void> updateQuestRequestItems(int id, QuestRequestItems model) async {
     final json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);

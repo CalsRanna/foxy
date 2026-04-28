@@ -5,7 +5,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellItemEnchantmentSoloRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_item_enchantment';
 
-  Future<List<SpellItemEnchantment>> search({
+  Future<List<SpellItemEnchantment>> getSpellItemEnchantments({
     required SpellItemEnchantmentFilterEntity filter,
     required int page,
   }) async {
@@ -17,13 +17,13 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
     return results.map((e) => SpellItemEnchantment.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required SpellItemEnchantmentFilterEntity filter}) async {
+  Future<int> countSpellItemEnchantments({required SpellItemEnchantmentFilterEntity filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<SpellItemEnchantment?> find(int id) async {
+  Future<SpellItemEnchantment?> getSpellItemEnchantment(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return SpellItemEnchantment.fromJson(result.toMap());
@@ -32,22 +32,22 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(SpellItemEnchantment entry) async {
+  Future<void> storeSpellItemEnchantment(SpellItemEnchantment entry) async {
     await laconic.table(_table).insert([entry.toJson()]);
   }
 
-  Future<void> update(SpellItemEnchantment entry) async {
+  Future<void> updateSpellItemEnchantment(SpellItemEnchantment entry) async {
     var json = entry.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', entry.id).update(json);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroySpellItemEnchantment(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    var source = await find(id);
+  Future<void> copySpellItemEnchantment(int id) async {
+    var source = await getSpellItemEnchantment(id);
     if (source == null) return;
     var json = source.toJson();
     var nextId = await _getNextId();

@@ -8,7 +8,7 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
   static const _table = 'gossip_menu_option_locale';
 
   /// 按 MenuID 查询所有 locale 记录
-  Future<List<GossipMenuOptionLocale>> search({required int menuId}) async {
+  Future<List<GossipMenuOptionLocale>> getGossipMenuOptionLocales({required int menuId}) async {
     try {
       final results = await laconic.table(_table).where('MenuID', menuId).get();
       return results

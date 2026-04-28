@@ -23,7 +23,7 @@ class SpellBonusDataViewModel {
     loading.value = true;
     try {
       final repository = SpellBonusDataRepository();
-      final data = await repository.find(spellId.value);
+      final data = await repository.getSpellBonusData(spellId.value);
       if (data != null) {
         bonusData.value = data;
       }
@@ -38,7 +38,7 @@ class SpellBonusDataViewModel {
     try {
       final data = _collectFromControllers();
       final repository = SpellBonusDataRepository();
-      await repository.save(data);
+      await repository.saveSpellBonusData(data);
       bonusData.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('奖励系数已保存'));

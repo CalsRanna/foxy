@@ -27,7 +27,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     return (maxEntry ?? 0) + 1;
   }
 
-  Future<int> count({CreatureTemplateFilterEntity? filter}) async {
+  Future<int> countCreatureTemplates({CreatureTemplateFilterEntity? filter}) async {
     var builder = laconic.table('$_table AS ct');
     builder.select(['ct.entry']);
     builder = builder.leftJoin(

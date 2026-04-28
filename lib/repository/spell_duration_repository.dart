@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellDurationRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_duration';
 
-  Future<List<SpellDuration>> search({
+  Future<List<SpellDuration>> getSpellDurations({
     String? id,
     required int page,
   }) async {
@@ -16,7 +16,7 @@ class SpellDurationRepository with RepositoryMixin {
     return results.map((e) => SpellDuration.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({String? id}) async {
+  Future<int> countSpellDurations({String? id}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id);
     return builder.count();

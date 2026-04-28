@@ -32,7 +32,7 @@ class ReferenceLootTemplateDetailViewModel {
     originalEntry.value = entry;
     originalItem.value = item;
     try {
-      final result = await repository.find(entry, item);
+      final result = await repository.getLootTemplate(entry, item);
       if (result != null) {
         template.value = result;
         _initControllers(result);
@@ -60,7 +60,7 @@ class ReferenceLootTemplateDetailViewModel {
     saving.value = true;
     try {
       final data = _collectFromControllers();
-      await repository.store(data);
+      await repository.storeLootTemplate(data);
       template.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('关联掉落已保存'));
@@ -81,7 +81,7 @@ class ReferenceLootTemplateDetailViewModel {
 
     try {
       final data = _collectFromControllers();
-      await repository.update(data, oldItem: oItem);
+      await repository.updateLootTemplate(data, oldItem: oItem);
       template.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

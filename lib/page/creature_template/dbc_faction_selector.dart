@@ -230,8 +230,8 @@ class _DialogState extends State<_Dialog> {
       final repository = DbcFactionRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
       final name = _nameController.text.isEmpty ? null : _nameController.text;
-      final items = await repository.search(id: id, name: name, page: _page);
-      final total = await repository.count(id: id, name: name);
+      final items = await repository.getDbcFactions(id: id, name: name, page: _page);
+      final total = await repository.countDbcFactions(id: id, name: name);
       if (mounted) {
         setState(() {
           _items = items;

@@ -271,8 +271,8 @@ class _DialogState extends State<_Dialog> {
       final spell = _spellController.text.isEmpty
           ? null
           : _spellController.text;
-      final items = await repository.search(id: id, spell: spell, page: _page);
-      final total = await repository.count(id: id, spell: spell);
+      final items = await repository.getCreatureSpellDatas(id: id, spell: spell, page: _page);
+      final total = await repository.countCreatureSpellDatas(id: id, spell: spell);
       if (mounted) {
         setState(() {
           _items = items;

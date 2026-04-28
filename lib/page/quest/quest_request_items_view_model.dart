@@ -20,12 +20,12 @@ class QuestRequestItemsViewModel {
   Future<void> initSignals({required int questId}) async {
     this.questId.value = questId;
     final repository = QuestRequestItemsRepository();
-    final existing = await repository.find(questId);
+    final existing = await repository.getQuestRequestItems(questId);
     if (existing != null) {
       _originalId = existing.id;
       _applyToControllers(existing);
     } else {
-      final blank = await repository.create(questId);
+      final blank = await repository.createQuestRequestItems(questId);
       _applyToControllers(blank);
     }
     idController.text = questId.toString();
@@ -36,9 +36,9 @@ class QuestRequestItemsViewModel {
       final model = _collectFromControllers();
       final repository = QuestRequestItemsRepository();
       if (_originalId == 0) {
-        await repository.store(model);
+        await repository.storeQuestRequestItems(model);
       } else {
-        await repository.update(_originalId, model);
+        await repository.updateQuestRequestItems(_originalId, model);
       }
       _originalId = model.id;
 

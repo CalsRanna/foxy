@@ -5,7 +5,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class ConditionRepository with RepositoryMixin {
   static const _table = 'conditions';
 
-  Future<List<Condition>> search({
+  Future<List<Condition>> getConditions({
     required ConditionFilterEntity filter,
     required int page,
   }) async {
@@ -17,13 +17,13 @@ class ConditionRepository with RepositoryMixin {
     return results.map((e) => Condition.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required ConditionFilterEntity filter}) async {
+  Future<int> countConditions({required ConditionFilterEntity filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<Condition> find(Map<String, dynamic> credential) async {
+  Future<Condition> getCondition(Map<String, dynamic> credential) async {
     var builder = laconic.table(_table);
     for (final entry in credential.entries) {
       builder = builder.where(entry.key, entry.value);
@@ -32,11 +32,11 @@ class ConditionRepository with RepositoryMixin {
     return Condition.fromJson(result.toMap());
   }
 
-  Future<void> store(Condition condition) async {
+  Future<void> storeCondition(Condition condition) async {
     await laconic.table(_table).insert([condition.toJson()]);
   }
 
-  Future<void> update(Map<String, dynamic> credential, Condition condition) async {
+  Future<void> updateCondition(Map<String, dynamic> credential, Condition condition) async {
     var json = condition.toJson();
     // 移除主键字段，只更新非键字段
     json.remove('SourceTypeOrReferenceId');
@@ -57,7 +57,7 @@ class ConditionRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> destroy(Map<String, dynamic> credential) async {
+  Future<void> destroyCondition(Map<String, dynamic> credential) async {
     var builder = laconic.table(_table);
     for (final entry in credential.entries) {
       builder = builder.where(entry.key, entry.value);
@@ -65,8 +65,8 @@ class ConditionRepository with RepositoryMixin {
     await builder.delete();
   }
 
-  Future<void> copy(Map<String, dynamic> credential) async {
-    var source = await find(credential);
+  Future<void> copyCondition(Map<String, dynamic> credential) async {
+    var source = await getCondition(credential);
     var json = source.toJson();
     json['ConditionValue3'] = (json['ConditionValue3'] as int) + 1;
     await laconic.table(_table).insert([json]);

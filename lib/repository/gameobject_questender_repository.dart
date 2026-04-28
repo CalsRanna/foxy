@@ -7,7 +7,7 @@ class GameobjectQuestenderRepository with RepositoryMixin {
   static const _table = 'gameobject_questender';
 
   /// 按 quest 搜索该任务下的所有任务结束者（带 gameobject_template JOIN，无 locale）
-  Future<List<BriefGameobjectQuestender>> search(int questId) async {
+  Future<List<BriefGameobjectQuestender>> getGameobjectQuestenders(int questId) async {
     try {
       const fields = ['goe.id', 'goe.quest', 'got.name'];
       var builder = laconic.table('$_table AS goe');
@@ -27,7 +27,7 @@ class GameobjectQuestenderRepository with RepositoryMixin {
   }
 
   /// 按复合键查找
-  Future<GameobjectQuestender?> find(Map<String, dynamic> id) async {
+  Future<GameobjectQuestender?> getGameobjectQuestender(Map<String, dynamic> id) async {
     try {
       var builder = laconic.table(_table);
       id.forEach((k, v) {
@@ -41,7 +41,7 @@ class GameobjectQuestenderRepository with RepositoryMixin {
   }
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
-  Future<GameobjectQuestender> create(int questId) async {
+  Future<GameobjectQuestender> createGameobjectQuestender(int questId) async {
     try {
       final result = await laconic.table(_table).where('quest', questId).select(
         ['MAX(id) as max_id'],
@@ -59,11 +59,11 @@ class GameobjectQuestenderRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(GameobjectQuestender model) async {
+  Future<void> storeGameobjectQuestender(GameobjectQuestender model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
-  Future<void> update(
+  Future<void> updateGameobjectQuestender(
     Map<String, dynamic> id,
     GameobjectQuestender model,
   ) async {
@@ -78,7 +78,7 @@ class GameobjectQuestenderRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> destroy(Map<String, dynamic> id) async {
+  Future<void> destroyGameobjectQuestender(Map<String, dynamic> id) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);
@@ -86,11 +86,11 @@ class GameobjectQuestenderRepository with RepositoryMixin {
     await builder.delete();
   }
 
-  Future<void> copy(Map<String, dynamic> id) async {
-    final original = await find(id);
+  Future<void> copyGameobjectQuestender(Map<String, dynamic> id) async {
+    final original = await getGameobjectQuestender(id);
     if (original == null) return;
-    final next = await create(original.quest);
+    final next = await createGameobjectQuestender(original.quest);
     original.id = next.id;
-    await store(original);
+    await storeGameobjectQuestender(original);
   }
 }

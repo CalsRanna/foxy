@@ -34,12 +34,12 @@ class QuestTemplateAddonViewModel {
   Future<void> initSignals({required int questId}) async {
     this.questId.value = questId;
     final repository = QuestTemplateAddonRepository();
-    final existing = await repository.find(questId);
+    final existing = await repository.getQuestTemplateAddon(questId);
     if (existing != null) {
       _originalId = existing.id;
       addon.value = existing;
     } else {
-      final blank = await repository.create(questId);
+      final blank = await repository.createQuestTemplateAddon(questId);
       addon.value = blank;
     }
     _initControllers(addon.value);
@@ -50,9 +50,9 @@ class QuestTemplateAddonViewModel {
       final model = _collectFromControllers();
       final repository = QuestTemplateAddonRepository();
       if (_originalId == 0) {
-        await repository.store(model);
+        await repository.storeQuestTemplateAddon(model);
       } else {
-        await repository.update(_originalId, model);
+        await repository.updateQuestTemplateAddon(_originalId, model);
       }
       _originalId = model.id;
       addon.value = model;

@@ -28,9 +28,9 @@ class GlyphPropertyDetailViewModel {
       final t = _collectFromControllers();
       final repository = GlyphPropertyRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeGlyphProperty(t);
       } else {
-        await repository.update(t);
+        await repository.updateGlyphProperty(t);
       }
       property.value = t;
       if (!context.mounted) return;
@@ -85,7 +85,7 @@ class GlyphPropertyDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      property.value = (await GlyphPropertyRepository().find(id))!;
+      property.value = (await GlyphPropertyRepository().getGlyphProperty(id))!;
       _initControllers(property.value);
     } catch (e, s) {
       logger.e('加载雕文属性(id=$id)失败', error: e, stackTrace: s);

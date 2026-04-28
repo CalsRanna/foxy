@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class ItemRandomPropertiesRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_random_properties';
 
-  Future<List<ItemRandomProperties>> search({
+  Future<List<ItemRandomProperties>> getItemRandomProperties({
     String? id,
     String? name,
     required int page,
@@ -19,7 +19,7 @@ class ItemRandomPropertiesRepository with RepositoryMixin {
     ).toList();
   }
 
-  Future<int> count({String? id, String? name}) async {
+  Future<int> countItemRandomProperties({String? id, String? name}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id, name: name);
     return builder.count();

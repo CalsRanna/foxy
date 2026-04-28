@@ -7,7 +7,7 @@ class CreatureQueststarterRepository with RepositoryMixin {
   static const _table = 'creature_queststarter';
 
   /// 按 quest 搜索该任务下的所有任务给予者（带 creature_template + locale JOIN）
-  Future<List<BriefCreatureQueststarter>> search(int questId) async {
+  Future<List<BriefCreatureQueststarter>> getCreatureQueststarters(int questId) async {
     try {
       const fields = ['cqs.id', 'cqs.quest', 'ct.name', 'ctl.Name'];
       var builder = laconic.table('$_table AS cqs');
@@ -31,7 +31,7 @@ class CreatureQueststarterRepository with RepositoryMixin {
   }
 
   /// 按复合键查找
-  Future<CreatureQueststarter?> find(Map<String, dynamic> id) async {
+  Future<CreatureQueststarter?> getCreatureQueststarter(Map<String, dynamic> id) async {
     try {
       var builder = laconic.table(_table);
       id.forEach((k, v) {
@@ -45,7 +45,7 @@ class CreatureQueststarterRepository with RepositoryMixin {
   }
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
-  Future<CreatureQueststarter> create(int questId) async {
+  Future<CreatureQueststarter> createCreatureQueststarter(int questId) async {
     try {
       final result = await laconic.table(_table).where('quest', questId).select(
         ['MAX(id) as max_id'],
@@ -63,11 +63,11 @@ class CreatureQueststarterRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(CreatureQueststarter model) async {
+  Future<void> storeCreatureQueststarter(CreatureQueststarter model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
-  Future<void> update(
+  Future<void> updateCreatureQueststarter(
     Map<String, dynamic> id,
     CreatureQueststarter model,
   ) async {
@@ -82,7 +82,7 @@ class CreatureQueststarterRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> destroy(Map<String, dynamic> id) async {
+  Future<void> destroyCreatureQueststarter(Map<String, dynamic> id) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);
@@ -90,11 +90,11 @@ class CreatureQueststarterRepository with RepositoryMixin {
     await builder.delete();
   }
 
-  Future<void> copy(Map<String, dynamic> id) async {
-    final original = await find(id);
+  Future<void> copyCreatureQueststarter(Map<String, dynamic> id) async {
+    final original = await getCreatureQueststarter(id);
     if (original == null) return;
-    final next = await create(original.quest);
+    final next = await createCreatureQueststarter(original.quest);
     original.id = next.id;
-    await store(original);
+    await storeCreatureQueststarter(original);
   }
 }

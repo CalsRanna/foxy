@@ -22,8 +22,8 @@ class PageTextListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    pages.value = await repository.search(filter: _buildFilter(), page: page.value);
-    total.value = await repository.count(filter: _buildFilter());
+    pages.value = await repository.getPageTexts(filter: _buildFilter(), page: page.value);
+    total.value = await repository.countPageTexts(filter: _buildFilter());
   }
 
   Future<void> search() async {
@@ -35,8 +35,8 @@ class PageTextListViewModel {
     idController.clear();
     textController.clear();
     page.value = 1;
-    pages.value = await repository.search(filter: _buildFilter(), page: page.value);
-    total.value = await repository.count(filter: _buildFilter());
+    pages.value = await repository.getPageTexts(filter: _buildFilter(), page: page.value);
+    total.value = await repository.countPageTexts(filter: _buildFilter());
   }
 
   Future<void> paginate(int newPage) async {
@@ -64,7 +64,7 @@ class PageTextListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copyPageText(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -84,7 +84,7 @@ class PageTextListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroyPageText(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -101,8 +101,8 @@ class PageTextListViewModel {
   }
 
   Future<void> _refresh() async {
-    pages.value = await repository.search(filter: _buildFilter(), page: page.value);
-    total.value = await repository.count(filter: _buildFilter());
+    pages.value = await repository.getPageTexts(filter: _buildFilter(), page: page.value);
+    total.value = await repository.countPageTexts(filter: _buildFilter());
   }
 
   void dispose() {

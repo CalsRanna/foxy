@@ -110,7 +110,7 @@ class GossipMenuListViewModel {
       filter: filter,
       page: page.value,
     );
-    total.value = await repository.count(filter: filter);
+    total.value = await repository.countGossipMenus(filter: filter);
   }
 
   GossipMenuFilterEntity _buildFilter() {
@@ -130,6 +130,6 @@ class GossipMenuListViewModel {
       entityName: name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().store(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

@@ -26,12 +26,12 @@ class QuestOfferRewardViewModel {
   Future<void> initSignals({required int questId}) async {
     this.questId.value = questId;
     final repository = QuestOfferRewardRepository();
-    final existing = await repository.find(questId);
+    final existing = await repository.getQuestOfferReward(questId);
     if (existing != null) {
       _originalId = existing.id;
       _applyToControllers(existing);
     } else {
-      final blank = await repository.create(questId);
+      final blank = await repository.createQuestOfferReward(questId);
       _applyToControllers(blank);
     }
     idController.text = questId.toString();
@@ -42,9 +42,9 @@ class QuestOfferRewardViewModel {
       final model = _collectFromControllers();
       final repository = QuestOfferRewardRepository();
       if (_originalId == 0) {
-        await repository.store(model);
+        await repository.storeQuestOfferReward(model);
       } else {
-        await repository.update(_originalId, model);
+        await repository.updateQuestOfferReward(_originalId, model);
       }
       _originalId = model.id;
 

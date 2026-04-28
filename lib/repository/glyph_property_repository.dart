@@ -5,7 +5,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GlyphPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_glyph_properties';
 
-  Future<List<GlyphProperty>> search({
+  Future<List<GlyphProperty>> getGlyphProperties({
     required GlyphPropertyFilterEntity filter,
     required int page,
   }) async {
@@ -17,13 +17,13 @@ class GlyphPropertyRepository with RepositoryMixin {
     return results.map((e) => GlyphProperty.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required GlyphPropertyFilterEntity filter}) async {
+  Future<int> countGlyphProperties({required GlyphPropertyFilterEntity filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<GlyphProperty?> find(int id) async {
+  Future<GlyphProperty?> getGlyphProperty(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return GlyphProperty.fromJson(result.toMap());
@@ -32,22 +32,22 @@ class GlyphPropertyRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(GlyphProperty glyphProperty) async {
+  Future<void> storeGlyphProperty(GlyphProperty glyphProperty) async {
     await laconic.table(_table).insert([glyphProperty.toJson()]);
   }
 
-  Future<void> update(GlyphProperty glyphProperty) async {
+  Future<void> updateGlyphProperty(GlyphProperty glyphProperty) async {
     var json = glyphProperty.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', glyphProperty.id).update(json);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroyGlyphProperty(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    var source = await find(id);
+  Future<void> copyGlyphProperty(int id) async {
+    var source = await getGlyphProperty(id);
     if (source == null) return;
     var json = source.toJson();
     var nextId = await _getNextId();

@@ -41,7 +41,7 @@ class ItemTemplateListViewModel {
 
   Future<void> initSignals() async {
     templates.value = await repository.getBriefItemTemplates();
-    total.value = await repository.count();
+    total.value = await repository.countItemTemplates();
   }
 
   void dispose() {
@@ -68,7 +68,7 @@ class ItemTemplateListViewModel {
     selectedSubclass.value = -1;
     page.value = 1;
     templates.value = await repository.getBriefItemTemplates();
-    total.value = await repository.count();
+    total.value = await repository.countItemTemplates();
   }
 
   /// 选择类别
@@ -175,7 +175,7 @@ class ItemTemplateListViewModel {
       ..description = descriptionController.text
       ..classId = selectedClassId.value
       ..subclass = selectedSubclass.value;
-    return repository.count(filter: filter);
+    return repository.countItemTemplates(filter: filter);
   }
 
   Future<void> _refresh() async {
@@ -194,6 +194,6 @@ class ItemTemplateListViewModel {
       entityName: name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().store(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

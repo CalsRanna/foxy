@@ -24,7 +24,7 @@ class GameobjectQuestenderViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.search(questId.value);
+      final data = await repository.getGameobjectQuestenders(questId.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -56,7 +56,7 @@ class GameobjectQuestenderViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final blank = await repository.create(questId.value);
+    final blank = await repository.createGameobjectQuestender(questId.value);
     resetForm();
     fillForm(blank);
     _originalId = blank.id;
@@ -70,7 +70,7 @@ class GameobjectQuestenderViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
 
     final item = items.value[index];
-    final existing = await repository.find({
+    final existing = await repository.getGameobjectQuestender({
       'id': item.id,
       'quest': item.quest,
     });
@@ -85,7 +85,7 @@ class GameobjectQuestenderViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.store(model);
+      await repository.storeGameobjectQuestender(model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -104,7 +104,7 @@ class GameobjectQuestenderViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.update({
+      await repository.updateGameobjectQuestender({
         'id': _originalId,
         'quest': _originalQuest,
       }, model);
@@ -147,7 +147,7 @@ class GameobjectQuestenderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.copy({'id': item.id, 'quest': item.quest});
+        await repository.copyGameobjectQuestender({'id': item.id, 'quest': item.quest});
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('复制成功'));
@@ -186,7 +186,7 @@ class GameobjectQuestenderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroy({'id': item.id, 'quest': item.quest});
+        await repository.destroyGameobjectQuestender({'id': item.id, 'quest': item.quest});
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

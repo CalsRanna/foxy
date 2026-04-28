@@ -243,12 +243,12 @@ class _DialogState extends State<_Dialog> {
       final repository = CharTitleRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
       final name = _nameController.text.isEmpty ? null : _nameController.text;
-      final items = await repository.search(
+      final items = await repository.getCharTitles(
         id: id,
         name: name,
         page: _page,
       );
-      final total = await repository.count(id: id, name: name);
+      final total = await repository.countCharTitles(id: id, name: name);
       if (mounted) {
         setState(() {
           _items = items;

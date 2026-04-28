@@ -23,9 +23,9 @@ class QuestSortDetailViewModel {
       final t = _collectFromControllers();
       final repository = QuestSortRepository();
       if (t.id == 0) {
-        await repository.store(t);
+        await repository.storeQuestSort(t);
       } else {
-        await repository.update(t);
+        await repository.updateQuestSort(t);
       }
       sort.value = t;
       if (!context.mounted) return;
@@ -68,7 +68,7 @@ class QuestSortDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      sort.value = (await QuestSortRepository().find(id))!;
+      sort.value = (await QuestSortRepository().getQuestSort(id))!;
       _initControllers(sort.value);
     } catch (e, s) {
       logger.e('加载任务排序(id=$id)失败', error: e, stackTrace: s);

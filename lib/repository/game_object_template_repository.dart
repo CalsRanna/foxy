@@ -23,7 +23,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     return (maxEntry ?? 0) + 1;
   }
 
-  Future<int> count({GameObjectTemplateFilterEntity? filter}) async {
+  Future<int> countGameObjectTemplates({GameObjectTemplateFilterEntity? filter}) async {
     var builder = laconic.table('$_table AS gt');
     builder.select(['gt.entry']);
     builder = builder.leftJoin(

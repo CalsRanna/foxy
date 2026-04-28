@@ -246,12 +246,12 @@ class _DialogState extends State<_Dialog> {
       final repository = BroadcastTextRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
       final text = _textController.text.isEmpty ? null : _textController.text;
-      final items = await repository.search(
+      final items = await repository.getBroadcastTexts(
         id: id,
         text: text,
         page: _page,
       );
-      final total = await repository.count(id: id, text: text);
+      final total = await repository.countBroadcastTexts(id: id, text: text);
       if (mounted) {
         setState(() {
           _items = items;

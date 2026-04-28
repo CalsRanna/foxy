@@ -42,14 +42,14 @@ class GossipMenuOptionViewModel {
     loading.value = true;
     try {
       currentMenuId.value = menuId;
-      options.value = await _repository.search(menuId: menuId);
+      options.value = await _repository.getGossipMenuOptions(menuId: menuId);
     } finally {
       loading.value = false;
     }
   }
 
   Future<void> onCreate() async {
-    final blank = await _repository.create(menuId: currentMenuId.value);
+    final blank = await _repository.createGossipMenuOption(menuId: currentMenuId.value);
     _applyToControllers(blank);
     _originalMenuId = blank.menuId;
     _originalOptionId = blank.optionId;
@@ -58,7 +58,7 @@ class GossipMenuOptionViewModel {
   }
 
   Future<void> onEdit(int menuId, int optionId) async {
-    final existing = await _repository.find({
+    final existing = await _repository.getGossipMenuOption({
       'MenuID': menuId,
       'OptionID': optionId,
     });
@@ -75,9 +75,9 @@ class GossipMenuOptionViewModel {
     try {
       final model = _collectFromControllers();
       if (creating.value) {
-        await _repository.store(model);
+        await _repository.storeGossipMenuOption(model);
       } else {
-        await _repository.update({
+        await _repository.updateGossipMenuOption({
           'MenuID': _originalMenuId,
           'OptionID': _originalOptionId,
         }, model);
@@ -108,7 +108,7 @@ class GossipMenuOptionViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.copy({'MenuID': menuId, 'OptionID': optionId});
+      await _repository.copyGossipMenuOption({'MenuID': menuId, 'OptionID': optionId});
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await search(currentMenuId.value);
@@ -128,7 +128,7 @@ class GossipMenuOptionViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.destroy({'MenuID': menuId, 'OptionID': optionId});
+      await _repository.destroyGossipMenuOption({'MenuID': menuId, 'OptionID': optionId});
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await search(currentMenuId.value);

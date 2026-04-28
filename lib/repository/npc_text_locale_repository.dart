@@ -7,7 +7,7 @@ class NpcTextLocaleRepository with RepositoryMixin {
   static const _table = 'npc_text_locale';
 
   /// 按 ID 查询该 NpcText 的所有 locale
-  Future<List<NpcTextLocale>> search({required int id}) async {
+  Future<List<NpcTextLocale>> getNpcTextLocales({required int id}) async {
     try {
       final results = await laconic.table(_table).where('ID', id).get();
       return results.map((e) => NpcTextLocale.fromJson(e.toMap())).toList();
@@ -17,7 +17,7 @@ class NpcTextLocaleRepository with RepositoryMixin {
   }
 
   /// 按 ID + Locale 查找
-  Future<NpcTextLocale?> find(Map<String, dynamic> id) async {
+  Future<NpcTextLocale?> getNpcTextLocale(Map<String, dynamic> id) async {
     try {
       var builder = laconic.table(_table);
       id.forEach((k, v) {
@@ -30,7 +30,7 @@ class NpcTextLocaleRepository with RepositoryMixin {
     }
   }
 
-  Future<void> update(Map<String, dynamic> id, NpcTextLocale model) async {
+  Future<void> updateNpcTextLocale(Map<String, dynamic> id, NpcTextLocale model) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);
@@ -41,21 +41,21 @@ class NpcTextLocaleRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> store(NpcTextLocale model) async {
+  Future<void> storeNpcTextLocale(NpcTextLocale model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   /// upsert：不存在则 insert，存在则 update
-  Future<void> storeOrUpdate(NpcTextLocale model) async {
-    final existing = await find({'ID': model.id, 'Locale': model.locale});
+  Future<void> saveNpcTextLocale(NpcTextLocale model) async {
+    final existing = await getNpcTextLocale({'ID': model.id, 'Locale': model.locale});
     if (existing == null) {
-      await store(model);
+      await storeNpcTextLocale(model);
     } else {
-      await update({'ID': model.id, 'Locale': model.locale}, model);
+      await updateNpcTextLocale({'ID': model.id, 'Locale': model.locale}, model);
     }
   }
 
-  Future<void> destroy(Map<String, dynamic> id) async {
+  Future<void> destroyNpcTextLocale(Map<String, dynamic> id) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);

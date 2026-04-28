@@ -70,7 +70,7 @@ class SpellListViewModel {
 
   Future<void> initSignals() async {
     spells.value = await repository.getBriefSpells();
-    total.value = await repository.count();
+    total.value = await repository.countSpells();
   }
 
   void navigateSpellDetailPage(BuildContext context, {int? id, String? name}) {
@@ -101,7 +101,7 @@ class SpellListViewModel {
     nameController.clear();
     page.value = 1;
     spells.value = await repository.getBriefSpells();
-    total.value = await repository.count();
+    total.value = await repository.countSpells();
   }
 
   Future<void> search() async {
@@ -115,7 +115,7 @@ class SpellListViewModel {
       page: page.value,
       filter: filter,
     );
-    total.value = await repository.count(filter: filter);
+    total.value = await repository.countSpells(filter: filter);
   }
 
   void _logActivity(ActivityActionType action, int id) {
@@ -129,6 +129,6 @@ class SpellListViewModel {
       entityName: name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().store(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 }

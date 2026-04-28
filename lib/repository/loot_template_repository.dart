@@ -23,7 +23,7 @@ class LootTemplateRepository with RepositoryMixin {
 
   String get _table => tableType.tableName;
 
-  Future<int> count({String? entry}) async {
+  Future<int> countLootTemplates({String? entry}) async {
     try {
       var builder = laconic.table(_table);
       builder = builder.select(['DISTINCT Entry']);
@@ -37,7 +37,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 获取符合过滤条件的行数计数
-  Future<int> countRows({String? entry, String? name}) async {
+  Future<int> countLootTemplateRows({String? entry, String? name}) async {
     try {
       var builder = laconic.table('$_table AS lt');
       builder = builder.leftJoin(
@@ -65,7 +65,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 获取不同的 Entry 列表（用于选择器）
-  Future<List<LootTemplate>> searchDistinctEntries({
+  Future<List<LootTemplate>> getLootTemplateDistinctEntries({
     String? entry,
     int page = 1,
   }) async {
@@ -86,7 +86,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 搜索掉落（带物品名称过滤+分页）
-  Future<List<LootTemplate>> searchByEntry({
+  Future<List<LootTemplate>> getLootTemplatesByEntry({
     String? entry,
     String? name,
     int page = 1,
@@ -133,7 +133,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 获取指定 Entry 的所有掉落项（带物品信息）
-  Future<List<LootTemplate>> getByEntry(int entry) async {
+  Future<List<LootTemplate>> getLootTemplates(int entry) async {
     try {
       var builder = laconic.table('$_table AS lt');
       const fields = [
@@ -165,7 +165,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<LootTemplate?> find(int entry, int item) async {
+  Future<LootTemplate?> getLootTemplate(int entry, int item) async {
     try {
       var result = await laconic
           .table(_table)
@@ -179,12 +179,12 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 新增掉落
-  Future<void> store(LootTemplate loot) async {
+  Future<void> storeLootTemplate(LootTemplate loot) async {
     await laconic.table(_table).insert([loot.toJson()]);
   }
 
   /// 更新掉落
-  Future<void> update(LootTemplate loot, {int? oldItem}) async {
+  Future<void> updateLootTemplate(LootTemplate loot, {int? oldItem}) async {
     var json = loot.toJson();
     json.remove('Entry');
     if (oldItem == null) json.remove('Item');
@@ -196,7 +196,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 删除掉落
-  Future<void> delete(int entry, int item) async {
+  Future<void> destroyLootTemplate(int entry, int item) async {
     await laconic
         .table(_table)
         .where('Entry', entry)
@@ -205,7 +205,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 复制掉落（获取新的Item ID）
-  Future<LootTemplate> copy(int entry, int item) async {
+  Future<LootTemplate> copyLootTemplate(int entry, int item) async {
     // 获取最大Item
     var maxResult = await laconic
         .table(_table)
@@ -215,7 +215,7 @@ class LootTemplateRepository with RepositoryMixin {
     var maxItem = (maxResult.toMap()['maxItem'] ?? 0) as int;
 
     // 获取源记录
-    var source = await find(entry, item);
+    var source = await getLootTemplate(entry, item);
     if (source == null) {
       throw Exception('源记录不存在');
     }
@@ -227,7 +227,7 @@ class LootTemplateRepository with RepositoryMixin {
       newLoot.reference = maxItem + 1;
     }
 
-    await store(newLoot);
+    await storeLootTemplate(newLoot);
     return newLoot;
   }
 

@@ -28,7 +28,7 @@ class QuestFactionRewardListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copyQuestFactionReward(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class QuestFactionRewardListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroyQuestFactionReward(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -64,8 +64,8 @@ class QuestFactionRewardListViewModel {
 
   Future<void> initSignals() async {
     final filter = QuestFactionRewardFilterEntity();
-    rewards.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    rewards.value = await repository.getQuestFactionRewards(page: 1, filter: filter);
+    total.value = await repository.countQuestFactionRewards(filter: filter);
   }
 
   void navigateToDetail(BuildContext context, {int? id}) {
@@ -94,8 +94,8 @@ class QuestFactionRewardListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = QuestFactionRewardFilterEntity();
-    rewards.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    rewards.value = await repository.getQuestFactionRewards(page: 1, filter: filter);
+    total.value = await repository.countQuestFactionRewards(filter: filter);
   }
 
   Future<void> search() async {
@@ -105,7 +105,7 @@ class QuestFactionRewardListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    rewards.value = await repository.search(page: page.value, filter: filter);
-    total.value = await repository.count(filter: filter);
+    rewards.value = await repository.getQuestFactionRewards(page: page.value, filter: filter);
+    total.value = await repository.countQuestFactionRewards(filter: filter);
   }
 }

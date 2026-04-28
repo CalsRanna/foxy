@@ -72,7 +72,7 @@ class ConditionListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(condition.buildCredential());
+      await repository.copyCondition(condition.buildCredential());
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -92,7 +92,7 @@ class ConditionListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(condition.buildCredential());
+      await repository.destroyCondition(condition.buildCredential());
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -109,11 +109,11 @@ class ConditionListViewModel {
   }
 
   Future<List<Condition>> _search() async {
-    return repository.search(filter: _buildFilter(), page: page.value);
+    return repository.getConditions(filter: _buildFilter(), page: page.value);
   }
 
   Future<int> _count() async {
-    return repository.count(filter: _buildFilter());
+    return repository.countConditions(filter: _buildFilter());
   }
 
   Future<void> _refresh() async {

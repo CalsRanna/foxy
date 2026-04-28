@@ -41,7 +41,7 @@ class SkinningLootTemplateViewModel {
       );
       creatureTemplate.value = template;
 
-      final data = await repository.getByEntry(template.skinLoot);
+      final data = await repository.getLootTemplates(template.skinLoot);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -132,7 +132,7 @@ class SkinningLootTemplateViewModel {
 
     final loot = items.value[index];
     try {
-      await repository.copy(loot.entry, loot.item);
+      await repository.copyLootTemplate(loot.entry, loot.item);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -171,7 +171,7 @@ class SkinningLootTemplateViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.delete(loot.entry, loot.item);
+        await repository.destroyLootTemplate(loot.entry, loot.item);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -189,7 +189,7 @@ class SkinningLootTemplateViewModel {
     saving.value = true;
     try {
       final loot = collectFromForm();
-      await repository.store(loot);
+      await repository.storeLootTemplate(loot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -209,7 +209,7 @@ class SkinningLootTemplateViewModel {
     try {
       final loot = collectFromForm();
       final oldItem = items.value[selectedIndex.value!].item;
-      await repository.update(loot, oldItem: oldItem);
+      await repository.updateLootTemplate(loot, oldItem: oldItem);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

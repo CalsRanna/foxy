@@ -29,7 +29,7 @@ class AreaTableListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copyAreaTable(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,7 +49,7 @@ class AreaTableListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroyAreaTable(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -66,8 +66,8 @@ class AreaTableListViewModel {
 
   Future<void> initSignals() async {
     final filter = AreaTableFilterEntity();
-    areas.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    areas.value = await repository.getAreaTables(page: 1, filter: filter);
+    total.value = await repository.countAreaTables(filter: filter);
   }
 
   void navigateToDetail(BuildContext context, {int? id, String? name}) {
@@ -98,8 +98,8 @@ class AreaTableListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = AreaTableFilterEntity();
-    areas.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    areas.value = await repository.getAreaTables(page: 1, filter: filter);
+    total.value = await repository.countAreaTables(filter: filter);
   }
 
   Future<void> search() async {
@@ -109,7 +109,7 @@ class AreaTableListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    areas.value = await repository.search(page: page.value, filter: filter);
-    total.value = await repository.count(filter: filter);
+    areas.value = await repository.getAreaTables(page: page.value, filter: filter);
+    total.value = await repository.countAreaTables(filter: filter);
   }
 }

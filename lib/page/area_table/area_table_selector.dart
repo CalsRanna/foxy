@@ -248,8 +248,8 @@ class _DialogState extends State<_Dialog> {
       final filter = AreaTableFilterEntity()
         ..id = _idController.text
         ..name = _nameController.text;
-      final items = await repository.search(filter: filter, page: _page);
-      final total = await repository.count(filter: filter);
+      final items = await repository.getAreaTables(filter: filter, page: _page);
+      final total = await repository.countAreaTables(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

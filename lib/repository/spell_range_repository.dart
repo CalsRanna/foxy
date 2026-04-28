@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellRangeRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_range';
 
-  Future<List<SpellRange>> search({
+  Future<List<SpellRange>> getSpellRanges({
     String? id,
     String? name,
     required int page,
@@ -17,7 +17,7 @@ class SpellRangeRepository with RepositoryMixin {
     return results.map((e) => SpellRange.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({String? id, String? name}) async {
+  Future<int> countSpellRanges({String? id, String? name}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id, name: name);
     return builder.count();

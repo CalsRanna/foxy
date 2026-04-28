@@ -5,7 +5,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GemPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_gem_properties';
 
-  Future<List<GemProperty>> search({
+  Future<List<GemProperty>> getGemProperties({
     required GemPropertyFilterEntity filter,
     required int page,
   }) async {
@@ -17,13 +17,13 @@ class GemPropertyRepository with RepositoryMixin {
     return results.map((e) => GemProperty.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required GemPropertyFilterEntity filter}) async {
+  Future<int> countGemProperties({required GemPropertyFilterEntity filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<GemProperty?> find(int id) async {
+  Future<GemProperty?> getGemProperty(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return GemProperty.fromJson(result.toMap());
@@ -32,22 +32,22 @@ class GemPropertyRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(GemProperty gemProperty) async {
+  Future<void> storeGemProperty(GemProperty gemProperty) async {
     await laconic.table(_table).insert([gemProperty.toJson()]);
   }
 
-  Future<void> update(GemProperty gemProperty) async {
+  Future<void> updateGemProperty(GemProperty gemProperty) async {
     var json = gemProperty.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', gemProperty.id).update(json);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroyGemProperty(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    var source = await find(id);
+  Future<void> copyGemProperty(int id) async {
+    var source = await getGemProperty(id);
     if (source == null) return;
     var json = source.toJson();
     var nextId = await _getNextId();

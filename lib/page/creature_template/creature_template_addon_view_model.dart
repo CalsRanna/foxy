@@ -23,7 +23,7 @@ class CreatureTemplateAddonViewModel {
   /// 从数据库加载数据
   Future<void> load() async {
     final repository = CreatureTemplateAddonRepository();
-    final data = await repository.find(creatureId.value);
+    final data = await repository.getCreatureTemplateAddon(creatureId.value);
     if (data != null) {
       addon.value = data;
       initControllers(data);
@@ -35,7 +35,7 @@ class CreatureTemplateAddonViewModel {
     try {
       final addonData = _collectFromControllers();
       final repository = CreatureTemplateAddonRepository();
-      await repository.save(addonData);
+      await repository.saveCreatureTemplateAddon(addonData);
       addon.value = addonData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板补充数据已保存'));

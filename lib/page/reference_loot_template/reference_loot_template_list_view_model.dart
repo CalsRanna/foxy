@@ -72,7 +72,7 @@ class ReferenceLootTemplateListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(entry, item);
+      await repository.copyLootTemplate(entry, item);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -92,7 +92,7 @@ class ReferenceLootTemplateListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.delete(entry, item);
+      await repository.destroyLootTemplate(entry, item);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -104,7 +104,7 @@ class ReferenceLootTemplateListViewModel {
 
   Future<List<LootTemplate>> _searchEntries() async {
     final filter = _buildFilter();
-    return repository.searchByEntry(
+    return repository.getLootTemplatesByEntry(
       entry: filter['Entry'],
       name: filter['name'],
       page: page.value,
@@ -113,7 +113,7 @@ class ReferenceLootTemplateListViewModel {
 
   Future<int> _countEntries() async {
     final filter = _buildFilter();
-    return repository.countRows(entry: filter['Entry'], name: filter['name']);
+    return repository.countLootTemplateRows(entry: filter['Entry'], name: filter['name']);
   }
 
   Map<String, String> _buildFilter() {

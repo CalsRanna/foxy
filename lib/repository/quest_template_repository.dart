@@ -21,7 +21,7 @@ class QuestTemplateRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  Future<int> count({QuestTemplateFilterEntity? filter}) async {
+  Future<int> countQuestTemplates({QuestTemplateFilterEntity? filter}) async {
     var builder = laconic.table('$_table AS qt');
     builder.select(['qt.ID']);
     builder = builder.leftJoin(

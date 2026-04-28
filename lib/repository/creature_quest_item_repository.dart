@@ -5,7 +5,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
   static const _table = 'creature_questitem';
 
   /// 获取指定生物的所有任务物品（带物品信息）
-  Future<List<CreatureQuestItem>> getByEntry(int creatureEntry) async {
+  Future<List<CreatureQuestItem>> getCreatureQuestItems(int creatureEntry) async {
     try {
       var builder = laconic.table('$_table AS cq');
       const fields = [
@@ -38,7 +38,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureQuestItem?> find(int creatureEntry, int idx) async {
+  Future<CreatureQuestItem?> getCreatureQuestItem(int creatureEntry, int idx) async {
     try {
       var result = await laconic
           .table(_table)
@@ -52,12 +52,12 @@ class CreatureQuestItemRepository with RepositoryMixin {
   }
 
   /// 新增任务物品
-  Future<void> store(CreatureQuestItem questItem) async {
+  Future<void> storeCreatureQuestItem(CreatureQuestItem questItem) async {
     await laconic.table(_table).insert([questItem.toJson()]);
   }
 
   /// 更新任务物品
-  Future<void> update(CreatureQuestItem questItem) async {
+  Future<void> updateCreatureQuestItem(CreatureQuestItem questItem) async {
     var json = questItem.toJson();
     json.remove('CreatureEntry');
     json.remove('Idx');
@@ -69,7 +69,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
   }
 
   /// 删除任务物品
-  Future<void> delete(int creatureEntry, int idx) async {
+  Future<void> destroyCreatureQuestItem(int creatureEntry, int idx) async {
     await laconic
         .table(_table)
         .where('CreatureEntry', creatureEntry)
@@ -78,7 +78,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
   }
 
   /// 复制任务物品
-  Future<CreatureQuestItem> copy(int creatureEntry, int idx) async {
+  Future<CreatureQuestItem> copyCreatureQuestItem(int creatureEntry, int idx) async {
     // 获取最大Idx
     var maxIdxResult = await laconic
         .table(_table)
@@ -88,7 +88,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
     var maxIdx = (maxIdxResult.toMap()['maxIdx'] ?? 0) as int;
 
     // 获取源记录
-    var source = await find(creatureEntry, idx);
+    var source = await getCreatureQuestItem(creatureEntry, idx);
     if (source == null) {
       throw Exception('源记录不存在');
     }
@@ -97,7 +97,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
     var newQuestItem = CreatureQuestItem.fromJson(source.toJson());
     newQuestItem.idx = maxIdx + 1;
 
-    await store(newQuestItem);
+    await storeCreatureQuestItem(newQuestItem);
     return newQuestItem;
   }
 

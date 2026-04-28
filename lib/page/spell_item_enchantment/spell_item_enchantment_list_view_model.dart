@@ -29,7 +29,7 @@ class SpellItemEnchantmentListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copySpellItemEnchantment(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,7 +49,7 @@ class SpellItemEnchantmentListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroySpellItemEnchantment(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -66,8 +66,8 @@ class SpellItemEnchantmentListViewModel {
 
   Future<void> initSignals() async {
     final filter = SpellItemEnchantmentFilterEntity();
-    enchantments.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    enchantments.value = await repository.getSpellItemEnchantments(page: 1, filter: filter);
+    total.value = await repository.countSpellItemEnchantments(filter: filter);
   }
 
   void navigateToDetail(BuildContext context, {int? id, String? name}) {
@@ -98,8 +98,8 @@ class SpellItemEnchantmentListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = SpellItemEnchantmentFilterEntity();
-    enchantments.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    enchantments.value = await repository.getSpellItemEnchantments(page: 1, filter: filter);
+    total.value = await repository.countSpellItemEnchantments(filter: filter);
   }
 
   Future<void> search() async {
@@ -109,7 +109,7 @@ class SpellItemEnchantmentListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    enchantments.value = await repository.search(page: page.value, filter: filter);
-    total.value = await repository.count(filter: filter);
+    enchantments.value = await repository.getSpellItemEnchantments(page: page.value, filter: filter);
+    total.value = await repository.countSpellItemEnchantments(filter: filter);
   }
 }

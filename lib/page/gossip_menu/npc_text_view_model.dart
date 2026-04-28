@@ -39,7 +39,7 @@ class NpcTextViewModel {
     loading.value = true;
     try {
       currentTextId.value = textId;
-      final main = await _repository.find(textId);
+      final main = await _repository.getNpcText(textId);
       if (main == null) {
         creating.value = true;
         final blank = NpcText();
@@ -49,7 +49,7 @@ class NpcTextViewModel {
         creating.value = false;
         _applyMainToControllers(main);
       }
-      final locales = await _localeRepository.search(id: textId);
+      final locales = await _localeRepository.getNpcTextLocales(id: textId);
       NpcTextLocale? zhCN;
       for (final l in locales) {
         if (l.locale == 'zhCN') {
@@ -71,10 +71,10 @@ class NpcTextViewModel {
     try {
       final main = _collectMainFromControllers();
       if (creating.value) {
-        await _repository.store(main);
+        await _repository.storeNpcText(main);
         creating.value = false;
       } else {
-        await _repository.update(currentTextId.value, main);
+        await _repository.updateNpcText(currentTextId.value, main);
       }
       currentTextId.value = main.id;
 
@@ -82,7 +82,7 @@ class NpcTextViewModel {
       final hasAnyText = locale.texts.any((g) => g.any((t) => t.isNotEmpty));
       if (hasAnyText) {
         try {
-          await _localeRepository.storeOrUpdate(locale);
+          await _localeRepository.saveNpcTextLocale(locale);
           localeExists.value = true;
         } catch (e) {
           logger.w('locale 保存失败（可能表不存在）：$e');

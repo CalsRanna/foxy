@@ -29,7 +29,7 @@ class QuestSortListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.copy(id);
+      await repository.copyQuestSort(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,7 +49,7 @@ class QuestSortListViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroy(id);
+      await repository.destroyQuestSort(id);
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -66,8 +66,8 @@ class QuestSortListViewModel {
 
   Future<void> initSignals() async {
     final filter = QuestSortFilterEntity();
-    sorts.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    sorts.value = await repository.getQuestSorts(page: 1, filter: filter);
+    total.value = await repository.countQuestSorts(filter: filter);
   }
 
   void navigateToDetail(BuildContext context, {int? id, String? name}) {
@@ -98,8 +98,8 @@ class QuestSortListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = QuestSortFilterEntity();
-    sorts.value = await repository.search(page: 1, filter: filter);
-    total.value = await repository.count(filter: filter);
+    sorts.value = await repository.getQuestSorts(page: 1, filter: filter);
+    total.value = await repository.countQuestSorts(filter: filter);
   }
 
   Future<void> search() async {
@@ -109,7 +109,7 @@ class QuestSortListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    sorts.value = await repository.search(page: page.value, filter: filter);
-    total.value = await repository.count(filter: filter);
+    sorts.value = await repository.getQuestSorts(page: page.value, filter: filter);
+    total.value = await repository.countQuestSorts(filter: filter);
   }
 }

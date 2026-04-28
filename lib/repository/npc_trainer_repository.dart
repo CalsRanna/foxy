@@ -5,7 +5,7 @@ class NpcTrainerRepository with RepositoryMixin {
   static const _table = 'npc_trainer';
 
   /// 获取指定训练师的所有技能（带技能信息）
-  Future<List<NpcTrainer>> getByEntry(int id) async {
+  Future<List<NpcTrainer>> getNpcTrainers(int id) async {
     try {
       var builder = laconic.table('$_table AS nt');
       const fields = [
@@ -28,7 +28,7 @@ class NpcTrainerRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<NpcTrainer?> find(int id, int spellID) async {
+  Future<NpcTrainer?> getNpcTrainer(int id, int spellID) async {
     try {
       var result = await laconic
           .table(_table)
@@ -42,12 +42,12 @@ class NpcTrainerRepository with RepositoryMixin {
   }
 
   /// 新增训练师技能
-  Future<void> store(NpcTrainer trainer) async {
+  Future<void> storeNpcTrainer(NpcTrainer trainer) async {
     await laconic.table(_table).insert([trainer.toJson()]);
   }
 
   /// 更新训练师技能
-  Future<void> update(NpcTrainer trainer) async {
+  Future<void> updateNpcTrainer(NpcTrainer trainer) async {
     var json = trainer.toJson();
     json.remove('ID');
     json.remove('SpellID');
@@ -59,7 +59,7 @@ class NpcTrainerRepository with RepositoryMixin {
   }
 
   /// 删除训练师技能
-  Future<void> delete(int id, int spellID) async {
+  Future<void> destroyNpcTrainer(int id, int spellID) async {
     await laconic
         .table(_table)
         .where('ID', id)
@@ -68,7 +68,7 @@ class NpcTrainerRepository with RepositoryMixin {
   }
 
   /// 复制训练师技能
-  Future<NpcTrainer> copy(int id, int spellID) async {
+  Future<NpcTrainer> copyNpcTrainer(int id, int spellID) async {
     // 获取最大SpellID
     var maxSpellResult = await laconic
         .table(_table)
@@ -78,7 +78,7 @@ class NpcTrainerRepository with RepositoryMixin {
     var maxSpellID = (maxSpellResult.toMap()['maxSpellID'] ?? 0) as int;
 
     // 获取源记录
-    var source = await find(id, spellID);
+    var source = await getNpcTrainer(id, spellID);
     if (source == null) {
       throw Exception('源记录不存在');
     }
@@ -87,7 +87,7 @@ class NpcTrainerRepository with RepositoryMixin {
     var newTrainer = NpcTrainer.fromJson(source.toJson());
     newTrainer.spellID = maxSpellID + 1;
 
-    await store(newTrainer);
+    await storeNpcTrainer(newTrainer);
     return newTrainer;
   }
 }

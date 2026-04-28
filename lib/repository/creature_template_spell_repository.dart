@@ -5,7 +5,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   static const _table = 'creature_template_spell';
 
   /// 获取指定生物的所有技能（带技能信息）
-  Future<List<CreatureTemplateSpell>> getByEntry(int creatureID) async {
+  Future<List<CreatureTemplateSpell>> getCreatureTemplateSpells(int creatureID) async {
     try {
       var builder = laconic.table('$_table AS cts');
       const fields = [
@@ -30,7 +30,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureTemplateSpell?> find(int creatureID, int index) async {
+  Future<CreatureTemplateSpell?> getCreatureTemplateSpell(int creatureID, int index) async {
     try {
       var result = await laconic
           .table(_table)
@@ -44,7 +44,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 新增技能
-  Future<void> store(CreatureTemplateSpell spell) async {
+  Future<void> storeCreatureTemplateSpell(CreatureTemplateSpell spell) async {
     var json = spell.toJson();
     // 处理 MySQL 保留字 Index
     json['`Index`'] = json.remove('Index');
@@ -52,7 +52,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 更新技能
-  Future<void> update(CreatureTemplateSpell spell) async {
+  Future<void> updateCreatureTemplateSpell(CreatureTemplateSpell spell) async {
     var json = spell.toJson();
     json.remove('CreatureID');
     // 处理 MySQL 保留字 Index
@@ -65,7 +65,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 删除技能
-  Future<void> delete(int creatureID, int index) async {
+  Future<void> destroyCreatureTemplateSpell(int creatureID, int index) async {
     await laconic
         .table(_table)
         .where('CreatureID', creatureID)
@@ -74,7 +74,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 复制技能
-  Future<CreatureTemplateSpell> copy(int creatureID, int index) async {
+  Future<CreatureTemplateSpell> copyCreatureTemplateSpell(int creatureID, int index) async {
     // 获取最大Index
     var maxIndexResult = await laconic
         .table(_table)
@@ -84,7 +84,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
     var maxIndex = (maxIndexResult.toMap()['maxIndex'] ?? 0) as int;
 
     // 获取源记录
-    var source = await find(creatureID, index);
+    var source = await getCreatureTemplateSpell(creatureID, index);
     if (source == null) {
       throw Exception('源记录不存在');
     }
@@ -93,7 +93,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
     var newSpell = CreatureTemplateSpell.fromJson(source.toJson());
     newSpell.index = maxIndex + 1;
 
-    await store(newSpell);
+    await storeCreatureTemplateSpell(newSpell);
     return newSpell;
   }
 

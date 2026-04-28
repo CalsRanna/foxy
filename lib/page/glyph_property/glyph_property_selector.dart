@@ -237,8 +237,8 @@ class _DialogState extends State<_Dialog> {
       final repository = GlyphPropertyRepository();
       final filter = GlyphPropertyFilterEntity()
         ..id = _idController.text;
-      final items = await repository.search(filter: filter, page: _page);
-      final total = await repository.count(filter: filter);
+      final items = await repository.getGlyphProperties(filter: filter, page: _page);
+      final total = await repository.countGlyphProperties(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

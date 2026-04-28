@@ -235,8 +235,8 @@ class _DialogState extends State<_Dialog> {
       final filter = PageTextFilterEntity()
         ..id = _idController.text
         ..text = '';
-      final items = await repository.search(filter: filter, page: _page);
-      final total = await repository.count(filter: filter);
+      final items = await repository.getPageTexts(filter: filter, page: _page);
+      final total = await repository.countPageTexts(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

@@ -7,7 +7,7 @@ class PageTextRepository with RepositoryMixin {
   static const _table = 'page_text';
   static const _localeTable = 'page_text_locale';
 
-  Future<List<PageText>> search({
+  Future<List<PageText>> getPageTexts({
     required PageTextFilterEntity filter,
     required int page,
   }) async {
@@ -25,7 +25,7 @@ class PageTextRepository with RepositoryMixin {
     return results.map((e) => PageText.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required PageTextFilterEntity filter}) async {
+  Future<int> countPageTexts({required PageTextFilterEntity filter}) async {
     var builder = laconic.table('$_table AS pt');
     builder = builder.leftJoin(
       '$_localeTable AS ptl',
@@ -35,27 +35,27 @@ class PageTextRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<PageText> find(int id) async {
+  Future<PageText> getPageText(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
     return PageText.fromJson(result.toMap());
   }
 
-  Future<void> store(PageText pageText) async {
+  Future<void> storePageText(PageText pageText) async {
     await laconic.table(_table).insert([pageText.toJson()]);
   }
 
-  Future<void> update(int id, PageText pageText) async {
+  Future<void> updatePageText(int id, PageText pageText) async {
     var json = pageText.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroyPageText(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    var text = await find(id);
+  Future<void> copyPageText(int id) async {
+    var text = await getPageText(id);
     var json = text.toJson();
     var newId = await _getNextId();
     json['ID'] = newId;

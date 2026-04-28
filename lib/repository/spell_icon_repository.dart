@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellIconRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_icon';
 
-  Future<List<SpellIcon>> search({
+  Future<List<SpellIcon>> getSpellIcons({
     String? id,
     String? name,
     required int page,
@@ -17,7 +17,7 @@ class SpellIconRepository with RepositoryMixin {
     return results.map((e) => SpellIcon.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({String? id, String? name}) async {
+  Future<int> countSpellIcons({String? id, String? name}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id, name: name);
     return builder.count();

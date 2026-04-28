@@ -5,7 +5,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class AreaTableRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_area_table';
 
-  Future<List<AreaTable>> search({
+  Future<List<AreaTable>> getAreaTables({
     required AreaTableFilterEntity filter,
     required int page,
   }) async {
@@ -17,13 +17,13 @@ class AreaTableRepository with RepositoryMixin {
     return results.map((e) => AreaTable.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required AreaTableFilterEntity filter}) async {
+  Future<int> countAreaTables({required AreaTableFilterEntity filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<AreaTable?> find(int id) async {
+  Future<AreaTable?> getAreaTable(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return AreaTable.fromJson(result.toMap());
@@ -32,22 +32,22 @@ class AreaTableRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(AreaTable area) async {
+  Future<void> storeAreaTable(AreaTable area) async {
     await laconic.table(_table).insert([area.toJson()]);
   }
 
-  Future<void> update(AreaTable area) async {
+  Future<void> updateAreaTable(AreaTable area) async {
     var json = area.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', area.id).update(json);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroyAreaTable(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    var source = await find(id);
+  Future<void> copyAreaTable(int id) async {
+    var source = await getAreaTable(id);
     if (source == null) return;
     var json = source.toJson();
     var nextId = await _getNextId();

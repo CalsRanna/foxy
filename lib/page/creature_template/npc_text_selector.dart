@@ -242,8 +242,8 @@ class _DialogState extends State<_Dialog> {
       final repo = NpcTextRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
       final text = _textController.text.isEmpty ? null : _textController.text;
-      final items = await repo.paginate(id: id, text: text, page: _page);
-      final total = await repo.count(id: id, text: text);
+      final items = await repo.getNpcTextsPaginated(id: id, text: text, page: _page);
+      final total = await repo.countNpcTexts(id: id, text: text);
       if (mounted) {
         setState(() {
           _items = items;

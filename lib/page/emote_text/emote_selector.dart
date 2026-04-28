@@ -248,8 +248,8 @@ class _DialogState extends State<_Dialog> {
       final filter = EmoteTextFilterEntity()
         ..id = _idController.text
         ..name = _nameController.text;
-      final items = await repository.search(filter: filter, page: _page);
-      final total = await repository.count(filter: filter);
+      final items = await repository.getEmoteTexts(filter: filter, page: _page);
+      final total = await repository.countEmoteTexts(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

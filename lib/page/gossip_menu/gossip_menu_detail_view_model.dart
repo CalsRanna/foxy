@@ -115,7 +115,7 @@ class GossipMenuDetailViewModel {
       entityName: '',
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().store(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
   void dispose() {

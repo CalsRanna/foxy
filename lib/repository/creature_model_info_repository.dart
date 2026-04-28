@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureModelInfoRepository with RepositoryMixin {
   static const _table = 'creature_model_info';
 
-  Future<List<CreatureModelInfo>> search({
+  Future<List<CreatureModelInfo>> getCreatureModelInfos({
     String? id,
     required int page,
   }) async {
@@ -18,7 +18,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
     ).toList();
   }
 
-  Future<int> count({String? id}) async {
+  Future<int> countCreatureModelInfos({String? id}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id);
     return builder.count();

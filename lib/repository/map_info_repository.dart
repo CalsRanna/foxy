@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class MapInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_map';
 
-  Future<List<MapInfo>> search({
+  Future<List<MapInfo>> getMapInfos({
     String? id,
     String? name,
     required int page,
@@ -17,7 +17,7 @@ class MapInfoRepository with RepositoryMixin {
     return results.map((e) => MapInfo.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({String? id, String? name}) async {
+  Future<int> countMapInfos({String? id, String? name}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id, name: name);
     return builder.count();

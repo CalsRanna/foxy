@@ -5,7 +5,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   static const _table = 'creature_template_resistance';
 
   /// 获取指定生物的所有抗性
-  Future<List<CreatureTemplateResistance>> getByEntry(int creatureID) async {
+  Future<List<CreatureTemplateResistance>> getCreatureTemplateResistances(int creatureID) async {
     try {
       var builder = laconic.table(_table);
       builder = builder.select(['*']);
@@ -21,7 +21,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureTemplateResistance?> find(int creatureID, int school) async {
+  Future<CreatureTemplateResistance?> getCreatureTemplateResistance(int creatureID, int school) async {
     try {
       var result = await laconic
           .table(_table)
@@ -35,12 +35,12 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   }
 
   /// 新增抗性
-  Future<void> store(CreatureTemplateResistance resistance) async {
+  Future<void> storeCreatureTemplateResistance(CreatureTemplateResistance resistance) async {
     await laconic.table(_table).insert([resistance.toJson()]);
   }
 
   /// 更新抗性
-  Future<void> update(CreatureTemplateResistance resistance) async {
+  Future<void> updateCreatureTemplateResistance(CreatureTemplateResistance resistance) async {
     var json = resistance.toJson();
     json.remove('CreatureID');
     json.remove('School');
@@ -52,7 +52,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   }
 
   /// 删除抗性
-  Future<void> delete(int creatureID, int school) async {
+  Future<void> destroyCreatureTemplateResistance(int creatureID, int school) async {
     await laconic
         .table(_table)
         .where('CreatureID', creatureID)
@@ -61,7 +61,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   }
 
   /// 复制抗性
-  Future<CreatureTemplateResistance> copy(int creatureID, int school) async {
+  Future<CreatureTemplateResistance> copyCreatureTemplateResistance(int creatureID, int school) async {
     // 获取最大School
     var maxSchoolResult = await laconic
         .table(_table)
@@ -71,7 +71,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
     var maxSchool = (maxSchoolResult.toMap()['maxSchool'] ?? 0) as int;
 
     // 获取源记录
-    var source = await find(creatureID, school);
+    var source = await getCreatureTemplateResistance(creatureID, school);
     if (source == null) {
       throw Exception('源记录不存在');
     }
@@ -80,7 +80,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
     var newResistance = CreatureTemplateResistance.fromJson(source.toJson());
     newResistance.school = maxSchool + 1;
 
-    await store(newResistance);
+    await storeCreatureTemplateResistance(newResistance);
     return newResistance;
   }
 

@@ -328,8 +328,8 @@ class _DialogState extends State<_Dialog> {
         final filter = AreaTableFilterEntity()
           ..id = _idController.text
           ..name = _nameController.text;
-        final items = await repository.search(filter: filter, page: _page);
-        final total = await repository.count(filter: filter);
+        final items = await repository.getAreaTables(filter: filter, page: _page);
+        final total = await repository.countAreaTables(filter: filter);
         if (mounted) {
           setState(() {
             _areaItems = items;
@@ -342,8 +342,8 @@ class _DialogState extends State<_Dialog> {
         final filter = QuestSortFilterEntity()
           ..id = _idController.text
           ..name = _nameController.text;
-        final items = await repository.search(filter: filter, page: _page);
-        final total = await repository.count(filter: filter);
+        final items = await repository.getQuestSorts(filter: filter, page: _page);
+        final total = await repository.countQuestSorts(filter: filter);
         if (mounted) {
           setState(() {
             _questItems = items;

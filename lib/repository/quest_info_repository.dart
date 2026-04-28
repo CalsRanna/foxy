@@ -5,7 +5,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class QuestInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_info';
 
-  Future<List<QuestInfo>> search({
+  Future<List<QuestInfo>> getQuestInfos({
     required QuestInfoFilterEntity filter,
     required int page,
   }) async {
@@ -17,13 +17,13 @@ class QuestInfoRepository with RepositoryMixin {
     return results.map((e) => QuestInfo.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({required QuestInfoFilterEntity filter}) async {
+  Future<int> countQuestInfos({required QuestInfoFilterEntity filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<QuestInfo?> find(int id) async {
+  Future<QuestInfo?> getQuestInfo(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return QuestInfo.fromJson(result.toMap());
@@ -32,22 +32,22 @@ class QuestInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(QuestInfo data) async {
+  Future<void> storeQuestInfo(QuestInfo data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> update(QuestInfo data) async {
+  Future<void> updateQuestInfo(QuestInfo data) async {
     var json = data.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', data.id).update(json);
   }
 
-  Future<void> destroy(int id) async {
+  Future<void> destroyQuestInfo(int id) async {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copy(int id) async {
-    var source = await find(id);
+  Future<void> copyQuestInfo(int id) async {
+    var source = await getQuestInfo(id);
     if (source == null) return;
     var json = source.toJson();
     var nextId = await _getNextId();

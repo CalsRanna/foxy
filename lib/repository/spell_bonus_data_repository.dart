@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellBonusDataRepository with RepositoryMixin {
   static const _table = 'spell_bonus_data';
 
-  Future<SpellBonusData?> find(int entry) async {
+  Future<SpellBonusData?> getSpellBonusData(int entry) async {
     try {
       var result = await laconic.table(_table).where('entry', entry).first();
       return SpellBonusData.fromJson(result.toMap());
@@ -13,22 +13,22 @@ class SpellBonusDataRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(SpellBonusData data) async {
+  Future<void> storeSpellBonusData(SpellBonusData data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> update(SpellBonusData data) async {
+  Future<void> updateSpellBonusData(SpellBonusData data) async {
     var json = data.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', data.entry).update(json);
   }
 
-  Future<void> save(SpellBonusData data) async {
-    var existing = await find(data.entry);
+  Future<void> saveSpellBonusData(SpellBonusData data) async {
+    var existing = await getSpellBonusData(data.entry);
     if (existing != null) {
-      await update(data);
+      await updateSpellBonusData(data);
     } else {
-      await store(data);
+      await storeSpellBonusData(data);
     }
   }
 }

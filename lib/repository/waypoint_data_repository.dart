@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class WaypointDataRepository with RepositoryMixin {
   static const _table = 'waypoint_data';
 
-  Future<List<WaypointData>> search({
+  Future<List<WaypointData>> getWaypointDatas({
     String? id,
     required int page,
   }) async {
@@ -20,7 +20,7 @@ class WaypointDataRepository with RepositoryMixin {
     return results.map((e) => WaypointData.fromJson(e.toMap())).toList();
   }
 
-  Future<int> count({String? id}) async {
+  Future<int> countWaypointDatas({String? id}) async {
     var builder = laconic.table(_table);
     if (id != null && id.isNotEmpty) {
       builder = builder.where('id', id);

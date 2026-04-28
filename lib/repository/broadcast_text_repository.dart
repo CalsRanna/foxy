@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class BroadcastTextRepository with RepositoryMixin {
   static const _table = 'broadcast_text';
 
-  Future<List<BroadcastText>> search({
+  Future<List<BroadcastText>> getBroadcastTexts({
     String? id,
     String? text,
     required int page,
@@ -35,7 +35,7 @@ class BroadcastTextRepository with RepositoryMixin {
     }).toList();
   }
 
-  Future<int> count({String? id, String? text}) async {
+  Future<int> countBroadcastTexts({String? id, String? text}) async {
     var builder = laconic.table(_table);
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);

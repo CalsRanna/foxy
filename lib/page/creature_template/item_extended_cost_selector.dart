@@ -88,8 +88,8 @@ class _ItemExtendedCostSelectorDialogState
     try {
       final repository = ItemExtendedCostRepository();
       final filter = ItemExtendedCostFilterEntity()..id = _idController.text;
-      final items = await repository.search(filter: filter, page: _page);
-      final total = await repository.count(filter: filter);
+      final items = await repository.getItemExtendedCosts(filter: filter, page: _page);
+      final total = await repository.countItemExtendedCosts(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

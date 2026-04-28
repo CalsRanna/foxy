@@ -7,7 +7,7 @@ class GameobjectQueststarterRepository with RepositoryMixin {
   static const _table = 'gameobject_queststarter';
 
   /// 按 quest 搜索该任务下的所有任务给予者（带 gameobject_template JOIN，无 locale）
-  Future<List<BriefGameobjectQueststarter>> search(int questId) async {
+  Future<List<BriefGameobjectQueststarter>> getGameobjectQueststarters(int questId) async {
     try {
       const fields = ['gos.id', 'gos.quest', 'got.name'];
       var builder = laconic.table('$_table AS gos');
@@ -27,7 +27,7 @@ class GameobjectQueststarterRepository with RepositoryMixin {
   }
 
   /// 按复合键查找
-  Future<GameobjectQueststarter?> find(Map<String, dynamic> id) async {
+  Future<GameobjectQueststarter?> getGameobjectQueststarter(Map<String, dynamic> id) async {
     try {
       var builder = laconic.table(_table);
       id.forEach((k, v) {
@@ -41,7 +41,7 @@ class GameobjectQueststarterRepository with RepositoryMixin {
   }
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
-  Future<GameobjectQueststarter> create(int questId) async {
+  Future<GameobjectQueststarter> createGameobjectQueststarter(int questId) async {
     try {
       final result = await laconic.table(_table).where('quest', questId).select(
         ['MAX(id) as max_id'],
@@ -59,11 +59,11 @@ class GameobjectQueststarterRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(GameobjectQueststarter model) async {
+  Future<void> storeGameobjectQueststarter(GameobjectQueststarter model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
-  Future<void> update(
+  Future<void> updateGameobjectQueststarter(
     Map<String, dynamic> id,
     GameobjectQueststarter model,
   ) async {
@@ -78,7 +78,7 @@ class GameobjectQueststarterRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> destroy(Map<String, dynamic> id) async {
+  Future<void> destroyGameobjectQueststarter(Map<String, dynamic> id) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);
@@ -86,11 +86,11 @@ class GameobjectQueststarterRepository with RepositoryMixin {
     await builder.delete();
   }
 
-  Future<void> copy(Map<String, dynamic> id) async {
-    final original = await find(id);
+  Future<void> copyGameobjectQueststarter(Map<String, dynamic> id) async {
+    final original = await getGameobjectQueststarter(id);
     if (original == null) return;
-    final next = await create(original.quest);
+    final next = await createGameobjectQueststarter(original.quest);
     original.id = next.id;
-    await store(original);
+    await storeGameobjectQueststarter(original);
   }
 }

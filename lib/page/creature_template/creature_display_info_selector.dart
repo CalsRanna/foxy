@@ -253,12 +253,12 @@ class _DialogState extends State<_Dialog> {
       final modelName = _modelNameController.text.isEmpty
           ? null
           : _modelNameController.text;
-      final items = await repository.search(
+      final items = await repository.getCreatureDisplayInfos(
         id: id,
         modelName: modelName,
         page: _page,
       );
-      final total = await repository.count(id: id, modelName: modelName);
+      final total = await repository.countCreatureDisplayInfos(id: id, modelName: modelName);
       if (mounted) {
         setState(() {
           _items = items;

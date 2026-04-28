@@ -23,7 +23,7 @@ class GameObjectTemplateAddonViewModel {
     loading.value = true;
     try {
       final repository = GameObjectTemplateAddonRepository();
-      final data = await repository.find(gameObjectId.value);
+      final data = await repository.getGameObjectTemplateAddon(gameObjectId.value);
       if (data != null) {
         addon.value = data;
       }
@@ -38,7 +38,7 @@ class GameObjectTemplateAddonViewModel {
     try {
       final addonData = _collectFromControllers();
       final repository = GameObjectTemplateAddonRepository();
-      await repository.save(addonData);
+      await repository.saveGameObjectTemplateAddon(addonData);
       addon.value = addonData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板补充数据已保存'));

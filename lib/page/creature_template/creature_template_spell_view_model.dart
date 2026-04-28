@@ -26,7 +26,7 @@ class CreatureTemplateSpellViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getByEntry(creatureId.value);
+      final data = await repository.getCreatureTemplateSpells(creatureId.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -91,7 +91,7 @@ class CreatureTemplateSpellViewModel {
 
     final spell = items.value[index];
     try {
-      await repository.copy(spell.creatureID, spell.index);
+      await repository.copyCreatureTemplateSpell(spell.creatureID, spell.index);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -130,7 +130,7 @@ class CreatureTemplateSpellViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.delete(spell.creatureID, spell.index);
+        await repository.destroyCreatureTemplateSpell(spell.creatureID, spell.index);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -148,7 +148,7 @@ class CreatureTemplateSpellViewModel {
     saving.value = true;
     try {
       final spell = collectFromForm();
-      await repository.store(spell);
+      await repository.storeCreatureTemplateSpell(spell);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -167,7 +167,7 @@ class CreatureTemplateSpellViewModel {
     saving.value = true;
     try {
       final spell = collectFromForm();
-      await repository.update(spell);
+      await repository.updateCreatureTemplateSpell(spell);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

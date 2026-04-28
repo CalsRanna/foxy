@@ -38,7 +38,7 @@ class ConditionDetailViewModel {
     if (credential == null) return;
     _originalCredential = credential;
     try {
-      final result = await repository.find(credential);
+      final result = await repository.getCondition(credential);
       condition.value = result;
       _initControllers(result);
     } catch (e, s) {
@@ -68,7 +68,7 @@ class ConditionDetailViewModel {
     saving.value = true;
     try {
       final data = _collect();
-      await repository.store(data);
+      await repository.storeCondition(data);
       condition.value = data;
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('条件已保存')));
@@ -84,7 +84,7 @@ class ConditionDetailViewModel {
     if (_originalCredential == null) return;
     try {
       final data = _collect();
-      await repository.update(_originalCredential!, data);
+      await repository.updateCondition(_originalCredential!, data);
       condition.value = data;
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));

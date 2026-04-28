@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellLootTemplateRepository with RepositoryMixin {
   static const _table = 'spell_loot_template';
 
-  Future<List<SpellLootTemplate>> getByEntry(int entry) async {
+  Future<List<SpellLootTemplate>> getSpellLootTemplates(int entry) async {
     try {
       var builder = laconic.table('$_table AS slt');
       const fields = [
@@ -31,7 +31,7 @@ class SpellLootTemplateRepository with RepositoryMixin {
     }
   }
 
-  Future<SpellLootTemplate?> find(int entry, int item) async {
+  Future<SpellLootTemplate?> getSpellLootTemplate(int entry, int item) async {
     try {
       var result = await laconic
           .table(_table)
@@ -44,11 +44,11 @@ class SpellLootTemplateRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(SpellLootTemplate data) async {
+  Future<void> storeSpellLootTemplate(SpellLootTemplate data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> update(
+  Future<void> updateSpellLootTemplate(
     SpellLootTemplate oldData,
     SpellLootTemplate newData,
   ) async {
@@ -62,7 +62,7 @@ class SpellLootTemplateRepository with RepositoryMixin {
         .update(json);
   }
 
-  Future<void> delete(int entry, int item) async {
+  Future<void> destroySpellLootTemplate(int entry, int item) async {
     await laconic
         .table(_table)
         .where('Entry', entry)
@@ -70,7 +70,7 @@ class SpellLootTemplateRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellLootTemplate> copy(SpellLootTemplate data) async {
+  Future<SpellLootTemplate> copySpellLootTemplate(SpellLootTemplate data) async {
     var json = data.toJson();
     var maxItemResult = await laconic
         .table(_table)

@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellLinkedSpellRepository with RepositoryMixin {
   static const _table = 'spell_linked_spell';
 
-  Future<List<SpellLinkedSpell>> getBySpellTrigger(int spellTrigger) async {
+  Future<List<SpellLinkedSpell>> getSpellLinkedSpells(int spellTrigger) async {
     try {
       var results = await laconic
           .table(_table)
@@ -17,7 +17,7 @@ class SpellLinkedSpellRepository with RepositoryMixin {
     }
   }
 
-  Future<SpellLinkedSpell?> find(int spellTrigger, int spellEffect) async {
+  Future<SpellLinkedSpell?> getSpellLinkedSpell(int spellTrigger, int spellEffect) async {
     try {
       var result = await laconic
           .table(_table)
@@ -30,11 +30,11 @@ class SpellLinkedSpellRepository with RepositoryMixin {
     }
   }
 
-  Future<void> store(SpellLinkedSpell data) async {
+  Future<void> storeSpellLinkedSpell(SpellLinkedSpell data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> update(
+  Future<void> updateSpellLinkedSpell(
     SpellLinkedSpell oldData,
     SpellLinkedSpell newData,
   ) async {
@@ -48,7 +48,7 @@ class SpellLinkedSpellRepository with RepositoryMixin {
         .update(json);
   }
 
-  Future<void> delete(int spellTrigger, int spellEffect) async {
+  Future<void> destroySpellLinkedSpell(int spellTrigger, int spellEffect) async {
     await laconic
         .table(_table)
         .where('spell_trigger', spellTrigger)
@@ -56,7 +56,7 @@ class SpellLinkedSpellRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellLinkedSpell> copy(SpellLinkedSpell data) async {
+  Future<SpellLinkedSpell> copySpellLinkedSpell(SpellLinkedSpell data) async {
     var json = data.toJson();
     var maxEffectResult = await laconic.table(_table).select([
       'MAX(spell_effect) AS maxEffect',
