@@ -16,7 +16,7 @@ class QuestSortListViewModel {
   final repository = QuestSortRepository();
 
   final page = signal(1);
-  final items = signal(<QuestSort>[]);
+  final sorts = signal(<QuestSort>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -66,7 +66,7 @@ class QuestSortListViewModel {
 
   Future<void> initSignals() async {
     final filter = QuestSortFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    sorts.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -98,7 +98,7 @@ class QuestSortListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = QuestSortFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    sorts.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -109,7 +109,7 @@ class QuestSortListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    items.value = await repository.search(page: page.value, filter: filter);
+    sorts.value = await repository.search(page: page.value, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 }

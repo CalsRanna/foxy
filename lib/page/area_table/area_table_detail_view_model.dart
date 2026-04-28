@@ -36,7 +36,7 @@ class AreaTableDetailViewModel {
   final liquidTypeId2Controller = TextEditingController();
   final liquidTypeId3Controller = TextEditingController();
 
-  final table = signal(AreaTable());
+  final area = signal(AreaTable());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -50,7 +50,7 @@ class AreaTableDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      area.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('区域数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -147,8 +147,8 @@ class AreaTableDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value = (await AreaTableRepository().find(id))!;
-      _initControllers(table.value);
+      area.value = (await AreaTableRepository().find(id))!;
+      _initControllers(area.value);
     } catch (e, s) {
       logger.e('加载区域(id=$id)失败', error: e, stackTrace: s);
     }

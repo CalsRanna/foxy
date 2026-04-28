@@ -33,7 +33,7 @@ class EmoteTextDetailViewModel {
   final emoteText14Controller = TextEditingController();
   final emoteText15Controller = TextEditingController();
 
-  final table = signal(EmoteText());
+  final emote = signal(EmoteText());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -47,7 +47,7 @@ class EmoteTextDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      emote.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('表情文本数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -130,8 +130,8 @@ class EmoteTextDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value = (await EmoteTextRepository().find(id))!;
-      _initControllers(table.value);
+      emote.value = (await EmoteTextRepository().find(id))!;
+      _initControllers(emote.value);
     } catch (e, s) {
       logger.e('加载表情文本(id=$id)失败', error: e, stackTrace: s);
     }

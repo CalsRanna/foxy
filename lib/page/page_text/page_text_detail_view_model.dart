@@ -17,15 +17,15 @@ class PageTextDetailViewModel {
   final nextPageIdController = TextEditingController();
   final verifiedBuildController = TextEditingController();
 
-  final pageText = signal<PageText?>(null);
+  final page = signal<PageText?>(null);
   final locales = signal<List<PageTextLocale>>([]);
   final saving = signal(false);
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      pageText.value = await repository.find(id);
-      _initControllers(pageText.value!);
+      page.value = await repository.find(id);
+      _initControllers(page.value!);
       locales.value = await repository.getLocales(id);
     } catch (e, s) {
       logger.e('加载页面文本(ID=$id)失败', error: e, stackTrace: s);
@@ -44,7 +44,7 @@ class PageTextDetailViewModel {
     try {
       final data = _collect();
       await repository.store(data);
-      pageText.value = data;
+      page.value = data;
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('页面文本已保存')));
     } catch (e) {
@@ -56,7 +56,7 @@ class PageTextDetailViewModel {
   }
 
   Future<void> update(BuildContext context) async {
-    final id = pageText.value?.id ?? 0;
+    final id = page.value?.id ?? 0;
     if (id == 0) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('记录未加载，无法更新')));
@@ -65,7 +65,7 @@ class PageTextDetailViewModel {
     try {
       final data = _collect();
       await repository.update(id, data);
-      pageText.value = data;
+      page.value = data;
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
     } catch (e) {

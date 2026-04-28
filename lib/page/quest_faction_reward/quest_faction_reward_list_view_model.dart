@@ -15,7 +15,7 @@ class QuestFactionRewardListViewModel {
   final repository = QuestFactionRewardRepository();
 
   final page = signal(1);
-  final items = signal(<QuestFactionReward>[]);
+  final rewards = signal(<QuestFactionReward>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -64,7 +64,7 @@ class QuestFactionRewardListViewModel {
 
   Future<void> initSignals() async {
     final filter = QuestFactionRewardFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    rewards.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -94,7 +94,7 @@ class QuestFactionRewardListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = QuestFactionRewardFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    rewards.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -105,7 +105,7 @@ class QuestFactionRewardListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    items.value = await repository.search(page: page.value, filter: filter);
+    rewards.value = await repository.search(page: page.value, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 }

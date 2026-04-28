@@ -32,7 +32,7 @@ class ItemExtendedCostDetailViewModel {
   final itemCount3Controller = TextEditingController();
   final itemCount4Controller = TextEditingController();
 
-  final table = signal(ItemExtendedCost());
+  final cost = signal(ItemExtendedCost());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -46,7 +46,7 @@ class ItemExtendedCostDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      cost.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('扩展价格数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -127,8 +127,8 @@ class ItemExtendedCostDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value = (await ItemExtendedCostRepository().find(id))!;
-      _initControllers(table.value);
+      cost.value = (await ItemExtendedCostRepository().find(id))!;
+      _initControllers(cost.value);
     } catch (e, s) {
       logger.e('加载扩展价格(id=$id)失败', error: e, stackTrace: s);
     }

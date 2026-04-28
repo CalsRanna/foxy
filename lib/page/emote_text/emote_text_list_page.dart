@@ -78,7 +78,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final emotes = viewModel.emotes.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -96,7 +96,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final item = items[vicinity.row];
+            final item = emotes[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.name)),
@@ -119,8 +119,8 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               context,
-              id: items[row].id,
-              name: items[row].name,
+              id: emotes[row].id,
+              name: emotes[row].name,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -133,8 +133,8 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
                   onPressed: () {
                     viewModel.navigateToDetail(
                       context,
-                      id: items[row].id,
-                      name: items[row].name,
+                      id: emotes[row].id,
+                      name: emotes[row].name,
                     );
                   },
                   child: Text('编辑'),
@@ -142,14 +142,14 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyEmoteText(items[row].id);
+                    viewModel.copyEmoteText(emotes[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteEmoteText(items[row].id);
+                    viewModel.deleteEmoteText(emotes[row].id);
                   },
                   child: Text('删除'),
                 ),
@@ -157,7 +157,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: emotes.length,
         );
       },
     );

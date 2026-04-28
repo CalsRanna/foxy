@@ -18,7 +18,7 @@ class SmartScriptListViewModel {
   final repository = SmartScriptRepository();
 
   final page = signal(1);
-  final templates = signal(<BriefSmartScript>[]);
+  final scripts = signal(<BriefSmartScript>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -79,7 +79,7 @@ class SmartScriptListViewModel {
   }
 
   Future<void> initSignals() async {
-    templates.value = await repository.getBriefSmartScripts();
+    scripts.value = await repository.getBriefSmartScripts();
     total.value = await repository.count();
   }
 
@@ -123,7 +123,7 @@ class SmartScriptListViewModel {
     entryOrGuidController.clear();
     commentController.clear();
     page.value = 1;
-    templates.value = await repository.getBriefSmartScripts();
+    scripts.value = await repository.getBriefSmartScripts();
     total.value = await repository.count();
   }
 
@@ -134,7 +134,7 @@ class SmartScriptListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    templates.value = await repository.getBriefSmartScripts(
+    scripts.value = await repository.getBriefSmartScripts(
       page: page.value,
       filter: filter,
     );
@@ -148,7 +148,7 @@ class SmartScriptListViewModel {
     int id,
     int link,
   ) {
-    final templates = this.templates.value;
+    final templates = scripts.value;
     final template = templates.where(
       (t) =>
           t.entryOrGuid == entryOrGuid &&

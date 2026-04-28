@@ -15,7 +15,7 @@ class GlyphPropertyListViewModel {
   final repository = GlyphPropertyRepository();
 
   final page = signal(1);
-  final items = signal(<GlyphProperty>[]);
+  final properties = signal(<GlyphProperty>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -64,7 +64,7 @@ class GlyphPropertyListViewModel {
 
   Future<void> initSignals() async {
     final filter = GlyphPropertyFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    properties.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -94,7 +94,7 @@ class GlyphPropertyListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = GlyphPropertyFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    properties.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -105,7 +105,7 @@ class GlyphPropertyListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    items.value = await repository.search(page: page.value, filter: filter);
+    properties.value = await repository.search(page: page.value, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 }

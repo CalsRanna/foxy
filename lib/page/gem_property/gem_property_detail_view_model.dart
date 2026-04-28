@@ -19,7 +19,7 @@ class GemPropertyDetailViewModel {
   final maxcountItemController = TextEditingController();
   final typeController = TextEditingController();
 
-  final table = signal(GemProperty());
+  final property = signal(GemProperty());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -33,7 +33,7 @@ class GemPropertyDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      property.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('宝石属性数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -82,8 +82,8 @@ class GemPropertyDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value = (await GemPropertyRepository().find(id))!;
-      _initControllers(table.value);
+      property.value = (await GemPropertyRepository().find(id))!;
+      _initControllers(property.value);
     } catch (e, s) {
       logger.e('加载宝石属性(id=$id)失败', error: e, stackTrace: s);
     }

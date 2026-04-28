@@ -82,7 +82,7 @@ class _ReferenceLootTemplateListPageState
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final templates = viewModel.templates.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -102,24 +102,24 @@ class _ReferenceLootTemplateListPageState
         var width = maxWidth - 600;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final item = items[vicinity.row];
+            final template = templates[vicinity.row];
             final qualityColor =
-                kItemQualityColors[item.itemQuality] ?? Colors.white;
+                kItemQualityColors[template.itemQuality] ?? Colors.white;
             return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.entry.toString())),
-              1 => ShadTableCell(child: Text(item.item.toString())),
+              0 => ShadTableCell(child: Text(template.entry.toString())),
+              1 => ShadTableCell(child: Text(template.item.toString())),
               2 => ShadTableCell(
                 child: Text(
-                  item.displayName,
+                  template.displayName,
                   style: TextStyle(color: qualityColor),
                 ),
               ),
-              3 => ShadTableCell(child: Text('${item.chance}%')),
+              3 => ShadTableCell(child: Text('${template.chance}%')),
               4 => ShadTableCell(
-                child: Text('${item.minCount}-${item.maxCount}'),
+                child: Text('${template.minCount}-${template.maxCount}'),
               ),
-              5 => ShadTableCell(child: Text(item.questRequired ? '是' : '否')),
-              6 => ShadTableCell(child: Text(item.groupId.toString())),
+              5 => ShadTableCell(child: Text(template.questRequired ? '是' : '否')),
+              6 => ShadTableCell(child: Text(template.groupId.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -142,9 +142,9 @@ class _ReferenceLootTemplateListPageState
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               context,
-              entry: items[row].entry,
-              item: items[row].item,
-              label: '${items[row].entry}-${items[row].item}',
+              entry: templates[row].entry,
+              item: templates[row].item,
+              label: '${templates[row].entry}-${templates[row].item}',
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -157,29 +157,29 @@ class _ReferenceLootTemplateListPageState
                   onPressed: () {
                     viewModel.navigateToDetail(
                       context,
-                      entry: items[row].entry,
-                      item: items[row].item,
-                      label: '${items[row].entry}-${items[row].item}',
+                      entry: templates[row].entry,
+                      item: templates[row].item,
+                      label: '${templates[row].entry}-${templates[row].item}',
                     );
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyReferenceLootTemplate(items[row].entry, items[row].item),
+                  onPressed: () => viewModel.copyReferenceLootTemplate(templates[row].entry, templates[row].item),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () =>
-                      viewModel.deleteReferenceLootTemplate(items[row].entry, items[row].item),
+                      viewModel.deleteReferenceLootTemplate(templates[row].entry, templates[row].item),
                   child: Text('删除'),
                 ),
               ],
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: templates.length,
         );
       },
     );

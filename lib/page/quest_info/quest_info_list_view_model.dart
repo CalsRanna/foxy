@@ -16,7 +16,7 @@ class QuestInfoListViewModel {
   final repository = QuestInfoRepository();
 
   final page = signal(1);
-  final items = signal(<QuestInfo>[]);
+  final infos = signal(<QuestInfo>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -66,7 +66,7 @@ class QuestInfoListViewModel {
 
   Future<void> initSignals() async {
     final filter = QuestInfoFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    infos.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -98,7 +98,7 @@ class QuestInfoListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = QuestInfoFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    infos.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -109,7 +109,7 @@ class QuestInfoListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    items.value = await repository.search(page: page.value, filter: filter);
+    infos.value = await repository.search(page: page.value, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 }

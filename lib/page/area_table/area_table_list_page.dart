@@ -78,7 +78,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final areas = viewModel.areas.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -96,7 +96,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final item = items[vicinity.row];
+            final item = areas[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.areaNameLangZhCn)),
@@ -125,8 +125,8 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               context,
-              id: items[row].id,
-              name: items[row].areaNameLangZhCn,
+              id: areas[row].id,
+              name: areas[row].areaNameLangZhCn,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -139,8 +139,8 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
                   onPressed: () {
                     viewModel.navigateToDetail(
                       context,
-                      id: items[row].id,
-                      name: items[row].areaNameLangZhCn,
+                      id: areas[row].id,
+                      name: areas[row].areaNameLangZhCn,
                     );
                   },
                   child: Text('编辑'),
@@ -148,14 +148,14 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyAreaTable(items[row].id);
+                    viewModel.copyAreaTable(areas[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteAreaTable(items[row].id);
+                    viewModel.deleteAreaTable(areas[row].id);
                   },
                   child: Text('删除'),
                 ),
@@ -163,7 +163,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: areas.length,
         );
       },
     );

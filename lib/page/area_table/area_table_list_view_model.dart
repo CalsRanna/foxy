@@ -16,7 +16,7 @@ class AreaTableListViewModel {
   final repository = AreaTableRepository();
 
   final page = signal(1);
-  final items = signal(<AreaTable>[]);
+  final areas = signal(<AreaTable>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -66,7 +66,7 @@ class AreaTableListViewModel {
 
   Future<void> initSignals() async {
     final filter = AreaTableFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    areas.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -98,7 +98,7 @@ class AreaTableListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = AreaTableFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    areas.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -109,7 +109,7 @@ class AreaTableListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    items.value = await repository.search(page: page.value, filter: filter);
+    areas.value = await repository.search(page: page.value, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 }

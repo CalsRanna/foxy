@@ -44,7 +44,7 @@ class SpellItemEnchantmentDetailViewModel {
   final requiredSkillRankController = TextEditingController();
   final minLevelController = TextEditingController();
 
-  final table = signal(SpellItemEnchantment());
+  final enchantment = signal(SpellItemEnchantment());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -58,7 +58,7 @@ class SpellItemEnchantmentDetailViewModel {
       } else {
         await repository.update(t);
       }
-      table.value = t;
+      enchantment.value = t;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('法术附魔数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -163,9 +163,9 @@ class SpellItemEnchantmentDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      table.value =
+      enchantment.value =
           (await SpellItemEnchantmentSoloRepository().find(id))!;
-      _initControllers(table.value);
+      _initControllers(enchantment.value);
     } catch (e, s) {
       logger.e('加载法术附魔(id=$id)失败', error: e, stackTrace: s);
     }

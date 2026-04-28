@@ -19,7 +19,7 @@ class GossipMenuListViewModel {
   final menuIdController = TextEditingController();
   final textController = TextEditingController();
 
-  final templates = signal<List<BriefGossipMenu>>([]);
+  final menus = signal<List<BriefGossipMenu>>([]);
   final page = signal(1);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
@@ -106,7 +106,7 @@ class GossipMenuListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    templates.value = await repository.getBriefGossipMenus(
+    menus.value = await repository.getBriefGossipMenus(
       filter: filter,
       page: page.value,
     );
@@ -120,7 +120,7 @@ class GossipMenuListViewModel {
   }
 
   void _logActivity(ActivityActionType action, int menuId, int textId) {
-    final templates = this.templates.value;
+    final templates = menus.value;
     final template = templates.where((t) => t.menuId == menuId && t.textId == textId).firstOrNull;
     final name = template?.text ?? '';
     final log = ActivityLog(

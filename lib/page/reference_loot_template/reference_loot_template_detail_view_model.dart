@@ -22,7 +22,7 @@ class ReferenceLootTemplateDetailViewModel {
   final maxCountController = TextEditingController();
   final commentController = TextEditingController();
 
-  final loot = signal<LootTemplate?>(null);
+  final template = signal<LootTemplate?>(null);
   final originalEntry = signal<int?>(null);
   final originalItem = signal<int?>(null);
   final saving = signal(false);
@@ -34,7 +34,7 @@ class ReferenceLootTemplateDetailViewModel {
     try {
       final result = await repository.find(entry, item);
       if (result != null) {
-        loot.value = result;
+        template.value = result;
         _initControllers(result);
       }
     } catch (e, s) {
@@ -61,7 +61,7 @@ class ReferenceLootTemplateDetailViewModel {
     try {
       final data = _collectFromControllers();
       await repository.store(data);
-      loot.value = data;
+      template.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('关联掉落已保存'));
       ShadSonner.of(context).show(toast);
@@ -82,7 +82,7 @@ class ReferenceLootTemplateDetailViewModel {
     try {
       final data = _collectFromControllers();
       await repository.update(data, oldItem: oItem);
-      loot.value = data;
+      template.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));
       ShadSonner.of(context).show(toast);

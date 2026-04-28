@@ -79,7 +79,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
       onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
-    final templates = viewModel.templates.value;
+    final templates = viewModel.scripts.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(

@@ -16,7 +16,7 @@ class EmoteTextListViewModel {
   final repository = EmoteTextRepository();
 
   final page = signal(1);
-  final items = signal(<EmoteText>[]);
+  final emotes = signal(<EmoteText>[]);
   final total = signal(0);
   final selectedRowIndex = signal(-1);
 
@@ -66,7 +66,7 @@ class EmoteTextListViewModel {
 
   Future<void> initSignals() async {
     final filter = EmoteTextFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    emotes.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -98,7 +98,7 @@ class EmoteTextListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = EmoteTextFilterEntity();
-    items.value = await repository.search(page: 1, filter: filter);
+    emotes.value = await repository.search(page: 1, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 
@@ -109,7 +109,7 @@ class EmoteTextListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    items.value = await repository.search(page: page.value, filter: filter);
+    emotes.value = await repository.search(page: page.value, filter: filter);
     total.value = await repository.count(filter: filter);
   }
 }

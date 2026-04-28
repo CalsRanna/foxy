@@ -16,13 +16,13 @@ class ConditionListViewModel {
   final repository = ConditionRepository();
 
   final page = signal(1);
-  final items = signal<List<Condition>>([]);
+  final conditions = signal<List<Condition>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    items.value = await _search();
+    conditions.value = await _search();
     total.value = await _count();
   }
 
@@ -35,7 +35,7 @@ class ConditionListViewModel {
     sourceTypeController.clear();
     sourceEntryController.clear();
     page.value = 1;
-    items.value = await _search();
+    conditions.value = await _search();
     total.value = await _count();
   }
 
@@ -117,7 +117,7 @@ class ConditionListViewModel {
   }
 
   Future<void> _refresh() async {
-    items.value = await _search();
+    conditions.value = await _search();
     total.value = await _count();
   }
 

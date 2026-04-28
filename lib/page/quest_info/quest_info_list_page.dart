@@ -78,7 +78,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
-    final items = viewModel.items.value;
+    final infos = viewModel.infos.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -96,7 +96,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
         var width = constraints.maxWidth - 120;
         return FoxyShadTable(
           builder: (context, vicinity) {
-            final item = items[vicinity.row];
+            final item = infos[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.infoNameLangZhCn)),
@@ -117,8 +117,8 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               context,
-              id: items[row].id,
-              name: items[row].infoNameLangZhCn,
+              id: infos[row].id,
+              name: infos[row].infoNameLangZhCn,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -131,8 +131,8 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
                   onPressed: () {
                     viewModel.navigateToDetail(
                       context,
-                      id: items[row].id,
-                      name: items[row].infoNameLangZhCn,
+                      id: infos[row].id,
+                      name: infos[row].infoNameLangZhCn,
                     );
                   },
                   child: Text('编辑'),
@@ -140,14 +140,14 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyQuestInfo(items[row].id);
+                    viewModel.copyQuestInfo(infos[row].id);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteQuestInfo(items[row].id);
+                    viewModel.deleteQuestInfo(infos[row].id);
                   },
                   child: Text('删除'),
                 ),
@@ -155,7 +155,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
             );
           },
           pinnedRowCount: 1,
-          rowCount: items.length,
+          rowCount: infos.length,
         );
       },
     );
