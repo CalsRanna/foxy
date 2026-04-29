@@ -68,8 +68,8 @@ class _QuestOfferRewardLocaleSelectorState
 
 class _LocaleDialog extends StatefulWidget {
   final int questId;
-  final List<QuestOfferRewardLocale> locales;
-  final Future<void> Function(List<QuestOfferRewardLocale>) onSave;
+  final List<QuestOfferRewardLocaleEntity> locales;
+  final Future<void> Function(List<QuestOfferRewardLocaleEntity>) onSave;
   final String title;
 
   const _LocaleDialog({
@@ -209,7 +209,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     setState(() => _saving = true);
     try {
       final locales = _rows.map((row) {
-        return QuestOfferRewardLocale(
+        return QuestOfferRewardLocaleEntity(
           id: widget.questId,
           locale: row.localeController.text,
           rewardText: row.rewardTextController.text,
@@ -231,7 +231,7 @@ class _LocaleRow {
     : localeController = TextEditingController(),
       rewardTextController = TextEditingController();
 
-  _LocaleRow.fromLocale(QuestOfferRewardLocale locale)
+  _LocaleRow.fromLocale(QuestOfferRewardLocaleEntity locale)
     : localeController = TextEditingController(text: locale.locale),
       rewardTextController = TextEditingController(text: locale.rewardText);
 

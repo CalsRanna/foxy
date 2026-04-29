@@ -1,4 +1,4 @@
-class GameObjectTemplateAddon {
+class GameObjectTemplateAddonEntity {
   final int entry;
   final int faction;
   final int flags;
@@ -9,7 +9,7 @@ class GameObjectTemplateAddon {
   final int artkit2;
   final int artkit3;
 
-  const GameObjectTemplateAddon({
+  const GameObjectTemplateAddonEntity({
     this.entry = 0,
     this.faction = 0,
     this.flags = 0,
@@ -21,8 +21,8 @@ class GameObjectTemplateAddon {
     this.artkit3 = 0,
   });
 
-  factory GameObjectTemplateAddon.fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplateAddon(
+  factory GameObjectTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
+    return GameObjectTemplateAddonEntity(
       entry: json['entry'] ?? 0,
       faction: json['faction'] ?? 0,
       flags: json['flags'] ?? 0,

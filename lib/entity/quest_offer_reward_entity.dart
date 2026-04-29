@@ -65,21 +65,21 @@ class QuestOfferRewardEntity {
 }
 
 /// quest_offer_reward_locale 本地化模型（复合键: ID + Locale）
-class QuestOfferRewardLocale {
+class QuestOfferRewardLocaleEntity {
   final int id;
   final String locale;
   final String rewardText;
   final int? verifiedBuild;
 
-  const QuestOfferRewardLocale({
+  const QuestOfferRewardLocaleEntity({
     this.id = 0,
     this.locale = 'zhCN',
     this.rewardText = '',
     this.verifiedBuild,
   });
 
-  factory QuestOfferRewardLocale.fromJson(Map<String, dynamic> json) {
-    return QuestOfferRewardLocale(
+  factory QuestOfferRewardLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return QuestOfferRewardLocaleEntity(
       id: (json['ID'] ?? json['id'] ?? 0) as int,
       locale: json['Locale']?.toString() ?? 'zhCN',
       rewardText: json['RewardText']?.toString() ?? '',

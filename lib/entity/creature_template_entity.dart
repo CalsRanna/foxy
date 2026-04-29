@@ -46,7 +46,7 @@ class BriefCreatureTemplateEntity {
   }
 }
 
-class CreatureTemplate {
+class CreatureTemplateEntity {
   final String aiName;
   final double armorModifier;
   final int baseAttackTime;
@@ -103,7 +103,7 @@ class CreatureTemplate {
   final int verifiedBuild;
   final int creatureImmunitiesId;
 
-  const CreatureTemplate({
+  const CreatureTemplateEntity({
     this.aiName = '',
     this.armorModifier = 1,
     this.baseAttackTime = 0,
@@ -161,8 +161,8 @@ class CreatureTemplate {
     this.creatureImmunitiesId = 0,
   });
 
-  factory CreatureTemplate.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplate(
+  factory CreatureTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateEntity(
       aiName: json['AIName'] ?? '',
       armorModifier: json['ArmorModifier'] ?? 1.0,
       baseAttackTime: json['BaseAttackTime'] ?? 0,

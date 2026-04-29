@@ -10,7 +10,7 @@ class PlayerCreateInfoActionViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final repository = PlayerCreateInfoRepository();
 
-  final actions = signal<List<PlayerCreateInfoAction>>([]);
+  final actions = signal<List<PlayerCreateInfoActionEntity>>([]);
   int? _race;
   int? _class_;
   int? _oldButton;
@@ -72,7 +72,7 @@ class PlayerCreateInfoActionViewModel {
 
   Future<void> onDelete(
     BuildContext context,
-    PlayerCreateInfoAction item,
+    PlayerCreateInfoActionEntity item,
   ) async {
     if (_race == null || _class_ == null) return;
     try {
@@ -86,8 +86,8 @@ class PlayerCreateInfoActionViewModel {
     }
   }
 
-  PlayerCreateInfoAction _collect() {
-    return PlayerCreateInfoAction(
+  PlayerCreateInfoActionEntity _collect() {
+    return PlayerCreateInfoActionEntity(
       race: _race ?? 0,
       class_: _class_ ?? 0,
       button: _parseInt(buttonController.text),

@@ -40,7 +40,7 @@ class CreatureEquipTemplateEntity {
 }
 
 /// 生物装备模板列表展示模型（含 LEFT JOIN item_template + item_display_info 的装备信息）
-class BriefCreatureEquipTemplate {
+class BriefCreatureEquipTemplateEntity {
   final int creatureID;
   final int id;
   final int itemID1;
@@ -64,7 +64,7 @@ class BriefCreatureEquipTemplate {
   String get displayName2 => localeName2.isNotEmpty ? localeName2 : name2;
   String get displayName3 => localeName3.isNotEmpty ? localeName3 : name3;
 
-  const BriefCreatureEquipTemplate({
+  const BriefCreatureEquipTemplateEntity({
     this.creatureID = 0,
     this.id = 0,
     this.itemID1 = 0,
@@ -85,8 +85,8 @@ class BriefCreatureEquipTemplate {
     this.icon3 = '',
   });
 
-  factory BriefCreatureEquipTemplate.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureEquipTemplate(
+  factory BriefCreatureEquipTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureEquipTemplateEntity(
       creatureID: json['CreatureID'] ?? 0,
       id: json['ID'] ?? 0,
       itemID1: json['ItemID1'] ?? 0,

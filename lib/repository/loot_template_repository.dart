@@ -65,7 +65,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 获取不同的 Entry 列表（用于选择器）
-  Future<List<BriefLootTemplate>> getLootTemplateDistinctEntries({
+  Future<List<BriefLootTemplateEntity>> getLootTemplateDistinctEntries({
     String? entry,
     int page = 1,
   }) async {
@@ -79,14 +79,16 @@ class LootTemplateRepository with RepositoryMixin {
       builder = builder.groupBy('Entry');
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
-      return results.map((e) => BriefLootTemplate.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       return [];
     }
   }
 
   /// 搜索掉落（带物品名称过滤+分页）
-  Future<List<BriefLootTemplate>> getLootTemplatesByEntry({
+  Future<List<BriefLootTemplateEntity>> getLootTemplatesByEntry({
     String? entry,
     String? name,
     int page = 1,
@@ -126,14 +128,16 @@ class LootTemplateRepository with RepositoryMixin {
       }
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
-      return results.map((e) => BriefLootTemplate.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       return [];
     }
   }
 
   /// 获取指定 Entry 的所有掉落项（带物品信息）
-  Future<List<BriefLootTemplate>> getLootTemplates(int entry) async {
+  Future<List<BriefLootTemplateEntity>> getLootTemplates(int entry) async {
     var builder = laconic.table('$_table AS lt');
     const fields = [
       'lt.*',
@@ -157,7 +161,9 @@ class LootTemplateRepository with RepositoryMixin {
     );
     builder = builder.where('lt.Entry', entry);
     var results = await builder.get();
-    return results.map((e) => BriefLootTemplate.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 查找单条记录

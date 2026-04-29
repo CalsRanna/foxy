@@ -52,7 +52,7 @@ class CreatureSpellDataEntity {
 }
 
 /// 宠物技能数据列表展示模型（含 LEFT JOIN foxy.dbc_spell 的法术名）
-class BriefCreatureSpellData {
+class BriefCreatureSpellDataEntity {
   final int id;
   final int spells0;
   final int spells1;
@@ -63,7 +63,7 @@ class BriefCreatureSpellData {
   final String spellName3;
   final String spellName4;
 
-  const BriefCreatureSpellData({
+  const BriefCreatureSpellDataEntity({
     this.id = 0,
     this.spells0 = 0,
     this.spells1 = 0,
@@ -75,8 +75,8 @@ class BriefCreatureSpellData {
     this.spellName4 = '',
   });
 
-  factory BriefCreatureSpellData.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureSpellData(
+  factory BriefCreatureSpellDataEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureSpellDataEntity(
       id: json['ID'] ?? 0,
       spells0: json['Spells0'] ?? 0,
       spells1: json['Spells1'] ?? 0,

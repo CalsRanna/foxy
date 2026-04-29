@@ -44,7 +44,7 @@ class NpcVendorEntity {
 }
 
 /// NPC商人物品列表展示模型（含 LEFT JOIN item_template + item_display_info 的物品信息）
-class BriefNpcVendor {
+class BriefNpcVendorEntity {
   final int entry;
   final int slot;
   final int item;
@@ -60,7 +60,7 @@ class BriefNpcVendor {
   String get displayName =>
       itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
-  const BriefNpcVendor({
+  const BriefNpcVendorEntity({
     this.entry = 0,
     this.slot = 0,
     this.item = 0,
@@ -74,8 +74,8 @@ class BriefNpcVendor {
     this.itemIcon = '',
   });
 
-  factory BriefNpcVendor.fromJson(Map<String, dynamic> json) {
-    return BriefNpcVendor(
+  factory BriefNpcVendorEntity.fromJson(Map<String, dynamic> json) {
+    return BriefNpcVendorEntity(
       entry: json['entry'] ?? 0,
       slot: json['slot'] ?? 0,
       item: json['item'] ?? 0,

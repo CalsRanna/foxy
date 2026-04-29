@@ -64,7 +64,7 @@ class _DialogState extends State<_Dialog> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  List<BriefItemTemplate> _items = [];
+  List<BriefItemTemplateEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

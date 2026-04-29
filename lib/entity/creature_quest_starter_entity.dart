@@ -16,21 +16,21 @@ class CreatureQuestStarterEntity {
   }
 }
 
-class BriefCreatureQuestStarter {
+class BriefCreatureQuestStarterEntity {
   final int id;
   final int quest;
   final String name;
   final String localeName;
 
-  const BriefCreatureQuestStarter({
+  const BriefCreatureQuestStarterEntity({
     this.id = 0,
     this.quest = 0,
     this.name = '',
     this.localeName = '',
   });
 
-  factory BriefCreatureQuestStarter.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureQuestStarter(
+  factory BriefCreatureQuestStarterEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureQuestStarterEntity(
       id: json['id'] ?? 0,
       quest: json['quest'] ?? 0,
       name: json['name']?.toString() ?? '',

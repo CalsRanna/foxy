@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GameObjectQuestItemRepository with RepositoryMixin {
   static const _table = 'gameobject_questitem';
 
-  Future<List<GameObjectQuestItem>> getGameObjectQuestItems(
+  Future<List<GameObjectQuestItemEntity>> getGameObjectQuestItems(
     int gameObjectEntry,
   ) async {
     try {
@@ -33,14 +33,14 @@ class GameObjectQuestItemRepository with RepositoryMixin {
       builder = builder.orderBy('gq.Idx');
       var results = await builder.get();
       return results
-          .map((e) => GameObjectQuestItem.fromJson(e.toMap()))
+          .map((e) => GameObjectQuestItemEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];
     }
   }
 
-  Future<GameObjectQuestItem?> getGameObjectQuestItem(
+  Future<GameObjectQuestItemEntity?> getGameObjectQuestItem(
     int gameObjectEntry,
     int idx,
   ) async {
@@ -50,17 +50,21 @@ class GameObjectQuestItemRepository with RepositoryMixin {
           .where('GameObjectEntry', gameObjectEntry)
           .where('Idx', idx)
           .first();
-      return GameObjectQuestItem.fromJson(result.toMap());
+      return GameObjectQuestItemEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
-  Future<void> storeGameObjectQuestItem(GameObjectQuestItem questItem) async {
+  Future<void> storeGameObjectQuestItem(
+    GameObjectQuestItemEntity questItem,
+  ) async {
     await laconic.table(_table).insert([questItem.toJson()]);
   }
 
-  Future<void> updateGameObjectQuestItem(GameObjectQuestItem questItem) async {
+  Future<void> updateGameObjectQuestItem(
+    GameObjectQuestItemEntity questItem,
+  ) async {
     var json = questItem.toJson();
     json.remove('GameObjectEntry');
     json.remove('Idx');
@@ -79,7 +83,7 @@ class GameObjectQuestItemRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<GameObjectQuestItem> copyGameObjectQuestItem(
+  Future<GameObjectQuestItemEntity> copyGameObjectQuestItem(
     int gameObjectEntry,
     int idx,
   ) async {
@@ -91,7 +95,7 @@ class GameObjectQuestItemRepository with RepositoryMixin {
     var maxIdx = (maxIdxResult.toMap()['maxIdx'] ?? 0) as int;
     var source = await getGameObjectQuestItem(gameObjectEntry, idx);
     if (source == null) throw Exception('源记录不存在');
-    var newQuestItem = GameObjectQuestItem.fromJson({
+    var newQuestItem = GameObjectQuestItemEntity.fromJson({
       ...source.toJson(),
       'Idx': maxIdx + 1,
     });

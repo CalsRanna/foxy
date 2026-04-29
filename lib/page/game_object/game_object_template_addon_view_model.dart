@@ -17,7 +17,7 @@ class GameObjectTemplateAddonViewModel {
 
   final loading = signal(false);
   final saving = signal(false);
-  final addon = signal(GameObjectTemplateAddon());
+  final addon = signal(GameObjectTemplateAddonEntity());
 
   Future<void> load() async {
     loading.value = true;
@@ -55,8 +55,8 @@ class GameObjectTemplateAddonViewModel {
     routerFacade.goBack();
   }
 
-  GameObjectTemplateAddon _collectFromControllers() {
-    return GameObjectTemplateAddon(
+  GameObjectTemplateAddonEntity _collectFromControllers() {
+    return GameObjectTemplateAddonEntity(
       entry: gameObjectId.value,
       faction: _parseInt(factionController.text),
       flags: _parseInt(flagsController.text),
@@ -72,7 +72,7 @@ class GameObjectTemplateAddonViewModel {
     return value;
   }
 
-  void initControllers(GameObjectTemplateAddon data) {
+  void initControllers(GameObjectTemplateAddonEntity data) {
     factionController.text = data.faction.toString();
     flagsController.text = data.flags.toString();
     minGoldController.text = data.minGold.toString();

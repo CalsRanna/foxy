@@ -40,7 +40,7 @@ class ItemEnchantmentTemplateEntity {
 }
 
 /// 物品附魔模板列表展示模型（含 LEFT JOIN dbc_spell_item_enchantment + dbc_item_random_properties 的附魔名）
-class BriefItemEnchantmentTemplate {
+class BriefItemEnchantmentTemplateEntity {
   final int entry;
   final int ench;
   final double chance;
@@ -54,7 +54,7 @@ class BriefItemEnchantmentTemplate {
   final String enchantment4Name;
   final String enchantment5Name;
 
-  const BriefItemEnchantmentTemplate({
+  const BriefItemEnchantmentTemplateEntity({
     this.entry = 0,
     this.ench = 0,
     this.chance = 0,
@@ -69,8 +69,10 @@ class BriefItemEnchantmentTemplate {
     this.enchantment5Name = '',
   });
 
-  factory BriefItemEnchantmentTemplate.fromJson(Map<String, dynamic> json) {
-    return BriefItemEnchantmentTemplate(
+  factory BriefItemEnchantmentTemplateEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefItemEnchantmentTemplateEntity(
       entry: json['entry'] ?? 0,
       ench: json['ench'] ?? 0,
       chance: (json['chance'] as num?)?.toDouble() ?? 0.0,

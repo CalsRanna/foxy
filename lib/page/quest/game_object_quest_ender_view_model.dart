@@ -6,7 +6,7 @@ import 'package:signals/signals.dart';
 
 class GameObjectQuestEnderViewModel {
   final questId = signal(0);
-  final items = signal<List<BriefGameObjectQuestEnder>>([]);
+  final items = signal<List<BriefGameObjectQuestEnderEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);

@@ -50,7 +50,7 @@ class BriefGossipMenuEntity {
 ///
 /// 列表查询通过 LEFT JOIN npc_text + npc_text_locale 得到展示文本，
 /// 因此 fromJson 兼容这些附加字段的读入。
-class GossipMenu {
+class GossipMenuEntity {
   final int menuId;
   final int textId;
   // 以下字段来自 LEFT JOIN npc_text 和 npc_text_locale，仅列表展示用
@@ -59,7 +59,7 @@ class GossipMenu {
   final String textLocale00;
   final String textLocale01;
 
-  const GossipMenu({
+  const GossipMenuEntity({
     this.menuId = 0,
     this.textId = 0,
     this.text00 = '',
@@ -68,8 +68,8 @@ class GossipMenu {
     this.textLocale01 = '',
   });
 
-  factory GossipMenu.fromJson(Map<String, dynamic> json) {
-    return GossipMenu(
+  factory GossipMenuEntity.fromJson(Map<String, dynamic> json) {
+    return GossipMenuEntity(
       menuId: json['MenuID'] ?? json['menuid'] ?? 0,
       textId: json['TextID'] ?? json['textid'] ?? 0,
       text00: json['text0_0']?.toString() ?? '',

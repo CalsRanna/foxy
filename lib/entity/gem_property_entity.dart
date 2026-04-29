@@ -34,21 +34,21 @@ class GemPropertyEntity {
   }
 }
 
-class BriefGemProperty {
+class BriefGemPropertyEntity {
   final int id;
   final int enchantId;
   final int maxCountInv;
   final int type;
 
-  const BriefGemProperty({
+  const BriefGemPropertyEntity({
     this.id = 0,
     this.enchantId = 0,
     this.maxCountInv = 0,
     this.type = 0,
   });
 
-  factory BriefGemProperty.fromJson(Map<String, dynamic> json) {
-    return BriefGemProperty(
+  factory BriefGemPropertyEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGemPropertyEntity(
       id: json['ID'] ?? 0,
       enchantId: json['Enchant_ID'] ?? 0,
       maxCountInv: json['Maxcount_inv'] ?? 0,

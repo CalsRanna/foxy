@@ -17,7 +17,7 @@ class GemPropertyRepository with RepositoryMixin {
     return results.map((e) => GemPropertyEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<List<BriefGemProperty>> getBriefGemProperties({
+  Future<List<BriefGemPropertyEntity>> getBriefGemProperties({
     int page = 1,
     GemPropertyFilterEntity? filter,
   }) async {
@@ -28,7 +28,9 @@ class GemPropertyRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => BriefGemProperty.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefGemPropertyEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<int> countGemProperties({GemPropertyFilterEntity? filter}) async {

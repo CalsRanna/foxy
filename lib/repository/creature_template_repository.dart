@@ -72,12 +72,12 @@ class CreatureTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureTemplate> getCreatureTemplate(int entry) async {
+  Future<CreatureTemplateEntity> getCreatureTemplate(int entry) async {
     var result = await laconic.table(_table).where('entry', entry).first();
-    return CreatureTemplate.fromJson(result.toMap());
+    return CreatureTemplateEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeCreatureTemplate(CreatureTemplate template) async {
+  Future<void> storeCreatureTemplate(CreatureTemplateEntity template) async {
     var json = template.toJson();
     var newEntry = await _getNextEntry();
     json['entry'] = newEntry;
@@ -88,7 +88,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateCreatureTemplate(CreatureTemplate template) async {
+  Future<void> updateCreatureTemplate(CreatureTemplateEntity template) async {
     var json = template.toJson();
     json.remove('entry');
     // 处理 MySQL 保留字

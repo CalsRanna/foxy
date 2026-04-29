@@ -62,7 +62,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _spellController = TextEditingController();
 
-  List<BriefCreatureSpellData> _items = [];
+  List<BriefCreatureSpellDataEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

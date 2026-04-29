@@ -56,7 +56,7 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
   }
 
   /// 按 quest 搜索该任务下的所有任务结束者（带 gameobject_template JOIN，无 locale）
-  Future<List<BriefGameObjectQuestEnder>> getGameObjectQuestEnders(
+  Future<List<BriefGameObjectQuestEnderEntity>> getGameObjectQuestEnders(
     int questId,
   ) async {
     try {
@@ -70,7 +70,7 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
       builder = builder.where('goe.quest', questId);
       final results = await builder.get();
       return results
-          .map((e) => BriefGameObjectQuestEnder.fromJson(e.toMap()))
+          .map((e) => BriefGameObjectQuestEnderEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];

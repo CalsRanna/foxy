@@ -149,7 +149,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     return Row(spacing: 16, children: children);
   }
 
-  Widget _buildIconAndName(BriefItemTemplate item, Color qualityColor) {
+  Widget _buildIconAndName(BriefItemTemplateEntity item, Color qualityColor) {
     final icon = item.inventoryIcon
         .toString()
         .toLowerCase()

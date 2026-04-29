@@ -36,7 +36,7 @@ class BriefGameObjectTemplateEntity {
   }
 }
 
-class GameObjectTemplate {
+class GameObjectTemplateEntity {
   final int entry;
   final int type;
   final int displayId;
@@ -73,7 +73,7 @@ class GameObjectTemplate {
   final String scriptName;
   final int verifiedBuild;
 
-  const GameObjectTemplate({
+  const GameObjectTemplateEntity({
     this.entry = 0,
     this.type = 0,
     this.displayId = 0,
@@ -111,8 +111,8 @@ class GameObjectTemplate {
     this.verifiedBuild = 0,
   });
 
-  factory GameObjectTemplate.fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplate(
+  factory GameObjectTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return GameObjectTemplateEntity(
       entry: json['entry'] ?? 0,
       type: json['type'] ?? 0,
       displayId: json['displayId'] ?? 0,

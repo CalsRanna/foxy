@@ -7,7 +7,7 @@ class CreatureQuestEnderRepository with RepositoryMixin {
   static const _table = 'creature_questender';
 
   /// 按 quest 搜索该任务下的所有任务结束者（带 creature_template + locale JOIN）
-  Future<List<BriefCreatureQuestEnder>> getCreatureQuestEnders(
+  Future<List<BriefCreatureQuestEnderEntity>> getCreatureQuestEnders(
     int questId,
   ) async {
     try {
@@ -25,7 +25,7 @@ class CreatureQuestEnderRepository with RepositoryMixin {
       builder = builder.where('cqe.quest', questId);
       final results = await builder.get();
       return results
-          .map((e) => BriefCreatureQuestEnder.fromJson(e.toMap()))
+          .map((e) => BriefCreatureQuestEnderEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];

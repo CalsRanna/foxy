@@ -17,7 +17,7 @@ class GossipMenuDetailViewModel {
 
   final menuId = signal(0);
   final textId = signal(0);
-  final menu = signal(GossipMenu());
+  final menu = signal(GossipMenuEntity());
   final saving = signal(false);
 
   int? _originalMenuId;
@@ -28,7 +28,7 @@ class GossipMenuDetailViewModel {
       final nextMenuId = await GossipMenuRepository().getNextMenuId();
       this.menuId.value = nextMenuId;
       this.textId.value = 0;
-      menu.value = GossipMenu(menuId: nextMenuId, textId: 0);
+      menu.value = GossipMenuEntity(menuId: nextMenuId, textId: 0);
       _originalMenuId = null;
       _originalTextId = null;
       menuIdController.text = nextMenuId.toString();
@@ -94,14 +94,14 @@ class GossipMenuDetailViewModel {
     routerFacade.goBack();
   }
 
-  GossipMenu _collectFromControllers() {
-    return GossipMenu(
+  GossipMenuEntity _collectFromControllers() {
+    return GossipMenuEntity(
       menuId: int.tryParse(menuIdController.text) ?? 0,
       textId: int.tryParse(textIdController.text) ?? 0,
     );
   }
 
-  void _logActivity(ActivityActionType action, GossipMenu t) {
+  void _logActivity(ActivityActionType action, GossipMenuEntity t) {
     final log = ActivityLogEntity(
       module: 'gossip_menu',
       actionType: action,

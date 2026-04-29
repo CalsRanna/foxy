@@ -95,7 +95,7 @@ class AreaTableEntity {
   }
 }
 
-class BriefAreaTable {
+class BriefAreaTableEntity {
   final int id;
   final String areaNameLangZhCn;
   final int continentId;
@@ -103,7 +103,7 @@ class BriefAreaTable {
   final int zoneMusic;
   final int explorationLevel;
 
-  const BriefAreaTable({
+  const BriefAreaTableEntity({
     this.id = 0,
     this.areaNameLangZhCn = '',
     this.continentId = 0,
@@ -112,8 +112,8 @@ class BriefAreaTable {
     this.explorationLevel = 0,
   });
 
-  factory BriefAreaTable.fromJson(Map<String, dynamic> json) {
-    return BriefAreaTable(
+  factory BriefAreaTableEntity.fromJson(Map<String, dynamic> json) {
+    return BriefAreaTableEntity(
       id: json['ID'] ?? 0,
       areaNameLangZhCn: json['AreaName_lang_zhCN'] ?? '',
       continentId: json['ContinentID'] ?? 0,

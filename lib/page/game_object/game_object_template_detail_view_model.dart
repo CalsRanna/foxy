@@ -49,7 +49,7 @@ class GameObjectTemplateDetailViewModel {
 
   final saving = signal(false);
   final entry = signal(0);
-  final template = signal(GameObjectTemplate());
+  final template = signal(GameObjectTemplateEntity());
 
   Future<void> save(BuildContext context) async {
     saving.value = true;
@@ -83,8 +83,8 @@ class GameObjectTemplateDetailViewModel {
     routerFacade.goBack();
   }
 
-  GameObjectTemplate _collectFromControllers() {
-    return GameObjectTemplate(
+  GameObjectTemplateEntity _collectFromControllers() {
+    return GameObjectTemplateEntity(
       entry: _parseInt(entryController.text),
       name: nameController.text,
       castBarCaption: castBarCaptionController.text,
@@ -184,7 +184,7 @@ class GameObjectTemplateDetailViewModel {
     _initControllers(template.value);
   }
 
-  void _initControllers(GameObjectTemplate template) {
+  void _initControllers(GameObjectTemplateEntity template) {
     entryController.text = template.entry.toString();
     nameController.text = template.name;
     castBarCaptionController.text = template.castBarCaption;
@@ -221,7 +221,7 @@ class GameObjectTemplateDetailViewModel {
     verifiedBuildController.text = template.verifiedBuild.toString();
   }
 
-  void _logActivity(ActivityActionType action, GameObjectTemplate t) {
+  void _logActivity(ActivityActionType action, GameObjectTemplateEntity t) {
     final log = ActivityLogEntity(
       module: 'gameobject_template',
       actionType: action,

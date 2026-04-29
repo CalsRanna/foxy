@@ -9,7 +9,7 @@ class GossipMenuRepository with RepositoryMixin {
     final original = await getGossipMenu(menuId, textId);
     final json = original.toJson();
     json['MenuID'] = await getNextMenuId();
-    final copy = GossipMenu.fromJson(json);
+    final copy = GossipMenuEntity.fromJson(json);
     await storeGossipMenu(copy);
   }
 
@@ -75,16 +75,16 @@ class GossipMenuRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<GossipMenu> getGossipMenu(int menuId, int textId) async {
+  Future<GossipMenuEntity> getGossipMenu(int menuId, int textId) async {
     final result = await laconic
         .table(_table)
         .where('MenuID', menuId)
         .where('TextID', textId)
         .first();
-    return GossipMenu.fromJson(result.toMap());
+    return GossipMenuEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeGossipMenu(GossipMenu model) async {
+  Future<void> storeGossipMenu(GossipMenuEntity model) async {
     var json = model.toJson();
     var newMenuId = await getNextMenuId();
     json['MenuID'] = newMenuId;
@@ -94,7 +94,7 @@ class GossipMenuRepository with RepositoryMixin {
   Future<void> updateGossipMenu(
     int menuId,
     int textId,
-    GossipMenu model,
+    GossipMenuEntity model,
   ) async {
     final json = model.toJson();
     json.remove('MenuID');

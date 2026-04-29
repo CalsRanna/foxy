@@ -30,7 +30,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<List<BriefCreatureDisplayInfo>> getCreatureDisplayInfos({
+  Future<List<BriefCreatureDisplayInfoEntity>> getCreatureDisplayInfos({
     String? id,
     String? modelName,
     int page = 1,
@@ -74,7 +74,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
       return results
-          .map((e) => BriefCreatureDisplayInfo.fromJson(e.toMap()))
+          .map((e) => BriefCreatureDisplayInfoEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       // 表可能不存在
