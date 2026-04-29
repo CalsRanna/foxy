@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/gameobject_questender.dart';
-import 'package:foxy/repository/gameobject_questender_repository.dart';
+import 'package:foxy/entity/game_object_quest_starter.dart';
+import 'package:foxy/repository/game_object_quest_starter_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GameobjectQuestenderViewModel {
+class GameObjectQuestStarterViewModel {
   final questId = signal(0);
-  final items = signal<List<BriefGameobjectQuestender>>([]);
+  final items = signal<List<BriefGameObjectQuestStarter>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -18,13 +18,13 @@ class GameobjectQuestenderViewModel {
   int _originalId = 0;
   int _originalQuest = 0;
 
-  final repository = GameobjectQuestenderRepository();
+  final repository = GameObjectQuestStarterRepository();
 
   /// 加载数据
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getGameobjectQuestenders(questId.value);
+      final data = await repository.getGameObjectQuestStarters(questId.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -41,14 +41,14 @@ class GameobjectQuestenderViewModel {
   }
 
   /// 填充表单
-  void fillForm(GameobjectQuestender model) {
+  void fillForm(GameObjectQuestStarter model) {
     idController.text = model.id.toString();
     questController.text = model.quest.toString();
   }
 
   /// 从表单收集数据
-  GameobjectQuestender collectFromForm() {
-    return GameobjectQuestender(
+  GameObjectQuestStarter collectFromForm() {
+    return GameObjectQuestStarter(
       id: int.tryParse(idController.text) ?? 0,
       quest: int.tryParse(questController.text) ?? 0,
     );
@@ -56,7 +56,7 @@ class GameobjectQuestenderViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final blank = await repository.createGameobjectQuestender(questId.value);
+    final blank = await repository.createGameObjectQuestStarter(questId.value);
     resetForm();
     fillForm(blank);
     _originalId = blank.id;
@@ -70,7 +70,7 @@ class GameobjectQuestenderViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
 
     final item = items.value[index];
-    final existing = await repository.getGameobjectQuestender({
+    final existing = await repository.getGameObjectQuestStarter({
       'id': item.id,
       'quest': item.quest,
     });
@@ -85,7 +85,7 @@ class GameobjectQuestenderViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.storeGameobjectQuestender(model);
+      await repository.storeGameObjectQuestStarter(model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -104,7 +104,7 @@ class GameobjectQuestenderViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.updateGameobjectQuestender({
+      await repository.updateGameObjectQuestStarter({
         'id': _originalId,
         'quest': _originalQuest,
       }, model);
@@ -147,7 +147,10 @@ class GameobjectQuestenderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.copyGameobjectQuestender({'id': item.id, 'quest': item.quest});
+        await repository.copyGameObjectQuestStarter({
+          'id': item.id,
+          'quest': item.quest,
+        });
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('复制成功'));
@@ -186,7 +189,10 @@ class GameobjectQuestenderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyGameobjectQuestender({'id': item.id, 'quest': item.quest});
+        await repository.destroyGameObjectQuestStarter({
+          'id': item.id,
+          'quest': item.quest,
+        });
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

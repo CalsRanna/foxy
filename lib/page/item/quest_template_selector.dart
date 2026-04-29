@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/quest_template.dart';
-import 'package:foxy/model/quest_template_filter_entity.dart';
+import 'package:foxy/entity/quest_template.dart';
+import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -80,7 +80,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('任务'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
@@ -257,7 +264,6 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

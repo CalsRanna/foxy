@@ -1,4 +1,4 @@
-import 'package:foxy/model/npc_trainer.dart';
+import 'package:foxy/entity/npc_trainer.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class NpcTrainerRepository with RepositoryMixin {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/util/item_helpers.dart';
-import 'package:foxy/model/item_template.dart';
+import 'package:foxy/entity/item_template.dart';
 import 'package:foxy/page/item/item_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -210,9 +210,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
                 kItemQualityColors[item.quality] ?? Colors.black;
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.entry.toString())),
-              1 => ShadTableCell(
-                child: _buildIconAndName(item, qualityColor),
-              ),
+              1 => ShadTableCell(child: _buildIconAndName(item, qualityColor)),
               2 => ShadTableCell(child: Text(getItemClassName(item.classId))),
               3 => ShadTableCell(
                 child: Text(getItemSubclassName(item.classId, item.subclass)),
@@ -289,5 +287,4 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
-
 }

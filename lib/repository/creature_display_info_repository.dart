@@ -1,4 +1,4 @@
-import 'package:foxy/model/creature_display_info.dart';
+import 'package:foxy/entity/creature_display_info.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureDisplayInfoRepository with RepositoryMixin {

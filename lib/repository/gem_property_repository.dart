@@ -1,5 +1,5 @@
-import 'package:foxy/model/gem_property.dart';
-import 'package:foxy/model/gem_property_filter_entity.dart';
+import 'package:foxy/entity/gem_property.dart';
+import 'package:foxy/entity/gem_property_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GemPropertyRepository with RepositoryMixin {

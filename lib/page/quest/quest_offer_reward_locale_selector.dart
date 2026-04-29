@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/quest_offer_reward.dart';
+import 'package:foxy/entity/quest_offer_reward.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -46,7 +46,9 @@ class _QuestOfferRewardLocaleSelectorState
 
   Future<void> _openLocaleDialog() async {
     if (widget.questId == null) return;
-    final locales = await repository.getQuestOfferRewardLocales(widget.questId!);
+    final locales = await repository.getQuestOfferRewardLocales(
+      widget.questId!,
+    );
     if (!mounted) return;
     await showShadDialog(
       context: context,

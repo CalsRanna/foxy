@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/glyph_property.dart';
-import 'package:foxy/model/glyph_property_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/glyph_property.dart';
+import 'package:foxy/entity/glyph_property_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -78,7 +78,10 @@ class GlyphPropertyListViewModel {
 
   Future<void> initSignals() async {
     final filter = GlyphPropertyFilterEntity();
-    properties.value = await repository.getGlyphProperties(page: 1, filter: filter);
+    properties.value = await repository.getGlyphProperties(
+      page: 1,
+      filter: filter,
+    );
     total.value = await repository.countGlyphProperties(filter: filter);
   }
 
@@ -107,7 +110,10 @@ class GlyphPropertyListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = GlyphPropertyFilterEntity();
-    properties.value = await repository.getGlyphProperties(page: 1, filter: filter);
+    properties.value = await repository.getGlyphProperties(
+      page: 1,
+      filter: filter,
+    );
     total.value = await repository.countGlyphProperties(filter: filter);
   }
 
@@ -118,7 +124,10 @@ class GlyphPropertyListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    properties.value = await repository.getGlyphProperties(page: page.value, filter: filter);
+    properties.value = await repository.getGlyphProperties(
+      page: page.value,
+      filter: filter,
+    );
     total.value = await repository.countGlyphProperties(filter: filter);
   }
 }

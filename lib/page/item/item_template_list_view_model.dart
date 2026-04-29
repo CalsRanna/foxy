@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/constant/item_constants.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/item_template.dart';
-import 'package:foxy/model/item_template_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/item_template.dart';
+import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -27,12 +27,15 @@ class ItemTemplateListViewModel {
 
   /// 当前选中的类别名称
   String get selectedClassName {
-    return selectedClassId.value >= 0 ? kItemClasses[selectedClassId.value] : '';
+    return selectedClassId.value >= 0
+        ? kItemClasses[selectedClassId.value]
+        : '';
   }
 
   /// 获取当前类别下的子类别列表
   List<String> get currentSubclasses {
-    if (selectedClassId.value < 0 || selectedClassId.value >= kItemSubclasses.length) {
+    if (selectedClassId.value < 0 ||
+        selectedClassId.value >= kItemSubclasses.length) {
       return [];
     }
     return kItemSubclasses[selectedClassId.value];

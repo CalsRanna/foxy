@@ -1,4 +1,4 @@
-import 'package:foxy/model/spell_icon.dart';
+import 'package:foxy/entity/spell_icon.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellIconRepository with RepositoryMixin {
@@ -23,20 +23,12 @@ class SpellIconRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(
-    dynamic builder, {
-    String? id,
-    String? name,
-  }) {
+  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }
     if (name != null && name.isNotEmpty) {
-      builder = builder.where(
-        'TextureFilename',
-        '%$name%',
-        comparator: 'like',
-      );
+      builder = builder.where('TextureFilename', '%$name%', comparator: 'like');
     }
     return builder;
   }

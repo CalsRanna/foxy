@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/item_display_info.dart';
+import 'package:foxy/entity/item_display_info.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -17,7 +17,8 @@ class ItemDisplayInfoSelector extends StatefulWidget {
   });
 
   @override
-  State<ItemDisplayInfoSelector> createState() => _ItemDisplayInfoSelectorState();
+  State<ItemDisplayInfoSelector> createState() =>
+      _ItemDisplayInfoSelectorState();
 }
 
 class _ItemDisplayInfoSelectorState extends State<ItemDisplayInfoSelector> {
@@ -79,7 +80,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('物品显示信息'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
@@ -264,7 +272,6 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

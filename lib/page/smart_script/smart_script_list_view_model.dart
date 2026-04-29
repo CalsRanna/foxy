@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/smart_script.dart';
-import 'package:foxy/model/smart_script_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/smart_script.dart';
+import 'package:foxy/entity/smart_script_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -62,7 +62,13 @@ class SmartScriptListViewModel {
       if (!confirmed) return;
       DialogUtil.instance.loading();
       await repository.destroySmartScript(entryOrGuid, sourceType, id, link);
-      _logActivity(ActivityActionType.delete, entryOrGuid, sourceType, id, link);
+      _logActivity(
+        ActivityActionType.delete,
+        entryOrGuid,
+        sourceType,
+        id,
+        link,
+      );
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -149,13 +155,15 @@ class SmartScriptListViewModel {
     int link,
   ) {
     final templates = scripts.value;
-    final template = templates.where(
-      (t) =>
-          t.entryOrGuid == entryOrGuid &&
-          t.sourceType == sourceType &&
-          t.id == id &&
-          t.link == link,
-    ).firstOrNull;
+    final template = templates
+        .where(
+          (t) =>
+              t.entryOrGuid == entryOrGuid &&
+              t.sourceType == sourceType &&
+              t.id == id &&
+              t.link == link,
+        )
+        .firstOrNull;
     final name = template?.comment ?? '';
     final log = ActivityLog(
       module: 'smart_script',

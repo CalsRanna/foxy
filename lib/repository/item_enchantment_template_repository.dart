@@ -1,4 +1,4 @@
-import 'package:foxy/model/item_enchantment_template.dart';
+import 'package:foxy/entity/item_enchantment_template.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemEnchantmentTemplateRepository with RepositoryMixin {
@@ -84,7 +84,9 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 获取指定 entry 的所有附魔项（带 DBC 名称）
-  Future<List<BriefItemEnchantmentTemplate>> getItemEnchantmentTemplatesByEntry(int entry) async {
+  Future<List<BriefItemEnchantmentTemplate>> getItemEnchantmentTemplatesByEntry(
+    int entry,
+  ) async {
     try {
       var builder = laconic.table('$_table AS iet');
       builder = builder.select([
@@ -138,7 +140,10 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<ItemEnchantmentTemplate?> getItemEnchantmentTemplate(int entry, int ench) async {
+  Future<ItemEnchantmentTemplate?> getItemEnchantmentTemplate(
+    int entry,
+    int ench,
+  ) async {
     try {
       var result = await laconic
           .table(_table)
@@ -152,12 +157,17 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 新增
-  Future<void> storeItemEnchantmentTemplate(ItemEnchantmentTemplate model) async {
+  Future<void> storeItemEnchantmentTemplate(
+    ItemEnchantmentTemplate model,
+  ) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   /// 更新
-  Future<void> updateItemEnchantmentTemplate(ItemEnchantmentTemplate model, {int? oldEnch}) async {
+  Future<void> updateItemEnchantmentTemplate(
+    ItemEnchantmentTemplate model, {
+    int? oldEnch,
+  }) async {
     var json = model.toJson();
     json.remove('entry');
     if (oldEnch == null) json.remove('ench');
@@ -178,7 +188,10 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 复制：取新 ench = MAX+1
-  Future<ItemEnchantmentTemplate> copyItemEnchantmentTemplate(int entry, int ench) async {
+  Future<ItemEnchantmentTemplate> copyItemEnchantmentTemplate(
+    int entry,
+    int ench,
+  ) async {
     // 获取最大 ench
     var maxResult = await laconic
         .table(_table)

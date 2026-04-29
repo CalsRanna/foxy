@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/quest_faction_reward.dart';
-import 'package:foxy/model/quest_faction_reward_filter_entity.dart';
+import 'package:foxy/entity/quest_faction_reward.dart';
+import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -63,13 +63,18 @@ class QuestFactionRewardListViewModel {
 
   Future<void> initSignals() async {
     final filter = QuestFactionRewardFilterEntity();
-    rewards.value = await repository.getQuestFactionRewards(page: 1, filter: filter);
+    rewards.value = await repository.getQuestFactionRewards(
+      page: 1,
+      filter: filter,
+    );
     total.value = await repository.countQuestFactionRewards(filter: filter);
   }
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '#$id' : '新建任务声望';
-    final routeId = id != null ? 'quest_faction_reward_$id' : 'quest_faction_reward_new';
+    final routeId = id != null
+        ? 'quest_faction_reward_$id'
+        : 'quest_faction_reward_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       id: routeId,
@@ -92,7 +97,10 @@ class QuestFactionRewardListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = QuestFactionRewardFilterEntity();
-    rewards.value = await repository.getQuestFactionRewards(page: 1, filter: filter);
+    rewards.value = await repository.getQuestFactionRewards(
+      page: 1,
+      filter: filter,
+    );
     total.value = await repository.countQuestFactionRewards(filter: filter);
   }
 
@@ -103,7 +111,10 @@ class QuestFactionRewardListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    rewards.value = await repository.getQuestFactionRewards(page: page.value, filter: filter);
+    rewards.value = await repository.getQuestFactionRewards(
+      page: page.value,
+      filter: filter,
+    );
     total.value = await repository.countQuestFactionRewards(filter: filter);
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/npc_text.dart';
+import 'package:foxy/entity/npc_text.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -94,14 +94,18 @@ class _DialogState extends State<_Dialog> {
     );
     return ShadDialog(
       title: Text('NPC 文本'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancel, confirm]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancel, confirm],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
-      child: Column(
-        spacing: 8,
-        children: [_buildFilter(), _buildTable()],
-      ),
+      child: Column(spacing: 8, children: [_buildFilter(), _buildTable()]),
     );
   }
 
@@ -242,7 +246,11 @@ class _DialogState extends State<_Dialog> {
       final repo = NpcTextRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
       final text = _textController.text.isEmpty ? null : _textController.text;
-      final items = await repo.getNpcTextsPaginated(id: id, text: text, page: _page);
+      final items = await repo.getNpcTextsPaginated(
+        id: id,
+        text: text,
+        page: _page,
+      );
       final total = await repo.countNpcTexts(id: id, text: text);
       if (mounted) {
         setState(() {
@@ -250,7 +258,6 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

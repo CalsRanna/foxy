@@ -1,5 +1,5 @@
-import 'package:foxy/model/area_table.dart';
-import 'package:foxy/model/area_table_filter_entity.dart';
+import 'package:foxy/entity/area_table.dart';
+import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class AreaTableRepository with RepositoryMixin {

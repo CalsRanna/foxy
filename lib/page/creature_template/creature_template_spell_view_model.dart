@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/creature_template_spell.dart';
+import 'package:foxy/entity/creature_template_spell.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -130,7 +130,10 @@ class CreatureTemplateSpellViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureTemplateSpell(spell.creatureID, spell.index);
+        await repository.destroyCreatureTemplateSpell(
+          spell.creatureID,
+          spell.index,
+        );
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

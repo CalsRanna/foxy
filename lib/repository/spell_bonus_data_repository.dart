@@ -1,4 +1,4 @@
-import 'package:foxy/model/spell_bonus_data.dart';
+import 'package:foxy/entity/spell_bonus_data.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellBonusDataRepository with RepositoryMixin {

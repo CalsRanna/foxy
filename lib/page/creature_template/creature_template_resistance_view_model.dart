@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/creature_template_resistance.dart';
+import 'package:foxy/entity/creature_template_resistance.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -26,7 +26,9 @@ class CreatureTemplateResistanceViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getCreatureTemplateResistances(creatureId.value);
+      final data = await repository.getCreatureTemplateResistances(
+        creatureId.value,
+      );
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -91,7 +93,10 @@ class CreatureTemplateResistanceViewModel {
 
     final resistance = items.value[index];
     try {
-      await repository.copyCreatureTemplateResistance(resistance.creatureID, resistance.school);
+      await repository.copyCreatureTemplateResistance(
+        resistance.creatureID,
+        resistance.school,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -130,7 +135,10 @@ class CreatureTemplateResistanceViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureTemplateResistance(resistance.creatureID, resistance.school);
+        await repository.destroyCreatureTemplateResistance(
+          resistance.creatureID,
+          resistance.school,
+        );
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

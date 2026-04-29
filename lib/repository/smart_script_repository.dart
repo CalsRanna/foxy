@@ -1,5 +1,5 @@
-import 'package:foxy/model/smart_script.dart';
-import 'package:foxy/model/smart_script_filter_entity.dart';
+import 'package:foxy/entity/smart_script.dart';
+import 'package:foxy/entity/smart_script_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SmartScriptRepository with RepositoryMixin {
@@ -126,7 +126,11 @@ class SmartScriptRepository with RepositoryMixin {
       builder = builder.where('entryorguid', filter.entryOrGuid);
     }
     if (filter.comment.isNotEmpty) {
-      builder = builder.where('comment', '%${filter.comment}%', operator: 'like');
+      builder = builder.where(
+        'comment',
+        '%${filter.comment}%',
+        operator: 'like',
+      );
     }
     return builder;
   }

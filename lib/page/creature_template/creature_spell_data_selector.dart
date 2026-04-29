@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/creature_spell_data.dart';
+import 'package:foxy/entity/creature_spell_data.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -80,7 +80,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('宠物技能'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
@@ -271,15 +278,21 @@ class _DialogState extends State<_Dialog> {
       final spell = _spellController.text.isEmpty
           ? null
           : _spellController.text;
-      final items = await repository.getCreatureSpellDatas(id: id, spell: spell, page: _page);
-      final total = await repository.countCreatureSpellDatas(id: id, spell: spell);
+      final items = await repository.getCreatureSpellDatas(
+        id: id,
+        spell: spell,
+        page: _page,
+      );
+      final total = await repository.countCreatureSpellDatas(
+        id: id,
+        spell: spell,
+      );
       if (mounted) {
         setState(() {
           _items = items;
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

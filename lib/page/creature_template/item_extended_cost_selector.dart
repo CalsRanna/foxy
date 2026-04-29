@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/item_extended_cost.dart';
-import 'package:foxy/model/item_extended_cost_filter_entity.dart';
+import 'package:foxy/entity/item_extended_cost.dart';
+import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -88,7 +88,10 @@ class _ItemExtendedCostSelectorDialogState
     try {
       final repository = ItemExtendedCostRepository();
       final filter = ItemExtendedCostFilterEntity(id: _idController.text);
-      final items = await repository.getItemExtendedCosts(filter: filter, page: _page);
+      final items = await repository.getItemExtendedCosts(
+        filter: filter,
+        page: _page,
+      );
       final total = await repository.countItemExtendedCosts(filter: filter);
       if (mounted) {
         setState(() {
@@ -96,8 +99,7 @@ class _ItemExtendedCostSelectorDialogState
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 
   void _reset() {
@@ -190,11 +192,7 @@ class _ItemExtendedCostSelectorDialogState
   }
 
   Widget _buildToolbar() {
-    return Row(
-      children: [
-        Text('共 $_total 条记录'),
-      ],
-    );
+    return Row(children: [Text('共 $_total 条记录')]);
   }
 
   Widget _buildPagination() {

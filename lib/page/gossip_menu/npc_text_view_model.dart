@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/npc_text.dart';
-import 'package:foxy/model/npc_text_locale.dart';
+import 'package:foxy/entity/npc_text.dart';
+import 'package:foxy/entity/npc_text_locale.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -142,8 +142,7 @@ class NpcTextViewModel {
           lang: controllerOf('lang$n').text.isEmpty
               ? '0'
               : controllerOf('lang$n').text,
-          probability:
-              double.tryParse(controllerOf('Probability$n').text) ?? 0,
+          probability: double.tryParse(controllerOf('Probability$n').text) ?? 0,
           text0: controllerOf('text${n}_0').text,
           text1: controllerOf('text${n}_1').text,
           broadcastTextId:
@@ -163,10 +162,13 @@ class NpcTextViewModel {
       locale: controllerOf('locale.Locale').text.isEmpty
           ? 'zhCN'
           : controllerOf('locale.Locale').text,
-      texts: List.generate(8, (n) => [
-        controllerOf('locale.Text${n}_0').text,
-        controllerOf('locale.Text${n}_1').text,
-      ]),
+      texts: List.generate(
+        8,
+        (n) => [
+          controllerOf('locale.Text${n}_0').text,
+          controllerOf('locale.Text${n}_1').text,
+        ],
+      ),
     );
   }
 }

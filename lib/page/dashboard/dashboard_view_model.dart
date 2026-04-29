@@ -1,4 +1,4 @@
-import 'package:foxy/model/activity_log.dart';
+import 'package:foxy/entity/activity_log.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router_facade.dart';

@@ -1,4 +1,4 @@
-import 'package:foxy/model/quest_offer_reward.dart';
+import 'package:foxy/entity/quest_offer_reward.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// quest_offer_reward_locale 表的数据访问层
@@ -7,7 +7,9 @@ class QuestOfferRewardLocaleRepository with RepositoryMixin {
   static const _table = 'quest_offer_reward_locale';
 
   /// 按 ID 查询该 QuestOfferReward 的所有 locale
-  Future<List<QuestOfferRewardLocale>> getQuestOfferRewardLocales(int id) async {
+  Future<List<QuestOfferRewardLocale>> getQuestOfferRewardLocales(
+    int id,
+  ) async {
     try {
       final results = await laconic.table(_table).where('ID', id).get();
       return results

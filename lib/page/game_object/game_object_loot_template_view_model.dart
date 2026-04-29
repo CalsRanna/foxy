@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/loot_template.dart';
+import 'package:foxy/entity/loot_template.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -91,12 +91,14 @@ class GameObjectLootTemplateViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) {
     if (text.isEmpty) return 0.0;
     final value = double.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   int _getSelectValue(ShadSelectController<int> controller) =>
       controller.value.firstOrNull ?? 0;
 

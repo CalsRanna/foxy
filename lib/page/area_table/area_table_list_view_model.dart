@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/area_table.dart';
-import 'package:foxy/model/area_table_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/area_table.dart';
+import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -111,7 +111,10 @@ class AreaTableListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    areas.value = await repository.getBriefAreaTables(page: page.value, filter: filter);
+    areas.value = await repository.getBriefAreaTables(
+      page: page.value,
+      filter: filter,
+    );
     total.value = await repository.countAreaTables(filter: filter);
   }
 

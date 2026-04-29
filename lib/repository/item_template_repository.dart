@@ -1,5 +1,5 @@
-import 'package:foxy/model/item_template.dart';
-import 'package:foxy/model/item_template_filter_entity.dart';
+import 'package:foxy/entity/item_template.dart';
+import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemTemplateRepository with RepositoryMixin {

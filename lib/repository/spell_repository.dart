@@ -1,5 +1,5 @@
-import 'package:foxy/model/spell.dart';
-import 'package:foxy/model/spell_filter_entity.dart';
+import 'package:foxy/entity/spell.dart';
+import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellRepository with RepositoryMixin {

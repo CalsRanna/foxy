@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/smart_script.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/smart_script.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -60,7 +60,9 @@ class SmartScriptDetailViewModel {
     saving.value = true;
     try {
       final t = _collectFromControllers();
-      final action = isNew.value ? ActivityActionType.create : ActivityActionType.update;
+      final action = isNew.value
+          ? ActivityActionType.create
+          : ActivityActionType.update;
       if (isNew.value) {
         await repository.storeSmartScript(t);
         _origEntryOrGuid = t.entryOrGuid;
@@ -127,7 +129,11 @@ class SmartScriptDetailViewModel {
       );
       _initControllers(script.value);
     } catch (e, s) {
-      logger.e('加载脚本(entryOrGuid=$entryOrGuid, id=$id)失败', error: e, stackTrace: s);
+      logger.e(
+        '加载脚本(entryOrGuid=$entryOrGuid, id=$id)失败',
+        error: e,
+        stackTrace: s,
+      );
     }
   }
 
@@ -208,6 +214,7 @@ class SmartScriptDetailViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) {
     if (text.isEmpty) return 0.0;
     final value = double.tryParse(text);

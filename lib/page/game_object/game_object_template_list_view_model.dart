@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/game_object_template.dart';
-import 'package:foxy/model/game_object_template_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/game_object_template.dart';
+import 'package:foxy/entity/game_object_template_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -89,7 +89,10 @@ class GameObjectTemplateListViewModel {
   }
 
   GameObjectTemplateFilterEntity _buildFilter() {
-    return GameObjectTemplateFilterEntity(entry: entryController.text, name: nameController.text);
+    return GameObjectTemplateFilterEntity(
+      entry: entryController.text,
+      name: nameController.text,
+    );
   }
 
   Future<void> paginate(int page) async {

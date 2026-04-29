@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/emote_text.dart';
-import 'package:foxy/model/emote_text_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/emote_text.dart';
+import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -99,7 +99,10 @@ class EmoteTextListViewModel {
   }
 
   EmoteTextFilterEntity _buildFilter() {
-    return EmoteTextFilterEntity(id: entryController.text, name: nameController.text);
+    return EmoteTextFilterEntity(
+      id: entryController.text,
+      name: nameController.text,
+    );
   }
 
   Future<void> paginate(int page) async {
@@ -122,7 +125,10 @@ class EmoteTextListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    emotes.value = await repository.getEmoteTexts(page: page.value, filter: filter);
+    emotes.value = await repository.getEmoteTexts(
+      page: page.value,
+      filter: filter,
+    );
     total.value = await repository.countEmoteTexts(filter: filter);
   }
 }

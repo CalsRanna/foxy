@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/loot_template.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/loot_template.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -40,8 +40,7 @@ class ReferenceLootTemplateDetailViewModel {
         _initControllers(result);
       }
     } catch (e, s) {
-      logger.e('加载关联掉落(Entry=$entry, Item=$item)失败',
-          error: e, stackTrace: s);
+      logger.e('加载关联掉落(Entry=$entry, Item=$item)失败', error: e, stackTrace: s);
     }
   }
 
@@ -122,6 +121,7 @@ class ReferenceLootTemplateDetailViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
 
   void _logActivity(ActivityActionType action, LootTemplate t) {

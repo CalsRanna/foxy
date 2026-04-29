@@ -1,6 +1,6 @@
-import 'package:foxy/model/creature_template.dart';
-import 'package:foxy/model/creature_template_filter_entity.dart';
-import 'package:foxy/model/creature_template_locale.dart';
+import 'package:foxy/entity/creature_template.dart';
+import 'package:foxy/entity/creature_template_filter_entity.dart';
+import 'package:foxy/entity/creature_template_locale.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureTemplateRepository with RepositoryMixin {
@@ -27,7 +27,9 @@ class CreatureTemplateRepository with RepositoryMixin {
     return (maxEntry ?? 0) + 1;
   }
 
-  Future<int> countCreatureTemplates({CreatureTemplateFilterEntity? filter}) async {
+  Future<int> countCreatureTemplates({
+    CreatureTemplateFilterEntity? filter,
+  }) async {
     var builder = laconic.table('$_table AS ct');
     builder.select(['ct.entry']);
     builder = builder.leftJoin(

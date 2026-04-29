@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/dbc_faction.dart';
+import 'package:foxy/entity/dbc_faction.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -79,7 +79,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('阵营'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
@@ -230,7 +237,11 @@ class _DialogState extends State<_Dialog> {
       final repository = DbcFactionRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
       final name = _nameController.text.isEmpty ? null : _nameController.text;
-      final items = await repository.getDbcFactions(id: id, name: name, page: _page);
+      final items = await repository.getDbcFactions(
+        id: id,
+        name: name,
+        page: _page,
+      );
       final total = await repository.countDbcFactions(id: id, name: name);
       if (mounted) {
         setState(() {
@@ -238,8 +249,7 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 
   void _paginate(int page) {

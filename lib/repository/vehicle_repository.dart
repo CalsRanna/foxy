@@ -1,4 +1,4 @@
-import 'package:foxy/model/vehicle.dart';
+import 'package:foxy/entity/vehicle.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class VehicleRepository with RepositoryMixin {

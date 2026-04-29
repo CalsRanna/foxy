@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/item_random_properties.dart';
+import 'package:foxy/entity/item_random_properties.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -81,7 +81,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('随机属性'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 640),
@@ -209,7 +216,9 @@ class _DialogState extends State<_Dialog> {
                 0 => ShadTableCell(child: Text(item.id.toString())),
                 1 => ShadTableCell(
                   child: Text(
-                    item.nameLangZhCn.isNotEmpty ? item.nameLangZhCn : item.name,
+                    item.nameLangZhCn.isNotEmpty
+                        ? item.nameLangZhCn
+                        : item.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -250,14 +259,16 @@ class _DialogState extends State<_Dialog> {
         name: name,
         page: _page,
       );
-      final total = await repository.countItemRandomProperties(id: id, name: name);
+      final total = await repository.countItemRandomProperties(
+        id: id,
+        name: name,
+      );
       if (mounted) {
         setState(() {
           _items = items;
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

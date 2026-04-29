@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/spell_item_enchantment.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/spell_item_enchantment.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -61,7 +61,10 @@ class SpellItemEnchantmentDetailViewModel {
         await repository.updateSpellItemEnchantment(t);
       }
       enchantment.value = t;
-      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('法术附魔数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -165,8 +168,8 @@ class SpellItemEnchantmentDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      enchantment.value =
-          (await SpellItemEnchantmentSoloRepository().getSpellItemEnchantment(id))!;
+      enchantment.value = (await SpellItemEnchantmentSoloRepository()
+          .getSpellItemEnchantment(id))!;
       _initControllers(enchantment.value);
     } catch (e, s) {
       logger.e('加载法术附魔(id=$id)失败', error: e, stackTrace: s);

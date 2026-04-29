@@ -1,4 +1,4 @@
-import 'package:foxy/model/activity_log.dart';
+import 'package:foxy/entity/activity_log.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ActivityLogRepository with RepositoryMixin {
@@ -16,8 +16,6 @@ class ActivityLogRepository with RepositoryMixin {
         .limit(limit)
         .get();
 
-    return rows
-        .map((row) => ActivityLog.fromJson(row.toMap()))
-        .toList();
+    return rows.map((row) => ActivityLog.fromJson(row.toMap())).toList();
   }
 }

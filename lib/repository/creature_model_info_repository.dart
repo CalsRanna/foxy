@@ -1,4 +1,4 @@
-import 'package:foxy/model/creature_model_info.dart';
+import 'package:foxy/entity/creature_model_info.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureModelInfoRepository with RepositoryMixin {
@@ -13,9 +13,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
     builder = _applyFilter(builder, id: id);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map(
-      (e) => CreatureModelInfo.fromJson(e.toMap()),
-    ).toList();
+    return results.map((e) => CreatureModelInfo.fromJson(e.toMap())).toList();
   }
 
   Future<int> countCreatureModelInfos({String? id}) async {

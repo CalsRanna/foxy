@@ -1,4 +1,4 @@
-import 'package:foxy/model/quest_request_items.dart';
+import 'package:foxy/entity/quest_request_items.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// quest_request_items 表的数据访问层

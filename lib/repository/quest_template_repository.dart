@@ -1,5 +1,5 @@
-import 'package:foxy/model/quest_template.dart';
-import 'package:foxy/model/quest_template_filter_entity.dart';
+import 'package:foxy/entity/quest_template.dart';
+import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class QuestTemplateRepository with RepositoryMixin {

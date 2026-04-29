@@ -1,0 +1,226 @@
+import 'package:flutter/widgets.dart';
+import 'package:foxy/entity/creature_quest_ender.dart';
+import 'package:foxy/repository/creature_quest_ender_repository.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals.dart';
+
+class CreatureQuestEnderViewModel {
+  final questId = signal(0);
+  final items = signal<List<BriefCreatureQuestEnder>>([]);
+  final selectedIndex = signal<int?>(null);
+  final loading = signal(false);
+  final saving = signal(false);
+
+  // 表单控制器
+  final idController = TextEditingController();
+  final questController = TextEditingController();
+
+  int _originalId = 0;
+  int _originalQuest = 0;
+
+  final repository = CreatureQuestEnderRepository();
+
+  /// 从表单收集数据
+  CreatureQuestEnder collectFromForm() {
+    return CreatureQuestEnder(
+      id: int.tryParse(idController.text) ?? 0,
+      quest: int.tryParse(questController.text) ?? 0,
+    );
+  }
+
+  /// 复制记录
+  Future<void> copy(BuildContext context) async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final item = items.value[index];
+    final confirmed = await showShadDialog<bool>(
+      context: context,
+      builder: (context) => ShadDialog.alert(
+        title: Text('确认复制'),
+        description: Text('此操作不会复制关联表数据，确认继续？'),
+        actions: [
+          ShadButton.outline(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('取消'),
+          ),
+          ShadButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('复制'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await repository.copyCreatureQuestEnder({
+          'id': item.id,
+          'quest': item.quest,
+        });
+        await load();
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text('复制成功'));
+        ShadSonner.of(context).show(toast);
+      } catch (e) {
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text(e.toString()));
+        ShadSonner.of(context).show(toast);
+      }
+    }
+  }
+
+  /// 创建新记录
+  Future<void> create() async {
+    final blank = await repository.createCreatureQuestEnder(questId.value);
+    resetForm();
+    fillForm(blank);
+    _originalId = blank.id;
+    _originalQuest = blank.quest;
+    selectedIndex.value = null;
+  }
+
+  /// 删除记录
+  Future<void> delete(BuildContext context) async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final item = items.value[index];
+    final confirmed = await showShadDialog<bool>(
+      context: context,
+      builder: (context) => ShadDialog.alert(
+        title: Text('确认删除'),
+        description: Text('将永久删除该记录，确认继续？'),
+        actions: [
+          ShadButton.outline(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('取消'),
+          ),
+          ShadButton.destructive(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('删除'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await repository.destroyCreatureQuestEnder({
+          'id': item.id,
+          'quest': item.quest,
+        });
+        await load();
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text('删除成功'));
+        ShadSonner.of(context).show(toast);
+      } catch (e) {
+        if (!context.mounted) return;
+        var toast = ShadToast(description: Text(e.toString()));
+        ShadSonner.of(context).show(toast);
+      }
+    }
+  }
+
+  /// 清理资源
+  void dispose() {
+    idController.dispose();
+    questController.dispose();
+  }
+
+  /// 编辑选中记录
+  Future<void> edit() async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final item = items.value[index];
+    final existing = await repository.getCreatureQuestEnder({
+      'id': item.id,
+      'quest': item.quest,
+    });
+    if (existing == null) return;
+    fillForm(existing);
+    _originalId = item.id;
+    _originalQuest = item.quest;
+  }
+
+  /// 填充表单
+  void fillForm(CreatureQuestEnder model) {
+    idController.text = model.id.toString();
+    questController.text = model.quest.toString();
+  }
+
+  /// 初始化
+  Future<void> initSignals({required int questId}) async {
+    this.questId.value = questId;
+    await load();
+  }
+
+  /// 加载数据
+  Future<void> load() async {
+    loading.value = true;
+    try {
+      final data = await repository.getCreatureQuestEnders(questId.value);
+      items.value = data;
+      selectedIndex.value = null;
+    } catch (e) {
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  /// 重置表单
+  void resetForm() {
+    idController.clear();
+    questController.clear();
+  }
+
+  /// 保存新记录
+  Future<void> save(BuildContext context) async {
+    saving.value = true;
+    try {
+      final model = collectFromForm();
+      await repository.storeCreatureQuestEnder(model);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('保存成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
+  }
+
+  /// 更新记录
+  Future<void> update(BuildContext context) async {
+    saving.value = true;
+    try {
+      final model = collectFromForm();
+      await repository.updateCreatureQuestEnder({
+        'id': _originalId,
+        'quest': _originalQuest,
+      }, model);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('更新成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    } finally {
+      saving.value = false;
+    }
+  }
+}

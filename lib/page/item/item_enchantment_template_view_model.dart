@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/item_enchantment_template.dart';
+import 'package:foxy/entity/item_enchantment_template.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -29,7 +29,9 @@ class ItemEnchantmentTemplateViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getItemEnchantmentTemplatesByEntry(entry.value);
+      final data = await repository.getItemEnchantmentTemplatesByEntry(
+        entry.value,
+      );
       items.value = data;
       selectedIndex.value = null;
       creating.value = false;
@@ -71,6 +73,7 @@ class ItemEnchantmentTemplateViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
 
   /// 创建新记录
@@ -145,7 +148,10 @@ class ItemEnchantmentTemplateViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyItemEnchantmentTemplate(model.entry, model.ench);
+        await repository.destroyItemEnchantmentTemplate(
+          model.entry,
+          model.ench,
+        );
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -182,7 +188,10 @@ class ItemEnchantmentTemplateViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.updateItemEnchantmentTemplate(model, oldEnch: editingEnch);
+      await repository.updateItemEnchantmentTemplate(
+        model,
+        oldEnch: editingEnch,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

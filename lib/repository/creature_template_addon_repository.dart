@@ -1,4 +1,4 @@
-import 'package:foxy/model/creature_template_addon.dart';
+import 'package:foxy/entity/creature_template_addon.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureTemplateAddonRepository with RepositoryMixin {

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/game_object_questitem.dart';
+import 'package:foxy/entity/game_object_questitem.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -24,7 +24,9 @@ class GameObjectQuestItemViewModel {
   Future<void> load() async {
     loading.value = true;
     try {
-      items.value = await repository.getGameObjectQuestItems(gameObjectEntry.value);
+      items.value = await repository.getGameObjectQuestItems(
+        gameObjectEntry.value,
+      );
     } catch (e) {
       rethrow;
     } finally {
@@ -109,7 +111,10 @@ class GameObjectQuestItemViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await repository.destroyGameObjectQuestItem(item.gameObjectEntry, item.idx);
+      await repository.destroyGameObjectQuestItem(
+        item.gameObjectEntry,
+        item.idx,
+      );
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await load();

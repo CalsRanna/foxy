@@ -1,5 +1,5 @@
-import 'package:foxy/model/quest_faction_reward.dart';
-import 'package:foxy/model/quest_faction_reward_filter_entity.dart';
+import 'package:foxy/entity/quest_faction_reward.dart';
+import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class QuestFactionRewardRepository with RepositoryMixin {
@@ -17,7 +17,9 @@ class QuestFactionRewardRepository with RepositoryMixin {
     return results.map((e) => QuestFactionReward.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countQuestFactionRewards({QuestFactionRewardFilterEntity? filter}) async {
+  Future<int> countQuestFactionRewards({
+    QuestFactionRewardFilterEntity? filter,
+  }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -62,7 +64,10 @@ class QuestFactionRewardRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, QuestFactionRewardFilterEntity? filter) {
+  dynamic _applyFilter(
+    dynamic builder,
+    QuestFactionRewardFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

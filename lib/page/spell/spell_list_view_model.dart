@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/spell.dart';
-import 'package:foxy/model/spell_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/spell.dart';
+import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -85,10 +85,7 @@ class SpellListViewModel {
   }
 
   SpellFilterEntity _buildFilter() {
-    return SpellFilterEntity(
-      id: idController.text,
-      name: nameController.text,
-    );
+    return SpellFilterEntity(id: idController.text, name: nameController.text);
   }
 
   Future<void> paginate(int page) async {

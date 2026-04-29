@@ -1,4 +1,4 @@
-import 'package:foxy/model/item_random_properties.dart';
+import 'package:foxy/entity/item_random_properties.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemRandomPropertiesRepository with RepositoryMixin {
@@ -14,9 +14,9 @@ class ItemRandomPropertiesRepository with RepositoryMixin {
     builder = _applyFilter(builder, id: id, name: name);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map(
-      (e) => ItemRandomProperties.fromJson(e.toMap()),
-    ).toList();
+    return results
+        .map((e) => ItemRandomProperties.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<int> countItemRandomProperties({String? id, String? name}) async {
@@ -25,20 +25,12 @@ class ItemRandomPropertiesRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(
-    dynamic builder, {
-    String? id,
-    String? name,
-  }) {
+  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }
     if (name != null && name.isNotEmpty) {
-      builder = builder.where(
-        'Name_lang_zhCN',
-        '%$name%',
-        comparator: 'like',
-      );
+      builder = builder.where('Name_lang_zhCN', '%$name%', comparator: 'like');
     }
     return builder;
   }

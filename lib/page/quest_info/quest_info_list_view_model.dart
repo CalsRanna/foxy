@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/quest_info.dart';
-import 'package:foxy/model/quest_info_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/quest_info.dart';
+import 'package:foxy/entity/quest_info_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -127,7 +127,10 @@ class QuestInfoListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    infos.value = await repository.getQuestInfos(page: page.value, filter: filter);
+    infos.value = await repository.getQuestInfos(
+      page: page.value,
+      filter: filter,
+    );
     total.value = await repository.countQuestInfos(filter: filter);
   }
 }

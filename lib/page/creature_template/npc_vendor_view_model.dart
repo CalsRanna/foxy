@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/npc_vendor.dart';
+import 'package:foxy/entity/npc_vendor.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';

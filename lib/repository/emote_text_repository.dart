@@ -1,5 +1,5 @@
-import 'package:foxy/model/emote_text.dart';
-import 'package:foxy/model/emote_text_filter_entity.dart';
+import 'package:foxy/entity/emote_text.dart';
+import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class EmoteTextRepository with RepositoryMixin {
@@ -68,11 +68,7 @@ class EmoteTextRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.where(
-        'Name',
-        '%${filter.name}%',
-        operator: 'like',
-      );
+      builder = builder.where('Name', '%${filter.name}%', operator: 'like');
     }
     return builder;
   }

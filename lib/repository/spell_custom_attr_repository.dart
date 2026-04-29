@@ -1,4 +1,4 @@
-import 'package:foxy/model/spell_custom_attr.dart';
+import 'package:foxy/entity/spell_custom_attr.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellCustomAttrRepository with RepositoryMixin {

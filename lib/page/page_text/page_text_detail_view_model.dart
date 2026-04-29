@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/page_text.dart';
-import 'package:foxy/model/page_text_locale.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/page_text.dart';
+import 'package:foxy/entity/page_text_locale.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/player_create_info.dart';
+import 'package:foxy/entity/player_create_info.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -49,10 +49,17 @@ class PlayerCreateInfoSpellCustomViewModel {
     }
   }
 
-  Future<void> onDelete(BuildContext context, PlayerCreateInfoSpellCustom item) async {
+  Future<void> onDelete(
+    BuildContext context,
+    PlayerCreateInfoSpellCustom item,
+  ) async {
     if (_race == null || _class_ == null) return;
     try {
-      await repository.deleteSpellCustom(item.racemask, item.classmask, item.spell);
+      await repository.deleteSpellCustom(
+        item.racemask,
+        item.classmask,
+        item.spell,
+      );
       spells.value = await repository.getSpellCustoms(_race!, _class_!);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));

@@ -1,4 +1,4 @@
-import 'package:foxy/model/creature_spell_data.dart';
+import 'package:foxy/entity/creature_spell_data.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureSpellDataRepository with RepositoryMixin {
@@ -104,7 +104,9 @@ class CreatureSpellDataRepository with RepositoryMixin {
       }
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
-      return results.map((e) => BriefCreatureSpellData.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => BriefCreatureSpellData.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       // 表可能不存在
       return [];

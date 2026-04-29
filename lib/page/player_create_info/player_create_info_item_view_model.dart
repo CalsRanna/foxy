@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/player_create_info.dart';
+import 'package:foxy/entity/player_create_info.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';

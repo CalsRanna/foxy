@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/quest_faction_reward.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/quest_faction_reward.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -42,7 +42,10 @@ class QuestFactionRewardDetailViewModel {
         await repository.updateQuestFactionReward(t);
       }
       reward.value = t;
-      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('任务声望数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -115,7 +118,8 @@ class QuestFactionRewardDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      reward.value = (await QuestFactionRewardRepository().getQuestFactionReward(id))!;
+      reward.value = (await QuestFactionRewardRepository()
+          .getQuestFactionReward(id))!;
       _initControllers(reward.value);
     } catch (e, s) {
       logger.e('加载任务声望(id=$id)失败', error: e, stackTrace: s);

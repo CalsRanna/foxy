@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/spell_linked_spell.dart';
+import 'package:foxy/entity/spell_linked_spell.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -115,7 +115,10 @@ class SpellLinkedSpellViewModel {
     );
     if (confirmed == true) {
       try {
-        await repository.destroySpellLinkedSpell(linked.spellTrigger, linked.spellEffect);
+        await repository.destroySpellLinkedSpell(
+          linked.spellTrigger,
+          linked.spellEffect,
+        );
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

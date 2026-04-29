@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/quest_template.dart';
-import 'package:foxy/model/quest_template_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/quest_template.dart';
+import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/creature_template.dart';
-import 'package:foxy/model/loot_template.dart';
+import 'package:foxy/entity/creature_template.dart';
+import 'package:foxy/entity/loot_template.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -109,6 +109,7 @@ class CreatureLootTemplateViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
 
   /// 创建新记录

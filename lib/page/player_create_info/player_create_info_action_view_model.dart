@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/player_create_info.dart';
+import 'package:foxy/entity/player_create_info.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -70,7 +70,10 @@ class PlayerCreateInfoActionViewModel {
     }
   }
 
-  Future<void> onDelete(BuildContext context, PlayerCreateInfoAction item) async {
+  Future<void> onDelete(
+    BuildContext context,
+    PlayerCreateInfoAction item,
+  ) async {
     if (_race == null || _class_ == null) return;
     try {
       await repository.deleteAction(_race!, _class_!, item.button);

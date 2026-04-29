@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/creature_template/creature_template_selector.dart';
-import 'package:foxy/page/quest/creature_queststarter_view_model.dart';
+import 'package:foxy/page/quest/game_object_quest_ender_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
@@ -8,17 +7,17 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-class CreatureQueststarterView extends StatefulWidget {
+class GameObjectQuestEnderView extends StatefulWidget {
   final int questId;
-  const CreatureQueststarterView({super.key, required this.questId});
+  const GameObjectQuestEnderView({super.key, required this.questId});
 
   @override
-  State<CreatureQueststarterView> createState() =>
-      _CreatureQueststarterViewState();
+  State<GameObjectQuestEnderView> createState() =>
+      _GameObjectQuestEnderViewState();
 }
 
-class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
-  final viewModel = GetIt.instance.get<CreatureQueststarterViewModel>();
+class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
+  final viewModel = GetIt.instance.get<GameObjectQuestEnderViewModel>();
 
   @override
   void initState() {
@@ -126,7 +125,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
     showShadDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('新增开始生物'),
+        title: Text('新增结束物体'),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -136,7 +135,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
     showShadDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('编辑开始生物'),
+        title: Text('编辑结束物体'),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -151,11 +150,9 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormItem(
-            label: '生物编号',
-            child: CreatureTemplateSelector(
-              controller: viewModel.idController,
-              placeholder: 'CreatureId',
-            ),
+            controller: viewModel.idController,
+            label: '物体编号',
+            placeholder: 'GameobjectId',
           ),
           SizedBox(height: 16),
           FormItem(

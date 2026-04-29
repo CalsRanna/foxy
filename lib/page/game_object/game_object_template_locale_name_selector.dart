@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/game_object_template_locale.dart';
+import 'package:foxy/entity/game_object_template_locale.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

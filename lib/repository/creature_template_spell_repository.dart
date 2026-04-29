@@ -1,11 +1,13 @@
-import 'package:foxy/model/creature_template_spell.dart';
+import 'package:foxy/entity/creature_template_spell.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureTemplateSpellRepository with RepositoryMixin {
   static const _table = 'creature_template_spell';
 
   /// 获取指定生物的所有技能（带技能信息）
-  Future<List<CreatureTemplateSpell>> getCreatureTemplateSpells(int creatureID) async {
+  Future<List<CreatureTemplateSpell>> getCreatureTemplateSpells(
+    int creatureID,
+  ) async {
     try {
       var builder = laconic.table('$_table AS cts');
       const fields = [
@@ -30,7 +32,10 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureTemplateSpell?> getCreatureTemplateSpell(int creatureID, int index) async {
+  Future<CreatureTemplateSpell?> getCreatureTemplateSpell(
+    int creatureID,
+    int index,
+  ) async {
     try {
       var result = await laconic
           .table(_table)
@@ -74,7 +79,10 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 复制技能
-  Future<CreatureTemplateSpell> copyCreatureTemplateSpell(int creatureID, int index) async {
+  Future<CreatureTemplateSpell> copyCreatureTemplateSpell(
+    int creatureID,
+    int index,
+  ) async {
     // 获取最大Index
     var maxIndexResult = await laconic
         .table(_table)

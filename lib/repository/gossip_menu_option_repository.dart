@@ -1,4 +1,4 @@
-import 'package:foxy/model/gossip_menu_option.dart';
+import 'package:foxy/entity/gossip_menu_option.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// gossip_menu_option 表的数据访问层
@@ -8,7 +8,9 @@ class GossipMenuOptionRepository with RepositoryMixin {
   static const _localeTable = 'gossip_menu_option_locale';
 
   /// 按 MenuID 搜索该菜单下的所有选项（带 locale JOIN）
-  Future<List<GossipMenuOption>> getGossipMenuOptions({required int menuId}) async {
+  Future<List<GossipMenuOption>> getGossipMenuOptions({
+    required int menuId,
+  }) async {
     try {
       const fields = [
         'gmo.MenuID',
@@ -65,13 +67,19 @@ class GossipMenuOptionRepository with RepositoryMixin {
         ['MAX(OptionID) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      return GossipMenuOption(menuId: menuId, optionId: maxId == null ? 0 : maxId + 1);
+      return GossipMenuOption(
+        menuId: menuId,
+        optionId: maxId == null ? 0 : maxId + 1,
+      );
     } catch (e) {
       return GossipMenuOption(menuId: menuId, optionId: 0);
     }
   }
 
-  Future<void> updateGossipMenuOption(Map<String, dynamic> id, GossipMenuOption model) async {
+  Future<void> updateGossipMenuOption(
+    Map<String, dynamic> id,
+    GossipMenuOption model,
+  ) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);

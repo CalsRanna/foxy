@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/item_extended_cost.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/item_extended_cost.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -49,7 +49,10 @@ class ItemExtendedCostDetailViewModel {
         await repository.updateItemExtendedCost(t);
       }
       cost.value = t;
-      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('扩展价格数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -134,7 +137,9 @@ class ItemExtendedCostDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      cost.value = (await ItemExtendedCostRepository().getItemExtendedCost(id))!;
+      cost.value = (await ItemExtendedCostRepository().getItemExtendedCost(
+        id,
+      ))!;
       _initControllers(cost.value);
     } catch (e, s) {
       logger.e('加载扩展价格(id=$id)失败', error: e, stackTrace: s);

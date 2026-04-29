@@ -1,5 +1,5 @@
-import 'package:foxy/model/condition.dart';
-import 'package:foxy/model/condition_filter_entity.dart';
+import 'package:foxy/entity/condition.dart';
+import 'package:foxy/entity/condition_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ConditionRepository with RepositoryMixin {
@@ -36,7 +36,10 @@ class ConditionRepository with RepositoryMixin {
     await laconic.table(_table).insert([condition.toJson()]);
   }
 
-  Future<void> updateCondition(Map<String, dynamic> credential, Condition condition) async {
+  Future<void> updateCondition(
+    Map<String, dynamic> credential,
+    Condition condition,
+  ) async {
     var json = condition.toJson();
     // 移除主键字段，只更新非键字段
     json.remove('SourceTypeOrReferenceId');
@@ -74,7 +77,10 @@ class ConditionRepository with RepositoryMixin {
 
   dynamic _applyFilter(dynamic builder, ConditionFilterEntity filter) {
     if (filter.sourceTypeOrReferenceId.isNotEmpty) {
-      builder = builder.where('SourceTypeOrReferenceId', filter.sourceTypeOrReferenceId);
+      builder = builder.where(
+        'SourceTypeOrReferenceId',
+        filter.sourceTypeOrReferenceId,
+      );
     }
     if (filter.sourceEntry.isNotEmpty) {
       builder = builder.where('SourceEntry', filter.sourceEntry);

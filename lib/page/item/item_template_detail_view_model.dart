@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/item_template.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/item_template.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -366,19 +366,18 @@ class ItemTemplateDetailViewModel {
       block: _parseInt(blockController.text),
 
       /// Card 5: Scaling Stats
-      scalingStatDistribution:
-          _parseInt(scalingStatDistributionController.text),
+      scalingStatDistribution: _parseInt(
+        scalingStatDistributionController.text,
+      ),
       scalingStatValue: _parseInt(scalingStatValueController.text),
 
       /// Card 6: Stats (dynamic)
       statsCount: _parseInt(statsCountController.text),
       statTypes: [
-        for (var i = 0; i < 10; i++)
-          _getSelectValue(statTypeControllers[i]),
+        for (var i = 0; i < 10; i++) _getSelectValue(statTypeControllers[i]),
       ],
       statValues: [
-        for (var i = 0; i < 10; i++)
-          _parseInt(statValueControllers[i].text),
+        for (var i = 0; i < 10; i++) _parseInt(statValueControllers[i].text),
       ],
 
       /// Card 7: Resistances
@@ -391,28 +390,23 @@ class ItemTemplateDetailViewModel {
 
       /// Card 8: Spells (5 slots)
       spellIds: [
-        for (var i = 0; i < 5; i++)
-          _parseInt(spellIdControllers[i].text),
+        for (var i = 0; i < 5; i++) _parseInt(spellIdControllers[i].text),
       ],
       spellTriggers: [
-        for (var i = 0; i < 5; i++)
-          _getSelectValue(spellTriggerControllers[i]),
+        for (var i = 0; i < 5; i++) _getSelectValue(spellTriggerControllers[i]),
       ],
       spellCharges: [
-        for (var i = 0; i < 5; i++)
-          _parseInt(spellChargeControllers[i].text),
+        for (var i = 0; i < 5; i++) _parseInt(spellChargeControllers[i].text),
       ],
       spellPpmRates: [
         for (var i = 0; i < 5; i++)
           _parseDouble(spellPpmRateControllers[i].text),
       ],
       spellCooldowns: [
-        for (var i = 0; i < 5; i++)
-          _parseInt(spellCooldownControllers[i].text),
+        for (var i = 0; i < 5; i++) _parseInt(spellCooldownControllers[i].text),
       ],
       spellCategories: [
-        for (var i = 0; i < 5; i++)
-          _parseInt(spellCategoryControllers[i].text),
+        for (var i = 0; i < 5; i++) _parseInt(spellCategoryControllers[i].text),
       ],
       spellCategoryCooldowns: [
         for (var i = 0; i < 5; i++)
@@ -429,23 +423,23 @@ class ItemTemplateDetailViewModel {
       requiredSpell: _parseInt(requiredSpellController.text),
       requiredHonorRank: _parseInt(requiredHonorRankController.text),
       requiredCityRank: _parseInt(requiredCityRankController.text),
-      requiredReputationFaction:
-          _parseInt(requiredReputationFactionController.text),
+      requiredReputationFaction: _parseInt(
+        requiredReputationFactionController.text,
+      ),
       requiredReputationRank: _parseInt(requiredReputationRankController.text),
-      requiredDisenchantSkill:
-          _parseInt(requiredDisenchantSkillController.text),
+      requiredDisenchantSkill: _parseInt(
+        requiredDisenchantSkillController.text,
+      ),
 
       /// Card 10: Socket/Gem
       lockid: _parseInt(lockidController.text),
       gemProperties: _parseInt(gemPropertiesController.text),
       socketBonus: _parseInt(socketBonusController.text),
       socketColors: [
-        for (var i = 0; i < 3; i++)
-          _getSelectValue(socketColorControllers[i]),
+        for (var i = 0; i < 3; i++) _getSelectValue(socketColorControllers[i]),
       ],
       socketContents: [
-        for (var i = 0; i < 3; i++)
-          _parseInt(socketContentControllers[i].text),
+        for (var i = 0; i < 3; i++) _parseInt(socketContentControllers[i].text),
       ],
 
       /// Card 11: Page/Misc
@@ -472,7 +466,10 @@ class ItemTemplateDetailViewModel {
         await repository.updateItemTemplate(t);
       }
       template.value = t;
-      _logActivity(t.entry == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.entry == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -496,12 +493,14 @@ class ItemTemplateDetailViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) {
     if (text.isEmpty) return 0.0;
     final value = double.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   int _getSelectValue(ShadSelectController<int> controller) =>
       controller.value.firstOrNull ?? 0;
 

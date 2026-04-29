@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/player_create_info.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/player_create_info.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -32,7 +32,11 @@ class PlayerCreateInfoDetailViewModel {
       info.value = result;
       _initControllers(result);
     } catch (e, s) {
-      logger.e('加载出生信息(race=$race, class=$playerClass)失败', error: e, stackTrace: s);
+      logger.e(
+        '加载出生信息(race=$race, class=$playerClass)失败',
+        error: e,
+        stackTrace: s,
+      );
     }
   }
 
@@ -112,6 +116,7 @@ class PlayerCreateInfoDetailViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
 
   void dispose() {

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/quest_template.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/quest_template.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -159,7 +159,10 @@ class QuestTemplateDetailViewModel {
       }
       template.value = t;
       entry.value = t.id;
-      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -338,17 +341,29 @@ class QuestTemplateDetailViewModel {
       itemDrop4: _parseInt(itemDrop4Controller.text),
       itemDropQuantity4: _parseInt(itemDropQuantity4Controller.text),
       rewardChoiceItemId1: _parseInt(rewardChoiceItemId1Controller.text),
-      rewardChoiceItemQuantity1: _parseInt(rewardChoiceItemQuantity1Controller.text),
+      rewardChoiceItemQuantity1: _parseInt(
+        rewardChoiceItemQuantity1Controller.text,
+      ),
       rewardChoiceItemId2: _parseInt(rewardChoiceItemId2Controller.text),
-      rewardChoiceItemQuantity2: _parseInt(rewardChoiceItemQuantity2Controller.text),
+      rewardChoiceItemQuantity2: _parseInt(
+        rewardChoiceItemQuantity2Controller.text,
+      ),
       rewardChoiceItemId3: _parseInt(rewardChoiceItemId3Controller.text),
-      rewardChoiceItemQuantity3: _parseInt(rewardChoiceItemQuantity3Controller.text),
+      rewardChoiceItemQuantity3: _parseInt(
+        rewardChoiceItemQuantity3Controller.text,
+      ),
       rewardChoiceItemId4: _parseInt(rewardChoiceItemId4Controller.text),
-      rewardChoiceItemQuantity4: _parseInt(rewardChoiceItemQuantity4Controller.text),
+      rewardChoiceItemQuantity4: _parseInt(
+        rewardChoiceItemQuantity4Controller.text,
+      ),
       rewardChoiceItemId5: _parseInt(rewardChoiceItemId5Controller.text),
-      rewardChoiceItemQuantity5: _parseInt(rewardChoiceItemQuantity5Controller.text),
+      rewardChoiceItemQuantity5: _parseInt(
+        rewardChoiceItemQuantity5Controller.text,
+      ),
       rewardChoiceItemId6: _parseInt(rewardChoiceItemId6Controller.text),
-      rewardChoiceItemQuantity6: _parseInt(rewardChoiceItemQuantity6Controller.text),
+      rewardChoiceItemQuantity6: _parseInt(
+        rewardChoiceItemQuantity6Controller.text,
+      ),
       poiContinent: _parseInt(poiContinentController.text),
       poiX: _parseDouble(poiXController.text),
       poiY: _parseDouble(poiYController.text),
@@ -413,12 +428,14 @@ class QuestTemplateDetailViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) {
     if (text.isEmpty) return 0.0;
     final value = double.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   int? _parseIntOrNull(String text) => text.isEmpty ? null : int.tryParse(text);
 
   void _logActivity(ActivityActionType action, QuestTemplate t) {

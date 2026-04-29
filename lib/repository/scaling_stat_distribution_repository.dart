@@ -1,4 +1,4 @@
-import 'package:foxy/model/item_enchantment_template.dart';
+import 'package:foxy/entity/item_enchantment_template.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ScalingStatDistributionRepository with RepositoryMixin {

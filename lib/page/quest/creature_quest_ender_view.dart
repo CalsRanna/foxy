@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/quest/gameobject_queststarter_view_model.dart';
+import 'package:foxy/page/creature_template/creature_template_selector.dart';
+import 'package:foxy/page/quest/creature_quest_ender_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
@@ -7,18 +8,16 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-class GameobjectQueststarterView extends StatefulWidget {
+class CreatureQuestEnderView extends StatefulWidget {
   final int questId;
-  const GameobjectQueststarterView({super.key, required this.questId});
+  const CreatureQuestEnderView({super.key, required this.questId});
 
   @override
-  State<GameobjectQueststarterView> createState() =>
-      _GameobjectQueststarterViewState();
+  State<CreatureQuestEnderView> createState() => _CreatureQuestEnderViewState();
 }
 
-class _GameobjectQueststarterViewState
-    extends State<GameobjectQueststarterView> {
-  final viewModel = GetIt.instance.get<GameobjectQueststarterViewModel>();
+class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
+  final viewModel = GetIt.instance.get<CreatureQuestEnderViewModel>();
 
   @override
   void initState() {
@@ -126,7 +125,7 @@ class _GameobjectQueststarterViewState
     showShadDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('新增开始物体'),
+        title: Text('新增结束生物'),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -136,7 +135,7 @@ class _GameobjectQueststarterViewState
     showShadDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('编辑开始物体'),
+        title: Text('编辑结束生物'),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -151,9 +150,11 @@ class _GameobjectQueststarterViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FormItem(
-            controller: viewModel.idController,
-            label: '物体编号',
-            placeholder: 'GameobjectId',
+            label: '生物编号',
+            child: CreatureTemplateSelector(
+              controller: viewModel.idController,
+              placeholder: 'CreatureId',
+            ),
           ),
           SizedBox(height: 16),
           FormItem(

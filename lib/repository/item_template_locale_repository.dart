@@ -1,4 +1,4 @@
-import 'package:foxy/model/item_template_locale.dart';
+import 'package:foxy/entity/item_template_locale.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// item_template_locale 表的数据访问层

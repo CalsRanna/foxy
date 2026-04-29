@@ -1,4 +1,4 @@
-import 'package:foxy/model/npc_text_locale.dart';
+import 'package:foxy/entity/npc_text_locale.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// npc_text_locale 表的数据访问层
@@ -30,7 +30,10 @@ class NpcTextLocaleRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateNpcTextLocale(Map<String, dynamic> id, NpcTextLocale model) async {
+  Future<void> updateNpcTextLocale(
+    Map<String, dynamic> id,
+    NpcTextLocale model,
+  ) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);
@@ -47,11 +50,17 @@ class NpcTextLocaleRepository with RepositoryMixin {
 
   /// upsert：不存在则 insert，存在则 update
   Future<void> saveNpcTextLocale(NpcTextLocale model) async {
-    final existing = await getNpcTextLocale({'ID': model.id, 'Locale': model.locale});
+    final existing = await getNpcTextLocale({
+      'ID': model.id,
+      'Locale': model.locale,
+    });
     if (existing == null) {
       await storeNpcTextLocale(model);
     } else {
-      await updateNpcTextLocale({'ID': model.id, 'Locale': model.locale}, model);
+      await updateNpcTextLocale({
+        'ID': model.id,
+        'Locale': model.locale,
+      }, model);
     }
   }
 
