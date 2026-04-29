@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/quest_template.dart';
+import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
@@ -19,7 +19,7 @@ class QuestTemplateListViewModel {
   final idController = TextEditingController();
   final titleController = TextEditingController();
 
-  final templates = signal<List<BriefQuestTemplate>>([]);
+  final templates = signal<List<BriefQuestTemplateEntity>>([]);
   final page = signal(1);
   final total = signal(0);
 

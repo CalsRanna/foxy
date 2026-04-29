@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/npc_trainer.dart';
+import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -61,8 +61,8 @@ class NpcTrainerViewModel {
   }
 
   /// 从表单收集数据
-  NpcTrainer collectFromForm() {
-    return NpcTrainer(
+  NpcTrainerEntity collectFromForm() {
+    return NpcTrainerEntity(
       id: id.value,
       spellID: _parseInt(spellIDController.text),
       moneyCost: _parseInt(moneyCostController.text),

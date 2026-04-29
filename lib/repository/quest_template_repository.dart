@@ -1,4 +1,4 @@
-import 'package:foxy/entity/quest_template.dart';
+import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
@@ -36,7 +36,7 @@ class QuestTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<List<BriefQuestTemplate>> getBriefQuestTemplates({
+  Future<List<BriefQuestTemplateEntity>> getBriefQuestTemplates({
     int page = 1,
     QuestTemplateFilterEntity? filter,
   }) async {
@@ -60,22 +60,24 @@ class QuestTemplateRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => BriefQuestTemplate.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefQuestTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
-  Future<QuestTemplate> getQuestTemplate(int id) async {
+  Future<QuestTemplateEntity> getQuestTemplate(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return QuestTemplate.fromJson(result.toMap());
+    return QuestTemplateEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeQuestTemplate(QuestTemplate model) async {
+  Future<void> storeQuestTemplate(QuestTemplateEntity model) async {
     var json = model.toJson();
     var newId = await _getNextId();
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateQuestTemplate(QuestTemplate model) async {
+  Future<void> updateQuestTemplate(QuestTemplateEntity model) async {
     var json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', model.id).update(json);

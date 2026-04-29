@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/spell.dart';
+import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -222,7 +222,7 @@ class SpellDetailViewModel {
   final shapeshiftExclude0Controller = TextEditingController();
 
   final id = signal(0);
-  final spell = signal(Spell());
+  final spell = signal(SpellEntity());
   final saving = signal(false);
 
   Future<void> save(BuildContext context) async {
@@ -256,8 +256,8 @@ class SpellDetailViewModel {
     routerFacade.goBack();
   }
 
-  Spell _collectFromControllers() {
-    final t = Spell(
+  SpellEntity _collectFromControllers() {
+    final t = SpellEntity(
       // === 基础文本 ===
       nameLangZhCN: nameLangZhCNController.text,
       nameSubtextLangZhCN: nameSubtextLangZhCNController.text,
@@ -504,7 +504,7 @@ class SpellDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, Spell t) {
+  void _logActivity(ActivityActionType action, SpellEntity t) {
     final log = ActivityLogEntity(
       module: 'spell',
       actionType: action,
@@ -736,7 +736,7 @@ class SpellDetailViewModel {
     }
   }
 
-  void _initControllers(Spell template) {
+  void _initControllers(SpellEntity template) {
     // === 基础文本 ===
     nameLangZhCNController.text = template.nameLangZhCN;
     nameSubtextLangZhCNController.text = template.nameSubtextLangZhCN;

@@ -1,4 +1,4 @@
-import 'package:foxy/entity/loot_template.dart';
+import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 enum LootTableType {
@@ -161,22 +161,25 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<LootTemplate?> getLootTemplate(int entry, int item) async {
+  Future<LootTemplateEntity?> getLootTemplate(int entry, int item) async {
     var result = await laconic
         .table(_table)
         .where('Entry', entry)
         .where('Item', item)
         .first();
-    return LootTemplate.fromJson(result.toMap());
+    return LootTemplateEntity.fromJson(result.toMap());
   }
 
   /// 新增掉落
-  Future<void> storeLootTemplate(LootTemplate loot) async {
+  Future<void> storeLootTemplate(LootTemplateEntity loot) async {
     await laconic.table(_table).insert([loot.toJson()]);
   }
 
   /// 更新掉落
-  Future<void> updateLootTemplate(LootTemplate loot, {int? oldItem}) async {
+  Future<void> updateLootTemplate(
+    LootTemplateEntity loot, {
+    int? oldItem,
+  }) async {
     var json = loot.toJson();
     json.remove('Entry');
     if (oldItem == null) json.remove('Item');
@@ -197,7 +200,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 复制掉落（获取新的Item ID）
-  Future<LootTemplate> copyLootTemplate(int entry, int item) async {
+  Future<LootTemplateEntity> copyLootTemplate(int entry, int item) async {
     // 获取最大Item
     var maxResult = await laconic
         .table(_table)
@@ -212,7 +215,7 @@ class LootTemplateRepository with RepositoryMixin {
       throw Exception('源记录不存在');
     }
 
-    var newLoot = LootTemplate(
+    var newLoot = LootTemplateEntity(
       entry: source.entry,
       item: maxItem + 1,
       reference: source.reference != 0 ? maxItem + 1 : source.reference,

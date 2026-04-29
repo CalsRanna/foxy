@@ -1,10 +1,10 @@
-import 'package:foxy/entity/spell_rank.dart';
+import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellRankRepository with RepositoryMixin {
   static const _table = 'spell_ranks';
 
-  Future<List<SpellRank>> getSpellRanks(int spellId) async {
+  Future<List<SpellRankEntity>> getSpellRanks(int spellId) async {
     try {
       var firstResult = await laconic
           .table(_table)
@@ -35,32 +35,35 @@ class SpellRankRepository with RepositoryMixin {
       builder = builder.where('sr.first_spell_id', firstSpellId);
       builder = builder.orderBy('sr.rank');
       var results = await builder.get();
-      return results.map((e) => SpellRank.fromJson(e.toMap())).toList();
+      return results.map((e) => SpellRankEntity.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
   }
 
-  Future<SpellRank?> getSpellRank(int firstSpellId, int rank) async {
+  Future<SpellRankEntity?> getSpellRank(int firstSpellId, int rank) async {
     try {
       var result = await laconic
           .table(_table)
           .where('first_spell_id', firstSpellId)
           .where('rank', rank)
           .first();
-      return SpellRank.fromJson(result.toMap());
+      return SpellRankEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
-  Future<void> storeSpellRank(SpellRank data) async {
+  Future<void> storeSpellRank(SpellRankEntity data) async {
     var json = data.toJson();
     json['`rank`'] = json.remove('rank');
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateSpellRank(SpellRank oldData, SpellRank newData) async {
+  Future<void> updateSpellRank(
+    SpellRankEntity oldData,
+    SpellRankEntity newData,
+  ) async {
     var json = newData.toJson();
     json.remove('first_spell_id');
     json['`rank`'] = json.remove('rank');
@@ -79,7 +82,7 @@ class SpellRankRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellRank> copySpellRank(SpellRank data) async {
+  Future<SpellRankEntity> copySpellRank(SpellRankEntity data) async {
     var json = data.toJson();
     var maxSpellIdResult = await laconic
         .table(_table)
@@ -97,6 +100,6 @@ class SpellRankRepository with RepositoryMixin {
     json['rank'] = maxRank + 1;
     json['`rank`'] = json.remove('rank');
     await laconic.table(_table).insert([json]);
-    return SpellRank.fromJson(json);
+    return SpellRankEntity.fromJson(json);
   }
 }

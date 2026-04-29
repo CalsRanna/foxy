@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/quest_sort.dart';
+import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -15,7 +15,7 @@ class QuestSortDetailViewModel {
   final idController = TextEditingController();
   final nameController = TextEditingController();
 
-  final sort = signal(QuestSort());
+  final sort = signal(QuestSortEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -52,8 +52,8 @@ class QuestSortDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 QuestSort
-  QuestSort _collectFromControllers() {
-    return QuestSort(
+  QuestSortEntity _collectFromControllers() {
+    return QuestSortEntity(
       id: _parseInt(idController.text),
       sortNameLangZhCn: nameController.text,
     );
@@ -66,7 +66,7 @@ class QuestSortDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, QuestSort t) {
+  void _logActivity(ActivityActionType action, QuestSortEntity t) {
     final log = ActivityLogEntity(
       module: 'quest_sort',
       actionType: action,
@@ -92,7 +92,7 @@ class QuestSortDetailViewModel {
     }
   }
 
-  void _initControllers(QuestSort table) {
+  void _initControllers(QuestSortEntity table) {
     idController.text = table.id.toString();
     nameController.text = table.sortNameLangZhCn;
   }

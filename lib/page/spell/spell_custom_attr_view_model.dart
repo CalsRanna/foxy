@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/spell_custom_attr.dart';
+import 'package:foxy/entity/spell_custom_attr_entity.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -13,7 +13,7 @@ class SpellCustomAttrViewModel {
   final attributesController = TextEditingController();
 
   final loading = signal(false);
-  final customAttr = signal(SpellCustomAttr());
+  final customAttr = signal(SpellCustomAttrEntity());
 
   Future<void> load() async {
     loading.value = true;
@@ -49,8 +49,8 @@ class SpellCustomAttrViewModel {
     routerFacade.goBack();
   }
 
-  SpellCustomAttr _collectFromControllers() {
-    final data = SpellCustomAttr(
+  SpellCustomAttrEntity _collectFromControllers() {
+    final data = SpellCustomAttrEntity(
       spellId: spellId.value,
       attributes: _parseInt(attributesController.text),
     );
@@ -64,7 +64,7 @@ class SpellCustomAttrViewModel {
     return value;
   }
 
-  void initControllers(SpellCustomAttr data) {
+  void initControllers(SpellCustomAttrEntity data) {
     attributesController.text = data.attributes.toString();
   }
 

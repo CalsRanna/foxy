@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/spell_linked_spell.dart';
+import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -10,7 +10,7 @@ class SpellLinkedSpellViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
-  final items = signal<List<SpellLinkedSpell>>([]);
+  final items = signal<List<SpellLinkedSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -40,14 +40,14 @@ class SpellLinkedSpellViewModel {
     commentController.clear();
   }
 
-  void fillForm(SpellLinkedSpell data) {
+  void fillForm(SpellLinkedSpellEntity data) {
     spellEffectController.text = data.spellEffect.toString();
     typeController.text = data.type.toString();
     commentController.text = data.comment;
   }
 
-  SpellLinkedSpell collectFromForm() {
-    final data = SpellLinkedSpell(
+  SpellLinkedSpellEntity collectFromForm() {
+    final data = SpellLinkedSpellEntity(
       spellTrigger: spellId.value,
       spellEffect: _parseInt(spellEffectController.text),
       type: _parseInt(typeController.text),

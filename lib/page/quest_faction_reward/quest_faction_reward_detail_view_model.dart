@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/quest_faction_reward.dart';
+import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -27,7 +27,7 @@ class QuestFactionRewardDetailViewModel {
   final difficulty8Controller = TextEditingController();
   final difficulty9Controller = TextEditingController();
 
-  final reward = signal(QuestFactionReward());
+  final reward = signal(QuestFactionRewardEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -64,8 +64,8 @@ class QuestFactionRewardDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 QuestFactionReward
-  QuestFactionReward _collectFromControllers() {
-    return QuestFactionReward(
+  QuestFactionRewardEntity _collectFromControllers() {
+    return QuestFactionRewardEntity(
       id: _parseInt(idController.text),
       difficulty0: _parseInt(difficulty0Controller.text),
       difficulty1: _parseInt(difficulty1Controller.text),
@@ -87,7 +87,7 @@ class QuestFactionRewardDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, QuestFactionReward t) {
+  void _logActivity(ActivityActionType action, QuestFactionRewardEntity t) {
     final log = ActivityLogEntity(
       module: 'quest_faction_reward',
       actionType: action,
@@ -126,7 +126,7 @@ class QuestFactionRewardDetailViewModel {
     }
   }
 
-  void _initControllers(QuestFactionReward table) {
+  void _initControllers(QuestFactionRewardEntity table) {
     /// Basic
     idController.text = table.id.toString();
 

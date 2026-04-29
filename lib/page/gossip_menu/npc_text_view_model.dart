@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/npc_text.dart';
-import 'package:foxy/entity/npc_text_locale.dart';
+import 'package:foxy/entity/npc_text_entity.dart';
+import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -42,14 +42,14 @@ class NpcTextViewModel {
       final main = await _repository.getNpcText(textId);
       if (main == null) {
         creating.value = true;
-        final blank = NpcText(id: textId);
+        final blank = NpcTextEntity(id: textId);
         _applyMainToControllers(blank);
       } else {
         creating.value = false;
         _applyMainToControllers(main);
       }
       final locales = await _localeRepository.getNpcTextLocales(id: textId);
-      NpcTextLocale? zhCN;
+      NpcTextLocaleEntity? zhCN;
       for (final l in locales) {
         if (l.locale == 'zhCN') {
           zhCN = l;
@@ -57,7 +57,7 @@ class NpcTextViewModel {
         }
       }
       localeExists.value = zhCN != null;
-      final target = zhCN ?? NpcTextLocale(id: textId);
+      final target = zhCN ?? NpcTextLocaleEntity(id: textId);
       _applyLocaleToControllers(target);
     } finally {
       loading.value = false;
@@ -109,7 +109,7 @@ class NpcTextViewModel {
     }
   }
 
-  void _applyMainToControllers(NpcText m) {
+  void _applyMainToControllers(NpcTextEntity m) {
     controllerOf('ID').text = m.id.toString();
     controllerOf('VerifiedBuild').text = m.verifiedBuild.toString();
     for (var n = 0; n < 8; n++) {
@@ -125,7 +125,7 @@ class NpcTextViewModel {
     }
   }
 
-  void _applyLocaleToControllers(NpcTextLocale l) {
+  void _applyLocaleToControllers(NpcTextLocaleEntity l) {
     controllerOf('locale.Locale').text = l.locale.isEmpty ? 'zhCN' : l.locale;
     for (var n = 0; n < 8; n++) {
       controllerOf('locale.Text${n}_0').text = l.texts[n][0];
@@ -133,8 +133,8 @@ class NpcTextViewModel {
     }
   }
 
-  NpcText _collectMainFromControllers() {
-    return NpcText(
+  NpcTextEntity _collectMainFromControllers() {
+    return NpcTextEntity(
       id: int.tryParse(controllerOf('ID').text) ?? 0,
       verifiedBuild: int.tryParse(controllerOf('VerifiedBuild').text) ?? 0,
       entries: List.generate(8, (n) {
@@ -156,8 +156,8 @@ class NpcTextViewModel {
     );
   }
 
-  NpcTextLocale _collectLocaleFromControllers(int id) {
-    return NpcTextLocale(
+  NpcTextLocaleEntity _collectLocaleFromControllers(int id) {
+    return NpcTextLocaleEntity(
       id: id,
       locale: controllerOf('locale.Locale').text.isEmpty
           ? 'zhCN'

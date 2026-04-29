@@ -1,4 +1,4 @@
-import 'package:foxy/entity/npc_text_locale.dart';
+import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// npc_text_locale 表的数据访问层
@@ -7,24 +7,26 @@ class NpcTextLocaleRepository with RepositoryMixin {
   static const _table = 'npc_text_locale';
 
   /// 按 ID 查询该 NpcText 的所有 locale
-  Future<List<NpcTextLocale>> getNpcTextLocales({required int id}) async {
+  Future<List<NpcTextLocaleEntity>> getNpcTextLocales({required int id}) async {
     try {
       final results = await laconic.table(_table).where('ID', id).get();
-      return results.map((e) => NpcTextLocale.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => NpcTextLocaleEntity.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       return [];
     }
   }
 
   /// 按 ID + Locale 查找
-  Future<NpcTextLocale?> getNpcTextLocale(Map<String, dynamic> id) async {
+  Future<NpcTextLocaleEntity?> getNpcTextLocale(Map<String, dynamic> id) async {
     try {
       var builder = laconic.table(_table);
       id.forEach((k, v) {
         builder = builder.where(k, v);
       });
       final result = await builder.first();
-      return NpcTextLocale.fromJson(result.toMap());
+      return NpcTextLocaleEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -32,7 +34,7 @@ class NpcTextLocaleRepository with RepositoryMixin {
 
   Future<void> updateNpcTextLocale(
     Map<String, dynamic> id,
-    NpcTextLocale model,
+    NpcTextLocaleEntity model,
   ) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
@@ -44,12 +46,12 @@ class NpcTextLocaleRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> storeNpcTextLocale(NpcTextLocale model) async {
+  Future<void> storeNpcTextLocale(NpcTextLocaleEntity model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   /// upsert：不存在则 insert，存在则 update
-  Future<void> saveNpcTextLocale(NpcTextLocale model) async {
+  Future<void> saveNpcTextLocale(NpcTextLocaleEntity model) async {
     final existing = await getNpcTextLocale({
       'ID': model.id,
       'Locale': model.locale,

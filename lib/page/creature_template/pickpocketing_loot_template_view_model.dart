@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
-import 'package:foxy/entity/loot_template.dart';
+import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -78,11 +78,11 @@ class PickpocketingLootTemplateViewModel {
   }
 
   /// 从表单收集数据
-  LootTemplate collectFromForm() {
+  LootTemplateEntity collectFromForm() {
     final template = creatureTemplate.value;
-    if (template == null) return LootTemplate();
+    if (template == null) return LootTemplateEntity();
 
-    return LootTemplate(
+    return LootTemplateEntity(
       entry: template.pickpocketLoot,
       item: _parseInt(itemController.text),
       reference: _parseInt(referenceController.text),

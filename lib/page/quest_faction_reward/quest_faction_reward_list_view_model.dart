@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/quest_faction_reward.dart';
+import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -15,7 +15,7 @@ class QuestFactionRewardListViewModel {
   final repository = QuestFactionRewardRepository();
 
   final page = signal(1);
-  final rewards = signal(<QuestFactionReward>[]);
+  final rewards = signal(<QuestFactionRewardEntity>[]);
   final total = signal(0);
 
   Future<void> copyQuestFactionReward(int id) async {

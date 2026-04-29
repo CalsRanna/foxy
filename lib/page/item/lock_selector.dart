@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/lock.dart';
+import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -56,7 +56,7 @@ class _Dialog extends StatefulWidget {
 class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
 
-  List<Lock> _items = [];
+  List<LockEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

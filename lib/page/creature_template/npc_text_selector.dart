@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/npc_text.dart';
+import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -60,7 +60,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _textController = TextEditingController();
 
-  List<NpcText> _items = [];
+  List<NpcTextEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

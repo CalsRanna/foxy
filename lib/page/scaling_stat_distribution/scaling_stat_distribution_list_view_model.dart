@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/scaling_stat_distribution.dart';
+import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
@@ -17,7 +17,7 @@ class ScalingStatDistributionListViewModel {
   final repository = ScalingStatDistributionSoloRepository();
 
   final page = signal(1);
-  final distributions = signal(<ScalingStatDistribution>[]);
+  final distributions = signal(<ScalingStatDistributionEntity>[]);
   final total = signal(0);
 
   Future<void> copyScalingStatDistribution(int id) async {

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/page_text_locale.dart';
+import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -8,7 +8,7 @@ import 'package:signals/signals.dart';
 class PageTextLocaleViewModel {
   final repository = PageTextRepository();
 
-  final locales = signal<List<PageTextLocale>>([]);
+  final locales = signal<List<PageTextLocaleEntity>>([]);
   final _controllers = signal<List<TextEditingController>>([]);
   int _currentId = 0;
 
@@ -37,7 +37,7 @@ class PageTextLocaleViewModel {
 
   void addLocale() {
     final newLocales = [...locales.value];
-    final locale = PageTextLocale(id: _currentId, locale: 'zhCN');
+    final locale = PageTextLocaleEntity(id: _currentId, locale: 'zhCN');
     newLocales.add(locale);
     locales.value = newLocales;
     _controllers.value = [..._controllers.value, TextEditingController()];
@@ -59,7 +59,7 @@ class PageTextLocaleViewModel {
         final idx = entry.key;
         final locale = entry.value;
         if (idx < _controllers.value.length) {
-          return PageTextLocale(
+          return PageTextLocaleEntity(
             id: locale.id,
             locale: locale.locale,
             text: _controllers.value[idx].text,

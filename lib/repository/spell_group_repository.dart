@@ -1,10 +1,10 @@
-import 'package:foxy/entity/spell_group.dart';
+import 'package:foxy/entity/spell_group_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellGroupRepository with RepositoryMixin {
   static const _table = 'spell_group';
 
-  Future<List<SpellGroup>> getSpellGroups(int spellId) async {
+  Future<List<SpellGroupEntity>> getSpellGroups(int spellId) async {
     try {
       var builder = laconic.table('$_table AS sg');
       const fields = [
@@ -19,30 +19,33 @@ class SpellGroupRepository with RepositoryMixin {
       );
       builder = builder.where('sg.spell_id', spellId);
       var results = await builder.get();
-      return results.map((e) => SpellGroup.fromJson(e.toMap())).toList();
+      return results.map((e) => SpellGroupEntity.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
   }
 
-  Future<SpellGroup?> getSpellGroup(int id, int spellId) async {
+  Future<SpellGroupEntity?> getSpellGroup(int id, int spellId) async {
     try {
       var result = await laconic
           .table(_table)
           .where('id', id)
           .where('spell_id', spellId)
           .first();
-      return SpellGroup.fromJson(result.toMap());
+      return SpellGroupEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
-  Future<void> storeSpellGroup(SpellGroup data) async {
+  Future<void> storeSpellGroup(SpellGroupEntity data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> updateSpellGroup(SpellGroup oldData, SpellGroup newData) async {
+  Future<void> updateSpellGroup(
+    SpellGroupEntity oldData,
+    SpellGroupEntity newData,
+  ) async {
     var json = newData.toJson();
     json.remove('id');
     json.remove('spell_id');
@@ -61,7 +64,7 @@ class SpellGroupRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellGroup> copySpellGroup(SpellGroup data) async {
+  Future<SpellGroupEntity> copySpellGroup(SpellGroupEntity data) async {
     var json = data.toJson();
     var maxIdResult = await laconic.table(_table).select([
       'MAX(id) AS maxId',
@@ -69,7 +72,7 @@ class SpellGroupRepository with RepositoryMixin {
     var maxId = (maxIdResult.toMap()['maxId'] ?? 0) as int;
     json['id'] = maxId + 1;
     await laconic.table(_table).insert([json]);
-    return SpellGroup.fromJson(json);
+    return SpellGroupEntity.fromJson(json);
   }
 
   Future<int> getNextId() async {

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/npc_vendor.dart';
+import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -63,8 +63,8 @@ class NpcVendorViewModel {
   }
 
   /// 从表单收集数据
-  NpcVendor collectFromForm() {
-    return NpcVendor(
+  NpcVendorEntity collectFromForm() {
+    return NpcVendorEntity(
       entry: entry.value,
       slot: _parseInt(slotController.text),
       item: _parseInt(itemController.text),

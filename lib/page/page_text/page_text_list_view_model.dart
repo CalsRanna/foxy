@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/page_text.dart';
+import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
@@ -18,7 +18,7 @@ class PageTextListViewModel {
   final repository = PageTextRepository();
 
   final page = signal(1);
-  final pages = signal<List<PageText>>([]);
+  final pages = signal<List<PageTextEntity>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();

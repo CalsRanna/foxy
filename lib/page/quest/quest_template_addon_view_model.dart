@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/quest_template_addon.dart';
+import 'package:foxy/entity/quest_template_addon_entity.dart';
 import 'package:foxy/repository/quest_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -9,7 +9,7 @@ import 'package:signals/signals.dart';
 class QuestTemplateAddonViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
-  final addon = signal(QuestTemplateAddon());
+  final addon = signal(QuestTemplateAddonEntity());
 
   final idController = TextEditingController();
   final maxLevelController = TextEditingController();
@@ -70,7 +70,7 @@ class QuestTemplateAddonViewModel {
     routerFacade.goBack();
   }
 
-  void _initControllers(QuestTemplateAddon addon) {
+  void _initControllers(QuestTemplateAddonEntity addon) {
     idController.text = addon.id.toString();
     maxLevelController.text = addon.maxLevel.toString();
     allowableClassesController.text = addon.allowableClasses.toString();
@@ -92,8 +92,8 @@ class QuestTemplateAddonViewModel {
     specialFlagsController.text = addon.specialFlags.toString();
   }
 
-  QuestTemplateAddon _collectFromControllers() {
-    return QuestTemplateAddon(
+  QuestTemplateAddonEntity _collectFromControllers() {
+    return QuestTemplateAddonEntity(
       id: questId.value,
       maxLevel: _parseInt(maxLevelController.text),
       allowableClasses: _parseInt(allowableClassesController.text),

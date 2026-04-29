@@ -1,10 +1,10 @@
-import 'package:foxy/entity/spell_range.dart';
+import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellRangeRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_range';
 
-  Future<List<SpellRange>> getSpellRanges({
+  Future<List<SpellRangeEntity>> getSpellRanges({
     String? id,
     String? name,
     required int page,
@@ -14,7 +14,7 @@ class SpellRangeRepository with RepositoryMixin {
     builder = _applyFilter(builder, id: id, name: name);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => SpellRange.fromJson(e.toMap())).toList();
+    return results.map((e) => SpellRangeEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countSpellRanges({String? id, String? name}) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/loot_template.dart';
+import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -24,7 +24,7 @@ class ReferenceLootTemplateDetailViewModel {
   final maxCountController = TextEditingController();
   final commentController = TextEditingController();
 
-  final template = signal<LootTemplate?>(null);
+  final template = signal<LootTemplateEntity?>(null);
   final originalEntry = signal<int?>(null);
   final originalItem = signal<int?>(null);
   final saving = signal(false);
@@ -44,7 +44,7 @@ class ReferenceLootTemplateDetailViewModel {
     }
   }
 
-  void _initControllers(LootTemplate loot) {
+  void _initControllers(LootTemplateEntity loot) {
     entryController.text = loot.entry.toString();
     itemController.text = loot.item.toString();
     referenceController.text = loot.reference.toString();
@@ -100,8 +100,8 @@ class ReferenceLootTemplateDetailViewModel {
     routerFacade.goBack();
   }
 
-  LootTemplate _collectFromControllers() {
-    return LootTemplate(
+  LootTemplateEntity _collectFromControllers() {
+    return LootTemplateEntity(
       entry: _parseInt(entryController.text),
       item: _parseInt(itemController.text),
       reference: _parseInt(referenceController.text),
@@ -124,7 +124,7 @@ class ReferenceLootTemplateDetailViewModel {
 
   double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
 
-  void _logActivity(ActivityActionType action, LootTemplate t) {
+  void _logActivity(ActivityActionType action, LootTemplateEntity t) {
     final log = ActivityLogEntity(
       module: 'reference_loot_template',
       actionType: action,

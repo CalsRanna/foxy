@@ -1,10 +1,10 @@
-import 'package:foxy/entity/spell_loot_template.dart';
+import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellLootTemplateRepository with RepositoryMixin {
   static const _table = 'spell_loot_template';
 
-  Future<List<SpellLootTemplate>> getSpellLootTemplates(int entry) async {
+  Future<List<SpellLootTemplateEntity>> getSpellLootTemplates(int entry) async {
     try {
       var builder = laconic.table('$_table AS slt');
       const fields = [
@@ -25,32 +25,37 @@ class SpellLootTemplateRepository with RepositoryMixin {
       );
       builder = builder.where('slt.Entry', entry);
       var results = await builder.get();
-      return results.map((e) => SpellLootTemplate.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => SpellLootTemplateEntity.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       return [];
     }
   }
 
-  Future<SpellLootTemplate?> getSpellLootTemplate(int entry, int item) async {
+  Future<SpellLootTemplateEntity?> getSpellLootTemplate(
+    int entry,
+    int item,
+  ) async {
     try {
       var result = await laconic
           .table(_table)
           .where('Entry', entry)
           .where('Item', item)
           .first();
-      return SpellLootTemplate.fromJson(result.toMap());
+      return SpellLootTemplateEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
-  Future<void> storeSpellLootTemplate(SpellLootTemplate data) async {
+  Future<void> storeSpellLootTemplate(SpellLootTemplateEntity data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
   Future<void> updateSpellLootTemplate(
-    SpellLootTemplate oldData,
-    SpellLootTemplate newData,
+    SpellLootTemplateEntity oldData,
+    SpellLootTemplateEntity newData,
   ) async {
     var json = newData.toJson();
     json.remove('Entry');
@@ -70,8 +75,8 @@ class SpellLootTemplateRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellLootTemplate> copySpellLootTemplate(
-    SpellLootTemplate data,
+  Future<SpellLootTemplateEntity> copySpellLootTemplate(
+    SpellLootTemplateEntity data,
   ) async {
     var json = data.toJson();
     var maxItemResult = await laconic
@@ -85,6 +90,6 @@ class SpellLootTemplateRepository with RepositoryMixin {
       json['Reference'] = maxItem + 1;
     }
     await laconic.table(_table).insert([json]);
-    return SpellLootTemplate.fromJson(json);
+    return SpellLootTemplateEntity.fromJson(json);
   }
 }

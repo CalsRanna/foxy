@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/spell.dart';
+import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
@@ -18,7 +18,7 @@ class SpellListViewModel {
   final repository = SpellRepository();
 
   final page = signal(1);
-  final spells = signal(<BriefSpell>[]);
+  final spells = signal(<BriefSpellEntity>[]);
   final total = signal(0);
 
   Future<void> copySpell(int id) async {

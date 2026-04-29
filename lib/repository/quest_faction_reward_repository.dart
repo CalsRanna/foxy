@@ -1,11 +1,11 @@
-import 'package:foxy/entity/quest_faction_reward.dart';
+import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class QuestFactionRewardRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_faction_reward';
 
-  Future<List<QuestFactionReward>> getQuestFactionRewards({
+  Future<List<QuestFactionRewardEntity>> getQuestFactionRewards({
     int page = 1,
     QuestFactionRewardFilterEntity? filter,
   }) async {
@@ -14,7 +14,9 @@ class QuestFactionRewardRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => QuestFactionReward.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => QuestFactionRewardEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<int> countQuestFactionRewards({
@@ -25,19 +27,19 @@ class QuestFactionRewardRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<QuestFactionReward?> getQuestFactionReward(int id) async {
+  Future<QuestFactionRewardEntity?> getQuestFactionReward(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return QuestFactionReward.fromJson(result.toMap());
+    return QuestFactionRewardEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeQuestFactionReward(QuestFactionReward data) async {
+  Future<void> storeQuestFactionReward(QuestFactionRewardEntity data) async {
     var json = data.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateQuestFactionReward(QuestFactionReward data) async {
+  Future<void> updateQuestFactionReward(QuestFactionRewardEntity data) async {
     var json = data.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', data.id).update(json);

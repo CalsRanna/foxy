@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/spell_icon.dart';
+import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/repository/spell_icon_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -61,7 +61,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<SpellIcon> _items = [];
+  List<SpellIconEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

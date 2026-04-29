@@ -1,4 +1,4 @@
-import 'package:foxy/entity/quest_offer_reward.dart';
+import 'package:foxy/entity/quest_offer_reward_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// quest_offer_reward_locale 表的数据访问层

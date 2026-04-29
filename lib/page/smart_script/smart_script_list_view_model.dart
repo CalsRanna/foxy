@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/smart_script.dart';
+import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
@@ -18,7 +18,7 @@ class SmartScriptListViewModel {
   final repository = SmartScriptRepository();
 
   final page = signal(1);
-  final scripts = signal(<BriefSmartScript>[]);
+  final scripts = signal(<BriefSmartScriptEntity>[]);
   final total = signal(0);
 
   Future<void> copySmartScript(

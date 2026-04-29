@@ -1,4 +1,4 @@
-import 'package:foxy/entity/npc_vendor.dart';
+import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class NpcVendorRepository with RepositoryMixin {
@@ -38,26 +38,26 @@ class NpcVendorRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<NpcVendor?> getNpcVendor(int entry, int slot) async {
+  Future<NpcVendorEntity?> getNpcVendor(int entry, int slot) async {
     try {
       var result = await laconic
           .table(_table)
           .where('entry', entry)
           .where('slot', slot)
           .first();
-      return NpcVendor.fromJson(result.toMap());
+      return NpcVendorEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 新增商品
-  Future<void> storeNpcVendor(NpcVendor vendor) async {
+  Future<void> storeNpcVendor(NpcVendorEntity vendor) async {
     await laconic.table(_table).insert([vendor.toJson()]);
   }
 
   /// 更新商品
-  Future<void> updateNpcVendor(NpcVendor vendor, {int? oldSlot}) async {
+  Future<void> updateNpcVendor(NpcVendorEntity vendor, {int? oldSlot}) async {
     var json = vendor.toJson();
     json.remove('entry');
     if (oldSlot == null) json.remove('slot');
@@ -78,7 +78,7 @@ class NpcVendorRepository with RepositoryMixin {
   }
 
   /// 复制商品
-  Future<NpcVendor> copyNpcVendor(int entry, int slot) async {
+  Future<NpcVendorEntity> copyNpcVendor(int entry, int slot) async {
     // 获取最大slot
     var maxSlotResult = await laconic
         .table(_table)
@@ -94,7 +94,7 @@ class NpcVendorRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newVendor = NpcVendor(
+    var newVendor = NpcVendorEntity(
       entry: source.entry,
       slot: maxSlot + 1,
       item: source.item,

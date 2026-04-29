@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/quest_request_items.dart';
+import 'package:foxy/entity/quest_request_items_entity.dart';
 import 'package:foxy/repository/quest_request_items_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -56,15 +56,15 @@ class QuestRequestItemsViewModel {
     routerFacade.goBack();
   }
 
-  void _applyToControllers(QuestRequestItems model) {
+  void _applyToControllers(QuestRequestItemsEntity model) {
     idController.text = model.id.toString();
     emoteOnCompleteController.text = model.emoteOnComplete.toString();
     emoteOnIncompleteController.text = model.emoteOnIncomplete.toString();
     completionTextController.text = model.completionText;
   }
 
-  QuestRequestItems _collectFromControllers() {
-    return QuestRequestItems(
+  QuestRequestItemsEntity _collectFromControllers() {
+    return QuestRequestItemsEntity(
       id: questId.value,
       emoteOnComplete: _parseInt(emoteOnCompleteController.text),
       emoteOnIncomplete: _parseInt(emoteOnIncompleteController.text),

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/spell_area.dart';
+import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/repository/spell_area_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -10,7 +10,7 @@ class SpellAreaViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
-  final items = signal<List<SpellArea>>([]);
+  final items = signal<List<SpellAreaEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -52,7 +52,7 @@ class SpellAreaViewModel {
     questEndStatusController.text = '0';
   }
 
-  void fillForm(SpellArea data) {
+  void fillForm(SpellAreaEntity data) {
     areaController.text = data.area.toString();
     questStartController.text = data.questStart.toString();
     questEndController.text = data.questEnd.toString();
@@ -64,8 +64,8 @@ class SpellAreaViewModel {
     questEndStatusController.text = data.questEndStatus.toString();
   }
 
-  SpellArea collectFromForm() {
-    return SpellArea(
+  SpellAreaEntity collectFromForm() {
+    return SpellAreaEntity(
       spell: spellId.value,
       area: _parseInt(areaController.text),
       questStart: _parseInt(questStartController.text),

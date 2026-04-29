@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/spell_bonus_data.dart';
+import 'package:foxy/entity/spell_bonus_data_entity.dart';
 import 'package:foxy/repository/spell_bonus_data_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -17,7 +17,7 @@ class SpellBonusDataViewModel {
   final commentsController = TextEditingController();
 
   final loading = signal(false);
-  final bonusData = signal(SpellBonusData());
+  final bonusData = signal(SpellBonusDataEntity());
 
   Future<void> load() async {
     loading.value = true;
@@ -53,8 +53,8 @@ class SpellBonusDataViewModel {
     routerFacade.goBack();
   }
 
-  SpellBonusData _collectFromControllers() {
-    return SpellBonusData(
+  SpellBonusDataEntity _collectFromControllers() {
+    return SpellBonusDataEntity(
       entry: spellId.value,
       directBonus: _parseDouble(directBonusController.text),
       dotBonus: _parseDouble(dotBonusController.text),
@@ -71,7 +71,7 @@ class SpellBonusDataViewModel {
     return value;
   }
 
-  void initControllers(SpellBonusData data) {
+  void initControllers(SpellBonusDataEntity data) {
     directBonusController.text = data.directBonus.toString();
     dotBonusController.text = data.dotBonus.toString();
     apBonusController.text = data.apBonus.toString();
