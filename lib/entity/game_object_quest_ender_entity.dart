@@ -1,14 +1,14 @@
-// gameobject_queststarter 模型
+// gameobject_questender 模型
 // 复合主键 (id, quest)
 
-class GameObjectQuestStarter {
+class GameObjectQuestEnderEntity {
   final int id;
   final int quest;
 
-  const GameObjectQuestStarter({this.id = 0, this.quest = 0});
+  const GameObjectQuestEnderEntity({this.id = 0, this.quest = 0});
 
-  factory GameObjectQuestStarter.fromJson(Map<String, dynamic> json) {
-    return GameObjectQuestStarter(
+  factory GameObjectQuestEnderEntity.fromJson(Map<String, dynamic> json) {
+    return GameObjectQuestEnderEntity(
       id: json['id'] ?? 0,
       quest: json['quest'] ?? 0,
     );
@@ -20,21 +20,21 @@ class GameObjectQuestStarter {
 }
 
 /// Brief 版本（LEFT JOIN gameobject_template 获取名称，无 locale 表）
-class BriefGameObjectQuestStarter {
+class BriefGameObjectQuestEnder {
   final int id;
   final int quest;
   final String name;
   final String localeName;
 
-  const BriefGameObjectQuestStarter({
+  const BriefGameObjectQuestEnder({
     this.id = 0,
     this.quest = 0,
     this.name = '',
     this.localeName = '',
   });
 
-  factory BriefGameObjectQuestStarter.fromJson(Map<String, dynamic> json) {
-    return BriefGameObjectQuestStarter(
+  factory BriefGameObjectQuestEnder.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectQuestEnder(
       id: json['id'] ?? 0,
       quest: json['quest'] ?? 0,
       name: json['name']?.toString() ?? '',

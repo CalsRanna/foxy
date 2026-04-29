@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/feature.dart';
+import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/feature_view_model.dart';
@@ -11,9 +11,9 @@ class MoreViewModel {
   final featureViewModel = GetIt.instance.get<FeatureViewModel>();
 
   final searchController = TextEditingController();
-  final filteredModules = signal<List<Feature>>([]);
+  final filteredModules = signal<List<FeatureEntity>>([]);
 
-  List<Feature> get _allModules => featureViewModel.allFeatures.value;
+  List<FeatureEntity> get _allModules => featureViewModel.allFeatures.value;
 
   void initSignals() {
     filteredModules.value = List.of(_allModules);
@@ -35,7 +35,7 @@ class MoreViewModel {
     filteredModules.value = List.of(_allModules);
   }
 
-  void navigateToModule(Feature module) {
+  void navigateToModule(FeatureEntity module) {
     final menu = RouterMenu.values.byName(module.routerMenu);
     final isSidebarModule = module.isPinned;
     routerFacade.navigateToMenu(
@@ -44,12 +44,12 @@ class MoreViewModel {
     );
   }
 
-  Future<void> togglePinned(Feature feature) async {
+  Future<void> togglePinned(FeatureEntity feature) async {
     await featureViewModel.togglePinned(feature.id);
     search();
   }
 
-  Future<void> toggleFavorite(Feature feature) async {
+  Future<void> toggleFavorite(FeatureEntity feature) async {
     await featureViewModel.toggleFavorite(feature.id);
     // 刷新搜索结果
     search();

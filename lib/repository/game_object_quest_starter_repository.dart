@@ -1,4 +1,4 @@
-import 'package:foxy/entity/game_object_quest_starter.dart';
+import 'package:foxy/entity/game_object_quest_starter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// gameobject_queststarter 表的数据访问层
@@ -29,7 +29,7 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
   }
 
   /// 按复合键查找
-  Future<GameObjectQuestStarter?> getGameObjectQuestStarter(
+  Future<GameObjectQuestStarterEntity?> getGameObjectQuestStarter(
     Map<String, dynamic> id,
   ) async {
     try {
@@ -38,14 +38,14 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
         builder = builder.where(k, v);
       });
       final result = await builder.first();
-      return GameObjectQuestStarter.fromJson(result.toMap());
+      return GameObjectQuestStarterEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
-  Future<GameObjectQuestStarter> createGameObjectQuestStarter(
+  Future<GameObjectQuestStarterEntity> createGameObjectQuestStarter(
     int questId,
   ) async {
     try {
@@ -53,22 +53,24 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
         ['MAX(id) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      return GameObjectQuestStarter(
+      return GameObjectQuestStarterEntity(
         quest: questId,
         id: maxId == null ? 0 : maxId + 1,
       );
     } catch (e) {
-      return GameObjectQuestStarter(quest: questId, id: 0);
+      return GameObjectQuestStarterEntity(quest: questId, id: 0);
     }
   }
 
-  Future<void> storeGameObjectQuestStarter(GameObjectQuestStarter model) async {
+  Future<void> storeGameObjectQuestStarter(
+    GameObjectQuestStarterEntity model,
+  ) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   Future<void> updateGameObjectQuestStarter(
     Map<String, dynamic> id,
-    GameObjectQuestStarter model,
+    GameObjectQuestStarterEntity model,
   ) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {

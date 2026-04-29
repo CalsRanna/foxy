@@ -1,5 +1,5 @@
 /// 物品附魔模板 — 对应 item_enchantment_template 表（复合键: entry + ench）
-class ItemEnchantmentTemplate {
+class ItemEnchantmentTemplateEntity {
   final int entry;
   final int ench;
   final double chance;
@@ -7,7 +7,7 @@ class ItemEnchantmentTemplate {
   final int condition2;
   final int condition3;
 
-  const ItemEnchantmentTemplate({
+  const ItemEnchantmentTemplateEntity({
     this.entry = 0,
     this.ench = 0,
     this.chance = 0,
@@ -16,8 +16,8 @@ class ItemEnchantmentTemplate {
     this.condition3 = 0,
   });
 
-  factory ItemEnchantmentTemplate.fromJson(Map<String, dynamic> json) {
-    return ItemEnchantmentTemplate(
+  factory ItemEnchantmentTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return ItemEnchantmentTemplateEntity(
       entry: json['entry'] ?? 0,
       ench: json['ench'] ?? 0,
       chance: (json['chance'] as num?)?.toDouble() ?? 0.0,

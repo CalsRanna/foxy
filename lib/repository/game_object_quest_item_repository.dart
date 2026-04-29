@@ -1,4 +1,4 @@
-import 'package:foxy/entity/game_object_questitem.dart';
+import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GameObjectQuestItemRepository with RepositoryMixin {

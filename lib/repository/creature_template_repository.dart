@@ -1,4 +1,4 @@
-import 'package:foxy/entity/creature_template.dart';
+import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
 import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -44,7 +44,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('entry', entry).delete();
   }
 
-  Future<List<BriefCreatureTemplate>> getBriefCreatureTemplates({
+  Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
     int page = 1,
     CreatureTemplateFilterEntity? filter,
   }) async {
@@ -68,7 +68,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
-        .map((e) => BriefCreatureTemplate.fromJson(e.toMap()))
+        .map((e) => BriefCreatureTemplateEntity.fromJson(e.toMap()))
         .toList();
   }
 

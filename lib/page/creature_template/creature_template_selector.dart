@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/creature_template.dart';
+import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -63,7 +63,7 @@ class _DialogState extends State<_Dialog> {
   final _entryController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<BriefCreatureTemplate> _items = [];
+  List<BriefCreatureTemplateEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

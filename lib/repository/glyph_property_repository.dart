@@ -1,11 +1,11 @@
-import 'package:foxy/entity/glyph_property.dart';
+import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/entity/glyph_property_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GlyphPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_glyph_properties';
 
-  Future<List<GlyphProperty>> getGlyphProperties({
+  Future<List<GlyphPropertyEntity>> getGlyphProperties({
     int page = 1,
     GlyphPropertyFilterEntity? filter,
   }) async {
@@ -14,7 +14,7 @@ class GlyphPropertyRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => GlyphProperty.fromJson(e.toMap())).toList();
+    return results.map((e) => GlyphPropertyEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countGlyphProperties({GlyphPropertyFilterEntity? filter}) async {
@@ -23,19 +23,19 @@ class GlyphPropertyRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<GlyphProperty?> getGlyphProperty(int id) async {
+  Future<GlyphPropertyEntity?> getGlyphProperty(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return GlyphProperty.fromJson(result.toMap());
+    return GlyphPropertyEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeGlyphProperty(GlyphProperty glyphProperty) async {
+  Future<void> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
     var json = glyphProperty.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateGlyphProperty(GlyphProperty glyphProperty) async {
+  Future<void> updateGlyphProperty(GlyphPropertyEntity glyphProperty) async {
     var json = glyphProperty.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', glyphProperty.id).update(json);

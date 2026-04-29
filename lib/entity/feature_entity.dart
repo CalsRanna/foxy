@@ -1,4 +1,4 @@
-class Feature {
+class FeatureEntity {
   final int id;
   final String name;
   final String description;
@@ -11,7 +11,7 @@ class Feature {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  const Feature({
+  const FeatureEntity({
     required this.id,
     required this.name,
     required this.description,
@@ -25,8 +25,8 @@ class Feature {
     required this.updatedAt,
   });
 
-  factory Feature.fromJson(Map<String, dynamic> json) {
-    return Feature(
+  factory FeatureEntity.fromJson(Map<String, dynamic> json) {
+    return FeatureEntity(
       id: json['id'] as int,
       name: json['name'] as String,
       description: json['description'] as String,
@@ -55,7 +55,7 @@ class Feature {
     };
   }
 
-  Feature copyWith({
+  FeatureEntity copyWith({
     int? id,
     String? name,
     String? description,
@@ -68,7 +68,7 @@ class Feature {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return Feature(
+    return FeatureEntity(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,

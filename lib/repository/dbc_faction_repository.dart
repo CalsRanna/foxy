@@ -1,4 +1,4 @@
-import 'package:foxy/entity/dbc_faction.dart';
+import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class DbcFactionRepository with RepositoryMixin {
@@ -25,7 +25,7 @@ class DbcFactionRepository with RepositoryMixin {
     }
   }
 
-  Future<List<DbcFaction>> getDbcFactions({
+  Future<List<DbcFactionEntity>> getDbcFactions({
     String? id,
     String? name,
     int page = 1,
@@ -49,21 +49,21 @@ class DbcFactionRepository with RepositoryMixin {
       }
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
-      return results.map((e) => DbcFaction.fromJson(e.toMap())).toList();
+      return results.map((e) => DbcFactionEntity.fromJson(e.toMap())).toList();
     } catch (e) {
       // 表可能不存在
       return [];
     }
   }
 
-  Future<DbcFaction?> getById(int id) async {
+  Future<DbcFactionEntity?> getById(int id) async {
     try {
       var result = await laconic
           .table(_table)
           .select(['ID', 'Name_lang_zhCN', 'Description_lang_zhCN'])
           .where('ID', id)
           .first();
-      return DbcFaction.fromJson(result.toMap());
+      return DbcFactionEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }

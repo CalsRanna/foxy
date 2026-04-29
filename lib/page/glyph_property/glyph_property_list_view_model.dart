@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/glyph_property.dart';
+import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/entity/glyph_property_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
@@ -17,7 +17,7 @@ class GlyphPropertyListViewModel {
   final repository = GlyphPropertyRepository();
 
   final page = signal(1);
-  final properties = signal(<GlyphProperty>[]);
+  final properties = signal(<GlyphPropertyEntity>[]);
   final total = signal(0);
 
   Future<void> copyGlyphProperty(int id) async {

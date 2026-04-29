@@ -1,4 +1,4 @@
-import 'package:foxy/entity/gossip_menu_option_locale.dart';
+import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// gossip_menu_option_locale 表的数据访问层（只读）
@@ -8,13 +8,13 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
   static const _table = 'gossip_menu_option_locale';
 
   /// 按 MenuID 查询所有 locale 记录
-  Future<List<GossipMenuOptionLocale>> getGossipMenuOptionLocales({
+  Future<List<GossipMenuOptionLocaleEntity>> getGossipMenuOptionLocales({
     required int menuId,
   }) async {
     try {
       final results = await laconic.table(_table).where('MenuID', menuId).get();
       return results
-          .map((e) => GossipMenuOptionLocale.fromJson(e.toMap()))
+          .map((e) => GossipMenuOptionLocaleEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];

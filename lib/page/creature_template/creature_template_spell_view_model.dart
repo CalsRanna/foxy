@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/creature_template_spell.dart';
+import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -10,7 +10,7 @@ class CreatureTemplateSpellViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final creatureId = signal(0);
-  final items = signal<List<CreatureTemplateSpell>>([]);
+  final items = signal<List<CreatureTemplateSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -44,15 +44,15 @@ class CreatureTemplateSpellViewModel {
   }
 
   /// 填充表单
-  void fillForm(CreatureTemplateSpell spell) {
+  void fillForm(CreatureTemplateSpellEntity spell) {
     indexController.text = spell.index.toString();
     spellController.text = spell.spell.toString();
     verifiedBuildController.text = spell.verifiedBuild.toString();
   }
 
   /// 从表单收集数据
-  CreatureTemplateSpell collectFromForm() {
-    final spell = CreatureTemplateSpell();
+  CreatureTemplateSpellEntity collectFromForm() {
+    final spell = CreatureTemplateSpellEntity();
     spell.creatureID = creatureId.value;
     spell.index = _parseInt(indexController.text);
     spell.spell = _parseInt(spellController.text);

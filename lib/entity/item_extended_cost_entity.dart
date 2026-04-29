@@ -1,5 +1,5 @@
 /// 扩展价格
-class ItemExtendedCost {
+class ItemExtendedCostEntity {
   final int id;
   final int honorPoints;
   final int arenaPoints;
@@ -17,7 +17,7 @@ class ItemExtendedCost {
   final int requiredArenaRating;
   final int itemPurchaseGroup;
 
-  const ItemExtendedCost({
+  const ItemExtendedCostEntity({
     this.id = 0,
     this.honorPoints = 0,
     this.arenaPoints = 0,
@@ -36,8 +36,8 @@ class ItemExtendedCost {
     this.itemPurchaseGroup = 0,
   });
 
-  factory ItemExtendedCost.fromJson(Map<String, dynamic> json) {
-    return ItemExtendedCost(
+  factory ItemExtendedCostEntity.fromJson(Map<String, dynamic> json) {
+    return ItemExtendedCostEntity(
       id: json['ID'] ?? json['id'] ?? 0,
       honorPoints: json['HonorPoints'] ?? json['honorPoints'] ?? 0,
       arenaPoints: json['ArenaPoints'] ?? json['arenaPoints'] ?? 0,

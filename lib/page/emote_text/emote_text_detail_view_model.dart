@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/emote_text.dart';
+import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -35,7 +35,7 @@ class EmoteTextDetailViewModel {
   final emoteText14Controller = TextEditingController();
   final emoteText15Controller = TextEditingController();
 
-  final emote = signal(EmoteText());
+  final emote = signal(EmoteTextEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -72,8 +72,8 @@ class EmoteTextDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 EmoteText
-  EmoteText _collectFromControllers() {
-    return EmoteText(
+  EmoteTextEntity _collectFromControllers() {
+    return EmoteTextEntity(
       id: _parseInt(idController.text),
       name: nameController.text,
       emoteId: _parseInt(emoteIdController.text),
@@ -103,7 +103,7 @@ class EmoteTextDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, EmoteText t) {
+  void _logActivity(ActivityActionType action, EmoteTextEntity t) {
     final log = ActivityLogEntity(
       module: 'emote_text',
       actionType: action,
@@ -149,7 +149,7 @@ class EmoteTextDetailViewModel {
     }
   }
 
-  void _initControllers(EmoteText emoteText) {
+  void _initControllers(EmoteTextEntity emoteText) {
     /// Basic
     idController.text = emoteText.id.toString();
     nameController.text = emoteText.name;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/item_random_properties.dart';
+import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -63,7 +63,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<ItemRandomProperties> _items = [];
+  List<ItemRandomPropertiesEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

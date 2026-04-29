@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/item_template_locale.dart';
+import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/repository/item_template_locale_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -66,8 +66,8 @@ class _ItemTemplateLocaleNameSelectorState
 
 class _LocaleDialog extends StatefulWidget {
   final int entry;
-  final List<ItemTemplateLocale> locales;
-  final Future<void> Function(List<ItemTemplateLocale>) onSave;
+  final List<ItemTemplateLocaleEntity> locales;
+  final Future<void> Function(List<ItemTemplateLocaleEntity>) onSave;
   final String title;
 
   const _LocaleDialog({
@@ -207,7 +207,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     setState(() => _saving = true);
     try {
       final locales = _rows.map((row) {
-        return ItemTemplateLocale(
+        return ItemTemplateLocaleEntity(
           id: widget.entry,
           locale: row.localeController.text,
           name: row.nameController.text,
@@ -229,7 +229,7 @@ class _LocaleRow {
     : localeController = TextEditingController(),
       nameController = TextEditingController();
 
-  _LocaleRow.fromLocale(ItemTemplateLocale locale)
+  _LocaleRow.fromLocale(ItemTemplateLocaleEntity locale)
     : localeController = TextEditingController(text: locale.locale),
       nameController = TextEditingController(text: locale.name);
 

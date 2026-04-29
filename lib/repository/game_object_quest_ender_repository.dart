@@ -1,4 +1,4 @@
-import 'package:foxy/entity/game_object_quest_ender.dart';
+import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// gameobject_questender 表的数据访问层
@@ -14,18 +14,20 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
   }
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
-  Future<GameObjectQuestEnder> createGameObjectQuestEnder(int questId) async {
+  Future<GameObjectQuestEnderEntity> createGameObjectQuestEnder(
+    int questId,
+  ) async {
     try {
       final result = await laconic.table(_table).where('quest', questId).select(
         ['MAX(id) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      return GameObjectQuestEnder(
+      return GameObjectQuestEnderEntity(
         quest: questId,
         id: maxId == null ? 0 : maxId + 1,
       );
     } catch (e) {
-      return GameObjectQuestEnder(quest: questId, id: 0);
+      return GameObjectQuestEnderEntity(quest: questId, id: 0);
     }
   }
 
@@ -38,7 +40,7 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
   }
 
   /// 按复合键查找
-  Future<GameObjectQuestEnder?> getGameObjectQuestEnder(
+  Future<GameObjectQuestEnderEntity?> getGameObjectQuestEnder(
     Map<String, dynamic> id,
   ) async {
     try {
@@ -47,7 +49,7 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
         builder = builder.where(k, v);
       });
       final result = await builder.first();
-      return GameObjectQuestEnder.fromJson(result.toMap());
+      return GameObjectQuestEnderEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -75,13 +77,15 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
     }
   }
 
-  Future<void> storeGameObjectQuestEnder(GameObjectQuestEnder model) async {
+  Future<void> storeGameObjectQuestEnder(
+    GameObjectQuestEnderEntity model,
+  ) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   Future<void> updateGameObjectQuestEnder(
     Map<String, dynamic> id,
-    GameObjectQuestEnder model,
+    GameObjectQuestEnderEntity model,
   ) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/emote_text.dart';
+import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
@@ -18,7 +18,7 @@ class EmoteTextListViewModel {
   final repository = EmoteTextRepository();
 
   final page = signal(1);
-  final emotes = signal(<EmoteText>[]);
+  final emotes = signal(<EmoteTextEntity>[]);
   final total = signal(0);
 
   Future<void> copyEmoteText(int id) async {

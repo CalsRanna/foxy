@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/glyph_property.dart';
+import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -20,7 +20,7 @@ class GlyphPropertyDetailViewModel {
   final glyphSlotFlagsController = TextEditingController();
   final spellIconIdController = TextEditingController();
 
-  final property = signal(GlyphProperty());
+  final property = signal(GlyphPropertyEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -57,8 +57,8 @@ class GlyphPropertyDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 GlyphProperty
-  GlyphProperty _collectFromControllers() {
-    return GlyphProperty(
+  GlyphPropertyEntity _collectFromControllers() {
+    return GlyphPropertyEntity(
       id: _parseInt(idController.text),
       spellId: _parseInt(spellIdController.text),
       glyphSlotFlags: _parseInt(glyphSlotFlagsController.text),
@@ -73,7 +73,7 @@ class GlyphPropertyDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, GlyphProperty t) {
+  void _logActivity(ActivityActionType action, GlyphPropertyEntity t) {
     final log = ActivityLogEntity(
       module: 'glyph_property',
       actionType: action,
@@ -104,7 +104,7 @@ class GlyphPropertyDetailViewModel {
     }
   }
 
-  void _initControllers(GlyphProperty glyphProperty) {
+  void _initControllers(GlyphPropertyEntity glyphProperty) {
     /// Basic
     idController.text = glyphProperty.id.toString();
 

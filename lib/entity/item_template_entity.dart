@@ -1,5 +1,5 @@
 /// 物品模板（完整字段，对应 AzerothCore item_template 表）
-class ItemTemplate {
+class ItemTemplateEntity {
   // --- 基础标识 ---
   final int entry;
   final String name;
@@ -135,7 +135,7 @@ class ItemTemplate {
   String get displayDescription =>
       localeDescription.isNotEmpty ? localeDescription : description;
 
-  const ItemTemplate({
+  const ItemTemplateEntity({
     // --- 基础标识 ---
     this.entry = 0,
     this.name = '',
@@ -248,8 +248,8 @@ class ItemTemplate {
     this.verifiedBuild = 0,
   });
 
-  factory ItemTemplate.fromJson(Map<String, dynamic> json) {
-    return ItemTemplate(
+  factory ItemTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return ItemTemplateEntity(
       // --- 基础标识 ---
       entry: json['entry'] ?? 0,
       name: json['name'] ?? '',
@@ -314,7 +314,9 @@ class ItemTemplate {
       block: json['block'] ?? 0,
       // --- 缩放属性 ---
       scalingStatDistribution:
-          json['ScalingStatDistribution'] ?? json['scalingStatDistribution'] ?? 0,
+          json['ScalingStatDistribution'] ??
+          json['scalingStatDistribution'] ??
+          0,
       scalingStatValue:
           json['ScalingStatValue'] ?? json['scalingStatValue'] ?? 0,
       // --- 统计属性（10 组）---
@@ -333,12 +335,9 @@ class ItemTemplate {
       spellTriggers: [
         for (var i = 1; i <= 5; i++) json['spelltrigger_$i'] ?? 0,
       ],
-      spellCharges: [
-        for (var i = 1; i <= 5; i++) json['spellcharges_$i'] ?? 0,
-      ],
+      spellCharges: [for (var i = 1; i <= 5; i++) json['spellcharges_$i'] ?? 0],
       spellPpmRates: [
-        for (var i = 1; i <= 5; i++)
-          (json['spellppmRate_$i'] ?? 0.0) as double,
+        for (var i = 1; i <= 5; i++) (json['spellppmRate_$i'] ?? 0.0) as double,
       ],
       spellCooldowns: [
         for (var i = 1; i <= 5; i++) json['spellcooldown_$i'] ?? 0,
@@ -347,8 +346,7 @@ class ItemTemplate {
         for (var i = 1; i <= 5; i++) json['spellcategory_$i'] ?? 0,
       ],
       spellCategoryCooldowns: [
-        for (var i = 1; i <= 5; i++)
-          json['spellcategorycooldown_$i'] ?? 0,
+        for (var i = 1; i <= 5; i++) json['spellcategorycooldown_$i'] ?? 0,
       ],
       // --- 使用限制 ---
       allowableClass:
@@ -374,7 +372,9 @@ class ItemTemplate {
       requiredReputationRank:
           json['RequiredReputationRank'] ?? json['requiredReputationRank'] ?? 0,
       requiredDisenchantSkill:
-          json['RequiredDisenchantSkill'] ?? json['requiredDisenchantSkill'] ?? 0,
+          json['RequiredDisenchantSkill'] ??
+          json['requiredDisenchantSkill'] ??
+          0,
       // --- 区域与节日 ---
       mapId: json['Map'] ?? json['mapId'] ?? 0,
       area: json['area'] ?? 0,
@@ -383,9 +383,7 @@ class ItemTemplate {
       lockid: json['lockid'] ?? 0,
       gemProperties: json['GemProperties'] ?? json['gemProperties'] ?? 0,
       socketBonus: json['socketBonus'] ?? 0,
-      socketColors: [
-        for (var i = 1; i <= 3; i++) json['socketColor_$i'] ?? 0,
-      ],
+      socketColors: [for (var i = 1; i <= 3; i++) json['socketColor_$i'] ?? 0],
       socketContents: [
         for (var i = 1; i <= 3; i++) json['socketContent_$i'] ?? 0,
       ],

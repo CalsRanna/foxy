@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/gossip_menu_option.dart';
+import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -11,7 +11,7 @@ class GossipMenuOptionViewModel {
   final _repository = GossipMenuOptionRepository();
 
   final currentMenuId = signal(0);
-  final options = signal<List<GossipMenuOption>>([]);
+  final options = signal<List<GossipMenuOptionEntity>>([]);
   final loading = signal(false);
   final saving = signal(false);
 
@@ -163,7 +163,7 @@ class GossipMenuOptionViewModel {
     verifiedBuildController.dispose();
   }
 
-  void _applyToControllers(GossipMenuOption o) {
+  void _applyToControllers(GossipMenuOptionEntity o) {
     menuIdController.text = o.menuId.toString();
     optionIdController.text = o.optionId.toString();
     optionIconController.value = {o.optionIcon};
@@ -180,8 +180,8 @@ class GossipMenuOptionViewModel {
     verifiedBuildController.text = o.verifiedBuild.toString();
   }
 
-  GossipMenuOption _collectFromControllers() {
-    return GossipMenuOption(
+  GossipMenuOptionEntity _collectFromControllers() {
+    return GossipMenuOptionEntity(
       menuId: int.tryParse(menuIdController.text) ?? 0,
       optionId: int.tryParse(optionIdController.text) ?? 0,
       optionIcon: optionIconController.value.isNotEmpty

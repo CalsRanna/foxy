@@ -1,5 +1,5 @@
 /// 生物模板技能
-class CreatureTemplateSpell {
+class CreatureTemplateSpellEntity {
   int creatureID = 0;
   int index = 0;
   int spell = 0;
@@ -9,10 +9,10 @@ class CreatureTemplateSpell {
   String spellName = '';
   String spellSubtext = '';
 
-  CreatureTemplateSpell();
+  CreatureTemplateSpellEntity();
 
-  factory CreatureTemplateSpell.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateSpell()
+  factory CreatureTemplateSpellEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateSpellEntity()
       ..creatureID = json['CreatureID'] ?? json['creatureID'] ?? 0
       ..index = json['Index'] ?? json['index'] ?? 0
       ..spell = json['Spell'] ?? json['spell'] ?? 0

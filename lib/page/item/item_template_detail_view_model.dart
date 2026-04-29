@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/item_template.dart';
+import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -156,7 +156,7 @@ class ItemTemplateDetailViewModel {
 
   /// Signals
   final entry = signal(0);
-  final template = signal(ItemTemplate());
+  final template = signal(ItemTemplateEntity());
   final statsCount = signal(0);
   final saving = signal(false);
 
@@ -180,7 +180,7 @@ class ItemTemplateDetailViewModel {
     }
   }
 
-  void _initControllers(ItemTemplate template) {
+  void _initControllers(ItemTemplateEntity template) {
     /// Card 1: Basic Info
     entryController.text = template.entry.toString();
     nameController.text = template.name;
@@ -309,8 +309,8 @@ class ItemTemplateDetailViewModel {
     verifiedBuildController.text = template.verifiedBuild.toString();
   }
 
-  ItemTemplate _collectFromControllers() {
-    return ItemTemplate(
+  ItemTemplateEntity _collectFromControllers() {
+    return ItemTemplateEntity(
       /// Card 1: Basic Info
       entry: _parseInt(entryController.text),
       name: nameController.text,
@@ -504,7 +504,7 @@ class ItemTemplateDetailViewModel {
   int _getSelectValue(ShadSelectController<int> controller) =>
       controller.value.firstOrNull ?? 0;
 
-  void _logActivity(ActivityActionType action, ItemTemplate t) {
+  void _logActivity(ActivityActionType action, ItemTemplateEntity t) {
     final log = ActivityLogEntity(
       module: 'item_template',
       actionType: action,

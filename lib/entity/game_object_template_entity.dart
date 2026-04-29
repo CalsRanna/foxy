@@ -1,11 +1,11 @@
-class BriefGameObjectTemplate {
+class BriefGameObjectTemplateEntity {
   final int entry;
   final String name;
   final String localeName;
   final int type;
   final double size;
 
-  const BriefGameObjectTemplate({
+  const BriefGameObjectTemplateEntity({
     this.entry = 0,
     this.name = '',
     this.localeName = '',
@@ -13,8 +13,8 @@ class BriefGameObjectTemplate {
     this.size = 0,
   });
 
-  factory BriefGameObjectTemplate.fromJson(Map<String, dynamic> json) {
-    return BriefGameObjectTemplate(
+  factory BriefGameObjectTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectTemplateEntity(
       entry: json['entry'] ?? 0,
       name: json['name'] ?? '',
       localeName: json['Name'] ?? '',

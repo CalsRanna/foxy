@@ -1,4 +1,4 @@
-import 'package:foxy/entity/game_object_template_addon.dart';
+import 'package:foxy/entity/game_object_template_addon_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GameObjectTemplateAddonRepository with RepositoryMixin {

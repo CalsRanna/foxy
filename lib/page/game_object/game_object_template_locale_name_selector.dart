@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/game_object_template_locale.dart';
+import 'package:foxy/entity/game_object_template_locale_entity.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -74,8 +74,8 @@ class _GameObjectTemplateLocaleNameSelectorState
 
 class _LocaleDialog extends StatefulWidget {
   final int entry;
-  final List<GameObjectTemplateLocale> locales;
-  final Future<void> Function(List<GameObjectTemplateLocale>) onSave;
+  final List<GameObjectTemplateLocaleEntity> locales;
+  final Future<void> Function(List<GameObjectTemplateLocaleEntity>) onSave;
   final String title;
   final bool isCaption;
 
@@ -222,7 +222,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     setState(() => _saving = true);
     try {
       final locales = _rows.map((row) {
-        return GameObjectTemplateLocale(
+        return GameObjectTemplateLocaleEntity(
           entry: widget.entry,
           locale: row.localeController.text,
           name: row.nameController.text,
@@ -244,7 +244,7 @@ class _LocaleRow {
     : localeController = TextEditingController(),
       nameController = TextEditingController();
 
-  _LocaleRow.fromLocale(GameObjectTemplateLocale locale)
+  _LocaleRow.fromLocale(GameObjectTemplateLocaleEntity locale)
     : localeController = TextEditingController(text: locale.locale),
       nameController = TextEditingController(text: locale.name);
 

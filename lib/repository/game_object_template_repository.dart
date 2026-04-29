@@ -1,6 +1,6 @@
-import 'package:foxy/entity/game_object_template.dart';
+import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
-import 'package:foxy/entity/game_object_template_locale.dart';
+import 'package:foxy/entity/game_object_template_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GameObjectTemplateRepository with RepositoryMixin {
@@ -40,7 +40,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('entry', entry).delete();
   }
 
-  Future<List<BriefGameObjectTemplate>> getBriefGameObjectTemplates({
+  Future<List<BriefGameObjectTemplateEntity>> getBriefGameObjectTemplates({
     int page = 1,
     GameObjectTemplateFilterEntity? filter,
   }) async {
@@ -62,7 +62,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
-        .map((e) => BriefGameObjectTemplate.fromJson(e.toMap()))
+        .map((e) => BriefGameObjectTemplateEntity.fromJson(e.toMap()))
         .toList();
   }
 
@@ -84,18 +84,18 @@ class GameObjectTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('entry', template.entry).update(json);
   }
 
-  Future<List<GameObjectTemplateLocale>> getGameObjectTemplateLocales(
+  Future<List<GameObjectTemplateLocaleEntity>> getGameObjectTemplateLocales(
     int entry,
   ) async {
     var results = await laconic.table(_localeTable).where('entry', entry).get();
     return results
-        .map((e) => GameObjectTemplateLocale.fromJson(e.toMap()))
+        .map((e) => GameObjectTemplateLocaleEntity.fromJson(e.toMap()))
         .toList();
   }
 
   Future<void> saveGameObjectTemplateLocales(
     int entry,
-    List<GameObjectTemplateLocale> locales,
+    List<GameObjectTemplateLocaleEntity> locales,
   ) async {
     await laconic.transaction(() async {
       await laconic.table(_localeTable).where('entry', entry).delete();

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/item_extended_cost.dart';
+import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
@@ -17,7 +17,7 @@ class ItemExtendedCostListViewModel {
   final repository = ItemExtendedCostRepository();
 
   final page = signal(1);
-  final costs = signal(<ItemExtendedCost>[]);
+  final costs = signal(<ItemExtendedCostEntity>[]);
   final total = signal(0);
 
   Future<void> copyItemExtendedCost(int id) async {

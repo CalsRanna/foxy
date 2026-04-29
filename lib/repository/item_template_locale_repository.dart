@@ -1,4 +1,4 @@
-import 'package:foxy/entity/item_template_locale.dart';
+import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// item_template_locale 表的数据访问层
@@ -7,11 +7,11 @@ class ItemTemplateLocaleRepository with RepositoryMixin {
   static const _table = 'item_template_locale';
 
   /// 按 ID 查询该 ItemTemplate 的所有 locale
-  Future<List<ItemTemplateLocale>> getItemTemplateLocales(int id) async {
+  Future<List<ItemTemplateLocaleEntity>> getItemTemplateLocales(int id) async {
     try {
       final results = await laconic.table(_table).where('ID', id).get();
       return results
-          .map((e) => ItemTemplateLocale.fromJson(e.toMap()))
+          .map((e) => ItemTemplateLocaleEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];
@@ -19,7 +19,10 @@ class ItemTemplateLocaleRepository with RepositoryMixin {
   }
 
   /// 删除-然后-重新插入模式（replaceAll）
-  Future<void> replaceAll(int id, List<ItemTemplateLocale> locales) async {
+  Future<void> replaceAll(
+    int id,
+    List<ItemTemplateLocaleEntity> locales,
+  ) async {
     await laconic.table(_table).where('ID', id).delete();
     if (locales.isNotEmpty) {
       await laconic

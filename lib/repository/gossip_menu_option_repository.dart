@@ -1,4 +1,4 @@
-import 'package:foxy/entity/gossip_menu_option.dart';
+import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// gossip_menu_option 表的数据访问层
@@ -8,7 +8,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
   static const _localeTable = 'gossip_menu_option_locale';
 
   /// 按 MenuID 搜索该菜单下的所有选项（带 locale JOIN）
-  Future<List<GossipMenuOption>> getGossipMenuOptions({
+  Future<List<GossipMenuOptionEntity>> getGossipMenuOptions({
     required int menuId,
   }) async {
     try {
@@ -40,45 +40,51 @@ class GossipMenuOptionRepository with RepositoryMixin {
       );
       builder = builder.where('gmo.MenuID', menuId);
       final results = await builder.get();
-      return results.map((e) => GossipMenuOption.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => GossipMenuOptionEntity.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       return [];
     }
   }
 
   /// 按复合键查找
-  Future<GossipMenuOption?> getGossipMenuOption(Map<String, dynamic> id) async {
+  Future<GossipMenuOptionEntity?> getGossipMenuOption(
+    Map<String, dynamic> id,
+  ) async {
     try {
       var builder = laconic.table(_table);
       id.forEach((k, v) {
         builder = builder.where(k, v);
       });
       final result = await builder.first();
-      return GossipMenuOption.fromJson(result.toMap());
+      return GossipMenuOptionEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 取指定 MenuID 下的下一个 OptionID
-  Future<GossipMenuOption> createGossipMenuOption({required int menuId}) async {
+  Future<GossipMenuOptionEntity> createGossipMenuOption({
+    required int menuId,
+  }) async {
     try {
       final result = await laconic.table(_table).where('MenuID', menuId).select(
         ['MAX(OptionID) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      return GossipMenuOption(
+      return GossipMenuOptionEntity(
         menuId: menuId,
         optionId: maxId == null ? 0 : maxId + 1,
       );
     } catch (e) {
-      return GossipMenuOption(menuId: menuId, optionId: 0);
+      return GossipMenuOptionEntity(menuId: menuId, optionId: 0);
     }
   }
 
   Future<void> updateGossipMenuOption(
     Map<String, dynamic> id,
-    GossipMenuOption model,
+    GossipMenuOptionEntity model,
   ) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
@@ -91,7 +97,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> storeGossipMenuOption(GossipMenuOption model) async {
+  Future<void> storeGossipMenuOption(GossipMenuOptionEntity model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 

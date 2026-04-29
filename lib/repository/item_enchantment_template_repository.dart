@@ -1,4 +1,4 @@
-import 'package:foxy/entity/item_enchantment_template.dart';
+import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemEnchantmentTemplateRepository with RepositoryMixin {
@@ -140,7 +140,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<ItemEnchantmentTemplate?> getItemEnchantmentTemplate(
+  Future<ItemEnchantmentTemplateEntity?> getItemEnchantmentTemplate(
     int entry,
     int ench,
   ) async {
@@ -150,7 +150,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
           .where('entry', entry)
           .where('ench', ench)
           .first();
-      return ItemEnchantmentTemplate.fromJson(result.toMap());
+      return ItemEnchantmentTemplateEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -158,14 +158,14 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
 
   /// 新增
   Future<void> storeItemEnchantmentTemplate(
-    ItemEnchantmentTemplate model,
+    ItemEnchantmentTemplateEntity model,
   ) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   /// 更新
   Future<void> updateItemEnchantmentTemplate(
-    ItemEnchantmentTemplate model, {
+    ItemEnchantmentTemplateEntity model, {
     int? oldEnch,
   }) async {
     var json = model.toJson();
@@ -188,7 +188,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 复制：取新 ench = MAX+1
-  Future<ItemEnchantmentTemplate> copyItemEnchantmentTemplate(
+  Future<ItemEnchantmentTemplateEntity> copyItemEnchantmentTemplate(
     int entry,
     int ench,
   ) async {
@@ -206,7 +206,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
       throw Exception('源记录不存在');
     }
 
-    var newModel = ItemEnchantmentTemplate(
+    var newModel = ItemEnchantmentTemplateEntity(
       entry: source.entry,
       ench: maxEnch + 1,
       chance: source.chance,

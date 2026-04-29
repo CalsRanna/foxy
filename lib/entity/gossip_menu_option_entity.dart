@@ -2,7 +2,7 @@
 ///
 /// 列表查询时通过 LEFT JOIN gossip_menu_option_locale 得到 localeOptionText，
 /// 仅用于列表展示，不参与 toJson。
-class GossipMenuOption {
+class GossipMenuOptionEntity {
   final int menuId;
   final int optionId;
   final int optionIcon;
@@ -21,7 +21,7 @@ class GossipMenuOption {
   /// 仅列表展示用（JOIN 结果）
   final String localeOptionText;
 
-  const GossipMenuOption({
+  const GossipMenuOptionEntity({
     this.menuId = 0,
     this.optionId = 0,
     this.optionIcon = 0,
@@ -39,8 +39,8 @@ class GossipMenuOption {
     this.localeOptionText = '',
   });
 
-  factory GossipMenuOption.fromJson(Map<String, dynamic> json) {
-    return GossipMenuOption(
+  factory GossipMenuOptionEntity.fromJson(Map<String, dynamic> json) {
+    return GossipMenuOptionEntity(
       menuId: json['MenuID'] ?? json['menuid'] ?? 0,
       optionId: json['OptionID'] ?? json['optionid'] ?? 0,
       optionIcon: json['OptionIcon'] ?? json['optionicon'] ?? 0,

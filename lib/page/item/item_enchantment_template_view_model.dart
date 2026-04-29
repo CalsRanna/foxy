@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/item_enchantment_template.dart';
+import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -59,8 +59,8 @@ class ItemEnchantmentTemplateViewModel {
   }
 
   /// 从表单收集数据
-  ItemEnchantmentTemplate collectFromForm() {
-    return ItemEnchantmentTemplate(
+  ItemEnchantmentTemplateEntity collectFromForm() {
+    return ItemEnchantmentTemplateEntity(
       entry: entry.value,
       ench: _parseInt(enchController.text),
       chance: _parseDouble(chanceController.text),

@@ -1,16 +1,16 @@
-class ItemDisplayInfo {
+class ItemDisplayInfoEntity {
   final int id;
   final String modelName0;
   final String inventoryIcon0;
 
-  const ItemDisplayInfo({
+  const ItemDisplayInfoEntity({
     this.id = 0,
     this.modelName0 = '',
     this.inventoryIcon0 = '',
   });
 
-  factory ItemDisplayInfo.fromJson(Map<String, dynamic> json) {
-    return ItemDisplayInfo(
+  factory ItemDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
+    return ItemDisplayInfoEntity(
       id: json['ID'] ?? 0,
       modelName0: json['ModelName0'] ?? '',
       inventoryIcon0: json['InventoryIcon0'] ?? '',
