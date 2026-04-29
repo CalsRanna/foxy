@@ -6,7 +6,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
 
   /// 搜索（分页）
-  Future<List<ItemEnchantmentTemplate>> getScalingStatDistributions({
+  Future<List<BriefItemEnchantmentTemplate>> getScalingStatDistributions({
     String? id,
     int page = 1,
   }) async {
@@ -23,7 +23,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
       // 但这里用更轻量的解析
       return results.map((e) {
         var map = e.toMap();
-        return ItemEnchantmentTemplate(
+        return BriefItemEnchantmentTemplate(
           entry: (map['ID'] as int?) ?? 0,
           name: (map['Name_lang_zhCN'] as String?) ?? '',
         );

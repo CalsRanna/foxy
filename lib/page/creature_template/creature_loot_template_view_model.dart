@@ -13,7 +13,7 @@ class CreatureLootTemplateViewModel {
 
   final creatureId = signal(0);
   final creatureTemplate = signal<CreatureTemplate?>(null);
-  final items = signal<List<LootTemplate>>([]);
+  final items = signal<List<BriefLootTemplate>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -71,7 +71,7 @@ class CreatureLootTemplateViewModel {
   }
 
   /// 填充表单
-  void fillForm(LootTemplate loot) {
+  void fillForm(BriefLootTemplate loot) {
     itemController.text = loot.item.toString();
     referenceController.text = loot.reference.toString();
     chanceController.text = loot.chance.toString();

@@ -47,7 +47,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
     }
   }
 
-  Future<List<CreatureSpellData>> getCreatureSpellDatas({
+  Future<List<BriefCreatureSpellData>> getCreatureSpellDatas({
     String? id,
     String? spell,
     int page = 1,
@@ -104,7 +104,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
       }
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
-      return results.map((e) => CreatureSpellData.fromJson(e.toMap())).toList();
+      return results.map((e) => BriefCreatureSpellData.fromJson(e.toMap())).toList();
     } catch (e) {
       // 表可能不存在
       return [];

@@ -5,7 +5,7 @@ class NpcTrainerRepository with RepositoryMixin {
   static const _table = 'npc_trainer';
 
   /// 获取指定训练师的所有技能（带技能信息）
-  Future<List<NpcTrainer>> getNpcTrainers(int id) async {
+  Future<List<BriefNpcTrainer>> getNpcTrainers(int id) async {
     try {
       var builder = laconic.table('$_table AS nt');
       const fields = [
@@ -21,7 +21,7 @@ class NpcTrainerRepository with RepositoryMixin {
       builder = builder.where('nt.ID', id);
       builder = builder.orderBy('nt.SpellID');
       var results = await builder.get();
-      return results.map((e) => NpcTrainer.fromJson(e.toMap())).toList();
+      return results.map((e) => BriefNpcTrainer.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
@@ -92,8 +92,6 @@ class NpcTrainerRepository with RepositoryMixin {
       reqSkillRank: source.reqSkillRank,
       reqLevel: source.reqLevel,
       reqSpell: source.reqSpell,
-      spellName: source.spellName,
-      spellSubtext: source.spellSubtext,
     );
 
     await storeNpcTrainer(newTrainer);
