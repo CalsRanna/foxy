@@ -46,4 +46,13 @@ class BriefGameobjectQuestender {
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'quest': quest,
+      'name': name,
+      'Name': localeName,
+    };
+  }
 }

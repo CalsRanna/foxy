@@ -32,6 +32,18 @@ class BriefCreatureTemplate {
   String get displayName => localeName.isNotEmpty ? localeName : name;
   String get displaySubName =>
       localeSubName.isNotEmpty ? localeSubName : subName;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'name': name,
+      'subname': subName,
+      'Name': localeName,
+      'Title': localeSubName,
+      'minlevel': minLevel,
+      'maxlevel': maxLevel,
+    };
+  }
 }
 
 class CreatureTemplate {

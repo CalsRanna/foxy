@@ -37,6 +37,18 @@ class BriefSpell {
 
   String get displayName => name;
   String get displaySubtext => subtext;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Name_lang_zhCN': name,
+      'NameSubtext_lang_zhCN': subtext,
+      'Description_lang_zhCN': description,
+      'AuraDescription_lang_zhCN': auraDescription,
+      'Duration': duration,
+      'TextureFilename': textureFilename,
+    };
+  }
 }
 
 /// 法术（技能）完整模型 - 对应 foxy.dbc_spell 表

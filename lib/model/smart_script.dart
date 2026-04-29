@@ -33,6 +33,19 @@ class BriefSmartScript {
   }
 
   String get displayName => comment;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entryorguid': entryOrGuid,
+      'source_type': sourceType,
+      'id': id,
+      'link': link,
+      'comment': comment,
+      'event_type': eventType,
+      'action_type': actionType,
+      'target_type': targetType,
+    };
+  }
 }
 
 class SmartScript {

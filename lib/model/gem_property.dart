@@ -55,4 +55,13 @@ class BriefGemProperty {
       type: json['Type'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Enchant_ID': enchantId,
+      'Maxcount_inv': maxcountInv,
+      'Type': type,
+    };
+  }
 }
