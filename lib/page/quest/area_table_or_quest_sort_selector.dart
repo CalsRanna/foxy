@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/area_table.dart';
+import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/entity/quest_sort.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
@@ -71,7 +71,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<AreaTable> _areaItems = [];
+  List<AreaTableEntity> _areaItems = [];
   List<QuestSort> _questItems = [];
   int _total = 0;
   int _page = 1;

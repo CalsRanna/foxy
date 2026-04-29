@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/area_table.dart';
+import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -38,7 +38,7 @@ class AreaTableDetailViewModel {
   final liquidTypeId2Controller = TextEditingController();
   final liquidTypeId3Controller = TextEditingController();
 
-  final area = signal(AreaTable());
+  final area = signal(AreaTableEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -75,8 +75,8 @@ class AreaTableDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 AreaTable
-  AreaTable _collectFromControllers() {
-    final t = AreaTable(
+  AreaTableEntity _collectFromControllers() {
+    final t = AreaTableEntity(
       id: _parseInt(idController.text),
       areaNameLangZhCn: nameController.text,
       continentId: _parseInt(continentIdController.text),
@@ -118,7 +118,7 @@ class AreaTableDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, AreaTable t) {
+  void _logActivity(ActivityActionType action, AreaTableEntity t) {
     final log = ActivityLogEntity(
       module: 'area_table',
       actionType: action,
@@ -167,7 +167,7 @@ class AreaTableDetailViewModel {
     }
   }
 
-  void _initControllers(AreaTable table) {
+  void _initControllers(AreaTableEntity table) {
     /// Basic
     idController.text = table.id.toString();
     nameController.text = table.areaNameLangZhCn;
