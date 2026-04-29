@@ -1,11 +1,11 @@
-class CharTitle {
+class CharTitleEntity {
   final int id;
   final String nameLangZhCn;
 
-  const CharTitle({this.id = 0, this.nameLangZhCn = ''});
+  const CharTitleEntity({this.id = 0, this.nameLangZhCn = ''});
 
-  factory CharTitle.fromJson(Map<String, dynamic> json) {
-    return CharTitle(
+  factory CharTitleEntity.fromJson(Map<String, dynamic> json) {
+    return CharTitleEntity(
       id: json['ID'] ?? 0,
       nameLangZhCn: json['Name_lang_zhCN'] ?? '',
     );
