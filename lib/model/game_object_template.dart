@@ -24,6 +24,16 @@ class BriefGameObjectTemplate {
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'name': name,
+      'Name': localeName,
+      'type': type,
+      'size': size,
+    };
+  }
 }
 
 class GameObjectTemplate {

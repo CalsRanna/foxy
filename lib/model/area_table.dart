@@ -121,4 +121,15 @@ class BriefAreaTable {
       explorationLevel: json['ExplorationLevel'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'AreaName_lang_zhCN': areaNameLangZhCn,
+      'ContinentID': continentId,
+      'MinElevation': minElevation,
+      'ZoneMusic': zoneMusic,
+      'ExplorationLevel': explorationLevel,
+    };
+  }
 }

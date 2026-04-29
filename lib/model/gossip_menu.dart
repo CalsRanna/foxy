@@ -33,6 +33,17 @@ class BriefGossipMenu {
     if (text01.isNotEmpty) return text01;
     return '';
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'MenuID': menuId,
+      'TextID': textId,
+      'text0_0': text00,
+      'text0_1': text01,
+      'Text0_0': textLocale00,
+      'Text0_1': textLocale01,
+    };
+  }
 }
 
 /// gossip_menu 主表模型（复合键: MenuID + TextID）

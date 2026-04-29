@@ -48,6 +48,19 @@ class BriefQuestTemplate {
   /// 优先本地化描述 > 英文描述
   String get displayDescription =>
       localeDetails.isNotEmpty ? localeDetails : questDescription;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'LogTitle': logTitle,
+      'Title': localeTitle,
+      'QuestDescription': questDescription,
+      'Details': localeDetails,
+      'QuestType': questType,
+      'QuestLevel': questLevel,
+      'MinLevel': minLevel,
+    };
+  }
 }
 
 class QuestTemplate {
