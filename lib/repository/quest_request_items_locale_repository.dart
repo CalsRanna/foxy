@@ -7,13 +7,13 @@ class QuestRequestItemsLocaleRepository with RepositoryMixin {
   static const _table = 'quest_request_items_locale';
 
   /// 按 ID 查询该 QuestRequestItems 的所有 locale
-  Future<List<QuestRequestItemsLocale>> getQuestRequestItemsLocales(
+  Future<List<QuestRequestItemsLocaleEntity>> getQuestRequestItemsLocales(
     int id,
   ) async {
     try {
       final results = await laconic.table(_table).where('ID', id).get();
       return results
-          .map((e) => QuestRequestItemsLocale.fromJson(e.toMap()))
+          .map((e) => QuestRequestItemsLocaleEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];
@@ -21,7 +21,10 @@ class QuestRequestItemsLocaleRepository with RepositoryMixin {
   }
 
   /// 删除-然后-重新插入模式（replaceAll）
-  Future<void> replaceAll(int id, List<QuestRequestItemsLocale> locales) async {
+  Future<void> replaceAll(
+    int id,
+    List<QuestRequestItemsLocaleEntity> locales,
+  ) async {
     await laconic.table(_table).where('ID', id).delete();
     if (locales.isNotEmpty) {
       await laconic
