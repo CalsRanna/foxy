@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/area_table.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -122,7 +122,7 @@ class AreaTableListViewModel {
     final areas = this.areas.value;
     final area = areas.where((a) => a.id == id).firstOrNull;
     final name = area?.areaNameLangZhCn ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'area_table',
       actionType: action,
       entityId: id,

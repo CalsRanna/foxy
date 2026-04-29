@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/glyph_property.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
@@ -74,7 +74,7 @@ class GlyphPropertyDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, GlyphProperty t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'glyph_property',
       actionType: action,
       entityId: t.id,

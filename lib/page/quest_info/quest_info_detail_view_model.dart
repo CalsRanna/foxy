@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_info.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
@@ -67,7 +67,7 @@ class QuestInfoDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, QuestInfo t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'quest_info',
       actionType: action,
       entityId: t.id,

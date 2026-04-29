@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_info.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -66,7 +66,7 @@ class QuestInfoListViewModel {
     final infos = this.infos.value;
     final info = infos.where((i) => i.id == id).firstOrNull;
     final name = info?.infoNameLangZhCn ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'quest_info',
       actionType: action,
       entityId: id,

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/emote_text.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
@@ -104,7 +104,7 @@ class EmoteTextDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, EmoteText t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'emote_text',
       actionType: action,
       entityId: t.id,

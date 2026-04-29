@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gem_property.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
@@ -76,7 +76,7 @@ class GemPropertyDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, GemProperty t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'gem_property',
       actionType: action,
       entityId: t.id,

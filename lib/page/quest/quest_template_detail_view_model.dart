@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_template.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
@@ -439,7 +439,7 @@ class QuestTemplateDetailViewModel {
   int? _parseIntOrNull(String text) => text.isEmpty ? null : int.tryParse(text);
 
   void _logActivity(ActivityActionType action, QuestTemplate t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'quest_template',
       actionType: action,
       entityId: t.id,

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
@@ -114,7 +114,7 @@ class ScalingStatDistributionDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, ScalingStatDistribution t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'scaling_stat_distribution',
       actionType: action,
       entityId: t.id,

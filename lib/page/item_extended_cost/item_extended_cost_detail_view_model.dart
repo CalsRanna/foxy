@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_extended_cost.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
@@ -100,7 +100,7 @@ class ItemExtendedCostDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, ItemExtendedCost t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'item_extended_cost',
       actionType: action,
       entityId: t.id,

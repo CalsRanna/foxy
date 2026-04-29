@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -126,7 +126,7 @@ class GossipMenuListViewModel {
         .where((t) => t.menuId == menuId && t.textId == textId)
         .firstOrNull;
     final name = template?.text ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'gossip_menu',
       actionType: action,
       entityId: menuId,

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
@@ -119,7 +119,7 @@ class SpellItemEnchantmentDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, SpellItemEnchantment t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'spell_item_enchantment',
       actionType: action,
       entityId: t.id,

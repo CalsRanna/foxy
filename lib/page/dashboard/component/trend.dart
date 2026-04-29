@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class Trend extends StatelessWidget {
-  final List<ActivityLog> activities;
+  final List<ActivityLogEntity> activities;
 
   const Trend({super.key, required this.activities});
 
@@ -38,7 +38,7 @@ class Trend extends StatelessWidget {
 }
 
 class _TrendItem extends StatelessWidget {
-  final ActivityLog activity;
+  final ActivityLogEntity activity;
 
   const _TrendItem({required this.activity});
 

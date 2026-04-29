@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/game_object_template.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
@@ -222,7 +222,7 @@ class GameObjectTemplateDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, GameObjectTemplate t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'gameobject_template',
       actionType: action,
       entityId: t.entry,

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition.dart';
 import 'package:foxy/entity/condition_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -127,7 +127,7 @@ class ConditionListViewModel {
   }
 
   void _logActivity(ActivityActionType action, Condition c) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'conditions',
       actionType: action,
       entityId: c.sourceTypeOrReferenceId,

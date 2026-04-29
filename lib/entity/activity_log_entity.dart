@@ -15,7 +15,7 @@ enum ActivityActionType {
   }
 }
 
-class ActivityLog {
+class ActivityLogEntity {
   final int id;
   final String module;
   final ActivityActionType actionType;
@@ -23,7 +23,7 @@ class ActivityLog {
   final String entityName;
   final DateTime createdAt;
 
-  const ActivityLog({
+  const ActivityLogEntity({
     this.id = 0,
     required this.module,
     required this.actionType,
@@ -32,8 +32,8 @@ class ActivityLog {
     required this.createdAt,
   });
 
-  factory ActivityLog.fromJson(Map<String, dynamic> json) {
-    return ActivityLog(
+  factory ActivityLogEntity.fromJson(Map<String, dynamic> json) {
+    return ActivityLogEntity(
       id: json['id'] as int,
       module: json['module'] as String,
       actionType: ActivityActionType.fromString(json['action_type'] as String),

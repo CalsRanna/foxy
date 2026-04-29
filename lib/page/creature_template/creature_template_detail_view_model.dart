@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/creature_template.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
@@ -335,7 +335,7 @@ class CreatureTemplateDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, CreatureTemplate t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'creature_template',
       actionType: action,
       entityId: t.entry,

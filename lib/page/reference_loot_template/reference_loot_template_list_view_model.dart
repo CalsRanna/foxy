@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/loot_template.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -105,7 +105,7 @@ class ReferenceLootTemplateListViewModel {
     final templates = this.templates.value;
     final t = templates.where((t) => t.entry == entry).firstOrNull;
     final name = t?.item.toString() ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'reference_loot_template',
       actionType: action,
       entityId: entry,

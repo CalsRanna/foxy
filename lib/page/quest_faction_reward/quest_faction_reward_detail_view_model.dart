@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_faction_reward.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
@@ -88,7 +88,7 @@ class QuestFactionRewardDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, QuestFactionReward t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'quest_faction_reward',
       actionType: action,
       entityId: t.id,
