@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/quest_sort.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/quest_sort.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -30,7 +30,10 @@ class QuestSortDetailViewModel {
         await repository.updateQuestSort(t);
       }
       sort.value = t;
-      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('任务排序数据已保存'));
       ShadSonner.of(context).show(toast);

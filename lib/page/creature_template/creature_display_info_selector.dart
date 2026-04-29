@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/creature_display_info.dart';
+import 'package:foxy/entity/creature_display_info.dart';
 import 'package:foxy/repository/creature_display_info_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -81,7 +81,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('模型'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
@@ -258,14 +265,16 @@ class _DialogState extends State<_Dialog> {
         modelName: modelName,
         page: _page,
       );
-      final total = await repository.countCreatureDisplayInfos(id: id, modelName: modelName);
+      final total = await repository.countCreatureDisplayInfos(
+        id: id,
+        modelName: modelName,
+      );
       if (mounted) {
         setState(() {
           _items = items;
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

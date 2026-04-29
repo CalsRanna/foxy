@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/spell_loot_template.dart';
+import 'package:foxy/entity/spell_loot_template.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -86,6 +86,7 @@ class SpellLootTemplateViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) {
     if (text.isEmpty) return 0.0;
     final value = double.tryParse(text);

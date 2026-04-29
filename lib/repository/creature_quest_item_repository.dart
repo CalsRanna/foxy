@@ -1,11 +1,13 @@
-import 'package:foxy/model/creature_questitem.dart';
+import 'package:foxy/entity/creature_quest_item.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureQuestItemRepository with RepositoryMixin {
   static const _table = 'creature_questitem';
 
   /// 获取指定生物的所有任务物品（带物品信息）
-  Future<List<CreatureQuestItem>> getCreatureQuestItems(int creatureEntry) async {
+  Future<List<CreatureQuestItem>> getCreatureQuestItems(
+    int creatureEntry,
+  ) async {
     try {
       var builder = laconic.table('$_table AS cq');
       const fields = [
@@ -38,7 +40,10 @@ class CreatureQuestItemRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureQuestItem?> getCreatureQuestItem(int creatureEntry, int idx) async {
+  Future<CreatureQuestItem?> getCreatureQuestItem(
+    int creatureEntry,
+    int idx,
+  ) async {
     try {
       var result = await laconic
           .table(_table)
@@ -78,7 +83,10 @@ class CreatureQuestItemRepository with RepositoryMixin {
   }
 
   /// 复制任务物品
-  Future<CreatureQuestItem> copyCreatureQuestItem(int creatureEntry, int idx) async {
+  Future<CreatureQuestItem> copyCreatureQuestItem(
+    int creatureEntry,
+    int idx,
+  ) async {
     // 获取最大Idx
     var maxIdxResult = await laconic
         .table(_table)

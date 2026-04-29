@@ -1,5 +1,5 @@
-import 'package:foxy/model/glyph_property.dart';
-import 'package:foxy/model/glyph_property_filter_entity.dart';
+import 'package:foxy/entity/glyph_property.dart';
+import 'package:foxy/entity/glyph_property_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GlyphPropertyRepository with RepositoryMixin {

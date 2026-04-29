@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/spell.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/spell.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -236,7 +236,10 @@ class SpellDetailViewModel {
         await repository.updateSpell(t);
       }
       spell.value = t;
-      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('法术数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -255,8 +258,7 @@ class SpellDetailViewModel {
 
   Spell _collectFromControllers() {
     final t = Spell(
-
-    // === 基础文本 ===
+      // === 基础文本 ===
       nameLangZhCN: nameLangZhCNController.text,
       nameSubtextLangZhCN: nameSubtextLangZhCNController.text,
       descriptionLangZhCN: descriptionLangZhCNController.text,
@@ -265,16 +267,16 @@ class SpellDetailViewModel {
       nameSubtextLangFlags: _parseInt(nameSubtextLangFlagsController.text),
       descriptionLangFlags: _parseInt(descriptionLangFlagsController.text),
       auraDescriptionLangFlags: _parseInt(
-      auraDescriptionLangFlagsController.text,
-    ),
+        auraDescriptionLangFlagsController.text,
+      ),
 
-    // === 图标/视觉 ===
+      // === 图标/视觉 ===
       spellIconID: _parseInt(spellIconIDController.text),
       activeIconID: _parseInt(activeIconIDController.text),
       spellVisualID0: _parseInt(spellVisualID0Controller.text),
       spellVisualID1: _parseInt(spellVisualID1Controller.text),
 
-    // === 分类/类型 ===
+      // === 分类/类型 ===
       category: _parseInt(categoryController.text),
       schoolMask: _parseInt(schoolMaskController.text),
       mechanic: _parseInt(mechanicController.text),
@@ -282,44 +284,44 @@ class SpellDetailViewModel {
       dispelType: _parseInt(dispelTypeController.text),
       preventionType: _parseInt(preventionTypeController.text),
 
-    // === 施法参数 ===
+      // === 施法参数 ===
       castingTimeIndex: _parseInt(castingTimeIndexController.text),
       durationIndex: _parseInt(durationIndexController.text),
       rangeIndex: _parseInt(rangeIndexController.text),
       spellDescriptionVariableID: _parseInt(
-      spellDescriptionVariableIDController.text,
-    ),
+        spellDescriptionVariableIDController.text,
+      ),
 
-    // === 等级 ===
+      // === 等级 ===
       baseLevel: _parseInt(baseLevelController.text),
       spellLevel: _parseInt(spellLevelController.text),
       maxLevel: _parseInt(maxLevelController.text),
       spellDifficultyID: _parseInt(spellDifficultyIDController.text),
 
-    // === 冷却/恢复 ===
+      // === 冷却/恢复 ===
       startRecoveryCategory: _parseInt(startRecoveryCategoryController.text),
       startRecoveryTime: _parseInt(startRecoveryTimeController.text),
       recoveryTime: _parseInt(recoveryTimeController.text),
       categoryRecoveryTime: _parseInt(categoryRecoveryTimeController.text),
 
-    // === 目标 ===
+      // === 目标 ===
       targetCreatureType: _parseInt(targetCreatureTypeController.text),
       targets: _parseInt(targetsController.text),
       maxTargets: _parseInt(maxTargetsController.text),
       maxTargetLevel: _parseInt(maxTargetLevelController.text),
 
-    // === 状态 ===
+      // === 状态 ===
       casterAuraState: _parseInt(casterAuraStateController.text),
       targetAuraState: _parseInt(targetAuraStateController.text),
       spellMissileID: _parseInt(spellMissileIDController.text),
       speed: _parseDouble(speedController.text),
 
-    // === 需求 ===
+      // === 需求 ===
       requiredAreasID: _parseInt(requiredAreasIDController.text),
       requiresSpellFocus: _parseInt(requiresSpellFocusController.text),
       facingCasterFlags: _parseInt(facingCasterFlagsController.text),
 
-    // === 能量消耗 ===
+      // === 能量消耗 ===
       powerDisplayID: _parseInt(powerDisplayIDController.text),
       powerType: _parseInt(powerTypeController.text),
       runeCostID: _parseInt(runeCostIDController.text),
@@ -329,7 +331,7 @@ class SpellDetailViewModel {
       manaPerSecond: _parseInt(manaPerSecondController.text),
       manaPerSecondPerLevel: _parseInt(manaPerSecondPerLevelController.text),
 
-    // === 标志位 ===
+      // === 标志位 ===
       interruptFlags: _parseInt(interruptFlagsController.text),
       auraInterruptFlags: _parseInt(auraInterruptFlagsController.text),
       channelInterruptFlags: _parseInt(channelInterruptFlagsController.text),
@@ -342,24 +344,24 @@ class SpellDetailViewModel {
       attributesExF: _parseInt(attributesExFController.text),
       attributesExG: _parseInt(attributesExGController.text),
 
-    // === 触发 ===
+      // === 触发 ===
       procTypeMask: _parseInt(procTypeMaskController.text),
       procChance: _parseInt(procChanceController.text),
       procCharges: _parseInt(procChargesController.text),
 
-    // === 法术分类 ===
+      // === 法术分类 ===
       spellClassSet: _parseInt(spellClassSetController.text),
       spellClassMask0: _parseInt(spellClassMask0Controller.text),
       spellClassMask1: _parseInt(spellClassMask1Controller.text),
       spellClassMask2: _parseInt(spellClassMask2Controller.text),
 
-    // === 效果0 ===
+      // === 效果0 ===
       effect0: _parseInt(effect0Controller.text),
       effectBasePoints0: _parseInt(effectBasePoints0Controller.text),
       effectDieSides0: _parseInt(effectDieSides0Controller.text),
       effectRealPointsPerLevel0: _parseDouble(
-      effectRealPointsPerLevel0Controller.text,
-    ),
+        effectRealPointsPerLevel0Controller.text,
+      ),
       effectMechanic0: _parseInt(effectMechanic0Controller.text),
       effectChainTargets0: _parseInt(effectChainTargets0Controller.text),
       effectAura0: _parseInt(effectAura0Controller.text),
@@ -370,28 +372,24 @@ class SpellDetailViewModel {
       effectMiscValue0: _parseInt(effectMiscValue0Controller.text),
       effectMiscValueB0: _parseInt(effectMiscValueB0Controller.text),
       effectRadiusIndex0: _parseInt(effectRadiusIndex0Controller.text),
-      effectChainAmplitude0: _parseDouble(
-      effectChainAmplitude0Controller.text,
-    ),
+      effectChainAmplitude0: _parseDouble(effectChainAmplitude0Controller.text),
       effectBonusCoefficient0: _parseDouble(
-      effectBonusCoefficient0Controller.text,
-    ),
+        effectBonusCoefficient0Controller.text,
+      ),
       effectItemType0: _parseInt(effectItemType0Controller.text),
       effectTriggerSpell0: _parseInt(effectTriggerSpell0Controller.text),
-      effectPointsPerCombo0: _parseDouble(
-      effectPointsPerCombo0Controller.text,
-    ),
+      effectPointsPerCombo0: _parseDouble(effectPointsPerCombo0Controller.text),
       effectSpellClassMaskA0: _parseInt(effectSpellClassMaskA0Controller.text),
       effectSpellClassMaskB0: _parseInt(effectSpellClassMaskB0Controller.text),
       effectSpellClassMaskC0: _parseInt(effectSpellClassMaskC0Controller.text),
 
-    // === 效果1 ===
+      // === 效果1 ===
       effect1: _parseInt(effect1Controller.text),
       effectBasePoints1: _parseInt(effectBasePoints1Controller.text),
       effectDieSides1: _parseInt(effectDieSides1Controller.text),
       effectRealPointsPerLevel1: _parseDouble(
-      effectRealPointsPerLevel1Controller.text,
-    ),
+        effectRealPointsPerLevel1Controller.text,
+      ),
       effectMechanic1: _parseInt(effectMechanic1Controller.text),
       effectChainTargets1: _parseInt(effectChainTargets1Controller.text),
       effectAura1: _parseInt(effectAura1Controller.text),
@@ -402,28 +400,24 @@ class SpellDetailViewModel {
       effectMiscValue1: _parseInt(effectMiscValue1Controller.text),
       effectMiscValueB1: _parseInt(effectMiscValueB1Controller.text),
       effectRadiusIndex1: _parseInt(effectRadiusIndex1Controller.text),
-      effectChainAmplitude1: _parseDouble(
-      effectChainAmplitude1Controller.text,
-    ),
+      effectChainAmplitude1: _parseDouble(effectChainAmplitude1Controller.text),
       effectBonusCoefficient1: _parseDouble(
-      effectBonusCoefficient1Controller.text,
-    ),
+        effectBonusCoefficient1Controller.text,
+      ),
       effectItemType1: _parseInt(effectItemType1Controller.text),
       effectTriggerSpell1: _parseInt(effectTriggerSpell1Controller.text),
-      effectPointsPerCombo1: _parseDouble(
-      effectPointsPerCombo1Controller.text,
-    ),
+      effectPointsPerCombo1: _parseDouble(effectPointsPerCombo1Controller.text),
       effectSpellClassMaskA1: _parseInt(effectSpellClassMaskA1Controller.text),
       effectSpellClassMaskB1: _parseInt(effectSpellClassMaskB1Controller.text),
       effectSpellClassMaskC1: _parseInt(effectSpellClassMaskC1Controller.text),
 
-    // === 效果2 ===
+      // === 效果2 ===
       effect2: _parseInt(effect2Controller.text),
       effectBasePoints2: _parseInt(effectBasePoints2Controller.text),
       effectDieSides2: _parseInt(effectDieSides2Controller.text),
       effectRealPointsPerLevel2: _parseDouble(
-      effectRealPointsPerLevel2Controller.text,
-    ),
+        effectRealPointsPerLevel2Controller.text,
+      ),
       effectMechanic2: _parseInt(effectMechanic2Controller.text),
       effectChainTargets2: _parseInt(effectChainTargets2Controller.text),
       effectAura2: _parseInt(effectAura2Controller.text),
@@ -434,34 +428,30 @@ class SpellDetailViewModel {
       effectMiscValue2: _parseInt(effectMiscValue2Controller.text),
       effectMiscValueB2: _parseInt(effectMiscValueB2Controller.text),
       effectRadiusIndex2: _parseInt(effectRadiusIndex2Controller.text),
-      effectChainAmplitude2: _parseDouble(
-      effectChainAmplitude2Controller.text,
-    ),
+      effectChainAmplitude2: _parseDouble(effectChainAmplitude2Controller.text),
       effectBonusCoefficient2: _parseDouble(
-      effectBonusCoefficient2Controller.text,
-    ),
+        effectBonusCoefficient2Controller.text,
+      ),
       effectItemType2: _parseInt(effectItemType2Controller.text),
       effectTriggerSpell2: _parseInt(effectTriggerSpell2Controller.text),
-      effectPointsPerCombo2: _parseDouble(
-      effectPointsPerCombo2Controller.text,
-    ),
+      effectPointsPerCombo2: _parseDouble(effectPointsPerCombo2Controller.text),
       effectSpellClassMaskA2: _parseInt(effectSpellClassMaskA2Controller.text),
       effectSpellClassMaskB2: _parseInt(effectSpellClassMaskB2Controller.text),
       effectSpellClassMaskC2: _parseInt(effectSpellClassMaskC2Controller.text),
 
-    // === 装备限制 ===
+      // === 装备限制 ===
       equippedItemClass: _parseInt(equippedItemClassController.text),
       equippedItemSubclass: _parseInt(equippedItemSubclassController.text),
       equippedItemInvTypes: _parseInt(equippedItemInvTypesController.text),
 
-    // === 图腾/施法材料 ===
+      // === 图腾/施法材料 ===
       requiredTotemCategoryID0: _parseInt(
-      requiredTotemCategoryID0Controller.text,
-    ),
+        requiredTotemCategoryID0Controller.text,
+      ),
       totem0: _parseInt(totem0Controller.text),
       requiredTotemCategoryID1: _parseInt(
-      requiredTotemCategoryID1Controller.text,
-    ),
+        requiredTotemCategoryID1Controller.text,
+      ),
       totem1: _parseInt(totem1Controller.text),
       reagent0: _parseInt(reagent0Controller.text),
       reagent1: _parseInt(reagent1Controller.text),
@@ -480,7 +470,7 @@ class SpellDetailViewModel {
       reagentCount6: _parseInt(reagentCount6Controller.text),
       reagentCount7: _parseInt(reagentCount7Controller.text),
 
-    // === 其他高级属性 ===
+      // === 其他高级属性 ===
       casterAuraSpell: _parseInt(casterAuraSpellController.text),
       cumulativeAura: _parseInt(cumulativeAuraController.text),
       minFactionID: _parseInt(minFactionIDController.text),
@@ -496,10 +486,8 @@ class SpellDetailViewModel {
       stanceBarOrder: _parseInt(stanceBarOrderController.text),
       shapeshiftMask0: _parseInt(shapeshiftMask0Controller.text),
       shapeshiftExclude0: _parseInt(shapeshiftExclude0Controller.text),
-
     );
     return t;
-
   }
 
   int _parseInt(String text) {
@@ -508,6 +496,7 @@ class SpellDetailViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) {
     if (text.isEmpty) return 0.0;
     final value = double.tryParse(text);

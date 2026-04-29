@@ -1,5 +1,5 @@
-import 'package:foxy/model/gossip_menu.dart';
-import 'package:foxy/model/gossip_menu_filter_entity.dart';
+import 'package:foxy/entity/gossip_menu.dart';
+import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GossipMenuRepository with RepositoryMixin {

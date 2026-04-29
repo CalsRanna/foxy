@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/spell_group.dart';
+import 'package:foxy/entity/spell_group.dart';
 import 'package:foxy/repository/spell_group_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';

@@ -1,17 +1,14 @@
 // gameobject_queststarter 模型
 // 复合主键 (id, quest)
 
-class GameobjectQueststarter {
+class GameObjectQuestStarter {
   final int id;
   final int quest;
 
-  const GameobjectQueststarter({
-    this.id = 0,
-    this.quest = 0,
-  });
+  const GameObjectQuestStarter({this.id = 0, this.quest = 0});
 
-  factory GameobjectQueststarter.fromJson(Map<String, dynamic> json) {
-    return GameobjectQueststarter(
+  factory GameObjectQuestStarter.fromJson(Map<String, dynamic> json) {
+    return GameObjectQuestStarter(
       id: json['id'] ?? 0,
       quest: json['quest'] ?? 0,
     );
@@ -23,21 +20,21 @@ class GameobjectQueststarter {
 }
 
 /// Brief 版本（LEFT JOIN gameobject_template 获取名称，无 locale 表）
-class BriefGameobjectQueststarter {
+class BriefGameObjectQuestStarter {
   final int id;
   final int quest;
   final String name;
   final String localeName;
 
-  const BriefGameobjectQueststarter({
+  const BriefGameObjectQuestStarter({
     this.id = 0,
     this.quest = 0,
     this.name = '',
     this.localeName = '',
   });
 
-  factory BriefGameobjectQueststarter.fromJson(Map<String, dynamic> json) {
-    return BriefGameobjectQueststarter(
+  factory BriefGameObjectQuestStarter.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectQuestStarter(
       id: json['id'] ?? 0,
       quest: json['quest'] ?? 0,
       name: json['name']?.toString() ?? '',
@@ -48,11 +45,6 @@ class BriefGameobjectQueststarter {
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'quest': quest,
-      'name': name,
-      'Name': localeName,
-    };
+    return {'id': id, 'quest': quest, 'name': name, 'Name': localeName};
   }
 }

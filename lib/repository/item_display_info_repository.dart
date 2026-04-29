@@ -1,4 +1,4 @@
-import 'package:foxy/model/item_display_info.dart';
+import 'package:foxy/entity/item_display_info.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemDisplayInfoRepository with RepositoryMixin {
@@ -23,20 +23,12 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(
-    dynamic builder, {
-    String? id,
-    String? name,
-  }) {
+  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }
     if (name != null && name.isNotEmpty) {
-      builder = builder.where(
-        'ModelName0',
-        '%$name%',
-        comparator: 'like',
-      );
+      builder = builder.where('ModelName0', '%$name%', comparator: 'like');
     }
     return builder;
   }

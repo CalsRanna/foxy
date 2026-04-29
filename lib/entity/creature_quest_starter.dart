@@ -1,14 +1,11 @@
-class CreatureQuestender {
+class CreatureQuestStarter {
   final int id;
   final int quest;
 
-  const CreatureQuestender({this.id = 0, this.quest = 0});
+  const CreatureQuestStarter({this.id = 0, this.quest = 0});
 
-  factory CreatureQuestender.fromJson(Map<String, dynamic> json) {
-    return CreatureQuestender(
-      id: json['id'] ?? 0,
-      quest: json['quest'] ?? 0,
-    );
+  factory CreatureQuestStarter.fromJson(Map<String, dynamic> json) {
+    return CreatureQuestStarter(id: json['id'] ?? 0, quest: json['quest'] ?? 0);
   }
 
   Map<String, dynamic> toJson() {
@@ -16,21 +13,21 @@ class CreatureQuestender {
   }
 }
 
-class BriefCreatureQuestender {
+class BriefCreatureQuestStarter {
   final int id;
   final int quest;
   final String name;
   final String localeName;
 
-  const BriefCreatureQuestender({
+  const BriefCreatureQuestStarter({
     this.id = 0,
     this.quest = 0,
     this.name = '',
     this.localeName = '',
   });
 
-  factory BriefCreatureQuestender.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureQuestender(
+  factory BriefCreatureQuestStarter.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureQuestStarter(
       id: json['id'] ?? 0,
       quest: json['quest'] ?? 0,
       name: json['name']?.toString() ?? '',
@@ -41,11 +38,6 @@ class BriefCreatureQuestender {
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'quest': quest,
-      'name': name,
-      'Name': localeName,
-    };
+    return {'id': id, 'quest': quest, 'name': name, 'Name': localeName};
   }
 }

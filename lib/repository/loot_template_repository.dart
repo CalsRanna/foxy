@@ -1,4 +1,4 @@
-import 'package:foxy/model/loot_template.dart';
+import 'package:foxy/entity/loot_template.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 enum LootTableType {
@@ -223,7 +223,6 @@ class LootTemplateRepository with RepositoryMixin {
       minCount: source.minCount,
       maxCount: source.maxCount,
       comment: source.comment,
-
     );
 
     await storeLootTemplate(newLoot);

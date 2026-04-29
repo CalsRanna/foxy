@@ -1,4 +1,4 @@
-import 'package:foxy/model/quest_template_addon.dart';
+import 'package:foxy/entity/quest_template_addon.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// quest_template_addon 表的数据访问层
@@ -30,7 +30,10 @@ class QuestTemplateAddonRepository with RepositoryMixin {
   }
 
   /// 更新（根据 ID）
-  Future<void> updateQuestTemplateAddon(int id, QuestTemplateAddon model) async {
+  Future<void> updateQuestTemplateAddon(
+    int id,
+    QuestTemplateAddon model,
+  ) async {
     final json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);

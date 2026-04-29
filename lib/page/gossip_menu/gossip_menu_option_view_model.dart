@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/gossip_menu_option.dart';
+import 'package:foxy/entity/gossip_menu_option.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -49,7 +49,9 @@ class GossipMenuOptionViewModel {
   }
 
   Future<void> onCreate() async {
-    final blank = await _repository.createGossipMenuOption(menuId: currentMenuId.value);
+    final blank = await _repository.createGossipMenuOption(
+      menuId: currentMenuId.value,
+    );
     _applyToControllers(blank);
     _originalMenuId = blank.menuId;
     _originalOptionId = blank.optionId;
@@ -108,7 +110,10 @@ class GossipMenuOptionViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.copyGossipMenuOption({'MenuID': menuId, 'OptionID': optionId});
+      await _repository.copyGossipMenuOption({
+        'MenuID': menuId,
+        'OptionID': optionId,
+      });
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await search(currentMenuId.value);
@@ -128,7 +133,10 @@ class GossipMenuOptionViewModel {
       );
       if (!confirmed) return;
       DialogUtil.instance.loading();
-      await _repository.destroyGossipMenuOption({'MenuID': menuId, 'OptionID': optionId});
+      await _repository.destroyGossipMenuOption({
+        'MenuID': menuId,
+        'OptionID': optionId,
+      });
       await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await search(currentMenuId.value);
@@ -189,8 +197,7 @@ class GossipMenuOptionViewModel {
       boxCoded: int.tryParse(boxCodedController.text) ?? 0,
       boxMoney: int.tryParse(boxMoneyController.text) ?? 0,
       boxText: boxTextController.text,
-      boxBroadcastTextId:
-          int.tryParse(boxBroadcastTextIdController.text) ?? 0,
+      boxBroadcastTextId: int.tryParse(boxBroadcastTextIdController.text) ?? 0,
       actionMenuId: int.tryParse(actionMenuIdController.text) ?? 0,
       actionPoiId: int.tryParse(actionPoiIdController.text) ?? 0,
       verifiedBuild: int.tryParse(verifiedBuildController.text) ?? 0,

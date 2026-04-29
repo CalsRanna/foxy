@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/activity_log.dart';
+import 'package:foxy/entity/activity_log.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -15,7 +15,9 @@ class Trend extends StatelessWidget {
         title: Text('动态'),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 24),
-          child: Center(child: Text('暂无动态', style: TextStyle(color: Colors.grey))),
+          child: Center(
+            child: Text('暂无动态', style: TextStyle(color: Colors.grey)),
+          ),
         ),
       );
     }

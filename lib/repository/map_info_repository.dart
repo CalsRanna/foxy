@@ -1,4 +1,4 @@
-import 'package:foxy/model/map_info.dart';
+import 'package:foxy/entity/map_info.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class MapInfoRepository with RepositoryMixin {
@@ -23,11 +23,7 @@ class MapInfoRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(
-    dynamic builder, {
-    String? id,
-    String? name,
-  }) {
+  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }

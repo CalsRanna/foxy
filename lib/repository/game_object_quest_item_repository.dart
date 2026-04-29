@@ -1,10 +1,12 @@
-import 'package:foxy/model/game_object_questitem.dart';
+import 'package:foxy/entity/game_object_questitem.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GameObjectQuestItemRepository with RepositoryMixin {
   static const _table = 'gameobject_questitem';
 
-  Future<List<GameObjectQuestItem>> getGameObjectQuestItems(int gameObjectEntry) async {
+  Future<List<GameObjectQuestItem>> getGameObjectQuestItems(
+    int gameObjectEntry,
+  ) async {
     try {
       var builder = laconic.table('$_table AS gq');
       const fields = [
@@ -38,7 +40,10 @@ class GameObjectQuestItemRepository with RepositoryMixin {
     }
   }
 
-  Future<GameObjectQuestItem?> getGameObjectQuestItem(int gameObjectEntry, int idx) async {
+  Future<GameObjectQuestItem?> getGameObjectQuestItem(
+    int gameObjectEntry,
+    int idx,
+  ) async {
     try {
       var result = await laconic
           .table(_table)
@@ -74,7 +79,10 @@ class GameObjectQuestItemRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<GameObjectQuestItem> copyGameObjectQuestItem(int gameObjectEntry, int idx) async {
+  Future<GameObjectQuestItem> copyGameObjectQuestItem(
+    int gameObjectEntry,
+    int idx,
+  ) async {
     var maxIdxResult = await laconic
         .table(_table)
         .select(['MAX(Idx) AS maxIdx'])

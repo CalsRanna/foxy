@@ -1,4 +1,4 @@
-import 'package:foxy/model/feature.dart';
+import 'package:foxy/entity/feature.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:signals/signals.dart';
 

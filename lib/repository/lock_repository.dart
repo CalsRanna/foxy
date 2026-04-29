@@ -1,13 +1,10 @@
-import 'package:foxy/model/lock.dart';
+import 'package:foxy/entity/lock.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class LockRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_lock';
 
-  Future<List<Lock>> getLocks({
-    String? id,
-    required int page,
-  }) async {
+  Future<List<Lock>> getLocks({String? id, required int page}) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id);

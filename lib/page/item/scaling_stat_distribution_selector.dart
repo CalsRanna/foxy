@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/item_enchantment_template.dart';
+import 'package:foxy/entity/item_enchantment_template.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -80,7 +80,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('属性缩放分布'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
@@ -234,7 +241,10 @@ class _DialogState extends State<_Dialog> {
     try {
       final repository = ScalingStatDistributionRepository();
       final id = _idController.text.isEmpty ? null : _idController.text;
-      final items = await repository.getScalingStatDistributions(id: id, page: _page);
+      final items = await repository.getScalingStatDistributions(
+        id: id,
+        page: _page,
+      );
       final total = await repository.countScalingStatDistributions(id: id);
       if (mounted) {
         setState(() {
@@ -242,7 +252,6 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

@@ -1,4 +1,4 @@
-import 'package:foxy/model/spell_linked_spell.dart';
+import 'package:foxy/entity/spell_linked_spell.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellLinkedSpellRepository with RepositoryMixin {
@@ -17,7 +17,10 @@ class SpellLinkedSpellRepository with RepositoryMixin {
     }
   }
 
-  Future<SpellLinkedSpell?> getSpellLinkedSpell(int spellTrigger, int spellEffect) async {
+  Future<SpellLinkedSpell?> getSpellLinkedSpell(
+    int spellTrigger,
+    int spellEffect,
+  ) async {
     try {
       var result = await laconic
           .table(_table)
@@ -48,7 +51,10 @@ class SpellLinkedSpellRepository with RepositoryMixin {
         .update(json);
   }
 
-  Future<void> destroySpellLinkedSpell(int spellTrigger, int spellEffect) async {
+  Future<void> destroySpellLinkedSpell(
+    int spellTrigger,
+    int spellEffect,
+  ) async {
     await laconic
         .table(_table)
         .where('spell_trigger', spellTrigger)

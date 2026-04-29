@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/page_text.dart';
-import 'package:foxy/model/page_text_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/page_text.dart';
+import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -24,7 +24,10 @@ class PageTextListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    pages.value = await repository.getPageTexts(filter: _buildFilter(), page: page.value);
+    pages.value = await repository.getPageTexts(
+      filter: _buildFilter(),
+      page: page.value,
+    );
     total.value = await repository.countPageTexts(filter: _buildFilter());
   }
 
@@ -37,7 +40,10 @@ class PageTextListViewModel {
     idController.clear();
     textController.clear();
     page.value = 1;
-    pages.value = await repository.getPageTexts(filter: _buildFilter(), page: page.value);
+    pages.value = await repository.getPageTexts(
+      filter: _buildFilter(),
+      page: page.value,
+    );
     total.value = await repository.countPageTexts(filter: _buildFilter());
   }
 
@@ -113,11 +119,17 @@ class PageTextListViewModel {
   }
 
   PageTextFilterEntity _buildFilter() {
-    return PageTextFilterEntity(id: idController.text, text: textController.text);
+    return PageTextFilterEntity(
+      id: idController.text,
+      text: textController.text,
+    );
   }
 
   Future<void> _refresh() async {
-    pages.value = await repository.getPageTexts(filter: _buildFilter(), page: page.value);
+    pages.value = await repository.getPageTexts(
+      filter: _buildFilter(),
+      page: page.value,
+    );
     total.value = await repository.countPageTexts(filter: _buildFilter());
   }
 

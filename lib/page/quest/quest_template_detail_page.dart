@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/quest/creature_questender_view.dart';
-import 'package:foxy/page/quest/creature_queststarter_view.dart';
-import 'package:foxy/page/quest/gameobject_questender_view.dart';
-import 'package:foxy/page/quest/gameobject_queststarter_view.dart';
+import 'package:foxy/page/quest/creature_quest_ender_view.dart';
+import 'package:foxy/page/quest/creature_quest_starter_view.dart';
+import 'package:foxy/page/quest/game_object_quest_ender_view.dart';
+import 'package:foxy/page/quest/game_object_quest_starter_view.dart';
 import 'package:foxy/page/quest/quest_offer_reward_view.dart';
 import 'package:foxy/page/quest/quest_request_items_view.dart';
 import 'package:foxy/page/quest/quest_template_addon_view.dart';
@@ -59,9 +59,9 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
       QuestRequestItemsView(questId: widget.entry ?? 0),
       QuestOfferRewardView(questId: widget.entry ?? 0),
       CreatureQueststarterView(questId: widget.entry ?? 0),
-      CreatureQuestenderView(questId: widget.entry ?? 0),
-      GameobjectQueststarterView(questId: widget.entry ?? 0),
-      GameobjectQuestenderView(questId: widget.entry ?? 0),
+      CreatureQuestEnderView(questId: widget.entry ?? 0),
+      GameObjectQuestStarterView(questId: widget.entry ?? 0),
+      GameObjectQuestEnderView(questId: widget.entry ?? 0),
     ];
 
     var tabBar = Watch((_) {

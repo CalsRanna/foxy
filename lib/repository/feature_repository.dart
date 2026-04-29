@@ -1,4 +1,4 @@
-import 'package:foxy/model/feature.dart';
+import 'package:foxy/entity/feature.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class FeatureRepository with RepositoryMixin {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/area_table.dart';
-import 'package:foxy/model/area_table_filter_entity.dart';
-import 'package:foxy/model/quest_sort.dart';
-import 'package:foxy/model/quest_sort_filter_entity.dart';
+import 'package:foxy/entity/area_table.dart';
+import 'package:foxy/entity/area_table_filter_entity.dart';
+import 'package:foxy/entity/quest_sort.dart';
+import 'package:foxy/entity/quest_sort_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -49,10 +49,8 @@ class _AreaTableOrQuestSortSelectorState
     final currentValue = int.tryParse(widget.controller.text);
     final result = await showShadDialog<int>(
       context: context,
-      builder: (context) => _Dialog(
-        initialValue: currentValue,
-        mode: widget.mode,
-      ),
+      builder: (context) =>
+          _Dialog(initialValue: currentValue, mode: widget.mode),
     );
     if (result == null) return;
     widget.controller.text = result.toString();
@@ -91,14 +89,17 @@ class _DialogState extends State<_Dialog> {
       onPressed: () => Navigator.of(context).pop(_selectedId),
       child: Text('确定'),
     );
-    var children = [
-      _buildModeSwitcher(),
-      _buildFilter(),
-      _buildTable(),
-    ];
+    var children = [_buildModeSwitcher(), _buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text(title),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
@@ -125,36 +126,43 @@ class _DialogState extends State<_Dialog> {
   }
 
   Widget _buildModeSwitcher() {
-    return Row(spacing: 8, children: [
-      ShadButton(
-        onPressed: _currentMode == 'AreaTable' ? null : () {
-          setState(() {
-            _currentMode = 'AreaTable';
-            _idController.clear();
-            _nameController.clear();
-            _selectedId = null;
-            _page = 1;
-          });
-          _search();
-        },
-        size: ShadButtonSize.sm,
-        child: Text('区域'),
-      ),
-      ShadButton(
-        onPressed: _currentMode == 'QuestSort' ? null : () {
-          setState(() {
-            _currentMode = 'QuestSort';
-            _idController.clear();
-            _nameController.clear();
-            _selectedId = null;
-            _page = 1;
-          });
-          _search();
-        },
-        size: ShadButtonSize.sm,
-        child: Text('任务排序'),
-      ),
-    ]);
+    return Row(
+      spacing: 8,
+      children: [
+        ShadButton(
+          onPressed: _currentMode == 'AreaTable'
+              ? null
+              : () {
+                  setState(() {
+                    _currentMode = 'AreaTable';
+                    _idController.clear();
+                    _nameController.clear();
+                    _selectedId = null;
+                    _page = 1;
+                  });
+                  _search();
+                },
+          size: ShadButtonSize.sm,
+          child: Text('区域'),
+        ),
+        ShadButton(
+          onPressed: _currentMode == 'QuestSort'
+              ? null
+              : () {
+                  setState(() {
+                    _currentMode = 'QuestSort';
+                    _idController.clear();
+                    _nameController.clear();
+                    _selectedId = null;
+                    _page = 1;
+                  });
+                  _search();
+                },
+          size: ShadButtonSize.sm,
+          child: Text('任务排序'),
+        ),
+      ],
+    );
   }
 
   Widget _buildFilter() {
@@ -213,10 +221,9 @@ class _DialogState extends State<_Dialog> {
           var nameWidth = maxWidth - 120;
           return FoxyShadTable(
             columnCount: 2,
-            rowCount:
-                _currentMode == 'AreaTable'
-                    ? _areaItems.length
-                    : _questItems.length,
+            rowCount: _currentMode == 'AreaTable'
+                ? _areaItems.length
+                : _questItems.length,
             pinnedRowCount: 1,
             header: (context, column) {
               return switch (column) {
@@ -329,7 +336,10 @@ class _DialogState extends State<_Dialog> {
           id: _idController.text,
           name: _nameController.text,
         );
-        final items = await repository.getAreaTables(filter: filter, page: _page);
+        final items = await repository.getAreaTables(
+          filter: filter,
+          page: _page,
+        );
         final total = await repository.countAreaTables(filter: filter);
         if (mounted) {
           setState(() {
@@ -344,7 +354,10 @@ class _DialogState extends State<_Dialog> {
           id: _idController.text,
           name: _nameController.text,
         );
-        final items = await repository.getQuestSorts(filter: filter, page: _page);
+        final items = await repository.getQuestSorts(
+          filter: filter,
+          page: _page,
+        );
         final total = await repository.countQuestSorts(filter: filter);
         if (mounted) {
           setState(() {
@@ -354,7 +367,6 @@ class _DialogState extends State<_Dialog> {
           });
         }
       }
-    } finally {
-    }
+    } finally {}
   }
 }

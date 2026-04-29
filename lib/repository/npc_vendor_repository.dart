@@ -1,4 +1,4 @@
-import 'package:foxy/model/npc_vendor.dart';
+import 'package:foxy/entity/npc_vendor.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class NpcVendorRepository with RepositoryMixin {

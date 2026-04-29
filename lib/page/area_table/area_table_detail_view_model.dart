@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/area_table.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/area_table.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -53,7 +53,10 @@ class AreaTableDetailViewModel {
         await repository.updateAreaTable(t);
       }
       area.value = t;
-      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('区域数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -107,6 +110,7 @@ class AreaTableDetailViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) {
     if (text.isEmpty) return 0.0;
     final value = double.tryParse(text);
@@ -177,7 +181,8 @@ class AreaTableDetailViewModel {
     /// Sound
     soundProviderPrefController.text = table.soundProviderPref.toString();
     soundProviderPrefUnderwaterController.text = table
-        .soundProviderPrefUnderwater.toString();
+        .soundProviderPrefUnderwater
+        .toString();
     ambienceIdController.text = table.ambienceId.toString();
     zoneMusicController.text = table.zoneMusic.toString();
     introSoundController.text = table.introSound.toString();

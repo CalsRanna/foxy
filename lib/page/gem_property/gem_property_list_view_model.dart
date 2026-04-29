@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/gem_property.dart';
-import 'package:foxy/model/gem_property_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/gem_property.dart';
+import 'package:foxy/entity/gem_property_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -105,7 +105,10 @@ class GemPropertyListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    properties.value = await repository.getGemProperties(page: page.value, filter: filter);
+    properties.value = await repository.getGemProperties(
+      page: page.value,
+      filter: filter,
+    );
     total.value = await repository.countGemProperties(filter: filter);
   }
 

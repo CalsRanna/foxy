@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/creature_onkill_reputation.dart';
+import 'package:foxy/entity/creature_onkill_reputation.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -30,7 +30,9 @@ class CreatureOnKillReputationViewModel {
     loading.value = true;
     try {
       final repository = CreatureOnKillReputationRepository();
-      final data = await repository.getCreatureOnKillReputation(creatureId.value);
+      final data = await repository.getCreatureOnKillReputation(
+        creatureId.value,
+      );
       if (data != null) {
         reputation.value = data;
       }
@@ -95,6 +97,7 @@ class CreatureOnKillReputationViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
+
   double _parseDouble(String text) {
     if (text.isEmpty) return 0.0;
     final value = double.tryParse(text);

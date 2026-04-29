@@ -1,4 +1,4 @@
-import 'package:foxy/model/broadcast_text.dart';
+import 'package:foxy/entity/broadcast_text.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class BroadcastTextRepository with RepositoryMixin {

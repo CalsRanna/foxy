@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/gossip_menu.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/gossip_menu.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -48,7 +48,11 @@ class GossipMenuDetailViewModel {
       menuIdController.text = this.menuId.value.toString();
       textIdController.text = this.textId.value.toString();
     } catch (e, s) {
-      logger.e('加载对话菜单(menuId=$menuId, textId=$textId)失败', error: e, stackTrace: s);
+      logger.e(
+        '加载对话菜单(menuId=$menuId, textId=$textId)失败',
+        error: e,
+        stackTrace: s,
+      );
     }
   }
 

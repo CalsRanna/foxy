@@ -1,4 +1,4 @@
-import 'package:foxy/model/item_random_suffix.dart';
+import 'package:foxy/entity/item_random_suffix.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemRandomSuffixRepository with RepositoryMixin {
@@ -23,20 +23,12 @@ class ItemRandomSuffixRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(
-    dynamic builder, {
-    String? id,
-    String? name,
-  }) {
+  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }
     if (name != null && name.isNotEmpty) {
-      builder = builder.where(
-        'Name_lang_zhCN',
-        '%$name%',
-        comparator: 'like',
-      );
+      builder = builder.where('Name_lang_zhCN', '%$name%', comparator: 'like');
     }
     return builder;
   }

@@ -1,4 +1,4 @@
-import 'package:foxy/model/version_entity.dart';
+import 'package:foxy/entity/version_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class VersionRepository with RepositoryMixin {

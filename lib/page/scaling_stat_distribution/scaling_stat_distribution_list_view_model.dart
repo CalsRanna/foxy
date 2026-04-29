@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/scaling_stat_distribution.dart';
-import 'package:foxy/model/scaling_stat_distribution_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/scaling_stat_distribution.dart';
+import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -78,13 +78,20 @@ class ScalingStatDistributionListViewModel {
 
   Future<void> initSignals() async {
     final filter = ScalingStatDistributionFilterEntity();
-    distributions.value = await repository.getScalingStatDistributions(page: 1, filter: filter);
-    total.value = await repository.countScalingStatDistributions(filter: filter);
+    distributions.value = await repository.getScalingStatDistributions(
+      page: 1,
+      filter: filter,
+    );
+    total.value = await repository.countScalingStatDistributions(
+      filter: filter,
+    );
   }
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '属性缩放分布 #$id' : '新建属性缩放分布';
-    final routeId = id != null ? 'scaling_stat_distribution_$id' : 'scaling_stat_distribution_new';
+    final routeId = id != null
+        ? 'scaling_stat_distribution_$id'
+        : 'scaling_stat_distribution_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       id: routeId,
@@ -107,8 +114,13 @@ class ScalingStatDistributionListViewModel {
     idController.clear();
     page.value = 1;
     final filter = ScalingStatDistributionFilterEntity();
-    distributions.value = await repository.getScalingStatDistributions(page: 1, filter: filter);
-    total.value = await repository.countScalingStatDistributions(filter: filter);
+    distributions.value = await repository.getScalingStatDistributions(
+      page: 1,
+      filter: filter,
+    );
+    total.value = await repository.countScalingStatDistributions(
+      filter: filter,
+    );
   }
 
   Future<void> search() async {
@@ -118,7 +130,12 @@ class ScalingStatDistributionListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    distributions.value = await repository.getScalingStatDistributions(page: page.value, filter: filter);
-    total.value = await repository.countScalingStatDistributions(filter: filter);
+    distributions.value = await repository.getScalingStatDistributions(
+      page: page.value,
+      filter: filter,
+    );
+    total.value = await repository.countScalingStatDistributions(
+      filter: filter,
+    );
   }
 }

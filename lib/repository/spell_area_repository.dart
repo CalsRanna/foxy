@@ -1,4 +1,4 @@
-import 'package:foxy/model/spell_area.dart';
+import 'package:foxy/entity/spell_area.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellAreaRepository with RepositoryMixin {

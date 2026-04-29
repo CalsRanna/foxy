@@ -1,5 +1,5 @@
-import 'package:foxy/model/item_extended_cost.dart';
-import 'package:foxy/model/item_extended_cost_filter_entity.dart';
+import 'package:foxy/entity/item_extended_cost.dart';
+import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemExtendedCostRepository with RepositoryMixin {
@@ -17,7 +17,9 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return results.map((e) => ItemExtendedCost.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countItemExtendedCosts({ItemExtendedCostFilterEntity? filter}) async {
+  Future<int> countItemExtendedCosts({
+    ItemExtendedCostFilterEntity? filter,
+  }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return await builder.count();

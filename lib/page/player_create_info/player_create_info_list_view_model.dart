@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/player_create_info.dart';
-import 'package:foxy/model/player_create_info_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/player_create_info.dart';
+import 'package:foxy/entity/player_create_info_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -121,7 +121,10 @@ class PlayerCreateInfoListViewModel {
   }
 
   Future<List<PlayerCreateInfo>> _search() async {
-    return repository.getPlayerCreateInfos(filter: _buildFilter(), page: page.value);
+    return repository.getPlayerCreateInfos(
+      filter: _buildFilter(),
+      page: page.value,
+    );
   }
 
   Future<int> _count() async {

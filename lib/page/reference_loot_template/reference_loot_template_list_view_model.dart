@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/loot_template.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/loot_template.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -45,11 +45,7 @@ class ReferenceLootTemplateListViewModel {
     await _refresh();
   }
 
-  void navigateToDetail({
-    int? entry,
-    int? item,
-    String? label,
-  }) {
+  void navigateToDetail({int? entry, int? item, String? label}) {
     final id = entry != null ? 'ref_loot_$entry' : 'ref_loot_new';
     final name = label?.isNotEmpty == true ? label! : '新建关联掉落';
     _routerFacade.navigateToDetail(
@@ -130,14 +126,14 @@ class ReferenceLootTemplateListViewModel {
 
   Future<int> _countEntries() async {
     final filter = _buildFilter();
-    return repository.countLootTemplateRows(entry: filter['Entry'], name: filter['name']);
+    return repository.countLootTemplateRows(
+      entry: filter['Entry'],
+      name: filter['name'],
+    );
   }
 
   Map<String, String> _buildFilter() {
-    return {
-      'Entry': entryController.text,
-      'name': nameController.text,
-    };
+    return {'Entry': entryController.text, 'name': nameController.text};
   }
 
   Future<void> _refresh() async {

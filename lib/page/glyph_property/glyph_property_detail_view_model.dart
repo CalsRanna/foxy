@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/glyph_property.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/glyph_property.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -35,7 +35,10 @@ class GlyphPropertyDetailViewModel {
         await repository.updateGlyphProperty(t);
       }
       property.value = t;
-      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('雕文属性数据已保存'));
       ShadSonner.of(context).show(toast);

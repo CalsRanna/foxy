@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/creature_equip_template.dart';
+import 'package:foxy/entity/creature_equip_template.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -139,7 +139,10 @@ class CreatureEquipTemplateViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureEquipTemplate(equip.creatureID, equip.id);
+        await repository.destroyCreatureEquipTemplate(
+          equip.creatureID,
+          equip.id,
+        );
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

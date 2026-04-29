@@ -1,4 +1,4 @@
-import 'package:foxy/model/spell_rank.dart';
+import 'package:foxy/entity/spell_rank.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellRankRepository with RepositoryMixin {

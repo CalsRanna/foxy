@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/page_text_locale.dart';
+import 'package:foxy/entity/page_text_locale.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';

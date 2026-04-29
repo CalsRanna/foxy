@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/creature_questitem.dart';
+import 'package:foxy/entity/creature_quest_item.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -92,7 +92,10 @@ class CreatureQuestItemViewModel {
 
     final questItem = items.value[index];
     try {
-      await repository.copyCreatureQuestItem(questItem.creatureEntry, questItem.idx);
+      await repository.copyCreatureQuestItem(
+        questItem.creatureEntry,
+        questItem.idx,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -131,7 +134,10 @@ class CreatureQuestItemViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureQuestItem(questItem.creatureEntry, questItem.idx);
+        await repository.destroyCreatureQuestItem(
+          questItem.creatureEntry,
+          questItem.idx,
+        );
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

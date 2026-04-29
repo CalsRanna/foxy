@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/spell_range.dart';
+import 'package:foxy/entity/spell_range.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -79,7 +79,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('技能射程'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 720),
@@ -216,8 +223,12 @@ class _DialogState extends State<_Dialog> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                2 => ShadTableCell(child: Text(item.rangeMin0.toStringAsFixed(1))),
-                3 => ShadTableCell(child: Text(item.rangeMax0.toStringAsFixed(1))),
+                2 => ShadTableCell(
+                  child: Text(item.rangeMin0.toStringAsFixed(1)),
+                ),
+                3 => ShadTableCell(
+                  child: Text(item.rangeMax0.toStringAsFixed(1)),
+                ),
                 _ => ShadTableCell(child: SizedBox()),
               };
             },
@@ -261,7 +272,6 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

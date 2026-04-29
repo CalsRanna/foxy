@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/quest/gameobject_questender_view_model.dart';
+import 'package:foxy/page/quest/game_object_quest_starter_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
@@ -7,17 +7,18 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-class GameobjectQuestenderView extends StatefulWidget {
+class GameObjectQuestStarterView extends StatefulWidget {
   final int questId;
-  const GameobjectQuestenderView({super.key, required this.questId});
+  const GameObjectQuestStarterView({super.key, required this.questId});
 
   @override
-  State<GameobjectQuestenderView> createState() =>
-      _GameobjectQuestenderViewState();
+  State<GameObjectQuestStarterView> createState() =>
+      _GameObjectQuestStarterViewState();
 }
 
-class _GameobjectQuestenderViewState extends State<GameobjectQuestenderView> {
-  final viewModel = GetIt.instance.get<GameobjectQuestenderViewModel>();
+class _GameObjectQuestStarterViewState
+    extends State<GameObjectQuestStarterView> {
+  final viewModel = GetIt.instance.get<GameObjectQuestStarterViewModel>();
 
   @override
   void initState() {
@@ -125,7 +126,7 @@ class _GameobjectQuestenderViewState extends State<GameobjectQuestenderView> {
     showShadDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('新增结束物体'),
+        title: Text('新增开始物体'),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -135,7 +136,7 @@ class _GameobjectQuestenderViewState extends State<GameobjectQuestenderView> {
     showShadDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('编辑结束物体'),
+        title: Text('编辑开始物体'),
         child: _buildDialogForm(dialogContext),
       ),
     );

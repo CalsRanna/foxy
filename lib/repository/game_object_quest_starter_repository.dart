@@ -1,13 +1,15 @@
-import 'package:foxy/model/gameobject_queststarter.dart';
+import 'package:foxy/entity/game_object_quest_starter.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// gameobject_queststarter 表的数据访问层
 /// 复合主键: (id, quest)
-class GameobjectQueststarterRepository with RepositoryMixin {
+class GameObjectQuestStarterRepository with RepositoryMixin {
   static const _table = 'gameobject_queststarter';
 
   /// 按 quest 搜索该任务下的所有任务给予者（带 gameobject_template JOIN，无 locale）
-  Future<List<BriefGameobjectQueststarter>> getGameobjectQueststarters(int questId) async {
+  Future<List<BriefGameObjectQuestStarter>> getGameObjectQuestStarters(
+    int questId,
+  ) async {
     try {
       const fields = ['gos.id', 'gos.quest', 'got.name'];
       var builder = laconic.table('$_table AS gos');
@@ -19,7 +21,7 @@ class GameobjectQueststarterRepository with RepositoryMixin {
       builder = builder.where('gos.quest', questId);
       final results = await builder.get();
       return results
-          .map((e) => BriefGameobjectQueststarter.fromJson(e.toMap()))
+          .map((e) => BriefGameObjectQuestStarter.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];
@@ -27,39 +29,46 @@ class GameobjectQueststarterRepository with RepositoryMixin {
   }
 
   /// 按复合键查找
-  Future<GameobjectQueststarter?> getGameobjectQueststarter(Map<String, dynamic> id) async {
+  Future<GameObjectQuestStarter?> getGameObjectQuestStarter(
+    Map<String, dynamic> id,
+  ) async {
     try {
       var builder = laconic.table(_table);
       id.forEach((k, v) {
         builder = builder.where(k, v);
       });
       final result = await builder.first();
-      return GameobjectQueststarter.fromJson(result.toMap());
+      return GameObjectQuestStarter.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
-  Future<GameobjectQueststarter> createGameobjectQueststarter(int questId) async {
+  Future<GameObjectQuestStarter> createGameObjectQuestStarter(
+    int questId,
+  ) async {
     try {
       final result = await laconic.table(_table).where('quest', questId).select(
         ['MAX(id) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      return GameobjectQueststarter(quest: questId, id: maxId == null ? 0 : maxId + 1);
+      return GameObjectQuestStarter(
+        quest: questId,
+        id: maxId == null ? 0 : maxId + 1,
+      );
     } catch (e) {
-      return GameobjectQueststarter(quest: questId, id: 0);
+      return GameObjectQuestStarter(quest: questId, id: 0);
     }
   }
 
-  Future<void> storeGameobjectQueststarter(GameobjectQueststarter model) async {
+  Future<void> storeGameObjectQuestStarter(GameObjectQuestStarter model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
-  Future<void> updateGameobjectQueststarter(
+  Future<void> updateGameObjectQuestStarter(
     Map<String, dynamic> id,
-    GameobjectQueststarter model,
+    GameObjectQuestStarter model,
   ) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
@@ -72,7 +81,7 @@ class GameobjectQueststarterRepository with RepositoryMixin {
     await builder.update(json);
   }
 
-  Future<void> destroyGameobjectQueststarter(Map<String, dynamic> id) async {
+  Future<void> destroyGameObjectQuestStarter(Map<String, dynamic> id) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {
       builder = builder.where(k, v);
@@ -80,10 +89,10 @@ class GameobjectQueststarterRepository with RepositoryMixin {
     await builder.delete();
   }
 
-  Future<void> copyGameobjectQueststarter(Map<String, dynamic> id) async {
-    final original = await getGameobjectQueststarter(id);
+  Future<void> copyGameObjectQuestStarter(Map<String, dynamic> id) async {
+    final original = await getGameObjectQuestStarter(id);
     if (original == null) return;
-    final next = await createGameobjectQueststarter(original.quest);
-    await storeGameobjectQueststarter(next);
+    final next = await createGameObjectQuestStarter(original.quest);
+    await storeGameObjectQuestStarter(next);
   }
 }

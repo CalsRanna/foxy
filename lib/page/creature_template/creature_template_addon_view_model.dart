@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/creature_template_addon.dart';
+import 'package:foxy/entity/creature_template_addon.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';

@@ -1,11 +1,13 @@
-import 'package:foxy/model/creature_equip_template.dart';
+import 'package:foxy/entity/creature_equip_template.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureEquipTemplateRepository with RepositoryMixin {
   static const _table = 'creature_equip_template';
 
   /// 获取指定生物的所有装备模板（带物品信息）
-  Future<List<BriefCreatureEquipTemplate>> getCreatureEquipTemplates(int creatureID) async {
+  Future<List<BriefCreatureEquipTemplate>> getCreatureEquipTemplates(
+    int creatureID,
+  ) async {
     try {
       var builder = laconic.table('$_table AS cet');
 
@@ -82,7 +84,10 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureEquipTemplate?> getCreatureEquipTemplate(int creatureID, int id) async {
+  Future<CreatureEquipTemplate?> getCreatureEquipTemplate(
+    int creatureID,
+    int id,
+  ) async {
     try {
       var result = await laconic
           .table(_table)
@@ -122,7 +127,10 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   }
 
   /// 复制装备模板
-  Future<CreatureEquipTemplate> copyCreatureEquipTemplate(int creatureID, int id) async {
+  Future<CreatureEquipTemplate> copyCreatureEquipTemplate(
+    int creatureID,
+    int id,
+  ) async {
     // 获取最大ID
     var maxIdResult = await laconic
         .table(_table)

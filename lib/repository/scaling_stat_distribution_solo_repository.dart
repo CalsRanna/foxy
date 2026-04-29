@@ -1,5 +1,5 @@
-import 'package:foxy/model/scaling_stat_distribution.dart';
-import 'package:foxy/model/scaling_stat_distribution_filter_entity.dart';
+import 'package:foxy/entity/scaling_stat_distribution.dart';
+import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ScalingStatDistributionSoloRepository with RepositoryMixin {
@@ -14,10 +14,14 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => ScalingStatDistribution.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => ScalingStatDistribution.fromJson(e.toMap()))
+        .toList();
   }
 
-  Future<int> countScalingStatDistributions({ScalingStatDistributionFilterEntity? filter}) async {
+  Future<int> countScalingStatDistributions({
+    ScalingStatDistributionFilterEntity? filter,
+  }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -28,14 +32,18 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     return ScalingStatDistribution.fromJson(result.toMap());
   }
 
-  Future<void> storeScalingStatDistribution(ScalingStatDistribution item) async {
+  Future<void> storeScalingStatDistribution(
+    ScalingStatDistribution item,
+  ) async {
     var json = item.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateScalingStatDistribution(ScalingStatDistribution item) async {
+  Future<void> updateScalingStatDistribution(
+    ScalingStatDistribution item,
+  ) async {
     var json = item.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', item.id).update(json);
@@ -62,7 +70,10 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, ScalingStatDistributionFilterEntity? filter) {
+  dynamic _applyFilter(
+    dynamic builder,
+    ScalingStatDistributionFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

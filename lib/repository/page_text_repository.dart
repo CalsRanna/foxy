@@ -1,6 +1,6 @@
-import 'package:foxy/model/page_text.dart';
-import 'package:foxy/model/page_text_filter_entity.dart';
-import 'package:foxy/model/page_text_locale.dart';
+import 'package:foxy/entity/page_text.dart';
+import 'package:foxy/entity/page_text_filter_entity.dart';
+import 'package:foxy/entity/page_text_locale.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class PageTextRepository with RepositoryMixin {
@@ -13,7 +13,12 @@ class PageTextRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS pt');
-    const fields = ['pt.ID', 'pt.Text', 'ptl.Text AS localeText', 'pt.NextPageID'];
+    const fields = [
+      'pt.ID',
+      'pt.Text',
+      'ptl.Text AS localeText',
+      'pt.NextPageID',
+    ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
       '$_localeTable AS ptl',
@@ -66,7 +71,9 @@ class PageTextRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select(['MAX(ID) as max_id']).first();
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
     var maxId = result.toMap()['max_id'] as int?;
     return (maxId ?? 0) + 1;
   }

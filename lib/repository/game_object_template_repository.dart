@@ -1,6 +1,6 @@
-import 'package:foxy/model/game_object_template.dart';
-import 'package:foxy/model/game_object_template_filter_entity.dart';
-import 'package:foxy/model/game_object_template_locale.dart';
+import 'package:foxy/entity/game_object_template.dart';
+import 'package:foxy/entity/game_object_template_filter_entity.dart';
+import 'package:foxy/entity/game_object_template_locale.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class GameObjectTemplateRepository with RepositoryMixin {
@@ -23,7 +23,9 @@ class GameObjectTemplateRepository with RepositoryMixin {
     return (maxEntry ?? 0) + 1;
   }
 
-  Future<int> countGameObjectTemplates({GameObjectTemplateFilterEntity? filter}) async {
+  Future<int> countGameObjectTemplates({
+    GameObjectTemplateFilterEntity? filter,
+  }) async {
     var builder = laconic.table('$_table AS gt');
     builder.select(['gt.entry']);
     builder = builder.leftJoin(

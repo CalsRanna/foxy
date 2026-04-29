@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/item_extended_cost.dart';
-import 'package:foxy/model/item_extended_cost_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/item_extended_cost.dart';
+import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -78,13 +78,18 @@ class ItemExtendedCostListViewModel {
 
   Future<void> initSignals() async {
     final filter = ItemExtendedCostFilterEntity();
-    costs.value = await repository.getItemExtendedCosts(page: 1, filter: filter);
+    costs.value = await repository.getItemExtendedCosts(
+      page: 1,
+      filter: filter,
+    );
     total.value = await repository.countItemExtendedCosts(filter: filter);
   }
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '扩展价格 #$id' : '新建扩展价格';
-    final routeId = id != null ? 'item_extended_cost_$id' : 'item_extended_cost_new';
+    final routeId = id != null
+        ? 'item_extended_cost_$id'
+        : 'item_extended_cost_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       id: routeId,
@@ -107,7 +112,10 @@ class ItemExtendedCostListViewModel {
     entryController.clear();
     page.value = 1;
     final filter = ItemExtendedCostFilterEntity();
-    costs.value = await repository.getItemExtendedCosts(page: 1, filter: filter);
+    costs.value = await repository.getItemExtendedCosts(
+      page: 1,
+      filter: filter,
+    );
     total.value = await repository.countItemExtendedCosts(filter: filter);
   }
 
@@ -118,7 +126,10 @@ class ItemExtendedCostListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    costs.value = await repository.getItemExtendedCosts(page: page.value, filter: filter);
+    costs.value = await repository.getItemExtendedCosts(
+      page: page.value,
+      filter: filter,
+    );
     total.value = await repository.countItemExtendedCosts(filter: filter);
   }
 }

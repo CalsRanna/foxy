@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/glyph_property.dart';
-import 'package:foxy/model/glyph_property_filter_entity.dart';
+import 'package:foxy/entity/glyph_property.dart';
+import 'package:foxy/entity/glyph_property_filter_entity.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -79,7 +79,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('雕文属性'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 640),
@@ -236,7 +243,10 @@ class _DialogState extends State<_Dialog> {
     try {
       final repository = GlyphPropertyRepository();
       final filter = GlyphPropertyFilterEntity(id: _idController.text);
-      final items = await repository.getGlyphProperties(filter: filter, page: _page);
+      final items = await repository.getGlyphProperties(
+        filter: filter,
+        page: _page,
+      );
       final total = await repository.countGlyphProperties(filter: filter);
       if (mounted) {
         setState(() {
@@ -244,7 +254,6 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

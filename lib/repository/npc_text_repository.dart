@@ -1,4 +1,4 @@
-import 'package:foxy/model/npc_text.dart';
+import 'package:foxy/entity/npc_text.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// npc_text 表的数据访问层
@@ -7,7 +7,11 @@ class NpcTextRepository with RepositoryMixin {
   static const _table = 'npc_text';
 
   /// 搜索（用于 NpcTextSelector）
-  Future<List<NpcText>> getNpcTexts({String? id, String? text, int page = 1}) async {
+  Future<List<NpcText>> getNpcTexts({
+    String? id,
+    String? text,
+    int page = 1,
+  }) async {
     return getNpcTextsPaginated(id: id, text: text, page: page);
   }
 

@@ -1,4 +1,4 @@
-import 'package:foxy/model/spell_group.dart';
+import 'package:foxy/entity/spell_group.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellGroupRepository with RepositoryMixin {

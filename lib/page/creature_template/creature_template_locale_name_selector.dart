@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/creature_template_locale.dart';
+import 'package:foxy/entity/creature_template_locale.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

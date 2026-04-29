@@ -1,4 +1,4 @@
-import 'package:foxy/model/spell_loot_template.dart';
+import 'package:foxy/entity/spell_loot_template.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellLootTemplateRepository with RepositoryMixin {
@@ -70,7 +70,9 @@ class SpellLootTemplateRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellLootTemplate> copySpellLootTemplate(SpellLootTemplate data) async {
+  Future<SpellLootTemplate> copySpellLootTemplate(
+    SpellLootTemplate data,
+  ) async {
     var json = data.toJson();
     var maxItemResult = await laconic
         .table(_table)

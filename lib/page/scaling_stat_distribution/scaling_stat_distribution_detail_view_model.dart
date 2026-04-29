@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/scaling_stat_distribution.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/scaling_stat_distribution.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -57,7 +57,10 @@ class ScalingStatDistributionDetailViewModel {
         await repository.updateScalingStatDistribution(t);
       }
       distribution.value = t;
-      _logActivity(t.id == 0 ? ActivityActionType.create : ActivityActionType.update, t);
+      _logActivity(
+        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('属性缩放分布数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -149,7 +152,8 @@ class ScalingStatDistributionDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      distribution.value = (await ScalingStatDistributionSoloRepository().getScalingStatDistribution(id))!;
+      distribution.value = (await ScalingStatDistributionSoloRepository()
+          .getScalingStatDistribution(id))!;
       _initControllers(distribution.value);
     } catch (e, s) {
       logger.e('加载属性缩放分布(id=$id)失败', error: e, stackTrace: s);

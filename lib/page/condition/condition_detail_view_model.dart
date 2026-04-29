@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/condition.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/condition.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -49,12 +49,14 @@ class ConditionDetailViewModel {
   }
 
   void _initControllers(Condition c) {
-    sourceTypeOrReferenceIdController.text = c.sourceTypeOrReferenceId.toString();
+    sourceTypeOrReferenceIdController.text = c.sourceTypeOrReferenceId
+        .toString();
     sourceGroupController.text = c.sourceGroup.toString();
     sourceEntryController.text = c.sourceEntry.toString();
     sourceIdController.text = c.sourceId.toString();
     elseGroupController.text = c.elseGroup.toString();
-    conditionTypeOrReferenceController.text = c.conditionTypeOrReference.toString();
+    conditionTypeOrReferenceController.text = c.conditionTypeOrReference
+        .toString();
     conditionTargetController.text = c.conditionTarget.toString();
     conditionValue1Controller.text = c.conditionValue1.toString();
     conditionValue2Controller.text = c.conditionValue2.toString();
@@ -77,7 +79,9 @@ class ConditionDetailViewModel {
       }
       condition.value = data;
       _logActivity(
-        _originalCredential == null ? ActivityActionType.create : ActivityActionType.update,
+        _originalCredential == null
+            ? ActivityActionType.create
+            : ActivityActionType.update,
         data,
       );
       if (!context.mounted) return;
@@ -96,12 +100,16 @@ class ConditionDetailViewModel {
 
   Condition _collectFromControllers() {
     final c = Condition(
-      sourceTypeOrReferenceId: _parseInt(sourceTypeOrReferenceIdController.text),
+      sourceTypeOrReferenceId: _parseInt(
+        sourceTypeOrReferenceIdController.text,
+      ),
       sourceGroup: _parseInt(sourceGroupController.text),
       sourceEntry: _parseInt(sourceEntryController.text),
       sourceId: _parseInt(sourceIdController.text),
       elseGroup: _parseInt(elseGroupController.text),
-      conditionTypeOrReference: _parseInt(conditionTypeOrReferenceController.text),
+      conditionTypeOrReference: _parseInt(
+        conditionTypeOrReferenceController.text,
+      ),
       conditionTarget: _parseInt(conditionTargetController.text),
       conditionValue1: _parseInt(conditionValue1Controller.text),
       conditionValue2: _parseInt(conditionValue2Controller.text),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/quest_template_locale.dart';
+import 'package:foxy/entity/quest_template_locale.dart';
 import 'package:foxy/repository/quest_template_locale_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

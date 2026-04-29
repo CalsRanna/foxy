@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/emote_text.dart';
-import 'package:foxy/model/emote_text_filter_entity.dart';
+import 'package:foxy/entity/emote_text.dart';
+import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -11,11 +11,7 @@ class EmoteSelector extends StatefulWidget {
   final TextEditingController controller;
   final String? placeholder;
 
-  const EmoteSelector({
-    super.key,
-    required this.controller,
-    this.placeholder,
-  });
+  const EmoteSelector({super.key, required this.controller, this.placeholder});
 
   @override
   State<EmoteSelector> createState() => _EmoteSelectorState();
@@ -80,7 +76,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('表情'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 640),
@@ -245,7 +248,10 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = EmoteTextRepository();
-      final filter = EmoteTextFilterEntity(id: _idController.text, name: _nameController.text);
+      final filter = EmoteTextFilterEntity(
+        id: _idController.text,
+        name: _nameController.text,
+      );
       final items = await repository.getEmoteTexts(filter: filter, page: _page);
       final total = await repository.countEmoteTexts(filter: filter);
       if (mounted) {
@@ -254,7 +260,6 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

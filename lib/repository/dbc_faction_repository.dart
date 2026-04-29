@@ -1,4 +1,4 @@
-import 'package:foxy/model/dbc_faction.dart';
+import 'package:foxy/entity/dbc_faction.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class DbcFactionRepository with RepositoryMixin {

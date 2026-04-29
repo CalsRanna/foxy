@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_selector.dart';
-import 'package:foxy/page/quest/creature_questender_view_model.dart';
+import 'package:foxy/page/quest/creature_quest_starter_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
@@ -8,16 +8,17 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-class CreatureQuestenderView extends StatefulWidget {
+class CreatureQueststarterView extends StatefulWidget {
   final int questId;
-  const CreatureQuestenderView({super.key, required this.questId});
+  const CreatureQueststarterView({super.key, required this.questId});
 
   @override
-  State<CreatureQuestenderView> createState() => _CreatureQuestenderViewState();
+  State<CreatureQueststarterView> createState() =>
+      _CreatureQueststarterViewState();
 }
 
-class _CreatureQuestenderViewState extends State<CreatureQuestenderView> {
-  final viewModel = GetIt.instance.get<CreatureQuestenderViewModel>();
+class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
+  final viewModel = GetIt.instance.get<CreatureQuestStarterViewModel>();
 
   @override
   void initState() {
@@ -125,7 +126,7 @@ class _CreatureQuestenderViewState extends State<CreatureQuestenderView> {
     showShadDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('新增结束生物'),
+        title: Text('新增开始生物'),
         child: _buildDialogForm(dialogContext),
       ),
     );
@@ -135,7 +136,7 @@ class _CreatureQuestenderViewState extends State<CreatureQuestenderView> {
     showShadDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('编辑结束生物'),
+        title: Text('编辑开始生物'),
         child: _buildDialogForm(dialogContext),
       ),
     );

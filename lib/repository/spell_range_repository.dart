@@ -1,4 +1,4 @@
-import 'package:foxy/model/spell_range.dart';
+import 'package:foxy/entity/spell_range.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellRangeRepository with RepositoryMixin {
@@ -23,11 +23,7 @@ class SpellRangeRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(
-    dynamic builder, {
-    String? id,
-    String? name,
-  }) {
+  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }

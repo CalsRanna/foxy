@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/model/spell_item_enchantment.dart';
-import 'package:foxy/model/spell_item_enchantment_filter_entity.dart';
+import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/spell_item_enchantment.dart';
+import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -83,13 +83,18 @@ class SpellItemEnchantmentListViewModel {
 
   Future<void> initSignals() async {
     final filter = SpellItemEnchantmentFilterEntity();
-    enchantments.value = await repository.getSpellItemEnchantments(page: 1, filter: filter);
+    enchantments.value = await repository.getSpellItemEnchantments(
+      page: 1,
+      filter: filter,
+    );
     total.value = await repository.countSpellItemEnchantments(filter: filter);
   }
 
   void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建法术附魔';
-    final routeId = id != null ? 'spell_item_enchantment_$id' : 'spell_item_enchantment_new';
+    final routeId = id != null
+        ? 'spell_item_enchantment_$id'
+        : 'spell_item_enchantment_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       id: routeId,
@@ -100,7 +105,10 @@ class SpellItemEnchantmentListViewModel {
   }
 
   SpellItemEnchantmentFilterEntity _buildFilter() {
-    return SpellItemEnchantmentFilterEntity(id: entryController.text, name: nameController.text);
+    return SpellItemEnchantmentFilterEntity(
+      id: entryController.text,
+      name: nameController.text,
+    );
   }
 
   Future<void> paginate(int page) async {
@@ -113,7 +121,10 @@ class SpellItemEnchantmentListViewModel {
     nameController.clear();
     page.value = 1;
     final filter = SpellItemEnchantmentFilterEntity();
-    enchantments.value = await repository.getSpellItemEnchantments(page: 1, filter: filter);
+    enchantments.value = await repository.getSpellItemEnchantments(
+      page: 1,
+      filter: filter,
+    );
     total.value = await repository.countSpellItemEnchantments(filter: filter);
   }
 
@@ -124,7 +135,10 @@ class SpellItemEnchantmentListViewModel {
 
   Future<void> _refresh() async {
     final filter = _buildFilter();
-    enchantments.value = await repository.getSpellItemEnchantments(page: page.value, filter: filter);
+    enchantments.value = await repository.getSpellItemEnchantments(
+      page: page.value,
+      filter: filter,
+    );
     total.value = await repository.countSpellItemEnchantments(filter: filter);
   }
 }

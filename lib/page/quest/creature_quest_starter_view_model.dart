@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/model/creature_questender.dart';
-import 'package:foxy/repository/creature_questender_repository.dart';
+import 'package:foxy/entity/creature_quest_starter.dart';
+import 'package:foxy/repository/creature_quest_starter_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureQuestenderViewModel {
+class CreatureQuestStarterViewModel {
   final questId = signal(0);
-  final items = signal<List<BriefCreatureQuestender>>([]);
+  final items = signal<List<BriefCreatureQuestStarter>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -18,13 +18,13 @@ class CreatureQuestenderViewModel {
   int _originalId = 0;
   int _originalQuest = 0;
 
-  final repository = CreatureQuestenderRepository();
+  final repository = CreatureQuestStarterRepository();
 
   /// 加载数据
   Future<void> load() async {
     loading.value = true;
     try {
-      final data = await repository.getCreatureQuestenders(questId.value);
+      final data = await repository.getCreatureQuestStarters(questId.value);
       items.value = data;
       selectedIndex.value = null;
     } catch (e) {
@@ -41,14 +41,14 @@ class CreatureQuestenderViewModel {
   }
 
   /// 填充表单
-  void fillForm(CreatureQuestender model) {
+  void fillForm(CreatureQuestStarter model) {
     idController.text = model.id.toString();
     questController.text = model.quest.toString();
   }
 
   /// 从表单收集数据
-  CreatureQuestender collectFromForm() {
-    return CreatureQuestender(
+  CreatureQuestStarter collectFromForm() {
+    return CreatureQuestStarter(
       id: int.tryParse(idController.text) ?? 0,
       quest: int.tryParse(questController.text) ?? 0,
     );
@@ -56,7 +56,7 @@ class CreatureQuestenderViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final blank = await repository.createCreatureQuestender(questId.value);
+    final blank = await repository.createCreatureQuestStarter(questId.value);
     resetForm();
     fillForm(blank);
     _originalId = blank.id;
@@ -70,7 +70,7 @@ class CreatureQuestenderViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
 
     final item = items.value[index];
-    final existing = await repository.getCreatureQuestender({
+    final existing = await repository.getCreatureQuestStarter({
       'id': item.id,
       'quest': item.quest,
     });
@@ -85,7 +85,7 @@ class CreatureQuestenderViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.storeCreatureQuestender(model);
+      await repository.storeCreatureQuestStarter(model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -104,7 +104,7 @@ class CreatureQuestenderViewModel {
     saving.value = true;
     try {
       final model = collectFromForm();
-      await repository.updateCreatureQuestender({
+      await repository.updateCreatureQuestStarter({
         'id': _originalId,
         'quest': _originalQuest,
       }, model);
@@ -147,7 +147,10 @@ class CreatureQuestenderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.copyCreatureQuestender({'id': item.id, 'quest': item.quest});
+        await repository.copyCreatureQuestStarter({
+          'id': item.id,
+          'quest': item.quest,
+        });
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('复制成功'));
@@ -186,7 +189,10 @@ class CreatureQuestenderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureQuestender({'id': item.id, 'quest': item.quest});
+        await repository.destroyCreatureQuestStarter({
+          'id': item.id,
+          'quest': item.quest,
+        });
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

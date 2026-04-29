@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/lock.dart';
+import 'package:foxy/entity/lock.dart';
 import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -10,11 +10,7 @@ class LockSelector extends StatefulWidget {
   final TextEditingController controller;
   final String? placeholder;
 
-  const LockSelector({
-    super.key,
-    required this.controller,
-    this.placeholder,
-  });
+  const LockSelector({super.key, required this.controller, this.placeholder});
 
   @override
   State<LockSelector> createState() => _LockSelectorState();
@@ -78,7 +74,14 @@ class _DialogState extends State<_Dialog> {
     var children = [_buildFilter(), _buildTable()];
     return ShadDialog(
       title: Text('锁'),
-      actions: [_buildPagination(), Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [cancelButton, confirmButton]),],
+      actions: [
+        _buildPagination(),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [cancelButton, confirmButton],
+        ),
+      ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
       constraints: BoxConstraints(maxWidth: 640),
@@ -103,7 +106,10 @@ class _DialogState extends State<_Dialog> {
   }
 
   Widget _buildFilter() {
-    var idInput = ShadInput(controller: _idController, placeholder: Text('锁ID'));
+    var idInput = ShadInput(
+      controller: _idController,
+      placeholder: Text('锁ID'),
+    );
     var searchButton = ShadButton(
       onPressed: _doSearch,
       size: ShadButtonSize.sm,
@@ -240,7 +246,6 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
-    } finally {
-    }
+    } finally {}
   }
 }

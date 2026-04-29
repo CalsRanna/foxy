@@ -1,4 +1,4 @@
-import 'package:foxy/model/waypoint_data.dart';
+import 'package:foxy/entity/waypoint_data.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class WaypointDataRepository with RepositoryMixin {

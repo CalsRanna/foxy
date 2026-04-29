@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/model/feature.dart';
+import 'package:foxy/entity/feature.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 const _kFeatureIconMap = <String, IconData>{

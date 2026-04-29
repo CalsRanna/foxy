@@ -1,5 +1,5 @@
-import 'package:foxy/model/spell_item_enchantment.dart';
-import 'package:foxy/model/spell_item_enchantment_filter_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment.dart';
+import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellItemEnchantmentSoloRepository with RepositoryMixin {
@@ -14,10 +14,14 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => SpellItemEnchantment.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => SpellItemEnchantment.fromJson(e.toMap()))
+        .toList();
   }
 
-  Future<int> countSpellItemEnchantments({SpellItemEnchantmentFilterEntity? filter}) async {
+  Future<int> countSpellItemEnchantments({
+    SpellItemEnchantmentFilterEntity? filter,
+  }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -62,7 +66,10 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, SpellItemEnchantmentFilterEntity? filter) {
+  dynamic _applyFilter(
+    dynamic builder,
+    SpellItemEnchantmentFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
