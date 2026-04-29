@@ -56,15 +56,13 @@ class GemPropertyDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 GemProperty
   GemProperty _collectFromControllers() {
-    final t = GemProperty();
-
-    t.id = _parseInt(idController.text);
-    t.enchantId = _parseInt(enchantIdController.text);
-    t.maxcountInv = _parseInt(maxcountInvController.text);
-    t.maxcountItem = _parseInt(maxcountItemController.text);
-    t.type = _parseInt(typeController.text);
-
-    return t;
+    return GemProperty(
+      id: _parseInt(idController.text),
+      enchantId: _parseInt(enchantIdController.text),
+      maxcountInv: _parseInt(maxcountInvController.text),
+      maxcountItem: _parseInt(maxcountItemController.text),
+      type: _parseInt(typeController.text),
+    );
   }
 
   int _parseInt(String text) {

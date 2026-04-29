@@ -81,45 +81,43 @@ class GameObjectTemplateDetailViewModel {
   }
 
   GameObjectTemplate _collectFromControllers() {
-    final t = GameObjectTemplate();
-
-    t.entry = _parseInt(entryController.text);
-    t.name = nameController.text;
-    t.castBarCaption = castBarCaptionController.text;
-    t.iconName = iconNameController.text;
-    t.type = _getSelectValue(typeController);
-    t.displayId = _parseInt(displayIdController.text);
-    t.size = _parseDouble(sizeController.text);
-    t.unk1 = unk1Controller.text;
-    t.data0 = _parseInt(data0Controller.text);
-    t.data1 = _parseInt(data1Controller.text);
-    t.data2 = _parseInt(data2Controller.text);
-    t.data3 = _parseInt(data3Controller.text);
-    t.data4 = _parseInt(data4Controller.text);
-    t.data5 = _parseInt(data5Controller.text);
-    t.data6 = _parseInt(data6Controller.text);
-    t.data7 = _parseInt(data7Controller.text);
-    t.data8 = _parseInt(data8Controller.text);
-    t.data9 = _parseInt(data9Controller.text);
-    t.data10 = _parseInt(data10Controller.text);
-    t.data11 = _parseInt(data11Controller.text);
-    t.data12 = _parseInt(data12Controller.text);
-    t.data13 = _parseInt(data13Controller.text);
-    t.data14 = _parseInt(data14Controller.text);
-    t.data15 = _parseInt(data15Controller.text);
-    t.data16 = _parseInt(data16Controller.text);
-    t.data17 = _parseInt(data17Controller.text);
-    t.data18 = _parseInt(data18Controller.text);
-    t.data19 = _parseInt(data19Controller.text);
-    t.data20 = _parseInt(data20Controller.text);
-    t.data21 = _parseInt(data21Controller.text);
-    t.data22 = _parseInt(data22Controller.text);
-    t.data23 = _parseInt(data23Controller.text);
-    t.aiName = aiNameController.text;
-    t.scriptName = scriptNameController.text;
-    t.verifiedBuild = _parseInt(verifiedBuildController.text);
-
-    return t;
+    return GameObjectTemplate(
+      entry: _parseInt(entryController.text),
+      name: nameController.text,
+      castBarCaption: castBarCaptionController.text,
+      iconName: iconNameController.text,
+      type: _getSelectValue(typeController),
+      displayId: _parseInt(displayIdController.text),
+      size: _parseDouble(sizeController.text),
+      unk1: unk1Controller.text,
+      data0: _parseInt(data0Controller.text),
+      data1: _parseInt(data1Controller.text),
+      data2: _parseInt(data2Controller.text),
+      data3: _parseInt(data3Controller.text),
+      data4: _parseInt(data4Controller.text),
+      data5: _parseInt(data5Controller.text),
+      data6: _parseInt(data6Controller.text),
+      data7: _parseInt(data7Controller.text),
+      data8: _parseInt(data8Controller.text),
+      data9: _parseInt(data9Controller.text),
+      data10: _parseInt(data10Controller.text),
+      data11: _parseInt(data11Controller.text),
+      data12: _parseInt(data12Controller.text),
+      data13: _parseInt(data13Controller.text),
+      data14: _parseInt(data14Controller.text),
+      data15: _parseInt(data15Controller.text),
+      data16: _parseInt(data16Controller.text),
+      data17: _parseInt(data17Controller.text),
+      data18: _parseInt(data18Controller.text),
+      data19: _parseInt(data19Controller.text),
+      data20: _parseInt(data20Controller.text),
+      data21: _parseInt(data21Controller.text),
+      data22: _parseInt(data22Controller.text),
+      data23: _parseInt(data23Controller.text),
+      aiName: aiNameController.text,
+      scriptName: scriptNameController.text,
+      verifiedBuild: _parseInt(verifiedBuildController.text),
+    );
   }
 
   int _getSelectValue(ShadSelectController<int> controller) =>

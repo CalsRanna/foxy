@@ -65,18 +65,18 @@ class SpellAreaViewModel {
   }
 
   SpellArea collectFromForm() {
-    final data = SpellArea();
-    data.spell = spellId.value;
-    data.area = _parseInt(areaController.text);
-    data.questStart = _parseInt(questStartController.text);
-    data.questEnd = _parseInt(questEndController.text);
-    data.auraSpell = _parseInt(auraSpellController.text);
-    data.racemask = _parseInt(racemaskController.text);
-    data.gender = _parseInt(genderController.text);
-    data.autocast = _parseInt(autocastController.text);
-    data.questStartStatus = _parseInt(questStartStatusController.text);
-    data.questEndStatus = _parseInt(questEndStatusController.text);
-    return data;
+    return SpellArea(
+      spell: spellId.value,
+      area: _parseInt(areaController.text),
+      questStart: _parseInt(questStartController.text),
+      questEnd: _parseInt(questEndController.text),
+      auraSpell: _parseInt(auraSpellController.text),
+      racemask: _parseInt(racemaskController.text),
+      gender: _parseInt(genderController.text),
+      autocast: _parseInt(autocastController.text),
+      questStartStatus: _parseInt(questStartStatusController.text),
+      questEndStatus: _parseInt(questEndStatusController.text),
+    );
   }
 
   int _parseInt(String text) {

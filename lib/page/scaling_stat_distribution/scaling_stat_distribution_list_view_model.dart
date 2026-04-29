@@ -95,8 +95,7 @@ class ScalingStatDistributionListViewModel {
   }
 
   ScalingStatDistributionFilterEntity _buildFilter() {
-    return ScalingStatDistributionFilterEntity()
-      ..id = idController.text;
+    return ScalingStatDistributionFilterEntity(id: idController.text);
   }
 
   Future<void> paginate(int page) async {

@@ -81,42 +81,30 @@ class SpellItemEnchantmentDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 SpellItemEnchantment
   SpellItemEnchantment _collectFromControllers() {
-    final t = SpellItemEnchantment();
-
-    /// Basic
-    t.id = _parseInt(idController.text);
-    t.nameLangZhCn = nameController.text;
-    t.charges = _parseInt(chargesController.text);
-
-    /// Effect
-    t.effect0 = _parseInt(effect0Controller.text);
-    t.effect1 = _parseInt(effect1Controller.text);
-    t.effect2 = _parseInt(effect2Controller.text);
-
-    /// EffectPointsMin
-    t.effectPointsMin0 = _parseInt(effectPointsMin0Controller.text);
-    t.effectPointsMin1 = _parseInt(effectPointsMin1Controller.text);
-    t.effectPointsMin2 = _parseInt(effectPointsMin2Controller.text);
-
-    /// EffectPointsMax
-    t.effectPointsMax0 = _parseInt(effectPointsMax0Controller.text);
-    t.effectPointsMax1 = _parseInt(effectPointsMax1Controller.text);
-    t.effectPointsMax2 = _parseInt(effectPointsMax2Controller.text);
-
-    /// EffectArg
-    t.effectArg0 = _parseInt(effectArg0Controller.text);
-    t.effectArg1 = _parseInt(effectArg1Controller.text);
-    t.effectArg2 = _parseInt(effectArg2Controller.text);
-
-    /// Other
-    t.itemVisual = _parseInt(itemVisualController.text);
-    t.flags = _parseInt(flagsController.text);
-    t.srcItemId = _parseInt(srcItemIdController.text);
-    t.conditionId = _parseInt(conditionIdController.text);
-    t.requiredSkillId = _parseInt(requiredSkillIdController.text);
-    t.requiredSkillRank = _parseInt(requiredSkillRankController.text);
-    t.minLevel = _parseInt(minLevelController.text);
-
+    final t = SpellItemEnchantment(
+      id: _parseInt(idController.text),
+      nameLangZhCn: nameController.text,
+      charges: _parseInt(chargesController.text),
+      effect0: _parseInt(effect0Controller.text),
+      effect1: _parseInt(effect1Controller.text),
+      effect2: _parseInt(effect2Controller.text),
+      effectPointsMin0: _parseInt(effectPointsMin0Controller.text),
+      effectPointsMin1: _parseInt(effectPointsMin1Controller.text),
+      effectPointsMin2: _parseInt(effectPointsMin2Controller.text),
+      effectPointsMax0: _parseInt(effectPointsMax0Controller.text),
+      effectPointsMax1: _parseInt(effectPointsMax1Controller.text),
+      effectPointsMax2: _parseInt(effectPointsMax2Controller.text),
+      effectArg0: _parseInt(effectArg0Controller.text),
+      effectArg1: _parseInt(effectArg1Controller.text),
+      effectArg2: _parseInt(effectArg2Controller.text),
+      itemVisual: _parseInt(itemVisualController.text),
+      flags: _parseInt(flagsController.text),
+      srcItemId: _parseInt(srcItemIdController.text),
+      conditionId: _parseInt(conditionIdController.text),
+      requiredSkillId: _parseInt(requiredSkillIdController.text),
+      requiredSkillRank: _parseInt(requiredSkillRankController.text),
+      minLevel: _parseInt(minLevelController.text),
+    );
     return t;
   }
 

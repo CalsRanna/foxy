@@ -245,9 +245,7 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = EmoteTextRepository();
-      final filter = EmoteTextFilterEntity()
-        ..id = _idController.text
-        ..name = _nameController.text;
+      final filter = EmoteTextFilterEntity(id: _idController.text, name: _nameController.text);
       final items = await repository.getEmoteTexts(filter: filter, page: _page);
       final total = await repository.countEmoteTexts(filter: filter);
       if (mounted) {

@@ -83,8 +83,7 @@ class GemPropertyListViewModel {
   }
 
   GemPropertyFilterEntity _buildFilter() {
-    return GemPropertyFilterEntity()
-      ..id = entryController.text;
+    return GemPropertyFilterEntity(id: entryController.text);
   }
 
   Future<void> paginate(int page) async {

@@ -245,9 +245,10 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = AreaTableRepository();
-      final filter = AreaTableFilterEntity()
-        ..id = _idController.text
-        ..name = _nameController.text;
+      final filter = AreaTableFilterEntity(
+        id: _idController.text,
+        name: _nameController.text,
+      );
       final items = await repository.getAreaTables(filter: filter, page: _page);
       final total = await repository.countAreaTables(filter: filter);
       if (mounted) {

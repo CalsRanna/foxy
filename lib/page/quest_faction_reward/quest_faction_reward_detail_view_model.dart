@@ -62,24 +62,19 @@ class QuestFactionRewardDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 QuestFactionReward
   QuestFactionReward _collectFromControllers() {
-    final t = QuestFactionReward();
-
-    /// Basic
-    t.id = _parseInt(idController.text);
-
-    /// Difficulty
-    t.difficulty0 = _parseInt(difficulty0Controller.text);
-    t.difficulty1 = _parseInt(difficulty1Controller.text);
-    t.difficulty2 = _parseInt(difficulty2Controller.text);
-    t.difficulty3 = _parseInt(difficulty3Controller.text);
-    t.difficulty4 = _parseInt(difficulty4Controller.text);
-    t.difficulty5 = _parseInt(difficulty5Controller.text);
-    t.difficulty6 = _parseInt(difficulty6Controller.text);
-    t.difficulty7 = _parseInt(difficulty7Controller.text);
-    t.difficulty8 = _parseInt(difficulty8Controller.text);
-    t.difficulty9 = _parseInt(difficulty9Controller.text);
-
-    return t;
+    return QuestFactionReward(
+      id: _parseInt(idController.text),
+      difficulty0: _parseInt(difficulty0Controller.text),
+      difficulty1: _parseInt(difficulty1Controller.text),
+      difficulty2: _parseInt(difficulty2Controller.text),
+      difficulty3: _parseInt(difficulty3Controller.text),
+      difficulty4: _parseInt(difficulty4Controller.text),
+      difficulty5: _parseInt(difficulty5Controller.text),
+      difficulty6: _parseInt(difficulty6Controller.text),
+      difficulty7: _parseInt(difficulty7Controller.text),
+      difficulty8: _parseInt(difficulty8Controller.text),
+      difficulty9: _parseInt(difficulty9Controller.text),
+    );
   }
 
   int _parseInt(String text) {

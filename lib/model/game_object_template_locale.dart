@@ -1,19 +1,26 @@
 class GameObjectTemplateLocale {
-  int entry = 0;
-  String locale = '';
-  String name = '';
-  String castBarCaption = '';
-  int verifiedBuild = 0;
+  final int entry;
+  final String locale;
+  final String name;
+  final String castBarCaption;
+  final int verifiedBuild;
 
-  GameObjectTemplateLocale();
+  const GameObjectTemplateLocale({
+    this.entry = 0,
+    this.locale = '',
+    this.name = '',
+    this.castBarCaption = '',
+    this.verifiedBuild = 0,
+  });
 
   factory GameObjectTemplateLocale.fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplateLocale()
-      ..entry = json['entry'] ?? 0
-      ..locale = json['locale'] ?? ''
-      ..name = json['name'] ?? ''
-      ..castBarCaption = json['castBarCaption'] ?? ''
-      ..verifiedBuild = json['VerifiedBuild'] ?? 0;
+    return GameObjectTemplateLocale(
+      entry: json['entry'] ?? 0,
+      locale: json['locale'] ?? '',
+      name: json['name'] ?? '',
+      castBarCaption: json['castBarCaption'] ?? '',
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -33,11 +40,12 @@ class GameObjectTemplateLocale {
     String? castBarCaption,
     int? verifiedBuild,
   }) {
-    return GameObjectTemplateLocale()
-      ..entry = entry ?? this.entry
-      ..locale = locale ?? this.locale
-      ..name = name ?? this.name
-      ..castBarCaption = castBarCaption ?? this.castBarCaption
-      ..verifiedBuild = verifiedBuild ?? this.verifiedBuild;
+    return GameObjectTemplateLocale(
+      entry: entry ?? this.entry,
+      locale: locale ?? this.locale,
+      name: name ?? this.name,
+      castBarCaption: castBarCaption ?? this.castBarCaption,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
   }
 }

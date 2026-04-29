@@ -1,42 +1,60 @@
 /// 扩展价格
 class ItemExtendedCost {
-  int id = 0;
-  int honorPoints = 0;
-  int arenaPoints = 0;
-  int arenaBracket = 0;
-  int itemID0 = 0;
-  int itemID1 = 0;
-  int itemID2 = 0;
-  int itemID3 = 0;
-  int itemID4 = 0;
-  int itemCount0 = 0;
-  int itemCount1 = 0;
-  int itemCount2 = 0;
-  int itemCount3 = 0;
-  int itemCount4 = 0;
-  int requiredArenaRating = 0;
-  int itemPurchaseGroup = 0;
+  final int id;
+  final int honorPoints;
+  final int arenaPoints;
+  final int arenaBracket;
+  final int itemID0;
+  final int itemID1;
+  final int itemID2;
+  final int itemID3;
+  final int itemID4;
+  final int itemCount0;
+  final int itemCount1;
+  final int itemCount2;
+  final int itemCount3;
+  final int itemCount4;
+  final int requiredArenaRating;
+  final int itemPurchaseGroup;
 
-  ItemExtendedCost();
+  const ItemExtendedCost({
+    this.id = 0,
+    this.honorPoints = 0,
+    this.arenaPoints = 0,
+    this.arenaBracket = 0,
+    this.itemID0 = 0,
+    this.itemID1 = 0,
+    this.itemID2 = 0,
+    this.itemID3 = 0,
+    this.itemID4 = 0,
+    this.itemCount0 = 0,
+    this.itemCount1 = 0,
+    this.itemCount2 = 0,
+    this.itemCount3 = 0,
+    this.itemCount4 = 0,
+    this.requiredArenaRating = 0,
+    this.itemPurchaseGroup = 0,
+  });
 
   factory ItemExtendedCost.fromJson(Map<String, dynamic> json) {
-    return ItemExtendedCost()
-      ..id = json['ID'] ?? json['id'] ?? 0
-      ..honorPoints = json['HonorPoints'] ?? json['honorPoints'] ?? 0
-      ..arenaPoints = json['ArenaPoints'] ?? json['arenaPoints'] ?? 0
-      ..arenaBracket = json['ArenaBracket'] ?? json['arenaBracket'] ?? 0
-      ..itemID0 = json['ItemID0'] ?? 0
-      ..itemID1 = json['ItemID1'] ?? 0
-      ..itemID2 = json['ItemID2'] ?? 0
-      ..itemID3 = json['ItemID3'] ?? 0
-      ..itemID4 = json['ItemID4'] ?? 0
-      ..itemCount0 = json['ItemCount0'] ?? 0
-      ..itemCount1 = json['ItemCount1'] ?? 0
-      ..itemCount2 = json['ItemCount2'] ?? 0
-      ..itemCount3 = json['ItemCount3'] ?? 0
-      ..itemCount4 = json['ItemCount4'] ?? 0
-      ..requiredArenaRating = json['RequiredArenaRating'] ?? 0
-      ..itemPurchaseGroup = json['ItemPurchaseGroup'] ?? 0;
+    return ItemExtendedCost(
+      id: json['ID'] ?? json['id'] ?? 0,
+      honorPoints: json['HonorPoints'] ?? json['honorPoints'] ?? 0,
+      arenaPoints: json['ArenaPoints'] ?? json['arenaPoints'] ?? 0,
+      arenaBracket: json['ArenaBracket'] ?? json['arenaBracket'] ?? 0,
+      itemID0: json['ItemID0'] ?? 0,
+      itemID1: json['ItemID1'] ?? 0,
+      itemID2: json['ItemID2'] ?? 0,
+      itemID3: json['ItemID3'] ?? 0,
+      itemID4: json['ItemID4'] ?? 0,
+      itemCount0: json['ItemCount0'] ?? 0,
+      itemCount1: json['ItemCount1'] ?? 0,
+      itemCount2: json['ItemCount2'] ?? 0,
+      itemCount3: json['ItemCount3'] ?? 0,
+      itemCount4: json['ItemCount4'] ?? 0,
+      requiredArenaRating: json['RequiredArenaRating'] ?? 0,
+      itemPurchaseGroup: json['ItemPurchaseGroup'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {

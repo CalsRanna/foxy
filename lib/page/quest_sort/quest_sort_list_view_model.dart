@@ -100,9 +100,10 @@ class QuestSortListViewModel {
   }
 
   QuestSortFilterEntity _buildFilter() {
-    return QuestSortFilterEntity()
-      ..id = entryController.text
-      ..name = nameController.text;
+    return QuestSortFilterEntity(
+      id: entryController.text,
+      name: nameController.text,
+    );
   }
 
   Future<void> paginate(int page) async {

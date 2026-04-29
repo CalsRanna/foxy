@@ -114,9 +114,10 @@ class GossipMenuListViewModel {
   }
 
   GossipMenuFilterEntity _buildFilter() {
-    return GossipMenuFilterEntity()
-      ..menuId = menuIdController.text
-      ..text = textController.text;
+    return GossipMenuFilterEntity(
+      menuId: menuIdController.text,
+      text: textController.text,
+    );
   }
 
   void _logActivity(ActivityActionType action, int menuId, int textId) {

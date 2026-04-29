@@ -64,15 +64,15 @@ class NpcVendorViewModel {
 
   /// 从表单收集数据
   NpcVendor collectFromForm() {
-    final vendor = NpcVendor();
-    vendor.entry = entry.value;
-    vendor.slot = _parseInt(slotController.text);
-    vendor.item = _parseInt(itemController.text);
-    vendor.maxcount = _parseInt(maxcountController.text);
-    vendor.incrtime = _parseInt(incrtimeController.text);
-    vendor.extendedCost = _parseInt(extendedCostController.text);
-    vendor.verifiedBuild = _parseInt(verifiedBuildController.text);
-    return vendor;
+    return NpcVendor(
+      entry: entry.value,
+      slot: _parseInt(slotController.text),
+      item: _parseInt(itemController.text),
+      maxcount: _parseInt(maxcountController.text),
+      incrtime: _parseInt(incrtimeController.text),
+      extendedCost: _parseInt(extendedCostController.text),
+      verifiedBuild: _parseInt(verifiedBuildController.text),
+    );
   }
 
   int _parseInt(String text) {

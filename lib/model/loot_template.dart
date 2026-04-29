@@ -1,48 +1,66 @@
 /// 掉落模板
 class LootTemplate {
-  int entry = 0;
-  int item = 0;
-  int reference = 0;
-  double chance = 0;
-  bool questRequired = false;
-  int lootMode = 1;
-  int groupId = 0;
-  int minCount = 1;
-  int maxCount = 1;
-  String comment = '';
+  final int entry;
+  final int item;
+  final int reference;
+  final double chance;
+  final bool questRequired;
+  final int lootMode;
+  final int groupId;
+  final int minCount;
+  final int maxCount;
+  final String comment;
 
   // 关联字段（物品信息）
-  String itemName = '';
-  String itemLocaleName = '';
-  int itemQuality = 0;
-  String itemIcon = '';
+  final String itemName;
+  final String itemLocaleName;
+  final int itemQuality;
+  final String itemIcon;
 
   // 聚合字段
-  int itemCount = 0;
+  final int itemCount;
 
   /// 显示名称（优先显示本地化名称）
   String get displayName =>
       itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
-  LootTemplate();
+  const LootTemplate({
+    this.entry = 0,
+    this.item = 0,
+    this.reference = 0,
+    this.chance = 0,
+    this.questRequired = false,
+    this.lootMode = 1,
+    this.groupId = 0,
+    this.minCount = 1,
+    this.maxCount = 1,
+    this.comment = '',
+    this.itemName = '',
+    this.itemLocaleName = '',
+    this.itemQuality = 0,
+    this.itemIcon = '',
+    this.itemCount = 0,
+  });
 
   factory LootTemplate.fromJson(Map<String, dynamic> json) {
-    return LootTemplate()
-      ..entry = json['Entry'] ?? json['entry'] ?? 0
-      ..item = json['Item'] ?? json['item'] ?? 0
-      ..reference = json['Reference'] ?? json['reference'] ?? 0
-      ..chance = (json['Chance'] ?? json['chance'] ?? 0).toDouble()
-      ..questRequired = (json['QuestRequired'] ?? json['questRequired'] ?? 0) == 1
-      ..lootMode = json['LootMode'] ?? json['lootMode'] ?? 1
-      ..groupId = json['GroupId'] ?? json['groupId'] ?? 0
-      ..minCount = json['MinCount'] ?? json['mincount'] ?? 1
-      ..maxCount = json['MaxCount'] ?? json['maxcount'] ?? 1
-      ..comment = json['Comment'] ?? json['comment'] ?? ''
-      ..itemName = json['name'] ?? ''
-      ..itemLocaleName = json['localeName'] ?? ''
-      ..itemQuality = json['Quality'] ?? 0
-      ..itemIcon = json['InventoryIcon0'] ?? ''
-      ..itemCount = json['ItemCount'] ?? 0;
+    return LootTemplate(
+      entry: json['Entry'] ?? json['entry'] ?? 0,
+      item: json['Item'] ?? json['item'] ?? 0,
+      reference: json['Reference'] ?? json['reference'] ?? 0,
+      chance: (json['Chance'] ?? json['chance'] ?? 0).toDouble(),
+      questRequired:
+          (json['QuestRequired'] ?? json['questRequired'] ?? 0) == 1,
+      lootMode: json['LootMode'] ?? json['lootMode'] ?? 1,
+      groupId: json['GroupId'] ?? json['groupId'] ?? 0,
+      minCount: json['MinCount'] ?? json['mincount'] ?? 1,
+      maxCount: json['MaxCount'] ?? json['maxcount'] ?? 1,
+      comment: json['Comment'] ?? json['comment'] ?? '',
+      itemName: json['name'] ?? '',
+      itemLocaleName: json['localeName'] ?? '',
+      itemQuality: json['Quality'] ?? 0,
+      itemIcon: json['InventoryIcon0'] ?? '',
+      itemCount: json['ItemCount'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {

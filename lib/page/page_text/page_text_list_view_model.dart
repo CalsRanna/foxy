@@ -113,9 +113,7 @@ class PageTextListViewModel {
   }
 
   PageTextFilterEntity _buildFilter() {
-    return PageTextFilterEntity()
-      ..id = idController.text
-      ..text = textController.text;
+    return PageTextFilterEntity(id: idController.text, text: textController.text);
   }
 
   Future<void> _refresh() async {

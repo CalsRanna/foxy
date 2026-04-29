@@ -138,8 +138,9 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newEquip = CreatureEquipTemplate.fromJson(source.toJson());
-    newEquip.id = maxId + 1;
+    final sourceJson = source.toJson();
+    sourceJson['ID'] = maxId + 1;
+    var newEquip = CreatureEquipTemplate.fromJson(sourceJson);
 
     await storeCreatureEquipTemplate(newEquip);
     return newEquip;

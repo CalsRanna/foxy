@@ -1,17 +1,23 @@
 class SpellRange {
-  int id = 0;
-  double rangeMin0 = 0.0;
-  double rangeMax0 = 0.0;
-  String displayNameLangZhCn = '';
+  final int id;
+  final double rangeMin0;
+  final double rangeMax0;
+  final String displayNameLangZhCn;
 
-  SpellRange();
+  const SpellRange({
+    this.id = 0,
+    this.rangeMin0 = 0.0,
+    this.rangeMax0 = 0.0,
+    this.displayNameLangZhCn = '',
+  });
 
   factory SpellRange.fromJson(Map<String, dynamic> json) {
-    return SpellRange()
-      ..id = json['ID'] ?? 0
-      ..rangeMin0 = (json['RangeMin0'] ?? 0).toDouble()
-      ..rangeMax0 = (json['RangeMax0'] ?? 0).toDouble()
-      ..displayNameLangZhCn = json['DisplayName_lang_zhCN'] ?? '';
+    return SpellRange(
+      id: json['ID'] ?? 0,
+      rangeMin0: (json['RangeMin0'] ?? 0).toDouble(),
+      rangeMax0: (json['RangeMax0'] ?? 0).toDouble(),
+      displayNameLangZhCn: json['DisplayName_lang_zhCN'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

@@ -47,10 +47,11 @@ class SpellRankViewModel {
   }
 
   SpellRank collectFromForm() {
-    final data = SpellRank();
-    data.firstSpellId = _parseInt(firstSpellIdController.text);
-    data.spellId = _parseInt(rankSpellIdController.text);
-    data.rank = _parseInt(rankController.text);
+    final data = SpellRank(
+      firstSpellId: _parseInt(firstSpellIdController.text),
+      spellId: _parseInt(rankSpellIdController.text),
+      rank: _parseInt(rankController.text),
+    );
     return data;
   }
 

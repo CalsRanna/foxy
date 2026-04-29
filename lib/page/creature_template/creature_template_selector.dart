@@ -249,9 +249,10 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = CreatureTemplateRepository();
-      final filter = CreatureTemplateFilterEntity()
-        ..entry = _entryController.text
-        ..name = _nameController.text;
+      final filter = CreatureTemplateFilterEntity(
+        entry: _entryController.text,
+        name: _nameController.text,
+      );
       final items = await repository.getBriefCreatureTemplates(
         page: _page,
         filter: filter,

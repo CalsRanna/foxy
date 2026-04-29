@@ -168,41 +168,38 @@ class SmartScriptDetailViewModel {
   }
 
   SmartScript _collectFromControllers() {
-    final t = SmartScript();
-    t.entryOrGuid = _parseInt(entryOrGuidController.text);
-    t.sourceType = _parseInt(sourceTypeController.text);
-    t.id = _parseInt(idController.text);
-    t.link = _parseInt(linkController.text);
-    t.comment = commentController.text;
-
-    t.eventType = _parseInt(eventTypeController.text);
-    t.eventPhaseMask = _parseInt(eventPhaseMaskController.text);
-    t.eventChance = _parseInt(eventChanceController.text);
-    t.eventFlags = _parseInt(eventFlagsController.text);
-    t.eventParam1 = _parseInt(eventParam1Controller.text);
-    t.eventParam2 = _parseInt(eventParam2Controller.text);
-    t.eventParam3 = _parseInt(eventParam3Controller.text);
-    t.eventParam4 = _parseInt(eventParam4Controller.text);
-    t.eventParam5 = _parseInt(eventParam5Controller.text);
-
-    t.actionType = _parseInt(actionTypeController.text);
-    t.actionParam1 = _parseInt(actionParam1Controller.text);
-    t.actionParam2 = _parseInt(actionParam2Controller.text);
-    t.actionParam3 = _parseInt(actionParam3Controller.text);
-    t.actionParam4 = _parseInt(actionParam4Controller.text);
-    t.actionParam5 = _parseInt(actionParam5Controller.text);
-    t.actionParam6 = _parseInt(actionParam6Controller.text);
-
-    t.targetType = _parseInt(targetTypeController.text);
-    t.targetParam1 = _parseInt(targetParam1Controller.text);
-    t.targetParam2 = _parseInt(targetParam2Controller.text);
-    t.targetParam3 = _parseInt(targetParam3Controller.text);
-    t.targetParam4 = _parseInt(targetParam4Controller.text);
-    t.targetX = _parseDouble(targetXController.text);
-    t.targetY = _parseDouble(targetYController.text);
-    t.targetZ = _parseDouble(targetZController.text);
-    t.targetO = _parseDouble(targetOController.text);
-    return t;
+    return SmartScript(
+      entryOrGuid: _parseInt(entryOrGuidController.text),
+      sourceType: _parseInt(sourceTypeController.text),
+      id: _parseInt(idController.text),
+      link: _parseInt(linkController.text),
+      comment: commentController.text,
+      eventType: _parseInt(eventTypeController.text),
+      eventPhaseMask: _parseInt(eventPhaseMaskController.text),
+      eventChance: _parseInt(eventChanceController.text),
+      eventFlags: _parseInt(eventFlagsController.text),
+      eventParam1: _parseInt(eventParam1Controller.text),
+      eventParam2: _parseInt(eventParam2Controller.text),
+      eventParam3: _parseInt(eventParam3Controller.text),
+      eventParam4: _parseInt(eventParam4Controller.text),
+      eventParam5: _parseInt(eventParam5Controller.text),
+      actionType: _parseInt(actionTypeController.text),
+      actionParam1: _parseInt(actionParam1Controller.text),
+      actionParam2: _parseInt(actionParam2Controller.text),
+      actionParam3: _parseInt(actionParam3Controller.text),
+      actionParam4: _parseInt(actionParam4Controller.text),
+      actionParam5: _parseInt(actionParam5Controller.text),
+      actionParam6: _parseInt(actionParam6Controller.text),
+      targetType: _parseInt(targetTypeController.text),
+      targetParam1: _parseInt(targetParam1Controller.text),
+      targetParam2: _parseInt(targetParam2Controller.text),
+      targetParam3: _parseInt(targetParam3Controller.text),
+      targetParam4: _parseInt(targetParam4Controller.text),
+      targetX: _parseDouble(targetXController.text),
+      targetY: _parseDouble(targetYController.text),
+      targetZ: _parseDouble(targetZController.text),
+      targetO: _parseDouble(targetOController.text),
+    );
   }
 
   int _parseInt(String text) {

@@ -51,15 +51,9 @@ class CreatureQuestenderRepository with RepositoryMixin {
         ['MAX(id) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      final model = CreatureQuestender();
-      model.quest = questId;
-      model.id = maxId == null ? 0 : maxId + 1;
-      return model;
+      return CreatureQuestender(quest: questId, id: maxId == null ? 0 : maxId + 1);
     } catch (e) {
-      final model = CreatureQuestender();
-      model.quest = questId;
-      model.id = 0;
-      return model;
+      return CreatureQuestender(quest: questId, id: 0);
     }
   }
 
@@ -91,7 +85,6 @@ class CreatureQuestenderRepository with RepositoryMixin {
     final original = await getCreatureQuestender(id);
     if (original == null) return;
     final next = await createCreatureQuestender(original.quest);
-    original.id = next.id;
-    await storeCreatureQuestender(original);
+    await storeCreatureQuestender(next);
   }
 }

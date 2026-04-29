@@ -1,19 +1,26 @@
 class GemProperty {
-  int id = 0;
-  int enchantId = 0;
-  int maxcountInv = 0;
-  int maxcountItem = 0;
-  int type = 0;
+  final int id;
+  final int enchantId;
+  final int maxcountInv;
+  final int maxcountItem;
+  final int type;
 
-  GemProperty();
+  const GemProperty({
+    this.id = 0,
+    this.enchantId = 0,
+    this.maxcountInv = 0,
+    this.maxcountItem = 0,
+    this.type = 0,
+  });
 
   factory GemProperty.fromJson(Map<String, dynamic> json) {
-    return GemProperty()
-      ..id = json['ID'] ?? 0
-      ..enchantId = json['Enchant_ID'] ?? 0
-      ..maxcountInv = json['Maxcount_inv'] ?? 0
-      ..maxcountItem = json['Maxcount_item'] ?? 0
-      ..type = json['Type'] ?? 0;
+    return GemProperty(
+      id: json['ID'] ?? 0,
+      enchantId: json['Enchant_ID'] ?? 0,
+      maxcountInv: json['Maxcount_inv'] ?? 0,
+      maxcountItem: json['Maxcount_item'] ?? 0,
+      type: json['Type'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -28,18 +35,24 @@ class GemProperty {
 }
 
 class BriefGemProperty {
-  int id = 0;
-  int enchantId = 0;
-  int maxcountInv = 0;
-  int type = 0;
+  final int id;
+  final int enchantId;
+  final int maxcountInv;
+  final int type;
 
-  BriefGemProperty();
+  const BriefGemProperty({
+    this.id = 0,
+    this.enchantId = 0,
+    this.maxcountInv = 0,
+    this.type = 0,
+  });
 
   factory BriefGemProperty.fromJson(Map<String, dynamic> json) {
-    return BriefGemProperty()
-      ..id = json['ID'] ?? 0
-      ..enchantId = json['Enchant_ID'] ?? 0
-      ..maxcountInv = json['Maxcount_inv'] ?? 0
-      ..type = json['Type'] ?? 0;
+    return BriefGemProperty(
+      id: json['ID'] ?? 0,
+      enchantId: json['Enchant_ID'] ?? 0,
+      maxcountInv: json['Maxcount_inv'] ?? 0,
+      type: json['Type'] ?? 0,
+    );
   }
 }

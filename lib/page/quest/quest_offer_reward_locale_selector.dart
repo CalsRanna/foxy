@@ -207,10 +207,11 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     setState(() => _saving = true);
     try {
       final locales = _rows.map((row) {
-        return QuestOfferRewardLocale()
-          ..id = widget.questId
-          ..locale = row.localeController.text
-          ..rewardText = row.rewardTextController.text;
+        return QuestOfferRewardLocale(
+          id: widget.questId,
+          locale: row.localeController.text,
+          rewardText: row.rewardTextController.text,
+        );
       }).toList();
       await widget.onSave(locales);
       if (mounted) Navigator.of(context).pop();

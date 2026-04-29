@@ -1,16 +1,17 @@
 class GameObjectTemplateFilterEntity {
-  String entry = '';
-  String name = '';
+  final String entry;
+  final String name;
 
-  GameObjectTemplateFilterEntity();
+  const GameObjectTemplateFilterEntity({this.entry = '', this.name = ''});
 
   Map<String, dynamic> toJson() {
     return {'entry': entry, 'name': name};
   }
 
   factory GameObjectTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplateFilterEntity()
-      ..entry = json['entry'] ?? ''
-      ..name = json['name'] ?? '';
+    return GameObjectTemplateFilterEntity(
+      entry: json['entry'] ?? '',
+      name: json['name'] ?? '',
+    );
   }
 }

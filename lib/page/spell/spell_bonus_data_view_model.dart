@@ -54,14 +54,14 @@ class SpellBonusDataViewModel {
   }
 
   SpellBonusData _collectFromControllers() {
-    final data = SpellBonusData();
-    data.entry = spellId.value;
-    data.directBonus = _parseDouble(directBonusController.text);
-    data.dotBonus = _parseDouble(dotBonusController.text);
-    data.apBonus = _parseDouble(apBonusController.text);
-    data.apDotBonus = _parseDouble(apDotBonusController.text);
-    data.comments = commentsController.text;
-    return data;
+    return SpellBonusData(
+      entry: spellId.value,
+      directBonus: _parseDouble(directBonusController.text),
+      dotBonus: _parseDouble(dotBonusController.text),
+      apBonus: _parseDouble(apBonusController.text),
+      apDotBonus: _parseDouble(apDotBonusController.text),
+      comments: commentsController.text,
+    );
   }
 
   double _parseDouble(String text) {

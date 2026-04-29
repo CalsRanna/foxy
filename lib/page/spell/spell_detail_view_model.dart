@@ -254,250 +254,252 @@ class SpellDetailViewModel {
   }
 
   Spell _collectFromControllers() {
-    final t = Spell();
+    final t = Spell(
 
     // === 基础文本 ===
-    t.nameLangZhCN = nameLangZhCNController.text;
-    t.nameSubtextLangZhCN = nameSubtextLangZhCNController.text;
-    t.descriptionLangZhCN = descriptionLangZhCNController.text;
-    t.auraDescriptionLangZhCN = auraDescriptionLangZhCNController.text;
-    t.nameLangFlags = _parseInt(nameLangFlagsController.text);
-    t.nameSubtextLangFlags = _parseInt(nameSubtextLangFlagsController.text);
-    t.descriptionLangFlags = _parseInt(descriptionLangFlagsController.text);
-    t.auraDescriptionLangFlags = _parseInt(
+      nameLangZhCN: nameLangZhCNController.text,
+      nameSubtextLangZhCN: nameSubtextLangZhCNController.text,
+      descriptionLangZhCN: descriptionLangZhCNController.text,
+      auraDescriptionLangZhCN: auraDescriptionLangZhCNController.text,
+      nameLangFlags: _parseInt(nameLangFlagsController.text),
+      nameSubtextLangFlags: _parseInt(nameSubtextLangFlagsController.text),
+      descriptionLangFlags: _parseInt(descriptionLangFlagsController.text),
+      auraDescriptionLangFlags: _parseInt(
       auraDescriptionLangFlagsController.text,
-    );
+    ),
 
     // === 图标/视觉 ===
-    t.spellIconID = _parseInt(spellIconIDController.text);
-    t.activeIconID = _parseInt(activeIconIDController.text);
-    t.spellVisualID0 = _parseInt(spellVisualID0Controller.text);
-    t.spellVisualID1 = _parseInt(spellVisualID1Controller.text);
+      spellIconID: _parseInt(spellIconIDController.text),
+      activeIconID: _parseInt(activeIconIDController.text),
+      spellVisualID0: _parseInt(spellVisualID0Controller.text),
+      spellVisualID1: _parseInt(spellVisualID1Controller.text),
 
     // === 分类/类型 ===
-    t.category = _parseInt(categoryController.text);
-    t.schoolMask = _parseInt(schoolMaskController.text);
-    t.mechanic = _parseInt(mechanicController.text);
-    t.defenseType = _parseInt(defenseTypeController.text);
-    t.dispelType = _parseInt(dispelTypeController.text);
-    t.preventionType = _parseInt(preventionTypeController.text);
+      category: _parseInt(categoryController.text),
+      schoolMask: _parseInt(schoolMaskController.text),
+      mechanic: _parseInt(mechanicController.text),
+      defenseType: _parseInt(defenseTypeController.text),
+      dispelType: _parseInt(dispelTypeController.text),
+      preventionType: _parseInt(preventionTypeController.text),
 
     // === 施法参数 ===
-    t.castingTimeIndex = _parseInt(castingTimeIndexController.text);
-    t.durationIndex = _parseInt(durationIndexController.text);
-    t.rangeIndex = _parseInt(rangeIndexController.text);
-    t.spellDescriptionVariableID = _parseInt(
+      castingTimeIndex: _parseInt(castingTimeIndexController.text),
+      durationIndex: _parseInt(durationIndexController.text),
+      rangeIndex: _parseInt(rangeIndexController.text),
+      spellDescriptionVariableID: _parseInt(
       spellDescriptionVariableIDController.text,
-    );
+    ),
 
     // === 等级 ===
-    t.baseLevel = _parseInt(baseLevelController.text);
-    t.spellLevel = _parseInt(spellLevelController.text);
-    t.maxLevel = _parseInt(maxLevelController.text);
-    t.spellDifficultyID = _parseInt(spellDifficultyIDController.text);
+      baseLevel: _parseInt(baseLevelController.text),
+      spellLevel: _parseInt(spellLevelController.text),
+      maxLevel: _parseInt(maxLevelController.text),
+      spellDifficultyID: _parseInt(spellDifficultyIDController.text),
 
     // === 冷却/恢复 ===
-    t.startRecoveryCategory = _parseInt(startRecoveryCategoryController.text);
-    t.startRecoveryTime = _parseInt(startRecoveryTimeController.text);
-    t.recoveryTime = _parseInt(recoveryTimeController.text);
-    t.categoryRecoveryTime = _parseInt(categoryRecoveryTimeController.text);
+      startRecoveryCategory: _parseInt(startRecoveryCategoryController.text),
+      startRecoveryTime: _parseInt(startRecoveryTimeController.text),
+      recoveryTime: _parseInt(recoveryTimeController.text),
+      categoryRecoveryTime: _parseInt(categoryRecoveryTimeController.text),
 
     // === 目标 ===
-    t.targetCreatureType = _parseInt(targetCreatureTypeController.text);
-    t.targets = _parseInt(targetsController.text);
-    t.maxTargets = _parseInt(maxTargetsController.text);
-    t.maxTargetLevel = _parseInt(maxTargetLevelController.text);
+      targetCreatureType: _parseInt(targetCreatureTypeController.text),
+      targets: _parseInt(targetsController.text),
+      maxTargets: _parseInt(maxTargetsController.text),
+      maxTargetLevel: _parseInt(maxTargetLevelController.text),
 
     // === 状态 ===
-    t.casterAuraState = _parseInt(casterAuraStateController.text);
-    t.targetAuraState = _parseInt(targetAuraStateController.text);
-    t.spellMissileID = _parseInt(spellMissileIDController.text);
-    t.speed = _parseDouble(speedController.text);
+      casterAuraState: _parseInt(casterAuraStateController.text),
+      targetAuraState: _parseInt(targetAuraStateController.text),
+      spellMissileID: _parseInt(spellMissileIDController.text),
+      speed: _parseDouble(speedController.text),
 
     // === 需求 ===
-    t.requiredAreasID = _parseInt(requiredAreasIDController.text);
-    t.requiresSpellFocus = _parseInt(requiresSpellFocusController.text);
-    t.facingCasterFlags = _parseInt(facingCasterFlagsController.text);
+      requiredAreasID: _parseInt(requiredAreasIDController.text),
+      requiresSpellFocus: _parseInt(requiresSpellFocusController.text),
+      facingCasterFlags: _parseInt(facingCasterFlagsController.text),
 
     // === 能量消耗 ===
-    t.powerDisplayID = _parseInt(powerDisplayIDController.text);
-    t.powerType = _parseInt(powerTypeController.text);
-    t.runeCostID = _parseInt(runeCostIDController.text);
-    t.manaCost = _parseInt(manaCostController.text);
-    t.manaCostPct = _parseInt(manaCostPctController.text);
-    t.manaCostPerLevel = _parseInt(manaCostPerLevelController.text);
-    t.manaPerSecond = _parseInt(manaPerSecondController.text);
-    t.manaPerSecondPerLevel = _parseInt(manaPerSecondPerLevelController.text);
+      powerDisplayID: _parseInt(powerDisplayIDController.text),
+      powerType: _parseInt(powerTypeController.text),
+      runeCostID: _parseInt(runeCostIDController.text),
+      manaCost: _parseInt(manaCostController.text),
+      manaCostPct: _parseInt(manaCostPctController.text),
+      manaCostPerLevel: _parseInt(manaCostPerLevelController.text),
+      manaPerSecond: _parseInt(manaPerSecondController.text),
+      manaPerSecondPerLevel: _parseInt(manaPerSecondPerLevelController.text),
 
     // === 标志位 ===
-    t.interruptFlags = _parseInt(interruptFlagsController.text);
-    t.auraInterruptFlags = _parseInt(auraInterruptFlagsController.text);
-    t.channelInterruptFlags = _parseInt(channelInterruptFlagsController.text);
-    t.attributes = _parseInt(attributesController.text);
-    t.attributesEx = _parseInt(attributesExController.text);
-    t.attributesExB = _parseInt(attributesExBController.text);
-    t.attributesExC = _parseInt(attributesExCController.text);
-    t.attributesExD = _parseInt(attributesExDController.text);
-    t.attributesExE = _parseInt(attributesExEController.text);
-    t.attributesExF = _parseInt(attributesExFController.text);
-    t.attributesExG = _parseInt(attributesExGController.text);
+      interruptFlags: _parseInt(interruptFlagsController.text),
+      auraInterruptFlags: _parseInt(auraInterruptFlagsController.text),
+      channelInterruptFlags: _parseInt(channelInterruptFlagsController.text),
+      attributes: _parseInt(attributesController.text),
+      attributesEx: _parseInt(attributesExController.text),
+      attributesExB: _parseInt(attributesExBController.text),
+      attributesExC: _parseInt(attributesExCController.text),
+      attributesExD: _parseInt(attributesExDController.text),
+      attributesExE: _parseInt(attributesExEController.text),
+      attributesExF: _parseInt(attributesExFController.text),
+      attributesExG: _parseInt(attributesExGController.text),
 
     // === 触发 ===
-    t.procTypeMask = _parseInt(procTypeMaskController.text);
-    t.procChance = _parseInt(procChanceController.text);
-    t.procCharges = _parseInt(procChargesController.text);
+      procTypeMask: _parseInt(procTypeMaskController.text),
+      procChance: _parseInt(procChanceController.text),
+      procCharges: _parseInt(procChargesController.text),
 
     // === 法术分类 ===
-    t.spellClassSet = _parseInt(spellClassSetController.text);
-    t.spellClassMask0 = _parseInt(spellClassMask0Controller.text);
-    t.spellClassMask1 = _parseInt(spellClassMask1Controller.text);
-    t.spellClassMask2 = _parseInt(spellClassMask2Controller.text);
+      spellClassSet: _parseInt(spellClassSetController.text),
+      spellClassMask0: _parseInt(spellClassMask0Controller.text),
+      spellClassMask1: _parseInt(spellClassMask1Controller.text),
+      spellClassMask2: _parseInt(spellClassMask2Controller.text),
 
     // === 效果0 ===
-    t.effect0 = _parseInt(effect0Controller.text);
-    t.effectBasePoints0 = _parseInt(effectBasePoints0Controller.text);
-    t.effectDieSides0 = _parseInt(effectDieSides0Controller.text);
-    t.effectRealPointsPerLevel0 = _parseDouble(
+      effect0: _parseInt(effect0Controller.text),
+      effectBasePoints0: _parseInt(effectBasePoints0Controller.text),
+      effectDieSides0: _parseInt(effectDieSides0Controller.text),
+      effectRealPointsPerLevel0: _parseDouble(
       effectRealPointsPerLevel0Controller.text,
-    );
-    t.effectMechanic0 = _parseInt(effectMechanic0Controller.text);
-    t.effectChainTargets0 = _parseInt(effectChainTargets0Controller.text);
-    t.effectAura0 = _parseInt(effectAura0Controller.text);
-    t.effectAuraPeriod0 = _parseInt(effectAuraPeriod0Controller.text);
-    t.effectAmplitude0 = _parseDouble(effectAmplitude0Controller.text);
-    t.implicitTargetA0 = _parseInt(implicitTargetA0Controller.text);
-    t.implicitTargetB0 = _parseInt(implicitTargetB0Controller.text);
-    t.effectMiscValue0 = _parseInt(effectMiscValue0Controller.text);
-    t.effectMiscValueB0 = _parseInt(effectMiscValueB0Controller.text);
-    t.effectRadiusIndex0 = _parseInt(effectRadiusIndex0Controller.text);
-    t.effectChainAmplitude0 = _parseDouble(
+    ),
+      effectMechanic0: _parseInt(effectMechanic0Controller.text),
+      effectChainTargets0: _parseInt(effectChainTargets0Controller.text),
+      effectAura0: _parseInt(effectAura0Controller.text),
+      effectAuraPeriod0: _parseInt(effectAuraPeriod0Controller.text),
+      effectAmplitude0: _parseDouble(effectAmplitude0Controller.text),
+      implicitTargetA0: _parseInt(implicitTargetA0Controller.text),
+      implicitTargetB0: _parseInt(implicitTargetB0Controller.text),
+      effectMiscValue0: _parseInt(effectMiscValue0Controller.text),
+      effectMiscValueB0: _parseInt(effectMiscValueB0Controller.text),
+      effectRadiusIndex0: _parseInt(effectRadiusIndex0Controller.text),
+      effectChainAmplitude0: _parseDouble(
       effectChainAmplitude0Controller.text,
-    );
-    t.effectBonusCoefficient0 = _parseDouble(
+    ),
+      effectBonusCoefficient0: _parseDouble(
       effectBonusCoefficient0Controller.text,
-    );
-    t.effectItemType0 = _parseInt(effectItemType0Controller.text);
-    t.effectTriggerSpell0 = _parseInt(effectTriggerSpell0Controller.text);
-    t.effectPointsPerCombo0 = _parseDouble(
+    ),
+      effectItemType0: _parseInt(effectItemType0Controller.text),
+      effectTriggerSpell0: _parseInt(effectTriggerSpell0Controller.text),
+      effectPointsPerCombo0: _parseDouble(
       effectPointsPerCombo0Controller.text,
-    );
-    t.effectSpellClassMaskA0 = _parseInt(effectSpellClassMaskA0Controller.text);
-    t.effectSpellClassMaskB0 = _parseInt(effectSpellClassMaskB0Controller.text);
-    t.effectSpellClassMaskC0 = _parseInt(effectSpellClassMaskC0Controller.text);
+    ),
+      effectSpellClassMaskA0: _parseInt(effectSpellClassMaskA0Controller.text),
+      effectSpellClassMaskB0: _parseInt(effectSpellClassMaskB0Controller.text),
+      effectSpellClassMaskC0: _parseInt(effectSpellClassMaskC0Controller.text),
 
     // === 效果1 ===
-    t.effect1 = _parseInt(effect1Controller.text);
-    t.effectBasePoints1 = _parseInt(effectBasePoints1Controller.text);
-    t.effectDieSides1 = _parseInt(effectDieSides1Controller.text);
-    t.effectRealPointsPerLevel1 = _parseDouble(
+      effect1: _parseInt(effect1Controller.text),
+      effectBasePoints1: _parseInt(effectBasePoints1Controller.text),
+      effectDieSides1: _parseInt(effectDieSides1Controller.text),
+      effectRealPointsPerLevel1: _parseDouble(
       effectRealPointsPerLevel1Controller.text,
-    );
-    t.effectMechanic1 = _parseInt(effectMechanic1Controller.text);
-    t.effectChainTargets1 = _parseInt(effectChainTargets1Controller.text);
-    t.effectAura1 = _parseInt(effectAura1Controller.text);
-    t.effectAuraPeriod1 = _parseInt(effectAuraPeriod1Controller.text);
-    t.effectAmplitude1 = _parseDouble(effectAmplitude1Controller.text);
-    t.implicitTargetA1 = _parseInt(implicitTargetA1Controller.text);
-    t.implicitTargetB1 = _parseInt(implicitTargetB1Controller.text);
-    t.effectMiscValue1 = _parseInt(effectMiscValue1Controller.text);
-    t.effectMiscValueB1 = _parseInt(effectMiscValueB1Controller.text);
-    t.effectRadiusIndex1 = _parseInt(effectRadiusIndex1Controller.text);
-    t.effectChainAmplitude1 = _parseDouble(
+    ),
+      effectMechanic1: _parseInt(effectMechanic1Controller.text),
+      effectChainTargets1: _parseInt(effectChainTargets1Controller.text),
+      effectAura1: _parseInt(effectAura1Controller.text),
+      effectAuraPeriod1: _parseInt(effectAuraPeriod1Controller.text),
+      effectAmplitude1: _parseDouble(effectAmplitude1Controller.text),
+      implicitTargetA1: _parseInt(implicitTargetA1Controller.text),
+      implicitTargetB1: _parseInt(implicitTargetB1Controller.text),
+      effectMiscValue1: _parseInt(effectMiscValue1Controller.text),
+      effectMiscValueB1: _parseInt(effectMiscValueB1Controller.text),
+      effectRadiusIndex1: _parseInt(effectRadiusIndex1Controller.text),
+      effectChainAmplitude1: _parseDouble(
       effectChainAmplitude1Controller.text,
-    );
-    t.effectBonusCoefficient1 = _parseDouble(
+    ),
+      effectBonusCoefficient1: _parseDouble(
       effectBonusCoefficient1Controller.text,
-    );
-    t.effectItemType1 = _parseInt(effectItemType1Controller.text);
-    t.effectTriggerSpell1 = _parseInt(effectTriggerSpell1Controller.text);
-    t.effectPointsPerCombo1 = _parseDouble(
+    ),
+      effectItemType1: _parseInt(effectItemType1Controller.text),
+      effectTriggerSpell1: _parseInt(effectTriggerSpell1Controller.text),
+      effectPointsPerCombo1: _parseDouble(
       effectPointsPerCombo1Controller.text,
-    );
-    t.effectSpellClassMaskA1 = _parseInt(effectSpellClassMaskA1Controller.text);
-    t.effectSpellClassMaskB1 = _parseInt(effectSpellClassMaskB1Controller.text);
-    t.effectSpellClassMaskC1 = _parseInt(effectSpellClassMaskC1Controller.text);
+    ),
+      effectSpellClassMaskA1: _parseInt(effectSpellClassMaskA1Controller.text),
+      effectSpellClassMaskB1: _parseInt(effectSpellClassMaskB1Controller.text),
+      effectSpellClassMaskC1: _parseInt(effectSpellClassMaskC1Controller.text),
 
     // === 效果2 ===
-    t.effect2 = _parseInt(effect2Controller.text);
-    t.effectBasePoints2 = _parseInt(effectBasePoints2Controller.text);
-    t.effectDieSides2 = _parseInt(effectDieSides2Controller.text);
-    t.effectRealPointsPerLevel2 = _parseDouble(
+      effect2: _parseInt(effect2Controller.text),
+      effectBasePoints2: _parseInt(effectBasePoints2Controller.text),
+      effectDieSides2: _parseInt(effectDieSides2Controller.text),
+      effectRealPointsPerLevel2: _parseDouble(
       effectRealPointsPerLevel2Controller.text,
-    );
-    t.effectMechanic2 = _parseInt(effectMechanic2Controller.text);
-    t.effectChainTargets2 = _parseInt(effectChainTargets2Controller.text);
-    t.effectAura2 = _parseInt(effectAura2Controller.text);
-    t.effectAuraPeriod2 = _parseInt(effectAuraPeriod2Controller.text);
-    t.effectAmplitude2 = _parseDouble(effectAmplitude2Controller.text);
-    t.implicitTargetA2 = _parseInt(implicitTargetA2Controller.text);
-    t.implicitTargetB2 = _parseInt(implicitTargetB2Controller.text);
-    t.effectMiscValue2 = _parseInt(effectMiscValue2Controller.text);
-    t.effectMiscValueB2 = _parseInt(effectMiscValueB2Controller.text);
-    t.effectRadiusIndex2 = _parseInt(effectRadiusIndex2Controller.text);
-    t.effectChainAmplitude2 = _parseDouble(
+    ),
+      effectMechanic2: _parseInt(effectMechanic2Controller.text),
+      effectChainTargets2: _parseInt(effectChainTargets2Controller.text),
+      effectAura2: _parseInt(effectAura2Controller.text),
+      effectAuraPeriod2: _parseInt(effectAuraPeriod2Controller.text),
+      effectAmplitude2: _parseDouble(effectAmplitude2Controller.text),
+      implicitTargetA2: _parseInt(implicitTargetA2Controller.text),
+      implicitTargetB2: _parseInt(implicitTargetB2Controller.text),
+      effectMiscValue2: _parseInt(effectMiscValue2Controller.text),
+      effectMiscValueB2: _parseInt(effectMiscValueB2Controller.text),
+      effectRadiusIndex2: _parseInt(effectRadiusIndex2Controller.text),
+      effectChainAmplitude2: _parseDouble(
       effectChainAmplitude2Controller.text,
-    );
-    t.effectBonusCoefficient2 = _parseDouble(
+    ),
+      effectBonusCoefficient2: _parseDouble(
       effectBonusCoefficient2Controller.text,
-    );
-    t.effectItemType2 = _parseInt(effectItemType2Controller.text);
-    t.effectTriggerSpell2 = _parseInt(effectTriggerSpell2Controller.text);
-    t.effectPointsPerCombo2 = _parseDouble(
+    ),
+      effectItemType2: _parseInt(effectItemType2Controller.text),
+      effectTriggerSpell2: _parseInt(effectTriggerSpell2Controller.text),
+      effectPointsPerCombo2: _parseDouble(
       effectPointsPerCombo2Controller.text,
-    );
-    t.effectSpellClassMaskA2 = _parseInt(effectSpellClassMaskA2Controller.text);
-    t.effectSpellClassMaskB2 = _parseInt(effectSpellClassMaskB2Controller.text);
-    t.effectSpellClassMaskC2 = _parseInt(effectSpellClassMaskC2Controller.text);
+    ),
+      effectSpellClassMaskA2: _parseInt(effectSpellClassMaskA2Controller.text),
+      effectSpellClassMaskB2: _parseInt(effectSpellClassMaskB2Controller.text),
+      effectSpellClassMaskC2: _parseInt(effectSpellClassMaskC2Controller.text),
 
     // === 装备限制 ===
-    t.equippedItemClass = _parseInt(equippedItemClassController.text);
-    t.equippedItemSubclass = _parseInt(equippedItemSubclassController.text);
-    t.equippedItemInvTypes = _parseInt(equippedItemInvTypesController.text);
+      equippedItemClass: _parseInt(equippedItemClassController.text),
+      equippedItemSubclass: _parseInt(equippedItemSubclassController.text),
+      equippedItemInvTypes: _parseInt(equippedItemInvTypesController.text),
 
     // === 图腾/施法材料 ===
-    t.requiredTotemCategoryID0 = _parseInt(
+      requiredTotemCategoryID0: _parseInt(
       requiredTotemCategoryID0Controller.text,
-    );
-    t.totem0 = _parseInt(totem0Controller.text);
-    t.requiredTotemCategoryID1 = _parseInt(
+    ),
+      totem0: _parseInt(totem0Controller.text),
+      requiredTotemCategoryID1: _parseInt(
       requiredTotemCategoryID1Controller.text,
-    );
-    t.totem1 = _parseInt(totem1Controller.text);
-    t.reagent0 = _parseInt(reagent0Controller.text);
-    t.reagent1 = _parseInt(reagent1Controller.text);
-    t.reagent2 = _parseInt(reagent2Controller.text);
-    t.reagent3 = _parseInt(reagent3Controller.text);
-    t.reagent4 = _parseInt(reagent4Controller.text);
-    t.reagent5 = _parseInt(reagent5Controller.text);
-    t.reagent6 = _parseInt(reagent6Controller.text);
-    t.reagent7 = _parseInt(reagent7Controller.text);
-    t.reagentCount0 = _parseInt(reagentCount0Controller.text);
-    t.reagentCount1 = _parseInt(reagentCount1Controller.text);
-    t.reagentCount2 = _parseInt(reagentCount2Controller.text);
-    t.reagentCount3 = _parseInt(reagentCount3Controller.text);
-    t.reagentCount4 = _parseInt(reagentCount4Controller.text);
-    t.reagentCount5 = _parseInt(reagentCount5Controller.text);
-    t.reagentCount6 = _parseInt(reagentCount6Controller.text);
-    t.reagentCount7 = _parseInt(reagentCount7Controller.text);
+    ),
+      totem1: _parseInt(totem1Controller.text),
+      reagent0: _parseInt(reagent0Controller.text),
+      reagent1: _parseInt(reagent1Controller.text),
+      reagent2: _parseInt(reagent2Controller.text),
+      reagent3: _parseInt(reagent3Controller.text),
+      reagent4: _parseInt(reagent4Controller.text),
+      reagent5: _parseInt(reagent5Controller.text),
+      reagent6: _parseInt(reagent6Controller.text),
+      reagent7: _parseInt(reagent7Controller.text),
+      reagentCount0: _parseInt(reagentCount0Controller.text),
+      reagentCount1: _parseInt(reagentCount1Controller.text),
+      reagentCount2: _parseInt(reagentCount2Controller.text),
+      reagentCount3: _parseInt(reagentCount3Controller.text),
+      reagentCount4: _parseInt(reagentCount4Controller.text),
+      reagentCount5: _parseInt(reagentCount5Controller.text),
+      reagentCount6: _parseInt(reagentCount6Controller.text),
+      reagentCount7: _parseInt(reagentCount7Controller.text),
 
     // === 其他高级属性 ===
-    t.casterAuraSpell = _parseInt(casterAuraSpellController.text);
-    t.cumulativeAura = _parseInt(cumulativeAuraController.text);
-    t.minFactionID = _parseInt(minFactionIDController.text);
-    t.minReputation = _parseInt(minReputationController.text);
-    t.excludeCasterAuraSpell = _parseInt(excludeCasterAuraSpellController.text);
-    t.excludeCasterAuraState = _parseInt(excludeCasterAuraStateController.text);
-    t.excludeTargetAuraSpell = _parseInt(excludeTargetAuraSpellController.text);
-    t.excludeTargetAuraState = _parseInt(excludeTargetAuraStateController.text);
-    t.spellPriority = _parseInt(spellPriorityController.text);
-    t.modalNextSpell = _parseInt(modalNextSpellController.text);
-    t.requiredAuraVision = _parseInt(requiredAuraVisionController.text);
-    t.targetAuraSpell = _parseInt(targetAuraSpellController.text);
-    t.stanceBarOrder = _parseInt(stanceBarOrderController.text);
-    t.shapeshiftMask0 = _parseInt(shapeshiftMask0Controller.text);
-    t.shapeshiftExclude0 = _parseInt(shapeshiftExclude0Controller.text);
+      casterAuraSpell: _parseInt(casterAuraSpellController.text),
+      cumulativeAura: _parseInt(cumulativeAuraController.text),
+      minFactionID: _parseInt(minFactionIDController.text),
+      minReputation: _parseInt(minReputationController.text),
+      excludeCasterAuraSpell: _parseInt(excludeCasterAuraSpellController.text),
+      excludeCasterAuraState: _parseInt(excludeCasterAuraStateController.text),
+      excludeTargetAuraSpell: _parseInt(excludeTargetAuraSpellController.text),
+      excludeTargetAuraState: _parseInt(excludeTargetAuraStateController.text),
+      spellPriority: _parseInt(spellPriorityController.text),
+      modalNextSpell: _parseInt(modalNextSpellController.text),
+      requiredAuraVision: _parseInt(requiredAuraVisionController.text),
+      targetAuraSpell: _parseInt(targetAuraSpellController.text),
+      stanceBarOrder: _parseInt(stanceBarOrderController.text),
+      shapeshiftMask0: _parseInt(shapeshiftMask0Controller.text),
+      shapeshiftExclude0: _parseInt(shapeshiftExclude0Controller.text),
 
+    );
     return t;
+
   }
 
   int _parseInt(String text) {

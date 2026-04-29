@@ -1,16 +1,14 @@
-// creature_queststarter 模型
-// 复合主键 (id, quest)
-
 class CreatureQueststarter {
-  int id = 0;
-  int quest = 0;
+  final int id;
+  final int quest;
 
-  CreatureQueststarter();
+  const CreatureQueststarter({this.id = 0, this.quest = 0});
 
   factory CreatureQueststarter.fromJson(Map<String, dynamic> json) {
-    return CreatureQueststarter()
-      ..id = json['id'] ?? 0
-      ..quest = json['quest'] ?? 0;
+    return CreatureQueststarter(
+      id: json['id'] ?? 0,
+      quest: json['quest'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -18,21 +16,26 @@ class CreatureQueststarter {
   }
 }
 
-/// Brief 版本（LEFT JOIN creature_template + locale 获取名称）
 class BriefCreatureQueststarter {
-  int id = 0;
-  int quest = 0;
-  String name = '';
-  String localeName = '';
+  final int id;
+  final int quest;
+  final String name;
+  final String localeName;
 
-  BriefCreatureQueststarter();
+  const BriefCreatureQueststarter({
+    this.id = 0,
+    this.quest = 0,
+    this.name = '',
+    this.localeName = '',
+  });
 
   factory BriefCreatureQueststarter.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureQueststarter()
-      ..id = json['id'] ?? 0
-      ..quest = json['quest'] ?? 0
-      ..name = json['name']?.toString() ?? ''
-      ..localeName = json['Name']?.toString() ?? '';
+    return BriefCreatureQueststarter(
+      id: json['id'] ?? 0,
+      quest: json['quest'] ?? 0,
+      name: json['name']?.toString() ?? '',
+      localeName: json['Name']?.toString() ?? '',
+    );
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;

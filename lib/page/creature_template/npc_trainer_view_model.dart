@@ -62,14 +62,14 @@ class NpcTrainerViewModel {
 
   /// 从表单收集数据
   NpcTrainer collectFromForm() {
-    final trainer = NpcTrainer();
-    trainer.id = id.value;
-    trainer.spellID = _parseInt(spellIDController.text);
-    trainer.moneyCost = _parseInt(moneyCostController.text);
-    trainer.reqSkillLine = _parseInt(reqSkillLineController.text);
-    trainer.reqSkillRank = _parseInt(reqSkillRankController.text);
-    trainer.reqLevel = _parseInt(reqLevelController.text);
-    return trainer;
+    return NpcTrainer(
+      id: id.value,
+      spellID: _parseInt(spellIDController.text),
+      moneyCost: _parseInt(moneyCostController.text),
+      reqSkillLine: _parseInt(reqSkillLineController.text),
+      reqSkillRank: _parseInt(reqSkillRankController.text),
+      reqLevel: _parseInt(reqLevelController.text),
+    );
   }
 
   int _parseInt(String text) {

@@ -33,11 +33,12 @@ class PlayerCreateInfoSpellCustomViewModel {
   Future<void> save(BuildContext context) async {
     if (_race == null || _class_ == null) return;
     try {
-      final item = PlayerCreateInfoSpellCustom()
-        ..racemask = _parseInt(racemaskController.text)
-        ..classmask = _parseInt(classmaskController.text)
-        ..spell = _parseInt(spellController.text)
-        ..note = noteController.text;
+      final item = PlayerCreateInfoSpellCustom(
+        racemask: _parseInt(racemaskController.text),
+        classmask: _parseInt(classmaskController.text),
+        spell: _parseInt(spellController.text),
+        note: noteController.text,
+      );
       await repository.storeSpellCustom(item);
       spells.value = await repository.getSpellCustoms(_race!, _class_!);
       if (!context.mounted) return;

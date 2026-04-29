@@ -1,16 +1,17 @@
 class SpellFilterEntity {
-  String id = '';
-  String name = '';
+  final String id;
+  final String name;
 
-  SpellFilterEntity();
+  const SpellFilterEntity({this.id = '', this.name = ''});
 
   Map<String, dynamic> toJson() {
     return {'id': id, 'name': name};
   }
 
   factory SpellFilterEntity.fromJson(Map<String, dynamic> json) {
-    return SpellFilterEntity()
-      ..id = json['id'] ?? ''
-      ..name = json['name'] ?? '';
+    return SpellFilterEntity(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+    );
   }
 }

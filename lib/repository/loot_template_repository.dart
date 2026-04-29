@@ -212,12 +212,23 @@ class LootTemplateRepository with RepositoryMixin {
       throw Exception('源记录不存在');
     }
 
-    // 创建新记录
-    var newLoot = LootTemplate.fromJson(source.toJson());
-    newLoot.item = maxItem + 1;
-    if (newLoot.reference != 0) {
-      newLoot.reference = maxItem + 1;
-    }
+    var newLoot = LootTemplate(
+      entry: source.entry,
+      item: maxItem + 1,
+      reference: source.reference != 0 ? maxItem + 1 : source.reference,
+      chance: source.chance,
+      questRequired: source.questRequired,
+      lootMode: source.lootMode,
+      groupId: source.groupId,
+      minCount: source.minCount,
+      maxCount: source.maxCount,
+      comment: source.comment,
+      itemName: source.itemName,
+      itemLocaleName: source.itemLocaleName,
+      itemQuality: source.itemQuality,
+      itemIcon: source.itemIcon,
+      itemCount: source.itemCount,
+    );
 
     await storeLootTemplate(newLoot);
     return newLoot;

@@ -89,9 +89,7 @@ class GameObjectTemplateListViewModel {
   }
 
   GameObjectTemplateFilterEntity _buildFilter() {
-    return GameObjectTemplateFilterEntity()
-      ..entry = entryController.text
-      ..name = nameController.text;
+    return GameObjectTemplateFilterEntity(entry: entryController.text, name: nameController.text);
   }
 
   Future<void> paginate(int page) async {

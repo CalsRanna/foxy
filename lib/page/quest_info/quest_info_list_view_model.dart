@@ -100,9 +100,10 @@ class QuestInfoListViewModel {
   }
 
   QuestInfoFilterEntity _buildFilter() {
-    return QuestInfoFilterEntity()
-      ..id = entryController.text
-      ..name = nameController.text;
+    return QuestInfoFilterEntity(
+      id: entryController.text,
+      name: nameController.text,
+    );
   }
 
   Future<void> paginate(int page) async {

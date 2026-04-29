@@ -222,10 +222,11 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     setState(() => _saving = true);
     try {
       final locales = _rows.map((row) {
-        return GameObjectTemplateLocale()
-          ..entry = widget.entry
-          ..locale = row.localeController.text
-          ..name = row.nameController.text;
+        return GameObjectTemplateLocale(
+          entry: widget.entry,
+          locale: row.localeController.text,
+          name: row.nameController.text,
+        );
       }).toList();
       await widget.onSave(locales);
       if (mounted) Navigator.of(context).pop();

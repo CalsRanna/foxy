@@ -73,12 +73,10 @@ class NpcTextRepository with RepositoryMixin {
         'MAX(ID) as max_id',
       ]).first();
       final maxId = result.toMap()['max_id'] as int?;
-      final model = NpcText();
-      model.id = (maxId ?? 0) + 1;
+      final model = NpcText(id: (maxId ?? 0) + 1);
       return model;
     } catch (e) {
-      final model = NpcText();
-      model.id = 1;
+      final model = NpcText(id: 1);
       return model;
     }
   }
@@ -101,7 +99,11 @@ class NpcTextRepository with RepositoryMixin {
     final original = await getNpcText(id);
     if (original == null) return;
     final next = await createNpcText();
-    original.id = next.id;
-    await storeNpcText(original);
+    final copy = NpcText(
+      id: next.id,
+      verifiedBuild: original.verifiedBuild,
+      entries: original.entries,
+    );
+    await storeNpcText(copy);
   }
 }

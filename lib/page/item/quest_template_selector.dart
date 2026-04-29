@@ -242,13 +242,10 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = QuestTemplateRepository();
-      final filter = QuestTemplateFilterEntity();
-      if (_entryController.text.isNotEmpty) {
-        filter.id = _entryController.text;
-      }
-      if (_nameController.text.isNotEmpty) {
-        filter.title = _nameController.text;
-      }
+      final filter = QuestTemplateFilterEntity(
+        id: _entryController.text,
+        title: _nameController.text,
+      );
       final items = await repository.getBriefQuestTemplates(
         filter: filter,
         page: _page,

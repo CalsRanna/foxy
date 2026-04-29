@@ -7,8 +7,10 @@ class GossipMenuRepository with RepositoryMixin {
 
   Future<void> copyGossipMenu(int menuId, int textId) async {
     final original = await getGossipMenu(menuId, textId);
-    original.menuId = await getNextMenuId();
-    await storeGossipMenu(original);
+    final json = original.toJson();
+    json['MenuID'] = await getNextMenuId();
+    final copy = GossipMenu.fromJson(json);
+    await storeGossipMenu(copy);
   }
 
   Future<int> getNextMenuId() async {

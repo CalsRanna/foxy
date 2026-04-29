@@ -92,12 +92,12 @@ class PageTextDetailViewModel {
   }
 
   PageText _collect() {
-    final pt = PageText();
-    pt.id = _parseInt(idController.text);
-    pt.text = textController.text;
-    pt.nextPageId = _parseInt(nextPageIdController.text);
-    pt.verifiedBuild = _parseInt(verifiedBuildController.text);
-    return pt;
+    return PageText(
+      id: _parseInt(idController.text),
+      text: textController.text,
+      nextPageId: _parseInt(nextPageIdController.text),
+      verifiedBuild: _parseInt(verifiedBuildController.text),
+    );
   }
 
   int _parseInt(String text) {

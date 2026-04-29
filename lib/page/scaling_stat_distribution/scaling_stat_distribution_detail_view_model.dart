@@ -77,32 +77,30 @@ class ScalingStatDistributionDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 ScalingStatDistribution
   ScalingStatDistribution _collectFromControllers() {
-    final t = ScalingStatDistribution();
-
-    t.id = _parseInt(idController.text);
-    t.statId0 = _parseInt(statId0Controller.text);
-    t.statId1 = _parseInt(statId1Controller.text);
-    t.statId2 = _parseInt(statId2Controller.text);
-    t.statId3 = _parseInt(statId3Controller.text);
-    t.statId4 = _parseInt(statId4Controller.text);
-    t.statId5 = _parseInt(statId5Controller.text);
-    t.statId6 = _parseInt(statId6Controller.text);
-    t.statId7 = _parseInt(statId7Controller.text);
-    t.statId8 = _parseInt(statId8Controller.text);
-    t.statId9 = _parseInt(statId9Controller.text);
-    t.bonus0 = _parseInt(bonus0Controller.text);
-    t.bonus1 = _parseInt(bonus1Controller.text);
-    t.bonus2 = _parseInt(bonus2Controller.text);
-    t.bonus3 = _parseInt(bonus3Controller.text);
-    t.bonus4 = _parseInt(bonus4Controller.text);
-    t.bonus5 = _parseInt(bonus5Controller.text);
-    t.bonus6 = _parseInt(bonus6Controller.text);
-    t.bonus7 = _parseInt(bonus7Controller.text);
-    t.bonus8 = _parseInt(bonus8Controller.text);
-    t.bonus9 = _parseInt(bonus9Controller.text);
-    t.maxlevel = _parseInt(maxlevelController.text);
-
-    return t;
+    return ScalingStatDistribution(
+      id: _parseInt(idController.text),
+      statId0: _parseInt(statId0Controller.text),
+      statId1: _parseInt(statId1Controller.text),
+      statId2: _parseInt(statId2Controller.text),
+      statId3: _parseInt(statId3Controller.text),
+      statId4: _parseInt(statId4Controller.text),
+      statId5: _parseInt(statId5Controller.text),
+      statId6: _parseInt(statId6Controller.text),
+      statId7: _parseInt(statId7Controller.text),
+      statId8: _parseInt(statId8Controller.text),
+      statId9: _parseInt(statId9Controller.text),
+      bonus0: _parseInt(bonus0Controller.text),
+      bonus1: _parseInt(bonus1Controller.text),
+      bonus2: _parseInt(bonus2Controller.text),
+      bonus3: _parseInt(bonus3Controller.text),
+      bonus4: _parseInt(bonus4Controller.text),
+      bonus5: _parseInt(bonus5Controller.text),
+      bonus6: _parseInt(bonus6Controller.text),
+      bonus7: _parseInt(bonus7Controller.text),
+      bonus8: _parseInt(bonus8Controller.text),
+      bonus9: _parseInt(bonus9Controller.text),
+      maxlevel: _parseInt(maxlevelController.text),
+    );
   }
 
   int _parseInt(String text) {

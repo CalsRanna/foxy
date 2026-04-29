@@ -83,8 +83,10 @@ class GameObjectQuestItemRepository with RepositoryMixin {
     var maxIdx = (maxIdxResult.toMap()['maxIdx'] ?? 0) as int;
     var source = await getGameObjectQuestItem(gameObjectEntry, idx);
     if (source == null) throw Exception('源记录不存在');
-    var newQuestItem = GameObjectQuestItem.fromJson(source.toJson());
-    newQuestItem.idx = maxIdx + 1;
+    var newQuestItem = GameObjectQuestItem.fromJson({
+      ...source.toJson(),
+      'Idx': maxIdx + 1,
+    });
     await storeGameObjectQuestItem(newQuestItem);
     return newQuestItem;
   }

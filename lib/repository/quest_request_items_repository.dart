@@ -20,8 +20,7 @@ class QuestRequestItemsRepository with RepositoryMixin {
 
   /// 创建：返回与 quest_template ID 关联的空白对象（不落库）
   Future<QuestRequestItems> createQuestRequestItems(int id) async {
-    final model = QuestRequestItems();
-    model.id = id;
+    final model = QuestRequestItems(id: id);
     return model;
   }
 

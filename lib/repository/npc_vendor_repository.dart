@@ -94,8 +94,19 @@ class NpcVendorRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newVendor = NpcVendor.fromJson(source.toJson());
-    newVendor.slot = maxSlot + 1;
+    var newVendor = NpcVendor(
+      entry: source.entry,
+      slot: maxSlot + 1,
+      item: source.item,
+      maxcount: source.maxcount,
+      incrtime: source.incrtime,
+      extendedCost: source.extendedCost,
+      verifiedBuild: source.verifiedBuild,
+      itemName: source.itemName,
+      itemLocaleName: source.itemLocaleName,
+      itemQuality: source.itemQuality,
+      itemIcon: source.itemIcon,
+    );
 
     await storeNpcVendor(newVendor);
     return newVendor;

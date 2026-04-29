@@ -1,13 +1,14 @@
 class QuestInfoFilterEntity {
-  String id = '';
-  String name = '';
+  final String id;
+  final String name;
 
-  QuestInfoFilterEntity();
+  const QuestInfoFilterEntity({this.id = '', this.name = ''});
 
   factory QuestInfoFilterEntity.fromJson(Map<String, dynamic> json) {
-    return QuestInfoFilterEntity()
-      ..id = json['id'] ?? ''
-      ..name = json['name'] ?? '';
+    return QuestInfoFilterEntity(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

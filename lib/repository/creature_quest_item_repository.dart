@@ -94,8 +94,10 @@ class CreatureQuestItemRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newQuestItem = CreatureQuestItem.fromJson(source.toJson());
-    newQuestItem.idx = maxIdx + 1;
+    var newQuestItem = CreatureQuestItem.fromJson({
+      ...source.toJson(),
+      'Idx': maxIdx + 1,
+    });
 
     await storeCreatureQuestItem(newQuestItem);
     return newQuestItem;

@@ -65,15 +65,9 @@ class GossipMenuOptionRepository with RepositoryMixin {
         ['MAX(OptionID) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      final model = GossipMenuOption();
-      model.menuId = menuId;
-      model.optionId = maxId == null ? 0 : maxId + 1;
-      return model;
+      return GossipMenuOption(menuId: menuId, optionId: maxId == null ? 0 : maxId + 1);
     } catch (e) {
-      final model = GossipMenuOption();
-      model.menuId = menuId;
-      model.optionId = 0;
-      return model;
+      return GossipMenuOption(menuId: menuId, optionId: 0);
     }
   }
 
@@ -105,7 +99,6 @@ class GossipMenuOptionRepository with RepositoryMixin {
     final original = await getGossipMenuOption(id);
     if (original == null) return;
     final next = await createGossipMenuOption(menuId: original.menuId);
-    original.optionId = next.optionId;
-    await storeGossipMenuOption(original);
+    await storeGossipMenuOption(next);
   }
 }

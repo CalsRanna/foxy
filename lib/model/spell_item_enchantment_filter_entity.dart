@@ -1,13 +1,14 @@
 class SpellItemEnchantmentFilterEntity {
-  String id = '';
-  String name = '';
+  final String id;
+  final String name;
 
-  SpellItemEnchantmentFilterEntity();
+  const SpellItemEnchantmentFilterEntity({this.id = '', this.name = ''});
 
   factory SpellItemEnchantmentFilterEntity.fromJson(Map<String, dynamic> json) {
-    return SpellItemEnchantmentFilterEntity()
-      ..id = json['id'] ?? ''
-      ..name = json['name'] ?? '';
+    return SpellItemEnchantmentFilterEntity(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

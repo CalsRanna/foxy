@@ -73,35 +73,30 @@ class AreaTableDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 AreaTable
   AreaTable _collectFromControllers() {
-    final t = AreaTable();
-
-    /// Basic
-    t.id = _parseInt(idController.text);
-    t.areaNameLangZhCn = nameController.text;
-    t.continentId = _parseInt(continentIdController.text);
-    t.parentAreaId = _parseInt(parentAreaIdController.text);
-    t.areaBit = _parseInt(areaBitController.text);
-    t.flags = _parseInt(flagsController.text);
-    t.factionGroupMask = _parseInt(factionGroupMaskController.text);
-    t.explorationLevel = _parseInt(explorationLevelController.text);
-
-    /// Sound
-    t.soundProviderPref = _parseInt(soundProviderPrefController.text);
-    t.soundProviderPrefUnderwater = _parseInt(
-      soundProviderPrefUnderwaterController.text,
+    final t = AreaTable(
+      id: _parseInt(idController.text),
+      areaNameLangZhCn: nameController.text,
+      continentId: _parseInt(continentIdController.text),
+      parentAreaId: _parseInt(parentAreaIdController.text),
+      areaBit: _parseInt(areaBitController.text),
+      flags: _parseInt(flagsController.text),
+      factionGroupMask: _parseInt(factionGroupMaskController.text),
+      explorationLevel: _parseInt(explorationLevelController.text),
+      soundProviderPref: _parseInt(soundProviderPrefController.text),
+      soundProviderPrefUnderwater: _parseInt(
+        soundProviderPrefUnderwaterController.text,
+      ),
+      ambienceId: _parseInt(ambienceIdController.text),
+      zoneMusic: _parseInt(zoneMusicController.text),
+      introSound: _parseInt(introSoundController.text),
+      ambientMultiplier: _parseDouble(ambientMultiplierController.text),
+      lightId: _parseInt(lightIdController.text),
+      minElevation: _parseDouble(minElevationController.text),
+      liquidTypeId0: _parseInt(liquidTypeId0Controller.text),
+      liquidTypeId1: _parseInt(liquidTypeId1Controller.text),
+      liquidTypeId2: _parseInt(liquidTypeId2Controller.text),
+      liquidTypeId3: _parseInt(liquidTypeId3Controller.text),
     );
-    t.ambienceId = _parseInt(ambienceIdController.text);
-    t.zoneMusic = _parseInt(zoneMusicController.text);
-    t.introSound = _parseInt(introSoundController.text);
-    t.ambientMultiplier = _parseDouble(ambientMultiplierController.text);
-    t.lightId = _parseInt(lightIdController.text);
-    t.minElevation = _parseDouble(minElevationController.text);
-
-    /// Other
-    t.liquidTypeId0 = _parseInt(liquidTypeId0Controller.text);
-    t.liquidTypeId1 = _parseInt(liquidTypeId1Controller.text);
-    t.liquidTypeId2 = _parseInt(liquidTypeId2Controller.text);
-    t.liquidTypeId3 = _parseInt(liquidTypeId3Controller.text);
 
     return t;
   }

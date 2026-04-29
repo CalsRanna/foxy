@@ -108,9 +108,10 @@ class SmartScriptListViewModel {
   }
 
   SmartScriptFilterEntity _buildFilter() {
-    return SmartScriptFilterEntity()
-      ..entryOrGuid = entryOrGuidController.text
-      ..comment = commentController.text;
+    return SmartScriptFilterEntity(
+      entryOrGuid: entryOrGuidController.text,
+      comment: commentController.text,
+    );
   }
 
   Future<void> paginate(int page) async {

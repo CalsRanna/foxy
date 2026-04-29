@@ -50,10 +50,10 @@ class QuestInfoDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 QuestInfo
   QuestInfo _collectFromControllers() {
-    final t = QuestInfo();
-    t.id = _parseInt(idController.text);
-    t.infoNameLangZhCn = nameController.text;
-    return t;
+    return QuestInfo(
+      id: _parseInt(idController.text),
+      infoNameLangZhCn: nameController.text,
+    );
   }
 
   int _parseInt(String text) {

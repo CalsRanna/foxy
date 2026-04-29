@@ -85,9 +85,10 @@ class AreaTableListViewModel {
   }
 
   AreaTableFilterEntity _buildFilter() {
-    return AreaTableFilterEntity()
-      ..id = entryController.text
-      ..name = nameController.text;
+    return AreaTableFilterEntity(
+      id: entryController.text,
+      name: nameController.text,
+    );
   }
 
   Future<void> paginate(int page) async {

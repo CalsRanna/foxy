@@ -1,16 +1,17 @@
 class SmartScriptFilterEntity {
-  String entryOrGuid = '';
-  String comment = '';
+  final String entryOrGuid;
+  final String comment;
 
-  SmartScriptFilterEntity();
+  const SmartScriptFilterEntity({this.entryOrGuid = '', this.comment = ''});
 
   Map<String, dynamic> toJson() {
     return {'entryOrGuid': entryOrGuid, 'comment': comment};
   }
 
   factory SmartScriptFilterEntity.fromJson(Map<String, dynamic> json) {
-    return SmartScriptFilterEntity()
-      ..entryOrGuid = json['entryOrGuid'] ?? ''
-      ..comment = json['comment'] ?? '';
+    return SmartScriptFilterEntity(
+      entryOrGuid: json['entryOrGuid'] ?? '',
+      comment: json['comment'] ?? '',
+    );
   }
 }

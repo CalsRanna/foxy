@@ -23,10 +23,10 @@ class ScalingStatDistributionRepository with RepositoryMixin {
       // 但这里用更轻量的解析
       return results.map((e) {
         var map = e.toMap();
-        var model = ItemEnchantmentTemplate();
-        model.entry = (map['ID'] as int?) ?? 0;
-        model.name = (map['Name_lang_zhCN'] as String?) ?? '';
-        return model;
+        return ItemEnchantmentTemplate(
+          entry: (map['ID'] as int?) ?? 0,
+          name: (map['Name_lang_zhCN'] as String?) ?? '',
+        );
       }).toList();
     } catch (e) {
       return [];

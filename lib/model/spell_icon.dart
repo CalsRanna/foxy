@@ -1,13 +1,14 @@
 class SpellIcon {
-  int id = 0;
-  String textureFilename = '';
+  final int id;
+  final String textureFilename;
 
-  SpellIcon();
+  const SpellIcon({this.id = 0, this.textureFilename = ''});
 
   factory SpellIcon.fromJson(Map<String, dynamic> json) {
-    return SpellIcon()
-      ..id = json['ID'] ?? 0
-      ..textureFilename = json['TextureFilename'] ?? '';
+    return SpellIcon(
+      id: json['ID'] ?? 0,
+      textureFilename: json['TextureFilename'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

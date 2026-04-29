@@ -3,43 +3,60 @@
 /// 列表查询时通过 LEFT JOIN gossip_menu_option_locale 得到 localeOptionText，
 /// 仅用于列表展示，不参与 toJson。
 class GossipMenuOption {
-  int menuId = 0;
-  int optionId = 0;
-  int optionIcon = 0;
-  String optionText = '';
-  int optionBroadcastTextId = 0;
-  int optionType = 0;
-  int optionNpcFlag = 0;
-  int boxCoded = 0;
-  int boxMoney = 0;
-  String boxText = '';
-  int boxBroadcastTextId = 0;
-  int actionMenuId = 0;
-  int actionPoiId = 0;
-  int verifiedBuild = 0;
+  final int menuId;
+  final int optionId;
+  final int optionIcon;
+  final String optionText;
+  final int optionBroadcastTextId;
+  final int optionType;
+  final int optionNpcFlag;
+  final int boxCoded;
+  final int boxMoney;
+  final String boxText;
+  final int boxBroadcastTextId;
+  final int actionMenuId;
+  final int actionPoiId;
+  final int verifiedBuild;
 
   /// 仅列表展示用（JOIN 结果）
-  String localeOptionText = '';
+  final String localeOptionText;
 
-  GossipMenuOption();
+  const GossipMenuOption({
+    this.menuId = 0,
+    this.optionId = 0,
+    this.optionIcon = 0,
+    this.optionText = '',
+    this.optionBroadcastTextId = 0,
+    this.optionType = 0,
+    this.optionNpcFlag = 0,
+    this.boxCoded = 0,
+    this.boxMoney = 0,
+    this.boxText = '',
+    this.boxBroadcastTextId = 0,
+    this.actionMenuId = 0,
+    this.actionPoiId = 0,
+    this.verifiedBuild = 0,
+    this.localeOptionText = '',
+  });
 
   factory GossipMenuOption.fromJson(Map<String, dynamic> json) {
-    return GossipMenuOption()
-      ..menuId = json['MenuID'] ?? json['menuid'] ?? 0
-      ..optionId = json['OptionID'] ?? json['optionid'] ?? 0
-      ..optionIcon = json['OptionIcon'] ?? json['optionicon'] ?? 0
-      ..optionText = json['OptionText']?.toString() ?? ''
-      ..optionBroadcastTextId = json['OptionBroadcastTextID'] ?? 0
-      ..optionType = json['OptionType'] ?? 0
-      ..optionNpcFlag = json['OptionNpcFlag'] ?? 0
-      ..boxCoded = json['BoxCoded'] ?? 0
-      ..boxMoney = json['BoxMoney'] ?? 0
-      ..boxText = json['BoxText']?.toString() ?? ''
-      ..boxBroadcastTextId = json['BoxBroadcastTextID'] ?? 0
-      ..actionMenuId = json['ActionMenuID'] ?? 0
-      ..actionPoiId = json['ActionPoiID'] ?? 0
-      ..verifiedBuild = json['VerifiedBuild'] ?? 0
-      ..localeOptionText = json['localeOptionText']?.toString() ?? '';
+    return GossipMenuOption(
+      menuId: json['MenuID'] ?? json['menuid'] ?? 0,
+      optionId: json['OptionID'] ?? json['optionid'] ?? 0,
+      optionIcon: json['OptionIcon'] ?? json['optionicon'] ?? 0,
+      optionText: json['OptionText']?.toString() ?? '',
+      optionBroadcastTextId: json['OptionBroadcastTextID'] ?? 0,
+      optionType: json['OptionType'] ?? 0,
+      optionNpcFlag: json['OptionNpcFlag'] ?? 0,
+      boxCoded: json['BoxCoded'] ?? 0,
+      boxMoney: json['BoxMoney'] ?? 0,
+      boxText: json['BoxText']?.toString() ?? '',
+      boxBroadcastTextId: json['BoxBroadcastTextID'] ?? 0,
+      actionMenuId: json['ActionMenuID'] ?? 0,
+      actionPoiId: json['ActionPoiID'] ?? 0,
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
+      localeOptionText: json['localeOptionText']?.toString() ?? '',
+    );
   }
 
   /// 显示文本（优先本地化）

@@ -261,10 +261,11 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = ItemTemplateRepository();
-      final filter = ItemTemplateFilterEntity()
-        ..entry = _entryController.text
-        ..name = _nameController.text
-        ..description = _descriptionController.text;
+      final filter = ItemTemplateFilterEntity(
+        entry: _entryController.text,
+        name: _nameController.text,
+        description: _descriptionController.text,
+      );
       final items = await repository.getBriefItemTemplates(
         filter: filter,
         page: _page,

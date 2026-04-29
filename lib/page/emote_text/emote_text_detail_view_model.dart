@@ -70,32 +70,27 @@ class EmoteTextDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 EmoteText
   EmoteText _collectFromControllers() {
-    final t = EmoteText();
-
-    /// Basic
-    t.id = _parseInt(idController.text);
-    t.name = nameController.text;
-    t.emoteId = _parseInt(emoteIdController.text);
-
-    /// EmoteText
-    t.emoteText0 = _parseInt(emoteText0Controller.text);
-    t.emoteText1 = _parseInt(emoteText1Controller.text);
-    t.emoteText2 = _parseInt(emoteText2Controller.text);
-    t.emoteText3 = _parseInt(emoteText3Controller.text);
-    t.emoteText4 = _parseInt(emoteText4Controller.text);
-    t.emoteText5 = _parseInt(emoteText5Controller.text);
-    t.emoteText6 = _parseInt(emoteText6Controller.text);
-    t.emoteText7 = _parseInt(emoteText7Controller.text);
-    t.emoteText8 = _parseInt(emoteText8Controller.text);
-    t.emoteText9 = _parseInt(emoteText9Controller.text);
-    t.emoteText10 = _parseInt(emoteText10Controller.text);
-    t.emoteText11 = _parseInt(emoteText11Controller.text);
-    t.emoteText12 = _parseInt(emoteText12Controller.text);
-    t.emoteText13 = _parseInt(emoteText13Controller.text);
-    t.emoteText14 = _parseInt(emoteText14Controller.text);
-    t.emoteText15 = _parseInt(emoteText15Controller.text);
-
-    return t;
+    return EmoteText(
+      id: _parseInt(idController.text),
+      name: nameController.text,
+      emoteId: _parseInt(emoteIdController.text),
+      emoteText0: _parseInt(emoteText0Controller.text),
+      emoteText1: _parseInt(emoteText1Controller.text),
+      emoteText2: _parseInt(emoteText2Controller.text),
+      emoteText3: _parseInt(emoteText3Controller.text),
+      emoteText4: _parseInt(emoteText4Controller.text),
+      emoteText5: _parseInt(emoteText5Controller.text),
+      emoteText6: _parseInt(emoteText6Controller.text),
+      emoteText7: _parseInt(emoteText7Controller.text),
+      emoteText8: _parseInt(emoteText8Controller.text),
+      emoteText9: _parseInt(emoteText9Controller.text),
+      emoteText10: _parseInt(emoteText10Controller.text),
+      emoteText11: _parseInt(emoteText11Controller.text),
+      emoteText12: _parseInt(emoteText12Controller.text),
+      emoteText13: _parseInt(emoteText13Controller.text),
+      emoteText14: _parseInt(emoteText14Controller.text),
+      emoteText15: _parseInt(emoteText15Controller.text),
+    );
   }
 
   int _parseInt(String text) {

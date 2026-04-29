@@ -1,29 +1,39 @@
 class PlayerCreateInfo {
-  int race = 0;
-  int class_ = 0;
-  int map = 0;
-  int zone = 0;
-  double positionX = 0;
-  double positionY = 0;
-  double positionZ = 0;
-  double orientation = 0;
+  final int race;
+  final int class_;
+  final int map;
+  final int zone;
+  final double positionX;
+  final double positionY;
+  final double positionZ;
+  final double orientation;
 
-  PlayerCreateInfo();
+  const PlayerCreateInfo({
+    this.race = 0,
+    this.class_ = 0,
+    this.map = 0,
+    this.zone = 0,
+    this.positionX = 0,
+    this.positionY = 0,
+    this.positionZ = 0,
+    this.orientation = 0,
+  });
 
   Map<String, dynamic> buildCredential() {
     return {'race': race, 'class': class_};
   }
 
   factory PlayerCreateInfo.fromJson(Map<String, dynamic> json) {
-    return PlayerCreateInfo()
-      ..race = json['race'] ?? 0
-      ..class_ = json['class'] ?? 0
-      ..map = json['map'] ?? 0
-      ..zone = json['zone'] ?? 0
-      ..positionX = (json['position_x'] as num?)?.toDouble() ?? 0
-      ..positionY = (json['position_y'] as num?)?.toDouble() ?? 0
-      ..positionZ = (json['position_z'] as num?)?.toDouble() ?? 0
-      ..orientation = (json['orientation'] as num?)?.toDouble() ?? 0;
+    return PlayerCreateInfo(
+      race: json['race'] ?? 0,
+      class_: json['class'] ?? 0,
+      map: json['map'] ?? 0,
+      zone: json['zone'] ?? 0,
+      positionX: (json['position_x'] as num?)?.toDouble() ?? 0,
+      positionY: (json['position_y'] as num?)?.toDouble() ?? 0,
+      positionZ: (json['position_z'] as num?)?.toDouble() ?? 0,
+      orientation: (json['orientation'] as num?)?.toDouble() ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -41,21 +51,28 @@ class PlayerCreateInfo {
 }
 
 class PlayerCreateInfoAction {
-  int race = 0;
-  int class_ = 0;
-  int button = 0;
-  int action = 0;
-  int type = 0;
+  final int race;
+  final int class_;
+  final int button;
+  final int action;
+  final int type;
 
-  PlayerCreateInfoAction();
+  const PlayerCreateInfoAction({
+    this.race = 0,
+    this.class_ = 0,
+    this.button = 0,
+    this.action = 0,
+    this.type = 0,
+  });
 
   factory PlayerCreateInfoAction.fromJson(Map<String, dynamic> json) {
-    return PlayerCreateInfoAction()
-      ..race = json['race'] ?? 0
-      ..class_ = json['class'] ?? 0
-      ..button = json['button'] ?? 0
-      ..action = json['action'] ?? 0
-      ..type = json['type'] ?? 0;
+    return PlayerCreateInfoAction(
+      race: json['race'] ?? 0,
+      class_: json['class'] ?? 0,
+      button: json['button'] ?? 0,
+      action: json['action'] ?? 0,
+      type: json['type'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -70,21 +87,28 @@ class PlayerCreateInfoAction {
 }
 
 class PlayerCreateInfoItem {
-  int race = 0;
-  int class_ = 0;
-  int itemid = 0;
-  int amount = 1;
-  String note = '';
+  final int race;
+  final int class_;
+  final int itemid;
+  final int amount;
+  final String note;
 
-  PlayerCreateInfoItem();
+  const PlayerCreateInfoItem({
+    this.race = 0,
+    this.class_ = 0,
+    this.itemid = 0,
+    this.amount = 1,
+    this.note = '',
+  });
 
   factory PlayerCreateInfoItem.fromJson(Map<String, dynamic> json) {
-    return PlayerCreateInfoItem()
-      ..race = json['race'] ?? 0
-      ..class_ = json['class'] ?? 0
-      ..itemid = json['itemid'] ?? 0
-      ..amount = json['amount'] ?? 1
-      ..note = json['Note'] ?? '';
+    return PlayerCreateInfoItem(
+      race: json['race'] ?? 0,
+      class_: json['class'] ?? 0,
+      itemid: json['itemid'] ?? 0,
+      amount: json['amount'] ?? 1,
+      note: json['Note'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -99,19 +123,25 @@ class PlayerCreateInfoItem {
 }
 
 class PlayerCreateInfoSpellCustom {
-  int racemask = 0;
-  int classmask = 0;
-  int spell = 0;
-  String note = '';
+  final int racemask;
+  final int classmask;
+  final int spell;
+  final String note;
 
-  PlayerCreateInfoSpellCustom();
+  const PlayerCreateInfoSpellCustom({
+    this.racemask = 0,
+    this.classmask = 0,
+    this.spell = 0,
+    this.note = '',
+  });
 
   factory PlayerCreateInfoSpellCustom.fromJson(Map<String, dynamic> json) {
-    return PlayerCreateInfoSpellCustom()
-      ..racemask = json['racemask'] ?? 0
-      ..classmask = json['classmask'] ?? 0
-      ..spell = json['spell'] ?? 0
-      ..note = json['note'] ?? '';
+    return PlayerCreateInfoSpellCustom(
+      racemask: json['racemask'] ?? 0,
+      classmask: json['classmask'] ?? 0,
+      spell: json['spell'] ?? 0,
+      note: json['note'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

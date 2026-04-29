@@ -42,8 +42,7 @@ class NpcTextViewModel {
       final main = await _repository.getNpcText(textId);
       if (main == null) {
         creating.value = true;
-        final blank = NpcText();
-        blank.id = textId;
+        final blank = NpcText(id: textId);
         _applyMainToControllers(blank);
       } else {
         creating.value = false;
@@ -58,7 +57,7 @@ class NpcTextViewModel {
         }
       }
       localeExists.value = zhCN != null;
-      final target = zhCN ?? (NpcTextLocale()..id = textId);
+      final target = zhCN ?? NpcTextLocale(id: textId);
       _applyLocaleToControllers(target);
     } finally {
       loading.value = false;
@@ -135,36 +134,39 @@ class NpcTextViewModel {
   }
 
   NpcText _collectMainFromControllers() {
-    final m = NpcText();
-    m.id = int.tryParse(controllerOf('ID').text) ?? 0;
-    m.verifiedBuild = int.tryParse(controllerOf('VerifiedBuild').text) ?? 0;
-    for (var n = 0; n < 8; n++) {
-      final e = m.entries[n];
-      e.lang = controllerOf('lang$n').text.isEmpty
-          ? '0'
-          : controllerOf('lang$n').text;
-      e.probability = double.tryParse(controllerOf('Probability$n').text) ?? 0;
-      e.text0 = controllerOf('text${n}_0').text;
-      e.text1 = controllerOf('text${n}_1').text;
-      e.broadcastTextId =
-          int.tryParse(controllerOf('BroadcastTextID$n').text) ?? 0;
-      for (var i = 0; i < 6; i++) {
-        e.emotes[i] = int.tryParse(controllerOf('em${n}_$i').text) ?? 0;
-      }
-    }
-    return m;
+    return NpcText(
+      id: int.tryParse(controllerOf('ID').text) ?? 0,
+      verifiedBuild: int.tryParse(controllerOf('VerifiedBuild').text) ?? 0,
+      entries: List.generate(8, (n) {
+        return NpcTextEntry(
+          lang: controllerOf('lang$n').text.isEmpty
+              ? '0'
+              : controllerOf('lang$n').text,
+          probability:
+              double.tryParse(controllerOf('Probability$n').text) ?? 0,
+          text0: controllerOf('text${n}_0').text,
+          text1: controllerOf('text${n}_1').text,
+          broadcastTextId:
+              int.tryParse(controllerOf('BroadcastTextID$n').text) ?? 0,
+          emotes: List.generate(
+            6,
+            (i) => int.tryParse(controllerOf('em${n}_$i').text) ?? 0,
+          ),
+        );
+      }),
+    );
   }
 
   NpcTextLocale _collectLocaleFromControllers(int id) {
-    final l = NpcTextLocale();
-    l.id = id;
-    l.locale = controllerOf('locale.Locale').text.isEmpty
-        ? 'zhCN'
-        : controllerOf('locale.Locale').text;
-    for (var n = 0; n < 8; n++) {
-      l.texts[n][0] = controllerOf('locale.Text${n}_0').text;
-      l.texts[n][1] = controllerOf('locale.Text${n}_1').text;
-    }
-    return l;
+    return NpcTextLocale(
+      id: id,
+      locale: controllerOf('locale.Locale').text.isEmpty
+          ? 'zhCN'
+          : controllerOf('locale.Locale').text,
+      texts: List.generate(8, (n) => [
+        controllerOf('locale.Text${n}_0').text,
+        controllerOf('locale.Text${n}_1').text,
+      ]),
+    );
   }
 }

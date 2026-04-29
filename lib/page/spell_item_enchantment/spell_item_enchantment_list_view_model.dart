@@ -100,9 +100,7 @@ class SpellItemEnchantmentListViewModel {
   }
 
   SpellItemEnchantmentFilterEntity _buildFilter() {
-    return SpellItemEnchantmentFilterEntity()
-      ..id = entryController.text
-      ..name = nameController.text;
+    return SpellItemEnchantmentFilterEntity(id: entryController.text, name: nameController.text);
   }
 
   Future<void> paginate(int page) async {

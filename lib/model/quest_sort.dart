@@ -1,13 +1,14 @@
 class QuestSort {
-  int id = 0;
-  String sortNameLangZhCn = '';
+  final int id;
+  final String sortNameLangZhCn;
 
-  QuestSort();
+  const QuestSort({this.id = 0, this.sortNameLangZhCn = ''});
 
   factory QuestSort.fromJson(Map<String, dynamic> json) {
-    return QuestSort()
-      ..id = json['ID'] ?? 0
-      ..sortNameLangZhCn = json['SortName_Lang_zhCN'] ?? '';
+    return QuestSort(
+      id: json['ID'] ?? 0,
+      sortNameLangZhCn: json['SortName_Lang_zhCN'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

@@ -95,8 +95,7 @@ class ItemExtendedCostListViewModel {
   }
 
   ItemExtendedCostFilterEntity _buildFilter() {
-    return ItemExtendedCostFilterEntity()
-      ..id = entryController.text;
+    return ItemExtendedCostFilterEntity(id: entryController.text);
   }
 
   Future<void> paginate(int page) async {

@@ -67,18 +67,18 @@ class CreatureOnKillReputationViewModel {
 
   /// 从 Controller 收集数据构建 CreatureOnKillReputation
   CreatureOnKillReputation _collectFromControllers() {
-    final data = CreatureOnKillReputation();
-    data.creatureID = creatureId.value;
-    data.rewOnKillRepFaction1 = _parseInt(rewOnKillRepFaction1Controller.text);
-    data.rewOnKillRepFaction2 = _parseInt(rewOnKillRepFaction2Controller.text);
-    data.maxStanding1 = _getControllerValue(maxStanding1Controller);
-    data.maxStanding2 = _getControllerValue(maxStanding2Controller);
-    data.isTeamAward1 = _getControllerValue(isTeamAward1Controller) == 1;
-    data.isTeamAward2 = _getControllerValue(isTeamAward2Controller) == 1;
-    data.rewOnKillRepValue1 = _parseDouble(rewOnKillRepValue1Controller.text);
-    data.rewOnKillRepValue2 = _parseDouble(rewOnKillRepValue2Controller.text);
-    data.teamDependent = _parseInt(teamDependentController.text);
-    return data;
+    return CreatureOnKillReputation(
+      creatureID: creatureId.value,
+      rewOnKillRepFaction1: _parseInt(rewOnKillRepFaction1Controller.text),
+      rewOnKillRepFaction2: _parseInt(rewOnKillRepFaction2Controller.text),
+      maxStanding1: _getControllerValue(maxStanding1Controller),
+      maxStanding2: _getControllerValue(maxStanding2Controller),
+      isTeamAward1: _getControllerValue(isTeamAward1Controller) == 1,
+      isTeamAward2: _getControllerValue(isTeamAward2Controller) == 1,
+      rewOnKillRepValue1: _parseDouble(rewOnKillRepValue1Controller.text),
+      rewOnKillRepValue2: _parseDouble(rewOnKillRepValue2Controller.text),
+      teamDependent: _parseInt(teamDependentController.text),
+    );
   }
 
   int _getControllerValue(ShadSelectController<int> controller) {

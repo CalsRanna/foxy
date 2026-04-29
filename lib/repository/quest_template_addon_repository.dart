@@ -20,8 +20,7 @@ class QuestTemplateAddonRepository with RepositoryMixin {
 
   /// 创建：返回与 quest_template ID 关联的空白对象（不落库）
   Future<QuestTemplateAddon> createQuestTemplateAddon(int id) async {
-    final model = QuestTemplateAddon();
-    model.id = id;
+    final model = QuestTemplateAddon(id: id);
     return model;
   }
 

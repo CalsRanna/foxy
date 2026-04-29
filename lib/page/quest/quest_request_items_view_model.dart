@@ -64,12 +64,12 @@ class QuestRequestItemsViewModel {
   }
 
   QuestRequestItems _collectFromControllers() {
-    final model = QuestRequestItems();
-    model.id = questId.value;
-    model.emoteOnComplete = _parseInt(emoteOnCompleteController.text);
-    model.emoteOnIncomplete = _parseInt(emoteOnIncompleteController.text);
-    model.completionText = completionTextController.text;
-    return model;
+    return QuestRequestItems(
+      id: questId.value,
+      emoteOnComplete: _parseInt(emoteOnCompleteController.text),
+      emoteOnIncomplete: _parseInt(emoteOnIncompleteController.text),
+      completionText: completionTextController.text,
+    );
   }
 
   int _parseInt(String text) {

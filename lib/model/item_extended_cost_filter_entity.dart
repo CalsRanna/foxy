@@ -1,11 +1,12 @@
 class ItemExtendedCostFilterEntity {
-  String id = '';
+  final String id;
 
-  ItemExtendedCostFilterEntity();
+  const ItemExtendedCostFilterEntity({this.id = ''});
 
   factory ItemExtendedCostFilterEntity.fromJson(Map<String, dynamic> json) {
-    return ItemExtendedCostFilterEntity()
-      ..id = json['id'] ?? '';
+    return ItemExtendedCostFilterEntity(
+      id: json['id'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

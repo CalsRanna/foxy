@@ -52,11 +52,12 @@ class CreatureQuestItemViewModel {
 
   /// 从表单收集数据
   CreatureQuestItem collectFromForm() {
-    final questItem = CreatureQuestItem();
-    questItem.creatureEntry = creatureEntry.value;
-    questItem.idx = _parseInt(idxController.text);
-    questItem.itemId = _parseInt(itemIdController.text);
-    questItem.verifiedBuild = _parseInt(verifiedBuildController.text);
+    final questItem = CreatureQuestItem(
+      creatureEntry: creatureEntry.value,
+      idx: _parseInt(idxController.text),
+      itemId: _parseInt(itemIdController.text),
+      verifiedBuild: _parseInt(verifiedBuildController.text),
+    );
     return questItem;
   }
 

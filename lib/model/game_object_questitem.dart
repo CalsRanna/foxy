@@ -1,29 +1,39 @@
 class GameObjectQuestItem {
-  int gameObjectEntry = 0;
-  int idx = 0;
-  int itemId = 0;
-  int verifiedBuild = 0;
+  final int gameObjectEntry;
+  final int idx;
+  final int itemId;
+  final int verifiedBuild;
 
-  String itemName = '';
-  String itemLocaleName = '';
-  int itemQuality = 0;
-  String itemIcon = '';
+  final String itemName;
+  final String itemLocaleName;
+  final int itemQuality;
+  final String itemIcon;
 
   String get displayName =>
       itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
-  GameObjectQuestItem();
+  const GameObjectQuestItem({
+    this.gameObjectEntry = 0,
+    this.idx = 0,
+    this.itemId = 0,
+    this.verifiedBuild = 0,
+    this.itemName = '',
+    this.itemLocaleName = '',
+    this.itemQuality = 0,
+    this.itemIcon = '',
+  });
 
   factory GameObjectQuestItem.fromJson(Map<String, dynamic> json) {
-    return GameObjectQuestItem()
-      ..gameObjectEntry = json['GameObjectEntry'] ?? json['gameObjectEntry'] ?? 0
-      ..idx = json['Idx'] ?? json['idx'] ?? 0
-      ..itemId = json['ItemId'] ?? json['itemId'] ?? 0
-      ..verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0
-      ..itemName = json['name'] ?? ''
-      ..itemLocaleName = json['localeName'] ?? ''
-      ..itemQuality = json['Quality'] ?? 0
-      ..itemIcon = json['InventoryIcon0'] ?? '';
+    return GameObjectQuestItem(
+      gameObjectEntry: json['GameObjectEntry'] ?? json['gameObjectEntry'] ?? 0,
+      idx: json['Idx'] ?? json['idx'] ?? 0,
+      itemId: json['ItemId'] ?? json['itemId'] ?? 0,
+      verifiedBuild: json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0,
+      itemName: json['name'] ?? '',
+      itemLocaleName: json['localeName'] ?? '',
+      itemQuality: json['Quality'] ?? 0,
+      itemIcon: json['InventoryIcon0'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

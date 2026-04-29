@@ -310,134 +310,154 @@ class ItemTemplateDetailViewModel {
   }
 
   ItemTemplate _collectFromControllers() {
-    final t = ItemTemplate();
+    return ItemTemplate(
+      /// Card 1: Basic Info
+      entry: _parseInt(entryController.text),
+      name: nameController.text,
+      description: descriptionController.text,
+      quality: _getSelectValue(qualityController),
+      className: _getSelectValue(classNameController),
+      subclass: _getSelectValue(subclassController),
+      soundOverrideSubclass: _parseInt(soundOverrideSubclassController.text),
+      material: _getSelectValue(materialController),
+      displayId: _parseInt(displayIdController.text),
+      inventoryType: _getSelectValue(inventoryTypeController),
+      sheath: _getSelectValue(sheathController),
 
-    /// Card 1: Basic Info
-    t.entry = _parseInt(entryController.text);
-    t.name = nameController.text;
-    t.description = descriptionController.text;
-    t.quality = _getSelectValue(qualityController);
-    t.className = _getSelectValue(classNameController);
-    t.subclass = _getSelectValue(subclassController);
-    t.soundOverrideSubclass = _parseInt(soundOverrideSubclassController.text);
-    t.material = _getSelectValue(materialController);
-    t.displayId = _parseInt(displayIdController.text);
-    t.inventoryType = _getSelectValue(inventoryTypeController);
-    t.sheath = _getSelectValue(sheathController);
+      /// Card 2: Set/Pricing/Container/Misc
+      bonding: _getSelectValue(bondingController),
+      itemset: _parseInt(itemsetController.text),
+      randomProperty: _parseInt(randomPropertyController.text),
+      randomSuffix: _parseInt(randomSuffixController.text),
+      maxDurability: _parseInt(maxDurabilityController.text),
+      buyPrice: _parseInt(buyPriceController.text),
+      sellPrice: _parseInt(sellPriceController.text),
+      buyCount: _parseInt(buyCountController.text),
+      maxcount: _parseInt(maxcountController.text),
+      stackable: _parseInt(stackableController.text),
+      totemCategory: _parseInt(totemCategoryController.text),
+      foodType: _getSelectValue(foodTypeController),
+      bagFamily: _parseInt(bagFamilyController.text),
+      containerSlots: _parseInt(containerSlotsController.text),
+      itemLimitCategory: _parseInt(itemLimitCategoryController.text),
+      startquest: _parseInt(startquestController.text),
+      duration: _parseInt(durationController.text),
+      disenchantId: _parseInt(disenchantIdController.text),
+      minMoneyLoot: _parseInt(minMoneyLootController.text),
+      maxMoneyLoot: _parseInt(maxMoneyLootController.text),
 
-    /// Card 2: Set/Pricing/Container/Misc
-    t.bonding = _getSelectValue(bondingController);
-    t.itemset = _parseInt(itemsetController.text);
-    t.randomProperty = _parseInt(randomPropertyController.text);
-    t.randomSuffix = _parseInt(randomSuffixController.text);
-    t.maxDurability = _parseInt(maxDurabilityController.text);
-    t.buyPrice = _parseInt(buyPriceController.text);
-    t.sellPrice = _parseInt(sellPriceController.text);
-    t.buyCount = _parseInt(buyCountController.text);
-    t.maxcount = _parseInt(maxcountController.text);
-    t.stackable = _parseInt(stackableController.text);
-    t.totemCategory = _parseInt(totemCategoryController.text);
-    t.foodType = _getSelectValue(foodTypeController);
-    t.bagFamily = _parseInt(bagFamilyController.text);
-    t.containerSlots = _parseInt(containerSlotsController.text);
-    t.itemLimitCategory = _parseInt(itemLimitCategoryController.text);
-    t.startquest = _parseInt(startquestController.text);
-    t.duration = _parseInt(durationController.text);
-    t.disenchantId = _parseInt(disenchantIdController.text);
-    t.minMoneyLoot = _parseInt(minMoneyLootController.text);
-    t.maxMoneyLoot = _parseInt(maxMoneyLootController.text);
+      /// Card 3: Flags
+      flags: _parseInt(flagsController.text),
+      flagsExtra: _parseInt(flagsExtraController.text),
+      flagsCustom: _parseInt(flagsCustomController.text),
 
-    /// Card 3: Flags
-    t.flags = _parseInt(flagsController.text);
-    t.flagsExtra = _parseInt(flagsExtraController.text);
-    t.flagsCustom = _parseInt(flagsCustomController.text);
+      /// Card 4: Damage/Armor
+      delay: _parseInt(delayController.text),
+      rangedModRange: _parseInt(rangedModRangeController.text),
+      armorDamageModifier: _parseDouble(armorDamageModifierController.text),
+      dmgType1: _getSelectValue(dmgType1Controller),
+      dmgMin1: _parseDouble(dmgMin1Controller.text),
+      dmgMax1: _parseDouble(dmgMax1Controller.text),
+      dmgType2: _getSelectValue(dmgType2Controller),
+      dmgMin2: _parseDouble(dmgMin2Controller.text),
+      dmgMax2: _parseDouble(dmgMax2Controller.text),
+      ammoType: _getSelectValue(ammoTypeController),
+      armor: _parseInt(armorController.text),
+      block: _parseInt(blockController.text),
 
-    /// Card 4: Damage/Armor
-    t.delay = _parseInt(delayController.text);
-    t.rangedModRange = _parseInt(rangedModRangeController.text);
-    t.armorDamageModifier = _parseDouble(armorDamageModifierController.text);
-    t.dmgType1 = _getSelectValue(dmgType1Controller);
-    t.dmgMin1 = _parseDouble(dmgMin1Controller.text);
-    t.dmgMax1 = _parseDouble(dmgMax1Controller.text);
-    t.dmgType2 = _getSelectValue(dmgType2Controller);
-    t.dmgMin2 = _parseDouble(dmgMin2Controller.text);
-    t.dmgMax2 = _parseDouble(dmgMax2Controller.text);
-    t.ammoType = _getSelectValue(ammoTypeController);
-    t.armor = _parseInt(armorController.text);
-    t.block = _parseInt(blockController.text);
+      /// Card 5: Scaling Stats
+      scalingStatDistribution:
+          _parseInt(scalingStatDistributionController.text),
+      scalingStatValue: _parseInt(scalingStatValueController.text),
 
-    /// Card 5: Scaling Stats
-    t.scalingStatDistribution = _parseInt(
-      scalingStatDistributionController.text,
+      /// Card 6: Stats (dynamic)
+      statsCount: _parseInt(statsCountController.text),
+      statTypes: [
+        for (var i = 0; i < 10; i++)
+          _getSelectValue(statTypeControllers[i]),
+      ],
+      statValues: [
+        for (var i = 0; i < 10; i++)
+          _parseInt(statValueControllers[i].text),
+      ],
+
+      /// Card 7: Resistances
+      holyRes: _parseInt(holyResController.text),
+      fireRes: _parseInt(fireResController.text),
+      natureRes: _parseInt(natureResController.text),
+      shadowRes: _parseInt(shadowResController.text),
+      frostRes: _parseInt(frostResController.text),
+      arcaneRes: _parseInt(arcaneResController.text),
+
+      /// Card 8: Spells (5 slots)
+      spellIds: [
+        for (var i = 0; i < 5; i++)
+          _parseInt(spellIdControllers[i].text),
+      ],
+      spellTriggers: [
+        for (var i = 0; i < 5; i++)
+          _getSelectValue(spellTriggerControllers[i]),
+      ],
+      spellCharges: [
+        for (var i = 0; i < 5; i++)
+          _parseInt(spellChargeControllers[i].text),
+      ],
+      spellPpmRates: [
+        for (var i = 0; i < 5; i++)
+          _parseDouble(spellPpmRateControllers[i].text),
+      ],
+      spellCooldowns: [
+        for (var i = 0; i < 5; i++)
+          _parseInt(spellCooldownControllers[i].text),
+      ],
+      spellCategories: [
+        for (var i = 0; i < 5; i++)
+          _parseInt(spellCategoryControllers[i].text),
+      ],
+      spellCategoryCooldowns: [
+        for (var i = 0; i < 5; i++)
+          _parseInt(spellCategoryCooldownControllers[i].text),
+      ],
+
+      /// Card 9: Requirements
+      allowableClass: _parseInt(allowableClassController.text),
+      allowableRace: _parseInt(allowableRaceController.text),
+      itemLevel: _parseInt(itemLevelController.text),
+      requiredLevel: _parseInt(requiredLevelController.text),
+      requiredSkill: _parseInt(requiredSkillController.text),
+      requiredSkillRank: _parseInt(requiredSkillRankController.text),
+      requiredSpell: _parseInt(requiredSpellController.text),
+      requiredHonorRank: _parseInt(requiredHonorRankController.text),
+      requiredCityRank: _parseInt(requiredCityRankController.text),
+      requiredReputationFaction:
+          _parseInt(requiredReputationFactionController.text),
+      requiredReputationRank: _parseInt(requiredReputationRankController.text),
+      requiredDisenchantSkill:
+          _parseInt(requiredDisenchantSkillController.text),
+
+      /// Card 10: Socket/Gem
+      lockid: _parseInt(lockidController.text),
+      gemProperties: _parseInt(gemPropertiesController.text),
+      socketBonus: _parseInt(socketBonusController.text),
+      socketColors: [
+        for (var i = 0; i < 3; i++)
+          _getSelectValue(socketColorControllers[i]),
+      ],
+      socketContents: [
+        for (var i = 0; i < 3; i++)
+          _parseInt(socketContentControllers[i].text),
+      ],
+
+      /// Card 11: Page/Misc
+      mapId: _parseInt(mapIdController.text),
+      area: _parseInt(areaController.text),
+      holidayId: _parseInt(holidayIdController.text),
+      pageText: _parseInt(pageTextController.text),
+      pageMaterial: _getSelectValue(pageMaterialController),
+      languageId: _getSelectValue(languageIdController),
+      scriptName: scriptNameController.text,
+      verifiedBuild: _parseInt(verifiedBuildController.text),
     );
-    t.scalingStatValue = _parseInt(scalingStatValueController.text);
-
-    /// Card 6: Stats (dynamic)
-    t.statsCount = _parseInt(statsCountController.text);
-    for (var i = 0; i < 10; i++) {
-      t.statTypes[i] = _getSelectValue(statTypeControllers[i]);
-      t.statValues[i] = _parseInt(statValueControllers[i].text);
-    }
-
-    /// Card 7: Resistances
-    t.holyRes = _parseInt(holyResController.text);
-    t.fireRes = _parseInt(fireResController.text);
-    t.natureRes = _parseInt(natureResController.text);
-    t.shadowRes = _parseInt(shadowResController.text);
-    t.frostRes = _parseInt(frostResController.text);
-    t.arcaneRes = _parseInt(arcaneResController.text);
-
-    /// Card 8: Spells (5 slots)
-    for (var i = 0; i < 5; i++) {
-      t.spellIds[i] = _parseInt(spellIdControllers[i].text);
-      t.spellTriggers[i] = _getSelectValue(spellTriggerControllers[i]);
-      t.spellCharges[i] = _parseInt(spellChargeControllers[i].text);
-      t.spellPpmRates[i] = _parseDouble(spellPpmRateControllers[i].text);
-      t.spellCooldowns[i] = _parseInt(spellCooldownControllers[i].text);
-      t.spellCategories[i] = _parseInt(spellCategoryControllers[i].text);
-      t.spellCategoryCooldowns[i] = _parseInt(
-        spellCategoryCooldownControllers[i].text,
-      );
-    }
-
-    /// Card 9: Requirements
-    t.allowableClass = _parseInt(allowableClassController.text);
-    t.allowableRace = _parseInt(allowableRaceController.text);
-    t.itemLevel = _parseInt(itemLevelController.text);
-    t.requiredLevel = _parseInt(requiredLevelController.text);
-    t.requiredSkill = _parseInt(requiredSkillController.text);
-    t.requiredSkillRank = _parseInt(requiredSkillRankController.text);
-    t.requiredSpell = _parseInt(requiredSpellController.text);
-    t.requiredHonorRank = _parseInt(requiredHonorRankController.text);
-    t.requiredCityRank = _parseInt(requiredCityRankController.text);
-    t.requiredReputationFaction = _parseInt(
-      requiredReputationFactionController.text,
-    );
-    t.requiredReputationRank = _parseInt(requiredReputationRankController.text);
-    t.requiredDisenchantSkill = _parseInt(
-      requiredDisenchantSkillController.text,
-    );
-
-    /// Card 10: Socket/Gem
-    t.lockid = _parseInt(lockidController.text);
-    t.gemProperties = _parseInt(gemPropertiesController.text);
-    t.socketBonus = _parseInt(socketBonusController.text);
-    for (var i = 0; i < 3; i++) {
-      t.socketColors[i] = _getSelectValue(socketColorControllers[i]);
-      t.socketContents[i] = _parseInt(socketContentControllers[i].text);
-    }
-
-    /// Card 11: Page/Misc
-    t.mapId = _parseInt(mapIdController.text);
-    t.area = _parseInt(areaController.text);
-    t.holidayId = _parseInt(holidayIdController.text);
-    t.pageText = _parseInt(pageTextController.text);
-    t.pageMaterial = _getSelectValue(pageMaterialController);
-    t.languageId = _getSelectValue(languageIdController);
-    t.scriptName = scriptNameController.text;
-    t.verifiedBuild = _parseInt(verifiedBuildController.text);
-
-    return t;
   }
 
   /// 保存模板到数据库

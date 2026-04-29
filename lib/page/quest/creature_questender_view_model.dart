@@ -48,10 +48,10 @@ class CreatureQuestenderViewModel {
 
   /// 从表单收集数据
   CreatureQuestender collectFromForm() {
-    final model = CreatureQuestender();
-    model.id = int.tryParse(idController.text) ?? 0;
-    model.quest = int.tryParse(questController.text) ?? 0;
-    return model;
+    return CreatureQuestender(
+      id: int.tryParse(idController.text) ?? 0,
+      quest: int.tryParse(questController.text) ?? 0,
+    );
   }
 
   /// 创建新记录

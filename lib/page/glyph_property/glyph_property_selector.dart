@@ -235,8 +235,7 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = GlyphPropertyRepository();
-      final filter = GlyphPropertyFilterEntity()
-        ..id = _idController.text;
+      final filter = GlyphPropertyFilterEntity(id: _idController.text);
       final items = await repository.getGlyphProperties(filter: filter, page: _page);
       final total = await repository.countGlyphProperties(filter: filter);
       if (mounted) {

@@ -47,11 +47,12 @@ class SpellLinkedSpellViewModel {
   }
 
   SpellLinkedSpell collectFromForm() {
-    final data = SpellLinkedSpell();
-    data.spellTrigger = spellId.value;
-    data.spellEffect = _parseInt(spellEffectController.text);
-    data.type = _parseInt(typeController.text);
-    data.comment = commentController.text;
+    final data = SpellLinkedSpell(
+      spellTrigger: spellId.value,
+      spellEffect: _parseInt(spellEffectController.text),
+      type: _parseInt(typeController.text),
+      comment: commentController.text,
+    );
     return data;
   }
 

@@ -58,11 +58,11 @@ class ItemEnchantmentTemplateViewModel {
 
   /// 从表单收集数据
   ItemEnchantmentTemplate collectFromForm() {
-    final model = ItemEnchantmentTemplate();
-    model.entry = entry.value;
-    model.ench = _parseInt(enchController.text);
-    model.chance = _parseDouble(chanceController.text);
-    return model;
+    return ItemEnchantmentTemplate(
+      entry: entry.value,
+      ench: _parseInt(enchController.text),
+      chance: _parseDouble(chanceController.text),
+    );
   }
 
   int _parseInt(String text) {

@@ -1,23 +1,32 @@
 class BriefCreatureTemplate {
-  int entry = 0;
-  String name = '';
-  String subName = '';
-  String localeName = '';
-  String localeSubName = '';
-  int minLevel = 0;
-  int maxLevel = 0;
+  final int entry;
+  final String name;
+  final String subName;
+  final String localeName;
+  final String localeSubName;
+  final int minLevel;
+  final int maxLevel;
 
-  BriefCreatureTemplate();
+  const BriefCreatureTemplate({
+    this.entry = 0,
+    this.name = '',
+    this.subName = '',
+    this.localeName = '',
+    this.localeSubName = '',
+    this.minLevel = 0,
+    this.maxLevel = 0,
+  });
 
   factory BriefCreatureTemplate.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureTemplate()
-      ..entry = json['entry'] ?? 0
-      ..name = json['name'] ?? ''
-      ..subName = json['subname'] ?? ''
-      ..localeName = json['Name'] ?? ''
-      ..localeSubName = json['Title'] ?? ''
-      ..minLevel = json['minlevel'] ?? 0
-      ..maxLevel = json['maxlevel'] ?? 0;
+    return BriefCreatureTemplate(
+      entry: json['entry'] ?? 0,
+      name: json['name'] ?? '',
+      subName: json['subname'] ?? '',
+      localeName: json['Name'] ?? '',
+      localeSubName: json['Title'] ?? '',
+      minLevel: json['minlevel'] ?? 0,
+      maxLevel: json['maxlevel'] ?? 0,
+    );
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
@@ -26,121 +35,178 @@ class BriefCreatureTemplate {
 }
 
 class CreatureTemplate {
-  String aiName = '';
-  double armorModifier = 1;
-  int baseAttackTime = 0;
-  double baseVariance = 1;
-  double damageModifier = 1;
-  int difficultyEntry1 = 0;
-  int difficultyEntry2 = 0;
-  int difficultyEntry3 = 0;
-  int damageSchool = 0;
-  double detectionRange = 20;
-  int dynamicFlags = 0;
-  int entry = 0;
-  int exp = 0;
-  double experienceModifier = 1;
-  int faction = 0;
-  int family = 0;
-  int flagsExtra = 0;
-  int gossipMenuId = 0;
-  double healthModifier = 1;
-  double hoverHeight = 1;
-  String iconName = '';
-  int killCredit1 = 0;
-  int killCredit2 = 0;
-  int lootId = 0;
-  int maxGold = 0;
-  int maxLevel = 1;
-  double manaModifier = 1;
-  int minLevel = 1;
-  int minGold = 0;
-  int movementId = 0;
-  int movementType = 0;
-  String name = '';
-  int npcFlag = 0;
-  int petSpellDataId = 0;
-  int pickpocketLoot = 0;
-  int racialLeader = 0;
-  int rangeAttackTime = 0;
-  double rangeVariance = 1;
-  int rank = 0;
-  int regenHealth = 1;
-  String scriptName = '';
-  int skinLoot = 0;
-  double speedFlight = 1;
-  double speedRun = 1.14286;
-  double speedSwim = 1;
-  double speedWalk = 1;
-  String subName = '';
-  int type = 0;
-  int typeFlags = 0;
-  int unitClass = 0;
-  int unitFlags = 0;
-  int unitFlags2 = 0;
-  int vehicleId = 0;
-  int verifiedBuild = 0;
-  int creatureImmunitiesId = 0;
+  final String aiName;
+  final double armorModifier;
+  final int baseAttackTime;
+  final double baseVariance;
+  final double damageModifier;
+  final int difficultyEntry1;
+  final int difficultyEntry2;
+  final int difficultyEntry3;
+  final int damageSchool;
+  final double detectionRange;
+  final int dynamicFlags;
+  final int entry;
+  final int exp;
+  final double experienceModifier;
+  final int faction;
+  final int family;
+  final int flagsExtra;
+  final int gossipMenuId;
+  final double healthModifier;
+  final double hoverHeight;
+  final String iconName;
+  final int killCredit1;
+  final int killCredit2;
+  final int lootId;
+  final int maxGold;
+  final int maxLevel;
+  final double manaModifier;
+  final int minLevel;
+  final int minGold;
+  final int movementId;
+  final int movementType;
+  final String name;
+  final int npcFlag;
+  final int petSpellDataId;
+  final int pickpocketLoot;
+  final int racialLeader;
+  final int rangeAttackTime;
+  final double rangeVariance;
+  final int rank;
+  final int regenHealth;
+  final String scriptName;
+  final int skinLoot;
+  final double speedFlight;
+  final double speedRun;
+  final double speedSwim;
+  final double speedWalk;
+  final String subName;
+  final int type;
+  final int typeFlags;
+  final int unitClass;
+  final int unitFlags;
+  final int unitFlags2;
+  final int vehicleId;
+  final int verifiedBuild;
+  final int creatureImmunitiesId;
 
-  CreatureTemplate();
+  const CreatureTemplate({
+    this.aiName = '',
+    this.armorModifier = 1,
+    this.baseAttackTime = 0,
+    this.baseVariance = 1,
+    this.damageModifier = 1,
+    this.difficultyEntry1 = 0,
+    this.difficultyEntry2 = 0,
+    this.difficultyEntry3 = 0,
+    this.damageSchool = 0,
+    this.detectionRange = 20,
+    this.dynamicFlags = 0,
+    this.entry = 0,
+    this.exp = 0,
+    this.experienceModifier = 1,
+    this.faction = 0,
+    this.family = 0,
+    this.flagsExtra = 0,
+    this.gossipMenuId = 0,
+    this.healthModifier = 1,
+    this.hoverHeight = 1,
+    this.iconName = '',
+    this.killCredit1 = 0,
+    this.killCredit2 = 0,
+    this.lootId = 0,
+    this.maxGold = 0,
+    this.maxLevel = 1,
+    this.manaModifier = 1,
+    this.minLevel = 1,
+    this.minGold = 0,
+    this.movementId = 0,
+    this.movementType = 0,
+    this.name = '',
+    this.npcFlag = 0,
+    this.petSpellDataId = 0,
+    this.pickpocketLoot = 0,
+    this.racialLeader = 0,
+    this.rangeAttackTime = 0,
+    this.rangeVariance = 1,
+    this.rank = 0,
+    this.regenHealth = 1,
+    this.scriptName = '',
+    this.skinLoot = 0,
+    this.speedFlight = 1,
+    this.speedRun = 1.14286,
+    this.speedSwim = 1,
+    this.speedWalk = 1,
+    this.subName = '',
+    this.type = 0,
+    this.typeFlags = 0,
+    this.unitClass = 0,
+    this.unitFlags = 0,
+    this.unitFlags2 = 0,
+    this.vehicleId = 0,
+    this.verifiedBuild = 0,
+    this.creatureImmunitiesId = 0,
+  });
 
   factory CreatureTemplate.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplate()
-      ..aiName = json['AIName'] ?? ''
-      ..armorModifier = json['ArmorModifier'] ?? 1.0
-      ..baseAttackTime = json['BaseAttackTime'] ?? 0
-      ..baseVariance = json['BaseVariance'] ?? 1.0
-      ..damageModifier = json['DamageModifier'] ?? 1.0
-      ..difficultyEntry1 = json['difficulty_entry_1'] ?? 0
-      ..difficultyEntry2 = json['difficulty_entry_2'] ?? 0
-      ..difficultyEntry3 = json['difficulty_entry_3'] ?? 0
-      ..damageSchool = json['dmgschool'] ?? 0
-      ..detectionRange = (json['detection_range'] as num?)?.toDouble() ?? 20.0
-      ..dynamicFlags = json['dynamicflags'] ?? 0
-      ..entry = json['entry'] ?? 0
-      ..exp = json['exp'] ?? 0
-      ..experienceModifier = json['ExperienceModifier'] ?? 1.0
-      ..faction = json['faction'] ?? 0
-      ..family = json['family'] ?? 0
-      ..flagsExtra = json['flags_extra'] ?? 0
-      ..gossipMenuId = json['gossip_menu_id'] ?? 0
-      ..healthModifier = json['HealthModifier'] ?? 1.0
-      ..hoverHeight = json['HoverHeight'] ?? 1.0
-      ..iconName = json['IconName'] ?? ''
-      ..killCredit1 = json['KillCredit1'] ?? 0
-      ..killCredit2 = json['KillCredit2'] ?? 0
-      ..lootId = json['lootid'] ?? 0
-      ..maxGold = json['maxgold'] ?? 0
-      ..maxLevel = json['maxlevel'] ?? 1
-      ..manaModifier = json['ManaModifier'] ?? 1.0
-      ..minLevel = json['minlevel'] ?? 1
-      ..minGold = json['mingold'] ?? 0
-      ..movementId = json['movementId'] ?? 0
-      ..movementType = json['MovementType'] ?? 0
-      ..name = json['name'] ?? ''
-      ..npcFlag = json['npcflag'] ?? 0
-      ..petSpellDataId = json['PetSpellDataId'] ?? 0
-      ..pickpocketLoot = json['pickpocketloot'] ?? 0
-      ..racialLeader = json['RacialLeader'] ?? 0
-      ..rangeAttackTime = json['RangeAttackTime'] ?? 0
-      ..rangeVariance = json['RangeVariance'] ?? 1.0
-      ..rank = json['rank'] ?? 0
-      ..regenHealth = json['RegenHealth'] ?? 1
-      ..scriptName = json['ScriptName'] ?? ''
-      ..skinLoot = json['skinloot'] ?? 0
-      ..speedFlight = (json['speed_flight'] as num?)?.toDouble() ?? 1.0
-      ..speedRun = json['speed_run'] ?? 1.14286
-      ..speedSwim = (json['speed_swim'] as num?)?.toDouble() ?? 1.0
-      ..speedWalk = json['speed_walk'] ?? 1.0
-      ..subName = json['subname'] ?? ''
-      ..type = json['type'] ?? 0
-      ..typeFlags = json['type_flags'] ?? 0
-      ..unitClass = json['unit_class'] ?? 0
-      ..unitFlags = json['unit_flags'] ?? 0
-      ..unitFlags2 = json['unit_flags2'] ?? 0
-      ..vehicleId = json['VehicleId'] ?? 0
-      ..verifiedBuild = json['VerifiedBuild'] ?? 0
-      ..creatureImmunitiesId = json['CreatureImmunitiesId'] ?? 0;
+    return CreatureTemplate(
+      aiName: json['AIName'] ?? '',
+      armorModifier: json['ArmorModifier'] ?? 1.0,
+      baseAttackTime: json['BaseAttackTime'] ?? 0,
+      baseVariance: json['BaseVariance'] ?? 1.0,
+      damageModifier: json['DamageModifier'] ?? 1.0,
+      difficultyEntry1: json['difficulty_entry_1'] ?? 0,
+      difficultyEntry2: json['difficulty_entry_2'] ?? 0,
+      difficultyEntry3: json['difficulty_entry_3'] ?? 0,
+      damageSchool: json['dmgschool'] ?? 0,
+      detectionRange: (json['detection_range'] as num?)?.toDouble() ?? 20.0,
+      dynamicFlags: json['dynamicflags'] ?? 0,
+      entry: json['entry'] ?? 0,
+      exp: json['exp'] ?? 0,
+      experienceModifier: json['ExperienceModifier'] ?? 1.0,
+      faction: json['faction'] ?? 0,
+      family: json['family'] ?? 0,
+      flagsExtra: json['flags_extra'] ?? 0,
+      gossipMenuId: json['gossip_menu_id'] ?? 0,
+      healthModifier: json['HealthModifier'] ?? 1.0,
+      hoverHeight: json['HoverHeight'] ?? 1.0,
+      iconName: json['IconName'] ?? '',
+      killCredit1: json['KillCredit1'] ?? 0,
+      killCredit2: json['KillCredit2'] ?? 0,
+      lootId: json['lootid'] ?? 0,
+      maxGold: json['maxgold'] ?? 0,
+      maxLevel: json['maxlevel'] ?? 1,
+      manaModifier: json['ManaModifier'] ?? 1.0,
+      minLevel: json['minlevel'] ?? 1,
+      minGold: json['mingold'] ?? 0,
+      movementId: json['movementId'] ?? 0,
+      movementType: json['MovementType'] ?? 0,
+      name: json['name'] ?? '',
+      npcFlag: json['npcflag'] ?? 0,
+      petSpellDataId: json['PetSpellDataId'] ?? 0,
+      pickpocketLoot: json['pickpocketloot'] ?? 0,
+      racialLeader: json['RacialLeader'] ?? 0,
+      rangeAttackTime: json['RangeAttackTime'] ?? 0,
+      rangeVariance: json['RangeVariance'] ?? 1.0,
+      rank: json['rank'] ?? 0,
+      regenHealth: json['RegenHealth'] ?? 1,
+      scriptName: json['ScriptName'] ?? '',
+      skinLoot: json['skinloot'] ?? 0,
+      speedFlight: (json['speed_flight'] as num?)?.toDouble() ?? 1.0,
+      speedRun: json['speed_run'] ?? 1.14286,
+      speedSwim: (json['speed_swim'] as num?)?.toDouble() ?? 1.0,
+      speedWalk: json['speed_walk'] ?? 1.0,
+      subName: json['subname'] ?? '',
+      type: json['type'] ?? 0,
+      typeFlags: json['type_flags'] ?? 0,
+      unitClass: json['unit_class'] ?? 0,
+      unitFlags: json['unit_flags'] ?? 0,
+      unitFlags2: json['unit_flags2'] ?? 0,
+      vehicleId: json['VehicleId'] ?? 0,
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
+      creatureImmunitiesId: json['CreatureImmunitiesId'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {

@@ -2,23 +2,25 @@
 ///
 /// 每行包含 8 组 × (Text{n}_0 / Text{n}_1) 共 16 个文本字段。
 class NpcTextLocale {
-  int id = 0;
-  String locale = 'zhCN';
+  final int id;
+  final String locale;
+  final List<List<String>> texts;
 
-  /// 8 组 × 2 个文本：texts[n][0] = Text{n}_0, texts[n][1] = Text{n}_1
-  final List<List<String>> texts = List.generate(8, (_) => List.filled(2, ''));
-
-  NpcTextLocale();
+  const NpcTextLocale({
+    this.id = 0,
+    this.locale = 'zhCN',
+    this.texts = const [],
+  });
 
   factory NpcTextLocale.fromJson(Map<String, dynamic> json) {
-    var obj = NpcTextLocale();
-    obj.id = (json['ID'] ?? json['id'] ?? 0) as int;
-    obj.locale = json['Locale']?.toString() ?? 'zhCN';
-    for (var n = 0; n < 8; n++) {
-      obj.texts[n][0] = json['Text${n}_0']?.toString() ?? '';
-      obj.texts[n][1] = json['Text${n}_1']?.toString() ?? '';
-    }
-    return obj;
+    return NpcTextLocale(
+      id: (json['ID'] ?? json['id'] ?? 0) as int,
+      locale: json['Locale']?.toString() ?? 'zhCN',
+      texts: List.generate(8, (n) => [
+        json['Text${n}_0']?.toString() ?? '',
+        json['Text${n}_1']?.toString() ?? '',
+      ]),
+    );
   }
 
   Map<String, dynamic> toJson() {

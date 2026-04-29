@@ -256,9 +256,7 @@ class _DialogState extends State<_Dialog> {
       final repository = SpellRepository();
       final id = _idController.text.isEmpty ? '' : _idController.text;
       final name = _nameController.text.isEmpty ? '' : _nameController.text;
-      final filter = SpellFilterEntity()
-        ..id = id
-        ..name = name;
+      final filter = SpellFilterEntity(id: id, name: name);
       final briefs = await repository.getBriefSpells(
         page: _page,
         filter: filter,
@@ -266,11 +264,12 @@ class _DialogState extends State<_Dialog> {
       final total = await repository.countSpells(filter: filter);
       final items = briefs
           .map(
-            (b) => Spell()
-              ..id = b.id
-              ..nameLangZhCN = b.name
-              ..nameSubtextLangZhCN = b.subtext
-              ..descriptionLangZhCN = b.description,
+            (b) => Spell(
+              id: b.id,
+              nameLangZhCN: b.name,
+              nameSubtextLangZhCN: b.subtext,
+              descriptionLangZhCN: b.description,
+            ),
           )
           .toList();
       if (mounted) {
