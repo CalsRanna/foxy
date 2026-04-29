@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/creature_quest_starter.dart';
+import 'package:foxy/entity/creature_quest_starter_entity.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -41,14 +41,14 @@ class CreatureQuestStarterViewModel {
   }
 
   /// 填充表单
-  void fillForm(CreatureQuestStarter model) {
+  void fillForm(CreatureQuestStarterEntity model) {
     idController.text = model.id.toString();
     questController.text = model.quest.toString();
   }
 
   /// 从表单收集数据
-  CreatureQuestStarter collectFromForm() {
-    return CreatureQuestStarter(
+  CreatureQuestStarterEntity collectFromForm() {
+    return CreatureQuestStarterEntity(
       id: int.tryParse(idController.text) ?? 0,
       quest: int.tryParse(questController.text) ?? 0,
     );

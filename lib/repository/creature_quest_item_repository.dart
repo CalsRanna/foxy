@@ -1,11 +1,11 @@
-import 'package:foxy/entity/creature_quest_item.dart';
+import 'package:foxy/entity/creature_quest_item_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureQuestItemRepository with RepositoryMixin {
   static const _table = 'creature_questitem';
 
   /// 获取指定生物的所有任务物品（带物品信息）
-  Future<List<CreatureQuestItem>> getCreatureQuestItems(
+  Future<List<CreatureQuestItemEntity>> getCreatureQuestItems(
     int creatureEntry,
   ) async {
     try {
@@ -33,14 +33,16 @@ class CreatureQuestItemRepository with RepositoryMixin {
       builder = builder.where('cq.CreatureEntry', creatureEntry);
       builder = builder.orderBy('cq.Idx');
       var results = await builder.get();
-      return results.map((e) => CreatureQuestItem.fromJson(e.toMap())).toList();
+      return results
+          .map((e) => CreatureQuestItemEntity.fromJson(e.toMap()))
+          .toList();
     } catch (e) {
       return [];
     }
   }
 
   /// 查找单条记录
-  Future<CreatureQuestItem?> getCreatureQuestItem(
+  Future<CreatureQuestItemEntity?> getCreatureQuestItem(
     int creatureEntry,
     int idx,
   ) async {
@@ -50,19 +52,21 @@ class CreatureQuestItemRepository with RepositoryMixin {
           .where('CreatureEntry', creatureEntry)
           .where('Idx', idx)
           .first();
-      return CreatureQuestItem.fromJson(result.toMap());
+      return CreatureQuestItemEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 新增任务物品
-  Future<void> storeCreatureQuestItem(CreatureQuestItem questItem) async {
+  Future<void> storeCreatureQuestItem(CreatureQuestItemEntity questItem) async {
     await laconic.table(_table).insert([questItem.toJson()]);
   }
 
   /// 更新任务物品
-  Future<void> updateCreatureQuestItem(CreatureQuestItem questItem) async {
+  Future<void> updateCreatureQuestItem(
+    CreatureQuestItemEntity questItem,
+  ) async {
     var json = questItem.toJson();
     json.remove('CreatureEntry');
     json.remove('Idx');
@@ -83,7 +87,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
   }
 
   /// 复制任务物品
-  Future<CreatureQuestItem> copyCreatureQuestItem(
+  Future<CreatureQuestItemEntity> copyCreatureQuestItem(
     int creatureEntry,
     int idx,
   ) async {
@@ -102,7 +106,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newQuestItem = CreatureQuestItem.fromJson({
+    var newQuestItem = CreatureQuestItemEntity.fromJson({
       ...source.toJson(),
       'Idx': maxIdx + 1,
     });

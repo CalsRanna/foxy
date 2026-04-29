@@ -1,6 +1,6 @@
 import 'package:foxy/entity/creature_template.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
-import 'package:foxy/entity/creature_template_locale.dart';
+import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureTemplateRepository with RepositoryMixin {
@@ -98,18 +98,18 @@ class CreatureTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('entry', template.entry).update(json);
   }
 
-  Future<List<CreatureTemplateLocale>> getCreatureTemplateLocales(
+  Future<List<CreatureTemplateLocaleEntity>> getCreatureTemplateLocales(
     int entry,
   ) async {
     var results = await laconic.table(_localeTable).where('entry', entry).get();
     return results
-        .map((e) => CreatureTemplateLocale.fromJson(e.toMap()))
+        .map((e) => CreatureTemplateLocaleEntity.fromJson(e.toMap()))
         .toList();
   }
 
   Future<void> saveCreatureTemplateLocales(
     int entry,
-    List<CreatureTemplateLocale> locales,
+    List<CreatureTemplateLocaleEntity> locales,
   ) async {
     await laconic.transaction(() async {
       await laconic.table(_localeTable).where('entry', entry).delete();

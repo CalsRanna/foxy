@@ -1,11 +1,11 @@
-import 'package:foxy/entity/creature_template_resistance.dart';
+import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureTemplateResistanceRepository with RepositoryMixin {
   static const _table = 'creature_template_resistance';
 
   /// 获取指定生物的所有抗性
-  Future<List<CreatureTemplateResistance>> getCreatureTemplateResistances(
+  Future<List<CreatureTemplateResistanceEntity>> getCreatureTemplateResistances(
     int creatureID,
   ) async {
     try {
@@ -15,7 +15,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
       builder = builder.orderBy('School');
       var results = await builder.get();
       return results
-          .map((e) => CreatureTemplateResistance.fromJson(e.toMap()))
+          .map((e) => CreatureTemplateResistanceEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];
@@ -23,7 +23,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureTemplateResistance?> getCreatureTemplateResistance(
+  Future<CreatureTemplateResistanceEntity?> getCreatureTemplateResistance(
     int creatureID,
     int school,
   ) async {
@@ -33,7 +33,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
           .where('CreatureID', creatureID)
           .where('School', school)
           .first();
-      return CreatureTemplateResistance.fromJson(result.toMap());
+      return CreatureTemplateResistanceEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -41,14 +41,14 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
 
   /// 新增抗性
   Future<void> storeCreatureTemplateResistance(
-    CreatureTemplateResistance resistance,
+    CreatureTemplateResistanceEntity resistance,
   ) async {
     await laconic.table(_table).insert([resistance.toJson()]);
   }
 
   /// 更新抗性
   Future<void> updateCreatureTemplateResistance(
-    CreatureTemplateResistance resistance,
+    CreatureTemplateResistanceEntity resistance,
   ) async {
     var json = resistance.toJson();
     json.remove('CreatureID');
@@ -73,7 +73,7 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   }
 
   /// 复制抗性
-  Future<CreatureTemplateResistance> copyCreatureTemplateResistance(
+  Future<CreatureTemplateResistanceEntity> copyCreatureTemplateResistance(
     int creatureID,
     int school,
   ) async {
@@ -92,7 +92,9 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newResistance = CreatureTemplateResistance.fromJson(source.toJson());
+    var newResistance = CreatureTemplateResistanceEntity.fromJson(
+      source.toJson(),
+    );
     newResistance.school = maxSchool + 1;
 
     await storeCreatureTemplateResistance(newResistance);

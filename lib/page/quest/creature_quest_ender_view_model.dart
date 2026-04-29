@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/creature_quest_ender.dart';
+import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -21,8 +21,8 @@ class CreatureQuestEnderViewModel {
   final repository = CreatureQuestEnderRepository();
 
   /// 从表单收集数据
-  CreatureQuestEnder collectFromForm() {
-    return CreatureQuestEnder(
+  CreatureQuestEnderEntity collectFromForm() {
+    return CreatureQuestEnderEntity(
       id: int.tryParse(idController.text) ?? 0,
       quest: int.tryParse(questController.text) ?? 0,
     );
@@ -145,7 +145,7 @@ class CreatureQuestEnderViewModel {
   }
 
   /// 填充表单
-  void fillForm(CreatureQuestEnder model) {
+  void fillForm(CreatureQuestEnderEntity model) {
     idController.text = model.id.toString();
     questController.text = model.quest.toString();
   }

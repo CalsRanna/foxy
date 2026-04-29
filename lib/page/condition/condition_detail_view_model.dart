@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/condition.dart';
+import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -32,7 +32,7 @@ class ConditionDetailViewModel {
   final scriptNameController = TextEditingController();
   final commentController = TextEditingController();
 
-  final condition = signal<Condition?>(null);
+  final condition = signal<ConditionEntity?>(null);
   final saving = signal(false);
   Map<String, dynamic>? _originalCredential;
 
@@ -48,7 +48,7 @@ class ConditionDetailViewModel {
     }
   }
 
-  void _initControllers(Condition c) {
+  void _initControllers(ConditionEntity c) {
     sourceTypeOrReferenceIdController.text = c.sourceTypeOrReferenceId
         .toString();
     sourceGroupController.text = c.sourceGroup.toString();
@@ -98,8 +98,8 @@ class ConditionDetailViewModel {
     routerFacade.goBack();
   }
 
-  Condition _collectFromControllers() {
-    final c = Condition(
+  ConditionEntity _collectFromControllers() {
+    final c = ConditionEntity(
       sourceTypeOrReferenceId: _parseInt(
         sourceTypeOrReferenceIdController.text,
       ),
@@ -130,7 +130,7 @@ class ConditionDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, Condition c) {
+  void _logActivity(ActivityActionType action, ConditionEntity c) {
     final log = ActivityLogEntity(
       module: 'conditions',
       actionType: action,

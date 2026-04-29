@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/creature_equip_template.dart';
+import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -57,8 +57,8 @@ class CreatureEquipTemplateViewModel {
   }
 
   /// 从表单收集数据
-  CreatureEquipTemplate collectFromForm() {
-    final equip = CreatureEquipTemplate(
+  CreatureEquipTemplateEntity collectFromForm() {
+    final equip = CreatureEquipTemplateEntity(
       creatureID: creatureId.value,
       id: _parseInt(idController.text),
       itemID1: _parseInt(itemID1Controller.text),

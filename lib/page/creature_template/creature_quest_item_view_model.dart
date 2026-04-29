@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/creature_quest_item.dart';
+import 'package:foxy/entity/creature_quest_item_entity.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -10,7 +10,7 @@ class CreatureQuestItemViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final creatureEntry = signal(0);
-  final items = signal<List<CreatureQuestItem>>([]);
+  final items = signal<List<CreatureQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -44,15 +44,15 @@ class CreatureQuestItemViewModel {
   }
 
   /// 填充表单
-  void fillForm(CreatureQuestItem questItem) {
+  void fillForm(CreatureQuestItemEntity questItem) {
     idxController.text = questItem.idx.toString();
     itemIdController.text = questItem.itemId.toString();
     verifiedBuildController.text = questItem.verifiedBuild.toString();
   }
 
   /// 从表单收集数据
-  CreatureQuestItem collectFromForm() {
-    final questItem = CreatureQuestItem(
+  CreatureQuestItemEntity collectFromForm() {
+    final questItem = CreatureQuestItemEntity(
       creatureEntry: creatureEntry.value,
       idx: _parseInt(idxController.text),
       itemId: _parseInt(itemIdController.text),

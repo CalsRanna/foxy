@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/condition.dart';
+import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/condition_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
@@ -18,7 +18,7 @@ class ConditionListViewModel {
   final repository = ConditionRepository();
 
   final page = signal(1);
-  final conditions = signal<List<Condition>>([]);
+  final conditions = signal<List<ConditionEntity>>([]);
   final total = signal(0);
 
   final routerFacade = GetIt.instance.get<RouterFacade>();
@@ -46,7 +46,7 @@ class ConditionListViewModel {
     await _refresh();
   }
 
-  void navigateToDetail({Condition? condition}) {
+  void navigateToDetail({ConditionEntity? condition}) {
     final id = condition != null
         ? 'condition_${condition.sourceTypeOrReferenceId}_${condition.sourceEntry}'
         : 'condition_new';
@@ -65,7 +65,7 @@ class ConditionListViewModel {
     );
   }
 
-  Future<void> copyCondition(Condition condition) async {
+  Future<void> copyCondition(ConditionEntity condition) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -85,7 +85,7 @@ class ConditionListViewModel {
     }
   }
 
-  Future<void> deleteCondition(Condition condition) async {
+  Future<void> deleteCondition(ConditionEntity condition) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
@@ -113,7 +113,7 @@ class ConditionListViewModel {
     );
   }
 
-  Future<List<Condition>> _search() async {
+  Future<List<ConditionEntity>> _search() async {
     return repository.getConditions(filter: _buildFilter(), page: page.value);
   }
 
@@ -126,7 +126,7 @@ class ConditionListViewModel {
     total.value = await _count();
   }
 
-  void _logActivity(ActivityActionType action, Condition c) {
+  void _logActivity(ActivityActionType action, ConditionEntity c) {
     final log = ActivityLogEntity(
       module: 'conditions',
       actionType: action,

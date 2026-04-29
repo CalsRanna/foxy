@@ -1,4 +1,4 @@
-import 'package:foxy/entity/creature_equip_template.dart';
+import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureEquipTemplateRepository with RepositoryMixin {
@@ -84,7 +84,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureEquipTemplate?> getCreatureEquipTemplate(
+  Future<CreatureEquipTemplateEntity?> getCreatureEquipTemplate(
     int creatureID,
     int id,
   ) async {
@@ -94,19 +94,23 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
           .where('CreatureID', creatureID)
           .where('ID', id)
           .first();
-      return CreatureEquipTemplate.fromJson(result.toMap());
+      return CreatureEquipTemplateEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 新增装备模板
-  Future<void> storeCreatureEquipTemplate(CreatureEquipTemplate equip) async {
+  Future<void> storeCreatureEquipTemplate(
+    CreatureEquipTemplateEntity equip,
+  ) async {
     await laconic.table(_table).insert([equip.toJson()]);
   }
 
   /// 更新装备模板
-  Future<void> updateCreatureEquipTemplate(CreatureEquipTemplate equip) async {
+  Future<void> updateCreatureEquipTemplate(
+    CreatureEquipTemplateEntity equip,
+  ) async {
     var json = equip.toJson();
     json.remove('CreatureID');
     json.remove('ID');
@@ -127,7 +131,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   }
 
   /// 复制装备模板
-  Future<CreatureEquipTemplate> copyCreatureEquipTemplate(
+  Future<CreatureEquipTemplateEntity> copyCreatureEquipTemplate(
     int creatureID,
     int id,
   ) async {
@@ -148,7 +152,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
     // 创建新记录
     final sourceJson = source.toJson();
     sourceJson['ID'] = maxId + 1;
-    var newEquip = CreatureEquipTemplate.fromJson(sourceJson);
+    var newEquip = CreatureEquipTemplateEntity.fromJson(sourceJson);
 
     await storeCreatureEquipTemplate(newEquip);
     return newEquip;

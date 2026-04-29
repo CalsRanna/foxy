@@ -1,5 +1,5 @@
 /// 宠物技能数据 — 对应 foxy.dbc_creature_spell_data 表
-class CreatureSpellData {
+class CreatureSpellDataEntity {
   final int id;
   final int spells0;
   final int spells1;
@@ -10,7 +10,7 @@ class CreatureSpellData {
   final int availability2;
   final int availability3;
 
-  const CreatureSpellData({
+  const CreatureSpellDataEntity({
     this.id = 0,
     this.spells0 = 0,
     this.spells1 = 0,
@@ -22,8 +22,8 @@ class CreatureSpellData {
     this.availability3 = 0,
   });
 
-  factory CreatureSpellData.fromJson(Map<String, dynamic> json) {
-    return CreatureSpellData(
+  factory CreatureSpellDataEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureSpellDataEntity(
       id: json['ID'] ?? 0,
       spells0: json['Spells0'] ?? 0,
       spells1: json['Spells1'] ?? 0,

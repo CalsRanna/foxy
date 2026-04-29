@@ -1,11 +1,11 @@
-class CreatureModelInfo {
+class CreatureModelInfoEntity {
   final int displayId;
   final double boundingRadius;
   final double combatReach;
   final int gender;
   final int displayIdOtherGender;
 
-  const CreatureModelInfo({
+  const CreatureModelInfoEntity({
     this.displayId = 0,
     this.boundingRadius = 0.0,
     this.combatReach = 0.0,
@@ -13,8 +13,8 @@ class CreatureModelInfo {
     this.displayIdOtherGender = 0,
   });
 
-  factory CreatureModelInfo.fromJson(Map<String, dynamic> json) {
-    return CreatureModelInfo(
+  factory CreatureModelInfoEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureModelInfoEntity(
       displayId: json['DisplayID'] ?? 0,
       boundingRadius: (json['BoundingRadius'] ?? 0).toDouble(),
       combatReach: (json['CombatReach'] ?? 0).toDouble(),

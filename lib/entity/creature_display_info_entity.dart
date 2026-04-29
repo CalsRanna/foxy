@@ -1,5 +1,5 @@
 /// 生物显示信息 — 对应 foxy.dbc_creature_display_info 表
-class CreatureDisplayInfo {
+class CreatureDisplayInfoEntity {
   final int id;
   final int modelId;
   final int soundId;
@@ -17,7 +17,7 @@ class CreatureDisplayInfo {
   final int creatureGeosetData;
   final int objectEffectPackageID;
 
-  const CreatureDisplayInfo({
+  const CreatureDisplayInfoEntity({
     this.id = 0,
     this.modelId = 0,
     this.soundId = 0,
@@ -36,8 +36,8 @@ class CreatureDisplayInfo {
     this.objectEffectPackageID = 0,
   });
 
-  factory CreatureDisplayInfo.fromJson(Map<String, dynamic> json) {
-    return CreatureDisplayInfo(
+  factory CreatureDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureDisplayInfoEntity(
       id: json['ID'] ?? 0,
       modelId: json['ModelID'] ?? 0,
       soundId: json['SoundID'] ?? 0,

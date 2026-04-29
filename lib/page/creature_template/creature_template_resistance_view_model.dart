@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/creature_template_resistance.dart';
+import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -10,7 +10,7 @@ class CreatureTemplateResistanceViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final creatureId = signal(0);
-  final items = signal<List<CreatureTemplateResistance>>([]);
+  final items = signal<List<CreatureTemplateResistanceEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -46,15 +46,15 @@ class CreatureTemplateResistanceViewModel {
   }
 
   /// 填充表单
-  void fillForm(CreatureTemplateResistance resistance) {
+  void fillForm(CreatureTemplateResistanceEntity resistance) {
     schoolController.value = {resistance.school};
     resistanceController.text = resistance.resistance.toString();
     verifiedBuildController.text = resistance.verifiedBuild.toString();
   }
 
   /// 从表单收集数据
-  CreatureTemplateResistance collectFromForm() {
-    final resistance = CreatureTemplateResistance();
+  CreatureTemplateResistanceEntity collectFromForm() {
+    final resistance = CreatureTemplateResistanceEntity();
     resistance.creatureID = creatureId.value;
     resistance.school = schoolController.value.firstOrNull ?? 0;
     resistance.resistance = _parseInt(resistanceController.text);

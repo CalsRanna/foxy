@@ -1,14 +1,14 @@
-class CreatureTemplateLocale {
+class CreatureTemplateLocaleEntity {
   int entry = 0;
   String locale = '';
   String name = '';
   String title = '';
   int verifiedBuild = 0;
 
-  CreatureTemplateLocale();
+  CreatureTemplateLocaleEntity();
 
-  factory CreatureTemplateLocale.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateLocale()
+  factory CreatureTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateLocaleEntity()
       ..entry = json['entry'] ?? 0
       ..locale = json['locale'] ?? ''
       ..name = json['Name'] ?? ''
@@ -26,14 +26,14 @@ class CreatureTemplateLocale {
     };
   }
 
-  CreatureTemplateLocale copyWith({
+  CreatureTemplateLocaleEntity copyWith({
     int? entry,
     String? locale,
     String? name,
     String? title,
     int? verifiedBuild,
   }) {
-    return CreatureTemplateLocale()
+    return CreatureTemplateLocaleEntity()
       ..entry = entry ?? this.entry
       ..locale = locale ?? this.locale
       ..name = name ?? this.name

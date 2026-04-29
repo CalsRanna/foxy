@@ -1,4 +1,4 @@
-import 'package:foxy/entity/creature_quest_starter.dart';
+import 'package:foxy/entity/creature_quest_starter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// creature_queststarter 表的数据访问层
@@ -14,18 +14,20 @@ class CreatureQuestStarterRepository with RepositoryMixin {
   }
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
-  Future<CreatureQuestStarter> createCreatureQuestStarter(int questId) async {
+  Future<CreatureQuestStarterEntity> createCreatureQuestStarter(
+    int questId,
+  ) async {
     try {
       final result = await laconic.table(_table).where('quest', questId).select(
         ['MAX(id) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      return CreatureQuestStarter(
+      return CreatureQuestStarterEntity(
         quest: questId,
         id: maxId == null ? 0 : maxId + 1,
       );
     } catch (e) {
-      return CreatureQuestStarter(quest: questId, id: 0);
+      return CreatureQuestStarterEntity(quest: questId, id: 0);
     }
   }
 
@@ -38,7 +40,7 @@ class CreatureQuestStarterRepository with RepositoryMixin {
   }
 
   /// 按复合键查找
-  Future<CreatureQuestStarter?> getCreatureQuestStarter(
+  Future<CreatureQuestStarterEntity?> getCreatureQuestStarter(
     Map<String, dynamic> id,
   ) async {
     try {
@@ -47,7 +49,7 @@ class CreatureQuestStarterRepository with RepositoryMixin {
         builder = builder.where(k, v);
       });
       final result = await builder.first();
-      return CreatureQuestStarter.fromJson(result.toMap());
+      return CreatureQuestStarterEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -79,13 +81,15 @@ class CreatureQuestStarterRepository with RepositoryMixin {
     }
   }
 
-  Future<void> storeCreatureQuestStarter(CreatureQuestStarter model) async {
+  Future<void> storeCreatureQuestStarter(
+    CreatureQuestStarterEntity model,
+  ) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   Future<void> updateCreatureQuestStarter(
     Map<String, dynamic> id,
-    CreatureQuestStarter model,
+    CreatureQuestStarterEntity model,
   ) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {

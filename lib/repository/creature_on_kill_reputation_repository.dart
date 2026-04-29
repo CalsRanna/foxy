@@ -1,11 +1,11 @@
-import 'package:foxy/entity/creature_onkill_reputation.dart';
+import 'package:foxy/entity/creature_onkill_reputation_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureOnKillReputationRepository with RepositoryMixin {
   static const _table = 'creature_onkill_reputation';
 
   /// 获取指定生物的击杀声望
-  Future<CreatureOnKillReputation?> getCreatureOnKillReputation(
+  Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
     int creatureID,
   ) async {
     try {
@@ -13,7 +13,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
       builder = builder.select(['*']);
       builder = builder.where('creature_id', creatureID);
       var result = await builder.first();
-      return CreatureOnKillReputation.fromJson(result.toMap());
+      return CreatureOnKillReputationEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
@@ -21,14 +21,14 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
 
   /// 新增击杀声望
   Future<void> storeCreatureOnKillReputation(
-    CreatureOnKillReputation rep,
+    CreatureOnKillReputationEntity rep,
   ) async {
     await laconic.table(_table).insert([rep.toJson()]);
   }
 
   /// 更新击杀声望
   Future<void> updateCreatureOnKillReputation(
-    CreatureOnKillReputation rep,
+    CreatureOnKillReputationEntity rep,
   ) async {
     var json = rep.toJson();
     json.remove('creature_id');
@@ -40,7 +40,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
 
   /// 保存（新增或更新）
   Future<void> saveCreatureOnKillReputation(
-    CreatureOnKillReputation rep,
+    CreatureOnKillReputationEntity rep,
   ) async {
     var existing = await getCreatureOnKillReputation(rep.creatureID);
     if (existing == null) {

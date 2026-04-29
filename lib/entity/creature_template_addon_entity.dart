@@ -1,5 +1,5 @@
 /// 生物模板附加数据
-class CreatureTemplateAddon {
+class CreatureTemplateAddonEntity {
   int entry = 0;
   int pathId = 0;
   int mount = 0;
@@ -9,10 +9,10 @@ class CreatureTemplateAddon {
   int visibilityDistanceType = 0;
   String auras = '';
 
-  CreatureTemplateAddon();
+  CreatureTemplateAddonEntity();
 
-  factory CreatureTemplateAddon.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateAddon()
+  factory CreatureTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateAddonEntity()
       ..entry = json['entry'] ?? 0
       ..pathId = json['path_id'] ?? 0
       ..mount = json['mount'] ?? 0

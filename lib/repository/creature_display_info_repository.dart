@@ -1,4 +1,4 @@
-import 'package:foxy/entity/creature_display_info.dart';
+import 'package:foxy/entity/creature_display_info_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureDisplayInfoRepository with RepositoryMixin {
@@ -82,7 +82,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<CreatureDisplayInfo?> getById(int id) async {
+  Future<CreatureDisplayInfoEntity?> getById(int id) async {
     try {
       var builder = laconic.table('$_table AS cdi');
       builder = builder.select([
@@ -109,7 +109,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
         (join) => join.on('cdi.ModelID', 'cmd.ID'),
       );
       var result = await builder.where('cdi.ID', id).first();
-      return CreatureDisplayInfo.fromJson(result.toMap());
+      return CreatureDisplayInfoEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
