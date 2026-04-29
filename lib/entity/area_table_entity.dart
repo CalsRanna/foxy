@@ -1,4 +1,4 @@
-class AreaTable {
+class AreaTableEntity {
   final int id;
   final int continentId;
   final int parentAreaId;
@@ -20,7 +20,7 @@ class AreaTable {
   final double ambientMultiplier;
   final int lightId;
 
-  const AreaTable({
+  const AreaTableEntity({
     this.id = 0,
     this.continentId = 0,
     this.parentAreaId = 0,
@@ -43,8 +43,8 @@ class AreaTable {
     this.lightId = 0,
   });
 
-  factory AreaTable.fromJson(Map<String, dynamic> json) {
-    return AreaTable(
+  factory AreaTableEntity.fromJson(Map<String, dynamic> json) {
+    return AreaTableEntity(
       id: json['ID'] ?? 0,
       continentId: json['ContinentID'] ?? 0,
       parentAreaId: json['ParentAreaID'] ?? 0,
@@ -63,7 +63,8 @@ class AreaTable {
       liquidTypeId2: json['LiquidTypeID2'] ?? 0,
       liquidTypeId3: json['LiquidTypeID3'] ?? 0,
       minElevation: (json['MinElevation'] as num?)?.toDouble() ?? 0.0,
-      ambientMultiplier: (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0,
+      ambientMultiplier:
+          (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0,
       lightId: json['LightID'] ?? 0,
     );
   }

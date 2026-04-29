@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/area_table.dart';
+import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';

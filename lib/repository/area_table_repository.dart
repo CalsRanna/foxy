@@ -1,11 +1,11 @@
-import 'package:foxy/entity/area_table.dart';
+import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class AreaTableRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_area_table';
 
-  Future<List<AreaTable>> getAreaTables({
+  Future<List<AreaTableEntity>> getAreaTables({
     int page = 1,
     AreaTableFilterEntity? filter,
   }) async {
@@ -14,7 +14,7 @@ class AreaTableRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => AreaTable.fromJson(e.toMap())).toList();
+    return results.map((e) => AreaTableEntity.fromJson(e.toMap())).toList();
   }
 
   Future<List<BriefAreaTable>> getBriefAreaTables({
@@ -44,19 +44,19 @@ class AreaTableRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<AreaTable?> getAreaTable(int id) async {
+  Future<AreaTableEntity?> getAreaTable(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return AreaTable.fromJson(result.toMap());
+    return AreaTableEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeAreaTable(AreaTable area) async {
+  Future<void> storeAreaTable(AreaTableEntity area) async {
     var json = area.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateAreaTable(AreaTable area) async {
+  Future<void> updateAreaTable(AreaTableEntity area) async {
     var json = area.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', area.id).update(json);
