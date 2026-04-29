@@ -1,10 +1,10 @@
-import 'package:foxy/entity/item_random_properties.dart';
+import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemRandomPropertiesRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_random_properties';
 
-  Future<List<ItemRandomProperties>> getItemRandomProperties({
+  Future<List<ItemRandomPropertiesEntity>> getItemRandomProperties({
     String? id,
     String? name,
     required int page,
@@ -15,7 +15,7 @@ class ItemRandomPropertiesRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
-        .map((e) => ItemRandomProperties.fromJson(e.toMap()))
+        .map((e) => ItemRandomPropertiesEntity.fromJson(e.toMap()))
         .toList();
   }
 

@@ -1,4 +1,4 @@
-class BriefGossipMenu {
+class BriefGossipMenuEntity {
   final int menuId;
   final int textId;
   final String text00;
@@ -6,7 +6,7 @@ class BriefGossipMenu {
   final String textLocale00;
   final String textLocale01;
 
-  const BriefGossipMenu({
+  const BriefGossipMenuEntity({
     this.menuId = 0,
     this.textId = 0,
     this.text00 = '',
@@ -15,8 +15,8 @@ class BriefGossipMenu {
     this.textLocale01 = '',
   });
 
-  factory BriefGossipMenu.fromJson(Map<String, dynamic> json) {
-    return BriefGossipMenu(
+  factory BriefGossipMenuEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGossipMenuEntity(
       menuId: json['MenuID'] ?? json['menuid'] ?? 0,
       textId: json['TextID'] ?? json['textid'] ?? 0,
       text00: json['text0_0']?.toString() ?? '',

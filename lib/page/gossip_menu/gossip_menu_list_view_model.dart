@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/gossip_menu.dart';
+import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
@@ -18,7 +18,7 @@ class GossipMenuListViewModel {
   final menuIdController = TextEditingController();
   final textController = TextEditingController();
 
-  final menus = signal<List<BriefGossipMenu>>([]);
+  final menus = signal<List<BriefGossipMenuEntity>>([]);
   final page = signal(1);
   final total = signal(0);
 

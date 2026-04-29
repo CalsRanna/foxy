@@ -1,18 +1,18 @@
-class GlyphProperty {
+class GlyphPropertyEntity {
   final int id;
   final int spellId;
   final int glyphSlotFlags;
   final int spellIconId;
 
-  const GlyphProperty({
+  const GlyphPropertyEntity({
     this.id = 0,
     this.spellId = 0,
     this.glyphSlotFlags = 0,
     this.spellIconId = 0,
   });
 
-  factory GlyphProperty.fromJson(Map<String, dynamic> json) {
-    return GlyphProperty(
+  factory GlyphPropertyEntity.fromJson(Map<String, dynamic> json) {
+    return GlyphPropertyEntity(
       id: json['ID'] ?? 0,
       spellId: json['SpellID'] ?? 0,
       glyphSlotFlags: json['GlyphSlotFlags'] ?? 0,

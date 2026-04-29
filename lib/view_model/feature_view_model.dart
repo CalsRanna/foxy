@@ -1,16 +1,16 @@
-import 'package:foxy/entity/feature.dart';
+import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:signals/signals.dart';
 
 class FeatureViewModel {
   final FeatureRepository _repository = FeatureRepository();
 
-  final allFeatures = signal<List<Feature>>([]);
+  final allFeatures = signal<List<FeatureEntity>>([]);
 
-  List<Feature> get pinnedFeatures =>
+  List<FeatureEntity> get pinnedFeatures =>
       allFeatures.value.where((f) => f.isPinned).toList();
 
-  List<Feature> get favoriteFeatures =>
+  List<FeatureEntity> get favoriteFeatures =>
       allFeatures.value.where((f) => f.isFavorite).toList();
 
   Future<void> load() async {

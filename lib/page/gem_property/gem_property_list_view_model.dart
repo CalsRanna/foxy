@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/gem_property.dart';
+import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
@@ -17,7 +17,7 @@ class GemPropertyListViewModel {
   final repository = GemPropertyRepository();
 
   final page = signal(1);
-  final properties = signal(<GemProperty>[]);
+  final properties = signal(<GemPropertyEntity>[]);
   final total = signal(0);
 
   Future<void> copyGemProperty(int id) async {

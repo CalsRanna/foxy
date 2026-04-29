@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/gem_property.dart';
+import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -21,7 +21,7 @@ class GemPropertyDetailViewModel {
   final maxcountItemController = TextEditingController();
   final typeController = TextEditingController();
 
-  final property = signal(GemProperty());
+  final property = signal(GemPropertyEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -58,12 +58,12 @@ class GemPropertyDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 GemProperty
-  GemProperty _collectFromControllers() {
-    return GemProperty(
+  GemPropertyEntity _collectFromControllers() {
+    return GemPropertyEntity(
       id: _parseInt(idController.text),
       enchantId: _parseInt(enchantIdController.text),
-      maxcountInv: _parseInt(maxcountInvController.text),
-      maxcountItem: _parseInt(maxcountItemController.text),
+      maxCountInv: _parseInt(maxcountInvController.text),
+      maxCountItem: _parseInt(maxcountItemController.text),
       type: _parseInt(typeController.text),
     );
   }
@@ -75,7 +75,7 @@ class GemPropertyDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, GemProperty t) {
+  void _logActivity(ActivityActionType action, GemPropertyEntity t) {
     final log = ActivityLogEntity(
       module: 'gem_property',
       actionType: action,
@@ -104,11 +104,11 @@ class GemPropertyDetailViewModel {
     }
   }
 
-  void _initControllers(GemProperty gemProperty) {
+  void _initControllers(GemPropertyEntity gemProperty) {
     idController.text = gemProperty.id.toString();
     enchantIdController.text = gemProperty.enchantId.toString();
-    maxcountInvController.text = gemProperty.maxcountInv.toString();
-    maxcountItemController.text = gemProperty.maxcountItem.toString();
+    maxcountInvController.text = gemProperty.maxCountInv.toString();
+    maxcountItemController.text = gemProperty.maxCountItem.toString();
     typeController.text = gemProperty.type.toString();
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/feature.dart';
+import 'package:foxy/entity/feature_entity.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 const _kFeatureIconMap = <String, IconData>{
@@ -27,7 +27,7 @@ const _kFeatureIconMap = <String, IconData>{
 };
 
 class FeatureCard extends StatefulWidget {
-  final Feature feature;
+  final FeatureEntity feature;
   final bool seamless;
   final Border? border;
   final VoidCallback onTap;

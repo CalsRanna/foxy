@@ -1,4 +1,4 @@
-class EmoteText {
+class EmoteTextEntity {
   final int id;
   final String name;
   final int emoteId;
@@ -19,7 +19,7 @@ class EmoteText {
   final int emoteText14;
   final int emoteText15;
 
-  const EmoteText({
+  const EmoteTextEntity({
     this.id = 0,
     this.name = '',
     this.emoteId = 0,
@@ -41,8 +41,8 @@ class EmoteText {
     this.emoteText15 = 0,
   });
 
-  factory EmoteText.fromJson(Map<String, dynamic> json) {
-    return EmoteText(
+  factory EmoteTextEntity.fromJson(Map<String, dynamic> json) {
+    return EmoteTextEntity(
       id: json['ID'] ?? 0,
       name: json['Name'] ?? '',
       emoteId: json['EmoteID'] ?? 0,

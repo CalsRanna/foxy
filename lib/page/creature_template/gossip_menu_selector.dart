@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/gossip_menu.dart';
+import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -62,7 +62,7 @@ class _DialogState extends State<_Dialog> {
   final _menuIdController = TextEditingController();
   final _textController = TextEditingController();
 
-  List<BriefGossipMenu> _items = [];
+  List<BriefGossipMenuEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

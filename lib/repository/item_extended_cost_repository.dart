@@ -1,11 +1,11 @@
-import 'package:foxy/entity/item_extended_cost.dart';
+import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemExtendedCostRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
 
-  Future<List<ItemExtendedCost>> getItemExtendedCosts({
+  Future<List<ItemExtendedCostEntity>> getItemExtendedCosts({
     int page = 1,
     ItemExtendedCostFilterEntity? filter,
   }) async {
@@ -14,7 +14,9 @@ class ItemExtendedCostRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => ItemExtendedCost.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => ItemExtendedCostEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<int> countItemExtendedCosts({
@@ -25,19 +27,19 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return await builder.count();
   }
 
-  Future<ItemExtendedCost?> getItemExtendedCost(int id) async {
+  Future<ItemExtendedCostEntity?> getItemExtendedCost(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return ItemExtendedCost.fromJson(result.toMap());
+    return ItemExtendedCostEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeItemExtendedCost(ItemExtendedCost data) async {
+  Future<void> storeItemExtendedCost(ItemExtendedCostEntity data) async {
     var json = data.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateItemExtendedCost(ItemExtendedCost data) async {
+  Future<void> updateItemExtendedCost(ItemExtendedCostEntity data) async {
     var json = data.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', data.id).update(json);

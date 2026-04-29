@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/item_enchantment_template.dart';
+import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';

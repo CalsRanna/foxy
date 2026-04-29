@@ -1,11 +1,11 @@
-class GameObjectTemplateLocale {
+class GameObjectTemplateLocaleEntity {
   final int entry;
   final String locale;
   final String name;
   final String castBarCaption;
   final int verifiedBuild;
 
-  const GameObjectTemplateLocale({
+  const GameObjectTemplateLocaleEntity({
     this.entry = 0,
     this.locale = '',
     this.name = '',
@@ -13,8 +13,8 @@ class GameObjectTemplateLocale {
     this.verifiedBuild = 0,
   });
 
-  factory GameObjectTemplateLocale.fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplateLocale(
+  factory GameObjectTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return GameObjectTemplateLocaleEntity(
       entry: json['entry'] ?? 0,
       locale: json['locale'] ?? '',
       name: json['name'] ?? '',
@@ -33,14 +33,14 @@ class GameObjectTemplateLocale {
     };
   }
 
-  GameObjectTemplateLocale copyWith({
+  GameObjectTemplateLocaleEntity copyWith({
     int? entry,
     String? locale,
     String? name,
     String? castBarCaption,
     int? verifiedBuild,
   }) {
-    return GameObjectTemplateLocale(
+    return GameObjectTemplateLocaleEntity(
       entry: entry ?? this.entry,
       locale: locale ?? this.locale,
       name: name ?? this.name,

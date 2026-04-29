@@ -1,15 +1,15 @@
-import 'package:foxy/entity/feature.dart';
+import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class FeatureRepository with RepositoryMixin {
-  Future<List<Feature>> getAll() async {
+  Future<List<FeatureEntity>> getAll() async {
     final rows = await laconic
         .table('foxy.features')
         .select(['*'])
         .orderBy('sort_order')
         .get();
 
-    return rows.map((row) => Feature.fromJson(row.toMap())).toList();
+    return rows.map((row) => FeatureEntity.fromJson(row.toMap())).toList();
   }
 
   Future<void> updatePinned(int id, bool pinned) async {

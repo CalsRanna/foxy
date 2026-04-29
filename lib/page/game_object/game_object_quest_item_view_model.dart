@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/game_object_questitem.dart';
+import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/game_object_template_addon.dart';
+import 'package:foxy/entity/game_object_template_addon_entity.dart';
 import 'package:foxy/repository/game_object_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';

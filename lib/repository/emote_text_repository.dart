@@ -1,11 +1,11 @@
-import 'package:foxy/entity/emote_text.dart';
+import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class EmoteTextRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_emotes_text';
 
-  Future<List<EmoteText>> getEmoteTexts({
+  Future<List<EmoteTextEntity>> getEmoteTexts({
     int page = 1,
     EmoteTextFilterEntity? filter,
   }) async {
@@ -14,7 +14,7 @@ class EmoteTextRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => EmoteText.fromJson(e.toMap())).toList();
+    return results.map((e) => EmoteTextEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countEmoteTexts({EmoteTextFilterEntity? filter}) async {
@@ -23,19 +23,19 @@ class EmoteTextRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<EmoteText?> getEmoteText(int id) async {
+  Future<EmoteTextEntity?> getEmoteText(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return EmoteText.fromJson(result.toMap());
+    return EmoteTextEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeEmoteText(EmoteText data) async {
+  Future<void> storeEmoteText(EmoteTextEntity data) async {
     var json = data.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateEmoteText(EmoteText data) async {
+  Future<void> updateEmoteText(EmoteTextEntity data) async {
     var json = data.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', data.id).update(json);

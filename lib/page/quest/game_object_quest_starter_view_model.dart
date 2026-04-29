@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/game_object_quest_starter.dart';
+import 'package:foxy/entity/game_object_quest_starter_entity.dart';
 import 'package:foxy/repository/game_object_quest_starter_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -41,14 +41,14 @@ class GameObjectQuestStarterViewModel {
   }
 
   /// 填充表单
-  void fillForm(GameObjectQuestStarter model) {
+  void fillForm(GameObjectQuestStarterEntity model) {
     idController.text = model.id.toString();
     questController.text = model.quest.toString();
   }
 
   /// 从表单收集数据
-  GameObjectQuestStarter collectFromForm() {
-    return GameObjectQuestStarter(
+  GameObjectQuestStarterEntity collectFromForm() {
+    return GameObjectQuestStarterEntity(
       id: int.tryParse(idController.text) ?? 0,
       quest: int.tryParse(questController.text) ?? 0,
     );

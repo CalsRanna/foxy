@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/item_extended_cost.dart';
+import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -66,7 +66,7 @@ class _ItemExtendedCostSelectorDialogState
     extends State<_ItemExtendedCostSelectorDialog> {
   final _idController = TextEditingController();
 
-  List<ItemExtendedCost> _items = [];
+  List<ItemExtendedCostEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

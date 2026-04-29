@@ -1,11 +1,11 @@
-import 'package:foxy/entity/creature_template_spell.dart';
+import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureTemplateSpellRepository with RepositoryMixin {
   static const _table = 'creature_template_spell';
 
   /// 获取指定生物的所有技能（带技能信息）
-  Future<List<CreatureTemplateSpell>> getCreatureTemplateSpells(
+  Future<List<CreatureTemplateSpellEntity>> getCreatureTemplateSpells(
     int creatureID,
   ) async {
     try {
@@ -24,7 +24,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
       builder = builder.orderBy('cts.`Index`');
       var results = await builder.get();
       return results
-          .map((e) => CreatureTemplateSpell.fromJson(e.toMap()))
+          .map((e) => CreatureTemplateSpellEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];
@@ -32,7 +32,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<CreatureTemplateSpell?> getCreatureTemplateSpell(
+  Future<CreatureTemplateSpellEntity?> getCreatureTemplateSpell(
     int creatureID,
     int index,
   ) async {
@@ -42,14 +42,16 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
           .where('CreatureID', creatureID)
           .where('`Index`', index)
           .first();
-      return CreatureTemplateSpell.fromJson(result.toMap());
+      return CreatureTemplateSpellEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 新增技能
-  Future<void> storeCreatureTemplateSpell(CreatureTemplateSpell spell) async {
+  Future<void> storeCreatureTemplateSpell(
+    CreatureTemplateSpellEntity spell,
+  ) async {
     var json = spell.toJson();
     // 处理 MySQL 保留字 Index
     json['`Index`'] = json.remove('Index');
@@ -57,7 +59,9 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 更新技能
-  Future<void> updateCreatureTemplateSpell(CreatureTemplateSpell spell) async {
+  Future<void> updateCreatureTemplateSpell(
+    CreatureTemplateSpellEntity spell,
+  ) async {
     var json = spell.toJson();
     json.remove('CreatureID');
     // 处理 MySQL 保留字 Index
@@ -79,7 +83,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   /// 复制技能
-  Future<CreatureTemplateSpell> copyCreatureTemplateSpell(
+  Future<CreatureTemplateSpellEntity> copyCreatureTemplateSpell(
     int creatureID,
     int index,
   ) async {
@@ -98,7 +102,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newSpell = CreatureTemplateSpell.fromJson(source.toJson());
+    var newSpell = CreatureTemplateSpellEntity.fromJson(source.toJson());
     newSpell.index = maxIndex + 1;
 
     await storeCreatureTemplateSpell(newSpell);

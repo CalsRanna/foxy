@@ -1,4 +1,4 @@
-import 'package:foxy/entity/item_template.dart';
+import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
@@ -70,7 +70,7 @@ class ItemTemplateRepository with RepositoryMixin {
     return results.map((e) => BriefItemTemplate.fromJson(e.toMap())).toList();
   }
 
-  Future<ItemTemplate> getItemTemplate(int entry) async {
+  Future<ItemTemplateEntity> getItemTemplate(int entry) async {
     var builder = laconic.table('$_table AS it');
     const fields = [
       'it.*',
@@ -89,17 +89,17 @@ class ItemTemplateRepository with RepositoryMixin {
     );
     builder = builder.where('it.entry', entry);
     var result = await builder.first();
-    return ItemTemplate.fromJson(result.toMap());
+    return ItemTemplateEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeItemTemplate(ItemTemplate template) async {
+  Future<void> storeItemTemplate(ItemTemplateEntity template) async {
     var json = template.toJson();
     var newEntry = await _getNextEntry();
     json['entry'] = newEntry;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateItemTemplate(ItemTemplate template) async {
+  Future<void> updateItemTemplate(ItemTemplateEntity template) async {
     var json = template.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', template.entry).update(json);

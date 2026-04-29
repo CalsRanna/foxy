@@ -1,5 +1,5 @@
 /// DBC 阵营 — 对应 foxy.dbc_faction 表
-class DbcFaction {
+class DbcFactionEntity {
   final int id;
   final int reputationIndex;
   final int reputationRaceMask0;
@@ -28,7 +28,7 @@ class DbcFaction {
   final int nameLangFlags;
   final int descriptionLangFlags;
 
-  const DbcFaction({
+  const DbcFactionEntity({
     this.id = 0,
     this.reputationIndex = 0,
     this.reputationRaceMask0 = 0,
@@ -58,8 +58,8 @@ class DbcFaction {
     this.descriptionLangFlags = 0,
   });
 
-  factory DbcFaction.fromJson(Map<String, dynamic> json) {
-    return DbcFaction(
+  factory DbcFactionEntity.fromJson(Map<String, dynamic> json) {
+    return DbcFactionEntity(
       id: json['ID'] ?? 0,
       reputationIndex: json['ReputationIndex'] ?? 0,
       reputationRaceMask0: json['ReputationRaceMask0'] ?? 0,
@@ -79,10 +79,8 @@ class DbcFaction {
       reputationFlags2: json['ReputationFlags2'] ?? 0,
       reputationFlags3: json['ReputationFlags3'] ?? 0,
       parentFactionId: json['ParentFactionID'] ?? 0,
-      parentFactionMod0:
-          (json['ParentFactionMod0'] as num?)?.toDouble() ?? 0.0,
-      parentFactionMod1:
-          (json['ParentFactionMod1'] as num?)?.toDouble() ?? 0.0,
+      parentFactionMod0: (json['ParentFactionMod0'] as num?)?.toDouble() ?? 0.0,
+      parentFactionMod1: (json['ParentFactionMod1'] as num?)?.toDouble() ?? 0.0,
       parentFactionCap0: json['ParentFactionCap0'] ?? 0,
       parentFactionCap1: json['ParentFactionCap1'] ?? 0,
       nameLangZhCn: json['Name_lang_zhCN'] ?? '',

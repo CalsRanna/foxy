@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/item_display_info.dart';
+import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -62,7 +62,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<ItemDisplayInfo> _items = [];
+  List<ItemDisplayInfoEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

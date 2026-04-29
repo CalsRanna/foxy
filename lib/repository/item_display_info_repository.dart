@@ -1,10 +1,10 @@
-import 'package:foxy/entity/item_display_info.dart';
+import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ItemDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_display_info';
 
-  Future<List<ItemDisplayInfo>> getItemDisplayInfos({
+  Future<List<ItemDisplayInfoEntity>> getItemDisplayInfos({
     String? id,
     String? name,
     required int page,
@@ -14,7 +14,9 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     builder = _applyFilter(builder, id: id, name: name);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => ItemDisplayInfo.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => ItemDisplayInfoEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<int> countItemDisplayInfos({String? id, String? name}) async {

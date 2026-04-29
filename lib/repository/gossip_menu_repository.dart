@@ -1,4 +1,4 @@
-import 'package:foxy/entity/gossip_menu.dart';
+import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
@@ -44,7 +44,7 @@ class GossipMenuRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<List<BriefGossipMenu>> getBriefGossipMenus({
+  Future<List<BriefGossipMenuEntity>> getBriefGossipMenus({
     int page = 1,
     GossipMenuFilterEntity? filter,
   }) async {
@@ -70,7 +70,9 @@ class GossipMenuRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     final results = await builder.get();
-    return results.map((e) => BriefGossipMenu.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefGossipMenuEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<GossipMenu> getGossipMenu(int menuId, int textId) async {

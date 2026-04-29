@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/item_extended_cost.dart';
+import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -34,7 +34,7 @@ class ItemExtendedCostDetailViewModel {
   final itemCount3Controller = TextEditingController();
   final itemCount4Controller = TextEditingController();
 
-  final cost = signal(ItemExtendedCost());
+  final cost = signal(ItemExtendedCostEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -71,8 +71,8 @@ class ItemExtendedCostDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 ItemExtendedCost
-  ItemExtendedCost _collectFromControllers() {
-    return ItemExtendedCost(
+  ItemExtendedCostEntity _collectFromControllers() {
+    return ItemExtendedCostEntity(
       id: _parseInt(idController.text),
       honorPoints: _parseInt(honorPointsController.text),
       arenaPoints: _parseInt(arenaPointsController.text),
@@ -99,7 +99,7 @@ class ItemExtendedCostDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, ItemExtendedCost t) {
+  void _logActivity(ActivityActionType action, ItemExtendedCostEntity t) {
     final log = ActivityLogEntity(
       module: 'item_extended_cost',
       actionType: action,
@@ -146,7 +146,7 @@ class ItemExtendedCostDetailViewModel {
     }
   }
 
-  void _initControllers(ItemExtendedCost table) {
+  void _initControllers(ItemExtendedCostEntity table) {
     /// Basic
     idController.text = table.id.toString();
     honorPointsController.text = table.honorPoints.toString();

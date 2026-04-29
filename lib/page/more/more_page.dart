@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/feature.dart';
+import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/page/more/more_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/feature_card.dart';
@@ -108,7 +108,7 @@ class _MorePageState extends State<MorePage> {
 
   void _showContextMenu(
     BuildContext context,
-    Feature feature,
+    FeatureEntity feature,
     Offset position,
   ) {
     showFoxyContextMenu(

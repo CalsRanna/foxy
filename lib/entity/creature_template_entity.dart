@@ -1,4 +1,4 @@
-class BriefCreatureTemplate {
+class BriefCreatureTemplateEntity {
   final int entry;
   final String name;
   final String subName;
@@ -7,7 +7,7 @@ class BriefCreatureTemplate {
   final int minLevel;
   final int maxLevel;
 
-  const BriefCreatureTemplate({
+  const BriefCreatureTemplateEntity({
     this.entry = 0,
     this.name = '',
     this.subName = '',
@@ -17,8 +17,8 @@ class BriefCreatureTemplate {
     this.maxLevel = 0,
   });
 
-  factory BriefCreatureTemplate.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureTemplate(
+  factory BriefCreatureTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureTemplateEntity(
       entry: json['entry'] ?? 0,
       name: json['name'] ?? '',
       subName: json['subname'] ?? '',

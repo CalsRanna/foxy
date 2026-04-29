@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/emote_text.dart';
+import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -58,7 +58,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<EmoteText> _items = [];
+  List<EmoteTextEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;
