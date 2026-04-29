@@ -1,21 +1,29 @@
 class BriefGossipMenu {
-  int menuId = 0;
-  int textId = 0;
-  String text00 = '';
-  String text01 = '';
-  String textLocale00 = '';
-  String textLocale01 = '';
+  final int menuId;
+  final int textId;
+  final String text00;
+  final String text01;
+  final String textLocale00;
+  final String textLocale01;
 
-  BriefGossipMenu();
+  const BriefGossipMenu({
+    this.menuId = 0,
+    this.textId = 0,
+    this.text00 = '',
+    this.text01 = '',
+    this.textLocale00 = '',
+    this.textLocale01 = '',
+  });
 
   factory BriefGossipMenu.fromJson(Map<String, dynamic> json) {
-    return BriefGossipMenu()
-      ..menuId = json['MenuID'] ?? json['menuid'] ?? 0
-      ..textId = json['TextID'] ?? json['textid'] ?? 0
-      ..text00 = json['text0_0']?.toString() ?? ''
-      ..text01 = json['text0_1']?.toString() ?? ''
-      ..textLocale00 = json['Text0_0']?.toString() ?? ''
-      ..textLocale01 = json['Text0_1']?.toString() ?? '';
+    return BriefGossipMenu(
+      menuId: json['MenuID'] ?? json['menuid'] ?? 0,
+      textId: json['TextID'] ?? json['textid'] ?? 0,
+      text00: json['text0_0']?.toString() ?? '',
+      text01: json['text0_1']?.toString() ?? '',
+      textLocale00: json['Text0_0']?.toString() ?? '',
+      textLocale01: json['Text0_1']?.toString() ?? '',
+    );
   }
 
   String get text {
@@ -32,24 +40,32 @@ class BriefGossipMenu {
 /// 列表查询通过 LEFT JOIN npc_text + npc_text_locale 得到展示文本，
 /// 因此 fromJson 兼容这些附加字段的读入。
 class GossipMenu {
-  int menuId = 0;
-  int textId = 0;
+  final int menuId;
+  final int textId;
   // 以下字段来自 LEFT JOIN npc_text 和 npc_text_locale，仅列表展示用
-  String text00 = '';
-  String text01 = '';
-  String textLocale00 = '';
-  String textLocale01 = '';
+  final String text00;
+  final String text01;
+  final String textLocale00;
+  final String textLocale01;
 
-  GossipMenu();
+  const GossipMenu({
+    this.menuId = 0,
+    this.textId = 0,
+    this.text00 = '',
+    this.text01 = '',
+    this.textLocale00 = '',
+    this.textLocale01 = '',
+  });
 
   factory GossipMenu.fromJson(Map<String, dynamic> json) {
-    return GossipMenu()
-      ..menuId = json['MenuID'] ?? json['menuid'] ?? 0
-      ..textId = json['TextID'] ?? json['textid'] ?? 0
-      ..text00 = json['text0_0']?.toString() ?? ''
-      ..text01 = json['text0_1']?.toString() ?? ''
-      ..textLocale00 = json['Text0_0']?.toString() ?? ''
-      ..textLocale01 = json['Text0_1']?.toString() ?? '';
+    return GossipMenu(
+      menuId: json['MenuID'] ?? json['menuid'] ?? 0,
+      textId: json['TextID'] ?? json['textid'] ?? 0,
+      text00: json['text0_0']?.toString() ?? '',
+      text01: json['text0_1']?.toString() ?? '',
+      textLocale00: json['Text0_0']?.toString() ?? '',
+      textLocale01: json['Text0_1']?.toString() ?? '',
+    );
   }
 
   /// 优先本地化文本 > 英文文本

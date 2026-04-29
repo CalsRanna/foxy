@@ -1,52 +1,67 @@
-/// 生物显示信息（模型）
 class CreatureDisplayInfo {
-  int id = 0;
-  int modelId = 0;
-  int soundId = 0;
-  int extendedDisplayInfoId = 0;
-  double creatureModelScale = 1.0;
-  int creatureModelAlpha = 0;
-  String textureVariation0 = '';
-  String textureVariation1 = '';
-  String textureVariation2 = '';
-  String portraitTextureName = '';
-  int sizeClass = 0;
-  int bloodID = 0;
-  int npcSoundID = 0;
-  int particleColorID = 0;
-  int creatureGeosetData = 0;
-  int objectEffectPackageID = 0;
+  final int id;
+  final int modelId;
+  final int soundId;
+  final int extendedDisplayInfoId;
+  final double creatureModelScale;
+  final int creatureModelAlpha;
+  final String textureVariation0;
+  final String textureVariation1;
+  final String textureVariation2;
+  final String portraitTextureName;
+  final int sizeClass;
+  final int bloodID;
+  final int npcSoundID;
+  final int particleColorID;
+  final int creatureGeosetData;
+  final int objectEffectPackageID;
+  final String modelName;
 
-  /// 来自 dbc_creature_model_data 的模型路径
-  String modelName = '';
-
-  CreatureDisplayInfo();
+  const CreatureDisplayInfo({
+    this.id = 0,
+    this.modelId = 0,
+    this.soundId = 0,
+    this.extendedDisplayInfoId = 0,
+    this.creatureModelScale = 1.0,
+    this.creatureModelAlpha = 0,
+    this.textureVariation0 = '',
+    this.textureVariation1 = '',
+    this.textureVariation2 = '',
+    this.portraitTextureName = '',
+    this.sizeClass = 0,
+    this.bloodID = 0,
+    this.npcSoundID = 0,
+    this.particleColorID = 0,
+    this.creatureGeosetData = 0,
+    this.objectEffectPackageID = 0,
+    this.modelName = '',
+  });
 
   factory CreatureDisplayInfo.fromJson(Map<String, dynamic> json) {
-    return CreatureDisplayInfo()
-      ..id = json['ID'] ?? json['id'] ?? 0
-      ..modelId = json['ModelID'] ?? json['ModelId'] ?? json['modelId'] ?? 0
-      ..soundId = json['SoundID'] ?? json['SoundId'] ?? json['soundId'] ?? 0
-      ..extendedDisplayInfoId =
-          json['ExtendedDisplayInfoID'] ??
+    return CreatureDisplayInfo(
+      id: json['ID'] ?? json['id'] ?? 0,
+      modelId: json['ModelID'] ?? json['ModelId'] ?? json['modelId'] ?? 0,
+      soundId: json['SoundID'] ?? json['SoundId'] ?? json['soundId'] ?? 0,
+      extendedDisplayInfoId: json['ExtendedDisplayInfoID'] ??
           json['ExtendedDisplayInfoId'] ??
           json['extendedDisplayInfoId'] ??
-          0
-      ..creatureModelScale =
+          0,
+      creatureModelScale:
           (json['CreatureModelScale'] ?? json['creatureModelScale'] ?? 1.0)
-              .toDouble()
-      ..creatureModelAlpha = json['CreatureModelAlpha'] ?? 0
-      ..textureVariation0 = json['TextureVariation0'] ?? ''
-      ..textureVariation1 = json['TextureVariation1'] ?? ''
-      ..textureVariation2 = json['TextureVariation2'] ?? ''
-      ..portraitTextureName = json['PortraitTextureName'] ?? ''
-      ..sizeClass = json['SizeClass'] ?? 0
-      ..bloodID = json['BloodID'] ?? 0
-      ..npcSoundID = json['NPCSoundID'] ?? 0
-      ..particleColorID = json['ParticleColorID'] ?? 0
-      ..creatureGeosetData = json['CreatureGeosetData'] ?? 0
-      ..objectEffectPackageID = json['ObjectEffectPackageID'] ?? 0
-      ..modelName = json['ModelName'] ?? json['modelName'] ?? '';
+              .toDouble(),
+      creatureModelAlpha: json['CreatureModelAlpha'] ?? 0,
+      textureVariation0: json['TextureVariation0'] ?? '',
+      textureVariation1: json['TextureVariation1'] ?? '',
+      textureVariation2: json['TextureVariation2'] ?? '',
+      portraitTextureName: json['PortraitTextureName'] ?? '',
+      sizeClass: json['SizeClass'] ?? 0,
+      bloodID: json['BloodID'] ?? 0,
+      npcSoundID: json['NPCSoundID'] ?? 0,
+      particleColorID: json['ParticleColorID'] ?? 0,
+      creatureGeosetData: json['CreatureGeosetData'] ?? 0,
+      objectEffectPackageID: json['ObjectEffectPackageID'] ?? 0,
+      modelName: json['ModelName'] ?? json['modelName'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

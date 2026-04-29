@@ -48,10 +48,10 @@ class GameobjectQueststarterViewModel {
 
   /// 从表单收集数据
   GameobjectQueststarter collectFromForm() {
-    final model = GameobjectQueststarter();
-    model.id = int.tryParse(idController.text) ?? 0;
-    model.quest = int.tryParse(questController.text) ?? 0;
-    return model;
+    return GameobjectQueststarter(
+      id: int.tryParse(idController.text) ?? 0,
+      quest: int.tryParse(questController.text) ?? 0,
+    );
   }
 
   /// 创建新记录

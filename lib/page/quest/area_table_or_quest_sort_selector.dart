@@ -325,9 +325,10 @@ class _DialogState extends State<_Dialog> {
     try {
       if (_currentMode == 'AreaTable') {
         final repository = AreaTableRepository();
-        final filter = AreaTableFilterEntity()
-          ..id = _idController.text
-          ..name = _nameController.text;
+        final filter = AreaTableFilterEntity(
+          id: _idController.text,
+          name: _nameController.text,
+        );
         final items = await repository.getAreaTables(filter: filter, page: _page);
         final total = await repository.countAreaTables(filter: filter);
         if (mounted) {
@@ -339,9 +340,10 @@ class _DialogState extends State<_Dialog> {
         }
       } else {
         final repository = QuestSortRepository();
-        final filter = QuestSortFilterEntity()
-          ..id = _idController.text
-          ..name = _nameController.text;
+        final filter = QuestSortFilterEntity(
+          id: _idController.text,
+          name: _nameController.text,
+        );
         final items = await repository.getQuestSorts(filter: filter, page: _page);
         final total = await repository.countQuestSorts(filter: filter);
         if (mounted) {

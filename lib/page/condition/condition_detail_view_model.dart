@@ -95,22 +95,23 @@ class ConditionDetailViewModel {
   }
 
   Condition _collectFromControllers() {
-    final c = Condition();
-    c.sourceTypeOrReferenceId = _parseInt(sourceTypeOrReferenceIdController.text);
-    c.sourceGroup = _parseInt(sourceGroupController.text);
-    c.sourceEntry = _parseInt(sourceEntryController.text);
-    c.sourceId = _parseInt(sourceIdController.text);
-    c.elseGroup = _parseInt(elseGroupController.text);
-    c.conditionTypeOrReference = _parseInt(conditionTypeOrReferenceController.text);
-    c.conditionTarget = _parseInt(conditionTargetController.text);
-    c.conditionValue1 = _parseInt(conditionValue1Controller.text);
-    c.conditionValue2 = _parseInt(conditionValue2Controller.text);
-    c.conditionValue3 = _parseInt(conditionValue3Controller.text);
-    c.negativeCondition = _parseInt(negativeConditionController.text);
-    c.errorType = _parseInt(errorTypeController.text);
-    c.errorTextId = _parseInt(errorTextIdController.text);
-    c.scriptName = scriptNameController.text;
-    c.comment = commentController.text;
+    final c = Condition(
+      sourceTypeOrReferenceId: _parseInt(sourceTypeOrReferenceIdController.text),
+      sourceGroup: _parseInt(sourceGroupController.text),
+      sourceEntry: _parseInt(sourceEntryController.text),
+      sourceId: _parseInt(sourceIdController.text),
+      elseGroup: _parseInt(elseGroupController.text),
+      conditionTypeOrReference: _parseInt(conditionTypeOrReferenceController.text),
+      conditionTarget: _parseInt(conditionTargetController.text),
+      conditionValue1: _parseInt(conditionValue1Controller.text),
+      conditionValue2: _parseInt(conditionValue2Controller.text),
+      conditionValue3: _parseInt(conditionValue3Controller.text),
+      negativeCondition: _parseInt(negativeConditionController.text),
+      errorType: _parseInt(errorTypeController.text),
+      errorTextId: _parseInt(errorTextIdController.text),
+      scriptName: scriptNameController.text,
+      comment: commentController.text,
+    );
     return c;
   }
 

@@ -207,10 +207,11 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     setState(() => _saving = true);
     try {
       final locales = _rows.map((row) {
-        return ItemTemplateLocale()
-          ..id = widget.entry
-          ..locale = row.localeController.text
-          ..description = row.descriptionController.text;
+        return ItemTemplateLocale(
+          id: widget.entry,
+          locale: row.localeController.text,
+          description: row.descriptionController.text,
+        );
       }).toList();
       await widget.onSave(locales);
       if (mounted) Navigator.of(context).pop();

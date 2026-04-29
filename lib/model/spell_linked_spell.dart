@@ -1,18 +1,24 @@
 /// 法术链接技能
 class SpellLinkedSpell {
-  int spellTrigger = 0;
-  int spellEffect = 0;
-  int type = 0;
-  String comment = '';
+  final int spellTrigger;
+  final int spellEffect;
+  final int type;
+  final String comment;
 
-  SpellLinkedSpell();
+  const SpellLinkedSpell({
+    this.spellTrigger = 0,
+    this.spellEffect = 0,
+    this.type = 0,
+    this.comment = '',
+  });
 
   factory SpellLinkedSpell.fromJson(Map<String, dynamic> json) {
-    return SpellLinkedSpell()
-      ..spellTrigger = json['spell_trigger'] ?? 0
-      ..spellEffect = json['spell_effect'] ?? 0
-      ..type = json['type'] ?? 0
-      ..comment = json['comment'] ?? '';
+    return SpellLinkedSpell(
+      spellTrigger: json['spell_trigger'] ?? 0,
+      spellEffect: json['spell_effect'] ?? 0,
+      type: json['type'] ?? 0,
+      comment: json['comment'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

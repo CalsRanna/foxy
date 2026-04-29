@@ -223,18 +223,19 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     setState(() => _saving = true);
     try {
       final locales = _rows.map((row) {
-        return QuestTemplateLocale()
-          ..id = widget.questId
-          ..locale = row.localeController.text
-          ..title = row.titleController.text
-          ..details = row.detailsController.text
-          ..objectives = row.objectivesController.text
-          ..endText = row.endTextController.text
-          ..completedText = row.completedTextController.text
-          ..objectiveText1 = row.objectiveText1Controller.text
-          ..objectiveText2 = row.objectiveText2Controller.text
-          ..objectiveText3 = row.objectiveText3Controller.text
-          ..objectiveText4 = row.objectiveText4Controller.text;
+        return QuestTemplateLocale(
+          id: widget.questId,
+          locale: row.localeController.text,
+          title: row.titleController.text,
+          details: row.detailsController.text,
+          objectives: row.objectivesController.text,
+          endText: row.endTextController.text,
+          completedText: row.completedTextController.text,
+          objectiveText1: row.objectiveText1Controller.text,
+          objectiveText2: row.objectiveText2Controller.text,
+          objectiveText3: row.objectiveText3Controller.text,
+          objectiveText4: row.objectiveText4Controller.text,
+        );
       }).toList();
       await widget.onSave(locales);
       if (mounted) Navigator.of(context).pop();

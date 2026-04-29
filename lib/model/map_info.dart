@@ -1,19 +1,26 @@
 class MapInfo {
-  int id = 0;
-  String mapNameLangZhCn = '';
-  String mapDescription0LangZhCn = '';
-  int instanceType = 0;
-  int pvp = 0;
+  final int id;
+  final String mapNameLangZhCn;
+  final String mapDescription0LangZhCn;
+  final int instanceType;
+  final int pvp;
 
-  MapInfo();
+  const MapInfo({
+    this.id = 0,
+    this.mapNameLangZhCn = '',
+    this.mapDescription0LangZhCn = '',
+    this.instanceType = 0,
+    this.pvp = 0,
+  });
 
   factory MapInfo.fromJson(Map<String, dynamic> json) {
-    return MapInfo()
-      ..id = json['ID'] ?? 0
-      ..mapNameLangZhCn = json['MapName_lang_zhCN'] ?? ''
-      ..mapDescription0LangZhCn = json['MapDescription0_lang_zhCN'] ?? ''
-      ..instanceType = json['InstanceType'] ?? 0
-      ..pvp = json['PVP'] ?? 0;
+    return MapInfo(
+      id: json['ID'] ?? 0,
+      mapNameLangZhCn: json['MapName_lang_zhCN'] ?? '',
+      mapDescription0LangZhCn: json['MapDescription0_lang_zhCN'] ?? '',
+      instanceType: json['InstanceType'] ?? 0,
+      pvp: json['PVP'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {

@@ -1,13 +1,14 @@
 class PlayerCreateInfoFilterEntity {
-  String race = '';
-  String class_ = '';
+  final String race;
+  final String class_;
 
-  PlayerCreateInfoFilterEntity();
+  const PlayerCreateInfoFilterEntity({this.race = '', this.class_ = ''});
 
   factory PlayerCreateInfoFilterEntity.fromJson(Map<String, dynamic> json) {
-    return PlayerCreateInfoFilterEntity()
-      ..race = json['race'] ?? ''
-      ..class_ = json['class_'] ?? '';
+    return PlayerCreateInfoFilterEntity(
+      race: json['race'] ?? '',
+      class_: json['class_'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

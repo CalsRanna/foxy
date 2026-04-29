@@ -50,10 +50,10 @@ class QuestSortDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 QuestSort
   QuestSort _collectFromControllers() {
-    final t = QuestSort();
-    t.id = _parseInt(idController.text);
-    t.sortNameLangZhCn = nameController.text;
-    return t;
+    return QuestSort(
+      id: _parseInt(idController.text),
+      sortNameLangZhCn: nameController.text,
+    );
   }
 
   int _parseInt(String text) {

@@ -28,9 +28,7 @@ class GossipMenuDetailViewModel {
       final nextMenuId = await GossipMenuRepository().getNextMenuId();
       this.menuId.value = nextMenuId;
       this.textId.value = 0;
-      menu.value = GossipMenu()
-        ..menuId = nextMenuId
-        ..textId = 0;
+      menu.value = GossipMenu(menuId: nextMenuId, textId: 0);
       _originalMenuId = null;
       _originalTextId = null;
       menuIdController.text = nextMenuId.toString();
@@ -93,10 +91,10 @@ class GossipMenuDetailViewModel {
   }
 
   GossipMenu _collectFromControllers() {
-    final t = GossipMenu()
-      ..menuId = int.tryParse(menuIdController.text) ?? 0
-      ..textId = int.tryParse(textIdController.text) ?? 0;
-    return t;
+    return GossipMenu(
+      menuId: int.tryParse(menuIdController.text) ?? 0,
+      textId: int.tryParse(textIdController.text) ?? 0,
+    );
   }
 
   void _logActivity(ActivityActionType action, GossipMenu t) {

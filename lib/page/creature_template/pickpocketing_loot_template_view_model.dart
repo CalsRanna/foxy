@@ -82,18 +82,18 @@ class PickpocketingLootTemplateViewModel {
     final template = creatureTemplate.value;
     if (template == null) return LootTemplate();
 
-    final loot = LootTemplate();
-    loot.entry = template.pickpocketLoot;
-    loot.item = _parseInt(itemController.text);
-    loot.reference = _parseInt(referenceController.text);
-    loot.chance = _parseDouble(chanceController.text);
-    loot.questRequired = questRequiredController.value.firstOrNull == 1;
-    loot.lootMode = _parseInt(lootModeController.text);
-    loot.groupId = _parseInt(groupIdController.text);
-    loot.minCount = _parseInt(minCountController.text);
-    loot.maxCount = _parseInt(maxCountController.text);
-    loot.comment = commentController.text;
-    return loot;
+    return LootTemplate(
+      entry: template.pickpocketLoot,
+      item: _parseInt(itemController.text),
+      reference: _parseInt(referenceController.text),
+      chance: _parseDouble(chanceController.text),
+      questRequired: questRequiredController.value.firstOrNull == 1,
+      lootMode: _parseInt(lootModeController.text),
+      groupId: _parseInt(groupIdController.text),
+      minCount: _parseInt(minCountController.text),
+      maxCount: _parseInt(maxCountController.text),
+      comment: commentController.text,
+    );
   }
 
   int _parseInt(String text) {

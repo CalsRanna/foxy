@@ -37,9 +37,7 @@ class PageTextLocaleViewModel {
 
   void addLocale() {
     final newLocales = [...locales.value];
-    final locale = PageTextLocale()
-      ..id = _currentId
-      ..locale = 'zhCN';
+    final locale = PageTextLocale(id: _currentId, locale: 'zhCN');
     newLocales.add(locale);
     locales.value = newLocales;
     _controllers.value = [..._controllers.value, TextEditingController()];
@@ -61,7 +59,12 @@ class PageTextLocaleViewModel {
         final idx = entry.key;
         final locale = entry.value;
         if (idx < _controllers.value.length) {
-          locale.text = _controllers.value[idx].text;
+          return PageTextLocale(
+            id: locale.id,
+            locale: locale.locale,
+            text: _controllers.value[idx].text,
+            verifiedBuild: locale.verifiedBuild,
+          );
         }
         return locale;
       }).toList();

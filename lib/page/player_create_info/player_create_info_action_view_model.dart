@@ -84,12 +84,13 @@ class PlayerCreateInfoActionViewModel {
   }
 
   PlayerCreateInfoAction _collect() {
-    return PlayerCreateInfoAction()
-      ..race = _race ?? 0
-      ..class_ = _class_ ?? 0
-      ..button = _parseInt(buttonController.text)
-      ..action = _parseInt(actionController.text)
-      ..type = _parseInt(typeController.text);
+    return PlayerCreateInfoAction(
+      race: _race ?? 0,
+      class_: _class_ ?? 0,
+      button: _parseInt(buttonController.text),
+      action: _parseInt(actionController.text),
+      type: _parseInt(typeController.text),
+    );
   }
 
   int _parseInt(String text) {

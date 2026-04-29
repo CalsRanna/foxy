@@ -90,10 +90,11 @@ class CreatureTemplateListViewModel {
   }
 
   CreatureTemplateFilterEntity _buildFilter() {
-    return CreatureTemplateFilterEntity()
-      ..entry = entryController.text
-      ..name = nameController.text
-      ..subName = subNameController.text;
+    return CreatureTemplateFilterEntity(
+      entry: entryController.text,
+      name: nameController.text,
+      subName: subNameController.text,
+    );
   }
 
   Future<void> paginate(int page) async {

@@ -102,18 +102,18 @@ class ReferenceLootTemplateDetailViewModel {
   }
 
   LootTemplate _collectFromControllers() {
-    final data = LootTemplate();
-    data.entry = _parseInt(entryController.text);
-    data.item = _parseInt(itemController.text);
-    data.reference = _parseInt(referenceController.text);
-    data.chance = _parseDouble(chanceController.text);
-    data.questRequired = questRequiredController.value.first == 1;
-    data.lootMode = _parseInt(lootModeController.text);
-    data.groupId = _parseInt(groupIdController.text);
-    data.minCount = _parseInt(minCountController.text);
-    data.maxCount = _parseInt(maxCountController.text);
-    data.comment = commentController.text;
-    return data;
+    return LootTemplate(
+      entry: _parseInt(entryController.text),
+      item: _parseInt(itemController.text),
+      reference: _parseInt(referenceController.text),
+      chance: _parseDouble(chanceController.text),
+      questRequired: questRequiredController.value.first == 1,
+      lootMode: _parseInt(lootModeController.text),
+      groupId: _parseInt(groupIdController.text),
+      minCount: _parseInt(minCountController.text),
+      maxCount: _parseInt(maxCountController.text),
+      comment: commentController.text,
+    );
   }
 
   int _parseInt(String text) {

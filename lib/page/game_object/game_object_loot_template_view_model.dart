@@ -71,18 +71,18 @@ class GameObjectLootTemplateViewModel {
   }
 
   LootTemplate collectFromForm() {
-    final loot = LootTemplate();
-    loot.entry = gameObjectId.value;
-    loot.item = _parseInt(itemController.text);
-    loot.reference = _parseInt(referenceController.text);
-    loot.chance = _parseDouble(chanceController.text);
-    loot.questRequired = _getSelectValue(questRequiredController) == 1;
-    loot.lootMode = _parseInt(lootModeController.text);
-    loot.groupId = _parseInt(groupIdController.text);
-    loot.minCount = _parseInt(minCountController.text);
-    loot.maxCount = _parseInt(maxCountController.text);
-    loot.comment = commentController.text;
-    return loot;
+    return LootTemplate(
+      entry: gameObjectId.value,
+      item: _parseInt(itemController.text),
+      reference: _parseInt(referenceController.text),
+      chance: _parseDouble(chanceController.text),
+      questRequired: _getSelectValue(questRequiredController) == 1,
+      lootMode: _parseInt(lootModeController.text),
+      groupId: _parseInt(groupIdController.text),
+      minCount: _parseInt(minCountController.text),
+      maxCount: _parseInt(maxCountController.text),
+      comment: commentController.text,
+    );
   }
 
   int _parseInt(String text) {

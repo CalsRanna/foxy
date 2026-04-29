@@ -1,17 +1,23 @@
 class BroadcastText {
-  int id = 0;
-  int languageId = 0;
-  String maleText = '';
-  String femaleText = '';
+  final int id;
+  final int languageId;
+  final String maleText;
+  final String femaleText;
 
-  BroadcastText();
+  const BroadcastText({
+    this.id = 0,
+    this.languageId = 0,
+    this.maleText = '',
+    this.femaleText = '',
+  });
 
   factory BroadcastText.fromJson(Map<String, dynamic> json) {
-    return BroadcastText()
-      ..id = json['ID'] ?? 0
-      ..languageId = json['LanguageID'] ?? 0
-      ..maleText = json['MaleText'] ?? ''
-      ..femaleText = json['FemaleText'] ?? '';
+    return BroadcastText(
+      id: json['ID'] ?? 0,
+      languageId: json['LanguageID'] ?? 0,
+      maleText: json['MaleText'] ?? '',
+      femaleText: json['FemaleText'] ?? '',
+    );
   }
 
   String get displayText {

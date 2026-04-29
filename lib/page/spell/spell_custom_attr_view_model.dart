@@ -50,9 +50,10 @@ class SpellCustomAttrViewModel {
   }
 
   SpellCustomAttr _collectFromControllers() {
-    final data = SpellCustomAttr();
-    data.spellId = spellId.value;
-    data.attributes = _parseInt(attributesController.text);
+    final data = SpellCustomAttr(
+      spellId: spellId.value,
+      attributes: _parseInt(attributesController.text),
+    );
     return data;
   }
 

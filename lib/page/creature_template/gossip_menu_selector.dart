@@ -246,9 +246,10 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = GossipMenuRepository();
-      final filter = GossipMenuFilterEntity()
-        ..menuId = _menuIdController.text
-        ..text = _textController.text;
+      final filter = GossipMenuFilterEntity(
+        menuId: _menuIdController.text,
+        text: _textController.text,
+      );
       final items = await repository.getBriefGossipMenus(
         filter: filter,
         page: _page,

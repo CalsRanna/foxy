@@ -193,9 +193,20 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
       throw Exception('源记录不存在');
     }
 
-    // 创建新记录
-    var newModel = ItemEnchantmentTemplate.fromJson(source.toJson());
-    newModel.ench = maxEnch + 1;
+    var newModel = ItemEnchantmentTemplate(
+      entry: source.entry,
+      ench: maxEnch + 1,
+      chance: source.chance,
+      condition1: source.condition1,
+      condition2: source.condition2,
+      condition3: source.condition3,
+      name: source.name,
+      enchantment1Name: source.enchantment1Name,
+      enchantment2Name: source.enchantment2Name,
+      enchantment3Name: source.enchantment3Name,
+      enchantment4Name: source.enchantment4Name,
+      enchantment5Name: source.enchantment5Name,
+    );
 
     await storeItemEnchantmentTemplate(newModel);
     return newModel;

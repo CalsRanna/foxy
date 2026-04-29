@@ -1,13 +1,14 @@
 class PageTextFilterEntity {
-  String id = '';
-  String text = '';
+  final String id;
+  final String text;
 
-  PageTextFilterEntity();
+  const PageTextFilterEntity({this.id = '', this.text = ''});
 
   factory PageTextFilterEntity.fromJson(Map<String, dynamic> json) {
-    return PageTextFilterEntity()
-      ..id = json['id'] ?? ''
-      ..text = json['text'] ?? '';
+    return PageTextFilterEntity(
+      id: json['id'] ?? '',
+      text: json['text'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

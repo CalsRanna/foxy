@@ -31,7 +31,8 @@ class BroadcastTextRepository with RepositoryMixin {
     return results.map((e) {
       final map = e.toMap();
       final displayText = map['display_text'] as String? ?? '';
-      return BroadcastText.fromJson(map)..maleText = displayText;
+      map['MaleText'] = displayText;
+      return BroadcastText.fromJson(map);
     }).toList();
   }
 

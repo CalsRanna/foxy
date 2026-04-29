@@ -51,15 +51,9 @@ class CreatureQueststarterRepository with RepositoryMixin {
         ['MAX(id) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      final model = CreatureQueststarter();
-      model.quest = questId;
-      model.id = maxId == null ? 0 : maxId + 1;
-      return model;
+      return CreatureQueststarter(quest: questId, id: maxId == null ? 0 : maxId + 1);
     } catch (e) {
-      final model = CreatureQueststarter();
-      model.quest = questId;
-      model.id = 0;
-      return model;
+      return CreatureQueststarter(quest: questId, id: 0);
     }
   }
 
@@ -94,7 +88,6 @@ class CreatureQueststarterRepository with RepositoryMixin {
     final original = await getCreatureQueststarter(id);
     if (original == null) return;
     final next = await createCreatureQueststarter(original.quest);
-    original.id = next.id;
-    await storeCreatureQueststarter(original);
+    await storeCreatureQueststarter(next);
   }
 }

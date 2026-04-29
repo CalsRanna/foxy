@@ -2,33 +2,46 @@
 // quest_offer_reward 表，1:1 关系与 quest_template，共享 ID 主键。
 
 class QuestOfferReward {
-  int id = 0;
-  int emote1 = 0;
-  int emote2 = 0;
-  int emote3 = 0;
-  int emote4 = 0;
-  int emoteDelay1 = 0;
-  int emoteDelay2 = 0;
-  int emoteDelay3 = 0;
-  int emoteDelay4 = 0;
-  String rewardText = '';
-  int? verifiedBuild;
+  final int id;
+  final int emote1;
+  final int emote2;
+  final int emote3;
+  final int emote4;
+  final int emoteDelay1;
+  final int emoteDelay2;
+  final int emoteDelay3;
+  final int emoteDelay4;
+  final String rewardText;
+  final int? verifiedBuild;
 
-  QuestOfferReward();
+  const QuestOfferReward({
+    this.id = 0,
+    this.emote1 = 0,
+    this.emote2 = 0,
+    this.emote3 = 0,
+    this.emote4 = 0,
+    this.emoteDelay1 = 0,
+    this.emoteDelay2 = 0,
+    this.emoteDelay3 = 0,
+    this.emoteDelay4 = 0,
+    this.rewardText = '',
+    this.verifiedBuild,
+  });
 
   factory QuestOfferReward.fromJson(Map<String, dynamic> json) {
-    return QuestOfferReward()
-      ..id = json['ID'] ?? 0
-      ..emote1 = json['Emote1'] ?? 0
-      ..emote2 = json['Emote2'] ?? 0
-      ..emote3 = json['Emote3'] ?? 0
-      ..emote4 = json['Emote4'] ?? 0
-      ..emoteDelay1 = json['EmoteDelay1'] ?? 0
-      ..emoteDelay2 = json['EmoteDelay2'] ?? 0
-      ..emoteDelay3 = json['EmoteDelay3'] ?? 0
-      ..emoteDelay4 = json['EmoteDelay4'] ?? 0
-      ..rewardText = json['RewardText']?.toString() ?? ''
-      ..verifiedBuild = json['VerifiedBuild'];
+    return QuestOfferReward(
+      id: json['ID'] ?? 0,
+      emote1: json['Emote1'] ?? 0,
+      emote2: json['Emote2'] ?? 0,
+      emote3: json['Emote3'] ?? 0,
+      emote4: json['Emote4'] ?? 0,
+      emoteDelay1: json['EmoteDelay1'] ?? 0,
+      emoteDelay2: json['EmoteDelay2'] ?? 0,
+      emoteDelay3: json['EmoteDelay3'] ?? 0,
+      emoteDelay4: json['EmoteDelay4'] ?? 0,
+      rewardText: json['RewardText']?.toString() ?? '',
+      verifiedBuild: json['VerifiedBuild'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -53,19 +66,25 @@ class QuestOfferReward {
 
 /// quest_offer_reward_locale 本地化模型（复合键: ID + Locale）
 class QuestOfferRewardLocale {
-  int id = 0;
-  String locale = 'zhCN';
-  String rewardText = '';
-  int? verifiedBuild;
+  final int id;
+  final String locale;
+  final String rewardText;
+  final int? verifiedBuild;
 
-  QuestOfferRewardLocale();
+  const QuestOfferRewardLocale({
+    this.id = 0,
+    this.locale = 'zhCN',
+    this.rewardText = '',
+    this.verifiedBuild,
+  });
 
   factory QuestOfferRewardLocale.fromJson(Map<String, dynamic> json) {
-    return QuestOfferRewardLocale()
-      ..id = (json['ID'] ?? json['id'] ?? 0) as int
-      ..locale = json['Locale']?.toString() ?? 'zhCN'
-      ..rewardText = json['RewardText']?.toString() ?? ''
-      ..verifiedBuild = json['VerifiedBuild'];
+    return QuestOfferRewardLocale(
+      id: (json['ID'] ?? json['id'] ?? 0) as int,
+      locale: json['Locale']?.toString() ?? 'zhCN',
+      rewardText: json['RewardText']?.toString() ?? '',
+      verifiedBuild: json['VerifiedBuild'],
+    );
   }
 
   Map<String, dynamic> toJson() {

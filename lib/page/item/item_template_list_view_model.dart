@@ -158,22 +158,24 @@ class ItemTemplateListViewModel {
   }
 
   Future<List<BriefItemTemplate>> _fetchItems() async {
-    var filter = ItemTemplateFilterEntity()
-      ..entry = entryController.text
-      ..name = nameController.text
-      ..description = descriptionController.text
-      ..classId = selectedClassId.value
-      ..subclass = selectedSubclass.value;
+    final filter = ItemTemplateFilterEntity(
+      entry: entryController.text,
+      name: nameController.text,
+      description: descriptionController.text,
+      classId: selectedClassId.value,
+      subclass: selectedSubclass.value,
+    );
     return repository.getBriefItemTemplates(page: page.value, filter: filter);
   }
 
   Future<int> _count() async {
-    var filter = ItemTemplateFilterEntity()
-      ..entry = entryController.text
-      ..name = nameController.text
-      ..description = descriptionController.text
-      ..classId = selectedClassId.value
-      ..subclass = selectedSubclass.value;
+    final filter = ItemTemplateFilterEntity(
+      entry: entryController.text,
+      name: nameController.text,
+      description: descriptionController.text,
+      classId: selectedClassId.value,
+      subclass: selectedSubclass.value,
+    );
     return repository.countItemTemplates(filter: filter);
   }
 

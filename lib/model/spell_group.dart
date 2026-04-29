@@ -1,22 +1,29 @@
 /// 法术技能组
 class SpellGroup {
-  int id = 0;
-  int spellId = 0;
-  int specialFlag = 0;
+  final int id;
+  final int spellId;
+  final int specialFlag;
 
   // 关联字段
-  int stackRule = 0;
-  String description = '';
+  final int stackRule;
+  final String description;
 
-  SpellGroup();
+  const SpellGroup({
+    this.id = 0,
+    this.spellId = 0,
+    this.specialFlag = 0,
+    this.stackRule = 0,
+    this.description = '',
+  });
 
   factory SpellGroup.fromJson(Map<String, dynamic> json) {
-    return SpellGroup()
-      ..id = json['id'] ?? 0
-      ..spellId = json['spell_id'] ?? 0
-      ..specialFlag = json['special_flag'] ?? 0
-      ..stackRule = json['stack_rule'] ?? 0
-      ..description = json['description'] ?? '';
+    return SpellGroup(
+      id: json['id'] ?? 0,
+      spellId: json['spell_id'] ?? 0,
+      specialFlag: json['special_flag'] ?? 0,
+      stackRule: json['stack_rule'] ?? 0,
+      description: json['description'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

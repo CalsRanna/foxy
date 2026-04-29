@@ -1,17 +1,23 @@
 class SpellDuration {
-  int id = 0;
-  int duration = 0;
-  int durationPerLevel = 0;
-  int maxDuration = 0;
+  final int id;
+  final int duration;
+  final int durationPerLevel;
+  final int maxDuration;
 
-  SpellDuration();
+  const SpellDuration({
+    this.id = 0,
+    this.duration = 0,
+    this.durationPerLevel = 0,
+    this.maxDuration = 0,
+  });
 
   factory SpellDuration.fromJson(Map<String, dynamic> json) {
-    return SpellDuration()
-      ..id = json['ID'] ?? 0
-      ..duration = json['Duration'] ?? 0
-      ..durationPerLevel = json['DurationPerLevel'] ?? 0
-      ..maxDuration = json['MaxDuration'] ?? 0;
+    return SpellDuration(
+      id: json['ID'] ?? 0,
+      duration: json['Duration'] ?? 0,
+      durationPerLevel: json['DurationPerLevel'] ?? 0,
+      maxDuration: json['MaxDuration'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {

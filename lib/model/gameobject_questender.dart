@@ -2,15 +2,19 @@
 // 复合主键 (id, quest)
 
 class GameobjectQuestender {
-  int id = 0;
-  int quest = 0;
+  final int id;
+  final int quest;
 
-  GameobjectQuestender();
+  const GameobjectQuestender({
+    this.id = 0,
+    this.quest = 0,
+  });
 
   factory GameobjectQuestender.fromJson(Map<String, dynamic> json) {
-    return GameobjectQuestender()
-      ..id = json['id'] ?? 0
-      ..quest = json['quest'] ?? 0;
+    return GameobjectQuestender(
+      id: json['id'] ?? 0,
+      quest: json['quest'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -20,19 +24,25 @@ class GameobjectQuestender {
 
 /// Brief 版本（LEFT JOIN gameobject_template 获取名称，无 locale 表）
 class BriefGameobjectQuestender {
-  int id = 0;
-  int quest = 0;
-  String name = '';
-  String localeName = '';
+  final int id;
+  final int quest;
+  final String name;
+  final String localeName;
 
-  BriefGameobjectQuestender();
+  const BriefGameobjectQuestender({
+    this.id = 0,
+    this.quest = 0,
+    this.name = '',
+    this.localeName = '',
+  });
 
   factory BriefGameobjectQuestender.fromJson(Map<String, dynamic> json) {
-    return BriefGameobjectQuestender()
-      ..id = json['id'] ?? 0
-      ..quest = json['quest'] ?? 0
-      ..name = json['name']?.toString() ?? ''
-      ..localeName = json['Name']?.toString() ?? '';
+    return BriefGameobjectQuestender(
+      id: json['id'] ?? 0,
+      quest: json['quest'] ?? 0,
+      name: json['name']?.toString() ?? '',
+      localeName: json['Name']?.toString() ?? '',
+    );
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;

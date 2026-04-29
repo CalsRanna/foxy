@@ -1,17 +1,18 @@
 class PageTextLocale {
-  int id = 0;
-  String locale = '';
-  String text = '';
-  int verifiedBuild = 0;
+  final int id;
+  final String locale;
+  final String text;
+  final int verifiedBuild;
 
-  PageTextLocale();
+  const PageTextLocale({this.id = 0, this.locale = '', this.text = '', this.verifiedBuild = 0});
 
   factory PageTextLocale.fromJson(Map<String, dynamic> json) {
-    return PageTextLocale()
-      ..id = json['ID'] ?? 0
-      ..locale = json['locale'] ?? ''
-      ..text = json['Text'] ?? ''
-      ..verifiedBuild = json['VerifiedBuild'] ?? 0;
+    return PageTextLocale(
+      id: json['ID'] ?? 0,
+      locale: json['locale'] ?? '',
+      text: json['Text'] ?? '',
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {

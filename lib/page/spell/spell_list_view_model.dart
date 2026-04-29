@@ -85,9 +85,10 @@ class SpellListViewModel {
   }
 
   SpellFilterEntity _buildFilter() {
-    return SpellFilterEntity()
-      ..id = idController.text
-      ..name = nameController.text;
+    return SpellFilterEntity(
+      id: idController.text,
+      name: nameController.text,
+    );
   }
 
   Future<void> paginate(int page) async {

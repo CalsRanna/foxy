@@ -1,16 +1,17 @@
 class GossipMenuFilterEntity {
-  String menuId = '';
-  String text = '';
+  final String menuId;
+  final String text;
 
-  GossipMenuFilterEntity();
+  const GossipMenuFilterEntity({this.menuId = '', this.text = ''});
 
   Map<String, dynamic> toJson() {
     return {'menuId': menuId, 'text': text};
   }
 
   factory GossipMenuFilterEntity.fromJson(Map<String, dynamic> json) {
-    return GossipMenuFilterEntity()
-      ..menuId = json['menuId'] ?? ''
-      ..text = json['text'] ?? '';
+    return GossipMenuFilterEntity(
+      menuId: json['menuId'] ?? '',
+      text: json['text'] ?? '',
+    );
   }
 }

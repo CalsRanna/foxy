@@ -55,17 +55,12 @@ class GlyphPropertyDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 GlyphProperty
   GlyphProperty _collectFromControllers() {
-    final t = GlyphProperty();
-
-    /// Basic
-    t.id = _parseInt(idController.text);
-
-    /// Property
-    t.spellId = _parseInt(spellIdController.text);
-    t.glyphSlotFlags = _parseInt(glyphSlotFlagsController.text);
-    t.spellIconId = _parseInt(spellIconIdController.text);
-
-    return t;
+    return GlyphProperty(
+      id: _parseInt(idController.text),
+      spellId: _parseInt(spellIdController.text),
+      glyphSlotFlags: _parseInt(glyphSlotFlagsController.text),
+      spellIconId: _parseInt(spellIconIdController.text),
+    );
   }
 
   int _parseInt(String text) {

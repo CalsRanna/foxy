@@ -242,9 +242,10 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = QuestInfoRepository();
-      final filter = QuestInfoFilterEntity()
-        ..id = _idController.text
-        ..name = _nameController.text;
+      final filter = QuestInfoFilterEntity(
+        id: _idController.text,
+        name: _nameController.text,
+      );
       final items = await repository.getQuestInfos(filter: filter, page: _page);
       final total = await repository.countQuestInfos(filter: filter);
       if (mounted) {

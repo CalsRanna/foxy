@@ -173,26 +173,27 @@ class GossipMenuOptionViewModel {
   }
 
   GossipMenuOption _collectFromControllers() {
-    final o = GossipMenuOption();
-    o.menuId = int.tryParse(menuIdController.text) ?? 0;
-    o.optionId = int.tryParse(optionIdController.text) ?? 0;
-    o.optionIcon = optionIconController.value.isNotEmpty
-        ? optionIconController.value.first
-        : 0;
-    o.optionText = optionTextController.text;
-    o.optionBroadcastTextId =
-        int.tryParse(optionBroadcastTextIdController.text) ?? 0;
-    o.optionType = optionTypeController.value.isNotEmpty
-        ? optionTypeController.value.first
-        : 0;
-    o.optionNpcFlag = int.tryParse(optionNpcFlagController.text) ?? 0;
-    o.boxCoded = int.tryParse(boxCodedController.text) ?? 0;
-    o.boxMoney = int.tryParse(boxMoneyController.text) ?? 0;
-    o.boxText = boxTextController.text;
-    o.boxBroadcastTextId = int.tryParse(boxBroadcastTextIdController.text) ?? 0;
-    o.actionMenuId = int.tryParse(actionMenuIdController.text) ?? 0;
-    o.actionPoiId = int.tryParse(actionPoiIdController.text) ?? 0;
-    o.verifiedBuild = int.tryParse(verifiedBuildController.text) ?? 0;
-    return o;
+    return GossipMenuOption(
+      menuId: int.tryParse(menuIdController.text) ?? 0,
+      optionId: int.tryParse(optionIdController.text) ?? 0,
+      optionIcon: optionIconController.value.isNotEmpty
+          ? optionIconController.value.first
+          : 0,
+      optionText: optionTextController.text,
+      optionBroadcastTextId:
+          int.tryParse(optionBroadcastTextIdController.text) ?? 0,
+      optionType: optionTypeController.value.isNotEmpty
+          ? optionTypeController.value.first
+          : 0,
+      optionNpcFlag: int.tryParse(optionNpcFlagController.text) ?? 0,
+      boxCoded: int.tryParse(boxCodedController.text) ?? 0,
+      boxMoney: int.tryParse(boxMoneyController.text) ?? 0,
+      boxText: boxTextController.text,
+      boxBroadcastTextId:
+          int.tryParse(boxBroadcastTextIdController.text) ?? 0,
+      actionMenuId: int.tryParse(actionMenuIdController.text) ?? 0,
+      actionPoiId: int.tryParse(actionPoiIdController.text) ?? 0,
+      verifiedBuild: int.tryParse(verifiedBuildController.text) ?? 0,
+    );
   }
 }

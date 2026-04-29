@@ -112,72 +112,63 @@ class CreatureTemplateDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 CreatureTemplate
   CreatureTemplate _collectFromControllers() {
-    final t = CreatureTemplate();
-
-    t.entry = _parseInt(entryController.text);
-    t.name = nameController.text;
-    t.subName = subNameController.text;
-    t.iconName = iconNameController.text;
-    t.minLevel = _parseInt(minLevelController.text);
-    t.maxLevel = _parseInt(maxLevelController.text);
-    t.unitClass = _getSelectValue(unitClassController);
-    t.rank = _getSelectValue(rankController);
-    t.racialLeader = _getSelectValue(racialLeaderController);
-    t.faction = _parseInt(factionController.text);
-    t.family = _getSelectValue(familyController);
-    t.type = _getSelectValue(typeController);
-    t.regenHealth = _getSelectValue(regenerateHealthController);
-    t.petSpellDataId = _parseInt(petSpellDataIdController.text);
-    t.vehicleId = _parseInt(vehicleIdController.text);
-    t.gossipMenuId = _parseInt(gossipMenuIdController.text);
-
-    t.npcFlag = _parseInt(npcFlagController.text);
-    t.typeFlags = _parseInt(typeFlagController.text);
-    t.dynamicFlags = _parseInt(dynamicFlagController.text);
-    t.flagsExtra = _parseInt(extraFlagController.text);
-    t.unitFlags = _parseInt(unitFlagController.text);
-    t.unitFlags2 = _parseInt(unitFlag2Controller.text);
-
-    t.creatureImmunitiesId = _parseInt(creatureImmunitiesIdController.text);
-
-    t.exp = _getSelectValue(expController);
-    t.damageSchool = _getSelectValue(damageSchoolController);
-    t.damageModifier = _parseDouble(damageModifierController.text);
-    t.armorModifier = _parseDouble(armorModifierController.text);
-    t.baseAttackTime = _parseInt(baseAttackTimeController.text);
-    t.baseVariance = _parseDouble(baseVarianceController.text);
-    t.rangeAttackTime = _parseInt(rangeAttackTimeController.text);
-    t.rangeVariance = _parseDouble(rangeVarianceController.text);
-    t.healthModifier = _parseDouble(healthModifierController.text);
-    t.manaModifier = _parseDouble(manaModifierController.text);
-    t.experienceModifier = _parseDouble(experienceModifierController.text);
-    t.speedWalk = _parseDouble(speedWalkController.text);
-    t.speedRun = _parseDouble(speedRunController.text);
-    t.speedSwim = _parseDouble(speedSwimController.text);
-    t.speedFlight = _parseDouble(speedFlightController.text);
-
-    t.minGold = _parseInt(minGoldController.text);
-    t.maxGold = _parseInt(maxGoldController.text);
-    t.lootId = _parseInt(lootController.text);
-    t.pickpocketLoot = _parseInt(pickpocketLootController.text);
-    t.skinLoot = _parseInt(skinLootController.text);
-
-    t.killCredit1 = _parseInt(killCredit1Controller.text);
-    t.killCredit2 = _parseInt(killCredit2Controller.text);
-    t.difficultyEntry1 = _parseInt(difficultyEntry1Controller.text);
-    t.difficultyEntry2 = _parseInt(difficultyEntry2Controller.text);
-    t.difficultyEntry3 = _parseInt(difficultyEntry3Controller.text);
-
-    t.movementId = _parseInt(movementIdController.text);
-    t.movementType = _getSelectValue(movementTypeController);
-    t.hoverHeight = _parseDouble(hoverHeightController.text);
-    t.detectionRange = _parseDouble(detectionRangeController.text);
-
-    t.aiName = aiNameController.text;
-    t.scriptName = scriptNameController.text;
-    t.verifiedBuild = _parseInt(verifiedBuildController.text);
-
-    return t;
+    return CreatureTemplate(
+      entry: _parseInt(entryController.text),
+      name: nameController.text,
+      subName: subNameController.text,
+      iconName: iconNameController.text,
+      minLevel: _parseInt(minLevelController.text),
+      maxLevel: _parseInt(maxLevelController.text),
+      unitClass: _getSelectValue(unitClassController),
+      rank: _getSelectValue(rankController),
+      racialLeader: _getSelectValue(racialLeaderController),
+      faction: _parseInt(factionController.text),
+      family: _getSelectValue(familyController),
+      type: _getSelectValue(typeController),
+      regenHealth: _getSelectValue(regenerateHealthController),
+      petSpellDataId: _parseInt(petSpellDataIdController.text),
+      vehicleId: _parseInt(vehicleIdController.text),
+      gossipMenuId: _parseInt(gossipMenuIdController.text),
+      npcFlag: _parseInt(npcFlagController.text),
+      typeFlags: _parseInt(typeFlagController.text),
+      dynamicFlags: _parseInt(dynamicFlagController.text),
+      flagsExtra: _parseInt(extraFlagController.text),
+      unitFlags: _parseInt(unitFlagController.text),
+      unitFlags2: _parseInt(unitFlag2Controller.text),
+      creatureImmunitiesId: _parseInt(creatureImmunitiesIdController.text),
+      exp: _getSelectValue(expController),
+      damageSchool: _getSelectValue(damageSchoolController),
+      damageModifier: _parseDouble(damageModifierController.text),
+      armorModifier: _parseDouble(armorModifierController.text),
+      baseAttackTime: _parseInt(baseAttackTimeController.text),
+      baseVariance: _parseDouble(baseVarianceController.text),
+      rangeAttackTime: _parseInt(rangeAttackTimeController.text),
+      rangeVariance: _parseDouble(rangeVarianceController.text),
+      healthModifier: _parseDouble(healthModifierController.text),
+      manaModifier: _parseDouble(manaModifierController.text),
+      experienceModifier: _parseDouble(experienceModifierController.text),
+      speedWalk: _parseDouble(speedWalkController.text),
+      speedRun: _parseDouble(speedRunController.text),
+      speedSwim: _parseDouble(speedSwimController.text),
+      speedFlight: _parseDouble(speedFlightController.text),
+      minGold: _parseInt(minGoldController.text),
+      maxGold: _parseInt(maxGoldController.text),
+      lootId: _parseInt(lootController.text),
+      pickpocketLoot: _parseInt(pickpocketLootController.text),
+      skinLoot: _parseInt(skinLootController.text),
+      killCredit1: _parseInt(killCredit1Controller.text),
+      killCredit2: _parseInt(killCredit2Controller.text),
+      difficultyEntry1: _parseInt(difficultyEntry1Controller.text),
+      difficultyEntry2: _parseInt(difficultyEntry2Controller.text),
+      difficultyEntry3: _parseInt(difficultyEntry3Controller.text),
+      movementId: _parseInt(movementIdController.text),
+      movementType: _getSelectValue(movementTypeController),
+      hoverHeight: _parseDouble(hoverHeightController.text),
+      detectionRange: _parseDouble(detectionRangeController.text),
+      aiName: aiNameController.text,
+      scriptName: scriptNameController.text,
+      verifiedBuild: _parseInt(verifiedBuildController.text),
+    );
   }
 
   int _parseInt(String text) {

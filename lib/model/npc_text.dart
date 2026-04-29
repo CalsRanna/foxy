@@ -4,22 +4,22 @@
 /// 每组包含: lang{n} / Probability{n} / text{n}_0 / text{n}_1
 ///          / BroadcastTextID{n} / em{n}_0..5
 class NpcText {
-  int id = 0;
-  int verifiedBuild = 0;
+  final int id;
+  final int verifiedBuild;
+  final List<NpcTextEntry> entries;
 
-  /// 8 组数据，index 0..7
-  final List<NpcTextEntry> entries = List.generate(8, (_) => NpcTextEntry());
-
-  NpcText();
+  const NpcText({
+    this.id = 0,
+    this.verifiedBuild = 0,
+    this.entries = const [],
+  });
 
   factory NpcText.fromJson(Map<String, dynamic> json) {
-    var obj = NpcText();
-    obj.id = json['ID'] ?? json['id'] ?? 0;
-    obj.verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0;
-    for (var n = 0; n < 8; n++) {
-      obj.entries[n] = NpcTextEntry.fromJson(json, n);
-    }
-    return obj;
+    return NpcText(
+      id: json['ID'] ?? json['id'] ?? 0,
+      verifiedBuild: json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0,
+      entries: List.generate(8, (n) => NpcTextEntry.fromJson(json, n)),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -33,29 +33,34 @@ class NpcText {
 
 /// npc_text 的单组数据
 class NpcTextEntry {
-  String lang = '0';
-  double probability = 0;
-  String text0 = '';
-  String text1 = '';
-  int broadcastTextId = 0;
-  List<int> emotes = List.filled(6, 0);
+  final String lang;
+  final double probability;
+  final String text0;
+  final String text1;
+  final int broadcastTextId;
+  final List<int> emotes;
 
-  NpcTextEntry();
+  const NpcTextEntry({
+    this.lang = '0',
+    this.probability = 0,
+    this.text0 = '',
+    this.text1 = '',
+    this.broadcastTextId = 0,
+    this.emotes = const [0, 0, 0, 0, 0, 0],
+  });
 
   factory NpcTextEntry.fromJson(Map<String, dynamic> json, int n) {
-    var obj = NpcTextEntry();
-    obj.lang = json['lang$n']?.toString() ?? '0';
-    obj.probability = (json['Probability$n'] is num)
-        ? (json['Probability$n'] as num).toDouble()
-        : double.tryParse(json['Probability$n']?.toString() ?? '') ?? 0;
-    obj.text0 = json['text${n}_0']?.toString() ?? '';
-    obj.text1 = json['text${n}_1']?.toString() ?? '';
-    obj.broadcastTextId =
-        json['BroadcastTextID$n'] ?? json['broadcasttextid$n'] ?? 0;
-    for (var i = 0; i < 6; i++) {
-      obj.emotes[i] = json['em${n}_$i'] ?? 0;
-    }
-    return obj;
+    return NpcTextEntry(
+      lang: json['lang$n']?.toString() ?? '0',
+      probability: (json['Probability$n'] is num)
+          ? (json['Probability$n'] as num).toDouble()
+          : double.tryParse(json['Probability$n']?.toString() ?? '') ?? 0,
+      text0: json['text${n}_0']?.toString() ?? '',
+      text1: json['text${n}_1']?.toString() ?? '',
+      broadcastTextId:
+          json['BroadcastTextID$n'] ?? json['broadcasttextid$n'] ?? 0,
+      emotes: List.generate(6, (i) => json['em${n}_$i'] ?? 0),
+    );
   }
 
   Map<String, dynamic> toJson(int n) {

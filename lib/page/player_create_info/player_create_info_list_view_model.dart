@@ -114,9 +114,10 @@ class PlayerCreateInfoListViewModel {
   }
 
   PlayerCreateInfoFilterEntity _buildFilter() {
-    return PlayerCreateInfoFilterEntity()
-      ..race = raceController.text
-      ..class_ = classController.text;
+    return PlayerCreateInfoFilterEntity(
+      race: raceController.text,
+      class_: classController.text,
+    );
   }
 
   Future<List<PlayerCreateInfo>> _search() async {

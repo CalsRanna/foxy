@@ -93,29 +93,25 @@ class QuestTemplateAddonViewModel {
   }
 
   QuestTemplateAddon _collectFromControllers() {
-    final addon = QuestTemplateAddon();
-    addon.id = questId.value;
-    addon.maxLevel = _parseInt(maxLevelController.text);
-    addon.allowableClasses = _parseInt(allowableClassesController.text);
-    addon.sourceSpellId = _parseInt(sourceSpellIdController.text);
-    addon.prevQuestId = _parseInt(prevQuestIdController.text);
-    addon.nextQuestId = _parseInt(nextQuestIdController.text);
-    addon.exclusiveGroup = _parseInt(exclusiveGroupController.text);
-    addon.rewardMailTemplateId = _parseInt(rewardMailTemplateIdController.text);
-    addon.rewardMailDelay = _parseInt(rewardMailDelayController.text);
-    addon.requiredSkillId = _parseInt(requiredSkillIdController.text);
-    addon.requiredSkillPoints = _parseInt(requiredSkillPointsController.text);
-    addon.requiredMinRepFaction = _parseInt(
-      requiredMinRepFactionController.text,
+    return QuestTemplateAddon(
+      id: questId.value,
+      maxLevel: _parseInt(maxLevelController.text),
+      allowableClasses: _parseInt(allowableClassesController.text),
+      sourceSpellId: _parseInt(sourceSpellIdController.text),
+      prevQuestId: _parseInt(prevQuestIdController.text),
+      nextQuestId: _parseInt(nextQuestIdController.text),
+      exclusiveGroup: _parseInt(exclusiveGroupController.text),
+      rewardMailTemplateId: _parseInt(rewardMailTemplateIdController.text),
+      rewardMailDelay: _parseInt(rewardMailDelayController.text),
+      requiredSkillId: _parseInt(requiredSkillIdController.text),
+      requiredSkillPoints: _parseInt(requiredSkillPointsController.text),
+      requiredMinRepFaction: _parseInt(requiredMinRepFactionController.text),
+      requiredMaxRepFaction: _parseInt(requiredMaxRepFactionController.text),
+      requiredMinRepValue: _parseInt(requiredMinRepValueController.text),
+      requiredMaxRepValue: _parseInt(requiredMaxRepValueController.text),
+      providedItemCount: _parseInt(providedItemCountController.text),
+      specialFlags: _parseInt(specialFlagsController.text),
     );
-    addon.requiredMaxRepFaction = _parseInt(
-      requiredMaxRepFactionController.text,
-    );
-    addon.requiredMinRepValue = _parseInt(requiredMinRepValueController.text);
-    addon.requiredMaxRepValue = _parseInt(requiredMaxRepValueController.text);
-    addon.providedItemCount = _parseInt(providedItemCountController.text);
-    addon.specialFlags = _parseInt(specialFlagsController.text);
-    return addon;
   }
 
   int _parseInt(String text) {

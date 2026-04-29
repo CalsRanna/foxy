@@ -58,13 +58,14 @@ class CreatureEquipTemplateViewModel {
 
   /// 从表单收集数据
   CreatureEquipTemplate collectFromForm() {
-    final equip = CreatureEquipTemplate();
-    equip.creatureID = creatureId.value;
-    equip.id = _parseInt(idController.text);
-    equip.itemID1 = _parseInt(itemID1Controller.text);
-    equip.itemID2 = _parseInt(itemID2Controller.text);
-    equip.itemID3 = _parseInt(itemID3Controller.text);
-    equip.verifiedBuild = _parseInt(verifiedBuildController.text);
+    final equip = CreatureEquipTemplate(
+      creatureID: creatureId.value,
+      id: _parseInt(idController.text),
+      itemID1: _parseInt(itemID1Controller.text),
+      itemID2: _parseInt(itemID2Controller.text),
+      itemID3: _parseInt(itemID3Controller.text),
+      verifiedBuild: _parseInt(verifiedBuildController.text),
+    );
     return equip;
   }
 

@@ -94,16 +94,16 @@ class PlayerCreateInfoDetailViewModel {
   }
 
   PlayerCreateInfo _collect() {
-    final i = PlayerCreateInfo();
-    i.race = _parseInt(raceController.text);
-    i.class_ = _parseInt(classController.text);
-    i.map = _parseInt(mapController.text);
-    i.zone = _parseInt(zoneController.text);
-    i.positionX = _parseDouble(positionXController.text);
-    i.positionY = _parseDouble(positionYController.text);
-    i.positionZ = _parseDouble(positionZController.text);
-    i.orientation = _parseDouble(orientationController.text);
-    return i;
+    return PlayerCreateInfo(
+      race: _parseInt(raceController.text),
+      class_: _parseInt(classController.text),
+      map: _parseInt(mapController.text),
+      zone: _parseInt(zoneController.text),
+      positionX: _parseDouble(positionXController.text),
+      positionY: _parseDouble(positionYController.text),
+      positionZ: _parseDouble(positionZController.text),
+      orientation: _parseDouble(orientationController.text),
+    );
   }
 
   int _parseInt(String text) {

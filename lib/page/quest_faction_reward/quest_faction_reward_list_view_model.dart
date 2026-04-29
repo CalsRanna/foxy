@@ -80,8 +80,7 @@ class QuestFactionRewardListViewModel {
   }
 
   QuestFactionRewardFilterEntity _buildFilter() {
-    return QuestFactionRewardFilterEntity()
-      ..id = entryController.text;
+    return QuestFactionRewardFilterEntity(id: entryController.text);
   }
 
   Future<void> paginate(int page) async {

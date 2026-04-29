@@ -1,22 +1,30 @@
 /// 法术奖励系数
 class SpellBonusData {
-  int entry = 0;
-  double directBonus = 0.0;
-  double dotBonus = 0.0;
-  double apBonus = 0.0;
-  double apDotBonus = 0.0;
-  String comments = '';
+  final int entry;
+  final double directBonus;
+  final double dotBonus;
+  final double apBonus;
+  final double apDotBonus;
+  final String comments;
 
-  SpellBonusData();
+  const SpellBonusData({
+    this.entry = 0,
+    this.directBonus = 0.0,
+    this.dotBonus = 0.0,
+    this.apBonus = 0.0,
+    this.apDotBonus = 0.0,
+    this.comments = '',
+  });
 
   factory SpellBonusData.fromJson(Map<String, dynamic> json) {
-    return SpellBonusData()
-      ..entry = json['entry'] ?? 0
-      ..directBonus = (json['direct_bonus'] ?? 0.0).toDouble()
-      ..dotBonus = (json['dot_bonus'] ?? 0.0).toDouble()
-      ..apBonus = (json['ap_bonus'] ?? 0.0).toDouble()
-      ..apDotBonus = (json['ap_dot_bonus'] ?? 0.0).toDouble()
-      ..comments = json['comments'] ?? '';
+    return SpellBonusData(
+      entry: json['entry'] ?? 0,
+      directBonus: (json['direct_bonus'] ?? 0.0).toDouble(),
+      dotBonus: (json['dot_bonus'] ?? 0.0).toDouble(),
+      apBonus: (json['ap_bonus'] ?? 0.0).toDouble(),
+      apDotBonus: (json['ap_dot_bonus'] ?? 0.0).toDouble(),
+      comments: json['comments'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

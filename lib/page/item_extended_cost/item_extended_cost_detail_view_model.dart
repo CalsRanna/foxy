@@ -69,31 +69,24 @@ class ItemExtendedCostDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 ItemExtendedCost
   ItemExtendedCost _collectFromControllers() {
-    final t = ItemExtendedCost();
-
-    /// Basic
-    t.id = _parseInt(idController.text);
-    t.honorPoints = _parseInt(honorPointsController.text);
-    t.arenaPoints = _parseInt(arenaPointsController.text);
-    t.arenaBracket = _parseInt(arenaBracketController.text);
-    t.requiredArenaRating = _parseInt(requiredArenaRatingController.text);
-    t.itemPurchaseGroup = _parseInt(itemPurchaseGroupController.text);
-
-    /// ItemID
-    t.itemID0 = _parseInt(itemID0Controller.text);
-    t.itemID1 = _parseInt(itemID1Controller.text);
-    t.itemID2 = _parseInt(itemID2Controller.text);
-    t.itemID3 = _parseInt(itemID3Controller.text);
-    t.itemID4 = _parseInt(itemID4Controller.text);
-
-    /// ItemCount
-    t.itemCount0 = _parseInt(itemCount0Controller.text);
-    t.itemCount1 = _parseInt(itemCount1Controller.text);
-    t.itemCount2 = _parseInt(itemCount2Controller.text);
-    t.itemCount3 = _parseInt(itemCount3Controller.text);
-    t.itemCount4 = _parseInt(itemCount4Controller.text);
-
-    return t;
+    return ItemExtendedCost(
+      id: _parseInt(idController.text),
+      honorPoints: _parseInt(honorPointsController.text),
+      arenaPoints: _parseInt(arenaPointsController.text),
+      arenaBracket: _parseInt(arenaBracketController.text),
+      requiredArenaRating: _parseInt(requiredArenaRatingController.text),
+      itemPurchaseGroup: _parseInt(itemPurchaseGroupController.text),
+      itemID0: _parseInt(itemID0Controller.text),
+      itemID1: _parseInt(itemID1Controller.text),
+      itemID2: _parseInt(itemID2Controller.text),
+      itemID3: _parseInt(itemID3Controller.text),
+      itemID4: _parseInt(itemID4Controller.text),
+      itemCount0: _parseInt(itemCount0Controller.text),
+      itemCount1: _parseInt(itemCount1Controller.text),
+      itemCount2: _parseInt(itemCount2Controller.text),
+      itemCount3: _parseInt(itemCount3Controller.text),
+      itemCount4: _parseInt(itemCount4Controller.text),
+    );
   }
 
   int _parseInt(String text) {

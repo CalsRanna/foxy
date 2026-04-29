@@ -1,36 +1,49 @@
-/// 生物击杀声望
 class CreatureOnKillReputation {
-  int creatureID = 0;
-  int rewOnKillRepFaction1 = 0;
-  int rewOnKillRepFaction2 = 0;
-  int maxStanding1 = 0;
-  int maxStanding2 = 0;
-  bool isTeamAward1 = false;
-  bool isTeamAward2 = false;
-  double rewOnKillRepValue1 = 0.0;
-  double rewOnKillRepValue2 = 0.0;
-  int teamDependent = 0;
+  final int creatureID;
+  final int rewOnKillRepFaction1;
+  final int rewOnKillRepFaction2;
+  final int maxStanding1;
+  final int maxStanding2;
+  final bool isTeamAward1;
+  final bool isTeamAward2;
+  final double rewOnKillRepValue1;
+  final double rewOnKillRepValue2;
+  final int teamDependent;
 
-  CreatureOnKillReputation();
+  const CreatureOnKillReputation({
+    this.creatureID = 0,
+    this.rewOnKillRepFaction1 = 0,
+    this.rewOnKillRepFaction2 = 0,
+    this.maxStanding1 = 0,
+    this.maxStanding2 = 0,
+    this.isTeamAward1 = false,
+    this.isTeamAward2 = false,
+    this.rewOnKillRepValue1 = 0.0,
+    this.rewOnKillRepValue2 = 0.0,
+    this.teamDependent = 0,
+  });
 
   factory CreatureOnKillReputation.fromJson(Map<String, dynamic> json) {
-    return CreatureOnKillReputation()
-      ..creatureID = json['creature_id'] ?? json['creatureID'] ?? 0
-      ..rewOnKillRepFaction1 =
-          json['RewOnKillRepFaction1'] ?? json['rewOnKillRepFaction1'] ?? 0
-      ..rewOnKillRepFaction2 =
-          json['RewOnKillRepFaction2'] ?? json['rewOnKillRepFaction2'] ?? 0
-      ..maxStanding1 = json['MaxStanding1'] ?? json['maxStanding1'] ?? 0
-      ..maxStanding2 = json['MaxStanding2'] ?? json['maxStanding2'] ?? 0
-      ..isTeamAward1 = (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1
-      ..isTeamAward2 = (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1
-      ..rewOnKillRepValue1 =
+    return CreatureOnKillReputation(
+      creatureID: json['creature_id'] ?? json['creatureID'] ?? 0,
+      rewOnKillRepFaction1:
+          json['RewOnKillRepFaction1'] ?? json['rewOnKillRepFaction1'] ?? 0,
+      rewOnKillRepFaction2:
+          json['RewOnKillRepFaction2'] ?? json['rewOnKillRepFaction2'] ?? 0,
+      maxStanding1: json['MaxStanding1'] ?? json['maxStanding1'] ?? 0,
+      maxStanding2: json['MaxStanding2'] ?? json['maxStanding2'] ?? 0,
+      isTeamAward1:
+          (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1,
+      isTeamAward2:
+          (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1,
+      rewOnKillRepValue1:
           (json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0.0)
-              .toDouble()
-      ..rewOnKillRepValue2 =
+              .toDouble(),
+      rewOnKillRepValue2:
           (json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2'] ?? 0.0)
-              .toDouble()
-      ..teamDependent = json['TeamDependent'] ?? json['teamDependent'] ?? 0;
+              .toDouble(),
+      teamDependent: json['TeamDependent'] ?? json['teamDependent'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {

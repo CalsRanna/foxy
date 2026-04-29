@@ -45,12 +45,12 @@ class GameObjectQuestItemViewModel {
   }
 
   GameObjectQuestItem collectFromForm() {
-    final questItem = GameObjectQuestItem();
-    questItem.gameObjectEntry = gameObjectEntry.value;
-    questItem.idx = _parseInt(idxController.text);
-    questItem.itemId = _parseInt(itemIdController.text);
-    questItem.verifiedBuild = _parseInt(verifiedBuildController.text);
-    return questItem;
+    return GameObjectQuestItem(
+      gameObjectEntry: gameObjectEntry.value,
+      idx: _parseInt(idxController.text),
+      itemId: _parseInt(itemIdController.text),
+      verifiedBuild: _parseInt(verifiedBuildController.text),
+    );
   }
 
   int _parseInt(String text) {

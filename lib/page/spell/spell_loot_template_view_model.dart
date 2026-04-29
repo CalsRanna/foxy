@@ -65,17 +65,18 @@ class SpellLootTemplateViewModel {
   }
 
   SpellLootTemplate collectFromForm() {
-    final data = SpellLootTemplate();
-    data.entry = spellId.value;
-    data.item = _parseInt(itemController.text);
-    data.reference = _parseInt(referenceController.text);
-    data.chance = _parseDouble(chanceController.text);
-    data.questRequired = _parseInt(questRequiredController.text);
-    data.lootMode = _parseInt(lootModeController.text);
-    data.groupId = _parseInt(groupIdController.text);
-    data.minCount = _parseInt(minCountController.text);
-    data.maxCount = _parseInt(maxCountController.text);
-    data.comment = commentController.text;
+    final data = SpellLootTemplate(
+      entry: spellId.value,
+      item: _parseInt(itemController.text),
+      reference: _parseInt(referenceController.text),
+      chance: _parseDouble(chanceController.text),
+      questRequired: _parseInt(questRequiredController.text),
+      lootMode: _parseInt(lootModeController.text),
+      groupId: _parseInt(groupIdController.text),
+      minCount: _parseInt(minCountController.text),
+      maxCount: _parseInt(maxCountController.text),
+      comment: commentController.text,
+    );
     return data;
   }
 

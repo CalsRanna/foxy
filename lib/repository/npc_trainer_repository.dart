@@ -84,8 +84,17 @@ class NpcTrainerRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newTrainer = NpcTrainer.fromJson(source.toJson());
-    newTrainer.spellID = maxSpellID + 1;
+    var newTrainer = NpcTrainer(
+      id: source.id,
+      spellID: maxSpellID + 1,
+      moneyCost: source.moneyCost,
+      reqSkillLine: source.reqSkillLine,
+      reqSkillRank: source.reqSkillRank,
+      reqLevel: source.reqLevel,
+      reqSpell: source.reqSpell,
+      spellName: source.spellName,
+      spellSubtext: source.spellSubtext,
+    );
 
     await storeNpcTrainer(newTrainer);
     return newTrainer;

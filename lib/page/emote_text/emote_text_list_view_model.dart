@@ -99,9 +99,7 @@ class EmoteTextListViewModel {
   }
 
   EmoteTextFilterEntity _buildFilter() {
-    return EmoteTextFilterEntity()
-      ..id = entryController.text
-      ..name = nameController.text;
+    return EmoteTextFilterEntity(id: entryController.text, name: nameController.text);
   }
 
   Future<void> paginate(int page) async {

@@ -1,13 +1,14 @@
 class ConditionFilterEntity {
-  String sourceTypeOrReferenceId = '';
-  String sourceEntry = '';
+  final String sourceTypeOrReferenceId;
+  final String sourceEntry;
 
-  ConditionFilterEntity();
+  const ConditionFilterEntity({this.sourceTypeOrReferenceId = '', this.sourceEntry = ''});
 
   factory ConditionFilterEntity.fromJson(Map<String, dynamic> json) {
-    return ConditionFilterEntity()
-      ..sourceTypeOrReferenceId = json['sourceTypeOrReferenceId'] ?? ''
-      ..sourceEntry = json['sourceEntry'] ?? '';
+    return ConditionFilterEntity(
+      sourceTypeOrReferenceId: json['sourceTypeOrReferenceId'] ?? '',
+      sourceEntry: json['sourceEntry'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

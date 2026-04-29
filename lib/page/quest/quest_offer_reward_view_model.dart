@@ -76,18 +76,18 @@ class QuestOfferRewardViewModel {
   }
 
   QuestOfferReward _collectFromControllers() {
-    final model = QuestOfferReward();
-    model.id = questId.value;
-    model.emote1 = _parseInt(emote1Controller.text);
-    model.emote2 = _parseInt(emote2Controller.text);
-    model.emote3 = _parseInt(emote3Controller.text);
-    model.emote4 = _parseInt(emote4Controller.text);
-    model.emoteDelay1 = _parseInt(emoteDelay1Controller.text);
-    model.emoteDelay2 = _parseInt(emoteDelay2Controller.text);
-    model.emoteDelay3 = _parseInt(emoteDelay3Controller.text);
-    model.emoteDelay4 = _parseInt(emoteDelay4Controller.text);
-    model.rewardText = rewardTextController.text;
-    return model;
+    return QuestOfferReward(
+      id: questId.value,
+      emote1: _parseInt(emote1Controller.text),
+      emote2: _parseInt(emote2Controller.text),
+      emote3: _parseInt(emote3Controller.text),
+      emote4: _parseInt(emote4Controller.text),
+      emoteDelay1: _parseInt(emoteDelay1Controller.text),
+      emoteDelay2: _parseInt(emoteDelay2Controller.text),
+      emoteDelay3: _parseInt(emoteDelay3Controller.text),
+      emoteDelay4: _parseInt(emoteDelay4Controller.text),
+      rewardText: rewardTextController.text,
+    );
   }
 
   int _parseInt(String text) {

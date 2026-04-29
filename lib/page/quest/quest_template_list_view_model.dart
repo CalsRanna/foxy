@@ -111,9 +111,10 @@ class QuestTemplateListViewModel {
   }
 
   QuestTemplateFilterEntity _buildFilter() {
-    return QuestTemplateFilterEntity()
-      ..id = idController.text
-      ..title = titleController.text;
+    return QuestTemplateFilterEntity(
+      id: idController.text,
+      title: titleController.text,
+    );
   }
 
   void _logActivity(ActivityActionType action, int id) {

@@ -1,13 +1,14 @@
 class AreaTableFilterEntity {
-  String id = '';
-  String name = '';
+  final String id;
+  final String name;
 
-  AreaTableFilterEntity();
+  const AreaTableFilterEntity({this.id = '', this.name = ''});
 
   factory AreaTableFilterEntity.fromJson(Map<String, dynamic> json) {
-    return AreaTableFilterEntity()
-      ..id = json['id'] ?? ''
-      ..name = json['name'] ?? '';
+    return AreaTableFilterEntity(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

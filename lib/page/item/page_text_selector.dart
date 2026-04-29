@@ -232,9 +232,7 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       final repository = PageTextRepository();
-      final filter = PageTextFilterEntity()
-        ..id = _idController.text
-        ..text = '';
+      final filter = PageTextFilterEntity(id: _idController.text, text: '');
       final items = await repository.getPageTexts(filter: filter, page: _page);
       final total = await repository.countPageTexts(filter: filter);
       if (mounted) {

@@ -298,125 +298,113 @@ class QuestTemplateDetailViewModel {
   }
 
   QuestTemplate _collectFromControllers() {
-    final t = QuestTemplate();
-    t.id = _parseInt(idController.text);
-    t.questType = _parseInt(questTypeController.text);
-    t.questLevel = _parseInt(questLevelController.text);
-    t.minLevel = _parseInt(minLevelController.text);
-    t.questSortId = _parseInt(questSortIdController.text);
-    t.questInfoId = _parseInt(questInfoIdController.text);
-    t.suggestedGroupNum = _parseInt(suggestedGroupNumController.text);
-    t.requiredFactionId1 = _parseInt(requiredFactionId1Controller.text);
-    t.requiredFactionId2 = _parseInt(requiredFactionId2Controller.text);
-    t.requiredFactionValue1 = _parseInt(requiredFactionValue1Controller.text);
-    t.requiredFactionValue2 = _parseInt(requiredFactionValue2Controller.text);
-    t.rewardNextQuest = _parseInt(rewardNextQuestController.text);
-    t.rewardXpDifficulty = _parseInt(rewardXpDifficultyController.text);
-    t.rewardMoney = _parseInt(rewardMoneyController.text);
-    t.rewardMoneyDifficulty = _parseInt(rewardMoneyDifficultyController.text);
-    t.rewardDisplaySpell = _parseInt(rewardDisplaySpellController.text);
-    t.rewardSpell = _parseInt(rewardSpellController.text);
-    t.rewardHonor = _parseInt(rewardHonorController.text);
-    t.rewardKillHonor = _parseDouble(rewardKillHonorController.text);
-    t.startItem = _parseInt(startItemController.text);
-    t.flags = _parseInt(flagsController.text);
-    t.requiredPlayerKills = _parseInt(requiredPlayerKillsController.text);
-    t.rewardItem1 = _parseInt(rewardItem1Controller.text);
-    t.rewardAmount1 = _parseInt(rewardAmount1Controller.text);
-    t.rewardItem2 = _parseInt(rewardItem2Controller.text);
-    t.rewardAmount2 = _parseInt(rewardAmount2Controller.text);
-    t.rewardItem3 = _parseInt(rewardItem3Controller.text);
-    t.rewardAmount3 = _parseInt(rewardAmount3Controller.text);
-    t.rewardItem4 = _parseInt(rewardItem4Controller.text);
-    t.rewardAmount4 = _parseInt(rewardAmount4Controller.text);
-    t.itemDrop1 = _parseInt(itemDrop1Controller.text);
-    t.itemDropQuantity1 = _parseInt(itemDropQuantity1Controller.text);
-    t.itemDrop2 = _parseInt(itemDrop2Controller.text);
-    t.itemDropQuantity2 = _parseInt(itemDropQuantity2Controller.text);
-    t.itemDrop3 = _parseInt(itemDrop3Controller.text);
-    t.itemDropQuantity3 = _parseInt(itemDropQuantity3Controller.text);
-    t.itemDrop4 = _parseInt(itemDrop4Controller.text);
-    t.itemDropQuantity4 = _parseInt(itemDropQuantity4Controller.text);
-    t.rewardChoiceItemId1 = _parseInt(rewardChoiceItemId1Controller.text);
-    t.rewardChoiceItemQuantity1 = _parseInt(
-      rewardChoiceItemQuantity1Controller.text,
+    return QuestTemplate(
+      id: _parseInt(idController.text),
+      questType: _parseInt(questTypeController.text),
+      questLevel: _parseInt(questLevelController.text),
+      minLevel: _parseInt(minLevelController.text),
+      questSortId: _parseInt(questSortIdController.text),
+      questInfoId: _parseInt(questInfoIdController.text),
+      suggestedGroupNum: _parseInt(suggestedGroupNumController.text),
+      requiredFactionId1: _parseInt(requiredFactionId1Controller.text),
+      requiredFactionId2: _parseInt(requiredFactionId2Controller.text),
+      requiredFactionValue1: _parseInt(requiredFactionValue1Controller.text),
+      requiredFactionValue2: _parseInt(requiredFactionValue2Controller.text),
+      rewardNextQuest: _parseInt(rewardNextQuestController.text),
+      rewardXpDifficulty: _parseInt(rewardXpDifficultyController.text),
+      rewardMoney: _parseInt(rewardMoneyController.text),
+      rewardMoneyDifficulty: _parseInt(rewardMoneyDifficultyController.text),
+      rewardDisplaySpell: _parseInt(rewardDisplaySpellController.text),
+      rewardSpell: _parseInt(rewardSpellController.text),
+      rewardHonor: _parseInt(rewardHonorController.text),
+      rewardKillHonor: _parseDouble(rewardKillHonorController.text),
+      startItem: _parseInt(startItemController.text),
+      flags: _parseInt(flagsController.text),
+      requiredPlayerKills: _parseInt(requiredPlayerKillsController.text),
+      rewardItem1: _parseInt(rewardItem1Controller.text),
+      rewardAmount1: _parseInt(rewardAmount1Controller.text),
+      rewardItem2: _parseInt(rewardItem2Controller.text),
+      rewardAmount2: _parseInt(rewardAmount2Controller.text),
+      rewardItem3: _parseInt(rewardItem3Controller.text),
+      rewardAmount3: _parseInt(rewardAmount3Controller.text),
+      rewardItem4: _parseInt(rewardItem4Controller.text),
+      rewardAmount4: _parseInt(rewardAmount4Controller.text),
+      itemDrop1: _parseInt(itemDrop1Controller.text),
+      itemDropQuantity1: _parseInt(itemDropQuantity1Controller.text),
+      itemDrop2: _parseInt(itemDrop2Controller.text),
+      itemDropQuantity2: _parseInt(itemDropQuantity2Controller.text),
+      itemDrop3: _parseInt(itemDrop3Controller.text),
+      itemDropQuantity3: _parseInt(itemDropQuantity3Controller.text),
+      itemDrop4: _parseInt(itemDrop4Controller.text),
+      itemDropQuantity4: _parseInt(itemDropQuantity4Controller.text),
+      rewardChoiceItemId1: _parseInt(rewardChoiceItemId1Controller.text),
+      rewardChoiceItemQuantity1: _parseInt(rewardChoiceItemQuantity1Controller.text),
+      rewardChoiceItemId2: _parseInt(rewardChoiceItemId2Controller.text),
+      rewardChoiceItemQuantity2: _parseInt(rewardChoiceItemQuantity2Controller.text),
+      rewardChoiceItemId3: _parseInt(rewardChoiceItemId3Controller.text),
+      rewardChoiceItemQuantity3: _parseInt(rewardChoiceItemQuantity3Controller.text),
+      rewardChoiceItemId4: _parseInt(rewardChoiceItemId4Controller.text),
+      rewardChoiceItemQuantity4: _parseInt(rewardChoiceItemQuantity4Controller.text),
+      rewardChoiceItemId5: _parseInt(rewardChoiceItemId5Controller.text),
+      rewardChoiceItemQuantity5: _parseInt(rewardChoiceItemQuantity5Controller.text),
+      rewardChoiceItemId6: _parseInt(rewardChoiceItemId6Controller.text),
+      rewardChoiceItemQuantity6: _parseInt(rewardChoiceItemQuantity6Controller.text),
+      poiContinent: _parseInt(poiContinentController.text),
+      poiX: _parseDouble(poiXController.text),
+      poiY: _parseDouble(poiYController.text),
+      poiPriority: _parseInt(poiPriorityController.text),
+      rewardTitle: _parseInt(rewardTitleController.text),
+      rewardTalents: _parseInt(rewardTalentsController.text),
+      rewardArenaPoints: _parseInt(rewardArenaPointsController.text),
+      rewardFactionId1: _parseInt(rewardFactionId1Controller.text),
+      rewardFactionValue1: _parseInt(rewardFactionValue1Controller.text),
+      rewardFactionOverride1: _parseInt(rewardFactionOverride1Controller.text),
+      rewardFactionId2: _parseInt(rewardFactionId2Controller.text),
+      rewardFactionValue2: _parseInt(rewardFactionValue2Controller.text),
+      rewardFactionOverride2: _parseInt(rewardFactionOverride2Controller.text),
+      rewardFactionId3: _parseInt(rewardFactionId3Controller.text),
+      rewardFactionValue3: _parseInt(rewardFactionValue3Controller.text),
+      rewardFactionOverride3: _parseInt(rewardFactionOverride3Controller.text),
+      rewardFactionId4: _parseInt(rewardFactionId4Controller.text),
+      rewardFactionValue4: _parseInt(rewardFactionValue4Controller.text),
+      rewardFactionOverride4: _parseInt(rewardFactionOverride4Controller.text),
+      rewardFactionId5: _parseInt(rewardFactionId5Controller.text),
+      rewardFactionValue5: _parseInt(rewardFactionValue5Controller.text),
+      rewardFactionOverride5: _parseInt(rewardFactionOverride5Controller.text),
+      timeAllowed: _parseInt(timeAllowedController.text),
+      allowableRaces: _parseInt(allowableRacesController.text),
+      logTitle: logTitleController.text,
+      logDescription: logDescriptionController.text,
+      questDescription: questDescriptionController.text,
+      areaDescription: areaDescriptionController.text,
+      questCompletionLog: questCompletionLogController.text,
+      requiredNpcOrGo1: _parseInt(requiredNpcOrGo1Controller.text),
+      requiredNpcOrGo2: _parseInt(requiredNpcOrGo2Controller.text),
+      requiredNpcOrGo3: _parseInt(requiredNpcOrGo3Controller.text),
+      requiredNpcOrGo4: _parseInt(requiredNpcOrGo4Controller.text),
+      requiredNpcOrGoCount1: _parseInt(requiredNpcOrGoCount1Controller.text),
+      requiredNpcOrGoCount2: _parseInt(requiredNpcOrGoCount2Controller.text),
+      requiredNpcOrGoCount3: _parseInt(requiredNpcOrGoCount3Controller.text),
+      requiredNpcOrGoCount4: _parseInt(requiredNpcOrGoCount4Controller.text),
+      requiredItemId1: _parseInt(requiredItemId1Controller.text),
+      requiredItemId2: _parseInt(requiredItemId2Controller.text),
+      requiredItemId3: _parseInt(requiredItemId3Controller.text),
+      requiredItemId4: _parseInt(requiredItemId4Controller.text),
+      requiredItemId5: _parseInt(requiredItemId5Controller.text),
+      requiredItemId6: _parseInt(requiredItemId6Controller.text),
+      requiredItemCount1: _parseInt(requiredItemCount1Controller.text),
+      requiredItemCount2: _parseInt(requiredItemCount2Controller.text),
+      requiredItemCount3: _parseInt(requiredItemCount3Controller.text),
+      requiredItemCount4: _parseInt(requiredItemCount4Controller.text),
+      requiredItemCount5: _parseInt(requiredItemCount5Controller.text),
+      requiredItemCount6: _parseInt(requiredItemCount6Controller.text),
+      unknown0: _parseInt(unknown0Controller.text),
+      objectiveText1: objectiveText1Controller.text,
+      objectiveText2: objectiveText2Controller.text,
+      objectiveText3: objectiveText3Controller.text,
+      objectiveText4: objectiveText4Controller.text,
+      verifiedBuild: _parseIntOrNull(verifiedBuildController.text),
     );
-    t.rewardChoiceItemId2 = _parseInt(rewardChoiceItemId2Controller.text);
-    t.rewardChoiceItemQuantity2 = _parseInt(
-      rewardChoiceItemQuantity2Controller.text,
-    );
-    t.rewardChoiceItemId3 = _parseInt(rewardChoiceItemId3Controller.text);
-    t.rewardChoiceItemQuantity3 = _parseInt(
-      rewardChoiceItemQuantity3Controller.text,
-    );
-    t.rewardChoiceItemId4 = _parseInt(rewardChoiceItemId4Controller.text);
-    t.rewardChoiceItemQuantity4 = _parseInt(
-      rewardChoiceItemQuantity4Controller.text,
-    );
-    t.rewardChoiceItemId5 = _parseInt(rewardChoiceItemId5Controller.text);
-    t.rewardChoiceItemQuantity5 = _parseInt(
-      rewardChoiceItemQuantity5Controller.text,
-    );
-    t.rewardChoiceItemId6 = _parseInt(rewardChoiceItemId6Controller.text);
-    t.rewardChoiceItemQuantity6 = _parseInt(
-      rewardChoiceItemQuantity6Controller.text,
-    );
-    t.poiContinent = _parseInt(poiContinentController.text);
-    t.poiX = _parseDouble(poiXController.text);
-    t.poiY = _parseDouble(poiYController.text);
-    t.poiPriority = _parseInt(poiPriorityController.text);
-    t.rewardTitle = _parseInt(rewardTitleController.text);
-    t.rewardTalents = _parseInt(rewardTalentsController.text);
-    t.rewardArenaPoints = _parseInt(rewardArenaPointsController.text);
-    t.rewardFactionId1 = _parseInt(rewardFactionId1Controller.text);
-    t.rewardFactionValue1 = _parseInt(rewardFactionValue1Controller.text);
-    t.rewardFactionOverride1 = _parseInt(rewardFactionOverride1Controller.text);
-    t.rewardFactionId2 = _parseInt(rewardFactionId2Controller.text);
-    t.rewardFactionValue2 = _parseInt(rewardFactionValue2Controller.text);
-    t.rewardFactionOverride2 = _parseInt(rewardFactionOverride2Controller.text);
-    t.rewardFactionId3 = _parseInt(rewardFactionId3Controller.text);
-    t.rewardFactionValue3 = _parseInt(rewardFactionValue3Controller.text);
-    t.rewardFactionOverride3 = _parseInt(rewardFactionOverride3Controller.text);
-    t.rewardFactionId4 = _parseInt(rewardFactionId4Controller.text);
-    t.rewardFactionValue4 = _parseInt(rewardFactionValue4Controller.text);
-    t.rewardFactionOverride4 = _parseInt(rewardFactionOverride4Controller.text);
-    t.rewardFactionId5 = _parseInt(rewardFactionId5Controller.text);
-    t.rewardFactionValue5 = _parseInt(rewardFactionValue5Controller.text);
-    t.rewardFactionOverride5 = _parseInt(rewardFactionOverride5Controller.text);
-    t.timeAllowed = _parseInt(timeAllowedController.text);
-    t.allowableRaces = _parseInt(allowableRacesController.text);
-    t.logTitle = logTitleController.text;
-    t.logDescription = logDescriptionController.text;
-    t.questDescription = questDescriptionController.text;
-    t.areaDescription = areaDescriptionController.text;
-    t.questCompletionLog = questCompletionLogController.text;
-    t.requiredNpcOrGo1 = _parseInt(requiredNpcOrGo1Controller.text);
-    t.requiredNpcOrGo2 = _parseInt(requiredNpcOrGo2Controller.text);
-    t.requiredNpcOrGo3 = _parseInt(requiredNpcOrGo3Controller.text);
-    t.requiredNpcOrGo4 = _parseInt(requiredNpcOrGo4Controller.text);
-    t.requiredNpcOrGoCount1 = _parseInt(requiredNpcOrGoCount1Controller.text);
-    t.requiredNpcOrGoCount2 = _parseInt(requiredNpcOrGoCount2Controller.text);
-    t.requiredNpcOrGoCount3 = _parseInt(requiredNpcOrGoCount3Controller.text);
-    t.requiredNpcOrGoCount4 = _parseInt(requiredNpcOrGoCount4Controller.text);
-    t.requiredItemId1 = _parseInt(requiredItemId1Controller.text);
-    t.requiredItemId2 = _parseInt(requiredItemId2Controller.text);
-    t.requiredItemId3 = _parseInt(requiredItemId3Controller.text);
-    t.requiredItemId4 = _parseInt(requiredItemId4Controller.text);
-    t.requiredItemId5 = _parseInt(requiredItemId5Controller.text);
-    t.requiredItemId6 = _parseInt(requiredItemId6Controller.text);
-    t.requiredItemCount1 = _parseInt(requiredItemCount1Controller.text);
-    t.requiredItemCount2 = _parseInt(requiredItemCount2Controller.text);
-    t.requiredItemCount3 = _parseInt(requiredItemCount3Controller.text);
-    t.requiredItemCount4 = _parseInt(requiredItemCount4Controller.text);
-    t.requiredItemCount5 = _parseInt(requiredItemCount5Controller.text);
-    t.requiredItemCount6 = _parseInt(requiredItemCount6Controller.text);
-    t.unknown0 = _parseInt(unknown0Controller.text);
-    t.objectiveText1 = objectiveText1Controller.text;
-    t.objectiveText2 = objectiveText2Controller.text;
-    t.objectiveText3 = objectiveText3Controller.text;
-    t.objectiveText4 = objectiveText4Controller.text;
-    t.verifiedBuild = _parseIntOrNull(verifiedBuildController.text);
-    return t;
   }
 
   int _parseInt(String text) {

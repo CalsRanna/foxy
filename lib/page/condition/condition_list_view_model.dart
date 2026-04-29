@@ -107,9 +107,10 @@ class ConditionListViewModel {
   }
 
   ConditionFilterEntity _buildFilter() {
-    return ConditionFilterEntity()
-      ..sourceTypeOrReferenceId = sourceTypeController.text
-      ..sourceEntry = sourceEntryController.text;
+    return ConditionFilterEntity(
+      sourceTypeOrReferenceId: sourceTypeController.text,
+      sourceEntry: sourceEntryController.text,
+    );
   }
 
   Future<List<Condition>> _search() async {

@@ -44,10 +44,11 @@ class SpellGroupViewModel {
   }
 
   SpellGroup collectFromForm() {
-    final data = SpellGroup();
-    data.spellId = spellId.value;
-    data.id = _parseInt(idController.text);
-    data.specialFlag = _parseInt(specialFlagController.text);
+    final data = SpellGroup(
+      spellId: spellId.value,
+      id: _parseInt(idController.text),
+      specialFlag: _parseInt(specialFlagController.text),
+    );
     return data;
   }
 

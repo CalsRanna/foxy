@@ -54,13 +54,13 @@ class GameObjectTemplateAddonViewModel {
   }
 
   GameObjectTemplateAddon _collectFromControllers() {
-    final data = GameObjectTemplateAddon();
-    data.entry = gameObjectId.value;
-    data.faction = _parseInt(factionController.text);
-    data.flags = _parseInt(flagsController.text);
-    data.minGold = _parseInt(minGoldController.text);
-    data.maxGold = _parseInt(maxGoldController.text);
-    return data;
+    return GameObjectTemplateAddon(
+      entry: gameObjectId.value,
+      faction: _parseInt(factionController.text),
+      flags: _parseInt(flagsController.text),
+      minGold: _parseInt(minGoldController.text),
+      maxGold: _parseInt(maxGoldController.text),
+    );
   }
 
   int _parseInt(String text) {

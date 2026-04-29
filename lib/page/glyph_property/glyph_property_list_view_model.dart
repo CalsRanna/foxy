@@ -95,8 +95,7 @@ class GlyphPropertyListViewModel {
   }
 
   GlyphPropertyFilterEntity _buildFilter() {
-    return GlyphPropertyFilterEntity()
-      ..id = entryController.text;
+    return GlyphPropertyFilterEntity(id: entryController.text);
   }
 
   Future<void> paginate(int page) async {

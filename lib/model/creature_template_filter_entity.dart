@@ -1,18 +1,19 @@
 class CreatureTemplateFilterEntity {
-  String entry = '';
-  String name = '';
-  String subName = '';
+  final String entry;
+  final String name;
+  final String subName;
 
-  CreatureTemplateFilterEntity();
+  const CreatureTemplateFilterEntity({this.entry = '', this.name = '', this.subName = ''});
 
   Map<String, dynamic> toJson() {
     return {'entry': entry, 'name': name, 'subName': subName};
   }
 
   factory CreatureTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateFilterEntity()
-      ..entry = json['entry'] ?? ''
-      ..name = json['name'] ?? ''
-      ..subName = json['subName'] ?? '';
+    return CreatureTemplateFilterEntity(
+      entry: json['entry'] ?? '',
+      name: json['name'] ?? '',
+      subName: json['subName'] ?? '',
+    );
   }
 }

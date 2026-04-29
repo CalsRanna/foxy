@@ -31,12 +31,13 @@ class PlayerCreateInfoItemViewModel {
   Future<void> save(BuildContext context) async {
     if (_race == null || _class_ == null) return;
     try {
-      final item = PlayerCreateInfoItem()
-        ..race = _race!
-        ..class_ = _class_!
-        ..itemid = _parseInt(itemIdController.text)
-        ..amount = _parseInt(amountController.text)
-        ..note = noteController.text;
+      final item = PlayerCreateInfoItem(
+        race: _race!,
+        class_: _class_!,
+        itemid: _parseInt(itemIdController.text),
+        amount: _parseInt(amountController.text),
+        note: noteController.text,
+      );
       await repository.storeItem(item);
       items.value = await repository.getItems(_race!, _class_!);
       if (!context.mounted) return;
