@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_template.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -121,7 +121,7 @@ class QuestTemplateListViewModel {
     final templates = this.templates.value;
     final template = templates.where((t) => t.id == id).firstOrNull;
     final name = template?.logTitle ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'quest_template',
       actionType: action,
       entityId: id,

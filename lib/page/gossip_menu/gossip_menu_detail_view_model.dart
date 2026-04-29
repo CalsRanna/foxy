@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
@@ -102,7 +102,7 @@ class GossipMenuDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, GossipMenu t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'gossip_menu',
       actionType: action,
       entityId: t.menuId,

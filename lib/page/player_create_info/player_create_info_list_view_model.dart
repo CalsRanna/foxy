@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info.dart';
 import 'package:foxy/entity/player_create_info_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -103,7 +103,7 @@ class PlayerCreateInfoListViewModel {
   }
 
   void _logActivity(ActivityActionType action, int id) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'player_create_info',
       actionType: action,
       entityId: id,

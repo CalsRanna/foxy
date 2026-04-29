@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/emote_text.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -66,7 +66,7 @@ class EmoteTextListViewModel {
     final templates = emotes.value;
     final template = templates.where((t) => t.id == id).firstOrNull;
     final name = template?.name ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'emote_text',
       actionType: action,
       entityId: id,

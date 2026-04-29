@@ -1,4 +1,4 @@
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -17,7 +17,7 @@ class DashboardViewModel {
   final coreRevision = signal('');
   final databaseVersion = signal('');
   final softwareVersion = signal('');
-  final recentActivities = signal(<ActivityLog>[]);
+  final recentActivities = signal(<ActivityLogEntity>[]);
 
   void navigateToMenu(RouterMenu menu) {
     final feature = featureViewModel.allFeatures.value

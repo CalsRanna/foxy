@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -108,7 +108,7 @@ class PageTextListViewModel {
     final pages = this.pages.value;
     final page = pages.where((p) => p.id == id).firstOrNull;
     final name = page?.text ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'page_text',
       actionType: action,
       entityId: id,

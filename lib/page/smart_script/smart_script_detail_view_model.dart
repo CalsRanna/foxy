@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
@@ -223,7 +223,7 @@ class SmartScriptDetailViewModel {
   }
 
   void _logActivity(ActivityActionType action, SmartScript t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'smart_script',
       actionType: action,
       entityId: t.entryOrGuid,

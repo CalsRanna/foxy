@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_sort.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -66,7 +66,7 @@ class QuestSortListViewModel {
     final sorts = this.sorts.value;
     final sort = sorts.where((s) => s.id == id).firstOrNull;
     final name = sort?.sortNameLangZhCn ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'quest_sort',
       actionType: action,
       entityId: id,

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -66,7 +66,7 @@ class SpellItemEnchantmentListViewModel {
     final enchantments = this.enchantments.value;
     final enchantment = enchantments.where((e) => e.id == id).firstOrNull;
     final name = enchantment?.nameLangZhCn ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'spell_item_enchantment',
       actionType: action,
       entityId: id,

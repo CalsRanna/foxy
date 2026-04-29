@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
@@ -87,7 +87,7 @@ class PlayerCreateInfoDetailViewModel {
   void pop() => routerFacade.goBack();
 
   void _logActivity(ActivityActionType action, PlayerCreateInfo t) {
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'player_create_info',
       actionType: action,
       entityId: t.race,

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/activity_log.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script.dart';
 import 'package:foxy/entity/smart_script_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -165,7 +165,7 @@ class SmartScriptListViewModel {
         )
         .firstOrNull;
     final name = template?.comment ?? '';
-    final log = ActivityLog(
+    final log = ActivityLogEntity(
       module: 'smart_script',
       actionType: action,
       entityId: entryOrGuid,
