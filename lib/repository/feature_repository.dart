@@ -1,13 +1,9 @@
 import 'package:foxy/model/feature.dart';
-import 'package:foxy/page/foxy_app/foxy_view_model.dart';
-import 'package:get_it/get_it.dart';
-import 'package:laconic/laconic.dart';
+import 'package:foxy/repository/repository_mixin.dart';
 
-class FeatureRepository {
-  Laconic get _laconic => GetIt.instance.get<FoxyViewModel>().laconic!;
-
+class FeatureRepository with RepositoryMixin {
   Future<List<Feature>> getAll() async {
-    final rows = await _laconic
+    final rows = await laconic
         .table('foxy.features')
         .select(['*'])
         .orderBy('sort_order')
@@ -17,13 +13,13 @@ class FeatureRepository {
   }
 
   Future<void> updatePinned(int id, bool pinned) async {
-    await _laconic.table('foxy.features').where('id', id).update({
+    await laconic.table('foxy.features').where('id', id).update({
       'is_pinned': pinned ? 1 : 0,
     });
   }
 
   Future<void> updateFavorite(int id, bool favorite) async {
-    await _laconic.table('foxy.features').where('id', id).update({
+    await laconic.table('foxy.features').where('id', id).update({
       'is_favorite': favorite ? 1 : 0,
     });
   }
