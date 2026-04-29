@@ -1,19 +1,15 @@
 import 'package:foxy/model/activity_log.dart';
-import 'package:foxy/page/foxy_app/foxy_view_model.dart';
-import 'package:get_it/get_it.dart';
-import 'package:laconic/laconic.dart';
+import 'package:foxy/repository/repository_mixin.dart';
 
-class ActivityLogRepository {
-  Laconic get _laconic => GetIt.instance.get<FoxyViewModel>().laconic!;
-
+class ActivityLogRepository with RepositoryMixin {
   static const String _table = 'foxy.activity_log';
 
   Future<void> storeActivityLog(ActivityLog log) async {
-    await _laconic.table(_table).insert([log.toJson()]);
+    await laconic.table(_table).insert([log.toJson()]);
   }
 
   Future<List<ActivityLog>> getRecentActivityLogs({int limit = 20}) async {
-    final rows = await _laconic
+    final rows = await laconic
         .table(_table)
         .select(['*'])
         .orderBy('id', direction: 'desc')
