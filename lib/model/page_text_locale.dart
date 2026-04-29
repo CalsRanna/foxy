@@ -6,11 +6,12 @@ class PageTextLocale {
 
   PageTextLocale();
 
-  PageTextLocale.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    locale = json['locale'] ?? '';
-    text = json['Text'] ?? '';
-    verifiedBuild = json['VerifiedBuild'] ?? 0;
+  factory PageTextLocale.fromJson(Map<String, dynamic> json) {
+    return PageTextLocale()
+      ..id = json['ID'] ?? 0
+      ..locale = json['locale'] ?? ''
+      ..text = json['Text'] ?? ''
+      ..verifiedBuild = json['VerifiedBuild'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

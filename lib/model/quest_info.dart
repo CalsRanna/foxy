@@ -4,9 +4,10 @@ class QuestInfo {
 
   QuestInfo();
 
-  QuestInfo.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    infoNameLangZhCn = json['InfoName_Lang_zhCN'] ?? '';
+  factory QuestInfo.fromJson(Map<String, dynamic> json) {
+    return QuestInfo()
+      ..id = json['ID'] ?? 0
+      ..infoNameLangZhCn = json['InfoName_Lang_zhCN'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

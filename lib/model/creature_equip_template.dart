@@ -32,31 +32,26 @@ class CreatureEquipTemplate {
 
   CreatureEquipTemplate();
 
-  CreatureEquipTemplate.fromJson(Map<String, dynamic> json) {
-    creatureID = json['CreatureID'] ?? json['creatureID'] ?? 0;
-    id = json['ID'] ?? json['id'] ?? 0;
-    itemID1 = json['ItemID1'] ?? json['itemID1'] ?? 0;
-    itemID2 = json['ItemID2'] ?? json['itemID2'] ?? 0;
-    itemID3 = json['ItemID3'] ?? json['itemID3'] ?? 0;
-    verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0;
-
-    // 装备1关联字段
-    name1 = json['name_1'] ?? '';
-    localeName1 = json['localeName_1'] ?? '';
-    quality1 = json['Quality_1'] ?? 0;
-    icon1 = json['Icon_1'] ?? '';
-
-    // 装备2关联字段
-    name2 = json['name_2'] ?? '';
-    localeName2 = json['localeName_2'] ?? '';
-    quality2 = json['Quality_2'] ?? 0;
-    icon2 = json['Icon_2'] ?? '';
-
-    // 装备3关联字段
-    name3 = json['name_3'] ?? '';
-    localeName3 = json['localeName_3'] ?? '';
-    quality3 = json['Quality_3'] ?? 0;
-    icon3 = json['Icon_3'] ?? '';
+  factory CreatureEquipTemplate.fromJson(Map<String, dynamic> json) {
+    return CreatureEquipTemplate()
+      ..creatureID = json['CreatureID'] ?? json['creatureID'] ?? 0
+      ..id = json['ID'] ?? json['id'] ?? 0
+      ..itemID1 = json['ItemID1'] ?? json['itemID1'] ?? 0
+      ..itemID2 = json['ItemID2'] ?? json['itemID2'] ?? 0
+      ..itemID3 = json['ItemID3'] ?? json['itemID3'] ?? 0
+      ..verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0
+      ..name1 = json['name_1'] ?? ''
+      ..localeName1 = json['localeName_1'] ?? ''
+      ..quality1 = json['Quality_1'] ?? 0
+      ..icon1 = json['Icon_1'] ?? ''
+      ..name2 = json['name_2'] ?? ''
+      ..localeName2 = json['localeName_2'] ?? ''
+      ..quality2 = json['Quality_2'] ?? 0
+      ..icon2 = json['Icon_2'] ?? ''
+      ..name3 = json['name_3'] ?? ''
+      ..localeName3 = json['localeName_3'] ?? ''
+      ..quality3 = json['Quality_3'] ?? 0
+      ..icon3 = json['Icon_3'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

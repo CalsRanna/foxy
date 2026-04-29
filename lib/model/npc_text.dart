@@ -12,12 +12,14 @@ class NpcText {
 
   NpcText();
 
-  NpcText.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? json['id'] ?? 0;
-    verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0;
+  factory NpcText.fromJson(Map<String, dynamic> json) {
+    var obj = NpcText();
+    obj.id = json['ID'] ?? json['id'] ?? 0;
+    obj.verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0;
     for (var n = 0; n < 8; n++) {
-      entries[n] = NpcTextEntry.fromJson(json, n);
+      obj.entries[n] = NpcTextEntry.fromJson(json, n);
     }
+    return obj;
   }
 
   Map<String, dynamic> toJson() {
@@ -40,18 +42,20 @@ class NpcTextEntry {
 
   NpcTextEntry();
 
-  NpcTextEntry.fromJson(Map<String, dynamic> json, int n) {
-    lang = json['lang$n']?.toString() ?? '0';
-    probability = (json['Probability$n'] is num)
+  factory NpcTextEntry.fromJson(Map<String, dynamic> json, int n) {
+    var obj = NpcTextEntry();
+    obj.lang = json['lang$n']?.toString() ?? '0';
+    obj.probability = (json['Probability$n'] is num)
         ? (json['Probability$n'] as num).toDouble()
         : double.tryParse(json['Probability$n']?.toString() ?? '') ?? 0;
-    text0 = json['text${n}_0']?.toString() ?? '';
-    text1 = json['text${n}_1']?.toString() ?? '';
-    broadcastTextId =
+    obj.text0 = json['text${n}_0']?.toString() ?? '';
+    obj.text1 = json['text${n}_1']?.toString() ?? '';
+    obj.broadcastTextId =
         json['BroadcastTextID$n'] ?? json['broadcasttextid$n'] ?? 0;
     for (var i = 0; i < 6; i++) {
-      emotes[i] = json['em${n}_$i'] ?? 0;
+      obj.emotes[i] = json['em${n}_$i'] ?? 0;
     }
+    return obj;
   }
 
   Map<String, dynamic> toJson(int n) {

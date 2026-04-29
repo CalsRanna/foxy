@@ -12,12 +12,13 @@ class GossipMenuOptionLocale {
 
   GossipMenuOptionLocale();
 
-  GossipMenuOptionLocale.fromJson(Map<String, dynamic> json) {
-    menuId = json['MenuID'] ?? 0;
-    optionId = json['OptionID'] ?? 0;
-    locale = json['Locale']?.toString() ?? 'zhCN';
-    optionText = json['OptionText']?.toString() ?? '';
-    boxText = json['BoxText']?.toString() ?? '';
+  factory GossipMenuOptionLocale.fromJson(Map<String, dynamic> json) {
+    return GossipMenuOptionLocale()
+      ..menuId = json['MenuID'] ?? 0
+      ..optionId = json['OptionID'] ?? 0
+      ..locale = json['Locale']?.toString() ?? 'zhCN'
+      ..optionText = json['OptionText']?.toString() ?? ''
+      ..boxText = json['BoxText']?.toString() ?? '';
   }
 
   Map<String, dynamic> toJson() {

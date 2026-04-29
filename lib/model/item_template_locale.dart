@@ -9,12 +9,13 @@ class ItemTemplateLocale {
 
   ItemTemplateLocale();
 
-  ItemTemplateLocale.fromJson(Map<String, dynamic> json) {
-    id = (json['ID'] ?? json['id'] ?? 0) as int;
-    locale = json['Locale']?.toString() ?? 'zhCN';
-    name = json['Name']?.toString() ?? '';
-    description = json['Description']?.toString() ?? '';
-    verifiedBuild = json['VerifiedBuild'] ?? 0;
+  factory ItemTemplateLocale.fromJson(Map<String, dynamic> json) {
+    return ItemTemplateLocale()
+      ..id = (json['ID'] ?? json['id'] ?? 0) as int
+      ..locale = json['Locale']?.toString() ?? 'zhCN'
+      ..name = json['Name']?.toString() ?? ''
+      ..description = json['Description']?.toString() ?? ''
+      ..verifiedBuild = json['VerifiedBuild'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

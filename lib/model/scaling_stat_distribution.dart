@@ -24,29 +24,30 @@ class ScalingStatDistribution {
 
   ScalingStatDistribution();
 
-  ScalingStatDistribution.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    statId0 = json['StatID0'] ?? 0;
-    statId1 = json['StatID1'] ?? 0;
-    statId2 = json['StatID2'] ?? 0;
-    statId3 = json['StatID3'] ?? 0;
-    statId4 = json['StatID4'] ?? 0;
-    statId5 = json['StatID5'] ?? 0;
-    statId6 = json['StatID6'] ?? 0;
-    statId7 = json['StatID7'] ?? 0;
-    statId8 = json['StatID8'] ?? 0;
-    statId9 = json['StatID9'] ?? 0;
-    bonus0 = json['Bonus0'] ?? 0;
-    bonus1 = json['Bonus1'] ?? 0;
-    bonus2 = json['Bonus2'] ?? 0;
-    bonus3 = json['Bonus3'] ?? 0;
-    bonus4 = json['Bonus4'] ?? 0;
-    bonus5 = json['Bonus5'] ?? 0;
-    bonus6 = json['Bonus6'] ?? 0;
-    bonus7 = json['Bonus7'] ?? 0;
-    bonus8 = json['Bonus8'] ?? 0;
-    bonus9 = json['Bonus9'] ?? 0;
-    maxlevel = json['Maxlevel'] ?? 0;
+  factory ScalingStatDistribution.fromJson(Map<String, dynamic> json) {
+    return ScalingStatDistribution()
+      ..id = json['ID'] ?? 0
+      ..statId0 = json['StatID0'] ?? 0
+      ..statId1 = json['StatID1'] ?? 0
+      ..statId2 = json['StatID2'] ?? 0
+      ..statId3 = json['StatID3'] ?? 0
+      ..statId4 = json['StatID4'] ?? 0
+      ..statId5 = json['StatID5'] ?? 0
+      ..statId6 = json['StatID6'] ?? 0
+      ..statId7 = json['StatID7'] ?? 0
+      ..statId8 = json['StatID8'] ?? 0
+      ..statId9 = json['StatID9'] ?? 0
+      ..bonus0 = json['Bonus0'] ?? 0
+      ..bonus1 = json['Bonus1'] ?? 0
+      ..bonus2 = json['Bonus2'] ?? 0
+      ..bonus3 = json['Bonus3'] ?? 0
+      ..bonus4 = json['Bonus4'] ?? 0
+      ..bonus5 = json['Bonus5'] ?? 0
+      ..bonus6 = json['Bonus6'] ?? 0
+      ..bonus7 = json['Bonus7'] ?? 0
+      ..bonus8 = json['Bonus8'] ?? 0
+      ..bonus9 = json['Bonus9'] ?? 0
+      ..maxlevel = json['Maxlevel'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

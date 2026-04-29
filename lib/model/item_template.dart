@@ -140,158 +140,162 @@ class ItemTemplate {
 
   ItemTemplate();
 
-  ItemTemplate.fromJson(Map<String, dynamic> json) {
+  factory ItemTemplate.fromJson(Map<String, dynamic> json) {
+    var obj = ItemTemplate();
+
     // --- 基础标识 ---
-    entry = json['entry'] ?? 0;
-    name = json['name'] ?? '';
-    description = json['description'] ?? '';
+    obj.entry = json['entry'] ?? 0;
+    obj.name = json['name'] ?? '';
+    obj.description = json['description'] ?? '';
 
     // --- 本地化（joined）---
-    localeName = json['localeName'] ?? json['Name'] ?? '';
-    localeDescription = json['localeDescription'] ?? json['Description'] ?? '';
+    obj.localeName = json['localeName'] ?? json['Name'] ?? '';
+    obj.localeDescription = json['localeDescription'] ?? json['Description'] ?? '';
 
     // --- 物品属性 ---
-    quality = json['Quality'] ?? json['quality'] ?? 0;
-    className = json['class'] ?? json['className'] ?? 0;
-    subclass = json['subclass'] ?? 0;
-    soundOverrideSubclass =
+    obj.quality = json['Quality'] ?? json['quality'] ?? 0;
+    obj.className = json['class'] ?? json['className'] ?? 0;
+    obj.subclass = json['subclass'] ?? 0;
+    obj.soundOverrideSubclass =
         json['SoundOverrideSubclass'] ?? json['soundOverrideSubclass'] ?? 0;
-    material = json['Material'] ?? json['material'] ?? 0;
-    displayId = json['displayid'] ?? json['displayId'] ?? 0;
-    inventoryType = json['InventoryType'] ?? json['inventoryType'] ?? 0;
-    sheath = json['sheath'] ?? 0;
+    obj.material = json['Material'] ?? json['material'] ?? 0;
+    obj.displayId = json['displayid'] ?? json['displayId'] ?? 0;
+    obj.inventoryType = json['InventoryType'] ?? json['inventoryType'] ?? 0;
+    obj.sheath = json['sheath'] ?? 0;
 
     // --- 经济与绑定 ---
-    bonding = json['bonding'] ?? 0;
-    itemset = json['itemset'] ?? 0;
-    randomProperty = json['RandomProperty'] ?? json['randomProperty'] ?? 0;
-    randomSuffix = json['RandomSuffix'] ?? json['randomSuffix'] ?? 0;
-    maxDurability = json['MaxDurability'] ?? json['maxDurability'] ?? 0;
-    buyPrice = json['BuyPrice'] ?? json['buyPrice'] ?? 0;
-    sellPrice = json['SellPrice'] ?? json['sellPrice'] ?? 0;
-    buyCount = json['BuyCount'] ?? json['buyCount'] ?? 0;
-    maxcount = json['maxcount'] ?? 0;
-    stackable = json['stackable'] ?? 1;
+    obj.bonding = json['bonding'] ?? 0;
+    obj.itemset = json['itemset'] ?? 0;
+    obj.randomProperty = json['RandomProperty'] ?? json['randomProperty'] ?? 0;
+    obj.randomSuffix = json['RandomSuffix'] ?? json['randomSuffix'] ?? 0;
+    obj.maxDurability = json['MaxDurability'] ?? json['maxDurability'] ?? 0;
+    obj.buyPrice = json['BuyPrice'] ?? json['buyPrice'] ?? 0;
+    obj.sellPrice = json['SellPrice'] ?? json['sellPrice'] ?? 0;
+    obj.buyCount = json['BuyCount'] ?? json['buyCount'] ?? 0;
+    obj.maxcount = json['maxcount'] ?? 0;
+    obj.stackable = json['stackable'] ?? 1;
 
     // --- 分类与容器 ---
-    totemCategory = json['TotemCategory'] ?? json['totemCategory'] ?? 0;
-    foodType = json['FoodType'] ?? json['foodType'] ?? 0;
-    bagFamily = json['BagFamily'] ?? json['bagFamily'] ?? 0;
-    containerSlots = json['ContainerSlots'] ?? json['containerSlots'] ?? 0;
-    itemLimitCategory =
+    obj.totemCategory = json['TotemCategory'] ?? json['totemCategory'] ?? 0;
+    obj.foodType = json['FoodType'] ?? json['foodType'] ?? 0;
+    obj.bagFamily = json['BagFamily'] ?? json['bagFamily'] ?? 0;
+    obj.containerSlots = json['ContainerSlots'] ?? json['containerSlots'] ?? 0;
+    obj.itemLimitCategory =
         json['ItemLimitCategory'] ?? json['itemLimitCategory'] ?? 0;
 
     // --- 任务与限时 ---
-    startquest = json['startquest'] ?? 0;
-    duration = json['duration'] ?? 0;
-    disenchantId = json['DisenchantID'] ?? json['disenchantId'] ?? 0;
-    minMoneyLoot = json['minMoneyLoot'] ?? 0;
-    maxMoneyLoot = json['maxMoneyLoot'] ?? 0;
+    obj.startquest = json['startquest'] ?? 0;
+    obj.duration = json['duration'] ?? 0;
+    obj.disenchantId = json['DisenchantID'] ?? json['disenchantId'] ?? 0;
+    obj.minMoneyLoot = json['minMoneyLoot'] ?? 0;
+    obj.maxMoneyLoot = json['maxMoneyLoot'] ?? 0;
 
     // --- 标志位 ---
-    flags = json['Flags'] ?? json['flags'] ?? 0;
-    flagsExtra = json['FlagsExtra'] ?? json['flagsExtra'] ?? 0;
-    flagsCustom = json['flagsCustom'] ?? 0;
+    obj.flags = json['Flags'] ?? json['flags'] ?? 0;
+    obj.flagsExtra = json['FlagsExtra'] ?? json['flagsExtra'] ?? 0;
+    obj.flagsCustom = json['flagsCustom'] ?? 0;
 
     // --- 武器与伤害 ---
-    delay = json['delay'] ?? 0;
-    rangedModRange = ((json['RangedModRange'] ?? json['rangedModRange'] ?? 0) as num).toInt();
-    armorDamageModifier =
+    obj.delay = json['delay'] ?? 0;
+    obj.rangedModRange = ((json['RangedModRange'] ?? json['rangedModRange'] ?? 0) as num).toInt();
+    obj.armorDamageModifier =
         (json['ArmorDamageModifier'] ?? json['armorDamageModifier'] ?? 0.0)
             as double;
-    dmgType1 = json['dmg_type1'] ?? json['dmgType1'] ?? 0;
-    dmgMin1 = (json['dmg_min1'] ?? json['dmgMin1'] ?? 0).toDouble();
-    dmgMax1 = (json['dmg_max1'] ?? json['dmgMax1'] ?? 0).toDouble();
-    dmgType2 = json['dmg_type2'] ?? json['dmgType2'] ?? 0;
-    dmgMin2 = (json['dmg_min2'] ?? json['dmgMin2'] ?? 0).toDouble();
-    dmgMax2 = (json['dmg_max2'] ?? json['dmgMax2'] ?? 0).toDouble();
-    ammoType = json['ammo_type'] ?? json['ammoType'] ?? 0;
-    armor = json['armor'] ?? 0;
-    block = json['block'] ?? 0;
+    obj.dmgType1 = json['dmg_type1'] ?? json['dmgType1'] ?? 0;
+    obj.dmgMin1 = (json['dmg_min1'] ?? json['dmgMin1'] ?? 0).toDouble();
+    obj.dmgMax1 = (json['dmg_max1'] ?? json['dmgMax1'] ?? 0).toDouble();
+    obj.dmgType2 = json['dmg_type2'] ?? json['dmgType2'] ?? 0;
+    obj.dmgMin2 = (json['dmg_min2'] ?? json['dmgMin2'] ?? 0).toDouble();
+    obj.dmgMax2 = (json['dmg_max2'] ?? json['dmgMax2'] ?? 0).toDouble();
+    obj.ammoType = json['ammo_type'] ?? json['ammoType'] ?? 0;
+    obj.armor = json['armor'] ?? 0;
+    obj.block = json['block'] ?? 0;
 
     // --- 缩放属性 ---
-    scalingStatDistribution =
+    obj.scalingStatDistribution =
         json['ScalingStatDistribution'] ?? json['scalingStatDistribution'] ?? 0;
-    scalingStatValue =
+    obj.scalingStatValue =
         json['ScalingStatValue'] ?? json['scalingStatValue'] ?? 0;
 
     // --- 统计属性 ---
-    statsCount = json['StatsCount'] ?? json['statsCount'] ?? 0;
+    obj.statsCount = json['StatsCount'] ?? json['statsCount'] ?? 0;
     for (var i = 0; i < 10; i++) {
-      statTypes[i] = json['stat_type${i + 1}'] ?? 0;
-      statValues[i] = json['stat_value${i + 1}'] ?? 0;
+      obj.statTypes[i] = json['stat_type${i + 1}'] ?? 0;
+      obj.statValues[i] = json['stat_value${i + 1}'] ?? 0;
     }
 
     // --- 抗性 ---
-    holyRes = json['holy_res'] ?? json['holyRes'] ?? 0;
-    fireRes = json['fire_res'] ?? json['fireRes'] ?? 0;
-    natureRes = json['nature_res'] ?? json['natureRes'] ?? 0;
-    shadowRes = json['shadow_res'] ?? json['shadowRes'] ?? 0;
-    frostRes = json['frost_res'] ?? json['frostRes'] ?? 0;
-    arcaneRes = json['arcane_res'] ?? json['arcaneRes'] ?? 0;
+    obj.holyRes = json['holy_res'] ?? json['holyRes'] ?? 0;
+    obj.fireRes = json['fire_res'] ?? json['fireRes'] ?? 0;
+    obj.natureRes = json['nature_res'] ?? json['natureRes'] ?? 0;
+    obj.shadowRes = json['shadow_res'] ?? json['shadowRes'] ?? 0;
+    obj.frostRes = json['frost_res'] ?? json['frostRes'] ?? 0;
+    obj.arcaneRes = json['arcane_res'] ?? json['arcaneRes'] ?? 0;
 
     // --- 法术效果（5 组）---
     for (var i = 0; i < 5; i++) {
-      spellIds[i] = json['spellid_${i + 1}'] ?? 0;
-      spellTriggers[i] = json['spelltrigger_${i + 1}'] ?? 0;
-      spellCharges[i] = json['spellcharges_${i + 1}'] ?? 0;
-      spellPpmRates[i] = (json['spellppmRate_${i + 1}'] ?? 0.0) as double;
-      spellCooldowns[i] = json['spellcooldown_${i + 1}'] ?? 0;
-      spellCategories[i] = json['spellcategory_${i + 1}'] ?? 0;
-      spellCategoryCooldowns[i] = json['spellcategorycooldown_${i + 1}'] ?? 0;
+      obj.spellIds[i] = json['spellid_${i + 1}'] ?? 0;
+      obj.spellTriggers[i] = json['spelltrigger_${i + 1}'] ?? 0;
+      obj.spellCharges[i] = json['spellcharges_${i + 1}'] ?? 0;
+      obj.spellPpmRates[i] = (json['spellppmRate_${i + 1}'] ?? 0.0) as double;
+      obj.spellCooldowns[i] = json['spellcooldown_${i + 1}'] ?? 0;
+      obj.spellCategories[i] = json['spellcategory_${i + 1}'] ?? 0;
+      obj.spellCategoryCooldowns[i] = json['spellcategorycooldown_${i + 1}'] ?? 0;
     }
 
     // --- 使用限制 ---
-    allowableClass =
+    obj.allowableClass =
         json['Allowableclass'] ??
         json['AllowableClass'] ??
         json['allowableClass'] ??
         -1;
-    allowableRace = json['AllowableRace'] ?? json['allowableRace'] ?? -1;
-    itemLevel = json['ItemLevel'] ?? json['itemLevel'] ?? 0;
-    requiredLevel = json['RequiredLevel'] ?? json['requiredLevel'] ?? 0;
-    requiredSkill = json['RequiredSkill'] ?? json['requiredSkill'] ?? 0;
-    requiredSkillRank =
+    obj.allowableRace = json['AllowableRace'] ?? json['allowableRace'] ?? -1;
+    obj.itemLevel = json['ItemLevel'] ?? json['itemLevel'] ?? 0;
+    obj.requiredLevel = json['RequiredLevel'] ?? json['requiredLevel'] ?? 0;
+    obj.requiredSkill = json['RequiredSkill'] ?? json['requiredSkill'] ?? 0;
+    obj.requiredSkillRank =
         json['RequiredSkillRank'] ?? json['requiredSkillRank'] ?? 0;
-    requiredSpell = json['requiredspell'] ?? json['requiredSpell'] ?? 0;
-    requiredHonorRank =
+    obj.requiredSpell = json['requiredspell'] ?? json['requiredSpell'] ?? 0;
+    obj.requiredHonorRank =
         json['requiredhonorrank'] ?? json['requiredHonorRank'] ?? 0;
-    requiredCityRank =
+    obj.requiredCityRank =
         json['RequiredCityRank'] ?? json['requiredCityRank'] ?? 0;
-    requiredReputationFaction =
+    obj.requiredReputationFaction =
         json['RequiredReputationFaction'] ??
         json['requiredReputationFaction'] ??
         0;
-    requiredReputationRank =
+    obj.requiredReputationRank =
         json['RequiredReputationRank'] ?? json['requiredReputationRank'] ?? 0;
-    requiredDisenchantSkill =
+    obj.requiredDisenchantSkill =
         json['RequiredDisenchantSkill'] ?? json['requiredDisenchantSkill'] ?? 0;
 
     // --- 区域与节日 ---
-    mapId = json['Map'] ?? json['mapId'] ?? 0;
-    area = json['area'] ?? 0;
-    holidayId = json['HolidayId'] ?? json['holidayId'] ?? 0;
+    obj.mapId = json['Map'] ?? json['mapId'] ?? 0;
+    obj.area = json['area'] ?? 0;
+    obj.holidayId = json['HolidayId'] ?? json['holidayId'] ?? 0;
 
     // --- 锁与宝石 ---
-    lockid = json['lockid'] ?? 0;
-    gemProperties = json['GemProperties'] ?? json['gemProperties'] ?? 0;
-    socketBonus = json['socketBonus'] ?? 0;
+    obj.lockid = json['lockid'] ?? 0;
+    obj.gemProperties = json['GemProperties'] ?? json['gemProperties'] ?? 0;
+    obj.socketBonus = json['socketBonus'] ?? 0;
     for (var i = 0; i < 3; i++) {
-      socketColors[i] = json['socketColor_${i + 1}'] ?? 0;
-      socketContents[i] = json['socketContent_${i + 1}'] ?? 0;
+      obj.socketColors[i] = json['socketColor_${i + 1}'] ?? 0;
+      obj.socketContents[i] = json['socketContent_${i + 1}'] ?? 0;
     }
 
     // --- 图标（joined）---
-    inventoryIcon = json['InventoryIcon0'] ?? json['inventoryIcon'] ?? '';
+    obj.inventoryIcon = json['InventoryIcon0'] ?? json['inventoryIcon'] ?? '';
 
     // --- 书页信息 ---
-    pageText = json['PageText'] ?? json['pageText'] ?? 0;
-    pageMaterial = json['PageMaterial'] ?? json['pageMaterial'] ?? 0;
-    languageId = json['LanguageID'] ?? json['languageId'] ?? 0;
+    obj.pageText = json['PageText'] ?? json['pageText'] ?? 0;
+    obj.pageMaterial = json['PageMaterial'] ?? json['pageMaterial'] ?? 0;
+    obj.languageId = json['LanguageID'] ?? json['languageId'] ?? 0;
 
     // --- 脚本与验证 ---
-    scriptName = json['ScriptName'] ?? json['scriptName'] ?? '';
-    verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0;
+    obj.scriptName = json['ScriptName'] ?? json['scriptName'] ?? '';
+    obj.verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0;
+
+    return obj;
   }
 
   Map<String, dynamic> toJson() {
@@ -447,17 +451,18 @@ class BriefItemTemplate {
   /// 显示名称（优先显示本地化名称）
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
-  BriefItemTemplate.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    name = json['name'] ?? '';
-    localeName = json['localeName'] ?? json['Name'] ?? '';
-    quality = json['Quality'] ?? json['quality'] ?? 0;
-    classId = json['class'] ?? json['classId'] ?? 0;
-    subclass = json['subclass'] ?? 0;
-    inventoryType = json['InventoryType'] ?? json['inventoryType'] ?? 0;
-    itemLevel = json['ItemLevel'] ?? json['itemLevel'] ?? 0;
-    requiredLevel = json['RequiredLevel'] ?? json['requiredLevel'] ?? 0;
-    inventoryIcon = json['InventoryIcon0'] ?? json['inventoryIcon'] ?? '';
+  factory BriefItemTemplate.fromJson(Map<String, dynamic> json) {
+    return BriefItemTemplate()
+      ..entry = json['entry'] ?? 0
+      ..name = json['name'] ?? ''
+      ..localeName = json['localeName'] ?? json['Name'] ?? ''
+      ..quality = json['Quality'] ?? json['quality'] ?? 0
+      ..classId = json['class'] ?? json['classId'] ?? 0
+      ..subclass = json['subclass'] ?? 0
+      ..inventoryType = json['InventoryType'] ?? json['inventoryType'] ?? 0
+      ..itemLevel = json['ItemLevel'] ?? json['itemLevel'] ?? 0
+      ..requiredLevel = json['RequiredLevel'] ?? json['requiredLevel'] ?? 0
+      ..inventoryIcon = json['InventoryIcon0'] ?? json['inventoryIcon'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

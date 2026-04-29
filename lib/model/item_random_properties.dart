@@ -5,10 +5,11 @@ class ItemRandomProperties {
 
   ItemRandomProperties();
 
-  ItemRandomProperties.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    name = json['Name'] ?? '';
-    nameLangZhCn = json['Name_lang_zhCN'] ?? '';
+  factory ItemRandomProperties.fromJson(Map<String, dynamic> json) {
+    return ItemRandomProperties()
+      ..id = json['ID'] ?? 0
+      ..name = json['Name'] ?? ''
+      ..nameLangZhCn = json['Name_lang_zhCN'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

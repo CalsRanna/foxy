@@ -4,9 +4,10 @@ class CharTitle {
 
   CharTitle();
 
-  CharTitle.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    nameLangZhCn = json['Name_lang_zhCN'] ?? '';
+  factory CharTitle.fromJson(Map<String, dynamic> json) {
+    return CharTitle()
+      ..id = json['ID'] ?? 0
+      ..nameLangZhCn = json['Name_lang_zhCN'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

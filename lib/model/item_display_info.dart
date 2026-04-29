@@ -5,10 +5,11 @@ class ItemDisplayInfo {
 
   ItemDisplayInfo();
 
-  ItemDisplayInfo.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    modelName0 = json['ModelName0'] ?? '';
-    inventoryIcon0 = json['InventoryIcon0'] ?? '';
+  factory ItemDisplayInfo.fromJson(Map<String, dynamic> json) {
+    return ItemDisplayInfo()
+      ..id = json['ID'] ?? 0
+      ..modelName0 = json['ModelName0'] ?? ''
+      ..inventoryIcon0 = json['InventoryIcon0'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

@@ -4,9 +4,10 @@ class QuestSort {
 
   QuestSort();
 
-  QuestSort.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    sortNameLangZhCn = json['SortName_Lang_zhCN'] ?? '';
+  factory QuestSort.fromJson(Map<String, dynamic> json) {
+    return QuestSort()
+      ..id = json['ID'] ?? 0
+      ..sortNameLangZhCn = json['SortName_Lang_zhCN'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

@@ -11,16 +11,17 @@ class GameObjectTemplateAddon {
 
   GameObjectTemplateAddon();
 
-  GameObjectTemplateAddon.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    faction = json['faction'] ?? 0;
-    flags = json['flags'] ?? 0;
-    minGold = json['mingold'] ?? json['Mingold'] ?? 0;
-    maxGold = json['maxgold'] ?? json['Maxgold'] ?? 0;
-    artkit0 = json['artkit0'] ?? json['Artkit0'] ?? 0;
-    artkit1 = json['artkit1'] ?? json['Artkit1'] ?? 0;
-    artkit2 = json['artkit2'] ?? json['Artkit2'] ?? 0;
-    artkit3 = json['artkit3'] ?? json['Artkit3'] ?? 0;
+  factory GameObjectTemplateAddon.fromJson(Map<String, dynamic> json) {
+    return GameObjectTemplateAddon()
+      ..entry = json['entry'] ?? 0
+      ..faction = json['faction'] ?? 0
+      ..flags = json['flags'] ?? 0
+      ..minGold = json['mingold'] ?? json['Mingold'] ?? 0
+      ..maxGold = json['maxgold'] ?? json['Maxgold'] ?? 0
+      ..artkit0 = json['artkit0'] ?? json['Artkit0'] ?? 0
+      ..artkit1 = json['artkit1'] ?? json['Artkit1'] ?? 0
+      ..artkit2 = json['artkit2'] ?? json['Artkit2'] ?? 0
+      ..artkit3 = json['artkit3'] ?? json['Artkit3'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

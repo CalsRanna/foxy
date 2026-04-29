@@ -22,27 +22,28 @@ class AreaTable {
 
   AreaTable();
 
-  AreaTable.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    continentId = json['ContinentID'] ?? 0;
-    parentAreaId = json['ParentAreaID'] ?? 0;
-    areaBit = json['AreaBit'] ?? 0;
-    flags = json['Flags'] ?? 0;
-    soundProviderPref = json['SoundProviderPref'] ?? 0;
-    soundProviderPrefUnderwater = json['SoundProviderPrefUnderwater'] ?? 0;
-    ambienceId = json['AmbienceID'] ?? 0;
-    zoneMusic = json['ZoneMusic'] ?? 0;
-    introSound = json['IntroSound'] ?? 0;
-    explorationLevel = json['ExplorationLevel'] ?? 0;
-    areaNameLangZhCn = json['AreaName_lang_zhCN'] ?? '';
-    factionGroupMask = json['FactionGroupMask'] ?? 0;
-    liquidTypeId0 = json['LiquidTypeID0'] ?? 0;
-    liquidTypeId1 = json['LiquidTypeID1'] ?? 0;
-    liquidTypeId2 = json['LiquidTypeID2'] ?? 0;
-    liquidTypeId3 = json['LiquidTypeID3'] ?? 0;
-    minElevation = (json['MinElevation'] as num?)?.toDouble() ?? 0.0;
-    ambientMultiplier = (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0;
-    lightId = json['LightID'] ?? 0;
+  factory AreaTable.fromJson(Map<String, dynamic> json) {
+    return AreaTable()
+      ..id = json['ID'] ?? 0
+      ..continentId = json['ContinentID'] ?? 0
+      ..parentAreaId = json['ParentAreaID'] ?? 0
+      ..areaBit = json['AreaBit'] ?? 0
+      ..flags = json['Flags'] ?? 0
+      ..soundProviderPref = json['SoundProviderPref'] ?? 0
+      ..soundProviderPrefUnderwater = json['SoundProviderPrefUnderwater'] ?? 0
+      ..ambienceId = json['AmbienceID'] ?? 0
+      ..zoneMusic = json['ZoneMusic'] ?? 0
+      ..introSound = json['IntroSound'] ?? 0
+      ..explorationLevel = json['ExplorationLevel'] ?? 0
+      ..areaNameLangZhCn = json['AreaName_lang_zhCN'] ?? ''
+      ..factionGroupMask = json['FactionGroupMask'] ?? 0
+      ..liquidTypeId0 = json['LiquidTypeID0'] ?? 0
+      ..liquidTypeId1 = json['LiquidTypeID1'] ?? 0
+      ..liquidTypeId2 = json['LiquidTypeID2'] ?? 0
+      ..liquidTypeId3 = json['LiquidTypeID3'] ?? 0
+      ..minElevation = (json['MinElevation'] as num?)?.toDouble() ?? 0.0
+      ..ambientMultiplier = (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0
+      ..lightId = json['LightID'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -81,12 +82,13 @@ class BriefAreaTable {
 
   BriefAreaTable();
 
-  BriefAreaTable.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    areaNameLangZhCn = json['AreaName_lang_zhCN'] ?? '';
-    continentId = json['ContinentID'] ?? 0;
-    minElevation = (json['MinElevation'] as num?)?.toDouble() ?? 0.0;
-    zoneMusic = json['ZoneMusic'] ?? 0;
-    explorationLevel = json['ExplorationLevel'] ?? 0;
+  factory BriefAreaTable.fromJson(Map<String, dynamic> json) {
+    return BriefAreaTable()
+      ..id = json['ID'] ?? 0
+      ..areaNameLangZhCn = json['AreaName_lang_zhCN'] ?? ''
+      ..continentId = json['ContinentID'] ?? 0
+      ..minElevation = (json['MinElevation'] as num?)?.toDouble() ?? 0.0
+      ..zoneMusic = json['ZoneMusic'] ?? 0
+      ..explorationLevel = json['ExplorationLevel'] ?? 0;
   }
 }

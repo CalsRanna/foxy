@@ -7,9 +7,10 @@ class GameobjectQuestender {
 
   GameobjectQuestender();
 
-  GameobjectQuestender.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 0;
-    quest = json['quest'] ?? 0;
+  factory GameobjectQuestender.fromJson(Map<String, dynamic> json) {
+    return GameobjectQuestender()
+      ..id = json['id'] ?? 0
+      ..quest = json['quest'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -26,11 +27,12 @@ class BriefGameobjectQuestender {
 
   BriefGameobjectQuestender();
 
-  BriefGameobjectQuestender.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 0;
-    quest = json['quest'] ?? 0;
-    name = json['name']?.toString() ?? '';
-    localeName = json['Name']?.toString() ?? '';
+  factory BriefGameobjectQuestender.fromJson(Map<String, dynamic> json) {
+    return BriefGameobjectQuestender()
+      ..id = json['id'] ?? 0
+      ..quest = json['quest'] ?? 0
+      ..name = json['name']?.toString() ?? ''
+      ..localeName = json['Name']?.toString() ?? '';
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;

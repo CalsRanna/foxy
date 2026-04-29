@@ -43,56 +43,48 @@ class Vehicle {
 
   Vehicle();
 
-  Vehicle.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? json['id'] ?? 0;
-    flags = json['Flags'] ?? json['flags'] ?? 0;
-    turnSpeed = (json['TurnSpeed'] ?? json['turnSpeed'] ?? 0).toDouble();
-    pitchSpeed = (json['PitchSpeed'] ?? json['pitchSpeed'] ?? 0).toDouble();
-    pitchMin = (json['PitchMin'] ?? json['pitchMin'] ?? 0).toDouble();
-    pitchMax = (json['PitchMax'] ?? json['pitchMax'] ?? 0).toDouble();
-    seatID0 = json['SeatID0'] ?? 0;
-    seatID1 = json['SeatID1'] ?? 0;
-    seatID2 = json['SeatID2'] ?? 0;
-    seatID3 = json['SeatID3'] ?? 0;
-    seatID4 = json['SeatID4'] ?? 0;
-    seatID5 = json['SeatID5'] ?? 0;
-    seatID6 = json['SeatID6'] ?? 0;
-    seatID7 = json['SeatID7'] ?? 0;
-    mouseLookOffsetPitch =
-        (json['MouseLookOffsetPitch'] as num?)?.toDouble() ?? 0;
-    cameraFadeDistScalarMin =
-        (json['CameraFadeDistScalarMin'] as num?)?.toDouble() ?? 0;
-    cameraFadeDistScalarMax =
-        (json['CameraFadeDistScalarMax'] as num?)?.toDouble() ?? 0;
-    cameraPitchOffset = (json['CameraPitchOffset'] as num?)?.toDouble() ?? 0;
-    facingLimitRight = (json['FacingLimitRight'] as num?)?.toDouble() ?? 0;
-    facingLimitLeft = (json['FacingLimitLeft'] as num?)?.toDouble() ?? 0;
-    msslTrgtTurnLingering =
-        (json['MsslTrgtTurnLingering'] as num?)?.toDouble() ?? 0;
-    msslTrgtPitchLingering =
-        (json['MsslTrgtPitchLingering'] as num?)?.toDouble() ?? 0;
-    msslTrgtMouseLingering =
-        (json['MsslTrgtMouseLingering'] as num?)?.toDouble() ?? 0;
-    msslTrgtEndOpacity = (json['MsslTrgtEndOpacity'] as num?)?.toDouble() ?? 0;
-    msslTrgtArcSpeed = (json['MsslTrgtArcSpeed'] as num?)?.toDouble() ?? 0;
-    msslTrgtArcRepeat = (json['MsslTrgtArcRepeat'] as num?)?.toDouble() ?? 0;
-    msslTrgtArcWidth = (json['MsslTrgtArcWidth'] as num?)?.toDouble() ?? 0;
-    msslTrgtImpactRadius0 =
-        (json['MsslTrgtImpactRadius0'] as num?)?.toDouble() ?? 0;
-    msslTrgtImpactRadius1 =
-        (json['MsslTrgtImpactRadius1'] as num?)?.toDouble() ?? 0;
-    msslTrgtArcTexture = json['MsslTrgtArcTexture'] ?? '';
-    msslTrgtImpactTexture = json['MsslTrgtImpactTexture'] ?? '';
-    msslTrgtImpactModel0 = json['MsslTrgtImpactModel0'] ?? '';
-    msslTrgtImpactModel1 = json['MsslTrgtImpactModel1'] ?? '';
-    cameraYawOffset = (json['CameraYawOffset'] as num?)?.toDouble() ?? 0;
-    uiLocomotionType = json['UiLocomotionType'] ?? 0;
-    msslTrgtImpactTexRadius =
-        (json['MsslTrgtImpactTexRadius'] as num?)?.toDouble() ?? 0;
-    vehicleUIIndicatorID = json['VehicleUIIndicatorID'] ?? 0;
-    powerDisplayID0 = json['PowerDisplayID0'] ?? 0;
-    powerDisplayID1 = json['PowerDisplayID1'] ?? 0;
-    powerDisplayID2 = json['PowerDisplayID2'] ?? 0;
+  factory Vehicle.fromJson(Map<String, dynamic> json) {
+    return Vehicle()
+      ..id = json['ID'] ?? json['id'] ?? 0
+      ..flags = json['Flags'] ?? json['flags'] ?? 0
+      ..turnSpeed = (json['TurnSpeed'] ?? json['turnSpeed'] ?? 0).toDouble()
+      ..pitchSpeed = (json['PitchSpeed'] ?? json['pitchSpeed'] ?? 0).toDouble()
+      ..pitchMin = (json['PitchMin'] ?? json['pitchMin'] ?? 0).toDouble()
+      ..pitchMax = (json['PitchMax'] ?? json['pitchMax'] ?? 0).toDouble()
+      ..seatID0 = json['SeatID0'] ?? 0
+      ..seatID1 = json['SeatID1'] ?? 0
+      ..seatID2 = json['SeatID2'] ?? 0
+      ..seatID3 = json['SeatID3'] ?? 0
+      ..seatID4 = json['SeatID4'] ?? 0
+      ..seatID5 = json['SeatID5'] ?? 0
+      ..seatID6 = json['SeatID6'] ?? 0
+      ..seatID7 = json['SeatID7'] ?? 0
+      ..mouseLookOffsetPitch = (json['MouseLookOffsetPitch'] as num?)?.toDouble() ?? 0
+      ..cameraFadeDistScalarMin = (json['CameraFadeDistScalarMin'] as num?)?.toDouble() ?? 0
+      ..cameraFadeDistScalarMax = (json['CameraFadeDistScalarMax'] as num?)?.toDouble() ?? 0
+      ..cameraPitchOffset = (json['CameraPitchOffset'] as num?)?.toDouble() ?? 0
+      ..facingLimitRight = (json['FacingLimitRight'] as num?)?.toDouble() ?? 0
+      ..facingLimitLeft = (json['FacingLimitLeft'] as num?)?.toDouble() ?? 0
+      ..msslTrgtTurnLingering = (json['MsslTrgtTurnLingering'] as num?)?.toDouble() ?? 0
+      ..msslTrgtPitchLingering = (json['MsslTrgtPitchLingering'] as num?)?.toDouble() ?? 0
+      ..msslTrgtMouseLingering = (json['MsslTrgtMouseLingering'] as num?)?.toDouble() ?? 0
+      ..msslTrgtEndOpacity = (json['MsslTrgtEndOpacity'] as num?)?.toDouble() ?? 0
+      ..msslTrgtArcSpeed = (json['MsslTrgtArcSpeed'] as num?)?.toDouble() ?? 0
+      ..msslTrgtArcRepeat = (json['MsslTrgtArcRepeat'] as num?)?.toDouble() ?? 0
+      ..msslTrgtArcWidth = (json['MsslTrgtArcWidth'] as num?)?.toDouble() ?? 0
+      ..msslTrgtImpactRadius0 = (json['MsslTrgtImpactRadius0'] as num?)?.toDouble() ?? 0
+      ..msslTrgtImpactRadius1 = (json['MsslTrgtImpactRadius1'] as num?)?.toDouble() ?? 0
+      ..msslTrgtArcTexture = json['MsslTrgtArcTexture'] ?? ''
+      ..msslTrgtImpactTexture = json['MsslTrgtImpactTexture'] ?? ''
+      ..msslTrgtImpactModel0 = json['MsslTrgtImpactModel0'] ?? ''
+      ..msslTrgtImpactModel1 = json['MsslTrgtImpactModel1'] ?? ''
+      ..cameraYawOffset = (json['CameraYawOffset'] as num?)?.toDouble() ?? 0
+      ..uiLocomotionType = json['UiLocomotionType'] ?? 0
+      ..msslTrgtImpactTexRadius = (json['MsslTrgtImpactTexRadius'] as num?)?.toDouble() ?? 0
+      ..vehicleUIIndicatorID = json['VehicleUIIndicatorID'] ?? 0
+      ..powerDisplayID0 = json['PowerDisplayID0'] ?? 0
+      ..powerDisplayID1 = json['PowerDisplayID1'] ?? 0
+      ..powerDisplayID2 = json['PowerDisplayID2'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

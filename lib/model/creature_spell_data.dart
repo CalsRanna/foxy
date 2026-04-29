@@ -16,20 +16,21 @@ class CreatureSpellData {
 
   CreatureSpellData();
 
-  CreatureSpellData.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? json['id'] ?? 0;
-    spells0 = json['Spells0'] ?? 0;
-    spells1 = json['Spells1'] ?? 0;
-    spells2 = json['Spells2'] ?? 0;
-    spells3 = json['Spells3'] ?? 0;
-    availability0 = json['Availability0'] ?? 0;
-    availability1 = json['Availability1'] ?? 0;
-    availability2 = json['Availability2'] ?? 0;
-    availability3 = json['Availability3'] ?? 0;
-    spellName1 = json['SpellName1'] ?? '';
-    spellName2 = json['SpellName2'] ?? '';
-    spellName3 = json['SpellName3'] ?? '';
-    spellName4 = json['SpellName4'] ?? '';
+  factory CreatureSpellData.fromJson(Map<String, dynamic> json) {
+    return CreatureSpellData()
+      ..id = json['ID'] ?? json['id'] ?? 0
+      ..spells0 = json['Spells0'] ?? 0
+      ..spells1 = json['Spells1'] ?? 0
+      ..spells2 = json['Spells2'] ?? 0
+      ..spells3 = json['Spells3'] ?? 0
+      ..availability0 = json['Availability0'] ?? 0
+      ..availability1 = json['Availability1'] ?? 0
+      ..availability2 = json['Availability2'] ?? 0
+      ..availability3 = json['Availability3'] ?? 0
+      ..spellName1 = json['SpellName1'] ?? ''
+      ..spellName2 = json['SpellName2'] ?? ''
+      ..spellName3 = json['SpellName3'] ?? ''
+      ..spellName4 = json['SpellName4'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

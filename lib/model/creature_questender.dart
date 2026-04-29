@@ -7,9 +7,10 @@ class CreatureQuestender {
 
   CreatureQuestender();
 
-  CreatureQuestender.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 0;
-    quest = json['quest'] ?? 0;
+  factory CreatureQuestender.fromJson(Map<String, dynamic> json) {
+    return CreatureQuestender()
+      ..id = json['id'] ?? 0
+      ..quest = json['quest'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -26,11 +27,12 @@ class BriefCreatureQuestender {
 
   BriefCreatureQuestender();
 
-  BriefCreatureQuestender.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 0;
-    quest = json['quest'] ?? 0;
-    name = json['name']?.toString() ?? '';
-    localeName = json['Name']?.toString() ?? '';
+  factory BriefCreatureQuestender.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureQuestender()
+      ..id = json['id'] ?? 0
+      ..quest = json['quest'] ?? 0
+      ..name = json['name']?.toString() ?? ''
+      ..localeName = json['Name']?.toString() ?? '';
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;

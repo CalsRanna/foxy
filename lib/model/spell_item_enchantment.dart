@@ -24,29 +24,30 @@ class SpellItemEnchantment {
 
   SpellItemEnchantment();
 
-  SpellItemEnchantment.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    charges = json['Charges'] ?? 0;
-    effect0 = json['Effect0'] ?? 0;
-    effect1 = json['Effect1'] ?? 0;
-    effect2 = json['Effect2'] ?? 0;
-    effectPointsMin0 = json['EffectPointsMin0'] ?? 0;
-    effectPointsMin1 = json['EffectPointsMin1'] ?? 0;
-    effectPointsMin2 = json['EffectPointsMin2'] ?? 0;
-    effectPointsMax0 = json['EffectPointsMax0'] ?? 0;
-    effectPointsMax1 = json['EffectPointsMax1'] ?? 0;
-    effectPointsMax2 = json['EffectPointsMax2'] ?? 0;
-    effectArg0 = json['EffectArg0'] ?? 0;
-    effectArg1 = json['EffectArg1'] ?? 0;
-    effectArg2 = json['EffectArg2'] ?? 0;
-    nameLangZhCn = json['Name_lang_zhCN'] ?? '';
-    itemVisual = json['ItemVisual'] ?? 0;
-    flags = json['Flags'] ?? 0;
-    srcItemId = json['Src_itemID'] ?? 0;
-    conditionId = json['Condition_ID'] ?? 0;
-    requiredSkillId = json['RequiredSkillID'] ?? 0;
-    requiredSkillRank = json['RequiredSkillRank'] ?? 0;
-    minLevel = json['MinLevel'] ?? 0;
+  factory SpellItemEnchantment.fromJson(Map<String, dynamic> json) {
+    return SpellItemEnchantment()
+      ..id = json['ID'] ?? 0
+      ..charges = json['Charges'] ?? 0
+      ..effect0 = json['Effect0'] ?? 0
+      ..effect1 = json['Effect1'] ?? 0
+      ..effect2 = json['Effect2'] ?? 0
+      ..effectPointsMin0 = json['EffectPointsMin0'] ?? 0
+      ..effectPointsMin1 = json['EffectPointsMin1'] ?? 0
+      ..effectPointsMin2 = json['EffectPointsMin2'] ?? 0
+      ..effectPointsMax0 = json['EffectPointsMax0'] ?? 0
+      ..effectPointsMax1 = json['EffectPointsMax1'] ?? 0
+      ..effectPointsMax2 = json['EffectPointsMax2'] ?? 0
+      ..effectArg0 = json['EffectArg0'] ?? 0
+      ..effectArg1 = json['EffectArg1'] ?? 0
+      ..effectArg2 = json['EffectArg2'] ?? 0
+      ..nameLangZhCn = json['Name_lang_zhCN'] ?? ''
+      ..itemVisual = json['ItemVisual'] ?? 0
+      ..flags = json['Flags'] ?? 0
+      ..srcItemId = json['Src_itemID'] ?? 0
+      ..conditionId = json['Condition_ID'] ?? 0
+      ..requiredSkillId = json['RequiredSkillID'] ?? 0
+      ..requiredSkillRank = json['RequiredSkillRank'] ?? 0
+      ..minLevel = json['MinLevel'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

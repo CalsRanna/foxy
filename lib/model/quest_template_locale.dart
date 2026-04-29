@@ -16,19 +16,20 @@ class QuestTemplateLocale {
 
   QuestTemplateLocale();
 
-  QuestTemplateLocale.fromJson(Map<String, dynamic> json) {
-    id = (json['ID'] ?? json['id'] ?? 0) as int;
-    locale = json['Locale']?.toString() ?? 'zhCN';
-    title = json['Title']?.toString() ?? '';
-    details = json['Details']?.toString() ?? '';
-    objectives = json['Objectives']?.toString() ?? '';
-    endText = json['EndText']?.toString() ?? '';
-    completedText = json['CompletedText']?.toString() ?? '';
-    objectiveText1 = json['ObjectiveText1']?.toString() ?? '';
-    objectiveText2 = json['ObjectiveText2']?.toString() ?? '';
-    objectiveText3 = json['ObjectiveText3']?.toString() ?? '';
-    objectiveText4 = json['ObjectiveText4']?.toString() ?? '';
-    verifiedBuild = json['VerifiedBuild'];
+  factory QuestTemplateLocale.fromJson(Map<String, dynamic> json) {
+    return QuestTemplateLocale()
+      ..id = (json['ID'] ?? json['id'] ?? 0) as int
+      ..locale = json['Locale']?.toString() ?? 'zhCN'
+      ..title = json['Title']?.toString() ?? ''
+      ..details = json['Details']?.toString() ?? ''
+      ..objectives = json['Objectives']?.toString() ?? ''
+      ..endText = json['EndText']?.toString() ?? ''
+      ..completedText = json['CompletedText']?.toString() ?? ''
+      ..objectiveText1 = json['ObjectiveText1']?.toString() ?? ''
+      ..objectiveText2 = json['ObjectiveText2']?.toString() ?? ''
+      ..objectiveText3 = json['ObjectiveText3']?.toString() ?? ''
+      ..objectiveText4 = json['ObjectiveText4']?.toString() ?? ''
+      ..verifiedBuild = json['VerifiedBuild'];
   }
 
   Map<String, dynamic> toJson() {

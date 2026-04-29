@@ -10,15 +10,16 @@ class BriefSmartScript {
 
   BriefSmartScript();
 
-  BriefSmartScript.fromJson(Map<String, dynamic> json) {
-    entryOrGuid = json['entryorguid'] ?? 0;
-    sourceType = json['source_type'] ?? 0;
-    id = json['id'] ?? 0;
-    link = json['link'] ?? 0;
-    comment = json['comment'] ?? '';
-    eventType = json['event_type'] ?? 0;
-    actionType = json['action_type'] ?? 0;
-    targetType = json['target_type'] ?? 0;
+  factory BriefSmartScript.fromJson(Map<String, dynamic> json) {
+    return BriefSmartScript()
+      ..entryOrGuid = json['entryorguid'] ?? 0
+      ..sourceType = json['source_type'] ?? 0
+      ..id = json['id'] ?? 0
+      ..link = json['link'] ?? 0
+      ..comment = json['comment'] ?? ''
+      ..eventType = json['event_type'] ?? 0
+      ..actionType = json['action_type'] ?? 0
+      ..targetType = json['target_type'] ?? 0;
   }
 
   String get displayName => comment;
@@ -58,37 +59,38 @@ class SmartScript {
 
   SmartScript();
 
-  SmartScript.fromJson(Map<String, dynamic> json) {
-    entryOrGuid = json['entryorguid'] ?? 0;
-    sourceType = json['source_type'] ?? 0;
-    id = json['id'] ?? 0;
-    link = json['link'] ?? 0;
-    eventType = json['event_type'] ?? 0;
-    eventPhaseMask = json['event_phase_mask'] ?? 0;
-    eventChance = json['event_chance'] ?? 0;
-    eventFlags = json['event_flags'] ?? 0;
-    eventParam1 = json['event_param1'] ?? 0;
-    eventParam2 = json['event_param2'] ?? 0;
-    eventParam3 = json['event_param3'] ?? 0;
-    eventParam4 = json['event_param4'] ?? 0;
-    eventParam5 = json['event_param5'] ?? 0;
-    actionType = json['action_type'] ?? 0;
-    actionParam1 = json['action_param1'] ?? 0;
-    actionParam2 = json['action_param2'] ?? 0;
-    actionParam3 = json['action_param3'] ?? 0;
-    actionParam4 = json['action_param4'] ?? 0;
-    actionParam5 = json['action_param5'] ?? 0;
-    actionParam6 = json['action_param6'] ?? 0;
-    targetType = json['target_type'] ?? 0;
-    targetParam1 = json['target_param1'] ?? 0;
-    targetParam2 = json['target_param2'] ?? 0;
-    targetParam3 = json['target_param3'] ?? 0;
-    targetParam4 = json['target_param4'] ?? 0;
-    targetX = (json['target_x'] ?? 0).toDouble();
-    targetY = (json['target_y'] ?? 0).toDouble();
-    targetZ = (json['target_z'] ?? 0).toDouble();
-    targetO = (json['target_o'] ?? 0).toDouble();
-    comment = json['comment'] ?? '';
+  factory SmartScript.fromJson(Map<String, dynamic> json) {
+    return SmartScript()
+      ..entryOrGuid = json['entryorguid'] ?? 0
+      ..sourceType = json['source_type'] ?? 0
+      ..id = json['id'] ?? 0
+      ..link = json['link'] ?? 0
+      ..eventType = json['event_type'] ?? 0
+      ..eventPhaseMask = json['event_phase_mask'] ?? 0
+      ..eventChance = json['event_chance'] ?? 0
+      ..eventFlags = json['event_flags'] ?? 0
+      ..eventParam1 = json['event_param1'] ?? 0
+      ..eventParam2 = json['event_param2'] ?? 0
+      ..eventParam3 = json['event_param3'] ?? 0
+      ..eventParam4 = json['event_param4'] ?? 0
+      ..eventParam5 = json['event_param5'] ?? 0
+      ..actionType = json['action_type'] ?? 0
+      ..actionParam1 = json['action_param1'] ?? 0
+      ..actionParam2 = json['action_param2'] ?? 0
+      ..actionParam3 = json['action_param3'] ?? 0
+      ..actionParam4 = json['action_param4'] ?? 0
+      ..actionParam5 = json['action_param5'] ?? 0
+      ..actionParam6 = json['action_param6'] ?? 0
+      ..targetType = json['target_type'] ?? 0
+      ..targetParam1 = json['target_param1'] ?? 0
+      ..targetParam2 = json['target_param2'] ?? 0
+      ..targetParam3 = json['target_param3'] ?? 0
+      ..targetParam4 = json['target_param4'] ?? 0
+      ..targetX = (json['target_x'] ?? 0).toDouble()
+      ..targetY = (json['target_y'] ?? 0).toDouble()
+      ..targetZ = (json['target_z'] ?? 0).toDouble()
+      ..targetO = (json['target_o'] ?? 0).toDouble()
+      ..comment = json['comment'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

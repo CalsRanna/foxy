@@ -33,22 +33,23 @@ class Condition {
     };
   }
 
-  Condition.fromJson(Map<String, dynamic> json) {
-    sourceTypeOrReferenceId = json['SourceTypeOrReferenceId'] ?? 0;
-    sourceGroup = json['SourceGroup'] ?? 0;
-    sourceEntry = json['SourceEntry'] ?? 0;
-    sourceId = json['SourceId'] ?? 0;
-    elseGroup = json['ElseGroup'] ?? 0;
-    conditionTypeOrReference = json['ConditionTypeOrReference'] ?? 0;
-    conditionTarget = json['ConditionTarget'] ?? 0;
-    conditionValue1 = json['ConditionValue1'] ?? 0;
-    conditionValue2 = json['ConditionValue2'] ?? 0;
-    conditionValue3 = json['ConditionValue3'] ?? 0;
-    negativeCondition = json['NegativeCondition'] ?? 0;
-    errorType = json['ErrorType'] ?? 0;
-    errorTextId = json['ErrorTextId'] ?? 0;
-    scriptName = json['ScriptName'] ?? '';
-    comment = json['Comment'] ?? '';
+  factory Condition.fromJson(Map<String, dynamic> json) {
+    return Condition()
+      ..sourceTypeOrReferenceId = json['SourceTypeOrReferenceId'] ?? 0
+      ..sourceGroup = json['SourceGroup'] ?? 0
+      ..sourceEntry = json['SourceEntry'] ?? 0
+      ..sourceId = json['SourceId'] ?? 0
+      ..elseGroup = json['ElseGroup'] ?? 0
+      ..conditionTypeOrReference = json['ConditionTypeOrReference'] ?? 0
+      ..conditionTarget = json['ConditionTarget'] ?? 0
+      ..conditionValue1 = json['ConditionValue1'] ?? 0
+      ..conditionValue2 = json['ConditionValue2'] ?? 0
+      ..conditionValue3 = json['ConditionValue3'] ?? 0
+      ..negativeCondition = json['NegativeCondition'] ?? 0
+      ..errorType = json['ErrorType'] ?? 0
+      ..errorTextId = json['ErrorTextId'] ?? 0
+      ..scriptName = json['ScriptName'] ?? ''
+      ..comment = json['Comment'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

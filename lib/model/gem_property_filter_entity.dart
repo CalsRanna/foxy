@@ -2,8 +2,9 @@ class GemPropertyFilterEntity {
   String id = '';
   GemPropertyFilterEntity();
 
-  GemPropertyFilterEntity.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? '';
+  factory GemPropertyFilterEntity.fromJson(Map<String, dynamic> json) {
+    return GemPropertyFilterEntity()
+      ..id = json['id'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

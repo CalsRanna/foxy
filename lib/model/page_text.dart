@@ -11,12 +11,13 @@ class PageText {
 
   PageText();
 
-  PageText.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    text = json['Text'] ?? '';
-    nextPageId = json['NextPageID'] ?? 0;
-    verifiedBuild = json['VerifiedBuild'] ?? 0;
-    localeText = json['localeText'] ?? '';
+  factory PageText.fromJson(Map<String, dynamic> json) {
+    return PageText()
+      ..id = json['ID'] ?? 0
+      ..text = json['Text'] ?? ''
+      ..nextPageId = json['NextPageID'] ?? 0
+      ..verifiedBuild = json['VerifiedBuild'] ?? 0
+      ..localeText = json['localeText'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

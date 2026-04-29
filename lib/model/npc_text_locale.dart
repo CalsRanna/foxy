@@ -10,13 +10,15 @@ class NpcTextLocale {
 
   NpcTextLocale();
 
-  NpcTextLocale.fromJson(Map<String, dynamic> json) {
-    id = (json['ID'] ?? json['id'] ?? 0) as int;
-    locale = json['Locale']?.toString() ?? 'zhCN';
+  factory NpcTextLocale.fromJson(Map<String, dynamic> json) {
+    var obj = NpcTextLocale();
+    obj.id = (json['ID'] ?? json['id'] ?? 0) as int;
+    obj.locale = json['Locale']?.toString() ?? 'zhCN';
     for (var n = 0; n < 8; n++) {
-      texts[n][0] = json['Text${n}_0']?.toString() ?? '';
-      texts[n][1] = json['Text${n}_1']?.toString() ?? '';
+      obj.texts[n][0] = json['Text${n}_0']?.toString() ?? '';
+      obj.texts[n][1] = json['Text${n}_1']?.toString() ?? '';
     }
+    return obj;
   }
 
   Map<String, dynamic> toJson() {

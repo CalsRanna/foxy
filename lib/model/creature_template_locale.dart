@@ -7,12 +7,13 @@ class CreatureTemplateLocale {
 
   CreatureTemplateLocale();
 
-  CreatureTemplateLocale.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    locale = json['locale'] ?? '';
-    name = json['Name'] ?? '';
-    title = json['Title'] ?? '';
-    verifiedBuild = json['VerifiedBuild'] ?? 0;
+  factory CreatureTemplateLocale.fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateLocale()
+      ..entry = json['entry'] ?? 0
+      ..locale = json['locale'] ?? ''
+      ..name = json['Name'] ?? ''
+      ..title = json['Title'] ?? ''
+      ..verifiedBuild = json['VerifiedBuild'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

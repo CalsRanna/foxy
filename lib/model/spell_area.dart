@@ -13,17 +13,18 @@ class SpellArea {
 
   SpellArea();
 
-  SpellArea.fromJson(Map<String, dynamic> json) {
-    spell = json['spell'] ?? 0;
-    area = json['area'] ?? 0;
-    questStart = json['quest_start'] ?? 0;
-    questEnd = json['quest_end'] ?? 0;
-    auraSpell = json['aura_spell'] ?? 0;
-    racemask = json['racemask'] ?? 0;
-    gender = json['gender'] ?? 0;
-    autocast = json['autocast'] ?? 0;
-    questStartStatus = json['quest_start_status'] ?? 0;
-    questEndStatus = json['quest_end_status'] ?? 0;
+  factory SpellArea.fromJson(Map<String, dynamic> json) {
+    return SpellArea()
+      ..spell = json['spell'] ?? 0
+      ..area = json['area'] ?? 0
+      ..questStart = json['quest_start'] ?? 0
+      ..questEnd = json['quest_end'] ?? 0
+      ..auraSpell = json['aura_spell'] ?? 0
+      ..racemask = json['racemask'] ?? 0
+      ..gender = json['gender'] ?? 0
+      ..autocast = json['autocast'] ?? 0
+      ..questStartStatus = json['quest_start_status'] ?? 0
+      ..questEndStatus = json['quest_end_status'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

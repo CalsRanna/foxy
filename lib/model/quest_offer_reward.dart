@@ -16,18 +16,19 @@ class QuestOfferReward {
 
   QuestOfferReward();
 
-  QuestOfferReward.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    emote1 = json['Emote1'] ?? 0;
-    emote2 = json['Emote2'] ?? 0;
-    emote3 = json['Emote3'] ?? 0;
-    emote4 = json['Emote4'] ?? 0;
-    emoteDelay1 = json['EmoteDelay1'] ?? 0;
-    emoteDelay2 = json['EmoteDelay2'] ?? 0;
-    emoteDelay3 = json['EmoteDelay3'] ?? 0;
-    emoteDelay4 = json['EmoteDelay4'] ?? 0;
-    rewardText = json['RewardText']?.toString() ?? '';
-    verifiedBuild = json['VerifiedBuild'];
+  factory QuestOfferReward.fromJson(Map<String, dynamic> json) {
+    return QuestOfferReward()
+      ..id = json['ID'] ?? 0
+      ..emote1 = json['Emote1'] ?? 0
+      ..emote2 = json['Emote2'] ?? 0
+      ..emote3 = json['Emote3'] ?? 0
+      ..emote4 = json['Emote4'] ?? 0
+      ..emoteDelay1 = json['EmoteDelay1'] ?? 0
+      ..emoteDelay2 = json['EmoteDelay2'] ?? 0
+      ..emoteDelay3 = json['EmoteDelay3'] ?? 0
+      ..emoteDelay4 = json['EmoteDelay4'] ?? 0
+      ..rewardText = json['RewardText']?.toString() ?? ''
+      ..verifiedBuild = json['VerifiedBuild'];
   }
 
   Map<String, dynamic> toJson() {
@@ -59,11 +60,12 @@ class QuestOfferRewardLocale {
 
   QuestOfferRewardLocale();
 
-  QuestOfferRewardLocale.fromJson(Map<String, dynamic> json) {
-    id = (json['ID'] ?? json['id'] ?? 0) as int;
-    locale = json['Locale']?.toString() ?? 'zhCN';
-    rewardText = json['RewardText']?.toString() ?? '';
-    verifiedBuild = json['VerifiedBuild'];
+  factory QuestOfferRewardLocale.fromJson(Map<String, dynamic> json) {
+    return QuestOfferRewardLocale()
+      ..id = (json['ID'] ?? json['id'] ?? 0) as int
+      ..locale = json['Locale']?.toString() ?? 'zhCN'
+      ..rewardText = json['RewardText']?.toString() ?? ''
+      ..verifiedBuild = json['VerifiedBuild'];
   }
 
   Map<String, dynamic> toJson() {

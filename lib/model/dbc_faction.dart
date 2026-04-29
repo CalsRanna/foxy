@@ -6,10 +6,11 @@ class DbcFaction {
 
   DbcFaction();
 
-  DbcFaction.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? json['id'] ?? 0;
-    name = json['Name_Lang_zhCN'] ?? json['name'] ?? '';
-    description = json['Description_Lang_zhCN'] ?? json['description'] ?? '';
+  factory DbcFaction.fromJson(Map<String, dynamic> json) {
+    return DbcFaction()
+      ..id = json['ID'] ?? json['id'] ?? 0
+      ..name = json['Name_Lang_zhCN'] ?? json['name'] ?? ''
+      ..description = json['Description_Lang_zhCN'] ?? json['description'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

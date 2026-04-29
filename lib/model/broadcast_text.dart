@@ -6,11 +6,12 @@ class BroadcastText {
 
   BroadcastText();
 
-  BroadcastText.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    languageId = json['LanguageID'] ?? 0;
-    maleText = json['MaleText'] ?? '';
-    femaleText = json['FemaleText'] ?? '';
+  factory BroadcastText.fromJson(Map<String, dynamic> json) {
+    return BroadcastText()
+      ..id = json['ID'] ?? 0
+      ..languageId = json['LanguageID'] ?? 0
+      ..maleText = json['MaleText'] ?? ''
+      ..femaleText = json['FemaleText'] ?? '';
   }
 
   String get displayText {

@@ -6,11 +6,12 @@ class GlyphProperty {
 
   GlyphProperty();
 
-  GlyphProperty.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    spellId = json['SpellID'] ?? 0;
-    glyphSlotFlags = json['GlyphSlotFlags'] ?? 0;
-    spellIconId = json['SpellIconID'] ?? 0;
+  factory GlyphProperty.fromJson(Map<String, dynamic> json) {
+    return GlyphProperty()
+      ..id = json['ID'] ?? 0
+      ..spellId = json['SpellID'] ?? 0
+      ..glyphSlotFlags = json['GlyphSlotFlags'] ?? 0
+      ..spellIconId = json['SpellIconID'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

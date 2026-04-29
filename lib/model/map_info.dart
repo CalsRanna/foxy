@@ -7,12 +7,13 @@ class MapInfo {
 
   MapInfo();
 
-  MapInfo.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    mapNameLangZhCn = json['MapName_lang_zhCN'] ?? '';
-    mapDescription0LangZhCn = json['MapDescription0_lang_zhCN'] ?? '';
-    instanceType = json['InstanceType'] ?? 0;
-    pvp = json['PVP'] ?? 0;
+  factory MapInfo.fromJson(Map<String, dynamic> json) {
+    return MapInfo()
+      ..id = json['ID'] ?? 0
+      ..mapNameLangZhCn = json['MapName_lang_zhCN'] ?? ''
+      ..mapDescription0LangZhCn = json['MapDescription0_lang_zhCN'] ?? ''
+      ..instanceType = json['InstanceType'] ?? 0
+      ..pvp = json['PVP'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

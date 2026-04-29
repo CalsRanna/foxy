@@ -10,19 +10,20 @@ class BriefSpell {
 
   BriefSpell();
 
-  BriefSpell.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    name = json['Name_lang_zhCN'] ?? json['Name_Lang_zhCN'] ?? '';
-    subtext =
-        json['NameSubtext_lang_zhCN'] ?? json['NameSubtext_Lang_zhCN'] ?? '';
-    description =
-        json['Description_lang_zhCN'] ?? json['Description_Lang_zhCN'] ?? '';
-    auraDescription =
-        json['AuraDescription_lang_zhCN'] ??
-        json['AuraDescription_Lang_zhCN'] ??
-        '';
-    duration = '${json['Duration'] ?? ''}';
-    textureFilename = json['TextureFilename'] ?? '';
+  factory BriefSpell.fromJson(Map<String, dynamic> json) {
+    return BriefSpell()
+      ..id = json['ID'] ?? 0
+      ..name = json['Name_lang_zhCN'] ?? json['Name_Lang_zhCN'] ?? ''
+      ..subtext =
+          json['NameSubtext_lang_zhCN'] ?? json['NameSubtext_Lang_zhCN'] ?? ''
+      ..description =
+          json['Description_lang_zhCN'] ?? json['Description_Lang_zhCN'] ?? ''
+      ..auraDescription =
+          json['AuraDescription_lang_zhCN'] ??
+          json['AuraDescription_Lang_zhCN'] ??
+          ''
+      ..duration = '${json['Duration'] ?? ''}'
+      ..textureFilename = json['TextureFilename'] ?? '';
   }
 
   String get displayName => name;
@@ -249,234 +250,194 @@ class Spell {
 
   Spell();
 
-  Spell.fromJson(Map<String, dynamic> json) {
-    // === 编号 ===
-    id = json['ID'] ?? 0;
-
-    // === 基础文本 ===
-    nameLangZhCN = json['Name_lang_zhCN'] ?? '';
-    nameSubtextLangZhCN = json['NameSubtext_lang_zhCN'] ?? '';
-    descriptionLangZhCN = json['Description_lang_zhCN'] ?? '';
-    auraDescriptionLangZhCN = json['AuraDescription_lang_zhCN'] ?? '';
-    nameLangFlags = json['Name_lang_Flags'] ?? 0;
-    nameSubtextLangFlags = json['NameSubtext_lang_Flags'] ?? 0;
-    descriptionLangFlags = json['Description_lang_Flags'] ?? 0;
-    auraDescriptionLangFlags = json['AuraDescription_lang_Flags'] ?? 0;
-
-    // === 图标/视觉 ===
-    spellIconID = json['SpellIconID'] ?? 0;
-    activeIconID = json['ActiveIconID'] ?? 0;
-    spellVisualID0 = json['SpellVisualID0'] ?? 0;
-    spellVisualID1 = json['SpellVisualID1'] ?? 0;
-
-    // === 分类/类型 ===
-    category = json['Category'] ?? 0;
-    schoolMask = json['SchoolMask'] ?? 0;
-    mechanic = json['Mechanic'] ?? 0;
-    defenseType = json['DefenseType'] ?? 0;
-    dispelType = json['DispelType'] ?? 0;
-    preventionType = json['PreventionType'] ?? 0;
-
-    // === 施法参数 ===
-    castingTimeIndex = json['CastingTimeIndex'] ?? 0;
-    durationIndex = json['DurationIndex'] ?? 0;
-    rangeIndex = json['RangeIndex'] ?? 0;
-    spellDescriptionVariableID = json['DescriptionVariablesID'] ?? 0;
-
-    // === 等级 ===
-    baseLevel = json['BaseLevel'] ?? 0;
-    spellLevel = json['SpellLevel'] ?? 0;
-    maxLevel = json['MaxLevel'] ?? 0;
-    spellDifficultyID = json['Difficulty'] ?? 0;
-
-    // === 冷却/恢复 ===
-    startRecoveryCategory = json['StartRecoveryCategory'] ?? 0;
-    startRecoveryTime = json['StartRecoveryTime'] ?? 0;
-    recoveryTime = json['RecoveryTime'] ?? 0;
-    categoryRecoveryTime = json['CategoryRecoveryTime'] ?? 0;
-
-    // === 目标 ===
-    targetCreatureType = json['TargetCreatureType'] ?? 0;
-    targets = json['Targets'] ?? 0;
-    maxTargets = json['MaxTargets'] ?? 0;
-    maxTargetLevel = json['MaxTargetLevel'] ?? 0;
-
-    // === 状态 ===
-    casterAuraState = json['CasterAuraState'] ?? 0;
-    targetAuraState = json['TargetAuraState'] ?? 0;
-    spellMissileID = json['SpellMissileID'] ?? 0;
-    speed = (json['Speed'] as num?)?.toDouble() ?? 0.0;
-
-    // === 需求 ===
-    requiredAreasID = json['RequiredAreasID'] ?? 0;
-    requiresSpellFocus = json['RequiresSpellFocus'] ?? 0;
-    facingCasterFlags = json['FacingCasterFlags'] ?? 0;
-
-    // === 能量消耗 ===
-    powerDisplayID = json['PowerDisplayID'] ?? 0;
-    powerType = json['PowerType'] ?? 0;
-    runeCostID = json['RuneCostID'] ?? 0;
-    manaCost = json['ManaCost'] ?? 0;
-    manaCostPct = json['ManaCostPct'] ?? 0;
-    manaCostPerLevel = json['ManaCostPerLevel'] ?? 0;
-    manaPerSecond = json['ManaPerSecond'] ?? 0;
-    manaPerSecondPerLevel = json['ManaPerSecondPerLevel'] ?? 0;
-
-    // === 标志位 ===
-    interruptFlags = json['InterruptFlags'] ?? 0;
-    auraInterruptFlags = json['AuraInterruptFlags'] ?? 0;
-    channelInterruptFlags = json['ChannelInterruptFlags'] ?? 0;
-    attributes = json['Attributes'] ?? 0;
-    attributesEx = json['AttributesEx'] ?? 0;
-    attributesExB = json['AttributesExB'] ?? 0;
-    attributesExC = json['AttributesExC'] ?? 0;
-    attributesExD = json['AttributesExD'] ?? 0;
-    attributesExE = json['AttributesExE'] ?? 0;
-    attributesExF = json['AttributesExF'] ?? 0;
-    attributesExG = json['AttributesExG'] ?? 0;
-
-    // === 触发 ===
-    procTypeMask = json['ProcTypeMask'] ?? 0;
-    procChance = json['ProcChance'] ?? 0;
-    procCharges = json['ProcCharges'] ?? 0;
-
-    // === 法术分类 ===
-    spellClassSet = json['SpellClassSet'] ?? 0;
-    spellClassMask0 = json['SpellClassMask0'] ?? 0;
-    spellClassMask1 = json['SpellClassMask1'] ?? 0;
-    spellClassMask2 = json['SpellClassMask2'] ?? 0;
-
-    // === 变形 ===
-    shapeshiftMask0 = json['ShapeshiftMask0'] ?? 0;
-    shapeshiftMask1 = json['ShapeshiftMask1'] ?? 0;
-    shapeshiftExclude0 = json['ShapeshiftExclude0'] ?? 0;
-    shapeshiftExclude1 = json['ShapeshiftExclude1'] ?? 0;
-
-    // === 效果0 ===
-    effect0 = json['Effect0'] ?? 0;
-    effectDieSides0 = json['EffectDieSides0'] ?? 0;
-    effectRealPointsPerLevel0 =
-        (json['EffectRealPointsPerLevel0'] as num?)?.toDouble() ?? 0.0;
-    effectBasePoints0 = json['EffectBasePoints0'] ?? 0;
-    effectMechanic0 = json['EffectMechanic0'] ?? 0;
-    effectAura0 = json['EffectAura0'] ?? 0;
-    effectAuraPeriod0 = json['EffectAuraPeriod0'] ?? 0;
-    effectAmplitude0 = (json['EffectAmplitude0'] as num?)?.toDouble() ?? 0.0;
-    effectChainTargets0 = json['EffectChainTargets0'] ?? 0;
-    effectItemType0 = json['EffectItemType0'] ?? 0;
-    effectMiscValue0 = json['EffectMiscValue0'] ?? 0;
-    effectMiscValueB0 = json['EffectMiscValueB0'] ?? 0;
-    effectRadiusIndex0 = json['EffectRadiusIndex0'] ?? 0;
-    implicitTargetA0 = json['ImplicitTargetA0'] ?? 0;
-    implicitTargetB0 = json['ImplicitTargetB0'] ?? 0;
-    effectTriggerSpell0 = json['EffectTriggerSpell0'] ?? 0;
-    effectPointsPerCombo0 =
-        (json['EffectPointsPerCombo0'] as num?)?.toDouble() ?? 0.0;
-    effectSpellClassMaskA0 = json['EffectSpellClassMaskA0'] ?? 0;
-    effectSpellClassMaskB0 = json['EffectSpellClassMaskB0'] ?? 0;
-    effectSpellClassMaskC0 = json['EffectSpellClassMaskC0'] ?? 0;
-    effectChainAmplitude0 =
-        (json['EffectChainAmplitude0'] as num?)?.toDouble() ?? 0.0;
-    effectBonusCoefficient0 =
-        (json['EffectBonusCoefficient0'] as num?)?.toDouble() ?? 0.0;
-
-    // === 效果1 ===
-    effect1 = json['Effect1'] ?? 0;
-    effectDieSides1 = json['EffectDieSides1'] ?? 0;
-    effectRealPointsPerLevel1 =
-        (json['EffectRealPointsPerLevel1'] as num?)?.toDouble() ?? 0.0;
-    effectBasePoints1 = json['EffectBasePoints1'] ?? 0;
-    effectMechanic1 = json['EffectMechanic1'] ?? 0;
-    effectAura1 = json['EffectAura1'] ?? 0;
-    effectAuraPeriod1 = json['EffectAuraPeriod1'] ?? 0;
-    effectAmplitude1 = (json['EffectAmplitude1'] as num?)?.toDouble() ?? 0.0;
-    effectChainTargets1 = json['EffectChainTargets1'] ?? 0;
-    effectItemType1 = json['EffectItemType1'] ?? 0;
-    effectMiscValue1 = json['EffectMiscValue1'] ?? 0;
-    effectMiscValueB1 = json['EffectMiscValueB1'] ?? 0;
-    effectRadiusIndex1 = json['EffectRadiusIndex1'] ?? 0;
-    implicitTargetA1 = json['ImplicitTargetA1'] ?? 0;
-    implicitTargetB1 = json['ImplicitTargetB1'] ?? 0;
-    effectTriggerSpell1 = json['EffectTriggerSpell1'] ?? 0;
-    effectPointsPerCombo1 =
-        (json['EffectPointsPerCombo1'] as num?)?.toDouble() ?? 0.0;
-    effectSpellClassMaskA1 = json['EffectSpellClassMaskA1'] ?? 0;
-    effectSpellClassMaskB1 = json['EffectSpellClassMaskB1'] ?? 0;
-    effectSpellClassMaskC1 = json['EffectSpellClassMaskC1'] ?? 0;
-    effectChainAmplitude1 =
-        (json['EffectChainAmplitude1'] as num?)?.toDouble() ?? 0.0;
-    effectBonusCoefficient1 =
-        (json['EffectBonusCoefficient1'] as num?)?.toDouble() ?? 0.0;
-
-    // === 效果2 ===
-    effect2 = json['Effect2'] ?? 0;
-    effectDieSides2 = json['EffectDieSides2'] ?? 0;
-    effectRealPointsPerLevel2 =
-        (json['EffectRealPointsPerLevel2'] as num?)?.toDouble() ?? 0.0;
-    effectBasePoints2 = json['EffectBasePoints2'] ?? 0;
-    effectMechanic2 = json['EffectMechanic2'] ?? 0;
-    effectAura2 = json['EffectAura2'] ?? 0;
-    effectAuraPeriod2 = json['EffectAuraPeriod2'] ?? 0;
-    effectAmplitude2 = (json['EffectAmplitude2'] as num?)?.toDouble() ?? 0.0;
-    effectChainTargets2 = json['EffectChainTargets2'] ?? 0;
-    effectItemType2 = json['EffectItemType2'] ?? 0;
-    effectMiscValue2 = json['EffectMiscValue2'] ?? 0;
-    effectMiscValueB2 = json['EffectMiscValueB2'] ?? 0;
-    effectRadiusIndex2 = json['EffectRadiusIndex2'] ?? 0;
-    implicitTargetA2 = json['ImplicitTargetA2'] ?? 0;
-    implicitTargetB2 = json['ImplicitTargetB2'] ?? 0;
-    effectTriggerSpell2 = json['EffectTriggerSpell2'] ?? 0;
-    effectPointsPerCombo2 =
-        (json['EffectPointsPerCombo2'] as num?)?.toDouble() ?? 0.0;
-    effectSpellClassMaskA2 = json['EffectSpellClassMaskA2'] ?? 0;
-    effectSpellClassMaskB2 = json['EffectSpellClassMaskB2'] ?? 0;
-    effectSpellClassMaskC2 = json['EffectSpellClassMaskC2'] ?? 0;
-    effectChainAmplitude2 =
-        (json['EffectChainAmplitude2'] as num?)?.toDouble() ?? 0.0;
-    effectBonusCoefficient2 =
-        (json['EffectBonusCoefficient2'] as num?)?.toDouble() ?? 0.0;
-
-    // === 装备限制 ===
-    equippedItemClass = json['EquippedItemClass'] ?? 0;
-    equippedItemSubclass = json['EquippedItemSubclass'] ?? 0;
-    equippedItemInvTypes = json['EquippedItemInvTypes'] ?? 0;
-
-    // === 图腾/施法材料 ===
-    requiredTotemCategoryID0 = json['RequiredTotemCategoryID0'] ?? 0;
-    totem0 = json['Totem0'] ?? 0;
-    requiredTotemCategoryID1 = json['RequiredTotemCategoryID1'] ?? 0;
-    totem1 = json['Totem1'] ?? 0;
-    reagent0 = json['Reagent0'] ?? 0;
-    reagent1 = json['Reagent1'] ?? 0;
-    reagent2 = json['Reagent2'] ?? 0;
-    reagent3 = json['Reagent3'] ?? 0;
-    reagent4 = json['Reagent4'] ?? 0;
-    reagent5 = json['Reagent5'] ?? 0;
-    reagent6 = json['Reagent6'] ?? 0;
-    reagent7 = json['Reagent7'] ?? 0;
-    reagentCount0 = json['ReagentCount0'] ?? 0;
-    reagentCount1 = json['ReagentCount1'] ?? 0;
-    reagentCount2 = json['ReagentCount2'] ?? 0;
-    reagentCount3 = json['ReagentCount3'] ?? 0;
-    reagentCount4 = json['ReagentCount4'] ?? 0;
-    reagentCount5 = json['ReagentCount5'] ?? 0;
-    reagentCount6 = json['ReagentCount6'] ?? 0;
-    reagentCount7 = json['ReagentCount7'] ?? 0;
-
-    // === 其他高级属性 ===
-    casterAuraSpell = json['CasterAuraSpell'] ?? 0;
-    cumulativeAura = json['CumulativeAura'] ?? 0;
-    minFactionID = json['MinFactionID'] ?? 0;
-    minReputation = json['MinReputation'] ?? 0;
-    excludeCasterAuraSpell = json['ExcludeCasterAuraSpell'] ?? 0;
-    excludeCasterAuraState = json['ExcludeCasterAuraState'] ?? 0;
-    excludeTargetAuraSpell = json['ExcludeTargetAuraSpell'] ?? 0;
-    excludeTargetAuraState = json['ExcludeTargetAuraState'] ?? 0;
-    spellPriority = json['SpellPriority'] ?? 0;
-    modalNextSpell = json['ModalNextSpell'] ?? 0;
-    requiredAuraVision = json['RequiredAuraVision'] ?? 0;
-    targetAuraSpell = json['TargetAuraSpell'] ?? 0;
-    stanceBarOrder = json['StanceBarOrder'] ?? 0;
+  factory Spell.fromJson(Map<String, dynamic> json) {
+    return Spell()
+      ..id = json['ID'] ?? 0
+      ..nameLangZhCN = json['Name_lang_zhCN'] ?? ''
+      ..nameSubtextLangZhCN = json['NameSubtext_lang_zhCN'] ?? ''
+      ..descriptionLangZhCN = json['Description_lang_zhCN'] ?? ''
+      ..auraDescriptionLangZhCN = json['AuraDescription_lang_zhCN'] ?? ''
+      ..nameLangFlags = json['Name_lang_Flags'] ?? 0
+      ..nameSubtextLangFlags = json['NameSubtext_lang_Flags'] ?? 0
+      ..descriptionLangFlags = json['Description_lang_Flags'] ?? 0
+      ..auraDescriptionLangFlags = json['AuraDescription_lang_Flags'] ?? 0
+      ..spellIconID = json['SpellIconID'] ?? 0
+      ..activeIconID = json['ActiveIconID'] ?? 0
+      ..spellVisualID0 = json['SpellVisualID0'] ?? 0
+      ..spellVisualID1 = json['SpellVisualID1'] ?? 0
+      ..category = json['Category'] ?? 0
+      ..schoolMask = json['SchoolMask'] ?? 0
+      ..mechanic = json['Mechanic'] ?? 0
+      ..defenseType = json['DefenseType'] ?? 0
+      ..dispelType = json['DispelType'] ?? 0
+      ..preventionType = json['PreventionType'] ?? 0
+      ..castingTimeIndex = json['CastingTimeIndex'] ?? 0
+      ..durationIndex = json['DurationIndex'] ?? 0
+      ..rangeIndex = json['RangeIndex'] ?? 0
+      ..spellDescriptionVariableID = json['DescriptionVariablesID'] ?? 0
+      ..baseLevel = json['BaseLevel'] ?? 0
+      ..spellLevel = json['SpellLevel'] ?? 0
+      ..maxLevel = json['MaxLevel'] ?? 0
+      ..spellDifficultyID = json['Difficulty'] ?? 0
+      ..startRecoveryCategory = json['StartRecoveryCategory'] ?? 0
+      ..startRecoveryTime = json['StartRecoveryTime'] ?? 0
+      ..recoveryTime = json['RecoveryTime'] ?? 0
+      ..categoryRecoveryTime = json['CategoryRecoveryTime'] ?? 0
+      ..targetCreatureType = json['TargetCreatureType'] ?? 0
+      ..targets = json['Targets'] ?? 0
+      ..maxTargets = json['MaxTargets'] ?? 0
+      ..maxTargetLevel = json['MaxTargetLevel'] ?? 0
+      ..casterAuraState = json['CasterAuraState'] ?? 0
+      ..targetAuraState = json['TargetAuraState'] ?? 0
+      ..spellMissileID = json['SpellMissileID'] ?? 0
+      ..speed = (json['Speed'] as num?)?.toDouble() ?? 0.0
+      ..requiredAreasID = json['RequiredAreasID'] ?? 0
+      ..requiresSpellFocus = json['RequiresSpellFocus'] ?? 0
+      ..facingCasterFlags = json['FacingCasterFlags'] ?? 0
+      ..powerDisplayID = json['PowerDisplayID'] ?? 0
+      ..powerType = json['PowerType'] ?? 0
+      ..runeCostID = json['RuneCostID'] ?? 0
+      ..manaCost = json['ManaCost'] ?? 0
+      ..manaCostPct = json['ManaCostPct'] ?? 0
+      ..manaCostPerLevel = json['ManaCostPerLevel'] ?? 0
+      ..manaPerSecond = json['ManaPerSecond'] ?? 0
+      ..manaPerSecondPerLevel = json['ManaPerSecondPerLevel'] ?? 0
+      ..interruptFlags = json['InterruptFlags'] ?? 0
+      ..auraInterruptFlags = json['AuraInterruptFlags'] ?? 0
+      ..channelInterruptFlags = json['ChannelInterruptFlags'] ?? 0
+      ..attributes = json['Attributes'] ?? 0
+      ..attributesEx = json['AttributesEx'] ?? 0
+      ..attributesExB = json['AttributesExB'] ?? 0
+      ..attributesExC = json['AttributesExC'] ?? 0
+      ..attributesExD = json['AttributesExD'] ?? 0
+      ..attributesExE = json['AttributesExE'] ?? 0
+      ..attributesExF = json['AttributesExF'] ?? 0
+      ..attributesExG = json['AttributesExG'] ?? 0
+      ..procTypeMask = json['ProcTypeMask'] ?? 0
+      ..procChance = json['ProcChance'] ?? 0
+      ..procCharges = json['ProcCharges'] ?? 0
+      ..spellClassSet = json['SpellClassSet'] ?? 0
+      ..spellClassMask0 = json['SpellClassMask0'] ?? 0
+      ..spellClassMask1 = json['SpellClassMask1'] ?? 0
+      ..spellClassMask2 = json['SpellClassMask2'] ?? 0
+      ..shapeshiftMask0 = json['ShapeshiftMask0'] ?? 0
+      ..shapeshiftMask1 = json['ShapeshiftMask1'] ?? 0
+      ..shapeshiftExclude0 = json['ShapeshiftExclude0'] ?? 0
+      ..shapeshiftExclude1 = json['ShapeshiftExclude1'] ?? 0
+      ..effect0 = json['Effect0'] ?? 0
+      ..effectDieSides0 = json['EffectDieSides0'] ?? 0
+      ..effectRealPointsPerLevel0 =
+          (json['EffectRealPointsPerLevel0'] as num?)?.toDouble() ?? 0.0
+      ..effectBasePoints0 = json['EffectBasePoints0'] ?? 0
+      ..effectMechanic0 = json['EffectMechanic0'] ?? 0
+      ..effectAura0 = json['EffectAura0'] ?? 0
+      ..effectAuraPeriod0 = json['EffectAuraPeriod0'] ?? 0
+      ..effectAmplitude0 = (json['EffectAmplitude0'] as num?)?.toDouble() ?? 0.0
+      ..effectChainTargets0 = json['EffectChainTargets0'] ?? 0
+      ..effectItemType0 = json['EffectItemType0'] ?? 0
+      ..effectMiscValue0 = json['EffectMiscValue0'] ?? 0
+      ..effectMiscValueB0 = json['EffectMiscValueB0'] ?? 0
+      ..effectRadiusIndex0 = json['EffectRadiusIndex0'] ?? 0
+      ..implicitTargetA0 = json['ImplicitTargetA0'] ?? 0
+      ..implicitTargetB0 = json['ImplicitTargetB0'] ?? 0
+      ..effectTriggerSpell0 = json['EffectTriggerSpell0'] ?? 0
+      ..effectPointsPerCombo0 =
+          (json['EffectPointsPerCombo0'] as num?)?.toDouble() ?? 0.0
+      ..effectSpellClassMaskA0 = json['EffectSpellClassMaskA0'] ?? 0
+      ..effectSpellClassMaskB0 = json['EffectSpellClassMaskB0'] ?? 0
+      ..effectSpellClassMaskC0 = json['EffectSpellClassMaskC0'] ?? 0
+      ..effectChainAmplitude0 =
+          (json['EffectChainAmplitude0'] as num?)?.toDouble() ?? 0.0
+      ..effectBonusCoefficient0 =
+          (json['EffectBonusCoefficient0'] as num?)?.toDouble() ?? 0.0
+      ..effect1 = json['Effect1'] ?? 0
+      ..effectDieSides1 = json['EffectDieSides1'] ?? 0
+      ..effectRealPointsPerLevel1 =
+          (json['EffectRealPointsPerLevel1'] as num?)?.toDouble() ?? 0.0
+      ..effectBasePoints1 = json['EffectBasePoints1'] ?? 0
+      ..effectMechanic1 = json['EffectMechanic1'] ?? 0
+      ..effectAura1 = json['EffectAura1'] ?? 0
+      ..effectAuraPeriod1 = json['EffectAuraPeriod1'] ?? 0
+      ..effectAmplitude1 = (json['EffectAmplitude1'] as num?)?.toDouble() ?? 0.0
+      ..effectChainTargets1 = json['EffectChainTargets1'] ?? 0
+      ..effectItemType1 = json['EffectItemType1'] ?? 0
+      ..effectMiscValue1 = json['EffectMiscValue1'] ?? 0
+      ..effectMiscValueB1 = json['EffectMiscValueB1'] ?? 0
+      ..effectRadiusIndex1 = json['EffectRadiusIndex1'] ?? 0
+      ..implicitTargetA1 = json['ImplicitTargetA1'] ?? 0
+      ..implicitTargetB1 = json['ImplicitTargetB1'] ?? 0
+      ..effectTriggerSpell1 = json['EffectTriggerSpell1'] ?? 0
+      ..effectPointsPerCombo1 =
+          (json['EffectPointsPerCombo1'] as num?)?.toDouble() ?? 0.0
+      ..effectSpellClassMaskA1 = json['EffectSpellClassMaskA1'] ?? 0
+      ..effectSpellClassMaskB1 = json['EffectSpellClassMaskB1'] ?? 0
+      ..effectSpellClassMaskC1 = json['EffectSpellClassMaskC1'] ?? 0
+      ..effectChainAmplitude1 =
+          (json['EffectChainAmplitude1'] as num?)?.toDouble() ?? 0.0
+      ..effectBonusCoefficient1 =
+          (json['EffectBonusCoefficient1'] as num?)?.toDouble() ?? 0.0
+      ..effect2 = json['Effect2'] ?? 0
+      ..effectDieSides2 = json['EffectDieSides2'] ?? 0
+      ..effectRealPointsPerLevel2 =
+          (json['EffectRealPointsPerLevel2'] as num?)?.toDouble() ?? 0.0
+      ..effectBasePoints2 = json['EffectBasePoints2'] ?? 0
+      ..effectMechanic2 = json['EffectMechanic2'] ?? 0
+      ..effectAura2 = json['EffectAura2'] ?? 0
+      ..effectAuraPeriod2 = json['EffectAuraPeriod2'] ?? 0
+      ..effectAmplitude2 = (json['EffectAmplitude2'] as num?)?.toDouble() ?? 0.0
+      ..effectChainTargets2 = json['EffectChainTargets2'] ?? 0
+      ..effectItemType2 = json['EffectItemType2'] ?? 0
+      ..effectMiscValue2 = json['EffectMiscValue2'] ?? 0
+      ..effectMiscValueB2 = json['EffectMiscValueB2'] ?? 0
+      ..effectRadiusIndex2 = json['EffectRadiusIndex2'] ?? 0
+      ..implicitTargetA2 = json['ImplicitTargetA2'] ?? 0
+      ..implicitTargetB2 = json['ImplicitTargetB2'] ?? 0
+      ..effectTriggerSpell2 = json['EffectTriggerSpell2'] ?? 0
+      ..effectPointsPerCombo2 =
+          (json['EffectPointsPerCombo2'] as num?)?.toDouble() ?? 0.0
+      ..effectSpellClassMaskA2 = json['EffectSpellClassMaskA2'] ?? 0
+      ..effectSpellClassMaskB2 = json['EffectSpellClassMaskB2'] ?? 0
+      ..effectSpellClassMaskC2 = json['EffectSpellClassMaskC2'] ?? 0
+      ..effectChainAmplitude2 =
+          (json['EffectChainAmplitude2'] as num?)?.toDouble() ?? 0.0
+      ..effectBonusCoefficient2 =
+          (json['EffectBonusCoefficient2'] as num?)?.toDouble() ?? 0.0
+      ..equippedItemClass = json['EquippedItemClass'] ?? 0
+      ..equippedItemSubclass = json['EquippedItemSubclass'] ?? 0
+      ..equippedItemInvTypes = json['EquippedItemInvTypes'] ?? 0
+      ..requiredTotemCategoryID0 = json['RequiredTotemCategoryID0'] ?? 0
+      ..totem0 = json['Totem0'] ?? 0
+      ..requiredTotemCategoryID1 = json['RequiredTotemCategoryID1'] ?? 0
+      ..totem1 = json['Totem1'] ?? 0
+      ..reagent0 = json['Reagent0'] ?? 0
+      ..reagent1 = json['Reagent1'] ?? 0
+      ..reagent2 = json['Reagent2'] ?? 0
+      ..reagent3 = json['Reagent3'] ?? 0
+      ..reagent4 = json['Reagent4'] ?? 0
+      ..reagent5 = json['Reagent5'] ?? 0
+      ..reagent6 = json['Reagent6'] ?? 0
+      ..reagent7 = json['Reagent7'] ?? 0
+      ..reagentCount0 = json['ReagentCount0'] ?? 0
+      ..reagentCount1 = json['ReagentCount1'] ?? 0
+      ..reagentCount2 = json['ReagentCount2'] ?? 0
+      ..reagentCount3 = json['ReagentCount3'] ?? 0
+      ..reagentCount4 = json['ReagentCount4'] ?? 0
+      ..reagentCount5 = json['ReagentCount5'] ?? 0
+      ..reagentCount6 = json['ReagentCount6'] ?? 0
+      ..reagentCount7 = json['ReagentCount7'] ?? 0
+      ..casterAuraSpell = json['CasterAuraSpell'] ?? 0
+      ..cumulativeAura = json['CumulativeAura'] ?? 0
+      ..minFactionID = json['MinFactionID'] ?? 0
+      ..minReputation = json['MinReputation'] ?? 0
+      ..excludeCasterAuraSpell = json['ExcludeCasterAuraSpell'] ?? 0
+      ..excludeCasterAuraState = json['ExcludeCasterAuraState'] ?? 0
+      ..excludeTargetAuraSpell = json['ExcludeTargetAuraSpell'] ?? 0
+      ..excludeTargetAuraState = json['ExcludeTargetAuraState'] ?? 0
+      ..spellPriority = json['SpellPriority'] ?? 0
+      ..modalNextSpell = json['ModalNextSpell'] ?? 0
+      ..requiredAuraVision = json['RequiredAuraVision'] ?? 0
+      ..targetAuraSpell = json['TargetAuraSpell'] ?? 0
+      ..stanceBarOrder = json['StanceBarOrder'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

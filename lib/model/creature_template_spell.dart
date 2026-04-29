@@ -11,14 +11,14 @@ class CreatureTemplateSpell {
 
   CreatureTemplateSpell();
 
-  CreatureTemplateSpell.fromJson(Map<String, dynamic> json) {
-    creatureID = json['CreatureID'] ?? json['creatureID'] ?? 0;
-    index = json['Index'] ?? json['index'] ?? 0;
-    spell = json['Spell'] ?? json['spell'] ?? 0;
-    verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0;
-    // 关联字段
-    spellName = json['spellName'] ?? '';
-    spellSubtext = json['spellSubtext'] ?? '';
+  factory CreatureTemplateSpell.fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateSpell()
+      ..creatureID = json['CreatureID'] ?? json['creatureID'] ?? 0
+      ..index = json['Index'] ?? json['index'] ?? 0
+      ..spell = json['Spell'] ?? json['spell'] ?? 0
+      ..verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0
+      ..spellName = json['spellName'] ?? ''
+      ..spellSubtext = json['spellSubtext'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

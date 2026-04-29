@@ -21,26 +21,27 @@ class EmoteText {
 
   EmoteText();
 
-  EmoteText.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    name = json['Name'] ?? '';
-    emoteId = json['EmoteID'] ?? 0;
-    emoteText0 = json['EmoteText0'] ?? 0;
-    emoteText1 = json['EmoteText1'] ?? 0;
-    emoteText2 = json['EmoteText2'] ?? 0;
-    emoteText3 = json['EmoteText3'] ?? 0;
-    emoteText4 = json['EmoteText4'] ?? 0;
-    emoteText5 = json['EmoteText5'] ?? 0;
-    emoteText6 = json['EmoteText6'] ?? 0;
-    emoteText7 = json['EmoteText7'] ?? 0;
-    emoteText8 = json['EmoteText8'] ?? 0;
-    emoteText9 = json['EmoteText9'] ?? 0;
-    emoteText10 = json['EmoteText10'] ?? 0;
-    emoteText11 = json['EmoteText11'] ?? 0;
-    emoteText12 = json['EmoteText12'] ?? 0;
-    emoteText13 = json['EmoteText13'] ?? 0;
-    emoteText14 = json['EmoteText14'] ?? 0;
-    emoteText15 = json['EmoteText15'] ?? 0;
+  factory EmoteText.fromJson(Map<String, dynamic> json) {
+    return EmoteText()
+      ..id = json['ID'] ?? 0
+      ..name = json['Name'] ?? ''
+      ..emoteId = json['EmoteID'] ?? 0
+      ..emoteText0 = json['EmoteText0'] ?? 0
+      ..emoteText1 = json['EmoteText1'] ?? 0
+      ..emoteText2 = json['EmoteText2'] ?? 0
+      ..emoteText3 = json['EmoteText3'] ?? 0
+      ..emoteText4 = json['EmoteText4'] ?? 0
+      ..emoteText5 = json['EmoteText5'] ?? 0
+      ..emoteText6 = json['EmoteText6'] ?? 0
+      ..emoteText7 = json['EmoteText7'] ?? 0
+      ..emoteText8 = json['EmoteText8'] ?? 0
+      ..emoteText9 = json['EmoteText9'] ?? 0
+      ..emoteText10 = json['EmoteText10'] ?? 0
+      ..emoteText11 = json['EmoteText11'] ?? 0
+      ..emoteText12 = json['EmoteText12'] ?? 0
+      ..emoteText13 = json['EmoteText13'] ?? 0
+      ..emoteText14 = json['EmoteText14'] ?? 0
+      ..emoteText15 = json['EmoteText15'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

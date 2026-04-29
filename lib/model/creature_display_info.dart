@@ -22,30 +22,31 @@ class CreatureDisplayInfo {
 
   CreatureDisplayInfo();
 
-  CreatureDisplayInfo.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? json['id'] ?? 0;
-    modelId = json['ModelID'] ?? json['ModelId'] ?? json['modelId'] ?? 0;
-    soundId = json['SoundID'] ?? json['SoundId'] ?? json['soundId'] ?? 0;
-    extendedDisplayInfoId =
-        json['ExtendedDisplayInfoID'] ??
-        json['ExtendedDisplayInfoId'] ??
-        json['extendedDisplayInfoId'] ??
-        0;
-    creatureModelScale =
-        (json['CreatureModelScale'] ?? json['creatureModelScale'] ?? 1.0)
-            .toDouble();
-    creatureModelAlpha = json['CreatureModelAlpha'] ?? 0;
-    textureVariation0 = json['TextureVariation0'] ?? '';
-    textureVariation1 = json['TextureVariation1'] ?? '';
-    textureVariation2 = json['TextureVariation2'] ?? '';
-    portraitTextureName = json['PortraitTextureName'] ?? '';
-    sizeClass = json['SizeClass'] ?? 0;
-    bloodID = json['BloodID'] ?? 0;
-    npcSoundID = json['NPCSoundID'] ?? 0;
-    particleColorID = json['ParticleColorID'] ?? 0;
-    creatureGeosetData = json['CreatureGeosetData'] ?? 0;
-    objectEffectPackageID = json['ObjectEffectPackageID'] ?? 0;
-    modelName = json['ModelName'] ?? json['modelName'] ?? '';
+  factory CreatureDisplayInfo.fromJson(Map<String, dynamic> json) {
+    return CreatureDisplayInfo()
+      ..id = json['ID'] ?? json['id'] ?? 0
+      ..modelId = json['ModelID'] ?? json['ModelId'] ?? json['modelId'] ?? 0
+      ..soundId = json['SoundID'] ?? json['SoundId'] ?? json['soundId'] ?? 0
+      ..extendedDisplayInfoId =
+          json['ExtendedDisplayInfoID'] ??
+          json['ExtendedDisplayInfoId'] ??
+          json['extendedDisplayInfoId'] ??
+          0
+      ..creatureModelScale =
+          (json['CreatureModelScale'] ?? json['creatureModelScale'] ?? 1.0)
+              .toDouble()
+      ..creatureModelAlpha = json['CreatureModelAlpha'] ?? 0
+      ..textureVariation0 = json['TextureVariation0'] ?? ''
+      ..textureVariation1 = json['TextureVariation1'] ?? ''
+      ..textureVariation2 = json['TextureVariation2'] ?? ''
+      ..portraitTextureName = json['PortraitTextureName'] ?? ''
+      ..sizeClass = json['SizeClass'] ?? 0
+      ..bloodID = json['BloodID'] ?? 0
+      ..npcSoundID = json['NPCSoundID'] ?? 0
+      ..particleColorID = json['ParticleColorID'] ?? 0
+      ..creatureGeosetData = json['CreatureGeosetData'] ?? 0
+      ..objectEffectPackageID = json['ObjectEffectPackageID'] ?? 0
+      ..modelName = json['ModelName'] ?? json['modelName'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

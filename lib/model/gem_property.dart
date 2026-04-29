@@ -7,12 +7,13 @@ class GemProperty {
 
   GemProperty();
 
-  GemProperty.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    enchantId = json['Enchant_ID'] ?? 0;
-    maxcountInv = json['Maxcount_inv'] ?? 0;
-    maxcountItem = json['Maxcount_item'] ?? 0;
-    type = json['Type'] ?? 0;
+  factory GemProperty.fromJson(Map<String, dynamic> json) {
+    return GemProperty()
+      ..id = json['ID'] ?? 0
+      ..enchantId = json['Enchant_ID'] ?? 0
+      ..maxcountInv = json['Maxcount_inv'] ?? 0
+      ..maxcountItem = json['Maxcount_item'] ?? 0
+      ..type = json['Type'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -34,10 +35,11 @@ class BriefGemProperty {
 
   BriefGemProperty();
 
-  BriefGemProperty.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    enchantId = json['Enchant_ID'] ?? 0;
-    maxcountInv = json['Maxcount_inv'] ?? 0;
-    type = json['Type'] ?? 0;
+  factory BriefGemProperty.fromJson(Map<String, dynamic> json) {
+    return BriefGemProperty()
+      ..id = json['ID'] ?? 0
+      ..enchantId = json['Enchant_ID'] ?? 0
+      ..maxcountInv = json['Maxcount_inv'] ?? 0
+      ..type = json['Type'] ?? 0;
   }
 }

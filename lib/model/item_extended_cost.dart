@@ -19,23 +19,24 @@ class ItemExtendedCost {
 
   ItemExtendedCost();
 
-  ItemExtendedCost.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? json['id'] ?? 0;
-    honorPoints = json['HonorPoints'] ?? json['honorPoints'] ?? 0;
-    arenaPoints = json['ArenaPoints'] ?? json['arenaPoints'] ?? 0;
-    arenaBracket = json['ArenaBracket'] ?? json['arenaBracket'] ?? 0;
-    itemID0 = json['ItemID0'] ?? 0;
-    itemID1 = json['ItemID1'] ?? 0;
-    itemID2 = json['ItemID2'] ?? 0;
-    itemID3 = json['ItemID3'] ?? 0;
-    itemID4 = json['ItemID4'] ?? 0;
-    itemCount0 = json['ItemCount0'] ?? 0;
-    itemCount1 = json['ItemCount1'] ?? 0;
-    itemCount2 = json['ItemCount2'] ?? 0;
-    itemCount3 = json['ItemCount3'] ?? 0;
-    itemCount4 = json['ItemCount4'] ?? 0;
-    requiredArenaRating = json['RequiredArenaRating'] ?? 0;
-    itemPurchaseGroup = json['ItemPurchaseGroup'] ?? 0;
+  factory ItemExtendedCost.fromJson(Map<String, dynamic> json) {
+    return ItemExtendedCost()
+      ..id = json['ID'] ?? json['id'] ?? 0
+      ..honorPoints = json['HonorPoints'] ?? json['honorPoints'] ?? 0
+      ..arenaPoints = json['ArenaPoints'] ?? json['arenaPoints'] ?? 0
+      ..arenaBracket = json['ArenaBracket'] ?? json['arenaBracket'] ?? 0
+      ..itemID0 = json['ItemID0'] ?? 0
+      ..itemID1 = json['ItemID1'] ?? 0
+      ..itemID2 = json['ItemID2'] ?? 0
+      ..itemID3 = json['ItemID3'] ?? 0
+      ..itemID4 = json['ItemID4'] ?? 0
+      ..itemCount0 = json['ItemCount0'] ?? 0
+      ..itemCount1 = json['ItemCount1'] ?? 0
+      ..itemCount2 = json['ItemCount2'] ?? 0
+      ..itemCount3 = json['ItemCount3'] ?? 0
+      ..itemCount4 = json['ItemCount4'] ?? 0
+      ..requiredArenaRating = json['RequiredArenaRating'] ?? 0
+      ..itemPurchaseGroup = json['ItemPurchaseGroup'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

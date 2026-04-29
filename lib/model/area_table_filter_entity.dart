@@ -4,9 +4,10 @@ class AreaTableFilterEntity {
 
   AreaTableFilterEntity();
 
-  AreaTableFilterEntity.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? '';
-    name = json['name'] ?? '';
+  factory AreaTableFilterEntity.fromJson(Map<String, dynamic> json) {
+    return AreaTableFilterEntity()
+      ..id = json['id'] ?? ''
+      ..name = json['name'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

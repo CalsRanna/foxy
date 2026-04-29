@@ -19,21 +19,22 @@ class SpellLootTemplate {
 
   SpellLootTemplate();
 
-  SpellLootTemplate.fromJson(Map<String, dynamic> json) {
-    entry = json['Entry'] ?? json['entry'] ?? 0;
-    item = json['Item'] ?? json['item'] ?? 0;
-    reference = json['Reference'] ?? json['reference'] ?? 0;
-    chance = (json['Chance'] ?? json['chance'] ?? 0.0).toDouble();
-    questRequired = json['QuestRequired'] ?? json['questRequired'] ?? 0;
-    lootMode = json['LootMode'] ?? json['lootMode'] ?? 0;
-    groupId = json['GroupId'] ?? json['GroudId'] ?? json['groupId'] ?? 0;
-    minCount = json['MinCount'] ?? json['minCount'] ?? 0;
-    maxCount = json['MaxCount'] ?? json['maxCount'] ?? 0;
-    comment = json['Comment'] ?? json['comment'] ?? '';
-    itemName = json['name'] ?? '';
-    localeName = json['localeName'] ?? '';
-    quality = json['Quality'] ?? 0;
-    icon = json['InventoryIcon0'] ?? '';
+  factory SpellLootTemplate.fromJson(Map<String, dynamic> json) {
+    return SpellLootTemplate()
+      ..entry = json['Entry'] ?? json['entry'] ?? 0
+      ..item = json['Item'] ?? json['item'] ?? 0
+      ..reference = json['Reference'] ?? json['reference'] ?? 0
+      ..chance = (json['Chance'] ?? json['chance'] ?? 0.0).toDouble()
+      ..questRequired = json['QuestRequired'] ?? json['questRequired'] ?? 0
+      ..lootMode = json['LootMode'] ?? json['lootMode'] ?? 0
+      ..groupId = json['GroupId'] ?? json['GroudId'] ?? json['groupId'] ?? 0
+      ..minCount = json['MinCount'] ?? json['minCount'] ?? 0
+      ..maxCount = json['MaxCount'] ?? json['maxCount'] ?? 0
+      ..comment = json['Comment'] ?? json['comment'] ?? ''
+      ..itemName = json['name'] ?? ''
+      ..localeName = json['localeName'] ?? ''
+      ..quality = json['Quality'] ?? 0
+      ..icon = json['InventoryIcon0'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

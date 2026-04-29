@@ -4,9 +4,10 @@ class SpellIcon {
 
   SpellIcon();
 
-  SpellIcon.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    textureFilename = json['TextureFilename'] ?? '';
+  factory SpellIcon.fromJson(Map<String, dynamic> json) {
+    return SpellIcon()
+      ..id = json['ID'] ?? 0
+      ..textureFilename = json['TextureFilename'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

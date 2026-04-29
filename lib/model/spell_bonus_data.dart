@@ -9,13 +9,14 @@ class SpellBonusData {
 
   SpellBonusData();
 
-  SpellBonusData.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    directBonus = (json['direct_bonus'] ?? 0.0).toDouble();
-    dotBonus = (json['dot_bonus'] ?? 0.0).toDouble();
-    apBonus = (json['ap_bonus'] ?? 0.0).toDouble();
-    apDotBonus = (json['ap_dot_bonus'] ?? 0.0).toDouble();
-    comments = json['comments'] ?? '';
+  factory SpellBonusData.fromJson(Map<String, dynamic> json) {
+    return SpellBonusData()
+      ..entry = json['entry'] ?? 0
+      ..directBonus = (json['direct_bonus'] ?? 0.0).toDouble()
+      ..dotBonus = (json['dot_bonus'] ?? 0.0).toDouble()
+      ..apBonus = (json['ap_bonus'] ?? 0.0).toDouble()
+      ..apDotBonus = (json['ap_dot_bonus'] ?? 0.0).toDouble()
+      ..comments = json['comments'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

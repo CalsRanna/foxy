@@ -21,20 +21,20 @@ class ItemEnchantmentTemplate {
 
   ItemEnchantmentTemplate();
 
-  ItemEnchantmentTemplate.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? json['Entry'] ?? 0;
-    ench = json['ench'] ?? json['Ench'] ?? 0;
-    chance = (json['chance'] ?? json['Chance'] ?? 0).toDouble();
-    condition1 = json['condition_1'] ?? json['Condition_1'] ?? 0;
-    condition2 = json['condition_2'] ?? json['Condition_2'] ?? 0;
-    condition3 = json['condition_3'] ?? json['Condition_3'] ?? 0;
-    // JOIN 字段
-    name = json['Name_Lang_zhCN'] ?? json['Name'] ?? '';
-    enchantment1Name = json['Enchantment_1'] ?? '';
-    enchantment2Name = json['Enchantment_2'] ?? '';
-    enchantment3Name = json['Enchantment_3'] ?? '';
-    enchantment4Name = json['Enchantment_4'] ?? '';
-    enchantment5Name = json['Enchantment_5'] ?? '';
+  factory ItemEnchantmentTemplate.fromJson(Map<String, dynamic> json) {
+    return ItemEnchantmentTemplate()
+      ..entry = json['entry'] ?? json['Entry'] ?? 0
+      ..ench = json['ench'] ?? json['Ench'] ?? 0
+      ..chance = (json['chance'] ?? json['Chance'] ?? 0).toDouble()
+      ..condition1 = json['condition_1'] ?? json['Condition_1'] ?? 0
+      ..condition2 = json['condition_2'] ?? json['Condition_2'] ?? 0
+      ..condition3 = json['condition_3'] ?? json['Condition_3'] ?? 0
+      ..name = json['Name_Lang_zhCN'] ?? json['Name'] ?? ''
+      ..enchantment1Name = json['Enchantment_1'] ?? ''
+      ..enchantment2Name = json['Enchantment_2'] ?? ''
+      ..enchantment3Name = json['Enchantment_3'] ?? ''
+      ..enchantment4Name = json['Enchantment_4'] ?? ''
+      ..enchantment5Name = json['Enchantment_5'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
