@@ -41,21 +41,21 @@ class QuestRequestItemsEntity {
 }
 
 /// quest_request_items_locale 本地化模型（复合键: ID + Locale）
-class QuestRequestItemsLocale {
+class QuestRequestItemsLocaleEntity {
   final int id;
   final String locale;
   final String completionText;
   final int? verifiedBuild;
 
-  const QuestRequestItemsLocale({
+  const QuestRequestItemsLocaleEntity({
     this.id = 0,
     this.locale = 'zhCN',
     this.completionText = '',
     this.verifiedBuild,
   });
 
-  factory QuestRequestItemsLocale.fromJson(Map<String, dynamic> json) {
-    return QuestRequestItemsLocale(
+  factory QuestRequestItemsLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return QuestRequestItemsLocaleEntity(
       id: (json['ID'] ?? json['id'] ?? 0) as int,
       locale: json['Locale']?.toString() ?? 'zhCN',
       completionText: json['CompletionText']?.toString() ?? '',
