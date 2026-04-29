@@ -11,7 +11,7 @@ import 'package:signals/signals.dart';
 class GameObjectQuestItemViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectEntry = signal(0);
-  final items = signal<List<GameObjectQuestItem>>([]);
+  final items = signal<List<GameObjectQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -40,14 +40,14 @@ class GameObjectQuestItemViewModel {
     verifiedBuildController.clear();
   }
 
-  void fillForm(GameObjectQuestItem questItem) {
+  void fillForm(GameObjectQuestItemEntity questItem) {
     idxController.text = questItem.idx.toString();
     itemIdController.text = questItem.itemId.toString();
     verifiedBuildController.text = questItem.verifiedBuild.toString();
   }
 
-  GameObjectQuestItem collectFromForm() {
-    return GameObjectQuestItem(
+  GameObjectQuestItemEntity collectFromForm() {
+    return GameObjectQuestItemEntity(
       gameObjectEntry: gameObjectEntry.value,
       idx: _parseInt(idxController.text),
       itemId: _parseInt(itemIdController.text),

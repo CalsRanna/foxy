@@ -56,7 +56,7 @@ class CreatureQuestStarterRepository with RepositoryMixin {
   }
 
   /// 按 quest 搜索该任务下的所有任务给予者（带 creature_template + locale JOIN）
-  Future<List<BriefCreatureQuestStarter>> getCreatureQuestStarters(
+  Future<List<BriefCreatureQuestStarterEntity>> getCreatureQuestStarters(
     int questId,
   ) async {
     try {
@@ -74,7 +74,7 @@ class CreatureQuestStarterRepository with RepositoryMixin {
       builder = builder.where('cqs.quest', questId);
       final results = await builder.get();
       return results
-          .map((e) => BriefCreatureQuestStarter.fromJson(e.toMap()))
+          .map((e) => BriefCreatureQuestStarterEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];

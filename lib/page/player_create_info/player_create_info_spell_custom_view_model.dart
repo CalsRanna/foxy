@@ -7,7 +7,7 @@ import 'package:signals/signals.dart';
 class PlayerCreateInfoSpellCustomViewModel {
   final repository = PlayerCreateInfoRepository();
 
-  final spells = signal<List<PlayerCreateInfoSpellCustom>>([]);
+  final spells = signal<List<PlayerCreateInfoSpellCustomEntity>>([]);
   int? _race;
   int? _class_;
 
@@ -33,7 +33,7 @@ class PlayerCreateInfoSpellCustomViewModel {
   Future<void> save(BuildContext context) async {
     if (_race == null || _class_ == null) return;
     try {
-      final item = PlayerCreateInfoSpellCustom(
+      final item = PlayerCreateInfoSpellCustomEntity(
         racemask: _parseInt(racemaskController.text),
         classmask: _parseInt(classmaskController.text),
         spell: _parseInt(spellController.text),
@@ -51,7 +51,7 @@ class PlayerCreateInfoSpellCustomViewModel {
 
   Future<void> onDelete(
     BuildContext context,
-    PlayerCreateInfoSpellCustom item,
+    PlayerCreateInfoSpellCustomEntity item,
   ) async {
     if (_race == null || _class_ == null) return;
     try {

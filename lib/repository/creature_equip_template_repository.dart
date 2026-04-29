@@ -5,7 +5,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
   static const _table = 'creature_equip_template';
 
   /// 获取指定生物的所有装备模板（带物品信息）
-  Future<List<BriefCreatureEquipTemplate>> getCreatureEquipTemplates(
+  Future<List<BriefCreatureEquipTemplateEntity>> getCreatureEquipTemplates(
     int creatureID,
   ) async {
     try {
@@ -76,7 +76,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
       builder = builder.orderBy('cet.ID');
       var results = await builder.get();
       return results
-          .map((e) => BriefCreatureEquipTemplate.fromJson(e.toMap()))
+          .map((e) => BriefCreatureEquipTemplateEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];

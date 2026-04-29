@@ -74,23 +74,26 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   // ---- Sub-table: action ----
-  Future<List<PlayerCreateInfoAction>> getActions(int race, int class_) async {
+  Future<List<PlayerCreateInfoActionEntity>> getActions(
+    int race,
+    int class_,
+  ) async {
     var results = await laconic
         .table('playercreateinfo_action')
         .where('race', race)
         .where('class', class_)
         .get();
     return results
-        .map((e) => PlayerCreateInfoAction.fromJson(e.toMap()))
+        .map((e) => PlayerCreateInfoActionEntity.fromJson(e.toMap()))
         .toList();
   }
 
-  Future<void> storeAction(PlayerCreateInfoAction action) async {
+  Future<void> storeAction(PlayerCreateInfoActionEntity action) async {
     await laconic.table('playercreateinfo_action').insert([action.toJson()]);
   }
 
   Future<void> updateAction(
-    PlayerCreateInfoAction action, {
+    PlayerCreateInfoActionEntity action, {
     int? oldButton,
   }) async {
     var json = action.toJson();
@@ -114,18 +117,21 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   // ---- Sub-table: item ----
-  Future<List<PlayerCreateInfoItem>> getItems(int race, int class_) async {
+  Future<List<PlayerCreateInfoItemEntity>> getItems(
+    int race,
+    int class_,
+  ) async {
     var results = await laconic
         .table('playercreateinfo_item')
         .where('race', race)
         .where('class', class_)
         .get();
     return results
-        .map((e) => PlayerCreateInfoItem.fromJson(e.toMap()))
+        .map((e) => PlayerCreateInfoItemEntity.fromJson(e.toMap()))
         .toList();
   }
 
-  Future<void> storeItem(PlayerCreateInfoItem item) async {
+  Future<void> storeItem(PlayerCreateInfoItemEntity item) async {
     await laconic.table('playercreateinfo_item').insert([item.toJson()]);
   }
 
@@ -139,7 +145,7 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   // ---- Sub-table: spell_custom ----
-  Future<List<PlayerCreateInfoSpellCustom>> getSpellCustoms(
+  Future<List<PlayerCreateInfoSpellCustomEntity>> getSpellCustoms(
     int racemask,
     int classmask,
   ) async {
@@ -149,11 +155,11 @@ class PlayerCreateInfoRepository with RepositoryMixin {
         .where('classmask', classmask)
         .get();
     return results
-        .map((e) => PlayerCreateInfoSpellCustom.fromJson(e.toMap()))
+        .map((e) => PlayerCreateInfoSpellCustomEntity.fromJson(e.toMap()))
         .toList();
   }
 
-  Future<void> storeSpellCustom(PlayerCreateInfoSpellCustom spell) async {
+  Future<void> storeSpellCustom(PlayerCreateInfoSpellCustomEntity spell) async {
     await laconic.table('playercreateinfo_spell_custom').insert([
       spell.toJson(),
     ]);

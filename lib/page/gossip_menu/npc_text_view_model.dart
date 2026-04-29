@@ -138,7 +138,7 @@ class NpcTextViewModel {
       id: int.tryParse(controllerOf('ID').text) ?? 0,
       verifiedBuild: int.tryParse(controllerOf('VerifiedBuild').text) ?? 0,
       entries: List.generate(8, (n) {
-        return NpcTextEntry(
+        return NpcTextEntryEntity(
           lang: controllerOf('lang$n').text.isEmpty
               ? '0'
               : controllerOf('lang$n').text,

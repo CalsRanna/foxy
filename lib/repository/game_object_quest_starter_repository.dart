@@ -7,7 +7,7 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
   static const _table = 'gameobject_queststarter';
 
   /// 按 quest 搜索该任务下的所有任务给予者（带 gameobject_template JOIN，无 locale）
-  Future<List<BriefGameObjectQuestStarter>> getGameObjectQuestStarters(
+  Future<List<BriefGameObjectQuestStarterEntity>> getGameObjectQuestStarters(
     int questId,
   ) async {
     try {
@@ -21,7 +21,7 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
       builder = builder.where('gos.quest', questId);
       final results = await builder.get();
       return results
-          .map((e) => BriefGameObjectQuestStarter.fromJson(e.toMap()))
+          .map((e) => BriefGameObjectQuestStarterEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];

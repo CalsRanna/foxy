@@ -6,7 +6,7 @@
 class NpcTextEntity {
   final int id;
   final int verifiedBuild;
-  final List<NpcTextEntry> entries;
+  final List<NpcTextEntryEntity> entries;
 
   const NpcTextEntity({
     this.id = 0,
@@ -18,7 +18,7 @@ class NpcTextEntity {
     return NpcTextEntity(
       id: json['ID'] ?? json['id'] ?? 0,
       verifiedBuild: json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0,
-      entries: List.generate(8, (n) => NpcTextEntry.fromJson(json, n)),
+      entries: List.generate(8, (n) => NpcTextEntryEntity.fromJson(json, n)),
     );
   }
 
@@ -32,7 +32,7 @@ class NpcTextEntity {
 }
 
 /// npc_text 的单组数据
-class NpcTextEntry {
+class NpcTextEntryEntity {
   final String lang;
   final double probability;
   final String text0;
@@ -40,7 +40,7 @@ class NpcTextEntry {
   final int broadcastTextId;
   final List<int> emotes;
 
-  const NpcTextEntry({
+  const NpcTextEntryEntity({
     this.lang = '0',
     this.probability = 0,
     this.text0 = '',
@@ -49,8 +49,8 @@ class NpcTextEntry {
     this.emotes = const [0, 0, 0, 0, 0, 0],
   });
 
-  factory NpcTextEntry.fromJson(Map<String, dynamic> json, int n) {
-    return NpcTextEntry(
+  factory NpcTextEntryEntity.fromJson(Map<String, dynamic> json, int n) {
+    return NpcTextEntryEntity(
       lang: json['lang$n']?.toString() ?? '0',
       probability: (json['Probability$n'] is num)
           ? (json['Probability$n'] as num).toDouble()

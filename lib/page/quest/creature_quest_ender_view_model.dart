@@ -6,7 +6,7 @@ import 'package:signals/signals.dart';
 
 class CreatureQuestEnderViewModel {
   final questId = signal(0);
-  final items = signal<List<BriefCreatureQuestEnder>>([]);
+  final items = signal<List<BriefCreatureQuestEnderEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);

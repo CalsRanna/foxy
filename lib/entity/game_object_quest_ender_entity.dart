@@ -20,21 +20,21 @@ class GameObjectQuestEnderEntity {
 }
 
 /// Brief 版本（LEFT JOIN gameobject_template 获取名称，无 locale 表）
-class BriefGameObjectQuestEnder {
+class BriefGameObjectQuestEnderEntity {
   final int id;
   final int quest;
   final String name;
   final String localeName;
 
-  const BriefGameObjectQuestEnder({
+  const BriefGameObjectQuestEnderEntity({
     this.id = 0,
     this.quest = 0,
     this.name = '',
     this.localeName = '',
   });
 
-  factory BriefGameObjectQuestEnder.fromJson(Map<String, dynamic> json) {
-    return BriefGameObjectQuestEnder(
+  factory BriefGameObjectQuestEnderEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectQuestEnderEntity(
       id: json['id'] ?? 0,
       quest: json['quest'] ?? 0,
       name: json['name']?.toString() ?? '',

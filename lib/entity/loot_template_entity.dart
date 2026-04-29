@@ -56,7 +56,7 @@ class LootTemplateEntity {
 }
 
 /// 掉落模板列表展示模型（含 LEFT JOIN item_template + item_display_info 的物品信息及聚合字段）
-class BriefLootTemplate {
+class BriefLootTemplateEntity {
   final int entry;
   final int item;
   final int reference;
@@ -76,7 +76,7 @@ class BriefLootTemplate {
   String get displayName =>
       itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
-  const BriefLootTemplate({
+  const BriefLootTemplateEntity({
     this.entry = 0,
     this.item = 0,
     this.reference = 0,
@@ -94,8 +94,8 @@ class BriefLootTemplate {
     this.itemCount = 0,
   });
 
-  factory BriefLootTemplate.fromJson(Map<String, dynamic> json) {
-    return BriefLootTemplate(
+  factory BriefLootTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefLootTemplateEntity(
       entry: json['Entry'] ?? 0,
       item: json['Item'] ?? 0,
       reference: json['Reference'] ?? 0,

@@ -37,7 +37,7 @@ class ItemTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('entry', entry).delete();
   }
 
-  Future<List<BriefItemTemplate>> getBriefItemTemplates({
+  Future<List<BriefItemTemplateEntity>> getBriefItemTemplates({
     int page = 1,
     ItemTemplateFilterEntity? filter,
   }) async {
@@ -67,7 +67,9 @@ class ItemTemplateRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => BriefItemTemplate.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefItemTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<ItemTemplateEntity> getItemTemplate(int entry) async {

@@ -50,14 +50,14 @@ class PlayerCreateInfoEntity {
   }
 }
 
-class PlayerCreateInfoAction {
+class PlayerCreateInfoActionEntity {
   final int race;
   final int class_;
   final int button;
   final int action;
   final int type;
 
-  const PlayerCreateInfoAction({
+  const PlayerCreateInfoActionEntity({
     this.race = 0,
     this.class_ = 0,
     this.button = 0,
@@ -65,8 +65,8 @@ class PlayerCreateInfoAction {
     this.type = 0,
   });
 
-  factory PlayerCreateInfoAction.fromJson(Map<String, dynamic> json) {
-    return PlayerCreateInfoAction(
+  factory PlayerCreateInfoActionEntity.fromJson(Map<String, dynamic> json) {
+    return PlayerCreateInfoActionEntity(
       race: json['race'] ?? 0,
       class_: json['class'] ?? 0,
       button: json['button'] ?? 0,
@@ -86,14 +86,14 @@ class PlayerCreateInfoAction {
   }
 }
 
-class PlayerCreateInfoItem {
+class PlayerCreateInfoItemEntity {
   final int race;
   final int class_;
   final int itemid;
   final int amount;
   final String note;
 
-  const PlayerCreateInfoItem({
+  const PlayerCreateInfoItemEntity({
     this.race = 0,
     this.class_ = 0,
     this.itemid = 0,
@@ -101,8 +101,8 @@ class PlayerCreateInfoItem {
     this.note = '',
   });
 
-  factory PlayerCreateInfoItem.fromJson(Map<String, dynamic> json) {
-    return PlayerCreateInfoItem(
+  factory PlayerCreateInfoItemEntity.fromJson(Map<String, dynamic> json) {
+    return PlayerCreateInfoItemEntity(
       race: json['race'] ?? 0,
       class_: json['class'] ?? 0,
       itemid: json['itemid'] ?? 0,
@@ -122,21 +122,23 @@ class PlayerCreateInfoItem {
   }
 }
 
-class PlayerCreateInfoSpellCustom {
+class PlayerCreateInfoSpellCustomEntity {
   final int racemask;
   final int classmask;
   final int spell;
   final String note;
 
-  const PlayerCreateInfoSpellCustom({
+  const PlayerCreateInfoSpellCustomEntity({
     this.racemask = 0,
     this.classmask = 0,
     this.spell = 0,
     this.note = '',
   });
 
-  factory PlayerCreateInfoSpellCustom.fromJson(Map<String, dynamic> json) {
-    return PlayerCreateInfoSpellCustom(
+  factory PlayerCreateInfoSpellCustomEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return PlayerCreateInfoSpellCustomEntity(
       racemask: json['racemask'] ?? 0,
       classmask: json['classmask'] ?? 0,
       spell: json['spell'] ?? 0,

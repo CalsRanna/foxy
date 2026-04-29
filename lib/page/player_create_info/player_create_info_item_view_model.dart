@@ -7,7 +7,7 @@ import 'package:signals/signals.dart';
 class PlayerCreateInfoItemViewModel {
   final repository = PlayerCreateInfoRepository();
 
-  final items = signal<List<PlayerCreateInfoItem>>([]);
+  final items = signal<List<PlayerCreateInfoItemEntity>>([]);
   int? _race;
   int? _class_;
 
@@ -31,7 +31,7 @@ class PlayerCreateInfoItemViewModel {
   Future<void> save(BuildContext context) async {
     if (_race == null || _class_ == null) return;
     try {
-      final item = PlayerCreateInfoItem(
+      final item = PlayerCreateInfoItemEntity(
         race: _race!,
         class_: _class_!,
         itemid: _parseInt(itemIdController.text),
@@ -48,7 +48,10 @@ class PlayerCreateInfoItemViewModel {
     }
   }
 
-  Future<void> onDelete(BuildContext context, PlayerCreateInfoItem item) async {
+  Future<void> onDelete(
+    BuildContext context,
+    PlayerCreateInfoItemEntity item,
+  ) async {
     if (_race == null || _class_ == null) return;
     try {
       await repository.deleteItem(_race!, _class_!, item.itemid);

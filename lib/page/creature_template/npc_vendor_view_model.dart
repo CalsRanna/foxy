@@ -10,7 +10,7 @@ class NpcVendorViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entry = signal(0);
-  final items = signal<List<BriefNpcVendor>>([]);
+  final items = signal<List<BriefNpcVendorEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -53,7 +53,7 @@ class NpcVendorViewModel {
   }
 
   /// 填充表单
-  void fillForm(BriefNpcVendor vendor) {
+  void fillForm(BriefNpcVendorEntity vendor) {
     slotController.text = vendor.slot.toString();
     itemController.text = vendor.item.toString();
     maxcountController.text = vendor.maxcount.toString();

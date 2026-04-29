@@ -76,7 +76,7 @@ class CreatureTemplateDetailViewModel {
   final verifiedBuildController = TextEditingController();
 
   final entry = signal(0);
-  final template = signal(CreatureTemplate());
+  final template = signal(CreatureTemplateEntity());
   final saving = signal(false);
 
   /// 保存模板到数据库
@@ -114,8 +114,8 @@ class CreatureTemplateDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 CreatureTemplate
-  CreatureTemplate _collectFromControllers() {
-    return CreatureTemplate(
+  CreatureTemplateEntity _collectFromControllers() {
+    return CreatureTemplateEntity(
       entry: _parseInt(entryController.text),
       name: nameController.text,
       subName: subNameController.text,
@@ -268,7 +268,7 @@ class CreatureTemplateDetailViewModel {
     }
   }
 
-  void _initControllers(CreatureTemplate template) {
+  void _initControllers(CreatureTemplateEntity template) {
     entryController.text = template.entry.toString();
     nameController.text = template.name;
     subNameController.text = template.subName;
@@ -334,7 +334,7 @@ class CreatureTemplateDetailViewModel {
     verifiedBuildController.text = template.verifiedBuild.toString();
   }
 
-  void _logActivity(ActivityActionType action, CreatureTemplate t) {
+  void _logActivity(ActivityActionType action, CreatureTemplateEntity t) {
     final log = ActivityLogEntity(
       module: 'creature_template',
       actionType: action,

@@ -5,7 +5,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   static const _table = 'item_enchantment_template';
 
   /// 搜索附魔模板（按 entry 搜索，带分页）
-  Future<List<BriefItemEnchantmentTemplate>> getItemEnchantmentTemplates({
+  Future<List<BriefItemEnchantmentTemplateEntity>> getItemEnchantmentTemplates({
     String? entry,
     int page = 1,
   }) async {
@@ -58,7 +58,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
       return results
-          .map((e) => BriefItemEnchantmentTemplate.fromJson(e.toMap()))
+          .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];
@@ -84,9 +84,8 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   /// 获取指定 entry 的所有附魔项（带 DBC 名称）
-  Future<List<BriefItemEnchantmentTemplate>> getItemEnchantmentTemplatesByEntry(
-    int entry,
-  ) async {
+  Future<List<BriefItemEnchantmentTemplateEntity>>
+  getItemEnchantmentTemplatesByEntry(int entry) async {
     try {
       var builder = laconic.table('$_table AS iet');
       builder = builder.select([
@@ -132,7 +131,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
       builder = builder.where('iet.entry', entry);
       var results = await builder.get();
       return results
-          .map((e) => BriefItemEnchantmentTemplate.fromJson(e.toMap()))
+          .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
           .toList();
     } catch (e) {
       return [];

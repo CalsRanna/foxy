@@ -4,23 +4,25 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GameObjectTemplateAddonRepository with RepositoryMixin {
   static const _table = 'gameobject_template_addon';
 
-  Future<GameObjectTemplateAddon?> getGameObjectTemplateAddon(int entry) async {
+  Future<GameObjectTemplateAddonEntity?> getGameObjectTemplateAddon(
+    int entry,
+  ) async {
     try {
       var result = await laconic.table(_table).where('entry', entry).first();
-      return GameObjectTemplateAddon.fromJson(result.toMap());
+      return GameObjectTemplateAddonEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   Future<void> storeGameObjectTemplateAddon(
-    GameObjectTemplateAddon addon,
+    GameObjectTemplateAddonEntity addon,
   ) async {
     await laconic.table(_table).insert([addon.toJson()]);
   }
 
   Future<void> updateGameObjectTemplateAddon(
-    GameObjectTemplateAddon addon,
+    GameObjectTemplateAddonEntity addon,
   ) async {
     var json = addon.toJson();
     json.remove('entry');
@@ -28,7 +30,7 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<void> saveGameObjectTemplateAddon(
-    GameObjectTemplateAddon addon,
+    GameObjectTemplateAddonEntity addon,
   ) async {
     var existing = await getGameObjectTemplateAddon(addon.entry);
     if (existing != null) {

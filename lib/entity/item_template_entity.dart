@@ -534,7 +534,7 @@ class ItemTemplateEntity {
 }
 
 /// 物品模板简要信息（用于列表显示）
-class BriefItemTemplate {
+class BriefItemTemplateEntity {
   final int entry;
   final String name;
   final String localeName;
@@ -549,7 +549,7 @@ class BriefItemTemplate {
   /// 显示名称（优先显示本地化名称）
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
-  const BriefItemTemplate({
+  const BriefItemTemplateEntity({
     this.entry = 0,
     this.name = '',
     this.localeName = '',
@@ -562,8 +562,8 @@ class BriefItemTemplate {
     this.inventoryIcon = '',
   });
 
-  factory BriefItemTemplate.fromJson(Map<String, dynamic> json) {
-    return BriefItemTemplate(
+  factory BriefItemTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemTemplateEntity(
       entry: json['entry'] ?? 0,
       name: json['name'] ?? '',
       localeName: json['localeName'] ?? json['Name'] ?? '',

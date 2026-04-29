@@ -44,7 +44,7 @@ class NpcTrainerEntity {
 }
 
 /// NPC训练师列表展示模型（含 LEFT JOIN foxy.dbc_spell 的技能信息）
-class BriefNpcTrainer {
+class BriefNpcTrainerEntity {
   final int id;
   final int spellID;
   final int moneyCost;
@@ -55,7 +55,7 @@ class BriefNpcTrainer {
   final String spellName;
   final String spellSubtext;
 
-  const BriefNpcTrainer({
+  const BriefNpcTrainerEntity({
     this.id = 0,
     this.spellID = 0,
     this.moneyCost = 0,
@@ -67,8 +67,8 @@ class BriefNpcTrainer {
     this.spellSubtext = '',
   });
 
-  factory BriefNpcTrainer.fromJson(Map<String, dynamic> json) {
-    return BriefNpcTrainer(
+  factory BriefNpcTrainerEntity.fromJson(Map<String, dynamic> json) {
+    return BriefNpcTrainerEntity(
       id: json['ID'] ?? 0,
       spellID: json['SpellID'] ?? 0,
       moneyCost: json['MoneyCost'] ?? 0,

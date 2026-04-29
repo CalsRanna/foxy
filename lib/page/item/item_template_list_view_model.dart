@@ -20,7 +20,7 @@ class ItemTemplateListViewModel {
   final repository = ItemTemplateRepository();
 
   final page = signal(1);
-  final templates = signal(<BriefItemTemplate>[]);
+  final templates = signal(<BriefItemTemplateEntity>[]);
   final total = signal(0);
   final selectedClassId = signal(-1);
   final selectedSubclass = signal(-1);
@@ -160,7 +160,7 @@ class ItemTemplateListViewModel {
     );
   }
 
-  Future<List<BriefItemTemplate>> _fetchItems() async {
+  Future<List<BriefItemTemplateEntity>> _fetchItems() async {
     final filter = ItemTemplateFilterEntity(
       entry: entryController.text,
       name: nameController.text,

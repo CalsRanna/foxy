@@ -1,4 +1,4 @@
-class GameObjectQuestItem {
+class GameObjectQuestItemEntity {
   final int gameObjectEntry;
   final int idx;
   final int itemId;
@@ -12,7 +12,7 @@ class GameObjectQuestItem {
   String get displayName =>
       itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
-  const GameObjectQuestItem({
+  const GameObjectQuestItemEntity({
     this.gameObjectEntry = 0,
     this.idx = 0,
     this.itemId = 0,
@@ -23,8 +23,8 @@ class GameObjectQuestItem {
     this.itemIcon = '',
   });
 
-  factory GameObjectQuestItem.fromJson(Map<String, dynamic> json) {
-    return GameObjectQuestItem(
+  factory GameObjectQuestItemEntity.fromJson(Map<String, dynamic> json) {
+    return GameObjectQuestItemEntity(
       gameObjectEntry: json['GameObjectEntry'] ?? json['gameObjectEntry'] ?? 0,
       idx: json['Idx'] ?? json['idx'] ?? 0,
       itemId: json['ItemId'] ?? json['itemId'] ?? 0,

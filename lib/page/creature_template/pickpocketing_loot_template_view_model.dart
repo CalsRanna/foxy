@@ -12,8 +12,8 @@ class PickpocketingLootTemplateViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final creatureId = signal(0);
-  final creatureTemplate = signal<CreatureTemplate?>(null);
-  final items = signal<List<BriefLootTemplate>>([]);
+  final creatureTemplate = signal<CreatureTemplateEntity?>(null);
+  final items = signal<List<BriefLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -65,7 +65,7 @@ class PickpocketingLootTemplateViewModel {
   }
 
   /// 填充表单
-  void fillForm(BriefLootTemplate loot) {
+  void fillForm(BriefLootTemplateEntity loot) {
     itemController.text = loot.item.toString();
     referenceController.text = loot.reference.toString();
     chanceController.text = loot.chance.toString();

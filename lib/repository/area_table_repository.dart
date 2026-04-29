@@ -17,7 +17,7 @@ class AreaTableRepository with RepositoryMixin {
     return results.map((e) => AreaTableEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<List<BriefAreaTable>> getBriefAreaTables({
+  Future<List<BriefAreaTableEntity>> getBriefAreaTables({
     int page = 1,
     AreaTableFilterEntity? filter,
   }) async {
@@ -35,7 +35,9 @@ class AreaTableRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => BriefAreaTable.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefAreaTableEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<int> countAreaTables({AreaTableFilterEntity? filter}) async {

@@ -119,7 +119,7 @@ class _Dialog extends StatefulWidget {
 class _DialogState extends State<_Dialog> {
   final _entryController = TextEditingController();
 
-  List<BriefLootTemplate> _items = [];
+  List<BriefLootTemplateEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

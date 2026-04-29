@@ -18,7 +18,7 @@ class AreaTableListViewModel {
   final repository = AreaTableRepository();
 
   final page = signal(1);
-  final areas = signal(<BriefAreaTable>[]);
+  final areas = signal(<BriefAreaTableEntity>[]);
   final total = signal(0);
 
   Future<void> copyAreaTable(int id) async {

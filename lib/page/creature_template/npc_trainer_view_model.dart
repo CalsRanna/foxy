@@ -10,7 +10,7 @@ class NpcTrainerViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final id = signal(0);
-  final items = signal<List<BriefNpcTrainer>>([]);
+  final items = signal<List<BriefNpcTrainerEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -52,7 +52,7 @@ class NpcTrainerViewModel {
   }
 
   /// 填充表单
-  void fillForm(BriefNpcTrainer trainer) {
+  void fillForm(BriefNpcTrainerEntity trainer) {
     spellIDController.text = trainer.spellID.toString();
     moneyCostController.text = trainer.moneyCost.toString();
     reqSkillLineController.text = trainer.reqSkillLine.toString();
