@@ -111,7 +111,7 @@ class Migration202604270000 implements Migration {
       {
         'name': '属性缩放分布',
         'description': '定义生物属性随等级动态缩放的分布规则，配置不同等级下各属性的增长比例。',
-        'icon': 'arrowUpDown',
+        'icon': 'trendingUp',
         'router_menu': 'scalingStatDistribution',
         'category': 'dbc',
         'is_pinned': 0,

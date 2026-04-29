@@ -1,3 +1,6 @@
+// Game Object Template 枚举常量定义
+// 数据来源：AzerothCore GameObject.h
+
 /// 游戏对象类型映射
 const kGameObjectTypeOptions = <int, String>{
   0: '门 (Door)',

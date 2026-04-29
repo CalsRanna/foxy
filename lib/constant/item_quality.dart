@@ -1,3 +1,6 @@
+// 物品品质枚举与颜色常量
+// 数据来源：AzerothCore SharedDefines.h
+
 import 'package:flutter/material.dart';
 
 /// 物品品质枚举
