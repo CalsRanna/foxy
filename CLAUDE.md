@@ -21,8 +21,7 @@ Foxy is a Flutter desktop application for managing AzerothCore World of Warcraft
 The application follows a layered architecture:
 
 - **Models** (`lib/model/`): Data models for database entities
-- **Services** (`lib/service/`): Business logic and database operations
-- **Repositories** (`lib/repository/`): Data access layer using laconic query builder
+- **Repositories** (`lib/repository/`): Data access layer using laconic query builder via RepositoryMixin
 - **Pages/ViewModels** (`lib/page/`): UI pages with corresponding view models
 - **Widgets** (`lib/widget/`): Reusable UI components
 - **Router** (`lib/router/`): Navigation configuration using auto_route
@@ -81,7 +80,7 @@ The application works with AzerothCore database tables:
 ## Important Files
 
 - `lib/di.dart`: Dependency injection setup using GetIt
-- `lib/service/service.dart`: MySQL connection wrapper and query helpers
+- `lib/repository/repository_mixin.dart`: Database connection access via laconic query builder
 - `lib/router/router.dart`: Application routing configuration
 - `config.yaml`: Database connection configuration
 - `pubspec.yaml`: Flutter dependencies and project configuration
@@ -91,4 +90,4 @@ The application works with AzerothCore database tables:
 - The project is transitioning from Riverpod to GetIt + Signals for state management
 - Window management is handled via window_manager package for desktop functionality
 - The laconic package provides a fluent query builder interface for MySQL operations
-- All database operations go through the Service mixin which handles connection management and logging
+- All database operations go through the RepositoryMixin which handles connection management and logging
