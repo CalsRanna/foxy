@@ -1,10 +1,10 @@
-import 'package:foxy/entity/char_title.dart';
+import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CharTitleRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_char_titles';
 
-  Future<List<CharTitle>> getCharTitles({
+  Future<List<CharTitleEntity>> getCharTitles({
     String? id,
     String? name,
     required int page,
@@ -14,7 +14,7 @@ class CharTitleRepository with RepositoryMixin {
     builder = _applyFilter(builder, id: id, name: name);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => CharTitle.fromJson(e.toMap())).toList();
+    return results.map((e) => CharTitleEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countCharTitles({String? id, String? name}) async {
