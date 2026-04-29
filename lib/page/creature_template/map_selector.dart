@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/map_info.dart';
+import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -57,7 +57,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<MapInfo> _items = [];
+  List<MapInfoEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

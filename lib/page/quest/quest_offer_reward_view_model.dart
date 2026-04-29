@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/quest_offer_reward.dart';
+import 'package:foxy/entity/quest_offer_reward_entity.dart';
 import 'package:foxy/repository/quest_offer_reward_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -62,7 +62,7 @@ class QuestOfferRewardViewModel {
     routerFacade.goBack();
   }
 
-  void _applyToControllers(QuestOfferReward model) {
+  void _applyToControllers(QuestOfferRewardEntity model) {
     idController.text = model.id.toString();
     emote1Controller.text = model.emote1.toString();
     emote2Controller.text = model.emote2.toString();
@@ -75,8 +75,8 @@ class QuestOfferRewardViewModel {
     rewardTextController.text = model.rewardText;
   }
 
-  QuestOfferReward _collectFromControllers() {
-    return QuestOfferReward(
+  QuestOfferRewardEntity _collectFromControllers() {
+    return QuestOfferRewardEntity(
       id: questId.value,
       emote1: _parseInt(emote1Controller.text),
       emote2: _parseInt(emote2Controller.text),

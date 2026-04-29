@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/scaling_stat_distribution.dart';
+import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -42,7 +42,7 @@ class ScalingStatDistributionDetailViewModel {
   /// Other
   final maxlevelController = TextEditingController();
 
-  final distribution = signal(ScalingStatDistribution());
+  final distribution = signal(ScalingStatDistributionEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -79,8 +79,8 @@ class ScalingStatDistributionDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 ScalingStatDistribution
-  ScalingStatDistribution _collectFromControllers() {
-    return ScalingStatDistribution(
+  ScalingStatDistributionEntity _collectFromControllers() {
+    return ScalingStatDistributionEntity(
       id: _parseInt(idController.text),
       statId0: _parseInt(statId0Controller.text),
       statId1: _parseInt(statId1Controller.text),
@@ -113,7 +113,10 @@ class ScalingStatDistributionDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, ScalingStatDistribution t) {
+  void _logActivity(
+    ActivityActionType action,
+    ScalingStatDistributionEntity t,
+  ) {
     final log = ActivityLogEntity(
       module: 'scaling_stat_distribution',
       actionType: action,
@@ -160,7 +163,7 @@ class ScalingStatDistributionDetailViewModel {
     }
   }
 
-  void _initControllers(ScalingStatDistribution item) {
+  void _initControllers(ScalingStatDistributionEntity item) {
     idController.text = item.id.toString();
     statId0Controller.text = item.statId0.toString();
     statId1Controller.text = item.statId1.toString();

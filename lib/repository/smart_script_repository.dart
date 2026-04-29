@@ -1,4 +1,4 @@
-import 'package:foxy/entity/smart_script.dart';
+import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
@@ -27,7 +27,7 @@ class SmartScriptRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<List<BriefSmartScript>> getBriefSmartScripts({
+  Future<List<BriefSmartScriptEntity>> getBriefSmartScripts({
     int page = 1,
     SmartScriptFilterEntity? filter,
   }) async {
@@ -51,10 +51,12 @@ class SmartScriptRepository with RepositoryMixin {
         .orderBy('id');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => BriefSmartScript.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefSmartScriptEntity.fromJson(e.toMap()))
+        .toList();
   }
 
-  Future<SmartScript> getSmartScript(
+  Future<SmartScriptEntity> getSmartScript(
     int entryOrGuid,
     int sourceType,
     int id,
@@ -67,10 +69,10 @@ class SmartScriptRepository with RepositoryMixin {
         .where('id', id)
         .where('link', link)
         .first();
-    return SmartScript.fromJson(result.toMap());
+    return SmartScriptEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeSmartScript(SmartScript script) async {
+  Future<void> storeSmartScript(SmartScriptEntity script) async {
     var json = script.toJson();
     await laconic.table(_table).insert([json]);
   }
@@ -80,7 +82,7 @@ class SmartScriptRepository with RepositoryMixin {
     int sourceType,
     int id,
     int link,
-    SmartScript script,
+    SmartScriptEntity script,
   ) async {
     var json = script.toJson();
     json.remove('entryorguid');

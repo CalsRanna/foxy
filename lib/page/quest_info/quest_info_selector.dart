@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/quest_info.dart';
+import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -62,7 +62,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<QuestInfo> _items = [];
+  List<QuestInfoEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

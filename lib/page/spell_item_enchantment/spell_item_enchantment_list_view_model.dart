@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment.dart';
+import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
@@ -18,7 +18,7 @@ class SpellItemEnchantmentListViewModel {
   final repository = SpellItemEnchantmentSoloRepository();
 
   final page = signal(1);
-  final enchantments = signal(<SpellItemEnchantment>[]);
+  final enchantments = signal(<SpellItemEnchantmentEntity>[]);
   final total = signal(0);
 
   Future<void> copySpellItemEnchantment(int id) async {

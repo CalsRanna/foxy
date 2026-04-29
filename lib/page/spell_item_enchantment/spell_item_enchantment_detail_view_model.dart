@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment.dart';
+import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -46,7 +46,7 @@ class SpellItemEnchantmentDetailViewModel {
   final requiredSkillRankController = TextEditingController();
   final minLevelController = TextEditingController();
 
-  final enchantment = signal(SpellItemEnchantment());
+  final enchantment = signal(SpellItemEnchantmentEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -83,8 +83,8 @@ class SpellItemEnchantmentDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 SpellItemEnchantment
-  SpellItemEnchantment _collectFromControllers() {
-    final t = SpellItemEnchantment(
+  SpellItemEnchantmentEntity _collectFromControllers() {
+    final t = SpellItemEnchantmentEntity(
       id: _parseInt(idController.text),
       nameLangZhCn: nameController.text,
       charges: _parseInt(chargesController.text),
@@ -118,7 +118,7 @@ class SpellItemEnchantmentDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, SpellItemEnchantment t) {
+  void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
     final log = ActivityLogEntity(
       module: 'spell_item_enchantment',
       actionType: action,
@@ -176,7 +176,7 @@ class SpellItemEnchantmentDetailViewModel {
     }
   }
 
-  void _initControllers(SpellItemEnchantment entry) {
+  void _initControllers(SpellItemEnchantmentEntity entry) {
     /// Basic
     idController.text = entry.id.toString();
     nameController.text = entry.nameLangZhCn;

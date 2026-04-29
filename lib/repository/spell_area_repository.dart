@@ -1,19 +1,19 @@
-import 'package:foxy/entity/spell_area.dart';
+import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellAreaRepository with RepositoryMixin {
   static const _table = 'spell_area';
 
-  Future<List<SpellArea>> getSpellAreas(int spell) async {
+  Future<List<SpellAreaEntity>> getSpellAreas(int spell) async {
     try {
       var results = await laconic.table(_table).where('spell', spell).get();
-      return results.map((e) => SpellArea.fromJson(e.toMap())).toList();
+      return results.map((e) => SpellAreaEntity.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
   }
 
-  Future<SpellArea?> getSpellArea(
+  Future<SpellAreaEntity?> getSpellArea(
     int spell,
     int area,
     int questStart,
@@ -31,17 +31,20 @@ class SpellAreaRepository with RepositoryMixin {
           .where('racemask', racemask)
           .where('gender', gender)
           .first();
-      return SpellArea.fromJson(result.toMap());
+      return SpellAreaEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
-  Future<void> storeSpellArea(SpellArea data) async {
+  Future<void> storeSpellArea(SpellAreaEntity data) async {
     await laconic.table(_table).insert([data.toJson()]);
   }
 
-  Future<void> updateSpellArea(SpellArea oldData, SpellArea newData) async {
+  Future<void> updateSpellArea(
+    SpellAreaEntity oldData,
+    SpellAreaEntity newData,
+  ) async {
     var json = newData.toJson();
     json.remove('spell');
     json.remove('area');
@@ -79,7 +82,7 @@ class SpellAreaRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellArea> copySpellArea(SpellArea data) async {
+  Future<SpellAreaEntity> copySpellArea(SpellAreaEntity data) async {
     var json = data.toJson();
     var maxAreaResult = await laconic
         .table(_table)
@@ -89,6 +92,6 @@ class SpellAreaRepository with RepositoryMixin {
     var maxArea = (maxAreaResult.toMap()['maxArea'] ?? 0) as int;
     json['area'] = maxArea + 1;
     await laconic.table(_table).insert([json]);
-    return SpellArea.fromJson(json);
+    return SpellAreaEntity.fromJson(json);
   }
 }

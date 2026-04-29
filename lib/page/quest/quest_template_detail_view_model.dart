@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/quest_template.dart';
+import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -12,7 +12,7 @@ class QuestTemplateDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entry = signal(0);
-  final template = signal(QuestTemplate());
+  final template = signal(QuestTemplateEntity());
   final saving = signal(false);
 
   /// Basic
@@ -186,7 +186,7 @@ class QuestTemplateDetailViewModel {
     _initControllers(template.value);
   }
 
-  void _initControllers(QuestTemplate t) {
+  void _initControllers(QuestTemplateEntity t) {
     idController.text = t.id.toString();
     questTypeController.text = t.questType.toString();
     questLevelController.text = t.questLevel.toString();
@@ -300,8 +300,8 @@ class QuestTemplateDetailViewModel {
     verifiedBuildController.text = t.verifiedBuild?.toString() ?? '';
   }
 
-  QuestTemplate _collectFromControllers() {
-    return QuestTemplate(
+  QuestTemplateEntity _collectFromControllers() {
+    return QuestTemplateEntity(
       id: _parseInt(idController.text),
       questType: _parseInt(questTypeController.text),
       questLevel: _parseInt(questLevelController.text),
@@ -438,7 +438,7 @@ class QuestTemplateDetailViewModel {
 
   int? _parseIntOrNull(String text) => text.isEmpty ? null : int.tryParse(text);
 
-  void _logActivity(ActivityActionType action, QuestTemplate t) {
+  void _logActivity(ActivityActionType action, QuestTemplateEntity t) {
     final log = ActivityLogEntity(
       module: 'quest_template',
       actionType: action,

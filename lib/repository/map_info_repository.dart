@@ -1,10 +1,10 @@
-import 'package:foxy/entity/map_info.dart';
+import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class MapInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_map';
 
-  Future<List<MapInfo>> getMapInfos({
+  Future<List<MapInfoEntity>> getMapInfos({
     String? id,
     String? name,
     required int page,
@@ -14,7 +14,7 @@ class MapInfoRepository with RepositoryMixin {
     builder = _applyFilter(builder, id: id, name: name);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => MapInfo.fromJson(e.toMap())).toList();
+    return results.map((e) => MapInfoEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countMapInfos({String? id, String? name}) async {

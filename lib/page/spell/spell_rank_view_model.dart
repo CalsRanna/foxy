@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/spell_rank.dart';
+import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -10,7 +10,7 @@ class SpellRankViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
-  final items = signal<List<SpellRank>>([]);
+  final items = signal<List<SpellRankEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -40,14 +40,14 @@ class SpellRankViewModel {
     rankController.clear();
   }
 
-  void fillForm(SpellRank data) {
+  void fillForm(SpellRankEntity data) {
     firstSpellIdController.text = data.firstSpellId.toString();
     rankSpellIdController.text = data.spellId.toString();
     rankController.text = data.rank.toString();
   }
 
-  SpellRank collectFromForm() {
-    final data = SpellRank(
+  SpellRankEntity collectFromForm() {
+    final data = SpellRankEntity(
       firstSpellId: _parseInt(firstSpellIdController.text),
       spellId: _parseInt(rankSpellIdController.text),
       rank: _parseInt(rankController.text),

@@ -1,10 +1,10 @@
-import 'package:foxy/entity/spell_duration.dart';
+import 'package:foxy/entity/spell_duration_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellDurationRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_duration';
 
-  Future<List<SpellDuration>> getSpellDurations({
+  Future<List<SpellDurationEntity>> getSpellDurations({
     String? id,
     required int page,
   }) async {
@@ -13,7 +13,7 @@ class SpellDurationRepository with RepositoryMixin {
     builder = _applyFilter(builder, id: id);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => SpellDuration.fromJson(e.toMap())).toList();
+    return results.map((e) => SpellDurationEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countSpellDurations({String? id}) async {

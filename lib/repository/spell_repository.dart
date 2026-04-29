@@ -1,4 +1,4 @@
-import 'package:foxy/entity/spell.dart';
+import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
@@ -24,7 +24,7 @@ class SpellRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<List<BriefSpell>> getBriefSpells({
+  Future<List<BriefSpellEntity>> getBriefSpells({
     int page = 1,
     SpellFilterEntity? filter,
   }) async {
@@ -51,22 +51,22 @@ class SpellRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => BriefSpell.fromJson(e.toMap())).toList();
+    return results.map((e) => BriefSpellEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<Spell> getSpell(int id) async {
+  Future<SpellEntity> getSpell(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return Spell.fromJson(result.toMap());
+    return SpellEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeSpell(Spell template) async {
+  Future<void> storeSpell(SpellEntity template) async {
     var json = template.toJson();
     var newId = await _getNextId();
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateSpell(Spell template) async {
+  Future<void> updateSpell(SpellEntity template) async {
     var json = template.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', template.id).update(json);

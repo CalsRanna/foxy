@@ -1,10 +1,10 @@
-import 'package:foxy/entity/waypoint_data.dart';
+import 'package:foxy/entity/waypoint_data_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class WaypointDataRepository with RepositoryMixin {
   static const _table = 'waypoint_data';
 
-  Future<List<WaypointData>> getWaypointDatas({
+  Future<List<WaypointDataEntity>> getWaypointDatas({
     String? id,
     required int page,
   }) async {
@@ -17,7 +17,7 @@ class WaypointDataRepository with RepositoryMixin {
     }
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => WaypointData.fromJson(e.toMap())).toList();
+    return results.map((e) => WaypointDataEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countWaypointDatas({String? id}) async {

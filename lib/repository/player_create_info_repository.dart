@@ -1,9 +1,9 @@
-import 'package:foxy/entity/player_create_info.dart';
+import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class PlayerCreateInfoRepository with RepositoryMixin {
-  Future<List<PlayerCreateInfo>> getPlayerCreateInfos({
+  Future<List<PlayerCreateInfoEntity>> getPlayerCreateInfos({
     required PlayerCreateInfoFilterEntity filter,
     required int page,
   }) async {
@@ -12,7 +12,9 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => PlayerCreateInfo.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => PlayerCreateInfoEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<int> countPlayerCreateInfos({
@@ -23,22 +25,25 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<PlayerCreateInfo> getPlayerCreateInfo(int race, int class_) async {
+  Future<PlayerCreateInfoEntity> getPlayerCreateInfo(
+    int race,
+    int class_,
+  ) async {
     var result = await laconic
         .table('playercreateinfo')
         .where('race', race)
         .where('class', class_)
         .first();
-    return PlayerCreateInfo.fromJson(result.toMap());
+    return PlayerCreateInfoEntity.fromJson(result.toMap());
   }
 
-  Future<void> storePlayerCreateInfo(PlayerCreateInfo info) async {
+  Future<void> storePlayerCreateInfo(PlayerCreateInfoEntity info) async {
     await laconic.table('playercreateinfo').insert([info.toJson()]);
   }
 
   Future<void> updatePlayerCreateInfo(
     Map<String, dynamic> credential,
-    PlayerCreateInfo info,
+    PlayerCreateInfoEntity info,
   ) async {
     var json = info.toJson();
     json.remove('race');

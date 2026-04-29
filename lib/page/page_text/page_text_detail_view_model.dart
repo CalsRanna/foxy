@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/page_text.dart';
-import 'package:foxy/entity/page_text_locale.dart';
+import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -19,8 +19,8 @@ class PageTextDetailViewModel {
   final nextPageIdController = TextEditingController();
   final verifiedBuildController = TextEditingController();
 
-  final page = signal<PageText?>(null);
-  final locales = signal<List<PageTextLocale>>([]);
+  final page = signal<PageTextEntity?>(null);
+  final locales = signal<List<PageTextLocaleEntity>>([]);
   final saving = signal(false);
 
   Future<void> initSignals({int? id}) async {
@@ -34,7 +34,7 @@ class PageTextDetailViewModel {
     }
   }
 
-  void _initControllers(PageText pt) {
+  void _initControllers(PageTextEntity pt) {
     idController.text = pt.id.toString();
     textController.text = pt.text;
     nextPageIdController.text = pt.nextPageId.toString();
@@ -80,7 +80,7 @@ class PageTextDetailViewModel {
 
   void pop() => routerFacade.goBack();
 
-  void _logActivity(ActivityActionType action, PageText t) {
+  void _logActivity(ActivityActionType action, PageTextEntity t) {
     final log = ActivityLogEntity(
       module: 'page_text',
       actionType: action,
@@ -91,8 +91,8 @@ class PageTextDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  PageText _collect() {
-    return PageText(
+  PageTextEntity _collect() {
+    return PageTextEntity(
       id: _parseInt(idController.text),
       text: textController.text,
       nextPageId: _parseInt(nextPageIdController.text),

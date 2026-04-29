@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/spell_loot_template.dart';
+import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -10,7 +10,7 @@ class SpellLootTemplateViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
-  final items = signal<List<SpellLootTemplate>>([]);
+  final items = signal<List<SpellLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -52,7 +52,7 @@ class SpellLootTemplateViewModel {
     commentController.clear();
   }
 
-  void fillForm(SpellLootTemplate data) {
+  void fillForm(SpellLootTemplateEntity data) {
     itemController.text = data.item.toString();
     referenceController.text = data.reference.toString();
     chanceController.text = data.chance.toString();
@@ -64,8 +64,8 @@ class SpellLootTemplateViewModel {
     commentController.text = data.comment;
   }
 
-  SpellLootTemplate collectFromForm() {
-    final data = SpellLootTemplate(
+  SpellLootTemplateEntity collectFromForm() {
+    final data = SpellLootTemplateEntity(
       entry: spellId.value,
       item: _parseInt(itemController.text),
       reference: _parseInt(referenceController.text),

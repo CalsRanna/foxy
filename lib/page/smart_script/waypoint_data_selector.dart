@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/waypoint_data.dart';
+import 'package:foxy/entity/waypoint_data_entity.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
@@ -60,7 +60,7 @@ class _Dialog extends StatefulWidget {
 class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
 
-  List<WaypointData> _items = [];
+  List<WaypointDataEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/loot_template.dart';
+import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -70,8 +70,8 @@ class GameObjectLootTemplateViewModel {
     editingItem = loot.item;
   }
 
-  LootTemplate collectFromForm() {
-    return LootTemplate(
+  LootTemplateEntity collectFromForm() {
+    return LootTemplateEntity(
       entry: gameObjectId.value,
       item: _parseInt(itemController.text),
       reference: _parseInt(referenceController.text),

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/player_create_info.dart';
+import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -22,7 +22,7 @@ class PlayerCreateInfoDetailViewModel {
   final positionZController = TextEditingController();
   final orientationController = TextEditingController();
 
-  final info = signal<PlayerCreateInfo?>(null);
+  final info = signal<PlayerCreateInfoEntity?>(null);
   final saving = signal(false);
 
   Future<void> initSignals({int? race, int? playerClass}) async {
@@ -40,7 +40,7 @@ class PlayerCreateInfoDetailViewModel {
     }
   }
 
-  void _initControllers(PlayerCreateInfo i) {
+  void _initControllers(PlayerCreateInfoEntity i) {
     raceController.text = i.race.toString();
     classController.text = i.class_.toString();
     mapController.text = i.map.toString();
@@ -86,7 +86,7 @@ class PlayerCreateInfoDetailViewModel {
 
   void pop() => routerFacade.goBack();
 
-  void _logActivity(ActivityActionType action, PlayerCreateInfo t) {
+  void _logActivity(ActivityActionType action, PlayerCreateInfoEntity t) {
     final log = ActivityLogEntity(
       module: 'player_create_info',
       actionType: action,
@@ -97,8 +97,8 @@ class PlayerCreateInfoDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  PlayerCreateInfo _collect() {
-    return PlayerCreateInfo(
+  PlayerCreateInfoEntity _collect() {
+    return PlayerCreateInfoEntity(
       race: _parseInt(raceController.text),
       class_: _parseInt(classController.text),
       map: _parseInt(mapController.text),

@@ -1,4 +1,4 @@
-import 'package:foxy/entity/npc_trainer.dart';
+import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class NpcTrainerRepository with RepositoryMixin {
@@ -28,26 +28,26 @@ class NpcTrainerRepository with RepositoryMixin {
   }
 
   /// 查找单条记录
-  Future<NpcTrainer?> getNpcTrainer(int id, int spellID) async {
+  Future<NpcTrainerEntity?> getNpcTrainer(int id, int spellID) async {
     try {
       var result = await laconic
           .table(_table)
           .where('ID', id)
           .where('SpellID', spellID)
           .first();
-      return NpcTrainer.fromJson(result.toMap());
+      return NpcTrainerEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 新增训练师技能
-  Future<void> storeNpcTrainer(NpcTrainer trainer) async {
+  Future<void> storeNpcTrainer(NpcTrainerEntity trainer) async {
     await laconic.table(_table).insert([trainer.toJson()]);
   }
 
   /// 更新训练师技能
-  Future<void> updateNpcTrainer(NpcTrainer trainer) async {
+  Future<void> updateNpcTrainer(NpcTrainerEntity trainer) async {
     var json = trainer.toJson();
     json.remove('ID');
     json.remove('SpellID');
@@ -68,7 +68,7 @@ class NpcTrainerRepository with RepositoryMixin {
   }
 
   /// 复制训练师技能
-  Future<NpcTrainer> copyNpcTrainer(int id, int spellID) async {
+  Future<NpcTrainerEntity> copyNpcTrainer(int id, int spellID) async {
     // 获取最大SpellID
     var maxSpellResult = await laconic
         .table(_table)
@@ -84,7 +84,7 @@ class NpcTrainerRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newTrainer = NpcTrainer(
+    var newTrainer = NpcTrainerEntity(
       id: source.id,
       spellID: maxSpellID + 1,
       moneyCost: source.moneyCost,

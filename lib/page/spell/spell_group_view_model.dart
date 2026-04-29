@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/spell_group.dart';
+import 'package:foxy/entity/spell_group_entity.dart';
 import 'package:foxy/repository/spell_group_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -10,7 +10,7 @@ class SpellGroupViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
-  final items = signal<List<SpellGroup>>([]);
+  final items = signal<List<SpellGroupEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -38,13 +38,13 @@ class SpellGroupViewModel {
     specialFlagController.text = '0';
   }
 
-  void fillForm(SpellGroup data) {
+  void fillForm(SpellGroupEntity data) {
     idController.text = data.id.toString();
     specialFlagController.text = data.specialFlag.toString();
   }
 
-  SpellGroup collectFromForm() {
-    final data = SpellGroup(
+  SpellGroupEntity collectFromForm() {
+    final data = SpellGroupEntity(
       spellId: spellId.value,
       id: _parseInt(idController.text),
       specialFlag: _parseInt(specialFlagController.text),

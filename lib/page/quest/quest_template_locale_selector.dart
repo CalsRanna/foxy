@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/quest_template_locale.dart';
+import 'package:foxy/entity/quest_template_locale_entity.dart';
 import 'package:foxy/repository/quest_template_locale_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -66,8 +66,8 @@ class _QuestTemplateLocaleSelectorState
 
 class _LocaleDialog extends StatefulWidget {
   final int questId;
-  final List<QuestTemplateLocale> locales;
-  final Future<void> Function(List<QuestTemplateLocale>) onSave;
+  final List<QuestTemplateLocaleEntity> locales;
+  final Future<void> Function(List<QuestTemplateLocaleEntity>) onSave;
   final String title;
 
   const _LocaleDialog({
@@ -223,7 +223,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     setState(() => _saving = true);
     try {
       final locales = _rows.map((row) {
-        return QuestTemplateLocale(
+        return QuestTemplateLocaleEntity(
           id: widget.questId,
           locale: row.localeController.text,
           title: row.titleController.text,
@@ -269,7 +269,7 @@ class _LocaleRow {
       objectiveText3Controller = TextEditingController(),
       objectiveText4Controller = TextEditingController();
 
-  _LocaleRow.fromLocale(QuestTemplateLocale locale)
+  _LocaleRow.fromLocale(QuestTemplateLocaleEntity locale)
     : localeController = TextEditingController(text: locale.locale),
       titleController = TextEditingController(text: locale.title),
       detailsController = TextEditingController(text: locale.details),

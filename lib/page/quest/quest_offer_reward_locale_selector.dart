@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/quest_offer_reward.dart';
+import 'package:foxy/entity/quest_offer_reward_entity.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

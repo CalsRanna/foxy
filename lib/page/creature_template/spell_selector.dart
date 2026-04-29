@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/spell.dart';
+import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -58,7 +58,7 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<Spell> _items = [];
+  List<SpellEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;
@@ -271,7 +271,7 @@ class _DialogState extends State<_Dialog> {
       final total = await repository.countSpells(filter: filter);
       final items = briefs
           .map(
-            (b) => Spell(
+            (b) => SpellEntity(
               id: b.id,
               nameLangZhCN: b.name,
               nameSubtextLangZhCN: b.subtext,

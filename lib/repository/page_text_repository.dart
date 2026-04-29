@@ -1,13 +1,13 @@
-import 'package:foxy/entity/page_text.dart';
+import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
-import 'package:foxy/entity/page_text_locale.dart';
+import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class PageTextRepository with RepositoryMixin {
   static const _table = 'page_text';
   static const _localeTable = 'page_text_locale';
 
-  Future<List<PageText>> getPageTexts({
+  Future<List<PageTextEntity>> getPageTexts({
     required PageTextFilterEntity filter,
     required int page,
   }) async {
@@ -27,7 +27,7 @@ class PageTextRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => PageText.fromJson(e.toMap())).toList();
+    return results.map((e) => PageTextEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countPageTexts({required PageTextFilterEntity filter}) async {
@@ -40,19 +40,19 @@ class PageTextRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<PageText> getPageText(int id) async {
+  Future<PageTextEntity> getPageText(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return PageText.fromJson(result.toMap());
+    return PageTextEntity.fromJson(result.toMap());
   }
 
-  Future<void> storePageText(PageText pageText) async {
+  Future<void> storePageText(PageTextEntity pageText) async {
     var json = pageText.toJson();
     var newId = await _getNextId();
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updatePageText(int id, PageText pageText) async {
+  Future<void> updatePageText(int id, PageTextEntity pageText) async {
     var json = pageText.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);
@@ -79,12 +79,14 @@ class PageTextRepository with RepositoryMixin {
   }
 
   // Locale operations
-  Future<List<PageTextLocale>> getLocales(int id) async {
+  Future<List<PageTextLocaleEntity>> getLocales(int id) async {
     var results = await laconic.table(_localeTable).where('ID', id).get();
-    return results.map((e) => PageTextLocale.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => PageTextLocaleEntity.fromJson(e.toMap()))
+        .toList();
   }
 
-  Future<void> saveLocales(int id, List<PageTextLocale> locales) async {
+  Future<void> saveLocales(int id, List<PageTextLocaleEntity> locales) async {
     await laconic.transaction(() async {
       await laconic.table(_localeTable).where('ID', id).delete();
       if (locales.isEmpty) return;

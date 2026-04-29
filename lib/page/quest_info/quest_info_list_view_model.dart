@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/quest_info.dart';
+import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
@@ -18,7 +18,7 @@ class QuestInfoListViewModel {
   final repository = QuestInfoRepository();
 
   final page = signal(1);
-  final infos = signal(<QuestInfo>[]);
+  final infos = signal(<QuestInfoEntity>[]);
   final total = signal(0);
 
   Future<void> copyQuestInfo(int id) async {

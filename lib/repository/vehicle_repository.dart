@@ -1,4 +1,4 @@
-import 'package:foxy/entity/vehicle.dart';
+import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class VehicleRepository with RepositoryMixin {
@@ -18,7 +18,7 @@ class VehicleRepository with RepositoryMixin {
     }
   }
 
-  Future<List<Vehicle>> getVehicles({String? id, int page = 1}) async {
+  Future<List<VehicleEntity>> getVehicles({String? id, int page = 1}) async {
     try {
       var offset = (page - 1) * kPageSize;
       var builder = laconic.table(_table);
@@ -27,17 +27,17 @@ class VehicleRepository with RepositoryMixin {
       }
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
-      return results.map((e) => Vehicle.fromJson(e.toMap())).toList();
+      return results.map((e) => VehicleEntity.fromJson(e.toMap())).toList();
     } catch (e) {
       // 表可能不存在
       return [];
     }
   }
 
-  Future<Vehicle?> getById(int id) async {
+  Future<VehicleEntity?> getById(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
-      return Vehicle.fromJson(result.toMap());
+      return VehicleEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }

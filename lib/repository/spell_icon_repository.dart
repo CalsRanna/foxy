@@ -1,10 +1,10 @@
-import 'package:foxy/entity/spell_icon.dart';
+import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellIconRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_icon';
 
-  Future<List<SpellIcon>> getSpellIcons({
+  Future<List<SpellIconEntity>> getSpellIcons({
     String? id,
     String? name,
     required int page,
@@ -14,7 +14,7 @@ class SpellIconRepository with RepositoryMixin {
     builder = _applyFilter(builder, id: id, name: name);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => SpellIcon.fromJson(e.toMap())).toList();
+    return results.map((e) => SpellIconEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countSpellIcons({String? id, String? name}) async {

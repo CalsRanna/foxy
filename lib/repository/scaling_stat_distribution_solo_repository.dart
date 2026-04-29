@@ -1,11 +1,11 @@
-import 'package:foxy/entity/scaling_stat_distribution.dart';
+import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ScalingStatDistributionSoloRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
 
-  Future<List<ScalingStatDistribution>> getScalingStatDistributions({
+  Future<List<ScalingStatDistributionEntity>> getScalingStatDistributions({
     int page = 1,
     ScalingStatDistributionFilterEntity? filter,
   }) async {
@@ -15,7 +15,7 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
-        .map((e) => ScalingStatDistribution.fromJson(e.toMap()))
+        .map((e) => ScalingStatDistributionEntity.fromJson(e.toMap()))
         .toList();
   }
 
@@ -27,13 +27,15 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<ScalingStatDistribution?> getScalingStatDistribution(int id) async {
+  Future<ScalingStatDistributionEntity?> getScalingStatDistribution(
+    int id,
+  ) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return ScalingStatDistribution.fromJson(result.toMap());
+    return ScalingStatDistributionEntity.fromJson(result.toMap());
   }
 
   Future<void> storeScalingStatDistribution(
-    ScalingStatDistribution item,
+    ScalingStatDistributionEntity item,
   ) async {
     var json = item.toJson();
     var nextId = await _getNextId();
@@ -42,7 +44,7 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
   }
 
   Future<void> updateScalingStatDistribution(
-    ScalingStatDistribution item,
+    ScalingStatDistributionEntity item,
   ) async {
     var json = item.toJson();
     json.remove('ID');

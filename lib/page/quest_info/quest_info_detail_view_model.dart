@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/quest_info.dart';
+import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -15,7 +15,7 @@ class QuestInfoDetailViewModel {
   final idController = TextEditingController();
   final nameController = TextEditingController();
 
-  final info = signal(QuestInfo());
+  final info = signal(QuestInfoEntity());
   final saving = signal(false);
 
   /// 保存到数据库
@@ -52,8 +52,8 @@ class QuestInfoDetailViewModel {
   }
 
   /// 从所有 Controller 收集数据构建 QuestInfo
-  QuestInfo _collectFromControllers() {
-    return QuestInfo(
+  QuestInfoEntity _collectFromControllers() {
+    return QuestInfoEntity(
       id: _parseInt(idController.text),
       infoNameLangZhCn: nameController.text,
     );
@@ -66,7 +66,7 @@ class QuestInfoDetailViewModel {
     return value;
   }
 
-  void _logActivity(ActivityActionType action, QuestInfo t) {
+  void _logActivity(ActivityActionType action, QuestInfoEntity t) {
     final log = ActivityLogEntity(
       module: 'quest_info',
       actionType: action,
@@ -92,7 +92,7 @@ class QuestInfoDetailViewModel {
     }
   }
 
-  void _initControllers(QuestInfo table) {
+  void _initControllers(QuestInfoEntity table) {
     idController.text = table.id.toString();
     nameController.text = table.infoNameLangZhCn;
   }

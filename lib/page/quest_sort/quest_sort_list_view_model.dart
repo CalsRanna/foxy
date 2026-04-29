@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/quest_sort.dart';
+import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
@@ -18,7 +18,7 @@ class QuestSortListViewModel {
   final repository = QuestSortRepository();
 
   final page = signal(1);
-  final sorts = signal(<QuestSort>[]);
+  final sorts = signal(<QuestSortEntity>[]);
   final total = signal(0);
 
   Future<void> copyQuestSort(int id) async {

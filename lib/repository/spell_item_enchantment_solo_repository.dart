@@ -1,11 +1,11 @@
-import 'package:foxy/entity/spell_item_enchantment.dart';
+import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class SpellItemEnchantmentSoloRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_item_enchantment';
 
-  Future<List<SpellItemEnchantment>> getSpellItemEnchantments({
+  Future<List<SpellItemEnchantmentEntity>> getSpellItemEnchantments({
     int page = 1,
     SpellItemEnchantmentFilterEntity? filter,
   }) async {
@@ -15,7 +15,7 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
-        .map((e) => SpellItemEnchantment.fromJson(e.toMap()))
+        .map((e) => SpellItemEnchantmentEntity.fromJson(e.toMap()))
         .toList();
   }
 
@@ -27,19 +27,23 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<SpellItemEnchantment?> getSpellItemEnchantment(int id) async {
+  Future<SpellItemEnchantmentEntity?> getSpellItemEnchantment(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return SpellItemEnchantment.fromJson(result.toMap());
+    return SpellItemEnchantmentEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeSpellItemEnchantment(SpellItemEnchantment entry) async {
+  Future<void> storeSpellItemEnchantment(
+    SpellItemEnchantmentEntity entry,
+  ) async {
     var json = entry.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateSpellItemEnchantment(SpellItemEnchantment entry) async {
+  Future<void> updateSpellItemEnchantment(
+    SpellItemEnchantmentEntity entry,
+  ) async {
     var json = entry.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', entry.id).update(json);

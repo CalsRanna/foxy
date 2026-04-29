@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/player_create_info.dart';
+import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
@@ -18,7 +18,7 @@ class PlayerCreateInfoListViewModel {
   final repository = PlayerCreateInfoRepository();
 
   final page = signal(1);
-  final infos = signal<List<PlayerCreateInfo>>([]);
+  final infos = signal<List<PlayerCreateInfoEntity>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
@@ -46,7 +46,7 @@ class PlayerCreateInfoListViewModel {
     await _refresh();
   }
 
-  void navigateToDetail({PlayerCreateInfo? info}) {
+  void navigateToDetail({PlayerCreateInfoEntity? info}) {
     final id = info != null ? 'pci_${info.race}_${info.class_}' : 'pci_new';
     final label = info != null ? '种族${info.race}-职业${info.class_}' : '新建出生信息';
     _routerFacade.navigateToDetail(
@@ -61,7 +61,7 @@ class PlayerCreateInfoListViewModel {
     );
   }
 
-  Future<void> copyPlayerCreateInfo(PlayerCreateInfo info) async {
+  Future<void> copyPlayerCreateInfo(PlayerCreateInfoEntity info) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -81,7 +81,7 @@ class PlayerCreateInfoListViewModel {
     }
   }
 
-  Future<void> deletePlayerCreateInfo(PlayerCreateInfo info) async {
+  Future<void> deletePlayerCreateInfo(PlayerCreateInfoEntity info) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
@@ -120,7 +120,7 @@ class PlayerCreateInfoListViewModel {
     );
   }
 
-  Future<List<PlayerCreateInfo>> _search() async {
+  Future<List<PlayerCreateInfoEntity>> _search() async {
     return repository.getPlayerCreateInfos(
       filter: _buildFilter(),
       page: page.value,

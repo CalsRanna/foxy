@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/page_text.dart';
+import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -61,7 +61,7 @@ class _Dialog extends StatefulWidget {
 class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
 
-  List<PageText> _items = [];
+  List<PageTextEntity> _items = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;

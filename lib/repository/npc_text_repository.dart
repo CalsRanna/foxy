@@ -1,4 +1,4 @@
-import 'package:foxy/entity/npc_text.dart';
+import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// npc_text 表的数据访问层
@@ -7,7 +7,7 @@ class NpcTextRepository with RepositoryMixin {
   static const _table = 'npc_text';
 
   /// 搜索（用于 NpcTextSelector）
-  Future<List<NpcText>> getNpcTexts({
+  Future<List<NpcTextEntity>> getNpcTexts({
     String? id,
     String? text,
     int page = 1,
@@ -15,7 +15,7 @@ class NpcTextRepository with RepositoryMixin {
     return getNpcTextsPaginated(id: id, text: text, page: page);
   }
 
-  Future<List<NpcText>> getNpcTextsPaginated({
+  Future<List<NpcTextEntity>> getNpcTextsPaginated({
     String? id,
     String? text,
     required int page,
@@ -35,7 +35,7 @@ class NpcTextRepository with RepositoryMixin {
       }
       builder = builder.limit(kPageSize).offset(offset);
       final results = await builder.get();
-      return results.map((e) => NpcText.fromJson(e.toMap())).toList();
+      return results.map((e) => NpcTextEntity.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
@@ -61,37 +61,37 @@ class NpcTextRepository with RepositoryMixin {
   }
 
   /// 按 ID 查找
-  Future<NpcText?> getNpcText(int id) async {
+  Future<NpcTextEntity?> getNpcText(int id) async {
     try {
       final result = await laconic.table(_table).where('ID', id).first();
-      return NpcText.fromJson(result.toMap());
+      return NpcTextEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// create：返回下一个可用 ID 的空白对象（不落库）
-  Future<NpcText> createNpcText() async {
+  Future<NpcTextEntity> createNpcText() async {
     try {
       final result = await laconic.table(_table).select([
         'MAX(ID) as max_id',
       ]).first();
       final maxId = result.toMap()['max_id'] as int?;
-      final model = NpcText(id: (maxId ?? 0) + 1);
+      final model = NpcTextEntity(id: (maxId ?? 0) + 1);
       return model;
     } catch (e) {
-      final model = NpcText(id: 1);
+      final model = NpcTextEntity(id: 1);
       return model;
     }
   }
 
-  Future<void> updateNpcText(int id, NpcText model) async {
+  Future<void> updateNpcText(int id, NpcTextEntity model) async {
     final json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);
   }
 
-  Future<void> storeNpcText(NpcText model) async {
+  Future<void> storeNpcText(NpcTextEntity model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
@@ -103,7 +103,7 @@ class NpcTextRepository with RepositoryMixin {
     final original = await getNpcText(id);
     if (original == null) return;
     final next = await createNpcText();
-    final copy = NpcText(
+    final copy = NpcTextEntity(
       id: next.id,
       verifiedBuild: original.verifiedBuild,
       entries: original.entries,

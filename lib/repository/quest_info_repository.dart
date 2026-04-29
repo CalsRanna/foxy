@@ -1,11 +1,11 @@
-import 'package:foxy/entity/quest_info.dart';
+import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class QuestInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_info';
 
-  Future<List<QuestInfo>> getQuestInfos({
+  Future<List<QuestInfoEntity>> getQuestInfos({
     int page = 1,
     QuestInfoFilterEntity? filter,
   }) async {
@@ -14,7 +14,7 @@ class QuestInfoRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => QuestInfo.fromJson(e.toMap())).toList();
+    return results.map((e) => QuestInfoEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countQuestInfos({QuestInfoFilterEntity? filter}) async {
@@ -23,19 +23,19 @@ class QuestInfoRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<QuestInfo?> getQuestInfo(int id) async {
+  Future<QuestInfoEntity?> getQuestInfo(int id) async {
     var result = await laconic.table(_table).where('ID', id).first();
-    return QuestInfo.fromJson(result.toMap());
+    return QuestInfoEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeQuestInfo(QuestInfo data) async {
+  Future<void> storeQuestInfo(QuestInfoEntity data) async {
     var json = data.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> updateQuestInfo(QuestInfo data) async {
+  Future<void> updateQuestInfo(QuestInfoEntity data) async {
     var json = data.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', data.id).update(json);
