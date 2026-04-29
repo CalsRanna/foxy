@@ -1,11 +1,11 @@
-import 'package:foxy/entity/condition.dart';
+import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/condition_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class ConditionRepository with RepositoryMixin {
   static const _table = 'conditions';
 
-  Future<List<Condition>> getConditions({
+  Future<List<ConditionEntity>> getConditions({
     required ConditionFilterEntity filter,
     required int page,
   }) async {
@@ -14,7 +14,7 @@ class ConditionRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => Condition.fromJson(e.toMap())).toList();
+    return results.map((e) => ConditionEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countConditions({required ConditionFilterEntity filter}) async {
@@ -23,22 +23,22 @@ class ConditionRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<Condition> getCondition(Map<String, dynamic> credential) async {
+  Future<ConditionEntity> getCondition(Map<String, dynamic> credential) async {
     var builder = laconic.table(_table);
     for (final entry in credential.entries) {
       builder = builder.where(entry.key, entry.value);
     }
     var result = await builder.first();
-    return Condition.fromJson(result.toMap());
+    return ConditionEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeCondition(Condition condition) async {
+  Future<void> storeCondition(ConditionEntity condition) async {
     await laconic.table(_table).insert([condition.toJson()]);
   }
 
   Future<void> updateCondition(
     Map<String, dynamic> credential,
-    Condition condition,
+    ConditionEntity condition,
   ) async {
     var json = condition.toJson();
     // 移除主键字段，只更新非键字段

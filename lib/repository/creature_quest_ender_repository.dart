@@ -1,4 +1,4 @@
-import 'package:foxy/entity/creature_quest_ender.dart';
+import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 /// creature_questender 表的数据访问层
@@ -33,7 +33,7 @@ class CreatureQuestEnderRepository with RepositoryMixin {
   }
 
   /// 按复合键查找
-  Future<CreatureQuestEnder?> getCreatureQuestEnder(
+  Future<CreatureQuestEnderEntity?> getCreatureQuestEnder(
     Map<String, dynamic> id,
   ) async {
     try {
@@ -42,35 +42,35 @@ class CreatureQuestEnderRepository with RepositoryMixin {
         builder = builder.where(k, v);
       });
       final result = await builder.first();
-      return CreatureQuestEnder.fromJson(result.toMap());
+      return CreatureQuestEnderEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }
   }
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
-  Future<CreatureQuestEnder> createCreatureQuestEnder(int questId) async {
+  Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int questId) async {
     try {
       final result = await laconic.table(_table).where('quest', questId).select(
         ['MAX(id) as max_id'],
       ).first();
       final maxId = result.toMap()['max_id'] as int?;
-      return CreatureQuestEnder(
+      return CreatureQuestEnderEntity(
         quest: questId,
         id: maxId == null ? 0 : maxId + 1,
       );
     } catch (e) {
-      return CreatureQuestEnder(quest: questId, id: 0);
+      return CreatureQuestEnderEntity(quest: questId, id: 0);
     }
   }
 
-  Future<void> storeCreatureQuestEnder(CreatureQuestEnder model) async {
+  Future<void> storeCreatureQuestEnder(CreatureQuestEnderEntity model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
   Future<void> updateCreatureQuestEnder(
     Map<String, dynamic> id,
-    CreatureQuestEnder model,
+    CreatureQuestEnderEntity model,
   ) async {
     var builder = laconic.table(_table);
     id.forEach((k, v) {

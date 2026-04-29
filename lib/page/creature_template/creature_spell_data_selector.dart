@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/creature_spell_data.dart';
+import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';

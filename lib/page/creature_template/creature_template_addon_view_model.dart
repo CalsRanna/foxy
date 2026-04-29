@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/creature_template_addon.dart';
+import 'package:foxy/entity/creature_template_addon_entity.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -18,7 +18,7 @@ class CreatureTemplateAddonViewModel {
   final visibilityDistanceTypeController = TextEditingController();
   final aurasController = TextEditingController();
 
-  final addon = signal(CreatureTemplateAddon());
+  final addon = signal(CreatureTemplateAddonEntity());
 
   /// 从数据库加载数据
   Future<void> load() async {
@@ -52,8 +52,8 @@ class CreatureTemplateAddonViewModel {
   }
 
   /// 从 Controller 收集数据构建 CreatureTemplateAddon
-  CreatureTemplateAddon _collectFromControllers() {
-    final data = CreatureTemplateAddon();
+  CreatureTemplateAddonEntity _collectFromControllers() {
+    final data = CreatureTemplateAddonEntity();
     data.entry = creatureId.value;
     data.pathId = _parseInt(pathIdController.text);
     data.mount = _parseInt(mountController.text);
@@ -75,7 +75,7 @@ class CreatureTemplateAddonViewModel {
   }
 
   /// 初始化 Controller 的值
-  void initControllers(CreatureTemplateAddon data) {
+  void initControllers(CreatureTemplateAddonEntity data) {
     pathIdController.text = data.pathId.toString();
     mountController.text = data.mount.toString();
     emoteController.text = data.emote.toString();

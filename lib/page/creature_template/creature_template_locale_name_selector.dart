@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/creature_template_locale.dart';
+import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -69,8 +69,8 @@ class _CreatureTemplateLocaleNameSelectorState
 
 class _LocaleDialog extends StatefulWidget {
   final int entry;
-  final List<CreatureTemplateLocale> locales;
-  final Future<void> Function(List<CreatureTemplateLocale>) onSave;
+  final List<CreatureTemplateLocaleEntity> locales;
+  final Future<void> Function(List<CreatureTemplateLocaleEntity>) onSave;
   final String title;
 
   const _LocaleDialog({
@@ -219,7 +219,7 @@ class _LocaleDialogState extends State<_LocaleDialog> {
     setState(() => _saving = true);
     try {
       final locales = _rows.map((row) {
-        return CreatureTemplateLocale()
+        return CreatureTemplateLocaleEntity()
           ..entry = widget.entry
           ..locale = row.localeController.text
           ..name = row.nameController.text
@@ -243,7 +243,7 @@ class _LocaleRow {
       nameController = TextEditingController(),
       titleController = TextEditingController();
 
-  _LocaleRow.fromLocale(CreatureTemplateLocale locale)
+  _LocaleRow.fromLocale(CreatureTemplateLocaleEntity locale)
     : localeController = TextEditingController(text: locale.locale),
       nameController = TextEditingController(text: locale.name),
       titleController = TextEditingController(text: locale.title);

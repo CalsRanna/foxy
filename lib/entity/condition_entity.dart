@@ -1,4 +1,4 @@
-class Condition {
+class ConditionEntity {
   final int sourceTypeOrReferenceId;
   final int sourceGroup;
   final int sourceEntry;
@@ -15,7 +15,7 @@ class Condition {
   final String scriptName;
   final String comment;
 
-  const Condition({
+  const ConditionEntity({
     this.sourceTypeOrReferenceId = 0,
     this.sourceGroup = 0,
     this.sourceEntry = 0,
@@ -49,8 +49,8 @@ class Condition {
     };
   }
 
-  factory Condition.fromJson(Map<String, dynamic> json) {
-    return Condition(
+  factory ConditionEntity.fromJson(Map<String, dynamic> json) {
+    return ConditionEntity(
       sourceTypeOrReferenceId: json['SourceTypeOrReferenceId'] ?? 0,
       sourceGroup: json['SourceGroup'] ?? 0,
       sourceEntry: json['SourceEntry'] ?? 0,

@@ -1,4 +1,4 @@
-class CreatureOnKillReputation {
+class CreatureOnKillReputationEntity {
   final int creatureID;
   final int rewOnKillRepFaction1;
   final int rewOnKillRepFaction2;
@@ -10,7 +10,7 @@ class CreatureOnKillReputation {
   final double rewOnKillRepValue2;
   final int teamDependent;
 
-  const CreatureOnKillReputation({
+  const CreatureOnKillReputationEntity({
     this.creatureID = 0,
     this.rewOnKillRepFaction1 = 0,
     this.rewOnKillRepFaction2 = 0,
@@ -23,8 +23,8 @@ class CreatureOnKillReputation {
     this.teamDependent = 0,
   });
 
-  factory CreatureOnKillReputation.fromJson(Map<String, dynamic> json) {
-    return CreatureOnKillReputation(
+  factory CreatureOnKillReputationEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureOnKillReputationEntity(
       creatureID: json['creature_id'] ?? json['creatureID'] ?? 0,
       rewOnKillRepFaction1:
           json['RewOnKillRepFaction1'] ?? json['rewOnKillRepFaction1'] ?? 0,
@@ -32,10 +32,8 @@ class CreatureOnKillReputation {
           json['RewOnKillRepFaction2'] ?? json['rewOnKillRepFaction2'] ?? 0,
       maxStanding1: json['MaxStanding1'] ?? json['maxStanding1'] ?? 0,
       maxStanding2: json['MaxStanding2'] ?? json['maxStanding2'] ?? 0,
-      isTeamAward1:
-          (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1,
-      isTeamAward2:
-          (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1,
+      isTeamAward1: (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1,
+      isTeamAward2: (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1,
       rewOnKillRepValue1:
           (json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0.0)
               .toDouble(),

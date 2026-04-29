@@ -1,5 +1,5 @@
 /// 生物装备模板 — 对应 creature_equip_template 表（复合键: CreatureID + ID）
-class CreatureEquipTemplate {
+class CreatureEquipTemplateEntity {
   final int creatureID;
   final int id;
   final int itemID1;
@@ -7,7 +7,7 @@ class CreatureEquipTemplate {
   final int itemID3;
   final int verifiedBuild;
 
-  const CreatureEquipTemplate({
+  const CreatureEquipTemplateEntity({
     this.creatureID = 0,
     this.id = 0,
     this.itemID1 = 0,
@@ -16,8 +16,8 @@ class CreatureEquipTemplate {
     this.verifiedBuild = 0,
   });
 
-  factory CreatureEquipTemplate.fromJson(Map<String, dynamic> json) {
-    return CreatureEquipTemplate(
+  factory CreatureEquipTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureEquipTemplateEntity(
       creatureID: json['CreatureID'] ?? 0,
       id: json['ID'] ?? 0,
       itemID1: json['ItemID1'] ?? 0,

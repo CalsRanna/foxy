@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/creature_onkill_reputation.dart';
+import 'package:foxy/entity/creature_onkill_reputation_entity.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -23,7 +23,7 @@ class CreatureOnKillReputationViewModel {
 
   final loading = signal(false);
   final saving = signal(false);
-  final reputation = signal(CreatureOnKillReputation());
+  final reputation = signal(CreatureOnKillReputationEntity());
 
   /// 从数据库加载数据
   Future<void> load() async {
@@ -68,8 +68,8 @@ class CreatureOnKillReputationViewModel {
   }
 
   /// 从 Controller 收集数据构建 CreatureOnKillReputation
-  CreatureOnKillReputation _collectFromControllers() {
-    return CreatureOnKillReputation(
+  CreatureOnKillReputationEntity _collectFromControllers() {
+    return CreatureOnKillReputationEntity(
       creatureID: creatureId.value,
       rewOnKillRepFaction1: _parseInt(rewOnKillRepFaction1Controller.text),
       rewOnKillRepFaction2: _parseInt(rewOnKillRepFaction2Controller.text),
@@ -106,7 +106,7 @@ class CreatureOnKillReputationViewModel {
   }
 
   /// 初始化 Controller 的值
-  void initControllers(CreatureOnKillReputation data) {
+  void initControllers(CreatureOnKillReputationEntity data) {
     creatureIdController.text = data.creatureID.toString();
     rewOnKillRepFaction1Controller.text = data.rewOnKillRepFaction1.toString();
     rewOnKillRepFaction2Controller.text = data.rewOnKillRepFaction2.toString();

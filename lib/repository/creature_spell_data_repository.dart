@@ -1,4 +1,4 @@
-import 'package:foxy/entity/creature_spell_data.dart';
+import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureSpellDataRepository with RepositoryMixin {
@@ -113,10 +113,10 @@ class CreatureSpellDataRepository with RepositoryMixin {
     }
   }
 
-  Future<CreatureSpellData?> getById(int id) async {
+  Future<CreatureSpellDataEntity?> getById(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
-      return CreatureSpellData.fromJson(result.toMap());
+      return CreatureSpellDataEntity.fromJson(result.toMap());
     } catch (e) {
       return null;
     }

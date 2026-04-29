@@ -1,4 +1,4 @@
-class CreatureQuestItem {
+class CreatureQuestItemEntity {
   final int creatureEntry;
   final int idx;
   final int itemId;
@@ -11,7 +11,7 @@ class CreatureQuestItem {
   String get displayName =>
       itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
-  const CreatureQuestItem({
+  const CreatureQuestItemEntity({
     this.creatureEntry = 0,
     this.idx = 0,
     this.itemId = 0,
@@ -22,8 +22,8 @@ class CreatureQuestItem {
     this.itemIcon = '',
   });
 
-  factory CreatureQuestItem.fromJson(Map<String, dynamic> json) {
-    return CreatureQuestItem(
+  factory CreatureQuestItemEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureQuestItemEntity(
       creatureEntry: json['CreatureEntry'] ?? json['creatureEntry'] ?? 0,
       idx: json['Idx'] ?? json['idx'] ?? 0,
       itemId: json['ItemId'] ?? json['itemId'] ?? 0,

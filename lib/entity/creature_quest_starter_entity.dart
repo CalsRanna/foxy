@@ -1,11 +1,14 @@
-class CreatureQuestEnder {
+class CreatureQuestStarterEntity {
   final int id;
   final int quest;
 
-  const CreatureQuestEnder({this.id = 0, this.quest = 0});
+  const CreatureQuestStarterEntity({this.id = 0, this.quest = 0});
 
-  factory CreatureQuestEnder.fromJson(Map<String, dynamic> json) {
-    return CreatureQuestEnder(id: json['id'] ?? 0, quest: json['quest'] ?? 0);
+  factory CreatureQuestStarterEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureQuestStarterEntity(
+      id: json['id'] ?? 0,
+      quest: json['quest'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -13,21 +16,21 @@ class CreatureQuestEnder {
   }
 }
 
-class BriefCreatureQuestEnder {
+class BriefCreatureQuestStarter {
   final int id;
   final int quest;
   final String name;
   final String localeName;
 
-  const BriefCreatureQuestEnder({
+  const BriefCreatureQuestStarter({
     this.id = 0,
     this.quest = 0,
     this.name = '',
     this.localeName = '',
   });
 
-  factory BriefCreatureQuestEnder.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureQuestEnder(
+  factory BriefCreatureQuestStarter.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureQuestStarter(
       id: json['id'] ?? 0,
       quest: json['quest'] ?? 0,
       name: json['name']?.toString() ?? '',
