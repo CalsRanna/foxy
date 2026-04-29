@@ -1,18 +1,6 @@
 // Creature Template 枚举常量定义
 // 数据来源：AzerothCore SharedDefines.h, UnitDefines.h
 
-import 'package:flutter/widgets.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
-
-/// Map 扩展方法，将 `Map<T, String>` 转换为 `List<ShadOption<T>>`
-extension ShadOptionsExtension<T> on Map<T, String> {
-  List<ShadOption<T>> toShadOptions() {
-    return entries
-        .map((e) => ShadOption(value: e.key, child: Text(e.value)))
-        .toList();
-  }
-}
-
 /// unit_class 职业选项
 const kUnitClassOptions = {
   1: '战士 (Warrior)',

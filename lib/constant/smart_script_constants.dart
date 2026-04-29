@@ -1,3 +1,6 @@
+// SmartAI 脚本枚举常量定义
+// 数据来源：AzerothCore SmartScriptMgr.h
+
 const Map<int, String> kSourceTypes = {
   0: '生物 (Creature)',
   1: '游戏对象 (GameObject)',

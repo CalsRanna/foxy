@@ -1,7 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/feature_icons.dart';
 import 'package:foxy/model/feature.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+
+const _kFeatureIconMap = <String, IconData>{
+  'pawPrint': LucideIcons.pawPrint,
+  'swords': LucideIcons.swords,
+  'badgeQuestionMark': LucideIcons.badgeQuestionMark,
+  'mapPin': LucideIcons.mapPin,
+  'messageCircle': LucideIcons.messageCircle,
+  'code': LucideIcons.code,
+  'shell': LucideIcons.shell,
+  'list': LucideIcons.list,
+  'bookOpen': LucideIcons.bookOpen,
+  'listFilter': LucideIcons.listFilter,
+  'userPlus': LucideIcons.userPlus,
+  'map': LucideIcons.map,
+  'laugh': LucideIcons.laugh,
+  'trophy': LucideIcons.trophy,
+  'arrowUpDown': LucideIcons.arrowUpDown,
+  'trendingUp': LucideIcons.trendingUp,
+  'info': LucideIcons.info,
+  'coins': LucideIcons.coins,
+  'wand': LucideIcons.wand,
+  'gem': LucideIcons.gem,
+  'triangle': LucideIcons.triangle,
+};
 
 class FeatureCard extends StatefulWidget {
   final Feature feature;
@@ -47,7 +70,7 @@ class _FeatureCardState extends State<FeatureCard> {
 
   Widget _buildContent() {
     final iconData =
-        featureIconMap[widget.feature.icon] ?? LucideIcons.circleAlert;
+        _kFeatureIconMap[widget.feature.icon] ?? LucideIcons.circleAlert;
     final tag = Text(
       widget.feature.category.toUpperCase(),
       style: const TextStyle(
