@@ -6,11 +6,12 @@ class Lock {
 
   Lock();
 
-  Lock.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    type0 = json['Type0'] ?? 0;
-    index0 = json['Index0'] ?? 0;
-    skill0 = json['Skill0'] ?? 0;
+  factory Lock.fromJson(Map<String, dynamic> json) {
+    return Lock()
+      ..id = json['ID'] ?? 0
+      ..type0 = json['Type0'] ?? 0
+      ..index0 = json['Index0'] ?? 0
+      ..skill0 = json['Skill0'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

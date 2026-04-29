@@ -11,15 +11,16 @@ class CreatureTemplateAddon {
 
   CreatureTemplateAddon();
 
-  CreatureTemplateAddon.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    pathId = json['path_id'] ?? 0;
-    mount = json['mount'] ?? 0;
-    emote = json['emote'] ?? 0;
-    bytes1 = json['bytes1'] ?? 0;
-    bytes2 = json['bytes2'] ?? 0;
-    visibilityDistanceType = json['visibilityDistanceType'] ?? 0;
-    auras = json['auras'] ?? '';
+  factory CreatureTemplateAddon.fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateAddon()
+      ..entry = json['entry'] ?? 0
+      ..pathId = json['path_id'] ?? 0
+      ..mount = json['mount'] ?? 0
+      ..emote = json['emote'] ?? 0
+      ..bytes1 = json['bytes1'] ?? 0
+      ..bytes2 = json['bytes2'] ?? 0
+      ..visibilityDistanceType = json['visibilityDistanceType'] ?? 0
+      ..auras = json['auras'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

@@ -22,24 +22,25 @@ class QuestTemplateAddon {
 
   QuestTemplateAddon();
 
-  QuestTemplateAddon.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    maxLevel = json['MaxLevel'] ?? 0;
-    allowableClasses = json['AllowableClasses'] ?? 0;
-    sourceSpellId = json['SourceSpellID'] ?? 0;
-    prevQuestId = json['PrevQuestID'] ?? 0;
-    nextQuestId = json['NextQuestID'] ?? 0;
-    exclusiveGroup = json['ExclusiveGroup'] ?? 0;
-    rewardMailTemplateId = json['RewardMailTemplateID'] ?? 0;
-    rewardMailDelay = json['RewardMailDelay'] ?? 0;
-    requiredSkillId = json['RequiredSkillID'] ?? 0;
-    requiredSkillPoints = json['RequiredSkillPoints'] ?? 0;
-    requiredMinRepFaction = json['RequiredMinRepFaction'] ?? 0;
-    requiredMaxRepFaction = json['RequiredMaxRepFaction'] ?? 0;
-    requiredMinRepValue = json['RequiredMinRepValue'] ?? 0;
-    requiredMaxRepValue = json['RequiredMaxRepValue'] ?? 0;
-    providedItemCount = json['ProvidedItemCount'] ?? 0;
-    specialFlags = json['SpecialFlags'] ?? 0;
+  factory QuestTemplateAddon.fromJson(Map<String, dynamic> json) {
+    return QuestTemplateAddon()
+      ..id = json['ID'] ?? 0
+      ..maxLevel = json['MaxLevel'] ?? 0
+      ..allowableClasses = json['AllowableClasses'] ?? 0
+      ..sourceSpellId = json['SourceSpellID'] ?? 0
+      ..prevQuestId = json['PrevQuestID'] ?? 0
+      ..nextQuestId = json['NextQuestID'] ?? 0
+      ..exclusiveGroup = json['ExclusiveGroup'] ?? 0
+      ..rewardMailTemplateId = json['RewardMailTemplateID'] ?? 0
+      ..rewardMailDelay = json['RewardMailDelay'] ?? 0
+      ..requiredSkillId = json['RequiredSkillID'] ?? 0
+      ..requiredSkillPoints = json['RequiredSkillPoints'] ?? 0
+      ..requiredMinRepFaction = json['RequiredMinRepFaction'] ?? 0
+      ..requiredMaxRepFaction = json['RequiredMaxRepFaction'] ?? 0
+      ..requiredMinRepValue = json['RequiredMinRepValue'] ?? 0
+      ..requiredMaxRepValue = json['RequiredMaxRepValue'] ?? 0
+      ..providedItemCount = json['ProvidedItemCount'] ?? 0
+      ..specialFlags = json['SpecialFlags'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

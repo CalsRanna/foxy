@@ -14,15 +14,16 @@ class PlayerCreateInfo {
     return {'race': race, 'class': class_};
   }
 
-  PlayerCreateInfo.fromJson(Map<String, dynamic> json) {
-    race = json['race'] ?? 0;
-    class_ = json['class'] ?? 0;
-    map = json['map'] ?? 0;
-    zone = json['zone'] ?? 0;
-    positionX = (json['position_x'] as num?)?.toDouble() ?? 0;
-    positionY = (json['position_y'] as num?)?.toDouble() ?? 0;
-    positionZ = (json['position_z'] as num?)?.toDouble() ?? 0;
-    orientation = (json['orientation'] as num?)?.toDouble() ?? 0;
+  factory PlayerCreateInfo.fromJson(Map<String, dynamic> json) {
+    return PlayerCreateInfo()
+      ..race = json['race'] ?? 0
+      ..class_ = json['class'] ?? 0
+      ..map = json['map'] ?? 0
+      ..zone = json['zone'] ?? 0
+      ..positionX = (json['position_x'] as num?)?.toDouble() ?? 0
+      ..positionY = (json['position_y'] as num?)?.toDouble() ?? 0
+      ..positionZ = (json['position_z'] as num?)?.toDouble() ?? 0
+      ..orientation = (json['orientation'] as num?)?.toDouble() ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -48,12 +49,13 @@ class PlayerCreateInfoAction {
 
   PlayerCreateInfoAction();
 
-  PlayerCreateInfoAction.fromJson(Map<String, dynamic> json) {
-    race = json['race'] ?? 0;
-    class_ = json['class'] ?? 0;
-    button = json['button'] ?? 0;
-    action = json['action'] ?? 0;
-    type = json['type'] ?? 0;
+  factory PlayerCreateInfoAction.fromJson(Map<String, dynamic> json) {
+    return PlayerCreateInfoAction()
+      ..race = json['race'] ?? 0
+      ..class_ = json['class'] ?? 0
+      ..button = json['button'] ?? 0
+      ..action = json['action'] ?? 0
+      ..type = json['type'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -76,12 +78,13 @@ class PlayerCreateInfoItem {
 
   PlayerCreateInfoItem();
 
-  PlayerCreateInfoItem.fromJson(Map<String, dynamic> json) {
-    race = json['race'] ?? 0;
-    class_ = json['class'] ?? 0;
-    itemid = json['itemid'] ?? 0;
-    amount = json['amount'] ?? 1;
-    note = json['Note'] ?? '';
+  factory PlayerCreateInfoItem.fromJson(Map<String, dynamic> json) {
+    return PlayerCreateInfoItem()
+      ..race = json['race'] ?? 0
+      ..class_ = json['class'] ?? 0
+      ..itemid = json['itemid'] ?? 0
+      ..amount = json['amount'] ?? 1
+      ..note = json['Note'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -103,11 +106,12 @@ class PlayerCreateInfoSpellCustom {
 
   PlayerCreateInfoSpellCustom();
 
-  PlayerCreateInfoSpellCustom.fromJson(Map<String, dynamic> json) {
-    racemask = json['racemask'] ?? 0;
-    classmask = json['classmask'] ?? 0;
-    spell = json['spell'] ?? 0;
-    note = json['note'] ?? '';
+  factory PlayerCreateInfoSpellCustom.fromJson(Map<String, dynamic> json) {
+    return PlayerCreateInfoSpellCustom()
+      ..racemask = json['racemask'] ?? 0
+      ..classmask = json['classmask'] ?? 0
+      ..spell = json['spell'] ?? 0
+      ..note = json['note'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

@@ -7,12 +7,13 @@ class CreatureModelInfo {
 
   CreatureModelInfo();
 
-  CreatureModelInfo.fromJson(Map<String, dynamic> json) {
-    displayId = json['DisplayID'] ?? 0;
-    boundingRadius = (json['BoundingRadius'] ?? 0).toDouble();
-    combatReach = (json['CombatReach'] ?? 0).toDouble();
-    gender = json['Gender'] ?? 0;
-    displayIdOtherGender = json['DisplayID_Other_Gender'] ?? 0;
+  factory CreatureModelInfo.fromJson(Map<String, dynamic> json) {
+    return CreatureModelInfo()
+      ..displayId = json['DisplayID'] ?? 0
+      ..boundingRadius = (json['BoundingRadius'] ?? 0).toDouble()
+      ..combatReach = (json['CombatReach'] ?? 0).toDouble()
+      ..gender = json['Gender'] ?? 0
+      ..displayIdOtherGender = json['DisplayID_Other_Gender'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

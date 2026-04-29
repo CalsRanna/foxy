@@ -6,11 +6,12 @@ class SpellRange {
 
   SpellRange();
 
-  SpellRange.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    rangeMin0 = (json['RangeMin0'] ?? 0).toDouble();
-    rangeMax0 = (json['RangeMax0'] ?? 0).toDouble();
-    displayNameLangZhCn = json['DisplayName_lang_zhCN'] ?? '';
+  factory SpellRange.fromJson(Map<String, dynamic> json) {
+    return SpellRange()
+      ..id = json['ID'] ?? 0
+      ..rangeMin0 = (json['RangeMin0'] ?? 0).toDouble()
+      ..rangeMax0 = (json['RangeMax0'] ?? 0).toDouble()
+      ..displayNameLangZhCn = json['DisplayName_lang_zhCN'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

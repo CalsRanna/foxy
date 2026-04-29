@@ -7,11 +7,12 @@ class SpellLinkedSpell {
 
   SpellLinkedSpell();
 
-  SpellLinkedSpell.fromJson(Map<String, dynamic> json) {
-    spellTrigger = json['spell_trigger'] ?? 0;
-    spellEffect = json['spell_effect'] ?? 0;
-    type = json['type'] ?? 0;
-    comment = json['comment'] ?? '';
+  factory SpellLinkedSpell.fromJson(Map<String, dynamic> json) {
+    return SpellLinkedSpell()
+      ..spellTrigger = json['spell_trigger'] ?? 0
+      ..spellEffect = json['spell_effect'] ?? 0
+      ..type = json['type'] ?? 0
+      ..comment = json['comment'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

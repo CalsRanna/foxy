@@ -23,22 +23,23 @@ class GossipMenuOption {
 
   GossipMenuOption();
 
-  GossipMenuOption.fromJson(Map<String, dynamic> json) {
-    menuId = json['MenuID'] ?? json['menuid'] ?? 0;
-    optionId = json['OptionID'] ?? json['optionid'] ?? 0;
-    optionIcon = json['OptionIcon'] ?? json['optionicon'] ?? 0;
-    optionText = json['OptionText']?.toString() ?? '';
-    optionBroadcastTextId = json['OptionBroadcastTextID'] ?? 0;
-    optionType = json['OptionType'] ?? 0;
-    optionNpcFlag = json['OptionNpcFlag'] ?? 0;
-    boxCoded = json['BoxCoded'] ?? 0;
-    boxMoney = json['BoxMoney'] ?? 0;
-    boxText = json['BoxText']?.toString() ?? '';
-    boxBroadcastTextId = json['BoxBroadcastTextID'] ?? 0;
-    actionMenuId = json['ActionMenuID'] ?? 0;
-    actionPoiId = json['ActionPoiID'] ?? 0;
-    verifiedBuild = json['VerifiedBuild'] ?? 0;
-    localeOptionText = json['localeOptionText']?.toString() ?? '';
+  factory GossipMenuOption.fromJson(Map<String, dynamic> json) {
+    return GossipMenuOption()
+      ..menuId = json['MenuID'] ?? json['menuid'] ?? 0
+      ..optionId = json['OptionID'] ?? json['optionid'] ?? 0
+      ..optionIcon = json['OptionIcon'] ?? json['optionicon'] ?? 0
+      ..optionText = json['OptionText']?.toString() ?? ''
+      ..optionBroadcastTextId = json['OptionBroadcastTextID'] ?? 0
+      ..optionType = json['OptionType'] ?? 0
+      ..optionNpcFlag = json['OptionNpcFlag'] ?? 0
+      ..boxCoded = json['BoxCoded'] ?? 0
+      ..boxMoney = json['BoxMoney'] ?? 0
+      ..boxText = json['BoxText']?.toString() ?? ''
+      ..boxBroadcastTextId = json['BoxBroadcastTextID'] ?? 0
+      ..actionMenuId = json['ActionMenuID'] ?? 0
+      ..actionPoiId = json['ActionPoiID'] ?? 0
+      ..verifiedBuild = json['VerifiedBuild'] ?? 0
+      ..localeOptionText = json['localeOptionText']?.toString() ?? '';
   }
 
   /// 显示文本（优先本地化）

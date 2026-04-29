@@ -9,14 +9,15 @@ class BriefCreatureTemplate {
 
   BriefCreatureTemplate();
 
-  BriefCreatureTemplate.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    name = json['name'] ?? '';
-    subName = json['subname'] ?? '';
-    localeName = json['Name'] ?? '';
-    localeSubName = json['Title'] ?? '';
-    minLevel = json['minlevel'] ?? 0;
-    maxLevel = json['maxlevel'] ?? 0;
+  factory BriefCreatureTemplate.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureTemplate()
+      ..entry = json['entry'] ?? 0
+      ..name = json['name'] ?? ''
+      ..subName = json['subname'] ?? ''
+      ..localeName = json['Name'] ?? ''
+      ..localeSubName = json['Title'] ?? ''
+      ..minLevel = json['minlevel'] ?? 0
+      ..maxLevel = json['maxlevel'] ?? 0;
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
@@ -83,62 +84,63 @@ class CreatureTemplate {
 
   CreatureTemplate();
 
-  CreatureTemplate.fromJson(Map<String, dynamic> json) {
-    aiName = json['AIName'] ?? '';
-    armorModifier = json['ArmorModifier'] ?? 1.0;
-    baseAttackTime = json['BaseAttackTime'] ?? 0;
-    baseVariance = json['BaseVariance'] ?? 1.0;
-    damageModifier = json['DamageModifier'] ?? 1.0;
-    difficultyEntry1 = json['difficulty_entry_1'] ?? 0;
-    difficultyEntry2 = json['difficulty_entry_2'] ?? 0;
-    difficultyEntry3 = json['difficulty_entry_3'] ?? 0;
-    damageSchool = json['dmgschool'] ?? 0;
-    detectionRange = (json['detection_range'] as num?)?.toDouble() ?? 20.0;
-    dynamicFlags = json['dynamicflags'] ?? 0;
-    entry = json['entry'] ?? 0;
-    exp = json['exp'] ?? 0;
-    experienceModifier = json['ExperienceModifier'] ?? 1.0;
-    faction = json['faction'] ?? 0;
-    family = json['family'] ?? 0;
-    flagsExtra = json['flags_extra'] ?? 0;
-    gossipMenuId = json['gossip_menu_id'] ?? 0;
-    healthModifier = json['HealthModifier'] ?? 1.0;
-    hoverHeight = json['HoverHeight'] ?? 1.0;
-    iconName = json['IconName'] ?? '';
-    killCredit1 = json['KillCredit1'] ?? 0;
-    killCredit2 = json['KillCredit2'] ?? 0;
-    lootId = json['lootid'] ?? 0;
-    maxGold = json['maxgold'] ?? 0;
-    maxLevel = json['maxlevel'] ?? 1;
-    manaModifier = json['ManaModifier'] ?? 1.0;
-    minLevel = json['minlevel'] ?? 1;
-    minGold = json['mingold'] ?? 0;
-    movementId = json['movementId'] ?? 0;
-    movementType = json['MovementType'] ?? 0;
-    name = json['name'] ?? '';
-    npcFlag = json['npcflag'] ?? 0;
-    petSpellDataId = json['PetSpellDataId'] ?? 0;
-    pickpocketLoot = json['pickpocketloot'] ?? 0;
-    racialLeader = json['RacialLeader'] ?? 0;
-    rangeAttackTime = json['RangeAttackTime'] ?? 0;
-    rangeVariance = json['RangeVariance'] ?? 1.0;
-    rank = json['rank'] ?? 0;
-    regenHealth = json['RegenHealth'] ?? 1;
-    scriptName = json['ScriptName'] ?? '';
-    skinLoot = json['skinloot'] ?? 0;
-    speedFlight = (json['speed_flight'] as num?)?.toDouble() ?? 1.0;
-    speedRun = json['speed_run'] ?? 1.14286;
-    speedSwim = (json['speed_swim'] as num?)?.toDouble() ?? 1.0;
-    speedWalk = json['speed_walk'] ?? 1.0;
-    subName = json['subname'] ?? '';
-    type = json['type'] ?? 0;
-    typeFlags = json['type_flags'] ?? 0;
-    unitClass = json['unit_class'] ?? 0;
-    unitFlags = json['unit_flags'] ?? 0;
-    unitFlags2 = json['unit_flags2'] ?? 0;
-    vehicleId = json['VehicleId'] ?? 0;
-    verifiedBuild = json['VerifiedBuild'] ?? 0;
-    creatureImmunitiesId = json['CreatureImmunitiesId'] ?? 0;
+  factory CreatureTemplate.fromJson(Map<String, dynamic> json) {
+    return CreatureTemplate()
+      ..aiName = json['AIName'] ?? ''
+      ..armorModifier = json['ArmorModifier'] ?? 1.0
+      ..baseAttackTime = json['BaseAttackTime'] ?? 0
+      ..baseVariance = json['BaseVariance'] ?? 1.0
+      ..damageModifier = json['DamageModifier'] ?? 1.0
+      ..difficultyEntry1 = json['difficulty_entry_1'] ?? 0
+      ..difficultyEntry2 = json['difficulty_entry_2'] ?? 0
+      ..difficultyEntry3 = json['difficulty_entry_3'] ?? 0
+      ..damageSchool = json['dmgschool'] ?? 0
+      ..detectionRange = (json['detection_range'] as num?)?.toDouble() ?? 20.0
+      ..dynamicFlags = json['dynamicflags'] ?? 0
+      ..entry = json['entry'] ?? 0
+      ..exp = json['exp'] ?? 0
+      ..experienceModifier = json['ExperienceModifier'] ?? 1.0
+      ..faction = json['faction'] ?? 0
+      ..family = json['family'] ?? 0
+      ..flagsExtra = json['flags_extra'] ?? 0
+      ..gossipMenuId = json['gossip_menu_id'] ?? 0
+      ..healthModifier = json['HealthModifier'] ?? 1.0
+      ..hoverHeight = json['HoverHeight'] ?? 1.0
+      ..iconName = json['IconName'] ?? ''
+      ..killCredit1 = json['KillCredit1'] ?? 0
+      ..killCredit2 = json['KillCredit2'] ?? 0
+      ..lootId = json['lootid'] ?? 0
+      ..maxGold = json['maxgold'] ?? 0
+      ..maxLevel = json['maxlevel'] ?? 1
+      ..manaModifier = json['ManaModifier'] ?? 1.0
+      ..minLevel = json['minlevel'] ?? 1
+      ..minGold = json['mingold'] ?? 0
+      ..movementId = json['movementId'] ?? 0
+      ..movementType = json['MovementType'] ?? 0
+      ..name = json['name'] ?? ''
+      ..npcFlag = json['npcflag'] ?? 0
+      ..petSpellDataId = json['PetSpellDataId'] ?? 0
+      ..pickpocketLoot = json['pickpocketloot'] ?? 0
+      ..racialLeader = json['RacialLeader'] ?? 0
+      ..rangeAttackTime = json['RangeAttackTime'] ?? 0
+      ..rangeVariance = json['RangeVariance'] ?? 1.0
+      ..rank = json['rank'] ?? 0
+      ..regenHealth = json['RegenHealth'] ?? 1
+      ..scriptName = json['ScriptName'] ?? ''
+      ..skinLoot = json['skinloot'] ?? 0
+      ..speedFlight = (json['speed_flight'] as num?)?.toDouble() ?? 1.0
+      ..speedRun = json['speed_run'] ?? 1.14286
+      ..speedSwim = (json['speed_swim'] as num?)?.toDouble() ?? 1.0
+      ..speedWalk = json['speed_walk'] ?? 1.0
+      ..subName = json['subname'] ?? ''
+      ..type = json['type'] ?? 0
+      ..typeFlags = json['type_flags'] ?? 0
+      ..unitClass = json['unit_class'] ?? 0
+      ..unitFlags = json['unit_flags'] ?? 0
+      ..unitFlags2 = json['unit_flags2'] ?? 0
+      ..vehicleId = json['VehicleId'] ?? 0
+      ..verifiedBuild = json['VerifiedBuild'] ?? 0
+      ..creatureImmunitiesId = json['CreatureImmunitiesId'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

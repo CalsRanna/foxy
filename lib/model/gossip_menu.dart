@@ -8,13 +8,14 @@ class BriefGossipMenu {
 
   BriefGossipMenu();
 
-  BriefGossipMenu.fromJson(Map<String, dynamic> json) {
-    menuId = json['MenuID'] ?? json['menuid'] ?? 0;
-    textId = json['TextID'] ?? json['textid'] ?? 0;
-    text00 = json['text0_0']?.toString() ?? '';
-    text01 = json['text0_1']?.toString() ?? '';
-    textLocale00 = json['Text0_0']?.toString() ?? '';
-    textLocale01 = json['Text0_1']?.toString() ?? '';
+  factory BriefGossipMenu.fromJson(Map<String, dynamic> json) {
+    return BriefGossipMenu()
+      ..menuId = json['MenuID'] ?? json['menuid'] ?? 0
+      ..textId = json['TextID'] ?? json['textid'] ?? 0
+      ..text00 = json['text0_0']?.toString() ?? ''
+      ..text01 = json['text0_1']?.toString() ?? ''
+      ..textLocale00 = json['Text0_0']?.toString() ?? ''
+      ..textLocale01 = json['Text0_1']?.toString() ?? '';
   }
 
   String get text {
@@ -41,13 +42,14 @@ class GossipMenu {
 
   GossipMenu();
 
-  GossipMenu.fromJson(Map<String, dynamic> json) {
-    menuId = json['MenuID'] ?? json['menuid'] ?? 0;
-    textId = json['TextID'] ?? json['textid'] ?? 0;
-    text00 = json['text0_0']?.toString() ?? '';
-    text01 = json['text0_1']?.toString() ?? '';
-    textLocale00 = json['Text0_0']?.toString() ?? '';
-    textLocale01 = json['Text0_1']?.toString() ?? '';
+  factory GossipMenu.fromJson(Map<String, dynamic> json) {
+    return GossipMenu()
+      ..menuId = json['MenuID'] ?? json['menuid'] ?? 0
+      ..textId = json['TextID'] ?? json['textid'] ?? 0
+      ..text00 = json['text0_0']?.toString() ?? ''
+      ..text01 = json['text0_1']?.toString() ?? ''
+      ..textLocale00 = json['Text0_0']?.toString() ?? ''
+      ..textLocale01 = json['Text0_1']?.toString() ?? '';
   }
 
   /// 优先本地化文本 > 英文文本

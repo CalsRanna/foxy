@@ -13,23 +13,24 @@ class CreatureOnKillReputation {
 
   CreatureOnKillReputation();
 
-  CreatureOnKillReputation.fromJson(Map<String, dynamic> json) {
-    creatureID = json['creature_id'] ?? json['creatureID'] ?? 0;
-    rewOnKillRepFaction1 =
-        json['RewOnKillRepFaction1'] ?? json['rewOnKillRepFaction1'] ?? 0;
-    rewOnKillRepFaction2 =
-        json['RewOnKillRepFaction2'] ?? json['rewOnKillRepFaction2'] ?? 0;
-    maxStanding1 = json['MaxStanding1'] ?? json['maxStanding1'] ?? 0;
-    maxStanding2 = json['MaxStanding2'] ?? json['maxStanding2'] ?? 0;
-    isTeamAward1 = (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1;
-    isTeamAward2 = (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1;
-    rewOnKillRepValue1 =
-        (json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0.0)
-            .toDouble();
-    rewOnKillRepValue2 =
-        (json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2'] ?? 0.0)
-            .toDouble();
-    teamDependent = json['TeamDependent'] ?? json['teamDependent'] ?? 0;
+  factory CreatureOnKillReputation.fromJson(Map<String, dynamic> json) {
+    return CreatureOnKillReputation()
+      ..creatureID = json['creature_id'] ?? json['creatureID'] ?? 0
+      ..rewOnKillRepFaction1 =
+          json['RewOnKillRepFaction1'] ?? json['rewOnKillRepFaction1'] ?? 0
+      ..rewOnKillRepFaction2 =
+          json['RewOnKillRepFaction2'] ?? json['rewOnKillRepFaction2'] ?? 0
+      ..maxStanding1 = json['MaxStanding1'] ?? json['maxStanding1'] ?? 0
+      ..maxStanding2 = json['MaxStanding2'] ?? json['maxStanding2'] ?? 0
+      ..isTeamAward1 = (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1
+      ..isTeamAward2 = (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1
+      ..rewOnKillRepValue1 =
+          (json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0.0)
+              .toDouble()
+      ..rewOnKillRepValue2 =
+          (json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2'] ?? 0.0)
+              .toDouble()
+      ..teamDependent = json['TeamDependent'] ?? json['teamDependent'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

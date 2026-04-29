@@ -12,14 +12,15 @@ class SpellRank {
 
   SpellRank();
 
-  SpellRank.fromJson(Map<String, dynamic> json) {
-    firstSpellId = json['first_spell_id'] ?? 0;
-    spellId = json['spell_id'] ?? 0;
-    rank = json['rank'] ?? 0;
-    firstSpellName = json['First_Spell_Name_Lang_zhCN'] ?? '';
-    firstSpellSubtext = json['First_Spell_NameSubtext_Lang_zhCN'] ?? '';
-    spellName = json['Spell_Name_Lang_zhCN'] ?? '';
-    spellSubtext = json['Spell_NameSubtext_Lang_zhCN'] ?? '';
+  factory SpellRank.fromJson(Map<String, dynamic> json) {
+    return SpellRank()
+      ..firstSpellId = json['first_spell_id'] ?? 0
+      ..spellId = json['spell_id'] ?? 0
+      ..rank = json['rank'] ?? 0
+      ..firstSpellName = json['First_Spell_Name_Lang_zhCN'] ?? ''
+      ..firstSpellSubtext = json['First_Spell_NameSubtext_Lang_zhCN'] ?? ''
+      ..spellName = json['Spell_Name_Lang_zhCN'] ?? ''
+      ..spellSubtext = json['Spell_NameSubtext_Lang_zhCN'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

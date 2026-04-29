@@ -5,9 +5,10 @@ class SpellCustomAttr {
 
   SpellCustomAttr();
 
-  SpellCustomAttr.fromJson(Map<String, dynamic> json) {
-    spellId = json['spell_id'] ?? 0;
-    attributes = json['attributes'] ?? 0;
+  factory SpellCustomAttr.fromJson(Map<String, dynamic> json) {
+    return SpellCustomAttr()
+      ..spellId = json['spell_id'] ?? 0
+      ..attributes = json['attributes'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

@@ -6,11 +6,12 @@ class VersionEntity {
 
   VersionEntity();
 
-  VersionEntity.fromJson(Map<String, dynamic> json) {
-    coreVersion = json['core_version'] ?? '';
-    coreRevision = json['core_revision'] ?? '';
-    dbVersion = json['db_version'] ?? '';
-    cacheId = json['cache_id'] ?? 0;
+  factory VersionEntity.fromJson(Map<String, dynamic> json) {
+    return VersionEntity()
+      ..coreVersion = json['core_version'] ?? ''
+      ..coreRevision = json['core_revision'] ?? ''
+      ..dbVersion = json['db_version'] ?? ''
+      ..cacheId = json['cache_id'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

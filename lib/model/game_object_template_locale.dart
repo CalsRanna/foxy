@@ -7,12 +7,13 @@ class GameObjectTemplateLocale {
 
   GameObjectTemplateLocale();
 
-  GameObjectTemplateLocale.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    locale = json['locale'] ?? '';
-    name = json['name'] ?? '';
-    castBarCaption = json['castBarCaption'] ?? '';
-    verifiedBuild = json['VerifiedBuild'] ?? 0;
+  factory GameObjectTemplateLocale.fromJson(Map<String, dynamic> json) {
+    return GameObjectTemplateLocale()
+      ..entry = json['entry'] ?? 0
+      ..locale = json['locale'] ?? ''
+      ..name = json['name'] ?? ''
+      ..castBarCaption = json['castBarCaption'] ?? ''
+      ..verifiedBuild = json['VerifiedBuild'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

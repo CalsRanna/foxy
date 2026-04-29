@@ -4,9 +4,10 @@ class WaypointData {
 
   WaypointData();
 
-  WaypointData.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 0;
-    points = json['points'] ?? 0;
+  factory WaypointData.fromJson(Map<String, dynamic> json) {
+    return WaypointData()
+      ..id = json['id'] ?? 0
+      ..points = json['points'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

@@ -7,12 +7,13 @@ class BriefGameObjectTemplate {
 
   BriefGameObjectTemplate();
 
-  BriefGameObjectTemplate.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    name = json['name'] ?? '';
-    localeName = json['Name'] ?? '';
-    type = json['type'] ?? 0;
-    size = json['size'] ?? 0.0;
+  factory BriefGameObjectTemplate.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectTemplate()
+      ..entry = json['entry'] ?? 0
+      ..name = json['name'] ?? ''
+      ..localeName = json['Name'] ?? ''
+      ..type = json['type'] ?? 0
+      ..size = json['size'] ?? 0.0;
   }
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
@@ -57,42 +58,43 @@ class GameObjectTemplate {
 
   GameObjectTemplate();
 
-  GameObjectTemplate.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    type = json['type'] ?? 0;
-    displayId = json['displayId'] ?? 0;
-    name = json['name'] ?? '';
-    iconName = json['IconName'] ?? '';
-    castBarCaption = json['castBarCaption'] ?? '';
-    unk1 = json['unk1'] ?? '';
-    size = json['size'] ?? 1.0;
-    data0 = json['Data0'] ?? 0;
-    data1 = json['Data1'] ?? 0;
-    data2 = json['Data2'] ?? 0;
-    data3 = json['Data3'] ?? 0;
-    data4 = json['Data4'] ?? 0;
-    data5 = json['Data5'] ?? 0;
-    data6 = json['Data6'] ?? 0;
-    data7 = json['Data7'] ?? 0;
-    data8 = json['Data8'] ?? 0;
-    data9 = json['Data9'] ?? 0;
-    data10 = json['Data10'] ?? 0;
-    data11 = json['Data11'] ?? 0;
-    data12 = json['Data12'] ?? 0;
-    data13 = json['Data13'] ?? 0;
-    data14 = json['Data14'] ?? 0;
-    data15 = json['Data15'] ?? 0;
-    data16 = json['Data16'] ?? 0;
-    data17 = json['Data17'] ?? 0;
-    data18 = json['Data18'] ?? 0;
-    data19 = json['Data19'] ?? 0;
-    data20 = json['Data20'] ?? 0;
-    data21 = json['Data21'] ?? 0;
-    data22 = json['Data22'] ?? 0;
-    data23 = json['Data23'] ?? 0;
-    aiName = json['AIName'] ?? '';
-    scriptName = json['ScriptName'] ?? '';
-    verifiedBuild = json['VerifiedBuild'] ?? 0;
+  factory GameObjectTemplate.fromJson(Map<String, dynamic> json) {
+    return GameObjectTemplate()
+      ..entry = json['entry'] ?? 0
+      ..type = json['type'] ?? 0
+      ..displayId = json['displayId'] ?? 0
+      ..name = json['name'] ?? ''
+      ..iconName = json['IconName'] ?? ''
+      ..castBarCaption = json['castBarCaption'] ?? ''
+      ..unk1 = json['unk1'] ?? ''
+      ..size = json['size'] ?? 1.0
+      ..data0 = json['Data0'] ?? 0
+      ..data1 = json['Data1'] ?? 0
+      ..data2 = json['Data2'] ?? 0
+      ..data3 = json['Data3'] ?? 0
+      ..data4 = json['Data4'] ?? 0
+      ..data5 = json['Data5'] ?? 0
+      ..data6 = json['Data6'] ?? 0
+      ..data7 = json['Data7'] ?? 0
+      ..data8 = json['Data8'] ?? 0
+      ..data9 = json['Data9'] ?? 0
+      ..data10 = json['Data10'] ?? 0
+      ..data11 = json['Data11'] ?? 0
+      ..data12 = json['Data12'] ?? 0
+      ..data13 = json['Data13'] ?? 0
+      ..data14 = json['Data14'] ?? 0
+      ..data15 = json['Data15'] ?? 0
+      ..data16 = json['Data16'] ?? 0
+      ..data17 = json['Data17'] ?? 0
+      ..data18 = json['Data18'] ?? 0
+      ..data19 = json['Data19'] ?? 0
+      ..data20 = json['Data20'] ?? 0
+      ..data21 = json['Data21'] ?? 0
+      ..data22 = json['Data22'] ?? 0
+      ..data23 = json['Data23'] ?? 0
+      ..aiName = json['AIName'] ?? ''
+      ..scriptName = json['ScriptName'] ?? ''
+      ..verifiedBuild = json['VerifiedBuild'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

@@ -13,18 +13,19 @@ class QuestFactionReward {
 
   QuestFactionReward();
 
-  QuestFactionReward.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    difficulty0 = json['Difficulty0'] ?? 0;
-    difficulty1 = json['Difficulty1'] ?? 0;
-    difficulty2 = json['Difficulty2'] ?? 0;
-    difficulty3 = json['Difficulty3'] ?? 0;
-    difficulty4 = json['Difficulty4'] ?? 0;
-    difficulty5 = json['Difficulty5'] ?? 0;
-    difficulty6 = json['Difficulty6'] ?? 0;
-    difficulty7 = json['Difficulty7'] ?? 0;
-    difficulty8 = json['Difficulty8'] ?? 0;
-    difficulty9 = json['Difficulty9'] ?? 0;
+  factory QuestFactionReward.fromJson(Map<String, dynamic> json) {
+    return QuestFactionReward()
+      ..id = json['ID'] ?? 0
+      ..difficulty0 = json['Difficulty0'] ?? 0
+      ..difficulty1 = json['Difficulty1'] ?? 0
+      ..difficulty2 = json['Difficulty2'] ?? 0
+      ..difficulty3 = json['Difficulty3'] ?? 0
+      ..difficulty4 = json['Difficulty4'] ?? 0
+      ..difficulty5 = json['Difficulty5'] ?? 0
+      ..difficulty6 = json['Difficulty6'] ?? 0
+      ..difficulty7 = json['Difficulty7'] ?? 0
+      ..difficulty8 = json['Difficulty8'] ?? 0
+      ..difficulty9 = json['Difficulty9'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {

@@ -10,12 +10,13 @@ class QuestRequestItems {
 
   QuestRequestItems();
 
-  QuestRequestItems.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    emoteOnComplete = json['EmoteOnComplete'] ?? 0;
-    emoteOnIncomplete = json['EmoteOnIncomplete'] ?? 0;
-    completionText = json['CompletionText']?.toString() ?? '';
-    verifiedBuild = json['VerifiedBuild'];
+  factory QuestRequestItems.fromJson(Map<String, dynamic> json) {
+    return QuestRequestItems()
+      ..id = json['ID'] ?? 0
+      ..emoteOnComplete = json['EmoteOnComplete'] ?? 0
+      ..emoteOnIncomplete = json['EmoteOnIncomplete'] ?? 0
+      ..completionText = json['CompletionText']?.toString() ?? ''
+      ..verifiedBuild = json['VerifiedBuild'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,11 +42,12 @@ class QuestRequestItemsLocale {
 
   QuestRequestItemsLocale();
 
-  QuestRequestItemsLocale.fromJson(Map<String, dynamic> json) {
-    id = (json['ID'] ?? json['id'] ?? 0) as int;
-    locale = json['Locale']?.toString() ?? 'zhCN';
-    completionText = json['CompletionText']?.toString() ?? '';
-    verifiedBuild = json['VerifiedBuild'];
+  factory QuestRequestItemsLocale.fromJson(Map<String, dynamic> json) {
+    return QuestRequestItemsLocale()
+      ..id = (json['ID'] ?? json['id'] ?? 0) as int
+      ..locale = json['Locale']?.toString() ?? 'zhCN'
+      ..completionText = json['CompletionText']?.toString() ?? ''
+      ..verifiedBuild = json['VerifiedBuild'];
   }
 
   Map<String, dynamic> toJson() {

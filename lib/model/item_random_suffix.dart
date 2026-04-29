@@ -5,10 +5,11 @@ class ItemRandomSuffix {
 
   ItemRandomSuffix();
 
-  ItemRandomSuffix.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? 0;
-    nameLangZhCn = json['Name_lang_zhCN'] ?? '';
-    internalName = json['InternalName'] ?? '';
+  factory ItemRandomSuffix.fromJson(Map<String, dynamic> json) {
+    return ItemRandomSuffix()
+      ..id = json['ID'] ?? 0
+      ..nameLangZhCn = json['Name_lang_zhCN'] ?? ''
+      ..internalName = json['InternalName'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

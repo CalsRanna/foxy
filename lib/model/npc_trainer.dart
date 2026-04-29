@@ -14,17 +14,17 @@ class NpcTrainer {
 
   NpcTrainer();
 
-  NpcTrainer.fromJson(Map<String, dynamic> json) {
-    id = json['ID'] ?? json['id'] ?? 0;
-    spellID = json['SpellID'] ?? json['spellID'] ?? 0;
-    moneyCost = json['MoneyCost'] ?? json['moneyCost'] ?? 0;
-    reqSkillLine = json['ReqSkillLine'] ?? json['reqSkillLine'] ?? 0;
-    reqSkillRank = json['ReqSkillRank'] ?? json['reqSkillRank'] ?? 0;
-    reqLevel = json['ReqLevel'] ?? json['reqLevel'] ?? 0;
-    reqSpell = json['ReqSpell'] ?? json['reqSpell'] ?? 0;
-    // 关联字段
-    spellName = json['spellName'] ?? '';
-    spellSubtext = json['spellSubtext'] ?? '';
+  factory NpcTrainer.fromJson(Map<String, dynamic> json) {
+    return NpcTrainer()
+      ..id = json['ID'] ?? json['id'] ?? 0
+      ..spellID = json['SpellID'] ?? json['spellID'] ?? 0
+      ..moneyCost = json['MoneyCost'] ?? json['moneyCost'] ?? 0
+      ..reqSkillLine = json['ReqSkillLine'] ?? json['reqSkillLine'] ?? 0
+      ..reqSkillRank = json['ReqSkillRank'] ?? json['reqSkillRank'] ?? 0
+      ..reqLevel = json['ReqLevel'] ?? json['reqLevel'] ?? 0
+      ..reqSpell = json['ReqSpell'] ?? json['reqSpell'] ?? 0
+      ..spellName = json['spellName'] ?? ''
+      ..spellSubtext = json['spellSubtext'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

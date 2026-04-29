@@ -20,19 +20,19 @@ class NpcVendor {
 
   NpcVendor();
 
-  NpcVendor.fromJson(Map<String, dynamic> json) {
-    entry = json['entry'] ?? 0;
-    slot = json['slot'] ?? 0;
-    item = json['item'] ?? 0;
-    maxcount = json['maxcount'] ?? 0;
-    incrtime = json['incrtime'] ?? 0;
-    extendedCost = json['ExtendedCost'] ?? json['extendedCost'] ?? 0;
-    verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0;
-    // 关联字段
-    itemName = json['name'] ?? '';
-    itemLocaleName = json['localeName'] ?? '';
-    itemQuality = json['Quality'] ?? 0;
-    itemIcon = json['InventoryIcon0'] ?? '';
+  factory NpcVendor.fromJson(Map<String, dynamic> json) {
+    return NpcVendor()
+      ..entry = json['entry'] ?? 0
+      ..slot = json['slot'] ?? 0
+      ..item = json['item'] ?? 0
+      ..maxcount = json['maxcount'] ?? 0
+      ..incrtime = json['incrtime'] ?? 0
+      ..extendedCost = json['ExtendedCost'] ?? json['extendedCost'] ?? 0
+      ..verifiedBuild = json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0
+      ..itemName = json['name'] ?? ''
+      ..itemLocaleName = json['localeName'] ?? ''
+      ..itemQuality = json['Quality'] ?? 0
+      ..itemIcon = json['InventoryIcon0'] ?? '';
   }
 
   Map<String, dynamic> toJson() {

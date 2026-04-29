@@ -10,12 +10,13 @@ class SpellGroup {
 
   SpellGroup();
 
-  SpellGroup.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 0;
-    spellId = json['spell_id'] ?? 0;
-    specialFlag = json['special_flag'] ?? 0;
-    stackRule = json['stack_rule'] ?? 0;
-    description = json['description'] ?? '';
+  factory SpellGroup.fromJson(Map<String, dynamic> json) {
+    return SpellGroup()
+      ..id = json['id'] ?? 0
+      ..spellId = json['spell_id'] ?? 0
+      ..specialFlag = json['special_flag'] ?? 0
+      ..stackRule = json['stack_rule'] ?? 0
+      ..description = json['description'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
