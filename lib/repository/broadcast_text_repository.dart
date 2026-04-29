@@ -1,10 +1,10 @@
-import 'package:foxy/entity/broadcast_text.dart';
+import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class BroadcastTextRepository with RepositoryMixin {
   static const _table = 'broadcast_text';
 
-  Future<List<BroadcastText>> getBroadcastTexts({
+  Future<List<BroadcastTextEntity>> getBroadcastTexts({
     String? id,
     String? text,
     required int page,
@@ -32,7 +32,7 @@ class BroadcastTextRepository with RepositoryMixin {
       final map = e.toMap();
       final displayText = map['display_text'] as String? ?? '';
       map['MaleText'] = displayText;
-      return BroadcastText.fromJson(map);
+      return BroadcastTextEntity.fromJson(map);
     }).toList();
   }
 
