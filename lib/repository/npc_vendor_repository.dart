@@ -5,7 +5,7 @@ class NpcVendorRepository with RepositoryMixin {
   static const _table = 'npc_vendor';
 
   /// 获取指定NPC的所有商品（带物品信息）
-  Future<List<NpcVendor>> getNpcVendors(int entry) async {
+  Future<List<BriefNpcVendor>> getNpcVendors(int entry) async {
     try {
       var builder = laconic.table('$_table AS nv');
       const fields = [
@@ -31,7 +31,7 @@ class NpcVendorRepository with RepositoryMixin {
       builder = builder.where('nv.entry', entry);
       builder = builder.orderBy('nv.slot');
       var results = await builder.get();
-      return results.map((e) => NpcVendor.fromJson(e.toMap())).toList();
+      return results.map((e) => BriefNpcVendor.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
@@ -102,10 +102,6 @@ class NpcVendorRepository with RepositoryMixin {
       incrtime: source.incrtime,
       extendedCost: source.extendedCost,
       verifiedBuild: source.verifiedBuild,
-      itemName: source.itemName,
-      itemLocaleName: source.itemLocaleName,
-      itemQuality: source.itemQuality,
-      itemIcon: source.itemIcon,
     );
 
     await storeNpcVendor(newVendor);

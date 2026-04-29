@@ -10,7 +10,7 @@ class ItemEnchantmentTemplateViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entry = signal(0);
-  final items = signal<List<ItemEnchantmentTemplate>>([]);
+  final items = signal<List<BriefItemEnchantmentTemplate>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -50,7 +50,7 @@ class ItemEnchantmentTemplateViewModel {
   }
 
   /// 填充表单
-  void fillForm(ItemEnchantmentTemplate model) {
+  void fillForm(BriefItemEnchantmentTemplate model) {
     entryController.text = model.entry.toString();
     enchController.text = model.ench.toString();
     chanceController.text = model.chance.toString();

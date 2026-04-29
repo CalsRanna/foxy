@@ -65,7 +65,7 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   /// 获取不同的 Entry 列表（用于选择器）
-  Future<List<LootTemplate>> getLootTemplateDistinctEntries({
+  Future<List<BriefLootTemplate>> getLootTemplateDistinctEntries({
     String? entry,
     int page = 1,
   }) async {
@@ -79,14 +79,14 @@ class LootTemplateRepository with RepositoryMixin {
       builder = builder.groupBy('Entry');
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
-      return results.map((e) => LootTemplate.fromJson(e.toMap())).toList();
+      return results.map((e) => BriefLootTemplate.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
   }
 
   /// 搜索掉落（带物品名称过滤+分页）
-  Future<List<LootTemplate>> getLootTemplatesByEntry({
+  Future<List<BriefLootTemplate>> getLootTemplatesByEntry({
     String? entry,
     String? name,
     int page = 1,
@@ -126,14 +126,14 @@ class LootTemplateRepository with RepositoryMixin {
       }
       builder = builder.limit(kPageSize).offset(offset);
       var results = await builder.get();
-      return results.map((e) => LootTemplate.fromJson(e.toMap())).toList();
+      return results.map((e) => BriefLootTemplate.fromJson(e.toMap())).toList();
     } catch (e) {
       return [];
     }
   }
 
   /// 获取指定 Entry 的所有掉落项（带物品信息）
-  Future<List<LootTemplate>> getLootTemplates(int entry) async {
+  Future<List<BriefLootTemplate>> getLootTemplates(int entry) async {
     var builder = laconic.table('$_table AS lt');
     const fields = [
       'lt.*',
@@ -157,7 +157,7 @@ class LootTemplateRepository with RepositoryMixin {
     );
     builder = builder.where('lt.Entry', entry);
     var results = await builder.get();
-    return results.map((e) => LootTemplate.fromJson(e.toMap())).toList();
+    return results.map((e) => BriefLootTemplate.fromJson(e.toMap())).toList();
   }
 
   /// 查找单条记录
@@ -223,11 +223,7 @@ class LootTemplateRepository with RepositoryMixin {
       minCount: source.minCount,
       maxCount: source.maxCount,
       comment: source.comment,
-      itemName: source.itemName,
-      itemLocaleName: source.itemLocaleName,
-      itemQuality: source.itemQuality,
-      itemIcon: source.itemIcon,
-      itemCount: source.itemCount,
+
     );
 
     await storeLootTemplate(newLoot);

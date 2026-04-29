@@ -10,7 +10,7 @@ class CreatureEquipTemplateViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final creatureId = signal(0);
-  final items = signal<List<CreatureEquipTemplate>>([]);
+  final items = signal<List<BriefCreatureEquipTemplate>>([]);
   final selectedIndex = signal<int?>(null);
   final loading = signal(false);
   final saving = signal(false);
@@ -48,7 +48,7 @@ class CreatureEquipTemplateViewModel {
   }
 
   /// 填充表单
-  void fillForm(CreatureEquipTemplate equip) {
+  void fillForm(BriefCreatureEquipTemplate equip) {
     idController.text = equip.id.toString();
     itemID1Controller.text = equip.itemID1.toString();
     itemID2Controller.text = equip.itemID2.toString();

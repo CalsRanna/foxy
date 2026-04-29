@@ -17,7 +17,7 @@ class ReferenceLootTemplateListViewModel {
   final repository = LootTemplateRepository(LootTableType.reference);
 
   final page = signal(1);
-  final templates = signal<List<LootTemplate>>([]);
+  final templates = signal<List<BriefLootTemplate>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
@@ -119,7 +119,7 @@ class ReferenceLootTemplateListViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  Future<List<LootTemplate>> _searchEntries() async {
+  Future<List<BriefLootTemplate>> _searchEntries() async {
     final filter = _buildFilter();
     return repository.getLootTemplatesByEntry(
       entry: filter['Entry'],
