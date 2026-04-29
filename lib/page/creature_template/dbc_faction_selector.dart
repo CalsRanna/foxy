@@ -208,10 +208,10 @@ class _DialogState extends State<_Dialog> {
               final item = _items[vicinity.row];
               return switch (vicinity.column) {
                 0 => ShadTableCell(child: Text(item.id.toString())),
-                1 => ShadTableCell(child: Text(item.name)),
+                1 => ShadTableCell(child: Text(item.nameLangZhCn)),
                 2 => ShadTableCell(
                   child: Text(
-                    item.description,
+                    item.descriptionLangZhCn,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
