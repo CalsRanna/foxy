@@ -88,56 +88,78 @@ class BootstrapViewModel {
   }
 
   Future<void> initSignals() async {
-    var config = await _loadConfig();
-    hostController.text = config['host'] ?? '127.0.0.1';
-    portController.text = config['port'] ?? '3306';
-    databaseController.text = config['database'] ?? '';
-    usernameController.text = config['username'] ?? '';
-    passwordController.text = config['password'] ?? '';
-    final packageInfo = await PackageInfo.fromPlatform();
-    version.value = '${packageInfo.version}+${packageInfo.buildNumber}';
+    try {
+      var config = await _loadConfig();
+      hostController.text = config['host'] ?? '127.0.0.1';
+      portController.text = config['port'] ?? '3306';
+      databaseController.text = config['database'] ?? '';
+      usernameController.text = config['username'] ?? '';
+      passwordController.text = config['password'] ?? '';
+      final packageInfo = await PackageInfo.fromPlatform();
+      version.value = '${packageInfo.version}+${packageInfo.buildNumber}';
+    } catch (e) {
+      LoggerUtil.instance.e('加载连接配置失败: $e');
+      DialogUtil.instance.error('加载连接配置失败: $e');
+    }
   }
 
   Future<Map<String, dynamic>> _loadConfig() async {
-    var currentDirectory = Directory.current;
-    var path = join(currentDirectory.path, 'config.yaml');
-    var file = File(path);
-    if (!await file.exists()) await file.create(recursive: true);
-    var content = await file.readAsString();
-    if (content.isNotEmpty) return Map<String, dynamic>.from(loadYaml(content));
-    var defaultConfig = {
-      'host': '127.0.0.1',
-      'port': '3306',
-      'database': '',
-      'username': '',
-      'password': '',
-    };
-    var editor = YamlEditor('');
-    editor.update([], defaultConfig);
-    await file.writeAsString(editor.toString());
-    return defaultConfig;
+    try {
+      var currentDirectory = Directory.current;
+      var path = join(currentDirectory.path, 'config.yaml');
+      var file = File(path);
+      if (!await file.exists()) await file.create(recursive: true);
+      var content = await file.readAsString();
+      if (content.isNotEmpty) return Map<String, dynamic>.from(loadYaml(content));
+      var defaultConfig = {
+        'host': '127.0.0.1',
+        'port': '3306',
+        'database': '',
+        'username': '',
+        'password': '',
+      };
+      var editor = YamlEditor('');
+      editor.update([], defaultConfig);
+      await file.writeAsString(editor.toString());
+      return defaultConfig;
+    } catch (e) {
+      LoggerUtil.instance.e('读取配置文件失败: $e');
+      DialogUtil.instance.error('读取配置文件失败: $e');
+      return {
+        'host': '127.0.0.1',
+        'port': '3306',
+        'database': '',
+        'username': '',
+        'password': '',
+      };
+    }
   }
 
   Future<void> _updateConfig() async {
-    var currentDirectory = Directory.current;
-    var path = join(currentDirectory.path, 'config.yaml');
-    var file = File(path);
-    if (!await file.exists()) await file.create(recursive: true);
-    var content = await file.readAsString();
-    Map<String, dynamic> existingConfig = {};
-    if (content.isNotEmpty) {
-      existingConfig = Map<String, dynamic>.from(loadYaml(content));
+    try {
+      var currentDirectory = Directory.current;
+      var path = join(currentDirectory.path, 'config.yaml');
+      var file = File(path);
+      if (!await file.exists()) await file.create(recursive: true);
+      var content = await file.readAsString();
+      Map<String, dynamic> existingConfig = {};
+      if (content.isNotEmpty) {
+        existingConfig = Map<String, dynamic>.from(loadYaml(content));
+      }
+      var config = {
+        ...existingConfig,
+        'host': hostController.text,
+        'port': portController.text,
+        'database': databaseController.text,
+        'username': usernameController.text,
+        'password': passwordController.text,
+      };
+      var editor = YamlEditor('');
+      editor.update([], config);
+      await file.writeAsString(editor.toString());
+    } catch (e) {
+      LoggerUtil.instance.e('保存配置文件失败: $e');
+      DialogUtil.instance.error('保存配置文件失败: $e');
     }
-    var config = {
-      ...existingConfig,
-      'host': hostController.text,
-      'port': portController.text,
-      'database': databaseController.text,
-      'username': usernameController.text,
-      'password': passwordController.text,
-    };
-    var editor = YamlEditor('');
-    editor.update([], config);
-    await file.writeAsString(editor.toString());
   }
 }

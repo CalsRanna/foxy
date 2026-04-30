@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -204,8 +206,13 @@ class NpcTrainerViewModel {
 
   /// 初始化
   Future<void> initSignals({required int creatureId}) async {
-    id.value = creatureId;
-    await load();
+    try {
+      id.value = creatureId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化NPC训练师失败: $e');
+      DialogUtil.instance.error('初始化NPC训练师失败: $e');
+    }
   }
 
   /// 退出页面

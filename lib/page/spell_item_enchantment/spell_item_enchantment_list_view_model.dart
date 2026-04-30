@@ -82,12 +82,17 @@ class SpellItemEnchantmentListViewModel {
   }
 
   Future<void> initSignals() async {
-    final filter = SpellItemEnchantmentFilterEntity();
-    enchantments.value = await repository.getSpellItemEnchantments(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countSpellItemEnchantments(filter: filter);
+    try {
+      final filter = SpellItemEnchantmentFilterEntity();
+      enchantments.value = await repository.getSpellItemEnchantments(
+        page: 1,
+        filter: filter,
+      );
+      total.value = await repository.countSpellItemEnchantments(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('加载法术物品附魔列表失败: $e');
+      DialogUtil.instance.error('加载法术物品附魔列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id, String? name}) {
@@ -120,12 +125,7 @@ class SpellItemEnchantmentListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    final filter = SpellItemEnchantmentFilterEntity();
-    enchantments.value = await repository.getSpellItemEnchantments(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countSpellItemEnchantments(filter: filter);
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -134,11 +134,16 @@ class SpellItemEnchantmentListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    enchantments.value = await repository.getSpellItemEnchantments(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countSpellItemEnchantments(filter: filter);
+    try {
+      final filter = _buildFilter();
+      enchantments.value = await repository.getSpellItemEnchantments(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countSpellItemEnchantments(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新法术物品附魔列表失败: $e');
+      DialogUtil.instance.error('刷新法术物品附魔列表失败: $e');
+    }
   }
 }

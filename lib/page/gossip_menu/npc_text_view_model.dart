@@ -59,6 +59,9 @@ class NpcTextViewModel {
       localeExists.value = zhCN != null;
       final target = zhCN ?? NpcTextLocaleEntity(id: textId);
       _applyLocaleToControllers(target);
+    } catch (e) {
+      LoggerUtil.instance.e('加载NPC文本失败: $e');
+      DialogUtil.instance.error('加载NPC文本失败: $e');
     } finally {
       loading.value = false;
     }

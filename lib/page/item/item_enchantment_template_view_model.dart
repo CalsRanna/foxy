@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -78,16 +80,21 @@ class ItemEnchantmentTemplateViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final maxEnch = items.value.fold<int>(
-      0,
-      (max, e) => e.ench > max ? e.ench : max,
-    );
-    resetForm();
-    enchController.text = (maxEnch + 1).toString();
-    creating.value = true;
-    editing.value = false;
-    selectedIndex.value = null;
-    editingEnch = null;
+    try {
+      final maxEnch = items.value.fold<int>(
+        0,
+        (max, e) => e.ench > max ? e.ench : max,
+      );
+      resetForm();
+      enchController.text = (maxEnch + 1).toString();
+      creating.value = true;
+      editing.value = false;
+      selectedIndex.value = null;
+      editingEnch = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建失败: $e');
+      DialogUtil.instance.error('创建失败: $e');
+    }
   }
 
   /// 编辑选中记录
@@ -214,8 +221,13 @@ class ItemEnchantmentTemplateViewModel {
 
   /// 初始化
   Future<void> initSignals({required int entry}) async {
-    this.entry.value = entry;
-    await load();
+    try {
+      this.entry.value = entry;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
+    }
   }
 
   /// 退出页面

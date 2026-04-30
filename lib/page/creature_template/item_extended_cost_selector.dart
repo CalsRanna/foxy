@@ -4,6 +4,8 @@ import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
+import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 扩展价格选择器
@@ -99,6 +101,9 @@ class _ItemExtendedCostSelectorDialogState
           _total = total;
         });
       }
+    } catch (e) {
+      LoggerUtil.instance.e('搜索失败: $e');
+      DialogUtil.instance.error('搜索失败: $e');
     } finally {}
   }
 

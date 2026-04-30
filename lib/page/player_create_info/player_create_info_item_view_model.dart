@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
@@ -16,10 +18,15 @@ class PlayerCreateInfoItemViewModel {
   final noteController = TextEditingController();
 
   Future<void> initSignals({int? race, int? class_}) async {
-    _race = race;
-    _class_ = class_;
-    if (race == null || class_ == null) return;
-    items.value = await repository.getItems(race, class_);
+    try {
+      _race = race;
+      _class_ = class_;
+      if (race == null || class_ == null) return;
+      items.value = await repository.getItems(race, class_);
+    } catch (e) {
+      LoggerUtil.instance.e('加载角色物品失败: $e');
+      DialogUtil.instance.error('加载角色物品失败: $e');
+    }
   }
 
   void create() {

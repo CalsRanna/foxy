@@ -77,12 +77,17 @@ class ItemExtendedCostListViewModel {
   }
 
   Future<void> initSignals() async {
-    final filter = ItemExtendedCostFilterEntity();
-    costs.value = await repository.getItemExtendedCosts(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countItemExtendedCosts(filter: filter);
+    try {
+      final filter = ItemExtendedCostFilterEntity();
+      costs.value = await repository.getItemExtendedCosts(
+        page: 1,
+        filter: filter,
+      );
+      total.value = await repository.countItemExtendedCosts(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('加载物品扩展消耗列表失败: $e');
+      DialogUtil.instance.error('加载物品扩展消耗列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id}) {
@@ -111,12 +116,7 @@ class ItemExtendedCostListViewModel {
   Future<void> reset() async {
     entryController.clear();
     page.value = 1;
-    final filter = ItemExtendedCostFilterEntity();
-    costs.value = await repository.getItemExtendedCosts(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countItemExtendedCosts(filter: filter);
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -125,11 +125,16 @@ class ItemExtendedCostListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    costs.value = await repository.getItemExtendedCosts(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countItemExtendedCosts(filter: filter);
+    try {
+      final filter = _buildFilter();
+      costs.value = await repository.getItemExtendedCosts(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countItemExtendedCosts(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新物品扩展消耗列表失败: $e');
+      DialogUtil.instance.error('刷新物品扩展消耗列表失败: $e');
+    }
   }
 }

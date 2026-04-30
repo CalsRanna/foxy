@@ -7,6 +7,8 @@ import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
+import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 区域或任务排序选择器，通过 [mode] 切换数据源
@@ -367,6 +369,9 @@ class _DialogState extends State<_Dialog> {
           });
         }
       }
+    } catch (e) {
+      LoggerUtil.instance.e('搜索失败: $e');
+      DialogUtil.instance.error('搜索失败: $e');
     } finally {}
   }
 }

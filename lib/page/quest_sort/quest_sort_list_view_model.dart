@@ -82,9 +82,14 @@ class QuestSortListViewModel {
   }
 
   Future<void> initSignals() async {
-    final filter = QuestSortFilterEntity();
-    sorts.value = await repository.getQuestSorts(page: 1, filter: filter);
-    total.value = await repository.countQuestSorts(filter: filter);
+    try {
+      final filter = QuestSortFilterEntity();
+      sorts.value = await repository.getQuestSorts(page: 1, filter: filter);
+      total.value = await repository.countQuestSorts(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('加载任务排序列表失败: $e');
+      DialogUtil.instance.error('加载任务排序列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id, String? name}) {
@@ -115,9 +120,7 @@ class QuestSortListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    final filter = QuestSortFilterEntity();
-    sorts.value = await repository.getQuestSorts(page: 1, filter: filter);
-    total.value = await repository.countQuestSorts(filter: filter);
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -126,11 +129,16 @@ class QuestSortListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    sorts.value = await repository.getQuestSorts(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countQuestSorts(filter: filter);
+    try {
+      final filter = _buildFilter();
+      sorts.value = await repository.getQuestSorts(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countQuestSorts(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新任务排序列表失败: $e');
+      DialogUtil.instance.error('刷新任务排序列表失败: $e');
+    }
   }
 }

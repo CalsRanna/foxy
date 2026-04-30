@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
@@ -32,49 +33,64 @@ class DbcImportViewModel {
 
   /// 从 config.yaml 加载并检查 DBC 状态
   Future<void> checkAndImport() async {
-    if (dbcImported.value) return;
+    try {
+      if (dbcImported.value) return;
 
-    final config = await _loadConfig();
-    final path = config['dbc_path'] as String?;
-    if (path != null && path.isNotEmpty) {
-      dbcPath.value = path;
+      final config = await _loadConfig();
+      final path = config['dbc_path'] as String?;
+      if (path != null && path.isNotEmpty) {
+        dbcPath.value = path;
+      }
+
+      final laconic = _laconic;
+      if (laconic == null) {
+        dbcImportError.value = '数据库连接未就绪';
+        return;
+      }
+
+      if (dbcPath.value == null) return;
+
+      await _runImport(laconic);
+    } catch (e) {
+      LoggerUtil.instance.e('检查DBC导入状态失败: $e');
+      DialogUtil.instance.error('检查DBC导入状态失败: $e');
     }
-
-    final laconic = _laconic;
-    if (laconic == null) {
-      dbcImportError.value = '数据库连接未就绪';
-      return;
-    }
-
-    if (dbcPath.value == null) return;
-
-    await _runImport(laconic);
   }
 
   /// 用户选择 DBC 路径后保存并开始导入
   Future<void> setDbcPath(String path) async {
-    dbcPath.value = path;
-    dbcImportError.value = null;
-    await _updateConfig('dbc_path', path);
+    try {
+      dbcPath.value = path;
+      dbcImportError.value = null;
+      await _updateConfig('dbc_path', path);
 
-    final laconic = _laconic;
-    if (laconic == null) {
-      dbcImportError.value = '数据库连接未就绪';
-      return;
+      final laconic = _laconic;
+      if (laconic == null) {
+        dbcImportError.value = '数据库连接未就绪';
+        return;
+      }
+
+      await _runImport(laconic);
+    } catch (e) {
+      LoggerUtil.instance.e('设置DBC路径失败: $e');
+      DialogUtil.instance.error('设置DBC路径失败: $e');
     }
-
-    await _runImport(laconic);
   }
 
   /// 重试导入
   Future<void> retryImport() async {
-    dbcImportError.value = null;
-    final laconic = _laconic;
-    if (laconic == null) {
-      dbcImportError.value = '数据库连接未就绪';
-      return;
+    try {
+      dbcImportError.value = null;
+      final laconic = _laconic;
+      if (laconic == null) {
+        dbcImportError.value = '数据库连接未就绪';
+        return;
+      }
+      await _runImport(laconic);
+    } catch (e) {
+      LoggerUtil.instance.e('重试DBC导入失败: $e');
+      DialogUtil.instance.error('重试DBC导入失败: $e');
     }
-    await _runImport(laconic);
   }
 
   Future<void> _runImport(Laconic laconic) async {

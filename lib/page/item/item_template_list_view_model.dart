@@ -42,8 +42,13 @@ class ItemTemplateListViewModel {
   }
 
   Future<void> initSignals() async {
-    templates.value = await repository.getBriefItemTemplates();
-    total.value = await repository.countItemTemplates();
+    try {
+      templates.value = await repository.getBriefItemTemplates();
+      total.value = await repository.countItemTemplates();
+    } catch (e) {
+      LoggerUtil.instance.e('加载物品列表失败: $e');
+      DialogUtil.instance.error('加载物品列表失败: $e');
+    }
   }
 
   void dispose() {
@@ -69,8 +74,7 @@ class ItemTemplateListViewModel {
     selectedClassId.value = -1;
     selectedSubclass.value = -1;
     page.value = 1;
-    templates.value = await repository.getBriefItemTemplates();
-    total.value = await repository.countItemTemplates();
+    await _refresh();
   }
 
   /// 选择类别
@@ -183,8 +187,13 @@ class ItemTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
-    templates.value = await _fetchItems();
-    total.value = await _count();
+    try {
+      templates.value = await _fetchItems();
+      total.value = await _count();
+    } catch (e) {
+      LoggerUtil.instance.e('刷新物品列表失败: $e');
+      DialogUtil.instance.error('刷新物品列表失败: $e');
+    }
   }
 
   void _logActivity(ActivityActionType action, int entry) {

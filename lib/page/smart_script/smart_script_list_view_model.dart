@@ -84,8 +84,13 @@ class SmartScriptListViewModel {
   }
 
   Future<void> initSignals() async {
-    scripts.value = await repository.getBriefSmartScripts();
-    total.value = await repository.countSmartScripts();
+    try {
+      scripts.value = await repository.getBriefSmartScripts();
+      total.value = await repository.countSmartScripts();
+    } catch (e) {
+      LoggerUtil.instance.e('加载SmartAI脚本列表失败: $e');
+      DialogUtil.instance.error('加载SmartAI脚本列表失败: $e');
+    }
   }
 
   void navigateToDetail({
@@ -129,8 +134,7 @@ class SmartScriptListViewModel {
     entryOrGuidController.clear();
     commentController.clear();
     page.value = 1;
-    scripts.value = await repository.getBriefSmartScripts();
-    total.value = await repository.countSmartScripts();
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -139,12 +143,17 @@ class SmartScriptListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    scripts.value = await repository.getBriefSmartScripts(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countSmartScripts(filter: filter);
+    try {
+      final filter = _buildFilter();
+      scripts.value = await repository.getBriefSmartScripts(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countSmartScripts(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新SmartAI脚本列表失败: $e');
+      DialogUtil.instance.error('刷新SmartAI脚本列表失败: $e');
+    }
   }
 
   void _logActivity(

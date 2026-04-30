@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
 import 'package:foxy/repository/game_object_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -80,8 +82,13 @@ class GameObjectTemplateAddonViewModel {
   }
 
   Future<void> initSignals({required int gameObjectId}) async {
-    this.gameObjectId.value = gameObjectId;
-    await load();
+    try {
+      this.gameObjectId.value = gameObjectId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
+    }
   }
 
   void dispose() {

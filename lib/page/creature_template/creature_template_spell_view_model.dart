@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -69,10 +71,15 @@ class CreatureTemplateSpellViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final nextIndex = await repository.getNextIndex(creatureId.value);
-    resetForm();
-    indexController.text = nextIndex.toString();
-    selectedIndex.value = null;
+    try {
+      final nextIndex = await repository.getNextIndex(creatureId.value);
+      resetForm();
+      indexController.text = nextIndex.toString();
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建生物法术记录失败: $e');
+      DialogUtil.instance.error('创建生物法术记录失败: $e');
+    }
   }
 
   /// 编辑选中记录
@@ -193,8 +200,13 @@ class CreatureTemplateSpellViewModel {
 
   /// 初始化
   Future<void> initSignals({required int creatureId}) async {
-    this.creatureId.value = creatureId;
-    await load();
+    try {
+      this.creatureId.value = creatureId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物法术失败: $e');
+      DialogUtil.instance.error('初始化生物法术失败: $e');
+    }
   }
 
   /// 退出页面

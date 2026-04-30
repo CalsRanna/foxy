@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_onkill_reputation_entity.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -121,9 +123,14 @@ class CreatureOnKillReputationViewModel {
 
   /// 初始化 ViewModel
   Future<void> initSignals({required int creatureId}) async {
-    this.creatureId.value = creatureId;
-    creatureIdController.text = creatureId.toString();
-    await load();
+    try {
+      this.creatureId.value = creatureId;
+      creatureIdController.text = creatureId.toString();
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化击杀声望失败: $e');
+      DialogUtil.instance.error('初始化击杀声望失败: $e');
+    }
   }
 
   /// 清理资源

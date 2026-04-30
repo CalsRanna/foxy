@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -63,15 +65,20 @@ class SpellRankViewModel {
   }
 
   Future<void> create() async {
-    resetForm();
-    firstSpellIdController.text = items.value.isNotEmpty
-        ? items.value.first.firstSpellId.toString()
-        : '0';
-    rankSpellIdController.text = spellId.value.toString();
-    rankController.text = items.value.isNotEmpty
-        ? (items.value.last.rank + 1).toString()
-        : '1';
-    selectedIndex.value = null;
+    try {
+      resetForm();
+      firstSpellIdController.text = items.value.isNotEmpty
+          ? items.value.first.firstSpellId.toString()
+          : '0';
+      rankSpellIdController.text = spellId.value.toString();
+      rankController.text = items.value.isNotEmpty
+          ? (items.value.last.rank + 1).toString()
+          : '1';
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('法术等级-创建失败: $e');
+      DialogUtil.instance.error('法术等级-创建失败: $e');
+    }
   }
 
   void edit() {
@@ -180,8 +187,13 @@ class SpellRankViewModel {
   }
 
   Future<void> initSignals({required int spellId}) async {
-    this.spellId.value = spellId;
-    await load();
+    try {
+      this.spellId.value = spellId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('法术等级-初始化失败: $e');
+      DialogUtil.instance.error('法术等级-初始化失败: $e');
+    }
   }
 
   void pop() {

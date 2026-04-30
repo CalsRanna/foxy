@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
 import 'package:foxy/repository/quest_request_items_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -18,17 +20,22 @@ class QuestRequestItemsViewModel {
   int _originalId = 0;
 
   Future<void> initSignals({required int questId}) async {
-    this.questId.value = questId;
-    final repository = QuestRequestItemsRepository();
-    final existing = await repository.getQuestRequestItems(questId);
-    if (existing != null) {
-      _originalId = existing.id;
-      _applyToControllers(existing);
-    } else {
-      final blank = await repository.createQuestRequestItems(questId);
-      _applyToControllers(blank);
+    try {
+      this.questId.value = questId;
+      final repository = QuestRequestItemsRepository();
+      final existing = await repository.getQuestRequestItems(questId);
+      if (existing != null) {
+        _originalId = existing.id;
+        _applyToControllers(existing);
+      } else {
+        final blank = await repository.createQuestRequestItems(questId);
+        _applyToControllers(blank);
+      }
+      idController.text = questId.toString();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
     }
-    idController.text = questId.toString();
   }
 
   Future<void> save(BuildContext context) async {

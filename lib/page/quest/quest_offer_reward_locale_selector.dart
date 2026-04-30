@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class QuestOfferRewardLocaleSelector extends StatefulWidget {
@@ -45,24 +47,29 @@ class _QuestOfferRewardLocaleSelectorState
   }
 
   Future<void> _openLocaleDialog() async {
-    if (widget.questId == null) return;
-    final locales = await repository.getQuestOfferRewardLocales(
-      widget.questId!,
-    );
-    if (!mounted) return;
-    await showShadDialog(
-      context: context,
-      builder: (context) {
-        return _LocaleDialog(
-          questId: widget.questId!,
-          locales: locales,
-          onSave: (locales) async {
-            await repository.replaceAll(widget.questId!, locales);
-          },
-          title: widget.title,
-        );
-      },
-    );
+    try {
+      if (widget.questId == null) return;
+      final locales = await repository.getQuestOfferRewardLocales(
+        widget.questId!,
+      );
+      if (!mounted) return;
+      await showShadDialog(
+        context: context,
+        builder: (context) {
+          return _LocaleDialog(
+            questId: widget.questId!,
+            locales: locales,
+            onSave: (locales) async {
+              await repository.replaceAll(widget.questId!, locales);
+            },
+            title: widget.title,
+          );
+        },
+      );
+    } catch (e) {
+      LoggerUtil.instance.e('加载本地化文本失败: $e');
+      DialogUtil.instance.error('加载本地化文本失败: $e');
+    }
   }
 }
 

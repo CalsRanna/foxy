@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
@@ -56,28 +58,38 @@ class CreatureQuestStarterViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final blank = await repository.createCreatureQuestStarter(questId.value);
-    resetForm();
-    fillForm(blank);
-    _originalId = blank.id;
-    _originalQuest = blank.quest;
-    selectedIndex.value = null;
+    try {
+      final blank = await repository.createCreatureQuestStarter(questId.value);
+      resetForm();
+      fillForm(blank);
+      _originalId = blank.id;
+      _originalQuest = blank.quest;
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建生物任务起始记录失败: $e');
+      DialogUtil.instance.error('创建生物任务起始记录失败: $e');
+    }
   }
 
   /// 编辑选中记录
   Future<void> edit() async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
+    try {
+      final index = selectedIndex.value;
+      if (index == null || index < 0 || index >= items.value.length) return;
 
-    final item = items.value[index];
-    final existing = await repository.getCreatureQuestStarter({
-      'id': item.id,
-      'quest': item.quest,
-    });
-    if (existing == null) return;
-    fillForm(existing);
-    _originalId = item.id;
-    _originalQuest = item.quest;
+      final item = items.value[index];
+      final existing = await repository.getCreatureQuestStarter({
+        'id': item.id,
+        'quest': item.quest,
+      });
+      if (existing == null) return;
+      fillForm(existing);
+      _originalId = item.id;
+      _originalQuest = item.quest;
+    } catch (e) {
+      LoggerUtil.instance.e('编辑生物任务起始记录失败: $e');
+      DialogUtil.instance.error('编辑生物任务起始记录失败: $e');
+    }
   }
 
   /// 保存新记录
@@ -214,8 +226,13 @@ class CreatureQuestStarterViewModel {
 
   /// 初始化
   Future<void> initSignals({required int questId}) async {
-    this.questId.value = questId;
-    await load();
+    try {
+      this.questId.value = questId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物任务起始失败: $e');
+      DialogUtil.instance.error('初始化生物任务起始失败: $e');
+    }
   }
 
   /// 清理资源

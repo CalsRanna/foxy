@@ -68,8 +68,13 @@ class SpellListViewModel {
   }
 
   Future<void> initSignals() async {
-    spells.value = await repository.getBriefSpells();
-    total.value = await repository.countSpells();
+    try {
+      spells.value = await repository.getBriefSpells();
+      total.value = await repository.countSpells();
+    } catch (e) {
+      LoggerUtil.instance.e('加载法术列表失败: $e');
+      DialogUtil.instance.error('加载法术列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id, String? name}) {
@@ -97,8 +102,7 @@ class SpellListViewModel {
     idController.clear();
     nameController.clear();
     page.value = 1;
-    spells.value = await repository.getBriefSpells();
-    total.value = await repository.countSpells();
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -107,12 +111,17 @@ class SpellListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    spells.value = await repository.getBriefSpells(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countSpells(filter: filter);
+    try {
+      final filter = _buildFilter();
+      spells.value = await repository.getBriefSpells(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countSpells(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新法术列表失败: $e');
+      DialogUtil.instance.error('刷新法术列表失败: $e');
+    }
   }
 
   void _logActivity(ActivityActionType action, int id) {

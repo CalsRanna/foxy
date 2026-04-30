@@ -3,6 +3,8 @@ import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
+import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 技能射程选择器
@@ -272,6 +274,9 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
+    } catch (e) {
+      LoggerUtil.instance.e('搜索失败: $e');
+      DialogUtil.instance.error('搜索失败: $e');
     } finally {}
   }
 }

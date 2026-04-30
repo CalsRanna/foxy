@@ -62,12 +62,17 @@ class QuestFactionRewardListViewModel {
   }
 
   Future<void> initSignals() async {
-    final filter = QuestFactionRewardFilterEntity();
-    rewards.value = await repository.getQuestFactionRewards(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countQuestFactionRewards(filter: filter);
+    try {
+      final filter = QuestFactionRewardFilterEntity();
+      rewards.value = await repository.getQuestFactionRewards(
+        page: 1,
+        filter: filter,
+      );
+      total.value = await repository.countQuestFactionRewards(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('加载任务阵营奖励列表失败: $e');
+      DialogUtil.instance.error('加载任务阵营奖励列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id}) {
@@ -96,12 +101,7 @@ class QuestFactionRewardListViewModel {
   Future<void> reset() async {
     entryController.clear();
     page.value = 1;
-    final filter = QuestFactionRewardFilterEntity();
-    rewards.value = await repository.getQuestFactionRewards(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countQuestFactionRewards(filter: filter);
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -110,11 +110,16 @@ class QuestFactionRewardListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    rewards.value = await repository.getQuestFactionRewards(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countQuestFactionRewards(filter: filter);
+    try {
+      final filter = _buildFilter();
+      rewards.value = await repository.getQuestFactionRewards(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countQuestFactionRewards(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新任务阵营奖励列表失败: $e');
+      DialogUtil.instance.error('刷新任务阵营奖励列表失败: $e');
+    }
   }
 }

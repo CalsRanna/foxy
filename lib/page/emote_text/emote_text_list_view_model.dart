@@ -82,8 +82,13 @@ class EmoteTextListViewModel {
   }
 
   Future<void> initSignals() async {
-    emotes.value = await repository.getEmoteTexts(page: 1);
-    total.value = await repository.countEmoteTexts();
+    try {
+      emotes.value = await repository.getEmoteTexts(page: 1);
+      total.value = await repository.countEmoteTexts();
+    } catch (e) {
+      LoggerUtil.instance.e('加载表情文本列表失败: $e');
+      DialogUtil.instance.error('加载表情文本列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id, String? name}) {
@@ -114,8 +119,7 @@ class EmoteTextListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    emotes.value = await repository.getEmoteTexts(page: 1);
-    total.value = await repository.countEmoteTexts();
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -124,11 +128,16 @@ class EmoteTextListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    emotes.value = await repository.getEmoteTexts(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countEmoteTexts(filter: filter);
+    try {
+      final filter = _buildFilter();
+      emotes.value = await repository.getEmoteTexts(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countEmoteTexts(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新表情文本列表失败: $e');
+      DialogUtil.instance.error('刷新表情文本列表失败: $e');
+    }
   }
 }

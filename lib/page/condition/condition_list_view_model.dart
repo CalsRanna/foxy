@@ -24,8 +24,13 @@ class ConditionListViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    conditions.value = await _search();
-    total.value = await _count();
+    try {
+      conditions.value = await _search();
+      total.value = await _count();
+    } catch (e) {
+      LoggerUtil.instance.e('加载条件列表失败: $e');
+      DialogUtil.instance.error('加载条件列表失败: $e');
+    }
   }
 
   Future<void> search() async {
@@ -122,8 +127,13 @@ class ConditionListViewModel {
   }
 
   Future<void> _refresh() async {
-    conditions.value = await _search();
-    total.value = await _count();
+    try {
+      conditions.value = await _search();
+      total.value = await _count();
+    } catch (e) {
+      LoggerUtil.instance.e('刷新条件列表失败: $e');
+      DialogUtil.instance.error('刷新条件列表失败: $e');
+    }
   }
 
   void _logActivity(ActivityActionType action, ConditionEntity c) {

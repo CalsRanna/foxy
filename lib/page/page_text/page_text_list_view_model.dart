@@ -24,11 +24,16 @@ class PageTextListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    pages.value = await repository.getPageTexts(
-      filter: _buildFilter(),
-      page: page.value,
-    );
-    total.value = await repository.countPageTexts(filter: _buildFilter());
+    try {
+      pages.value = await repository.getPageTexts(
+        filter: _buildFilter(),
+        page: page.value,
+      );
+      total.value = await repository.countPageTexts(filter: _buildFilter());
+    } catch (e) {
+      LoggerUtil.instance.e('加载页面文本列表失败: $e');
+      DialogUtil.instance.error('加载页面文本列表失败: $e');
+    }
   }
 
   Future<void> search() async {
@@ -40,11 +45,7 @@ class PageTextListViewModel {
     idController.clear();
     textController.clear();
     page.value = 1;
-    pages.value = await repository.getPageTexts(
-      filter: _buildFilter(),
-      page: page.value,
-    );
-    total.value = await repository.countPageTexts(filter: _buildFilter());
+    await _refresh();
   }
 
   Future<void> paginate(int newPage) async {
@@ -126,11 +127,16 @@ class PageTextListViewModel {
   }
 
   Future<void> _refresh() async {
-    pages.value = await repository.getPageTexts(
-      filter: _buildFilter(),
-      page: page.value,
-    );
-    total.value = await repository.countPageTexts(filter: _buildFilter());
+    try {
+      pages.value = await repository.getPageTexts(
+        filter: _buildFilter(),
+        page: page.value,
+      );
+      total.value = await repository.countPageTexts(filter: _buildFilter());
+    } catch (e) {
+      LoggerUtil.instance.e('刷新页面文本列表失败: $e');
+      DialogUtil.instance.error('刷新页面文本列表失败: $e');
+    }
   }
 
   void dispose() {

@@ -23,8 +23,13 @@ class ReferenceLootTemplateListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    templates.value = await _searchEntries();
-    total.value = await _countEntries();
+    try {
+      templates.value = await _searchEntries();
+      total.value = await _countEntries();
+    } catch (e) {
+      LoggerUtil.instance.e('加载引用掉落模板列表失败: $e');
+      DialogUtil.instance.error('加载引用掉落模板列表失败: $e');
+    }
   }
 
   Future<void> search() async {
@@ -137,8 +142,13 @@ class ReferenceLootTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
-    templates.value = await _searchEntries();
-    total.value = await _countEntries();
+    try {
+      templates.value = await _searchEntries();
+      total.value = await _countEntries();
+    } catch (e) {
+      LoggerUtil.instance.e('刷新引用掉落模板列表失败: $e');
+      DialogUtil.instance.error('刷新引用掉落模板列表失败: $e');
+    }
   }
 
   void dispose() {
