@@ -49,7 +49,8 @@ class FrequentModuleComponent extends StatelessWidget {
             : BorderSide.none,
       );
 
-      return Expanded(
+      return SizedBox(
+        height: 160,
         child: FeatureCard(
           seamless: true,
           feature: feature,
@@ -68,7 +69,10 @@ class FrequentModuleComponent extends StatelessWidget {
       final end = (i + kTotalColumns > tiles.length)
           ? tiles.length
           : i + kTotalColumns;
-      final rowWidgets = List<Widget>.from(tiles.sublist(i, end));
+      final rowWidgets = tiles
+          .sublist(i, end)
+          .map((t) => Expanded(child: t))
+          .toList();
       while (rowWidgets.length < kTotalColumns) {
         rowWidgets.add(const Expanded(child: SizedBox()));
       }
