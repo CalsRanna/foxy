@@ -455,7 +455,7 @@ _workerImportFile(
     return (done: false, parseUs: 0, convertUs: 0, insertUs: 0, startedAt: 0);
   }
 
-  final path = '$dbcPath\\${file.name}.dbc';
+  final path = p.join(dbcPath, '${file.name}.dbc');
   if (!File(path).existsSync()) {
     throw FileSystemException('DBC 文件不存在', path);
   }
