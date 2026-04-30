@@ -14,9 +14,6 @@ class CreatureQuestItemViewModel {
   final creatureEntry = signal(0);
   final items = signal<List<CreatureQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   // 表单控制器
   final idxController = TextEditingController();
   final itemIdController = TextEditingController();
@@ -26,16 +23,9 @@ class CreatureQuestItemViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getCreatureQuestItems(creatureEntry.value);
-      items.value = data;
-      selectedIndex.value = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getCreatureQuestItems(creatureEntry.value);
+    items.value = data;
+    selectedIndex.value = null;
   }
 
   /// 重置表单
@@ -159,7 +149,6 @@ class CreatureQuestItemViewModel {
 
   /// 保存记录
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final questItem = collectFromForm();
       await repository.storeCreatureQuestItem(questItem);
@@ -171,14 +160,11 @@ class CreatureQuestItemViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   /// 更新记录
   Future<void> update(BuildContext context) async {
-    saving.value = true;
     try {
       final questItem = collectFromForm();
       await repository.updateCreatureQuestItem(questItem);
@@ -190,8 +176,6 @@ class CreatureQuestItemViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

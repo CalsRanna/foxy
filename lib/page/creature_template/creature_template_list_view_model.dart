@@ -30,10 +30,8 @@ class CreatureTemplateListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.copyCreatureTemplate(entry);
       _logActivity(ActivityActionType.copy, entry);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -51,10 +49,8 @@ class CreatureTemplateListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroyCreatureTemplate(entry);
       _logActivity(ActivityActionType.delete, entry);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

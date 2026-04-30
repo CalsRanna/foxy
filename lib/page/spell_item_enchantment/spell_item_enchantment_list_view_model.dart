@@ -29,10 +29,8 @@ class SpellItemEnchantmentListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.copySpellItemEnchantment(id);
       _logActivity(ActivityActionType.copy, id);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -50,10 +48,8 @@ class SpellItemEnchantmentListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroySpellItemEnchantment(id);
       _logActivity(ActivityActionType.delete, id);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

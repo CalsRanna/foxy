@@ -21,8 +21,6 @@ class PageTextDetailViewModel {
 
   final page = signal<PageTextEntity?>(null);
   final locales = signal<List<PageTextLocaleEntity>>([]);
-  final saving = signal(false);
-
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
@@ -42,7 +40,6 @@ class PageTextDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final data = _collect();
       await repository.storePageText(data);
@@ -53,8 +50,6 @@ class PageTextDetailViewModel {
     } catch (e) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
-    } finally {
-      saving.value = false;
     }
   }
 

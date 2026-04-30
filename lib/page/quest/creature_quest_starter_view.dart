@@ -82,7 +82,6 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
           header: (context, index) {
             return ShadTableCell.header(child: Text(headers[index]));
           },
-          loading: viewModel.loading.value,
           onRowSecondaryTapDownWithDetails: (row, details) {
             viewModel.selectRow(row);
             showFoxyContextMenu(

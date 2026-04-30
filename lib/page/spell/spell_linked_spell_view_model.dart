@@ -14,9 +14,6 @@ class SpellLinkedSpellViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellLinkedSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   final spellEffectController = TextEditingController();
   final typeController = TextEditingController();
   final commentController = TextEditingController();
@@ -24,16 +21,9 @@ class SpellLinkedSpellViewModel {
   final repository = SpellLinkedSpellRepository();
 
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getSpellLinkedSpells(spellId.value);
-      items.value = data;
-      selectedIndex.value = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getSpellLinkedSpells(spellId.value);
+    items.value = data;
+    selectedIndex.value = null;
   }
 
   void resetForm() {
@@ -139,7 +129,6 @@ class SpellLinkedSpellViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final data = collectFromForm();
       await repository.storeSpellLinkedSpell(data);
@@ -151,15 +140,12 @@ class SpellLinkedSpellViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   Future<void> update(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
-    saving.value = true;
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
@@ -172,8 +158,6 @@ class SpellLinkedSpellViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

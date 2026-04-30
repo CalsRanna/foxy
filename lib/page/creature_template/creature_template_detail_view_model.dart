@@ -77,11 +77,8 @@ class CreatureTemplateDetailViewModel {
 
   final entry = signal(0);
   final template = signal(CreatureTemplateEntity());
-  final saving = signal(false);
-
   /// 保存模板到数据库
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = CreatureTemplateRepository();
@@ -103,8 +100,6 @@ class CreatureTemplateDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

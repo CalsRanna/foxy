@@ -15,8 +15,6 @@ class QuestTemplateDetailViewModel {
 
   final entry = signal(0);
   final template = signal(QuestTemplateEntity());
-  final saving = signal(false);
-
   /// Basic
   final idController = TextEditingController();
   final questTypeController = TextEditingController();
@@ -150,7 +148,6 @@ class QuestTemplateDetailViewModel {
 
   /// 保存模板到数据库
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = QuestTemplateRepository();
@@ -172,8 +169,6 @@ class QuestTemplateDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

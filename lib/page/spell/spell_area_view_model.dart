@@ -14,9 +14,6 @@ class SpellAreaViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellAreaEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   final areaController = TextEditingController();
   final questStartController = TextEditingController();
   final questEndController = TextEditingController();
@@ -30,16 +27,9 @@ class SpellAreaViewModel {
   final repository = SpellAreaRepository();
 
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getSpellAreas(spellId.value);
-      items.value = data;
-      selectedIndex.value = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getSpellAreas(spellId.value);
+    items.value = data;
+    selectedIndex.value = null;
   }
 
   void resetForm() {
@@ -166,7 +156,6 @@ class SpellAreaViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final data = collectFromForm();
       await repository.storeSpellArea(data);
@@ -178,15 +167,12 @@ class SpellAreaViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   Future<void> update(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
-    saving.value = true;
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
@@ -199,8 +185,6 @@ class SpellAreaViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

@@ -73,10 +73,8 @@ class ReferenceLootTemplateListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.copyLootTemplate(entry, item);
       _logActivity(ActivityActionType.copy, entry);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -94,10 +92,8 @@ class ReferenceLootTemplateListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroyLootTemplate(entry, item);
       _logActivity(ActivityActionType.delete, entry);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

@@ -14,8 +14,6 @@ class MillingLootTemplateViewModel {
   final entry = signal(0);
   final items = signal<List<BriefLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
   final creating = signal(false);
   final editing = signal(false);
   int? editingItem;
@@ -35,19 +33,12 @@ class MillingLootTemplateViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getLootTemplates(entry.value);
-      items.value = data;
-      selectedIndex.value = null;
-      creating.value = false;
-      editing.value = false;
-      editingItem = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getLootTemplates(entry.value);
+    items.value = data;
+    selectedIndex.value = null;
+    creating.value = false;
+    editing.value = false;
+    editingItem = null;
   }
 
   /// 重置表单
@@ -190,7 +181,6 @@ class MillingLootTemplateViewModel {
 
   /// 保存记录
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final loot = collectFromForm();
       await repository.storeLootTemplate(loot);
@@ -202,14 +192,11 @@ class MillingLootTemplateViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   /// 更新记录
   Future<void> update(BuildContext context) async {
-    saving.value = true;
     try {
       final loot = collectFromForm();
       await repository.updateLootTemplate(loot, oldItem: editingItem);
@@ -221,8 +208,6 @@ class MillingLootTemplateViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

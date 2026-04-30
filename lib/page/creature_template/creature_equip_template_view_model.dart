@@ -14,9 +14,6 @@ class CreatureEquipTemplateViewModel {
   final creatureId = signal(0);
   final items = signal<List<BriefCreatureEquipTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   // 表单控制器
   final idController = TextEditingController();
   final itemID1Controller = TextEditingController();
@@ -28,16 +25,9 @@ class CreatureEquipTemplateViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getCreatureEquipTemplates(creatureId.value);
-      items.value = data;
-      selectedIndex.value = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getCreatureEquipTemplates(creatureId.value);
+    items.value = data;
+    selectedIndex.value = null;
   }
 
   /// 重置表单
@@ -164,7 +154,6 @@ class CreatureEquipTemplateViewModel {
 
   /// 保存记录
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final equip = collectFromForm();
       await repository.storeCreatureEquipTemplate(equip);
@@ -176,14 +165,11 @@ class CreatureEquipTemplateViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   /// 更新记录
   Future<void> update(BuildContext context) async {
-    saving.value = true;
     try {
       final equip = collectFromForm();
       await repository.updateCreatureEquipTemplate(equip);
@@ -195,8 +181,6 @@ class CreatureEquipTemplateViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

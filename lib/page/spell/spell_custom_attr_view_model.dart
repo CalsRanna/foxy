@@ -14,21 +14,13 @@ class SpellCustomAttrViewModel {
 
   final attributesController = TextEditingController();
 
-  final loading = signal(false);
   final customAttr = signal(SpellCustomAttrEntity());
 
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final repository = SpellCustomAttrRepository();
-      final data = await repository.getSpellCustomAttr(spellId.value);
-      if (data != null) {
-        customAttr.value = data;
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
+    final repository = SpellCustomAttrRepository();
+    final data = await repository.getSpellCustomAttr(spellId.value);
+    if (data != null) {
+      customAttr.value = data;
     }
   }
 

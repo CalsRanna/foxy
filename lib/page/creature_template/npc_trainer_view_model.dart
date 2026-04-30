@@ -14,8 +14,6 @@ class NpcTrainerViewModel {
   final id = signal(0);
   final items = signal<List<BriefNpcTrainerEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
   final creating = signal(false);
   final editing = signal(false);
 
@@ -30,18 +28,11 @@ class NpcTrainerViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getNpcTrainers(id.value);
-      items.value = data;
-      selectedIndex.value = null;
-      creating.value = false;
-      editing.value = false;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getNpcTrainers(id.value);
+    items.value = data;
+    selectedIndex.value = null;
+    creating.value = false;
+    editing.value = false;
   }
 
   /// 重置表单
@@ -161,7 +152,6 @@ class NpcTrainerViewModel {
 
   /// 保存记录
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final trainer = collectFromForm();
       await repository.storeNpcTrainer(trainer);
@@ -173,14 +163,11 @@ class NpcTrainerViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   /// 更新记录
   Future<void> update(BuildContext context) async {
-    saving.value = true;
     try {
       final trainer = collectFromForm();
       await repository.updateNpcTrainer(trainer);
@@ -192,8 +179,6 @@ class NpcTrainerViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

@@ -14,9 +14,6 @@ class CreatureTemplateSpellViewModel {
   final creatureId = signal(0);
   final items = signal<List<CreatureTemplateSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   // 表单控制器
   final indexController = TextEditingController();
   final spellController = TextEditingController();
@@ -26,16 +23,9 @@ class CreatureTemplateSpellViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getCreatureTemplateSpells(creatureId.value);
-      items.value = data;
-      selectedIndex.value = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getCreatureTemplateSpells(creatureId.value);
+    items.value = data;
+    selectedIndex.value = null;
   }
 
   /// 重置表单
@@ -155,7 +145,6 @@ class CreatureTemplateSpellViewModel {
 
   /// 保存记录
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final spell = collectFromForm();
       await repository.storeCreatureTemplateSpell(spell);
@@ -167,14 +156,11 @@ class CreatureTemplateSpellViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   /// 更新记录
   Future<void> update(BuildContext context) async {
-    saving.value = true;
     try {
       final spell = collectFromForm();
       await repository.updateCreatureTemplateSpell(spell);
@@ -186,8 +172,6 @@ class CreatureTemplateSpellViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

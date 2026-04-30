@@ -72,10 +72,8 @@ class PageTextListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.copyPageText(id);
       _logActivity(ActivityActionType.copy, id);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -93,10 +91,8 @@ class PageTextListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroyPageText(id);
       _logActivity(ActivityActionType.delete, id);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

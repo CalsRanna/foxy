@@ -19,8 +19,6 @@ class GossipMenuDetailViewModel {
   final menuId = signal(0);
   final textId = signal(0);
   final menu = signal(GossipMenuEntity());
-  final saving = signal(false);
-
   int? _originalMenuId;
   int? _originalTextId;
 
@@ -55,7 +53,6 @@ class GossipMenuDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final t = _collectFromControllers();
       if (_originalMenuId == null) {
@@ -83,8 +80,6 @@ class GossipMenuDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

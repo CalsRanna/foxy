@@ -16,9 +16,6 @@ class GameObjectLootTemplateViewModel {
   final gameObjectId = signal(0);
   final items = signal<List<BriefLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   final itemController = TextEditingController();
   final referenceController = TextEditingController();
   final chanceController = TextEditingController();
@@ -34,14 +31,7 @@ class GameObjectLootTemplateViewModel {
   final repository = LootTemplateRepository(LootTableType.gameobject);
 
   Future<void> load() async {
-    loading.value = true;
-    try {
-      items.value = await repository.getLootTemplates(gameObjectId.value);
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    items.value = await repository.getLootTemplates(gameObjectId.value);
   }
 
   void resetForm() {
@@ -133,9 +123,7 @@ class GameObjectLootTemplateViewModel {
     if (index == null) return;
     try {
       final item = items.value[index];
-      DialogUtil.instance.loading();
       await repository.copyLootTemplate(item.entry, item.item);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await load();
     } catch (e) {
@@ -156,9 +144,7 @@ class GameObjectLootTemplateViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroyLootTemplate(item.entry, item.item);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await load();
     } catch (e) {
@@ -168,7 +154,6 @@ class GameObjectLootTemplateViewModel {
   }
 
   Future<void> save(BuildContext dialogContext) async {
-    saving.value = true;
     try {
       final loot = collectFromForm();
       await repository.storeLootTemplate(loot);
@@ -176,13 +161,10 @@ class GameObjectLootTemplateViewModel {
       if (dialogContext.mounted) Navigator.of(dialogContext).pop();
     } catch (e) {
       DialogUtil.instance.error('保存失败: $e');
-    } finally {
-      saving.value = false;
     }
   }
 
   Future<void> update(BuildContext dialogContext) async {
-    saving.value = true;
     try {
       final loot = collectFromForm();
       await repository.updateLootTemplate(loot, oldItem: editingItem);
@@ -190,8 +172,6 @@ class GameObjectLootTemplateViewModel {
       if (dialogContext.mounted) Navigator.of(dialogContext).pop();
     } catch (e) {
       DialogUtil.instance.error('更新失败: $e');
-    } finally {
-      saving.value = false;
     }
   }
 
@@ -290,9 +270,7 @@ class GameObjectLootTemplateViewModel {
                 child: Text('取消'),
               ),
               ShadButton(
-                onPressed: saving.value
-                    ? null
-                    : () => isNew ? save(dialogContext) : update(dialogContext),
+                onPressed: () => isNew ? save(dialogContext) : update(dialogContext),
                 child: Text('保存'),
               ),
             ],

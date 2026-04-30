@@ -34,10 +34,8 @@ class SmartScriptListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.copySmartScript(entryOrGuid, sourceType, id, link);
       _logActivity(ActivityActionType.copy, entryOrGuid, sourceType, id, link);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -60,7 +58,6 @@ class SmartScriptListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroySmartScript(entryOrGuid, sourceType, id, link);
       _logActivity(
         ActivityActionType.delete,
@@ -69,7 +66,6 @@ class SmartScriptListViewModel {
         id,
         link,
       );
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

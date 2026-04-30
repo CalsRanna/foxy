@@ -12,10 +12,6 @@ class GossipMenuOptionViewModel {
 
   final currentMenuId = signal(0);
   final options = signal<List<GossipMenuOptionEntity>>([]);
-  final loading = signal(false);
-  final saving = signal(false);
-
-  /// UI 状态
   final editing = signal(false);
   final creating = signal(false);
 
@@ -39,16 +35,8 @@ class GossipMenuOptionViewModel {
   int _originalOptionId = 0;
 
   Future<void> search(int menuId) async {
-    loading.value = true;
-    try {
-      currentMenuId.value = menuId;
-      options.value = await _repository.getGossipMenuOptions(menuId: menuId);
-    } catch (e) {
-      LoggerUtil.instance.e('加载对话菜单选项失败: $e');
-      DialogUtil.instance.error('加载对话菜单选项失败: $e');
-    } finally {
-      loading.value = false;
-    }
+    currentMenuId.value = menuId;
+    options.value = await _repository.getGossipMenuOptions(menuId: menuId);
   }
 
   Future<void> onCreate() async {
@@ -86,7 +74,6 @@ class GossipMenuOptionViewModel {
   }
 
   Future<void> onSave() async {
-    saving.value = true;
     try {
       final model = _collectFromControllers();
       if (creating.value) {
@@ -104,8 +91,6 @@ class GossipMenuOptionViewModel {
     } catch (e) {
       LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('保存失败: ${e.toString()}');
-    } finally {
-      saving.value = false;
     }
   }
 
@@ -122,12 +107,10 @@ class GossipMenuOptionViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await _repository.copyGossipMenuOption({
         'MenuID': menuId,
         'OptionID': optionId,
       });
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await search(currentMenuId.value);
     } catch (e) {
@@ -145,12 +128,10 @@ class GossipMenuOptionViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await _repository.destroyGossipMenuOption({
         'MenuID': menuId,
         'OptionID': optionId,
       });
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await search(currentMenuId.value);
     } catch (e) {

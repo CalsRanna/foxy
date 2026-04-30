@@ -62,10 +62,8 @@ class GossipMenuListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.copyGossipMenu(menuId, textId);
       _logActivity(ActivityActionType.copy, menuId, textId);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -85,10 +83,8 @@ class GossipMenuListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroyGossipMenu(menuId, textId);
       _logActivity(ActivityActionType.delete, menuId, textId);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

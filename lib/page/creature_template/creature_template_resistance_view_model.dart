@@ -14,9 +14,6 @@ class CreatureTemplateResistanceViewModel {
   final creatureId = signal(0);
   final items = signal<List<CreatureTemplateResistanceEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   // 表单控制器
   final schoolController = ShadSelectController<int>();
   final resistanceController = TextEditingController();
@@ -26,18 +23,11 @@ class CreatureTemplateResistanceViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getCreatureTemplateResistances(
-        creatureId.value,
-      );
-      items.value = data;
-      selectedIndex.value = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getCreatureTemplateResistances(
+      creatureId.value,
+    );
+    items.value = data;
+    selectedIndex.value = null;
   }
 
   /// 重置表单
@@ -160,7 +150,6 @@ class CreatureTemplateResistanceViewModel {
 
   /// 保存记录
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final resistance = collectFromForm();
       await repository.storeCreatureTemplateResistance(resistance);
@@ -172,14 +161,11 @@ class CreatureTemplateResistanceViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   /// 更新记录
   Future<void> update(BuildContext context) async {
-    saving.value = true;
     try {
       final resistance = collectFromForm();
       await repository.updateCreatureTemplateResistance(resistance);
@@ -191,8 +177,6 @@ class CreatureTemplateResistanceViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

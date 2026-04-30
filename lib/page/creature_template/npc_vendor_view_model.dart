@@ -14,9 +14,6 @@ class NpcVendorViewModel {
   final entry = signal(0);
   final items = signal<List<BriefNpcVendorEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   // 表单控制器
   final slotController = TextEditingController();
   final itemController = TextEditingController();
@@ -32,16 +29,9 @@ class NpcVendorViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getNpcVendors(entry.value);
-      items.value = data;
-      selectedIndex.value = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getNpcVendors(entry.value);
+    items.value = data;
+    selectedIndex.value = null;
   }
 
   /// 重置表单
@@ -169,7 +159,6 @@ class NpcVendorViewModel {
 
   /// 保存记录（新增）
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final vendor = collectFromForm();
       await repository.storeNpcVendor(vendor);
@@ -181,14 +170,11 @@ class NpcVendorViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
-  /// 更新记录（编辑）
+  /// 更新记录
   Future<void> update(BuildContext context) async {
-    saving.value = true;
     try {
       final vendor = collectFromForm();
       await repository.updateNpcVendor(vendor, oldSlot: _editingSlot);
@@ -200,8 +186,6 @@ class NpcVendorViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

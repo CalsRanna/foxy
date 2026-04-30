@@ -14,9 +14,6 @@ class SpellRankViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellRankEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   final firstSpellIdController = TextEditingController();
   final rankSpellIdController = TextEditingController();
   final rankController = TextEditingController();
@@ -24,16 +21,9 @@ class SpellRankViewModel {
   final repository = SpellRankRepository();
 
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final data = await repository.getSpellRanks(spellId.value);
-      items.value = data;
-      selectedIndex.value = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getSpellRanks(spellId.value);
+    items.value = data;
+    selectedIndex.value = null;
   }
 
   void resetForm() {
@@ -142,7 +132,6 @@ class SpellRankViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final data = collectFromForm();
       await repository.storeSpellRank(data);
@@ -154,15 +143,12 @@ class SpellRankViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   Future<void> update(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
-    saving.value = true;
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
@@ -175,8 +161,6 @@ class SpellRankViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

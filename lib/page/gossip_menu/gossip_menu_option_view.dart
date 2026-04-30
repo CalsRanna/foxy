@@ -275,13 +275,10 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       ),
     );
 
-    final saveBtn = Watch((_) {
-      return ShadButton(
-        enabled: !viewModel.saving.value,
-        onPressed: viewModel.onSave,
-        child: Text(viewModel.saving.value ? '保存中...' : '保存'),
-      );
-    });
+    final saveBtn = ShadButton(
+      onPressed: viewModel.onSave,
+      child: const Text('保存'),
+    );
     final cancelBtn = ShadButton.outline(
       onPressed: viewModel.onCancel,
       child: Text('返回'),

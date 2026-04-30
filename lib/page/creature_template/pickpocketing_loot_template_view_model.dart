@@ -17,9 +17,6 @@ class PickpocketingLootTemplateViewModel {
   final creatureTemplate = signal<CreatureTemplateEntity?>(null);
   final items = signal<List<BriefLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   // 表单控制器
   final itemController = TextEditingController();
   final referenceController = TextEditingController();
@@ -36,21 +33,14 @@ class PickpocketingLootTemplateViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final template = await creatureRepository.getCreatureTemplate(
-        creatureId.value,
-      );
-      creatureTemplate.value = template;
+    final template = await creatureRepository.getCreatureTemplate(
+      creatureId.value,
+    );
+    creatureTemplate.value = template;
 
-      final data = await repository.getLootTemplates(template.pickpocketLoot);
-      items.value = data;
-      selectedIndex.value = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getLootTemplates(template.pickpocketLoot);
+    items.value = data;
+    selectedIndex.value = null;
   }
 
   /// 重置表单
@@ -193,7 +183,6 @@ class PickpocketingLootTemplateViewModel {
 
   /// 保存记录
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final loot = collectFromForm();
       await repository.storeLootTemplate(loot);
@@ -205,14 +194,11 @@ class PickpocketingLootTemplateViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   /// 更新记录
   Future<void> update(BuildContext context) async {
-    saving.value = true;
     try {
       final loot = collectFromForm();
       final oldItem = items.value[selectedIndex.value!].item;
@@ -225,8 +211,6 @@ class PickpocketingLootTemplateViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
