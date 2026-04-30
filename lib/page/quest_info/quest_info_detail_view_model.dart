@@ -16,11 +16,8 @@ class QuestInfoDetailViewModel {
   final nameController = TextEditingController();
 
   final info = signal(QuestInfoEntity());
-  final saving = signal(false);
-
   /// 保存到数据库
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = QuestInfoRepository();
@@ -41,8 +38,6 @@ class QuestInfoDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

@@ -29,10 +29,8 @@ class QuestSortListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.copyQuestSort(id);
       _logActivity(ActivityActionType.copy, id);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -50,10 +48,8 @@ class QuestSortListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroyQuestSort(id);
       _logActivity(ActivityActionType.delete, id);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

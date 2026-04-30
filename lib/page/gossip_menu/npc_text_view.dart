@@ -45,12 +45,6 @@ class _NpcTextViewState extends State<NpcTextView> {
   @override
   Widget build(BuildContext context) {
     return Watch((_) {
-      if (viewModel.loading.value) {
-        return const Padding(
-          padding: EdgeInsets.all(32),
-          child: Center(child: CircularProgressIndicator()),
-        );
-      }
       final cards = <Widget>[_buildMetaCard()];
       for (var n = 0; n < 8; n++) {
         cards.add(_buildEntryCard(n));
@@ -197,13 +191,10 @@ class _NpcTextViewState extends State<NpcTextView> {
   }
 
   Widget _buildActions() {
-    final saveBtn = Watch((_) {
-      return ShadButton(
-        enabled: !viewModel.saving.value,
-        onPressed: viewModel.onSave,
-        child: Text(viewModel.saving.value ? '保存中...' : '保存'),
-      );
-    });
+    final saveBtn = ShadButton(
+      onPressed: viewModel.onSave,
+      child: const Text('保存'),
+    );
     final backBtn = ShadButton.outline(
       onPressed: parentViewModel.pop,
       child: Text('返回'),

@@ -223,10 +223,7 @@ class SpellDetailViewModel {
 
   final id = signal(0);
   final spell = signal(SpellEntity());
-  final saving = signal(false);
-
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = SpellRepository();
@@ -247,8 +244,6 @@ class SpellDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

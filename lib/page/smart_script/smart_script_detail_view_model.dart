@@ -15,8 +15,6 @@ class SmartScriptDetailViewModel {
 
   final script = signal(SmartScriptEntity());
   final isNew = signal(true);
-  final saving = signal(false);
-
   int? _origEntryOrGuid;
   int? _origSourceType;
   int? _origId;
@@ -57,7 +55,6 @@ class SmartScriptDetailViewModel {
   final targetOController = TextEditingController();
 
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final t = _collectFromControllers();
       final action = isNew.value
@@ -93,8 +90,6 @@ class SmartScriptDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

@@ -15,8 +15,6 @@ class NpcTextViewModel {
 
   final _controllers = <String, TextEditingController>{};
 
-  final loading = signal(false);
-  final saving = signal(false);
   final creating = signal(false);
   final currentTextId = signal(0);
   final localeExists = signal(false);
@@ -36,7 +34,6 @@ class NpcTextViewModel {
       controllerOf('VerifiedBuild').text = '0';
       return;
     }
-    loading.value = true;
     try {
       currentTextId.value = textId;
       final main = await _repository.getNpcText(textId);
@@ -62,14 +59,11 @@ class NpcTextViewModel {
     } catch (e) {
       LoggerUtil.instance.e('加载NPC文本失败: $e');
       DialogUtil.instance.error('加载NPC文本失败: $e');
-    } finally {
-      loading.value = false;
     }
   }
 
   /// 保存主表 + zhCN locale
   Future<void> onSave() async {
-    saving.value = true;
     try {
       final main = _collectMainFromControllers();
       if (creating.value) {
@@ -94,8 +88,6 @@ class NpcTextViewModel {
     } catch (e) {
       LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('保存失败: ${e.toString()}');
-    } finally {
-      saving.value = false;
     }
   }
 

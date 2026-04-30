@@ -23,31 +23,21 @@ class CreatureOnKillReputationViewModel {
   final rewOnKillRepValue2Controller = TextEditingController();
   final teamDependentController = TextEditingController();
 
-  final loading = signal(false);
-  final saving = signal(false);
   final reputation = signal(CreatureOnKillReputationEntity());
 
   /// 从数据库加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final repository = CreatureOnKillReputationRepository();
-      final data = await repository.getCreatureOnKillReputation(
-        creatureId.value,
-      );
-      if (data != null) {
-        reputation.value = data;
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
+    final repository = CreatureOnKillReputationRepository();
+    final data = await repository.getCreatureOnKillReputation(
+      creatureId.value,
+    );
+    if (data != null) {
+      reputation.value = data;
     }
   }
 
   /// 保存数据到数据库
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final repData = _collectFromControllers();
       final repository = CreatureOnKillReputationRepository();
@@ -59,8 +49,6 @@ class CreatureOnKillReputationViewModel {
     } catch (e) {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

@@ -17,24 +17,15 @@ class GameObjectTemplateAddonViewModel {
   final minGoldController = TextEditingController();
   final maxGoldController = TextEditingController();
 
-  final loading = signal(false);
-  final saving = signal(false);
   final addon = signal(GameObjectTemplateAddonEntity());
 
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final repository = GameObjectTemplateAddonRepository();
-      final data = await repository.getGameObjectTemplateAddon(
-        gameObjectId.value,
-      );
-      if (data != null) {
-        addon.value = data;
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
+    final repository = GameObjectTemplateAddonRepository();
+    final data = await repository.getGameObjectTemplateAddon(
+      gameObjectId.value,
+    );
+    if (data != null) {
+      addon.value = data;
     }
   }
 

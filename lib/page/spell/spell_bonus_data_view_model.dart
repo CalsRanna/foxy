@@ -18,21 +18,13 @@ class SpellBonusDataViewModel {
   final apDotBonusController = TextEditingController();
   final commentsController = TextEditingController();
 
-  final loading = signal(false);
   final bonusData = signal(SpellBonusDataEntity());
 
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final repository = SpellBonusDataRepository();
-      final data = await repository.getSpellBonusData(spellId.value);
-      if (data != null) {
-        bonusData.value = data;
-      }
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
+    final repository = SpellBonusDataRepository();
+    final data = await repository.getSpellBonusData(spellId.value);
+    if (data != null) {
+      bonusData.value = data;
     }
   }
 

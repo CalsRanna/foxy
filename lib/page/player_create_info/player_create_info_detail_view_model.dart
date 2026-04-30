@@ -23,8 +23,6 @@ class PlayerCreateInfoDetailViewModel {
   final orientationController = TextEditingController();
 
   final info = signal<PlayerCreateInfoEntity?>(null);
-  final saving = signal(false);
-
   Future<void> initSignals({int? race, int? playerClass}) async {
     if (race == null || playerClass == null) return;
     try {
@@ -52,7 +50,6 @@ class PlayerCreateInfoDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final data = _collect();
       await repository.storePlayerCreateInfo(data);
@@ -63,8 +60,6 @@ class PlayerCreateInfoDetailViewModel {
     } catch (e) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
-    } finally {
-      saving.value = false;
     }
   }
 

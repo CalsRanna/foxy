@@ -17,8 +17,6 @@ class CreatureLootTemplateViewModel {
   final creatureTemplate = signal<CreatureTemplateEntity?>(null);
   final items = signal<List<BriefLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
   final creating = signal(false);
   final editing = signal(false);
   int? editingItem; // 正在编辑的原始Item值
@@ -39,24 +37,17 @@ class CreatureLootTemplateViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    loading.value = true;
-    try {
-      final template = await creatureRepository.getCreatureTemplate(
-        creatureId.value,
-      );
-      creatureTemplate.value = template;
+    final template = await creatureRepository.getCreatureTemplate(
+      creatureId.value,
+    );
+    creatureTemplate.value = template;
 
-      final data = await repository.getLootTemplates(template.lootId);
-      items.value = data;
-      selectedIndex.value = null;
-      creating.value = false;
-      editing.value = false;
-      editingItem = null;
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    final data = await repository.getLootTemplates(template.lootId);
+    items.value = data;
+    selectedIndex.value = null;
+    creating.value = false;
+    editing.value = false;
+    editingItem = null;
   }
 
   /// 重置表单
@@ -206,7 +197,6 @@ class CreatureLootTemplateViewModel {
 
   /// 保存记录
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final loot = collectFromForm();
       await repository.storeLootTemplate(loot);
@@ -218,14 +208,11 @@ class CreatureLootTemplateViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 
   /// 更新记录
   Future<void> update(BuildContext context) async {
-    saving.value = true;
     try {
       final loot = collectFromForm();
       await repository.updateLootTemplate(loot, oldItem: editingItem);
@@ -237,8 +224,6 @@ class CreatureLootTemplateViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

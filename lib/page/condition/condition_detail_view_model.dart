@@ -33,7 +33,6 @@ class ConditionDetailViewModel {
   final commentController = TextEditingController();
 
   final condition = signal<ConditionEntity?>(null);
-  final saving = signal(false);
   Map<String, dynamic>? _originalCredential;
 
   Future<void> initSignals({Map<String, dynamic>? credential}) async {
@@ -69,7 +68,6 @@ class ConditionDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final data = _collectFromControllers();
       if (_originalCredential == null) {
@@ -89,8 +87,6 @@ class ConditionDetailViewModel {
     } catch (e) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
-    } finally {
-      saving.value = false;
     }
   }
 

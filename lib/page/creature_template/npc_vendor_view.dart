@@ -107,7 +107,6 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           header: (context, index) {
             return ShadTableCell.header(child: Text(headers[index]));
           },
-          loading: viewModel.loading.value,
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,

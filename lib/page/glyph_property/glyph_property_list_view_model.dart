@@ -28,10 +28,8 @@ class GlyphPropertyListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.copyGlyphProperty(id);
       _logActivity(ActivityActionType.copy, id);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -49,10 +47,8 @@ class GlyphPropertyListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroyGlyphProperty(id);
       _logActivity(ActivityActionType.delete, id);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

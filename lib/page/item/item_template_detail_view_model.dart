@@ -158,8 +158,6 @@ class ItemTemplateDetailViewModel {
   final entry = signal(0);
   final template = signal(ItemTemplateEntity());
   final statsCount = signal(0);
-  final saving = signal(false);
-
   /// Computed conditions
   bool get hasEnchantment =>
       template.value.randomProperty != 0 || template.value.randomSuffix != 0;
@@ -456,7 +454,6 @@ class ItemTemplateDetailViewModel {
 
   /// 保存模板到数据库
   Future<void> save(BuildContext context) async {
-    saving.value = true;
     try {
       final t = _collectFromControllers();
       final repository = ItemTemplateRepository();
@@ -477,8 +474,6 @@ class ItemTemplateDetailViewModel {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-    } finally {
-      saving.value = false;
     }
   }
 

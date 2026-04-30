@@ -74,10 +74,8 @@ class PlayerCreateInfoListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.copyPlayerCreateInfo(info.buildCredential());
       _logActivity(ActivityActionType.copy, info.race);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -95,10 +93,8 @@ class PlayerCreateInfoListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroyPlayerCreateInfo(info.buildCredential());
       _logActivity(ActivityActionType.delete, info.race);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

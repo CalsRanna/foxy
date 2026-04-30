@@ -14,25 +14,15 @@ class GameObjectQuestItemViewModel {
   final gameObjectEntry = signal(0);
   final items = signal<List<GameObjectQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final loading = signal(false);
-  final saving = signal(false);
-
   final idxController = TextEditingController();
   final itemIdController = TextEditingController();
   final verifiedBuildController = TextEditingController();
   final repository = GameObjectQuestItemRepository();
 
   Future<void> load() async {
-    loading.value = true;
-    try {
-      items.value = await repository.getGameObjectQuestItems(
-        gameObjectEntry.value,
-      );
-    } catch (e) {
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
+    items.value = await repository.getGameObjectQuestItems(
+      gameObjectEntry.value,
+    );
   }
 
   void resetForm() {
@@ -94,9 +84,7 @@ class GameObjectQuestItemViewModel {
     if (index == null) return;
     try {
       final item = items.value[index];
-      DialogUtil.instance.loading();
       await repository.copyGameObjectQuestItem(item.gameObjectEntry, item.idx);
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('复制成功');
       await load();
     } catch (e) {
@@ -116,12 +104,10 @@ class GameObjectQuestItemViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      DialogUtil.instance.loading();
       await repository.destroyGameObjectQuestItem(
         item.gameObjectEntry,
         item.idx,
       );
-      await DialogUtil.instance.dismiss();
       DialogUtil.instance.success('删除成功');
       await load();
     } catch (e) {
@@ -130,7 +116,6 @@ class GameObjectQuestItemViewModel {
   }
 
   Future<void> save(BuildContext dialogContext) async {
-    saving.value = true;
     try {
       final questItem = collectFromForm();
       await repository.storeGameObjectQuestItem(questItem);
@@ -138,13 +123,10 @@ class GameObjectQuestItemViewModel {
       if (dialogContext.mounted) Navigator.of(dialogContext).pop();
     } catch (e) {
       DialogUtil.instance.error('保存失败: $e');
-    } finally {
-      saving.value = false;
     }
   }
 
   Future<void> update(BuildContext dialogContext) async {
-    saving.value = true;
     try {
       final questItem = collectFromForm();
       await repository.updateGameObjectQuestItem(questItem);
@@ -152,8 +134,6 @@ class GameObjectQuestItemViewModel {
       if (dialogContext.mounted) Navigator.of(dialogContext).pop();
     } catch (e) {
       DialogUtil.instance.error('更新失败: $e');
-    } finally {
-      saving.value = false;
     }
   }
 
@@ -220,9 +200,7 @@ class GameObjectQuestItemViewModel {
                 child: Text('取消'),
               ),
               ShadButton(
-                onPressed: saving.value
-                    ? null
-                    : () => isNew ? save(dialogContext) : update(dialogContext),
+                onPressed: () => isNew ? save(dialogContext) : update(dialogContext),
                 child: Text('保存'),
               ),
             ],
