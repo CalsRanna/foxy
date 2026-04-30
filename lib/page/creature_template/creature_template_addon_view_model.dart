@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -22,11 +24,16 @@ class CreatureTemplateAddonViewModel {
 
   /// 从数据库加载数据
   Future<void> load() async {
-    final repository = CreatureTemplateAddonRepository();
-    final data = await repository.getCreatureTemplateAddon(creatureId.value);
-    if (data != null) {
-      addon.value = data;
-      initControllers(data);
+    try {
+      final repository = CreatureTemplateAddonRepository();
+      final data = await repository.getCreatureTemplateAddon(creatureId.value);
+      if (data != null) {
+        addon.value = data;
+        initControllers(data);
+      }
+    } catch (e) {
+      LoggerUtil.instance.e('加载生物附加数据失败: $e');
+      DialogUtil.instance.error('加载生物附加数据失败: $e');
     }
   }
 
@@ -88,8 +95,13 @@ class CreatureTemplateAddonViewModel {
 
   /// 初始化 ViewModel
   Future<void> initSignals({required int creatureId}) async {
-    this.creatureId.value = creatureId;
-    await load();
+    try {
+      this.creatureId.value = creatureId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物附加失败: $e');
+      DialogUtil.instance.error('初始化生物附加失败: $e');
+    }
   }
 
   /// 清理资源

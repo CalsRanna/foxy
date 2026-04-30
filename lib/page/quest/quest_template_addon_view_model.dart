@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';
 import 'package:foxy/repository/quest_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -32,17 +34,22 @@ class QuestTemplateAddonViewModel {
   int _originalId = 0;
 
   Future<void> initSignals({required int questId}) async {
-    this.questId.value = questId;
-    final repository = QuestTemplateAddonRepository();
-    final existing = await repository.getQuestTemplateAddon(questId);
-    if (existing != null) {
-      _originalId = existing.id;
-      addon.value = existing;
-    } else {
-      final blank = await repository.createQuestTemplateAddon(questId);
-      addon.value = blank;
+    try {
+      this.questId.value = questId;
+      final repository = QuestTemplateAddonRepository();
+      final existing = await repository.getQuestTemplateAddon(questId);
+      if (existing != null) {
+        _originalId = existing.id;
+        addon.value = existing;
+      } else {
+        final blank = await repository.createQuestTemplateAddon(questId);
+        addon.value = blank;
+      }
+      _initControllers(addon.value);
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
     }
-    _initControllers(addon.value);
   }
 
   Future<void> save(BuildContext context) async {

@@ -103,14 +103,19 @@ class GameObjectLootTemplateViewModel {
       controller.value.firstOrNull ?? 0;
 
   Future<void> create(BuildContext dialogContext) async {
-    resetForm();
-    final nextItemId = await repository.getNextItemId(gameObjectId.value);
-    if (!dialogContext.mounted) return;
-    itemController.text = nextItemId.toString();
-    await showShadDialog(
-      context: dialogContext,
-      builder: (context) => _buildDialogForm(context),
-    );
+    try {
+      resetForm();
+      final nextItemId = await repository.getNextItemId(gameObjectId.value);
+      if (!dialogContext.mounted) return;
+      itemController.text = nextItemId.toString();
+      await showShadDialog(
+        context: dialogContext,
+        builder: (context) => _buildDialogForm(context),
+      );
+    } catch (e) {
+      LoggerUtil.instance.e('创建失败: $e');
+      DialogUtil.instance.error('创建失败: $e');
+    }
   }
 
   void edit(BuildContext dialogContext) {
@@ -195,8 +200,13 @@ class GameObjectLootTemplateViewModel {
   }
 
   Future<void> initSignals({required int gameObjectId}) async {
-    this.gameObjectId.value = gameObjectId;
-    await load();
+    try {
+      this.gameObjectId.value = gameObjectId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
+    }
   }
 
   void pop() {

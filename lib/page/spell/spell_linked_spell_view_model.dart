@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -64,8 +66,13 @@ class SpellLinkedSpellViewModel {
   }
 
   Future<void> create() async {
-    resetForm();
-    selectedIndex.value = null;
+    try {
+      resetForm();
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('法术链接-创建失败: $e');
+      DialogUtil.instance.error('法术链接-创建失败: $e');
+    }
   }
 
   void edit() {
@@ -177,8 +184,13 @@ class SpellLinkedSpellViewModel {
   }
 
   Future<void> initSignals({required int spellId}) async {
-    this.spellId.value = spellId;
-    await load();
+    try {
+      this.spellId.value = spellId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('法术链接-初始化失败: $e');
+      DialogUtil.instance.error('法术链接-初始化失败: $e');
+    }
   }
 
   void pop() {

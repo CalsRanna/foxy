@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -84,11 +86,16 @@ class NpcVendorViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final nextSlot = await repository.getNextSlot(entry.value);
-    resetForm();
-    slotController.text = nextSlot.toString();
-    selectedIndex.value = null;
-    _editingSlot = null;
+    try {
+      final nextSlot = await repository.getNextSlot(entry.value);
+      resetForm();
+      slotController.text = nextSlot.toString();
+      selectedIndex.value = null;
+      _editingSlot = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建NPC商人记录失败: $e');
+      DialogUtil.instance.error('创建NPC商人记录失败: $e');
+    }
   }
 
   /// 编辑选中记录
@@ -207,8 +214,13 @@ class NpcVendorViewModel {
 
   /// 初始化
   Future<void> initSignals({required int creatureId}) async {
-    entry.value = creatureId;
-    await load();
+    try {
+      entry.value = creatureId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化NPC商人失败: $e');
+      DialogUtil.instance.error('初始化NPC商人失败: $e');
+    }
   }
 
   /// 退出页面

@@ -68,8 +68,13 @@ class AreaTableListViewModel {
   }
 
   Future<void> initSignals() async {
-    areas.value = await repository.getBriefAreaTables();
-    total.value = await repository.countAreaTables();
+    try {
+      areas.value = await repository.getBriefAreaTables();
+      total.value = await repository.countAreaTables();
+    } catch (e) {
+      LoggerUtil.instance.e('加载区域表列表失败: $e');
+      DialogUtil.instance.error('加载区域表列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id, String? name}) {
@@ -100,8 +105,7 @@ class AreaTableListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    areas.value = await repository.getBriefAreaTables();
-    total.value = await repository.countAreaTables();
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -110,12 +114,17 @@ class AreaTableListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    areas.value = await repository.getBriefAreaTables(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countAreaTables(filter: filter);
+    try {
+      final filter = _buildFilter();
+      areas.value = await repository.getBriefAreaTables(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countAreaTables(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新区域表列表失败: $e');
+      DialogUtil.instance.error('刷新区域表列表失败: $e');
+    }
   }
 
   void _logActivity(ActivityActionType action, int id) {

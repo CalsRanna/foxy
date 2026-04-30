@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class GameObjectTemplateLocaleNameSelector extends StatefulWidget {
@@ -47,28 +49,33 @@ class _GameObjectTemplateLocaleNameSelectorState
   }
 
   Future<void> _openLocaleDialog() async {
-    if (widget.entry == null) return;
-    final locales = await repository.getGameObjectTemplateLocales(
-      widget.entry!,
-    );
-    if (!mounted) return;
-    await showShadDialog(
-      context: context,
-      builder: (context) {
-        return _LocaleDialog(
-          entry: widget.entry!,
-          locales: locales,
-          onSave: (locales) async {
-            await repository.saveGameObjectTemplateLocales(
-              widget.entry!,
-              locales,
-            );
-          },
-          title: widget.title,
-          isCaption: widget.isCaption,
-        );
-      },
-    );
+    try {
+      if (widget.entry == null) return;
+      final locales = await repository.getGameObjectTemplateLocales(
+        widget.entry!,
+      );
+      if (!mounted) return;
+      await showShadDialog(
+        context: context,
+        builder: (context) {
+          return _LocaleDialog(
+            entry: widget.entry!,
+            locales: locales,
+            onSave: (locales) async {
+              await repository.saveGameObjectTemplateLocales(
+                widget.entry!,
+                locales,
+              );
+            },
+            title: widget.title,
+            isCaption: widget.isCaption,
+          );
+        },
+      );
+    } catch (e) {
+      LoggerUtil.instance.e('加载本地化文本失败: $e');
+      DialogUtil.instance.error('加载本地化文本失败: $e');
+    }
   }
 }
 

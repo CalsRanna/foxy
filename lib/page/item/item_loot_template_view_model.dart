@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -101,13 +103,18 @@ class ItemLootTemplateViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final nextItem = await repository.getNextItemId(entry.value);
-    resetForm();
-    itemController.text = nextItem.toString();
-    creating.value = true;
-    editing.value = false;
-    selectedIndex.value = null;
-    editingItem = null;
+    try {
+      final nextItem = await repository.getNextItemId(entry.value);
+      resetForm();
+      itemController.text = nextItem.toString();
+      creating.value = true;
+      editing.value = false;
+      selectedIndex.value = null;
+      editingItem = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建失败: $e');
+      DialogUtil.instance.error('创建失败: $e');
+    }
   }
 
   /// 编辑选中记录
@@ -228,8 +235,13 @@ class ItemLootTemplateViewModel {
 
   /// 初始化
   Future<void> initSignals({required int itemId}) async {
-    entry.value = itemId;
-    await load();
+    try {
+      entry.value = itemId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
+    }
   }
 
   /// 退出页面

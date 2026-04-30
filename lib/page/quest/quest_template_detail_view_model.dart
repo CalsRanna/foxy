@@ -4,6 +4,8 @@ import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -182,8 +184,13 @@ class QuestTemplateDetailViewModel {
 
   Future<void> initSignals({int? questId}) async {
     if (questId == null) return;
-    template.value = await QuestTemplateRepository().getQuestTemplate(questId);
-    _initControllers(template.value);
+    try {
+      template.value = await QuestTemplateRepository().getQuestTemplate(questId);
+      _initControllers(template.value);
+    } catch (e) {
+      LoggerUtil.instance.e('加载任务详情失败: $e');
+      DialogUtil.instance.error('加载任务详情失败: $e');
+    }
   }
 
   void _initControllers(QuestTemplateEntity t) {

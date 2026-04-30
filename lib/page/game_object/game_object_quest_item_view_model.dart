@@ -4,6 +4,7 @@ import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -63,14 +64,19 @@ class GameObjectQuestItemViewModel {
   }
 
   Future<void> create(BuildContext dialogContext) async {
-    resetForm();
-    final nextIdx = await repository.getNextIdx(gameObjectEntry.value);
-    if (!dialogContext.mounted) return;
-    idxController.text = nextIdx.toString();
-    await showShadDialog(
-      context: dialogContext,
-      builder: (context) => _buildDialogForm(context, isNew: true),
-    );
+    try {
+      resetForm();
+      final nextIdx = await repository.getNextIdx(gameObjectEntry.value);
+      if (!dialogContext.mounted) return;
+      idxController.text = nextIdx.toString();
+      await showShadDialog(
+        context: dialogContext,
+        builder: (context) => _buildDialogForm(context, isNew: true),
+      );
+    } catch (e) {
+      LoggerUtil.instance.e('创建失败: $e');
+      DialogUtil.instance.error('创建失败: $e');
+    }
   }
 
   void edit(BuildContext dialogContext) {
@@ -156,8 +162,13 @@ class GameObjectQuestItemViewModel {
   }
 
   Future<void> initSignals({required int gameObjectId}) async {
-    gameObjectEntry.value = gameObjectId;
-    await load();
+    try {
+      gameObjectEntry.value = gameObjectId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
+    }
   }
 
   void pop() {

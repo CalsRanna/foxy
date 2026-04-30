@@ -23,8 +23,13 @@ class GossipMenuListViewModel {
   final total = signal(0);
 
   Future<void> initSignals() async {
-    menus.value = await repository.getBriefGossipMenus();
-    total.value = await repository.countGossipMenus();
+    try {
+      menus.value = await repository.getBriefGossipMenus();
+      total.value = await repository.countGossipMenus();
+    } catch (e) {
+      LoggerUtil.instance.e('加载对话菜单列表失败: $e');
+      DialogUtil.instance.error('加载对话菜单列表失败: $e');
+    }
   }
 
   void dispose() {
@@ -46,8 +51,7 @@ class GossipMenuListViewModel {
     menuIdController.clear();
     textController.clear();
     page.value = 1;
-    menus.value = await repository.getBriefGossipMenus();
-    total.value = await repository.countGossipMenus();
+    await _refresh();
   }
 
   Future<void> copyGossipMenu(int menuId, int textId) async {
@@ -105,12 +109,17 @@ class GossipMenuListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    menus.value = await repository.getBriefGossipMenus(
-      filter: filter,
-      page: page.value,
-    );
-    total.value = await repository.countGossipMenus(filter: filter);
+    try {
+      final filter = _buildFilter();
+      menus.value = await repository.getBriefGossipMenus(
+        filter: filter,
+        page: page.value,
+      );
+      total.value = await repository.countGossipMenus(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新对话菜单列表失败: $e');
+      DialogUtil.instance.error('刷新对话菜单列表失败: $e');
+    }
   }
 
   GossipMenuFilterEntity _buildFilter() {

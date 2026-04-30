@@ -68,8 +68,13 @@ class GameObjectTemplateListViewModel {
   }
 
   Future<void> initSignals() async {
-    templates.value = await repository.getBriefGameObjectTemplates();
-    total.value = await repository.countGameObjectTemplates();
+    try {
+      templates.value = await repository.getBriefGameObjectTemplates();
+      total.value = await repository.countGameObjectTemplates();
+    } catch (e) {
+      LoggerUtil.instance.e('加载游戏对象列表失败: $e');
+      DialogUtil.instance.error('加载游戏对象列表失败: $e');
+    }
   }
 
   void navigateGameObjectTemplateDetailPage(
@@ -104,8 +109,7 @@ class GameObjectTemplateListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    templates.value = await repository.getBriefGameObjectTemplates();
-    total.value = await repository.countGameObjectTemplates();
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -114,12 +118,17 @@ class GameObjectTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefGameObjectTemplates(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countGameObjectTemplates(filter: filter);
+    try {
+      final filter = _buildFilter();
+      templates.value = await repository.getBriefGameObjectTemplates(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countGameObjectTemplates(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新游戏对象列表失败: $e');
+      DialogUtil.instance.error('刷新游戏对象列表失败: $e');
+    }
   }
 
   void _logActivity(ActivityActionType action, int entry) {

@@ -66,8 +66,13 @@ class GemPropertyListViewModel {
   }
 
   Future<void> initSignals() async {
-    properties.value = await repository.getGemProperties();
-    total.value = await repository.countGemProperties();
+    try {
+      properties.value = await repository.getGemProperties();
+      total.value = await repository.countGemProperties();
+    } catch (e) {
+      LoggerUtil.instance.e('加载宝石属性列表失败: $e');
+      DialogUtil.instance.error('加载宝石属性列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id}) {
@@ -94,8 +99,7 @@ class GemPropertyListViewModel {
   Future<void> reset() async {
     entryController.clear();
     page.value = 1;
-    properties.value = await repository.getGemProperties();
-    total.value = await repository.countGemProperties();
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -104,12 +108,17 @@ class GemPropertyListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    properties.value = await repository.getGemProperties(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countGemProperties(filter: filter);
+    try {
+      final filter = _buildFilter();
+      properties.value = await repository.getGemProperties(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countGemProperties(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新宝石属性列表失败: $e');
+      DialogUtil.instance.error('刷新宝石属性列表失败: $e');
+    }
   }
 
   void _logActivity(ActivityActionType action, int id) {

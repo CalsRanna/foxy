@@ -77,14 +77,19 @@ class ScalingStatDistributionListViewModel {
   }
 
   Future<void> initSignals() async {
-    final filter = ScalingStatDistributionFilterEntity();
-    distributions.value = await repository.getScalingStatDistributions(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countScalingStatDistributions(
-      filter: filter,
-    );
+    try {
+      final filter = ScalingStatDistributionFilterEntity();
+      distributions.value = await repository.getScalingStatDistributions(
+        page: 1,
+        filter: filter,
+      );
+      total.value = await repository.countScalingStatDistributions(
+        filter: filter,
+      );
+    } catch (e) {
+      LoggerUtil.instance.e('加载属性缩放分布列表失败: $e');
+      DialogUtil.instance.error('加载属性缩放分布列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id}) {
@@ -113,14 +118,7 @@ class ScalingStatDistributionListViewModel {
   Future<void> reset() async {
     idController.clear();
     page.value = 1;
-    final filter = ScalingStatDistributionFilterEntity();
-    distributions.value = await repository.getScalingStatDistributions(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countScalingStatDistributions(
-      filter: filter,
-    );
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -129,13 +127,18 @@ class ScalingStatDistributionListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    distributions.value = await repository.getScalingStatDistributions(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countScalingStatDistributions(
-      filter: filter,
-    );
+    try {
+      final filter = _buildFilter();
+      distributions.value = await repository.getScalingStatDistributions(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countScalingStatDistributions(
+        filter: filter,
+      );
+    } catch (e) {
+      LoggerUtil.instance.e('刷新属性缩放分布列表失败: $e');
+      DialogUtil.instance.error('刷新属性缩放分布列表失败: $e');
+    }
   }
 }

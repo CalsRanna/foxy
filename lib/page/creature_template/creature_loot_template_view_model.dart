@@ -4,6 +4,8 @@ import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -114,16 +116,21 @@ class CreatureLootTemplateViewModel {
 
   /// 创建新记录
   Future<void> create() async {
-    final template = creatureTemplate.value;
-    if (template == null) return;
+    try {
+      final template = creatureTemplate.value;
+      if (template == null) return;
 
-    final nextItem = await repository.getNextItemId(template.lootId);
-    resetForm();
-    itemController.text = nextItem.toString();
-    creating.value = true;
-    editing.value = false;
-    selectedIndex.value = null;
-    editingItem = null;
+      final nextItem = await repository.getNextItemId(template.lootId);
+      resetForm();
+      itemController.text = nextItem.toString();
+      creating.value = true;
+      editing.value = false;
+      selectedIndex.value = null;
+      editingItem = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建生物掉落记录失败: $e');
+      DialogUtil.instance.error('创建生物掉落记录失败: $e');
+    }
   }
 
   /// 编辑选中记录
@@ -244,8 +251,13 @@ class CreatureLootTemplateViewModel {
 
   /// 初始化
   Future<void> initSignals({required int creatureId}) async {
-    this.creatureId.value = creatureId;
-    await load();
+    try {
+      this.creatureId.value = creatureId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物掉落失败: $e');
+      DialogUtil.instance.error('初始化生物掉落失败: $e');
+    }
   }
 
   /// 退出页面

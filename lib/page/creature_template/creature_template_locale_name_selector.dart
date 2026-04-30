@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class CreatureTemplateLocaleNameSelector extends StatefulWidget {
@@ -45,25 +47,30 @@ class _CreatureTemplateLocaleNameSelectorState
   }
 
   Future<void> _openLocaleDialog() async {
-    if (widget.entry == null) return;
-    final locales = await repository.getCreatureTemplateLocales(widget.entry!);
-    if (!mounted) return;
-    await showShadDialog(
-      context: context,
-      builder: (context) {
-        return _LocaleDialog(
-          entry: widget.entry!,
-          locales: locales,
-          onSave: (locales) async {
-            await repository.saveCreatureTemplateLocales(
-              widget.entry!,
-              locales,
-            );
-          },
-          title: widget.title,
-        );
-      },
-    );
+    try {
+      if (widget.entry == null) return;
+      final locales = await repository.getCreatureTemplateLocales(widget.entry!);
+      if (!mounted) return;
+      await showShadDialog(
+        context: context,
+        builder: (context) {
+          return _LocaleDialog(
+            entry: widget.entry!,
+            locales: locales,
+            onSave: (locales) async {
+              await repository.saveCreatureTemplateLocales(
+                widget.entry!,
+                locales,
+              );
+            },
+            title: widget.title,
+          );
+        },
+      );
+    } catch (e) {
+      LoggerUtil.instance.e('加载本地化文本失败: $e');
+      DialogUtil.instance.error('加载本地化文本失败: $e');
+    }
   }
 }
 

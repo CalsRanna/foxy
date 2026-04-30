@@ -43,33 +43,46 @@ class GossipMenuOptionViewModel {
     try {
       currentMenuId.value = menuId;
       options.value = await _repository.getGossipMenuOptions(menuId: menuId);
+    } catch (e) {
+      LoggerUtil.instance.e('加载对话菜单选项失败: $e');
+      DialogUtil.instance.error('加载对话菜单选项失败: $e');
     } finally {
       loading.value = false;
     }
   }
 
   Future<void> onCreate() async {
-    final blank = await _repository.createGossipMenuOption(
-      menuId: currentMenuId.value,
-    );
-    _applyToControllers(blank);
-    _originalMenuId = blank.menuId;
-    _originalOptionId = blank.optionId;
-    creating.value = true;
-    editing.value = false;
+    try {
+      final blank = await _repository.createGossipMenuOption(
+        menuId: currentMenuId.value,
+      );
+      _applyToControllers(blank);
+      _originalMenuId = blank.menuId;
+      _originalOptionId = blank.optionId;
+      creating.value = true;
+      editing.value = false;
+    } catch (e) {
+      LoggerUtil.instance.e('创建对话菜单选项失败: $e');
+      DialogUtil.instance.error('创建对话菜单选项失败: $e');
+    }
   }
 
   Future<void> onEdit(int menuId, int optionId) async {
-    final existing = await _repository.getGossipMenuOption({
-      'MenuID': menuId,
-      'OptionID': optionId,
-    });
-    if (existing == null) return;
-    _applyToControllers(existing);
-    _originalMenuId = menuId;
-    _originalOptionId = optionId;
-    creating.value = false;
-    editing.value = true;
+    try {
+      final existing = await _repository.getGossipMenuOption({
+        'MenuID': menuId,
+        'OptionID': optionId,
+      });
+      if (existing == null) return;
+      _applyToControllers(existing);
+      _originalMenuId = menuId;
+      _originalOptionId = optionId;
+      creating.value = false;
+      editing.value = true;
+    } catch (e) {
+      LoggerUtil.instance.e('加载对话菜单选项编辑失败: $e');
+      DialogUtil.instance.error('加载对话菜单选项编辑失败: $e');
+    }
   }
 
   Future<void> onSave() async {

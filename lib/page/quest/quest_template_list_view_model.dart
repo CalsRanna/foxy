@@ -24,7 +24,12 @@ class QuestTemplateListViewModel {
   final total = signal(0);
 
   Future<void> initSignals() async {
-    await _refresh();
+    try {
+      await _refresh();
+    } catch (e) {
+      LoggerUtil.instance.e('加载任务列表失败: $e');
+      DialogUtil.instance.error('加载任务列表失败: $e');
+    }
   }
 
   void dispose() {
@@ -102,12 +107,17 @@ class QuestTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefQuestTemplates(
-      filter: filter,
-      page: page.value,
-    );
-    total.value = await repository.countQuestTemplates(filter: filter);
+    try {
+      final filter = _buildFilter();
+      templates.value = await repository.getBriefQuestTemplates(
+        filter: filter,
+        page: page.value,
+      );
+      total.value = await repository.countQuestTemplates(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新任务列表失败: $e');
+      DialogUtil.instance.error('刷新任务列表失败: $e');
+    }
   }
 
   QuestTemplateFilterEntity _buildFilter() {

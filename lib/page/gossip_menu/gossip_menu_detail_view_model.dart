@@ -4,6 +4,7 @@ import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -24,20 +25,20 @@ class GossipMenuDetailViewModel {
   int? _originalTextId;
 
   Future<void> initSignals({int? menuId, int? textId}) async {
-    if (menuId == null) {
-      final nextMenuId = await GossipMenuRepository().getNextMenuId();
-      this.menuId.value = nextMenuId;
-      this.textId.value = 0;
-      menu.value = GossipMenuEntity(menuId: nextMenuId, textId: 0);
-      _originalMenuId = null;
-      _originalTextId = null;
-      menuIdController.text = nextMenuId.toString();
-      textIdController.text = '0';
-      return;
-    }
-    _originalMenuId = menuId;
-    _originalTextId = textId ?? 0;
     try {
+      if (menuId == null) {
+        final nextMenuId = await GossipMenuRepository().getNextMenuId();
+        this.menuId.value = nextMenuId;
+        this.textId.value = 0;
+        menu.value = GossipMenuEntity(menuId: nextMenuId, textId: 0);
+        _originalMenuId = null;
+        _originalTextId = null;
+        menuIdController.text = nextMenuId.toString();
+        textIdController.text = '0';
+        return;
+      }
+      _originalMenuId = menuId;
+      _originalTextId = textId ?? 0;
       final existing = await GossipMenuRepository().getGossipMenu(
         menuId,
         textId ?? 0,
@@ -47,12 +48,9 @@ class GossipMenuDetailViewModel {
       menu.value = existing;
       menuIdController.text = this.menuId.value.toString();
       textIdController.text = this.textId.value.toString();
-    } catch (e, s) {
-      LoggerUtil.instance.e(
-        '加载对话菜单(menuId=$menuId, textId=$textId)失败',
-        error: e,
-        stackTrace: s,
-      );
+    } catch (e) {
+      LoggerUtil.instance.e('加载对话菜单详情失败: $e');
+      DialogUtil.instance.error('加载对话菜单详情失败: $e');
     }
   }
 

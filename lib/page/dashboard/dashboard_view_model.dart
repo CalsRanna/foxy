@@ -3,6 +3,8 @@ import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -31,16 +33,26 @@ class DashboardViewModel {
   }
 
   Future<void> initSignals() async {
-    var versionEntity = await VersionRepository().getVersion();
-    coreVersion.value = versionEntity.coreVersion;
-    coreRevision.value = versionEntity.coreRevision;
-    databaseVersion.value = versionEntity.dbVersion;
-    var packageInfo = await PackageInfo.fromPlatform();
-    softwareVersion.value = '${packageInfo.version}+${packageInfo.buildNumber}';
-    await _loadRecentActivities();
+    try {
+      var versionEntity = await VersionRepository().getVersion();
+      coreVersion.value = versionEntity.coreVersion;
+      coreRevision.value = versionEntity.coreRevision;
+      databaseVersion.value = versionEntity.dbVersion;
+      var packageInfo = await PackageInfo.fromPlatform();
+      softwareVersion.value = '${packageInfo.version}+${packageInfo.buildNumber}';
+      await _loadRecentActivities();
+    } catch (e) {
+      LoggerUtil.instance.e('加载仪表板数据失败: $e');
+      DialogUtil.instance.error('加载仪表板数据失败: $e');
+    }
   }
 
   Future<void> _loadRecentActivities() async {
-    recentActivities.value = await _activityRepo.getRecentActivityLogs();
+    try {
+      recentActivities.value = await _activityRepo.getRecentActivityLogs();
+    } catch (e) {
+      LoggerUtil.instance.e('加载最近活动失败: $e');
+      DialogUtil.instance.error('加载最近活动失败: $e');
+    }
   }
 }

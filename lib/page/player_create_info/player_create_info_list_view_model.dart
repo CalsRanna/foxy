@@ -24,8 +24,13 @@ class PlayerCreateInfoListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
-    infos.value = await _search();
-    total.value = await _count();
+    try {
+      infos.value = await _search();
+      total.value = await _count();
+    } catch (e) {
+      LoggerUtil.instance.e('加载角色创建信息列表失败: $e');
+      DialogUtil.instance.error('加载角色创建信息列表失败: $e');
+    }
   }
 
   Future<void> search() async {
@@ -132,8 +137,13 @@ class PlayerCreateInfoListViewModel {
   }
 
   Future<void> _refresh() async {
-    infos.value = await _search();
-    total.value = await _count();
+    try {
+      infos.value = await _search();
+      total.value = await _count();
+    } catch (e) {
+      LoggerUtil.instance.e('刷新角色创建信息列表失败: $e');
+      DialogUtil.instance.error('刷新角色创建信息列表失败: $e');
+    }
   }
 
   void dispose() {

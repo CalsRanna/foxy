@@ -77,12 +77,17 @@ class GlyphPropertyListViewModel {
   }
 
   Future<void> initSignals() async {
-    final filter = GlyphPropertyFilterEntity();
-    properties.value = await repository.getGlyphProperties(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countGlyphProperties(filter: filter);
+    try {
+      final filter = GlyphPropertyFilterEntity();
+      properties.value = await repository.getGlyphProperties(
+        page: 1,
+        filter: filter,
+      );
+      total.value = await repository.countGlyphProperties(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('加载雕文属性列表失败: $e');
+      DialogUtil.instance.error('加载雕文属性列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? id}) {
@@ -109,12 +114,7 @@ class GlyphPropertyListViewModel {
   Future<void> reset() async {
     entryController.clear();
     page.value = 1;
-    final filter = GlyphPropertyFilterEntity();
-    properties.value = await repository.getGlyphProperties(
-      page: 1,
-      filter: filter,
-    );
-    total.value = await repository.countGlyphProperties(filter: filter);
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -123,11 +123,16 @@ class GlyphPropertyListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    properties.value = await repository.getGlyphProperties(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countGlyphProperties(filter: filter);
+    try {
+      final filter = _buildFilter();
+      properties.value = await repository.getGlyphProperties(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countGlyphProperties(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新雕文属性列表失败: $e');
+      DialogUtil.instance.error('刷新雕文属性列表失败: $e');
+    }
   }
 }

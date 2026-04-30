@@ -63,10 +63,46 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 
   void _showDbcDialog() {
+    final vm = dbcImportViewModel;
+
+    // 已导入，无需操作
+    if (vm.dbcImported.value) return;
+
+    // 自动导入进行中（config 中预设了路径），显示进度
+    if (vm.dbcImportProgress.value.isNotEmpty) {
+      showShadDialog(
+        context: context,
+        builder: (ctx) => _DbcImportDialog(vm: dbcImportViewModel),
+      );
+      return;
+    }
+
+    // 未导入 → 显示提醒对话框
     showShadDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (ctx) => _DbcImportDialog(vm: dbcImportViewModel),
+      builder: (ctx) => ShadDialog.alert(
+        title: const Text('DBC 数据未导入'),
+        description: const Text(
+          '导入 DBC 数据后才能正常使用应用的全部功能，'
+          '包括法术、物品、生物等数据的完整展示与编辑。',
+        ),
+        actions: [
+          ShadButton.outline(
+            child: const Text('稍后再说'),
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+          ShadButton(
+            child: const Text('立即导入'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              showShadDialog(
+                context: context,
+                builder: (ctx) => _DbcImportDialog(vm: vm),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 

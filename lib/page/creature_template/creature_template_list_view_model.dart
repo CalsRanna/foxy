@@ -70,8 +70,13 @@ class CreatureTemplateListViewModel {
   }
 
   Future<void> initSignals() async {
-    templates.value = await repository.getBriefCreatureTemplates();
-    total.value = await repository.countCreatureTemplates();
+    try {
+      templates.value = await repository.getBriefCreatureTemplates();
+      total.value = await repository.countCreatureTemplates();
+    } catch (e) {
+      LoggerUtil.instance.e('加载生物列表失败: $e');
+      DialogUtil.instance.error('加载生物列表失败: $e');
+    }
   }
 
   void navigateToDetail({int? entry, String? name}) {
@@ -104,8 +109,7 @@ class CreatureTemplateListViewModel {
     nameController.clear();
     subNameController.clear();
     page.value = 1;
-    templates.value = await repository.getBriefCreatureTemplates();
-    total.value = await repository.countCreatureTemplates();
+    await _refresh();
   }
 
   Future<void> search() async {
@@ -114,12 +118,17 @@ class CreatureTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
-    final filter = _buildFilter();
-    templates.value = await repository.getBriefCreatureTemplates(
-      page: page.value,
-      filter: filter,
-    );
-    total.value = await repository.countCreatureTemplates(filter: filter);
+    try {
+      final filter = _buildFilter();
+      templates.value = await repository.getBriefCreatureTemplates(
+        page: page.value,
+        filter: filter,
+      );
+      total.value = await repository.countCreatureTemplates(filter: filter);
+    } catch (e) {
+      LoggerUtil.instance.e('刷新生物列表失败: $e');
+      DialogUtil.instance.error('刷新生物列表失败: $e');
+    }
   }
 
   void _logActivity(ActivityActionType action, int entry) {

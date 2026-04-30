@@ -3,6 +3,8 @@ import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
+import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 宠物技能选择器
@@ -293,6 +295,9 @@ class _DialogState extends State<_Dialog> {
           _total = total;
         });
       }
+    } catch (e) {
+      LoggerUtil.instance.e('搜索失败: $e');
+      DialogUtil.instance.error('搜索失败: $e');
     } finally {}
   }
 }
