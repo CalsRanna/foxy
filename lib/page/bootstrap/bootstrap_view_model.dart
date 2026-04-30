@@ -91,9 +91,9 @@ class BootstrapViewModel {
     var config = await _loadConfig();
     hostController.text = config['host'] ?? '127.0.0.1';
     portController.text = config['port'] ?? '3306';
-    databaseController.text = config['database'] ?? 'arcane_world';
-    usernameController.text = config['username'] ?? 'root';
-    passwordController.text = config['password'] ?? 'root';
+    databaseController.text = config['database'] ?? '';
+    usernameController.text = config['username'] ?? '';
+    passwordController.text = config['password'] ?? '';
     final packageInfo = await PackageInfo.fromPlatform();
     version.value = '${packageInfo.version}+${packageInfo.buildNumber}';
   }
@@ -108,9 +108,9 @@ class BootstrapViewModel {
     var defaultConfig = {
       'host': '127.0.0.1',
       'port': '3306',
-      'database': 'arcane_world',
-      'username': 'root',
-      'password': 'root',
+      'database': '',
+      'username': '',
+      'password': '',
     };
     var editor = YamlEditor('');
     editor.update([], defaultConfig);
