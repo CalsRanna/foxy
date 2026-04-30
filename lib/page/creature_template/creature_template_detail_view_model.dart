@@ -264,7 +264,7 @@ class CreatureTemplateDetailViewModel {
       );
       _initControllers(template.value);
     } catch (e, s) {
-      logger.e('加载生物模板(entry=$entry)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载生物模板(entry=$entry)失败', error: e, stackTrace: s);
     }
   }
 

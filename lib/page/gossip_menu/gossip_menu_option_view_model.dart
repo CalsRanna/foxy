@@ -89,7 +89,7 @@ class GossipMenuOptionViewModel {
       editing.value = false;
       await search(currentMenuId.value);
     } catch (e) {
-      logger.e(e.toString());
+      LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('保存失败: ${e.toString()}');
     } finally {
       saving.value = false;
@@ -118,7 +118,7 @@ class GossipMenuOptionViewModel {
       DialogUtil.instance.success('复制成功');
       await search(currentMenuId.value);
     } catch (e) {
-      logger.e(e.toString());
+      LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('复制失败: ${e.toString()}');
     }
   }
@@ -141,7 +141,7 @@ class GossipMenuOptionViewModel {
       DialogUtil.instance.success('删除成功');
       await search(currentMenuId.value);
     } catch (e) {
-      logger.e(e.toString());
+      LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
   }

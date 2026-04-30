@@ -40,7 +40,7 @@ class BootstrapViewModel {
       );
       var laconic = Laconic(
         MysqlDriver(config),
-        listen: (query) => logger.d(query.sql),
+        listen: (query) => LoggerUtil.instance.d(query.sql),
       );
       var foxyViewModel = GetIt.instance.get<FoxyViewModel>();
       foxyViewModel.initSignals(laconic);
@@ -74,7 +74,7 @@ class BootstrapViewModel {
       if (!context.mounted) return;
       AutoRouter.of(context).replaceAll([DashboardRoute()]);
     } catch (e) {
-      logger.e(e.toString());
+      LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error(e.toString());
     }
   }

@@ -88,7 +88,7 @@ class QuestSortDetailViewModel {
       sort.value = (await QuestSortRepository().getQuestSort(id))!;
       _initControllers(sort.value);
     } catch (e, s) {
-      logger.e('加载任务排序(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载任务排序(id=$id)失败', error: e, stackTrace: s);
     }
   }
 

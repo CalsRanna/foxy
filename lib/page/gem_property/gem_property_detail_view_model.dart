@@ -100,7 +100,7 @@ class GemPropertyDetailViewModel {
       property.value = (await GemPropertyRepository().getGemProperty(id))!;
       _initControllers(property.value);
     } catch (e, s) {
-      logger.e('加载宝石属性(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载宝石属性(id=$id)失败', error: e, stackTrace: s);
     }
   }
 

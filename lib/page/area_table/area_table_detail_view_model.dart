@@ -163,7 +163,7 @@ class AreaTableDetailViewModel {
       area.value = (await AreaTableRepository().getAreaTable(id))!;
       _initControllers(area.value);
     } catch (e, s) {
-      logger.e('加载区域(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载区域(id=$id)失败', error: e, stackTrace: s);
     }
   }
 

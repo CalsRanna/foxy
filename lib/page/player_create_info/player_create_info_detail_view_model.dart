@@ -32,7 +32,7 @@ class PlayerCreateInfoDetailViewModel {
       info.value = result;
       _initControllers(result);
     } catch (e, s) {
-      logger.e(
+      LoggerUtil.instance.e(
         '加载出生信息(race=$race, class=$playerClass)失败',
         error: e,
         stackTrace: s,

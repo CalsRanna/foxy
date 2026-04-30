@@ -80,7 +80,7 @@ class ConditionListViewModel {
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
-      logger.e(e.toString());
+      LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('复制失败: ${e.toString()}');
     }
   }
@@ -101,7 +101,7 @@ class ConditionListViewModel {
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
-      logger.e(e.toString());
+      LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
   }

@@ -210,7 +210,7 @@ class DbcImportViewModel {
   ) async {
     final line = '\nImported: $imported, Skipped: $skipped, Errors: $errors';
     await File(_timingLogPath).writeAsString('$line\n', mode: FileMode.append);
-    logger.i('DBC import timing log: $_timingLogPath');
+    LoggerUtil.instance.i('DBC import timing log: $_timingLogPath');
   }
 
   // ========== 配置持久化 ==========

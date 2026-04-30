@@ -40,7 +40,11 @@ class ReferenceLootTemplateDetailViewModel {
         _initControllers(result);
       }
     } catch (e, s) {
-      logger.e('加载关联掉落(Entry=$entry, Item=$item)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e(
+        '加载关联掉落(Entry=$entry, Item=$item)失败',
+        error: e,
+        stackTrace: s,
+      );
     }
   }
 
