@@ -75,13 +75,13 @@ class DialogUtil {
       context: context,
       builder: (context) {
         return const ShadDialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text('连接中...'),
-            ],
+          closeIcon: SizedBox.shrink(),
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: SizedBox.square(
+              dimension: 28,
+              child: CircularProgressIndicator(strokeWidth: 3),
+            ),
           ),
         );
       },
