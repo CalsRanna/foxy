@@ -91,24 +91,42 @@ class _FeatureCardState extends State<FeatureCard> {
         Expanded(child: titleColumn),
       ],
     );
+    final descriptionStyle = TextStyle(
+      fontSize: 13,
+      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+    );
+    final lineHeight = _measureLineHeight(descriptionStyle);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         title,
         const SizedBox(height: 16),
-        SizedBox(
-          height: 72,
-          child: Text(
-            widget.feature.description,
-            style: TextStyle(
-              fontSize: 13,
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final maxLines = (constraints.maxHeight / lineHeight)
+                  .floor()
+                  .clamp(1, 20);
+              return Text(
+                widget.feature.description,
+                maxLines: maxLines,
+                overflow: TextOverflow.ellipsis,
+                style: descriptionStyle,
+              );
+            },
           ),
         ),
       ],
     );
+  }
+
+  /// The line height is determined by font metrics (ascent + descent + leading),
+  /// not by the text content. A single space suffices to measure it.
+  double _measureLineHeight(TextStyle style) {
+    final painter = TextPainter(
+      text: TextSpan(text: ' ', style: style),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return painter.preferredLineHeight;
   }
 }
