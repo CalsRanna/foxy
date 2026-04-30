@@ -129,7 +129,7 @@ class SmartScriptDetailViewModel {
       );
       _initControllers(script.value);
     } catch (e, s) {
-      logger.e(
+      LoggerUtil.instance.e(
         '加载脚本(entryOrGuid=$entryOrGuid, id=$id)失败',
         error: e,
         stackTrace: s,

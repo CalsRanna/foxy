@@ -36,7 +36,7 @@ class GameObjectTemplateListViewModel {
       _logActivity(ActivityActionType.copy, entry);
       await _refresh();
     } catch (e) {
-      logger.e(e.toString());
+      LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('复制失败: ${e.toString()}');
     }
   }
@@ -57,7 +57,7 @@ class GameObjectTemplateListViewModel {
       _logActivity(ActivityActionType.delete, entry);
       await _refresh();
     } catch (e) {
-      logger.e(e.toString());
+      LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('删除失败: ${e.toString()}');
     }
   }

@@ -142,7 +142,7 @@ class ItemExtendedCostDetailViewModel {
       ))!;
       _initControllers(cost.value);
     } catch (e, s) {
-      logger.e('加载扩展价格(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载扩展价格(id=$id)失败', error: e, stackTrace: s);
     }
   }
 

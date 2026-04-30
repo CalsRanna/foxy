@@ -172,7 +172,7 @@ class SpellItemEnchantmentDetailViewModel {
           .getSpellItemEnchantment(id))!;
       _initControllers(enchantment.value);
     } catch (e, s) {
-      logger.e('加载法术附魔(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载法术附魔(id=$id)失败', error: e, stackTrace: s);
     }
   }
 

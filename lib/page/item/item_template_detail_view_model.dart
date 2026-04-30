@@ -176,7 +176,7 @@ class ItemTemplateDetailViewModel {
       _initControllers(template.value);
       statsCount.value = template.value.statsCount;
     } catch (e, s) {
-      logger.e('加载物品模板(entry=$entry)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载物品模板(entry=$entry)失败', error: e, stackTrace: s);
     }
   }
 

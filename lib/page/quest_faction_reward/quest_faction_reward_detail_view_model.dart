@@ -122,7 +122,7 @@ class QuestFactionRewardDetailViewModel {
           .getQuestFactionReward(id))!;
       _initControllers(reward.value);
     } catch (e, s) {
-      logger.e('加载任务声望(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载任务声望(id=$id)失败', error: e, stackTrace: s);
     }
   }
 

@@ -30,7 +30,7 @@ class PageTextDetailViewModel {
       _initControllers(page.value!);
       locales.value = await repository.getLocales(id);
     } catch (e, s) {
-      logger.e('加载页面文本(ID=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载页面文本(ID=$id)失败', error: e, stackTrace: s);
     }
   }
 

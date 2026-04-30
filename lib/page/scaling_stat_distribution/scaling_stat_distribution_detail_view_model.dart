@@ -159,7 +159,7 @@ class ScalingStatDistributionDetailViewModel {
           .getScalingStatDistribution(id))!;
       _initControllers(distribution.value);
     } catch (e, s) {
-      logger.e('加载属性缩放分布(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载属性缩放分布(id=$id)失败', error: e, stackTrace: s);
     }
   }
 

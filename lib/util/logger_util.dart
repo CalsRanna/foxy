@@ -62,5 +62,3 @@ class _PlainPrinter extends LogPrinter {
     return [message];
   }
 }
-
-final logger = LoggerUtil.instance;

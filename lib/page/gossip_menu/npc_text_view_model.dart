@@ -84,12 +84,12 @@ class NpcTextViewModel {
           await _localeRepository.saveNpcTextLocale(locale);
           localeExists.value = true;
         } catch (e) {
-          logger.w('locale 保存失败（可能表不存在）：$e');
+          LoggerUtil.instance.w('locale 保存失败（可能表不存在）：$e');
         }
       }
       DialogUtil.instance.success('保存成功');
     } catch (e) {
-      logger.e(e.toString());
+      LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('保存失败: ${e.toString()}');
     } finally {
       saving.value = false;
