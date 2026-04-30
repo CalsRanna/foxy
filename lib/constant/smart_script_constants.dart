@@ -2,10 +2,10 @@
 // 数据来源：AzerothCore SmartScriptMgr.h
 
 const Map<int, String> kSourceTypes = {
-  0: '生物 (Creature)',
-  1: '游戏对象 (GameObject)',
-  2: '区域触发 (AreaTrigger)',
-  9: '定时动作列表 (TimedActionList)',
+  0: '生物', // Creature
+  1: '游戏对象', // GameObject
+  2: '区域触发', // AreaTrigger
+  9: '定时动作列表', // TimedActionList
 };
 
 const Map<int, String> kEventTypes = {
@@ -277,13 +277,13 @@ const Map<int, String> kEventPhaseMasks = {
 };
 
 const Map<int, String> kEventFlags = {
-  1: '非重复 (Not Repeatable)',
-  2: '困难模式 (Difficulty 0)',
-  4: '困难模式1 (Difficulty 1)',
-  8: '困难模式2 (Difficulty 2)',
-  16: '普通模式 (Difficulty 0/10)',
-  32: '普通地下城 (Normal Dungeon)',
-  64: '英雄地下城 (Heroic Dungeon)',
-  128: '重置后重复 (Repeatable after Reset)',
-  256: '调试模式 (Debug Only)',
+  1: '非重复', // Not Repeatable
+  2: '困难模式', // Difficulty 0
+  4: '困难模式1', // Difficulty 1
+  8: '困难模式2', // Difficulty 2
+  16: '普通模式', // Difficulty 0/10
+  32: '普通地下城', // Normal Dungeon
+  64: '英雄地下城', // Heroic Dungeon
+  128: '重置后重复', // Repeatable after Reset
+  256: '调试模式', // Debug Only
 };

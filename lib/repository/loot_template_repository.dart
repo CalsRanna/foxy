@@ -24,44 +24,36 @@ class LootTemplateRepository with RepositoryMixin {
   String get _table => tableType.tableName;
 
   Future<int> countLootTemplates({String? entry}) async {
-    try {
-      var builder = laconic.table(_table);
-      builder = builder.select(['DISTINCT Entry']);
-      if (entry != null && entry.isNotEmpty) {
-        builder = builder.where('Entry', entry);
-      }
-      return await builder.count();
-    } catch (e) {
-      return 0;
+    var builder = laconic.table(_table);
+    builder = builder.select(['DISTINCT Entry']);
+    if (entry != null && entry.isNotEmpty) {
+      builder = builder.where('Entry', entry);
     }
+    return await builder.count();
   }
 
   /// 获取符合过滤条件的行数计数
   Future<int> countLootTemplateRows({String? entry, String? name}) async {
-    try {
-      var builder = laconic.table('$_table AS lt');
-      builder = builder.leftJoin(
-        'item_template AS it',
-        (join) => join.on('lt.Item', 'it.entry'),
-      );
-      builder = builder.leftJoin(
-        'item_template_locale AS itl',
-        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-      );
-      if (entry != null && entry.isNotEmpty) {
-        builder = builder.where('lt.Entry', entry);
-      }
-      if (name != null && name.isNotEmpty) {
-        builder = builder.whereAny(
-          ['it.name', 'itl.Name'],
-          '%$name%',
-          operator: 'like',
-        );
-      }
-      return await builder.count();
-    } catch (e) {
-      return 0;
+    var builder = laconic.table('$_table AS lt');
+    builder = builder.leftJoin(
+      'item_template AS it',
+      (join) => join.on('lt.Item', 'it.entry'),
+    );
+    builder = builder.leftJoin(
+      'item_template_locale AS itl',
+      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+    );
+    if (entry != null && entry.isNotEmpty) {
+      builder = builder.where('lt.Entry', entry);
     }
+    if (name != null && name.isNotEmpty) {
+      builder = builder.whereAny(
+        ['it.name', 'itl.Name'],
+        '%$name%',
+        operator: 'like',
+      );
+    }
+    return await builder.count();
   }
 
   /// 获取不同的 Entry 列表（用于选择器）
@@ -69,22 +61,18 @@ class LootTemplateRepository with RepositoryMixin {
     String? entry,
     int page = 1,
   }) async {
-    try {
-      var offset = (page - 1) * kPageSize;
-      var builder = laconic.table(_table);
-      builder = builder.select(['Entry', 'COUNT(*) as ItemCount']);
-      if (entry != null && entry.isNotEmpty) {
-        builder = builder.where('Entry', entry);
-      }
-      builder = builder.groupBy('Entry');
-      builder = builder.limit(kPageSize).offset(offset);
-      var results = await builder.get();
-      return results
-          .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select(['Entry', 'COUNT(*) as ItemCount']);
+    if (entry != null && entry.isNotEmpty) {
+      builder = builder.where('Entry', entry);
     }
+    builder = builder.groupBy('Entry');
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 搜索掉落（带物品名称过滤+分页）
@@ -93,47 +81,43 @@ class LootTemplateRepository with RepositoryMixin {
     String? name,
     int page = 1,
   }) async {
-    try {
-      var offset = (page - 1) * kPageSize;
-      var builder = laconic.table('$_table AS lt');
-      const fields = [
-        'lt.*',
-        'it.name',
-        'itl.Name AS localeName',
-        'it.Quality',
-        'didi.InventoryIcon0',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'item_template AS it',
-        (join) => join.on('lt.Item', 'it.entry'),
-      );
-      builder = builder.leftJoin(
-        'item_template_locale AS itl',
-        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_item_display_info AS didi',
-        (join) => join.on('it.displayid', 'didi.ID'),
-      );
-      if (entry != null && entry.isNotEmpty) {
-        builder = builder.where('lt.Entry', entry);
-      }
-      if (name != null && name.isNotEmpty) {
-        builder = builder.whereAny(
-          ['it.name', 'itl.Name'],
-          '%$name%',
-          operator: 'like',
-        );
-      }
-      builder = builder.limit(kPageSize).offset(offset);
-      var results = await builder.get();
-      return results
-          .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table AS lt');
+    const fields = [
+      'lt.*',
+      'it.name',
+      'itl.Name AS localeName',
+      'it.Quality',
+      'didi.InventoryIcon0',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'item_template AS it',
+      (join) => join.on('lt.Item', 'it.entry'),
+    );
+    builder = builder.leftJoin(
+      'item_template_locale AS itl',
+      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info AS didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
+    if (entry != null && entry.isNotEmpty) {
+      builder = builder.where('lt.Entry', entry);
     }
+    if (name != null && name.isNotEmpty) {
+      builder = builder.whereAny(
+        ['it.name', 'itl.Name'],
+        '%$name%',
+        operator: 'like',
+      );
+    }
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 获取指定 Entry 的所有掉落项（带物品信息）
