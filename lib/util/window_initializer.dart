@@ -2,17 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:foxy/util/shared_preferences_util.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WindowInitializer with WindowListener {
-  static const _keyWidth = 'window_width';
-  static const _keyHeight = 'window_height';
   static const _defaultWidth = 1000.0;
   static const _defaultHeight = 750.0;
 
   static WindowInitializer? _instance;
-  late SharedPreferences _preference;
 
   WindowInitializer._();
 
@@ -22,17 +19,17 @@ class WindowInitializer with WindowListener {
     await _saveWindowSize(size);
   }
 
-  Size _getSavedWindowSize() {
-    final width = _preference.getDouble(_keyWidth) ?? _defaultWidth;
-    final height = _preference.getDouble(_keyHeight) ?? _defaultHeight;
+  Future<Size> _getSavedWindowSize() async {
+    final instance = SharedPreferencesUtil.instance;
+    final width = await instance.getWindowWidth();
+    final height = await instance.getWindowHeight();
     return Size(width, height);
   }
 
   Future<void> _initialize() async {
-    _preference = await SharedPreferences.getInstance();
     await windowManager.ensureInitialized();
 
-    final savedSize = _getSavedWindowSize();
+    final savedSize = await _getSavedWindowSize();
     final options = WindowOptions(
       backgroundColor: Colors.transparent,
       center: true,
@@ -51,8 +48,9 @@ class WindowInitializer with WindowListener {
   }
 
   Future<void> _saveWindowSize(Size size) async {
-    await _preference.setDouble(_keyWidth, size.width);
-    await _preference.setDouble(_keyHeight, size.height);
+    final instance = SharedPreferencesUtil.instance;
+    await instance.setWindowWidth(size.width);
+    await instance.setWindowHeight(size.height);
   }
 
   static Future<void> ensureInitialized() async {
