@@ -24,6 +24,11 @@ const _kFeatureIconMap = <String, IconData>{
   'wand': LucideIcons.wand,
   'gem': LucideIcons.gem,
   'triangle': LucideIcons.triangle,
+  'award': LucideIcons.award,
+  'banknote': LucideIcons.banknote,
+  'layers': LucideIcons.layers,
+  'ruler': LucideIcons.ruler,
+  'sparkles': LucideIcons.sparkles,
 };
 
 class FeatureCard extends StatefulWidget {

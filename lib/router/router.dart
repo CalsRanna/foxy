@@ -100,6 +100,26 @@ class FoxyRouter extends RootStackRouter {
       AutoRoute(page: GlyphPropertyListRoute.page),
       AutoRoute(page: GlyphPropertyDetailRoute.page),
 
+      /// Talent
+      AutoRoute(page: TalentListRoute.page),
+      AutoRoute(page: TalentDetailRoute.page),
+
+      /// Scaling Stat Value
+      AutoRoute(page: ScalingStatValueListRoute.page),
+      AutoRoute(page: ScalingStatValueDetailRoute.page),
+
+      /// Currency Type
+      AutoRoute(page: CurrencyTypeListRoute.page),
+      AutoRoute(page: CurrencyTypeDetailRoute.page),
+
+      /// Item Set
+      AutoRoute(page: ItemSetListRoute.page),
+      AutoRoute(page: ItemSetDetailRoute.page),
+
+      /// Achievement
+      AutoRoute(page: AchievementListRoute.page),
+      AutoRoute(page: AchievementDetailRoute.page),
+
       /// Player Create Info
       AutoRoute(page: PlayerCreateInfoListRoute.page),
       AutoRoute(page: PlayerCreateInfoDetailRoute.page),
