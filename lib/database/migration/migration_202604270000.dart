@@ -15,7 +15,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'referenceLootTemplate',
         'category': 'database',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 8,
       },
       {
@@ -25,7 +25,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'pageText',
         'category': 'database',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 9,
       },
       {
@@ -45,7 +45,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'playerCreateInfo',
         'category': 'database',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 11,
       },
       {
@@ -55,7 +55,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'areaTable',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 12,
       },
       {
@@ -65,7 +65,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'emoteText',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 13,
       },
       {
@@ -75,7 +75,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'questFactionReward',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 14,
       },
       {
@@ -85,7 +85,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'questSort',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 15,
       },
       {
@@ -95,7 +95,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'questInfo',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 16,
       },
       {
@@ -105,7 +105,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'itemExtendedCost',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 17,
       },
       {
@@ -115,7 +115,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'scalingStatDistribution',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 18,
       },
       {
@@ -125,7 +125,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'spellItemEnchantment',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 19,
       },
       {
@@ -135,7 +135,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'gemProperty',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 20,
       },
       {
@@ -145,7 +145,7 @@ class Migration202604270000 implements Migration {
         'router_menu': 'glyphProperty',
         'category': 'dbc',
         'is_pinned': 0,
-        'is_favorite': 1,
+        'is_favorite': 0,
         'sort_order': 21,
       },
     ]);

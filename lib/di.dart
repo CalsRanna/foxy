@@ -1,5 +1,7 @@
 import 'package:foxy/page/area_table/area_table_detail_view_model.dart';
 import 'package:foxy/page/area_table/area_table_list_view_model.dart';
+import 'package:foxy/page/achievement/achievement_detail_view_model.dart';
+import 'package:foxy/page/achievement/achievement_list_view_model.dart';
 import 'package:foxy/page/bootstrap/bootstrap_view_model.dart';
 import 'package:foxy/page/condition/condition_detail_view_model.dart';
 import 'package:foxy/page/condition/condition_list_view_model.dart';
@@ -25,6 +27,10 @@ import 'package:foxy/page/game_object/game_object_quest_item_view_model.dart';
 import 'package:foxy/page/game_object/game_object_template_addon_view_model.dart';
 import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
 import 'package:foxy/page/game_object/game_object_template_list_view_model.dart';
+import 'package:foxy/page/currency_type/currency_type_detail_view_model.dart';
+import 'package:foxy/page/currency_type/currency_type_list_view_model.dart';
+import 'package:foxy/page/talent/talent_detail_view_model.dart';
+import 'package:foxy/page/talent/talent_list_view_model.dart';
 import 'package:foxy/page/gem_property/gem_property_detail_view_model.dart';
 import 'package:foxy/page/gem_property/gem_property_list_view_model.dart';
 import 'package:foxy/page/glyph_property/glyph_property_detail_view_model.dart';
@@ -72,6 +78,8 @@ import 'package:foxy/page/scaffold/dbc_import_view_model.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_list_view_model.dart';
+import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart';
+import 'package:foxy/page/scaling_stat_value/scaling_stat_value_list_view_model.dart';
 import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_list_view_model.dart';
@@ -84,6 +92,8 @@ import 'package:foxy/page/spell/spell_linked_spell_view_model.dart';
 import 'package:foxy/page/spell/spell_list_view_model.dart';
 import 'package:foxy/page/spell/spell_loot_template_view_model.dart';
 import 'package:foxy/page/spell/spell_rank_view_model.dart';
+import 'package:foxy/page/item_set/item_set_detail_view_model.dart';
+import 'package:foxy/page/item_set/item_set_list_view_model.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_list_view_model.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -200,5 +210,17 @@ class DI {
     GetIt.instance.registerFactory(() => GemPropertyDetailViewModel());
     GetIt.instance.registerLazySingleton(() => GlyphPropertyListViewModel());
     GetIt.instance.registerFactory(() => GlyphPropertyDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => TalentListViewModel());
+    GetIt.instance.registerFactory(() => TalentDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => CurrencyTypeListViewModel());
+    GetIt.instance.registerFactory(() => CurrencyTypeDetailViewModel());
+    GetIt.instance.registerLazySingleton(
+      () => ScalingStatValueListViewModel(),
+    );
+    GetIt.instance.registerFactory(() => ScalingStatValueDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => ItemSetListViewModel());
+    GetIt.instance.registerFactory(() => ItemSetDetailViewModel());
+    GetIt.instance.registerLazySingleton(() => AchievementListViewModel());
+    GetIt.instance.registerFactory(() => AchievementDetailViewModel());
   }
 }

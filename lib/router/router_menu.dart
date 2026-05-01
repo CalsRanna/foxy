@@ -29,7 +29,12 @@ enum RouterMenu {
   scalingStatDistribution(label: '属性缩放分布', icon: LucideIcons.arrowUpDown),
   spellItemEnchantment(label: '法术附魔', icon: LucideIcons.wand),
   gemProperty(label: '宝石属性', icon: LucideIcons.gem),
-  glyphProperty(label: '雕文属性', icon: LucideIcons.triangle);
+  glyphProperty(label: '雕文属性', icon: LucideIcons.triangle),
+  talent(label: '天赋列表', icon: LucideIcons.sparkles),
+  currencyType(label: '货币', icon: LucideIcons.banknote),
+  scalingStatValue(label: '缩放属性值', icon: LucideIcons.ruler),
+  itemSet(label: '套装列表', icon: LucideIcons.layers),
+  achievement(label: '成就列表', icon: LucideIcons.award);
 
   final String label;
   final IconData icon;
@@ -65,6 +70,11 @@ enum RouterMenu {
       RouterMenu.spellItemEnchantment => const SpellItemEnchantmentListRoute(),
       RouterMenu.gemProperty => const GemPropertyListRoute(),
       RouterMenu.glyphProperty => const GlyphPropertyListRoute(),
+      RouterMenu.talent => const TalentListRoute(),
+      RouterMenu.currencyType => const CurrencyTypeListRoute(),
+      RouterMenu.scalingStatValue => const ScalingStatValueListRoute(),
+      RouterMenu.itemSet => const ItemSetListRoute(),
+      RouterMenu.achievement => const AchievementListRoute(),
     };
   }
 

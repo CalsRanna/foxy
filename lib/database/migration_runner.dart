@@ -2,6 +2,7 @@ import 'package:foxy/database/migration/migration_202604260000.dart';
 import 'package:foxy/database/migration/migration_202604260001.dart';
 import 'package:foxy/database/migration/migration_202604270000.dart';
 import 'package:foxy/database/migration/migration_202604280000.dart';
+import 'package:foxy/database/migration/migration_202605010000.dart';
 import 'package:laconic/laconic.dart';
 
 abstract class Migration {
@@ -30,6 +31,7 @@ class MigrationRunner {
       Migration202604260001(),
       Migration202604270000(),
       Migration202604280000(),
+      Migration202605010000(),
     ];
 
     for (final migration in migrations) {
