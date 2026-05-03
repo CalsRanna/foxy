@@ -5,6 +5,7 @@ import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -188,19 +189,22 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
         children: [
           // 生物ID（只读）
           FormItem(
-            controller: TextEditingController(
-              text: widget.creatureId.toString(),
-            ),
             label: '生物ID',
-            placeholder: 'CreatureID',
-            readOnly: true,
+            child: FoxyNumberInput<int>(
+              value: widget.creatureId,
+              placeholder: 'CreatureID',
+              readOnly: true,
+            ),
           ),
           SizedBox(height: 16),
           // 模板ID
           FormItem(
-            controller: viewModel.idController,
             label: '模板ID',
-            placeholder: 'ID',
+            child: FoxyNumberInput<int>(
+              value: viewModel.id.value,
+              onChanged: (v) => viewModel.id.value = v,
+              placeholder: 'ID',
+            ),
           ),
           SizedBox(height: 16),
           // 主手武器
@@ -232,9 +236,12 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           SizedBox(height: 16),
           // VerifiedBuild
           FormItem(
-            controller: viewModel.verifiedBuildController,
             label: 'VerifiedBuild',
-            placeholder: 'VerifiedBuild',
+            child: FoxyNumberInput<int>(
+              value: viewModel.verifiedBuild.value,
+              onChanged: (v) => viewModel.verifiedBuild.value = v,
+              placeholder: 'VerifiedBuild',
+            ),
           ),
           SizedBox(height: 24),
           // 按钮行

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/page_text/page_text_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -30,10 +31,13 @@ class _PageTextViewState extends State<PageTextView> {
   @override
   Widget build(BuildContext context) {
     final idInput = FormItem(
-      controller: viewModel.idController,
       label: '编号',
       placeholder: 'ID',
-      readOnly: widget.id != null,
+      child: FoxyNumberInput<int>(
+        value: viewModel.id.value,
+        onChanged: (v) => viewModel.id.value = v,
+        readOnly: widget.id != null,
+      ),
     );
     final textInput = FormItem(
       controller: viewModel.textController,
@@ -41,14 +45,20 @@ class _PageTextViewState extends State<PageTextView> {
       placeholder: 'Text',
     );
     final nextPageIdInput = FormItem(
-      controller: viewModel.nextPageIdController,
       label: '下一页编号',
       placeholder: 'NextPageID',
+      child: FoxyNumberInput<int>(
+        value: viewModel.nextPageId.value,
+        onChanged: (v) => viewModel.nextPageId.value = v,
+      ),
     );
     final verifiedBuildInput = FormItem(
-      controller: viewModel.verifiedBuildController,
       label: 'VerifiedBuild',
       placeholder: 'VerifiedBuild',
+      child: FoxyNumberInput<int>(
+        value: viewModel.verifiedBuild.value,
+        onChanged: (v) => viewModel.verifiedBuild.value = v,
+      ),
     );
 
     final isNew = widget.id == null;

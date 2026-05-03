@@ -13,19 +13,19 @@ class QuestFactionRewardDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
+  final id = signal<int>(0);
 
   /// Difficulty
-  final difficulty0Controller = TextEditingController();
-  final difficulty1Controller = TextEditingController();
-  final difficulty2Controller = TextEditingController();
-  final difficulty3Controller = TextEditingController();
-  final difficulty4Controller = TextEditingController();
-  final difficulty5Controller = TextEditingController();
-  final difficulty6Controller = TextEditingController();
-  final difficulty7Controller = TextEditingController();
-  final difficulty8Controller = TextEditingController();
-  final difficulty9Controller = TextEditingController();
+  final difficulty0 = signal<int>(0);
+  final difficulty1 = signal<int>(0);
+  final difficulty2 = signal<int>(0);
+  final difficulty3 = signal<int>(0);
+  final difficulty4 = signal<int>(0);
+  final difficulty5 = signal<int>(0);
+  final difficulty6 = signal<int>(0);
+  final difficulty7 = signal<int>(0);
+  final difficulty8 = signal<int>(0);
+  final difficulty9 = signal<int>(0);
 
   final reward = signal(QuestFactionRewardEntity());
   /// 保存到数据库
@@ -61,25 +61,18 @@ class QuestFactionRewardDetailViewModel {
   /// 从所有 Controller 收集数据构建 QuestFactionReward
   QuestFactionRewardEntity _collectFromControllers() {
     return QuestFactionRewardEntity(
-      id: _parseInt(idController.text),
-      difficulty0: _parseInt(difficulty0Controller.text),
-      difficulty1: _parseInt(difficulty1Controller.text),
-      difficulty2: _parseInt(difficulty2Controller.text),
-      difficulty3: _parseInt(difficulty3Controller.text),
-      difficulty4: _parseInt(difficulty4Controller.text),
-      difficulty5: _parseInt(difficulty5Controller.text),
-      difficulty6: _parseInt(difficulty6Controller.text),
-      difficulty7: _parseInt(difficulty7Controller.text),
-      difficulty8: _parseInt(difficulty8Controller.text),
-      difficulty9: _parseInt(difficulty9Controller.text),
+      id: id.value,
+      difficulty0: difficulty0.value,
+      difficulty1: difficulty1.value,
+      difficulty2: difficulty2.value,
+      difficulty3: difficulty3.value,
+      difficulty4: difficulty4.value,
+      difficulty5: difficulty5.value,
+      difficulty6: difficulty6.value,
+      difficulty7: difficulty7.value,
+      difficulty8: difficulty8.value,
+      difficulty9: difficulty9.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, QuestFactionRewardEntity t) {
@@ -93,22 +86,7 @@ class QuestFactionRewardDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  void dispose() {
-    /// Basic
-    idController.dispose();
-
-    /// Difficulty
-    difficulty0Controller.dispose();
-    difficulty1Controller.dispose();
-    difficulty2Controller.dispose();
-    difficulty3Controller.dispose();
-    difficulty4Controller.dispose();
-    difficulty5Controller.dispose();
-    difficulty6Controller.dispose();
-    difficulty7Controller.dispose();
-    difficulty8Controller.dispose();
-    difficulty9Controller.dispose();
-  }
+  void dispose() {}
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -123,18 +101,18 @@ class QuestFactionRewardDetailViewModel {
 
   void _initControllers(QuestFactionRewardEntity table) {
     /// Basic
-    idController.text = table.id.toString();
+    id.value = table.id;
 
     /// Difficulty
-    difficulty0Controller.text = table.difficulty0.toString();
-    difficulty1Controller.text = table.difficulty1.toString();
-    difficulty2Controller.text = table.difficulty2.toString();
-    difficulty3Controller.text = table.difficulty3.toString();
-    difficulty4Controller.text = table.difficulty4.toString();
-    difficulty5Controller.text = table.difficulty5.toString();
-    difficulty6Controller.text = table.difficulty6.toString();
-    difficulty7Controller.text = table.difficulty7.toString();
-    difficulty8Controller.text = table.difficulty8.toString();
-    difficulty9Controller.text = table.difficulty9.toString();
+    difficulty0.value = table.difficulty0;
+    difficulty1.value = table.difficulty1;
+    difficulty2.value = table.difficulty2;
+    difficulty3.value = table.difficulty3;
+    difficulty4.value = table.difficulty4;
+    difficulty5.value = table.difficulty5;
+    difficulty6.value = table.difficulty6;
+    difficulty7.value = table.difficulty7;
+    difficulty8.value = table.difficulty8;
+    difficulty9.value = table.difficulty9;
   }
 }

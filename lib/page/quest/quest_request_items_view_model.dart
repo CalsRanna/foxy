@@ -12,9 +12,9 @@ class QuestRequestItemsViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
-  final idController = TextEditingController();
-  final emoteOnCompleteController = TextEditingController();
-  final emoteOnIncompleteController = TextEditingController();
+  final id = signal<int>(0);
+  final emoteOnComplete = signal<int>(0);
+  final emoteOnIncomplete = signal<int>(0);
   final completionTextController = TextEditingController();
 
   int _originalId = 0;
@@ -26,12 +26,12 @@ class QuestRequestItemsViewModel {
       final existing = await repository.getQuestRequestItems(questId);
       if (existing != null) {
         _originalId = existing.id;
-        _applyToControllers(existing);
+        _applyToSignals(existing);
       } else {
         final blank = await repository.createQuestRequestItems(questId);
-        _applyToControllers(blank);
+        _applyToSignals(blank);
       }
-      idController.text = questId.toString();
+      id.value = questId;
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
@@ -40,7 +40,7 @@ class QuestRequestItemsViewModel {
 
   Future<void> save(BuildContext context) async {
     try {
-      final model = _collectFromControllers();
+      final model = _collect();
       final repository = QuestRequestItemsRepository();
       if (_originalId == 0) {
         await repository.storeQuestRequestItems(model);
@@ -63,33 +63,22 @@ class QuestRequestItemsViewModel {
     routerFacade.goBack();
   }
 
-  void _applyToControllers(QuestRequestItemsEntity model) {
-    idController.text = model.id.toString();
-    emoteOnCompleteController.text = model.emoteOnComplete.toString();
-    emoteOnIncompleteController.text = model.emoteOnIncomplete.toString();
+  void _applyToSignals(QuestRequestItemsEntity model) {
+    emoteOnComplete.value = model.emoteOnComplete;
+    emoteOnIncomplete.value = model.emoteOnIncomplete;
     completionTextController.text = model.completionText;
   }
 
-  QuestRequestItemsEntity _collectFromControllers() {
+  QuestRequestItemsEntity _collect() {
     return QuestRequestItemsEntity(
       id: questId.value,
-      emoteOnComplete: _parseInt(emoteOnCompleteController.text),
-      emoteOnIncomplete: _parseInt(emoteOnIncompleteController.text),
+      emoteOnComplete: emoteOnComplete.value,
+      emoteOnIncomplete: emoteOnIncomplete.value,
       completionText: completionTextController.text,
     );
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
   void dispose() {
-    idController.dispose();
-    emoteOnCompleteController.dispose();
-    emoteOnIncompleteController.dispose();
     completionTextController.dispose();
   }
 }

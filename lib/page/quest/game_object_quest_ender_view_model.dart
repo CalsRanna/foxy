@@ -10,8 +10,8 @@ class GameObjectQuestEnderViewModel {
   final questId = signal(0);
   final items = signal<List<BriefGameObjectQuestEnderEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final idController = TextEditingController();
-  final questController = TextEditingController();
+  final id = signal<int>(0);
+  final quest = signal<int>(0);
 
   int _originalId = 0;
   int _originalQuest = 0;
@@ -27,21 +27,21 @@ class GameObjectQuestEnderViewModel {
 
   /// 重置表单
   void resetForm() {
-    idController.clear();
-    questController.clear();
+    id.value = 0;
+    quest.value = 0;
   }
 
   /// 填充表单
   void fillForm(GameObjectQuestEnderEntity model) {
-    idController.text = model.id.toString();
-    questController.text = model.quest.toString();
+    id.value = model.id;
+    quest.value = model.quest;
   }
 
   /// 从表单收集数据
   GameObjectQuestEnderEntity collectFromForm() {
     return GameObjectQuestEnderEntity(
-      id: int.tryParse(idController.text) ?? 0,
-      quest: int.tryParse(questController.text) ?? 0,
+      id: id.value,
+      quest: quest.value,
     );
   }
 
@@ -219,8 +219,5 @@ class GameObjectQuestEnderViewModel {
   }
 
   /// 清理资源
-  void dispose() {
-    idController.dispose();
-    questController.dispose();
-  }
+  void dispose() {}
 }

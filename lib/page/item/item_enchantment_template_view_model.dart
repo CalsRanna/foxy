@@ -18,14 +18,11 @@ class ItemEnchantmentTemplateViewModel {
   final editing = signal(false);
   int? editingEnch;
 
-  // 表单控制器
-  final entryController = TextEditingController();
   final enchController = TextEditingController();
-  final chanceController = TextEditingController();
+  final chance = signal<double>(0.0);
 
   final repository = ItemEnchantmentTemplateRepository();
 
-  /// 加载数据
   Future<void> load() async {
     final data = await repository.getItemEnchantmentTemplatesByEntry(
       entry.value,
@@ -37,26 +34,21 @@ class ItemEnchantmentTemplateViewModel {
     editingEnch = null;
   }
 
-  /// 重置表单
   void resetForm() {
-    entryController.text = entry.value.toString();
     enchController.clear();
-    chanceController.text = '0';
+    chance.value = 0;
   }
 
-  /// 填充表单
   void fillForm(BriefItemEnchantmentTemplateEntity model) {
-    entryController.text = model.entry.toString();
     enchController.text = model.ench.toString();
-    chanceController.text = model.chance.toString();
+    chance.value = model.chance;
   }
 
-  /// 从表单收集数据
   ItemEnchantmentTemplateEntity collectFromForm() {
     return ItemEnchantmentTemplateEntity(
       entry: entry.value,
       ench: _parseInt(enchController.text),
-      chance: _parseDouble(chanceController.text),
+      chance: chance.value,
     );
   }
 
@@ -67,9 +59,6 @@ class ItemEnchantmentTemplateViewModel {
     return value;
   }
 
-  double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
-
-  /// 创建新记录
   Future<void> create() async {
     try {
       final maxEnch = items.value.fold<int>(
@@ -88,7 +77,6 @@ class ItemEnchantmentTemplateViewModel {
     }
   }
 
-  /// 编辑选中记录
   void edit() {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
@@ -100,7 +88,6 @@ class ItemEnchantmentTemplateViewModel {
     editingEnch = model.ench;
   }
 
-  /// 复制记录
   Future<void> copy(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
@@ -119,7 +106,6 @@ class ItemEnchantmentTemplateViewModel {
     }
   }
 
-  /// 删除记录
   Future<void> delete(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
@@ -162,7 +148,6 @@ class ItemEnchantmentTemplateViewModel {
     }
   }
 
-  /// 保存记录
   Future<void> save(BuildContext context) async {
     try {
       final model = collectFromForm();
@@ -178,7 +163,6 @@ class ItemEnchantmentTemplateViewModel {
     }
   }
 
-  /// 更新记录
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
@@ -197,14 +181,12 @@ class ItemEnchantmentTemplateViewModel {
     }
   }
 
-  /// 选择行
   void selectRow(int index) {
     if (index >= 0 && index < items.value.length) {
       selectedIndex.value = index;
     }
   }
 
-  /// 初始化
   Future<void> initSignals({required int entry}) async {
     try {
       this.entry.value = entry;
@@ -215,15 +197,11 @@ class ItemEnchantmentTemplateViewModel {
     }
   }
 
-  /// 退出页面
   void pop() {
     routerFacade.goBack();
   }
 
-  /// 清理资源
   void dispose() {
-    entryController.dispose();
     enchController.dispose();
-    chanceController.dispose();
   }
 }

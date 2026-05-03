@@ -14,10 +14,10 @@ class PageTextDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final repository = PageTextRepository();
 
-  final idController = TextEditingController();
+  final id = signal<int>(0);
   final textController = TextEditingController();
-  final nextPageIdController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final nextPageId = signal<int>(0);
+  final verifiedBuild = signal<int>(0);
 
   final page = signal<PageTextEntity?>(null);
   final locales = signal<List<PageTextLocaleEntity>>([]);
@@ -33,10 +33,10 @@ class PageTextDetailViewModel {
   }
 
   void _initControllers(PageTextEntity pt) {
-    idController.text = pt.id.toString();
+    id.value = pt.id;
     textController.text = pt.text;
-    nextPageIdController.text = pt.nextPageId.toString();
-    verifiedBuildController.text = pt.verifiedBuild.toString();
+    nextPageId.value = pt.nextPageId;
+    verifiedBuild.value = pt.verifiedBuild;
   }
 
   Future<void> save(BuildContext context) async {
@@ -88,24 +88,14 @@ class PageTextDetailViewModel {
 
   PageTextEntity _collect() {
     return PageTextEntity(
-      id: _parseInt(idController.text),
+      id: id.value,
       text: textController.text,
-      nextPageId: _parseInt(nextPageIdController.text),
-      verifiedBuild: _parseInt(verifiedBuildController.text),
+      nextPageId: nextPageId.value,
+      verifiedBuild: verifiedBuild.value,
     );
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
   void dispose() {
-    idController.dispose();
     textController.dispose();
-    nextPageIdController.dispose();
-    verifiedBuildController.dispose();
   }
 }

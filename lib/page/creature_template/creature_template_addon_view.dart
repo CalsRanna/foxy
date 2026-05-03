@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -48,35 +49,42 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                   children: [
                     Expanded(
                       child: FormItem(
-                        controller: TextEditingController(
-                          text: viewModel.creatureId.value == 0
-                              ? widget.creatureId.toString()
-                              : viewModel.creatureId.value.toString(),
-                        ),
                         label: '编号',
-                        placeholder: 'entry',
-                        readOnly: true,
+                        child: FoxyNumberInput<int>(
+                          value: viewModel.creatureId.value,
+                          placeholder: 'entry',
+                          readOnly: true,
+                        ),
                       ),
                     ),
                     Expanded(
                       child: FormItem(
-                        controller: viewModel.pathIdController,
                         label: '路径ID',
-                        placeholder: 'path_id',
+                        child: FoxyNumberInput<int>(
+                          value: viewModel.pathId.value,
+                          onChanged: (v) => viewModel.pathId.value = v,
+                          placeholder: 'path_id',
+                        ),
                       ),
                     ),
                     Expanded(
                       child: FormItem(
-                        controller: viewModel.mountController,
                         label: '坐骑编号',
-                        placeholder: 'mount',
+                        child: FoxyNumberInput<int>(
+                          value: viewModel.mount.value,
+                          onChanged: (v) => viewModel.mount.value = v,
+                          placeholder: 'mount',
+                        ),
                       ),
                     ),
                     Expanded(
                       child: FormItem(
-                        controller: viewModel.emoteController,
                         label: '表情',
-                        placeholder: 'emote',
+                        child: FoxyNumberInput<int>(
+                          value: viewModel.emote.value,
+                          onChanged: (v) => viewModel.emote.value = v,
+                          placeholder: 'emote',
+                        ),
                       ),
                     ),
                   ],
@@ -86,23 +94,33 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                   children: [
                     Expanded(
                       child: FormItem(
-                        controller: viewModel.bytes1Controller,
                         label: '覆盖标识1',
-                        placeholder: 'bytes1',
+                        child: FoxyNumberInput<int>(
+                          value: viewModel.bytes1.value,
+                          onChanged: (v) => viewModel.bytes1.value = v,
+                          placeholder: 'bytes1',
+                        ),
                       ),
                     ),
                     Expanded(
                       child: FormItem(
-                        controller: viewModel.bytes2Controller,
                         label: '覆盖标识2',
-                        placeholder: 'bytes2',
+                        child: FoxyNumberInput<int>(
+                          value: viewModel.bytes2.value,
+                          onChanged: (v) => viewModel.bytes2.value = v,
+                          placeholder: 'bytes2',
+                        ),
                       ),
                     ),
                     Expanded(
                       child: FormItem(
-                        controller: viewModel.visibilityDistanceTypeController,
                         label: '可见距离类型',
-                        placeholder: 'visibilityDistanceType',
+                        child: FoxyNumberInput<int>(
+                          value: viewModel.visibilityDistanceType.value,
+                          onChanged: (v) =>
+                              viewModel.visibilityDistanceType.value = v,
+                          placeholder: 'visibilityDistanceType',
+                        ),
                       ),
                     ),
                     Expanded(

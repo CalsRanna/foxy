@@ -12,7 +12,7 @@ class SpellCustomAttrViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
-  final attributesController = TextEditingController();
+  final attributes = signal<int>(0);
 
   final customAttr = signal(SpellCustomAttrEntity());
 
@@ -46,20 +46,13 @@ class SpellCustomAttrViewModel {
   SpellCustomAttrEntity _collectFromControllers() {
     final data = SpellCustomAttrEntity(
       spellId: spellId.value,
-      attributes: _parseInt(attributesController.text),
+      attributes: attributes.value,
     );
     return data;
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
   void initControllers(SpellCustomAttrEntity data) {
-    attributesController.text = data.attributes.toString();
+    attributes.value = data.attributes;
   }
 
   Future<void> initSignals({required int spellId}) async {
@@ -72,7 +65,5 @@ class SpellCustomAttrViewModel {
     }
   }
 
-  void dispose() {
-    attributesController.dispose();
-  }
+  void dispose() {}
 }

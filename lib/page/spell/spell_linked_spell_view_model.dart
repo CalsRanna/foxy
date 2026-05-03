@@ -14,8 +14,8 @@ class SpellLinkedSpellViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellLinkedSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final spellEffectController = TextEditingController();
-  final typeController = TextEditingController();
+  final spellEffect = signal<int>(0);
+  final type = signal<int>(0);
   final commentController = TextEditingController();
 
   final repository = SpellLinkedSpellRepository();
@@ -27,32 +27,25 @@ class SpellLinkedSpellViewModel {
   }
 
   void resetForm() {
-    spellEffectController.clear();
-    typeController.text = '0';
+    spellEffect.value = 0;
+    type.value = 0;
     commentController.clear();
   }
 
   void fillForm(SpellLinkedSpellEntity data) {
-    spellEffectController.text = data.spellEffect.toString();
-    typeController.text = data.type.toString();
+    spellEffect.value = data.spellEffect;
+    type.value = data.type;
     commentController.text = data.comment;
   }
 
   SpellLinkedSpellEntity collectFromForm() {
     final data = SpellLinkedSpellEntity(
       spellTrigger: spellId.value,
-      spellEffect: _parseInt(spellEffectController.text),
-      type: _parseInt(typeController.text),
+      spellEffect: spellEffect.value,
+      type: type.value,
       comment: commentController.text,
     );
     return data;
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   Future<void> create() async {
@@ -182,8 +175,6 @@ class SpellLinkedSpellViewModel {
   }
 
   void dispose() {
-    spellEffectController.dispose();
-    typeController.dispose();
     commentController.dispose();
   }
 }

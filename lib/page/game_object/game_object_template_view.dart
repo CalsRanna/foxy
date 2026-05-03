@@ -3,6 +3,7 @@ import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
 import 'package:foxy/page/game_object/game_object_template_locale_name_selector.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -34,10 +35,13 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
   Widget build(BuildContext context) {
     /// 基础信息
     final entryInput = FormItem(
-      controller: viewModel.entryController,
       label: '编号',
       placeholder: 'entry',
-      readOnly: true,
+      child: FoxyNumberInput<int>(
+        value: viewModel.entry.value,
+        onChanged: (v) => viewModel.entry.value = v,
+        readOnly: true,
+      ),
     );
     final nameInput = FormItem(
       label: '名称',
@@ -86,14 +90,20 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       ),
     );
     final displayIdInput = FormItem(
-      controller: viewModel.displayIdController,
       label: '外观模型',
       placeholder: 'displayId',
+      child: FoxyNumberInput<int>(
+        value: viewModel.displayId.value,
+        onChanged: (v) => viewModel.displayId.value = v,
+      ),
     );
     final sizeInput = FormItem(
-      controller: viewModel.sizeController,
       label: '尺寸',
       placeholder: 'size',
+      child: FoxyNumberInput<double>(
+        value: viewModel.size.value,
+        onChanged: (v) => viewModel.size.value = v,
+      ),
     );
     final unk1Input = FormItem(
       controller: viewModel.unk1Controller,
@@ -135,9 +145,12 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       placeholder: 'ScriptName',
     );
     final verifiedBuildInput = FormItem(
-      controller: viewModel.verifiedBuildController,
       label: 'VerifiedBuild',
       placeholder: 'VerifiedBuild',
+      child: FoxyNumberInput<int>(
+        value: viewModel.verifiedBuild.value,
+        onChanged: (v) => viewModel.verifiedBuild.value = v,
+      ),
     );
 
     final otherRows = [
@@ -209,36 +222,40 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
   }
 
   FormItem _buildDataInput(int index) {
-    final controllers = [
-      viewModel.data0Controller,
-      viewModel.data1Controller,
-      viewModel.data2Controller,
-      viewModel.data3Controller,
-      viewModel.data4Controller,
-      viewModel.data5Controller,
-      viewModel.data6Controller,
-      viewModel.data7Controller,
-      viewModel.data8Controller,
-      viewModel.data9Controller,
-      viewModel.data10Controller,
-      viewModel.data11Controller,
-      viewModel.data12Controller,
-      viewModel.data13Controller,
-      viewModel.data14Controller,
-      viewModel.data15Controller,
-      viewModel.data16Controller,
-      viewModel.data17Controller,
-      viewModel.data18Controller,
-      viewModel.data19Controller,
-      viewModel.data20Controller,
-      viewModel.data21Controller,
-      viewModel.data22Controller,
-      viewModel.data23Controller,
+    final signals = [
+      viewModel.data0,
+      viewModel.data1,
+      viewModel.data2,
+      viewModel.data3,
+      viewModel.data4,
+      viewModel.data5,
+      viewModel.data6,
+      viewModel.data7,
+      viewModel.data8,
+      viewModel.data9,
+      viewModel.data10,
+      viewModel.data11,
+      viewModel.data12,
+      viewModel.data13,
+      viewModel.data14,
+      viewModel.data15,
+      viewModel.data16,
+      viewModel.data17,
+      viewModel.data18,
+      viewModel.data19,
+      viewModel.data20,
+      viewModel.data21,
+      viewModel.data22,
+      viewModel.data23,
     ];
+    final s = signals[index];
     return FormItem(
-      controller: controllers[index],
       label: 'Data$index',
       placeholder: 'Data$index',
+      child: FoxyNumberInput<int>(
+        value: s.value,
+        onChanged: (v) => s.value = v,
+      ),
     );
   }
 }

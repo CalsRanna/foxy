@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/player_create_info/player_create_info_spell_custom_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -92,9 +93,9 @@ class _PlayerCreateInfoSpellCustomViewState extends State<PlayerCreateInfoSpellC
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 400),
         child: Column(mainAxisSize: MainAxisSize.min, spacing: 16, children: [
-          FormItem(controller: viewModel.racemaskController, label: '种族掩码', placeholder: 'racemask'),
-          FormItem(controller: viewModel.classmaskController, label: '职业掩码', placeholder: 'classmask'),
-          FormItem(controller: viewModel.spellController, label: '法术', placeholder: 'spell'),
+          FormItem(label: '种族掩码', placeholder: 'racemask', child: FoxyNumberInput<int>(value: viewModel.racemask.value, onChanged: (v) => viewModel.racemask.value = v)),
+          FormItem(label: '职业掩码', placeholder: 'classmask', child: FoxyNumberInput<int>(value: viewModel.classmask.value, onChanged: (v) => viewModel.classmask.value = v)),
+          FormItem(label: '法术', placeholder: 'spell', child: FoxyNumberInput<int>(value: viewModel.spell.value, onChanged: (v) => viewModel.spell.value = v)),
           FormItem(controller: viewModel.noteController, label: '备注', placeholder: 'note'),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             ShadButton.outline(onPressed: () => Navigator.of(c).pop(), child: Text('取消')),

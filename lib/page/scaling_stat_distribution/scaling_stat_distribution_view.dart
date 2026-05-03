@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -31,121 +32,187 @@ class _ScalingStatDistributionViewState extends State<ScalingStatDistributionVie
   Widget build(BuildContext context) {
     /// Basic
     final idInput = FormItem(
-      controller: viewModel.idController,
       label: '编号',
       placeholder: 'ID',
-      readOnly: true,
+      child: FoxyNumberInput<int>(
+        value: viewModel.id.value,
+        onChanged: (v) => viewModel.id.value = v,
+        readOnly: true,
+      ),
     );
 
     /// StatID 0~9
     final statId0Input = FormItem(
-      controller: viewModel.statId0Controller,
       label: 'StatID0',
       placeholder: 'StatID0',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId0.value,
+        onChanged: (v) => viewModel.statId0.value = v,
+      ),
     );
     final statId1Input = FormItem(
-      controller: viewModel.statId1Controller,
       label: 'StatID1',
       placeholder: 'StatID1',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId1.value,
+        onChanged: (v) => viewModel.statId1.value = v,
+      ),
     );
     final statId2Input = FormItem(
-      controller: viewModel.statId2Controller,
       label: 'StatID2',
       placeholder: 'StatID2',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId2.value,
+        onChanged: (v) => viewModel.statId2.value = v,
+      ),
     );
     final statId3Input = FormItem(
-      controller: viewModel.statId3Controller,
       label: 'StatID3',
       placeholder: 'StatID3',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId3.value,
+        onChanged: (v) => viewModel.statId3.value = v,
+      ),
     );
     final statId4Input = FormItem(
-      controller: viewModel.statId4Controller,
       label: 'StatID4',
       placeholder: 'StatID4',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId4.value,
+        onChanged: (v) => viewModel.statId4.value = v,
+      ),
     );
     final statId5Input = FormItem(
-      controller: viewModel.statId5Controller,
       label: 'StatID5',
       placeholder: 'StatID5',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId5.value,
+        onChanged: (v) => viewModel.statId5.value = v,
+      ),
     );
     final statId6Input = FormItem(
-      controller: viewModel.statId6Controller,
       label: 'StatID6',
       placeholder: 'StatID6',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId6.value,
+        onChanged: (v) => viewModel.statId6.value = v,
+      ),
     );
     final statId7Input = FormItem(
-      controller: viewModel.statId7Controller,
       label: 'StatID7',
       placeholder: 'StatID7',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId7.value,
+        onChanged: (v) => viewModel.statId7.value = v,
+      ),
     );
     final statId8Input = FormItem(
-      controller: viewModel.statId8Controller,
       label: 'StatID8',
       placeholder: 'StatID8',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId8.value,
+        onChanged: (v) => viewModel.statId8.value = v,
+      ),
     );
     final statId9Input = FormItem(
-      controller: viewModel.statId9Controller,
       label: 'StatID9',
       placeholder: 'StatID9',
+      child: FoxyNumberInput<int>(
+        value: viewModel.statId9.value,
+        onChanged: (v) => viewModel.statId9.value = v,
+      ),
     );
 
     /// Bonus 0~9
     final bonus0Input = FormItem(
-      controller: viewModel.bonus0Controller,
       label: 'Bonus0',
       placeholder: 'Bonus0',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus0.value,
+        onChanged: (v) => viewModel.bonus0.value = v,
+      ),
     );
     final bonus1Input = FormItem(
-      controller: viewModel.bonus1Controller,
       label: 'Bonus1',
       placeholder: 'Bonus1',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus1.value,
+        onChanged: (v) => viewModel.bonus1.value = v,
+      ),
     );
     final bonus2Input = FormItem(
-      controller: viewModel.bonus2Controller,
       label: 'Bonus2',
       placeholder: 'Bonus2',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus2.value,
+        onChanged: (v) => viewModel.bonus2.value = v,
+      ),
     );
     final bonus3Input = FormItem(
-      controller: viewModel.bonus3Controller,
       label: 'Bonus3',
       placeholder: 'Bonus3',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus3.value,
+        onChanged: (v) => viewModel.bonus3.value = v,
+      ),
     );
     final bonus4Input = FormItem(
-      controller: viewModel.bonus4Controller,
       label: 'Bonus4',
       placeholder: 'Bonus4',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus4.value,
+        onChanged: (v) => viewModel.bonus4.value = v,
+      ),
     );
     final bonus5Input = FormItem(
-      controller: viewModel.bonus5Controller,
       label: 'Bonus5',
       placeholder: 'Bonus5',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus5.value,
+        onChanged: (v) => viewModel.bonus5.value = v,
+      ),
     );
     final bonus6Input = FormItem(
-      controller: viewModel.bonus6Controller,
       label: 'Bonus6',
       placeholder: 'Bonus6',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus6.value,
+        onChanged: (v) => viewModel.bonus6.value = v,
+      ),
     );
     final bonus7Input = FormItem(
-      controller: viewModel.bonus7Controller,
       label: 'Bonus7',
       placeholder: 'Bonus7',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus7.value,
+        onChanged: (v) => viewModel.bonus7.value = v,
+      ),
     );
     final bonus8Input = FormItem(
-      controller: viewModel.bonus8Controller,
       label: 'Bonus8',
       placeholder: 'Bonus8',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus8.value,
+        onChanged: (v) => viewModel.bonus8.value = v,
+      ),
     );
     final bonus9Input = FormItem(
-      controller: viewModel.bonus9Controller,
       label: 'Bonus9',
       placeholder: 'Bonus9',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bonus9.value,
+        onChanged: (v) => viewModel.bonus9.value = v,
+      ),
     );
 
     /// Other
     final maxlevelInput = FormItem(
-      controller: viewModel.maxlevelController,
       label: 'Maxlevel',
       placeholder: 'Maxlevel',
+      child: FoxyNumberInput<int>(
+        value: viewModel.maxlevel.value,
+        onChanged: (v) => viewModel.maxlevel.value = v,
+      ),
     );
 
     /// 1. 基本信息

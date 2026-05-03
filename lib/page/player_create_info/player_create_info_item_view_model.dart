@@ -13,8 +13,8 @@ class PlayerCreateInfoItemViewModel {
   int? _race;
   int? _class_;
 
-  final itemIdController = TextEditingController();
-  final amountController = TextEditingController();
+  final itemId = signal<int>(0);
+  final amount = signal<int>(1);
   final noteController = TextEditingController();
 
   Future<void> initSignals({int? race, int? class_}) async {
@@ -30,8 +30,8 @@ class PlayerCreateInfoItemViewModel {
   }
 
   void create() {
-    itemIdController.clear();
-    amountController.text = '1';
+    itemId.value = 0;
+    amount.value = 1;
     noteController.clear();
   }
 
@@ -41,8 +41,8 @@ class PlayerCreateInfoItemViewModel {
       final item = PlayerCreateInfoItemEntity(
         race: _race!,
         class_: _class_!,
-        itemid: _parseInt(itemIdController.text),
-        amount: _parseInt(amountController.text),
+        itemid: itemId.value,
+        amount: amount.value,
         note: noteController.text,
       );
       await repository.storeItem(item);
@@ -71,16 +71,7 @@ class PlayerCreateInfoItemViewModel {
     }
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
   void dispose() {
-    itemIdController.dispose();
-    amountController.dispose();
     noteController.dispose();
   }
 }

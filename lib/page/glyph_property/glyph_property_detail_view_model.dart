@@ -13,12 +13,12 @@ class GlyphPropertyDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
+  final id = signal<int>(0);
 
   /// Property
-  final spellIdController = TextEditingController();
-  final glyphSlotFlagsController = TextEditingController();
-  final spellIconIdController = TextEditingController();
+  final spellId = signal<int>(0);
+  final glyphSlotFlags = signal<int>(0);
+  final spellIconId = signal<int>(0);
 
   final property = signal(GlyphPropertyEntity());
   /// 保存到数据库
@@ -54,18 +54,11 @@ class GlyphPropertyDetailViewModel {
   /// 从所有 Controller 收集数据构建 GlyphProperty
   GlyphPropertyEntity _collectFromControllers() {
     return GlyphPropertyEntity(
-      id: _parseInt(idController.text),
-      spellId: _parseInt(spellIdController.text),
-      glyphSlotFlags: _parseInt(glyphSlotFlagsController.text),
-      spellIconId: _parseInt(spellIconIdController.text),
+      id: id.value,
+      spellId: spellId.value,
+      glyphSlotFlags: glyphSlotFlags.value,
+      spellIconId: spellIconId.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, GlyphPropertyEntity t) {
@@ -79,15 +72,7 @@ class GlyphPropertyDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  void dispose() {
-    /// Basic
-    idController.dispose();
-
-    /// Property
-    spellIdController.dispose();
-    glyphSlotFlagsController.dispose();
-    spellIconIdController.dispose();
-  }
+  void dispose() {}
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -101,11 +86,11 @@ class GlyphPropertyDetailViewModel {
 
   void _initControllers(GlyphPropertyEntity glyphProperty) {
     /// Basic
-    idController.text = glyphProperty.id.toString();
+    id.value = glyphProperty.id;
 
     /// Property
-    spellIdController.text = glyphProperty.spellId.toString();
-    glyphSlotFlagsController.text = glyphProperty.glyphSlotFlags.toString();
-    spellIconIdController.text = glyphProperty.spellIconId.toString();
+    spellId.value = glyphProperty.spellId;
+    glyphSlotFlags.value = glyphProperty.glyphSlotFlags;
+    spellIconId.value = glyphProperty.spellIconId;
   }
 }

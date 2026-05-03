@@ -6,6 +6,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -13,17 +14,17 @@ import 'package:signals/signals.dart';
 
 class GameObjectLootTemplateViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final gameObjectId = signal(0);
+  final gameObjectId = signal<int>(0);
   final items = signal<List<BriefLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final itemController = TextEditingController();
-  final referenceController = TextEditingController();
-  final chanceController = TextEditingController();
+  final reference = signal<int>(0);
+  final chance = signal<double>(0.0);
   final questRequiredController = ShadSelectController<int>();
-  final lootModeController = TextEditingController();
-  final groupIdController = TextEditingController();
-  final minCountController = TextEditingController();
-  final maxCountController = TextEditingController();
+  final lootMode = signal<int>(0);
+  final groupId = signal<int>(0);
+  final minCount = signal<int>(0);
+  final maxCount = signal<int>(0);
   final commentController = TextEditingController();
 
   int? editingItem;
@@ -36,26 +37,26 @@ class GameObjectLootTemplateViewModel {
 
   void resetForm() {
     itemController.clear();
-    referenceController.clear();
-    chanceController.clear();
+    reference.value = 0;
+    chance.value = 0.0;
     questRequiredController.value = {0};
-    lootModeController.text = '1';
-    groupIdController.clear();
-    minCountController.text = '1';
-    maxCountController.text = '1';
+    lootMode.value = 1;
+    groupId.value = 0;
+    minCount.value = 1;
+    maxCount.value = 1;
     commentController.clear();
     editingItem = null;
   }
 
   void fillForm(BriefLootTemplateEntity loot) {
     itemController.text = loot.item.toString();
-    referenceController.text = loot.reference.toString();
-    chanceController.text = loot.chance.toString();
+    reference.value = loot.reference;
+    chance.value = loot.chance;
     questRequiredController.value = {loot.questRequired ? 1 : 0};
-    lootModeController.text = loot.lootMode.toString();
-    groupIdController.text = loot.groupId.toString();
-    minCountController.text = loot.minCount.toString();
-    maxCountController.text = loot.maxCount.toString();
+    lootMode.value = loot.lootMode;
+    groupId.value = loot.groupId;
+    minCount.value = loot.minCount;
+    maxCount.value = loot.maxCount;
     commentController.text = loot.comment;
     editingItem = loot.item;
   }
@@ -64,13 +65,13 @@ class GameObjectLootTemplateViewModel {
     return LootTemplateEntity(
       entry: gameObjectId.value,
       item: _parseInt(itemController.text),
-      reference: _parseInt(referenceController.text),
-      chance: _parseDouble(chanceController.text),
+      reference: reference.value,
+      chance: chance.value,
       questRequired: _getSelectValue(questRequiredController) == 1,
-      lootMode: _parseInt(lootModeController.text),
-      groupId: _parseInt(groupIdController.text),
-      minCount: _parseInt(minCountController.text),
-      maxCount: _parseInt(maxCountController.text),
+      lootMode: lootMode.value,
+      groupId: groupId.value,
+      minCount: minCount.value,
+      maxCount: maxCount.value,
       comment: commentController.text,
     );
   }
@@ -78,13 +79,6 @@ class GameObjectLootTemplateViewModel {
   int _parseInt(String text) {
     if (text.isEmpty) return 0;
     final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  double _parseDouble(String text) {
-    if (text.isEmpty) return 0.0;
-    final value = double.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
@@ -195,13 +189,7 @@ class GameObjectLootTemplateViewModel {
 
   void dispose() {
     itemController.dispose();
-    referenceController.dispose();
-    chanceController.dispose();
     questRequiredController.dispose();
-    lootModeController.dispose();
-    groupIdController.dispose();
-    minCountController.dispose();
-    maxCountController.dispose();
     commentController.dispose();
   }
 
@@ -231,8 +219,15 @@ class GameObjectLootTemplateViewModel {
               placeholder: '物品ID',
             ),
           ),
-          ShadInput(controller: referenceController, placeholder: Text('关联ID')),
-          ShadInput(controller: chanceController, placeholder: Text('掉落几率')),
+          FoxyNumberInput<int>(
+            value: reference.value,
+            onChanged: (v) => reference.value = v,
+          ),
+          FoxyNumberInput<double>(
+            value: chance.value,
+            onChanged: (v) => chance.value = v,
+            placeholder: '掉落几率',
+          ),
           FormItem(
             label: '需要任务',
             child: FoxyShadSelect<int>(
@@ -241,21 +236,31 @@ class GameObjectLootTemplateViewModel {
               placeholder: const Text('QuestRequired'),
             ),
           ),
-          ShadInput(controller: lootModeController, placeholder: Text('掉落模式')),
-          ShadInput(controller: groupIdController, placeholder: Text('组ID')),
+          FoxyNumberInput<int>(
+            value: lootMode.value,
+            onChanged: (v) => lootMode.value = v,
+            placeholder: '掉落模式',
+          ),
+          FoxyNumberInput<int>(
+            value: groupId.value,
+            onChanged: (v) => groupId.value = v,
+            placeholder: '组ID',
+          ),
           Row(
             spacing: 12,
             children: [
               Expanded(
-                child: ShadInput(
-                  controller: minCountController,
-                  placeholder: Text('最小数量'),
+                child: FoxyNumberInput<int>(
+                  value: minCount.value,
+                  onChanged: (v) => minCount.value = v,
+                  placeholder: '最小数量',
                 ),
               ),
               Expanded(
-                child: ShadInput(
-                  controller: maxCountController,
-                  placeholder: Text('最大数量'),
+                child: FoxyNumberInput<int>(
+                  value: maxCount.value,
+                  onChanged: (v) => maxCount.value = v,
+                  placeholder: '最大数量',
                 ),
               ),
             ],

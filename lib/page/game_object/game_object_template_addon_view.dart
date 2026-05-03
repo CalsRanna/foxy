@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/game_object/game_object_template_addon_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -33,35 +34,47 @@ class _GameObjectTemplateAddonViewState
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      final addonData = viewModel.addon.value;
-      viewModel.initControllers(addonData);
-
-      final entryInput = FormItem(
-        controller: TextEditingController(text: widget.gameObjectId.toString()),
-        label: '编号',
-        placeholder: 'entry',
+    final entryInput = FormItem(
+      label: '编号',
+      placeholder: 'entry',
+      child: FoxyNumberInput<int>(
+        value: widget.gameObjectId,
+        onChanged: (_) {},
         readOnly: true,
-      );
+      ),
+    );
+    return Watch((_) {
       final factionInput = FormItem(
-        controller: viewModel.factionController,
         label: '阵营',
         placeholder: 'faction',
+        child: FoxyNumberInput<int>(
+          value: viewModel.faction.value,
+          onChanged: (v) => viewModel.faction.value = v,
+        ),
       );
       final flagsInput = FormItem(
-        controller: viewModel.flagsController,
         label: '标志位',
         placeholder: 'flags',
+        child: FoxyNumberInput<int>(
+          value: viewModel.flags.value,
+          onChanged: (v) => viewModel.flags.value = v,
+        ),
       );
       final minGoldInput = FormItem(
-        controller: viewModel.minGoldController,
         label: '最小金钱',
         placeholder: 'mingold',
+        child: FoxyNumberInput<int>(
+          value: viewModel.minGold.value,
+          onChanged: (v) => viewModel.minGold.value = v,
+        ),
       );
       final maxGoldInput = FormItem(
-        controller: viewModel.maxGoldController,
         label: '最大金钱',
         placeholder: 'maxgold',
+        child: FoxyNumberInput<int>(
+          value: viewModel.maxGold.value,
+          onChanged: (v) => viewModel.maxGold.value = v,
+        ),
       );
 
       return SingleChildScrollView(

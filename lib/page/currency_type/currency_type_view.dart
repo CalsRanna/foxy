@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/currency_type/currency_type_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -30,25 +31,37 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
   @override
   Widget build(BuildContext context) {
     final idInput = FormItem(
-      controller: viewModel.idController,
       label: '编号',
       placeholder: 'ID',
-      readOnly: true,
+      child: FoxyNumberInput<int>(
+        value: viewModel.id.value,
+        onChanged: (v) => viewModel.id.value = v,
+        readOnly: true,
+      ),
     );
     final itemIdInput = FormItem(
-      controller: viewModel.itemIdController,
       label: '物品编号',
       placeholder: 'ItemID',
+      child: FoxyNumberInput<int>(
+        value: viewModel.itemId.value,
+        onChanged: (v) => viewModel.itemId.value = v,
+      ),
     );
     final categoryIdInput = FormItem(
-      controller: viewModel.categoryIdController,
       label: '分类编号',
       placeholder: 'CategoryID',
+      child: FoxyNumberInput<int>(
+        value: viewModel.categoryId.value,
+        onChanged: (v) => viewModel.categoryId.value = v,
+      ),
     );
     final bitIndexInput = FormItem(
-      controller: viewModel.bitIndexController,
       label: '位索引',
       placeholder: 'BitIndex',
+      child: FoxyNumberInput<int>(
+        value: viewModel.bitIndex.value,
+        onChanged: (v) => viewModel.bitIndex.value = v,
+      ),
     );
 
     return SingleChildScrollView(

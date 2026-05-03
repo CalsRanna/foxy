@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_loot_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
@@ -176,9 +177,12 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.itemController,
                   label: '物品',
                   placeholder: 'Item',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.item.value,
+                    onChanged: (v) => viewModel.item.value = v,
+                  ),
                 ),
               ),
             ],
@@ -189,23 +193,32 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             children: [
               Expanded(
                 child: FormItem(
-                  controller: viewModel.referenceController,
                   label: '关联',
                   placeholder: 'Reference',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.reference.value,
+                    onChanged: (v) => viewModel.reference.value = v,
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.chanceController,
                   label: '几率',
                   placeholder: 'Chance',
+                  child: FoxyNumberInput<double>(
+                    value: viewModel.chance.value,
+                    onChanged: (v) => viewModel.chance.value = v,
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.questRequiredController,
                   label: '需要任务',
                   placeholder: 'QuestRequired',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.questRequired.value,
+                    onChanged: (v) => viewModel.questRequired.value = v,
+                  ),
                 ),
               ),
             ],
@@ -216,30 +229,42 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             children: [
               Expanded(
                 child: FormItem(
-                  controller: viewModel.lootModeController,
                   label: '掉落模式',
                   placeholder: 'LootMode',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.lootMode.value,
+                    onChanged: (v) => viewModel.lootMode.value = v,
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.groupIdController,
                   label: '组ID',
                   placeholder: 'GroudId',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.groupId.value,
+                    onChanged: (v) => viewModel.groupId.value = v,
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.minCountController,
                   label: '最小数量',
                   placeholder: 'MinCount',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.minCount.value,
+                    onChanged: (v) => viewModel.minCount.value = v,
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.maxCountController,
                   label: '最大数量',
                   placeholder: 'MaxCount',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.maxCount.value,
+                    onChanged: (v) => viewModel.maxCount.value = v,
+                  ),
                 ),
               ),
             ],

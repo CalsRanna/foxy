@@ -13,14 +13,14 @@ class PlayerCreateInfoDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final repository = PlayerCreateInfoRepository();
 
-  final raceController = TextEditingController();
-  final classController = TextEditingController();
-  final mapController = TextEditingController();
-  final zoneController = TextEditingController();
-  final positionXController = TextEditingController();
-  final positionYController = TextEditingController();
-  final positionZController = TextEditingController();
-  final orientationController = TextEditingController();
+  final race = signal<int>(0);
+  final playerClass = signal<int>(0);
+  final map = signal<int>(0);
+  final zone = signal<int>(0);
+  final positionX = signal<double>(0.0);
+  final positionY = signal<double>(0.0);
+  final positionZ = signal<double>(0.0);
+  final orientation = signal<double>(0.0);
 
   final info = signal<PlayerCreateInfoEntity?>(null);
   Future<void> initSignals({int? race, int? playerClass}) async {
@@ -39,14 +39,14 @@ class PlayerCreateInfoDetailViewModel {
   }
 
   void _initControllers(PlayerCreateInfoEntity i) {
-    raceController.text = i.race.toString();
-    classController.text = i.class_.toString();
-    mapController.text = i.map.toString();
-    zoneController.text = i.zone.toString();
-    positionXController.text = i.positionX.toString();
-    positionYController.text = i.positionY.toString();
-    positionZController.text = i.positionZ.toString();
-    orientationController.text = i.orientation.toString();
+    race.value = i.race;
+    playerClass.value = i.class_;
+    map.value = i.map;
+    zone.value = i.zone;
+    positionX.value = i.positionX;
+    positionY.value = i.positionY;
+    positionZ.value = i.positionZ;
+    orientation.value = i.orientation;
   }
 
   Future<void> save(BuildContext context) async {
@@ -94,34 +94,16 @@ class PlayerCreateInfoDetailViewModel {
 
   PlayerCreateInfoEntity _collect() {
     return PlayerCreateInfoEntity(
-      race: _parseInt(raceController.text),
-      class_: _parseInt(classController.text),
-      map: _parseInt(mapController.text),
-      zone: _parseInt(zoneController.text),
-      positionX: _parseDouble(positionXController.text),
-      positionY: _parseDouble(positionYController.text),
-      positionZ: _parseDouble(positionZController.text),
-      orientation: _parseDouble(orientationController.text),
+      race: race.value,
+      class_: playerClass.value,
+      map: map.value,
+      zone: zone.value,
+      positionX: positionX.value,
+      positionY: positionY.value,
+      positionZ: positionZ.value,
+      orientation: orientation.value,
     );
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
-
-  void dispose() {
-    raceController.dispose();
-    classController.dispose();
-    mapController.dispose();
-    zoneController.dispose();
-    positionXController.dispose();
-    positionYController.dispose();
-    positionZController.dispose();
-    orientationController.dispose();
-  }
+  void dispose() {}
 }

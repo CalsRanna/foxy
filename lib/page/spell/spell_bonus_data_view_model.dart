@@ -12,10 +12,10 @@ class SpellBonusDataViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
-  final directBonusController = TextEditingController();
-  final dotBonusController = TextEditingController();
-  final apBonusController = TextEditingController();
-  final apDotBonusController = TextEditingController();
+  final directBonus = signal<double>(0.0);
+  final dotBonus = signal<double>(0.0);
+  final apBonus = signal<double>(0.0);
+  final apDotBonus = signal<double>(0.0);
   final commentsController = TextEditingController();
 
   final bonusData = signal(SpellBonusDataEntity());
@@ -50,26 +50,19 @@ class SpellBonusDataViewModel {
   SpellBonusDataEntity _collectFromControllers() {
     return SpellBonusDataEntity(
       entry: spellId.value,
-      directBonus: _parseDouble(directBonusController.text),
-      dotBonus: _parseDouble(dotBonusController.text),
-      apBonus: _parseDouble(apBonusController.text),
-      apDotBonus: _parseDouble(apDotBonusController.text),
+      directBonus: directBonus.value,
+      dotBonus: dotBonus.value,
+      apBonus: apBonus.value,
+      apDotBonus: apDotBonus.value,
       comments: commentsController.text,
     );
   }
 
-  double _parseDouble(String text) {
-    if (text.isEmpty) return 0.0;
-    final value = double.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
   void initControllers(SpellBonusDataEntity data) {
-    directBonusController.text = data.directBonus.toString();
-    dotBonusController.text = data.dotBonus.toString();
-    apBonusController.text = data.apBonus.toString();
-    apDotBonusController.text = data.apDotBonus.toString();
+    directBonus.value = data.directBonus;
+    dotBonus.value = data.dotBonus;
+    apBonus.value = data.apBonus;
+    apDotBonus.value = data.apDotBonus;
     commentsController.text = data.comments;
   }
 
@@ -84,10 +77,6 @@ class SpellBonusDataViewModel {
   }
 
   void dispose() {
-    directBonusController.dispose();
-    dotBonusController.dispose();
-    apBonusController.dispose();
-    apDotBonusController.dispose();
     commentsController.dispose();
   }
 }

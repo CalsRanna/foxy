@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -57,17 +58,23 @@ class _CreatureOnKillReputationViewState
                     children: [
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.creatureIdController,
                           label: '编号',
-                          placeholder: 'creature_id',
-                          readOnly: true,
+                          child: FoxyNumberInput<int>(
+                            value: viewModel.creatureId.value,
+                            placeholder: 'creature_id',
+                            readOnly: true,
+                          ),
                         ),
                       ),
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.teamDependentController,
                           label: '区分阵营',
-                          placeholder: 'TeamDependent',
+                          child: FoxyNumberInput<int>(
+                            value: viewModel.teamDependent.value,
+                            onChanged: (v) =>
+                                viewModel.teamDependent.value = v,
+                            placeholder: 'TeamDependent',
+                          ),
                         ),
                       ),
                       const Expanded(child: SizedBox()),
@@ -79,16 +86,24 @@ class _CreatureOnKillReputationViewState
                     children: [
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.rewOnKillRepFaction1Controller,
                           label: '阵营1',
-                          placeholder: 'RewOnKillRepFaction1',
+                          child: FoxyNumberInput<int>(
+                            value: viewModel.rewOnKillRepFaction1.value,
+                            onChanged: (v) =>
+                                viewModel.rewOnKillRepFaction1.value = v,
+                            placeholder: 'RewOnKillRepFaction1',
+                          ),
                         ),
                       ),
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.rewOnKillRepFaction2Controller,
                           label: '阵营2',
-                          placeholder: 'RewOnKillRepFaction2',
+                          child: FoxyNumberInput<int>(
+                            value: viewModel.rewOnKillRepFaction2.value,
+                            onChanged: (v) =>
+                                viewModel.rewOnKillRepFaction2.value = v,
+                            placeholder: 'RewOnKillRepFaction2',
+                          ),
                         ),
                       ),
                       const Expanded(child: SizedBox()),
@@ -100,16 +115,24 @@ class _CreatureOnKillReputationViewState
                     children: [
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.rewOnKillRepValue1Controller,
                           label: '声望值1',
-                          placeholder: 'RewOnKillRepValue1',
+                          child: FoxyNumberInput<double>(
+                            value: viewModel.rewOnKillRepValue1.value,
+                            onChanged: (v) =>
+                                viewModel.rewOnKillRepValue1.value = v,
+                            placeholder: 'RewOnKillRepValue1',
+                          ),
                         ),
                       ),
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.rewOnKillRepValue2Controller,
                           label: '声望值2',
-                          placeholder: 'RewOnKillRepValue2',
+                          child: FoxyNumberInput<double>(
+                            value: viewModel.rewOnKillRepValue2.value,
+                            onChanged: (v) =>
+                                viewModel.rewOnKillRepValue2.value = v,
+                            placeholder: 'RewOnKillRepValue2',
+                          ),
                         ),
                       ),
                       const Expanded(child: SizedBox()),

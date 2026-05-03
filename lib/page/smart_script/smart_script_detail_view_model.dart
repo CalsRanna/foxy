@@ -20,39 +20,39 @@ class SmartScriptDetailViewModel {
   int? _origId;
   int? _origLink;
 
-  final entryOrGuidController = TextEditingController();
-  final sourceTypeController = TextEditingController();
-  final idController = TextEditingController();
-  final linkController = TextEditingController();
+  final entryOrGuid = signal<int>(0);
+  final sourceType = signal<int>(0);
+  final id = signal<int>(0);
+  final link = signal<int>(0);
   final commentController = TextEditingController();
 
-  final eventTypeController = TextEditingController();
-  final eventPhaseMaskController = TextEditingController();
-  final eventChanceController = TextEditingController();
-  final eventFlagsController = TextEditingController();
-  final eventParam1Controller = TextEditingController();
-  final eventParam2Controller = TextEditingController();
-  final eventParam3Controller = TextEditingController();
-  final eventParam4Controller = TextEditingController();
-  final eventParam5Controller = TextEditingController();
+  final eventType = signal<int>(0);
+  final eventPhaseMask = signal<int>(0);
+  final eventChance = signal<int>(0);
+  final eventFlags = signal<int>(0);
+  final eventParam1 = signal<int>(0);
+  final eventParam2 = signal<int>(0);
+  final eventParam3 = signal<int>(0);
+  final eventParam4 = signal<int>(0);
+  final eventParam5 = signal<int>(0);
 
-  final actionTypeController = TextEditingController();
-  final actionParam1Controller = TextEditingController();
-  final actionParam2Controller = TextEditingController();
-  final actionParam3Controller = TextEditingController();
-  final actionParam4Controller = TextEditingController();
-  final actionParam5Controller = TextEditingController();
-  final actionParam6Controller = TextEditingController();
+  final actionType = signal<int>(0);
+  final actionParam1 = signal<int>(0);
+  final actionParam2 = signal<int>(0);
+  final actionParam3 = signal<int>(0);
+  final actionParam4 = signal<int>(0);
+  final actionParam5 = signal<int>(0);
+  final actionParam6 = signal<int>(0);
 
-  final targetTypeController = TextEditingController();
-  final targetParam1Controller = TextEditingController();
-  final targetParam2Controller = TextEditingController();
-  final targetParam3Controller = TextEditingController();
-  final targetParam4Controller = TextEditingController();
-  final targetXController = TextEditingController();
-  final targetYController = TextEditingController();
-  final targetZController = TextEditingController();
-  final targetOController = TextEditingController();
+  final targetType = signal<int>(0);
+  final targetParam1 = signal<int>(0);
+  final targetParam2 = signal<int>(0);
+  final targetParam3 = signal<int>(0);
+  final targetParam4 = signal<int>(0);
+  final targetX = signal<double>(0.0);
+  final targetY = signal<double>(0.0);
+  final targetZ = signal<double>(0.0);
+  final targetO = signal<double>(0.0);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -133,88 +133,74 @@ class SmartScriptDetailViewModel {
   }
 
   void _initControllers(SmartScriptEntity t) {
-    entryOrGuidController.text = t.entryOrGuid.toString();
-    sourceTypeController.text = t.sourceType.toString();
-    idController.text = t.id.toString();
-    linkController.text = t.link.toString();
+    entryOrGuid.value = t.entryOrGuid;
+    sourceType.value = t.sourceType;
+    id.value = t.id;
+    link.value = t.link;
     commentController.text = t.comment;
 
-    eventTypeController.text = t.eventType.toString();
-    eventPhaseMaskController.text = t.eventPhaseMask.toString();
-    eventChanceController.text = t.eventChance.toString();
-    eventFlagsController.text = t.eventFlags.toString();
-    eventParam1Controller.text = t.eventParam1.toString();
-    eventParam2Controller.text = t.eventParam2.toString();
-    eventParam3Controller.text = t.eventParam3.toString();
-    eventParam4Controller.text = t.eventParam4.toString();
-    eventParam5Controller.text = t.eventParam5.toString();
+    eventType.value = t.eventType;
+    eventPhaseMask.value = t.eventPhaseMask;
+    eventChance.value = t.eventChance;
+    eventFlags.value = t.eventFlags;
+    eventParam1.value = t.eventParam1;
+    eventParam2.value = t.eventParam2;
+    eventParam3.value = t.eventParam3;
+    eventParam4.value = t.eventParam4;
+    eventParam5.value = t.eventParam5;
 
-    actionTypeController.text = t.actionType.toString();
-    actionParam1Controller.text = t.actionParam1.toString();
-    actionParam2Controller.text = t.actionParam2.toString();
-    actionParam3Controller.text = t.actionParam3.toString();
-    actionParam4Controller.text = t.actionParam4.toString();
-    actionParam5Controller.text = t.actionParam5.toString();
-    actionParam6Controller.text = t.actionParam6.toString();
+    actionType.value = t.actionType;
+    actionParam1.value = t.actionParam1;
+    actionParam2.value = t.actionParam2;
+    actionParam3.value = t.actionParam3;
+    actionParam4.value = t.actionParam4;
+    actionParam5.value = t.actionParam5;
+    actionParam6.value = t.actionParam6;
 
-    targetTypeController.text = t.targetType.toString();
-    targetParam1Controller.text = t.targetParam1.toString();
-    targetParam2Controller.text = t.targetParam2.toString();
-    targetParam3Controller.text = t.targetParam3.toString();
-    targetParam4Controller.text = t.targetParam4.toString();
-    targetXController.text = t.targetX.toString();
-    targetYController.text = t.targetY.toString();
-    targetZController.text = t.targetZ.toString();
-    targetOController.text = t.targetO.toString();
+    targetType.value = t.targetType;
+    targetParam1.value = t.targetParam1;
+    targetParam2.value = t.targetParam2;
+    targetParam3.value = t.targetParam3;
+    targetParam4.value = t.targetParam4;
+    targetX.value = t.targetX;
+    targetY.value = t.targetY;
+    targetZ.value = t.targetZ;
+    targetO.value = t.targetO;
   }
 
   SmartScriptEntity _collectFromControllers() {
     return SmartScriptEntity(
-      entryOrGuid: _parseInt(entryOrGuidController.text),
-      sourceType: _parseInt(sourceTypeController.text),
-      id: _parseInt(idController.text),
-      link: _parseInt(linkController.text),
+      entryOrGuid: entryOrGuid.value,
+      sourceType: sourceType.value,
+      id: id.value,
+      link: link.value,
       comment: commentController.text,
-      eventType: _parseInt(eventTypeController.text),
-      eventPhaseMask: _parseInt(eventPhaseMaskController.text),
-      eventChance: _parseInt(eventChanceController.text),
-      eventFlags: _parseInt(eventFlagsController.text),
-      eventParam1: _parseInt(eventParam1Controller.text),
-      eventParam2: _parseInt(eventParam2Controller.text),
-      eventParam3: _parseInt(eventParam3Controller.text),
-      eventParam4: _parseInt(eventParam4Controller.text),
-      eventParam5: _parseInt(eventParam5Controller.text),
-      actionType: _parseInt(actionTypeController.text),
-      actionParam1: _parseInt(actionParam1Controller.text),
-      actionParam2: _parseInt(actionParam2Controller.text),
-      actionParam3: _parseInt(actionParam3Controller.text),
-      actionParam4: _parseInt(actionParam4Controller.text),
-      actionParam5: _parseInt(actionParam5Controller.text),
-      actionParam6: _parseInt(actionParam6Controller.text),
-      targetType: _parseInt(targetTypeController.text),
-      targetParam1: _parseInt(targetParam1Controller.text),
-      targetParam2: _parseInt(targetParam2Controller.text),
-      targetParam3: _parseInt(targetParam3Controller.text),
-      targetParam4: _parseInt(targetParam4Controller.text),
-      targetX: _parseDouble(targetXController.text),
-      targetY: _parseDouble(targetYController.text),
-      targetZ: _parseDouble(targetZController.text),
-      targetO: _parseDouble(targetOController.text),
+      eventType: eventType.value,
+      eventPhaseMask: eventPhaseMask.value,
+      eventChance: eventChance.value,
+      eventFlags: eventFlags.value,
+      eventParam1: eventParam1.value,
+      eventParam2: eventParam2.value,
+      eventParam3: eventParam3.value,
+      eventParam4: eventParam4.value,
+      eventParam5: eventParam5.value,
+      actionType: actionType.value,
+      actionParam1: actionParam1.value,
+      actionParam2: actionParam2.value,
+      actionParam3: actionParam3.value,
+      actionParam4: actionParam4.value,
+      actionParam5: actionParam5.value,
+      actionParam6: actionParam6.value,
+      targetType: targetType.value,
+      targetParam1: targetParam1.value,
+      targetParam2: targetParam2.value,
+      targetParam3: targetParam3.value,
+      targetParam4: targetParam4.value,
+      targetX: targetX.value,
+      targetY: targetY.value,
+      targetZ: targetZ.value,
+      targetO: targetO.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  double _parseDouble(String text) {
-    if (text.isEmpty) return 0.0;
-    final value = double.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, SmartScriptEntity t) {
@@ -229,35 +215,6 @@ class SmartScriptDetailViewModel {
   }
 
   void dispose() {
-    entryOrGuidController.dispose();
-    sourceTypeController.dispose();
-    idController.dispose();
-    linkController.dispose();
     commentController.dispose();
-    eventTypeController.dispose();
-    eventPhaseMaskController.dispose();
-    eventChanceController.dispose();
-    eventFlagsController.dispose();
-    eventParam1Controller.dispose();
-    eventParam2Controller.dispose();
-    eventParam3Controller.dispose();
-    eventParam4Controller.dispose();
-    eventParam5Controller.dispose();
-    actionTypeController.dispose();
-    actionParam1Controller.dispose();
-    actionParam2Controller.dispose();
-    actionParam3Controller.dispose();
-    actionParam4Controller.dispose();
-    actionParam5Controller.dispose();
-    actionParam6Controller.dispose();
-    targetTypeController.dispose();
-    targetParam1Controller.dispose();
-    targetParam2Controller.dispose();
-    targetParam3Controller.dispose();
-    targetParam4Controller.dispose();
-    targetXController.dispose();
-    targetYController.dispose();
-    targetZController.dispose();
-    targetOController.dispose();
   }
 }

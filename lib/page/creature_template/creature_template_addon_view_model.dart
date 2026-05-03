@@ -12,12 +12,12 @@ class CreatureTemplateAddonViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final creatureId = signal(0);
 
-  final pathIdController = TextEditingController();
-  final mountController = TextEditingController();
-  final emoteController = TextEditingController();
-  final bytes1Controller = TextEditingController();
-  final bytes2Controller = TextEditingController();
-  final visibilityDistanceTypeController = TextEditingController();
+  final pathId = signal<int>(0);
+  final mount = signal<int>(0);
+  final emote = signal<int>(0);
+  final bytes1 = signal<int>(0);
+  final bytes2 = signal<int>(0);
+  final visibilityDistanceType = signal<int>(0);
   final aurasController = TextEditingController();
 
   final addon = signal(CreatureTemplateAddonEntity());
@@ -62,34 +62,24 @@ class CreatureTemplateAddonViewModel {
   CreatureTemplateAddonEntity _collectFromControllers() {
     final data = CreatureTemplateAddonEntity();
     data.entry = creatureId.value;
-    data.pathId = _parseInt(pathIdController.text);
-    data.mount = _parseInt(mountController.text);
-    data.emote = _parseInt(emoteController.text);
-    data.bytes1 = _parseInt(bytes1Controller.text);
-    data.bytes2 = _parseInt(bytes2Controller.text);
-    data.visibilityDistanceType = _parseInt(
-      visibilityDistanceTypeController.text,
-    );
+    data.pathId = pathId.value;
+    data.mount = mount.value;
+    data.emote = emote.value;
+    data.bytes1 = bytes1.value;
+    data.bytes2 = bytes2.value;
+    data.visibilityDistanceType = visibilityDistanceType.value;
     data.auras = aurasController.text;
     return data;
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
   /// 初始化 Controller 的值
   void initControllers(CreatureTemplateAddonEntity data) {
-    pathIdController.text = data.pathId.toString();
-    mountController.text = data.mount.toString();
-    emoteController.text = data.emote.toString();
-    bytes1Controller.text = data.bytes1.toString();
-    bytes2Controller.text = data.bytes2.toString();
-    visibilityDistanceTypeController.text = data.visibilityDistanceType
-        .toString();
+    pathId.value = data.pathId;
+    mount.value = data.mount;
+    emote.value = data.emote;
+    bytes1.value = data.bytes1;
+    bytes2.value = data.bytes2;
+    visibilityDistanceType.value = data.visibilityDistanceType;
     aurasController.text = data.auras;
   }
 
@@ -106,12 +96,6 @@ class CreatureTemplateAddonViewModel {
 
   /// 清理资源
   void dispose() {
-    pathIdController.dispose();
-    mountController.dispose();
-    emoteController.dispose();
-    bytes1Controller.dispose();
-    bytes2Controller.dispose();
-    visibilityDistanceTypeController.dispose();
     aurasController.dispose();
   }
 }

@@ -3,6 +3,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -37,9 +38,12 @@ class _ReferenceLootTemplateViewState
   @override
   Widget build(BuildContext context) {
     final entryInput = FormItem(
-      controller: viewModel.entryController,
       label: 'Entry',
       placeholder: 'Entry',
+      child: FoxyNumberInput<int>(
+        value: viewModel.entry.value,
+        onChanged: (v) => viewModel.entry.value = v,
+      ),
     );
     final itemInput = FormItem(
       label: '物品ID',
@@ -49,14 +53,20 @@ class _ReferenceLootTemplateViewState
       ),
     );
     final referenceInput = FormItem(
-      controller: viewModel.referenceController,
       label: '关联ID',
       placeholder: 'Reference',
+      child: FoxyNumberInput<int>(
+        value: viewModel.reference.value,
+        onChanged: (v) => viewModel.reference.value = v,
+      ),
     );
     final chanceInput = FormItem(
-      controller: viewModel.chanceController,
       label: '掉落几率',
       placeholder: 'Chance (%)',
+      child: FoxyNumberInput<double>(
+        value: viewModel.chance.value,
+        onChanged: (v) => viewModel.chance.value = v,
+      ),
     );
     final questRequiredInput = FormItem(
       label: '需要任务',
@@ -67,24 +77,36 @@ class _ReferenceLootTemplateViewState
       ),
     );
     final lootModeInput = FormItem(
-      controller: viewModel.lootModeController,
       label: '掉落模式',
       placeholder: 'LootMode',
+      child: FoxyNumberInput<int>(
+        value: viewModel.lootMode.value,
+        onChanged: (v) => viewModel.lootMode.value = v,
+      ),
     );
     final groupIdInput = FormItem(
-      controller: viewModel.groupIdController,
       label: '组ID',
       placeholder: 'GroupId',
+      child: FoxyNumberInput<int>(
+        value: viewModel.groupId.value,
+        onChanged: (v) => viewModel.groupId.value = v,
+      ),
     );
     final minCountInput = FormItem(
-      controller: viewModel.minCountController,
       label: '最小数量',
       placeholder: 'MinCount',
+      child: FoxyNumberInput<int>(
+        value: viewModel.minCount.value,
+        onChanged: (v) => viewModel.minCount.value = v,
+      ),
     );
     final maxCountInput = FormItem(
-      controller: viewModel.maxCountController,
       label: '最大数量',
       placeholder: 'MaxCount',
+      child: FoxyNumberInput<int>(
+        value: viewModel.maxCount.value,
+        onChanged: (v) => viewModel.maxCount.value = v,
+      ),
     );
     final commentInput = FormItem(
       controller: viewModel.commentController,

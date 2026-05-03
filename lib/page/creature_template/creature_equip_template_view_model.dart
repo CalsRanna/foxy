@@ -15,11 +15,11 @@ class CreatureEquipTemplateViewModel {
   final items = signal<List<BriefCreatureEquipTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final idController = TextEditingController();
+  final id = signal<int>(0);
   final itemID1Controller = TextEditingController();
   final itemID2Controller = TextEditingController();
   final itemID3Controller = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final verifiedBuild = signal<int>(0);
 
   final repository = CreatureEquipTemplateRepository();
 
@@ -32,31 +32,31 @@ class CreatureEquipTemplateViewModel {
 
   /// 重置表单
   void resetForm() {
-    idController.clear();
+    id.value = 0;
     itemID1Controller.clear();
     itemID2Controller.clear();
     itemID3Controller.clear();
-    verifiedBuildController.text = '0';
+    verifiedBuild.value = 0;
   }
 
   /// 填充表单
   void fillForm(BriefCreatureEquipTemplateEntity equip) {
-    idController.text = equip.id.toString();
+    id.value = equip.id;
     itemID1Controller.text = equip.itemID1.toString();
     itemID2Controller.text = equip.itemID2.toString();
     itemID3Controller.text = equip.itemID3.toString();
-    verifiedBuildController.text = equip.verifiedBuild.toString();
+    verifiedBuild.value = equip.verifiedBuild;
   }
 
   /// 从表单收集数据
   CreatureEquipTemplateEntity collectFromForm() {
     final equip = CreatureEquipTemplateEntity(
       creatureID: creatureId.value,
-      id: _parseInt(idController.text),
+      id: id.value,
       itemID1: _parseInt(itemID1Controller.text),
       itemID2: _parseInt(itemID2Controller.text),
       itemID3: _parseInt(itemID3Controller.text),
-      verifiedBuild: _parseInt(verifiedBuildController.text),
+      verifiedBuild: verifiedBuild.value,
     );
     return equip;
   }
@@ -73,7 +73,7 @@ class CreatureEquipTemplateViewModel {
     try {
       final nextId = await repository.getNextId(creatureId.value);
       resetForm();
-      idController.text = nextId.toString();
+      id.value = nextId;
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物装备记录失败: $e');
@@ -209,10 +209,8 @@ class CreatureEquipTemplateViewModel {
 
   /// 清理资源
   void dispose() {
-    idController.dispose();
     itemID1Controller.dispose();
     itemID2Controller.dispose();
     itemID3Controller.dispose();
-    verifiedBuildController.dispose();
   }
 }

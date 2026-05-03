@@ -13,26 +13,26 @@ class ItemExtendedCostDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
-  final honorPointsController = TextEditingController();
-  final arenaPointsController = TextEditingController();
-  final arenaBracketController = TextEditingController();
-  final requiredArenaRatingController = TextEditingController();
-  final itemPurchaseGroupController = TextEditingController();
+  final id = signal<int>(0);
+  final honorPoints = signal<int>(0);
+  final arenaPoints = signal<int>(0);
+  final arenaBracket = signal<int>(0);
+  final requiredArenaRating = signal<int>(0);
+  final itemPurchaseGroup = signal<int>(0);
 
   /// ItemID
-  final itemID0Controller = TextEditingController();
-  final itemID1Controller = TextEditingController();
-  final itemID2Controller = TextEditingController();
-  final itemID3Controller = TextEditingController();
-  final itemID4Controller = TextEditingController();
+  final itemID0 = signal<int>(0);
+  final itemID1 = signal<int>(0);
+  final itemID2 = signal<int>(0);
+  final itemID3 = signal<int>(0);
+  final itemID4 = signal<int>(0);
 
   /// ItemCount
-  final itemCount0Controller = TextEditingController();
-  final itemCount1Controller = TextEditingController();
-  final itemCount2Controller = TextEditingController();
-  final itemCount3Controller = TextEditingController();
-  final itemCount4Controller = TextEditingController();
+  final itemCount0 = signal<int>(0);
+  final itemCount1 = signal<int>(0);
+  final itemCount2 = signal<int>(0);
+  final itemCount3 = signal<int>(0);
+  final itemCount4 = signal<int>(0);
 
   final cost = signal(ItemExtendedCostEntity());
   /// 保存到数据库
@@ -68,30 +68,23 @@ class ItemExtendedCostDetailViewModel {
   /// 从所有 Controller 收集数据构建 ItemExtendedCost
   ItemExtendedCostEntity _collectFromControllers() {
     return ItemExtendedCostEntity(
-      id: _parseInt(idController.text),
-      honorPoints: _parseInt(honorPointsController.text),
-      arenaPoints: _parseInt(arenaPointsController.text),
-      arenaBracket: _parseInt(arenaBracketController.text),
-      requiredArenaRating: _parseInt(requiredArenaRatingController.text),
-      itemPurchaseGroup: _parseInt(itemPurchaseGroupController.text),
-      itemID0: _parseInt(itemID0Controller.text),
-      itemID1: _parseInt(itemID1Controller.text),
-      itemID2: _parseInt(itemID2Controller.text),
-      itemID3: _parseInt(itemID3Controller.text),
-      itemID4: _parseInt(itemID4Controller.text),
-      itemCount0: _parseInt(itemCount0Controller.text),
-      itemCount1: _parseInt(itemCount1Controller.text),
-      itemCount2: _parseInt(itemCount2Controller.text),
-      itemCount3: _parseInt(itemCount3Controller.text),
-      itemCount4: _parseInt(itemCount4Controller.text),
+      id: id.value,
+      honorPoints: honorPoints.value,
+      arenaPoints: arenaPoints.value,
+      arenaBracket: arenaBracket.value,
+      requiredArenaRating: requiredArenaRating.value,
+      itemPurchaseGroup: itemPurchaseGroup.value,
+      itemID0: itemID0.value,
+      itemID1: itemID1.value,
+      itemID2: itemID2.value,
+      itemID3: itemID3.value,
+      itemID4: itemID4.value,
+      itemCount0: itemCount0.value,
+      itemCount1: itemCount1.value,
+      itemCount2: itemCount2.value,
+      itemCount3: itemCount3.value,
+      itemCount4: itemCount4.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, ItemExtendedCostEntity t) {
@@ -105,29 +98,7 @@ class ItemExtendedCostDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  void dispose() {
-    /// Basic
-    idController.dispose();
-    honorPointsController.dispose();
-    arenaPointsController.dispose();
-    arenaBracketController.dispose();
-    requiredArenaRatingController.dispose();
-    itemPurchaseGroupController.dispose();
-
-    /// ItemID
-    itemID0Controller.dispose();
-    itemID1Controller.dispose();
-    itemID2Controller.dispose();
-    itemID3Controller.dispose();
-    itemID4Controller.dispose();
-
-    /// ItemCount
-    itemCount0Controller.dispose();
-    itemCount1Controller.dispose();
-    itemCount2Controller.dispose();
-    itemCount3Controller.dispose();
-    itemCount4Controller.dispose();
-  }
+  void dispose() {}
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -143,25 +114,25 @@ class ItemExtendedCostDetailViewModel {
 
   void _initControllers(ItemExtendedCostEntity table) {
     /// Basic
-    idController.text = table.id.toString();
-    honorPointsController.text = table.honorPoints.toString();
-    arenaPointsController.text = table.arenaPoints.toString();
-    arenaBracketController.text = table.arenaBracket.toString();
-    requiredArenaRatingController.text = table.requiredArenaRating.toString();
-    itemPurchaseGroupController.text = table.itemPurchaseGroup.toString();
+    id.value = table.id;
+    honorPoints.value = table.honorPoints;
+    arenaPoints.value = table.arenaPoints;
+    arenaBracket.value = table.arenaBracket;
+    requiredArenaRating.value = table.requiredArenaRating;
+    itemPurchaseGroup.value = table.itemPurchaseGroup;
 
     /// ItemID
-    itemID0Controller.text = table.itemID0.toString();
-    itemID1Controller.text = table.itemID1.toString();
-    itemID2Controller.text = table.itemID2.toString();
-    itemID3Controller.text = table.itemID3.toString();
-    itemID4Controller.text = table.itemID4.toString();
+    itemID0.value = table.itemID0;
+    itemID1.value = table.itemID1;
+    itemID2.value = table.itemID2;
+    itemID3.value = table.itemID3;
+    itemID4.value = table.itemID4;
 
     /// ItemCount
-    itemCount0Controller.text = table.itemCount0.toString();
-    itemCount1Controller.text = table.itemCount1.toString();
-    itemCount2Controller.text = table.itemCount2.toString();
-    itemCount3Controller.text = table.itemCount3.toString();
-    itemCount4Controller.text = table.itemCount4.toString();
+    itemCount0.value = table.itemCount0;
+    itemCount1.value = table.itemCount1;
+    itemCount2.value = table.itemCount2;
+    itemCount3.value = table.itemCount3;
+    itemCount4.value = table.itemCount4;
   }
 }

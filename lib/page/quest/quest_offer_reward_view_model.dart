@@ -12,15 +12,15 @@ class QuestOfferRewardViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
-  final idController = TextEditingController();
-  final emote1Controller = TextEditingController();
-  final emote2Controller = TextEditingController();
-  final emote3Controller = TextEditingController();
-  final emote4Controller = TextEditingController();
-  final emoteDelay1Controller = TextEditingController();
-  final emoteDelay2Controller = TextEditingController();
-  final emoteDelay3Controller = TextEditingController();
-  final emoteDelay4Controller = TextEditingController();
+  final id = signal<int>(0);
+  final emote1 = signal<int>(0);
+  final emote2 = signal<int>(0);
+  final emote3 = signal<int>(0);
+  final emote4 = signal<int>(0);
+  final emoteDelay1 = signal<int>(0);
+  final emoteDelay2 = signal<int>(0);
+  final emoteDelay3 = signal<int>(0);
+  final emoteDelay4 = signal<int>(0);
   final rewardTextController = TextEditingController();
 
   int _originalId = 0;
@@ -32,12 +32,12 @@ class QuestOfferRewardViewModel {
       final existing = await repository.getQuestOfferReward(questId);
       if (existing != null) {
         _originalId = existing.id;
-        _applyToControllers(existing);
+        _applyToSignals(existing);
       } else {
         final blank = await repository.createQuestOfferReward(questId);
-        _applyToControllers(blank);
+        _applyToSignals(blank);
       }
-      idController.text = questId.toString();
+      id.value = questId;
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
@@ -46,7 +46,7 @@ class QuestOfferRewardViewModel {
 
   Future<void> save(BuildContext context) async {
     try {
-      final model = _collectFromControllers();
+      final model = _collect();
       final repository = QuestOfferRewardRepository();
       if (_originalId == 0) {
         await repository.storeQuestOfferReward(model);
@@ -69,51 +69,34 @@ class QuestOfferRewardViewModel {
     routerFacade.goBack();
   }
 
-  void _applyToControllers(QuestOfferRewardEntity model) {
-    idController.text = model.id.toString();
-    emote1Controller.text = model.emote1.toString();
-    emote2Controller.text = model.emote2.toString();
-    emote3Controller.text = model.emote3.toString();
-    emote4Controller.text = model.emote4.toString();
-    emoteDelay1Controller.text = model.emoteDelay1.toString();
-    emoteDelay2Controller.text = model.emoteDelay2.toString();
-    emoteDelay3Controller.text = model.emoteDelay3.toString();
-    emoteDelay4Controller.text = model.emoteDelay4.toString();
+  void _applyToSignals(QuestOfferRewardEntity model) {
+    emote1.value = model.emote1;
+    emote2.value = model.emote2;
+    emote3.value = model.emote3;
+    emote4.value = model.emote4;
+    emoteDelay1.value = model.emoteDelay1;
+    emoteDelay2.value = model.emoteDelay2;
+    emoteDelay3.value = model.emoteDelay3;
+    emoteDelay4.value = model.emoteDelay4;
     rewardTextController.text = model.rewardText;
   }
 
-  QuestOfferRewardEntity _collectFromControllers() {
+  QuestOfferRewardEntity _collect() {
     return QuestOfferRewardEntity(
       id: questId.value,
-      emote1: _parseInt(emote1Controller.text),
-      emote2: _parseInt(emote2Controller.text),
-      emote3: _parseInt(emote3Controller.text),
-      emote4: _parseInt(emote4Controller.text),
-      emoteDelay1: _parseInt(emoteDelay1Controller.text),
-      emoteDelay2: _parseInt(emoteDelay2Controller.text),
-      emoteDelay3: _parseInt(emoteDelay3Controller.text),
-      emoteDelay4: _parseInt(emoteDelay4Controller.text),
+      emote1: emote1.value,
+      emote2: emote2.value,
+      emote3: emote3.value,
+      emote4: emote4.value,
+      emoteDelay1: emoteDelay1.value,
+      emoteDelay2: emoteDelay2.value,
+      emoteDelay3: emoteDelay3.value,
+      emoteDelay4: emoteDelay4.value,
       rewardText: rewardTextController.text,
     );
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
   void dispose() {
-    idController.dispose();
-    emote1Controller.dispose();
-    emote2Controller.dispose();
-    emote3Controller.dispose();
-    emote4Controller.dispose();
-    emoteDelay1Controller.dispose();
-    emoteDelay2Controller.dispose();
-    emoteDelay3Controller.dispose();
-    emoteDelay4Controller.dispose();
     rewardTextController.dispose();
   }
 }

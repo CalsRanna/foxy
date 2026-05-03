@@ -4,6 +4,7 @@ import 'package:foxy/page/creature_template/spell_selector.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -164,12 +165,12 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
         children: [
           // 训练师ID（只读）
           FormItem(
-            controller: TextEditingController(
-              text: widget.creatureId.toString(),
-            ),
             label: '训练师ID',
-            placeholder: 'ID',
-            readOnly: true,
+            child: FoxyNumberInput<int>(
+              value: widget.creatureId,
+              placeholder: 'ID',
+              readOnly: true,
+            ),
           ),
           SizedBox(height: 16),
           // 技能
@@ -183,30 +184,42 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           SizedBox(height: 16),
           // 金币花费
           FormItem(
-            controller: viewModel.moneyCostController,
             label: '金币花费',
-            placeholder: 'MoneyCost',
+            child: FoxyNumberInput<int>(
+              value: viewModel.moneyCost.value,
+              onChanged: (v) => viewModel.moneyCost.value = v,
+              placeholder: 'MoneyCost',
+            ),
           ),
           SizedBox(height: 16),
           // 需要技能线
           FormItem(
-            controller: viewModel.reqSkillLineController,
             label: '需要技能线',
-            placeholder: 'ReqSkillLine',
+            child: FoxyNumberInput<int>(
+              value: viewModel.reqSkillLine.value,
+              onChanged: (v) => viewModel.reqSkillLine.value = v,
+              placeholder: 'ReqSkillLine',
+            ),
           ),
           SizedBox(height: 16),
           // 需要技能等级
           FormItem(
-            controller: viewModel.reqSkillRankController,
             label: '需要技能等级',
-            placeholder: 'ReqSkillRank',
+            child: FoxyNumberInput<int>(
+              value: viewModel.reqSkillRank.value,
+              onChanged: (v) => viewModel.reqSkillRank.value = v,
+              placeholder: 'ReqSkillRank',
+            ),
           ),
           SizedBox(height: 16),
           // 需要等级
           FormItem(
-            controller: viewModel.reqLevelController,
             label: '需要等级',
-            placeholder: 'ReqLevel',
+            child: FoxyNumberInput<int>(
+              value: viewModel.reqLevel.value,
+              onChanged: (v) => viewModel.reqLevel.value = v,
+              placeholder: 'ReqLevel',
+            ),
           ),
           SizedBox(height: 24),
           // 按钮行

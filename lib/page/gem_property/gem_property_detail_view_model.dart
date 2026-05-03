@@ -13,13 +13,13 @@ class GemPropertyDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
+  final id = signal<int>(0);
 
   /// Property
-  final enchantIdController = TextEditingController();
-  final maxcountInvController = TextEditingController();
-  final maxcountItemController = TextEditingController();
-  final typeController = TextEditingController();
+  final enchantId = signal<int>(0);
+  final maxCountInv = signal<int>(0);
+  final maxCountItem = signal<int>(0);
+  final type = signal<int>(0);
 
   final property = signal(GemPropertyEntity());
   /// 保存到数据库
@@ -55,19 +55,12 @@ class GemPropertyDetailViewModel {
   /// 从所有 Controller 收集数据构建 GemProperty
   GemPropertyEntity _collectFromControllers() {
     return GemPropertyEntity(
-      id: _parseInt(idController.text),
-      enchantId: _parseInt(enchantIdController.text),
-      maxCountInv: _parseInt(maxcountInvController.text),
-      maxCountItem: _parseInt(maxcountItemController.text),
-      type: _parseInt(typeController.text),
+      id: id.value,
+      enchantId: enchantId.value,
+      maxCountInv: maxCountInv.value,
+      maxCountItem: maxCountItem.value,
+      type: type.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, GemPropertyEntity t) {
@@ -81,13 +74,7 @@ class GemPropertyDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  void dispose() {
-    idController.dispose();
-    enchantIdController.dispose();
-    maxcountInvController.dispose();
-    maxcountItemController.dispose();
-    typeController.dispose();
-  }
+  void dispose() {}
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -100,10 +87,10 @@ class GemPropertyDetailViewModel {
   }
 
   void _initControllers(GemPropertyEntity gemProperty) {
-    idController.text = gemProperty.id.toString();
-    enchantIdController.text = gemProperty.enchantId.toString();
-    maxcountInvController.text = gemProperty.maxCountInv.toString();
-    maxcountItemController.text = gemProperty.maxCountItem.toString();
-    typeController.text = gemProperty.type.toString();
+    id.value = gemProperty.id;
+    enchantId.value = gemProperty.enchantId;
+    maxCountInv.value = gemProperty.maxCountInv;
+    maxCountItem.value = gemProperty.maxCountItem;
+    type.value = gemProperty.type;
   }
 }

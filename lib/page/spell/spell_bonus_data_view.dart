@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_bonus_data_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -75,30 +76,42 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                     children: [
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.directBonusController,
                           label: '法术强度',
                           placeholder: 'direct_bonus',
+                          child: FoxyNumberInput<double>(
+                            value: viewModel.directBonus.value,
+                            onChanged: (v) => viewModel.directBonus.value = v,
+                          ),
                         ),
                       ),
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.dotBonusController,
                           label: '法术强度(dot)',
                           placeholder: 'dot_bonus',
+                          child: FoxyNumberInput<double>(
+                            value: viewModel.dotBonus.value,
+                            onChanged: (v) => viewModel.dotBonus.value = v,
+                          ),
                         ),
                       ),
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.apBonusController,
                           label: '攻击强度',
                           placeholder: 'ap_bonus',
+                          child: FoxyNumberInput<double>(
+                            value: viewModel.apBonus.value,
+                            onChanged: (v) => viewModel.apBonus.value = v,
+                          ),
                         ),
                       ),
                       Expanded(
                         child: FormItem(
-                          controller: viewModel.apDotBonusController,
                           label: '攻击强度(dot)',
                           placeholder: 'ap_dot_bonus',
+                          child: FoxyNumberInput<double>(
+                            value: viewModel.apDotBonus.value,
+                            onChanged: (v) => viewModel.apDotBonus.value = v,
+                          ),
                         ),
                       ),
                     ],

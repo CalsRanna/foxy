@@ -13,9 +13,9 @@ class PlayerCreateInfoSpellCustomViewModel {
   int? _race;
   int? _class_;
 
-  final racemaskController = TextEditingController();
-  final classmaskController = TextEditingController();
-  final spellController = TextEditingController();
+  final racemask = signal<int>(0);
+  final classmask = signal<int>(0);
+  final spell = signal<int>(0);
   final noteController = TextEditingController();
 
   Future<void> initSignals({int? race, int? class_}) async {
@@ -31,9 +31,9 @@ class PlayerCreateInfoSpellCustomViewModel {
   }
 
   void create() {
-    racemaskController.clear();
-    classmaskController.clear();
-    spellController.clear();
+    racemask.value = 0;
+    classmask.value = 0;
+    spell.value = 0;
     noteController.clear();
   }
 
@@ -41,9 +41,9 @@ class PlayerCreateInfoSpellCustomViewModel {
     if (_race == null || _class_ == null) return;
     try {
       final item = PlayerCreateInfoSpellCustomEntity(
-        racemask: _parseInt(racemaskController.text),
-        classmask: _parseInt(classmaskController.text),
-        spell: _parseInt(spellController.text),
+        racemask: racemask.value,
+        classmask: classmask.value,
+        spell: spell.value,
         note: noteController.text,
       );
       await repository.storeSpellCustom(item);
@@ -76,17 +76,7 @@ class PlayerCreateInfoSpellCustomViewModel {
     }
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
   void dispose() {
-    racemaskController.dispose();
-    classmaskController.dispose();
-    spellController.dispose();
     noteController.dispose();
   }
 }

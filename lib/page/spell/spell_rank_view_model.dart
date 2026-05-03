@@ -14,9 +14,9 @@ class SpellRankViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellRankEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final firstSpellIdController = TextEditingController();
-  final rankSpellIdController = TextEditingController();
-  final rankController = TextEditingController();
+  final firstSpellId = signal<int>(0);
+  final rankSpellId = signal<int>(0);
+  final rank = signal<int>(0);
 
   final repository = SpellRankRepository();
 
@@ -27,43 +27,36 @@ class SpellRankViewModel {
   }
 
   void resetForm() {
-    firstSpellIdController.clear();
-    rankSpellIdController.clear();
-    rankController.clear();
+    firstSpellId.value = 0;
+    rankSpellId.value = 0;
+    rank.value = 0;
   }
 
   void fillForm(SpellRankEntity data) {
-    firstSpellIdController.text = data.firstSpellId.toString();
-    rankSpellIdController.text = data.spellId.toString();
-    rankController.text = data.rank.toString();
+    firstSpellId.value = data.firstSpellId;
+    rankSpellId.value = data.spellId;
+    rank.value = data.rank;
   }
 
   SpellRankEntity collectFromForm() {
     final data = SpellRankEntity(
-      firstSpellId: _parseInt(firstSpellIdController.text),
-      spellId: _parseInt(rankSpellIdController.text),
-      rank: _parseInt(rankController.text),
+      firstSpellId: firstSpellId.value,
+      spellId: rankSpellId.value,
+      rank: rank.value,
     );
     return data;
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   Future<void> create() async {
     try {
       resetForm();
-      firstSpellIdController.text = items.value.isNotEmpty
-          ? items.value.first.firstSpellId.toString()
-          : '0';
-      rankSpellIdController.text = spellId.value.toString();
-      rankController.text = items.value.isNotEmpty
-          ? (items.value.last.rank + 1).toString()
-          : '1';
+      firstSpellId.value = items.value.isNotEmpty
+          ? items.value.first.firstSpellId
+          : 0;
+      rankSpellId.value = spellId.value;
+      rank.value = items.value.isNotEmpty
+          ? (items.value.last.rank + 1)
+          : 1;
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('法术等级-创建失败: $e');
@@ -184,9 +177,5 @@ class SpellRankViewModel {
     routerFacade.goBack();
   }
 
-  void dispose() {
-    firstSpellIdController.dispose();
-    rankSpellIdController.dispose();
-    rankController.dispose();
-  }
+  void dispose() {}
 }

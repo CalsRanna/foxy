@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/quest/quest_request_items_locale_selector.dart';
 import 'package:foxy/page/quest/quest_request_items_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -38,23 +39,31 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
         children: [
           Expanded(
             child: FormItem(
-              controller: vm.idController,
               label: '编号',
-              readOnly: true,
+              child: FoxyNumberInput<int>(
+                value: vm.id.value,
+                readOnly: true,
+              ),
             ),
           ),
           Expanded(
             child: FormItem(
-              controller: vm.emoteOnCompleteController,
               label: '完成表情',
               placeholder: 'EmoteOnComplete',
+              child: FoxyNumberInput<int>(
+                value: vm.emoteOnComplete.value,
+                onChanged: (v) => vm.emoteOnComplete.value = v,
+              ),
             ),
           ),
           Expanded(
             child: FormItem(
-              controller: vm.emoteOnIncompleteController,
               label: '未完成表情',
               placeholder: 'EmoteOnIncomplete',
+              child: FoxyNumberInput<int>(
+                value: vm.emoteOnIncomplete.value,
+                onChanged: (v) => vm.emoteOnIncomplete.value = v,
+              ),
             ),
           ),
           Expanded(child: SizedBox()),
