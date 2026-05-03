@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_group_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
@@ -162,16 +163,22 @@ class _SpellGroupViewState extends State<SpellGroupView> {
             children: [
               Expanded(
                 child: FormItem(
-                  controller: viewModel.idController,
                   label: '技能组',
                   placeholder: 'id',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.groupId.value,
+                    onChanged: (v) => viewModel.groupId.value = v,
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.specialFlagController,
                   label: '标识',
                   placeholder: 'special_flag',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.specialFlag.value,
+                    onChanged: (v) => viewModel.specialFlag.value = v,
+                  ),
                 ),
               ),
             ],

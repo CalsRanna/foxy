@@ -13,15 +13,15 @@ class ReferenceLootTemplateDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final repository = LootTemplateRepository(LootTableType.reference);
 
-  final entryController = TextEditingController();
+  final entry = signal<int>(0);
   final itemController = TextEditingController();
-  final referenceController = TextEditingController();
-  final chanceController = TextEditingController();
+  final reference = signal<int>(0);
+  final chance = signal<double>(0.0);
   final questRequiredController = ShadSelectController<int>();
-  final lootModeController = TextEditingController();
-  final groupIdController = TextEditingController();
-  final minCountController = TextEditingController();
-  final maxCountController = TextEditingController();
+  final lootMode = signal<int>(0);
+  final groupId = signal<int>(0);
+  final minCount = signal<int>(0);
+  final maxCount = signal<int>(0);
   final commentController = TextEditingController();
 
   final template = signal<LootTemplateEntity?>(null);
@@ -47,15 +47,15 @@ class ReferenceLootTemplateDetailViewModel {
   }
 
   void _initControllers(LootTemplateEntity loot) {
-    entryController.text = loot.entry.toString();
+    entry.value = loot.entry;
     itemController.text = loot.item.toString();
-    referenceController.text = loot.reference.toString();
-    chanceController.text = loot.chance.toString();
+    reference.value = loot.reference;
+    chance.value = loot.chance;
     questRequiredController.value = {loot.questRequired ? 1 : 0};
-    lootModeController.text = loot.lootMode.toString();
-    groupIdController.text = loot.groupId.toString();
-    minCountController.text = loot.minCount.toString();
-    maxCountController.text = loot.maxCount.toString();
+    lootMode.value = loot.lootMode;
+    groupId.value = loot.groupId;
+    minCount.value = loot.minCount;
+    maxCount.value = loot.maxCount;
     commentController.text = loot.comment;
   }
 
@@ -101,15 +101,15 @@ class ReferenceLootTemplateDetailViewModel {
 
   LootTemplateEntity _collectFromControllers() {
     return LootTemplateEntity(
-      entry: _parseInt(entryController.text),
+      entry: entry.value,
       item: _parseInt(itemController.text),
-      reference: _parseInt(referenceController.text),
-      chance: _parseDouble(chanceController.text),
+      reference: reference.value,
+      chance: chance.value,
       questRequired: questRequiredController.value.first == 1,
-      lootMode: _parseInt(lootModeController.text),
-      groupId: _parseInt(groupIdController.text),
-      minCount: _parseInt(minCountController.text),
-      maxCount: _parseInt(maxCountController.text),
+      lootMode: lootMode.value,
+      groupId: groupId.value,
+      minCount: minCount.value,
+      maxCount: maxCount.value,
       comment: commentController.text,
     );
   }
@@ -120,8 +120,6 @@ class ReferenceLootTemplateDetailViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
-
-  double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
 
   void _logActivity(ActivityActionType action, LootTemplateEntity t) {
     final log = ActivityLogEntity(
@@ -135,15 +133,8 @@ class ReferenceLootTemplateDetailViewModel {
   }
 
   void dispose() {
-    entryController.dispose();
     itemController.dispose();
-    referenceController.dispose();
-    chanceController.dispose();
     questRequiredController.dispose();
-    lootModeController.dispose();
-    groupIdController.dispose();
-    minCountController.dispose();
-    maxCountController.dispose();
     commentController.dispose();
   }
 }

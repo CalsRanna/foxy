@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -32,10 +33,13 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
   Widget build(BuildContext context) {
     /// Basic
     final idInput = FormItem(
-      controller: viewModel.idController,
       label: '编号',
       placeholder: 'ID',
-      readOnly: true,
+      child: FoxyNumberInput<int>(
+        value: viewModel.id.value,
+        onChanged: (v) => viewModel.id.value = v,
+        readOnly: true,
+      ),
     );
     final nameInput = FormItem(
       controller: viewModel.nameController,
@@ -43,112 +47,172 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
       placeholder: 'Name_lang_zhCN',
     );
     final chargesInput = FormItem(
-      controller: viewModel.chargesController,
       label: '充能次数',
       placeholder: 'Charges',
+      child: FoxyNumberInput<int>(
+        value: viewModel.charges.value,
+        onChanged: (v) => viewModel.charges.value = v,
+      ),
     );
 
     /// Effect row 0
     final effect0Input = FormItem(
-      controller: viewModel.effect0Controller,
       label: 'Effect0',
       placeholder: 'Effect0',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effect0.value,
+        onChanged: (v) => viewModel.effect0.value = v,
+      ),
     );
     final effectPointsMin0Input = FormItem(
-      controller: viewModel.effectPointsMin0Controller,
       label: 'EffectPointsMin0',
       placeholder: 'EffectPointsMin0',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effectPointsMin0.value,
+        onChanged: (v) => viewModel.effectPointsMin0.value = v,
+      ),
     );
     final effectPointsMax0Input = FormItem(
-      controller: viewModel.effectPointsMax0Controller,
       label: 'EffectPointsMax0',
       placeholder: 'EffectPointsMax0',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effectPointsMax0.value,
+        onChanged: (v) => viewModel.effectPointsMax0.value = v,
+      ),
     );
     final effectArg0Input = FormItem(
-      controller: viewModel.effectArg0Controller,
       label: 'EffectArg0',
       placeholder: 'EffectArg0',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effectArg0.value,
+        onChanged: (v) => viewModel.effectArg0.value = v,
+      ),
     );
 
     /// Effect row 1
     final effect1Input = FormItem(
-      controller: viewModel.effect1Controller,
       label: 'Effect1',
       placeholder: 'Effect1',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effect1.value,
+        onChanged: (v) => viewModel.effect1.value = v,
+      ),
     );
     final effectPointsMin1Input = FormItem(
-      controller: viewModel.effectPointsMin1Controller,
       label: 'EffectPointsMin1',
       placeholder: 'EffectPointsMin1',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effectPointsMin1.value,
+        onChanged: (v) => viewModel.effectPointsMin1.value = v,
+      ),
     );
     final effectPointsMax1Input = FormItem(
-      controller: viewModel.effectPointsMax1Controller,
       label: 'EffectPointsMax1',
       placeholder: 'EffectPointsMax1',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effectPointsMax1.value,
+        onChanged: (v) => viewModel.effectPointsMax1.value = v,
+      ),
     );
     final effectArg1Input = FormItem(
-      controller: viewModel.effectArg1Controller,
       label: 'EffectArg1',
       placeholder: 'EffectArg1',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effectArg1.value,
+        onChanged: (v) => viewModel.effectArg1.value = v,
+      ),
     );
 
     /// Effect row 2
     final effect2Input = FormItem(
-      controller: viewModel.effect2Controller,
       label: 'Effect2',
       placeholder: 'Effect2',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effect2.value,
+        onChanged: (v) => viewModel.effect2.value = v,
+      ),
     );
     final effectPointsMin2Input = FormItem(
-      controller: viewModel.effectPointsMin2Controller,
       label: 'EffectPointsMin2',
       placeholder: 'EffectPointsMin2',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effectPointsMin2.value,
+        onChanged: (v) => viewModel.effectPointsMin2.value = v,
+      ),
     );
     final effectPointsMax2Input = FormItem(
-      controller: viewModel.effectPointsMax2Controller,
       label: 'EffectPointsMax2',
       placeholder: 'EffectPointsMax2',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effectPointsMax2.value,
+        onChanged: (v) => viewModel.effectPointsMax2.value = v,
+      ),
     );
     final effectArg2Input = FormItem(
-      controller: viewModel.effectArg2Controller,
       label: 'EffectArg2',
       placeholder: 'EffectArg2',
+      child: FoxyNumberInput<int>(
+        value: viewModel.effectArg2.value,
+        onChanged: (v) => viewModel.effectArg2.value = v,
+      ),
     );
 
     /// Other
     final itemVisualInput = FormItem(
-      controller: viewModel.itemVisualController,
       label: 'ItemVisual',
       placeholder: 'ItemVisual',
+      child: FoxyNumberInput<int>(
+        value: viewModel.itemVisual.value,
+        onChanged: (v) => viewModel.itemVisual.value = v,
+      ),
     );
     final flagsInput = FormItem(
-      controller: viewModel.flagsController,
       label: 'Flags',
       placeholder: 'Flags',
+      child: FoxyNumberInput<int>(
+        value: viewModel.flags.value,
+        onChanged: (v) => viewModel.flags.value = v,
+      ),
     );
     final srcItemIdInput = FormItem(
-      controller: viewModel.srcItemIdController,
       label: 'Src_itemID',
       placeholder: 'Src_itemID',
+      child: FoxyNumberInput<int>(
+        value: viewModel.srcItemId.value,
+        onChanged: (v) => viewModel.srcItemId.value = v,
+      ),
     );
     final conditionIdInput = FormItem(
-      controller: viewModel.conditionIdController,
       label: 'Condition_ID',
       placeholder: 'Condition_ID',
+      child: FoxyNumberInput<int>(
+        value: viewModel.conditionId.value,
+        onChanged: (v) => viewModel.conditionId.value = v,
+      ),
     );
     final requiredSkillIdInput = FormItem(
-      controller: viewModel.requiredSkillIdController,
       label: 'RequiredSkillID',
       placeholder: 'RequiredSkillID',
+      child: FoxyNumberInput<int>(
+        value: viewModel.requiredSkillId.value,
+        onChanged: (v) => viewModel.requiredSkillId.value = v,
+      ),
     );
     final requiredSkillRankInput = FormItem(
-      controller: viewModel.requiredSkillRankController,
       label: 'RequiredSkillRank',
       placeholder: 'RequiredSkillRank',
+      child: FoxyNumberInput<int>(
+        value: viewModel.requiredSkillRank.value,
+        onChanged: (v) => viewModel.requiredSkillRank.value = v,
+      ),
     );
     final minLevelInput = FormItem(
-      controller: viewModel.minLevelController,
       label: 'MinLevel',
       placeholder: 'MinLevel',
+      child: FoxyNumberInput<int>(
+        value: viewModel.minLevel.value,
+        onChanged: (v) => viewModel.minLevel.value = v,
+      ),
     );
 
     /// 1. 基本信息

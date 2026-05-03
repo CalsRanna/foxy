@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/emote_text/emote_text_detail_view_model.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals.dart';
 
 class EmoteTextView extends StatefulWidget {
   final int? entry;
@@ -30,29 +32,17 @@ class _EmoteTextViewState extends State<EmoteTextView> {
   @override
   Widget build(BuildContext context) {
     /// Basic
-    final idInput = FormItem(
-      controller: viewModel.idController,
-      label: '编号',
-      placeholder: 'ID',
-      readOnly: true,
-    );
-    final nameInput = FormItem(
-      controller: viewModel.nameController,
-      label: '名称',
-      placeholder: 'Name',
-    );
-    final emoteIdInput = FormItem(
-      controller: viewModel.emoteIdController,
-      label: '表情编号',
-      placeholder: 'EmoteID',
-    );
+    final idInput = FormItem(label: '编号', placeholder: 'ID', child: FoxyNumberInput<int>(value: viewModel.id.value, onChanged: (v) => viewModel.id.value = v, readOnly: true));
+    final nameInput = FormItem(controller: viewModel.nameController, label: '名称', placeholder: 'Name');
+    final emoteIdInput = FormItem(label: '表情编号', placeholder: 'EmoteID', child: FoxyNumberInput<int>(value: viewModel.emoteId.value, onChanged: (v) => viewModel.emoteId.value = v));
 
     /// EmoteText
     final emoteTextInputs = List.generate(16, (i) {
+      final s = _getEmoteTextSignal(i);
       return FormItem(
-        controller: _getEmoteTextController(i),
         label: '表情文本$i',
         placeholder: 'EmoteText$i',
+        child: FoxyNumberInput<int>(value: s.value, onChanged: (v) => s.value = v),
       );
     });
 
@@ -125,24 +115,24 @@ class _EmoteTextViewState extends State<EmoteTextView> {
     );
   }
 
-  TextEditingController _getEmoteTextController(int index) {
+  Signal<int> _getEmoteTextSignal(int index) {
     return switch (index) {
-      0 => viewModel.emoteText0Controller,
-      1 => viewModel.emoteText1Controller,
-      2 => viewModel.emoteText2Controller,
-      3 => viewModel.emoteText3Controller,
-      4 => viewModel.emoteText4Controller,
-      5 => viewModel.emoteText5Controller,
-      6 => viewModel.emoteText6Controller,
-      7 => viewModel.emoteText7Controller,
-      8 => viewModel.emoteText8Controller,
-      9 => viewModel.emoteText9Controller,
-      10 => viewModel.emoteText10Controller,
-      11 => viewModel.emoteText11Controller,
-      12 => viewModel.emoteText12Controller,
-      13 => viewModel.emoteText13Controller,
-      14 => viewModel.emoteText14Controller,
-      15 => viewModel.emoteText15Controller,
+      0 => viewModel.emoteText0,
+      1 => viewModel.emoteText1,
+      2 => viewModel.emoteText2,
+      3 => viewModel.emoteText3,
+      4 => viewModel.emoteText4,
+      5 => viewModel.emoteText5,
+      6 => viewModel.emoteText6,
+      7 => viewModel.emoteText7,
+      8 => viewModel.emoteText8,
+      9 => viewModel.emoteText9,
+      10 => viewModel.emoteText10,
+      11 => viewModel.emoteText11,
+      12 => viewModel.emoteText12,
+      13 => viewModel.emoteText13,
+      14 => viewModel.emoteText14,
+      15 => viewModel.emoteText15,
       _ => throw ArgumentError('Invalid emoteText index: $index'),
     };
   }

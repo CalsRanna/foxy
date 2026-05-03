@@ -5,6 +5,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -167,12 +168,12 @@ class _CreatureTemplateResistanceViewState
         children: [
           // 生物ID（只读）
           FormItem(
-            controller: TextEditingController(
-              text: widget.creatureId.toString(),
-            ),
             label: '生物ID',
-            placeholder: 'CreatureID',
-            readOnly: true,
+            child: FoxyNumberInput<int>(
+              value: widget.creatureId,
+              placeholder: 'CreatureID',
+              readOnly: true,
+            ),
           ),
           SizedBox(height: 16),
           // 抗性类型
@@ -187,16 +188,22 @@ class _CreatureTemplateResistanceViewState
           SizedBox(height: 16),
           // 抗性值
           FormItem(
-            controller: viewModel.resistanceController,
             label: '抗性值',
-            placeholder: 'Resistance',
+            child: FoxyNumberInput<int>(
+              value: viewModel.resistance.value,
+              onChanged: (v) => viewModel.resistance.value = v,
+              placeholder: 'Resistance',
+            ),
           ),
           SizedBox(height: 16),
           // VerifiedBuild
           FormItem(
-            controller: viewModel.verifiedBuildController,
             label: 'VerifiedBuild',
-            placeholder: 'VerifiedBuild',
+            child: FoxyNumberInput<int>(
+              value: viewModel.verifiedBuild.value,
+              onChanged: (v) => viewModel.verifiedBuild.value = v,
+              placeholder: 'VerifiedBuild',
+            ),
           ),
           SizedBox(height: 24),
           // 按钮行

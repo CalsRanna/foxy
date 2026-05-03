@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/quest_sort/quest_sort_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -30,10 +31,13 @@ class _QuestSortViewState extends State<QuestSortView> {
   @override
   Widget build(BuildContext context) {
     final idInput = FormItem(
-      controller: viewModel.idController,
       label: '编号',
       placeholder: 'ID',
-      readOnly: true,
+      child: FoxyNumberInput<int>(
+        value: viewModel.id.value,
+        onChanged: (v) => viewModel.id.value = v,
+        readOnly: true,
+      ),
     );
     final nameInput = FormItem(
       controller: viewModel.nameController,

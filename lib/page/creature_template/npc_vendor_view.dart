@@ -6,6 +6,7 @@ import 'package:foxy/page/creature_template/npc_vendor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -182,19 +183,22 @@ class _NpcVendorViewState extends State<NpcVendorView> {
         children: [
           // 商人ID（只读）
           FormItem(
-            controller: TextEditingController(
-              text: widget.creatureId.toString(),
-            ),
             label: '商人ID',
-            placeholder: 'Entry',
-            readOnly: true,
+            child: FoxyNumberInput<int>(
+              value: widget.creatureId,
+              placeholder: 'Entry',
+              readOnly: true,
+            ),
           ),
           SizedBox(height: 16),
           // 插槽
           FormItem(
-            controller: viewModel.slotController,
             label: '插槽',
-            placeholder: 'slot',
+            child: FoxyNumberInput<int>(
+              value: viewModel.slot.value,
+              onChanged: (v) => viewModel.slot.value = v,
+              placeholder: 'slot',
+            ),
           ),
           SizedBox(height: 16),
           // 物品
@@ -208,16 +212,22 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           SizedBox(height: 16),
           // 最大数量
           FormItem(
-            controller: viewModel.maxcountController,
             label: '最大数量',
-            placeholder: 'maxcount (0=无限)',
+            child: FoxyNumberInput<int>(
+              value: viewModel.maxcount.value,
+              onChanged: (v) => viewModel.maxcount.value = v,
+              placeholder: 'maxcount (0=无限)',
+            ),
           ),
           SizedBox(height: 16),
           // 补货时间
           FormItem(
-            controller: viewModel.incrtimeController,
             label: '补货时间',
-            placeholder: 'incrtime (秒)',
+            child: FoxyNumberInput<int>(
+              value: viewModel.incrtime.value,
+              onChanged: (v) => viewModel.incrtime.value = v,
+              placeholder: 'incrtime (秒)',
+            ),
           ),
           SizedBox(height: 16),
           // 扩展价格
@@ -231,9 +241,12 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           SizedBox(height: 16),
           // VerifiedBuild
           FormItem(
-            controller: viewModel.verifiedBuildController,
             label: 'VerifiedBuild',
-            placeholder: 'VerifiedBuild',
+            child: FoxyNumberInput<int>(
+              value: viewModel.verifiedBuild.value,
+              onChanged: (v) => viewModel.verifiedBuild.value = v,
+              placeholder: 'VerifiedBuild',
+            ),
           ),
           SizedBox(height: 24),
           // 按钮行

@@ -16,8 +16,8 @@ class CreatureTemplateResistanceViewModel {
   final selectedIndex = signal<int?>(null);
   // 表单控制器
   final schoolController = ShadSelectController<int>();
-  final resistanceController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final resistance = signal<int>(0);
+  final verifiedBuild = signal<int>(0);
 
   final repository = CreatureTemplateResistanceRepository();
 
@@ -33,32 +33,25 @@ class CreatureTemplateResistanceViewModel {
   /// 重置表单
   void resetForm() {
     schoolController.value = {0};
-    resistanceController.clear();
-    verifiedBuildController.text = '0';
+    resistance.value = 0;
+    verifiedBuild.value = 0;
   }
 
   /// 填充表单
   void fillForm(CreatureTemplateResistanceEntity resistance) {
     schoolController.value = {resistance.school};
-    resistanceController.text = resistance.resistance.toString();
-    verifiedBuildController.text = resistance.verifiedBuild.toString();
+    this.resistance.value = resistance.resistance;
+    verifiedBuild.value = resistance.verifiedBuild;
   }
 
   /// 从表单收集数据
   CreatureTemplateResistanceEntity collectFromForm() {
-    final resistance = CreatureTemplateResistanceEntity();
-    resistance.creatureID = creatureId.value;
-    resistance.school = schoolController.value.firstOrNull ?? 0;
-    resistance.resistance = _parseInt(resistanceController.text);
-    resistance.verifiedBuild = _parseInt(verifiedBuildController.text);
-    return resistance;
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
+    final r = CreatureTemplateResistanceEntity();
+    r.creatureID = creatureId.value;
+    r.school = schoolController.value.firstOrNull ?? 0;
+    r.resistance = resistance.value;
+    r.verifiedBuild = verifiedBuild.value;
+    return r;
   }
 
   /// 创建新记录
@@ -79,8 +72,8 @@ class CreatureTemplateResistanceViewModel {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
 
-    final resistance = items.value[index];
-    fillForm(resistance);
+    final r = items.value[index];
+    fillForm(r);
   }
 
   /// 复制记录
@@ -88,11 +81,11 @@ class CreatureTemplateResistanceViewModel {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
 
-    final resistance = items.value[index];
+    final r = items.value[index];
     try {
       await repository.copyCreatureTemplateResistance(
-        resistance.creatureID,
-        resistance.school,
+        r.creatureID,
+        r.school,
       );
       await load();
       if (!context.mounted) return;
@@ -110,7 +103,7 @@ class CreatureTemplateResistanceViewModel {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
 
-    final resistance = items.value[index];
+    final r = items.value[index];
 
     final confirmed = await showShadDialog<bool>(
       context: context,
@@ -133,8 +126,8 @@ class CreatureTemplateResistanceViewModel {
     if (confirmed == true) {
       try {
         await repository.destroyCreatureTemplateResistance(
-          resistance.creatureID,
-          resistance.school,
+          r.creatureID,
+          r.school,
         );
         await load();
         if (!context.mounted) return;
@@ -151,8 +144,8 @@ class CreatureTemplateResistanceViewModel {
   /// 保存记录
   Future<void> save(BuildContext context) async {
     try {
-      final resistance = collectFromForm();
-      await repository.storeCreatureTemplateResistance(resistance);
+      final r = collectFromForm();
+      await repository.storeCreatureTemplateResistance(r);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -167,8 +160,8 @@ class CreatureTemplateResistanceViewModel {
   /// 更新记录
   Future<void> update(BuildContext context) async {
     try {
-      final resistance = collectFromForm();
-      await repository.updateCreatureTemplateResistance(resistance);
+      final r = collectFromForm();
+      await repository.updateCreatureTemplateResistance(r);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));
@@ -206,7 +199,5 @@ class CreatureTemplateResistanceViewModel {
   /// 清理资源
   void dispose() {
     schoolController.dispose();
-    resistanceController.dispose();
-    verifiedBuildController.dispose();
   }
 }

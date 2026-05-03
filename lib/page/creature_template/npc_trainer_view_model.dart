@@ -19,10 +19,10 @@ class NpcTrainerViewModel {
 
   // 表单控制器
   final spellIDController = TextEditingController();
-  final moneyCostController = TextEditingController();
-  final reqSkillLineController = TextEditingController();
-  final reqSkillRankController = TextEditingController();
-  final reqLevelController = TextEditingController();
+  final moneyCost = signal<int>(0);
+  final reqSkillLine = signal<int>(0);
+  final reqSkillRank = signal<int>(0);
+  final reqLevel = signal<int>(0);
 
   final repository = NpcTrainerRepository();
 
@@ -38,19 +38,19 @@ class NpcTrainerViewModel {
   /// 重置表单
   void resetForm() {
     spellIDController.clear();
-    moneyCostController.text = '0';
-    reqSkillLineController.text = '0';
-    reqSkillRankController.text = '0';
-    reqLevelController.text = '0';
+    moneyCost.value = 0;
+    reqSkillLine.value = 0;
+    reqSkillRank.value = 0;
+    reqLevel.value = 0;
   }
 
   /// 填充表单
   void fillForm(BriefNpcTrainerEntity trainer) {
     spellIDController.text = trainer.spellID.toString();
-    moneyCostController.text = trainer.moneyCost.toString();
-    reqSkillLineController.text = trainer.reqSkillLine.toString();
-    reqSkillRankController.text = trainer.reqSkillRank.toString();
-    reqLevelController.text = trainer.reqLevel.toString();
+    moneyCost.value = trainer.moneyCost;
+    reqSkillLine.value = trainer.reqSkillLine;
+    reqSkillRank.value = trainer.reqSkillRank;
+    reqLevel.value = trainer.reqLevel;
   }
 
   /// 从表单收集数据
@@ -58,10 +58,10 @@ class NpcTrainerViewModel {
     return NpcTrainerEntity(
       id: id.value,
       spellID: _parseInt(spellIDController.text),
-      moneyCost: _parseInt(moneyCostController.text),
-      reqSkillLine: _parseInt(reqSkillLineController.text),
-      reqSkillRank: _parseInt(reqSkillRankController.text),
-      reqLevel: _parseInt(reqLevelController.text),
+      moneyCost: moneyCost.value,
+      reqSkillLine: reqSkillLine.value,
+      reqSkillRank: reqSkillRank.value,
+      reqLevel: reqLevel.value,
     );
   }
 
@@ -208,9 +208,5 @@ class NpcTrainerViewModel {
   /// 清理资源
   void dispose() {
     spellIDController.dispose();
-    moneyCostController.dispose();
-    reqSkillLineController.dispose();
-    reqSkillRankController.dispose();
-    reqLevelController.dispose();
   }
 }

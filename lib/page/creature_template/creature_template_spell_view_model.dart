@@ -15,9 +15,9 @@ class CreatureTemplateSpellViewModel {
   final items = signal<List<CreatureTemplateSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final indexController = TextEditingController();
+  final index = signal<int>(0);
   final spellController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final verifiedBuild = signal<int>(0);
 
   final repository = CreatureTemplateSpellRepository();
 
@@ -30,25 +30,25 @@ class CreatureTemplateSpellViewModel {
 
   /// 重置表单
   void resetForm() {
-    indexController.clear();
+    index.value = 0;
     spellController.clear();
-    verifiedBuildController.text = '0';
+    verifiedBuild.value = 0;
   }
 
   /// 填充表单
   void fillForm(CreatureTemplateSpellEntity spell) {
-    indexController.text = spell.index.toString();
+    index.value = spell.index;
     spellController.text = spell.spell.toString();
-    verifiedBuildController.text = spell.verifiedBuild.toString();
+    verifiedBuild.value = spell.verifiedBuild;
   }
 
   /// 从表单收集数据
   CreatureTemplateSpellEntity collectFromForm() {
     final spell = CreatureTemplateSpellEntity();
     spell.creatureID = creatureId.value;
-    spell.index = _parseInt(indexController.text);
+    spell.index = index.value;
     spell.spell = _parseInt(spellController.text);
-    spell.verifiedBuild = _parseInt(verifiedBuildController.text);
+    spell.verifiedBuild = verifiedBuild.value;
     return spell;
   }
 
@@ -64,7 +64,7 @@ class CreatureTemplateSpellViewModel {
     try {
       final nextIndex = await repository.getNextIndex(creatureId.value);
       resetForm();
-      indexController.text = nextIndex.toString();
+      index.value = nextIndex;
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物法术记录失败: $e');
@@ -74,19 +74,19 @@ class CreatureTemplateSpellViewModel {
 
   /// 编辑选中记录
   void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
+    final idx = selectedIndex.value;
+    if (idx == null || idx < 0 || idx >= items.value.length) return;
 
-    final spell = items.value[index];
+    final spell = items.value[idx];
     fillForm(spell);
   }
 
   /// 复制记录
   Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
+    final idx = selectedIndex.value;
+    if (idx == null || idx < 0 || idx >= items.value.length) return;
 
-    final spell = items.value[index];
+    final spell = items.value[idx];
     try {
       await repository.copyCreatureTemplateSpell(spell.creatureID, spell.index);
       await load();
@@ -102,10 +102,10 @@ class CreatureTemplateSpellViewModel {
 
   /// 删除记录
   Future<void> delete(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
+    final idx = selectedIndex.value;
+    if (idx == null || idx < 0 || idx >= items.value.length) return;
 
-    final spell = items.value[index];
+    final spell = items.value[idx];
 
     final confirmed = await showShadDialog<bool>(
       context: context,
@@ -200,8 +200,6 @@ class CreatureTemplateSpellViewModel {
 
   /// 清理资源
   void dispose() {
-    indexController.dispose();
     spellController.dispose();
-    verifiedBuildController.dispose();
   }
 }

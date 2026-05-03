@@ -12,7 +12,7 @@ import 'package:signals/signals.dart';
 class QuestInfoDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final idController = TextEditingController();
+  final id = signal<int>(0);
   final nameController = TextEditingController();
 
   final info = signal(QuestInfoEntity());
@@ -49,16 +49,9 @@ class QuestInfoDetailViewModel {
   /// 从所有 Controller 收集数据构建 QuestInfo
   QuestInfoEntity _collectFromControllers() {
     return QuestInfoEntity(
-      id: _parseInt(idController.text),
+      id: id.value,
       infoNameLangZhCn: nameController.text,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, QuestInfoEntity t) {
@@ -73,7 +66,6 @@ class QuestInfoDetailViewModel {
   }
 
   void dispose() {
-    idController.dispose();
     nameController.dispose();
   }
 
@@ -88,7 +80,7 @@ class QuestInfoDetailViewModel {
   }
 
   void _initControllers(QuestInfoEntity table) {
-    idController.text = table.id.toString();
+    id.value = table.id;
     nameController.text = table.infoNameLangZhCn;
   }
 }

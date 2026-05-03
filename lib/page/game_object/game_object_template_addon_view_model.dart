@@ -10,12 +10,12 @@ import 'package:signals/signals.dart';
 
 class GameObjectTemplateAddonViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final gameObjectId = signal(0);
+  final gameObjectId = signal<int>(0);
 
-  final factionController = TextEditingController();
-  final flagsController = TextEditingController();
-  final minGoldController = TextEditingController();
-  final maxGoldController = TextEditingController();
+  final faction = signal<int>(0);
+  final flags = signal<int>(0);
+  final minGold = signal<int>(0);
+  final maxGold = signal<int>(0);
 
   final addon = signal(GameObjectTemplateAddonEntity());
 
@@ -26,6 +26,7 @@ class GameObjectTemplateAddonViewModel {
     );
     if (data != null) {
       addon.value = data;
+      _initSignals(data);
     }
   }
 
@@ -51,25 +52,18 @@ class GameObjectTemplateAddonViewModel {
   GameObjectTemplateAddonEntity _collectFromControllers() {
     return GameObjectTemplateAddonEntity(
       entry: gameObjectId.value,
-      faction: _parseInt(factionController.text),
-      flags: _parseInt(flagsController.text),
-      minGold: _parseInt(minGoldController.text),
-      maxGold: _parseInt(maxGoldController.text),
+      faction: faction.value,
+      flags: flags.value,
+      minGold: minGold.value,
+      maxGold: maxGold.value,
     );
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  void initControllers(GameObjectTemplateAddonEntity data) {
-    factionController.text = data.faction.toString();
-    flagsController.text = data.flags.toString();
-    minGoldController.text = data.minGold.toString();
-    maxGoldController.text = data.maxGold.toString();
+  void _initSignals(GameObjectTemplateAddonEntity data) {
+    faction.value = data.faction;
+    flags.value = data.flags;
+    minGold.value = data.minGold;
+    maxGold.value = data.maxGold;
   }
 
   Future<void> initSignals({required int gameObjectId}) async {
@@ -82,10 +76,5 @@ class GameObjectTemplateAddonViewModel {
     }
   }
 
-  void dispose() {
-    factionController.dispose();
-    flagsController.dispose();
-    minGoldController.dispose();
-    maxGoldController.dispose();
-  }
+  void dispose() {}
 }

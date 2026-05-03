@@ -14,15 +14,15 @@ class SpellAreaViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellAreaEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final areaController = TextEditingController();
-  final questStartController = TextEditingController();
-  final questEndController = TextEditingController();
-  final auraSpellController = TextEditingController();
-  final racemaskController = TextEditingController();
-  final genderController = TextEditingController();
-  final autocastController = TextEditingController();
-  final questStartStatusController = TextEditingController();
-  final questEndStatusController = TextEditingController();
+  final area = signal<int>(0);
+  final questStart = signal<int>(0);
+  final questEnd = signal<int>(0);
+  final auraSpell = signal<int>(0);
+  final racemask = signal<int>(0);
+  final gender = signal<int>(0);
+  final autocast = signal<int>(0);
+  final questStartStatus = signal<int>(0);
+  final questEndStatus = signal<int>(0);
 
   final repository = SpellAreaRepository();
 
@@ -33,49 +33,42 @@ class SpellAreaViewModel {
   }
 
   void resetForm() {
-    areaController.clear();
-    questStartController.clear();
-    questEndController.text = '0';
-    auraSpellController.clear();
-    racemaskController.clear();
-    genderController.clear();
-    autocastController.text = '0';
-    questStartStatusController.text = '0';
-    questEndStatusController.text = '0';
+    area.value = 0;
+    questStart.value = 0;
+    questEnd.value = 0;
+    auraSpell.value = 0;
+    racemask.value = 0;
+    gender.value = 0;
+    autocast.value = 0;
+    questStartStatus.value = 0;
+    questEndStatus.value = 0;
   }
 
   void fillForm(SpellAreaEntity data) {
-    areaController.text = data.area.toString();
-    questStartController.text = data.questStart.toString();
-    questEndController.text = data.questEnd.toString();
-    auraSpellController.text = data.auraSpell.toString();
-    racemaskController.text = data.racemask.toString();
-    genderController.text = data.gender.toString();
-    autocastController.text = data.autocast.toString();
-    questStartStatusController.text = data.questStartStatus.toString();
-    questEndStatusController.text = data.questEndStatus.toString();
+    area.value = data.area;
+    questStart.value = data.questStart;
+    questEnd.value = data.questEnd;
+    auraSpell.value = data.auraSpell;
+    racemask.value = data.racemask;
+    gender.value = data.gender;
+    autocast.value = data.autocast;
+    questStartStatus.value = data.questStartStatus;
+    questEndStatus.value = data.questEndStatus;
   }
 
   SpellAreaEntity collectFromForm() {
     return SpellAreaEntity(
       spell: spellId.value,
-      area: _parseInt(areaController.text),
-      questStart: _parseInt(questStartController.text),
-      questEnd: _parseInt(questEndController.text),
-      auraSpell: _parseInt(auraSpellController.text),
-      racemask: _parseInt(racemaskController.text),
-      gender: _parseInt(genderController.text),
-      autocast: _parseInt(autocastController.text),
-      questStartStatus: _parseInt(questStartStatusController.text),
-      questEndStatus: _parseInt(questEndStatusController.text),
+      area: area.value,
+      questStart: questStart.value,
+      questEnd: questEnd.value,
+      auraSpell: auraSpell.value,
+      racemask: racemask.value,
+      gender: gender.value,
+      autocast: autocast.value,
+      questStartStatus: questStartStatus.value,
+      questEndStatus: questEndStatus.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   Future<void> create() async {
@@ -208,15 +201,5 @@ class SpellAreaViewModel {
     routerFacade.goBack();
   }
 
-  void dispose() {
-    areaController.dispose();
-    questStartController.dispose();
-    questEndController.dispose();
-    auraSpellController.dispose();
-    racemaskController.dispose();
-    genderController.dispose();
-    autocastController.dispose();
-    questStartStatusController.dispose();
-    questEndStatusController.dispose();
-  }
+  void dispose() {}
 }

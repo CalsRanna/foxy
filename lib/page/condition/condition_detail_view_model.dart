@@ -14,21 +14,21 @@ class ConditionDetailViewModel {
   final repository = ConditionRepository();
 
   // 主键字段
-  final sourceTypeOrReferenceIdController = TextEditingController();
-  final sourceGroupController = TextEditingController();
-  final sourceEntryController = TextEditingController();
-  final sourceIdController = TextEditingController();
-  final elseGroupController = TextEditingController();
-  final conditionTypeOrReferenceController = TextEditingController();
-  final conditionTargetController = TextEditingController();
-  final conditionValue1Controller = TextEditingController();
-  final conditionValue2Controller = TextEditingController();
-  final conditionValue3Controller = TextEditingController();
+  final sourceTypeOrReferenceId = signal<int>(0);
+  final sourceGroup = signal<int>(0);
+  final sourceEntry = signal<int>(0);
+  final sourceId = signal<int>(0);
+  final elseGroup = signal<int>(0);
+  final conditionTypeOrReference = signal<int>(0);
+  final conditionTarget = signal<int>(0);
+  final conditionValue1 = signal<int>(0);
+  final conditionValue2 = signal<int>(0);
+  final conditionValue3 = signal<int>(0);
 
   // 非键字段
-  final negativeConditionController = TextEditingController();
-  final errorTypeController = TextEditingController();
-  final errorTextIdController = TextEditingController();
+  final negativeCondition = signal<int>(0);
+  final errorType = signal<int>(0);
+  final errorTextId = signal<int>(0);
   final scriptNameController = TextEditingController();
   final commentController = TextEditingController();
 
@@ -48,21 +48,19 @@ class ConditionDetailViewModel {
   }
 
   void _initControllers(ConditionEntity c) {
-    sourceTypeOrReferenceIdController.text = c.sourceTypeOrReferenceId
-        .toString();
-    sourceGroupController.text = c.sourceGroup.toString();
-    sourceEntryController.text = c.sourceEntry.toString();
-    sourceIdController.text = c.sourceId.toString();
-    elseGroupController.text = c.elseGroup.toString();
-    conditionTypeOrReferenceController.text = c.conditionTypeOrReference
-        .toString();
-    conditionTargetController.text = c.conditionTarget.toString();
-    conditionValue1Controller.text = c.conditionValue1.toString();
-    conditionValue2Controller.text = c.conditionValue2.toString();
-    conditionValue3Controller.text = c.conditionValue3.toString();
-    negativeConditionController.text = c.negativeCondition.toString();
-    errorTypeController.text = c.errorType.toString();
-    errorTextIdController.text = c.errorTextId.toString();
+    sourceTypeOrReferenceId.value = c.sourceTypeOrReferenceId;
+    sourceGroup.value = c.sourceGroup;
+    sourceEntry.value = c.sourceEntry;
+    sourceId.value = c.sourceId;
+    elseGroup.value = c.elseGroup;
+    conditionTypeOrReference.value = c.conditionTypeOrReference;
+    conditionTarget.value = c.conditionTarget;
+    conditionValue1.value = c.conditionValue1;
+    conditionValue2.value = c.conditionValue2;
+    conditionValue3.value = c.conditionValue3;
+    negativeCondition.value = c.negativeCondition;
+    errorType.value = c.errorType;
+    errorTextId.value = c.errorTextId;
     scriptNameController.text = c.scriptName;
     commentController.text = c.comment;
   }
@@ -96,34 +94,23 @@ class ConditionDetailViewModel {
 
   ConditionEntity _collectFromControllers() {
     final c = ConditionEntity(
-      sourceTypeOrReferenceId: _parseInt(
-        sourceTypeOrReferenceIdController.text,
-      ),
-      sourceGroup: _parseInt(sourceGroupController.text),
-      sourceEntry: _parseInt(sourceEntryController.text),
-      sourceId: _parseInt(sourceIdController.text),
-      elseGroup: _parseInt(elseGroupController.text),
-      conditionTypeOrReference: _parseInt(
-        conditionTypeOrReferenceController.text,
-      ),
-      conditionTarget: _parseInt(conditionTargetController.text),
-      conditionValue1: _parseInt(conditionValue1Controller.text),
-      conditionValue2: _parseInt(conditionValue2Controller.text),
-      conditionValue3: _parseInt(conditionValue3Controller.text),
-      negativeCondition: _parseInt(negativeConditionController.text),
-      errorType: _parseInt(errorTypeController.text),
-      errorTextId: _parseInt(errorTextIdController.text),
+      sourceTypeOrReferenceId: sourceTypeOrReferenceId.value,
+      sourceGroup: sourceGroup.value,
+      sourceEntry: sourceEntry.value,
+      sourceId: sourceId.value,
+      elseGroup: elseGroup.value,
+      conditionTypeOrReference: conditionTypeOrReference.value,
+      conditionTarget: conditionTarget.value,
+      conditionValue1: conditionValue1.value,
+      conditionValue2: conditionValue2.value,
+      conditionValue3: conditionValue3.value,
+      negativeCondition: negativeCondition.value,
+      errorType: errorType.value,
+      errorTextId: errorTextId.value,
       scriptName: scriptNameController.text,
       comment: commentController.text,
     );
     return c;
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, ConditionEntity c) {
@@ -138,19 +125,6 @@ class ConditionDetailViewModel {
   }
 
   void dispose() {
-    sourceTypeOrReferenceIdController.dispose();
-    sourceGroupController.dispose();
-    sourceEntryController.dispose();
-    sourceIdController.dispose();
-    elseGroupController.dispose();
-    conditionTypeOrReferenceController.dispose();
-    conditionTargetController.dispose();
-    conditionValue1Controller.dispose();
-    conditionValue2Controller.dispose();
-    conditionValue3Controller.dispose();
-    negativeConditionController.dispose();
-    errorTypeController.dispose();
-    errorTextIdController.dispose();
     scriptNameController.dispose();
     commentController.dispose();
   }

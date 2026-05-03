@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/player_create_info/player_create_info_action_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -103,9 +104,9 @@ class _PlayerCreateInfoActionViewState extends State<PlayerCreateInfoActionView>
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 400),
         child: Column(mainAxisSize: MainAxisSize.min, spacing: 16, children: [
-          FormItem(controller: viewModel.buttonController, label: '按钮', placeholder: 'button'),
-          FormItem(controller: viewModel.actionController, label: '动作', placeholder: 'action'),
-          FormItem(controller: viewModel.typeController, label: '类型', placeholder: 'type'),
+          FormItem(label: '按钮', placeholder: 'button', child: FoxyNumberInput<int>(value: viewModel.button.value, onChanged: (v) => viewModel.button.value = v)),
+          FormItem(label: '动作', placeholder: 'action', child: FoxyNumberInput<int>(value: viewModel.action.value, onChanged: (v) => viewModel.action.value = v)),
+          FormItem(label: '类型', placeholder: 'type', child: FoxyNumberInput<int>(value: viewModel.type.value, onChanged: (v) => viewModel.type.value = v)),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             ShadButton.outline(onPressed: () => Navigator.of(dialogContext).pop(), child: Text('取消')),
             SizedBox(width: 8),

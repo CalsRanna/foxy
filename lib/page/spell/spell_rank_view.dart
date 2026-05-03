@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_rank_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
@@ -159,23 +160,32 @@ class _SpellRankViewState extends State<SpellRankView> {
             children: [
               Expanded(
                 child: FormItem(
-                  controller: viewModel.firstSpellIdController,
                   label: '起始技能',
                   placeholder: 'first_spell_id',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.firstSpellId.value,
+                    onChanged: (v) => viewModel.firstSpellId.value = v,
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.rankSpellIdController,
                   label: '技能',
                   placeholder: 'spell_id',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.rankSpellId.value,
+                    onChanged: (v) => viewModel.rankSpellId.value = v,
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.rankController,
                   label: '排行',
                   placeholder: 'rank',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.rank.value,
+                    onChanged: (v) => viewModel.rank.value = v,
+                  ),
                 ),
               ),
             ],

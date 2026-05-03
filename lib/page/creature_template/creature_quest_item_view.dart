@@ -5,6 +5,7 @@ import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -167,19 +168,22 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
         children: [
           // 生物ID（只读）
           FormItem(
-            controller: TextEditingController(
-              text: widget.creatureId.toString(),
-            ),
             label: '生物ID',
-            placeholder: 'CreatureEntry',
-            readOnly: true,
+            child: FoxyNumberInput<int>(
+              value: widget.creatureId,
+              placeholder: 'CreatureEntry',
+              readOnly: true,
+            ),
           ),
           SizedBox(height: 16),
           // 索引
           FormItem(
-            controller: viewModel.idxController,
             label: '索引',
-            placeholder: 'Idx',
+            child: FoxyNumberInput<int>(
+              value: viewModel.idx.value,
+              onChanged: (v) => viewModel.idx.value = v,
+              placeholder: 'Idx',
+            ),
           ),
           SizedBox(height: 16),
           // 物品
@@ -193,9 +197,12 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           SizedBox(height: 16),
           // VerifiedBuild
           FormItem(
-            controller: viewModel.verifiedBuildController,
             label: 'VerifiedBuild',
-            placeholder: 'VerifiedBuild',
+            child: FoxyNumberInput<int>(
+              value: viewModel.verifiedBuild.value,
+              onChanged: (v) => viewModel.verifiedBuild.value = v,
+              placeholder: 'VerifiedBuild',
+            ),
           ),
           SizedBox(height: 24),
           // 按钮行

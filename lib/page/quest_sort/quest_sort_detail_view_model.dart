@@ -12,7 +12,7 @@ import 'package:signals/signals.dart';
 class QuestSortDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final idController = TextEditingController();
+  final id = signal<int>(0);
   final nameController = TextEditingController();
 
   final sort = signal(QuestSortEntity());
@@ -49,16 +49,9 @@ class QuestSortDetailViewModel {
   /// 从所有 Controller 收集数据构建 QuestSort
   QuestSortEntity _collectFromControllers() {
     return QuestSortEntity(
-      id: _parseInt(idController.text),
+      id: id.value,
       sortNameLangZhCn: nameController.text,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, QuestSortEntity t) {
@@ -73,7 +66,6 @@ class QuestSortDetailViewModel {
   }
 
   void dispose() {
-    idController.dispose();
     nameController.dispose();
   }
 
@@ -88,7 +80,7 @@ class QuestSortDetailViewModel {
   }
 
   void _initControllers(QuestSortEntity table) {
-    idController.text = table.id.toString();
+    id.value = table.id;
     nameController.text = table.sortNameLangZhCn;
   }
 }

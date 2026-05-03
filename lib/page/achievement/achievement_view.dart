@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/achievement/achievement_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -48,25 +49,37 @@ class _AchievementViewState extends State<AchievementView> {
 
   Widget _buildBasicInfoCard() {
     final idInput = FormItem(
-      controller: viewModel.idController,
       label: '编号',
       placeholder: 'ID',
-      readOnly: true,
+      child: FoxyNumberInput<int>(
+        value: viewModel.id.value,
+        onChanged: (v) => viewModel.id.value = v,
+        readOnly: true,
+      ),
     );
     final factionInput = FormItem(
-      controller: viewModel.factionController,
       label: '阵营',
       placeholder: 'Faction',
+      child: FoxyNumberInput<int>(
+        value: viewModel.faction.value,
+        onChanged: (v) => viewModel.faction.value = v,
+      ),
     );
     final instanceIdInput = FormItem(
-      controller: viewModel.instanceIdController,
       label: '实例编号',
       placeholder: 'Instance_ID',
+      child: FoxyNumberInput<int>(
+        value: viewModel.instanceId.value,
+        onChanged: (v) => viewModel.instanceId.value = v,
+      ),
     );
     final supercedesInput = FormItem(
-      controller: viewModel.supercedesController,
       label: '前置成就',
       placeholder: 'Supercedes',
+      child: FoxyNumberInput<int>(
+        value: viewModel.supercedes.value,
+        onChanged: (v) => viewModel.supercedes.value = v,
+      ),
     );
 
     return ShadCard(
@@ -216,39 +229,60 @@ class _AchievementViewState extends State<AchievementView> {
 
   Widget _buildOtherCard() {
     final categoryInput = FormItem(
-      controller: viewModel.categoryController,
       label: '类别',
       placeholder: 'Category',
+      child: FoxyNumberInput<int>(
+        value: viewModel.category.value,
+        onChanged: (v) => viewModel.category.value = v,
+      ),
     );
     final pointsInput = FormItem(
-      controller: viewModel.pointsController,
       label: '点数',
       placeholder: 'Points',
+      child: FoxyNumberInput<int>(
+        value: viewModel.points.value,
+        onChanged: (v) => viewModel.points.value = v,
+      ),
     );
     final uiOrderInput = FormItem(
-      controller: viewModel.uiOrderController,
       label: '排序',
       placeholder: 'Ui_order',
+      child: FoxyNumberInput<int>(
+        value: viewModel.uiOrder.value,
+        onChanged: (v) => viewModel.uiOrder.value = v,
+      ),
     );
     final flagsInput = FormItem(
-      controller: viewModel.flagsController,
       label: '标识',
       placeholder: 'Flags',
+      child: FoxyNumberInput<int>(
+        value: viewModel.flags.value,
+        onChanged: (v) => viewModel.flags.value = v,
+      ),
     );
     final iconIdInput = FormItem(
-      controller: viewModel.iconIdController,
       label: '图标编号',
       placeholder: 'IconID',
+      child: FoxyNumberInput<int>(
+        value: viewModel.iconId.value,
+        onChanged: (v) => viewModel.iconId.value = v,
+      ),
     );
     final minimumCriteriaInput = FormItem(
-      controller: viewModel.minimumCriteriaController,
       label: '最小完成条件',
       placeholder: 'Minimum_criteria',
+      child: FoxyNumberInput<int>(
+        value: viewModel.minimumCriteria.value,
+        onChanged: (v) => viewModel.minimumCriteria.value = v,
+      ),
     );
     final sharesCriteriaInput = FormItem(
-      controller: viewModel.sharesCriteriaController,
       label: '共享条件',
       placeholder: 'Shares_criteria',
+      child: FoxyNumberInput<int>(
+        value: viewModel.sharesCriteria.value,
+        onChanged: (v) => viewModel.sharesCriteria.value = v,
+      ),
     );
 
     return ShadCard(

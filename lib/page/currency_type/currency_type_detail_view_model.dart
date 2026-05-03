@@ -12,10 +12,10 @@ import 'package:signals/signals.dart';
 class CurrencyTypeDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final idController = TextEditingController();
-  final itemIdController = TextEditingController();
-  final categoryIdController = TextEditingController();
-  final bitIndexController = TextEditingController();
+  final id = signal<int>(0);
+  final itemId = signal<int>(0);
+  final categoryId = signal<int>(0);
+  final bitIndex = signal<int>(0);
 
   final currencyType = signal(CurrencyTypeEntity());
 
@@ -52,18 +52,11 @@ class CurrencyTypeDetailViewModel {
   /// 从所有 Controller 收集数据构建 CurrencyType
   CurrencyTypeEntity _collectFromControllers() {
     return CurrencyTypeEntity(
-      id: _parseInt(idController.text),
-      itemId: _parseInt(itemIdController.text),
-      categoryId: _parseInt(categoryIdController.text),
-      bitIndex: _parseInt(bitIndexController.text),
+      id: id.value,
+      itemId: itemId.value,
+      categoryId: categoryId.value,
+      bitIndex: bitIndex.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, CurrencyTypeEntity t) {
@@ -77,12 +70,7 @@ class CurrencyTypeDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  void dispose() {
-    idController.dispose();
-    itemIdController.dispose();
-    categoryIdController.dispose();
-    bitIndexController.dispose();
-  }
+  void dispose() {}
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -96,9 +84,9 @@ class CurrencyTypeDetailViewModel {
   }
 
   void _initControllers(CurrencyTypeEntity currencyType) {
-    idController.text = currencyType.id.toString();
-    itemIdController.text = currencyType.itemId.toString();
-    categoryIdController.text = currencyType.categoryId.toString();
-    bitIndexController.text = currencyType.bitIndex.toString();
+    id.value = currencyType.id;
+    itemId.value = currencyType.itemId;
+    categoryId.value = currencyType.categoryId;
+    bitIndex.value = currencyType.bitIndex;
   }
 }

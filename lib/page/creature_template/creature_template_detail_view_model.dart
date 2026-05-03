@@ -16,8 +16,8 @@ class CreatureTemplateDetailViewModel {
   final nameController = TextEditingController();
   final subNameController = TextEditingController();
   final iconNameController = TextEditingController();
-  final minLevelController = TextEditingController();
-  final maxLevelController = TextEditingController();
+  final minLevel = signal<int>(0);
+  final maxLevel = signal<int>(0);
   final unitClassController = ShadSelectController<int>();
   final rankController = ShadSelectController<int>();
   final racialLeaderController = ShadSelectController<int>();
@@ -36,26 +36,26 @@ class CreatureTemplateDetailViewModel {
   final unitFlagController = TextEditingController();
   final unitFlag2Controller = TextEditingController();
 
-  final creatureImmunitiesIdController = TextEditingController();
+  final creatureImmunitiesId = signal<int>(0);
 
   final expController = ShadSelectController<int>();
   final damageSchoolController = ShadSelectController<int>();
-  final damageModifierController = TextEditingController();
-  final armorModifierController = TextEditingController();
-  final baseAttackTimeController = TextEditingController();
-  final baseVarianceController = TextEditingController();
-  final rangeAttackTimeController = TextEditingController();
-  final rangeVarianceController = TextEditingController();
-  final healthModifierController = TextEditingController();
-  final manaModifierController = TextEditingController();
-  final experienceModifierController = TextEditingController();
-  final speedWalkController = TextEditingController();
-  final speedRunController = TextEditingController();
-  final speedSwimController = TextEditingController();
-  final speedFlightController = TextEditingController();
+  final damageModifier = signal<double>(0.0);
+  final armorModifier = signal<double>(0.0);
+  final baseAttackTime = signal<int>(0);
+  final baseVariance = signal<double>(0.0);
+  final rangeAttackTime = signal<int>(0);
+  final rangeVariance = signal<double>(0.0);
+  final healthModifier = signal<double>(0.0);
+  final manaModifier = signal<double>(0.0);
+  final experienceModifier = signal<double>(0.0);
+  final speedWalk = signal<double>(0.0);
+  final speedRun = signal<double>(0.0);
+  final speedSwim = signal<double>(0.0);
+  final speedFlight = signal<double>(0.0);
 
-  final minGoldController = TextEditingController();
-  final maxGoldController = TextEditingController();
+  final minGold = signal<int>(0);
+  final maxGold = signal<int>(0);
   final lootController = TextEditingController();
   final pickpocketLootController = TextEditingController();
   final skinLootController = TextEditingController();
@@ -66,14 +66,14 @@ class CreatureTemplateDetailViewModel {
   final difficultyEntry2Controller = TextEditingController();
   final difficultyEntry3Controller = TextEditingController();
 
-  final movementIdController = TextEditingController();
+  final movementId = signal<int>(0);
   final movementTypeController = ShadSelectController<int>();
-  final hoverHeightController = TextEditingController();
-  final detectionRangeController = TextEditingController();
+  final hoverHeight = signal<double>(0.0);
+  final detectionRange = signal<double>(0.0);
 
   final aiNameController = TextEditingController();
   final scriptNameController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final verifiedBuild = signal<int>(0);
 
   final entry = signal(0);
   final template = signal(CreatureTemplateEntity());
@@ -115,8 +115,8 @@ class CreatureTemplateDetailViewModel {
       name: nameController.text,
       subName: subNameController.text,
       iconName: iconNameController.text,
-      minLevel: _parseInt(minLevelController.text),
-      maxLevel: _parseInt(maxLevelController.text),
+      minLevel: minLevel.value,
+      maxLevel: maxLevel.value,
       unitClass: _getSelectValue(unitClassController),
       rank: _getSelectValue(rankController),
       racialLeader: _getSelectValue(racialLeaderController),
@@ -133,24 +133,24 @@ class CreatureTemplateDetailViewModel {
       flagsExtra: _parseInt(extraFlagController.text),
       unitFlags: _parseInt(unitFlagController.text),
       unitFlags2: _parseInt(unitFlag2Controller.text),
-      creatureImmunitiesId: _parseInt(creatureImmunitiesIdController.text),
+      creatureImmunitiesId: creatureImmunitiesId.value,
       exp: _getSelectValue(expController),
       damageSchool: _getSelectValue(damageSchoolController),
-      damageModifier: _parseDouble(damageModifierController.text),
-      armorModifier: _parseDouble(armorModifierController.text),
-      baseAttackTime: _parseInt(baseAttackTimeController.text),
-      baseVariance: _parseDouble(baseVarianceController.text),
-      rangeAttackTime: _parseInt(rangeAttackTimeController.text),
-      rangeVariance: _parseDouble(rangeVarianceController.text),
-      healthModifier: _parseDouble(healthModifierController.text),
-      manaModifier: _parseDouble(manaModifierController.text),
-      experienceModifier: _parseDouble(experienceModifierController.text),
-      speedWalk: _parseDouble(speedWalkController.text),
-      speedRun: _parseDouble(speedRunController.text),
-      speedSwim: _parseDouble(speedSwimController.text),
-      speedFlight: _parseDouble(speedFlightController.text),
-      minGold: _parseInt(minGoldController.text),
-      maxGold: _parseInt(maxGoldController.text),
+      damageModifier: damageModifier.value,
+      armorModifier: armorModifier.value,
+      baseAttackTime: baseAttackTime.value,
+      baseVariance: baseVariance.value,
+      rangeAttackTime: rangeAttackTime.value,
+      rangeVariance: rangeVariance.value,
+      healthModifier: healthModifier.value,
+      manaModifier: manaModifier.value,
+      experienceModifier: experienceModifier.value,
+      speedWalk: speedWalk.value,
+      speedRun: speedRun.value,
+      speedSwim: speedSwim.value,
+      speedFlight: speedFlight.value,
+      minGold: minGold.value,
+      maxGold: maxGold.value,
       lootId: _parseInt(lootController.text),
       pickpocketLoot: _parseInt(pickpocketLootController.text),
       skinLoot: _parseInt(skinLootController.text),
@@ -159,26 +159,19 @@ class CreatureTemplateDetailViewModel {
       difficultyEntry1: _parseInt(difficultyEntry1Controller.text),
       difficultyEntry2: _parseInt(difficultyEntry2Controller.text),
       difficultyEntry3: _parseInt(difficultyEntry3Controller.text),
-      movementId: _parseInt(movementIdController.text),
+      movementId: movementId.value,
       movementType: _getSelectValue(movementTypeController),
-      hoverHeight: _parseDouble(hoverHeightController.text),
-      detectionRange: _parseDouble(detectionRangeController.text),
+      hoverHeight: hoverHeight.value,
+      detectionRange: detectionRange.value,
       aiName: aiNameController.text,
       scriptName: scriptNameController.text,
-      verifiedBuild: _parseInt(verifiedBuildController.text),
+      verifiedBuild: verifiedBuild.value,
     );
   }
 
   int _parseInt(String text) {
     if (text.isEmpty) return 0;
     final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  double _parseDouble(String text) {
-    if (text.isEmpty) return 0.0;
-    final value = double.tryParse(text);
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
@@ -191,8 +184,6 @@ class CreatureTemplateDetailViewModel {
     nameController.dispose();
     subNameController.dispose();
     iconNameController.dispose();
-    minLevelController.dispose();
-    maxLevelController.dispose();
     unitClassController.dispose();
     rankController.dispose();
     racialLeaderController.dispose();
@@ -211,26 +202,9 @@ class CreatureTemplateDetailViewModel {
     unitFlagController.dispose();
     unitFlag2Controller.dispose();
 
-    creatureImmunitiesIdController.dispose();
-
     expController.dispose();
     damageSchoolController.dispose();
-    damageModifierController.dispose();
-    armorModifierController.dispose();
-    baseAttackTimeController.dispose();
-    baseVarianceController.dispose();
-    rangeAttackTimeController.dispose();
-    rangeVarianceController.dispose();
-    healthModifierController.dispose();
-    manaModifierController.dispose();
-    experienceModifierController.dispose();
-    speedWalkController.dispose();
-    speedRunController.dispose();
-    speedSwimController.dispose();
-    speedFlightController.dispose();
 
-    minGoldController.dispose();
-    maxGoldController.dispose();
     lootController.dispose();
     pickpocketLootController.dispose();
     skinLootController.dispose();
@@ -241,14 +215,10 @@ class CreatureTemplateDetailViewModel {
     difficultyEntry2Controller.dispose();
     difficultyEntry3Controller.dispose();
 
-    movementIdController.dispose();
     movementTypeController.dispose();
-    hoverHeightController.dispose();
-    detectionRangeController.dispose();
 
     aiNameController.dispose();
     scriptNameController.dispose();
-    verifiedBuildController.dispose();
   }
 
   Future<void> initSignals({int? entry}) async {
@@ -268,8 +238,8 @@ class CreatureTemplateDetailViewModel {
     nameController.text = template.name;
     subNameController.text = template.subName;
     iconNameController.text = template.iconName;
-    minLevelController.text = template.minLevel.toString();
-    maxLevelController.text = template.maxLevel.toString();
+    minLevel.value = template.minLevel;
+    maxLevel.value = template.maxLevel;
     unitClassController.value = {template.unitClass};
     rankController.value = {template.rank};
     racialLeaderController.value = {template.racialLeader};
@@ -288,27 +258,26 @@ class CreatureTemplateDetailViewModel {
     unitFlagController.text = template.unitFlags.toString();
     unitFlag2Controller.text = template.unitFlags2.toString();
 
-    creatureImmunitiesIdController.text = template.creatureImmunitiesId
-        .toString();
+    creatureImmunitiesId.value = template.creatureImmunitiesId;
 
     expController.value = {template.exp};
     damageSchoolController.value = {template.damageSchool};
-    damageModifierController.text = template.damageModifier.toString();
-    armorModifierController.text = template.armorModifier.toString();
-    baseAttackTimeController.text = template.baseAttackTime.toString();
-    baseVarianceController.text = template.baseVariance.toString();
-    rangeAttackTimeController.text = template.rangeAttackTime.toString();
-    rangeVarianceController.text = template.rangeVariance.toString();
-    healthModifierController.text = template.healthModifier.toString();
-    manaModifierController.text = template.manaModifier.toString();
-    experienceModifierController.text = template.experienceModifier.toString();
-    speedWalkController.text = template.speedWalk.toString();
-    speedRunController.text = template.speedRun.toString();
-    speedSwimController.text = template.speedSwim.toString();
-    speedFlightController.text = template.speedFlight.toString();
+    damageModifier.value = template.damageModifier;
+    armorModifier.value = template.armorModifier;
+    baseAttackTime.value = template.baseAttackTime;
+    baseVariance.value = template.baseVariance;
+    rangeAttackTime.value = template.rangeAttackTime;
+    rangeVariance.value = template.rangeVariance;
+    healthModifier.value = template.healthModifier;
+    manaModifier.value = template.manaModifier;
+    experienceModifier.value = template.experienceModifier;
+    speedWalk.value = template.speedWalk;
+    speedRun.value = template.speedRun;
+    speedSwim.value = template.speedSwim;
+    speedFlight.value = template.speedFlight;
 
-    minGoldController.text = template.minGold.toString();
-    maxGoldController.text = template.maxGold.toString();
+    minGold.value = template.minGold;
+    maxGold.value = template.maxGold;
     lootController.text = template.lootId.toString();
     pickpocketLootController.text = template.pickpocketLoot.toString();
     skinLootController.text = template.skinLoot.toString();
@@ -319,14 +288,14 @@ class CreatureTemplateDetailViewModel {
     difficultyEntry2Controller.text = template.difficultyEntry2.toString();
     difficultyEntry3Controller.text = template.difficultyEntry3.toString();
 
-    movementIdController.text = template.movementId.toString();
+    movementId.value = template.movementId;
     movementTypeController.value = {template.movementType};
-    hoverHeightController.text = template.hoverHeight.toString();
-    detectionRangeController.text = template.detectionRange.toString();
+    hoverHeight.value = template.hoverHeight;
+    detectionRange.value = template.detectionRange;
 
     aiNameController.text = template.aiName;
     scriptNameController.text = template.scriptName;
-    verifiedBuildController.text = template.verifiedBuild.toString();
+    verifiedBuild.value = template.verifiedBuild;
   }
 
   void _logActivity(ActivityActionType action, CreatureTemplateEntity t) {

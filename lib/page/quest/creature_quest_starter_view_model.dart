@@ -11,7 +11,7 @@ class CreatureQuestStarterViewModel {
   final items = signal<List<BriefCreatureQuestStarterEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final idController = TextEditingController();
-  final questController = TextEditingController();
+  final quest = signal<int>(0);
 
   int _originalId = 0;
   int _originalQuest = 0;
@@ -28,20 +28,20 @@ class CreatureQuestStarterViewModel {
   /// 重置表单
   void resetForm() {
     idController.clear();
-    questController.clear();
+    quest.value = 0;
   }
 
   /// 填充表单
   void fillForm(CreatureQuestStarterEntity model) {
     idController.text = model.id.toString();
-    questController.text = model.quest.toString();
+    quest.value = model.quest;
   }
 
   /// 从表单收集数据
   CreatureQuestStarterEntity collectFromForm() {
     return CreatureQuestStarterEntity(
       id: int.tryParse(idController.text) ?? 0,
-      quest: int.tryParse(questController.text) ?? 0,
+      quest: quest.value,
     );
   }
 
@@ -221,6 +221,5 @@ class CreatureQuestStarterViewModel {
   /// 清理资源
   void dispose() {
     idController.dispose();
-    questController.dispose();
   }
 }

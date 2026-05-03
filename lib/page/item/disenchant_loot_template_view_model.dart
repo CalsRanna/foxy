@@ -18,20 +18,18 @@ class DisenchantLootTemplateViewModel {
   final editing = signal(false);
   int? editingItem;
 
-  // 表单控制器
   final itemController = TextEditingController();
-  final referenceController = TextEditingController();
-  final chanceController = TextEditingController();
+  final reference = signal<int>(0);
+  final chance = signal<double>(0.0);
   final questRequiredController = ShadSelectController<int>();
-  final lootModeController = TextEditingController();
-  final groupIdController = TextEditingController();
-  final minCountController = TextEditingController();
-  final maxCountController = TextEditingController();
+  final lootMode = signal<int>(0);
+  final groupId = signal<int>(0);
+  final minCount = signal<int>(0);
+  final maxCount = signal<int>(0);
   final commentController = TextEditingController();
 
   final repository = LootTemplateRepository(LootTableType.disenchant);
 
-  /// 加载数据
   Future<void> load() async {
     final data = await repository.getLootTemplates(entry.value);
     items.value = data;
@@ -41,44 +39,41 @@ class DisenchantLootTemplateViewModel {
     editingItem = null;
   }
 
-  /// 重置表单
   void resetForm() {
     itemController.clear();
-    referenceController.text = '0';
-    chanceController.text = '0';
+    reference.value = 0;
+    chance.value = 0;
     questRequiredController.value = {0};
-    lootModeController.text = '1';
-    groupIdController.text = '0';
-    minCountController.text = '1';
-    maxCountController.text = '1';
+    lootMode.value = 1;
+    groupId.value = 0;
+    minCount.value = 1;
+    maxCount.value = 1;
     commentController.clear();
   }
 
-  /// 填充表单
   void fillForm(BriefLootTemplateEntity loot) {
     itemController.text = loot.item.toString();
-    referenceController.text = loot.reference.toString();
-    chanceController.text = loot.chance.toString();
+    reference.value = loot.reference;
+    chance.value = loot.chance;
     questRequiredController.value = {loot.questRequired ? 1 : 0};
-    lootModeController.text = loot.lootMode.toString();
-    groupIdController.text = loot.groupId.toString();
-    minCountController.text = loot.minCount.toString();
-    maxCountController.text = loot.maxCount.toString();
+    lootMode.value = loot.lootMode;
+    groupId.value = loot.groupId;
+    minCount.value = loot.minCount;
+    maxCount.value = loot.maxCount;
     commentController.text = loot.comment;
   }
 
-  /// 从表单收集数据
   LootTemplateEntity collectFromForm() {
     return LootTemplateEntity(
       entry: entry.value,
       item: _parseInt(itemController.text),
-      reference: _parseInt(referenceController.text),
-      chance: _parseDouble(chanceController.text),
+      reference: reference.value,
+      chance: chance.value,
       questRequired: questRequiredController.value.first == 1,
-      lootMode: _parseInt(lootModeController.text),
-      groupId: _parseInt(groupIdController.text),
-      minCount: _parseInt(minCountController.text),
-      maxCount: _parseInt(maxCountController.text),
+      lootMode: lootMode.value,
+      groupId: groupId.value,
+      minCount: minCount.value,
+      maxCount: maxCount.value,
       comment: commentController.text,
     );
   }
@@ -90,9 +85,6 @@ class DisenchantLootTemplateViewModel {
     return value;
   }
 
-  double _parseDouble(String text) => text.isEmpty ? 0 : double.parse(text);
-
-  /// 创建新记录
   Future<void> create() async {
     try {
       final nextItem = await repository.getNextItemId(entry.value);
@@ -108,7 +100,6 @@ class DisenchantLootTemplateViewModel {
     }
   }
 
-  /// 编辑选中记录
   void edit() {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
@@ -120,7 +111,6 @@ class DisenchantLootTemplateViewModel {
     editingItem = loot.item;
   }
 
-  /// 复制记录
   Future<void> copy(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
@@ -139,7 +129,6 @@ class DisenchantLootTemplateViewModel {
     }
   }
 
-  /// 删除记录
   Future<void> delete(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
@@ -179,7 +168,6 @@ class DisenchantLootTemplateViewModel {
     }
   }
 
-  /// 保存记录
   Future<void> save(BuildContext context) async {
     try {
       final loot = collectFromForm();
@@ -195,7 +183,6 @@ class DisenchantLootTemplateViewModel {
     }
   }
 
-  /// 更新记录
   Future<void> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
@@ -211,14 +198,12 @@ class DisenchantLootTemplateViewModel {
     }
   }
 
-  /// 选择行
   void selectRow(int index) {
     if (index >= 0 && index < items.value.length) {
       selectedIndex.value = index;
     }
   }
 
-  /// 初始化
   Future<void> initSignals({required int disenchantId}) async {
     try {
       entry.value = disenchantId;
@@ -229,21 +214,13 @@ class DisenchantLootTemplateViewModel {
     }
   }
 
-  /// 退出页面
   void pop() {
     routerFacade.goBack();
   }
 
-  /// 清理资源
   void dispose() {
     itemController.dispose();
-    referenceController.dispose();
-    chanceController.dispose();
     questRequiredController.dispose();
-    lootModeController.dispose();
-    groupIdController.dispose();
-    minCountController.dispose();
-    maxCountController.dispose();
     commentController.dispose();
   }
 }

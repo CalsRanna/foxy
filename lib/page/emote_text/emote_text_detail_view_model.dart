@@ -13,27 +13,27 @@ class EmoteTextDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
+  final id = signal<int>(0);
   final nameController = TextEditingController();
-  final emoteIdController = TextEditingController();
+  final emoteId = signal<int>(0);
 
   /// EmoteText
-  final emoteText0Controller = TextEditingController();
-  final emoteText1Controller = TextEditingController();
-  final emoteText2Controller = TextEditingController();
-  final emoteText3Controller = TextEditingController();
-  final emoteText4Controller = TextEditingController();
-  final emoteText5Controller = TextEditingController();
-  final emoteText6Controller = TextEditingController();
-  final emoteText7Controller = TextEditingController();
-  final emoteText8Controller = TextEditingController();
-  final emoteText9Controller = TextEditingController();
-  final emoteText10Controller = TextEditingController();
-  final emoteText11Controller = TextEditingController();
-  final emoteText12Controller = TextEditingController();
-  final emoteText13Controller = TextEditingController();
-  final emoteText14Controller = TextEditingController();
-  final emoteText15Controller = TextEditingController();
+  final emoteText0 = signal<int>(0);
+  final emoteText1 = signal<int>(0);
+  final emoteText2 = signal<int>(0);
+  final emoteText3 = signal<int>(0);
+  final emoteText4 = signal<int>(0);
+  final emoteText5 = signal<int>(0);
+  final emoteText6 = signal<int>(0);
+  final emoteText7 = signal<int>(0);
+  final emoteText8 = signal<int>(0);
+  final emoteText9 = signal<int>(0);
+  final emoteText10 = signal<int>(0);
+  final emoteText11 = signal<int>(0);
+  final emoteText12 = signal<int>(0);
+  final emoteText13 = signal<int>(0);
+  final emoteText14 = signal<int>(0);
+  final emoteText15 = signal<int>(0);
 
   final emote = signal(EmoteTextEntity());
   /// 保存到数据库
@@ -69,33 +69,26 @@ class EmoteTextDetailViewModel {
   /// 从所有 Controller 收集数据构建 EmoteText
   EmoteTextEntity _collectFromControllers() {
     return EmoteTextEntity(
-      id: _parseInt(idController.text),
+      id: id.value,
       name: nameController.text,
-      emoteId: _parseInt(emoteIdController.text),
-      emoteText0: _parseInt(emoteText0Controller.text),
-      emoteText1: _parseInt(emoteText1Controller.text),
-      emoteText2: _parseInt(emoteText2Controller.text),
-      emoteText3: _parseInt(emoteText3Controller.text),
-      emoteText4: _parseInt(emoteText4Controller.text),
-      emoteText5: _parseInt(emoteText5Controller.text),
-      emoteText6: _parseInt(emoteText6Controller.text),
-      emoteText7: _parseInt(emoteText7Controller.text),
-      emoteText8: _parseInt(emoteText8Controller.text),
-      emoteText9: _parseInt(emoteText9Controller.text),
-      emoteText10: _parseInt(emoteText10Controller.text),
-      emoteText11: _parseInt(emoteText11Controller.text),
-      emoteText12: _parseInt(emoteText12Controller.text),
-      emoteText13: _parseInt(emoteText13Controller.text),
-      emoteText14: _parseInt(emoteText14Controller.text),
-      emoteText15: _parseInt(emoteText15Controller.text),
+      emoteId: emoteId.value,
+      emoteText0: emoteText0.value,
+      emoteText1: emoteText1.value,
+      emoteText2: emoteText2.value,
+      emoteText3: emoteText3.value,
+      emoteText4: emoteText4.value,
+      emoteText5: emoteText5.value,
+      emoteText6: emoteText6.value,
+      emoteText7: emoteText7.value,
+      emoteText8: emoteText8.value,
+      emoteText9: emoteText9.value,
+      emoteText10: emoteText10.value,
+      emoteText11: emoteText11.value,
+      emoteText12: emoteText12.value,
+      emoteText13: emoteText13.value,
+      emoteText14: emoteText14.value,
+      emoteText15: emoteText15.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, EmoteTextEntity t) {
@@ -110,28 +103,7 @@ class EmoteTextDetailViewModel {
   }
 
   void dispose() {
-    /// Basic
-    idController.dispose();
     nameController.dispose();
-    emoteIdController.dispose();
-
-    /// EmoteText
-    emoteText0Controller.dispose();
-    emoteText1Controller.dispose();
-    emoteText2Controller.dispose();
-    emoteText3Controller.dispose();
-    emoteText4Controller.dispose();
-    emoteText5Controller.dispose();
-    emoteText6Controller.dispose();
-    emoteText7Controller.dispose();
-    emoteText8Controller.dispose();
-    emoteText9Controller.dispose();
-    emoteText10Controller.dispose();
-    emoteText11Controller.dispose();
-    emoteText12Controller.dispose();
-    emoteText13Controller.dispose();
-    emoteText14Controller.dispose();
-    emoteText15Controller.dispose();
   }
 
   Future<void> initSignals({int? id}) async {
@@ -146,26 +118,26 @@ class EmoteTextDetailViewModel {
 
   void _initControllers(EmoteTextEntity emoteText) {
     /// Basic
-    idController.text = emoteText.id.toString();
+    id.value = emoteText.id;
     nameController.text = emoteText.name;
-    emoteIdController.text = emoteText.emoteId.toString();
+    emoteId.value = emoteText.emoteId;
 
     /// EmoteText
-    emoteText0Controller.text = emoteText.emoteText0.toString();
-    emoteText1Controller.text = emoteText.emoteText1.toString();
-    emoteText2Controller.text = emoteText.emoteText2.toString();
-    emoteText3Controller.text = emoteText.emoteText3.toString();
-    emoteText4Controller.text = emoteText.emoteText4.toString();
-    emoteText5Controller.text = emoteText.emoteText5.toString();
-    emoteText6Controller.text = emoteText.emoteText6.toString();
-    emoteText7Controller.text = emoteText.emoteText7.toString();
-    emoteText8Controller.text = emoteText.emoteText8.toString();
-    emoteText9Controller.text = emoteText.emoteText9.toString();
-    emoteText10Controller.text = emoteText.emoteText10.toString();
-    emoteText11Controller.text = emoteText.emoteText11.toString();
-    emoteText12Controller.text = emoteText.emoteText12.toString();
-    emoteText13Controller.text = emoteText.emoteText13.toString();
-    emoteText14Controller.text = emoteText.emoteText14.toString();
-    emoteText15Controller.text = emoteText.emoteText15.toString();
+    emoteText0.value = emoteText.emoteText0;
+    emoteText1.value = emoteText.emoteText1;
+    emoteText2.value = emoteText.emoteText2;
+    emoteText3.value = emoteText.emoteText3;
+    emoteText4.value = emoteText.emoteText4;
+    emoteText5.value = emoteText.emoteText5;
+    emoteText6.value = emoteText.emoteText6;
+    emoteText7.value = emoteText.emoteText7;
+    emoteText8.value = emoteText.emoteText8;
+    emoteText9.value = emoteText.emoteText9;
+    emoteText10.value = emoteText.emoteText10;
+    emoteText11.value = emoteText.emoteText11;
+    emoteText12.value = emoteText.emoteText12;
+    emoteText13.value = emoteText.emoteText13;
+    emoteText14.value = emoteText.emoteText14;
+    emoteText15.value = emoteText.emoteText15;
   }
 }

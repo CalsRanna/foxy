@@ -17,9 +17,9 @@ class PlayerCreateInfoActionViewModel {
   int? _class_;
   int? _oldButton;
 
-  final buttonController = TextEditingController();
-  final actionController = TextEditingController();
-  final typeController = TextEditingController();
+  final button = signal<int>(0);
+  final action = signal<int>(0);
+  final type = signal<int>(0);
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -35,18 +35,18 @@ class PlayerCreateInfoActionViewModel {
 
   void create() {
     _oldButton = null;
-    buttonController.clear();
-    actionController.clear();
-    typeController.clear();
+    button.value = 0;
+    action.value = 0;
+    type.value = 0;
   }
 
   void edit(int index) {
     if (index >= actions.value.length) return;
     final item = actions.value[index];
     _oldButton = item.button;
-    buttonController.text = item.button.toString();
-    actionController.text = item.action.toString();
-    typeController.text = item.type.toString();
+    button.value = item.button;
+    action.value = item.action;
+    type.value = item.type;
   }
 
   Future<void> save(BuildContext context) async {
@@ -97,22 +97,11 @@ class PlayerCreateInfoActionViewModel {
     return PlayerCreateInfoActionEntity(
       race: _race ?? 0,
       class_: _class_ ?? 0,
-      button: _parseInt(buttonController.text),
-      action: _parseInt(actionController.text),
-      type: _parseInt(typeController.text),
+      button: button.value,
+      action: action.value,
+      type: type.value,
     );
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  void dispose() {
-    buttonController.dispose();
-    actionController.dispose();
-    typeController.dispose();
-  }
+  void dispose() {}
 }

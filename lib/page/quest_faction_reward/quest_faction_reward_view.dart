@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -31,62 +32,95 @@ class _QuestFactionRewardViewState extends State<QuestFactionRewardView> {
   Widget build(BuildContext context) {
     /// Basic
     final idInput = FormItem(
-      controller: viewModel.idController,
       label: '编号',
       placeholder: 'ID',
-      readOnly: true,
+      child: FoxyNumberInput<int>(
+        value: viewModel.id.value,
+        onChanged: (v) => viewModel.id.value = v,
+        readOnly: true,
+      ),
     );
 
     /// Difficulty
     final difficulty0Input = FormItem(
-      controller: viewModel.difficulty0Controller,
       label: '难度0',
       placeholder: 'Difficulty0',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty0.value,
+        onChanged: (v) => viewModel.difficulty0.value = v,
+      ),
     );
     final difficulty1Input = FormItem(
-      controller: viewModel.difficulty1Controller,
       label: '难度1',
       placeholder: 'Difficulty1',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty1.value,
+        onChanged: (v) => viewModel.difficulty1.value = v,
+      ),
     );
     final difficulty2Input = FormItem(
-      controller: viewModel.difficulty2Controller,
       label: '难度2',
       placeholder: 'Difficulty2',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty2.value,
+        onChanged: (v) => viewModel.difficulty2.value = v,
+      ),
     );
     final difficulty3Input = FormItem(
-      controller: viewModel.difficulty3Controller,
       label: '难度3',
       placeholder: 'Difficulty3',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty3.value,
+        onChanged: (v) => viewModel.difficulty3.value = v,
+      ),
     );
     final difficulty4Input = FormItem(
-      controller: viewModel.difficulty4Controller,
       label: '难度4',
       placeholder: 'Difficulty4',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty4.value,
+        onChanged: (v) => viewModel.difficulty4.value = v,
+      ),
     );
     final difficulty5Input = FormItem(
-      controller: viewModel.difficulty5Controller,
       label: '难度5',
       placeholder: 'Difficulty5',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty5.value,
+        onChanged: (v) => viewModel.difficulty5.value = v,
+      ),
     );
     final difficulty6Input = FormItem(
-      controller: viewModel.difficulty6Controller,
       label: '难度6',
       placeholder: 'Difficulty6',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty6.value,
+        onChanged: (v) => viewModel.difficulty6.value = v,
+      ),
     );
     final difficulty7Input = FormItem(
-      controller: viewModel.difficulty7Controller,
       label: '难度7',
       placeholder: 'Difficulty7',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty7.value,
+        onChanged: (v) => viewModel.difficulty7.value = v,
+      ),
     );
     final difficulty8Input = FormItem(
-      controller: viewModel.difficulty8Controller,
       label: '难度8',
       placeholder: 'Difficulty8',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty8.value,
+        onChanged: (v) => viewModel.difficulty8.value = v,
+      ),
     );
     final difficulty9Input = FormItem(
-      controller: viewModel.difficulty9Controller,
       label: '难度9',
       placeholder: 'Difficulty9',
+      child: FoxyNumberInput<int>(
+        value: viewModel.difficulty9.value,
+        onChanged: (v) => viewModel.difficulty9.value = v,
+      ),
     );
 
     /// 1. 基本信息

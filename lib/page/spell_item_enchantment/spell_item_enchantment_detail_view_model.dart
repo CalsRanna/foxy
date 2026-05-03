@@ -13,38 +13,38 @@ class SpellItemEnchantmentDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
+  final id = signal<int>(0);
   final nameController = TextEditingController();
-  final chargesController = TextEditingController();
+  final charges = signal<int>(0);
 
   /// Effect
-  final effect0Controller = TextEditingController();
-  final effect1Controller = TextEditingController();
-  final effect2Controller = TextEditingController();
+  final effect0 = signal<int>(0);
+  final effect1 = signal<int>(0);
+  final effect2 = signal<int>(0);
 
   /// EffectPointsMin
-  final effectPointsMin0Controller = TextEditingController();
-  final effectPointsMin1Controller = TextEditingController();
-  final effectPointsMin2Controller = TextEditingController();
+  final effectPointsMin0 = signal<int>(0);
+  final effectPointsMin1 = signal<int>(0);
+  final effectPointsMin2 = signal<int>(0);
 
   /// EffectPointsMax
-  final effectPointsMax0Controller = TextEditingController();
-  final effectPointsMax1Controller = TextEditingController();
-  final effectPointsMax2Controller = TextEditingController();
+  final effectPointsMax0 = signal<int>(0);
+  final effectPointsMax1 = signal<int>(0);
+  final effectPointsMax2 = signal<int>(0);
 
   /// EffectArg
-  final effectArg0Controller = TextEditingController();
-  final effectArg1Controller = TextEditingController();
-  final effectArg2Controller = TextEditingController();
+  final effectArg0 = signal<int>(0);
+  final effectArg1 = signal<int>(0);
+  final effectArg2 = signal<int>(0);
 
   /// Other
-  final itemVisualController = TextEditingController();
-  final flagsController = TextEditingController();
-  final srcItemIdController = TextEditingController();
-  final conditionIdController = TextEditingController();
-  final requiredSkillIdController = TextEditingController();
-  final requiredSkillRankController = TextEditingController();
-  final minLevelController = TextEditingController();
+  final itemVisual = signal<int>(0);
+  final flags = signal<int>(0);
+  final srcItemId = signal<int>(0);
+  final conditionId = signal<int>(0);
+  final requiredSkillId = signal<int>(0);
+  final requiredSkillRank = signal<int>(0);
+  final minLevel = signal<int>(0);
 
   final enchantment = signal(SpellItemEnchantmentEntity());
   /// 保存到数据库
@@ -80,37 +80,30 @@ class SpellItemEnchantmentDetailViewModel {
   /// 从所有 Controller 收集数据构建 SpellItemEnchantment
   SpellItemEnchantmentEntity _collectFromControllers() {
     final t = SpellItemEnchantmentEntity(
-      id: _parseInt(idController.text),
+      id: id.value,
       nameLangZhCn: nameController.text,
-      charges: _parseInt(chargesController.text),
-      effect0: _parseInt(effect0Controller.text),
-      effect1: _parseInt(effect1Controller.text),
-      effect2: _parseInt(effect2Controller.text),
-      effectPointsMin0: _parseInt(effectPointsMin0Controller.text),
-      effectPointsMin1: _parseInt(effectPointsMin1Controller.text),
-      effectPointsMin2: _parseInt(effectPointsMin2Controller.text),
-      effectPointsMax0: _parseInt(effectPointsMax0Controller.text),
-      effectPointsMax1: _parseInt(effectPointsMax1Controller.text),
-      effectPointsMax2: _parseInt(effectPointsMax2Controller.text),
-      effectArg0: _parseInt(effectArg0Controller.text),
-      effectArg1: _parseInt(effectArg1Controller.text),
-      effectArg2: _parseInt(effectArg2Controller.text),
-      itemVisual: _parseInt(itemVisualController.text),
-      flags: _parseInt(flagsController.text),
-      srcItemId: _parseInt(srcItemIdController.text),
-      conditionId: _parseInt(conditionIdController.text),
-      requiredSkillId: _parseInt(requiredSkillIdController.text),
-      requiredSkillRank: _parseInt(requiredSkillRankController.text),
-      minLevel: _parseInt(minLevelController.text),
+      charges: charges.value,
+      effect0: effect0.value,
+      effect1: effect1.value,
+      effect2: effect2.value,
+      effectPointsMin0: effectPointsMin0.value,
+      effectPointsMin1: effectPointsMin1.value,
+      effectPointsMin2: effectPointsMin2.value,
+      effectPointsMax0: effectPointsMax0.value,
+      effectPointsMax1: effectPointsMax1.value,
+      effectPointsMax2: effectPointsMax2.value,
+      effectArg0: effectArg0.value,
+      effectArg1: effectArg1.value,
+      effectArg2: effectArg2.value,
+      itemVisual: itemVisual.value,
+      flags: flags.value,
+      srcItemId: srcItemId.value,
+      conditionId: conditionId.value,
+      requiredSkillId: requiredSkillId.value,
+      requiredSkillRank: requiredSkillRank.value,
+      minLevel: minLevel.value,
     );
     return t;
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
@@ -125,39 +118,7 @@ class SpellItemEnchantmentDetailViewModel {
   }
 
   void dispose() {
-    /// Basic
-    idController.dispose();
     nameController.dispose();
-    chargesController.dispose();
-
-    /// Effect
-    effect0Controller.dispose();
-    effect1Controller.dispose();
-    effect2Controller.dispose();
-
-    /// EffectPointsMin
-    effectPointsMin0Controller.dispose();
-    effectPointsMin1Controller.dispose();
-    effectPointsMin2Controller.dispose();
-
-    /// EffectPointsMax
-    effectPointsMax0Controller.dispose();
-    effectPointsMax1Controller.dispose();
-    effectPointsMax2Controller.dispose();
-
-    /// EffectArg
-    effectArg0Controller.dispose();
-    effectArg1Controller.dispose();
-    effectArg2Controller.dispose();
-
-    /// Other
-    itemVisualController.dispose();
-    flagsController.dispose();
-    srcItemIdController.dispose();
-    conditionIdController.dispose();
-    requiredSkillIdController.dispose();
-    requiredSkillRankController.dispose();
-    minLevelController.dispose();
   }
 
   Future<void> initSignals({int? id}) async {
@@ -172,38 +133,27 @@ class SpellItemEnchantmentDetailViewModel {
   }
 
   void _initControllers(SpellItemEnchantmentEntity entry) {
-    /// Basic
-    idController.text = entry.id.toString();
+    id.value = entry.id;
     nameController.text = entry.nameLangZhCn;
-    chargesController.text = entry.charges.toString();
-
-    /// Effect
-    effect0Controller.text = entry.effect0.toString();
-    effect1Controller.text = entry.effect1.toString();
-    effect2Controller.text = entry.effect2.toString();
-
-    /// EffectPointsMin
-    effectPointsMin0Controller.text = entry.effectPointsMin0.toString();
-    effectPointsMin1Controller.text = entry.effectPointsMin1.toString();
-    effectPointsMin2Controller.text = entry.effectPointsMin2.toString();
-
-    /// EffectPointsMax
-    effectPointsMax0Controller.text = entry.effectPointsMax0.toString();
-    effectPointsMax1Controller.text = entry.effectPointsMax1.toString();
-    effectPointsMax2Controller.text = entry.effectPointsMax2.toString();
-
-    /// EffectArg
-    effectArg0Controller.text = entry.effectArg0.toString();
-    effectArg1Controller.text = entry.effectArg1.toString();
-    effectArg2Controller.text = entry.effectArg2.toString();
-
-    /// Other
-    itemVisualController.text = entry.itemVisual.toString();
-    flagsController.text = entry.flags.toString();
-    srcItemIdController.text = entry.srcItemId.toString();
-    conditionIdController.text = entry.conditionId.toString();
-    requiredSkillIdController.text = entry.requiredSkillId.toString();
-    requiredSkillRankController.text = entry.requiredSkillRank.toString();
-    minLevelController.text = entry.minLevel.toString();
+    charges.value = entry.charges;
+    effect0.value = entry.effect0;
+    effect1.value = entry.effect1;
+    effect2.value = entry.effect2;
+    effectPointsMin0.value = entry.effectPointsMin0;
+    effectPointsMin1.value = entry.effectPointsMin1;
+    effectPointsMin2.value = entry.effectPointsMin2;
+    effectPointsMax0.value = entry.effectPointsMax0;
+    effectPointsMax1.value = entry.effectPointsMax1;
+    effectPointsMax2.value = entry.effectPointsMax2;
+    effectArg0.value = entry.effectArg0;
+    effectArg1.value = entry.effectArg1;
+    effectArg2.value = entry.effectArg2;
+    itemVisual.value = entry.itemVisual;
+    flags.value = entry.flags;
+    srcItemId.value = entry.srcItemId;
+    conditionId.value = entry.conditionId;
+    requiredSkillId.value = entry.requiredSkillId;
+    requiredSkillRank.value = entry.requiredSkillRank;
+    minLevel.value = entry.minLevel;
   }
 }

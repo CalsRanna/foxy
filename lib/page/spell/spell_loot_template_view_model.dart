@@ -14,14 +14,14 @@ class SpellLootTemplateViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final itemController = TextEditingController();
-  final referenceController = TextEditingController();
-  final chanceController = TextEditingController();
-  final questRequiredController = TextEditingController();
-  final lootModeController = TextEditingController();
-  final groupIdController = TextEditingController();
-  final minCountController = TextEditingController();
-  final maxCountController = TextEditingController();
+  final item = signal<int>(0);
+  final reference = signal<int>(0);
+  final chance = signal<double>(0.0);
+  final questRequired = signal<int>(0);
+  final lootMode = signal<int>(0);
+  final groupId = signal<int>(0);
+  final minCount = signal<int>(0);
+  final maxCount = signal<int>(0);
   final commentController = TextEditingController();
 
   final repository = SpellLootTemplateRepository();
@@ -33,57 +33,43 @@ class SpellLootTemplateViewModel {
   }
 
   void resetForm() {
-    itemController.clear();
-    referenceController.text = '0';
-    chanceController.text = '0';
-    questRequiredController.text = '0';
-    lootModeController.text = '0';
-    groupIdController.text = '0';
-    minCountController.text = '0';
-    maxCountController.text = '0';
+    item.value = 0;
+    reference.value = 0;
+    chance.value = 0.0;
+    questRequired.value = 0;
+    lootMode.value = 0;
+    groupId.value = 0;
+    minCount.value = 0;
+    maxCount.value = 0;
     commentController.clear();
   }
 
   void fillForm(SpellLootTemplateEntity data) {
-    itemController.text = data.item.toString();
-    referenceController.text = data.reference.toString();
-    chanceController.text = data.chance.toString();
-    questRequiredController.text = data.questRequired.toString();
-    lootModeController.text = data.lootMode.toString();
-    groupIdController.text = data.groupId.toString();
-    minCountController.text = data.minCount.toString();
-    maxCountController.text = data.maxCount.toString();
+    item.value = data.item;
+    reference.value = data.reference;
+    chance.value = data.chance;
+    questRequired.value = data.questRequired;
+    lootMode.value = data.lootMode;
+    groupId.value = data.groupId;
+    minCount.value = data.minCount;
+    maxCount.value = data.maxCount;
     commentController.text = data.comment;
   }
 
   SpellLootTemplateEntity collectFromForm() {
     final data = SpellLootTemplateEntity(
       entry: spellId.value,
-      item: _parseInt(itemController.text),
-      reference: _parseInt(referenceController.text),
-      chance: _parseDouble(chanceController.text),
-      questRequired: _parseInt(questRequiredController.text),
-      lootMode: _parseInt(lootModeController.text),
-      groupId: _parseInt(groupIdController.text),
-      minCount: _parseInt(minCountController.text),
-      maxCount: _parseInt(maxCountController.text),
+      item: item.value,
+      reference: reference.value,
+      chance: chance.value,
+      questRequired: questRequired.value,
+      lootMode: lootMode.value,
+      groupId: groupId.value,
+      minCount: minCount.value,
+      maxCount: maxCount.value,
       comment: commentController.text,
     );
     return data;
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  double _parseDouble(String text) {
-    if (text.isEmpty) return 0.0;
-    final value = double.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   Future<void> create() async {
@@ -210,14 +196,6 @@ class SpellLootTemplateViewModel {
   }
 
   void dispose() {
-    itemController.dispose();
-    referenceController.dispose();
-    chanceController.dispose();
-    questRequiredController.dispose();
-    lootModeController.dispose();
-    groupIdController.dispose();
-    minCountController.dispose();
-    maxCountController.dispose();
     commentController.dispose();
   }
 }

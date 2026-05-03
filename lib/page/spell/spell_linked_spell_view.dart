@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_linked_spell_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
@@ -160,16 +161,22 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
             children: [
               Expanded(
                 child: FormItem(
-                  controller: viewModel.spellEffectController,
                   label: '链接技能',
                   placeholder: 'spell_effect',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.spellEffect.value,
+                    onChanged: (v) => viewModel.spellEffect.value = v,
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.typeController,
                   label: '类型',
                   placeholder: 'type',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.type.value,
+                    onChanged: (v) => viewModel.type.value = v,
+                  ),
                 ),
               ),
             ],

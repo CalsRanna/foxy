@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/player_create_info/player_create_info_item_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -90,8 +91,8 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 400),
         child: Column(mainAxisSize: MainAxisSize.min, spacing: 16, children: [
-          FormItem(controller: viewModel.itemIdController, label: '物品ID', placeholder: 'itemid'),
-          FormItem(controller: viewModel.amountController, label: '数量', placeholder: 'amount'),
+          FormItem(label: '物品ID', placeholder: 'itemid', child: FoxyNumberInput<int>(value: viewModel.itemId.value, onChanged: (v) => viewModel.itemId.value = v)),
+          FormItem(label: '数量', placeholder: 'amount', child: FoxyNumberInput<int>(value: viewModel.amount.value, onChanged: (v) => viewModel.amount.value = v)),
           FormItem(controller: viewModel.noteController, label: '备注', placeholder: 'Note'),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             ShadButton.outline(onPressed: () => Navigator.of(c).pop(), child: Text('取消')),

@@ -6,6 +6,7 @@ import 'package:foxy/page/item/item_loot_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -201,14 +202,20 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
           SizedBox(height: 16),
           // 关联ID
           FormItem(
-            controller: viewModel.referenceController,
+            child: FoxyNumberInput<int>(
+              value: viewModel.reference.value,
+              onChanged: (v) => viewModel.reference.value = v,
+            ),
             label: '关联ID',
             placeholder: 'Reference (0=直接掉落)',
           ),
           SizedBox(height: 16),
           // 掉落几率
           FormItem(
-            controller: viewModel.chanceController,
+            child: FoxyNumberInput<double>(
+              value: viewModel.chance.value,
+              onChanged: (v) => viewModel.chance.value = v,
+            ),
             label: '掉落几率',
             placeholder: 'Chance (%)',
           ),
@@ -225,14 +232,20 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
           SizedBox(height: 16),
           // 掉落模式
           FormItem(
-            controller: viewModel.lootModeController,
+            child: FoxyNumberInput<int>(
+              value: viewModel.lootMode.value,
+              onChanged: (v) => viewModel.lootMode.value = v,
+            ),
             label: '掉落模式',
             placeholder: 'LootMode',
           ),
           SizedBox(height: 16),
           // 组ID
           FormItem(
-            controller: viewModel.groupIdController,
+            child: FoxyNumberInput<int>(
+              value: viewModel.groupId.value,
+              onChanged: (v) => viewModel.groupId.value = v,
+            ),
             label: '组ID',
             placeholder: 'GroupId',
           ),
@@ -243,14 +256,20 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
             children: [
               Expanded(
                 child: FormItem(
-                  controller: viewModel.minCountController,
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.minCount.value,
+                    onChanged: (v) => viewModel.minCount.value = v,
+                  ),
                   label: '最小数量',
                   placeholder: 'MinCount',
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.maxCountController,
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.maxCount.value,
+                    onChanged: (v) => viewModel.maxCount.value = v,
+                  ),
                   label: '最大数量',
                   placeholder: 'MaxCount',
                 ),

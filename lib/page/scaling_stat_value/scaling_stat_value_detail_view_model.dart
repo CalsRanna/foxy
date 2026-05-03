@@ -13,36 +13,30 @@ class ScalingStatValueDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
-  final charlevelController = TextEditingController();
-
-  /// Budget
-  final shoulderBudgetController = TextEditingController();
-  final trinketBudgetController = TextEditingController();
-  final weaponBudget1HController = TextEditingController();
-  final rangedBudgetController = TextEditingController();
-  final primaryBudgetController = TextEditingController();
-  final tertiaryBudgetController = TextEditingController();
-  final spellPowerController = TextEditingController();
-
-  /// Armor
-  final clothShoulderArmorController = TextEditingController();
-  final leatherShoulderArmorController = TextEditingController();
-  final mailShoulderArmorController = TextEditingController();
-  final plateShoulderArmorController = TextEditingController();
-  final clothCloakArmorController = TextEditingController();
-  final clothChestArmorController = TextEditingController();
-  final leatherChestArmorController = TextEditingController();
-  final mailChestArmorController = TextEditingController();
-  final plateChestArmorController = TextEditingController();
-
-  /// DPS
-  final weaponDPS1HController = TextEditingController();
-  final weaponDPS2HController = TextEditingController();
-  final spellcasterDPS1HController = TextEditingController();
-  final spellcasterDPS2HController = TextEditingController();
-  final rangedDPSController = TextEditingController();
-  final wandDPSController = TextEditingController();
+  final id = signal<int>(0);
+  final charlevel = signal<int>(0);
+  final shoulderBudget = signal<int>(0);
+  final trinketBudget = signal<int>(0);
+  final weaponBudget1H = signal<int>(0);
+  final rangedBudget = signal<int>(0);
+  final primaryBudget = signal<int>(0);
+  final tertiaryBudget = signal<int>(0);
+  final spellPower = signal<int>(0);
+  final clothShoulderArmor = signal<int>(0);
+  final leatherShoulderArmor = signal<int>(0);
+  final mailShoulderArmor = signal<int>(0);
+  final plateShoulderArmor = signal<int>(0);
+  final clothCloakArmor = signal<int>(0);
+  final clothChestArmor = signal<int>(0);
+  final leatherChestArmor = signal<int>(0);
+  final mailChestArmor = signal<int>(0);
+  final plateChestArmor = signal<int>(0);
+  final weaponDPS1H = signal<int>(0);
+  final weaponDPS2H = signal<int>(0);
+  final spellcasterDPS1H = signal<int>(0);
+  final spellcasterDPS2H = signal<int>(0);
+  final rangedDPS = signal<int>(0);
+  final wandDPS = signal<int>(0);
 
   final scalingStatValue = signal(ScalingStatValueEntity());
 
@@ -79,39 +73,34 @@ class ScalingStatValueDetailViewModel {
   /// 从所有 Controller 收集数据构建 ScalingStatValue
   ScalingStatValueEntity _collectFromControllers() {
     return ScalingStatValueEntity(
-      id: _parseInt(idController.text),
-      charlevel: _parseInt(charlevelController.text),
-      shoulderBudget: _parseInt(shoulderBudgetController.text),
-      trinketBudget: _parseInt(trinketBudgetController.text),
-      weaponBudget1H: _parseInt(weaponBudget1HController.text),
-      rangedBudget: _parseInt(rangedBudgetController.text),
-      clothShoulderArmor: _parseInt(clothShoulderArmorController.text),
-      leatherShoulderArmor: _parseInt(leatherShoulderArmorController.text),
-      mailShoulderArmor: _parseInt(mailShoulderArmorController.text),
-      plateShoulderArmor: _parseInt(plateShoulderArmorController.text),
-      weaponDPS1H: _parseInt(weaponDPS1HController.text),
-      weaponDPS2H: _parseInt(weaponDPS2HController.text),
-      spellcasterDPS1H: _parseInt(spellcasterDPS1HController.text),
-      spellcasterDPS2H: _parseInt(spellcasterDPS2HController.text),
-      rangedDPS: _parseInt(rangedDPSController.text),
-      wandDPS: _parseInt(wandDPSController.text),
-      spellPower: _parseInt(spellPowerController.text),
-      primaryBudget: _parseInt(primaryBudgetController.text),
-      tertiaryBudget: _parseInt(tertiaryBudgetController.text),
-      clothCloakArmor: _parseInt(clothCloakArmorController.text),
-      clothChestArmor: _parseInt(clothChestArmorController.text),
-      leatherChestArmor: _parseInt(leatherChestArmorController.text),
-      mailChestArmor: _parseInt(mailChestArmorController.text),
-      plateChestArmor: _parseInt(plateChestArmorController.text),
+      id: id.value,
+      charlevel: charlevel.value,
+      shoulderBudget: shoulderBudget.value,
+      trinketBudget: trinketBudget.value,
+      weaponBudget1H: weaponBudget1H.value,
+      rangedBudget: rangedBudget.value,
+      clothShoulderArmor: clothShoulderArmor.value,
+      leatherShoulderArmor: leatherShoulderArmor.value,
+      mailShoulderArmor: mailShoulderArmor.value,
+      plateShoulderArmor: plateShoulderArmor.value,
+      weaponDPS1H: weaponDPS1H.value,
+      weaponDPS2H: weaponDPS2H.value,
+      spellcasterDPS1H: spellcasterDPS1H.value,
+      spellcasterDPS2H: spellcasterDPS2H.value,
+      rangedDPS: rangedDPS.value,
+      wandDPS: wandDPS.value,
+      spellPower: spellPower.value,
+      primaryBudget: primaryBudget.value,
+      tertiaryBudget: tertiaryBudget.value,
+      clothCloakArmor: clothCloakArmor.value,
+      clothChestArmor: clothChestArmor.value,
+      leatherChestArmor: leatherChestArmor.value,
+      mailChestArmor: mailChestArmor.value,
+      plateChestArmor: plateChestArmor.value,
     );
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
+  void dispose() {}
 
   void _logActivity(ActivityActionType action, ScalingStatValueEntity t) {
     final log = ActivityLogEntity(
@@ -122,33 +111,6 @@ class ScalingStatValueDetailViewModel {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
-  }
-
-  void dispose() {
-    idController.dispose();
-    charlevelController.dispose();
-    shoulderBudgetController.dispose();
-    trinketBudgetController.dispose();
-    weaponBudget1HController.dispose();
-    rangedBudgetController.dispose();
-    primaryBudgetController.dispose();
-    tertiaryBudgetController.dispose();
-    spellPowerController.dispose();
-    clothShoulderArmorController.dispose();
-    leatherShoulderArmorController.dispose();
-    mailShoulderArmorController.dispose();
-    plateShoulderArmorController.dispose();
-    clothCloakArmorController.dispose();
-    clothChestArmorController.dispose();
-    leatherChestArmorController.dispose();
-    mailChestArmorController.dispose();
-    plateChestArmorController.dispose();
-    weaponDPS1HController.dispose();
-    weaponDPS2HController.dispose();
-    spellcasterDPS1HController.dispose();
-    spellcasterDPS2HController.dispose();
-    rangedDPSController.dispose();
-    wandDPSController.dispose();
   }
 
   Future<void> initSignals({int? id}) async {
@@ -163,46 +125,29 @@ class ScalingStatValueDetailViewModel {
   }
 
   void _initControllers(ScalingStatValueEntity scalingStatValue) {
-    idController.text = scalingStatValue.id.toString();
-    charlevelController.text = scalingStatValue.charlevel.toString();
-    shoulderBudgetController.text =
-        scalingStatValue.shoulderBudget.toString();
-    trinketBudgetController.text =
-        scalingStatValue.trinketBudget.toString();
-    weaponBudget1HController.text =
-        scalingStatValue.weaponBudget1H.toString();
-    rangedBudgetController.text =
-        scalingStatValue.rangedBudget.toString();
-    primaryBudgetController.text =
-        scalingStatValue.primaryBudget.toString();
-    tertiaryBudgetController.text =
-        scalingStatValue.tertiaryBudget.toString();
-    spellPowerController.text = scalingStatValue.spellPower.toString();
-    clothShoulderArmorController.text =
-        scalingStatValue.clothShoulderArmor.toString();
-    leatherShoulderArmorController.text =
-        scalingStatValue.leatherShoulderArmor.toString();
-    mailShoulderArmorController.text =
-        scalingStatValue.mailShoulderArmor.toString();
-    plateShoulderArmorController.text =
-        scalingStatValue.plateShoulderArmor.toString();
-    clothCloakArmorController.text =
-        scalingStatValue.clothCloakArmor.toString();
-    clothChestArmorController.text =
-        scalingStatValue.clothChestArmor.toString();
-    leatherChestArmorController.text =
-        scalingStatValue.leatherChestArmor.toString();
-    mailChestArmorController.text =
-        scalingStatValue.mailChestArmor.toString();
-    plateChestArmorController.text =
-        scalingStatValue.plateChestArmor.toString();
-    weaponDPS1HController.text = scalingStatValue.weaponDPS1H.toString();
-    weaponDPS2HController.text = scalingStatValue.weaponDPS2H.toString();
-    spellcasterDPS1HController.text =
-        scalingStatValue.spellcasterDPS1H.toString();
-    spellcasterDPS2HController.text =
-        scalingStatValue.spellcasterDPS2H.toString();
-    rangedDPSController.text = scalingStatValue.rangedDPS.toString();
-    wandDPSController.text = scalingStatValue.wandDPS.toString();
+    id.value = scalingStatValue.id;
+    charlevel.value = scalingStatValue.charlevel;
+    shoulderBudget.value = scalingStatValue.shoulderBudget;
+    trinketBudget.value = scalingStatValue.trinketBudget;
+    weaponBudget1H.value = scalingStatValue.weaponBudget1H;
+    rangedBudget.value = scalingStatValue.rangedBudget;
+    primaryBudget.value = scalingStatValue.primaryBudget;
+    tertiaryBudget.value = scalingStatValue.tertiaryBudget;
+    spellPower.value = scalingStatValue.spellPower;
+    clothShoulderArmor.value = scalingStatValue.clothShoulderArmor;
+    leatherShoulderArmor.value = scalingStatValue.leatherShoulderArmor;
+    mailShoulderArmor.value = scalingStatValue.mailShoulderArmor;
+    plateShoulderArmor.value = scalingStatValue.plateShoulderArmor;
+    clothCloakArmor.value = scalingStatValue.clothCloakArmor;
+    clothChestArmor.value = scalingStatValue.clothChestArmor;
+    leatherChestArmor.value = scalingStatValue.leatherChestArmor;
+    mailChestArmor.value = scalingStatValue.mailChestArmor;
+    plateChestArmor.value = scalingStatValue.plateChestArmor;
+    weaponDPS1H.value = scalingStatValue.weaponDPS1H;
+    weaponDPS2H.value = scalingStatValue.weaponDPS2H;
+    spellcasterDPS1H.value = scalingStatValue.spellcasterDPS1H;
+    spellcasterDPS2H.value = scalingStatValue.spellcasterDPS2H;
+    rangedDPS.value = scalingStatValue.rangedDPS;
+    wandDPS.value = scalingStatValue.wandDPS;
   }
 }

@@ -7,6 +7,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -185,12 +186,12 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
         children: [
           // 生物ID（只读）
           FormItem(
-            controller: TextEditingController(
-              text: widget.creatureId.toString(),
-            ),
             label: '生物ID',
-            placeholder: 'CreatureID',
-            readOnly: true,
+            child: FoxyNumberInput<int>(
+              value: widget.creatureId,
+              placeholder: 'CreatureID',
+              readOnly: true,
+            ),
           ),
           SizedBox(height: 16),
           // 物品ID
@@ -204,16 +205,22 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
           SizedBox(height: 16),
           // 关联ID
           FormItem(
-            controller: viewModel.referenceController,
             label: '关联ID',
-            placeholder: 'Reference (0=直接掉落)',
+            child: FoxyNumberInput<int>(
+              value: viewModel.reference.value,
+              onChanged: (v) => viewModel.reference.value = v,
+              placeholder: 'Reference (0=直接掉落)',
+            ),
           ),
           SizedBox(height: 16),
           // 掉落几率
           FormItem(
-            controller: viewModel.chanceController,
             label: '掉落几率',
-            placeholder: 'Chance (%)',
+            child: FoxyNumberInput<double>(
+              value: viewModel.chance.value,
+              onChanged: (v) => viewModel.chance.value = v,
+              placeholder: 'Chance (%)',
+            ),
           ),
           SizedBox(height: 16),
           // 需要任务
@@ -228,16 +235,22 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
           SizedBox(height: 16),
           // 掉落模式
           FormItem(
-            controller: viewModel.lootModeController,
             label: '掉落模式',
-            placeholder: 'LootMode',
+            child: FoxyNumberInput<int>(
+              value: viewModel.lootMode.value,
+              onChanged: (v) => viewModel.lootMode.value = v,
+              placeholder: 'LootMode',
+            ),
           ),
           SizedBox(height: 16),
           // 组ID
           FormItem(
-            controller: viewModel.groupIdController,
             label: '组ID',
-            placeholder: 'GroupId',
+            child: FoxyNumberInput<int>(
+              value: viewModel.groupId.value,
+              onChanged: (v) => viewModel.groupId.value = v,
+              placeholder: 'GroupId',
+            ),
           ),
           SizedBox(height: 16),
           // 数量范围
@@ -246,16 +259,22 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
             children: [
               Expanded(
                 child: FormItem(
-                  controller: viewModel.minCountController,
                   label: '最小数量',
-                  placeholder: 'MinCount',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.minCount.value,
+                    onChanged: (v) => viewModel.minCount.value = v,
+                    placeholder: 'MinCount',
+                  ),
                 ),
               ),
               Expanded(
                 child: FormItem(
-                  controller: viewModel.maxCountController,
                   label: '最大数量',
-                  placeholder: 'MaxCount',
+                  child: FoxyNumberInput<int>(
+                    value: viewModel.maxCount.value,
+                    onChanged: (v) => viewModel.maxCount.value = v,
+                    placeholder: 'MaxCount',
+                  ),
                 ),
               ),
             ],
