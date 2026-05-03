@@ -19,10 +19,10 @@ class SpellBonusDataEntity {
   factory SpellBonusDataEntity.fromJson(Map<String, dynamic> json) {
     return SpellBonusDataEntity(
       entry: json['entry'] ?? 0,
-      directBonus: (json['direct_bonus'] ?? 0.0).toDouble(),
-      dotBonus: (json['dot_bonus'] ?? 0.0).toDouble(),
-      apBonus: (json['ap_bonus'] ?? 0.0).toDouble(),
-      apDotBonus: (json['ap_dot_bonus'] ?? 0.0).toDouble(),
+      directBonus: (json['direct_bonus'] ?? 0.0),
+      dotBonus: (json['dot_bonus'] ?? 0.0),
+      apBonus: (json['ap_bonus'] ?? 0.0),
+      apDotBonus: (json['ap_dot_bonus'] ?? 0.0),
       comments: json['comments'] ?? '',
     );
   }

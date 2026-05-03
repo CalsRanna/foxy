@@ -29,10 +29,10 @@ class PlayerCreateInfoEntity {
       class_: json['class'] ?? 0,
       map: json['map'] ?? 0,
       zone: json['zone'] ?? 0,
-      positionX: (json['position_x'] as num?)?.toDouble() ?? 0,
-      positionY: (json['position_y'] as num?)?.toDouble() ?? 0,
-      positionZ: (json['position_z'] as num?)?.toDouble() ?? 0,
-      orientation: (json['orientation'] as num?)?.toDouble() ?? 0,
+      positionX: json['position_x'] ?? 0,
+      positionY: json['position_y'] ?? 0,
+      positionZ: json['position_z'] ?? 0,
+      orientation: json['orientation'] ?? 0,
     );
   }
 

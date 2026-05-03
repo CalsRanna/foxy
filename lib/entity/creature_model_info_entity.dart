@@ -16,8 +16,8 @@ class CreatureModelInfoEntity {
   factory CreatureModelInfoEntity.fromJson(Map<String, dynamic> json) {
     return CreatureModelInfoEntity(
       displayId: json['DisplayID'] ?? 0,
-      boundingRadius: (json['BoundingRadius'] ?? 0).toDouble(),
-      combatReach: (json['CombatReach'] ?? 0).toDouble(),
+      boundingRadius: (json['BoundingRadius'] ?? 0.0),
+      combatReach: (json['CombatReach'] ?? 0.0),
       gender: json['Gender'] ?? 0,
       displayIdOtherGender: json['DisplayID_Other_Gender'] ?? 0,
     );

@@ -14,8 +14,8 @@ class SpellRangeEntity {
   factory SpellRangeEntity.fromJson(Map<String, dynamic> json) {
     return SpellRangeEntity(
       id: json['ID'] ?? 0,
-      rangeMin0: (json['RangeMin0'] ?? 0).toDouble(),
-      rangeMax0: (json['RangeMax0'] ?? 0).toDouble(),
+      rangeMin0: (json['RangeMin0'] ?? 0.0),
+      rangeMax0: (json['RangeMax0'] ?? 0.0),
       displayNameLangZhCn: json['DisplayName_lang_zhCN'] ?? '',
     );
   }

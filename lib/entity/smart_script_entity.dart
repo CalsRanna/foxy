@@ -140,10 +140,10 @@ class SmartScriptEntity {
       targetParam2: json['target_param2'] ?? 0,
       targetParam3: json['target_param3'] ?? 0,
       targetParam4: json['target_param4'] ?? 0,
-      targetX: (json['target_x'] ?? 0).toDouble(),
-      targetY: (json['target_y'] ?? 0).toDouble(),
-      targetZ: (json['target_z'] ?? 0).toDouble(),
-      targetO: (json['target_o'] ?? 0).toDouble(),
+      targetX: (json['target_x'] ?? 0.0),
+      targetY: (json['target_y'] ?? 0.0),
+      targetZ: (json['target_z'] ?? 0.0),
+      targetO: (json['target_o'] ?? 0.0),
       comment: json['comment'] ?? '',
     );
   }
