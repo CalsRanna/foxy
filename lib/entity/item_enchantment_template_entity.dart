@@ -20,7 +20,7 @@ class ItemEnchantmentTemplateEntity {
     return ItemEnchantmentTemplateEntity(
       entry: json['entry'] ?? 0,
       ench: json['ench'] ?? 0,
-      chance: (json['chance'] as num?)?.toDouble() ?? 0.0,
+      chance: json['chance'] ?? 0.0,
       condition1: json['condition_1'] ?? 0,
       condition2: json['condition_2'] ?? 0,
       condition3: json['condition_3'] ?? 0,
@@ -75,7 +75,7 @@ class BriefItemEnchantmentTemplateEntity {
     return BriefItemEnchantmentTemplateEntity(
       entry: json['entry'] ?? 0,
       ench: json['ench'] ?? 0,
-      chance: (json['chance'] as num?)?.toDouble() ?? 0.0,
+      chance: json['chance'] ?? 0.0,
       condition1: json['condition_1'] ?? 0,
       condition2: json['condition_2'] ?? 0,
       condition3: json['condition_3'] ?? 0,

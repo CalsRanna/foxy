@@ -42,8 +42,7 @@ class CreatureDisplayInfoEntity {
       modelId: json['ModelID'] ?? 0,
       soundId: json['SoundID'] ?? 0,
       extendedDisplayInfoId: json['ExtendedDisplayInfoID'] ?? 0,
-      creatureModelScale:
-          (json['CreatureModelScale'] as num?)?.toDouble() ?? 1.0,
+      creatureModelScale: json['CreatureModelScale'] ?? 1.0,
       creatureModelAlpha: json['CreatureModelAlpha'] ?? 0,
       textureVariation0: json['TextureVariation0'] ?? '',
       textureVariation1: json['TextureVariation1'] ?? '',
@@ -102,8 +101,7 @@ class BriefCreatureDisplayInfoEntity {
     return BriefCreatureDisplayInfoEntity(
       id: json['ID'] ?? 0,
       modelId: json['ModelID'] ?? 0,
-      creatureModelScale:
-          (json['CreatureModelScale'] as num?)?.toDouble() ?? 1.0,
+      creatureModelScale: json['CreatureModelScale'] ?? 1.0,
       sizeClass: json['SizeClass'] ?? 0,
       bloodID: json['BloodID'] ?? 0,
       modelName: json['ModelName'] ?? '',

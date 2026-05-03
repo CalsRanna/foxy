@@ -35,11 +35,9 @@ class CreatureOnKillReputationEntity {
       isTeamAward1: (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1,
       isTeamAward2: (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1,
       rewOnKillRepValue1:
-          (json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0.0)
-              .toDouble(),
+          json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1'] ?? 0.0,
       rewOnKillRepValue2:
-          (json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2'] ?? 0.0)
-              .toDouble(),
+          json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2'] ?? 0.0,
       teamDependent: json['TeamDependent'] ?? json['teamDependent'] ?? 0,
     );
   }

@@ -52,9 +52,7 @@ class NpcTextEntryEntity {
   factory NpcTextEntryEntity.fromJson(Map<String, dynamic> json, int n) {
     return NpcTextEntryEntity(
       lang: json['lang$n']?.toString() ?? '0',
-      probability: (json['Probability$n'] is num)
-          ? (json['Probability$n'] as num).toDouble()
-          : double.tryParse(json['Probability$n']?.toString() ?? '') ?? 0,
+      probability: json['Probability$n'] ?? 0,
       text0: json['text${n}_0']?.toString() ?? '',
       text1: json['text${n}_1']?.toString() ?? '',
       broadcastTextId:

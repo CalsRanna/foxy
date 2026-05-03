@@ -298,17 +298,16 @@ class ItemTemplateEntity {
       // --- 武器与伤害 ---
       delay: json['delay'] ?? 0,
       rangedModRange:
-          ((json['RangedModRange'] ?? json['rangedModRange'] ?? 0) as num)
-              .toInt(),
+          json['RangedModRange'] ?? json['rangedModRange'] ?? 0,
       armorDamageModifier:
           (json['ArmorDamageModifier'] ?? json['armorDamageModifier'] ?? 0.0)
               as double,
       dmgType1: json['dmg_type1'] ?? json['dmgType1'] ?? 0,
-      dmgMin1: (json['dmg_min1'] ?? json['dmgMin1'] ?? 0).toDouble(),
-      dmgMax1: (json['dmg_max1'] ?? json['dmgMax1'] ?? 0).toDouble(),
+      dmgMin1: (json['dmg_min1'] ?? json['dmgMin1'] ?? 0.0),
+      dmgMax1: (json['dmg_max1'] ?? json['dmgMax1'] ?? 0.0),
       dmgType2: json['dmg_type2'] ?? json['dmgType2'] ?? 0,
-      dmgMin2: (json['dmg_min2'] ?? json['dmgMin2'] ?? 0).toDouble(),
-      dmgMax2: (json['dmg_max2'] ?? json['dmgMax2'] ?? 0).toDouble(),
+      dmgMin2: (json['dmg_min2'] ?? json['dmgMin2'] ?? 0.0),
+      dmgMax2: (json['dmg_max2'] ?? json['dmgMax2'] ?? 0.0),
       ammoType: json['ammo_type'] ?? json['ammoType'] ?? 0,
       armor: json['armor'] ?? 0,
       block: json['block'] ?? 0,
