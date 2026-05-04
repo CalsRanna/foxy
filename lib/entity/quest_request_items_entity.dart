@@ -71,7 +71,7 @@ class QuestRequestItemsLocaleEntity {
   factory QuestRequestItemsLocaleEntity.fromJson(Map<String, dynamic> json) {
     return QuestRequestItemsLocaleEntity(
       id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['Locale']?.toString() ?? 'zhCN',
+      locale: json['locale']?.toString() ?? 'zhCN',
       completionText: json['CompletionText']?.toString() ?? '',
       verifiedBuild: json['VerifiedBuild'] ?? 0,
     );
@@ -80,7 +80,7 @@ class QuestRequestItemsLocaleEntity {
   Map<String, dynamic> toJson() {
     final result = <String, dynamic>{
       'ID': id,
-      'Locale': locale,
+      'locale': locale,
       'CompletionText': completionText,
       'VerifiedBuild': verifiedBuild,
     };

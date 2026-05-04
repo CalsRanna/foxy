@@ -48,7 +48,6 @@ class SpellGroupRepository with RepositoryMixin {
   ) async {
     var json = newData.toJson();
     json.remove('id');
-    json.remove('spell_id');
     await laconic
         .table(_table)
         .where('id', oldData.id)

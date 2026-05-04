@@ -3,17 +3,11 @@ class ItemEnchantmentTemplateEntity {
   final int entry;
   final int ench;
   final double chance;
-  final int condition1;
-  final int condition2;
-  final int condition3;
 
   const ItemEnchantmentTemplateEntity({
     this.entry = 0,
     this.ench = 0,
     this.chance = 0,
-    this.condition1 = 0,
-    this.condition2 = 0,
-    this.condition3 = 0,
   });
 
   factory ItemEnchantmentTemplateEntity.fromJson(Map<String, dynamic> json) {
@@ -21,9 +15,6 @@ class ItemEnchantmentTemplateEntity {
       entry: json['entry'] ?? 0,
       ench: json['ench'] ?? 0,
       chance: json['chance'] ?? 0.0,
-      condition1: json['condition_1'] ?? 0,
-      condition2: json['condition_2'] ?? 0,
-      condition3: json['condition_3'] ?? 0,
     );
   }
 
@@ -32,9 +23,6 @@ class ItemEnchantmentTemplateEntity {
       'entry': entry,
       'ench': ench,
       'chance': chance,
-      'condition_1': condition1,
-      'condition_2': condition2,
-      'condition_3': condition3,
     };
   }
 
@@ -42,17 +30,11 @@ class ItemEnchantmentTemplateEntity {
     int? entry,
     int? ench,
     double? chance,
-    int? condition1,
-    int? condition2,
-    int? condition3,
   }) {
     return ItemEnchantmentTemplateEntity(
       entry: entry ?? this.entry,
       ench: ench ?? this.ench,
       chance: chance ?? this.chance,
-      condition1: condition1 ?? this.condition1,
-      condition2: condition2 ?? this.condition2,
-      condition3: condition3 ?? this.condition3,
     );
   }
 }
@@ -62,9 +44,6 @@ class BriefItemEnchantmentTemplateEntity {
   final int entry;
   final int ench;
   final double chance;
-  final int condition1;
-  final int condition2;
-  final int condition3;
   final String name;
   final String enchantment1Name;
   final String enchantment2Name;
@@ -76,9 +55,6 @@ class BriefItemEnchantmentTemplateEntity {
     this.entry = 0,
     this.ench = 0,
     this.chance = 0,
-    this.condition1 = 0,
-    this.condition2 = 0,
-    this.condition3 = 0,
     this.name = '',
     this.enchantment1Name = '',
     this.enchantment2Name = '',
@@ -94,9 +70,6 @@ class BriefItemEnchantmentTemplateEntity {
       entry: json['entry'] ?? 0,
       ench: json['ench'] ?? 0,
       chance: json['chance'] ?? 0.0,
-      condition1: json['condition_1'] ?? 0,
-      condition2: json['condition_2'] ?? 0,
-      condition3: json['condition_3'] ?? 0,
       name: json['Name_Lang_zhCN'] ?? '',
       enchantment1Name: json['Enchantment_1'] ?? '',
       enchantment2Name: json['Enchantment_2'] ?? '',

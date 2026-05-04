@@ -195,8 +195,8 @@ class PlayerCreateInfoSpellCustomEntity {
     return PlayerCreateInfoSpellCustomEntity(
       racemask: json['racemask'] ?? 0,
       classmask: json['classmask'] ?? 0,
-      spell: json['spell'] ?? 0,
-      note: json['note'] ?? '',
+      spell: json['Spell'] ?? 0,
+      note: json['Note'] ?? '',
     );
   }
 
@@ -204,8 +204,8 @@ class PlayerCreateInfoSpellCustomEntity {
     return {
       'racemask': racemask,
       'classmask': classmask,
-      'spell': spell,
-      'note': note,
+      'Spell': spell,
+      'Note': note,
     };
   }
 

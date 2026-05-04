@@ -16,9 +16,6 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
         'iet.entry',
         'iet.ench',
         'iet.chance',
-        'iet.condition_1',
-        'iet.condition_2',
-        'iet.condition_3',
         'dirp.Name_lang_zhCN',
         'dirp.Name',
         'dsie_1.Name_lang_zhCN AS Enchantment_1',
@@ -92,9 +89,6 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
         'iet.entry',
         'iet.ench',
         'iet.chance',
-        'iet.condition_1',
-        'iet.condition_2',
-        'iet.condition_3',
         'dirp.Name_lang_zhCN',
         'dirp.Name',
         'dsie_1.Name_lang_zhCN AS Enchantment_1',
@@ -209,9 +203,6 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
       entry: source.entry,
       ench: maxEnch + 1,
       chance: source.chance,
-      condition1: source.condition1,
-      condition2: source.condition2,
-      condition3: source.condition3,
     );
 
     await storeItemEnchantmentTemplate(newModel);

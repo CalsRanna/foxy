@@ -2,7 +2,6 @@
 class SpellGroupEntity {
   final int id;
   final int spellId;
-  final int specialFlag;
 
   // 关联字段
   final int stackRule;
@@ -11,7 +10,6 @@ class SpellGroupEntity {
   const SpellGroupEntity({
     this.id = 0,
     this.spellId = 0,
-    this.specialFlag = 0,
     this.stackRule = 0,
     this.description = '',
   });
@@ -20,7 +18,6 @@ class SpellGroupEntity {
     return SpellGroupEntity(
       id: json['id'] ?? 0,
       spellId: json['spell_id'] ?? 0,
-      specialFlag: json['special_flag'] ?? 0,
       stackRule: json['stack_rule'] ?? 0,
       description: json['description'] ?? '',
     );
@@ -33,14 +30,12 @@ class SpellGroupEntity {
   SpellGroupEntity copyWith({
     int? id,
     int? spellId,
-    int? specialFlag,
     int? stackRule,
     String? description,
   }) {
     return SpellGroupEntity(
       id: id ?? this.id,
       spellId: spellId ?? this.spellId,
-      specialFlag: specialFlag ?? this.specialFlag,
       stackRule: stackRule ?? this.stackRule,
       description: description ?? this.description,
     );

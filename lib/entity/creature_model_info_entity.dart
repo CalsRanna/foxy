@@ -4,6 +4,7 @@ class CreatureModelInfoEntity {
   final double combatReach;
   final int gender;
   final int displayIdOtherGender;
+  final int verifiedBuild;
 
   const CreatureModelInfoEntity({
     this.displayId = 0,
@@ -11,6 +12,7 @@ class CreatureModelInfoEntity {
     this.combatReach = 0.0,
     this.gender = 0,
     this.displayIdOtherGender = 0,
+    this.verifiedBuild = 0,
   });
 
   factory CreatureModelInfoEntity.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class CreatureModelInfoEntity {
       combatReach: (json['CombatReach'] ?? 0.0),
       gender: json['Gender'] ?? 0,
       displayIdOtherGender: json['DisplayID_Other_Gender'] ?? 0,
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
     );
   }
 
@@ -30,6 +33,7 @@ class CreatureModelInfoEntity {
       'CombatReach': combatReach,
       'Gender': gender,
       'DisplayID_Other_Gender': displayIdOtherGender,
+      'VerifiedBuild': verifiedBuild,
     };
   }
 
@@ -39,6 +43,7 @@ class CreatureModelInfoEntity {
     double? combatReach,
     int? gender,
     int? displayIdOtherGender,
+    int? verifiedBuild,
   }) {
     return CreatureModelInfoEntity(
       displayId: displayId ?? this.displayId,
@@ -46,6 +51,7 @@ class CreatureModelInfoEntity {
       combatReach: combatReach ?? this.combatReach,
       gender: gender ?? this.gender,
       displayIdOtherGender: displayIdOtherGender ?? this.displayIdOtherGender,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
   }
 }
