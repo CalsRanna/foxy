@@ -29,7 +29,7 @@ class CreatureTemplateAddonViewModel {
       final data = await repository.getCreatureTemplateAddon(creatureId.value);
       if (data != null) {
         addon.value = data;
-        initControllers(data);
+        _initSignals(data);
       }
     } catch (e) {
       LoggerUtil.instance.e('加载生物附加数据失败: $e');
@@ -73,7 +73,7 @@ class CreatureTemplateAddonViewModel {
   }
 
   /// 初始化 Controller 的值
-  void initControllers(CreatureTemplateAddonEntity data) {
+  void _initSignals(CreatureTemplateAddonEntity data) {
     pathId.value = data.pathId;
     mount.value = data.mount;
     emote.value = data.emote;

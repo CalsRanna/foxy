@@ -34,7 +34,7 @@ class VehicleRepository with RepositoryMixin {
     }
   }
 
-  Future<VehicleEntity?> getById(int id) async {
+  Future<VehicleEntity?> getVehicle(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return VehicleEntity.fromJson(result.toMap());

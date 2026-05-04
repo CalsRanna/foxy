@@ -75,7 +75,7 @@ class _PlayerCreateInfoSpellCustomViewState extends State<PlayerCreateInfoSpellC
           items: [
             ShadContextMenuItem(
               leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: () => viewModel.onDelete(context, spells[row]),
+              onPressed: () => viewModel.delete(context, spells[row]),
               child: Text('删除'),
             ),
           ],

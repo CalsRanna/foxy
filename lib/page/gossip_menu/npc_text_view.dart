@@ -192,7 +192,7 @@ class _NpcTextViewState extends State<NpcTextView> {
 
   Widget _buildActions() {
     final saveBtn = ShadButton(
-      onPressed: viewModel.onSave,
+      onPressed: viewModel.save,
       child: const Text('保存'),
     );
     final backBtn = ShadButton.outline(

@@ -113,7 +113,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
     }
   }
 
-  Future<CreatureSpellDataEntity?> getById(int id) async {
+  Future<CreatureSpellDataEntity?> getCreatureSpellData(int id) async {
     try {
       var result = await laconic.table(_table).where('ID', id).first();
       return CreatureSpellDataEntity.fromJson(result.toMap());

@@ -26,7 +26,7 @@ class PageTextDetailViewModel {
     try {
       page.value = await repository.getPageText(id);
       _initControllers(page.value!);
-      locales.value = await repository.getLocales(id);
+      locales.value = await repository.getPageTextLocales(id);
     } catch (e, s) {
       LoggerUtil.instance.e('加载页面文本(ID=$id)失败', error: e, stackTrace: s);
     }
@@ -42,31 +42,18 @@ class PageTextDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final data = _collect();
-      await repository.storePageText(data);
-      page.value = data;
-      _logActivity(ActivityActionType.create, data);
+      final existing = page.value;
+      if (existing != null) {
+        await repository.updatePageText(existing.id, data);
+        page.value = data;
+        _logActivity(ActivityActionType.update, data);
+      } else {
+        await repository.storePageText(data);
+        page.value = data;
+        _logActivity(ActivityActionType.create, data);
+      }
       if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('页面文本已保存')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
-    }
-  }
-
-  Future<void> update(BuildContext context) async {
-    final id = page.value?.id ?? 0;
-    if (id == 0) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('记录未加载，无法更新')));
-      return;
-    }
-    try {
-      final data = _collect();
-      await repository.updatePageText(id, data);
-      page.value = data;
-      _logActivity(ActivityActionType.update, data);
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
+      ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
     } catch (e) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));

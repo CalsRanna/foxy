@@ -39,7 +39,7 @@ class GossipMenuOptionViewModel {
     options.value = await _repository.getGossipMenuOptions(menuId: menuId);
   }
 
-  Future<void> onCreate() async {
+  Future<void> create() async {
     try {
       final blank = await _repository.createGossipMenuOption(
         menuId: currentMenuId.value,
@@ -55,7 +55,7 @@ class GossipMenuOptionViewModel {
     }
   }
 
-  Future<void> onEdit(int menuId, int optionId) async {
+  Future<void> edit(int menuId, int optionId) async {
     try {
       final existing = await _repository.getGossipMenuOption({
         'MenuID': menuId,
@@ -73,7 +73,7 @@ class GossipMenuOptionViewModel {
     }
   }
 
-  Future<void> onSave() async {
+  Future<void> save() async {
     try {
       final model = _collectFromControllers();
       if (creating.value) {
@@ -94,12 +94,12 @@ class GossipMenuOptionViewModel {
     }
   }
 
-  void onCancel() {
+  void cancel() {
     creating.value = false;
     editing.value = false;
   }
 
-  Future<void> onCopy(int menuId, int optionId) async {
+  Future<void> copy(int menuId, int optionId) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -119,7 +119,7 @@ class GossipMenuOptionViewModel {
     }
   }
 
-  Future<void> onDestroy(int menuId, int optionId) async {
+  Future<void> delete(int menuId, int optionId) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',

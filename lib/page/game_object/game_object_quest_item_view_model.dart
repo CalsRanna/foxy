@@ -54,14 +54,14 @@ class GameObjectQuestItemViewModel {
     return value;
   }
 
-  Future<void> create(BuildContext dialogContext) async {
+  Future<void> create(BuildContext context) async {
     try {
       resetForm();
       final nextIdx = await repository.getNextIdx(gameObjectEntry.value);
-      if (!dialogContext.mounted) return;
+      if (!context.mounted) return;
       idx.value = nextIdx;
       await showShadDialog(
-        context: dialogContext,
+        context: context,
         builder: (context) => _buildDialogForm(context, isNew: true),
       );
     } catch (e) {
@@ -70,17 +70,17 @@ class GameObjectQuestItemViewModel {
     }
   }
 
-  void edit(BuildContext dialogContext) {
+  void edit(BuildContext context) {
     final index = selectedIndex.value;
     if (index == null) return;
     fillForm(items.value[index]);
     showShadDialog(
-      context: dialogContext,
+      context: context,
       builder: (context) => _buildDialogForm(context, isNew: false),
     );
   }
 
-  Future<void> copy(BuildContext dialogContext) async {
+  Future<void> copy(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null) return;
     try {
@@ -116,23 +116,23 @@ class GameObjectQuestItemViewModel {
     }
   }
 
-  Future<void> save(BuildContext dialogContext) async {
+  Future<void> save(BuildContext context) async {
     try {
       final questItem = collectFromForm();
       await repository.storeGameObjectQuestItem(questItem);
       await load();
-      if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+      if (context.mounted) Navigator.of(context).pop();
     } catch (e) {
       DialogUtil.instance.error('保存失败: $e');
     }
   }
 
-  Future<void> update(BuildContext dialogContext) async {
+  Future<void> update(BuildContext context) async {
     try {
       final questItem = collectFromForm();
       await repository.updateGameObjectQuestItem(questItem);
       await load();
-      if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+      if (context.mounted) Navigator.of(context).pop();
     } catch (e) {
       DialogUtil.instance.error('更新失败: $e');
     }
@@ -160,7 +160,7 @@ class GameObjectQuestItemViewModel {
     itemIdController.dispose();
   }
 
-  Widget _buildDialogForm(BuildContext dialogContext, {required bool isNew}) {
+  Widget _buildDialogForm(BuildContext context, {required bool isNew}) {
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 500),
       child: Column(
@@ -195,11 +195,11 @@ class GameObjectQuestItemViewModel {
             spacing: 12,
             children: [
               ShadButton.outline(
-                onPressed: () => Navigator.of(dialogContext).pop(),
+                onPressed: () => Navigator.of(context).pop(),
                 child: Text('取消'),
               ),
               ShadButton(
-                onPressed: () => isNew ? save(dialogContext) : update(dialogContext),
+                onPressed: () => isNew ? save(context) : update(context),
                 child: Text('保存'),
               ),
             ],

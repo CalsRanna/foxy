@@ -61,7 +61,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   Widget _buildList() {
     final createBtn = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: viewModel.onCreate,
+      onPressed: viewModel.create,
       child: Text('新增'),
     );
     final toolbar = Row(children: [createBtn]);
@@ -116,7 +116,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
           },
           onRowDoubleTap: (row) {
             final o = options[row];
-            viewModel.onEdit(o.menuId, o.optionId);
+            viewModel.edit(o.menuId, o.optionId);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final o = options[row];
@@ -126,17 +126,17 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.onEdit(o.menuId, o.optionId),
+                  onPressed: () => viewModel.edit(o.menuId, o.optionId),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.onCopy(o.menuId, o.optionId),
+                  onPressed: () => viewModel.copy(o.menuId, o.optionId),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.onDestroy(o.menuId, o.optionId),
+                  onPressed: () => viewModel.delete(o.menuId, o.optionId),
                   child: Text('删除'),
                 ),
               ],
@@ -276,11 +276,11 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
     );
 
     final saveBtn = ShadButton(
-      onPressed: viewModel.onSave,
+      onPressed: viewModel.save,
       child: const Text('保存'),
     );
     final cancelBtn = ShadButton.outline(
-      onPressed: viewModel.onCancel,
+      onPressed: viewModel.cancel,
       child: Text('返回'),
     );
     final actions = ShadCard(

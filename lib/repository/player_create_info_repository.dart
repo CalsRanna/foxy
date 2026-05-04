@@ -42,31 +42,31 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   Future<void> updatePlayerCreateInfo(
-    Map<String, dynamic> credential,
+    Map<String, dynamic> id,
     PlayerCreateInfoEntity info,
   ) async {
     var json = info.toJson();
     json.remove('race');
     json.remove('class');
     var builder = laconic.table('playercreateinfo');
-    for (final entry in credential.entries) {
+    for (final entry in id.entries) {
       builder = builder.where(entry.key, entry.value);
     }
     await builder.update(json);
   }
 
-  Future<void> destroyPlayerCreateInfo(Map<String, dynamic> credential) async {
+  Future<void> destroyPlayerCreateInfo(Map<String, dynamic> id) async {
     var builder = laconic.table('playercreateinfo');
-    for (final entry in credential.entries) {
+    for (final entry in id.entries) {
       builder = builder.where(entry.key, entry.value);
     }
     await builder.delete();
   }
 
-  Future<void> copyPlayerCreateInfo(Map<String, dynamic> credential) async {
+  Future<void> copyPlayerCreateInfo(Map<String, dynamic> id) async {
     var source = await getPlayerCreateInfo(
-      credential['race'] as int,
-      credential['class'] as int,
+      id['race'] as int,
+      id['class'] as int,
     );
     var json = source.toJson();
     json['class'] = (json['class'] as int) + 1;

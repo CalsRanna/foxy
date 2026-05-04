@@ -32,10 +32,10 @@ class QuestOfferRewardViewModel {
       final existing = await repository.getQuestOfferReward(questId);
       if (existing != null) {
         _originalId = existing.id;
-        _applyToSignals(existing);
+        _initSignals(existing);
       } else {
         final blank = await repository.createQuestOfferReward(questId);
-        _applyToSignals(blank);
+        _initSignals(blank);
       }
       id.value = questId;
     } catch (e) {
@@ -69,7 +69,7 @@ class QuestOfferRewardViewModel {
     routerFacade.goBack();
   }
 
-  void _applyToSignals(QuestOfferRewardEntity model) {
+  void _initSignals(QuestOfferRewardEntity model) {
     emote1.value = model.emote1;
     emote2.value = model.emote2;
     emote3.value = model.emote3;

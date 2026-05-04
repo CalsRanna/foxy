@@ -31,8 +31,6 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    final isNew = widget.race == null || widget.playerClass == null;
-
     return SingleChildScrollView(
       padding: EdgeInsets.only(top: 16),
       child: Column(
@@ -56,7 +54,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
           Row(
             children: [
               ShadButton(
-                onPressed: () => isNew ? viewModel.save(context) : viewModel.update(context),
+                onPressed: () => viewModel.save(context),
                 child: Text('保存'),
               ),
               SizedBox(width: 8),

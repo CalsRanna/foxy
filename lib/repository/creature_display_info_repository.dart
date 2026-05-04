@@ -82,7 +82,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<CreatureDisplayInfoEntity?> getById(int id) async {
+  Future<CreatureDisplayInfoEntity?> getCreatureDisplayInfo(int id) async {
     try {
       var builder = laconic.table('$_table AS cdi');
       builder = builder.select([

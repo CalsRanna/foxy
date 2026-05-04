@@ -58,7 +58,15 @@ ViewModel 通过 `GetIt.instance.get<T>()` 获取, 使用 signals 的 `signal()`
 - **Entity**: 纯数据类, 字段对应 MySQL 列名 (snake_case), 包含 `fromJson(Map)` 工厂构造函数和 `toJson()` 方法
 - **Brief 实体** (如 `BriefCreatureTemplateEntity`): 列表页用的精简版实体, 通过 LEFT JOIN locale 表获取本地化字段
 - **Filter 实体** (如 `CreatureTemplateFilterEntity`): 封装列表筛选条件
-- **Repository**: 通过 `RepositoryMixin` 混入获得 `laconic` 实例和 `kPageSize = 50` 常量
+- **Repository**: 通过 `RepositoryMixin` 混入获得 `laconic` 实例和 `kPageSize = 50` 常量。方法命名遵循以下约定:
+  - 列表查询: `get<Entities>({FilterEntity? filter, int page = 1})` — filter 封装为实体, page 有默认值
+  - 计数: `count<Entities>({FilterEntity? filter})`
+  - 单条查询: `get<Entity>(int id)` 或 `get<Entity>(Map<String, dynamic> id)` (复合主键)
+  - 新增: `store<Entity>(Entity entity)`
+  - 更新: `update<Entity>(dynamic id, Entity entity)`
+  - 删除: `destroy<Entity>(dynamic id)`
+  - 复制: `copy<Entity>(dynamic id)`
+  - 子表本地化: `get<Entity>Locales(int id)` / `save<Entity>Locales(int id, List<LocaleEntity> locales)`
 
 ### 数据库层
 

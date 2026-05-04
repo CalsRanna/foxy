@@ -77,7 +77,7 @@ class PlayerCreateInfoActionViewModel {
     }
   }
 
-  Future<void> onDelete(
+  Future<void> delete(
     BuildContext context,
     PlayerCreateInfoActionEntity item,
   ) async {

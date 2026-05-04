@@ -73,7 +73,7 @@ class GameObjectTemplateListViewModel {
     }
   }
 
-  void navigateGameObjectTemplateDetailPage(
+  void navigateToDetail(
     BuildContext context, {
     int? entry,
     String? name,

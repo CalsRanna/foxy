@@ -86,14 +86,14 @@ class GameObjectLootTemplateViewModel {
   int _getSelectValue(ShadSelectController<int> controller) =>
       controller.value.firstOrNull ?? 0;
 
-  Future<void> create(BuildContext dialogContext) async {
+  Future<void> create(BuildContext context) async {
     try {
       resetForm();
       final nextItemId = await repository.getNextItemId(gameObjectId.value);
-      if (!dialogContext.mounted) return;
+      if (!context.mounted) return;
       itemController.text = nextItemId.toString();
       await showShadDialog(
-        context: dialogContext,
+        context: context,
         builder: (context) => _buildDialogForm(context),
       );
     } catch (e) {
@@ -102,17 +102,17 @@ class GameObjectLootTemplateViewModel {
     }
   }
 
-  void edit(BuildContext dialogContext) {
+  void edit(BuildContext context) {
     final index = selectedIndex.value;
     if (index == null) return;
     fillForm(items.value[index]);
     showShadDialog(
-      context: dialogContext,
+      context: context,
       builder: (context) => _buildDialogForm(context),
     );
   }
 
-  Future<void> copy(BuildContext dialogContext) async {
+  Future<void> copy(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null) return;
     try {
@@ -147,23 +147,23 @@ class GameObjectLootTemplateViewModel {
     }
   }
 
-  Future<void> save(BuildContext dialogContext) async {
+  Future<void> save(BuildContext context) async {
     try {
       final loot = collectFromForm();
       await repository.storeLootTemplate(loot);
       await load();
-      if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+      if (context.mounted) Navigator.of(context).pop();
     } catch (e) {
       DialogUtil.instance.error('保存失败: $e');
     }
   }
 
-  Future<void> update(BuildContext dialogContext) async {
+  Future<void> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
       await repository.updateLootTemplate(loot, oldItem: editingItem);
       await load();
-      if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+      if (context.mounted) Navigator.of(context).pop();
     } catch (e) {
       DialogUtil.instance.error('更新失败: $e');
     }
@@ -193,7 +193,7 @@ class GameObjectLootTemplateViewModel {
     commentController.dispose();
   }
 
-  Widget _buildDialogForm(BuildContext dialogContext) {
+  Widget _buildDialogForm(BuildContext context) {
     final isNew = editingItem == null;
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 500),
@@ -271,11 +271,11 @@ class GameObjectLootTemplateViewModel {
             spacing: 12,
             children: [
               ShadButton.outline(
-                onPressed: () => Navigator.of(dialogContext).pop(),
+                onPressed: () => Navigator.of(context).pop(),
                 child: Text('取消'),
               ),
               ShadButton(
-                onPressed: () => isNew ? save(dialogContext) : update(dialogContext),
+                onPressed: () => isNew ? save(context) : update(context),
                 child: Text('保存'),
               ),
             ],

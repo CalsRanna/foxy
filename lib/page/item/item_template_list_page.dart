@@ -181,7 +181,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: viewModel.navigateToNew,
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final templates = viewModel.templates.value;
@@ -241,8 +241,8 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              templates[row].entry,
-              templates[row].displayName,
+              entry: templates[row].entry,
+              name: templates[row].displayName,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -254,8 +254,8 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      templates[row].entry,
-                      templates[row].displayName,
+                      entry: templates[row].entry,
+                      name: templates[row].displayName,
                     );
                   },
                   child: Text('编辑'),

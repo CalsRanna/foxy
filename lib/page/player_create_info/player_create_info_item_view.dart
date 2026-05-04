@@ -73,7 +73,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
           items: [
             ShadContextMenuItem(
               leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: () => viewModel.onDelete(context, items[row]),
+              onPressed: () => viewModel.delete(context, items[row]),
               child: Text('删除'),
             ),
           ],

@@ -140,25 +140,18 @@ class ItemTemplateListViewModel {
     }
   }
 
-  void navigateToDetail(int entry, String name) {
+  void navigateToDetail({int? entry, String? name}) {
     final routerFacade = GetIt.instance.get<RouterFacade>();
+    final id = entry != null ? 'item_$entry' : 'item_new';
+    final label = name?.isNotEmpty == true ? name! : '新建物品';
     routerFacade.navigateToDetail(
-      id: 'item_$entry',
-      label: name,
+      id: id,
+      label: label,
       route: ItemTemplateDetailRoute(entry: entry, name: name),
       parentMenu: RouterMenu.itemTemplate,
     );
   }
 
-  void navigateToNew() {
-    final routerFacade = GetIt.instance.get<RouterFacade>();
-    routerFacade.navigateToDetail(
-      id: 'item_new',
-      label: '新建物品',
-      route: ItemTemplateDetailRoute(),
-      parentMenu: RouterMenu.itemTemplate,
-    );
-  }
 
   Future<List<BriefItemTemplateEntity>> _fetchItems() async {
     final filter = ItemTemplateFilterEntity(

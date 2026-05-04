@@ -50,29 +50,20 @@ class PlayerCreateInfoDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    try {
-      final data = _collect();
-      await repository.storePlayerCreateInfo(data);
-      info.value = data;
-      _logActivity(ActivityActionType.create, data);
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('出生信息已保存')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
-    }
-  }
-
-  Future<void> update(BuildContext context) async {
     final current = info.value;
-    if (current == null) return;
     try {
       final data = _collect();
-      await repository.updatePlayerCreateInfo(current.buildCredential(), data);
-      info.value = data;
-      _logActivity(ActivityActionType.update, data);
+      if (current != null) {
+        await repository.updatePlayerCreateInfo(current.buildCredential(), data);
+        info.value = data;
+        _logActivity(ActivityActionType.update, data);
+      } else {
+        await repository.storePlayerCreateInfo(data);
+        info.value = data;
+        _logActivity(ActivityActionType.create, data);
+      }
       if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
+      ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
     } catch (e) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));

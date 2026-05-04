@@ -77,7 +77,7 @@ class _GameObjectTemplateListPageState
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus),
-      onPressed: () => viewModel.navigateGameObjectTemplateDetailPage(context),
+      onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );
     final templates = viewModel.templates.value;
@@ -121,7 +121,7 @@ class _GameObjectTemplateListPageState
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateGameObjectTemplateDetailPage(
+            viewModel.navigateToDetail(
               context,
               entry: templates[row].entry,
               name: templates[row].displayName,
@@ -135,7 +135,7 @@ class _GameObjectTemplateListPageState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateGameObjectTemplateDetailPage(
+                    viewModel.navigateToDetail(
                       context,
                       entry: templates[row].entry,
                       name: templates[row].displayName,
