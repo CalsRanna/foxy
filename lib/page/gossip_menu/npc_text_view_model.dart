@@ -14,6 +14,8 @@ class NpcTextViewModel {
   final _localeRepository = NpcTextLocaleRepository();
 
   final _controllers = <String, TextEditingController>{};
+  final _emoteSignals = <String, Signal<int>>{};
+  final _broadcastSignals = <int, Signal<int>>{};
 
   final creating = signal(false);
   final currentTextId = signal(0);
@@ -22,6 +24,14 @@ class NpcTextViewModel {
   /// 按需获取字段 controller（惰性初始化）
   TextEditingController controllerOf(String key) {
     return _controllers.putIfAbsent(key, () => TextEditingController());
+  }
+
+  Signal<int> emoteSignalOf(String key) {
+    return _emoteSignals.putIfAbsent(key, () => signal(0));
+  }
+
+  Signal<int> broadcastSignalOf(int n) {
+    return _broadcastSignals.putIfAbsent(n, () => signal<int>(0));
   }
 
   /// 加载指定 textId 的数据到所有 controller
@@ -102,6 +112,12 @@ class NpcTextViewModel {
     for (final c in _controllers.values) {
       c.text = '';
     }
+    for (final s in _emoteSignals.values) {
+      s.value = 0;
+    }
+    for (final s in _broadcastSignals.values) {
+      s.value = 0;
+    }
   }
 
   void _applyMainToControllers(NpcTextEntity m) {
@@ -115,7 +131,7 @@ class NpcTextViewModel {
       controllerOf('text${n}_1').text = e.text1;
       controllerOf('BroadcastTextID$n').text = e.broadcastTextId.toString();
       for (var i = 0; i < 6; i++) {
-        controllerOf('em${n}_$i').text = e.emotes[i].toString();
+        emoteSignalOf('em${n}_$i').value = e.emotes[i];
       }
     }
   }
@@ -140,11 +156,10 @@ class NpcTextViewModel {
           probability: double.tryParse(controllerOf('Probability$n').text) ?? 0,
           text0: controllerOf('text${n}_0').text,
           text1: controllerOf('text${n}_1').text,
-          broadcastTextId:
-              int.tryParse(controllerOf('BroadcastTextID$n').text) ?? 0,
+          broadcastTextId: broadcastSignalOf(n).value,
           emotes: List.generate(
             6,
-            (i) => int.tryParse(controllerOf('em${n}_$i').text) ?? 0,
+            (i) => emoteSignalOf('em${n}_$i').value,
           ),
         );
       }),

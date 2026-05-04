@@ -184,7 +184,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           FormItem(
             label: '技能',
             child: SpellSelector(
-              controller: viewModel.spellController,
+              signal: viewModel.spell,
               placeholder: 'Spell',
             ),
           ),

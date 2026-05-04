@@ -29,7 +29,7 @@ class QuestTemplateDetailViewModel {
 
   /// Basic (selector controllers — KEEP)
   final questSortIdController = TextEditingController();
-  final questInfoIdController = TextEditingController();
+  final questInfoId = signal<int>(0);
 
   /// Reward (ints)
   final rewardNextQuest = signal<int>(0);
@@ -84,8 +84,8 @@ class QuestTemplateDetailViewModel {
   final poiY = signal<double>(0.0);
   final poiPriority = signal<int>(0);
 
-  /// RewardTitle (selector controller) / Talents (ints)
-  final rewardTitleController = TextEditingController();
+  /// RewardTitle (selector signal) / Talents (ints)
+  final rewardTitle = signal<int>(0);
   final rewardTalents = signal<int>(0);
   final rewardArenaPoints = signal<int>(0);
 
@@ -195,7 +195,7 @@ class QuestTemplateDetailViewModel {
     questLevel.value = t.questLevel;
     minLevel.value = t.minLevel;
     questSortIdController.text = t.questSortId.toString();
-    questInfoIdController.text = t.questInfoId.toString();
+    questInfoId.value = t.questInfoId;
     suggestedGroupNum.value = t.suggestedGroupNum;
     requiredFactionId1.value = t.requiredFactionId1;
     requiredFactionId2.value = t.requiredFactionId2;
@@ -250,7 +250,7 @@ class QuestTemplateDetailViewModel {
     poiY.value = t.poiY;
     poiPriority.value = t.poiPriority;
 
-    rewardTitleController.text = t.rewardTitle.toString();
+    rewardTitle.value = t.rewardTitle;
     rewardTalents.value = t.rewardTalents;
     rewardArenaPoints.value = t.rewardArenaPoints;
 
@@ -316,7 +316,7 @@ class QuestTemplateDetailViewModel {
       questLevel: questLevel.value,
       minLevel: minLevel.value,
       questSortId: _parseInt(questSortIdController.text),
-      questInfoId: _parseInt(questInfoIdController.text),
+      questInfoId: questInfoId.value,
       suggestedGroupNum: suggestedGroupNum.value,
       requiredFactionId1: requiredFactionId1.value,
       requiredFactionId2: requiredFactionId2.value,
@@ -365,7 +365,7 @@ class QuestTemplateDetailViewModel {
       poiX: poiX.value,
       poiY: poiY.value,
       poiPriority: poiPriority.value,
-      rewardTitle: _parseInt(rewardTitleController.text),
+      rewardTitle: rewardTitle.value,
       rewardTalents: rewardTalents.value,
       rewardArenaPoints: rewardArenaPoints.value,
       rewardFactionId1: rewardFactionId1.value,
@@ -441,8 +441,6 @@ class QuestTemplateDetailViewModel {
 
   void dispose() {
     questSortIdController.dispose();
-    questInfoIdController.dispose();
-    rewardTitleController.dispose();
     logTitleController.dispose();
     logDescriptionController.dispose();
     questDescriptionController.dispose();

@@ -14,52 +14,39 @@ class CreatureTemplateSpellViewModel {
   final creatureId = signal(0);
   final items = signal<List<CreatureTemplateSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  // 表单控制器
   final index = signal<int>(0);
-  final spellController = TextEditingController();
+  final spell = signal<int>(0);
   final verifiedBuild = signal<int>(0);
 
   final repository = CreatureTemplateSpellRepository();
 
-  /// 加载数据
   Future<void> load() async {
     final data = await repository.getCreatureTemplateSpells(creatureId.value);
     items.value = data;
     selectedIndex.value = null;
   }
 
-  /// 重置表单
   void resetForm() {
     index.value = 0;
-    spellController.clear();
+    spell.value = 0;
     verifiedBuild.value = 0;
   }
 
-  /// 填充表单
   void fillForm(CreatureTemplateSpellEntity spell) {
     index.value = spell.index;
-    spellController.text = spell.spell.toString();
+    this.spell.value = spell.spell;
     verifiedBuild.value = spell.verifiedBuild;
   }
 
-  /// 从表单收集数据
   CreatureTemplateSpellEntity collectFromForm() {
     final spell = CreatureTemplateSpellEntity();
     spell.creatureID = creatureId.value;
     spell.index = index.value;
-    spell.spell = _parseInt(spellController.text);
+    spell.spell = this.spell.value;
     spell.verifiedBuild = verifiedBuild.value;
     return spell;
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  /// 创建新记录
   Future<void> create() async {
     try {
       final nextIndex = await repository.getNextIndex(creatureId.value);
@@ -72,7 +59,6 @@ class CreatureTemplateSpellViewModel {
     }
   }
 
-  /// 编辑选中记录
   void edit() {
     final idx = selectedIndex.value;
     if (idx == null || idx < 0 || idx >= items.value.length) return;
@@ -81,7 +67,6 @@ class CreatureTemplateSpellViewModel {
     fillForm(spell);
   }
 
-  /// 复制记录
   Future<void> copy(BuildContext context) async {
     final idx = selectedIndex.value;
     if (idx == null || idx < 0 || idx >= items.value.length) return;
@@ -100,7 +85,6 @@ class CreatureTemplateSpellViewModel {
     }
   }
 
-  /// 删除记录
   Future<void> delete(BuildContext context) async {
     final idx = selectedIndex.value;
     if (idx == null || idx < 0 || idx >= items.value.length) return;
@@ -143,7 +127,6 @@ class CreatureTemplateSpellViewModel {
     }
   }
 
-  /// 保存记录
   Future<void> save(BuildContext context) async {
     try {
       final spell = collectFromForm();
@@ -159,7 +142,6 @@ class CreatureTemplateSpellViewModel {
     }
   }
 
-  /// 更新记录
   Future<void> update(BuildContext context) async {
     try {
       final spell = collectFromForm();
@@ -175,14 +157,12 @@ class CreatureTemplateSpellViewModel {
     }
   }
 
-  /// 选择行
   void selectRow(int index) {
     if (index >= 0 && index < items.value.length) {
       selectedIndex.value = index;
     }
   }
 
-  /// 初始化
   Future<void> initSignals({required int creatureId}) async {
     try {
       this.creatureId.value = creatureId;
@@ -193,13 +173,9 @@ class CreatureTemplateSpellViewModel {
     }
   }
 
-  /// 退出页面
   void pop() {
     routerFacade.goBack();
   }
 
-  /// 清理资源
-  void dispose() {
-    spellController.dispose();
-  }
+  void dispose() {}
 }

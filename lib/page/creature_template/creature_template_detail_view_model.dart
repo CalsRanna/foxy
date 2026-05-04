@@ -21,20 +21,20 @@ class CreatureTemplateDetailViewModel {
   final unitClassController = ShadSelectController<int>();
   final rankController = ShadSelectController<int>();
   final racialLeaderController = ShadSelectController<int>();
-  final factionController = TextEditingController();
+  final faction = signal<int>(0);
   final familyController = ShadSelectController<int>();
   final typeController = ShadSelectController<int>();
   final regenerateHealthController = ShadSelectController<int>();
-  final petSpellDataIdController = TextEditingController();
-  final vehicleIdController = TextEditingController();
-  final gossipMenuIdController = TextEditingController();
+  final petSpellDataId = signal<int>(0);
+  final vehicleId = signal<int>(0);
+  final gossipMenuId = signal<int>(0);
 
-  final npcFlagController = TextEditingController();
-  final typeFlagController = TextEditingController();
-  final dynamicFlagController = TextEditingController();
-  final extraFlagController = TextEditingController();
-  final unitFlagController = TextEditingController();
-  final unitFlag2Controller = TextEditingController();
+  final npcFlag = signal<int>(0);
+  final typeFlag = signal<int>(0);
+  final dynamicFlag = signal<int>(0);
+  final extraFlag = signal<int>(0);
+  final unitFlag = signal<int>(0);
+  final unitFlag2 = signal<int>(0);
 
   final creatureImmunitiesId = signal<int>(0);
 
@@ -56,23 +56,23 @@ class CreatureTemplateDetailViewModel {
 
   final minGold = signal<int>(0);
   final maxGold = signal<int>(0);
-  final lootController = TextEditingController();
-  final pickpocketLootController = TextEditingController();
-  final skinLootController = TextEditingController();
+  final lootId = signal<int>(0);
+  final pickpocketLoot = signal<int>(0);
+  final skinLoot = signal<int>(0);
 
-  final killCredit1Controller = TextEditingController();
-  final killCredit2Controller = TextEditingController();
-  final difficultyEntry1Controller = TextEditingController();
-  final difficultyEntry2Controller = TextEditingController();
-  final difficultyEntry3Controller = TextEditingController();
+  final killCredit1 = signal<int>(0);
+  final killCredit2 = signal<int>(0);
+  final difficultyEntry1 = signal<int>(0);
+  final difficultyEntry2 = signal<int>(0);
+  final difficultyEntry3 = signal<int>(0);
+  final aiNameController = TextEditingController();
+  final scriptNameController = TextEditingController();
 
   final movementId = signal<int>(0);
   final movementTypeController = ShadSelectController<int>();
   final hoverHeight = signal<double>(0.0);
   final detectionRange = signal<double>(0.0);
 
-  final aiNameController = TextEditingController();
-  final scriptNameController = TextEditingController();
   final verifiedBuild = signal<int>(0);
 
   final entry = signal(0);
@@ -120,19 +120,19 @@ class CreatureTemplateDetailViewModel {
       unitClass: _getSelectValue(unitClassController),
       rank: _getSelectValue(rankController),
       racialLeader: _getSelectValue(racialLeaderController),
-      faction: _parseInt(factionController.text),
+      faction: faction.value,
       family: _getSelectValue(familyController),
       type: _getSelectValue(typeController),
       regenHealth: _getSelectValue(regenerateHealthController),
-      petSpellDataId: _parseInt(petSpellDataIdController.text),
-      vehicleId: _parseInt(vehicleIdController.text),
-      gossipMenuId: _parseInt(gossipMenuIdController.text),
-      npcFlag: _parseInt(npcFlagController.text),
-      typeFlags: _parseInt(typeFlagController.text),
-      dynamicFlags: _parseInt(dynamicFlagController.text),
-      flagsExtra: _parseInt(extraFlagController.text),
-      unitFlags: _parseInt(unitFlagController.text),
-      unitFlags2: _parseInt(unitFlag2Controller.text),
+      petSpellDataId: petSpellDataId.value,
+      vehicleId: vehicleId.value,
+      gossipMenuId: gossipMenuId.value,
+      npcFlag: npcFlag.value,
+      typeFlags: typeFlag.value,
+      dynamicFlags: dynamicFlag.value,
+      flagsExtra: extraFlag.value,
+      unitFlags: unitFlag.value,
+      unitFlags2: unitFlag2.value,
       creatureImmunitiesId: creatureImmunitiesId.value,
       exp: _getSelectValue(expController),
       damageSchool: _getSelectValue(damageSchoolController),
@@ -151,14 +151,14 @@ class CreatureTemplateDetailViewModel {
       speedFlight: speedFlight.value,
       minGold: minGold.value,
       maxGold: maxGold.value,
-      lootId: _parseInt(lootController.text),
-      pickpocketLoot: _parseInt(pickpocketLootController.text),
-      skinLoot: _parseInt(skinLootController.text),
-      killCredit1: _parseInt(killCredit1Controller.text),
-      killCredit2: _parseInt(killCredit2Controller.text),
-      difficultyEntry1: _parseInt(difficultyEntry1Controller.text),
-      difficultyEntry2: _parseInt(difficultyEntry2Controller.text),
-      difficultyEntry3: _parseInt(difficultyEntry3Controller.text),
+      lootId: lootId.value,
+      pickpocketLoot: pickpocketLoot.value,
+      skinLoot: skinLoot.value,
+      killCredit1: killCredit1.value,
+      killCredit2: killCredit2.value,
+      difficultyEntry1: difficultyEntry1.value,
+      difficultyEntry2: difficultyEntry2.value,
+      difficultyEntry3: difficultyEntry3.value,
       movementId: movementId.value,
       movementType: _getSelectValue(movementTypeController),
       hoverHeight: hoverHeight.value,
@@ -187,33 +187,12 @@ class CreatureTemplateDetailViewModel {
     unitClassController.dispose();
     rankController.dispose();
     racialLeaderController.dispose();
-    factionController.dispose();
     familyController.dispose();
     typeController.dispose();
     regenerateHealthController.dispose();
-    petSpellDataIdController.dispose();
-    vehicleIdController.dispose();
-    gossipMenuIdController.dispose();
-
-    npcFlagController.dispose();
-    typeFlagController.dispose();
-    dynamicFlagController.dispose();
-    extraFlagController.dispose();
-    unitFlagController.dispose();
-    unitFlag2Controller.dispose();
 
     expController.dispose();
     damageSchoolController.dispose();
-
-    lootController.dispose();
-    pickpocketLootController.dispose();
-    skinLootController.dispose();
-
-    killCredit1Controller.dispose();
-    killCredit2Controller.dispose();
-    difficultyEntry1Controller.dispose();
-    difficultyEntry2Controller.dispose();
-    difficultyEntry3Controller.dispose();
 
     movementTypeController.dispose();
 
@@ -243,20 +222,20 @@ class CreatureTemplateDetailViewModel {
     unitClassController.value = {template.unitClass};
     rankController.value = {template.rank};
     racialLeaderController.value = {template.racialLeader};
-    factionController.text = template.faction.toString();
+    faction.value = template.faction;
     familyController.value = {template.family};
     typeController.value = {template.type};
     regenerateHealthController.value = {template.regenHealth};
-    petSpellDataIdController.text = template.petSpellDataId.toString();
-    vehicleIdController.text = template.vehicleId.toString();
-    gossipMenuIdController.text = template.gossipMenuId.toString();
+    petSpellDataId.value = template.petSpellDataId;
+    vehicleId.value = template.vehicleId;
+    gossipMenuId.value = template.gossipMenuId;
 
-    npcFlagController.text = template.npcFlag.toString();
-    typeFlagController.text = template.typeFlags.toString();
-    dynamicFlagController.text = template.dynamicFlags.toString();
-    extraFlagController.text = template.flagsExtra.toString();
-    unitFlagController.text = template.unitFlags.toString();
-    unitFlag2Controller.text = template.unitFlags2.toString();
+    npcFlag.value = template.npcFlag;
+    typeFlag.value = template.typeFlags;
+    dynamicFlag.value = template.dynamicFlags;
+    extraFlag.value = template.flagsExtra;
+    unitFlag.value = template.unitFlags;
+    unitFlag2.value = template.unitFlags2;
 
     creatureImmunitiesId.value = template.creatureImmunitiesId;
 
@@ -278,15 +257,15 @@ class CreatureTemplateDetailViewModel {
 
     minGold.value = template.minGold;
     maxGold.value = template.maxGold;
-    lootController.text = template.lootId.toString();
-    pickpocketLootController.text = template.pickpocketLoot.toString();
-    skinLootController.text = template.skinLoot.toString();
+    lootId.value = template.lootId;
+    pickpocketLoot.value = template.pickpocketLoot;
+    skinLoot.value = template.skinLoot;
 
-    killCredit1Controller.text = template.killCredit1.toString();
-    killCredit2Controller.text = template.killCredit2.toString();
-    difficultyEntry1Controller.text = template.difficultyEntry1.toString();
-    difficultyEntry2Controller.text = template.difficultyEntry2.toString();
-    difficultyEntry3Controller.text = template.difficultyEntry3.toString();
+    killCredit1.value = template.killCredit1;
+    killCredit2.value = template.killCredit2;
+    difficultyEntry1.value = template.difficultyEntry1;
+    difficultyEntry2.value = template.difficultyEntry2;
+    difficultyEntry3.value = template.difficultyEntry3;
 
     movementId.value = template.movementId;
     movementTypeController.value = {template.movementType};

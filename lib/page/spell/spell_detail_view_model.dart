@@ -23,8 +23,8 @@ class SpellDetailViewModel {
   final auraDescriptionLangFlags = signal<int>(0);
 
   // === 图标/视觉 ===
-  final spellIconIDController = TextEditingController();
-  final activeIconIDController = TextEditingController();
+  final spellIconID = signal<int>(0);
+  final activeIconID = signal<int>(0);
   final spellVisualID0 = signal<int>(0);
   final spellVisualID1 = signal<int>(0);
 
@@ -38,8 +38,8 @@ class SpellDetailViewModel {
 
   // === 施法参数 ===
   final castingTimeIndex = signal<int>(0);
-  final durationIndexController = TextEditingController();
-  final rangeIndexController = TextEditingController();
+  final durationIndex = signal<int>(0);
+  final rangeIndex = signal<int>(0);
   final spellDescriptionVariableID = signal<int>(0);
 
   // === 等级 ===
@@ -67,7 +67,7 @@ class SpellDetailViewModel {
   final speed = signal<double>(0.0);
 
   // === 需求 ===
-  final requiredAreasIDController = TextEditingController();
+  final requiredAreasID = signal<int>(0);
   final requiresSpellFocus = signal<int>(0);
   final facingCasterFlags = signal<int>(0);
 
@@ -264,8 +264,8 @@ class SpellDetailViewModel {
       auraDescriptionLangFlags: auraDescriptionLangFlags.value,
 
       // === 图标/视觉 ===
-      spellIconID: _parseInt(spellIconIDController.text),
-      activeIconID: _parseInt(activeIconIDController.text),
+      spellIconID: spellIconID.value,
+      activeIconID: activeIconID.value,
       spellVisualID0: spellVisualID0.value,
       spellVisualID1: spellVisualID1.value,
 
@@ -279,8 +279,8 @@ class SpellDetailViewModel {
 
       // === 施法参数 ===
       castingTimeIndex: castingTimeIndex.value,
-      durationIndex: _parseInt(durationIndexController.text),
-      rangeIndex: _parseInt(rangeIndexController.text),
+      durationIndex: durationIndex.value,
+      rangeIndex: rangeIndex.value,
       spellDescriptionVariableID: spellDescriptionVariableID.value,
 
       // === 等级 ===
@@ -308,7 +308,7 @@ class SpellDetailViewModel {
       speed: speed.value,
 
       // === 需求 ===
-      requiredAreasID: _parseInt(requiredAreasIDController.text),
+      requiredAreasID: requiredAreasID.value,
       requiresSpellFocus: requiresSpellFocus.value,
       facingCasterFlags: facingCasterFlags.value,
 
@@ -465,13 +465,6 @@ class SpellDetailViewModel {
     return t;
   }
 
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
   void _logActivity(ActivityActionType action, SpellEntity t) {
     final log = ActivityLogEntity(
       module: 'spell',
@@ -491,14 +484,10 @@ class SpellDetailViewModel {
     auraDescriptionLangZhCNController.dispose();
 
     // === 图标/视觉 ===
-    spellIconIDController.dispose();
-    activeIconIDController.dispose();
 
     // === 分类/类型 ===
 
     // === 施法参数 ===
-    durationIndexController.dispose();
-    rangeIndexController.dispose();
 
     // === 等级 ===
 
@@ -509,7 +498,6 @@ class SpellDetailViewModel {
     // === 状态 ===
 
     // === 需求 ===
-    requiredAreasIDController.dispose();
 
     // === 能量消耗 ===
 
@@ -554,8 +542,8 @@ class SpellDetailViewModel {
     auraDescriptionLangFlags.value = template.auraDescriptionLangFlags;
 
     // === 图标/视觉 ===
-    spellIconIDController.text = template.spellIconID.toString();
-    activeIconIDController.text = template.activeIconID.toString();
+    spellIconID.value = template.spellIconID;
+    activeIconID.value = template.activeIconID;
     spellVisualID0.value = template.spellVisualID0;
     spellVisualID1.value = template.spellVisualID1;
 
@@ -569,8 +557,8 @@ class SpellDetailViewModel {
 
     // === 施法参数 ===
     castingTimeIndex.value = template.castingTimeIndex;
-    durationIndexController.text = template.durationIndex.toString();
-    rangeIndexController.text = template.rangeIndex.toString();
+    durationIndex.value = template.durationIndex;
+    rangeIndex.value = template.rangeIndex;
     spellDescriptionVariableID.value = template.spellDescriptionVariableID;
 
     // === 等级 ===
@@ -598,7 +586,7 @@ class SpellDetailViewModel {
     speed.value = template.speed;
 
     // === 需求 ===
-    requiredAreasIDController.text = template.requiredAreasID.toString();
+    requiredAreasID.value = template.requiredAreasID;
     requiresSpellFocus.value = template.requiresSpellFocus;
     facingCasterFlags.value = template.facingCasterFlags;
 

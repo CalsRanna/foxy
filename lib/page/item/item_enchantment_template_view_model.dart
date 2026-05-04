@@ -18,7 +18,7 @@ class ItemEnchantmentTemplateViewModel {
   final editing = signal(false);
   int? editingEnch;
 
-  final enchController = TextEditingController();
+  final enchSignal = signal<int>(0);
   final chance = signal<double>(0.0);
 
   final repository = ItemEnchantmentTemplateRepository();
@@ -35,28 +35,21 @@ class ItemEnchantmentTemplateViewModel {
   }
 
   void resetForm() {
-    enchController.clear();
+    enchSignal.value = 0;
     chance.value = 0;
   }
 
   void fillForm(BriefItemEnchantmentTemplateEntity model) {
-    enchController.text = model.ench.toString();
+    enchSignal.value = model.ench;
     chance.value = model.chance;
   }
 
   ItemEnchantmentTemplateEntity collectFromForm() {
     return ItemEnchantmentTemplateEntity(
       entry: entry.value,
-      ench: _parseInt(enchController.text),
+      ench: enchSignal.value,
       chance: chance.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   Future<void> create() async {
@@ -66,7 +59,7 @@ class ItemEnchantmentTemplateViewModel {
         (max, e) => e.ench > max ? e.ench : max,
       );
       resetForm();
-      enchController.text = (maxEnch + 1).toString();
+      enchSignal.value = (maxEnch + 1);
       creating.value = true;
       editing.value = false;
       selectedIndex.value = null;
@@ -201,7 +194,5 @@ class ItemEnchantmentTemplateViewModel {
     routerFacade.goBack();
   }
 
-  void dispose() {
-    enchController.dispose();
-  }
+  void dispose() {}
 }

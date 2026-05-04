@@ -177,7 +177,7 @@ class _ItemEnchantmentTemplateViewState
           FormItem(
             label: '附魔ID',
             child: ItemEnchantmentTemplateSelector(
-              controller: viewModel.enchController,
+              signal: viewModel.enchSignal,
               placeholder: 'Ench',
             ),
           ),

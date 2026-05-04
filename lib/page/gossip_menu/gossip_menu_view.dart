@@ -23,7 +23,7 @@ class _GossipMenuViewState extends State<GossipMenuView> {
     );
     final textIdLabel = const Text('文本编号 (TextID)');
     final textIdInput = NpcTextSelector(
-      controller: viewModel.textIdController,
+      signal: viewModel.textId,
       placeholder: 'TextID',
     );
 

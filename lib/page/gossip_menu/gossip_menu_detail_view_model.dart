@@ -14,10 +14,9 @@ class GossipMenuDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final menuIdController = TextEditingController();
-  final textIdController = TextEditingController();
 
   final menuId = signal(0);
-  final textId = signal(0);
+  final textId = signal<int>(0);
   final menu = signal(GossipMenuEntity());
   int? _originalMenuId;
   int? _originalTextId;
@@ -32,7 +31,7 @@ class GossipMenuDetailViewModel {
         _originalMenuId = null;
         _originalTextId = null;
         menuIdController.text = nextMenuId.toString();
-        textIdController.text = '0';
+        this.textId.value = 0;
         return;
       }
       _originalMenuId = menuId;
@@ -45,7 +44,6 @@ class GossipMenuDetailViewModel {
       this.textId.value = existing.textId;
       menu.value = existing;
       menuIdController.text = this.menuId.value.toString();
-      textIdController.text = this.textId.value.toString();
     } catch (e) {
       LoggerUtil.instance.e('加载对话菜单详情失败: $e');
       DialogUtil.instance.error('加载对话菜单详情失败: $e');
@@ -90,7 +88,7 @@ class GossipMenuDetailViewModel {
   GossipMenuEntity _collectFromControllers() {
     return GossipMenuEntity(
       menuId: int.tryParse(menuIdController.text) ?? 0,
-      textId: int.tryParse(textIdController.text) ?? 0,
+      textId: textId.value,
     );
   }
 
@@ -107,6 +105,5 @@ class GossipMenuDetailViewModel {
 
   void dispose() {
     menuIdController.dispose();
-    textIdController.dispose();
   }
 }

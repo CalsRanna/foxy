@@ -114,7 +114,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final factionInput = FormItem(
       label: '阵营',
       child: DbcFactionSelector(
-        controller: viewModel.factionController,
+        signal: viewModel.faction,
         placeholder: 'faction',
       ),
     );
@@ -145,21 +145,21 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final petSpellDataIdInput = FormItem(
       label: '宠物技能',
       child: CreatureSpellDataSelector(
-        controller: viewModel.petSpellDataIdController,
+        signal: viewModel.petSpellDataId,
         placeholder: 'PetSpellDataId',
       ),
     );
     final vehicleIdInput = FormItem(
       label: '载具',
       child: VehicleSelector(
-        controller: viewModel.vehicleIdController,
+        signal: viewModel.vehicleId,
         placeholder: 'VehicleId',
       ),
     );
     final gossipMenuIdInput = FormItem(
       label: '对话',
       child: GossipMenuSelector(
-        controller: viewModel.gossipMenuIdController,
+        signal: viewModel.gossipMenuId,
         placeholder: 'gossip_menu_id',
       ),
     );
@@ -222,7 +222,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final npcFlagInput = FormItem(
       label: 'NPC标识',
       child: FlagPicker(
-        controller: viewModel.npcFlagController,
+        signal: viewModel.npcFlag,
         flags: kNpcFlagOptions,
         title: 'NPC标识',
         placeholder: 'npcflag',
@@ -231,7 +231,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final typeFlagInput = FormItem(
       label: '类型标识',
       child: FlagPicker(
-        controller: viewModel.typeFlagController,
+        signal: viewModel.typeFlag,
         flags: kCreatureTypeFlagOptions,
         title: '类型标识',
         placeholder: 'type_flags',
@@ -240,7 +240,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final dynamicFlagInput = FormItem(
       label: '动态标识',
       child: FlagPicker(
-        controller: viewModel.dynamicFlagController,
+        signal: viewModel.dynamicFlag,
         flags: kDynamicFlagOptions,
         title: '动态标识',
         placeholder: 'dynamicflags',
@@ -249,7 +249,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final extraFlagInput = FormItem(
       label: '额外标识',
       child: FlagPicker(
-        controller: viewModel.extraFlagController,
+        signal: viewModel.extraFlag,
         flags: kFlagsExtraOptions,
         title: '额外标识',
         placeholder: 'flags_extra',
@@ -258,7 +258,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final unitFlagInput = FormItem(
       label: '单位标识',
       child: FlagPicker(
-        controller: viewModel.unitFlagController,
+        signal: viewModel.unitFlag,
         flags: kUnitFlagOptions,
         title: '单位标识',
         placeholder: 'unit_flags',
@@ -267,7 +267,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final unitFlag2Input = FormItem(
       label: '单位标识2',
       child: FlagPicker(
-        controller: viewModel.unitFlag2Controller,
+        signal: viewModel.unitFlag2,
         flags: kUnitFlag2Options,
         title: '单位标识2',
         placeholder: 'unit_flags2',
@@ -439,21 +439,21 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final lootInput = FormItem(
       label: '击杀掉落',
       child: LootTemplateSelector.creature(
-        controller: viewModel.lootController,
+        signal: viewModel.lootId,
         placeholder: 'lootid',
       ),
     );
     final pickpocketLootInput = FormItem(
       label: '偷窃掉落',
       child: LootTemplateSelector.pickpocket(
-        controller: viewModel.pickpocketLootController,
+        signal: viewModel.pickpocketLoot,
         placeholder: 'pickpocketloot',
       ),
     );
     final skinLootInput = FormItem(
       label: '剥皮掉落',
       child: LootTemplateSelector.skinning(
-        controller: viewModel.skinLootController,
+        signal: viewModel.skinLoot,
         placeholder: 'skinloot',
       ),
     );
@@ -559,35 +559,35 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final killCredit1Input = FormItem(
       label: '击杀关联1',
       child: CreatureTemplateSelector(
-        controller: viewModel.killCredit1Controller,
+        signal: viewModel.killCredit1,
         placeholder: 'KillCredit1',
       ),
     );
     final killCredit2input = FormItem(
       label: '击杀关联2',
       child: CreatureTemplateSelector(
-        controller: viewModel.killCredit2Controller,
+        signal: viewModel.killCredit2,
         placeholder: 'KillCredit2',
       ),
     );
     final difficultyEntry1Input = FormItem(
       label: '难度1',
       child: CreatureTemplateSelector(
-        controller: viewModel.difficultyEntry1Controller,
+        signal: viewModel.difficultyEntry1,
         placeholder: 'difficulty_entry_1',
       ),
     );
     final difficultyEntry2Input = FormItem(
       label: '难度2',
       child: CreatureTemplateSelector(
-        controller: viewModel.difficultyEntry2Controller,
+        signal: viewModel.difficultyEntry2,
         placeholder: 'difficulty_entry_2',
       ),
     );
     final difficultyEntry3Input = FormItem(
       label: '难度3',
       child: CreatureTemplateSelector(
-        controller: viewModel.difficultyEntry3Controller,
+        signal: viewModel.difficultyEntry3,
         placeholder: 'difficulty_entry_3',
       ),
     );

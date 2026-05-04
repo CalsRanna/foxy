@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
 import 'package:foxy/repository/quest_template_locale_repository.dart';
-import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/widget/locale_crud_dialog.dart';
+import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class QuestTemplateLocaleSelector extends StatefulWidget {
@@ -47,267 +47,74 @@ class _QuestTemplateLocaleSelectorState
   }
 
   Future<void> _openLocaleDialog() async {
-    try {
-      if (widget.questId == null) return;
-      final locales = await repository.getQuestTemplateLocales(widget.questId!);
-      if (!mounted) return;
-      await showShadDialog(
-        context: context,
-        builder: (context) {
-          return _LocaleDialog(
-            questId: widget.questId!,
-            locales: locales,
-            onSave: (locales) async {
-              await repository.replaceAll(widget.questId!, locales);
-            },
-            title: widget.title,
-          );
-        },
-      );
-    } catch (e) {
-      LoggerUtil.instance.e('加载本地化文本失败: $e');
-      DialogUtil.instance.error('加载本地化文本失败: $e');
-    }
-  }
-}
-
-class _LocaleDialog extends StatefulWidget {
-  final int questId;
-  final List<QuestTemplateLocaleEntity> locales;
-  final Future<void> Function(List<QuestTemplateLocaleEntity>) onSave;
-  final String title;
-
-  const _LocaleDialog({
-    required this.questId,
-    required this.locales,
-    required this.onSave,
-    required this.title,
-  });
-
-  @override
-  State<_LocaleDialog> createState() => _LocaleDialogState();
-}
-
-class _LocaleDialogState extends State<_LocaleDialog> {
-  late List<_LocaleRow> _rows;
-  bool _saving = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _rows = widget.locales.map((e) => _LocaleRow.fromLocale(e)).toList();
-  }
-
-  @override
-  void dispose() {
-    for (var row in _rows) {
-      row.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    return ShadDialog(
-      title: Text(widget.title),
-      constraints: BoxConstraints(maxWidth: 720),
-      actions: [
-        ShadButton.outline(onPressed: _addRow, child: Text('添加')),
-        const Spacer(),
-        ShadButton.outline(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text('取消'),
-        ),
-        ShadButton(
-          onPressed: _saving ? null : _save,
-          child: _saving ? Text('保存中...') : Text('保存'),
-        ),
+    if (widget.questId == null) return;
+    final vm = LocaleCrudViewModel(
+      entry: widget.questId!,
+      fields: [
+        'locale',
+        'title',
+        'details',
+        'objectives',
+        'endText',
+        'completedText',
+        'objectiveText1',
+        'objectiveText2',
+        'objectiveText3',
+        'objectiveText4',
       ],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildHeader(theme),
-          Flexible(child: _buildTable()),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader(ShadThemeData theme) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: theme.colorScheme.border)),
-      ),
-      child: Row(
-        children: [
-          SizedBox(width: 100, child: Text('语言', style: theme.textTheme.muted)),
-          SizedBox(width: 16),
-          Expanded(child: Text('标题', style: theme.textTheme.muted)),
-          SizedBox(width: 16),
-          Expanded(child: Text('详情', style: theme.textTheme.muted)),
-          SizedBox(width: 16),
-          Expanded(child: Text('目标', style: theme.textTheme.muted)),
-          SizedBox(width: 40),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTable() {
-    if (_rows.isEmpty) {
-      return Padding(
-        padding: EdgeInsets.all(32),
-        child: Text('暂无多语言数据，点击添加按钮新增'),
-      );
-    }
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: _rows.length,
-      itemBuilder: (context, index) {
-        final row = _rows[index];
-        return Padding(
-          padding: EdgeInsets.symmetric(vertical: 4),
-          child: Row(
-            spacing: 16,
-            children: [
-              SizedBox(
-                width: 100,
-                child: ShadInput(
-                  controller: row.localeController,
-                  placeholder: Text('zhCN'),
-                ),
-              ),
-              Expanded(
-                child: ShadInput(
-                  controller: row.titleController,
-                  placeholder: Text('标题'),
-                ),
-              ),
-              Expanded(
-                child: ShadInput(
-                  controller: row.detailsController,
-                  placeholder: Text('详情'),
-                ),
-              ),
-              Expanded(
-                child: ShadInput(
-                  controller: row.objectivesController,
-                  placeholder: Text('目标'),
-                ),
-              ),
-              SizedBox(
-                width: 40,
-                child: ShadButton.ghost(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => _removeRow(index),
-                  size: ShadButtonSize.sm,
-                  child: Icon(LucideIcons.trash, size: 16),
-                ),
-              ),
-            ],
-          ),
-        );
+      fieldLabels: [
+        '语言',
+        '标题',
+        '详情',
+        '目标',
+        '结束文本',
+        '完成文本',
+        '目标文本1',
+        '目标文本2',
+        '目标文本3',
+        '目标文本4',
+      ],
+      onLoad: (questId) async {
+        final locales = await repository.getQuestTemplateLocales(questId);
+        return locales
+            .map((e) => {
+                  'locale': e.locale,
+                  'title': e.title,
+                  'details': e.details,
+                  'objectives': e.objectives,
+                  'endText': e.endText,
+                  'completedText': e.completedText,
+                  'objectiveText1': e.objectiveText1,
+                  'objectiveText2': e.objectiveText2,
+                  'objectiveText3': e.objectiveText3,
+                  'objectiveText4': e.objectiveText4,
+                })
+            .toList();
+      },
+      onSave: (questId, data) async {
+        final locales = data
+            .map((d) => QuestTemplateLocaleEntity(
+                  id: questId,
+                  locale: d['locale'] ?? '',
+                  title: d['title'] ?? '',
+                  details: d['details'] ?? '',
+                  objectives: d['objectives'] ?? '',
+                  endText: d['endText'] ?? '',
+                  completedText: d['completedText'] ?? '',
+                  objectiveText1: d['objectiveText1'] ?? '',
+                  objectiveText2: d['objectiveText2'] ?? '',
+                  objectiveText3: d['objectiveText3'] ?? '',
+                  objectiveText4: d['objectiveText4'] ?? '',
+                ))
+            .toList();
+        await repository.replaceAll(questId, locales);
       },
     );
-  }
-
-  void _addRow() {
-    setState(() {
-      _rows.add(_LocaleRow());
-    });
-  }
-
-  void _removeRow(int index) {
-    setState(() {
-      _rows[index].dispose();
-      _rows.removeAt(index);
-    });
-  }
-
-  Future<void> _save() async {
-    setState(() => _saving = true);
-    try {
-      final locales = _rows.map((row) {
-        return QuestTemplateLocaleEntity(
-          id: widget.questId,
-          locale: row.localeController.text,
-          title: row.titleController.text,
-          details: row.detailsController.text,
-          objectives: row.objectivesController.text,
-          endText: row.endTextController.text,
-          completedText: row.completedTextController.text,
-          objectiveText1: row.objectiveText1Controller.text,
-          objectiveText2: row.objectiveText2Controller.text,
-          objectiveText3: row.objectiveText3Controller.text,
-          objectiveText4: row.objectiveText4Controller.text,
-        );
-      }).toList();
-      await widget.onSave(locales);
-      if (mounted) Navigator.of(context).pop();
-    } finally {
-      if (mounted) setState(() => _saving = false);
-    }
-  }
-}
-
-class _LocaleRow {
-  final TextEditingController localeController;
-  final TextEditingController titleController;
-  final TextEditingController detailsController;
-  final TextEditingController objectivesController;
-  final TextEditingController endTextController;
-  final TextEditingController completedTextController;
-  final TextEditingController objectiveText1Controller;
-  final TextEditingController objectiveText2Controller;
-  final TextEditingController objectiveText3Controller;
-  final TextEditingController objectiveText4Controller;
-
-  _LocaleRow()
-    : localeController = TextEditingController(),
-      titleController = TextEditingController(),
-      detailsController = TextEditingController(),
-      objectivesController = TextEditingController(),
-      endTextController = TextEditingController(),
-      completedTextController = TextEditingController(),
-      objectiveText1Controller = TextEditingController(),
-      objectiveText2Controller = TextEditingController(),
-      objectiveText3Controller = TextEditingController(),
-      objectiveText4Controller = TextEditingController();
-
-  _LocaleRow.fromLocale(QuestTemplateLocaleEntity locale)
-    : localeController = TextEditingController(text: locale.locale),
-      titleController = TextEditingController(text: locale.title),
-      detailsController = TextEditingController(text: locale.details),
-      objectivesController = TextEditingController(text: locale.objectives),
-      endTextController = TextEditingController(text: locale.endText),
-      completedTextController = TextEditingController(
-        text: locale.completedText,
-      ),
-      objectiveText1Controller = TextEditingController(
-        text: locale.objectiveText1,
-      ),
-      objectiveText2Controller = TextEditingController(
-        text: locale.objectiveText2,
-      ),
-      objectiveText3Controller = TextEditingController(
-        text: locale.objectiveText3,
-      ),
-      objectiveText4Controller = TextEditingController(
-        text: locale.objectiveText4,
-      );
-
-  void dispose() {
-    localeController.dispose();
-    titleController.dispose();
-    detailsController.dispose();
-    objectivesController.dispose();
-    endTextController.dispose();
-    completedTextController.dispose();
-    objectiveText1Controller.dispose();
-    objectiveText2Controller.dispose();
-    objectiveText3Controller.dispose();
-    objectiveText4Controller.dispose();
+    await LocaleCrudDialog(
+      title: widget.title,
+      entry: widget.questId!,
+      vm: vm,
+    ).show(context);
+    vm.dispose();
   }
 }

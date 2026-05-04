@@ -190,7 +190,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
             child: _labeled(
               'NPC标识',
               FlagPicker(
-                controller: viewModel.optionNpcFlagController,
+                signal: viewModel.optionNpcFlag,
                 flags: kNpcFlagOptions,
                 title: 'Npc标识编辑器',
                 placeholder: 'OptionNpcFlag',
@@ -217,7 +217,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
             child: _labeled(
               '子选项编号',
               GossipMenuSelector(
-                controller: viewModel.actionMenuIdController,
+                signal: viewModel.actionMenuId,
                 placeholder: 'ActionMenuID',
               ),
             ),
@@ -226,7 +226,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
             child: _labeled(
               '广播文本编号',
               BroadcastTextSelector(
-                controller: viewModel.optionBroadcastTextIdController,
+                signal: viewModel.optionBroadcastTextId,
                 placeholder: 'broadcast_text_id',
               ),
             ),
@@ -242,7 +242,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
             child: _labeled(
               'BoxBroadcastTextID',
               BroadcastTextSelector(
-                controller: viewModel.boxBroadcastTextIdController,
+                signal: viewModel.boxBroadcastTextId,
                 placeholder: 'box_broadcast_text_id',
               ),
             ),
