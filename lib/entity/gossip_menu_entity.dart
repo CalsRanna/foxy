@@ -44,6 +44,24 @@ class BriefGossipMenuEntity {
       'Text0_1': textLocale01,
     };
   }
+
+  BriefGossipMenuEntity copyWith({
+    int? menuId,
+    int? textId,
+    String? text00,
+    String? text01,
+    String? textLocale00,
+    String? textLocale01,
+  }) {
+    return BriefGossipMenuEntity(
+      menuId: menuId ?? this.menuId,
+      textId: textId ?? this.textId,
+      text00: text00 ?? this.text00,
+      text01: text01 ?? this.text01,
+      textLocale00: textLocale00 ?? this.textLocale00,
+      textLocale01: textLocale01 ?? this.textLocale01,
+    );
+  }
 }
 
 /// gossip_menu 主表模型（复合键: MenuID + TextID）
@@ -91,5 +109,23 @@ class GossipMenuEntity {
   /// 主表仅 MenuID + TextID 两列
   Map<String, dynamic> toJson() {
     return {'MenuID': menuId, 'TextID': textId};
+  }
+
+  GossipMenuEntity copyWith({
+    int? menuId,
+    int? textId,
+    String? text00,
+    String? text01,
+    String? textLocale00,
+    String? textLocale01,
+  }) {
+    return GossipMenuEntity(
+      menuId: menuId ?? this.menuId,
+      textId: textId ?? this.textId,
+      text00: text00 ?? this.text00,
+      text01: text01 ?? this.text01,
+      textLocale00: textLocale00 ?? this.textLocale00,
+      textLocale01: textLocale01 ?? this.textLocale01,
+    );
   }
 }

@@ -14,4 +14,14 @@ class ItemSetFilterEntity {
   Map<String, dynamic> toJson() {
     return {'id': id, 'name': name};
   }
+
+  ItemSetFilterEntity copyWith({
+    String? id,
+    String? name,
+  }) {
+    return ItemSetFilterEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

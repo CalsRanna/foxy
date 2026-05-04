@@ -48,4 +48,28 @@ class GameObjectTemplateAddonEntity {
       'artkit3': artkit3,
     };
   }
+
+  GameObjectTemplateAddonEntity copyWith({
+    int? entry,
+    int? faction,
+    int? flags,
+    int? minGold,
+    int? maxGold,
+    int? artkit0,
+    int? artkit1,
+    int? artkit2,
+    int? artkit3,
+  }) {
+    return GameObjectTemplateAddonEntity(
+      entry: entry ?? this.entry,
+      faction: faction ?? this.faction,
+      flags: flags ?? this.flags,
+      minGold: minGold ?? this.minGold,
+      maxGold: maxGold ?? this.maxGold,
+      artkit0: artkit0 ?? this.artkit0,
+      artkit1: artkit1 ?? this.artkit1,
+      artkit2: artkit2 ?? this.artkit2,
+      artkit3: artkit3 ?? this.artkit3,
+    );
+  }
 }

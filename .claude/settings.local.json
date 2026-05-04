@@ -48,7 +48,9 @@
       "Read(//usr/local/**)",
       "Bash(brew list *)",
       "Bash(echo \"EXIT CODE: $?\")",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(git *)",
+      "Bash(awk '{print $2}')"
     ],
     "deny": []
   }

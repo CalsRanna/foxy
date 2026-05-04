@@ -81,4 +81,40 @@ class GossipMenuOptionEntity {
       'VerifiedBuild': verifiedBuild,
     };
   }
+
+  GossipMenuOptionEntity copyWith({
+    int? menuId,
+    int? optionId,
+    int? optionIcon,
+    String? optionText,
+    int? optionBroadcastTextId,
+    int? optionType,
+    int? optionNpcFlag,
+    int? boxCoded,
+    int? boxMoney,
+    String? boxText,
+    int? boxBroadcastTextId,
+    int? actionMenuId,
+    int? actionPoiId,
+    int? verifiedBuild,
+    String? localeOptionText,
+  }) {
+    return GossipMenuOptionEntity(
+      menuId: menuId ?? this.menuId,
+      optionId: optionId ?? this.optionId,
+      optionIcon: optionIcon ?? this.optionIcon,
+      optionText: optionText ?? this.optionText,
+      optionBroadcastTextId: optionBroadcastTextId ?? this.optionBroadcastTextId,
+      optionType: optionType ?? this.optionType,
+      optionNpcFlag: optionNpcFlag ?? this.optionNpcFlag,
+      boxCoded: boxCoded ?? this.boxCoded,
+      boxMoney: boxMoney ?? this.boxMoney,
+      boxText: boxText ?? this.boxText,
+      boxBroadcastTextId: boxBroadcastTextId ?? this.boxBroadcastTextId,
+      actionMenuId: actionMenuId ?? this.actionMenuId,
+      actionPoiId: actionPoiId ?? this.actionPoiId,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      localeOptionText: localeOptionText ?? this.localeOptionText,
+    );
+  }
 }

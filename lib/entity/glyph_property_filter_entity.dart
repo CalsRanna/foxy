@@ -14,4 +14,12 @@ class GlyphPropertyFilterEntity {
       'id': id,
     };
   }
+
+  GlyphPropertyFilterEntity copyWith({
+    String? id,
+  }) {
+    return GlyphPropertyFilterEntity(
+      id: id ?? this.id,
+    );
+  }
 }

@@ -8,6 +8,16 @@ class GameObjectTemplateFilterEntity {
     return {'entry': entry, 'name': name};
   }
 
+  GameObjectTemplateFilterEntity copyWith({
+    String? entry,
+    String? name,
+  }) {
+    return GameObjectTemplateFilterEntity(
+      entry: entry ?? this.entry,
+      name: name ?? this.name,
+    );
+  }
+
   factory GameObjectTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
     return GameObjectTemplateFilterEntity(
       entry: json['entry'] ?? '',

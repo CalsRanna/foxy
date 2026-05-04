@@ -34,4 +34,20 @@ class ItemTemplateLocaleEntity {
       'VerifiedBuild': verifiedBuild,
     };
   }
+
+  ItemTemplateLocaleEntity copyWith({
+    int? id,
+    String? locale,
+    String? name,
+    String? description,
+    int? verifiedBuild,
+  }) {
+    return ItemTemplateLocaleEntity(
+      id: id ?? this.id,
+      locale: locale ?? this.locale,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
+  }
 }

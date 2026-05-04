@@ -83,4 +83,44 @@ class QuestTemplateAddonEntity {
       'SpecialFlags': specialFlags,
     };
   }
+
+  QuestTemplateAddonEntity copyWith({
+    int? id,
+    int? maxLevel,
+    int? allowableClasses,
+    int? sourceSpellId,
+    int? prevQuestId,
+    int? nextQuestId,
+    int? exclusiveGroup,
+    int? rewardMailTemplateId,
+    int? rewardMailDelay,
+    int? requiredSkillId,
+    int? requiredSkillPoints,
+    int? requiredMinRepFaction,
+    int? requiredMaxRepFaction,
+    int? requiredMinRepValue,
+    int? requiredMaxRepValue,
+    int? providedItemCount,
+    int? specialFlags,
+  }) {
+    return QuestTemplateAddonEntity(
+      id: id ?? this.id,
+      maxLevel: maxLevel ?? this.maxLevel,
+      allowableClasses: allowableClasses ?? this.allowableClasses,
+      sourceSpellId: sourceSpellId ?? this.sourceSpellId,
+      prevQuestId: prevQuestId ?? this.prevQuestId,
+      nextQuestId: nextQuestId ?? this.nextQuestId,
+      exclusiveGroup: exclusiveGroup ?? this.exclusiveGroup,
+      rewardMailTemplateId: rewardMailTemplateId ?? this.rewardMailTemplateId,
+      rewardMailDelay: rewardMailDelay ?? this.rewardMailDelay,
+      requiredSkillId: requiredSkillId ?? this.requiredSkillId,
+      requiredSkillPoints: requiredSkillPoints ?? this.requiredSkillPoints,
+      requiredMinRepFaction: requiredMinRepFaction ?? this.requiredMinRepFaction,
+      requiredMaxRepFaction: requiredMaxRepFaction ?? this.requiredMaxRepFaction,
+      requiredMinRepValue: requiredMinRepValue ?? this.requiredMinRepValue,
+      requiredMaxRepValue: requiredMaxRepValue ?? this.requiredMaxRepValue,
+      providedItemCount: providedItemCount ?? this.providedItemCount,
+      specialFlags: specialFlags ?? this.specialFlags,
+    );
+  }
 }

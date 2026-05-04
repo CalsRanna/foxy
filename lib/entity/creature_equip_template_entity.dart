@@ -37,6 +37,24 @@ class CreatureEquipTemplateEntity {
       'VerifiedBuild': verifiedBuild,
     };
   }
+
+  CreatureEquipTemplateEntity copyWith({
+    int? creatureID,
+    int? id,
+    int? itemID1,
+    int? itemID2,
+    int? itemID3,
+    int? verifiedBuild,
+  }) {
+    return CreatureEquipTemplateEntity(
+      creatureID: creatureID ?? this.creatureID,
+      id: id ?? this.id,
+      itemID1: itemID1 ?? this.itemID1,
+      itemID2: itemID2 ?? this.itemID2,
+      itemID3: itemID3 ?? this.itemID3,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
+  }
 }
 
 /// 生物装备模板列表展示模型（含 LEFT JOIN item_template + item_display_info 的装备信息）

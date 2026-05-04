@@ -92,6 +92,52 @@ class AreaTableEntity {
       'LightID': lightId,
     };
   }
+
+  AreaTableEntity copyWith({
+    int? id,
+    int? continentId,
+    int? parentAreaId,
+    int? areaBit,
+    int? flags,
+    int? soundProviderPref,
+    int? soundProviderPrefUnderwater,
+    int? ambienceId,
+    int? zoneMusic,
+    int? introSound,
+    int? explorationLevel,
+    String? areaNameLangZhCn,
+    int? factionGroupMask,
+    int? liquidTypeId0,
+    int? liquidTypeId1,
+    int? liquidTypeId2,
+    int? liquidTypeId3,
+    double? minElevation,
+    double? ambientMultiplier,
+    int? lightId,
+  }) {
+    return AreaTableEntity(
+      id: id ?? this.id,
+      continentId: continentId ?? this.continentId,
+      parentAreaId: parentAreaId ?? this.parentAreaId,
+      areaBit: areaBit ?? this.areaBit,
+      flags: flags ?? this.flags,
+      soundProviderPref: soundProviderPref ?? this.soundProviderPref,
+      soundProviderPrefUnderwater: soundProviderPrefUnderwater ?? this.soundProviderPrefUnderwater,
+      ambienceId: ambienceId ?? this.ambienceId,
+      zoneMusic: zoneMusic ?? this.zoneMusic,
+      introSound: introSound ?? this.introSound,
+      explorationLevel: explorationLevel ?? this.explorationLevel,
+      areaNameLangZhCn: areaNameLangZhCn ?? this.areaNameLangZhCn,
+      factionGroupMask: factionGroupMask ?? this.factionGroupMask,
+      liquidTypeId0: liquidTypeId0 ?? this.liquidTypeId0,
+      liquidTypeId1: liquidTypeId1 ?? this.liquidTypeId1,
+      liquidTypeId2: liquidTypeId2 ?? this.liquidTypeId2,
+      liquidTypeId3: liquidTypeId3 ?? this.liquidTypeId3,
+      minElevation: minElevation ?? this.minElevation,
+      ambientMultiplier: ambientMultiplier ?? this.ambientMultiplier,
+      lightId: lightId ?? this.lightId,
+    );
+  }
 }
 
 class BriefAreaTableEntity {
@@ -131,5 +177,23 @@ class BriefAreaTableEntity {
       'ZoneMusic': zoneMusic,
       'ExplorationLevel': explorationLevel,
     };
+  }
+
+  BriefAreaTableEntity copyWith({
+    int? id,
+    String? areaNameLangZhCn,
+    int? continentId,
+    double? minElevation,
+    int? zoneMusic,
+    int? explorationLevel,
+  }) {
+    return BriefAreaTableEntity(
+      id: id ?? this.id,
+      areaNameLangZhCn: areaNameLangZhCn ?? this.areaNameLangZhCn,
+      continentId: continentId ?? this.continentId,
+      minElevation: minElevation ?? this.minElevation,
+      zoneMusic: zoneMusic ?? this.zoneMusic,
+      explorationLevel: explorationLevel ?? this.explorationLevel,
+    );
   }
 }

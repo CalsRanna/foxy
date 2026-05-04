@@ -14,4 +14,14 @@ class QuestInfoFilterEntity {
   Map<String, dynamic> toJson() {
     return {'id': id, 'name': name};
   }
+
+  QuestInfoFilterEntity copyWith({
+    String? id,
+    String? name,
+  }) {
+    return QuestInfoFilterEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

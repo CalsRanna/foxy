@@ -8,6 +8,16 @@ class SmartScriptFilterEntity {
     return {'entryOrGuid': entryOrGuid, 'comment': comment};
   }
 
+  SmartScriptFilterEntity copyWith({
+    String? entryOrGuid,
+    String? comment,
+  }) {
+    return SmartScriptFilterEntity(
+      entryOrGuid: entryOrGuid ?? this.entryOrGuid,
+      comment: comment ?? this.comment,
+    );
+  }
+
   factory SmartScriptFilterEntity.fromJson(Map<String, dynamic> json) {
     return SmartScriptFilterEntity(
       entryOrGuid: json['entryOrGuid'] ?? '',

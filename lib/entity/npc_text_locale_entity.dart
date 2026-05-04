@@ -34,4 +34,16 @@ class NpcTextLocaleEntity {
     }
     return result;
   }
+
+  NpcTextLocaleEntity copyWith({
+    int? id,
+    String? locale,
+    List<List<String>>? texts,
+  }) {
+    return NpcTextLocaleEntity(
+      id: id ?? this.id,
+      locale: locale ?? this.locale,
+      texts: texts ?? this.texts,
+    );
+  }
 }

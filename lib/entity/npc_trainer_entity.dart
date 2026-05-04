@@ -41,6 +41,26 @@ class NpcTrainerEntity {
       'ReqSpell': reqSpell,
     };
   }
+
+  NpcTrainerEntity copyWith({
+    int? id,
+    int? spellID,
+    int? moneyCost,
+    int? reqSkillLine,
+    int? reqSkillRank,
+    int? reqLevel,
+    int? reqSpell,
+  }) {
+    return NpcTrainerEntity(
+      id: id ?? this.id,
+      spellID: spellID ?? this.spellID,
+      moneyCost: moneyCost ?? this.moneyCost,
+      reqSkillLine: reqSkillLine ?? this.reqSkillLine,
+      reqSkillRank: reqSkillRank ?? this.reqSkillRank,
+      reqLevel: reqLevel ?? this.reqLevel,
+      reqSpell: reqSpell ?? this.reqSpell,
+    );
+  }
 }
 
 /// NPC训练师列表展示模型（含 LEFT JOIN foxy.dbc_spell 的技能信息）

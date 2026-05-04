@@ -12,4 +12,12 @@ class ItemExtendedCostFilterEntity {
   Map<String, dynamic> toJson() {
     return {'id': id};
   }
+
+  ItemExtendedCostFilterEntity copyWith({
+    String? id,
+  }) {
+    return ItemExtendedCostFilterEntity(
+      id: id ?? this.id,
+    );
+  }
 }

@@ -77,6 +77,44 @@ class CreatureDisplayInfoEntity {
       'ObjectEffectPackageID': objectEffectPackageID,
     };
   }
+
+  CreatureDisplayInfoEntity copyWith({
+    int? id,
+    int? modelId,
+    int? soundId,
+    int? extendedDisplayInfoId,
+    double? creatureModelScale,
+    int? creatureModelAlpha,
+    String? textureVariation0,
+    String? textureVariation1,
+    String? textureVariation2,
+    String? portraitTextureName,
+    int? sizeClass,
+    int? bloodID,
+    int? npcSoundID,
+    int? particleColorID,
+    int? creatureGeosetData,
+    int? objectEffectPackageID,
+  }) {
+    return CreatureDisplayInfoEntity(
+      id: id ?? this.id,
+      modelId: modelId ?? this.modelId,
+      soundId: soundId ?? this.soundId,
+      extendedDisplayInfoId: extendedDisplayInfoId ?? this.extendedDisplayInfoId,
+      creatureModelScale: creatureModelScale ?? this.creatureModelScale,
+      creatureModelAlpha: creatureModelAlpha ?? this.creatureModelAlpha,
+      textureVariation0: textureVariation0 ?? this.textureVariation0,
+      textureVariation1: textureVariation1 ?? this.textureVariation1,
+      textureVariation2: textureVariation2 ?? this.textureVariation2,
+      portraitTextureName: portraitTextureName ?? this.portraitTextureName,
+      sizeClass: sizeClass ?? this.sizeClass,
+      bloodID: bloodID ?? this.bloodID,
+      npcSoundID: npcSoundID ?? this.npcSoundID,
+      particleColorID: particleColorID ?? this.particleColorID,
+      creatureGeosetData: creatureGeosetData ?? this.creatureGeosetData,
+      objectEffectPackageID: objectEffectPackageID ?? this.objectEffectPackageID,
+    );
+  }
 }
 
 /// 生物显示信息列表展示模型（含 LEFT JOIN foxy.dbc_creature_model_data 的模型名）

@@ -48,6 +48,28 @@ class PlayerCreateInfoEntity {
       'orientation': orientation,
     };
   }
+
+  PlayerCreateInfoEntity copyWith({
+    int? race,
+    int? class_,
+    int? map,
+    int? zone,
+    double? positionX,
+    double? positionY,
+    double? positionZ,
+    double? orientation,
+  }) {
+    return PlayerCreateInfoEntity(
+      race: race ?? this.race,
+      class_: class_ ?? this.class_,
+      map: map ?? this.map,
+      zone: zone ?? this.zone,
+      positionX: positionX ?? this.positionX,
+      positionY: positionY ?? this.positionY,
+      positionZ: positionZ ?? this.positionZ,
+      orientation: orientation ?? this.orientation,
+    );
+  }
 }
 
 class PlayerCreateInfoActionEntity {
@@ -83,6 +105,22 @@ class PlayerCreateInfoActionEntity {
       'action': action,
       'type': type,
     };
+  }
+
+  PlayerCreateInfoActionEntity copyWith({
+    int? race,
+    int? class_,
+    int? button,
+    int? action,
+    int? type,
+  }) {
+    return PlayerCreateInfoActionEntity(
+      race: race ?? this.race,
+      class_: class_ ?? this.class_,
+      button: button ?? this.button,
+      action: action ?? this.action,
+      type: type ?? this.type,
+    );
   }
 }
 
@@ -120,6 +158,22 @@ class PlayerCreateInfoItemEntity {
       'Note': note,
     };
   }
+
+  PlayerCreateInfoItemEntity copyWith({
+    int? race,
+    int? class_,
+    int? itemid,
+    int? amount,
+    String? note,
+  }) {
+    return PlayerCreateInfoItemEntity(
+      race: race ?? this.race,
+      class_: class_ ?? this.class_,
+      itemid: itemid ?? this.itemid,
+      amount: amount ?? this.amount,
+      note: note ?? this.note,
+    );
+  }
 }
 
 class PlayerCreateInfoSpellCustomEntity {
@@ -153,5 +207,19 @@ class PlayerCreateInfoSpellCustomEntity {
       'spell': spell,
       'note': note,
     };
+  }
+
+  PlayerCreateInfoSpellCustomEntity copyWith({
+    int? racemask,
+    int? classmask,
+    int? spell,
+    String? note,
+  }) {
+    return PlayerCreateInfoSpellCustomEntity(
+      racemask: racemask ?? this.racemask,
+      classmask: classmask ?? this.classmask,
+      spell: spell ?? this.spell,
+      note: note ?? this.note,
+    );
   }
 }

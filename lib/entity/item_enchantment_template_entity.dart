@@ -37,6 +37,24 @@ class ItemEnchantmentTemplateEntity {
       'condition_3': condition3,
     };
   }
+
+  ItemEnchantmentTemplateEntity copyWith({
+    int? entry,
+    int? ench,
+    double? chance,
+    int? condition1,
+    int? condition2,
+    int? condition3,
+  }) {
+    return ItemEnchantmentTemplateEntity(
+      entry: entry ?? this.entry,
+      ench: ench ?? this.ench,
+      chance: chance ?? this.chance,
+      condition1: condition1 ?? this.condition1,
+      condition2: condition2 ?? this.condition2,
+      condition3: condition3 ?? this.condition3,
+    );
+  }
 }
 
 /// 物品附魔模板列表展示模型（含 LEFT JOIN dbc_spell_item_enchantment + dbc_item_random_properties 的附魔名）

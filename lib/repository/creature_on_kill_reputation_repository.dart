@@ -1,4 +1,4 @@
-import 'package:foxy/entity/creature_onkill_reputation_entity.dart';
+import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureOnKillReputationRepository with RepositoryMixin {

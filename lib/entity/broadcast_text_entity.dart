@@ -33,4 +33,18 @@ class BroadcastTextEntity {
       'FemaleText': femaleText,
     };
   }
+
+  BroadcastTextEntity copyWith({
+    int? id,
+    int? languageId,
+    String? maleText,
+    String? femaleText,
+  }) {
+    return BroadcastTextEntity(
+      id: id ?? this.id,
+      languageId: languageId ?? this.languageId,
+      maleText: maleText ?? this.maleText,
+      femaleText: femaleText ?? this.femaleText,
+    );
+  }
 }

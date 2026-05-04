@@ -17,6 +17,16 @@ class GameObjectQuestStarterEntity {
   Map<String, dynamic> toJson() {
     return {'id': id, 'quest': quest};
   }
+
+  GameObjectQuestStarterEntity copyWith({
+    int? id,
+    int? quest,
+  }) {
+    return GameObjectQuestStarterEntity(
+      id: id ?? this.id,
+      quest: quest ?? this.quest,
+    );
+  }
 }
 
 /// Brief 版本（LEFT JOIN gameobject_template 获取名称，无 locale 表）
@@ -48,5 +58,19 @@ class BriefGameObjectQuestStarterEntity {
 
   Map<String, dynamic> toJson() {
     return {'id': id, 'quest': quest, 'name': name, 'Name': localeName};
+  }
+
+  BriefGameObjectQuestStarterEntity copyWith({
+    int? id,
+    int? quest,
+    String? name,
+    String? localeName,
+  }) {
+    return BriefGameObjectQuestStarterEntity(
+      id: id ?? this.id,
+      quest: quest ?? this.quest,
+      name: name ?? this.name,
+      localeName: localeName ?? this.localeName,
+    );
   }
 }

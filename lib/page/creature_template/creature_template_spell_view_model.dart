@@ -39,12 +39,12 @@ class CreatureTemplateSpellViewModel {
   }
 
   CreatureTemplateSpellEntity collectFromForm() {
-    final spell = CreatureTemplateSpellEntity();
-    spell.creatureID = creatureId.value;
-    spell.index = index.value;
-    spell.spell = this.spell.value;
-    spell.verifiedBuild = verifiedBuild.value;
-    return spell;
+    return CreatureTemplateSpellEntity(
+      creatureID: creatureId.value,
+      index: index.value,
+      spell: spell.value,
+      verifiedBuild: verifiedBuild.value,
+    );
   }
 
   Future<void> create() async {

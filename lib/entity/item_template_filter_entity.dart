@@ -13,6 +13,16 @@ class ItemTemplateFilterEntity {
     this.subclass = -1,
   });
 
+  factory ItemTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
+    return ItemTemplateFilterEntity(
+      entry: json['entry'] ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      classId: json['classId'] ?? -1,
+      subclass: json['subclass'] ?? -1,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'entry': entry,
@@ -23,13 +33,19 @@ class ItemTemplateFilterEntity {
     };
   }
 
-  factory ItemTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
+  ItemTemplateFilterEntity copyWith({
+    String? entry,
+    String? name,
+    String? description,
+    int? classId,
+    int? subclass,
+  }) {
     return ItemTemplateFilterEntity(
-      entry: json['entry'] ?? '',
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      classId: json['classId'] ?? -1,
-      subclass: json['subclass'] ?? -1,
+      entry: entry ?? this.entry,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      classId: classId ?? this.classId,
+      subclass: subclass ?? this.subclass,
     );
   }
 }

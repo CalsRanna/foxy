@@ -32,6 +32,22 @@ class GemPropertyEntity {
       'Type': type,
     };
   }
+
+  GemPropertyEntity copyWith({
+    int? id,
+    int? enchantId,
+    int? maxCountInv,
+    int? maxCountItem,
+    int? type,
+  }) {
+    return GemPropertyEntity(
+      id: id ?? this.id,
+      enchantId: enchantId ?? this.enchantId,
+      maxCountInv: maxCountInv ?? this.maxCountInv,
+      maxCountItem: maxCountItem ?? this.maxCountItem,
+      type: type ?? this.type,
+    );
+  }
 }
 
 class BriefGemPropertyEntity {
@@ -63,5 +79,19 @@ class BriefGemPropertyEntity {
       'Maxcount_inv': maxCountInv,
       'Type': type,
     };
+  }
+
+  BriefGemPropertyEntity copyWith({
+    int? id,
+    int? enchantId,
+    int? maxCountInv,
+    int? type,
+  }) {
+    return BriefGemPropertyEntity(
+      id: id ?? this.id,
+      enchantId: enchantId ?? this.enchantId,
+      maxCountInv: maxCountInv ?? this.maxCountInv,
+      type: type ?? this.type,
+    );
   }
 }

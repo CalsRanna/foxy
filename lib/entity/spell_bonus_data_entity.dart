@@ -37,4 +37,22 @@ class SpellBonusDataEntity {
       'comments': comments,
     };
   }
+
+  SpellBonusDataEntity copyWith({
+    int? entry,
+    double? directBonus,
+    double? dotBonus,
+    double? apBonus,
+    double? apDotBonus,
+    String? comments,
+  }) {
+    return SpellBonusDataEntity(
+      entry: entry ?? this.entry,
+      directBonus: directBonus ?? this.directBonus,
+      dotBonus: dotBonus ?? this.dotBonus,
+      apBonus: apBonus ?? this.apBonus,
+      apDotBonus: apDotBonus ?? this.apDotBonus,
+      comments: comments ?? this.comments,
+    );
+  }
 }

@@ -49,6 +49,30 @@ class CreatureSpellDataEntity {
       'Availability3': availability3,
     };
   }
+
+  CreatureSpellDataEntity copyWith({
+    int? id,
+    int? spells0,
+    int? spells1,
+    int? spells2,
+    int? spells3,
+    int? availability0,
+    int? availability1,
+    int? availability2,
+    int? availability3,
+  }) {
+    return CreatureSpellDataEntity(
+      id: id ?? this.id,
+      spells0: spells0 ?? this.spells0,
+      spells1: spells1 ?? this.spells1,
+      spells2: spells2 ?? this.spells2,
+      spells3: spells3 ?? this.spells3,
+      availability0: availability0 ?? this.availability0,
+      availability1: availability1 ?? this.availability1,
+      availability2: availability2 ?? this.availability2,
+      availability3: availability3 ?? this.availability3,
+    );
+  }
 }
 
 /// 宠物技能数据列表展示模型（含 LEFT JOIN foxy.dbc_spell 的法术名）

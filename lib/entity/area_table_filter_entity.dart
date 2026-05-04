@@ -17,4 +17,14 @@ class AreaTableFilterEntity {
       'name': name,
     };
   }
+
+  AreaTableFilterEntity copyWith({
+    String? id,
+    String? name,
+  }) {
+    return AreaTableFilterEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
 }

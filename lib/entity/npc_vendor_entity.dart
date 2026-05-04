@@ -41,6 +41,26 @@ class NpcVendorEntity {
       'VerifiedBuild': verifiedBuild,
     };
   }
+
+  NpcVendorEntity copyWith({
+    int? entry,
+    int? slot,
+    int? item,
+    int? maxcount,
+    int? incrtime,
+    int? extendedCost,
+    int? verifiedBuild,
+  }) {
+    return NpcVendorEntity(
+      entry: entry ?? this.entry,
+      slot: slot ?? this.slot,
+      item: item ?? this.item,
+      maxcount: maxcount ?? this.maxcount,
+      incrtime: incrtime ?? this.incrtime,
+      extendedCost: extendedCost ?? this.extendedCost,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
+  }
 }
 
 /// NPC商人物品列表展示模型（含 LEFT JOIN item_template + item_display_info 的物品信息）

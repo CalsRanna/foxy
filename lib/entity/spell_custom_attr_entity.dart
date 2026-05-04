@@ -15,4 +15,14 @@ class SpellCustomAttrEntity {
   Map<String, dynamic> toJson() {
     return {'spell_id': spellId, 'attributes': attributes};
   }
+
+  SpellCustomAttrEntity copyWith({
+    int? spellId,
+    int? attributes,
+  }) {
+    return SpellCustomAttrEntity(
+      spellId: spellId ?? this.spellId,
+      attributes: attributes ?? this.attributes,
+    );
+  }
 }

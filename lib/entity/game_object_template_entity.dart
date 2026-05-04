@@ -34,6 +34,22 @@ class BriefGameObjectTemplateEntity {
       'size': size,
     };
   }
+
+  BriefGameObjectTemplateEntity copyWith({
+    int? entry,
+    String? name,
+    String? localeName,
+    int? type,
+    double? size,
+  }) {
+    return BriefGameObjectTemplateEntity(
+      entry: entry ?? this.entry,
+      name: name ?? this.name,
+      localeName: localeName ?? this.localeName,
+      type: type ?? this.type,
+      size: size ?? this.size,
+    );
+  }
 }
 
 class GameObjectTemplateEntity {
@@ -189,5 +205,81 @@ class GameObjectTemplateEntity {
       'ScriptName': scriptName,
       'VerifiedBuild': verifiedBuild,
     };
+  }
+
+  GameObjectTemplateEntity copyWith({
+    int? entry,
+    int? type,
+    int? displayId,
+    String? name,
+    String? iconName,
+    String? castBarCaption,
+    String? unk1,
+    double? size,
+    int? data0,
+    int? data1,
+    int? data2,
+    int? data3,
+    int? data4,
+    int? data5,
+    int? data6,
+    int? data7,
+    int? data8,
+    int? data9,
+    int? data10,
+    int? data11,
+    int? data12,
+    int? data13,
+    int? data14,
+    int? data15,
+    int? data16,
+    int? data17,
+    int? data18,
+    int? data19,
+    int? data20,
+    int? data21,
+    int? data22,
+    int? data23,
+    String? aiName,
+    String? scriptName,
+    int? verifiedBuild,
+  }) {
+    return GameObjectTemplateEntity(
+      entry: entry ?? this.entry,
+      type: type ?? this.type,
+      displayId: displayId ?? this.displayId,
+      name: name ?? this.name,
+      iconName: iconName ?? this.iconName,
+      castBarCaption: castBarCaption ?? this.castBarCaption,
+      unk1: unk1 ?? this.unk1,
+      size: size ?? this.size,
+      data0: data0 ?? this.data0,
+      data1: data1 ?? this.data1,
+      data2: data2 ?? this.data2,
+      data3: data3 ?? this.data3,
+      data4: data4 ?? this.data4,
+      data5: data5 ?? this.data5,
+      data6: data6 ?? this.data6,
+      data7: data7 ?? this.data7,
+      data8: data8 ?? this.data8,
+      data9: data9 ?? this.data9,
+      data10: data10 ?? this.data10,
+      data11: data11 ?? this.data11,
+      data12: data12 ?? this.data12,
+      data13: data13 ?? this.data13,
+      data14: data14 ?? this.data14,
+      data15: data15 ?? this.data15,
+      data16: data16 ?? this.data16,
+      data17: data17 ?? this.data17,
+      data18: data18 ?? this.data18,
+      data19: data19 ?? this.data19,
+      data20: data20 ?? this.data20,
+      data21: data21 ?? this.data21,
+      data22: data22 ?? this.data22,
+      data23: data23 ?? this.data23,
+      aiName: aiName ?? this.aiName,
+      scriptName: scriptName ?? this.scriptName,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
   }
 }

@@ -43,4 +43,26 @@ class CreatureQuestItemEntity {
       'VerifiedBuild': verifiedBuild,
     };
   }
+
+  CreatureQuestItemEntity copyWith({
+    int? creatureEntry,
+    int? idx,
+    int? itemId,
+    int? verifiedBuild,
+    String? itemName,
+    String? itemLocaleName,
+    int? itemQuality,
+    String? itemIcon,
+  }) {
+    return CreatureQuestItemEntity(
+      creatureEntry: creatureEntry ?? this.creatureEntry,
+      idx: idx ?? this.idx,
+      itemId: itemId ?? this.itemId,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      itemName: itemName ?? this.itemName,
+      itemLocaleName: itemLocaleName ?? this.itemLocaleName,
+      itemQuality: itemQuality ?? this.itemQuality,
+      itemIcon: itemIcon ?? this.itemIcon,
+    );
+  }
 }

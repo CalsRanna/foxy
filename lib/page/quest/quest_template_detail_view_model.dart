@@ -306,7 +306,7 @@ class QuestTemplateDetailViewModel {
     objectiveText2Controller.text = t.objectiveText2;
     objectiveText3Controller.text = t.objectiveText3;
     objectiveText4Controller.text = t.objectiveText4;
-    verifiedBuildController.text = t.verifiedBuild?.toString() ?? '';
+    verifiedBuildController.text = t.verifiedBuild.toString();
   }
 
   QuestTemplateEntity _collect() {
@@ -415,7 +415,7 @@ class QuestTemplateDetailViewModel {
       objectiveText2: objectiveText2Controller.text,
       objectiveText3: objectiveText3Controller.text,
       objectiveText4: objectiveText4Controller.text,
-      verifiedBuild: _parseIntOrNull(verifiedBuildController.text),
+      verifiedBuild: int.tryParse(verifiedBuildController.text) ?? 0,
     );
   }
 
@@ -426,7 +426,6 @@ class QuestTemplateDetailViewModel {
     return value;
   }
 
-  int? _parseIntOrNull(String text) => text.isEmpty ? null : int.tryParse(text);
 
   void _logActivity(ActivityActionType action, QuestTemplateEntity t) {
     final log = ActivityLogEntity(

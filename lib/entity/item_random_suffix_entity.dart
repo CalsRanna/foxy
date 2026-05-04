@@ -24,4 +24,16 @@ class ItemRandomSuffixEntity {
       'InternalName': internalName,
     };
   }
+
+  ItemRandomSuffixEntity copyWith({
+    int? id,
+    String? nameLangZhCn,
+    String? internalName,
+  }) {
+    return ItemRandomSuffixEntity(
+      id: id ?? this.id,
+      nameLangZhCn: nameLangZhCn ?? this.nameLangZhCn,
+      internalName: internalName ?? this.internalName,
+    );
+  }
 }
