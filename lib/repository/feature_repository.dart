@@ -2,7 +2,7 @@ import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class FeatureRepository with RepositoryMixin {
-  Future<List<FeatureEntity>> getAll() async {
+  Future<List<FeatureEntity>> getFeatures() async {
     final rows = await laconic
         .table('foxy.features')
         .select(['*'])

@@ -73,7 +73,7 @@ class NpcTextViewModel {
   }
 
   /// 保存主表 + zhCN locale
-  Future<void> onSave() async {
+  Future<void> save() async {
     try {
       final main = _collectMainFromControllers();
       if (creating.value) {

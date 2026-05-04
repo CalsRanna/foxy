@@ -23,9 +23,9 @@ class ConditionRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<ConditionEntity> getCondition(Map<String, dynamic> credential) async {
+  Future<ConditionEntity> getCondition(Map<String, dynamic> id) async {
     var builder = laconic.table(_table);
-    for (final entry in credential.entries) {
+    for (final entry in id.entries) {
       builder = builder.where(entry.key, entry.value);
     }
     var result = await builder.first();
@@ -37,7 +37,7 @@ class ConditionRepository with RepositoryMixin {
   }
 
   Future<void> updateCondition(
-    Map<String, dynamic> credential,
+    Map<String, dynamic> id,
     ConditionEntity condition,
   ) async {
     var json = condition.toJson();
@@ -54,22 +54,22 @@ class ConditionRepository with RepositoryMixin {
     json.remove('ConditionValue3');
 
     var builder = laconic.table(_table);
-    for (final entry in credential.entries) {
+    for (final entry in id.entries) {
       builder = builder.where(entry.key, entry.value);
     }
     await builder.update(json);
   }
 
-  Future<void> destroyCondition(Map<String, dynamic> credential) async {
+  Future<void> destroyCondition(Map<String, dynamic> id) async {
     var builder = laconic.table(_table);
-    for (final entry in credential.entries) {
+    for (final entry in id.entries) {
       builder = builder.where(entry.key, entry.value);
     }
     await builder.delete();
   }
 
-  Future<void> copyCondition(Map<String, dynamic> credential) async {
-    var source = await getCondition(credential);
+  Future<void> copyCondition(Map<String, dynamic> id) async {
+    var source = await getCondition(id);
     var json = source.toJson();
     json['ConditionValue3'] = (json['ConditionValue3'] as int) + 1;
     await laconic.table(_table).insert([json]);

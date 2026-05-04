@@ -79,14 +79,14 @@ class PageTextRepository with RepositoryMixin {
   }
 
   // Locale operations
-  Future<List<PageTextLocaleEntity>> getLocales(int id) async {
+  Future<List<PageTextLocaleEntity>> getPageTextLocales(int id) async {
     var results = await laconic.table(_localeTable).where('ID', id).get();
     return results
         .map((e) => PageTextLocaleEntity.fromJson(e.toMap()))
         .toList();
   }
 
-  Future<void> saveLocales(int id, List<PageTextLocaleEntity> locales) async {
+  Future<void> savePageTextLocales(int id, List<PageTextLocaleEntity> locales) async {
     await laconic.transaction(() async {
       await laconic.table(_localeTable).where('ID', id).delete();
       if (locales.isEmpty) return;

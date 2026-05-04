@@ -134,8 +134,6 @@ class _ReferenceLootTemplateViewState
       ]),
     ];
 
-    final isNew = widget.entry == null;
-
     return SingleChildScrollView(
       padding: EdgeInsets.only(top: 16),
       child: Column(
@@ -153,9 +151,7 @@ class _ReferenceLootTemplateViewState
           Row(
             children: [
               ShadButton(
-                onPressed: () => isNew
-                    ? viewModel.save(context)
-                    : viewModel.update(context),
+                onPressed: () => viewModel.save(context),
                 child: Text('保存'),
               ),
               const SizedBox(width: 8),

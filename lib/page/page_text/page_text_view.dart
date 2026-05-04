@@ -61,8 +61,6 @@ class _PageTextViewState extends State<PageTextView> {
       ),
     );
 
-    final isNew = widget.id == null;
-
     return SingleChildScrollView(
       padding: EdgeInsets.only(top: 16),
       child: Column(
@@ -89,7 +87,7 @@ class _PageTextViewState extends State<PageTextView> {
           Row(
             children: [
               ShadButton(
-                onPressed: () => isNew ? viewModel.save(context) : viewModel.update(context),
+                onPressed: () => viewModel.save(context),
                 child: Text('保存'),
               ),
               SizedBox(width: 8),

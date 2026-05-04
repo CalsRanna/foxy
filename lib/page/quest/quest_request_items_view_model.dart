@@ -26,10 +26,10 @@ class QuestRequestItemsViewModel {
       final existing = await repository.getQuestRequestItems(questId);
       if (existing != null) {
         _originalId = existing.id;
-        _applyToSignals(existing);
+        _initSignals(existing);
       } else {
         final blank = await repository.createQuestRequestItems(questId);
-        _applyToSignals(blank);
+        _initSignals(blank);
       }
       id.value = questId;
     } catch (e) {
@@ -63,7 +63,7 @@ class QuestRequestItemsViewModel {
     routerFacade.goBack();
   }
 
-  void _applyToSignals(QuestRequestItemsEntity model) {
+  void _initSignals(QuestRequestItemsEntity model) {
     emoteOnComplete.value = model.emoteOnComplete;
     emoteOnIncomplete.value = model.emoteOnIncomplete;
     completionTextController.text = model.completionText;

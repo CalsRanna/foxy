@@ -60,38 +60,23 @@ class ReferenceLootTemplateDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    try {
-      final data = _collectFromControllers();
-      await repository.storeLootTemplate(data);
-      template.value = data;
-      _logActivity(ActivityActionType.create, data);
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('关联掉落已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  Future<void> update(BuildContext context) async {
-    final oEntry = originalEntry.value;
     final oItem = originalItem.value;
-    if (oEntry == null || oItem == null) return;
-
     try {
       final data = _collectFromControllers();
-      await repository.updateLootTemplate(data, oldItem: oItem);
-      template.value = data;
-      _logActivity(ActivityActionType.update, data);
+      if (oItem != null) {
+        await repository.updateLootTemplate(data, oldItem: oItem);
+        template.value = data;
+        _logActivity(ActivityActionType.update, data);
+      } else {
+        await repository.storeLootTemplate(data);
+        template.value = data;
+        _logActivity(ActivityActionType.create, data);
+      }
       if (!context.mounted) return;
-      var toast = ShadToast(description: Text('更新成功'));
-      ShadSonner.of(context).show(toast);
+      ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
     } catch (e) {
       if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
+      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
     }
   }
 

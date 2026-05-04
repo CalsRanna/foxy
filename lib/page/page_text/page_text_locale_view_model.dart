@@ -16,7 +16,7 @@ class PageTextLocaleViewModel {
     if (id == null) return;
     _currentId = id;
     try {
-      final data = await repository.getLocales(id);
+      final data = await repository.getPageTextLocales(id);
       locales.value = data;
       _syncControllers();
     } catch (e, s) {
@@ -68,7 +68,7 @@ class PageTextLocaleViewModel {
         }
         return locale;
       }).toList();
-      await repository.saveLocales(_currentId, updatedLocales);
+      await repository.savePageTextLocales(_currentId, updatedLocales);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('本地化已保存')));
     } catch (e) {

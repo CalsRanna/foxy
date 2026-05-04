@@ -56,7 +56,7 @@ class PlayerCreateInfoSpellCustomViewModel {
     }
   }
 
-  Future<void> onDelete(
+  Future<void> delete(
     BuildContext context,
     PlayerCreateInfoSpellCustomEntity item,
   ) async {

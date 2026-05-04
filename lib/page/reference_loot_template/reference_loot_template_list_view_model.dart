@@ -45,8 +45,8 @@ class ReferenceLootTemplateListViewModel {
     total.value = await _countEntries();
   }
 
-  Future<void> paginate(int newPage) async {
-    page.value = newPage;
+  Future<void> paginate(int page) async {
+    this.page.value = page;
     await _refresh();
   }
 

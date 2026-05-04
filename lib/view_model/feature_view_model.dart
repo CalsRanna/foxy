@@ -14,7 +14,7 @@ class FeatureViewModel {
       allFeatures.value.where((f) => f.isFavorite).toList();
 
   Future<void> load() async {
-    final features = await _repository.getAll();
+    final features = await _repository.getFeatures();
     allFeatures.value = features;
   }
 

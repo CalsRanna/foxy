@@ -56,7 +56,7 @@ class DbcFactionRepository with RepositoryMixin {
     }
   }
 
-  Future<DbcFactionEntity?> getById(int id) async {
+  Future<DbcFactionEntity?> getDbcFaction(int id) async {
     try {
       var result = await laconic
           .table(_table)
