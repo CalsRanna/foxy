@@ -184,12 +184,12 @@ class _ItemEnchantmentTemplateViewState
           SizedBox(height: 16),
           // 几率
           FormItem(
+            label: '几率',
+            placeholder: 'Chance (%)',
             child: FoxyNumberInput<double>(
               value: viewModel.chance.value,
               onChanged: (v) => viewModel.chance.value = v,
             ),
-            label: '几率',
-            placeholder: 'Chance (%)',
           ),
           SizedBox(height: 24),
           // 按钮行
