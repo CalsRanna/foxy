@@ -15,7 +15,6 @@ class SpellGroupViewModel {
   final items = signal<List<SpellGroupEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final groupId = signal<int>(0);
-  final specialFlag = signal<int>(0);
 
   final repository = SpellGroupRepository();
 
@@ -27,19 +26,16 @@ class SpellGroupViewModel {
 
   void resetForm() {
     groupId.value = 0;
-    specialFlag.value = 0;
   }
 
   void fillForm(SpellGroupEntity data) {
     groupId.value = data.id;
-    specialFlag.value = data.specialFlag;
   }
 
   SpellGroupEntity collectFromForm() {
     final data = SpellGroupEntity(
       spellId: spellId.value,
       id: groupId.value,
-      specialFlag: specialFlag.value,
     );
     return data;
   }

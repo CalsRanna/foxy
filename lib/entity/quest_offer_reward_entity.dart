@@ -107,7 +107,7 @@ class QuestOfferRewardLocaleEntity {
   factory QuestOfferRewardLocaleEntity.fromJson(Map<String, dynamic> json) {
     return QuestOfferRewardLocaleEntity(
       id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['Locale']?.toString() ?? 'zhCN',
+      locale: json['locale']?.toString() ?? 'zhCN',
       rewardText: json['RewardText']?.toString() ?? '',
       verifiedBuild: json['VerifiedBuild'] ?? 0,
     );
@@ -116,7 +116,7 @@ class QuestOfferRewardLocaleEntity {
   Map<String, dynamic> toJson() {
     final result = <String, dynamic>{
       'ID': id,
-      'Locale': locale,
+      'locale': locale,
       'RewardText': rewardText,
       'VerifiedBuild': verifiedBuild,
     };

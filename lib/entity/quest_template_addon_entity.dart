@@ -9,6 +9,7 @@ class QuestTemplateAddonEntity {
   final int prevQuestId;
   final int nextQuestId;
   final int exclusiveGroup;
+  final int breadcrumbForQuestId;
   final int rewardMailTemplateId;
   final int rewardMailDelay;
   final int requiredSkillId;
@@ -28,6 +29,7 @@ class QuestTemplateAddonEntity {
     this.prevQuestId = 0,
     this.nextQuestId = 0,
     this.exclusiveGroup = 0,
+    this.breadcrumbForQuestId = 0,
     this.rewardMailTemplateId = 0,
     this.rewardMailDelay = 0,
     this.requiredSkillId = 0,
@@ -49,6 +51,7 @@ class QuestTemplateAddonEntity {
       prevQuestId: json['PrevQuestID'] ?? 0,
       nextQuestId: json['NextQuestID'] ?? 0,
       exclusiveGroup: json['ExclusiveGroup'] ?? 0,
+      breadcrumbForQuestId: json['BreadcrumbForQuestId'] ?? 0,
       rewardMailTemplateId: json['RewardMailTemplateID'] ?? 0,
       rewardMailDelay: json['RewardMailDelay'] ?? 0,
       requiredSkillId: json['RequiredSkillID'] ?? 0,
@@ -71,6 +74,7 @@ class QuestTemplateAddonEntity {
       'PrevQuestID': prevQuestId,
       'NextQuestID': nextQuestId,
       'ExclusiveGroup': exclusiveGroup,
+      'BreadcrumbForQuestId': breadcrumbForQuestId,
       'RewardMailTemplateID': rewardMailTemplateId,
       'RewardMailDelay': rewardMailDelay,
       'RequiredSkillID': requiredSkillId,
@@ -92,6 +96,7 @@ class QuestTemplateAddonEntity {
     int? prevQuestId,
     int? nextQuestId,
     int? exclusiveGroup,
+    int? breadcrumbForQuestId,
     int? rewardMailTemplateId,
     int? rewardMailDelay,
     int? requiredSkillId,
@@ -111,6 +116,7 @@ class QuestTemplateAddonEntity {
       prevQuestId: prevQuestId ?? this.prevQuestId,
       nextQuestId: nextQuestId ?? this.nextQuestId,
       exclusiveGroup: exclusiveGroup ?? this.exclusiveGroup,
+      breadcrumbForQuestId: breadcrumbForQuestId ?? this.breadcrumbForQuestId,
       rewardMailTemplateId: rewardMailTemplateId ?? this.rewardMailTemplateId,
       rewardMailDelay: rewardMailDelay ?? this.rewardMailDelay,
       requiredSkillId: requiredSkillId ?? this.requiredSkillId,

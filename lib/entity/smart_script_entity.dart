@@ -62,6 +62,7 @@ class SmartScriptEntity {
   final int eventParam3;
   final int eventParam4;
   final int eventParam5;
+  final int eventParam6;
   final int actionType;
   final int actionParam1;
   final int actionParam2;
@@ -94,6 +95,7 @@ class SmartScriptEntity {
     this.eventParam3 = 0,
     this.eventParam4 = 0,
     this.eventParam5 = 0,
+    this.eventParam6 = 0,
     this.actionType = 0,
     this.actionParam1 = 0,
     this.actionParam2 = 0,
@@ -128,6 +130,7 @@ class SmartScriptEntity {
       eventParam3: json['event_param3'] ?? 0,
       eventParam4: json['event_param4'] ?? 0,
       eventParam5: json['event_param5'] ?? 0,
+      eventParam6: json['event_param6'] ?? 0,
       actionType: json['action_type'] ?? 0,
       actionParam1: json['action_param1'] ?? 0,
       actionParam2: json['action_param2'] ?? 0,
@@ -163,6 +166,7 @@ class SmartScriptEntity {
       'event_param3': eventParam3,
       'event_param4': eventParam4,
       'event_param5': eventParam5,
+      'event_param6': eventParam6,
       'action_type': actionType,
       'action_param1': actionParam1,
       'action_param2': actionParam2,

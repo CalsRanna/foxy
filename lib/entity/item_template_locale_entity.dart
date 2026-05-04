@@ -18,7 +18,7 @@ class ItemTemplateLocaleEntity {
   factory ItemTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
     return ItemTemplateLocaleEntity(
       id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['Locale']?.toString() ?? 'zhCN',
+      locale: json['locale']?.toString() ?? 'zhCN',
       name: json['Name']?.toString() ?? '',
       description: json['Description']?.toString() ?? '',
       verifiedBuild: json['VerifiedBuild'] ?? 0,
@@ -28,7 +28,7 @@ class ItemTemplateLocaleEntity {
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
-      'Locale': locale,
+      'locale': locale,
       'Name': name,
       'Description': description,
       'VerifiedBuild': verifiedBuild,

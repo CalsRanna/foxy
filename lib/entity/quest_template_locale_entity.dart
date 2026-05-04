@@ -32,7 +32,7 @@ class QuestTemplateLocaleEntity {
   factory QuestTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
     return QuestTemplateLocaleEntity(
       id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['Locale']?.toString() ?? 'zhCN',
+      locale: json['locale']?.toString() ?? 'zhCN',
       title: json['Title']?.toString() ?? '',
       details: json['Details']?.toString() ?? '',
       objectives: json['Objectives']?.toString() ?? '',
@@ -49,7 +49,7 @@ class QuestTemplateLocaleEntity {
   Map<String, dynamic> toJson() {
     final result = <String, dynamic>{
       'ID': id,
-      'Locale': locale,
+      'locale': locale,
       'Title': title,
       'Details': details,
       'Objectives': objectives,

@@ -42,7 +42,7 @@ class SpellLootTemplateEntity {
       chance: (json['Chance'] ?? json['chance'] ?? 0.0),
       questRequired: json['QuestRequired'] ?? json['questRequired'] ?? 0,
       lootMode: json['LootMode'] ?? json['lootMode'] ?? 0,
-      groupId: json['GroupId'] ?? json['GroudId'] ?? json['groupId'] ?? 0,
+      groupId: json['GroupId'] ?? 0,
       minCount: json['MinCount'] ?? json['minCount'] ?? 0,
       maxCount: json['MaxCount'] ?? json['maxCount'] ?? 0,
       comment: json['Comment'] ?? json['comment'] ?? '',

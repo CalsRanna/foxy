@@ -48,7 +48,7 @@ class _SpellGroupViewState extends State<SpellGroupView> {
     final toolbar = Row(children: [createButton, Spacer()]);
 
     final items = viewModel.items.value;
-    final headers = ['技能组', '标识', '光环叠加规则', '描述'];
+    final headers = ['技能组', '光环叠加规则', '描述'];
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
@@ -62,9 +62,8 @@ class _SpellGroupViewState extends State<SpellGroupView> {
             final item = items[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.specialFlag.toString())),
-              2 => ShadTableCell(child: Text(item.stackRule.toString())),
-              3 => ShadTableCell(child: Text(item.description)),
+              1 => ShadTableCell(child: Text(item.stackRule.toString())),
+              2 => ShadTableCell(child: Text(item.description)),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -168,16 +167,6 @@ class _SpellGroupViewState extends State<SpellGroupView> {
                   child: FoxyNumberInput<int>(
                     value: viewModel.groupId.value,
                     onChanged: (v) => viewModel.groupId.value = v,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FormItem(
-                  label: '标识',
-                  placeholder: 'special_flag',
-                  child: FoxyNumberInput<int>(
-                    value: viewModel.specialFlag.value,
-                    onChanged: (v) => viewModel.specialFlag.value = v,
                   ),
                 ),
               ),

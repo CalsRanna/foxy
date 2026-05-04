@@ -319,7 +319,7 @@ class ItemTemplateEntity {
       scalingStatValue:
           json['ScalingStatValue'] ?? json['scalingStatValue'] ?? 0,
       // --- 统计属性（10 组）---
-      statsCount: json['StatsCount'] ?? json['statsCount'] ?? 0,
+      statsCount: json['StatsCount'] ?? 0,
       statTypes: [for (var i = 1; i <= 10; i++) json['stat_type$i'] ?? 0],
       statValues: [for (var i = 1; i <= 10; i++) json['stat_value$i'] ?? 0],
       // --- 抗性 ---
@@ -348,11 +348,7 @@ class ItemTemplateEntity {
         for (var i = 1; i <= 5; i++) json['spellcategorycooldown_$i'] ?? 0,
       ],
       // --- 使用限制 ---
-      allowableClass:
-          json['Allowableclass'] ??
-          json['AllowableClass'] ??
-          json['allowableClass'] ??
-          -1,
+      allowableClass: json['AllowableClass'] ?? -1,
       allowableRace: json['AllowableRace'] ?? json['allowableRace'] ?? -1,
       itemLevel: json['ItemLevel'] ?? json['itemLevel'] ?? 0,
       requiredLevel: json['RequiredLevel'] ?? json['requiredLevel'] ?? 0,
@@ -465,7 +461,6 @@ class ItemTemplateEntity {
       'ScalingStatValue': scalingStatValue,
 
       // --- 统计属性 ---
-      'StatsCount': statsCount,
     };
     for (var i = 0; i < 10; i++) {
       result['stat_type${i + 1}'] = statTypes[i];
@@ -492,7 +487,7 @@ class ItemTemplateEntity {
     }
 
     // --- 使用限制 ---
-    result['Allowableclass'] = allowableClass;
+    result['AllowableClass'] = allowableClass;
     result['AllowableRace'] = allowableRace;
     result['ItemLevel'] = itemLevel;
     result['RequiredLevel'] = requiredLevel;
