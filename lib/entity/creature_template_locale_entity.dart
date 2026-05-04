@@ -1,19 +1,26 @@
 class CreatureTemplateLocaleEntity {
-  int entry = 0;
-  String locale = '';
-  String name = '';
-  String title = '';
-  int verifiedBuild = 0;
+  final int entry;
+  final String locale;
+  final String name;
+  final String title;
+  final int verifiedBuild;
 
-  CreatureTemplateLocaleEntity();
+  const CreatureTemplateLocaleEntity({
+    this.entry = 0,
+    this.locale = '',
+    this.name = '',
+    this.title = '',
+    this.verifiedBuild = 0,
+  });
 
   factory CreatureTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateLocaleEntity()
-      ..entry = json['entry'] ?? 0
-      ..locale = json['locale'] ?? ''
-      ..name = json['Name'] ?? ''
-      ..title = json['Title'] ?? ''
-      ..verifiedBuild = json['VerifiedBuild'] ?? 0;
+    return CreatureTemplateLocaleEntity(
+      entry: json['entry'] ?? 0,
+      locale: json['locale'] ?? '',
+      name: json['Name'] ?? '',
+      title: json['Title'] ?? '',
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -33,11 +40,12 @@ class CreatureTemplateLocaleEntity {
     String? title,
     int? verifiedBuild,
   }) {
-    return CreatureTemplateLocaleEntity()
-      ..entry = entry ?? this.entry
-      ..locale = locale ?? this.locale
-      ..name = name ?? this.name
-      ..title = title ?? this.title
-      ..verifiedBuild = verifiedBuild ?? this.verifiedBuild;
+    return CreatureTemplateLocaleEntity(
+      entry: entry ?? this.entry,
+      locale: locale ?? this.locale,
+      name: name ?? this.name,
+      title: title ?? this.title,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
   }
 }

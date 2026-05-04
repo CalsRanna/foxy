@@ -56,4 +56,30 @@ class CreatureOnKillReputationEntity {
       'TeamDependent': teamDependent,
     };
   }
+
+  CreatureOnKillReputationEntity copyWith({
+    int? creatureID,
+    int? rewOnKillRepFaction1,
+    int? rewOnKillRepFaction2,
+    int? maxStanding1,
+    int? maxStanding2,
+    bool? isTeamAward1,
+    bool? isTeamAward2,
+    double? rewOnKillRepValue1,
+    double? rewOnKillRepValue2,
+    int? teamDependent,
+  }) {
+    return CreatureOnKillReputationEntity(
+      creatureID: creatureID ?? this.creatureID,
+      rewOnKillRepFaction1: rewOnKillRepFaction1 ?? this.rewOnKillRepFaction1,
+      rewOnKillRepFaction2: rewOnKillRepFaction2 ?? this.rewOnKillRepFaction2,
+      maxStanding1: maxStanding1 ?? this.maxStanding1,
+      maxStanding2: maxStanding2 ?? this.maxStanding2,
+      isTeamAward1: isTeamAward1 ?? this.isTeamAward1,
+      isTeamAward2: isTeamAward2 ?? this.isTeamAward2,
+      rewOnKillRepValue1: rewOnKillRepValue1 ?? this.rewOnKillRepValue1,
+      rewOnKillRepValue2: rewOnKillRepValue2 ?? this.rewOnKillRepValue2,
+      teamDependent: teamDependent ?? this.teamDependent,
+    );
+  }
 }

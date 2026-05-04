@@ -77,4 +77,42 @@ class ItemExtendedCostEntity {
       'ItemPurchaseGroup': itemPurchaseGroup,
     };
   }
+
+  ItemExtendedCostEntity copyWith({
+    int? id,
+    int? honorPoints,
+    int? arenaPoints,
+    int? arenaBracket,
+    int? itemID0,
+    int? itemID1,
+    int? itemID2,
+    int? itemID3,
+    int? itemID4,
+    int? itemCount0,
+    int? itemCount1,
+    int? itemCount2,
+    int? itemCount3,
+    int? itemCount4,
+    int? requiredArenaRating,
+    int? itemPurchaseGroup,
+  }) {
+    return ItemExtendedCostEntity(
+      id: id ?? this.id,
+      honorPoints: honorPoints ?? this.honorPoints,
+      arenaPoints: arenaPoints ?? this.arenaPoints,
+      arenaBracket: arenaBracket ?? this.arenaBracket,
+      itemID0: itemID0 ?? this.itemID0,
+      itemID1: itemID1 ?? this.itemID1,
+      itemID2: itemID2 ?? this.itemID2,
+      itemID3: itemID3 ?? this.itemID3,
+      itemID4: itemID4 ?? this.itemID4,
+      itemCount0: itemCount0 ?? this.itemCount0,
+      itemCount1: itemCount1 ?? this.itemCount1,
+      itemCount2: itemCount2 ?? this.itemCount2,
+      itemCount3: itemCount3 ?? this.itemCount3,
+      itemCount4: itemCount4 ?? this.itemCount4,
+      requiredArenaRating: requiredArenaRating ?? this.requiredArenaRating,
+      itemPurchaseGroup: itemPurchaseGroup ?? this.itemPurchaseGroup,
+    );
+  }
 }

@@ -37,4 +37,20 @@ class GossipMenuOptionLocaleEntity {
       'BoxText': boxText,
     };
   }
+
+  GossipMenuOptionLocaleEntity copyWith({
+    int? menuId,
+    int? optionId,
+    String? locale,
+    String? optionText,
+    String? boxText,
+  }) {
+    return GossipMenuOptionLocaleEntity(
+      menuId: menuId ?? this.menuId,
+      optionId: optionId ?? this.optionId,
+      locale: locale ?? this.locale,
+      optionText: optionText ?? this.optionText,
+      boxText: boxText ?? this.boxText,
+    );
+  }
 }

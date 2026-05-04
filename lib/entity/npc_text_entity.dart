@@ -29,6 +29,18 @@ class NpcTextEntity {
     }
     return result;
   }
+
+  NpcTextEntity copyWith({
+    int? id,
+    int? verifiedBuild,
+    List<NpcTextEntryEntity>? entries,
+  }) {
+    return NpcTextEntity(
+      id: id ?? this.id,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      entries: entries ?? this.entries,
+    );
+  }
 }
 
 /// npc_text 的单组数据

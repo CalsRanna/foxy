@@ -104,6 +104,58 @@ class TalentEntity {
       'CategoryMask1': categoryMask1,
     };
   }
+
+  TalentEntity copyWith({
+    int? id,
+    int? tabId,
+    int? tierId,
+    int? columnIndex,
+    int? spellRank0,
+    int? spellRank1,
+    int? spellRank2,
+    int? spellRank3,
+    int? spellRank4,
+    int? spellRank5,
+    int? spellRank6,
+    int? spellRank7,
+    int? spellRank8,
+    int? prereqTalent0,
+    int? prereqTalent1,
+    int? prereqTalent2,
+    int? prereqRank0,
+    int? prereqRank1,
+    int? prereqRank2,
+    int? flags,
+    int? requiredSpellId,
+    int? categoryMask0,
+    int? categoryMask1,
+  }) {
+    return TalentEntity(
+      id: id ?? this.id,
+      tabId: tabId ?? this.tabId,
+      tierId: tierId ?? this.tierId,
+      columnIndex: columnIndex ?? this.columnIndex,
+      spellRank0: spellRank0 ?? this.spellRank0,
+      spellRank1: spellRank1 ?? this.spellRank1,
+      spellRank2: spellRank2 ?? this.spellRank2,
+      spellRank3: spellRank3 ?? this.spellRank3,
+      spellRank4: spellRank4 ?? this.spellRank4,
+      spellRank5: spellRank5 ?? this.spellRank5,
+      spellRank6: spellRank6 ?? this.spellRank6,
+      spellRank7: spellRank7 ?? this.spellRank7,
+      spellRank8: spellRank8 ?? this.spellRank8,
+      prereqTalent0: prereqTalent0 ?? this.prereqTalent0,
+      prereqTalent1: prereqTalent1 ?? this.prereqTalent1,
+      prereqTalent2: prereqTalent2 ?? this.prereqTalent2,
+      prereqRank0: prereqRank0 ?? this.prereqRank0,
+      prereqRank1: prereqRank1 ?? this.prereqRank1,
+      prereqRank2: prereqRank2 ?? this.prereqRank2,
+      flags: flags ?? this.flags,
+      requiredSpellId: requiredSpellId ?? this.requiredSpellId,
+      categoryMask0: categoryMask0 ?? this.categoryMask0,
+      categoryMask1: categoryMask1 ?? this.categoryMask1,
+    );
+  }
 }
 
 class BriefTalentEntity {
@@ -139,5 +191,21 @@ class BriefTalentEntity {
       'ColumnIndex': columnIndex,
       'SpellRank0': spellRank0,
     };
+  }
+
+  BriefTalentEntity copyWith({
+    int? id,
+    int? tabId,
+    int? tierId,
+    int? columnIndex,
+    int? spellRank0,
+  }) {
+    return BriefTalentEntity(
+      id: id ?? this.id,
+      tabId: tabId ?? this.tabId,
+      tierId: tierId ?? this.tierId,
+      columnIndex: columnIndex ?? this.columnIndex,
+      spellRank0: spellRank0 ?? this.spellRank0,
+    );
   }
 }

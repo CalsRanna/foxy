@@ -32,4 +32,20 @@ class CreatureModelInfoEntity {
       'DisplayID_Other_Gender': displayIdOtherGender,
     };
   }
+
+  CreatureModelInfoEntity copyWith({
+    int? displayId,
+    double? boundingRadius,
+    double? combatReach,
+    int? gender,
+    int? displayIdOtherGender,
+  }) {
+    return CreatureModelInfoEntity(
+      displayId: displayId ?? this.displayId,
+      boundingRadius: boundingRadius ?? this.boundingRadius,
+      combatReach: combatReach ?? this.combatReach,
+      gender: gender ?? this.gender,
+      displayIdOtherGender: displayIdOtherGender ?? this.displayIdOtherGender,
+    );
+  }
 }

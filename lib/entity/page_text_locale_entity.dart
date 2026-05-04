@@ -28,4 +28,18 @@ class PageTextLocaleEntity {
       'VerifiedBuild': verifiedBuild,
     };
   }
+
+  PageTextLocaleEntity copyWith({
+    int? id,
+    String? locale,
+    String? text,
+    int? verifiedBuild,
+  }) {
+    return PageTextLocaleEntity(
+      id: id ?? this.id,
+      locale: locale ?? this.locale,
+      text: text ?? this.text,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
+  }
 }

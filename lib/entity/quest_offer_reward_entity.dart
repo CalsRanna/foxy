@@ -12,7 +12,7 @@ class QuestOfferRewardEntity {
   final int emoteDelay3;
   final int emoteDelay4;
   final String rewardText;
-  final int? verifiedBuild;
+  final int verifiedBuild;
 
   const QuestOfferRewardEntity({
     this.id = 0,
@@ -25,7 +25,7 @@ class QuestOfferRewardEntity {
     this.emoteDelay3 = 0,
     this.emoteDelay4 = 0,
     this.rewardText = '',
-    this.verifiedBuild,
+    this.verifiedBuild = 0,
   });
 
   factory QuestOfferRewardEntity.fromJson(Map<String, dynamic> json) {
@@ -40,7 +40,7 @@ class QuestOfferRewardEntity {
       emoteDelay3: json['EmoteDelay3'] ?? 0,
       emoteDelay4: json['EmoteDelay4'] ?? 0,
       rewardText: json['RewardText']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'],
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
     );
   }
 
@@ -56,11 +56,37 @@ class QuestOfferRewardEntity {
       'EmoteDelay3': emoteDelay3,
       'EmoteDelay4': emoteDelay4,
       'RewardText': rewardText,
+      'VerifiedBuild': verifiedBuild,
     };
-    if (verifiedBuild != null) {
-      result['VerifiedBuild'] = verifiedBuild!;
-    }
     return result;
+  }
+
+  QuestOfferRewardEntity copyWith({
+    int? id,
+    int? emote1,
+    int? emote2,
+    int? emote3,
+    int? emote4,
+    int? emoteDelay1,
+    int? emoteDelay2,
+    int? emoteDelay3,
+    int? emoteDelay4,
+    String? rewardText,
+    int? verifiedBuild,
+  }) {
+    return QuestOfferRewardEntity(
+      id: id ?? this.id,
+      emote1: emote1 ?? this.emote1,
+      emote2: emote2 ?? this.emote2,
+      emote3: emote3 ?? this.emote3,
+      emote4: emote4 ?? this.emote4,
+      emoteDelay1: emoteDelay1 ?? this.emoteDelay1,
+      emoteDelay2: emoteDelay2 ?? this.emoteDelay2,
+      emoteDelay3: emoteDelay3 ?? this.emoteDelay3,
+      emoteDelay4: emoteDelay4 ?? this.emoteDelay4,
+      rewardText: rewardText ?? this.rewardText,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
   }
 }
 
@@ -69,13 +95,13 @@ class QuestOfferRewardLocaleEntity {
   final int id;
   final String locale;
   final String rewardText;
-  final int? verifiedBuild;
+  final int verifiedBuild;
 
   const QuestOfferRewardLocaleEntity({
     this.id = 0,
     this.locale = 'zhCN',
     this.rewardText = '',
-    this.verifiedBuild,
+    this.verifiedBuild = 0,
   });
 
   factory QuestOfferRewardLocaleEntity.fromJson(Map<String, dynamic> json) {
@@ -83,7 +109,7 @@ class QuestOfferRewardLocaleEntity {
       id: (json['ID'] ?? json['id'] ?? 0) as int,
       locale: json['Locale']?.toString() ?? 'zhCN',
       rewardText: json['RewardText']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'],
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
     );
   }
 
@@ -92,10 +118,22 @@ class QuestOfferRewardLocaleEntity {
       'ID': id,
       'Locale': locale,
       'RewardText': rewardText,
+      'VerifiedBuild': verifiedBuild,
     };
-    if (verifiedBuild != null) {
-      result['VerifiedBuild'] = verifiedBuild!;
-    }
     return result;
+  }
+
+  QuestOfferRewardLocaleEntity copyWith({
+    int? id,
+    String? locale,
+    String? rewardText,
+    int? verifiedBuild,
+  }) {
+    return QuestOfferRewardLocaleEntity(
+      id: id ?? this.id,
+      locale: locale ?? this.locale,
+      rewardText: rewardText ?? this.rewardText,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
   }
 }

@@ -20,4 +20,16 @@ class ItemRandomPropertiesEntity {
   Map<String, dynamic> toJson() {
     return {'ID': id, 'Name': name, 'Name_lang_zhCN': nameLangZhCn};
   }
+
+  ItemRandomPropertiesEntity copyWith({
+    int? id,
+    String? name,
+    String? nameLangZhCn,
+  }) {
+    return ItemRandomPropertiesEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      nameLangZhCn: nameLangZhCn ?? this.nameLangZhCn,
+    );
+  }
 }

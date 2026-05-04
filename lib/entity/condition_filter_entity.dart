@@ -14,4 +14,14 @@ class ConditionFilterEntity {
   Map<String, dynamic> toJson() {
     return {'sourceTypeOrReferenceId': sourceTypeOrReferenceId, 'sourceEntry': sourceEntry};
   }
+
+  ConditionFilterEntity copyWith({
+    String? sourceTypeOrReferenceId,
+    String? sourceEntry,
+  }) {
+    return ConditionFilterEntity(
+      sourceTypeOrReferenceId: sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
+      sourceEntry: sourceEntry ?? this.sourceEntry,
+    );
+  }
 }

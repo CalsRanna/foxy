@@ -6,14 +6,14 @@ class QuestRequestItemsEntity {
   final int emoteOnComplete;
   final int emoteOnIncomplete;
   final String completionText;
-  final int? verifiedBuild;
+  final int verifiedBuild;
 
   const QuestRequestItemsEntity({
     this.id = 0,
     this.emoteOnComplete = 0,
     this.emoteOnIncomplete = 0,
     this.completionText = '',
-    this.verifiedBuild,
+    this.verifiedBuild = 0,
   });
 
   factory QuestRequestItemsEntity.fromJson(Map<String, dynamic> json) {
@@ -22,7 +22,7 @@ class QuestRequestItemsEntity {
       emoteOnComplete: json['EmoteOnComplete'] ?? 0,
       emoteOnIncomplete: json['EmoteOnIncomplete'] ?? 0,
       completionText: json['CompletionText']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'],
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
     );
   }
 
@@ -32,11 +32,25 @@ class QuestRequestItemsEntity {
       'EmoteOnComplete': emoteOnComplete,
       'EmoteOnIncomplete': emoteOnIncomplete,
       'CompletionText': completionText,
+      'VerifiedBuild': verifiedBuild,
     };
-    if (verifiedBuild != null) {
-      result['VerifiedBuild'] = verifiedBuild!;
-    }
     return result;
+  }
+
+  QuestRequestItemsEntity copyWith({
+    int? id,
+    int? emoteOnComplete,
+    int? emoteOnIncomplete,
+    String? completionText,
+    int? verifiedBuild,
+  }) {
+    return QuestRequestItemsEntity(
+      id: id ?? this.id,
+      emoteOnComplete: emoteOnComplete ?? this.emoteOnComplete,
+      emoteOnIncomplete: emoteOnIncomplete ?? this.emoteOnIncomplete,
+      completionText: completionText ?? this.completionText,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
   }
 }
 
@@ -45,13 +59,13 @@ class QuestRequestItemsLocaleEntity {
   final int id;
   final String locale;
   final String completionText;
-  final int? verifiedBuild;
+  final int verifiedBuild;
 
   const QuestRequestItemsLocaleEntity({
     this.id = 0,
     this.locale = 'zhCN',
     this.completionText = '',
-    this.verifiedBuild,
+    this.verifiedBuild = 0,
   });
 
   factory QuestRequestItemsLocaleEntity.fromJson(Map<String, dynamic> json) {
@@ -59,7 +73,7 @@ class QuestRequestItemsLocaleEntity {
       id: (json['ID'] ?? json['id'] ?? 0) as int,
       locale: json['Locale']?.toString() ?? 'zhCN',
       completionText: json['CompletionText']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'],
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
     );
   }
 
@@ -68,10 +82,22 @@ class QuestRequestItemsLocaleEntity {
       'ID': id,
       'Locale': locale,
       'CompletionText': completionText,
+      'VerifiedBuild': verifiedBuild,
     };
-    if (verifiedBuild != null) {
-      result['VerifiedBuild'] = verifiedBuild!;
-    }
     return result;
+  }
+
+  QuestRequestItemsLocaleEntity copyWith({
+    int? id,
+    String? locale,
+    String? completionText,
+    int? verifiedBuild,
+  }) {
+    return QuestRequestItemsLocaleEntity(
+      id: id ?? this.id,
+      locale: locale ?? this.locale,
+      completionText: completionText ?? this.completionText,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
   }
 }

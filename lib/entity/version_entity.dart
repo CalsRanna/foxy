@@ -28,4 +28,18 @@ class VersionEntity {
       'cache_id': cacheId,
     };
   }
+
+  VersionEntity copyWith({
+    String? coreVersion,
+    String? coreRevision,
+    String? dbVersion,
+    int? cacheId,
+  }) {
+    return VersionEntity(
+      coreVersion: coreVersion ?? this.coreVersion,
+      coreRevision: coreRevision ?? this.coreRevision,
+      dbVersion: dbVersion ?? this.dbVersion,
+      cacheId: cacheId ?? this.cacheId,
+    );
+  }
 }

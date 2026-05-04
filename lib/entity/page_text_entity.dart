@@ -35,4 +35,20 @@ class PageTextEntity {
       'VerifiedBuild': verifiedBuild,
     };
   }
+
+  PageTextEntity copyWith({
+    int? id,
+    String? text,
+    int? nextPageId,
+    int? verifiedBuild,
+    String? localeText,
+  }) {
+    return PageTextEntity(
+      id: id ?? this.id,
+      text: text ?? this.text,
+      nextPageId: nextPageId ?? this.nextPageId,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      localeText: localeText ?? this.localeText,
+    );
+  }
 }

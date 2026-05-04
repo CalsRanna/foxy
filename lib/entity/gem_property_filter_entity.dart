@@ -14,4 +14,12 @@ class GemPropertyFilterEntity {
       'id': id,
     };
   }
+
+  GemPropertyFilterEntity copyWith({
+    String? id,
+  }) {
+    return GemPropertyFilterEntity(
+      id: id ?? this.id,
+    );
+  }
 }

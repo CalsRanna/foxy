@@ -14,4 +14,14 @@ class PageTextFilterEntity {
   Map<String, dynamic> toJson() {
     return {'id': id, 'text': text};
   }
+
+  PageTextFilterEntity copyWith({
+    String? id,
+    String? text,
+  }) {
+    return PageTextFilterEntity(
+      id: id ?? this.id,
+      text: text ?? this.text,
+    );
+  }
 }

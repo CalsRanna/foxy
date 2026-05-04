@@ -29,4 +29,20 @@ class SpellGroupEntity {
   Map<String, dynamic> toJson() {
     return {'id': id, 'spell_id': spellId};
   }
+
+  SpellGroupEntity copyWith({
+    int? id,
+    int? spellId,
+    int? specialFlag,
+    int? stackRule,
+    String? description,
+  }) {
+    return SpellGroupEntity(
+      id: id ?? this.id,
+      spellId: spellId ?? this.spellId,
+      specialFlag: specialFlag ?? this.specialFlag,
+      stackRule: stackRule ?? this.stackRule,
+      description: description ?? this.description,
+    );
+  }
 }

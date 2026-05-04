@@ -14,4 +14,14 @@ class SpellIconEntity {
   Map<String, dynamic> toJson() {
     return {'ID': id, 'TextureFilename': textureFilename};
   }
+
+  SpellIconEntity copyWith({
+    int? id,
+    String? textureFilename,
+  }) {
+    return SpellIconEntity(
+      id: id ?? this.id,
+      textureFilename: textureFilename ?? this.textureFilename,
+    );
+  }
 }

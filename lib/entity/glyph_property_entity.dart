@@ -28,4 +28,18 @@ class GlyphPropertyEntity {
       'SpellIconID': spellIconId,
     };
   }
+
+  GlyphPropertyEntity copyWith({
+    int? id,
+    int? spellId,
+    int? glyphSlotFlags,
+    int? spellIconId,
+  }) {
+    return GlyphPropertyEntity(
+      id: id ?? this.id,
+      spellId: spellId ?? this.spellId,
+      glyphSlotFlags: glyphSlotFlags ?? this.glyphSlotFlags,
+      spellIconId: spellIconId ?? this.spellIconId,
+    );
+  }
 }

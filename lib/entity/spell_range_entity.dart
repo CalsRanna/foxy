@@ -28,4 +28,18 @@ class SpellRangeEntity {
       'DisplayName_lang_zhCN': displayNameLangZhCn,
     };
   }
+
+  SpellRangeEntity copyWith({
+    int? id,
+    double? rangeMin0,
+    double? rangeMax0,
+    String? displayNameLangZhCn,
+  }) {
+    return SpellRangeEntity(
+      id: id ?? this.id,
+      rangeMin0: rangeMin0 ?? this.rangeMin0,
+      rangeMax0: rangeMax0 ?? this.rangeMax0,
+      displayNameLangZhCn: displayNameLangZhCn ?? this.displayNameLangZhCn,
+    );
+  }
 }

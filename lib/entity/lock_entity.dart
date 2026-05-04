@@ -23,4 +23,18 @@ class LockEntity {
   Map<String, dynamic> toJson() {
     return {'ID': id, 'Type0': type0, 'Index0': index0, 'Skill0': skill0};
   }
+
+  LockEntity copyWith({
+    int? id,
+    int? type0,
+    int? index0,
+    int? skill0,
+  }) {
+    return LockEntity(
+      id: id ?? this.id,
+      type0: type0 ?? this.type0,
+      index0: index0 ?? this.index0,
+      skill0: skill0 ?? this.skill0,
+    );
+  }
 }

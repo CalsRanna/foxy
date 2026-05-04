@@ -29,4 +29,18 @@ class SpellLinkedSpellEntity {
       'comment': comment,
     };
   }
+
+  SpellLinkedSpellEntity copyWith({
+    int? spellTrigger,
+    int? spellEffect,
+    int? type,
+    String? comment,
+  }) {
+    return SpellLinkedSpellEntity(
+      spellTrigger: spellTrigger ?? this.spellTrigger,
+      spellEffect: spellEffect ?? this.spellEffect,
+      type: type ?? this.type,
+      comment: comment ?? this.comment,
+    );
+  }
 }

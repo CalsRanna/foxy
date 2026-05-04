@@ -28,6 +28,20 @@ class CurrencyTypeEntity {
       'BitIndex': bitIndex,
     };
   }
+
+  CurrencyTypeEntity copyWith({
+    int? id,
+    int? itemId,
+    int? categoryId,
+    int? bitIndex,
+  }) {
+    return CurrencyTypeEntity(
+      id: id ?? this.id,
+      itemId: itemId ?? this.itemId,
+      categoryId: categoryId ?? this.categoryId,
+      bitIndex: bitIndex ?? this.bitIndex,
+    );
+  }
 }
 
 class BriefCurrencyTypeEntity {
@@ -59,5 +73,19 @@ class BriefCurrencyTypeEntity {
       'CategoryID': categoryId,
       'BitIndex': bitIndex,
     };
+  }
+
+  BriefCurrencyTypeEntity copyWith({
+    int? id,
+    int? itemId,
+    int? categoryId,
+    int? bitIndex,
+  }) {
+    return BriefCurrencyTypeEntity(
+      id: id ?? this.id,
+      itemId: itemId ?? this.itemId,
+      categoryId: categoryId ?? this.categoryId,
+      bitIndex: bitIndex ?? this.bitIndex,
+    );
   }
 }

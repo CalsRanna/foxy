@@ -92,10 +92,12 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newResistance = CreatureTemplateResistanceEntity.fromJson(
-      source.toJson(),
+    var newResistance = CreatureTemplateResistanceEntity(
+      creatureID: source.creatureID,
+      school: maxSchool + 1,
+      resistance: source.resistance,
+      verifiedBuild: source.verifiedBuild,
     );
-    newResistance.school = maxSchool + 1;
 
     await storeCreatureTemplateResistance(newResistance);
     return newResistance;

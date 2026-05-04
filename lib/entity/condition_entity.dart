@@ -88,4 +88,40 @@ class ConditionEntity {
       'Comment': comment,
     };
   }
+
+  ConditionEntity copyWith({
+    int? sourceTypeOrReferenceId,
+    int? sourceGroup,
+    int? sourceEntry,
+    int? sourceId,
+    int? elseGroup,
+    int? conditionTypeOrReference,
+    int? conditionTarget,
+    int? conditionValue1,
+    int? conditionValue2,
+    int? conditionValue3,
+    int? negativeCondition,
+    int? errorType,
+    int? errorTextId,
+    String? scriptName,
+    String? comment,
+  }) {
+    return ConditionEntity(
+      sourceTypeOrReferenceId: sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
+      sourceGroup: sourceGroup ?? this.sourceGroup,
+      sourceEntry: sourceEntry ?? this.sourceEntry,
+      sourceId: sourceId ?? this.sourceId,
+      elseGroup: elseGroup ?? this.elseGroup,
+      conditionTypeOrReference: conditionTypeOrReference ?? this.conditionTypeOrReference,
+      conditionTarget: conditionTarget ?? this.conditionTarget,
+      conditionValue1: conditionValue1 ?? this.conditionValue1,
+      conditionValue2: conditionValue2 ?? this.conditionValue2,
+      conditionValue3: conditionValue3 ?? this.conditionValue3,
+      negativeCondition: negativeCondition ?? this.negativeCondition,
+      errorType: errorType ?? this.errorType,
+      errorTextId: errorTextId ?? this.errorTextId,
+      scriptName: scriptName ?? this.scriptName,
+      comment: comment ?? this.comment,
+    );
+  }
 }

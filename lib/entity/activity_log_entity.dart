@@ -51,4 +51,22 @@ class ActivityLogEntity {
       'entity_name': entityName,
     };
   }
+
+  ActivityLogEntity copyWith({
+    int? id,
+    String? module,
+    ActivityActionType? actionType,
+    int? entityId,
+    String? entityName,
+    DateTime? createdAt,
+  }) {
+    return ActivityLogEntity(
+      id: id ?? this.id,
+      module: module ?? this.module,
+      actionType: actionType ?? this.actionType,
+      entityId: entityId ?? this.entityId,
+      entityName: entityName ?? this.entityName,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

@@ -35,4 +35,24 @@ class SpellRankEntity {
   Map<String, dynamic> toJson() {
     return {'first_spell_id': firstSpellId, 'spell_id': spellId, 'rank': rank};
   }
+
+  SpellRankEntity copyWith({
+    int? firstSpellId,
+    int? spellId,
+    int? rank,
+    String? firstSpellName,
+    String? firstSpellSubtext,
+    String? spellName,
+    String? spellSubtext,
+  }) {
+    return SpellRankEntity(
+      firstSpellId: firstSpellId ?? this.firstSpellId,
+      spellId: spellId ?? this.spellId,
+      rank: rank ?? this.rank,
+      firstSpellName: firstSpellName ?? this.firstSpellName,
+      firstSpellSubtext: firstSpellSubtext ?? this.firstSpellSubtext,
+      spellName: spellName ?? this.spellName,
+      spellSubtext: spellSubtext ?? this.spellSubtext,
+    );
+  }
 }

@@ -60,16 +60,16 @@ class CreatureTemplateAddonViewModel {
 
   /// 从 Controller 收集数据构建 CreatureTemplateAddon
   CreatureTemplateAddonEntity _collectFromControllers() {
-    final data = CreatureTemplateAddonEntity();
-    data.entry = creatureId.value;
-    data.pathId = pathId.value;
-    data.mount = mount.value;
-    data.emote = emote.value;
-    data.bytes1 = bytes1.value;
-    data.bytes2 = bytes2.value;
-    data.visibilityDistanceType = visibilityDistanceType.value;
-    data.auras = aurasController.text;
-    return data;
+    return CreatureTemplateAddonEntity(
+      entry: creatureId.value,
+      pathId: pathId.value,
+      mount: mount.value,
+      emote: emote.value,
+      bytes1: bytes1.value,
+      bytes2: bytes2.value,
+      visibilityDistanceType: visibilityDistanceType.value,
+      auras: aurasController.text,
+    );
   }
 
   /// 初始化 Controller 的值

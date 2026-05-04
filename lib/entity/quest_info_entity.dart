@@ -14,4 +14,14 @@ class QuestInfoEntity {
   Map<String, dynamic> toJson() {
     return {'ID': id, 'InfoName_Lang_zhCN': infoNameLangZhCn};
   }
+
+  QuestInfoEntity copyWith({
+    int? id,
+    String? infoNameLangZhCn,
+  }) {
+    return QuestInfoEntity(
+      id: id ?? this.id,
+      infoNameLangZhCn: infoNameLangZhCn ?? this.infoNameLangZhCn,
+    );
+  }
 }

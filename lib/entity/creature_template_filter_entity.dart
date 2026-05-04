@@ -9,6 +9,18 @@ class CreatureTemplateFilterEntity {
     return {'entry': entry, 'name': name, 'subName': subName};
   }
 
+  CreatureTemplateFilterEntity copyWith({
+    String? entry,
+    String? name,
+    String? subName,
+  }) {
+    return CreatureTemplateFilterEntity(
+      entry: entry ?? this.entry,
+      name: name ?? this.name,
+      subName: subName ?? this.subName,
+    );
+  }
+
   factory CreatureTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
     return CreatureTemplateFilterEntity(
       entry: json['entry'] ?? '',

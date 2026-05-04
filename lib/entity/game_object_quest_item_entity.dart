@@ -44,4 +44,26 @@ class GameObjectQuestItemEntity {
       'VerifiedBuild': verifiedBuild,
     };
   }
+
+  GameObjectQuestItemEntity copyWith({
+    int? gameObjectEntry,
+    int? idx,
+    int? itemId,
+    int? verifiedBuild,
+    String? itemName,
+    String? itemLocaleName,
+    int? itemQuality,
+    String? itemIcon,
+  }) {
+    return GameObjectQuestItemEntity(
+      gameObjectEntry: gameObjectEntry ?? this.gameObjectEntry,
+      idx: idx ?? this.idx,
+      itemId: itemId ?? this.itemId,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      itemName: itemName ?? this.itemName,
+      itemLocaleName: itemLocaleName ?? this.itemLocaleName,
+      itemQuality: itemQuality ?? this.itemQuality,
+      itemIcon: itemIcon ?? this.itemIcon,
+    );
+  }
 }

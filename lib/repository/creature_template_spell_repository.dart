@@ -102,8 +102,12 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
     }
 
     // 创建新记录
-    var newSpell = CreatureTemplateSpellEntity.fromJson(source.toJson());
-    newSpell.index = maxIndex + 1;
+    var newSpell = CreatureTemplateSpellEntity(
+      creatureID: source.creatureID,
+      index: maxIndex + 1,
+      spell: source.spell,
+      verifiedBuild: source.verifiedBuild,
+    );
 
     await storeCreatureTemplateSpell(newSpell);
     return newSpell;

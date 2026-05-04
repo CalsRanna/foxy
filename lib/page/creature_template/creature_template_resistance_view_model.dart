@@ -46,12 +46,12 @@ class CreatureTemplateResistanceViewModel {
 
   /// 从表单收集数据
   CreatureTemplateResistanceEntity collectFromForm() {
-    final r = CreatureTemplateResistanceEntity();
-    r.creatureID = creatureId.value;
-    r.school = schoolController.value.firstOrNull ?? 0;
-    r.resistance = resistance.value;
-    r.verifiedBuild = verifiedBuild.value;
-    return r;
+    return CreatureTemplateResistanceEntity(
+      creatureID: creatureId.value,
+      school: schoolController.value.firstOrNull ?? 0,
+      resistance: resistance.value,
+      verifiedBuild: verifiedBuild.value,
+    );
   }
 
   /// 创建新记录

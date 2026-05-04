@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/creature_onkill_reputation_entity.dart';
+import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -27,9 +27,7 @@ class CreatureOnKillReputationViewModel {
   /// 从数据库加载数据
   Future<void> load() async {
     final repository = CreatureOnKillReputationRepository();
-    final data = await repository.getCreatureOnKillReputation(
-      creatureId.value,
-    );
+    final data = await repository.getCreatureOnKillReputation(creatureId.value);
     if (data != null) {
       reputation.value = data;
     }

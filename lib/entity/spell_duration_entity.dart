@@ -28,4 +28,18 @@ class SpellDurationEntity {
       'MaxDuration': maxDuration,
     };
   }
+
+  SpellDurationEntity copyWith({
+    int? id,
+    int? duration,
+    int? durationPerLevel,
+    int? maxDuration,
+  }) {
+    return SpellDurationEntity(
+      id: id ?? this.id,
+      duration: duration ?? this.duration,
+      durationPerLevel: durationPerLevel ?? this.durationPerLevel,
+      maxDuration: maxDuration ?? this.maxDuration,
+    );
+  }
 }

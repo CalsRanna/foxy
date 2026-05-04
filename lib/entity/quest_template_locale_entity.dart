@@ -12,7 +12,7 @@ class QuestTemplateLocaleEntity {
   final String objectiveText2;
   final String objectiveText3;
   final String objectiveText4;
-  final int? verifiedBuild;
+  final int verifiedBuild;
 
   const QuestTemplateLocaleEntity({
     this.id = 0,
@@ -26,7 +26,7 @@ class QuestTemplateLocaleEntity {
     this.objectiveText2 = '',
     this.objectiveText3 = '',
     this.objectiveText4 = '',
-    this.verifiedBuild,
+    this.verifiedBuild = 0,
   });
 
   factory QuestTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
@@ -42,7 +42,7 @@ class QuestTemplateLocaleEntity {
       objectiveText2: json['ObjectiveText2']?.toString() ?? '',
       objectiveText3: json['ObjectiveText3']?.toString() ?? '',
       objectiveText4: json['ObjectiveText4']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'],
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
     );
   }
 
@@ -59,10 +59,38 @@ class QuestTemplateLocaleEntity {
       'ObjectiveText2': objectiveText2,
       'ObjectiveText3': objectiveText3,
       'ObjectiveText4': objectiveText4,
+      'VerifiedBuild': verifiedBuild,
     };
-    if (verifiedBuild != null) {
-      result['VerifiedBuild'] = verifiedBuild!;
-    }
     return result;
+  }
+
+  QuestTemplateLocaleEntity copyWith({
+    int? id,
+    String? locale,
+    String? title,
+    String? details,
+    String? objectives,
+    String? endText,
+    String? completedText,
+    String? objectiveText1,
+    String? objectiveText2,
+    String? objectiveText3,
+    String? objectiveText4,
+    int? verifiedBuild,
+  }) {
+    return QuestTemplateLocaleEntity(
+      id: id ?? this.id,
+      locale: locale ?? this.locale,
+      title: title ?? this.title,
+      details: details ?? this.details,
+      objectives: objectives ?? this.objectives,
+      endText: endText ?? this.endText,
+      completedText: completedText ?? this.completedText,
+      objectiveText1: objectiveText1 ?? this.objectiveText1,
+      objectiveText2: objectiveText2 ?? this.objectiveText2,
+      objectiveText3: objectiveText3 ?? this.objectiveText3,
+      objectiveText4: objectiveText4 ?? this.objectiveText4,
+      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+    );
   }
 }

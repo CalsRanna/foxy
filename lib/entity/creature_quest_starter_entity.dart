@@ -14,6 +14,16 @@ class CreatureQuestStarterEntity {
   Map<String, dynamic> toJson() {
     return {'id': id, 'quest': quest};
   }
+
+  CreatureQuestStarterEntity copyWith({
+    int? id,
+    int? quest,
+  }) {
+    return CreatureQuestStarterEntity(
+      id: id ?? this.id,
+      quest: quest ?? this.quest,
+    );
+  }
 }
 
 class BriefCreatureQuestStarterEntity {
@@ -42,5 +52,19 @@ class BriefCreatureQuestStarterEntity {
 
   Map<String, dynamic> toJson() {
     return {'id': id, 'quest': quest, 'name': name, 'Name': localeName};
+  }
+
+  BriefCreatureQuestStarterEntity copyWith({
+    int? id,
+    int? quest,
+    String? name,
+    String? localeName,
+  }) {
+    return BriefCreatureQuestStarterEntity(
+      id: id ?? this.id,
+      quest: quest ?? this.quest,
+      name: name ?? this.name,
+      localeName: localeName ?? this.localeName,
+    );
   }
 }

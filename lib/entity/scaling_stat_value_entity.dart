@@ -108,6 +108,60 @@ class ScalingStatValueEntity {
       'PlateChestArmor': plateChestArmor,
     };
   }
+
+  ScalingStatValueEntity copyWith({
+    int? id,
+    int? charlevel,
+    int? shoulderBudget,
+    int? trinketBudget,
+    int? weaponBudget1H,
+    int? rangedBudget,
+    int? clothShoulderArmor,
+    int? leatherShoulderArmor,
+    int? mailShoulderArmor,
+    int? plateShoulderArmor,
+    int? weaponDPS1H,
+    int? weaponDPS2H,
+    int? spellcasterDPS1H,
+    int? spellcasterDPS2H,
+    int? rangedDPS,
+    int? wandDPS,
+    int? spellPower,
+    int? primaryBudget,
+    int? tertiaryBudget,
+    int? clothCloakArmor,
+    int? clothChestArmor,
+    int? leatherChestArmor,
+    int? mailChestArmor,
+    int? plateChestArmor,
+  }) {
+    return ScalingStatValueEntity(
+      id: id ?? this.id,
+      charlevel: charlevel ?? this.charlevel,
+      shoulderBudget: shoulderBudget ?? this.shoulderBudget,
+      trinketBudget: trinketBudget ?? this.trinketBudget,
+      weaponBudget1H: weaponBudget1H ?? this.weaponBudget1H,
+      rangedBudget: rangedBudget ?? this.rangedBudget,
+      clothShoulderArmor: clothShoulderArmor ?? this.clothShoulderArmor,
+      leatherShoulderArmor: leatherShoulderArmor ?? this.leatherShoulderArmor,
+      mailShoulderArmor: mailShoulderArmor ?? this.mailShoulderArmor,
+      plateShoulderArmor: plateShoulderArmor ?? this.plateShoulderArmor,
+      weaponDPS1H: weaponDPS1H ?? this.weaponDPS1H,
+      weaponDPS2H: weaponDPS2H ?? this.weaponDPS2H,
+      spellcasterDPS1H: spellcasterDPS1H ?? this.spellcasterDPS1H,
+      spellcasterDPS2H: spellcasterDPS2H ?? this.spellcasterDPS2H,
+      rangedDPS: rangedDPS ?? this.rangedDPS,
+      wandDPS: wandDPS ?? this.wandDPS,
+      spellPower: spellPower ?? this.spellPower,
+      primaryBudget: primaryBudget ?? this.primaryBudget,
+      tertiaryBudget: tertiaryBudget ?? this.tertiaryBudget,
+      clothCloakArmor: clothCloakArmor ?? this.clothCloakArmor,
+      clothChestArmor: clothChestArmor ?? this.clothChestArmor,
+      leatherChestArmor: leatherChestArmor ?? this.leatherChestArmor,
+      mailChestArmor: mailChestArmor ?? this.mailChestArmor,
+      plateChestArmor: plateChestArmor ?? this.plateChestArmor,
+    );
+  }
 }
 
 class BriefScalingStatValueEntity {
@@ -125,5 +179,15 @@ class BriefScalingStatValueEntity {
 
   Map<String, dynamic> toJson() {
     return {'ID': id, 'Charlevel': charlevel};
+  }
+
+  BriefScalingStatValueEntity copyWith({
+    int? id,
+    int? charlevel,
+  }) {
+    return BriefScalingStatValueEntity(
+      id: id ?? this.id,
+      charlevel: charlevel ?? this.charlevel,
+    );
   }
 }

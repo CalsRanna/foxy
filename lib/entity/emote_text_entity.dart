@@ -88,4 +88,48 @@ class EmoteTextEntity {
       'EmoteText15': emoteText15,
     };
   }
+
+  EmoteTextEntity copyWith({
+    int? id,
+    String? name,
+    int? emoteId,
+    int? emoteText0,
+    int? emoteText1,
+    int? emoteText2,
+    int? emoteText3,
+    int? emoteText4,
+    int? emoteText5,
+    int? emoteText6,
+    int? emoteText7,
+    int? emoteText8,
+    int? emoteText9,
+    int? emoteText10,
+    int? emoteText11,
+    int? emoteText12,
+    int? emoteText13,
+    int? emoteText14,
+    int? emoteText15,
+  }) {
+    return EmoteTextEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      emoteId: emoteId ?? this.emoteId,
+      emoteText0: emoteText0 ?? this.emoteText0,
+      emoteText1: emoteText1 ?? this.emoteText1,
+      emoteText2: emoteText2 ?? this.emoteText2,
+      emoteText3: emoteText3 ?? this.emoteText3,
+      emoteText4: emoteText4 ?? this.emoteText4,
+      emoteText5: emoteText5 ?? this.emoteText5,
+      emoteText6: emoteText6 ?? this.emoteText6,
+      emoteText7: emoteText7 ?? this.emoteText7,
+      emoteText8: emoteText8 ?? this.emoteText8,
+      emoteText9: emoteText9 ?? this.emoteText9,
+      emoteText10: emoteText10 ?? this.emoteText10,
+      emoteText11: emoteText11 ?? this.emoteText11,
+      emoteText12: emoteText12 ?? this.emoteText12,
+      emoteText13: emoteText13 ?? this.emoteText13,
+      emoteText14: emoteText14 ?? this.emoteText14,
+      emoteText15: emoteText15 ?? this.emoteText15,
+    );
+  }
 }

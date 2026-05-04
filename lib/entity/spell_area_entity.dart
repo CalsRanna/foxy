@@ -53,4 +53,30 @@ class SpellAreaEntity {
       'quest_end_status': questEndStatus,
     };
   }
+
+  SpellAreaEntity copyWith({
+    int? spell,
+    int? area,
+    int? questStart,
+    int? questEnd,
+    int? auraSpell,
+    int? racemask,
+    int? gender,
+    int? autocast,
+    int? questStartStatus,
+    int? questEndStatus,
+  }) {
+    return SpellAreaEntity(
+      spell: spell ?? this.spell,
+      area: area ?? this.area,
+      questStart: questStart ?? this.questStart,
+      questEnd: questEnd ?? this.questEnd,
+      auraSpell: auraSpell ?? this.auraSpell,
+      racemask: racemask ?? this.racemask,
+      gender: gender ?? this.gender,
+      autocast: autocast ?? this.autocast,
+      questStartStatus: questStartStatus ?? this.questStartStatus,
+      questEndStatus: questEndStatus ?? this.questEndStatus,
+    );
+  }
 }

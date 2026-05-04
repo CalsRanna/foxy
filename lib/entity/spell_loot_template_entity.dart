@@ -67,4 +67,38 @@ class SpellLootTemplateEntity {
       'Comment': comment,
     };
   }
+
+  SpellLootTemplateEntity copyWith({
+    int? entry,
+    int? item,
+    int? reference,
+    double? chance,
+    int? questRequired,
+    int? lootMode,
+    int? groupId,
+    int? minCount,
+    int? maxCount,
+    String? comment,
+    String? itemName,
+    String? localeName,
+    int? quality,
+    String? icon,
+  }) {
+    return SpellLootTemplateEntity(
+      entry: entry ?? this.entry,
+      item: item ?? this.item,
+      reference: reference ?? this.reference,
+      chance: chance ?? this.chance,
+      questRequired: questRequired ?? this.questRequired,
+      lootMode: lootMode ?? this.lootMode,
+      groupId: groupId ?? this.groupId,
+      minCount: minCount ?? this.minCount,
+      maxCount: maxCount ?? this.maxCount,
+      comment: comment ?? this.comment,
+      itemName: itemName ?? this.itemName,
+      localeName: localeName ?? this.localeName,
+      quality: quality ?? this.quality,
+      icon: icon ?? this.icon,
+    );
+  }
 }
