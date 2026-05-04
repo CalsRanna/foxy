@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals.dart';
 
-/// 标志位选择器组件
 class FlagPicker extends StatefulWidget {
-  /// 控制器，存储整数值（字符串形式）
-  final TextEditingController controller;
-
-  /// 标志位选项列表
+  final Signal<int> signal;
   final List<FlagItem> flags;
-
-  /// 标题（用于弹窗标题）
   final String title;
-
-  /// 占位符
   final String? placeholder;
 
   const FlagPicker({
     super.key,
-    required this.controller,
+    required this.signal,
     required this.flags,
     required this.title,
     this.placeholder,
@@ -29,11 +22,47 @@ class FlagPicker extends StatefulWidget {
 }
 
 class _FlagPickerState extends State<FlagPicker> {
+  late final TextEditingController _displayController;
+  bool _isInternal = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _displayController = TextEditingController(text: _format(widget.signal.value));
+    widget.signal.subscribe(_onSignalChanged);
+  }
+
+  @override
+  void didUpdateWidget(FlagPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_isInternal) return;
+    if (widget.signal.value != oldWidget.signal.value) {
+      _displayController.text = _format(widget.signal.value);
+    }
+  }
+
+  @override
+  void dispose() {
+    _displayController.dispose();
+    super.dispose();
+  }
+
+  void _onSignalChanged(int _) {
+    if (_isInternal) return;
+    _displayController.text = _format(widget.signal.value);
+  }
+
+  String _format(int value) {
+    final hex = value.toRadixString(16).toUpperCase().padLeft(8, '0');
+    return '$value (0x$hex)';
+  }
+
   @override
   Widget build(BuildContext context) {
     return ShadInput(
-      controller: widget.controller,
+      controller: _displayController,
       placeholder: Text(widget.placeholder ?? ''),
+      readOnly: true,
       trailing: ShadButton.ghost(
         height: 20,
         width: 20,
@@ -45,24 +74,24 @@ class _FlagPickerState extends State<FlagPicker> {
   }
 
   Future<void> _openDialog() async {
-    final currentValue = int.tryParse(widget.controller.text) ?? 0;
     final result = await showShadDialog<int>(
       context: context,
       builder: (context) {
         return _FlagPickerDialog(
           title: widget.title,
           flags: widget.flags,
-          initialValue: currentValue,
+          initialValue: widget.signal.value,
         );
       },
     );
     if (result != null) {
-      widget.controller.text = result.toString();
+      _isInternal = true;
+      widget.signal.value = result;
+      _isInternal = false;
     }
   }
 }
 
-/// 标志位选择弹窗
 class _FlagPickerDialog extends StatefulWidget {
   final String title;
   final List<FlagItem> flags;
@@ -153,14 +182,12 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
                 };
               },
               onRowTap: (row) {
-                // row 包含 header，所以减 1
                 final dataRow = row - 1;
                 if (dataRow >= 0 && dataRow < flags.length) {
                   _toggleFlag(flags[dataRow].value);
                 }
               },
               builder: (context, vicinity) {
-                // 边界检查
                 if (vicinity.row < 0 || vicinity.row >= flags.length) {
                   return ShadTableCell(child: SizedBox());
                 }

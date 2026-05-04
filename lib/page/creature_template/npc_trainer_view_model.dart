@@ -18,7 +18,7 @@ class NpcTrainerViewModel {
   final editing = signal(false);
 
   // 表单控制器
-  final spellIDController = TextEditingController();
+  final spellID = signal<int>(0);
   final moneyCost = signal<int>(0);
   final reqSkillLine = signal<int>(0);
   final reqSkillRank = signal<int>(0);
@@ -37,7 +37,7 @@ class NpcTrainerViewModel {
 
   /// 重置表单
   void resetForm() {
-    spellIDController.clear();
+    spellID.value = 0;
     moneyCost.value = 0;
     reqSkillLine.value = 0;
     reqSkillRank.value = 0;
@@ -46,7 +46,7 @@ class NpcTrainerViewModel {
 
   /// 填充表单
   void fillForm(BriefNpcTrainerEntity trainer) {
-    spellIDController.text = trainer.spellID.toString();
+    spellID.value = trainer.spellID;
     moneyCost.value = trainer.moneyCost;
     reqSkillLine.value = trainer.reqSkillLine;
     reqSkillRank.value = trainer.reqSkillRank;
@@ -57,19 +57,12 @@ class NpcTrainerViewModel {
   NpcTrainerEntity collectFromForm() {
     return NpcTrainerEntity(
       id: id.value,
-      spellID: _parseInt(spellIDController.text),
+      spellID: spellID.value,
       moneyCost: moneyCost.value,
       reqSkillLine: reqSkillLine.value,
       reqSkillRank: reqSkillRank.value,
       reqLevel: reqLevel.value,
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   /// 创建新记录
@@ -206,7 +199,5 @@ class NpcTrainerViewModel {
   }
 
   /// 清理资源
-  void dispose() {
-    spellIDController.dispose();
-  }
+  void dispose() {}
 }

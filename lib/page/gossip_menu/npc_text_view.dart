@@ -106,7 +106,7 @@ class _NpcTextViewState extends State<NpcTextView> {
               label: '广播文本',
               placeholder: 'BroadcastTextID$n',
               child: BroadcastTextSelector(
-                controller: viewModel.controllerOf('BroadcastTextID$n'),
+                signal: viewModel.broadcastSignalOf(n),
                 placeholder: 'BroadcastTextID$n',
               ),
             ),
@@ -122,7 +122,7 @@ class _NpcTextViewState extends State<NpcTextView> {
             label: '表演',
             placeholder: 'em${n}_$i',
             child: EmoteSelector(
-              controller: viewModel.controllerOf('em${n}_$i'),
+              signal: viewModel.emoteSignalOf('em${n}_$i'),
               placeholder: 'em${n}_$i',
             ),
           ),

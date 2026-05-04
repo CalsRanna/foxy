@@ -234,7 +234,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FormItem(
             label: '扩展价格',
             child: ItemExtendedCostSelector(
-              controller: viewModel.extendedCostController,
+              signal: viewModel.extendedCost,
               placeholder: 'ExtendedCost',
             ),
           ),

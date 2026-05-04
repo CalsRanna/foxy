@@ -176,7 +176,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final displayIdInput = FormItem(
       label: '外观模型',
       child: ItemDisplayInfoSelector(
-        controller: viewModel.displayIdController,
+        signal: viewModel.displayId,
         placeholder: 'displayid',
       ),
     );
@@ -247,14 +247,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final randomPropertyInput = FormItem(
       label: '随机属性',
       child: ItemRandomPropertiesSelector(
-        controller: viewModel.randomPropertyController,
+        signal: viewModel.randomProperty,
         placeholder: 'RandomProperty',
       ),
     );
     final randomSuffixInput = FormItem(
       label: '随机后缀',
       child: ItemRandomSuffixSelector(
-        controller: viewModel.randomSuffixController,
+        signal: viewModel.randomSuffix,
         placeholder: 'RandomSuffix',
       ),
     );
@@ -325,7 +325,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final bagFamilyInput = FormItem(
       label: '背包类别',
       child: FlagPicker(
-        controller: viewModel.bagFamilyController,
+          signal: viewModel.bagFamily,
         flags: kItemBagFamilyOptions,
         title: '背包类别',
         placeholder: 'BagFamily',
@@ -350,7 +350,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final startquestInput = FormItem(
       label: '起始任务',
       child: QuestTemplateSelector(
-        controller: viewModel.startquestController,
+        signal: viewModel.startquest,
         placeholder: 'startquest',
       ),
     );
@@ -439,7 +439,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final flagsInput = FormItem(
       label: '物品标识',
       child: FlagPicker(
-        controller: viewModel.flagsController,
+        signal: viewModel.flags,
         flags: kItemFlagOptions,
         title: '物品标识',
         placeholder: 'flags',
@@ -448,7 +448,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final flagsExtraInput = FormItem(
       label: '额外标识',
       child: FlagPicker(
-        controller: viewModel.flagsExtraController,
+        signal: viewModel.flagsExtra,
         flags: kItemFlagsExtraOptions,
         title: '额外标识',
         placeholder: 'flagsExtra',
@@ -457,7 +457,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final flagsCustomInput = FormItem(
       label: '自定义标识',
       child: FlagPicker(
-        controller: viewModel.flagsCustomController,
+        signal: viewModel.flagsCustom,
         flags: kItemFlagsCustomOptions,
         title: '自定义标识',
         placeholder: 'flagsCustom',
@@ -608,14 +608,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final scalingStatDistributionInput = FormItem(
       label: '缩放分布',
       child: ScalingStatDistributionSelector(
-        controller: viewModel.scalingStatDistributionController,
+        signal: viewModel.scalingStatDistribution,
         placeholder: 'ScalingStatDistribution',
       ),
     );
     final scalingStatValueInput = FormItem(
       label: '缩放值',
       child: FlagPicker(
-        controller: viewModel.scalingStatValueController,
+        signal: viewModel.scalingStatValue,
         flags: kItemScalingStatValueOptions,
         title: '缩放值',
         placeholder: 'ScalingStatValue',
@@ -717,7 +717,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final allowableClassInput = FormItem(
       label: '允许职业',
       child: FlagPicker(
-        controller: viewModel.allowableClassController,
+        signal: viewModel.allowableClass,
         flags: kAllowableClassOptions,
         title: '允许职业',
         placeholder: 'AllowableClass',
@@ -726,7 +726,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final allowableRaceInput = FormItem(
       label: '允许种族',
       child: FlagPicker(
-        controller: viewModel.allowableRaceController,
+        signal: viewModel.allowableRace,
         flags: kAllowableRaceOptions,
         title: '允许种族',
         placeholder: 'AllowableRace',
@@ -767,7 +767,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final requiredSpellInput = FormItem(
       label: '需求法术',
       child: SpellSelector(
-        controller: viewModel.requiredSpellController,
+        signal: viewModel.requiredSpell,
         placeholder: 'requiredspell',
       ),
     );
@@ -814,14 +814,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final mapIdInput = FormItem(
       label: '地图',
       child: MapSelector(
-        controller: viewModel.mapIdController,
+        signal: viewModel.mapId,
         placeholder: 'Map',
       ),
     );
     final areaInput = FormItem(
       label: '区域',
       child: AreaTableSelector(
-        controller: viewModel.areaController,
+        signal: viewModel.area,
         placeholder: 'area',
       ),
     );
@@ -836,7 +836,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final lockidInput = FormItem(
       label: '锁定ID',
       child: LockSelector(
-        controller: viewModel.lockidController,
+        signal: viewModel.lockid,
         placeholder: 'lockid',
       ),
     );
@@ -971,7 +971,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final pageTextInput = FormItem(
       label: '页面文本',
       child: PageTextSelector(
-        controller: viewModel.pageTextController,
+        signal: viewModel.pageText,
         placeholder: 'PageText',
       ),
     );
@@ -1158,7 +1158,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               child: FormItem(
                                 label: '法术${i + 1}',
                                 child: SpellSelector(
-                                  controller: viewModel.spellIdControllers[i],
+                                  signal: viewModel.spellIds[i],
                                   placeholder: 'spellid_${i + 1}',
                                 ),
                               ),
