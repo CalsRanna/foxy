@@ -11,75 +11,63 @@ class GossipMenuOptionRepository with RepositoryMixin {
   Future<List<GossipMenuOptionEntity>> getGossipMenuOptions({
     required int menuId,
   }) async {
-    try {
-      const fields = [
-        'gmo.MenuID',
-        'gmo.OptionID',
-        'gmo.OptionIcon',
-        'gmo.OptionText',
-        'gmo.OptionBroadcastTextID',
-        'gmo.OptionType',
-        'gmo.OptionNpcFlag',
-        'gmo.BoxCoded',
-        'gmo.BoxMoney',
-        'gmo.BoxText',
-        'gmo.BoxBroadcastTextID',
-        'gmo.ActionMenuID',
-        'gmo.ActionPoiID',
-        'gmo.VerifiedBuild',
-        'gmol.OptionText AS localeOptionText',
-      ];
-      var builder = laconic.table('$_table AS gmo');
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        '$_localeTable AS gmol',
-        (join) => join
-            .on('gmo.MenuID', 'gmol.MenuID')
-            .on('gmo.OptionID', 'gmol.OptionID')
-            .on('gmol.Locale', '"zhCN"'),
-      );
-      builder = builder.where('gmo.MenuID', menuId);
-      final results = await builder.get();
-      return results
-          .map((e) => GossipMenuOptionEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    const fields = [
+      'gmo.MenuID',
+      'gmo.OptionID',
+      'gmo.OptionIcon',
+      'gmo.OptionText',
+      'gmo.OptionBroadcastTextID',
+      'gmo.OptionType',
+      'gmo.OptionNpcFlag',
+      'gmo.BoxCoded',
+      'gmo.BoxMoney',
+      'gmo.BoxText',
+      'gmo.BoxBroadcastTextID',
+      'gmo.ActionMenuID',
+      'gmo.ActionPoiID',
+      'gmo.VerifiedBuild',
+      'gmol.OptionText AS localeOptionText',
+    ];
+    var builder = laconic.table('$_table AS gmo');
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      '$_localeTable AS gmol',
+      (join) => join
+          .on('gmo.MenuID', 'gmol.MenuID')
+          .on('gmo.OptionID', 'gmol.OptionID')
+          .on('gmol.Locale', '"zhCN"'),
+    );
+    builder = builder.where('gmo.MenuID', menuId);
+    final results = await builder.get();
+    return results
+        .map((e) => GossipMenuOptionEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 按复合键查找
   Future<GossipMenuOptionEntity?> getGossipMenuOption(
     Map<String, dynamic> id,
   ) async {
-    try {
-      var builder = laconic.table(_table);
-      id.forEach((k, v) {
-        builder = builder.where(k, v);
-      });
-      final result = await builder.first();
-      return GossipMenuOptionEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var builder = laconic.table(_table);
+    id.forEach((k, v) {
+      builder = builder.where(k, v);
+    });
+    final result = await builder.first();
+    return GossipMenuOptionEntity.fromJson(result.toMap());
   }
 
   /// 取指定 MenuID 下的下一个 OptionID
   Future<GossipMenuOptionEntity> createGossipMenuOption({
     required int menuId,
   }) async {
-    try {
-      final result = await laconic.table(_table).where('MenuID', menuId).select(
-        ['MAX(OptionID) as max_id'],
-      ).first();
-      final maxId = result.toMap()['max_id'] as int?;
-      return GossipMenuOptionEntity(
-        menuId: menuId,
-        optionId: maxId == null ? 0 : maxId + 1,
-      );
-    } catch (e) {
-      return GossipMenuOptionEntity(menuId: menuId, optionId: 0);
-    }
+    final result = await laconic.table(_table).where('MenuID', menuId).select(
+      ['MAX(OptionID) as max_id'],
+    ).first();
+    final maxId = result.toMap()['max_id'] as int?;
+    return GossipMenuOptionEntity(
+      menuId: menuId,
+      optionId: maxId == null ? 0 : maxId + 1,
+    );
   }
 
   Future<void> updateGossipMenuOption(

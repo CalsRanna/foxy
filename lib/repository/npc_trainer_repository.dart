@@ -6,41 +6,33 @@ class NpcTrainerRepository with RepositoryMixin {
 
   /// 获取指定训练师的所有技能（带技能信息）
   Future<List<BriefNpcTrainerEntity>> getNpcTrainers(int id) async {
-    try {
-      var builder = laconic.table('$_table AS nt');
-      const fields = [
-        'nt.*',
-        'ds.Name_lang_zhCN as spellName',
-        'ds.NameSubtext_lang_zhCN as spellSubtext',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'foxy.dbc_spell AS ds',
-        (join) => join.on('nt.SpellID', 'ds.ID'),
-      );
-      builder = builder.where('nt.ID', id);
-      builder = builder.orderBy('nt.SpellID');
-      var results = await builder.get();
-      return results
-          .map((e) => BriefNpcTrainerEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    var builder = laconic.table('$_table AS nt');
+    const fields = [
+      'nt.*',
+      'ds.Name_lang_zhCN as spellName',
+      'ds.NameSubtext_lang_zhCN as spellSubtext',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'foxy.dbc_spell AS ds',
+      (join) => join.on('nt.SpellID', 'ds.ID'),
+    );
+    builder = builder.where('nt.ID', id);
+    builder = builder.orderBy('nt.SpellID');
+    var results = await builder.get();
+    return results
+        .map((e) => BriefNpcTrainerEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 查找单条记录
   Future<NpcTrainerEntity?> getNpcTrainer(int id, int spellID) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('ID', id)
-          .where('SpellID', spellID)
-          .first();
-      return NpcTrainerEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('ID', id)
+        .where('SpellID', spellID)
+        .first();
+    return NpcTrainerEntity.fromJson(result.toMap());
   }
 
   /// 新增训练师技能

@@ -8,14 +8,10 @@ class ItemTemplateLocaleRepository with RepositoryMixin {
 
   /// 按 ID 查询该 ItemTemplate 的所有 locale
   Future<List<ItemTemplateLocaleEntity>> getItemTemplateLocales(int id) async {
-    try {
-      final results = await laconic.table(_table).where('ID', id).get();
-      return results
-          .map((e) => ItemTemplateLocaleEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    final results = await laconic.table(_table).where('ID', id).get();
+    return results
+        .map((e) => ItemTemplateLocaleEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 删除-然后-重新插入模式（replaceAll）

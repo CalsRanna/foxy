@@ -5,12 +5,8 @@ class SpellBonusDataRepository with RepositoryMixin {
   static const _table = 'spell_bonus_data';
 
   Future<SpellBonusDataEntity?> getSpellBonusData(int entry) async {
-    try {
-      var result = await laconic.table(_table).where('entry', entry).first();
-      return SpellBonusDataEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('entry', entry).first();
+    return SpellBonusDataEntity.fromJson(result.toMap());
   }
 
   Future<void> storeSpellBonusData(SpellBonusDataEntity data) async {

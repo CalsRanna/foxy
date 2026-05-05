@@ -7,27 +7,22 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   final String _modelDataTable = 'foxy.dbc_creature_model_data';
 
   Future<int> countCreatureDisplayInfos({String? id, String? modelName}) async {
-    try {
-      var builder = laconic.table('$_table AS cdi');
-      builder = builder.leftJoin(
-        '$_modelDataTable AS cmd',
-        (join) => join.on('cdi.ModelID', 'cmd.ID'),
-      );
-      if (id != null && id.isNotEmpty) {
-        builder = builder.where('cdi.ID', id);
-      }
-      if (modelName != null && modelName.isNotEmpty) {
-        builder = builder.where(
-          'cmd.ModelName',
-          '%$modelName%',
-          comparator: 'like',
-        );
-      }
-      return await builder.count();
-    } catch (e) {
-      // 表可能不存在
-      return 0;
+    var builder = laconic.table('$_table AS cdi');
+    builder = builder.leftJoin(
+      '$_modelDataTable AS cmd',
+      (join) => join.on('cdi.ModelID', 'cmd.ID'),
+    );
+    if (id != null && id.isNotEmpty) {
+      builder = builder.where('cdi.ID', id);
     }
+    if (modelName != null && modelName.isNotEmpty) {
+      builder = builder.where(
+        'cmd.ModelName',
+        '%$modelName%',
+        comparator: 'like',
+      );
+    }
+    return await builder.count();
   }
 
   Future<List<BriefCreatureDisplayInfoEntity>> getCreatureDisplayInfos({
@@ -35,83 +30,74 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     String? modelName,
     int page = 1,
   }) async {
-    try {
-      var offset = (page - 1) * kPageSize;
-      var builder = laconic.table('$_table AS cdi');
-      builder = builder.select([
-        'cdi.ID',
-        'cdi.ModelID',
-        'cdi.SoundID',
-        'cdi.ExtendedDisplayInfoID',
-        'cdi.CreatureModelScale',
-        'cdi.CreatureModelAlpha',
-        'cdi.TextureVariation0',
-        'cdi.TextureVariation1',
-        'cdi.TextureVariation2',
-        'cdi.PortraitTextureName',
-        'cdi.SizeClass',
-        'cdi.BloodID',
-        'cdi.NPCSoundID',
-        'cdi.ParticleColorID',
-        'cdi.CreatureGeosetData',
-        'cdi.ObjectEffectPackageID',
-        'cmd.ModelName',
-      ]);
-      builder = builder.leftJoin(
-        '$_modelDataTable AS cmd',
-        (join) => join.on('cdi.ModelID', 'cmd.ID'),
-      );
-      if (id != null && id.isNotEmpty) {
-        builder = builder.where('cdi.ID', id);
-      }
-      if (modelName != null && modelName.isNotEmpty) {
-        builder = builder.where(
-          'cmd.ModelName',
-          '%$modelName%',
-          comparator: 'like',
-        );
-      }
-      builder = builder.limit(kPageSize).offset(offset);
-      var results = await builder.get();
-      return results
-          .map((e) => BriefCreatureDisplayInfoEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      // 表可能不存在
-      return [];
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table AS cdi');
+    builder = builder.select([
+      'cdi.ID',
+      'cdi.ModelID',
+      'cdi.SoundID',
+      'cdi.ExtendedDisplayInfoID',
+      'cdi.CreatureModelScale',
+      'cdi.CreatureModelAlpha',
+      'cdi.TextureVariation0',
+      'cdi.TextureVariation1',
+      'cdi.TextureVariation2',
+      'cdi.PortraitTextureName',
+      'cdi.SizeClass',
+      'cdi.BloodID',
+      'cdi.NPCSoundID',
+      'cdi.ParticleColorID',
+      'cdi.CreatureGeosetData',
+      'cdi.ObjectEffectPackageID',
+      'cmd.ModelName',
+    ]);
+    builder = builder.leftJoin(
+      '$_modelDataTable AS cmd',
+      (join) => join.on('cdi.ModelID', 'cmd.ID'),
+    );
+    if (id != null && id.isNotEmpty) {
+      builder = builder.where('cdi.ID', id);
     }
+    if (modelName != null && modelName.isNotEmpty) {
+      builder = builder.where(
+        'cmd.ModelName',
+        '%$modelName%',
+        comparator: 'like',
+      );
+    }
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefCreatureDisplayInfoEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<CreatureDisplayInfoEntity?> getCreatureDisplayInfo(int id) async {
-    try {
-      var builder = laconic.table('$_table AS cdi');
-      builder = builder.select([
-        'cdi.ID',
-        'cdi.ModelID',
-        'cdi.SoundID',
-        'cdi.ExtendedDisplayInfoID',
-        'cdi.CreatureModelScale',
-        'cdi.CreatureModelAlpha',
-        'cdi.TextureVariation0',
-        'cdi.TextureVariation1',
-        'cdi.TextureVariation2',
-        'cdi.PortraitTextureName',
-        'cdi.SizeClass',
-        'cdi.BloodID',
-        'cdi.NPCSoundID',
-        'cdi.ParticleColorID',
-        'cdi.CreatureGeosetData',
-        'cdi.ObjectEffectPackageID',
-        'cmd.ModelName',
-      ]);
-      builder = builder.leftJoin(
-        '$_modelDataTable AS cmd',
-        (join) => join.on('cdi.ModelID', 'cmd.ID'),
-      );
-      var result = await builder.where('cdi.ID', id).first();
-      return CreatureDisplayInfoEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var builder = laconic.table('$_table AS cdi');
+    builder = builder.select([
+      'cdi.ID',
+      'cdi.ModelID',
+      'cdi.SoundID',
+      'cdi.ExtendedDisplayInfoID',
+      'cdi.CreatureModelScale',
+      'cdi.CreatureModelAlpha',
+      'cdi.TextureVariation0',
+      'cdi.TextureVariation1',
+      'cdi.TextureVariation2',
+      'cdi.PortraitTextureName',
+      'cdi.SizeClass',
+      'cdi.BloodID',
+      'cdi.NPCSoundID',
+      'cdi.ParticleColorID',
+      'cdi.CreatureGeosetData',
+      'cdi.ObjectEffectPackageID',
+      'cmd.ModelName',
+    ]);
+    builder = builder.leftJoin(
+      '$_modelDataTable AS cmd',
+      (join) => join.on('cdi.ModelID', 'cmd.ID'),
+    );
+    var result = await builder.where('cdi.ID', id).first();
+    return CreatureDisplayInfoEntity.fromJson(result.toMap());
   }
 }

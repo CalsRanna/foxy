@@ -8,37 +8,33 @@ class CreatureQuestItemRepository with RepositoryMixin {
   Future<List<CreatureQuestItemEntity>> getCreatureQuestItems(
     int creatureEntry,
   ) async {
-    try {
-      var builder = laconic.table('$_table AS cq');
-      const fields = [
-        'cq.*',
-        'it.name',
-        'itl.Name AS localeName',
-        'it.Quality',
-        'didi.InventoryIcon0',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'item_template AS it',
-        (join) => join.on('cq.ItemId', 'it.entry'),
-      );
-      builder = builder.leftJoin(
-        'item_template_locale AS itl',
-        (join) => join.on('cq.ItemId', 'itl.ID').on('itl.locale', '"zhCN"'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_item_display_info AS didi',
-        (join) => join.on('it.displayid', 'didi.ID'),
-      );
-      builder = builder.where('cq.CreatureEntry', creatureEntry);
-      builder = builder.orderBy('cq.Idx');
-      var results = await builder.get();
-      return results
-          .map((e) => CreatureQuestItemEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    var builder = laconic.table('$_table AS cq');
+    const fields = [
+      'cq.*',
+      'it.name',
+      'itl.Name AS localeName',
+      'it.Quality',
+      'didi.InventoryIcon0',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'item_template AS it',
+      (join) => join.on('cq.ItemId', 'it.entry'),
+    );
+    builder = builder.leftJoin(
+      'item_template_locale AS itl',
+      (join) => join.on('cq.ItemId', 'itl.ID').on('itl.locale', '"zhCN"'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info AS didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
+    builder = builder.where('cq.CreatureEntry', creatureEntry);
+    builder = builder.orderBy('cq.Idx');
+    var results = await builder.get();
+    return results
+        .map((e) => CreatureQuestItemEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 查找单条记录
@@ -46,16 +42,12 @@ class CreatureQuestItemRepository with RepositoryMixin {
     int creatureEntry,
     int idx,
   ) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('CreatureEntry', creatureEntry)
-          .where('Idx', idx)
-          .first();
-      return CreatureQuestItemEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('CreatureEntry', creatureEntry)
+        .where('Idx', idx)
+        .first();
+    return CreatureQuestItemEntity.fromJson(result.toMap());
   }
 
   /// 新增任务物品

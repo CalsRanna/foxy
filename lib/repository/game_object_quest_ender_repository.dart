@@ -17,18 +17,14 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
   Future<GameObjectQuestEnderEntity> createGameObjectQuestEnder(
     int questId,
   ) async {
-    try {
-      final result = await laconic.table(_table).where('quest', questId).select(
-        ['MAX(id) as max_id'],
-      ).first();
-      final maxId = result.toMap()['max_id'] as int?;
-      return GameObjectQuestEnderEntity(
-        quest: questId,
-        id: maxId == null ? 0 : maxId + 1,
-      );
-    } catch (e) {
-      return GameObjectQuestEnderEntity(quest: questId, id: 0);
-    }
+    final result = await laconic.table(_table).where('quest', questId).select(
+      ['MAX(id) as max_id'],
+    ).first();
+    final maxId = result.toMap()['max_id'] as int?;
+    return GameObjectQuestEnderEntity(
+      quest: questId,
+      id: maxId == null ? 0 : maxId + 1,
+    );
   }
 
   Future<void> destroyGameObjectQuestEnder(Map<String, dynamic> id) async {
@@ -43,38 +39,30 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
   Future<GameObjectQuestEnderEntity?> getGameObjectQuestEnder(
     Map<String, dynamic> id,
   ) async {
-    try {
-      var builder = laconic.table(_table);
-      id.forEach((k, v) {
-        builder = builder.where(k, v);
-      });
-      final result = await builder.first();
-      return GameObjectQuestEnderEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var builder = laconic.table(_table);
+    id.forEach((k, v) {
+      builder = builder.where(k, v);
+    });
+    final result = await builder.first();
+    return GameObjectQuestEnderEntity.fromJson(result.toMap());
   }
 
   /// 按 quest 搜索该任务下的所有任务结束者（带 gameobject_template JOIN，无 locale）
   Future<List<BriefGameObjectQuestEnderEntity>> getGameObjectQuestEnders(
     int questId,
   ) async {
-    try {
-      const fields = ['goe.id', 'goe.quest', 'got.name'];
-      var builder = laconic.table('$_table AS goe');
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'gameobject_template AS got',
-        (join) => join.on('goe.id', 'got.entry'),
-      );
-      builder = builder.where('goe.quest', questId);
-      final results = await builder.get();
-      return results
-          .map((e) => BriefGameObjectQuestEnderEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    const fields = ['goe.id', 'goe.quest', 'got.name'];
+    var builder = laconic.table('$_table AS goe');
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'gameobject_template AS got',
+      (join) => join.on('goe.id', 'got.entry'),
+    );
+    builder = builder.where('goe.quest', questId);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefGameObjectQuestEnderEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeGameObjectQuestEnder(

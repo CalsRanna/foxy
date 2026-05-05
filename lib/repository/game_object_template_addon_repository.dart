@@ -7,12 +7,8 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
   Future<GameObjectTemplateAddonEntity?> getGameObjectTemplateAddon(
     int entry,
   ) async {
-    try {
-      var result = await laconic.table(_table).where('entry', entry).first();
-      return GameObjectTemplateAddonEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('entry', entry).first();
+    return GameObjectTemplateAddonEntity.fromJson(result.toMap());
   }
 
   Future<void> storeGameObjectTemplateAddon(

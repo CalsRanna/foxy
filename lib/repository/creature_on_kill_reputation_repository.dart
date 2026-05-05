@@ -8,15 +8,11 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
   Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
     int creatureID,
   ) async {
-    try {
-      var builder = laconic.table(_table);
-      builder = builder.select(['*']);
-      builder = builder.where('creature_id', creatureID);
-      var result = await builder.first();
-      return CreatureOnKillReputationEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var builder = laconic.table(_table);
+    builder = builder.select(['*']);
+    builder = builder.where('creature_id', creatureID);
+    var result = await builder.first();
+    return CreatureOnKillReputationEntity.fromJson(result.toMap());
   }
 
   /// 新增击杀声望

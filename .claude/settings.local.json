@@ -57,7 +57,8 @@
       "Bash(awk -F: '{print $1}')",
       "Bash(sort -t' ' -k2 -rn)",
       "Bash(awk '$1 == \"blob\" && $2 > 102400 && $3 !~ /\\\\.\\(png|jpg|jpeg|gif|ico|icns|xcassets|AppIcon|isarc|lock\\)$/')",
-      "Bash(\\\\$\" /Users/cals/Code/foxy/lib/ --include='*.dart' | grep -v '.g.dart:' | grep -v '.freezed.dart:' | grep -v \"///\" | grep -v \"laconic\\\\|logger\\\\|shad\\\\|sonner\\\\|text\\\\|path\\\\|route\\\\|controller\\\\|comment\\\\|suffix\\\\|error\\\\|message\\\\|title\\\\|description\\\\|label\" | head -20)"
+      "Bash(\\\\$\" /Users/cals/Code/foxy/lib/ --include='*.dart' | grep -v '.g.dart:' | grep -v '.freezed.dart:' | grep -v \"///\" | grep -v \"laconic\\\\|logger\\\\|shad\\\\|sonner\\\\|text\\\\|path\\\\|route\\\\|controller\\\\|comment\\\\|suffix\\\\|error\\\\|message\\\\|title\\\\|description\\\\|label\" | head -20)",
+      "Bash(sort -t: -k2 -rn)"
     ],
     "deny": []
   }

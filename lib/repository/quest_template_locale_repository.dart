@@ -10,14 +10,10 @@ class QuestTemplateLocaleRepository with RepositoryMixin {
   Future<List<QuestTemplateLocaleEntity>> getQuestTemplateLocales(
     int id,
   ) async {
-    try {
-      final results = await laconic.table(_table).where('ID', id).get();
-      return results
-          .map((e) => QuestTemplateLocaleEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    final results = await laconic.table(_table).where('ID', id).get();
+    return results
+        .map((e) => QuestTemplateLocaleEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 删除-然后-重新插入模式（replaceAll）

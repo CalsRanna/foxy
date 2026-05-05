@@ -6,23 +6,18 @@ class DbcFactionRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_faction';
 
   Future<int> countDbcFactions({String? id, String? name}) async {
-    try {
-      var builder = laconic.table(_table);
-      if (id != null && id.isNotEmpty) {
-        builder = builder.where('ID', id);
-      }
-      if (name != null && name.isNotEmpty) {
-        builder = builder.where(
-          'Name_lang_zhCN',
-          '%$name%',
-          comparator: 'like',
-        );
-      }
-      return await builder.count();
-    } catch (e) {
-      // 表可能不存在
-      return 0;
+    var builder = laconic.table(_table);
+    if (id != null && id.isNotEmpty) {
+      builder = builder.where('ID', id);
     }
+    if (name != null && name.isNotEmpty) {
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%$name%',
+        comparator: 'like',
+      );
+    }
+    return await builder.count();
   }
 
   Future<List<DbcFactionEntity>> getDbcFactions({
@@ -30,42 +25,33 @@ class DbcFactionRepository with RepositoryMixin {
     String? name,
     int page = 1,
   }) async {
-    try {
-      var offset = (page - 1) * kPageSize;
-      var builder = laconic.table(_table).select([
-        'ID',
-        'Name_lang_zhCN',
-        'Description_lang_zhCN',
-      ]);
-      if (id != null && id.isNotEmpty) {
-        builder = builder.where('ID', id);
-      }
-      if (name != null && name.isNotEmpty) {
-        builder = builder.where(
-          'Name_lang_zhCN',
-          '%$name%',
-          comparator: 'like',
-        );
-      }
-      builder = builder.limit(kPageSize).offset(offset);
-      var results = await builder.get();
-      return results.map((e) => DbcFactionEntity.fromJson(e.toMap())).toList();
-    } catch (e) {
-      // 表可能不存在
-      return [];
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table).select([
+      'ID',
+      'Name_lang_zhCN',
+      'Description_lang_zhCN',
+    ]);
+    if (id != null && id.isNotEmpty) {
+      builder = builder.where('ID', id);
     }
+    if (name != null && name.isNotEmpty) {
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%$name%',
+        comparator: 'like',
+      );
+    }
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results.map((e) => DbcFactionEntity.fromJson(e.toMap())).toList();
   }
 
   Future<DbcFactionEntity?> getDbcFaction(int id) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .select(['ID', 'Name_lang_zhCN', 'Description_lang_zhCN'])
-          .where('ID', id)
-          .first();
-      return DbcFactionEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .select(['ID', 'Name_lang_zhCN', 'Description_lang_zhCN'])
+        .where('ID', id)
+        .first();
+    return DbcFactionEntity.fromJson(result.toMap());
   }
 }

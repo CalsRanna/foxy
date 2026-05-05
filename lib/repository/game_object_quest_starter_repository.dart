@@ -10,56 +10,44 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
   Future<List<BriefGameObjectQuestStarterEntity>> getGameObjectQuestStarters(
     int questId,
   ) async {
-    try {
-      const fields = ['gos.id', 'gos.quest', 'got.name'];
-      var builder = laconic.table('$_table AS gos');
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'gameobject_template AS got',
-        (join) => join.on('gos.id', 'got.entry'),
-      );
-      builder = builder.where('gos.quest', questId);
-      final results = await builder.get();
-      return results
-          .map((e) => BriefGameObjectQuestStarterEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    const fields = ['gos.id', 'gos.quest', 'got.name'];
+    var builder = laconic.table('$_table AS gos');
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'gameobject_template AS got',
+      (join) => join.on('gos.id', 'got.entry'),
+    );
+    builder = builder.where('gos.quest', questId);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefGameObjectQuestStarterEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 按复合键查找
   Future<GameObjectQuestStarterEntity?> getGameObjectQuestStarter(
     Map<String, dynamic> id,
   ) async {
-    try {
-      var builder = laconic.table(_table);
-      id.forEach((k, v) {
-        builder = builder.where(k, v);
-      });
-      final result = await builder.first();
-      return GameObjectQuestStarterEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var builder = laconic.table(_table);
+    id.forEach((k, v) {
+      builder = builder.where(k, v);
+    });
+    final result = await builder.first();
+    return GameObjectQuestStarterEntity.fromJson(result.toMap());
   }
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
   Future<GameObjectQuestStarterEntity> createGameObjectQuestStarter(
     int questId,
   ) async {
-    try {
-      final result = await laconic.table(_table).where('quest', questId).select(
-        ['MAX(id) as max_id'],
-      ).first();
-      final maxId = result.toMap()['max_id'] as int?;
-      return GameObjectQuestStarterEntity(
-        quest: questId,
-        id: maxId == null ? 0 : maxId + 1,
-      );
-    } catch (e) {
-      return GameObjectQuestStarterEntity(quest: questId, id: 0);
-    }
+    final result = await laconic.table(_table).where('quest', questId).select(
+      ['MAX(id) as max_id'],
+    ).first();
+    final maxId = result.toMap()['max_id'] as int?;
+    return GameObjectQuestStarterEntity(
+      quest: questId,
+      id: maxId == null ? 0 : maxId + 1,
+    );
   }
 
   Future<void> storeGameObjectQuestStarter(
