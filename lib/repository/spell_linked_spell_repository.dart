@@ -7,34 +7,26 @@ class SpellLinkedSpellRepository with RepositoryMixin {
   Future<List<SpellLinkedSpellEntity>> getSpellLinkedSpells(
     int spellTrigger,
   ) async {
-    try {
-      var results = await laconic
-          .table(_table)
-          .where('spell_trigger', spellTrigger)
-          .orWhere('spell_trigger', -spellTrigger)
-          .get();
-      return results
-          .map((e) => SpellLinkedSpellEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    var results = await laconic
+        .table(_table)
+        .where('spell_trigger', spellTrigger)
+        .orWhere('spell_trigger', -spellTrigger)
+        .get();
+    return results
+        .map((e) => SpellLinkedSpellEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<SpellLinkedSpellEntity?> getSpellLinkedSpell(
     int spellTrigger,
     int spellEffect,
   ) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('spell_trigger', spellTrigger)
-          .where('spell_effect', spellEffect)
-          .first();
-      return SpellLinkedSpellEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('spell_trigger', spellTrigger)
+        .where('spell_effect', spellEffect)
+        .first();
+    return SpellLinkedSpellEntity.fromJson(result.toMap());
   }
 
   Future<void> storeSpellLinkedSpell(SpellLinkedSpellEntity data) async {

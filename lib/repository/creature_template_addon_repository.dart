@@ -8,12 +8,8 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
   Future<CreatureTemplateAddonEntity?> getCreatureTemplateAddon(
     int entry,
   ) async {
-    try {
-      var result = await laconic.table(_table).where('entry', entry).first();
-      return CreatureTemplateAddonEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic.table(_table).where('entry', entry).first();
+    return CreatureTemplateAddonEntity.fromJson(result.toMap());
   }
 
   /// 新增附加数据

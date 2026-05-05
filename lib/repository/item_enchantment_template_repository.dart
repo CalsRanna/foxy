@@ -9,127 +9,115 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     String? entry,
     int page = 1,
   }) async {
-    try {
-      var offset = (page - 1) * kPageSize;
-      var builder = laconic.table('$_table AS iet');
-      builder = builder.select([
-        'iet.entry',
-        'iet.ench',
-        'iet.chance',
-        'dirp.Name_lang_zhCN',
-        'dirp.Name',
-        'dsie_1.Name_lang_zhCN AS Enchantment_1',
-        'dsie_2.Name_lang_zhCN AS Enchantment_2',
-        'dsie_3.Name_lang_zhCN AS Enchantment_3',
-        'dsie_4.Name_lang_zhCN AS Enchantment_4',
-        'dsie_5.Name_lang_zhCN AS Enchantment_5',
-      ]);
-      builder = builder.leftJoin(
-        'foxy.dbc_item_random_properties AS dirp',
-        (join) => join.on('iet.ench', 'dirp.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_1',
-        (join) => join.on('dirp.Enchantment_1', 'dsie_1.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_2',
-        (join) => join.on('dirp.Enchantment_2', 'dsie_2.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_3',
-        (join) => join.on('dirp.Enchantment_3', 'dsie_3.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_4',
-        (join) => join.on('dirp.Enchantment_4', 'dsie_4.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_5',
-        (join) => join.on('dirp.Enchantment_5', 'dsie_5.ID'),
-      );
-      builder = builder.whereNotNull('dirp.ID');
-      if (entry != null && entry.isNotEmpty) {
-        builder = builder.where('iet.entry', entry);
-      }
-      builder = builder.limit(kPageSize).offset(offset);
-      var results = await builder.get();
-      return results
-          .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table AS iet');
+    builder = builder.select([
+      'iet.entry',
+      'iet.ench',
+      'iet.chance',
+      'dirp.Name_lang_zhCN',
+      'dirp.Name',
+      'dsie_1.Name_lang_zhCN AS Enchantment_1',
+      'dsie_2.Name_lang_zhCN AS Enchantment_2',
+      'dsie_3.Name_lang_zhCN AS Enchantment_3',
+      'dsie_4.Name_lang_zhCN AS Enchantment_4',
+      'dsie_5.Name_lang_zhCN AS Enchantment_5',
+    ]);
+    builder = builder.leftJoin(
+      'foxy.dbc_item_random_properties AS dirp',
+      (join) => join.on('iet.ench', 'dirp.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_1',
+      (join) => join.on('dirp.Enchantment_1', 'dsie_1.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_2',
+      (join) => join.on('dirp.Enchantment_2', 'dsie_2.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_3',
+      (join) => join.on('dirp.Enchantment_3', 'dsie_3.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_4',
+      (join) => join.on('dirp.Enchantment_4', 'dsie_4.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_5',
+      (join) => join.on('dirp.Enchantment_5', 'dsie_5.ID'),
+    );
+    builder = builder.whereNotNull('dirp.ID');
+    if (entry != null && entry.isNotEmpty) {
+      builder = builder.where('iet.entry', entry);
     }
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 计数
   Future<int> countItemEnchantmentTemplates({String? entry}) async {
-    try {
-      var builder = laconic.table('$_table AS iet');
-      builder = builder.leftJoin(
-        'foxy.dbc_item_random_properties AS dirp',
-        (join) => join.on('iet.ench', 'dirp.ID'),
-      );
-      builder = builder.whereNotNull('dirp.ID');
-      if (entry != null && entry.isNotEmpty) {
-        builder = builder.where('iet.entry', entry);
-      }
-      return await builder.count();
-    } catch (e) {
-      return 0;
+    var builder = laconic.table('$_table AS iet');
+    builder = builder.leftJoin(
+      'foxy.dbc_item_random_properties AS dirp',
+      (join) => join.on('iet.ench', 'dirp.ID'),
+    );
+    builder = builder.whereNotNull('dirp.ID');
+    if (entry != null && entry.isNotEmpty) {
+      builder = builder.where('iet.entry', entry);
     }
+    return await builder.count();
   }
 
   /// 获取指定 entry 的所有附魔项（带 DBC 名称）
   Future<List<BriefItemEnchantmentTemplateEntity>>
   getItemEnchantmentTemplatesByEntry(int entry) async {
-    try {
-      var builder = laconic.table('$_table AS iet');
-      builder = builder.select([
-        'iet.entry',
-        'iet.ench',
-        'iet.chance',
-        'dirp.Name_lang_zhCN',
-        'dirp.Name',
-        'dsie_1.Name_lang_zhCN AS Enchantment_1',
-        'dsie_2.Name_lang_zhCN AS Enchantment_2',
-        'dsie_3.Name_lang_zhCN AS Enchantment_3',
-        'dsie_4.Name_lang_zhCN AS Enchantment_4',
-        'dsie_5.Name_lang_zhCN AS Enchantment_5',
-      ]);
-      builder = builder.leftJoin(
-        'foxy.dbc_item_random_properties AS dirp',
-        (join) => join.on('iet.ench', 'dirp.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_1',
-        (join) => join.on('dirp.Enchantment_1', 'dsie_1.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_2',
-        (join) => join.on('dirp.Enchantment_2', 'dsie_2.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_3',
-        (join) => join.on('dirp.Enchantment_3', 'dsie_3.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_4',
-        (join) => join.on('dirp.Enchantment_4', 'dsie_4.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell_item_enchantment AS dsie_5',
-        (join) => join.on('dirp.Enchantment_5', 'dsie_5.ID'),
-      );
-      builder = builder.whereNotNull('dirp.ID');
-      builder = builder.where('iet.entry', entry);
-      var results = await builder.get();
-      return results
-          .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    var builder = laconic.table('$_table AS iet');
+    builder = builder.select([
+      'iet.entry',
+      'iet.ench',
+      'iet.chance',
+      'dirp.Name_lang_zhCN',
+      'dirp.Name',
+      'dsie_1.Name_lang_zhCN AS Enchantment_1',
+      'dsie_2.Name_lang_zhCN AS Enchantment_2',
+      'dsie_3.Name_lang_zhCN AS Enchantment_3',
+      'dsie_4.Name_lang_zhCN AS Enchantment_4',
+      'dsie_5.Name_lang_zhCN AS Enchantment_5',
+    ]);
+    builder = builder.leftJoin(
+      'foxy.dbc_item_random_properties AS dirp',
+      (join) => join.on('iet.ench', 'dirp.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_1',
+      (join) => join.on('dirp.Enchantment_1', 'dsie_1.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_2',
+      (join) => join.on('dirp.Enchantment_2', 'dsie_2.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_3',
+      (join) => join.on('dirp.Enchantment_3', 'dsie_3.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_4',
+      (join) => join.on('dirp.Enchantment_4', 'dsie_4.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell_item_enchantment AS dsie_5',
+      (join) => join.on('dirp.Enchantment_5', 'dsie_5.ID'),
+    );
+    builder = builder.whereNotNull('dirp.ID');
+    builder = builder.where('iet.entry', entry);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 查找单条记录
@@ -137,16 +125,12 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     int entry,
     int ench,
   ) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('entry', entry)
-          .where('ench', ench)
-          .first();
-      return ItemEnchantmentTemplateEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('entry', entry)
+        .where('ench', ench)
+        .first();
+    return ItemEnchantmentTemplateEntity.fromJson(result.toMap());
   }
 
   /// 新增

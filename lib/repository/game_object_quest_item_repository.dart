@@ -7,53 +7,45 @@ class GameObjectQuestItemRepository with RepositoryMixin {
   Future<List<GameObjectQuestItemEntity>> getGameObjectQuestItems(
     int gameObjectEntry,
   ) async {
-    try {
-      var builder = laconic.table('$_table AS gq');
-      const fields = [
-        'gq.*',
-        'it.name',
-        'itl.Name AS localeName',
-        'it.Quality',
-        'didi.InventoryIcon0',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'item_template AS it',
-        (join) => join.on('gq.ItemId', 'it.entry'),
-      );
-      builder = builder.leftJoin(
-        'item_template_locale AS itl',
-        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_item_display_info AS didi',
-        (join) => join.on('it.displayid', 'didi.ID'),
-      );
-      builder = builder.where('gq.GameObjectEntry', gameObjectEntry);
-      builder = builder.orderBy('gq.Idx');
-      var results = await builder.get();
-      return results
-          .map((e) => GameObjectQuestItemEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    var builder = laconic.table('$_table AS gq');
+    const fields = [
+      'gq.*',
+      'it.name',
+      'itl.Name AS localeName',
+      'it.Quality',
+      'didi.InventoryIcon0',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'item_template AS it',
+      (join) => join.on('gq.ItemId', 'it.entry'),
+    );
+    builder = builder.leftJoin(
+      'item_template_locale AS itl',
+      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info AS didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
+    builder = builder.where('gq.GameObjectEntry', gameObjectEntry);
+    builder = builder.orderBy('gq.Idx');
+    var results = await builder.get();
+    return results
+        .map((e) => GameObjectQuestItemEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<GameObjectQuestItemEntity?> getGameObjectQuestItem(
     int gameObjectEntry,
     int idx,
   ) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('GameObjectEntry', gameObjectEntry)
-          .where('Idx', idx)
-          .first();
-      return GameObjectQuestItemEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('GameObjectEntry', gameObjectEntry)
+        .where('Idx', idx)
+        .first();
+    return GameObjectQuestItemEntity.fromJson(result.toMap());
   }
 
   Future<void> storeGameObjectQuestItem(

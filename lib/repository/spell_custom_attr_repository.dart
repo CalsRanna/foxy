@@ -5,15 +5,11 @@ class SpellCustomAttrRepository with RepositoryMixin {
   static const _table = 'spell_custom_attr';
 
   Future<SpellCustomAttrEntity?> getSpellCustomAttr(int spellId) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('spell_id', spellId)
-          .first();
-      return SpellCustomAttrEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('spell_id', spellId)
+        .first();
+    return SpellCustomAttrEntity.fromJson(result.toMap());
   }
 
   Future<void> storeSpellCustomAttr(SpellCustomAttrEntity data) async {

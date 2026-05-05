@@ -5,12 +5,8 @@ class SpellAreaRepository with RepositoryMixin {
   static const _table = 'spell_area';
 
   Future<List<SpellAreaEntity>> getSpellAreas(int spell) async {
-    try {
-      var results = await laconic.table(_table).where('spell', spell).get();
-      return results.map((e) => SpellAreaEntity.fromJson(e.toMap())).toList();
-    } catch (e) {
-      return [];
-    }
+    var results = await laconic.table(_table).where('spell', spell).get();
+    return results.map((e) => SpellAreaEntity.fromJson(e.toMap())).toList();
   }
 
   Future<SpellAreaEntity?> getSpellArea(
@@ -21,20 +17,16 @@ class SpellAreaRepository with RepositoryMixin {
     int racemask,
     int gender,
   ) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('spell', spell)
-          .where('area', area)
-          .where('quest_start', questStart)
-          .where('aura_spell', auraSpell)
-          .where('racemask', racemask)
-          .where('gender', gender)
-          .first();
-      return SpellAreaEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('spell', spell)
+        .where('area', area)
+        .where('quest_start', questStart)
+        .where('aura_spell', auraSpell)
+        .where('racemask', racemask)
+        .where('gender', gender)
+        .first();
+    return SpellAreaEntity.fromJson(result.toMap());
   }
 
   Future<void> storeSpellArea(SpellAreaEntity data) async {

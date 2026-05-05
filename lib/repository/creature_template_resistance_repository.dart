@@ -8,18 +8,14 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   Future<List<CreatureTemplateResistanceEntity>> getCreatureTemplateResistances(
     int creatureID,
   ) async {
-    try {
-      var builder = laconic.table(_table);
-      builder = builder.select(['*']);
-      builder = builder.where('CreatureID', creatureID);
-      builder = builder.orderBy('School');
-      var results = await builder.get();
-      return results
-          .map((e) => CreatureTemplateResistanceEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    var builder = laconic.table(_table);
+    builder = builder.select(['*']);
+    builder = builder.where('CreatureID', creatureID);
+    builder = builder.orderBy('School');
+    var results = await builder.get();
+    return results
+        .map((e) => CreatureTemplateResistanceEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 查找单条记录
@@ -27,16 +23,12 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
     int creatureID,
     int school,
   ) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('CreatureID', creatureID)
-          .where('School', school)
-          .first();
-      return CreatureTemplateResistanceEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('CreatureID', creatureID)
+        .where('School', school)
+        .first();
+    return CreatureTemplateResistanceEntity.fromJson(result.toMap());
   }
 
   /// 新增抗性

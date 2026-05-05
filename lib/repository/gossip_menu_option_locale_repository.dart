@@ -11,13 +11,9 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
   Future<List<GossipMenuOptionLocaleEntity>> getGossipMenuOptionLocales({
     required int menuId,
   }) async {
-    try {
-      final results = await laconic.table(_table).where('MenuID', menuId).get();
-      return results
-          .map((e) => GossipMenuOptionLocaleEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    final results = await laconic.table(_table).where('MenuID', menuId).get();
+    return results
+        .map((e) => GossipMenuOptionLocaleEntity.fromJson(e.toMap()))
+        .toList();
   }
 }

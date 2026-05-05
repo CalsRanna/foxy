@@ -17,18 +17,14 @@ class CreatureQuestStarterRepository with RepositoryMixin {
   Future<CreatureQuestStarterEntity> createCreatureQuestStarter(
     int questId,
   ) async {
-    try {
-      final result = await laconic.table(_table).where('quest', questId).select(
-        ['MAX(id) as max_id'],
-      ).first();
-      final maxId = result.toMap()['max_id'] as int?;
-      return CreatureQuestStarterEntity(
-        quest: questId,
-        id: maxId == null ? 0 : maxId + 1,
-      );
-    } catch (e) {
-      return CreatureQuestStarterEntity(quest: questId, id: 0);
-    }
+    final result = await laconic.table(_table).where('quest', questId).select(
+      ['MAX(id) as max_id'],
+    ).first();
+    final maxId = result.toMap()['max_id'] as int?;
+    return CreatureQuestStarterEntity(
+      quest: questId,
+      id: maxId == null ? 0 : maxId + 1,
+    );
   }
 
   Future<void> destroyCreatureQuestStarter(Map<String, dynamic> id) async {
@@ -43,42 +39,34 @@ class CreatureQuestStarterRepository with RepositoryMixin {
   Future<CreatureQuestStarterEntity?> getCreatureQuestStarter(
     Map<String, dynamic> id,
   ) async {
-    try {
-      var builder = laconic.table(_table);
-      id.forEach((k, v) {
-        builder = builder.where(k, v);
-      });
-      final result = await builder.first();
-      return CreatureQuestStarterEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var builder = laconic.table(_table);
+    id.forEach((k, v) {
+      builder = builder.where(k, v);
+    });
+    final result = await builder.first();
+    return CreatureQuestStarterEntity.fromJson(result.toMap());
   }
 
   /// 按 quest 搜索该任务下的所有任务给予者（带 creature_template + locale JOIN）
   Future<List<BriefCreatureQuestStarterEntity>> getCreatureQuestStarters(
     int questId,
   ) async {
-    try {
-      const fields = ['cqs.id', 'cqs.quest', 'ct.name', 'ctl.Name'];
-      var builder = laconic.table('$_table AS cqs');
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'creature_template AS ct',
-        (join) => join.on('cqs.id', 'ct.entry'),
-      );
-      builder = builder.leftJoin(
-        'creature_template_locale AS ctl',
-        (join) => join.on('cqs.id', 'ctl.entry').on('ctl.locale', '"zhCN"'),
-      );
-      builder = builder.where('cqs.quest', questId);
-      final results = await builder.get();
-      return results
-          .map((e) => BriefCreatureQuestStarterEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    const fields = ['cqs.id', 'cqs.quest', 'ct.name', 'ctl.Name'];
+    var builder = laconic.table('$_table AS cqs');
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'creature_template AS ct',
+      (join) => join.on('cqs.id', 'ct.entry'),
+    );
+    builder = builder.leftJoin(
+      'creature_template_locale AS ctl',
+      (join) => join.on('cqs.id', 'ctl.entry').on('ctl.locale', '"zhCN"'),
+    );
+    builder = builder.where('cqs.quest', questId);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefCreatureQuestStarterEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeCreatureQuestStarter(

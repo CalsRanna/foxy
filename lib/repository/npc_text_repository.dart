@@ -20,69 +20,52 @@ class NpcTextRepository with RepositoryMixin {
     String? text,
     required int page,
   }) async {
-    try {
-      final offset = (page - 1) * kPageSize;
-      var builder = laconic.table(_table);
-      if (id != null && id.isNotEmpty) {
-        builder = builder.where('ID', id);
-      }
-      if (text != null && text.isNotEmpty) {
-        builder = builder.whereAny(
-          ['text0_0', 'text0_1'],
-          '%$text%',
-          operator: 'like',
-        );
-      }
-      builder = builder.limit(kPageSize).offset(offset);
-      final results = await builder.get();
-      return results.map((e) => NpcTextEntity.fromJson(e.toMap())).toList();
-    } catch (e) {
-      return [];
+    final offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    if (id != null && id.isNotEmpty) {
+      builder = builder.where('ID', id);
     }
+    if (text != null && text.isNotEmpty) {
+      builder = builder.whereAny(
+        ['text0_0', 'text0_1'],
+        '%$text%',
+        operator: 'like',
+      );
+    }
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results.map((e) => NpcTextEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countNpcTexts({String? id, String? text}) async {
-    try {
-      var builder = laconic.table(_table);
-      if (id != null && id.isNotEmpty) {
-        builder = builder.where('ID', id);
-      }
-      if (text != null && text.isNotEmpty) {
-        builder = builder.whereAny(
-          ['text0_0', 'text0_1'],
-          '%$text%',
-          operator: 'like',
-        );
-      }
-      return await builder.count();
-    } catch (e) {
-      return 0;
+    var builder = laconic.table(_table);
+    if (id != null && id.isNotEmpty) {
+      builder = builder.where('ID', id);
     }
+    if (text != null && text.isNotEmpty) {
+      builder = builder.whereAny(
+        ['text0_0', 'text0_1'],
+        '%$text%',
+        operator: 'like',
+      );
+    }
+    return await builder.count();
   }
 
   /// 按 ID 查找
   Future<NpcTextEntity?> getNpcText(int id) async {
-    try {
-      final result = await laconic.table(_table).where('ID', id).first();
-      return NpcTextEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    final result = await laconic.table(_table).where('ID', id).first();
+    return NpcTextEntity.fromJson(result.toMap());
   }
 
   /// create：返回下一个可用 ID 的空白对象（不落库）
   Future<NpcTextEntity> createNpcText() async {
-    try {
-      final result = await laconic.table(_table).select([
-        'MAX(ID) as max_id',
-      ]).first();
-      final maxId = result.toMap()['max_id'] as int?;
-      final model = NpcTextEntity(id: (maxId ?? 0) + 1);
-      return model;
-    } catch (e) {
-      final model = NpcTextEntity(id: 1);
-      return model;
-    }
+    final result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    final maxId = result.toMap()['max_id'] as int?;
+    final model = NpcTextEntity(id: (maxId ?? 0) + 1);
+    return model;
   }
 
   Future<void> updateNpcText(int id, NpcTextEntity model) async {

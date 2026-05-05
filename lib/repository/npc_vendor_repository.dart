@@ -6,51 +6,43 @@ class NpcVendorRepository with RepositoryMixin {
 
   /// 获取指定NPC的所有商品（带物品信息）
   Future<List<BriefNpcVendorEntity>> getNpcVendors(int entry) async {
-    try {
-      var builder = laconic.table('$_table AS nv');
-      const fields = [
-        'nv.*',
-        'it.name',
-        'itl.Name AS localeName',
-        'it.Quality',
-        'didi.InventoryIcon0',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'item_template AS it',
-        (join) => join.on('nv.item', 'it.entry'),
-      );
-      builder = builder.leftJoin(
-        'item_template_locale AS itl',
-        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_item_display_info AS didi',
-        (join) => join.on('it.displayid', 'didi.ID'),
-      );
-      builder = builder.where('nv.entry', entry);
-      builder = builder.orderBy('nv.slot');
-      var results = await builder.get();
-      return results
-          .map((e) => BriefNpcVendorEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    var builder = laconic.table('$_table AS nv');
+    const fields = [
+      'nv.*',
+      'it.name',
+      'itl.Name AS localeName',
+      'it.Quality',
+      'didi.InventoryIcon0',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'item_template AS it',
+      (join) => join.on('nv.item', 'it.entry'),
+    );
+    builder = builder.leftJoin(
+      'item_template_locale AS itl',
+      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info AS didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
+    builder = builder.where('nv.entry', entry);
+    builder = builder.orderBy('nv.slot');
+    var results = await builder.get();
+    return results
+        .map((e) => BriefNpcVendorEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 查找单条记录
   Future<NpcVendorEntity?> getNpcVendor(int entry, int slot) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('entry', entry)
-          .where('slot', slot)
-          .first();
-      return NpcVendorEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('entry', entry)
+        .where('slot', slot)
+        .first();
+    return NpcVendorEntity.fromJson(result.toMap());
   }
 
   /// 新增商品

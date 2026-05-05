@@ -8,27 +8,23 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   Future<List<CreatureTemplateSpellEntity>> getCreatureTemplateSpells(
     int creatureID,
   ) async {
-    try {
-      var builder = laconic.table('$_table AS cts');
-      const fields = [
-        'cts.*',
-        'ds.Name_lang_zhCN as spellName',
-        'ds.NameSubtext_lang_zhCN as spellSubtext',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'foxy.dbc_spell AS ds',
-        (join) => join.on('cts.Spell', 'ds.ID'),
-      );
-      builder = builder.where('cts.CreatureID', creatureID);
-      builder = builder.orderBy('cts.`Index`');
-      var results = await builder.get();
-      return results
-          .map((e) => CreatureTemplateSpellEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    var builder = laconic.table('$_table AS cts');
+    const fields = [
+      'cts.*',
+      'ds.Name_lang_zhCN as spellName',
+      'ds.NameSubtext_lang_zhCN as spellSubtext',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'foxy.dbc_spell AS ds',
+      (join) => join.on('cts.Spell', 'ds.ID'),
+    );
+    builder = builder.where('cts.CreatureID', creatureID);
+    builder = builder.orderBy('cts.`Index`');
+    var results = await builder.get();
+    return results
+        .map((e) => CreatureTemplateSpellEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 查找单条记录
@@ -36,16 +32,12 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
     int creatureID,
     int index,
   ) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('CreatureID', creatureID)
-          .where('`Index`', index)
-          .first();
-      return CreatureTemplateSpellEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('CreatureID', creatureID)
+        .where('`Index`', index)
+        .first();
+    return CreatureTemplateSpellEntity.fromJson(result.toMap());
   }
 
   /// 新增技能

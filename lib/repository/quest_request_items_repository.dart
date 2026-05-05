@@ -10,12 +10,8 @@ class QuestRequestItemsRepository with RepositoryMixin {
 
   /// 根据 ID 查找
   Future<QuestRequestItemsEntity?> getQuestRequestItems(int id) async {
-    try {
-      final result = await laconic.table(_table).where('ID', id).first();
-      return QuestRequestItemsEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    final result = await laconic.table(_table).where('ID', id).first();
+    return QuestRequestItemsEntity.fromJson(result.toMap());
   }
 
   /// 创建：返回与 quest_template ID 关联的空白对象（不落库）

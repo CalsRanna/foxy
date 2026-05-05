@@ -5,53 +5,45 @@ class SpellRankRepository with RepositoryMixin {
   static const _table = 'spell_ranks';
 
   Future<List<SpellRankEntity>> getSpellRanks(int spellId) async {
-    try {
-      var firstResult = await laconic
-          .table(_table)
-          .select(['first_spell_id'])
-          .where('spell_id', spellId)
-          .first();
+    var firstResult = await laconic
+        .table(_table)
+        .select(['first_spell_id'])
+        .where('spell_id', spellId)
+        .first();
 
-      var firstSpellId = (firstResult.toMap()['first_spell_id'] ?? 0) as int;
-      if (firstSpellId == 0) return [];
+    var firstSpellId = (firstResult.toMap()['first_spell_id'] ?? 0) as int;
+    if (firstSpellId == 0) return [];
 
-      var builder = laconic.table('$_table AS sr');
-      const fields = [
-        'sr.*',
-        'fds.Name_lang_zhCN as First_Spell_Name_Lang_zhCN',
-        'fds.NameSubtext_lang_zhCN as First_Spell_NameSubtext_Lang_zhCN',
-        'ds.Name_lang_zhCN as Spell_Name_Lang_zhCN',
-        'ds.NameSubtext_lang_zhCN as Spell_NameSubtext_Lang_zhCN',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'foxy.dbc_spell AS fds',
-        (join) => join.on('sr.first_spell_id', 'fds.ID'),
-      );
-      builder = builder.leftJoin(
-        'foxy.dbc_spell AS ds',
-        (join) => join.on('sr.spell_id', 'ds.ID'),
-      );
-      builder = builder.where('sr.first_spell_id', firstSpellId);
-      builder = builder.orderBy('sr.rank');
-      var results = await builder.get();
-      return results.map((e) => SpellRankEntity.fromJson(e.toMap())).toList();
-    } catch (e) {
-      return [];
-    }
+    var builder = laconic.table('$_table AS sr');
+    const fields = [
+      'sr.*',
+      'fds.Name_lang_zhCN as First_Spell_Name_Lang_zhCN',
+      'fds.NameSubtext_lang_zhCN as First_Spell_NameSubtext_Lang_zhCN',
+      'ds.Name_lang_zhCN as Spell_Name_Lang_zhCN',
+      'ds.NameSubtext_lang_zhCN as Spell_NameSubtext_Lang_zhCN',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'foxy.dbc_spell AS fds',
+      (join) => join.on('sr.first_spell_id', 'fds.ID'),
+    );
+    builder = builder.leftJoin(
+      'foxy.dbc_spell AS ds',
+      (join) => join.on('sr.spell_id', 'ds.ID'),
+    );
+    builder = builder.where('sr.first_spell_id', firstSpellId);
+    builder = builder.orderBy('sr.rank');
+    var results = await builder.get();
+    return results.map((e) => SpellRankEntity.fromJson(e.toMap())).toList();
   }
 
   Future<SpellRankEntity?> getSpellRank(int firstSpellId, int rank) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('first_spell_id', firstSpellId)
-          .where('rank', rank)
-          .first();
-      return SpellRankEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('first_spell_id', firstSpellId)
+        .where('rank', rank)
+        .first();
+    return SpellRankEntity.fromJson(result.toMap());
   }
 
   Future<void> storeSpellRank(SpellRankEntity data) async {

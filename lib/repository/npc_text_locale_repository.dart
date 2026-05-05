@@ -8,28 +8,20 @@ class NpcTextLocaleRepository with RepositoryMixin {
 
   /// 按 ID 查询该 NpcText 的所有 locale
   Future<List<NpcTextLocaleEntity>> getNpcTextLocales({required int id}) async {
-    try {
-      final results = await laconic.table(_table).where('ID', id).get();
-      return results
-          .map((e) => NpcTextLocaleEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    final results = await laconic.table(_table).where('ID', id).get();
+    return results
+        .map((e) => NpcTextLocaleEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   /// 按 ID + Locale 查找
   Future<NpcTextLocaleEntity?> getNpcTextLocale(Map<String, dynamic> id) async {
-    try {
-      var builder = laconic.table(_table);
-      id.forEach((k, v) {
-        builder = builder.where(k, v);
-      });
-      final result = await builder.first();
-      return NpcTextLocaleEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var builder = laconic.table(_table);
+    id.forEach((k, v) {
+      builder = builder.where(k, v);
+    });
+    final result = await builder.first();
+    return NpcTextLocaleEntity.fromJson(result.toMap());
   }
 
   Future<void> updateNpcTextLocale(

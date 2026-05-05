@@ -5,48 +5,40 @@ class SpellLootTemplateRepository with RepositoryMixin {
   static const _table = 'spell_loot_template';
 
   Future<List<SpellLootTemplateEntity>> getSpellLootTemplates(int entry) async {
-    try {
-      var builder = laconic.table('$_table AS slt');
-      const fields = [
-        'slt.*',
-        'it.name',
-        'itl.Name as localeName',
-        'it.Quality',
-        'didi.InventoryIcon0',
-      ];
-      builder = builder.select(fields);
-      builder = builder.leftJoin(
-        'item_template AS it',
-        (join) => join.on('slt.Item', 'it.entry'),
-      );
-      builder = builder.leftJoin(
-        'item_template_locale AS itl',
-        (join) => join.on('it.entry', 'itl.ID'),
-      );
-      builder = builder.where('slt.Entry', entry);
-      var results = await builder.get();
-      return results
-          .map((e) => SpellLootTemplateEntity.fromJson(e.toMap()))
-          .toList();
-    } catch (e) {
-      return [];
-    }
+    var builder = laconic.table('$_table AS slt');
+    const fields = [
+      'slt.*',
+      'it.name',
+      'itl.Name as localeName',
+      'it.Quality',
+      'didi.InventoryIcon0',
+    ];
+    builder = builder.select(fields);
+    builder = builder.leftJoin(
+      'item_template AS it',
+      (join) => join.on('slt.Item', 'it.entry'),
+    );
+    builder = builder.leftJoin(
+      'item_template_locale AS itl',
+      (join) => join.on('it.entry', 'itl.ID'),
+    );
+    builder = builder.where('slt.Entry', entry);
+    var results = await builder.get();
+    return results
+        .map((e) => SpellLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<SpellLootTemplateEntity?> getSpellLootTemplate(
     int entry,
     int item,
   ) async {
-    try {
-      var result = await laconic
-          .table(_table)
-          .where('Entry', entry)
-          .where('Item', item)
-          .first();
-      return SpellLootTemplateEntity.fromJson(result.toMap());
-    } catch (e) {
-      return null;
-    }
+    var result = await laconic
+        .table(_table)
+        .where('Entry', entry)
+        .where('Item', item)
+        .first();
+    return SpellLootTemplateEntity.fromJson(result.toMap());
   }
 
   Future<void> storeSpellLootTemplate(SpellLootTemplateEntity data) async {
