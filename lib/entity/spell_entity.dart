@@ -3,49 +3,55 @@ class BriefSpellEntity {
   final int id;
   final String name;
   final String subtext;
+  final String localeName;
+  final String localeSubtext;
   final String description;
-  final String auraDescription;
-  final String duration;
+  final String localeDescription;
   final String textureFilename;
 
   const BriefSpellEntity({
     this.id = 0,
     this.name = '',
     this.subtext = '',
+    this.localeName = '',
+    this.localeSubtext = '',
     this.description = '',
-    this.auraDescription = '',
-    this.duration = '',
+    this.localeDescription = '',
     this.textureFilename = '',
   });
 
   factory BriefSpellEntity.fromJson(Map<String, dynamic> json) {
     return BriefSpellEntity(
       id: json['ID'] ?? 0,
-      name: json['Name_lang_zhCN'] ?? json['Name_Lang_zhCN'] ?? '',
+      name: json['Name_lang_enUS'] ?? json['Name_Lang_enUS'] ?? '',
       subtext:
+          json['NameSubtext_lang_enUS'] ?? json['NameSubtext_Lang_enUS'] ?? '',
+      localeName: json['Name_lang_zhCN'] ?? json['Name_Lang_zhCN'] ?? '',
+      localeSubtext:
           json['NameSubtext_lang_zhCN'] ?? json['NameSubtext_Lang_zhCN'] ?? '',
       description:
+          json['Description_lang_enUS'] ?? json['Description_Lang_enUS'] ?? '',
+      localeDescription:
           json['Description_lang_zhCN'] ?? json['Description_Lang_zhCN'] ?? '',
-      auraDescription:
-          json['AuraDescription_lang_zhCN'] ??
-          json['AuraDescription_Lang_zhCN'] ??
-          '',
-      duration: '${json['Duration'] ?? ''}',
       textureFilename: json['TextureFilename'] ?? '',
     );
   }
 
-  String get displayName => name;
-  String get displaySubtext => subtext;
+  String get displayName => localeName.isNotEmpty ? localeName : name;
+  String get displaySubtext =>
+      localeSubtext.isNotEmpty ? localeSubtext : subtext;
+  String get displayDescription =>
+      localeDescription.isNotEmpty ? localeDescription : description;
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
-      'Name_lang_zhCN': name,
-      'NameSubtext_lang_zhCN': subtext,
-      'Description_lang_zhCN': description,
-      'AuraDescription_lang_zhCN': auraDescription,
-      'Duration': duration,
+      'Name_lang_enUS': name,
+      'NameSubtext_lang_enUS': subtext,
+      'Name_lang_zhCN': localeName,
+      'NameSubtext_lang_zhCN': localeSubtext,
+      'Description_lang_enUS': description,
+      'Description_lang_zhCN': localeDescription,
       'TextureFilename': textureFilename,
     };
   }
@@ -54,18 +60,20 @@ class BriefSpellEntity {
     int? id,
     String? name,
     String? subtext,
+    String? localeName,
+    String? localeSubtext,
     String? description,
-    String? auraDescription,
-    String? duration,
+    String? localeDescription,
     String? textureFilename,
   }) {
     return BriefSpellEntity(
       id: id ?? this.id,
       name: name ?? this.name,
       subtext: subtext ?? this.subtext,
+      localeName: localeName ?? this.localeName,
+      localeSubtext: localeSubtext ?? this.localeSubtext,
       description: description ?? this.description,
-      auraDescription: auraDescription ?? this.auraDescription,
-      duration: duration ?? this.duration,
+      localeDescription: localeDescription ?? this.localeDescription,
       textureFilename: textureFilename ?? this.textureFilename,
     );
   }
@@ -542,8 +550,7 @@ class SpellEntity {
       shapeshiftExclude1: json['ShapeshiftExclude1'] ?? 0,
       effect0: json['Effect0'] ?? 0,
       effectDieSides0: json['EffectDieSides0'] ?? 0,
-      effectRealPointsPerLevel0:
-          json['EffectRealPointsPerLevel0'] ?? 0.0,
+      effectRealPointsPerLevel0: json['EffectRealPointsPerLevel0'] ?? 0.0,
       effectBasePoints0: json['EffectBasePoints0'] ?? 0,
       effectMechanic0: json['EffectMechanic0'] ?? 0,
       effectAura0: json['EffectAura0'] ?? 0,
@@ -557,19 +564,15 @@ class SpellEntity {
       implicitTargetA0: json['ImplicitTargetA0'] ?? 0,
       implicitTargetB0: json['ImplicitTargetB0'] ?? 0,
       effectTriggerSpell0: json['EffectTriggerSpell0'] ?? 0,
-      effectPointsPerCombo0:
-          json['EffectPointsPerCombo0'] ?? 0.0,
+      effectPointsPerCombo0: json['EffectPointsPerCombo0'] ?? 0.0,
       effectSpellClassMaskA0: json['EffectSpellClassMaskA0'] ?? 0,
       effectSpellClassMaskB0: json['EffectSpellClassMaskB0'] ?? 0,
       effectSpellClassMaskC0: json['EffectSpellClassMaskC0'] ?? 0,
-      effectChainAmplitude0:
-          json['EffectChainAmplitude0'] ?? 0.0,
-      effectBonusCoefficient0:
-          json['EffectBonusCoefficient0'] ?? 0.0,
+      effectChainAmplitude0: json['EffectChainAmplitude0'] ?? 0.0,
+      effectBonusCoefficient0: json['EffectBonusCoefficient0'] ?? 0.0,
       effect1: json['Effect1'] ?? 0,
       effectDieSides1: json['EffectDieSides1'] ?? 0,
-      effectRealPointsPerLevel1:
-          json['EffectRealPointsPerLevel1'] ?? 0.0,
+      effectRealPointsPerLevel1: json['EffectRealPointsPerLevel1'] ?? 0.0,
       effectBasePoints1: json['EffectBasePoints1'] ?? 0,
       effectMechanic1: json['EffectMechanic1'] ?? 0,
       effectAura1: json['EffectAura1'] ?? 0,
@@ -583,19 +586,15 @@ class SpellEntity {
       implicitTargetA1: json['ImplicitTargetA1'] ?? 0,
       implicitTargetB1: json['ImplicitTargetB1'] ?? 0,
       effectTriggerSpell1: json['EffectTriggerSpell1'] ?? 0,
-      effectPointsPerCombo1:
-          json['EffectPointsPerCombo1'] ?? 0.0,
+      effectPointsPerCombo1: json['EffectPointsPerCombo1'] ?? 0.0,
       effectSpellClassMaskA1: json['EffectSpellClassMaskA1'] ?? 0,
       effectSpellClassMaskB1: json['EffectSpellClassMaskB1'] ?? 0,
       effectSpellClassMaskC1: json['EffectSpellClassMaskC1'] ?? 0,
-      effectChainAmplitude1:
-          json['EffectChainAmplitude1'] ?? 0.0,
-      effectBonusCoefficient1:
-          json['EffectBonusCoefficient1'] ?? 0.0,
+      effectChainAmplitude1: json['EffectChainAmplitude1'] ?? 0.0,
+      effectBonusCoefficient1: json['EffectBonusCoefficient1'] ?? 0.0,
       effect2: json['Effect2'] ?? 0,
       effectDieSides2: json['EffectDieSides2'] ?? 0,
-      effectRealPointsPerLevel2:
-          json['EffectRealPointsPerLevel2'] ?? 0.0,
+      effectRealPointsPerLevel2: json['EffectRealPointsPerLevel2'] ?? 0.0,
       effectBasePoints2: json['EffectBasePoints2'] ?? 0,
       effectMechanic2: json['EffectMechanic2'] ?? 0,
       effectAura2: json['EffectAura2'] ?? 0,
@@ -609,15 +608,12 @@ class SpellEntity {
       implicitTargetA2: json['ImplicitTargetA2'] ?? 0,
       implicitTargetB2: json['ImplicitTargetB2'] ?? 0,
       effectTriggerSpell2: json['EffectTriggerSpell2'] ?? 0,
-      effectPointsPerCombo2:
-          json['EffectPointsPerCombo2'] ?? 0.0,
+      effectPointsPerCombo2: json['EffectPointsPerCombo2'] ?? 0.0,
       effectSpellClassMaskA2: json['EffectSpellClassMaskA2'] ?? 0,
       effectSpellClassMaskB2: json['EffectSpellClassMaskB2'] ?? 0,
       effectSpellClassMaskC2: json['EffectSpellClassMaskC2'] ?? 0,
-      effectChainAmplitude2:
-          json['EffectChainAmplitude2'] ?? 0.0,
-      effectBonusCoefficient2:
-          json['EffectBonusCoefficient2'] ?? 0.0,
+      effectChainAmplitude2: json['EffectChainAmplitude2'] ?? 0.0,
+      effectBonusCoefficient2: json['EffectBonusCoefficient2'] ?? 0.0,
       equippedItemClass: json['EquippedItemClass'] ?? 0,
       equippedItemSubclass: json['EquippedItemSubclass'] ?? 0,
       equippedItemInvTypes: json['EquippedItemInvTypes'] ?? 0,
@@ -1058,11 +1054,13 @@ class SpellEntity {
       nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
       nameSubtextLangZhCN: nameSubtextLangZhCN ?? this.nameSubtextLangZhCN,
       descriptionLangZhCN: descriptionLangZhCN ?? this.descriptionLangZhCN,
-      auraDescriptionLangZhCN: auraDescriptionLangZhCN ?? this.auraDescriptionLangZhCN,
+      auraDescriptionLangZhCN:
+          auraDescriptionLangZhCN ?? this.auraDescriptionLangZhCN,
       nameLangFlags: nameLangFlags ?? this.nameLangFlags,
       nameSubtextLangFlags: nameSubtextLangFlags ?? this.nameSubtextLangFlags,
       descriptionLangFlags: descriptionLangFlags ?? this.descriptionLangFlags,
-      auraDescriptionLangFlags: auraDescriptionLangFlags ?? this.auraDescriptionLangFlags,
+      auraDescriptionLangFlags:
+          auraDescriptionLangFlags ?? this.auraDescriptionLangFlags,
       spellIconID: spellIconID ?? this.spellIconID,
       activeIconID: activeIconID ?? this.activeIconID,
       spellVisualID0: spellVisualID0 ?? this.spellVisualID0,
@@ -1076,12 +1074,14 @@ class SpellEntity {
       castingTimeIndex: castingTimeIndex ?? this.castingTimeIndex,
       durationIndex: durationIndex ?? this.durationIndex,
       rangeIndex: rangeIndex ?? this.rangeIndex,
-      spellDescriptionVariableID: spellDescriptionVariableID ?? this.spellDescriptionVariableID,
+      spellDescriptionVariableID:
+          spellDescriptionVariableID ?? this.spellDescriptionVariableID,
       baseLevel: baseLevel ?? this.baseLevel,
       spellLevel: spellLevel ?? this.spellLevel,
       maxLevel: maxLevel ?? this.maxLevel,
       spellDifficultyID: spellDifficultyID ?? this.spellDifficultyID,
-      startRecoveryCategory: startRecoveryCategory ?? this.startRecoveryCategory,
+      startRecoveryCategory:
+          startRecoveryCategory ?? this.startRecoveryCategory,
       startRecoveryTime: startRecoveryTime ?? this.startRecoveryTime,
       recoveryTime: recoveryTime ?? this.recoveryTime,
       categoryRecoveryTime: categoryRecoveryTime ?? this.categoryRecoveryTime,
@@ -1103,10 +1103,12 @@ class SpellEntity {
       manaCostPct: manaCostPct ?? this.manaCostPct,
       manaCostPerLevel: manaCostPerLevel ?? this.manaCostPerLevel,
       manaPerSecond: manaPerSecond ?? this.manaPerSecond,
-      manaPerSecondPerLevel: manaPerSecondPerLevel ?? this.manaPerSecondPerLevel,
+      manaPerSecondPerLevel:
+          manaPerSecondPerLevel ?? this.manaPerSecondPerLevel,
       interruptFlags: interruptFlags ?? this.interruptFlags,
       auraInterruptFlags: auraInterruptFlags ?? this.auraInterruptFlags,
-      channelInterruptFlags: channelInterruptFlags ?? this.channelInterruptFlags,
+      channelInterruptFlags:
+          channelInterruptFlags ?? this.channelInterruptFlags,
       attributes: attributes ?? this.attributes,
       attributesEx: attributesEx ?? this.attributesEx,
       attributesExB: attributesExB ?? this.attributesExB,
@@ -1128,7 +1130,8 @@ class SpellEntity {
       shapeshiftExclude1: shapeshiftExclude1 ?? this.shapeshiftExclude1,
       effect0: effect0 ?? this.effect0,
       effectDieSides0: effectDieSides0 ?? this.effectDieSides0,
-      effectRealPointsPerLevel0: effectRealPointsPerLevel0 ?? this.effectRealPointsPerLevel0,
+      effectRealPointsPerLevel0:
+          effectRealPointsPerLevel0 ?? this.effectRealPointsPerLevel0,
       effectBasePoints0: effectBasePoints0 ?? this.effectBasePoints0,
       effectMechanic0: effectMechanic0 ?? this.effectMechanic0,
       effectAura0: effectAura0 ?? this.effectAura0,
@@ -1142,15 +1145,22 @@ class SpellEntity {
       implicitTargetA0: implicitTargetA0 ?? this.implicitTargetA0,
       implicitTargetB0: implicitTargetB0 ?? this.implicitTargetB0,
       effectTriggerSpell0: effectTriggerSpell0 ?? this.effectTriggerSpell0,
-      effectPointsPerCombo0: effectPointsPerCombo0 ?? this.effectPointsPerCombo0,
-      effectSpellClassMaskA0: effectSpellClassMaskA0 ?? this.effectSpellClassMaskA0,
-      effectSpellClassMaskB0: effectSpellClassMaskB0 ?? this.effectSpellClassMaskB0,
-      effectSpellClassMaskC0: effectSpellClassMaskC0 ?? this.effectSpellClassMaskC0,
-      effectChainAmplitude0: effectChainAmplitude0 ?? this.effectChainAmplitude0,
-      effectBonusCoefficient0: effectBonusCoefficient0 ?? this.effectBonusCoefficient0,
+      effectPointsPerCombo0:
+          effectPointsPerCombo0 ?? this.effectPointsPerCombo0,
+      effectSpellClassMaskA0:
+          effectSpellClassMaskA0 ?? this.effectSpellClassMaskA0,
+      effectSpellClassMaskB0:
+          effectSpellClassMaskB0 ?? this.effectSpellClassMaskB0,
+      effectSpellClassMaskC0:
+          effectSpellClassMaskC0 ?? this.effectSpellClassMaskC0,
+      effectChainAmplitude0:
+          effectChainAmplitude0 ?? this.effectChainAmplitude0,
+      effectBonusCoefficient0:
+          effectBonusCoefficient0 ?? this.effectBonusCoefficient0,
       effect1: effect1 ?? this.effect1,
       effectDieSides1: effectDieSides1 ?? this.effectDieSides1,
-      effectRealPointsPerLevel1: effectRealPointsPerLevel1 ?? this.effectRealPointsPerLevel1,
+      effectRealPointsPerLevel1:
+          effectRealPointsPerLevel1 ?? this.effectRealPointsPerLevel1,
       effectBasePoints1: effectBasePoints1 ?? this.effectBasePoints1,
       effectMechanic1: effectMechanic1 ?? this.effectMechanic1,
       effectAura1: effectAura1 ?? this.effectAura1,
@@ -1164,15 +1174,22 @@ class SpellEntity {
       implicitTargetA1: implicitTargetA1 ?? this.implicitTargetA1,
       implicitTargetB1: implicitTargetB1 ?? this.implicitTargetB1,
       effectTriggerSpell1: effectTriggerSpell1 ?? this.effectTriggerSpell1,
-      effectPointsPerCombo1: effectPointsPerCombo1 ?? this.effectPointsPerCombo1,
-      effectSpellClassMaskA1: effectSpellClassMaskA1 ?? this.effectSpellClassMaskA1,
-      effectSpellClassMaskB1: effectSpellClassMaskB1 ?? this.effectSpellClassMaskB1,
-      effectSpellClassMaskC1: effectSpellClassMaskC1 ?? this.effectSpellClassMaskC1,
-      effectChainAmplitude1: effectChainAmplitude1 ?? this.effectChainAmplitude1,
-      effectBonusCoefficient1: effectBonusCoefficient1 ?? this.effectBonusCoefficient1,
+      effectPointsPerCombo1:
+          effectPointsPerCombo1 ?? this.effectPointsPerCombo1,
+      effectSpellClassMaskA1:
+          effectSpellClassMaskA1 ?? this.effectSpellClassMaskA1,
+      effectSpellClassMaskB1:
+          effectSpellClassMaskB1 ?? this.effectSpellClassMaskB1,
+      effectSpellClassMaskC1:
+          effectSpellClassMaskC1 ?? this.effectSpellClassMaskC1,
+      effectChainAmplitude1:
+          effectChainAmplitude1 ?? this.effectChainAmplitude1,
+      effectBonusCoefficient1:
+          effectBonusCoefficient1 ?? this.effectBonusCoefficient1,
       effect2: effect2 ?? this.effect2,
       effectDieSides2: effectDieSides2 ?? this.effectDieSides2,
-      effectRealPointsPerLevel2: effectRealPointsPerLevel2 ?? this.effectRealPointsPerLevel2,
+      effectRealPointsPerLevel2:
+          effectRealPointsPerLevel2 ?? this.effectRealPointsPerLevel2,
       effectBasePoints2: effectBasePoints2 ?? this.effectBasePoints2,
       effectMechanic2: effectMechanic2 ?? this.effectMechanic2,
       effectAura2: effectAura2 ?? this.effectAura2,
@@ -1186,18 +1203,26 @@ class SpellEntity {
       implicitTargetA2: implicitTargetA2 ?? this.implicitTargetA2,
       implicitTargetB2: implicitTargetB2 ?? this.implicitTargetB2,
       effectTriggerSpell2: effectTriggerSpell2 ?? this.effectTriggerSpell2,
-      effectPointsPerCombo2: effectPointsPerCombo2 ?? this.effectPointsPerCombo2,
-      effectSpellClassMaskA2: effectSpellClassMaskA2 ?? this.effectSpellClassMaskA2,
-      effectSpellClassMaskB2: effectSpellClassMaskB2 ?? this.effectSpellClassMaskB2,
-      effectSpellClassMaskC2: effectSpellClassMaskC2 ?? this.effectSpellClassMaskC2,
-      effectChainAmplitude2: effectChainAmplitude2 ?? this.effectChainAmplitude2,
-      effectBonusCoefficient2: effectBonusCoefficient2 ?? this.effectBonusCoefficient2,
+      effectPointsPerCombo2:
+          effectPointsPerCombo2 ?? this.effectPointsPerCombo2,
+      effectSpellClassMaskA2:
+          effectSpellClassMaskA2 ?? this.effectSpellClassMaskA2,
+      effectSpellClassMaskB2:
+          effectSpellClassMaskB2 ?? this.effectSpellClassMaskB2,
+      effectSpellClassMaskC2:
+          effectSpellClassMaskC2 ?? this.effectSpellClassMaskC2,
+      effectChainAmplitude2:
+          effectChainAmplitude2 ?? this.effectChainAmplitude2,
+      effectBonusCoefficient2:
+          effectBonusCoefficient2 ?? this.effectBonusCoefficient2,
       equippedItemClass: equippedItemClass ?? this.equippedItemClass,
       equippedItemSubclass: equippedItemSubclass ?? this.equippedItemSubclass,
       equippedItemInvTypes: equippedItemInvTypes ?? this.equippedItemInvTypes,
-      requiredTotemCategoryID0: requiredTotemCategoryID0 ?? this.requiredTotemCategoryID0,
+      requiredTotemCategoryID0:
+          requiredTotemCategoryID0 ?? this.requiredTotemCategoryID0,
       totem0: totem0 ?? this.totem0,
-      requiredTotemCategoryID1: requiredTotemCategoryID1 ?? this.requiredTotemCategoryID1,
+      requiredTotemCategoryID1:
+          requiredTotemCategoryID1 ?? this.requiredTotemCategoryID1,
       totem1: totem1 ?? this.totem1,
       reagent0: reagent0 ?? this.reagent0,
       reagent1: reagent1 ?? this.reagent1,
@@ -1219,10 +1244,14 @@ class SpellEntity {
       cumulativeAura: cumulativeAura ?? this.cumulativeAura,
       minFactionID: minFactionID ?? this.minFactionID,
       minReputation: minReputation ?? this.minReputation,
-      excludeCasterAuraSpell: excludeCasterAuraSpell ?? this.excludeCasterAuraSpell,
-      excludeCasterAuraState: excludeCasterAuraState ?? this.excludeCasterAuraState,
-      excludeTargetAuraSpell: excludeTargetAuraSpell ?? this.excludeTargetAuraSpell,
-      excludeTargetAuraState: excludeTargetAuraState ?? this.excludeTargetAuraState,
+      excludeCasterAuraSpell:
+          excludeCasterAuraSpell ?? this.excludeCasterAuraSpell,
+      excludeCasterAuraState:
+          excludeCasterAuraState ?? this.excludeCasterAuraState,
+      excludeTargetAuraSpell:
+          excludeTargetAuraSpell ?? this.excludeTargetAuraSpell,
+      excludeTargetAuraState:
+          excludeTargetAuraState ?? this.excludeTargetAuraState,
       spellPriority: spellPriority ?? this.spellPriority,
       modalNextSpell: modalNextSpell ?? this.modalNextSpell,
       requiredAuraVision: requiredAuraVision ?? this.requiredAuraVision,

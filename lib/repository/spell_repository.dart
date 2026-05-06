@@ -32,11 +32,12 @@ class SpellRepository with RepositoryMixin {
     var builder = laconic.table('$_table AS ds');
     const fields = [
       'ds.ID',
+      'ds.Name_lang_enUS',
+      'ds.NameSubtext_lang_enUS',
       'ds.Name_lang_zhCN',
       'ds.NameSubtext_lang_zhCN',
+      'ds.Description_lang_enUS',
       'ds.Description_lang_zhCN',
-      'ds.AuraDescription_lang_zhCN',
-      'dsd.Duration',
       'dsi.TextureFilename',
     ];
     builder = builder.select(fields);
@@ -86,7 +87,11 @@ class SpellRepository with RepositoryMixin {
       builder = builder.where('ds.ID', filter.id);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.where('ds.Name_lang_zhCN', '%${filter.name}%');
+      builder = builder.whereAny(
+        ['ds.Name_lang_zhCN', 'ds.Name_lang_enUS'],
+        '%${filter.name}%',
+        operator: 'like',
+      );
     }
     return builder;
   }
