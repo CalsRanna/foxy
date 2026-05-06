@@ -29,7 +29,11 @@ class _TextContentListPageState extends State<TextContentListPage> {
     ];
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 16, children: children),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: children,
+      ),
     );
   }
 
@@ -61,11 +65,14 @@ class _TextContentListPageState extends State<TextContentListPage> {
     var row = Row(spacing: 16, children: [searchButton, resetButton]);
     return ShadCard(
       padding: const EdgeInsets.all(16),
-      child: Row(spacing: 16, children: [
-        Expanded(child: idInput),
-        Expanded(child: textInput),
-        Expanded(flex: 2, child: row),
-      ]),
+      child: Row(
+        spacing: 16,
+        children: [
+          Expanded(child: idInput),
+          Expanded(child: textInput),
+          Expanded(flex: 2, child: row),
+        ],
+      ),
     );
   }
 
@@ -89,13 +96,19 @@ class _TextContentListPageState extends State<TextContentListPage> {
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 240;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final pageText = pages[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(pageText.id.toString())),
-              1 => ShadTableCell(child: Text(pageText.displayText)),
+              1 => ShadTableCell(
+                child: Text(
+                  pageText.displayText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               2 => ShadTableCell(child: Text(pageText.nextPageId.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
@@ -125,7 +138,10 @@ class _TextContentListPageState extends State<TextContentListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(id: pages[row].id, label: pages[row].displayText),
+                  onPressed: () => viewModel.navigateToDetail(
+                    id: pages[row].id,
+                    label: pages[row].displayText,
+                  ),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
@@ -149,7 +165,13 @@ class _TextContentListPageState extends State<TextContentListPage> {
 
     return ShadCard(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Column(spacing: 16, children: [toolbar, Expanded(child: layoutBuilder)]),
+      child: Column(
+        spacing: 16,
+        children: [
+          toolbar,
+          Expanded(child: layoutBuilder),
+        ],
+      ),
     );
   }
 }
