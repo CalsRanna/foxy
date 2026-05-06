@@ -298,7 +298,7 @@ class ItemTemplateEntity {
       // --- 武器与伤害 ---
       delay: json['delay'] ?? 0,
       rangedModRange:
-          json['RangedModRange'] ?? json['rangedModRange'] ?? 0,
+          ((json['RangedModRange'] ?? json['rangedModRange'] ?? 0) as num).toInt(),
       armorDamageModifier:
           (json['ArmorDamageModifier'] ?? json['armorDamageModifier'] ?? 0.0)
               as double,
