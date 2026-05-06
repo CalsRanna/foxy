@@ -123,7 +123,7 @@ class SpellListViewModel {
   void _logActivity(ActivityActionType action, int id) {
     final templates = spells.value;
     final template = templates.where((t) => t.id == id).firstOrNull;
-    final name = template?.name ?? '';
+    final name = template?.displayName ?? '';
     final log = ActivityLogEntity(
       module: 'spell',
       actionType: action,

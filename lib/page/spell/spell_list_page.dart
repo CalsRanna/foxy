@@ -86,9 +86,15 @@ class _SpellListPageState extends State<SpellListPage> {
     );
     var children = [
       ClipRRect(borderRadius: BorderRadius.circular(6), child: image),
-      Text(spell.displayName),
+      Expanded(
+        child: Text(
+          spell.displayName,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
     ];
-    return Row(children: children);
+    return Row(spacing: 8, children: children);
   }
 
   Widget _buildTable() {
@@ -109,10 +115,10 @@ class _SpellListPageState extends State<SpellListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '名称', '子名称', '持续时间'];
+    final headers = ['编号', '名称', '子名称', '描述'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var flexWidth = constraints.maxWidth - 200;
+        var flexWidth = constraints.maxWidth - 240;
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= templates.length) {
@@ -123,17 +129,23 @@ class _SpellListPageState extends State<SpellListPage> {
               0 => ShadTableCell(child: Text(spell.id.toString())),
               1 => ShadTableCell(child: _buildIconAndName(spell)),
               2 => ShadTableCell(child: Text(spell.displaySubtext)),
-              3 => ShadTableCell(child: Text(spell.duration)),
+              3 => ShadTableCell(
+                child: Text(
+                  spell.displayDescription,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
           columnCount: headers.length,
           columnSpanExtent: (index) {
             return switch (index) {
-              0 => FixedTableSpanExtent(80),
-              1 => FixedTableSpanExtent(flexWidth / 2),
-              2 => FixedTableSpanExtent(flexWidth / 2),
-              3 => FixedTableSpanExtent(120),
+              0 => FixedTableSpanExtent(120),
+              1 => FixedTableSpanExtent(flexWidth / 3),
+              2 => FixedTableSpanExtent(120),
+              3 => FixedTableSpanExtent(flexWidth / 3 * 2),
               _ => null,
             };
           },
