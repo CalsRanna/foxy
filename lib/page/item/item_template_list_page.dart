@@ -150,21 +150,22 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   Widget _buildIconAndName(BriefItemTemplateEntity item, Color qualityColor) {
-    final icon = item.inventoryIcon
+    var icon = item.inventoryIcon
         .toString()
         .toLowerCase()
         .replaceAll('\\', '/')
         .replaceAll('interface/icons', 'asset/icon');
+    if (!icon.startsWith('asset/icon/')) {
+      icon = 'asset/icon/$icon';
+    }
     var image = Image.asset(
       '$icon.png',
-      height: 24,
-      width: 24,
+      height: 40,
+      width: 40,
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) =>
-          const SizedBox(width: 24, height: 24),
     );
     var children = [
-      ClipRRect(borderRadius: BorderRadius.circular(4), child: image),
+      ClipRRect(borderRadius: BorderRadius.circular(6), child: image),
       const SizedBox(width: 8),
       Expanded(
         child: Text(
