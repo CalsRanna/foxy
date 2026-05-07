@@ -95,15 +95,16 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
           },
           columnCount: headers.length,
           columnSpanExtent: (index) {
+            var flexWidth = constraints.maxWidth - 840;
             return switch (index) {
-              0 => FixedTableSpanExtent(100),
-              1 => FixedTableSpanExtent(100),
-              2 => FixedTableSpanExtent(100),
-              3 => FixedTableSpanExtent(100),
-              4 => FixedTableSpanExtent(100),
-              5 => FixedTableSpanExtent(100),
-              6 => FixedTableSpanExtent(100),
-              7 => FixedTableSpanExtent(100),
+              0 => FixedTableSpanExtent(120),
+              1 => FixedTableSpanExtent(120),
+              2 => FixedTableSpanExtent(120),
+              3 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(120),
+              5 => FixedTableSpanExtent(120),
+              6 => FixedTableSpanExtent(120),
+              7 => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
               _ => null,
             };
           },

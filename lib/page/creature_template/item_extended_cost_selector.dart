@@ -202,17 +202,22 @@ class _DialogState extends State<_Dialog> {
           maxWidth: 720,
           maxHeight: tableMaxHeight,
         ),
-        child: FoxyShadTable(
-          columnCount: 4,
-          rowCount: items.length,
-          pinnedRowCount: 1,
-          header: (context, column) {
-            final headers = ['编号', '荣誉点数', '竞技场点数', '竞技场等级'];
-            return ShadTableCell.header(child: Text(headers[column]));
-          },
-          columnBuilder: (column) {
-            return TableSpan(extent: FixedTableSpanExtent(120));
-          },
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            var flexWidth = constraints.maxWidth - 360;
+            return FoxyShadTable(
+              columnCount: 4,
+              rowCount: items.length,
+              pinnedRowCount: 1,
+              header: (context, column) {
+                final headers = ['编号', '荣誉点数', '竞技场点数', '竞技场等级'];
+                return ShadTableCell.header(child: Text(headers[column]));
+              },
+              columnBuilder: (column) => TableSpan(
+                extent: column < 3
+                    ? FixedTableSpanExtent(120)
+                    : FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
+              ),
           rowSpanBackgroundDecoration: (row) {
             final dataRow = row - 1;
             if (dataRow < 0 || dataRow >= items.length) return null;
@@ -243,6 +248,8 @@ class _DialogState extends State<_Dialog> {
               3 => ShadTableCell(child: Text(item.arenaBracket.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
+            }
+            );
           },
         ),
       );

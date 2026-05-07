@@ -47,27 +47,30 @@ class _PlayerCreateInfoSpellCustomViewState extends State<PlayerCreateInfoSpellC
 
   Widget _buildTable() {
     final spells = viewModel.spells.value;
-    return FoxyShadTable(
-      builder: (context, vicinity) {
-        final item = spells[vicinity.row];
-        return switch (vicinity.column) {
-          0 => ShadTableCell(child: Text(item.racemask.toString())),
-          1 => ShadTableCell(child: Text(item.classmask.toString())),
-          2 => ShadTableCell(child: Text(item.spell.toString())),
-          3 => ShadTableCell(child: Text(item.note)),
-          _ => ShadTableCell(child: SizedBox()),
-        };
-      },
-      columnCount: 4,
-      columnSpanExtent: (index) => switch (index) {
-        0 => FixedTableSpanExtent(120),
-        1 => FixedTableSpanExtent(120),
-        2 => FixedTableSpanExtent(120),
-        _ => FixedTableSpanExtent(200),
-      },
-      header: (context, index) => ShadTableCell.header(
-        child: Text(['种族掩码', '职业掩码', '法术', '备注'][index]),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        var flexWidth = constraints.maxWidth - 360;
+        return FoxyShadTable(
+          builder: (context, vicinity) {
+            final item = spells[vicinity.row];
+            return switch (vicinity.column) {
+              0 => ShadTableCell(child: Text(item.racemask.toString())),
+              1 => ShadTableCell(child: Text(item.classmask.toString())),
+              2 => ShadTableCell(child: Text(item.spell.toString())),
+              3 => ShadTableCell(child: Text(item.note)),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+          columnCount: 4,
+          columnSpanExtent: (index) => switch (index) {
+            0 => FixedTableSpanExtent(120),
+            1 => FixedTableSpanExtent(120),
+            2 => FixedTableSpanExtent(120),
+            _ => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
+          },
+          header: (context, index) => ShadTableCell.header(
+            child: Text(['种族掩码', '职业掩码', '法术', '备注'][index]),
+          ),
       onRowSecondaryTapDownWithDetails: (row, details) {
         showFoxyContextMenu(
           context: context,
@@ -81,8 +84,10 @@ class _PlayerCreateInfoSpellCustomViewState extends State<PlayerCreateInfoSpellC
           ],
         );
       },
-      rowCount: spells.length,
-      shrinkWrap: true,
+          rowCount: spells.length,
+          shrinkWrap: true,
+        );
+      },
     );
   }
 
