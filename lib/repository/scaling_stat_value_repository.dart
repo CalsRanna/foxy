@@ -25,7 +25,16 @@ class ScalingStatValueRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
-    const fields = ['ID', 'Charlevel'];
+    const fields = [
+      'ID',
+      'Charlevel',
+      'PrimaryBudget',
+      'TertiaryBudget',
+      'ShoulderBudget',
+      'TrinketBudget',
+      'WeaponBudget1H',
+      'RangedBudget',
+    ];
     builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);

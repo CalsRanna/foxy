@@ -115,10 +115,10 @@ class _SpellListPageState extends State<SpellListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '名称', '子名称', '描述'];
+    final headers = ['编号', '名称', '子名称', '描述', 'Buff描述'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var flexWidth = constraints.maxWidth - 240;
+        var flexWidth = constraints.maxWidth - 480;
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= templates.length) {
@@ -136,6 +136,13 @@ class _SpellListPageState extends State<SpellListPage> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+              4 => ShadTableCell(
+                child: Text(
+                  spell.displayAuraDescription,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -145,7 +152,8 @@ class _SpellListPageState extends State<SpellListPage> {
               0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(flexWidth / 3),
               2 => FixedTableSpanExtent(120),
-              3 => FixedTableSpanExtent(flexWidth / 3 * 2),
+              3 => FixedTableSpanExtent(flexWidth / 3),
+              4 => FixedTableSpanExtent(flexWidth / 3),
               _ => null,
             };
           },

@@ -86,7 +86,19 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号'];
+    final headers = [
+      '编号',
+      '难度0',
+      '难度1',
+      '难度2',
+      '难度3',
+      '难度4',
+      '难度5',
+      '难度6',
+      '难度7',
+      '难度8',
+      '难度9',
+    ];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var width = constraints.maxWidth - 360;
@@ -95,14 +107,24 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
             final item = rewards[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
+              1 => ShadTableCell(child: Text(item.difficulty0.toString())),
+              2 => ShadTableCell(child: Text(item.difficulty1.toString())),
+              3 => ShadTableCell(child: Text(item.difficulty2.toString())),
+              4 => ShadTableCell(child: Text(item.difficulty3.toString())),
+              5 => ShadTableCell(child: Text(item.difficulty4.toString())),
+              6 => ShadTableCell(child: Text(item.difficulty5.toString())),
+              7 => ShadTableCell(child: Text(item.difficulty6.toString())),
+              8 => ShadTableCell(child: Text(item.difficulty7.toString())),
+              9 => ShadTableCell(child: Text(item.difficulty8.toString())),
+              10 => ShadTableCell(child: Text(item.difficulty9.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
           columnCount: headers.length,
           columnSpanExtent: (index) {
             return switch (index) {
-              0 => FixedTableSpanExtent(width),
-              _ => null,
+              0 => FixedTableSpanExtent(120),
+              _ => FixedTableSpanExtent(width / 10),
             };
           },
           header: (context, index) {

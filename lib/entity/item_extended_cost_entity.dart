@@ -78,6 +78,18 @@ class ItemExtendedCostEntity {
     };
   }
 
+  String get displayItems {
+    final ids = [itemID0, itemID1, itemID2, itemID3, itemID4];
+    final counts = [itemCount0, itemCount1, itemCount2, itemCount3, itemCount4];
+    final parts = <String>[];
+    for (var i = 0; i < 5; i++) {
+      if (ids[i] != 0) {
+        parts.add('${ids[i]}x${counts[i]}');
+      }
+    }
+    return parts.isEmpty ? '-' : parts.join(', ');
+  }
+
   ItemExtendedCostEntity copyWith({
     int? id,
     int? honorPoints,

@@ -85,10 +85,10 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '荣誉点数', '竞技场点数', '竞技场等级', '所需评级'];
+    final headers = ['编号', '荣誉点数', '竞技场点数', '物品列表'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 480;
+        var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
@@ -96,8 +96,13 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.honorPoints.toString())),
               2 => ShadTableCell(child: Text(item.arenaPoints.toString())),
-              3 => ShadTableCell(child: Text(item.arenaBracket.toString())),
-              4 => ShadTableCell(child: Text(item.requiredArenaRating.toString())),
+              3 => ShadTableCell(
+                child: Text(
+                  item.displayItems,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -107,8 +112,7 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
               0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(120),
               2 => FixedTableSpanExtent(120),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(width / 2),
+              3 => FixedTableSpanExtent(width),
               _ => null,
             };
           },

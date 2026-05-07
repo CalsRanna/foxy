@@ -7,6 +7,8 @@ class BriefSpellEntity {
   final String localeSubtext;
   final String description;
   final String localeDescription;
+  final String auraDescription;
+  final String localeAuraDescription;
   final String textureFilename;
 
   const BriefSpellEntity({
@@ -17,6 +19,8 @@ class BriefSpellEntity {
     this.localeSubtext = '',
     this.description = '',
     this.localeDescription = '',
+    this.auraDescription = '',
+    this.localeAuraDescription = '',
     this.textureFilename = '',
   });
 
@@ -33,6 +37,12 @@ class BriefSpellEntity {
           json['Description_lang_enUS'] ?? json['Description_Lang_enUS'] ?? '',
       localeDescription:
           json['Description_lang_zhCN'] ?? json['Description_Lang_zhCN'] ?? '',
+      auraDescription: json['AuraDescription_lang_enUS'] ??
+          json['AuraDescription_Lang_enUS'] ??
+          '',
+      localeAuraDescription: json['AuraDescription_lang_zhCN'] ??
+          json['AuraDescription_Lang_zhCN'] ??
+          '',
       textureFilename: json['TextureFilename'] ?? '',
     );
   }
@@ -42,6 +52,8 @@ class BriefSpellEntity {
       localeSubtext.isNotEmpty ? localeSubtext : subtext;
   String get displayDescription =>
       localeDescription.isNotEmpty ? localeDescription : description;
+  String get displayAuraDescription =>
+      localeAuraDescription.isNotEmpty ? localeAuraDescription : auraDescription;
 
   Map<String, dynamic> toJson() {
     return {
@@ -52,6 +64,8 @@ class BriefSpellEntity {
       'NameSubtext_lang_zhCN': localeSubtext,
       'Description_lang_enUS': description,
       'Description_lang_zhCN': localeDescription,
+      'AuraDescription_lang_enUS': auraDescription,
+      'AuraDescription_lang_zhCN': localeAuraDescription,
       'TextureFilename': textureFilename,
     };
   }
@@ -64,6 +78,8 @@ class BriefSpellEntity {
     String? localeSubtext,
     String? description,
     String? localeDescription,
+    String? auraDescription,
+    String? localeAuraDescription,
     String? textureFilename,
   }) {
     return BriefSpellEntity(
@@ -74,6 +90,8 @@ class BriefSpellEntity {
       localeSubtext: localeSubtext ?? this.localeSubtext,
       description: description ?? this.description,
       localeDescription: localeDescription ?? this.localeDescription,
+      auraDescription: auraDescription ?? this.auraDescription,
+      localeAuraDescription: localeAuraDescription ?? this.localeAuraDescription,
       textureFilename: textureFilename ?? this.textureFilename,
     );
   }
