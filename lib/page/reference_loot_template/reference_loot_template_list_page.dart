@@ -94,12 +94,11 @@ class _ReferenceLootTemplateListPageState
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['Entry', '物品ID', '物品名称', '几率', '数量', '任务', '组'];
+    final headers = ['Entry', '物品名称', '关联', '几率', '需要任务', '最小数量', '最大数量'];
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var width = maxWidth - 600;
+        var width = constraints.maxWidth - 720;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final template = templates[vicinity.row];
@@ -107,19 +106,17 @@ class _ReferenceLootTemplateListPageState
                 kItemQualityColors[template.itemQuality] ?? Colors.white;
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(template.entry.toString())),
-              1 => ShadTableCell(child: Text(template.item.toString())),
-              2 => ShadTableCell(
+              1 => ShadTableCell(
                 child: Text(
                   template.displayName,
                   style: TextStyle(color: qualityColor),
                 ),
               ),
+              2 => ShadTableCell(child: Text(template.reference.toString())),
               3 => ShadTableCell(child: Text('${template.chance}%')),
-              4 => ShadTableCell(
-                child: Text('${template.minCount}-${template.maxCount}'),
-              ),
-              5 => ShadTableCell(child: Text(template.questRequired ? '是' : '否')),
-              6 => ShadTableCell(child: Text(template.groupId.toString())),
+              4 => ShadTableCell(child: Text(template.questRequired ? '是' : '否')),
+              5 => ShadTableCell(child: Text(template.minCount.toString())),
+              6 => ShadTableCell(child: Text(template.maxCount.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -127,8 +124,8 @@ class _ReferenceLootTemplateListPageState
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(120),
-              2 => FixedTableSpanExtent(width),
+              1 => FixedTableSpanExtent(width),
+              2 => FixedTableSpanExtent(120),
               3 => FixedTableSpanExtent(120),
               4 => FixedTableSpanExtent(120),
               5 => FixedTableSpanExtent(120),

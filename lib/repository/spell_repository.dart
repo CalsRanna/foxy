@@ -38,6 +38,8 @@ class SpellRepository with RepositoryMixin {
       'ds.NameSubtext_lang_zhCN',
       'ds.Description_lang_enUS',
       'ds.Description_lang_zhCN',
+      'ds.AuraDescription_lang_enUS',
+      'ds.AuraDescription_lang_zhCN',
       'dsi.TextureFilename',
     ];
     builder = builder.select(fields);

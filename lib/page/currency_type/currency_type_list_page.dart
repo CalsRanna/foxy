@@ -85,7 +85,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '物品编号', '分类编号', '位索引'];
+    final headers = ['编号', '名称', '分类'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var width = constraints.maxWidth - 360;
@@ -94,9 +94,8 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
             final item = items[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.itemId.toString())),
+              1 => ShadTableCell(child: Text(item.displayItemName)),
               2 => ShadTableCell(child: Text(item.categoryId.toString())),
-              3 => ShadTableCell(child: Text(item.bitIndex.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -104,9 +103,8 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 3),
+              1 => FixedTableSpanExtent(width),
               2 => FixedTableSpanExtent(120),
-              3 => FixedTableSpanExtent(120),
               _ => null,
             };
           },

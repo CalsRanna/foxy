@@ -91,7 +91,16 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '角色等级'];
+    final headers = [
+      '编号',
+      '角色等级',
+      '主要预算',
+      '次要预算',
+      '肩膀预算',
+      '饰品预算',
+      '单手武器预算',
+      '远程武器预算',
+    ];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var width = constraints.maxWidth - 360;
@@ -101,6 +110,12 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.charlevel.toString())),
+              2 => ShadTableCell(child: Text(item.primaryBudget.toString())),
+              3 => ShadTableCell(child: Text(item.tertiaryBudget.toString())),
+              4 => ShadTableCell(child: Text(item.shoulderBudget.toString())),
+              5 => ShadTableCell(child: Text(item.trinketBudget.toString())),
+              6 => ShadTableCell(child: Text(item.weaponBudget1H.toString())),
+              7 => ShadTableCell(child: Text(item.rangedBudget.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -108,8 +123,8 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
-              _ => null,
+              1 => FixedTableSpanExtent(120),
+              _ => FixedTableSpanExtent(width / 6),
             };
           },
           header: (context, index) {

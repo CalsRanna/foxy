@@ -85,7 +85,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '附魔编号', '最大数量', '类型'];
+    final headers = ['编号', '附魔编号', '最大数量(背包)', '最大数量(物品)', '类型'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var width = constraints.maxWidth - 360;
@@ -96,7 +96,8 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.enchantId.toString())),
               2 => ShadTableCell(child: Text(item.maxCountInv.toString())),
-              3 => ShadTableCell(child: Text(item.type.toString())),
+              3 => ShadTableCell(child: Text(item.maxCountItem.toString())),
+              4 => ShadTableCell(child: Text(item.type.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -104,9 +105,10 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 3),
+              1 => FixedTableSpanExtent(width / 2),
               2 => FixedTableSpanExtent(120),
               3 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(120),
               _ => null,
             };
           },

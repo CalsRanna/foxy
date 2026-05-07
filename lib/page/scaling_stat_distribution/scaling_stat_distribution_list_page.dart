@@ -86,21 +86,30 @@ class _ScalingStatDistributionListPageState extends State<ScalingStatDistributio
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号'];
+    final headers = ['编号', '属性分布'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
+        var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
+              1 => ShadTableCell(
+                child: Text(
+                  item.displayStats,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
           columnCount: headers.length,
           columnSpanExtent: (index) {
             return switch (index) {
-              0 => FixedTableSpanExtent(constraints.maxWidth),
+              0 => FixedTableSpanExtent(120),
+              1 => FixedTableSpanExtent(width),
               _ => null,
             };
           },

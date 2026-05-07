@@ -92,7 +92,7 @@ class _SpellItemEnchantmentListPageState
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '名称', '效果'];
+    final headers = ['编号', '名称', '充能', '效果0', '效果1', '效果2'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var width = constraints.maxWidth - 360;
@@ -102,7 +102,10 @@ class _SpellItemEnchantmentListPageState
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.nameLangZhCn)),
-              2 => ShadTableCell(child: Text(item.effect0.toString())),
+              2 => ShadTableCell(child: Text(item.charges.toString())),
+              3 => ShadTableCell(child: Text(item.effect0.toString())),
+              4 => ShadTableCell(child: Text(item.effect1.toString())),
+              5 => ShadTableCell(child: Text(item.effect2.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -112,6 +115,9 @@ class _SpellItemEnchantmentListPageState
               0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(width / 2),
               2 => FixedTableSpanExtent(120),
+              3 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(120),
+              5 => FixedTableSpanExtent(120),
               _ => null,
             };
           },

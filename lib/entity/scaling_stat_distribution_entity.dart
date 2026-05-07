@@ -101,6 +101,24 @@ class ScalingStatDistributionEntity {
     };
   }
 
+  String get displayStats {
+    final stats = [
+      statId0, statId1, statId2, statId3, statId4,
+      statId5, statId6, statId7, statId8, statId9,
+    ];
+    final bonuses = [
+      bonus0, bonus1, bonus2, bonus3, bonus4,
+      bonus5, bonus6, bonus7, bonus8, bonus9,
+    ];
+    final parts = <String>[];
+    for (var i = 0; i < 10; i++) {
+      if (stats[i] != 0) {
+        parts.add('${stats[i]}+${bonuses[i]}');
+      }
+    }
+    return parts.isEmpty ? '-' : parts.join(', ');
+  }
+
   ScalingStatDistributionEntity copyWith({
     int? id,
     int? statId0,

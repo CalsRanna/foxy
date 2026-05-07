@@ -49,13 +49,20 @@ class BriefCurrencyTypeEntity {
   final int itemId;
   final int categoryId;
   final int bitIndex;
+  final String itemName;
+  final String localeItemName;
 
   const BriefCurrencyTypeEntity({
     this.id = 0,
     this.itemId = 0,
     this.categoryId = 0,
     this.bitIndex = 0,
+    this.itemName = '',
+    this.localeItemName = '',
   });
+
+  String get displayItemName =>
+      localeItemName.isNotEmpty ? localeItemName : itemName;
 
   factory BriefCurrencyTypeEntity.fromJson(Map<String, dynamic> json) {
     return BriefCurrencyTypeEntity(
@@ -63,6 +70,8 @@ class BriefCurrencyTypeEntity {
       itemId: json['ItemID'] ?? 0,
       categoryId: json['CategoryID'] ?? 0,
       bitIndex: json['BitIndex'] ?? 0,
+      itemName: json['name'] ?? '',
+      localeItemName: json['localeName'] ?? '',
     );
   }
 
@@ -72,6 +81,8 @@ class BriefCurrencyTypeEntity {
       'ItemID': itemId,
       'CategoryID': categoryId,
       'BitIndex': bitIndex,
+      'name': itemName,
+      'localeName': localeItemName,
     };
   }
 
@@ -80,12 +91,16 @@ class BriefCurrencyTypeEntity {
     int? itemId,
     int? categoryId,
     int? bitIndex,
+    String? itemName,
+    String? localeItemName,
   }) {
     return BriefCurrencyTypeEntity(
       id: id ?? this.id,
       itemId: itemId ?? this.itemId,
       categoryId: categoryId ?? this.categoryId,
       bitIndex: bitIndex ?? this.bitIndex,
+      itemName: itemName ?? this.itemName,
+      localeItemName: localeItemName ?? this.localeItemName,
     );
   }
 }
