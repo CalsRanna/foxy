@@ -47,25 +47,28 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
 
   Widget _buildTable() {
     final items = viewModel.items.value;
-    return FoxyShadTable(
-      builder: (context, vicinity) {
-        final item = items[vicinity.row];
-        return switch (vicinity.column) {
-          0 => ShadTableCell(child: Text(item.itemid.toString())),
-          1 => ShadTableCell(child: Text(item.amount.toString())),
-          2 => ShadTableCell(child: Text(item.note)),
-          _ => ShadTableCell(child: SizedBox()),
-        };
-      },
-      columnCount: 3,
-      columnSpanExtent: (index) => switch (index) {
-        0 => FixedTableSpanExtent(120),
-        1 => FixedTableSpanExtent(120),
-        _ => FixedTableSpanExtent(200),
-      },
-      header: (context, index) => ShadTableCell.header(
-        child: Text(['物品ID', '数量', '备注'][index]),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        var flexWidth = constraints.maxWidth - 240;
+        return FoxyShadTable(
+          builder: (context, vicinity) {
+            final item = items[vicinity.row];
+            return switch (vicinity.column) {
+              0 => ShadTableCell(child: Text(item.itemid.toString())),
+              1 => ShadTableCell(child: Text(item.amount.toString())),
+              2 => ShadTableCell(child: Text(item.note)),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+          columnCount: 3,
+          columnSpanExtent: (index) => switch (index) {
+            0 => FixedTableSpanExtent(120),
+            1 => FixedTableSpanExtent(120),
+            _ => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
+          },
+          header: (context, index) => ShadTableCell.header(
+            child: Text(['物品ID', '数量', '备注'][index]),
+          ),
       onRowSecondaryTapDownWithDetails: (row, details) {
         showFoxyContextMenu(
           context: context,
@@ -79,8 +82,10 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
           ],
         );
       },
-      rowCount: items.length,
-      shrinkWrap: true,
+          rowCount: items.length,
+          shrinkWrap: true,
+        );
+      },
     );
   }
 

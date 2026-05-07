@@ -98,17 +98,18 @@ class _ConditionListPageState extends State<ConditionListPage> {
           },
           columnCount: headers.length,
           columnSpanExtent: (index) {
+            var flexWidth = constraints.maxWidth - 1080;
             return switch (index) {
-              0 => FixedTableSpanExtent(130),
-              1 => FixedTableSpanExtent(130),
-              2 => FixedTableSpanExtent(130),
-              3 => FixedTableSpanExtent(100),
-              4 => FixedTableSpanExtent(100),
-              5 => FixedTableSpanExtent(130),
-              6 => FixedTableSpanExtent(100),
-              7 => FixedTableSpanExtent(100),
-              8 => FixedTableSpanExtent(100),
-              9 => FixedTableSpanExtent(100),
+              0 => FixedTableSpanExtent(120),
+              1 => FixedTableSpanExtent(120),
+              2 => FixedTableSpanExtent(120),
+              3 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(120),
+              5 => FixedTableSpanExtent(120),
+              6 => FixedTableSpanExtent(120),
+              7 => FixedTableSpanExtent(120),
+              8 => FixedTableSpanExtent(120),
+              9 => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
               _ => null,
             };
           },

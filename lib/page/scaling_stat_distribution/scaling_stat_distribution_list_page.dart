@@ -100,7 +100,7 @@ class _ScalingStatDistributionListPageState extends State<ScalingStatDistributio
           columnCount: headers.length,
           columnSpanExtent: (index) {
             return switch (index) {
-              0 => FixedTableSpanExtent(120),
+              0 => FixedTableSpanExtent(constraints.maxWidth),
               _ => null,
             };
           },

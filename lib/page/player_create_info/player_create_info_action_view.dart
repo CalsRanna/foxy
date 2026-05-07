@@ -52,39 +52,48 @@ class _PlayerCreateInfoActionViewState extends State<PlayerCreateInfoActionView>
     final actions = viewModel.actions.value;
     final headers = ['按钮', '动作', '类型'];
 
-    return FoxyShadTable(
-      builder: (context, vicinity) {
-        final item = actions[vicinity.row];
-        return switch (vicinity.column) {
-          0 => ShadTableCell(child: Text(item.button.toString())),
-          1 => ShadTableCell(child: Text(item.action.toString())),
-          2 => ShadTableCell(child: Text(item.type.toString())),
-          _ => ShadTableCell(child: SizedBox()),
-        };
-      },
-      columnCount: headers.length,
-      columnSpanExtent: (_) => FixedTableSpanExtent(120),
-      header: (context, index) => ShadTableCell.header(child: Text(headers[index])),
-      onRowSecondaryTapDownWithDetails: (row, details) {
-        showFoxyContextMenu(
-          context: context,
-          position: details.globalPosition,
-          items: [
-            ShadContextMenuItem(
-              leading: Icon(LucideIcons.squarePen, size: 16),
-              onPressed: () => _showEditDialog(row),
-              child: Text('编辑'),
-            ),
-            ShadContextMenuItem(
-              leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: () => viewModel.delete(context, actions[row]),
-              child: Text('删除'),
-            ),
-          ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        var flexWidth = constraints.maxWidth - 240;
+        return FoxyShadTable(
+          builder: (context, vicinity) {
+            final item = actions[vicinity.row];
+            return switch (vicinity.column) {
+              0 => ShadTableCell(child: Text(item.button.toString())),
+              1 => ShadTableCell(child: Text(item.action.toString())),
+              2 => ShadTableCell(child: Text(item.type.toString())),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+          columnCount: headers.length,
+          columnSpanExtent: (index) => switch (index) {
+            0 => FixedTableSpanExtent(120),
+            1 => FixedTableSpanExtent(120),
+            _ => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
+          },
+          header: (context, index) => ShadTableCell.header(child: Text(headers[index])),
+          onRowSecondaryTapDownWithDetails: (row, details) {
+            showFoxyContextMenu(
+              context: context,
+              position: details.globalPosition,
+              items: [
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.squarePen, size: 16),
+                  onPressed: () => _showEditDialog(row),
+                  child: Text('编辑'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () => viewModel.delete(context, actions[row]),
+                  child: Text('删除'),
+                ),
+              ],
+            );
+          },
+          rowCount: actions.length,
+          shrinkWrap: true,
         );
       },
-      rowCount: actions.length,
-      shrinkWrap: true,
     );
   }
 
