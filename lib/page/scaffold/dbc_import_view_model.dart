@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/database/database.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
@@ -29,8 +28,6 @@ class DbcImportViewModel {
 
   // ========== 导入流程 ==========
 
-  Laconic? get _laconic => GetIt.instance.get<FoxyViewModel>().laconic;
-
   /// 从 config.yaml 加载并检查 DBC 状态
   Future<void> checkAndImport() async {
     try {
@@ -42,15 +39,9 @@ class DbcImportViewModel {
         dbcPath.value = path;
       }
 
-      final laconic = _laconic;
-      if (laconic == null) {
-        dbcImportError.value = '数据库连接未就绪';
-        return;
-      }
-
       if (dbcPath.value == null) return;
 
-      await _runImport(laconic);
+      await _runImport(Database.instance.laconic);
     } catch (e) {
       LoggerUtil.instance.e('检查DBC导入状态失败: $e');
       DialogUtil.instance.error('检查DBC导入状态失败: $e');
@@ -64,13 +55,7 @@ class DbcImportViewModel {
       dbcImportError.value = null;
       await _updateConfig('dbc_path', path);
 
-      final laconic = _laconic;
-      if (laconic == null) {
-        dbcImportError.value = '数据库连接未就绪';
-        return;
-      }
-
-      await _runImport(laconic);
+      await _runImport(Database.instance.laconic);
     } catch (e) {
       LoggerUtil.instance.e('设置DBC路径失败: $e');
       DialogUtil.instance.error('设置DBC路径失败: $e');
@@ -81,12 +66,7 @@ class DbcImportViewModel {
   Future<void> retryImport() async {
     try {
       dbcImportError.value = null;
-      final laconic = _laconic;
-      if (laconic == null) {
-        dbcImportError.value = '数据库连接未就绪';
-        return;
-      }
-      await _runImport(laconic);
+      await _runImport(Database.instance.laconic);
     } catch (e) {
       LoggerUtil.instance.e('重试DBC导入失败: $e');
       DialogUtil.instance.error('重试DBC导入失败: $e');
