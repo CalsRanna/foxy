@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class SpellDetailViewModel {
+  final _repository = GetIt.instance.get<SpellRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   // === 基础文本 ===
@@ -226,11 +227,10 @@ class SpellDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = SpellRepository();
       if (t.id == 0) {
-        await repository.storeSpell(t);
+        await _repository.storeSpell(t);
       } else {
-        await repository.updateSpell(t);
+        await _repository.updateSpell(t);
       }
       spell.value = t;
       _logActivity(
@@ -523,7 +523,7 @@ class SpellDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      spell.value = await SpellRepository().getSpell(id);
+      spell.value = await _repository.getSpell(id);
       _initControllers(spell.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载法术(id=$id)失败', error: e, stackTrace: s);

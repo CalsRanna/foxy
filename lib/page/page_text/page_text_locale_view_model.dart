@@ -4,9 +4,10 @@ import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
+import 'package:get_it/get_it.dart';
 
 class PageTextLocaleViewModel {
-  final repository = PageTextRepository();
+  final _repository = GetIt.instance.get<PageTextRepository>();
 
   final locales = signal<List<PageTextLocaleEntity>>([]);
   final _controllers = signal<List<TextEditingController>>([]);
@@ -16,7 +17,7 @@ class PageTextLocaleViewModel {
     if (id == null) return;
     _currentId = id;
     try {
-      final data = await repository.getPageTextLocales(id);
+      final data = await _repository.getPageTextLocales(id);
       locales.value = data;
       _syncControllers();
     } catch (e, s) {
@@ -68,7 +69,7 @@ class PageTextLocaleViewModel {
         }
         return locale;
       }).toList();
-      await repository.savePageTextLocales(_currentId, updatedLocales);
+      await _repository.savePageTextLocales(_currentId, updatedLocales);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('本地化已保存')));
     } catch (e) {

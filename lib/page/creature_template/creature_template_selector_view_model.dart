@@ -4,9 +4,10 @@ import 'package:foxy/entity/creature_template_filter_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class CreatureTemplateSelectorViewModel {
-  final _repository = CreatureTemplateRepository();
+  final _repository = GetIt.instance.get<CreatureTemplateRepository>();
 
   final entryFilter = signal('');
   final nameFilter = signal('');

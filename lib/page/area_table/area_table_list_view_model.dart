@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class AreaTableListViewModel {
   final entryController = TextEditingController();
   final nameController = TextEditingController();
-  final repository = AreaTableRepository();
+  final _repository = GetIt.instance.get<AreaTableRepository>();
 
   final page = signal(1);
   final areas = signal(<BriefAreaTableEntity>[]);
@@ -29,7 +29,7 @@ class AreaTableListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyAreaTable(id);
+      await _repository.copyAreaTable(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class AreaTableListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyAreaTable(id);
+      await _repository.destroyAreaTable(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -65,8 +65,8 @@ class AreaTableListViewModel {
 
   Future<void> initSignals() async {
     try {
-      areas.value = await repository.getBriefAreaTables();
-      total.value = await repository.countAreaTables();
+      areas.value = await _repository.getBriefAreaTables();
+      total.value = await _repository.countAreaTables();
     } catch (e) {
       LoggerUtil.instance.e('加载区域表列表失败: $e');
       DialogUtil.instance.error('加载区域表列表失败: $e');
@@ -112,11 +112,11 @@ class AreaTableListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      areas.value = await repository.getBriefAreaTables(
+      areas.value = await _repository.getBriefAreaTables(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countAreaTables(filter: filter);
+      total.value = await _repository.countAreaTables(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新区域表列表失败: $e');
       DialogUtil.instance.error('刷新区域表列表失败: $e');

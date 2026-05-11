@@ -14,7 +14,7 @@ import 'package:signals/signals.dart';
 
 class GemPropertyListViewModel {
   final entryController = TextEditingController();
-  final repository = GemPropertyRepository();
+  final _repository = GetIt.instance.get<GemPropertyRepository>();
 
   final page = signal(1);
   final properties = signal(<GemPropertyEntity>[]);
@@ -28,7 +28,7 @@ class GemPropertyListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyGemProperty(id);
+      await _repository.copyGemProperty(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -47,7 +47,7 @@ class GemPropertyListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyGemProperty(id);
+      await _repository.destroyGemProperty(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -63,8 +63,8 @@ class GemPropertyListViewModel {
 
   Future<void> initSignals() async {
     try {
-      properties.value = await repository.getGemProperties();
-      total.value = await repository.countGemProperties();
+      properties.value = await _repository.getGemProperties();
+      total.value = await _repository.countGemProperties();
     } catch (e) {
       LoggerUtil.instance.e('加载宝石属性列表失败: $e');
       DialogUtil.instance.error('加载宝石属性列表失败: $e');
@@ -106,11 +106,11 @@ class GemPropertyListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      properties.value = await repository.getGemProperties(
+      properties.value = await _repository.getGemProperties(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countGemProperties(filter: filter);
+      total.value = await _repository.countGemProperties(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新宝石属性列表失败: $e');
       DialogUtil.instance.error('刷新宝石属性列表失败: $e');

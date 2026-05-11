@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class EmoteTextListViewModel {
   final entryController = TextEditingController();
   final nameController = TextEditingController();
-  final repository = EmoteTextRepository();
+  final _repository = GetIt.instance.get<EmoteTextRepository>();
 
   final page = signal(1);
   final emotes = signal(<EmoteTextEntity>[]);
@@ -29,7 +29,7 @@ class EmoteTextListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyEmoteText(id);
+      await _repository.copyEmoteText(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class EmoteTextListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyEmoteText(id);
+      await _repository.destroyEmoteText(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -79,8 +79,8 @@ class EmoteTextListViewModel {
 
   Future<void> initSignals() async {
     try {
-      emotes.value = await repository.getEmoteTexts(page: 1);
-      total.value = await repository.countEmoteTexts();
+      emotes.value = await _repository.getEmoteTexts(page: 1);
+      total.value = await _repository.countEmoteTexts();
     } catch (e) {
       LoggerUtil.instance.e('加载表情文本列表失败: $e');
       DialogUtil.instance.error('加载表情文本列表失败: $e');
@@ -126,11 +126,11 @@ class EmoteTextListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      emotes.value = await repository.getEmoteTexts(
+      emotes.value = await _repository.getEmoteTexts(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countEmoteTexts(filter: filter);
+      total.value = await _repository.countEmoteTexts(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新表情文本列表失败: $e');
       DialogUtil.instance.error('刷新表情文本列表失败: $e');

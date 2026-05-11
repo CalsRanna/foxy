@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ScalingStatValueDetailViewModel {
+  final _repository = GetIt.instance.get<ScalingStatValueRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -44,11 +45,10 @@ class ScalingStatValueDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = ScalingStatValueRepository();
       if (t.id == 0) {
-        await repository.storeScalingStatValue(t);
+        await _repository.storeScalingStatValue(t);
       } else {
-        await repository.updateScalingStatValue(t);
+        await _repository.updateScalingStatValue(t);
       }
       scalingStatValue.value = t;
       _logActivity(
@@ -117,7 +117,7 @@ class ScalingStatValueDetailViewModel {
     if (id == null) return;
     try {
       scalingStatValue.value =
-          (await ScalingStatValueRepository().getScalingStatValue(id))!;
+          (await _repository.getScalingStatValue(id))!;
       _initControllers(scalingStatValue.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载缩放属性值(id=$id)失败', error: e, stackTrace: s);

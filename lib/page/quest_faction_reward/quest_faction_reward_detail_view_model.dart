@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class QuestFactionRewardDetailViewModel {
+  final _repository = GetIt.instance.get<QuestFactionRewardRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -32,11 +33,10 @@ class QuestFactionRewardDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = QuestFactionRewardRepository();
       if (t.id == 0) {
-        await repository.storeQuestFactionReward(t);
+        await _repository.storeQuestFactionReward(t);
       } else {
-        await repository.updateQuestFactionReward(t);
+        await _repository.updateQuestFactionReward(t);
       }
       reward.value = t;
       _logActivity(
@@ -91,8 +91,7 @@ class QuestFactionRewardDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      reward.value = (await QuestFactionRewardRepository()
-          .getQuestFactionReward(id))!;
+      reward.value = (await _repository.getQuestFactionReward(id))!;
       _initControllers(reward.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载任务声望(id=$id)失败', error: e, stackTrace: s);

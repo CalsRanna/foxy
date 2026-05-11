@@ -11,6 +11,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class GossipMenuDetailViewModel {
+  final _repository = GetIt.instance.get<GossipMenuRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final menuIdController = TextEditingController();
@@ -24,7 +25,7 @@ class GossipMenuDetailViewModel {
   Future<void> initSignals({int? menuId, int? textId}) async {
     try {
       if (menuId == null) {
-        final nextMenuId = await GossipMenuRepository().getNextMenuId();
+        final nextMenuId = await _repository.getNextMenuId();
         this.menuId.value = nextMenuId;
         this.textId.value = 0;
         menu.value = GossipMenuEntity(menuId: nextMenuId, textId: 0);
@@ -36,7 +37,7 @@ class GossipMenuDetailViewModel {
       }
       _originalMenuId = menuId;
       _originalTextId = textId ?? 0;
-      final existing = await GossipMenuRepository().getGossipMenu(
+      final existing = await _repository.getGossipMenu(
         menuId,
         textId ?? 0,
       );
@@ -54,13 +55,13 @@ class GossipMenuDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (_originalMenuId == null) {
-        await GossipMenuRepository().storeGossipMenu(t);
+        await _repository.storeGossipMenu(t);
         menu.value = t;
         _logActivity(ActivityActionType.create, t);
         _originalMenuId = t.menuId;
         _originalTextId = t.textId;
       } else {
-        await GossipMenuRepository().updateGossipMenu(
+        await _repository.updateGossipMenu(
           _originalMenuId!,
           _originalTextId!,
           t,

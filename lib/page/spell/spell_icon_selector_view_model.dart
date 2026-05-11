@@ -3,9 +3,10 @@ import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/repository/spell_icon_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class SpellIconSelectorViewModel {
-  final _repository = SpellIconRepository();
+  final _repository = GetIt.instance.get<SpellIconRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

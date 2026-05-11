@@ -18,10 +18,10 @@ class CreatureTemplateSpellViewModel {
   final spell = signal<int>(0);
   final verifiedBuild = signal<int>(0);
 
-  final repository = CreatureTemplateSpellRepository();
+  final _repository = GetIt.instance.get<CreatureTemplateSpellRepository>();
 
   Future<void> load() async {
-    final data = await repository.getCreatureTemplateSpells(creatureId.value);
+    final data = await _repository.getCreatureTemplateSpells(creatureId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -49,7 +49,7 @@ class CreatureTemplateSpellViewModel {
 
   Future<void> create() async {
     try {
-      final nextIndex = await repository.getNextIndex(creatureId.value);
+      final nextIndex = await _repository.getNextIndex(creatureId.value);
       resetForm();
       index.value = nextIndex;
       selectedIndex.value = null;
@@ -73,7 +73,7 @@ class CreatureTemplateSpellViewModel {
 
     final spell = items.value[idx];
     try {
-      await repository.copyCreatureTemplateSpell(spell.creatureID, spell.index);
+      await _repository.copyCreatureTemplateSpell(spell.creatureID, spell.index);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -111,7 +111,7 @@ class CreatureTemplateSpellViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureTemplateSpell(
+        await _repository.destroyCreatureTemplateSpell(
           spell.creatureID,
           spell.index,
         );
@@ -130,7 +130,7 @@ class CreatureTemplateSpellViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final spell = collectFromForm();
-      await repository.storeCreatureTemplateSpell(spell);
+      await _repository.storeCreatureTemplateSpell(spell);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -145,7 +145,7 @@ class CreatureTemplateSpellViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final spell = collectFromForm();
-      await repository.updateCreatureTemplateSpell(spell);
+      await _repository.updateCreatureTemplateSpell(spell);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

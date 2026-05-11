@@ -9,6 +9,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class SpellCustomAttrViewModel {
+  final _repository = GetIt.instance.get<SpellCustomAttrRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
@@ -17,8 +18,7 @@ class SpellCustomAttrViewModel {
   final customAttr = signal(SpellCustomAttrEntity());
 
   Future<void> load() async {
-    final repository = SpellCustomAttrRepository();
-    final data = await repository.getSpellCustomAttr(spellId.value);
+    final data = await _repository.getSpellCustomAttr(spellId.value);
     if (data != null) {
       customAttr.value = data;
     }
@@ -27,8 +27,7 @@ class SpellCustomAttrViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final data = _collectFromControllers();
-      final repository = SpellCustomAttrRepository();
-      await repository.saveSpellCustomAttr(data);
+      await _repository.saveSpellCustomAttr(data);
       customAttr.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('自定义属性已保存'));

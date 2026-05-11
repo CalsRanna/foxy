@@ -9,6 +9,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class GameObjectTemplateAddonViewModel {
+  final _repository = GetIt.instance.get<GameObjectTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectId = signal<int>(0);
 
@@ -20,8 +21,7 @@ class GameObjectTemplateAddonViewModel {
   final addon = signal(GameObjectTemplateAddonEntity());
 
   Future<void> load() async {
-    final repository = GameObjectTemplateAddonRepository();
-    final data = await repository.getGameObjectTemplateAddon(
+    final data = await _repository.getGameObjectTemplateAddon(
       gameObjectId.value,
     );
     if (data != null) {
@@ -33,8 +33,7 @@ class GameObjectTemplateAddonViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final addonData = _collectFromControllers();
-      final repository = GameObjectTemplateAddonRepository();
-      await repository.saveGameObjectTemplateAddon(addonData);
+      await _repository.saveGameObjectTemplateAddon(addonData);
       addon.value = addonData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板补充数据已保存'));

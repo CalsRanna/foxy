@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class QuestSortListViewModel {
   final entryController = TextEditingController();
   final nameController = TextEditingController();
-  final repository = QuestSortRepository();
+  final _repository = GetIt.instance.get<QuestSortRepository>();
 
   final page = signal(1);
   final sorts = signal(<QuestSortEntity>[]);
@@ -29,7 +29,7 @@ class QuestSortListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyQuestSort(id);
+      await _repository.copyQuestSort(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class QuestSortListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyQuestSort(id);
+      await _repository.destroyQuestSort(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -80,8 +80,8 @@ class QuestSortListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = QuestSortFilterEntity();
-      sorts.value = await repository.getQuestSorts(page: 1, filter: filter);
-      total.value = await repository.countQuestSorts(filter: filter);
+      sorts.value = await _repository.getQuestSorts(page: 1, filter: filter);
+      total.value = await _repository.countQuestSorts(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('加载任务排序列表失败: $e');
       DialogUtil.instance.error('加载任务排序列表失败: $e');
@@ -127,11 +127,11 @@ class QuestSortListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      sorts.value = await repository.getQuestSorts(
+      sorts.value = await _repository.getQuestSorts(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countQuestSorts(filter: filter);
+      total.value = await _repository.countQuestSorts(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新任务排序列表失败: $e');
       DialogUtil.instance.error('刷新任务排序列表失败: $e');

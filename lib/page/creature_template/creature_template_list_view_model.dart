@@ -16,7 +16,7 @@ class CreatureTemplateListViewModel {
   final entryController = TextEditingController();
   final nameController = TextEditingController();
   final subNameController = TextEditingController();
-  final repository = CreatureTemplateRepository();
+  final _repository = GetIt.instance.get<CreatureTemplateRepository>();
 
   final page = signal(1);
   final templates = signal(<BriefCreatureTemplateEntity>[]);
@@ -30,7 +30,7 @@ class CreatureTemplateListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyCreatureTemplate(entry);
+      await _repository.copyCreatureTemplate(entry);
       _logActivity(ActivityActionType.copy, entry);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -49,7 +49,7 @@ class CreatureTemplateListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyCreatureTemplate(entry);
+      await _repository.destroyCreatureTemplate(entry);
       _logActivity(ActivityActionType.delete, entry);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -67,8 +67,8 @@ class CreatureTemplateListViewModel {
 
   Future<void> initSignals() async {
     try {
-      templates.value = await repository.getBriefCreatureTemplates();
-      total.value = await repository.countCreatureTemplates();
+      templates.value = await _repository.getBriefCreatureTemplates();
+      total.value = await _repository.countCreatureTemplates();
     } catch (e) {
       LoggerUtil.instance.e('加载生物列表失败: $e');
       DialogUtil.instance.error('加载生物列表失败: $e');
@@ -116,11 +116,11 @@ class CreatureTemplateListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      templates.value = await repository.getBriefCreatureTemplates(
+      templates.value = await _repository.getBriefCreatureTemplates(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countCreatureTemplates(filter: filter);
+      total.value = await _repository.countCreatureTemplates(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新生物列表失败: $e');
       DialogUtil.instance.error('刷新生物列表失败: $e');

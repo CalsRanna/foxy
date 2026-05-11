@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class QuestSortDetailViewModel {
+  final _repository = GetIt.instance.get<QuestSortRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final id = signal<int>(0);
@@ -20,11 +21,10 @@ class QuestSortDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = QuestSortRepository();
       if (t.id == 0) {
-        await repository.storeQuestSort(t);
+        await _repository.storeQuestSort(t);
       } else {
-        await repository.updateQuestSort(t);
+        await _repository.updateQuestSort(t);
       }
       sort.value = t;
       _logActivity(
@@ -72,7 +72,7 @@ class QuestSortDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      sort.value = (await QuestSortRepository().getQuestSort(id))!;
+      sort.value = (await _repository.getQuestSort(id))!;
       _initControllers(sort.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载任务排序(id=$id)失败', error: e, stackTrace: s);

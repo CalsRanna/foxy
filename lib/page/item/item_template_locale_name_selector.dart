@@ -4,6 +4,7 @@ import 'package:foxy/repository/item_template_locale_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
 import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:get_it/get_it.dart';
 
 class ItemTemplateLocaleNameSelector extends StatefulWidget {
   final int? entry;
@@ -28,7 +29,7 @@ class ItemTemplateLocaleNameSelector extends StatefulWidget {
 
 class _ItemTemplateLocaleNameSelectorState
     extends State<ItemTemplateLocaleNameSelector> {
-  final repository = ItemTemplateLocaleRepository();
+  final _repository = GetIt.instance.get<ItemTemplateLocaleRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class _ItemTemplateLocaleNameSelectorState
       fields: ['locale', 'name'],
       fieldLabels: ['语言', '名称'],
       onLoad: (entry) async {
-        final locales = await repository.getItemTemplateLocales(entry);
+        final locales = await _repository.getItemTemplateLocales(entry);
         return locales
             .map((e) => {'locale': e.locale, 'name': e.name})
             .toList();
@@ -66,7 +67,7 @@ class _ItemTemplateLocaleNameSelectorState
                   name: d['name'] ?? '',
                 ))
             .toList();
-        await repository.replaceAll(entry, locales);
+        await _repository.replaceAll(entry, locales);
       },
     );
     await LocaleCrudDialog(

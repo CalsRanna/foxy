@@ -5,6 +5,7 @@ import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
+import 'package:get_it/get_it.dart';
 
 class CreatureQuestStarterViewModel {
   final questId = signal(0);
@@ -16,11 +17,11 @@ class CreatureQuestStarterViewModel {
   int _originalId = 0;
   int _originalQuest = 0;
 
-  final repository = CreatureQuestStarterRepository();
+  final _repository = GetIt.instance.get<CreatureQuestStarterRepository>();
 
   /// 加载数据
   Future<void> load() async {
-    final data = await repository.getCreatureQuestStarters(questId.value);
+    final data = await _repository.getCreatureQuestStarters(questId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -48,7 +49,7 @@ class CreatureQuestStarterViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final blank = await repository.createCreatureQuestStarter(questId.value);
+      final blank = await _repository.createCreatureQuestStarter(questId.value);
       resetForm();
       fillForm(blank);
       _originalId = blank.id;
@@ -67,7 +68,7 @@ class CreatureQuestStarterViewModel {
       if (index == null || index < 0 || index >= items.value.length) return;
 
       final item = items.value[index];
-      final existing = await repository.getCreatureQuestStarter({
+      final existing = await _repository.getCreatureQuestStarter({
         'id': item.id,
         'quest': item.quest,
       });
@@ -85,7 +86,7 @@ class CreatureQuestStarterViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await repository.storeCreatureQuestStarter(model);
+      await _repository.storeCreatureQuestStarter(model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -101,7 +102,7 @@ class CreatureQuestStarterViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await repository.updateCreatureQuestStarter({
+      await _repository.updateCreatureQuestStarter({
         'id': _originalId,
         'quest': _originalQuest,
       }, model);
@@ -142,7 +143,7 @@ class CreatureQuestStarterViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.copyCreatureQuestStarter({
+        await _repository.copyCreatureQuestStarter({
           'id': item.id,
           'quest': item.quest,
         });
@@ -184,7 +185,7 @@ class CreatureQuestStarterViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureQuestStarter({
+        await _repository.destroyCreatureQuestStarter({
           'id': item.id,
           'quest': item.quest,
         });

@@ -9,6 +9,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class SpellBonusDataViewModel {
+  final _repository = GetIt.instance.get<SpellBonusDataRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
@@ -21,8 +22,7 @@ class SpellBonusDataViewModel {
   final bonusData = signal(SpellBonusDataEntity());
 
   Future<void> load() async {
-    final repository = SpellBonusDataRepository();
-    final data = await repository.getSpellBonusData(spellId.value);
+    final data = await _repository.getSpellBonusData(spellId.value);
     if (data != null) {
       bonusData.value = data;
     }
@@ -31,8 +31,7 @@ class SpellBonusDataViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final data = _collectFromControllers();
-      final repository = SpellBonusDataRepository();
-      await repository.saveSpellBonusData(data);
+      await _repository.saveSpellBonusData(data);
       bonusData.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('奖励系数已保存'));

@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class CurrencyTypeDetailViewModel {
+  final _repository = GetIt.instance.get<CurrencyTypeRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final id = signal<int>(0);
@@ -23,11 +24,10 @@ class CurrencyTypeDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = CurrencyTypeRepository();
       if (t.id == 0) {
-        await repository.storeCurrencyType(t);
+        await _repository.storeCurrencyType(t);
       } else {
-        await repository.updateCurrencyType(t);
+        await _repository.updateCurrencyType(t);
       }
       currencyType.value = t;
       _logActivity(
@@ -76,7 +76,7 @@ class CurrencyTypeDetailViewModel {
     if (id == null) return;
     try {
       currencyType.value =
-          (await CurrencyTypeRepository().getCurrencyType(id))!;
+          (await _repository.getCurrencyType(id))!;
       _initControllers(currencyType.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载货币(id=$id)失败', error: e, stackTrace: s);

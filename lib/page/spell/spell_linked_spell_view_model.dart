@@ -18,10 +18,10 @@ class SpellLinkedSpellViewModel {
   final type = signal<int>(0);
   final commentController = TextEditingController();
 
-  final repository = SpellLinkedSpellRepository();
+  final _repository = GetIt.instance.get<SpellLinkedSpellRepository>();
 
   Future<void> load() async {
-    final data = await repository.getSpellLinkedSpells(spellId.value);
+    final data = await _repository.getSpellLinkedSpells(spellId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -70,7 +70,7 @@ class SpellLinkedSpellViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final linked = items.value[index];
     try {
-      await repository.copySpellLinkedSpell(linked);
+      await _repository.copySpellLinkedSpell(linked);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -105,7 +105,7 @@ class SpellLinkedSpellViewModel {
     );
     if (confirmed == true) {
       try {
-        await repository.destroySpellLinkedSpell(
+        await _repository.destroySpellLinkedSpell(
           linked.spellTrigger,
           linked.spellEffect,
         );
@@ -124,7 +124,7 @@ class SpellLinkedSpellViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
-      await repository.storeSpellLinkedSpell(data);
+      await _repository.storeSpellLinkedSpell(data);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -142,7 +142,7 @@ class SpellLinkedSpellViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await repository.updateSpellLinkedSpell(oldData, newData);
+      await _repository.updateSpellLinkedSpell(oldData, newData);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

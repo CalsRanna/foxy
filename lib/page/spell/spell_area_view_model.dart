@@ -24,10 +24,10 @@ class SpellAreaViewModel {
   final questStartStatus = signal<int>(0);
   final questEndStatus = signal<int>(0);
 
-  final repository = SpellAreaRepository();
+  final _repository = GetIt.instance.get<SpellAreaRepository>();
 
   Future<void> load() async {
-    final data = await repository.getSpellAreas(spellId.value);
+    final data = await _repository.getSpellAreas(spellId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -93,7 +93,7 @@ class SpellAreaViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final area = items.value[index];
     try {
-      await repository.copySpellArea(area);
+      await _repository.copySpellArea(area);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -128,7 +128,7 @@ class SpellAreaViewModel {
     );
     if (confirmed == true) {
       try {
-        await repository.destroySpellArea(
+        await _repository.destroySpellArea(
           area.spell,
           area.area,
           area.questStart,
@@ -151,7 +151,7 @@ class SpellAreaViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
-      await repository.storeSpellArea(data);
+      await _repository.storeSpellArea(data);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -169,7 +169,7 @@ class SpellAreaViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await repository.updateSpellArea(oldData, newData);
+      await _repository.updateSpellArea(oldData, newData);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

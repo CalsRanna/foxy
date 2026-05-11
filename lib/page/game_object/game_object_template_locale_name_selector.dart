@@ -4,6 +4,7 @@ import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
 import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:get_it/get_it.dart';
 
 class GameObjectTemplateLocaleNameSelector extends StatefulWidget {
   final int? entry;
@@ -30,7 +31,7 @@ class GameObjectTemplateLocaleNameSelector extends StatefulWidget {
 
 class _GameObjectTemplateLocaleNameSelectorState
     extends State<GameObjectTemplateLocaleNameSelector> {
-  final repository = GameObjectTemplateRepository();
+  final _repository = GetIt.instance.get<GameObjectTemplateRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class _GameObjectTemplateLocaleNameSelectorState
       fields: ['locale', 'name'],
       fieldLabels: ['语言', widget.isCaption ? '使用说明' : '名称'],
       onLoad: (entry) async {
-        final locales = await repository.getGameObjectTemplateLocales(entry);
+        final locales = await _repository.getGameObjectTemplateLocales(entry);
         return locales
             .map((e) => {'locale': e.locale, 'name': e.name})
             .toList();
@@ -68,7 +69,7 @@ class _GameObjectTemplateLocaleNameSelectorState
                   name: d['name'] ?? '',
                 ))
             .toList();
-        await repository.saveGameObjectTemplateLocales(entry, locales);
+        await _repository.saveGameObjectTemplateLocales(entry, locales);
       },
     );
     await LocaleCrudDialog(

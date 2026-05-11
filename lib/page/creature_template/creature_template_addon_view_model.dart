@@ -9,6 +9,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class CreatureTemplateAddonViewModel {
+  final _repository = GetIt.instance.get<CreatureTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final creatureId = signal(0);
 
@@ -25,8 +26,7 @@ class CreatureTemplateAddonViewModel {
   /// 从数据库加载数据
   Future<void> load() async {
     try {
-      final repository = CreatureTemplateAddonRepository();
-      final data = await repository.getCreatureTemplateAddon(creatureId.value);
+      final data = await _repository.getCreatureTemplateAddon(creatureId.value);
       if (data != null) {
         addon.value = data;
         _initSignals(data);
@@ -41,8 +41,7 @@ class CreatureTemplateAddonViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final addonData = _collectFromControllers();
-      final repository = CreatureTemplateAddonRepository();
-      await repository.saveCreatureTemplateAddon(addonData);
+      await _repository.saveCreatureTemplateAddon(addonData);
       addon.value = addonData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板补充数据已保存'));

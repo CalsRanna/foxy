@@ -29,11 +29,11 @@ class SkinningLootTemplateViewModel {
   final commentController = TextEditingController();
 
   final repository = LootTemplateRepository(LootTableType.skinning);
-  final creatureRepository = CreatureTemplateRepository();
+  final _creatureRepository = GetIt.instance.get<CreatureTemplateRepository>();
 
   /// 加载数据
   Future<void> load() async {
-    final template = await creatureRepository.getCreatureTemplate(
+    final template = await _creatureRepository.getCreatureTemplate(
       creatureId.value,
     );
     creatureTemplate.value = template;

@@ -3,9 +3,10 @@ import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class CreatureSpellDataSelectorViewModel {
-  final _repository = CreatureSpellDataRepository();
+  final _repository = GetIt.instance.get<CreatureSpellDataRepository>();
 
   final idFilter = signal('');
   final spellFilter = signal('');

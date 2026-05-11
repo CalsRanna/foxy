@@ -4,9 +4,10 @@ import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class AreaTableSelectorViewModel {
-  final _repository = AreaTableRepository();
+  final _repository = GetIt.instance.get<AreaTableRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

@@ -3,9 +3,10 @@ import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class ItemRandomSuffixSelectorViewModel {
-  final _repository = ItemRandomSuffixRepository();
+  final _repository = GetIt.instance.get<ItemRandomSuffixRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

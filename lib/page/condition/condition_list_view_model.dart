@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class ConditionListViewModel {
   final sourceTypeController = TextEditingController();
   final sourceEntryController = TextEditingController();
-  final repository = ConditionRepository();
+  final _repository = GetIt.instance.get<ConditionRepository>();
 
   final page = signal(1);
   final conditions = signal<List<ConditionEntity>>([]);
@@ -78,7 +78,7 @@ class ConditionListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyCondition(condition.buildCredential());
+      await _repository.copyCondition(condition.buildCredential());
       _logActivity(ActivityActionType.copy, condition);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -97,7 +97,7 @@ class ConditionListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyCondition(condition.buildCredential());
+      await _repository.destroyCondition(condition.buildCredential());
       _logActivity(ActivityActionType.delete, condition);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -115,11 +115,11 @@ class ConditionListViewModel {
   }
 
   Future<List<ConditionEntity>> _search() async {
-    return repository.getConditions(filter: _buildFilter(), page: page.value);
+    return _repository.getConditions(filter: _buildFilter(), page: page.value);
   }
 
   Future<int> _count() async {
-    return repository.countConditions(filter: _buildFilter());
+    return _repository.countConditions(filter: _buildFilter());
   }
 
   Future<void> _refresh() async {

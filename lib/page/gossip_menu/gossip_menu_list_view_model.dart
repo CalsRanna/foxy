@@ -13,7 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class GossipMenuListViewModel {
-  final repository = GossipMenuRepository();
+  final _repository = GetIt.instance.get<GossipMenuRepository>();
 
   final menuIdController = TextEditingController();
   final textController = TextEditingController();
@@ -24,8 +24,8 @@ class GossipMenuListViewModel {
 
   Future<void> initSignals() async {
     try {
-      menus.value = await repository.getBriefGossipMenus();
-      total.value = await repository.countGossipMenus();
+      menus.value = await _repository.getBriefGossipMenus();
+      total.value = await _repository.countGossipMenus();
     } catch (e) {
       LoggerUtil.instance.e('加载对话菜单列表失败: $e');
       DialogUtil.instance.error('加载对话菜单列表失败: $e');
@@ -62,7 +62,7 @@ class GossipMenuListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyGossipMenu(menuId, textId);
+      await _repository.copyGossipMenu(menuId, textId);
       _logActivity(ActivityActionType.copy, menuId, textId);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -83,7 +83,7 @@ class GossipMenuListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyGossipMenu(menuId, textId);
+      await _repository.destroyGossipMenu(menuId, textId);
       _logActivity(ActivityActionType.delete, menuId, textId);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -107,11 +107,11 @@ class GossipMenuListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      menus.value = await repository.getBriefGossipMenus(
+      menus.value = await _repository.getBriefGossipMenus(
         filter: filter,
         page: page.value,
       );
-      total.value = await repository.countGossipMenus(filter: filter);
+      total.value = await _repository.countGossipMenus(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新对话菜单列表失败: $e');
       DialogUtil.instance.error('刷新对话菜单列表失败: $e');

@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ItemExtendedCostDetailViewModel {
+  final _repository = GetIt.instance.get<ItemExtendedCostRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -39,11 +40,10 @@ class ItemExtendedCostDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = ItemExtendedCostRepository();
       if (t.id == 0) {
-        await repository.storeItemExtendedCost(t);
+        await _repository.storeItemExtendedCost(t);
       } else {
-        await repository.updateItemExtendedCost(t);
+        await _repository.updateItemExtendedCost(t);
       }
       cost.value = t;
       _logActivity(
@@ -103,7 +103,7 @@ class ItemExtendedCostDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      cost.value = (await ItemExtendedCostRepository().getItemExtendedCost(
+      cost.value = (await _repository.getItemExtendedCost(
         id,
       ))!;
       _initControllers(cost.value);

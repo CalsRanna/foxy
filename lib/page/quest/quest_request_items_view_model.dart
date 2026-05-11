@@ -9,6 +9,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class QuestRequestItemsViewModel {
+  final _repository = GetIt.instance.get<QuestRequestItemsRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
@@ -22,13 +23,12 @@ class QuestRequestItemsViewModel {
   Future<void> initSignals({required int questId}) async {
     try {
       this.questId.value = questId;
-      final repository = QuestRequestItemsRepository();
-      final existing = await repository.getQuestRequestItems(questId);
+      final existing = await _repository.getQuestRequestItems(questId);
       if (existing != null) {
         _originalId = existing.id;
         _initSignals(existing);
       } else {
-        final blank = await repository.createQuestRequestItems(questId);
+        final blank = await _repository.createQuestRequestItems(questId);
         _initSignals(blank);
       }
       id.value = questId;
@@ -41,11 +41,10 @@ class QuestRequestItemsViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final model = _collect();
-      final repository = QuestRequestItemsRepository();
       if (_originalId == 0) {
-        await repository.storeQuestRequestItems(model);
+        await _repository.storeQuestRequestItems(model);
       } else {
-        await repository.updateQuestRequestItems(_originalId, model);
+        await _repository.updateQuestRequestItems(_originalId, model);
       }
       _originalId = model.id;
 

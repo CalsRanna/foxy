@@ -9,6 +9,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class QuestOfferRewardViewModel {
+  final _repository = GetIt.instance.get<QuestOfferRewardRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
@@ -28,13 +29,12 @@ class QuestOfferRewardViewModel {
   Future<void> initSignals({required int questId}) async {
     try {
       this.questId.value = questId;
-      final repository = QuestOfferRewardRepository();
-      final existing = await repository.getQuestOfferReward(questId);
+      final existing = await _repository.getQuestOfferReward(questId);
       if (existing != null) {
         _originalId = existing.id;
         _initSignals(existing);
       } else {
-        final blank = await repository.createQuestOfferReward(questId);
+        final blank = await _repository.createQuestOfferReward(questId);
         _initSignals(blank);
       }
       id.value = questId;
@@ -47,11 +47,10 @@ class QuestOfferRewardViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final model = _collect();
-      final repository = QuestOfferRewardRepository();
       if (_originalId == 0) {
-        await repository.storeQuestOfferReward(model);
+        await _repository.storeQuestOfferReward(model);
       } else {
-        await repository.updateQuestOfferReward(_originalId, model);
+        await _repository.updateQuestOfferReward(_originalId, model);
       }
       _originalId = model.id;
 

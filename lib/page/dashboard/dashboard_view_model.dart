@@ -11,6 +11,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:signals/signals.dart';
 
 class DashboardViewModel {
+  final _repository = GetIt.instance.get<VersionRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final featureViewModel = GetIt.instance.get<FeatureViewModel>();
   final _activityRepo = GetIt.instance.get<ActivityLogRepository>();
@@ -34,7 +35,7 @@ class DashboardViewModel {
 
   Future<void> initSignals() async {
     try {
-      var versionEntity = await VersionRepository().getVersion();
+      var versionEntity = await _repository.getVersion();
       coreVersion.value = versionEntity.coreVersion;
       coreRevision.value = versionEntity.coreRevision;
       databaseVersion.value = versionEntity.dbVersion;

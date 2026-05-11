@@ -14,7 +14,7 @@ import 'package:signals/signals.dart';
 
 class TalentListViewModel {
   final entryController = TextEditingController();
-  final repository = TalentRepository();
+  final _repository = GetIt.instance.get<TalentRepository>();
 
   final page = signal(1);
   final talents = signal(<BriefTalentEntity>[]);
@@ -28,7 +28,7 @@ class TalentListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyTalent(id);
+      await _repository.copyTalent(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -47,7 +47,7 @@ class TalentListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyTalent(id);
+      await _repository.destroyTalent(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -63,8 +63,8 @@ class TalentListViewModel {
 
   Future<void> initSignals() async {
     try {
-      talents.value = await repository.getBriefTalents();
-      total.value = await repository.countTalents();
+      talents.value = await _repository.getBriefTalents();
+      total.value = await _repository.countTalents();
     } catch (e) {
       LoggerUtil.instance.e('加载天赋列表失败: $e');
       DialogUtil.instance.error('加载天赋列表失败: $e');
@@ -106,11 +106,11 @@ class TalentListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      talents.value = await repository.getBriefTalents(
+      talents.value = await _repository.getBriefTalents(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countTalents(filter: filter);
+      total.value = await _repository.countTalents(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新天赋列表失败: $e');
       DialogUtil.instance.error('刷新天赋列表失败: $e');

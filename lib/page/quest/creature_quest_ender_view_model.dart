@@ -5,6 +5,7 @@ import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
+import 'package:get_it/get_it.dart';
 
 class CreatureQuestEnderViewModel {
   final questId = signal(0);
@@ -16,7 +17,7 @@ class CreatureQuestEnderViewModel {
   int _originalId = 0;
   int _originalQuest = 0;
 
-  final repository = CreatureQuestEnderRepository();
+  final _repository = GetIt.instance.get<CreatureQuestEnderRepository>();
 
   /// 从表单收集数据
   CreatureQuestEnderEntity collectFromForm() {
@@ -52,7 +53,7 @@ class CreatureQuestEnderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.copyCreatureQuestEnder({
+        await _repository.copyCreatureQuestEnder({
           'id': item.id,
           'quest': item.quest,
         });
@@ -71,7 +72,7 @@ class CreatureQuestEnderViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final blank = await repository.createCreatureQuestEnder(questId.value);
+      final blank = await _repository.createCreatureQuestEnder(questId.value);
       resetForm();
       fillForm(blank);
       _originalId = blank.id;
@@ -109,7 +110,7 @@ class CreatureQuestEnderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureQuestEnder({
+        await _repository.destroyCreatureQuestEnder({
           'id': item.id,
           'quest': item.quest,
         });
@@ -135,7 +136,7 @@ class CreatureQuestEnderViewModel {
       if (index == null || index < 0 || index >= items.value.length) return;
 
       final item = items.value[index];
-      final existing = await repository.getCreatureQuestEnder({
+      final existing = await _repository.getCreatureQuestEnder({
         'id': item.id,
         'quest': item.quest,
       });
@@ -168,7 +169,7 @@ class CreatureQuestEnderViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    final data = await repository.getCreatureQuestEnders(questId.value);
+    final data = await _repository.getCreatureQuestEnders(questId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -183,7 +184,7 @@ class CreatureQuestEnderViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await repository.storeCreatureQuestEnder(model);
+      await _repository.storeCreatureQuestEnder(model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -206,7 +207,7 @@ class CreatureQuestEnderViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await repository.updateCreatureQuestEnder({
+      await _repository.updateCreatureQuestEnder({
         'id': _originalId,
         'quest': _originalQuest,
       }, model);

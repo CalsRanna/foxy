@@ -11,6 +11,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class GameObjectTemplateDetailViewModel {
+  final _repository = GetIt.instance.get<GameObjectTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final nameController = TextEditingController();
@@ -55,12 +56,11 @@ class GameObjectTemplateDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = GameObjectTemplateRepository();
       final isNew = t.entry == 0;
       if (isNew) {
-        await repository.storeGameObjectTemplate(t);
+        await _repository.storeGameObjectTemplate(t);
       } else {
-        await repository.updateGameObjectTemplate(t);
+        await _repository.updateGameObjectTemplate(t);
       }
       template.value = t;
       _logActivity(
@@ -136,7 +136,7 @@ class GameObjectTemplateDetailViewModel {
   Future<void> initSignals({int? entry}) async {
     if (entry == null) return;
     try {
-      template.value = await GameObjectTemplateRepository().getGameObjectTemplate(
+      template.value = await _repository.getGameObjectTemplate(
         entry,
       );
       _initControllers(template.value);

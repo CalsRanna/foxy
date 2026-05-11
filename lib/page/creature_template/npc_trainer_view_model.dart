@@ -24,11 +24,11 @@ class NpcTrainerViewModel {
   final reqSkillRank = signal<int>(0);
   final reqLevel = signal<int>(0);
 
-  final repository = NpcTrainerRepository();
+  final _repository = GetIt.instance.get<NpcTrainerRepository>();
 
   /// 加载数据
   Future<void> load() async {
-    final data = await repository.getNpcTrainers(id.value);
+    final data = await _repository.getNpcTrainers(id.value);
     items.value = data;
     selectedIndex.value = null;
     creating.value = false;
@@ -91,7 +91,7 @@ class NpcTrainerViewModel {
 
     final trainer = items.value[index];
     try {
-      await repository.copyNpcTrainer(trainer.id, trainer.spellID);
+      await _repository.copyNpcTrainer(trainer.id, trainer.spellID);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -130,7 +130,7 @@ class NpcTrainerViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyNpcTrainer(trainer.id, trainer.spellID);
+        await _repository.destroyNpcTrainer(trainer.id, trainer.spellID);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -147,7 +147,7 @@ class NpcTrainerViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final trainer = collectFromForm();
-      await repository.storeNpcTrainer(trainer);
+      await _repository.storeNpcTrainer(trainer);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -163,7 +163,7 @@ class NpcTrainerViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final trainer = collectFromForm();
-      await repository.updateNpcTrainer(trainer);
+      await _repository.updateNpcTrainer(trainer);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

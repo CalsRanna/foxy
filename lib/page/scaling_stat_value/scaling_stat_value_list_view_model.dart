@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class ScalingStatValueListViewModel {
   final entryController = TextEditingController();
   final charlevelController = TextEditingController();
-  final repository = ScalingStatValueRepository();
+  final _repository = GetIt.instance.get<ScalingStatValueRepository>();
 
   final page = signal(1);
   final scalingStatValues = signal(<BriefScalingStatValueEntity>[]);
@@ -29,7 +29,7 @@ class ScalingStatValueListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyScalingStatValue(id);
+      await _repository.copyScalingStatValue(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class ScalingStatValueListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyScalingStatValue(id);
+      await _repository.destroyScalingStatValue(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -65,8 +65,8 @@ class ScalingStatValueListViewModel {
 
   Future<void> initSignals() async {
     try {
-      scalingStatValues.value = await repository.getBriefScalingStatValues();
-      total.value = await repository.countScalingStatValues();
+      scalingStatValues.value = await _repository.getBriefScalingStatValues();
+      total.value = await _repository.countScalingStatValues();
     } catch (e) {
       LoggerUtil.instance.e('加载缩放属性值列表失败: $e');
       DialogUtil.instance.error('加载缩放属性值列表失败: $e');
@@ -112,11 +112,11 @@ class ScalingStatValueListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      scalingStatValues.value = await repository.getBriefScalingStatValues(
+      scalingStatValues.value = await _repository.getBriefScalingStatValues(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countScalingStatValues(filter: filter);
+      total.value = await _repository.countScalingStatValues(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新缩放属性值列表失败: $e');
       DialogUtil.instance.error('刷新缩放属性值列表失败: $e');

@@ -9,6 +9,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class CreatureOnKillReputationViewModel {
+  final _repository = GetIt.instance.get<CreatureOnKillReputationRepository>();
   final creatureId = signal(0);
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -26,8 +27,7 @@ class CreatureOnKillReputationViewModel {
 
   /// 从数据库加载数据
   Future<void> load() async {
-    final repository = CreatureOnKillReputationRepository();
-    final data = await repository.getCreatureOnKillReputation(creatureId.value);
+    final data = await _repository.getCreatureOnKillReputation(creatureId.value);
     if (data != null) {
       reputation.value = data;
     }
@@ -37,8 +37,7 @@ class CreatureOnKillReputationViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final repData = _collectFromControllers();
-      final repository = CreatureOnKillReputationRepository();
-      await repository.saveCreatureOnKillReputation(repData);
+      await _repository.saveCreatureOnKillReputation(repData);
       reputation.value = repData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('击杀声望数据已保存'));

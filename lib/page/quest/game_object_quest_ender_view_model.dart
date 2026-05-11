@@ -5,6 +5,7 @@ import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
+import 'package:get_it/get_it.dart';
 
 class GameObjectQuestEnderViewModel {
   final questId = signal(0);
@@ -16,11 +17,11 @@ class GameObjectQuestEnderViewModel {
   int _originalId = 0;
   int _originalQuest = 0;
 
-  final repository = GameObjectQuestEnderRepository();
+  final _repository = GetIt.instance.get<GameObjectQuestEnderRepository>();
 
   /// 加载数据
   Future<void> load() async {
-    final data = await repository.getGameObjectQuestEnders(questId.value);
+    final data = await _repository.getGameObjectQuestEnders(questId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -48,7 +49,7 @@ class GameObjectQuestEnderViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final blank = await repository.createGameObjectQuestEnder(questId.value);
+      final blank = await _repository.createGameObjectQuestEnder(questId.value);
       resetForm();
       fillForm(blank);
       _originalId = blank.id;
@@ -67,7 +68,7 @@ class GameObjectQuestEnderViewModel {
       if (index == null || index < 0 || index >= items.value.length) return;
 
       final item = items.value[index];
-      final existing = await repository.getGameObjectQuestEnder({
+      final existing = await _repository.getGameObjectQuestEnder({
         'id': item.id,
         'quest': item.quest,
       });
@@ -85,7 +86,7 @@ class GameObjectQuestEnderViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await repository.storeGameObjectQuestEnder(model);
+      await _repository.storeGameObjectQuestEnder(model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -101,7 +102,7 @@ class GameObjectQuestEnderViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await repository.updateGameObjectQuestEnder({
+      await _repository.updateGameObjectQuestEnder({
         'id': _originalId,
         'quest': _originalQuest,
       }, model);
@@ -142,7 +143,7 @@ class GameObjectQuestEnderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.copyGameObjectQuestEnder({
+        await _repository.copyGameObjectQuestEnder({
           'id': item.id,
           'quest': item.quest,
         });
@@ -184,7 +185,7 @@ class GameObjectQuestEnderViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyGameObjectQuestEnder({
+        await _repository.destroyGameObjectQuestEnder({
           'id': item.id,
           'quest': item.quest,
         });

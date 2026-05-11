@@ -25,11 +25,11 @@ class NpcVendorViewModel {
   // 内部状态
   int? _editingSlot;
 
-  final repository = NpcVendorRepository();
+  final _repository = GetIt.instance.get<NpcVendorRepository>();
 
   /// 加载数据
   Future<void> load() async {
-    final data = await repository.getNpcVendors(entry.value);
+    final data = await _repository.getNpcVendors(entry.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -77,7 +77,7 @@ class NpcVendorViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final nextSlot = await repository.getNextSlot(entry.value);
+      final nextSlot = await _repository.getNextSlot(entry.value);
       resetForm();
       slot.value = nextSlot;
       selectedIndex.value = null;
@@ -105,7 +105,7 @@ class NpcVendorViewModel {
 
     final vendor = items.value[index];
     try {
-      await repository.copyNpcVendor(vendor.entry, vendor.slot);
+      await _repository.copyNpcVendor(vendor.entry, vendor.slot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -144,7 +144,7 @@ class NpcVendorViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyNpcVendor(vendor.entry, vendor.slot);
+        await _repository.destroyNpcVendor(vendor.entry, vendor.slot);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -161,7 +161,7 @@ class NpcVendorViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final vendor = collectFromForm();
-      await repository.storeNpcVendor(vendor);
+      await _repository.storeNpcVendor(vendor);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -177,7 +177,7 @@ class NpcVendorViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final vendor = collectFromForm();
-      await repository.updateNpcVendor(vendor, oldSlot: _editingSlot);
+      await _repository.updateNpcVendor(vendor, oldSlot: _editingSlot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

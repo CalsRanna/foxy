@@ -4,6 +4,7 @@ import 'package:foxy/repository/quest_request_items_locale_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
 import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:get_it/get_it.dart';
 
 class QuestRequestItemsLocaleSelector extends StatefulWidget {
   final int? questId;
@@ -28,7 +29,7 @@ class QuestRequestItemsLocaleSelector extends StatefulWidget {
 
 class _QuestRequestItemsLocaleSelectorState
     extends State<QuestRequestItemsLocaleSelector> {
-  final repository = QuestRequestItemsLocaleRepository();
+  final _repository = GetIt.instance.get<QuestRequestItemsLocaleRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class _QuestRequestItemsLocaleSelectorState
       fields: ['locale', 'completionText'],
       fieldLabels: ['语言', '完成文本'],
       onLoad: (questId) async {
-        final locales = await repository.getQuestRequestItemsLocales(questId);
+        final locales = await _repository.getQuestRequestItemsLocales(questId);
         return locales
             .map((e) => {
                   'locale': e.locale,
@@ -69,7 +70,7 @@ class _QuestRequestItemsLocaleSelectorState
                   completionText: d['completionText'] ?? '',
                 ))
             .toList();
-        await repository.replaceAll(questId, locales);
+        await _repository.replaceAll(questId, locales);
       },
     );
     await LocaleCrudDialog(

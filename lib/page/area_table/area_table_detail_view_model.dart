@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class AreaTableDetailViewModel {
+  final _repository = GetIt.instance.get<AreaTableRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -43,11 +44,10 @@ class AreaTableDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = AreaTableRepository();
       if (t.id == 0) {
-        await repository.storeAreaTable(t);
+        await _repository.storeAreaTable(t);
       } else {
-        await repository.updateAreaTable(t);
+        await _repository.updateAreaTable(t);
       }
       area.value = t;
       _logActivity(
@@ -115,7 +115,7 @@ class AreaTableDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      area.value = (await AreaTableRepository().getAreaTable(id))!;
+      area.value = (await _repository.getAreaTable(id))!;
       _initControllers(area.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载区域(id=$id)失败', error: e, stackTrace: s);

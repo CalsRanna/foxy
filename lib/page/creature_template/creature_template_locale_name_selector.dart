@@ -4,6 +4,7 @@ import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
 import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:get_it/get_it.dart';
 
 class CreatureTemplateLocaleNameSelector extends StatefulWidget {
   final int? entry;
@@ -28,7 +29,7 @@ class CreatureTemplateLocaleNameSelector extends StatefulWidget {
 
 class _CreatureTemplateLocaleNameSelectorState
     extends State<CreatureTemplateLocaleNameSelector> {
-  final repository = CreatureTemplateRepository();
+  final _repository = GetIt.instance.get<CreatureTemplateRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class _CreatureTemplateLocaleNameSelectorState
       fields: ['locale', 'name', 'title'],
       fieldLabels: ['语言', '名称', '称号'],
       onLoad: (entry) async {
-        final locales = await repository.getCreatureTemplateLocales(entry);
+        final locales = await _repository.getCreatureTemplateLocales(entry);
         return locales
             .map((e) => {'locale': e.locale, 'name': e.name, 'title': e.title})
             .toList();
@@ -67,7 +68,7 @@ class _CreatureTemplateLocaleNameSelectorState
               title: d['title'] ?? '',
             ))
             .toList();
-        await repository.saveCreatureTemplateLocales(entry, locales);
+        await _repository.saveCreatureTemplateLocales(entry, locales);
       },
     );
     await LocaleCrudDialog(

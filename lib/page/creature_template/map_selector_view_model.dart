@@ -3,9 +3,10 @@ import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class MapSelectorViewModel {
-  final _repository = MapInfoRepository();
+  final _repository = GetIt.instance.get<MapInfoRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

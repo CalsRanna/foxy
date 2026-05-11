@@ -11,7 +11,7 @@ import 'package:signals/signals.dart';
 
 class ConditionDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final repository = ConditionRepository();
+  final _repository = GetIt.instance.get<ConditionRepository>();
 
   // 主键字段
   final sourceTypeOrReferenceId = signal<int>(0);
@@ -39,7 +39,7 @@ class ConditionDetailViewModel {
     if (credential == null) return;
     _originalCredential = credential;
     try {
-      final result = await repository.getCondition(credential);
+      final result = await _repository.getCondition(credential);
       condition.value = result;
       _initControllers(result);
     } catch (e, s) {
@@ -69,9 +69,9 @@ class ConditionDetailViewModel {
     try {
       final data = _collectFromControllers();
       if (_originalCredential == null) {
-        await repository.storeCondition(data);
+        await _repository.storeCondition(data);
       } else {
-        await repository.updateCondition(_originalCredential!, data);
+        await _repository.updateCondition(_originalCredential!, data);
       }
       condition.value = data;
       _logActivity(

@@ -3,9 +3,10 @@ import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class CharTitleSelectorViewModel {
-  final _repository = CharTitleRepository();
+  final _repository = GetIt.instance.get<CharTitleRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

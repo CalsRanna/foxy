@@ -3,9 +3,10 @@ import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class ItemDisplayInfoSelectorViewModel {
-  final _repository = ItemDisplayInfoRepository();
+  final _repository = GetIt.instance.get<ItemDisplayInfoRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

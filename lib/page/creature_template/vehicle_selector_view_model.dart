@@ -3,9 +3,10 @@ import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class VehicleSelectorViewModel {
-  final _repository = VehicleRepository();
+  final _repository = GetIt.instance.get<VehicleRepository>();
 
   final idFilter = signal('');
   final items = signal<List<VehicleEntity>>([]);

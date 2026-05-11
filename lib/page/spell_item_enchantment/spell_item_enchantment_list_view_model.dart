@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class SpellItemEnchantmentListViewModel {
   final entryController = TextEditingController();
   final nameController = TextEditingController();
-  final repository = SpellItemEnchantmentSoloRepository();
+  final _repository = GetIt.instance.get<SpellItemEnchantmentSoloRepository>();
 
   final page = signal(1);
   final enchantments = signal(<SpellItemEnchantmentEntity>[]);
@@ -29,7 +29,7 @@ class SpellItemEnchantmentListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copySpellItemEnchantment(id);
+      await _repository.copySpellItemEnchantment(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class SpellItemEnchantmentListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroySpellItemEnchantment(id);
+      await _repository.destroySpellItemEnchantment(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -80,11 +80,11 @@ class SpellItemEnchantmentListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = SpellItemEnchantmentFilterEntity();
-      enchantments.value = await repository.getSpellItemEnchantments(
+      enchantments.value = await _repository.getSpellItemEnchantments(
         page: 1,
         filter: filter,
       );
-      total.value = await repository.countSpellItemEnchantments(filter: filter);
+      total.value = await _repository.countSpellItemEnchantments(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('加载法术物品附魔列表失败: $e');
       DialogUtil.instance.error('加载法术物品附魔列表失败: $e');
@@ -132,11 +132,11 @@ class SpellItemEnchantmentListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      enchantments.value = await repository.getSpellItemEnchantments(
+      enchantments.value = await _repository.getSpellItemEnchantments(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countSpellItemEnchantments(filter: filter);
+      total.value = await _repository.countSpellItemEnchantments(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新法术物品附魔列表失败: $e');
       DialogUtil.instance.error('刷新法术物品附魔列表失败: $e');

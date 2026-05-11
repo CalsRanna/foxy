@@ -20,6 +20,8 @@ import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
 class BootstrapViewModel {
+  final _settingRepo = GetIt.instance.get<SettingRepository>();
+  final _repository = GetIt.instance.get<VersionRepository>();
   final version = signal('');
 
   final hostController = TextEditingController();
@@ -44,10 +46,10 @@ class BootstrapViewModel {
       );
       var foxyViewModel = GetIt.instance.get<FoxyViewModel>();
       foxyViewModel.initSignals(laconic);
-      await VersionRepository().connect();
+      await _repository.connect();
 
       // Check for locale tables and load locale settings
-      var hasLocaleTables = await SettingRepository().hasLocaleTables();
+      var hasLocaleTables = await _settingRepo.hasLocaleTables();
       var savedConfig = await _loadConfig();
       var localeEnabled = savedConfig['locale_enabled'] == true;
       // Auto-enable locale if tables exist and not explicitly set

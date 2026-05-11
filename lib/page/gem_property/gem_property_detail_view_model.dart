@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class GemPropertyDetailViewModel {
+  final _repository = GetIt.instance.get<GemPropertyRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -26,11 +27,10 @@ class GemPropertyDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = GemPropertyRepository();
       if (t.id == 0) {
-        await repository.storeGemProperty(t);
+        await _repository.storeGemProperty(t);
       } else {
-        await repository.updateGemProperty(t);
+        await _repository.updateGemProperty(t);
       }
       property.value = t;
       _logActivity(
@@ -79,7 +79,7 @@ class GemPropertyDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      property.value = (await GemPropertyRepository().getGemProperty(id))!;
+      property.value = (await _repository.getGemProperty(id))!;
       _initControllers(property.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载宝石属性(id=$id)失败', error: e, stackTrace: s);

@@ -8,6 +8,7 @@ import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:get_it/get_it.dart';
 
 /// 物品模板选择器
 class ItemTemplateSelector extends StatefulWidget {
@@ -269,17 +270,17 @@ class _DialogState extends State<_Dialog> {
 
   Future<void> _search() async {
     try {
-      final repository = ItemTemplateRepository();
       final filter = ItemTemplateFilterEntity(
         entry: _entryController.text,
         name: _nameController.text,
         description: _descriptionController.text,
       );
-      final items = await repository.getBriefItemTemplates(
+      final _repository = GetIt.instance.get<ItemTemplateRepository>();
+      final items = await _repository.getBriefItemTemplates(
         filter: filter,
         page: _page,
       );
-      final total = await repository.countItemTemplates(filter: filter);
+      final total = await _repository.countItemTemplates(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;

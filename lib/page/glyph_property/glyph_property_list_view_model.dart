@@ -14,7 +14,7 @@ import 'package:signals/signals.dart';
 
 class GlyphPropertyListViewModel {
   final entryController = TextEditingController();
-  final repository = GlyphPropertyRepository();
+  final _repository = GetIt.instance.get<GlyphPropertyRepository>();
 
   final page = signal(1);
   final properties = signal(<GlyphPropertyEntity>[]);
@@ -28,7 +28,7 @@ class GlyphPropertyListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyGlyphProperty(id);
+      await _repository.copyGlyphProperty(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -47,7 +47,7 @@ class GlyphPropertyListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyGlyphProperty(id);
+      await _repository.destroyGlyphProperty(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -75,11 +75,11 @@ class GlyphPropertyListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = GlyphPropertyFilterEntity();
-      properties.value = await repository.getGlyphProperties(
+      properties.value = await _repository.getGlyphProperties(
         page: 1,
         filter: filter,
       );
-      total.value = await repository.countGlyphProperties(filter: filter);
+      total.value = await _repository.countGlyphProperties(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('加载雕文属性列表失败: $e');
       DialogUtil.instance.error('加载雕文属性列表失败: $e');
@@ -121,11 +121,11 @@ class GlyphPropertyListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      properties.value = await repository.getGlyphProperties(
+      properties.value = await _repository.getGlyphProperties(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countGlyphProperties(filter: filter);
+      total.value = await _repository.countGlyphProperties(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新雕文属性列表失败: $e');
       DialogUtil.instance.error('刷新雕文属性列表失败: $e');

@@ -4,9 +4,10 @@ import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class QuestTemplateSelectorViewModel {
-  final _repository = QuestTemplateRepository();
+  final _repository = GetIt.instance.get<QuestTemplateRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

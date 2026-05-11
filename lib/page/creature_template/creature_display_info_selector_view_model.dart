@@ -3,9 +3,10 @@ import 'package:foxy/entity/creature_display_info_entity.dart';
 import 'package:foxy/repository/creature_display_info_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class CreatureDisplayInfoSelectorViewModel {
-  final _repository = CreatureDisplayInfoRepository();
+  final _repository = GetIt.instance.get<CreatureDisplayInfoRepository>();
 
   final idFilter = signal('');
   final modelNameFilter = signal('');

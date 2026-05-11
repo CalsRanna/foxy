@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class TalentDetailViewModel {
+  final _repository = GetIt.instance.get<TalentRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -43,11 +44,10 @@ class TalentDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = TalentRepository();
       if (t.id == 0) {
-        await repository.storeTalent(t);
+        await _repository.storeTalent(t);
       } else {
-        await repository.updateTalent(t);
+        await _repository.updateTalent(t);
       }
       talent.value = t;
       _logActivity(
@@ -114,7 +114,7 @@ class TalentDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      talent.value = (await TalentRepository().getTalent(id))!;
+      talent.value = (await _repository.getTalent(id))!;
       _initControllers(talent.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载天赋(id=$id)失败', error: e, stackTrace: s);
