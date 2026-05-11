@@ -21,11 +21,11 @@ class CreatureEquipTemplateViewModel {
   final itemID3Controller = TextEditingController();
   final verifiedBuild = signal<int>(0);
 
-  final repository = CreatureEquipTemplateRepository();
+  final _repository = GetIt.instance.get<CreatureEquipTemplateRepository>();
 
   /// 加载数据
   Future<void> load() async {
-    final data = await repository.getCreatureEquipTemplates(creatureId.value);
+    final data = await _repository.getCreatureEquipTemplates(creatureId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -71,7 +71,7 @@ class CreatureEquipTemplateViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final nextId = await repository.getNextId(creatureId.value);
+      final nextId = await _repository.getNextId(creatureId.value);
       resetForm();
       id.value = nextId;
       selectedIndex.value = null;
@@ -97,7 +97,7 @@ class CreatureEquipTemplateViewModel {
 
     final equip = items.value[index];
     try {
-      await repository.copyCreatureEquipTemplate(equip.creatureID, equip.id);
+      await _repository.copyCreatureEquipTemplate(equip.creatureID, equip.id);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -136,7 +136,7 @@ class CreatureEquipTemplateViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureEquipTemplate(
+        await _repository.destroyCreatureEquipTemplate(
           equip.creatureID,
           equip.id,
         );
@@ -156,7 +156,7 @@ class CreatureEquipTemplateViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final equip = collectFromForm();
-      await repository.storeCreatureEquipTemplate(equip);
+      await _repository.storeCreatureEquipTemplate(equip);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -172,7 +172,7 @@ class CreatureEquipTemplateViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final equip = collectFromForm();
-      await repository.updateCreatureEquipTemplate(equip);
+      await _repository.updateCreatureEquipTemplate(equip);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

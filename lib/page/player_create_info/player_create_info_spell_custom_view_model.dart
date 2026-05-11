@@ -5,9 +5,10 @@ import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
+import 'package:get_it/get_it.dart';
 
 class PlayerCreateInfoSpellCustomViewModel {
-  final repository = PlayerCreateInfoRepository();
+  final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
   final spells = signal<List<PlayerCreateInfoSpellCustomEntity>>([]);
   int? _race;
@@ -23,7 +24,7 @@ class PlayerCreateInfoSpellCustomViewModel {
       _race = race;
       _class_ = class_;
       if (race == null || class_ == null) return;
-      spells.value = await repository.getSpellCustoms(race, class_);
+      spells.value = await _repository.getSpellCustoms(race, class_);
     } catch (e) {
       LoggerUtil.instance.e('加载角色自定义法术失败: $e');
       DialogUtil.instance.error('加载角色自定义法术失败: $e');
@@ -46,8 +47,8 @@ class PlayerCreateInfoSpellCustomViewModel {
         spell: spell.value,
         note: noteController.text,
       );
-      await repository.storeSpellCustom(item);
-      spells.value = await repository.getSpellCustoms(_race!, _class_!);
+      await _repository.storeSpellCustom(item);
+      spells.value = await _repository.getSpellCustoms(_race!, _class_!);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
     } catch (e) {
@@ -62,12 +63,12 @@ class PlayerCreateInfoSpellCustomViewModel {
   ) async {
     if (_race == null || _class_ == null) return;
     try {
-      await repository.deleteSpellCustom(
+      await _repository.deleteSpellCustom(
         item.racemask,
         item.classmask,
         item.spell,
       );
-      spells.value = await repository.getSpellCustoms(_race!, _class_!);
+      spells.value = await _repository.getSpellCustoms(_race!, _class_!);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
     } catch (e) {

@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class SpellItemEnchantmentDetailViewModel {
+  final _repository = GetIt.instance.get<SpellItemEnchantmentSoloRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -51,11 +52,10 @@ class SpellItemEnchantmentDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = SpellItemEnchantmentSoloRepository();
       if (t.id == 0) {
-        await repository.storeSpellItemEnchantment(t);
+        await _repository.storeSpellItemEnchantment(t);
       } else {
-        await repository.updateSpellItemEnchantment(t);
+        await _repository.updateSpellItemEnchantment(t);
       }
       enchantment.value = t;
       _logActivity(
@@ -124,8 +124,7 @@ class SpellItemEnchantmentDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      enchantment.value = (await SpellItemEnchantmentSoloRepository()
-          .getSpellItemEnchantment(id))!;
+      enchantment.value = (await _repository.getSpellItemEnchantment(id))!;
       _initControllers(enchantment.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载法术附魔(id=$id)失败', error: e, stackTrace: s);

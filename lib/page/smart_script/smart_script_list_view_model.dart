@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class SmartScriptListViewModel {
   final entryOrGuidController = TextEditingController();
   final commentController = TextEditingController();
-  final repository = SmartScriptRepository();
+  final _repository = GetIt.instance.get<SmartScriptRepository>();
 
   final page = signal(1);
   final scripts = signal(<BriefSmartScriptEntity>[]);
@@ -34,7 +34,7 @@ class SmartScriptListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copySmartScript(entryOrGuid, sourceType, id, link);
+      await _repository.copySmartScript(entryOrGuid, sourceType, id, link);
       _logActivity(ActivityActionType.copy, entryOrGuid, sourceType, id, link);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -58,7 +58,7 @@ class SmartScriptListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroySmartScript(entryOrGuid, sourceType, id, link);
+      await _repository.destroySmartScript(entryOrGuid, sourceType, id, link);
       _logActivity(
         ActivityActionType.delete,
         entryOrGuid,
@@ -81,8 +81,8 @@ class SmartScriptListViewModel {
 
   Future<void> initSignals() async {
     try {
-      scripts.value = await repository.getBriefSmartScripts();
-      total.value = await repository.countSmartScripts();
+      scripts.value = await _repository.getBriefSmartScripts();
+      total.value = await _repository.countSmartScripts();
     } catch (e) {
       LoggerUtil.instance.e('加载SmartAI脚本列表失败: $e');
       DialogUtil.instance.error('加载SmartAI脚本列表失败: $e');
@@ -141,11 +141,11 @@ class SmartScriptListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      scripts.value = await repository.getBriefSmartScripts(
+      scripts.value = await _repository.getBriefSmartScripts(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countSmartScripts(filter: filter);
+      total.value = await _repository.countSmartScripts(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新SmartAI脚本列表失败: $e');
       DialogUtil.instance.error('刷新SmartAI脚本列表失败: $e');

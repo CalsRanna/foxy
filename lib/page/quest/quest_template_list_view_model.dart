@@ -14,7 +14,7 @@ import 'package:signals/signals.dart';
 
 /// 任务模板列表 ViewModel（LazySingleton，保留搜索状态）
 class QuestTemplateListViewModel {
-  final repository = QuestTemplateRepository();
+  final _repository = GetIt.instance.get<QuestTemplateRepository>();
 
   final idController = TextEditingController();
   final titleController = TextEditingController();
@@ -62,7 +62,7 @@ class QuestTemplateListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyQuestTemplate(id);
+      await _repository.copyQuestTemplate(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -81,7 +81,7 @@ class QuestTemplateListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyQuestTemplate(id);
+      await _repository.destroyQuestTemplate(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -105,11 +105,11 @@ class QuestTemplateListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      templates.value = await repository.getBriefQuestTemplates(
+      templates.value = await _repository.getBriefQuestTemplates(
         filter: filter,
         page: page.value,
       );
-      total.value = await repository.countQuestTemplates(filter: filter);
+      total.value = await _repository.countQuestTemplates(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新任务列表失败: $e');
       DialogUtil.instance.error('刷新任务列表失败: $e');

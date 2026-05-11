@@ -19,11 +19,11 @@ class CreatureQuestItemViewModel {
   final itemIdController = TextEditingController();
   final verifiedBuild = signal<int>(0);
 
-  final repository = CreatureQuestItemRepository();
+  final _repository = GetIt.instance.get<CreatureQuestItemRepository>();
 
   /// 加载数据
   Future<void> load() async {
-    final data = await repository.getCreatureQuestItems(creatureEntry.value);
+    final data = await _repository.getCreatureQuestItems(creatureEntry.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -63,7 +63,7 @@ class CreatureQuestItemViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final nextIdx = await repository.getNextIdx(creatureEntry.value);
+      final nextIdx = await _repository.getNextIdx(creatureEntry.value);
       resetForm();
       idx.value = nextIdx;
       selectedIndex.value = null;
@@ -89,7 +89,7 @@ class CreatureQuestItemViewModel {
 
     final questItem = items.value[index];
     try {
-      await repository.copyCreatureQuestItem(
+      await _repository.copyCreatureQuestItem(
         questItem.creatureEntry,
         questItem.idx,
       );
@@ -131,7 +131,7 @@ class CreatureQuestItemViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureQuestItem(
+        await _repository.destroyCreatureQuestItem(
           questItem.creatureEntry,
           questItem.idx,
         );
@@ -151,7 +151,7 @@ class CreatureQuestItemViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final questItem = collectFromForm();
-      await repository.storeCreatureQuestItem(questItem);
+      await _repository.storeCreatureQuestItem(questItem);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -167,7 +167,7 @@ class CreatureQuestItemViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final questItem = collectFromForm();
-      await repository.updateCreatureQuestItem(questItem);
+      await _repository.updateCreatureQuestItem(questItem);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

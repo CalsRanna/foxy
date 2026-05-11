@@ -24,10 +24,10 @@ class SpellLootTemplateViewModel {
   final maxCount = signal<int>(0);
   final commentController = TextEditingController();
 
-  final repository = SpellLootTemplateRepository();
+  final _repository = GetIt.instance.get<SpellLootTemplateRepository>();
 
   Future<void> load() async {
-    final data = await repository.getSpellLootTemplates(spellId.value);
+    final data = await _repository.getSpellLootTemplates(spellId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -94,7 +94,7 @@ class SpellLootTemplateViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final loot = items.value[index];
     try {
-      await repository.copySpellLootTemplate(loot);
+      await _repository.copySpellLootTemplate(loot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -129,7 +129,7 @@ class SpellLootTemplateViewModel {
     );
     if (confirmed == true) {
       try {
-        await repository.destroySpellLootTemplate(loot.entry, loot.item);
+        await _repository.destroySpellLootTemplate(loot.entry, loot.item);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -145,7 +145,7 @@ class SpellLootTemplateViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
-      await repository.storeSpellLootTemplate(data);
+      await _repository.storeSpellLootTemplate(data);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -163,7 +163,7 @@ class SpellLootTemplateViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await repository.updateSpellLootTemplate(oldData, newData);
+      await _repository.updateSpellLootTemplate(oldData, newData);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

@@ -16,10 +16,10 @@ class SpellGroupViewModel {
   final selectedIndex = signal<int?>(null);
   final groupId = signal<int>(0);
 
-  final repository = SpellGroupRepository();
+  final _repository = GetIt.instance.get<SpellGroupRepository>();
 
   Future<void> load() async {
-    final data = await repository.getSpellGroups(spellId.value);
+    final data = await _repository.getSpellGroups(spellId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -42,7 +42,7 @@ class SpellGroupViewModel {
 
   Future<void> create() async {
     try {
-      final nextId = await repository.getNextId();
+      final nextId = await _repository.getNextId();
       resetForm();
       groupId.value = nextId;
       selectedIndex.value = null;
@@ -64,7 +64,7 @@ class SpellGroupViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final group = items.value[index];
     try {
-      await repository.copySpellGroup(group);
+      await _repository.copySpellGroup(group);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -99,7 +99,7 @@ class SpellGroupViewModel {
     );
     if (confirmed == true) {
       try {
-        await repository.destroySpellGroup(group.id, group.spellId);
+        await _repository.destroySpellGroup(group.id, group.spellId);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -115,7 +115,7 @@ class SpellGroupViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
-      await repository.storeSpellGroup(data);
+      await _repository.storeSpellGroup(data);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -133,7 +133,7 @@ class SpellGroupViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await repository.updateSpellGroup(oldData, newData);
+      await _repository.updateSpellGroup(oldData, newData);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

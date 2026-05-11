@@ -18,10 +18,10 @@ class GameObjectQuestItemViewModel {
   final idx = signal<int>(0);
   final itemIdController = TextEditingController();
   final verifiedBuild = signal<int>(0);
-  final repository = GameObjectQuestItemRepository();
+  final _repository = GetIt.instance.get<GameObjectQuestItemRepository>();
 
   Future<void> load() async {
-    items.value = await repository.getGameObjectQuestItems(
+    items.value = await _repository.getGameObjectQuestItems(
       gameObjectEntry.value,
     );
   }
@@ -57,7 +57,7 @@ class GameObjectQuestItemViewModel {
   Future<void> create(BuildContext context) async {
     try {
       resetForm();
-      final nextIdx = await repository.getNextIdx(gameObjectEntry.value);
+      final nextIdx = await _repository.getNextIdx(gameObjectEntry.value);
       if (!context.mounted) return;
       idx.value = nextIdx;
       await showShadDialog(
@@ -85,7 +85,7 @@ class GameObjectQuestItemViewModel {
     if (index == null) return;
     try {
       final item = items.value[index];
-      await repository.copyGameObjectQuestItem(item.gameObjectEntry, item.idx);
+      await _repository.copyGameObjectQuestItem(item.gameObjectEntry, item.idx);
       DialogUtil.instance.success('复制成功');
       await load();
     } catch (e) {
@@ -105,7 +105,7 @@ class GameObjectQuestItemViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyGameObjectQuestItem(
+      await _repository.destroyGameObjectQuestItem(
         item.gameObjectEntry,
         item.idx,
       );
@@ -119,7 +119,7 @@ class GameObjectQuestItemViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final questItem = collectFromForm();
-      await repository.storeGameObjectQuestItem(questItem);
+      await _repository.storeGameObjectQuestItem(questItem);
       await load();
       if (context.mounted) Navigator.of(context).pop();
     } catch (e) {
@@ -130,7 +130,7 @@ class GameObjectQuestItemViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final questItem = collectFromForm();
-      await repository.updateGameObjectQuestItem(questItem);
+      await _repository.updateGameObjectQuestItem(questItem);
       await load();
       if (context.mounted) Navigator.of(context).pop();
     } catch (e) {

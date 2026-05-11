@@ -4,6 +4,7 @@ import 'package:foxy/repository/quest_template_locale_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
 import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:get_it/get_it.dart';
 
 class QuestTemplateLocaleSelector extends StatefulWidget {
   final int? questId;
@@ -28,7 +29,7 @@ class QuestTemplateLocaleSelector extends StatefulWidget {
 
 class _QuestTemplateLocaleSelectorState
     extends State<QuestTemplateLocaleSelector> {
-  final repository = QuestTemplateLocaleRepository();
+  final _repository = GetIt.instance.get<QuestTemplateLocaleRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,7 @@ class _QuestTemplateLocaleSelectorState
         '目标文本4',
       ],
       onLoad: (questId) async {
-        final locales = await repository.getQuestTemplateLocales(questId);
+        final locales = await _repository.getQuestTemplateLocales(questId);
         return locales
             .map((e) => {
                   'locale': e.locale,
@@ -107,7 +108,7 @@ class _QuestTemplateLocaleSelectorState
                   objectiveText4: d['objectiveText4'] ?? '',
                 ))
             .toList();
-        await repository.replaceAll(questId, locales);
+        await _repository.replaceAll(questId, locales);
       },
     );
     await LocaleCrudDialog(

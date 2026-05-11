@@ -14,7 +14,7 @@ import 'package:signals/signals.dart';
 
 class ItemExtendedCostListViewModel {
   final entryController = TextEditingController();
-  final repository = ItemExtendedCostRepository();
+  final _repository = GetIt.instance.get<ItemExtendedCostRepository>();
 
   final page = signal(1);
   final costs = signal(<ItemExtendedCostEntity>[]);
@@ -28,7 +28,7 @@ class ItemExtendedCostListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyItemExtendedCost(id);
+      await _repository.copyItemExtendedCost(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -47,7 +47,7 @@ class ItemExtendedCostListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyItemExtendedCost(id);
+      await _repository.destroyItemExtendedCost(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -75,11 +75,11 @@ class ItemExtendedCostListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = ItemExtendedCostFilterEntity();
-      costs.value = await repository.getItemExtendedCosts(
+      costs.value = await _repository.getItemExtendedCosts(
         page: 1,
         filter: filter,
       );
-      total.value = await repository.countItemExtendedCosts(filter: filter);
+      total.value = await _repository.countItemExtendedCosts(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('加载物品扩展消耗列表失败: $e');
       DialogUtil.instance.error('加载物品扩展消耗列表失败: $e');
@@ -123,11 +123,11 @@ class ItemExtendedCostListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      costs.value = await repository.getItemExtendedCosts(
+      costs.value = await _repository.getItemExtendedCosts(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countItemExtendedCosts(filter: filter);
+      total.value = await _repository.countItemExtendedCosts(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新物品扩展消耗列表失败: $e');
       DialogUtil.instance.error('刷新物品扩展消耗列表失败: $e');

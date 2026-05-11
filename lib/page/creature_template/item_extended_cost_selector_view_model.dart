@@ -4,9 +4,10 @@ import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class ItemExtendedCostSelectorViewModel {
-  final _repository = ItemExtendedCostRepository();
+  final _repository = GetIt.instance.get<ItemExtendedCostRepository>();
 
   final idFilter = signal('');
   final items = signal<List<ItemExtendedCostEntity>>([]);

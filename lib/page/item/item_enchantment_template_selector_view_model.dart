@@ -3,9 +3,10 @@ import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class ItemEnchantmentTemplateSelectorViewModel {
-  final _repository = ItemEnchantmentTemplateRepository();
+  final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

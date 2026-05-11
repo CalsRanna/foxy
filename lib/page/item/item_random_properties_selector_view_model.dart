@@ -3,9 +3,10 @@ import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class ItemRandomPropertiesSelectorViewModel {
-  final _repository = ItemRandomPropertiesRepository();
+  final _repository = GetIt.instance.get<ItemRandomPropertiesRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

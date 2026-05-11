@@ -17,7 +17,7 @@ class ItemTemplateListViewModel {
   final entryController = TextEditingController();
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
-  final repository = ItemTemplateRepository();
+  final _repository = GetIt.instance.get<ItemTemplateRepository>();
 
   final page = signal(1);
   final templates = signal(<BriefItemTemplateEntity>[]);
@@ -43,8 +43,8 @@ class ItemTemplateListViewModel {
 
   Future<void> initSignals() async {
     try {
-      templates.value = await repository.getBriefItemTemplates();
-      total.value = await repository.countItemTemplates();
+      templates.value = await _repository.getBriefItemTemplates();
+      total.value = await _repository.countItemTemplates();
     } catch (e) {
       LoggerUtil.instance.e('加载物品列表失败: $e');
       DialogUtil.instance.error('加载物品列表失败: $e');
@@ -111,7 +111,7 @@ class ItemTemplateListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyItemTemplate(entry);
+      await _repository.copyItemTemplate(entry);
       _logActivity(ActivityActionType.copy, entry);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -130,7 +130,7 @@ class ItemTemplateListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyItemTemplate(entry);
+      await _repository.destroyItemTemplate(entry);
       _logActivity(ActivityActionType.delete, entry);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -161,7 +161,7 @@ class ItemTemplateListViewModel {
       classId: selectedClassId.value,
       subclass: selectedSubclass.value,
     );
-    return repository.getBriefItemTemplates(page: page.value, filter: filter);
+    return _repository.getBriefItemTemplates(page: page.value, filter: filter);
   }
 
   Future<int> _count() async {
@@ -172,7 +172,7 @@ class ItemTemplateListViewModel {
       classId: selectedClassId.value,
       subclass: selectedSubclass.value,
     );
-    return repository.countItemTemplates(filter: filter);
+    return _repository.countItemTemplates(filter: filter);
   }
 
   Future<void> _refresh() async {

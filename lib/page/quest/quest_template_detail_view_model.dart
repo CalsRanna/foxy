@@ -11,6 +11,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class QuestTemplateDetailViewModel {
+  final _repository = GetIt.instance.get<QuestTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entry = signal(0);
@@ -152,11 +153,10 @@ class QuestTemplateDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collect();
-      final repository = QuestTemplateRepository();
       if (t.id == 0) {
-        await repository.storeQuestTemplate(t);
+        await _repository.storeQuestTemplate(t);
       } else {
-        await repository.updateQuestTemplate(t);
+        await _repository.updateQuestTemplate(t);
       }
       template.value = t;
       entry.value = t.id;
@@ -181,7 +181,7 @@ class QuestTemplateDetailViewModel {
   Future<void> initSignals({int? questId}) async {
     if (questId == null) return;
     try {
-      template.value = await QuestTemplateRepository().getQuestTemplate(questId);
+      template.value = await _repository.getQuestTemplate(questId);
       _initSignals(template.value);
     } catch (e) {
       LoggerUtil.instance.e('加载任务详情失败: $e');

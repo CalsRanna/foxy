@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class PlayerCreateInfoListViewModel {
   final raceController = TextEditingController();
   final classController = TextEditingController();
-  final repository = PlayerCreateInfoRepository();
+  final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
   final page = signal(1);
   final infos = signal<List<PlayerCreateInfoEntity>>([]);
@@ -74,7 +74,7 @@ class PlayerCreateInfoListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyPlayerCreateInfo(info.buildCredential());
+      await _repository.copyPlayerCreateInfo(info.buildCredential());
       _logActivity(ActivityActionType.copy, info.race);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -93,7 +93,7 @@ class PlayerCreateInfoListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyPlayerCreateInfo(info.buildCredential());
+      await _repository.destroyPlayerCreateInfo(info.buildCredential());
       _logActivity(ActivityActionType.delete, info.race);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -122,14 +122,14 @@ class PlayerCreateInfoListViewModel {
   }
 
   Future<List<PlayerCreateInfoEntity>> _search() async {
-    return repository.getPlayerCreateInfos(
+    return _repository.getPlayerCreateInfos(
       filter: _buildFilter(),
       page: page.value,
     );
   }
 
   Future<int> _count() async {
-    return repository.countPlayerCreateInfos(filter: _buildFilter());
+    return _repository.countPlayerCreateInfos(filter: _buildFilter());
   }
 
   Future<void> _refresh() async {

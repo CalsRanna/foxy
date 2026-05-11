@@ -14,7 +14,7 @@ import 'package:signals/signals.dart';
 
 class ScalingStatDistributionListViewModel {
   final idController = TextEditingController();
-  final repository = ScalingStatDistributionSoloRepository();
+  final _repository = GetIt.instance.get<ScalingStatDistributionSoloRepository>();
 
   final page = signal(1);
   final distributions = signal(<ScalingStatDistributionEntity>[]);
@@ -28,7 +28,7 @@ class ScalingStatDistributionListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyScalingStatDistribution(id);
+      await _repository.copyScalingStatDistribution(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -47,7 +47,7 @@ class ScalingStatDistributionListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyScalingStatDistribution(id);
+      await _repository.destroyScalingStatDistribution(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -75,11 +75,11 @@ class ScalingStatDistributionListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = ScalingStatDistributionFilterEntity();
-      distributions.value = await repository.getScalingStatDistributions(
+      distributions.value = await _repository.getScalingStatDistributions(
         page: 1,
         filter: filter,
       );
-      total.value = await repository.countScalingStatDistributions(
+      total.value = await _repository.countScalingStatDistributions(
         filter: filter,
       );
     } catch (e) {
@@ -125,11 +125,11 @@ class ScalingStatDistributionListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      distributions.value = await repository.getScalingStatDistributions(
+      distributions.value = await _repository.getScalingStatDistributions(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countScalingStatDistributions(
+      total.value = await _repository.countScalingStatDistributions(
         filter: filter,
       );
     } catch (e) {

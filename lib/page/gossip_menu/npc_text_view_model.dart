@@ -6,12 +6,13 @@ import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:signals/signals.dart';
+import 'package:get_it/get_it.dart';
 
 /// Tab 2 (npc_text) ViewModel
 /// 用 `Map<String, TextEditingController>` 管理约 114 个字段的 controller
 class NpcTextViewModel {
-  final _repository = NpcTextRepository();
-  final _localeRepository = NpcTextLocaleRepository();
+  final _repository = GetIt.instance.get<NpcTextRepository>();
+  final _localeRepository = GetIt.instance.get<NpcTextLocaleRepository>();
 
   final _controllers = <String, TextEditingController>{};
   final _emoteSignals = <String, Signal<int>>{};

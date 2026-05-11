@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class PageTextListViewModel {
   final idController = TextEditingController();
   final textController = TextEditingController();
-  final repository = PageTextRepository();
+  final _repository = GetIt.instance.get<PageTextRepository>();
 
   final page = signal(1);
   final pages = signal<List<PageTextEntity>>([]);
@@ -25,11 +25,11 @@ class PageTextListViewModel {
 
   Future<void> initSignals() async {
     try {
-      pages.value = await repository.getPageTexts(
+      pages.value = await _repository.getPageTexts(
         filter: _buildFilter(),
         page: page.value,
       );
-      total.value = await repository.countPageTexts(filter: _buildFilter());
+      total.value = await _repository.countPageTexts(filter: _buildFilter());
     } catch (e) {
       LoggerUtil.instance.e('加载页面文本列表失败: $e');
       DialogUtil.instance.error('加载页面文本列表失败: $e');
@@ -72,7 +72,7 @@ class PageTextListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyPageText(id);
+      await _repository.copyPageText(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -91,7 +91,7 @@ class PageTextListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyPageText(id);
+      await _repository.destroyPageText(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -124,11 +124,11 @@ class PageTextListViewModel {
 
   Future<void> _refresh() async {
     try {
-      pages.value = await repository.getPageTexts(
+      pages.value = await _repository.getPageTexts(
         filter: _buildFilter(),
         page: page.value,
       );
-      total.value = await repository.countPageTexts(filter: _buildFilter());
+      total.value = await _repository.countPageTexts(filter: _buildFilter());
     } catch (e) {
       LoggerUtil.instance.e('刷新页面文本列表失败: $e');
       DialogUtil.instance.error('刷新页面文本列表失败: $e');

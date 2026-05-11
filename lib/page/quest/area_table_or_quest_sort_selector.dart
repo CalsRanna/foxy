@@ -10,6 +10,7 @@ import 'package:foxy/widget/pagination.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:get_it/get_it.dart';
 
 /// 区域或任务排序选择器，通过 [mode] 切换数据源
 class AreaTableOrQuestSortSelector extends StatefulWidget {
@@ -333,16 +334,16 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       if (_currentMode == 'AreaTable') {
-        final repository = AreaTableRepository();
+        final _repository = GetIt.instance.get<AreaTableRepository>();
         final filter = AreaTableFilterEntity(
           id: _idController.text,
           name: _nameController.text,
         );
-        final items = await repository.getAreaTables(
+        final items = await _repository.getAreaTables(
           filter: filter,
           page: _page,
         );
-        final total = await repository.countAreaTables(filter: filter);
+        final total = await _repository.countAreaTables(filter: filter);
         if (mounted) {
           setState(() {
             _areaItems = items;
@@ -351,16 +352,16 @@ class _DialogState extends State<_Dialog> {
           });
         }
       } else {
-        final repository = QuestSortRepository();
+        final _repository = GetIt.instance.get<QuestSortRepository>();
         final filter = QuestSortFilterEntity(
           id: _idController.text,
           name: _nameController.text,
         );
-        final items = await repository.getQuestSorts(
+        final items = await _repository.getQuestSorts(
           filter: filter,
           page: _page,
         );
-        final total = await repository.countQuestSorts(filter: filter);
+        final total = await _repository.countQuestSorts(filter: filter);
         if (mounted) {
           setState(() {
             _questItems = items;

@@ -9,6 +9,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class QuestTemplateAddonViewModel {
+  final _repository = GetIt.instance.get<QuestTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
   final addon = signal(QuestTemplateAddonEntity());
@@ -36,13 +37,12 @@ class QuestTemplateAddonViewModel {
   Future<void> initSignals({required int questId}) async {
     try {
       this.questId.value = questId;
-      final repository = QuestTemplateAddonRepository();
-      final existing = await repository.getQuestTemplateAddon(questId);
+      final existing = await _repository.getQuestTemplateAddon(questId);
       if (existing != null) {
         _originalId = existing.id;
         addon.value = existing;
       } else {
-        final blank = await repository.createQuestTemplateAddon(questId);
+        final blank = await _repository.createQuestTemplateAddon(questId);
         addon.value = blank;
       }
       _initSignals(addon.value);
@@ -55,11 +55,10 @@ class QuestTemplateAddonViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final model = _collect();
-      final repository = QuestTemplateAddonRepository();
       if (_originalId == 0) {
-        await repository.storeQuestTemplateAddon(model);
+        await _repository.storeQuestTemplateAddon(model);
       } else {
-        await repository.updateQuestTemplateAddon(_originalId, model);
+        await _repository.updateQuestTemplateAddon(_originalId, model);
       }
       _originalId = model.id;
       addon.value = model;

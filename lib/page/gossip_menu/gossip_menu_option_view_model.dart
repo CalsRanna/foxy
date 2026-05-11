@@ -5,10 +5,11 @@ import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
+import 'package:get_it/get_it.dart';
 
 /// Tab 3 (gossip_menu_option) ViewModel
 class GossipMenuOptionViewModel {
-  final _repository = GossipMenuOptionRepository();
+  final _repository = GetIt.instance.get<GossipMenuOptionRepository>();
 
   final currentMenuId = signal(0);
   final options = signal<List<GossipMenuOptionEntity>>([]);

@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class AchievementListViewModel {
   final entryController = TextEditingController();
   final titleController = TextEditingController();
-  final repository = AchievementRepository();
+  final _repository = GetIt.instance.get<AchievementRepository>();
 
   final page = signal(1);
   final achievements = signal(<BriefAchievementEntity>[]);
@@ -29,7 +29,7 @@ class AchievementListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyAchievement(id);
+      await _repository.copyAchievement(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class AchievementListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyAchievement(id);
+      await _repository.destroyAchievement(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -65,8 +65,8 @@ class AchievementListViewModel {
 
   Future<void> initSignals() async {
     try {
-      achievements.value = await repository.getBriefAchievements();
-      total.value = await repository.countAchievements();
+      achievements.value = await _repository.getBriefAchievements();
+      total.value = await _repository.countAchievements();
     } catch (e) {
       LoggerUtil.instance.e('加载成就列表失败: $e');
       DialogUtil.instance.error('加载成就列表失败: $e');
@@ -112,11 +112,11 @@ class AchievementListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      achievements.value = await repository.getBriefAchievements(
+      achievements.value = await _repository.getBriefAchievements(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countAchievements(filter: filter);
+      total.value = await _repository.countAchievements(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新成就列表失败: $e');
       DialogUtil.instance.error('刷新成就列表失败: $e');

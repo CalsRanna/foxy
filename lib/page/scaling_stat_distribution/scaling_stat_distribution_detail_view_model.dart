@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ScalingStatDistributionDetailViewModel {
+  final _repository = GetIt.instance.get<ScalingStatDistributionSoloRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -41,11 +42,10 @@ class ScalingStatDistributionDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = ScalingStatDistributionSoloRepository();
       if (t.id == 0) {
-        await repository.storeScalingStatDistribution(t);
+        await _repository.storeScalingStatDistribution(t);
       } else {
-        await repository.updateScalingStatDistribution(t);
+        await _repository.updateScalingStatDistribution(t);
       }
       distribution.value = t;
       _logActivity(
@@ -114,8 +114,7 @@ class ScalingStatDistributionDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      distribution.value = (await ScalingStatDistributionSoloRepository()
-          .getScalingStatDistribution(id))!;
+      distribution.value = (await _repository.getScalingStatDistribution(id))!;
       _initControllers(distribution.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载属性缩放分布(id=$id)失败', error: e, stackTrace: s);

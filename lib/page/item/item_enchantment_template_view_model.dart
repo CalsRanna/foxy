@@ -21,10 +21,10 @@ class ItemEnchantmentTemplateViewModel {
   final enchSignal = signal<int>(0);
   final chance = signal<double>(0.0);
 
-  final repository = ItemEnchantmentTemplateRepository();
+  final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
 
   Future<void> load() async {
-    final data = await repository.getItemEnchantmentTemplatesByEntry(
+    final data = await _repository.getItemEnchantmentTemplatesByEntry(
       entry.value,
     );
     items.value = data;
@@ -87,7 +87,7 @@ class ItemEnchantmentTemplateViewModel {
 
     final model = items.value[index];
     try {
-      await repository.copyItemEnchantmentTemplate(model.entry, model.ench);
+      await _repository.copyItemEnchantmentTemplate(model.entry, model.ench);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -125,7 +125,7 @@ class ItemEnchantmentTemplateViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyItemEnchantmentTemplate(
+        await _repository.destroyItemEnchantmentTemplate(
           model.entry,
           model.ench,
         );
@@ -144,7 +144,7 @@ class ItemEnchantmentTemplateViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await repository.storeItemEnchantmentTemplate(model);
+      await _repository.storeItemEnchantmentTemplate(model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -159,7 +159,7 @@ class ItemEnchantmentTemplateViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await repository.updateItemEnchantmentTemplate(
+      await _repository.updateItemEnchantmentTemplate(
         model,
         oldEnch: editingEnch,
       );

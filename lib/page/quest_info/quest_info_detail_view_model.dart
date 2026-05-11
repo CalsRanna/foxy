@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class QuestInfoDetailViewModel {
+  final _repository = GetIt.instance.get<QuestInfoRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final id = signal<int>(0);
@@ -20,11 +21,10 @@ class QuestInfoDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = QuestInfoRepository();
       if (t.id == 0) {
-        await repository.storeQuestInfo(t);
+        await _repository.storeQuestInfo(t);
       } else {
-        await repository.updateQuestInfo(t);
+        await _repository.updateQuestInfo(t);
       }
       info.value = t;
       _logActivity(
@@ -72,7 +72,7 @@ class QuestInfoDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      info.value = (await QuestInfoRepository().getQuestInfo(id))!;
+      info.value = (await _repository.getQuestInfo(id))!;
       _initControllers(info.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载任务信息(id=$id)失败', error: e, stackTrace: s);

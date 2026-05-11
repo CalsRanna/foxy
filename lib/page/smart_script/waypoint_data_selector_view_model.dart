@@ -3,9 +3,10 @@ import 'package:foxy/entity/waypoint_data_entity.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class WaypointDataSelectorViewModel {
-  final _repository = WaypointDataRepository();
+  final _repository = GetIt.instance.get<WaypointDataRepository>();
 
   final idFilter = signal('');
   final items = signal<List<WaypointDataEntity>>([]);

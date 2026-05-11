@@ -14,7 +14,7 @@ import 'package:signals/signals.dart';
 
 class CurrencyTypeListViewModel {
   final entryController = TextEditingController();
-  final repository = CurrencyTypeRepository();
+  final _repository = GetIt.instance.get<CurrencyTypeRepository>();
 
   final page = signal(1);
   final currencyTypes = signal(<BriefCurrencyTypeEntity>[]);
@@ -28,7 +28,7 @@ class CurrencyTypeListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyCurrencyType(id);
+      await _repository.copyCurrencyType(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -47,7 +47,7 @@ class CurrencyTypeListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyCurrencyType(id);
+      await _repository.destroyCurrencyType(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -63,8 +63,8 @@ class CurrencyTypeListViewModel {
 
   Future<void> initSignals() async {
     try {
-      currencyTypes.value = await repository.getBriefCurrencyTypes();
-      total.value = await repository.countCurrencyTypes();
+      currencyTypes.value = await _repository.getBriefCurrencyTypes();
+      total.value = await _repository.countCurrencyTypes();
     } catch (e) {
       LoggerUtil.instance.e('加载货币列表失败: $e');
       DialogUtil.instance.error('加载货币列表失败: $e');
@@ -106,11 +106,11 @@ class CurrencyTypeListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      currencyTypes.value = await repository.getBriefCurrencyTypes(
+      currencyTypes.value = await _repository.getBriefCurrencyTypes(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countCurrencyTypes(filter: filter);
+      total.value = await _repository.countCurrencyTypes(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新货币列表失败: $e');
       DialogUtil.instance.error('刷新货币列表失败: $e');

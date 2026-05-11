@@ -3,9 +3,10 @@ import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class LockSelectorViewModel {
-  final _repository = LockRepository();
+  final _repository = GetIt.instance.get<LockRepository>();
 
   final idFilter = signal('');
   final items = signal<List<LockEntity>>([]);

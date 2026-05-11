@@ -4,9 +4,10 @@ import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class SpellSelectorViewModel {
-  final _repository = SpellRepository();
+  final _repository = GetIt.instance.get<SpellRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

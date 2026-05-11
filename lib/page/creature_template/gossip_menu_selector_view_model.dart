@@ -4,9 +4,10 @@ import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class GossipMenuSelectorViewModel {
-  final _repository = GossipMenuRepository();
+  final _repository = GetIt.instance.get<GossipMenuRepository>();
 
   final menuIdFilter = signal('');
   final textFilter = signal('');

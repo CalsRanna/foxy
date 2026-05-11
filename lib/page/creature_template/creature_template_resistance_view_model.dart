@@ -19,11 +19,11 @@ class CreatureTemplateResistanceViewModel {
   final resistance = signal<int>(0);
   final verifiedBuild = signal<int>(0);
 
-  final repository = CreatureTemplateResistanceRepository();
+  final _repository = GetIt.instance.get<CreatureTemplateResistanceRepository>();
 
   /// 加载数据
   Future<void> load() async {
-    final data = await repository.getCreatureTemplateResistances(
+    final data = await _repository.getCreatureTemplateResistances(
       creatureId.value,
     );
     items.value = data;
@@ -57,7 +57,7 @@ class CreatureTemplateResistanceViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final nextSchool = await repository.getNextSchool(creatureId.value);
+      final nextSchool = await _repository.getNextSchool(creatureId.value);
       resetForm();
       schoolController.value = {nextSchool};
       selectedIndex.value = null;
@@ -83,7 +83,7 @@ class CreatureTemplateResistanceViewModel {
 
     final r = items.value[index];
     try {
-      await repository.copyCreatureTemplateResistance(
+      await _repository.copyCreatureTemplateResistance(
         r.creatureID,
         r.school,
       );
@@ -125,7 +125,7 @@ class CreatureTemplateResistanceViewModel {
 
     if (confirmed == true) {
       try {
-        await repository.destroyCreatureTemplateResistance(
+        await _repository.destroyCreatureTemplateResistance(
           r.creatureID,
           r.school,
         );
@@ -145,7 +145,7 @@ class CreatureTemplateResistanceViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final r = collectFromForm();
-      await repository.storeCreatureTemplateResistance(r);
+      await _repository.storeCreatureTemplateResistance(r);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('保存成功'));
@@ -161,7 +161,7 @@ class CreatureTemplateResistanceViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final r = collectFromForm();
-      await repository.updateCreatureTemplateResistance(r);
+      await _repository.updateCreatureTemplateResistance(r);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

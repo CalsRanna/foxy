@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class EmoteTextDetailViewModel {
+  final _repository = GetIt.instance.get<EmoteTextRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -40,11 +41,10 @@ class EmoteTextDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = EmoteTextRepository();
       if (t.id == 0) {
-        await repository.storeEmoteText(t);
+        await _repository.storeEmoteText(t);
       } else {
-        await repository.updateEmoteText(t);
+        await _repository.updateEmoteText(t);
       }
       emote.value = t;
       _logActivity(
@@ -109,7 +109,7 @@ class EmoteTextDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      emote.value = (await EmoteTextRepository().getEmoteText(id))!;
+      emote.value = (await _repository.getEmoteText(id))!;
       _initControllers(emote.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载表情文本(id=$id)失败', error: e, stackTrace: s);

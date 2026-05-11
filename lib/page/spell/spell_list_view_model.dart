@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class SpellListViewModel {
   final idController = TextEditingController();
   final nameController = TextEditingController();
-  final repository = SpellRepository();
+  final _repository = GetIt.instance.get<SpellRepository>();
 
   final page = signal(1);
   final spells = signal(<BriefSpellEntity>[]);
@@ -29,7 +29,7 @@ class SpellListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copySpell(id);
+      await _repository.copySpell(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class SpellListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroySpell(id);
+      await _repository.destroySpell(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -65,8 +65,8 @@ class SpellListViewModel {
 
   Future<void> initSignals() async {
     try {
-      spells.value = await repository.getBriefSpells();
-      total.value = await repository.countSpells();
+      spells.value = await _repository.getBriefSpells();
+      total.value = await _repository.countSpells();
     } catch (e) {
       LoggerUtil.instance.e('加载法术列表失败: $e');
       DialogUtil.instance.error('加载法术列表失败: $e');
@@ -109,11 +109,11 @@ class SpellListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      spells.value = await repository.getBriefSpells(
+      spells.value = await _repository.getBriefSpells(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countSpells(filter: filter);
+      total.value = await _repository.countSpells(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新法术列表失败: $e');
       DialogUtil.instance.error('刷新法术列表失败: $e');

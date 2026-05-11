@@ -4,9 +4,10 @@ import 'package:foxy/entity/quest_info_filter_entity.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class QuestInfoSelectorViewModel {
-  final _repository = QuestInfoRepository();
+  final _repository = GetIt.instance.get<QuestInfoRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

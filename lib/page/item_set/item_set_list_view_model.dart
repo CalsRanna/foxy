@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class ItemSetListViewModel {
   final entryController = TextEditingController();
   final nameController = TextEditingController();
-  final repository = ItemSetRepository();
+  final _repository = GetIt.instance.get<ItemSetRepository>();
 
   final page = signal(1);
   final itemSets = signal(<BriefItemSetEntity>[]);
@@ -29,7 +29,7 @@ class ItemSetListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyItemSet(id);
+      await _repository.copyItemSet(id);
       _logActivity(ActivityActionType.copy, id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -48,7 +48,7 @@ class ItemSetListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyItemSet(id);
+      await _repository.destroyItemSet(id);
       _logActivity(ActivityActionType.delete, id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -65,8 +65,8 @@ class ItemSetListViewModel {
 
   Future<void> initSignals() async {
     try {
-      itemSets.value = await repository.getBriefItemSets();
-      total.value = await repository.countItemSets();
+      itemSets.value = await _repository.getBriefItemSets();
+      total.value = await _repository.countItemSets();
     } catch (e) {
       LoggerUtil.instance.e('加载套装列表失败: $e');
       DialogUtil.instance.error('加载套装列表失败: $e');
@@ -112,11 +112,11 @@ class ItemSetListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      itemSets.value = await repository.getBriefItemSets(
+      itemSets.value = await _repository.getBriefItemSets(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countItemSets(filter: filter);
+      total.value = await _repository.countItemSets(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新套装列表失败: $e');
       DialogUtil.instance.error('刷新套装列表失败: $e');

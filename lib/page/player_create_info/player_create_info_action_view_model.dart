@@ -10,7 +10,7 @@ import 'package:signals/signals.dart';
 
 class PlayerCreateInfoActionViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final repository = PlayerCreateInfoRepository();
+  final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
   final actions = signal<List<PlayerCreateInfoActionEntity>>([]);
   int? _race;
@@ -26,7 +26,7 @@ class PlayerCreateInfoActionViewModel {
       _race = race;
       _class_ = class_;
       if (race == null || class_ == null) return;
-      actions.value = await repository.getActions(race, class_);
+      actions.value = await _repository.getActions(race, class_);
     } catch (e) {
       LoggerUtil.instance.e('加载角色动作失败: $e');
       DialogUtil.instance.error('加载角色动作失败: $e');
@@ -53,8 +53,8 @@ class PlayerCreateInfoActionViewModel {
     if (_race == null || _class_ == null) return;
     try {
       final item = _collect();
-      await repository.storeAction(item);
-      actions.value = await repository.getActions(_race!, _class_!);
+      await _repository.storeAction(item);
+      actions.value = await _repository.getActions(_race!, _class_!);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
     } catch (e) {
@@ -67,8 +67,8 @@ class PlayerCreateInfoActionViewModel {
     if (_race == null || _class_ == null) return;
     try {
       final item = _collect();
-      await repository.updateAction(item, oldButton: _oldButton);
-      actions.value = await repository.getActions(_race!, _class_!);
+      await _repository.updateAction(item, oldButton: _oldButton);
+      actions.value = await _repository.getActions(_race!, _class_!);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
     } catch (e) {
@@ -83,8 +83,8 @@ class PlayerCreateInfoActionViewModel {
   ) async {
     if (_race == null || _class_ == null) return;
     try {
-      await repository.deleteAction(_race!, _class_!, item.button);
-      actions.value = await repository.getActions(_race!, _class_!);
+      await _repository.deleteAction(_race!, _class_!, item.button);
+      actions.value = await _repository.getActions(_race!, _class_!);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
     } catch (e) {

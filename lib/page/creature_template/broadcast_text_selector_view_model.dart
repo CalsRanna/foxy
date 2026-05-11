@@ -3,9 +3,10 @@ import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/repository/broadcast_text_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class BroadcastTextSelectorViewModel {
-  final _repository = BroadcastTextRepository();
+  final _repository = GetIt.instance.get<BroadcastTextRepository>();
 
   final idFilter = signal('');
   final textFilter = signal('');

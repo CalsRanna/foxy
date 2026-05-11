@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class AchievementDetailViewModel {
+  final _repository = GetIt.instance.get<AchievementRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -92,11 +93,10 @@ class AchievementDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = AchievementRepository();
       if (t.id == 0) {
-        await repository.storeAchievement(t);
+        await _repository.storeAchievement(t);
       } else {
-        await repository.updateAchievement(t);
+        await _repository.updateAchievement(t);
       }
       achievement.value = t;
       _logActivity(
@@ -251,7 +251,7 @@ class AchievementDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      achievement.value = (await AchievementRepository().getAchievement(id))!;
+      achievement.value = (await _repository.getAchievement(id))!;
       _initControllers(achievement.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载成就(id=$id)失败', error: e, stackTrace: s);

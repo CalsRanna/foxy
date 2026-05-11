@@ -4,9 +4,10 @@ import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class EmoteSelectorViewModel {
-  final _repository = EmoteTextRepository();
+  final _repository = GetIt.instance.get<EmoteTextRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

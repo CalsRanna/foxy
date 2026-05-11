@@ -11,7 +11,7 @@ import 'package:signals/signals.dart';
 
 class PlayerCreateInfoDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final repository = PlayerCreateInfoRepository();
+  final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
   final race = signal<int>(0);
   final playerClass = signal<int>(0);
@@ -26,7 +26,7 @@ class PlayerCreateInfoDetailViewModel {
   Future<void> initSignals({int? race, int? playerClass}) async {
     if (race == null || playerClass == null) return;
     try {
-      final result = await repository.getPlayerCreateInfo(race, playerClass);
+      final result = await _repository.getPlayerCreateInfo(race, playerClass);
       info.value = result;
       _initControllers(result);
     } catch (e, s) {
@@ -54,11 +54,11 @@ class PlayerCreateInfoDetailViewModel {
     try {
       final data = _collect();
       if (current != null) {
-        await repository.updatePlayerCreateInfo(current.buildCredential(), data);
+        await _repository.updatePlayerCreateInfo(current.buildCredential(), data);
         info.value = data;
         _logActivity(ActivityActionType.update, data);
       } else {
-        await repository.storePlayerCreateInfo(data);
+        await _repository.storePlayerCreateInfo(data);
         info.value = data;
         _logActivity(ActivityActionType.create, data);
       }

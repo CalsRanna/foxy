@@ -4,6 +4,7 @@ import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
 import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:get_it/get_it.dart';
 
 class QuestOfferRewardLocaleSelector extends StatefulWidget {
   final int? questId;
@@ -28,7 +29,7 @@ class QuestOfferRewardLocaleSelector extends StatefulWidget {
 
 class _QuestOfferRewardLocaleSelectorState
     extends State<QuestOfferRewardLocaleSelector> {
-  final repository = QuestOfferRewardLocaleRepository();
+  final _repository = GetIt.instance.get<QuestOfferRewardLocaleRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class _QuestOfferRewardLocaleSelectorState
       fields: ['locale', 'rewardText'],
       fieldLabels: ['语言', '奖励文本'],
       onLoad: (questId) async {
-        final locales = await repository.getQuestOfferRewardLocales(questId);
+        final locales = await _repository.getQuestOfferRewardLocales(questId);
         return locales
             .map((e) => {'locale': e.locale, 'rewardText': e.rewardText})
             .toList();
@@ -66,7 +67,7 @@ class _QuestOfferRewardLocaleSelectorState
                   rewardText: d['rewardText'] ?? '',
                 ))
             .toList();
-        await repository.replaceAll(questId, locales);
+        await _repository.replaceAll(questId, locales);
       },
     );
     await LocaleCrudDialog(

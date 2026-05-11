@@ -15,7 +15,7 @@ import 'package:signals/signals.dart';
 class GameObjectTemplateListViewModel {
   final entryController = TextEditingController();
   final nameController = TextEditingController();
-  final repository = GameObjectTemplateRepository();
+  final _repository = GetIt.instance.get<GameObjectTemplateRepository>();
 
   final page = signal(1);
   final templates = signal(<BriefGameObjectTemplateEntity>[]);
@@ -29,7 +29,7 @@ class GameObjectTemplateListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyGameObjectTemplate(entry);
+      await _repository.copyGameObjectTemplate(entry);
       DialogUtil.instance.success('复制成功');
       _logActivity(ActivityActionType.copy, entry);
       await _refresh();
@@ -48,7 +48,7 @@ class GameObjectTemplateListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyGameObjectTemplate(entry);
+      await _repository.destroyGameObjectTemplate(entry);
       DialogUtil.instance.success('删除成功');
       _logActivity(ActivityActionType.delete, entry);
       await _refresh();
@@ -65,8 +65,8 @@ class GameObjectTemplateListViewModel {
 
   Future<void> initSignals() async {
     try {
-      templates.value = await repository.getBriefGameObjectTemplates();
-      total.value = await repository.countGameObjectTemplates();
+      templates.value = await _repository.getBriefGameObjectTemplates();
+      total.value = await _repository.countGameObjectTemplates();
     } catch (e) {
       LoggerUtil.instance.e('加载游戏对象列表失败: $e');
       DialogUtil.instance.error('加载游戏对象列表失败: $e');
@@ -116,11 +116,11 @@ class GameObjectTemplateListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      templates.value = await repository.getBriefGameObjectTemplates(
+      templates.value = await _repository.getBriefGameObjectTemplates(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countGameObjectTemplates(filter: filter);
+      total.value = await _repository.countGameObjectTemplates(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新游戏对象列表失败: $e');
       DialogUtil.instance.error('刷新游戏对象列表失败: $e');

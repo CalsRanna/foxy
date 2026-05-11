@@ -4,9 +4,10 @@ import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class PageTextSelectorViewModel {
-  final _repository = PageTextRepository();
+  final _repository = GetIt.instance.get<PageTextRepository>();
 
   final idFilter = signal('');
   final items = signal<List<PageTextEntity>>([]);

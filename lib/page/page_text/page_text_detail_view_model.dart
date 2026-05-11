@@ -12,7 +12,7 @@ import 'package:signals/signals.dart';
 
 class PageTextDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final repository = PageTextRepository();
+  final _repository = GetIt.instance.get<PageTextRepository>();
 
   final id = signal<int>(0);
   final textController = TextEditingController();
@@ -24,9 +24,9 @@ class PageTextDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      page.value = await repository.getPageText(id);
+      page.value = await _repository.getPageText(id);
       _initControllers(page.value!);
-      locales.value = await repository.getPageTextLocales(id);
+      locales.value = await _repository.getPageTextLocales(id);
     } catch (e, s) {
       LoggerUtil.instance.e('加载页面文本(ID=$id)失败', error: e, stackTrace: s);
     }
@@ -44,11 +44,11 @@ class PageTextDetailViewModel {
       final data = _collect();
       final existing = page.value;
       if (existing != null) {
-        await repository.updatePageText(existing.id, data);
+        await _repository.updatePageText(existing.id, data);
         page.value = data;
         _logActivity(ActivityActionType.update, data);
       } else {
-        await repository.storePageText(data);
+        await _repository.storePageText(data);
         page.value = data;
         _logActivity(ActivityActionType.create, data);
       }

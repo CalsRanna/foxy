@@ -3,9 +3,10 @@ import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class NpcTextSelectorViewModel {
-  final _repository = NpcTextRepository();
+  final _repository = GetIt.instance.get<NpcTextRepository>();
 
   final idFilter = signal('');
   final textFilter = signal('');

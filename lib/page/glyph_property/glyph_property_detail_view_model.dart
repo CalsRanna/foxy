@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class GlyphPropertyDetailViewModel {
+  final _repository = GetIt.instance.get<GlyphPropertyRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -25,11 +26,10 @@ class GlyphPropertyDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = GlyphPropertyRepository();
       if (t.id == 0) {
-        await repository.storeGlyphProperty(t);
+        await _repository.storeGlyphProperty(t);
       } else {
-        await repository.updateGlyphProperty(t);
+        await _repository.updateGlyphProperty(t);
       }
       property.value = t;
       _logActivity(
@@ -77,7 +77,7 @@ class GlyphPropertyDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      property.value = (await GlyphPropertyRepository().getGlyphProperty(id))!;
+      property.value = (await _repository.getGlyphProperty(id))!;
       _initControllers(property.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载雕文属性(id=$id)失败', error: e, stackTrace: s);

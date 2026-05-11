@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class CreatureTemplateDetailViewModel {
+  final _repository = GetIt.instance.get<CreatureTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entryController = TextEditingController();
@@ -81,12 +82,11 @@ class CreatureTemplateDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = CreatureTemplateRepository();
       final isNew = t.entry == 0;
       if (isNew) {
-        await repository.storeCreatureTemplate(t);
+        await _repository.storeCreatureTemplate(t);
       } else {
-        await repository.updateCreatureTemplate(t);
+        await _repository.updateCreatureTemplate(t);
       }
       template.value = t;
       _logActivity(
@@ -203,7 +203,7 @@ class CreatureTemplateDetailViewModel {
   Future<void> initSignals({int? entry}) async {
     if (entry == null) return;
     try {
-      template.value = await CreatureTemplateRepository().getCreatureTemplate(
+      template.value = await _repository.getCreatureTemplate(
         entry,
       );
       _initControllers(template.value);

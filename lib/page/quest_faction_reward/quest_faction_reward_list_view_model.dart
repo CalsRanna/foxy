@@ -12,7 +12,7 @@ import 'package:signals/signals.dart';
 
 class QuestFactionRewardListViewModel {
   final entryController = TextEditingController();
-  final repository = QuestFactionRewardRepository();
+  final _repository = GetIt.instance.get<QuestFactionRewardRepository>();
 
   final page = signal(1);
   final rewards = signal(<QuestFactionRewardEntity>[]);
@@ -26,7 +26,7 @@ class QuestFactionRewardListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyQuestFactionReward(id);
+      await _repository.copyQuestFactionReward(id);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -44,7 +44,7 @@ class QuestFactionRewardListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyQuestFactionReward(id);
+      await _repository.destroyQuestFactionReward(id);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -60,11 +60,11 @@ class QuestFactionRewardListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = QuestFactionRewardFilterEntity();
-      rewards.value = await repository.getQuestFactionRewards(
+      rewards.value = await _repository.getQuestFactionRewards(
         page: 1,
         filter: filter,
       );
-      total.value = await repository.countQuestFactionRewards(filter: filter);
+      total.value = await _repository.countQuestFactionRewards(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('加载任务阵营奖励列表失败: $e');
       DialogUtil.instance.error('加载任务阵营奖励列表失败: $e');
@@ -108,11 +108,11 @@ class QuestFactionRewardListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      rewards.value = await repository.getQuestFactionRewards(
+      rewards.value = await _repository.getQuestFactionRewards(
         page: page.value,
         filter: filter,
       );
-      total.value = await repository.countQuestFactionRewards(filter: filter);
+      total.value = await _repository.countQuestFactionRewards(filter: filter);
     } catch (e) {
       LoggerUtil.instance.e('刷新任务阵营奖励列表失败: $e');
       DialogUtil.instance.error('刷新任务阵营奖励列表失败: $e');

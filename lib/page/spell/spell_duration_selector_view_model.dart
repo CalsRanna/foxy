@@ -3,9 +3,10 @@ import 'package:foxy/entity/spell_duration_entity.dart';
 import 'package:foxy/repository/spell_duration_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class SpellDurationSelectorViewModel {
-  final _repository = SpellDurationRepository();
+  final _repository = GetIt.instance.get<SpellDurationRepository>();
 
   final idFilter = signal('');
   final items = signal<List<SpellDurationEntity>>([]);

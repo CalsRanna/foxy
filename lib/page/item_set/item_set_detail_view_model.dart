@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ItemSetDetailViewModel {
+  final _repository = GetIt.instance.get<ItemSetRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -83,11 +84,10 @@ class ItemSetDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = ItemSetRepository();
       if (t.id == 0) {
-        await repository.storeItemSet(t);
+        await _repository.storeItemSet(t);
       } else {
-        await repository.updateItemSet(t);
+        await _repository.updateItemSet(t);
       }
       itemSet.value = t;
       _logActivity(
@@ -201,7 +201,7 @@ class ItemSetDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      itemSet.value = (await ItemSetRepository().getItemSet(id))!;
+      itemSet.value = (await _repository.getItemSet(id))!;
       _initControllers(itemSet.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载套装(id=$id)失败', error: e, stackTrace: s);

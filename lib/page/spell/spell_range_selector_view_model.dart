@@ -3,9 +3,10 @@ import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class SpellRangeSelectorViewModel {
-  final _repository = SpellRangeRepository();
+  final _repository = GetIt.instance.get<SpellRangeRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');

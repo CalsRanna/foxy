@@ -11,7 +11,7 @@ import 'package:signals/signals.dart';
 
 class SmartScriptDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final repository = SmartScriptRepository();
+  final _repository = GetIt.instance.get<SmartScriptRepository>();
 
   final script = signal(SmartScriptEntity());
   final isNew = signal(true);
@@ -61,7 +61,7 @@ class SmartScriptDetailViewModel {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (isNew.value) {
-        await repository.storeSmartScript(t);
+        await _repository.storeSmartScript(t);
         _origEntryOrGuid = t.entryOrGuid;
         _origSourceType = t.sourceType;
         _origId = t.id;
@@ -69,7 +69,7 @@ class SmartScriptDetailViewModel {
         isNew.value = false;
         script.value = t;
       } else {
-        await repository.updateSmartScript(
+        await _repository.updateSmartScript(
           _origEntryOrGuid!,
           _origSourceType!,
           _origId!,
@@ -116,7 +116,7 @@ class SmartScriptDetailViewModel {
     _origLink = link;
     isNew.value = false;
     try {
-      script.value = await repository.getSmartScript(
+      script.value = await _repository.getSmartScript(
         entryOrGuid,
         sourceType,
         id,

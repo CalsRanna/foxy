@@ -10,6 +10,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ItemTemplateDetailViewModel {
+  final _repository = GetIt.instance.get<ItemTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Card 1: Basic Info
@@ -170,8 +171,7 @@ class ItemTemplateDetailViewModel {
   Future<void> initSignals({int? entry}) async {
     if (entry == null || entry <= 0) return;
     try {
-      final repository = ItemTemplateRepository();
-      template.value = await repository.getItemTemplate(entry);
+      template.value = await _repository.getItemTemplate(entry);
       _initControllers(template.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载物品模板(entry=$entry)失败', error: e, stackTrace: s);
@@ -438,11 +438,10 @@ class ItemTemplateDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final repository = ItemTemplateRepository();
       if (t.entry == 0) {
-        await repository.storeItemTemplate(t);
+        await _repository.storeItemTemplate(t);
       } else {
-        await repository.updateItemTemplate(t);
+        await _repository.updateItemTemplate(t);
       }
       template.value = t;
       _logActivity(

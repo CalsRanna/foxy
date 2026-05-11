@@ -4,9 +4,10 @@ import 'package:foxy/entity/glyph_property_filter_entity.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class GlyphPropertySelectorViewModel {
-  final _repository = GlyphPropertyRepository();
+  final _repository = GetIt.instance.get<GlyphPropertyRepository>();
 
   final idFilter = signal('');
   final items = signal<List<GlyphPropertyEntity>>([]);

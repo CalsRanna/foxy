@@ -3,9 +3,10 @@ import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:get_it/get_it.dart';
 
 class DbcFactionSelectorViewModel {
-  final _repository = DbcFactionRepository();
+  final _repository = GetIt.instance.get<DbcFactionRepository>();
 
   final idFilter = signal('');
   final nameFilter = signal('');
