@@ -1,9 +1,10 @@
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/repository/feature_repository.dart';
+import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class FeatureViewModel {
-  final FeatureRepository _repository = FeatureRepository();
+  final _repository = GetIt.instance.get<FeatureRepository>();
 
   final allFeatures = signal<List<FeatureEntity>>([]);
 
