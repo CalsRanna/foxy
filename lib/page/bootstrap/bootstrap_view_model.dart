@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
+import 'package:foxy/database/database.dart';
 import 'package:foxy/database/migration_runner.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/repository/setting_repository.dart';
@@ -11,7 +12,6 @@ import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
-import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
@@ -40,12 +40,11 @@ class BootstrapViewModel {
         port: int.parse(portController.text),
         username: usernameController.text,
       );
-      var laconic = Laconic(
-        MysqlDriver(config),
-        listen: (query) => LoggerUtil.instance.d(query.sql),
+      await Database.instance.connect(
+        config,
+        onQuery: (query) => LoggerUtil.instance.d(query.sql),
       );
       var foxyViewModel = GetIt.instance.get<FoxyViewModel>();
-      foxyViewModel.initSignals(laconic);
       await _repository.connect();
 
       // Check for locale tables and load locale settings
@@ -66,7 +65,7 @@ class BootstrapViewModel {
       );
 
       // 运行数据库迁移
-      await MigrationRunner(laconic).run();
+      await MigrationRunner(Database.instance.laconic).run();
 
       // 加载 features 数据
       await GetIt.instance.get<FeatureViewModel>().load();

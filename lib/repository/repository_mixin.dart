@@ -1,7 +1,7 @@
-import 'package:foxy/page/foxy_app/foxy_view_model.dart';
-import 'package:get_it/get_it.dart';
+import 'package:foxy/database/database.dart';
+import 'package:laconic/laconic.dart';
 
 mixin RepositoryMixin {
-  final laconic = GetIt.instance.get<FoxyViewModel>().laconic!;
+  Laconic get laconic => Database.instance.laconic;
   final kPageSize = 50;
 }
