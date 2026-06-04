@@ -62,7 +62,8 @@
       "Bash(python *)",
       "Bash(dart --version)",
       "Bash(dart *)",
-      "Bash(perl *)"
+      "Bash(perl *)",
+      "Read(//c/Users/calsr/**)"
     ],
     "deny": []
   }
