@@ -49,7 +49,7 @@ class _FoxyCardState extends State<FoxyCard> {
 
   List<Widget> _buildTitle() {
     if (widget.title == null) return [];
-    const textStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+    const textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
     final title = DefaultTextStyle.merge(
       style: textStyle,
       child: widget.title!,

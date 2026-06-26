@@ -76,7 +76,7 @@ class _GameObjectTemplateListPageState
 
   Widget _buildTable() {
     var createButton = ShadButton(
-      leading: Icon(LucideIcons.plus),
+      leading: Icon(LucideIcons.plus, size: 16),
       onPressed: () => viewModel.navigateToDetail(context),
       child: Text('新增'),
     );

@@ -105,6 +105,6 @@ class DialogUtil {
 
   void success(String message) {
     final context = router.navigatorKey.currentContext!;
-    ShadSonner.of(context).show(ShadToast(title: Text(message)));
+    ShadSonner.of(context).show(ShadToast(description: Text(message)));
   }
 }

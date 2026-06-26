@@ -60,7 +60,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
 
   Widget _buildList() {
     final createBtn = ShadButton(
-      leading: Icon(LucideIcons.plus),
+      leading: Icon(LucideIcons.plus, size: 16),
       onPressed: viewModel.create,
       child: Text('新增'),
     );

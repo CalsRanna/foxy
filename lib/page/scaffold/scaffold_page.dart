@@ -193,7 +193,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     final iconColor = active ? Colors.white : colorScheme.onSurface;
     var padding = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Icon(menu.icon, size: 20, color: iconColor),
+      child: Icon(menu.icon, size: 16, color: iconColor),
     );
     var iconButton = IconButton(
       onPressed: () => viewModel.navigatePage(menu),
