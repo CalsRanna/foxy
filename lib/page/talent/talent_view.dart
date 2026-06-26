@@ -226,7 +226,10 @@ class _TalentViewState extends State<TalentView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          // 分组1: 基础信息
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('基础信息'),
+          ),
           ShadCard(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -253,7 +256,10 @@ class _TalentViewState extends State<TalentView> {
               ],
             ),
           ),
-          // 分组2: 法术等级
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('法术等级'),
+          ),
           ShadCard(
             padding: EdgeInsets.all(16),
             child: Column(
@@ -289,7 +295,10 @@ class _TalentViewState extends State<TalentView> {
               ],
             ),
           ),
-          // 分组3: 前置天赋
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('前置天赋'),
+          ),
           ShadCard(
             padding: EdgeInsets.all(16),
             child: Row(
@@ -302,7 +311,10 @@ class _TalentViewState extends State<TalentView> {
               ],
             ),
           ),
-          // 分组4: 前置等级
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('前置等级'),
+          ),
           ShadCard(
             padding: EdgeInsets.all(16),
             child: Row(
@@ -315,7 +327,10 @@ class _TalentViewState extends State<TalentView> {
               ],
             ),
           ),
-          // 分组5: 掩码
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text('分类掩码'),
+          ),
           ShadCard(
             padding: EdgeInsets.all(16),
             child: Row(
