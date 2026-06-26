@@ -32,8 +32,8 @@ class _GemPropertyViewState extends State<GemPropertyView> {
   Widget build(BuildContext context) {
     final idInput = FormItem(
       label: '编号',
-      placeholder: 'ID',
       child: FoxyNumberInput<int>(
+        placeholder: 'ID',
         value: viewModel.id.value,
         onChanged: (v) => viewModel.id.value = v,
         readOnly: true,
@@ -41,32 +41,32 @@ class _GemPropertyViewState extends State<GemPropertyView> {
     );
     final enchantIdInput = FormItem(
       label: '附魔编号',
-      placeholder: 'Enchant_ID',
       child: FoxyNumberInput<int>(
+        placeholder: 'Enchant_ID',
         value: viewModel.enchantId.value,
         onChanged: (v) => viewModel.enchantId.value = v,
       ),
     );
     final maxcountInvInput = FormItem(
       label: '最大库存',
-      placeholder: 'Maxcount_inv',
       child: FoxyNumberInput<int>(
+        placeholder: 'Maxcount_inv',
         value: viewModel.maxCountInv.value,
         onChanged: (v) => viewModel.maxCountInv.value = v,
       ),
     );
     final maxcountItemInput = FormItem(
       label: '最大物品',
-      placeholder: 'Maxcount_item',
       child: FoxyNumberInput<int>(
+        placeholder: 'Maxcount_item',
         value: viewModel.maxCountItem.value,
         onChanged: (v) => viewModel.maxCountItem.value = v,
       ),
     );
     final typeInput = FormItem(
       label: '类型',
-      placeholder: 'Type',
       child: FoxyNumberInput<int>(
+        placeholder: 'Type',
         value: viewModel.type.value,
         onChanged: (v) => viewModel.type.value = v,
       ),

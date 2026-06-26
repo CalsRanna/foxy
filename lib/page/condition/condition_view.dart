@@ -33,40 +33,40 @@ class _ConditionViewState extends State<ConditionView> {
     // 来源信息
     final sourceTypeInput = FormItem(
       label: '源类型/关联',
-      placeholder: 'SourceTypeOrReferenceId',
       child: FoxyNumberInput<int>(
+        placeholder: 'SourceTypeOrReferenceId',
         value: viewModel.sourceTypeOrReferenceId.value,
         onChanged: (v) => viewModel.sourceTypeOrReferenceId.value = v,
       ),
     );
     final sourceGroupInput = FormItem(
       label: 'SourceGroup',
-      placeholder: 'SourceGroup',
       child: FoxyNumberInput<int>(
+        placeholder: 'SourceGroup',
         value: viewModel.sourceGroup.value,
         onChanged: (v) => viewModel.sourceGroup.value = v,
       ),
     );
     final sourceEntryInput = FormItem(
       label: 'SourceEntry',
-      placeholder: 'SourceEntry',
       child: FoxyNumberInput<int>(
+        placeholder: 'SourceEntry',
         value: viewModel.sourceEntry.value,
         onChanged: (v) => viewModel.sourceEntry.value = v,
       ),
     );
     final sourceIdInput = FormItem(
       label: 'SourceId',
-      placeholder: 'SourceId',
       child: FoxyNumberInput<int>(
+        placeholder: 'SourceId',
         value: viewModel.sourceId.value,
         onChanged: (v) => viewModel.sourceId.value = v,
       ),
     );
     final elseGroupInput = FormItem(
       label: 'ElseGroup',
-      placeholder: 'ElseGroup',
       child: FoxyNumberInput<int>(
+        placeholder: 'ElseGroup',
         value: viewModel.elseGroup.value,
         onChanged: (v) => viewModel.elseGroup.value = v,
       ),
@@ -75,48 +75,48 @@ class _ConditionViewState extends State<ConditionView> {
     // 条件信息
     final conditionTypeInput = FormItem(
       label: '条件类型/关联',
-      placeholder: 'ConditionTypeOrReference',
       child: FoxyNumberInput<int>(
+        placeholder: 'ConditionTypeOrReference',
         value: viewModel.conditionTypeOrReference.value,
         onChanged: (v) => viewModel.conditionTypeOrReference.value = v,
       ),
     );
     final conditionTargetInput = FormItem(
       label: 'ConditionTarget',
-      placeholder: 'ConditionTarget',
       child: FoxyNumberInput<int>(
+        placeholder: 'ConditionTarget',
         value: viewModel.conditionTarget.value,
         onChanged: (v) => viewModel.conditionTarget.value = v,
       ),
     );
     final conditionValue1Input = FormItem(
       label: 'ConditionValue1',
-      placeholder: 'ConditionValue1',
       child: FoxyNumberInput<int>(
+        placeholder: 'ConditionValue1',
         value: viewModel.conditionValue1.value,
         onChanged: (v) => viewModel.conditionValue1.value = v,
       ),
     );
     final conditionValue2Input = FormItem(
       label: 'ConditionValue2',
-      placeholder: 'ConditionValue2',
       child: FoxyNumberInput<int>(
+        placeholder: 'ConditionValue2',
         value: viewModel.conditionValue2.value,
         onChanged: (v) => viewModel.conditionValue2.value = v,
       ),
     );
     final conditionValue3Input = FormItem(
       label: 'ConditionValue3',
-      placeholder: 'ConditionValue3',
       child: FoxyNumberInput<int>(
+        placeholder: 'ConditionValue3',
         value: viewModel.conditionValue3.value,
         onChanged: (v) => viewModel.conditionValue3.value = v,
       ),
     );
     final negativeConditionInput = FormItem(
       label: '否定条件',
-      placeholder: 'NegativeCondition',
       child: FoxyNumberInput<int>(
+        placeholder: 'NegativeCondition',
         value: viewModel.negativeCondition.value,
         onChanged: (v) => viewModel.negativeCondition.value = v,
       ),
@@ -125,16 +125,16 @@ class _ConditionViewState extends State<ConditionView> {
     // 错误与脚本
     final errorTypeInput = FormItem(
       label: '错误类型',
-      placeholder: 'ErrorType',
       child: FoxyNumberInput<int>(
+        placeholder: 'ErrorType',
         value: viewModel.errorType.value,
         onChanged: (v) => viewModel.errorType.value = v,
       ),
     );
     final errorTextIdInput = FormItem(
       label: '错误文本编号',
-      placeholder: 'ErrorTextId',
       child: FoxyNumberInput<int>(
+        placeholder: 'ErrorTextId',
         value: viewModel.errorTextId.value,
         onChanged: (v) => viewModel.errorTextId.value = v,
       ),

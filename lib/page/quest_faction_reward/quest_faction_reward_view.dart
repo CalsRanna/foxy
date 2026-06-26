@@ -33,8 +33,8 @@ class _QuestFactionRewardViewState extends State<QuestFactionRewardView> {
     /// Basic
     final idInput = FormItem(
       label: '编号',
-      placeholder: 'ID',
       child: FoxyNumberInput<int>(
+        placeholder: 'ID',
         value: viewModel.id.value,
         onChanged: (v) => viewModel.id.value = v,
         readOnly: true,
@@ -44,80 +44,80 @@ class _QuestFactionRewardViewState extends State<QuestFactionRewardView> {
     /// Difficulty
     final difficulty0Input = FormItem(
       label: '难度0',
-      placeholder: 'Difficulty0',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty0',
         value: viewModel.difficulty0.value,
         onChanged: (v) => viewModel.difficulty0.value = v,
       ),
     );
     final difficulty1Input = FormItem(
       label: '难度1',
-      placeholder: 'Difficulty1',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty1',
         value: viewModel.difficulty1.value,
         onChanged: (v) => viewModel.difficulty1.value = v,
       ),
     );
     final difficulty2Input = FormItem(
       label: '难度2',
-      placeholder: 'Difficulty2',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty2',
         value: viewModel.difficulty2.value,
         onChanged: (v) => viewModel.difficulty2.value = v,
       ),
     );
     final difficulty3Input = FormItem(
       label: '难度3',
-      placeholder: 'Difficulty3',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty3',
         value: viewModel.difficulty3.value,
         onChanged: (v) => viewModel.difficulty3.value = v,
       ),
     );
     final difficulty4Input = FormItem(
       label: '难度4',
-      placeholder: 'Difficulty4',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty4',
         value: viewModel.difficulty4.value,
         onChanged: (v) => viewModel.difficulty4.value = v,
       ),
     );
     final difficulty5Input = FormItem(
       label: '难度5',
-      placeholder: 'Difficulty5',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty5',
         value: viewModel.difficulty5.value,
         onChanged: (v) => viewModel.difficulty5.value = v,
       ),
     );
     final difficulty6Input = FormItem(
       label: '难度6',
-      placeholder: 'Difficulty6',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty6',
         value: viewModel.difficulty6.value,
         onChanged: (v) => viewModel.difficulty6.value = v,
       ),
     );
     final difficulty7Input = FormItem(
       label: '难度7',
-      placeholder: 'Difficulty7',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty7',
         value: viewModel.difficulty7.value,
         onChanged: (v) => viewModel.difficulty7.value = v,
       ),
     );
     final difficulty8Input = FormItem(
       label: '难度8',
-      placeholder: 'Difficulty8',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty8',
         value: viewModel.difficulty8.value,
         onChanged: (v) => viewModel.difficulty8.value = v,
       ),
     );
     final difficulty9Input = FormItem(
       label: '难度9',
-      placeholder: 'Difficulty9',
       child: FoxyNumberInput<int>(
+        placeholder: 'Difficulty9',
         value: viewModel.difficulty9.value,
         onChanged: (v) => viewModel.difficulty9.value = v,
       ),

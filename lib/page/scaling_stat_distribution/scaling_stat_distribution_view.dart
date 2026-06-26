@@ -33,8 +33,8 @@ class _ScalingStatDistributionViewState extends State<ScalingStatDistributionVie
     /// Basic
     final idInput = FormItem(
       label: '编号',
-      placeholder: 'ID',
       child: FoxyNumberInput<int>(
+        placeholder: 'ID',
         value: viewModel.id.value,
         onChanged: (v) => viewModel.id.value = v,
         readOnly: true,
@@ -44,80 +44,80 @@ class _ScalingStatDistributionViewState extends State<ScalingStatDistributionVie
     /// StatID 0~9
     final statId0Input = FormItem(
       label: 'StatID0',
-      placeholder: 'StatID0',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID0',
         value: viewModel.statId0.value,
         onChanged: (v) => viewModel.statId0.value = v,
       ),
     );
     final statId1Input = FormItem(
       label: 'StatID1',
-      placeholder: 'StatID1',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID1',
         value: viewModel.statId1.value,
         onChanged: (v) => viewModel.statId1.value = v,
       ),
     );
     final statId2Input = FormItem(
       label: 'StatID2',
-      placeholder: 'StatID2',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID2',
         value: viewModel.statId2.value,
         onChanged: (v) => viewModel.statId2.value = v,
       ),
     );
     final statId3Input = FormItem(
       label: 'StatID3',
-      placeholder: 'StatID3',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID3',
         value: viewModel.statId3.value,
         onChanged: (v) => viewModel.statId3.value = v,
       ),
     );
     final statId4Input = FormItem(
       label: 'StatID4',
-      placeholder: 'StatID4',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID4',
         value: viewModel.statId4.value,
         onChanged: (v) => viewModel.statId4.value = v,
       ),
     );
     final statId5Input = FormItem(
       label: 'StatID5',
-      placeholder: 'StatID5',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID5',
         value: viewModel.statId5.value,
         onChanged: (v) => viewModel.statId5.value = v,
       ),
     );
     final statId6Input = FormItem(
       label: 'StatID6',
-      placeholder: 'StatID6',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID6',
         value: viewModel.statId6.value,
         onChanged: (v) => viewModel.statId6.value = v,
       ),
     );
     final statId7Input = FormItem(
       label: 'StatID7',
-      placeholder: 'StatID7',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID7',
         value: viewModel.statId7.value,
         onChanged: (v) => viewModel.statId7.value = v,
       ),
     );
     final statId8Input = FormItem(
       label: 'StatID8',
-      placeholder: 'StatID8',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID8',
         value: viewModel.statId8.value,
         onChanged: (v) => viewModel.statId8.value = v,
       ),
     );
     final statId9Input = FormItem(
       label: 'StatID9',
-      placeholder: 'StatID9',
       child: FoxyNumberInput<int>(
+        placeholder: 'StatID9',
         value: viewModel.statId9.value,
         onChanged: (v) => viewModel.statId9.value = v,
       ),
@@ -126,80 +126,80 @@ class _ScalingStatDistributionViewState extends State<ScalingStatDistributionVie
     /// Bonus 0~9
     final bonus0Input = FormItem(
       label: 'Bonus0',
-      placeholder: 'Bonus0',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus0',
         value: viewModel.bonus0.value,
         onChanged: (v) => viewModel.bonus0.value = v,
       ),
     );
     final bonus1Input = FormItem(
       label: 'Bonus1',
-      placeholder: 'Bonus1',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus1',
         value: viewModel.bonus1.value,
         onChanged: (v) => viewModel.bonus1.value = v,
       ),
     );
     final bonus2Input = FormItem(
       label: 'Bonus2',
-      placeholder: 'Bonus2',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus2',
         value: viewModel.bonus2.value,
         onChanged: (v) => viewModel.bonus2.value = v,
       ),
     );
     final bonus3Input = FormItem(
       label: 'Bonus3',
-      placeholder: 'Bonus3',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus3',
         value: viewModel.bonus3.value,
         onChanged: (v) => viewModel.bonus3.value = v,
       ),
     );
     final bonus4Input = FormItem(
       label: 'Bonus4',
-      placeholder: 'Bonus4',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus4',
         value: viewModel.bonus4.value,
         onChanged: (v) => viewModel.bonus4.value = v,
       ),
     );
     final bonus5Input = FormItem(
       label: 'Bonus5',
-      placeholder: 'Bonus5',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus5',
         value: viewModel.bonus5.value,
         onChanged: (v) => viewModel.bonus5.value = v,
       ),
     );
     final bonus6Input = FormItem(
       label: 'Bonus6',
-      placeholder: 'Bonus6',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus6',
         value: viewModel.bonus6.value,
         onChanged: (v) => viewModel.bonus6.value = v,
       ),
     );
     final bonus7Input = FormItem(
       label: 'Bonus7',
-      placeholder: 'Bonus7',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus7',
         value: viewModel.bonus7.value,
         onChanged: (v) => viewModel.bonus7.value = v,
       ),
     );
     final bonus8Input = FormItem(
       label: 'Bonus8',
-      placeholder: 'Bonus8',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus8',
         value: viewModel.bonus8.value,
         onChanged: (v) => viewModel.bonus8.value = v,
       ),
     );
     final bonus9Input = FormItem(
       label: 'Bonus9',
-      placeholder: 'Bonus9',
       child: FoxyNumberInput<int>(
+        placeholder: 'Bonus9',
         value: viewModel.bonus9.value,
         onChanged: (v) => viewModel.bonus9.value = v,
       ),
@@ -208,8 +208,8 @@ class _ScalingStatDistributionViewState extends State<ScalingStatDistributionVie
     /// Other
     final maxlevelInput = FormItem(
       label: 'Maxlevel',
-      placeholder: 'Maxlevel',
       child: FoxyNumberInput<int>(
+        placeholder: 'Maxlevel',
         value: viewModel.maxlevel.value,
         onChanged: (v) => viewModel.maxlevel.value = v,
       ),

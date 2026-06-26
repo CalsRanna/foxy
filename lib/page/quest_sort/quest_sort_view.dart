@@ -32,8 +32,8 @@ class _QuestSortViewState extends State<QuestSortView> {
   Widget build(BuildContext context) {
     final idInput = FormItem(
       label: '编号',
-      placeholder: 'ID',
       child: FoxyNumberInput<int>(
+        placeholder: 'ID',
         value: viewModel.id.value,
         onChanged: (v) => viewModel.id.value = v,
         readOnly: true,

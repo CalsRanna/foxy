@@ -39,8 +39,8 @@ class _ReferenceLootTemplateViewState
   Widget build(BuildContext context) {
     final entryInput = FormItem(
       label: 'Entry',
-      placeholder: 'Entry',
       child: FoxyNumberInput<int>(
+        placeholder: 'Entry',
         value: viewModel.entry.value,
         onChanged: (v) => viewModel.entry.value = v,
       ),
@@ -54,16 +54,16 @@ class _ReferenceLootTemplateViewState
     );
     final referenceInput = FormItem(
       label: '关联ID',
-      placeholder: 'Reference',
       child: FoxyNumberInput<int>(
+        placeholder: 'Reference',
         value: viewModel.reference.value,
         onChanged: (v) => viewModel.reference.value = v,
       ),
     );
     final chanceInput = FormItem(
       label: '掉落几率',
-      placeholder: 'Chance (%)',
       child: FoxyNumberInput<double>(
+        placeholder: 'Chance (%)',
         value: viewModel.chance.value,
         onChanged: (v) => viewModel.chance.value = v,
       ),
@@ -78,32 +78,32 @@ class _ReferenceLootTemplateViewState
     );
     final lootModeInput = FormItem(
       label: '掉落模式',
-      placeholder: 'LootMode',
       child: FoxyNumberInput<int>(
+        placeholder: 'LootMode',
         value: viewModel.lootMode.value,
         onChanged: (v) => viewModel.lootMode.value = v,
       ),
     );
     final groupIdInput = FormItem(
       label: '组ID',
-      placeholder: 'GroupId',
       child: FoxyNumberInput<int>(
+        placeholder: 'GroupId',
         value: viewModel.groupId.value,
         onChanged: (v) => viewModel.groupId.value = v,
       ),
     );
     final minCountInput = FormItem(
       label: '最小数量',
-      placeholder: 'MinCount',
       child: FoxyNumberInput<int>(
+        placeholder: 'MinCount',
         value: viewModel.minCount.value,
         onChanged: (v) => viewModel.minCount.value = v,
       ),
     );
     final maxCountInput = FormItem(
       label: '最大数量',
-      placeholder: 'MaxCount',
       child: FoxyNumberInput<int>(
+        placeholder: 'MaxCount',
         value: viewModel.maxCount.value,
         onChanged: (v) => viewModel.maxCount.value = v,
       ),

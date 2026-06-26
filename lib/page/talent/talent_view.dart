@@ -32,8 +32,8 @@ class _TalentViewState extends State<TalentView> {
   Widget build(BuildContext context) {
     final idInput = FormItem(
       label: '编号',
-      placeholder: 'ID',
       child: FoxyNumberInput<int>(
+        placeholder: 'ID',
         value: viewModel.id.value,
         onChanged: (v) => viewModel.id.value = v,
         readOnly: true,
@@ -41,40 +41,40 @@ class _TalentViewState extends State<TalentView> {
     );
     final tabIdInput = FormItem(
       label: '标签页',
-      placeholder: 'TabID',
       child: FoxyNumberInput<int>(
+        placeholder: 'TabID',
         value: viewModel.tabId.value,
         onChanged: (v) => viewModel.tabId.value = v,
       ),
     );
     final tierIdInput = FormItem(
       label: '层',
-      placeholder: 'TierID',
       child: FoxyNumberInput<int>(
+        placeholder: 'TierID',
         value: viewModel.tierId.value,
         onChanged: (v) => viewModel.tierId.value = v,
       ),
     );
     final columnIndexInput = FormItem(
       label: '列',
-      placeholder: 'ColumnIndex',
       child: FoxyNumberInput<int>(
+        placeholder: 'ColumnIndex',
         value: viewModel.columnIndex.value,
         onChanged: (v) => viewModel.columnIndex.value = v,
       ),
     );
     final flagsInput = FormItem(
       label: '标志',
-      placeholder: 'Flags',
       child: FoxyNumberInput<int>(
+        placeholder: 'Flags',
         value: viewModel.flags.value,
         onChanged: (v) => viewModel.flags.value = v,
       ),
     );
     final requiredSpellIdInput = FormItem(
       label: '必需法术',
-      placeholder: 'RequiredSpellID',
       child: FoxyNumberInput<int>(
+        placeholder: 'RequiredSpellID',
         value: viewModel.requiredSpellId.value,
         onChanged: (v) => viewModel.requiredSpellId.value = v,
       ),
@@ -82,72 +82,72 @@ class _TalentViewState extends State<TalentView> {
 
     final spellRank0Input = FormItem(
       label: '法术等级0',
-      placeholder: 'SpellRank0',
       child: FoxyNumberInput<int>(
+        placeholder: 'SpellRank0',
         value: viewModel.spellRank0.value,
         onChanged: (v) => viewModel.spellRank0.value = v,
       ),
     );
     final spellRank1Input = FormItem(
       label: '法术等级1',
-      placeholder: 'SpellRank1',
       child: FoxyNumberInput<int>(
+        placeholder: 'SpellRank1',
         value: viewModel.spellRank1.value,
         onChanged: (v) => viewModel.spellRank1.value = v,
       ),
     );
     final spellRank2Input = FormItem(
       label: '法术等级2',
-      placeholder: 'SpellRank2',
       child: FoxyNumberInput<int>(
+        placeholder: 'SpellRank2',
         value: viewModel.spellRank2.value,
         onChanged: (v) => viewModel.spellRank2.value = v,
       ),
     );
     final spellRank3Input = FormItem(
       label: '法术等级3',
-      placeholder: 'SpellRank3',
       child: FoxyNumberInput<int>(
+        placeholder: 'SpellRank3',
         value: viewModel.spellRank3.value,
         onChanged: (v) => viewModel.spellRank3.value = v,
       ),
     );
     final spellRank4Input = FormItem(
       label: '法术等级4',
-      placeholder: 'SpellRank4',
       child: FoxyNumberInput<int>(
+        placeholder: 'SpellRank4',
         value: viewModel.spellRank4.value,
         onChanged: (v) => viewModel.spellRank4.value = v,
       ),
     );
     final spellRank5Input = FormItem(
       label: '法术等级5',
-      placeholder: 'SpellRank5',
       child: FoxyNumberInput<int>(
+        placeholder: 'SpellRank5',
         value: viewModel.spellRank5.value,
         onChanged: (v) => viewModel.spellRank5.value = v,
       ),
     );
     final spellRank6Input = FormItem(
       label: '法术等级6',
-      placeholder: 'SpellRank6',
       child: FoxyNumberInput<int>(
+        placeholder: 'SpellRank6',
         value: viewModel.spellRank6.value,
         onChanged: (v) => viewModel.spellRank6.value = v,
       ),
     );
     final spellRank7Input = FormItem(
       label: '法术等级7',
-      placeholder: 'SpellRank7',
       child: FoxyNumberInput<int>(
+        placeholder: 'SpellRank7',
         value: viewModel.spellRank7.value,
         onChanged: (v) => viewModel.spellRank7.value = v,
       ),
     );
     final spellRank8Input = FormItem(
       label: '法术等级8',
-      placeholder: 'SpellRank8',
       child: FoxyNumberInput<int>(
+        placeholder: 'SpellRank8',
         value: viewModel.spellRank8.value,
         onChanged: (v) => viewModel.spellRank8.value = v,
       ),
@@ -155,24 +155,24 @@ class _TalentViewState extends State<TalentView> {
 
     final prereqTalent0Input = FormItem(
       label: '前置天赋0',
-      placeholder: 'PrereqTalent0',
       child: FoxyNumberInput<int>(
+        placeholder: 'PrereqTalent0',
         value: viewModel.prereqTalent0.value,
         onChanged: (v) => viewModel.prereqTalent0.value = v,
       ),
     );
     final prereqTalent1Input = FormItem(
       label: '前置天赋1',
-      placeholder: 'PrereqTalent1',
       child: FoxyNumberInput<int>(
+        placeholder: 'PrereqTalent1',
         value: viewModel.prereqTalent1.value,
         onChanged: (v) => viewModel.prereqTalent1.value = v,
       ),
     );
     final prereqTalent2Input = FormItem(
       label: '前置天赋2',
-      placeholder: 'PrereqTalent2',
       child: FoxyNumberInput<int>(
+        placeholder: 'PrereqTalent2',
         value: viewModel.prereqTalent2.value,
         onChanged: (v) => viewModel.prereqTalent2.value = v,
       ),
@@ -180,24 +180,24 @@ class _TalentViewState extends State<TalentView> {
 
     final prereqRank0Input = FormItem(
       label: '前置等级0',
-      placeholder: 'PrereqRank0',
       child: FoxyNumberInput<int>(
+        placeholder: 'PrereqRank0',
         value: viewModel.prereqRank0.value,
         onChanged: (v) => viewModel.prereqRank0.value = v,
       ),
     );
     final prereqRank1Input = FormItem(
       label: '前置等级1',
-      placeholder: 'PrereqRank1',
       child: FoxyNumberInput<int>(
+        placeholder: 'PrereqRank1',
         value: viewModel.prereqRank1.value,
         onChanged: (v) => viewModel.prereqRank1.value = v,
       ),
     );
     final prereqRank2Input = FormItem(
       label: '前置等级2',
-      placeholder: 'PrereqRank2',
       child: FoxyNumberInput<int>(
+        placeholder: 'PrereqRank2',
         value: viewModel.prereqRank2.value,
         onChanged: (v) => viewModel.prereqRank2.value = v,
       ),
@@ -205,16 +205,16 @@ class _TalentViewState extends State<TalentView> {
 
     final categoryMask0Input = FormItem(
       label: '掩码0',
-      placeholder: 'CategoryMask0',
       child: FoxyNumberInput<int>(
+        placeholder: 'CategoryMask0',
         value: viewModel.categoryMask0.value,
         onChanged: (v) => viewModel.categoryMask0.value = v,
       ),
     );
     final categoryMask1Input = FormItem(
       label: '掩码1',
-      placeholder: 'CategoryMask1',
       child: FoxyNumberInput<int>(
+        placeholder: 'CategoryMask1',
         value: viewModel.categoryMask1.value,
         onChanged: (v) => viewModel.categoryMask1.value = v,
       ),

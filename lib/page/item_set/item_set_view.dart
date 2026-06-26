@@ -59,8 +59,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '编号',
-                  placeholder: 'ID',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ID',
                     value: viewModel.id.value,
                     onChanged: (v) => viewModel.id.value = v,
                     readOnly: true,
@@ -70,8 +70,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '需求技能',
-                  placeholder: 'RequiredSkill',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'RequiredSkill',
                     value: viewModel.requiredSkill.value,
                     onChanged: (v) => viewModel.requiredSkill.value = v,
                   ),
@@ -80,8 +80,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '需求技能等级',
-                  placeholder: 'RequiredSkillRank',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'RequiredSkillRank',
                     value: viewModel.requiredSkillRank.value,
                     onChanged: (v) => viewModel.requiredSkillRank.value = v,
                   ),
@@ -151,8 +151,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品0',
-                  placeholder: 'ItemID0',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID0',
                     value: viewModel.itemId0.value,
                     onChanged: (v) => viewModel.itemId0.value = v,
                   ),
@@ -161,8 +161,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品1',
-                  placeholder: 'ItemID1',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID1',
                     value: viewModel.itemId1.value,
                     onChanged: (v) => viewModel.itemId1.value = v,
                   ),
@@ -171,8 +171,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品2',
-                  placeholder: 'ItemID2',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID2',
                     value: viewModel.itemId2.value,
                     onChanged: (v) => viewModel.itemId2.value = v,
                   ),
@@ -181,8 +181,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品3',
-                  placeholder: 'ItemID3',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID3',
                     value: viewModel.itemId3.value,
                     onChanged: (v) => viewModel.itemId3.value = v,
                   ),
@@ -196,8 +196,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品4',
-                  placeholder: 'ItemID4',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID4',
                     value: viewModel.itemId4.value,
                     onChanged: (v) => viewModel.itemId4.value = v,
                   ),
@@ -206,8 +206,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品5',
-                  placeholder: 'ItemID5',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID5',
                     value: viewModel.itemId5.value,
                     onChanged: (v) => viewModel.itemId5.value = v,
                   ),
@@ -216,8 +216,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品6',
-                  placeholder: 'ItemID6',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID6',
                     value: viewModel.itemId6.value,
                     onChanged: (v) => viewModel.itemId6.value = v,
                   ),
@@ -226,8 +226,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品7',
-                  placeholder: 'ItemID7',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID7',
                     value: viewModel.itemId7.value,
                     onChanged: (v) => viewModel.itemId7.value = v,
                   ),
@@ -241,8 +241,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品8',
-                  placeholder: 'ItemID8',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID8',
                     value: viewModel.itemId8.value,
                     onChanged: (v) => viewModel.itemId8.value = v,
                   ),
@@ -251,8 +251,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品9',
-                  placeholder: 'ItemID9',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID9',
                     value: viewModel.itemId9.value,
                     onChanged: (v) => viewModel.itemId9.value = v,
                   ),
@@ -261,8 +261,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品10',
-                  placeholder: 'ItemID10',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID10',
                     value: viewModel.itemId10.value,
                     onChanged: (v) => viewModel.itemId10.value = v,
                   ),
@@ -271,8 +271,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品11',
-                  placeholder: 'ItemID11',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID11',
                     value: viewModel.itemId11.value,
                     onChanged: (v) => viewModel.itemId11.value = v,
                   ),
@@ -286,8 +286,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品12',
-                  placeholder: 'ItemID12',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID12',
                     value: viewModel.itemId12.value,
                     onChanged: (v) => viewModel.itemId12.value = v,
                   ),
@@ -296,8 +296,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品13',
-                  placeholder: 'ItemID13',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID13',
                     value: viewModel.itemId13.value,
                     onChanged: (v) => viewModel.itemId13.value = v,
                   ),
@@ -306,8 +306,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品14',
-                  placeholder: 'ItemID14',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID14',
                     value: viewModel.itemId14.value,
                     onChanged: (v) => viewModel.itemId14.value = v,
                   ),
@@ -316,8 +316,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品15',
-                  placeholder: 'ItemID15',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID15',
                     value: viewModel.itemId15.value,
                     onChanged: (v) => viewModel.itemId15.value = v,
                   ),
@@ -331,8 +331,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '物品16',
-                  placeholder: 'ItemID16',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'ItemID16',
                     value: viewModel.itemId16.value,
                     onChanged: (v) => viewModel.itemId16.value = v,
                   ),
@@ -360,8 +360,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '法术0',
-                  placeholder: 'SetSpellID0',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetSpellID0',
                     value: viewModel.setSpellId0.value,
                     onChanged: (v) => viewModel.setSpellId0.value = v,
                   ),
@@ -370,8 +370,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '法术1',
-                  placeholder: 'SetSpellID1',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetSpellID1',
                     value: viewModel.setSpellId1.value,
                     onChanged: (v) => viewModel.setSpellId1.value = v,
                   ),
@@ -380,8 +380,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '法术2',
-                  placeholder: 'SetSpellID2',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetSpellID2',
                     value: viewModel.setSpellId2.value,
                     onChanged: (v) => viewModel.setSpellId2.value = v,
                   ),
@@ -390,8 +390,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '法术3',
-                  placeholder: 'SetSpellID3',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetSpellID3',
                     value: viewModel.setSpellId3.value,
                     onChanged: (v) => viewModel.setSpellId3.value = v,
                   ),
@@ -405,8 +405,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '法术4',
-                  placeholder: 'SetSpellID4',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetSpellID4',
                     value: viewModel.setSpellId4.value,
                     onChanged: (v) => viewModel.setSpellId4.value = v,
                   ),
@@ -415,8 +415,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '法术5',
-                  placeholder: 'SetSpellID5',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetSpellID5',
                     value: viewModel.setSpellId5.value,
                     onChanged: (v) => viewModel.setSpellId5.value = v,
                   ),
@@ -425,8 +425,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '法术6',
-                  placeholder: 'SetSpellID6',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetSpellID6',
                     value: viewModel.setSpellId6.value,
                     onChanged: (v) => viewModel.setSpellId6.value = v,
                   ),
@@ -435,8 +435,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '法术7',
-                  placeholder: 'SetSpellID7',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetSpellID7',
                     value: viewModel.setSpellId7.value,
                     onChanged: (v) => viewModel.setSpellId7.value = v,
                   ),
@@ -461,8 +461,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '门槛0',
-                  placeholder: 'SetThreshold0',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetThreshold0',
                     value: viewModel.setThreshold0.value,
                     onChanged: (v) => viewModel.setThreshold0.value = v,
                   ),
@@ -471,8 +471,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '门槛1',
-                  placeholder: 'SetThreshold1',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetThreshold1',
                     value: viewModel.setThreshold1.value,
                     onChanged: (v) => viewModel.setThreshold1.value = v,
                   ),
@@ -481,8 +481,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '门槛2',
-                  placeholder: 'SetThreshold2',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetThreshold2',
                     value: viewModel.setThreshold2.value,
                     onChanged: (v) => viewModel.setThreshold2.value = v,
                   ),
@@ -491,8 +491,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '门槛3',
-                  placeholder: 'SetThreshold3',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetThreshold3',
                     value: viewModel.setThreshold3.value,
                     onChanged: (v) => viewModel.setThreshold3.value = v,
                   ),
@@ -506,8 +506,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '门槛4',
-                  placeholder: 'SetThreshold4',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetThreshold4',
                     value: viewModel.setThreshold4.value,
                     onChanged: (v) => viewModel.setThreshold4.value = v,
                   ),
@@ -516,8 +516,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '门槛5',
-                  placeholder: 'SetThreshold5',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetThreshold5',
                     value: viewModel.setThreshold5.value,
                     onChanged: (v) => viewModel.setThreshold5.value = v,
                   ),
@@ -526,8 +526,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '门槛6',
-                  placeholder: 'SetThreshold6',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetThreshold6',
                     value: viewModel.setThreshold6.value,
                     onChanged: (v) => viewModel.setThreshold6.value = v,
                   ),
@@ -536,8 +536,8 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(
                 child: FormItem(
                   label: '门槛7',
-                  placeholder: 'SetThreshold7',
                   child: FoxyNumberInput<int>(
+                    placeholder: 'SetThreshold7',
                     value: viewModel.setThreshold7.value,
                     onChanged: (v) => viewModel.setThreshold7.value = v,
                   ),
