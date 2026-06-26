@@ -10,7 +10,7 @@ class FoxyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var shadSonnerTheme = ShadSonnerTheme(alignment: Alignment.topCenter);
-    var family = Platform.isWindows ? 'Microsoft YaHei' : null;
+    var family = Platform.isWindows ? 'Microsoft YaHei UI' : null;
     var shadTextTheme = ShadTextTheme(family: family);
     var shadThemeData = ShadThemeData(
       sonnerTheme: shadSonnerTheme,
