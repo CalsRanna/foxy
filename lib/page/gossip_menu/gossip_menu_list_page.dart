@@ -78,7 +78,7 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
     final total = viewModel.total.value;
 
     final createBtn = ShadButton(
-      leading: Icon(LucideIcons.plus),
+      leading: Icon(LucideIcons.plus, size: 16),
       onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );

@@ -12,7 +12,7 @@ class FrequentModuleComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+    const textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
     const title = Text('常用功能', style: textStyle);
     final featureViewModel = GetIt.instance.get<FeatureViewModel>();
     final features = featureViewModel.favoriteFeatures;

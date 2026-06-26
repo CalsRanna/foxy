@@ -99,7 +99,7 @@ class _SpellListPageState extends State<SpellListPage> {
 
   Widget _buildTable() {
     var createButton = ShadButton(
-      leading: Icon(LucideIcons.plus),
+      leading: Icon(LucideIcons.plus, size: 16),
       onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );

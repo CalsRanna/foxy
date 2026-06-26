@@ -42,7 +42,7 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
   Widget _buildTable() {
     var createButton = ShadButton(
       onPressed: _showCreateDialog,
-      leading: Icon(LucideIcons.plus),
+      leading: Icon(LucideIcons.plus, size: 16),
       child: Text('新增'),
     );
     final toolbar = Row(children: [createButton, Spacer()]);
