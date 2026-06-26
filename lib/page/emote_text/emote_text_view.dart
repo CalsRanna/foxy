@@ -32,17 +32,17 @@ class _EmoteTextViewState extends State<EmoteTextView> {
   @override
   Widget build(BuildContext context) {
     /// Basic
-    final idInput = FormItem(label: '编号', placeholder: 'ID', child: FoxyNumberInput<int>(value: viewModel.id.value, onChanged: (v) => viewModel.id.value = v, readOnly: true));
+  final idInput = FormItem(label: '编号', child: FoxyNumberInput<int>(placeholder: 'ID', value: viewModel.id.value, onChanged:(v) => viewModel.id.value = v, readOnly: true));
     final nameInput = FormItem(controller: viewModel.nameController, label: '名称', placeholder: 'Name');
-    final emoteIdInput = FormItem(label: '表情编号', placeholder: 'EmoteID', child: FoxyNumberInput<int>(value: viewModel.emoteId.value, onChanged: (v) => viewModel.emoteId.value = v));
+  final emoteIdInput = FormItem(label: '表情编号', child: FoxyNumberInput<int>(placeholder: 'EmoteID', value: viewModel.emoteId.value, onChanged:(v) => viewModel.emoteId.value = v));
 
     /// EmoteText
     final emoteTextInputs = List.generate(16, (i) {
       final s = _getEmoteTextSignal(i);
       return FormItem(
         label: '表情文本$i',
-        placeholder: 'EmoteText$i',
         child: FoxyNumberInput<int>(value: s.value, onChanged: (v) => s.value = v),
+          placeholder: 'EmoteText$i',
       );
     });
 
