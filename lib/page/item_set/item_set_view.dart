@@ -48,99 +48,127 @@ class _ItemSetViewState extends State<ItemSetView> {
   }
 
   Widget _buildBasicInfo() {
-    return ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 0,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text('基本信息'),
+        ),
+        ShadCard(
+          padding: EdgeInsets.all(16),
+          child: Column(
             spacing: 8,
             children: [
-              Expanded(
-                child: FormItem(
-                  label: '编号',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'ID',
-                    value: viewModel.id.value,
-                    onChanged: (v) => viewModel.id.value = v,
-                    readOnly: true,
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FormItem(
+                      label: '编号',
+                      child: FoxyNumberInput<int>(
+                        placeholder: 'ID',
+                        value: viewModel.id.value,
+                        onChanged: (v) => viewModel.id.value = v,
+                        readOnly: true,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Expanded(
-                child: FormItem(
-                  label: '需求技能',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'RequiredSkill',
-                    value: viewModel.requiredSkill.value,
-                    onChanged: (v) => viewModel.requiredSkill.value = v,
+                  Expanded(
+                    child: FormItem(
+                      label: '需求技能',
+                      child: FoxyNumberInput<int>(
+                        placeholder: 'RequiredSkill',
+                        value: viewModel.requiredSkill.value,
+                        onChanged: (v) => viewModel.requiredSkill.value = v,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Expanded(
-                child: FormItem(
-                  label: '需求技能等级',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'RequiredSkillRank',
-                    value: viewModel.requiredSkillRank.value,
-                    onChanged: (v) => viewModel.requiredSkillRank.value = v,
+                  Expanded(
+                    child: FormItem(
+                      label: '需求技能等级',
+                      child: FoxyNumberInput<int>(
+                        placeholder: 'RequiredSkillRank',
+                        value: viewModel.requiredSkillRank.value,
+                        onChanged: (v) => viewModel.requiredSkillRank.value = v,
+                      ),
+                    ),
                   ),
-                ),
+                  Expanded(child: SizedBox()),
+                ],
               ),
-              Expanded(child: SizedBox()),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildNameText() {
-    return ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 0,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text('名称文本'),
+        ),
+        ShadCard(
+          padding: EdgeInsets.all(16),
+          child: Column(
             spacing: 8,
             children: [
-              Expanded(
-                child: FormItem(
-                  controller: viewModel.nameLangEnUSController,
-                  label: '英文名称',
-                  placeholder: 'enUS',
-                ),
-              ),
-              Expanded(
-                child: FormItem(
-                  controller: viewModel.nameLangZhCNController,
-                  label: '简体中文名称',
-                  placeholder: 'zhCN',
-                ),
-              ),
-              Expanded(
-                child: FormItem(
-                  controller: viewModel.nameLangZhTWController,
-                  label: '繁体中文名称',
-                  placeholder: 'zhTW',
-                ),
-              ),
-              Expanded(
-                child: FormItem(
-                  controller: viewModel.nameLangKoKRController,
-                  label: '韩文名称',
-                  placeholder: 'koKR',
-                ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FormItem(
+                      controller: viewModel.nameLangEnUSController,
+                      label: '英文名称',
+                      placeholder: 'enUS',
+                    ),
+                  ),
+                  Expanded(
+                    child: FormItem(
+                      controller: viewModel.nameLangZhCNController,
+                      label: '简体中文名称',
+                      placeholder: 'zhCN',
+                    ),
+                  ),
+                  Expanded(
+                    child: FormItem(
+                      controller: viewModel.nameLangZhTWController,
+                      label: '繁体中文名称',
+                      placeholder: 'zhTW',
+                    ),
+                  ),
+                  Expanded(
+                    child: FormItem(
+                      controller: viewModel.nameLangKoKRController,
+                      label: '韩文名称',
+                      placeholder: 'koKR',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildItemIds() {
-    return ShadCard(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 0,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text('套装物品'),
+        ),
+        ShadCard(
       padding: EdgeInsets.all(16),
       child: Column(
         spacing: 8,
@@ -345,11 +373,21 @@ class _ItemSetViewState extends State<ItemSetView> {
           ),
         ],
       ),
-    );
+    ),
+  ],
+);
   }
 
   Widget _buildSetSpellIds() {
-    return ShadCard(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 0,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text('套装法术'),
+        ),
+        ShadCard(
       padding: EdgeInsets.all(16),
       child: Column(
         spacing: 8,
@@ -446,11 +484,21 @@ class _ItemSetViewState extends State<ItemSetView> {
           ),
         ],
       ),
-    );
+    ),
+  ],
+);
   }
 
   Widget _buildSetThresholds() {
-    return ShadCard(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 0,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text('触发阈值'),
+        ),
+        ShadCard(
       padding: EdgeInsets.all(16),
       child: Column(
         spacing: 8,
@@ -547,7 +595,9 @@ class _ItemSetViewState extends State<ItemSetView> {
           ),
         ],
       ),
-    );
+    ),
+  ],
+);
   }
 
   Widget _buildButtons() {
