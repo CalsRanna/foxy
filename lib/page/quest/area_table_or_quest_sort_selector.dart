@@ -334,16 +334,16 @@ class _DialogState extends State<_Dialog> {
   Future<void> _search() async {
     try {
       if (_currentMode == 'AreaTable') {
-        final _repository = GetIt.instance.get<AreaTableRepository>();
+        final repository = GetIt.instance.get<AreaTableRepository>();
         final filter = AreaTableFilterEntity(
           id: _idController.text,
           name: _nameController.text,
         );
-        final items = await _repository.getAreaTables(
+        final items = await repository.getAreaTables(
           filter: filter,
           page: _page,
         );
-        final total = await _repository.countAreaTables(filter: filter);
+        final total = await repository.countAreaTables(filter: filter);
         if (mounted) {
           setState(() {
             _areaItems = items;
@@ -352,16 +352,16 @@ class _DialogState extends State<_Dialog> {
           });
         }
       } else {
-        final _repository = GetIt.instance.get<QuestSortRepository>();
+        final repository = GetIt.instance.get<QuestSortRepository>();
         final filter = QuestSortFilterEntity(
           id: _idController.text,
           name: _nameController.text,
         );
-        final items = await _repository.getQuestSorts(
+        final items = await repository.getQuestSorts(
           filter: filter,
           page: _page,
         );
-        final total = await _repository.countQuestSorts(filter: filter);
+        final total = await repository.countQuestSorts(filter: filter);
         if (mounted) {
           setState(() {
             _questItems = items;

@@ -275,12 +275,12 @@ class _DialogState extends State<_Dialog> {
         name: _nameController.text,
         description: _descriptionController.text,
       );
-      final _repository = GetIt.instance.get<ItemTemplateRepository>();
-      final items = await _repository.getBriefItemTemplates(
+      final repository = GetIt.instance.get<ItemTemplateRepository>();
+      final items = await repository.getBriefItemTemplates(
         filter: filter,
         page: _page,
       );
-      final total = await _repository.countItemTemplates(filter: filter);
+      final total = await repository.countItemTemplates(filter: filter);
       if (mounted) {
         setState(() {
           _items = items;
