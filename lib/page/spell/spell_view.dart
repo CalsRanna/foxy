@@ -6,6 +6,7 @@ import 'package:foxy/page/spell/spell_range_selector.dart';
 import 'package:foxy/page/area_table/area_table_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -1738,25 +1739,25 @@ class _SpellViewState extends State<SpellView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          section('基础文本', basicRows),
-          section('图标视觉', visualRows),
-          section('分类类型', categoryRows),
-          section('施法参数', castingRows),
-          section('冷却恢复', recoveryRows),
-          section('目标', targetRows),
-          section('状态', stateRows),
-          section('需求', requiredRows),
-          section('能量消耗', powerRows),
-          section('标志位', attributeFlagRows),
-          section('触发', procRows),
-          section('法术分类掩码', spellClassRows),
-          section('效果0', effect0Rows),
-          section('效果1', effect1Rows),
-          section('效果2', effect2Rows),
-          section('装备限制', equipRows),
-          section('图腾', totemRows),
-          section('施法材料', reagentRows),
-          section('其他高级属性', otherRows),
+          FormSection(title: '基础文本', children: basicRows),
+          FormSection(title: '图标视觉', children: visualRows),
+          FormSection(title: '分类类型', children: categoryRows),
+          FormSection(title: '施法参数', children: castingRows),
+          FormSection(title: '冷却恢复', children: recoveryRows),
+          FormSection(title: '目标', children: targetRows),
+          FormSection(title: '状态', children: stateRows),
+          FormSection(title: '需求', children: requiredRows),
+          FormSection(title: '能量消耗', children: powerRows),
+          FormSection(title: '标志位', children: attributeFlagRows),
+          FormSection(title: '触发', children: procRows),
+          FormSection(title: '法术分类掩码', children: spellClassRows),
+          FormSection(title: '效果0', children: effect0Rows),
+          FormSection(title: '效果1', children: effect1Rows),
+          FormSection(title: '效果2', children: effect2Rows),
+          FormSection(title: '装备限制', children: equipRows),
+          FormSection(title: '图腾', children: totemRows),
+          FormSection(title: '施法材料', children: reagentRows),
+          FormSection(title: '其他高级属性', children: otherRows),
           Row(
             children: [
               ShadButton(
@@ -1774,21 +1775,4 @@ class _SpellViewState extends State<SpellView> {
       ),
     );
   }
-}
-
-Widget section(String title, List<Widget> rows) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    spacing: 0,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text(title),
-      ),
-      ShadCard(
-        padding: EdgeInsets.all(16),
-        child: Column(spacing: 8, children: rows),
-      ),
-    ],
-  );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/item_set/item_set_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -48,19 +49,7 @@ class _ItemSetViewState extends State<ItemSetView> {
   }
 
   Widget _buildBasicInfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 0,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text('基本信息'),
-        ),
-        ShadCard(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            spacing: 8,
-            children: [
+    return FormSection(title: '基本信息', children: [
               Row(
                 spacing: 8,
                 children: [
@@ -98,27 +87,12 @@ class _ItemSetViewState extends State<ItemSetView> {
                   Expanded(child: SizedBox()),
                 ],
               ),
-            ],
-          ),
-        ),
-      ],
-    );
+  ],
+);
   }
 
   Widget _buildNameText() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 0,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text('名称文本'),
-        ),
-        ShadCard(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            spacing: 8,
-            children: [
+    return FormSection(title: '名称文本', children: [
               Row(
                 spacing: 8,
                 children: [
@@ -152,27 +126,12 @@ class _ItemSetViewState extends State<ItemSetView> {
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-      ],
-    );
+  ],
+);
   }
 
   Widget _buildItemIds() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 0,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text('套装物品'),
-        ),
-        ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
+    return FormSection(title: '套装物品', children: [
           Row(
             spacing: 8,
             children: [
@@ -371,27 +330,12 @@ class _ItemSetViewState extends State<ItemSetView> {
               Expanded(child: SizedBox()),
             ],
           ),
-        ],
-      ),
-    ),
   ],
 );
   }
 
   Widget _buildSetSpellIds() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 0,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text('套装法术'),
-        ),
-        ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
+    return FormSection(title: '套装法术', children: [
           Row(
             spacing: 8,
             children: [
@@ -482,27 +426,12 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ],
           ),
-        ],
-      ),
-    ),
   ],
 );
   }
 
   Widget _buildSetThresholds() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 0,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text('触发阈值'),
-        ),
-        ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
+    return FormSection(title: '触发阈值', children: [
           Row(
             spacing: 8,
             children: [
@@ -593,9 +522,6 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ],
           ),
-        ],
-      ),
-    ),
   ],
 );
   }

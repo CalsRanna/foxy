@@ -11,12 +11,13 @@ class Trend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (activities.isEmpty) {
-      return const FoxyCard(
-        title: Text('动态'),
+      final mutedColor = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5);
+      return FoxyCard(
+        title: const Text('动态'),
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 24),
+          padding: const EdgeInsets.symmetric(vertical: 24),
           child: Center(
-            child: Text('暂无动态', style: TextStyle(color: Colors.grey)),
+            child: Text('暂无动态', style: TextStyle(color: mutedColor)),
           ),
         ),
       );
@@ -99,7 +100,7 @@ class _TrendItem extends StatelessWidget {
           ),
           Text(
             _timeAgo(activity.createdAt),
-            style: textTheme.bodySmall?.copyWith(color: Colors.grey),
+            style: textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -237,130 +238,86 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          // 分组1: 基础信息
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(
+          FormSection(title: '基础信息', children: [
+            Row(
               spacing: 8,
               children: [
-                Text(
-                  '基础信息',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: idInput),
-                    Expanded(child: charlevelInput),
-                    Expanded(child: SizedBox()),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
+                Expanded(child: idInput),
+                Expanded(child: charlevelInput),
+                Expanded(child: SizedBox()),
+                Expanded(child: SizedBox()),
               ],
             ),
-          ),
-          // 分组2: 预算值
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(
+          ]),
+          FormSection(title: '预算值', children: [
+            Row(
               spacing: 8,
               children: [
-                Text(
-                  '预算值',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: shoulderBudgetInput),
-                    Expanded(child: trinketBudgetInput),
-                    Expanded(child: weaponBudget1HInput),
-                    Expanded(child: rangedBudgetInput),
-                  ],
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: primaryBudgetInput),
-                    Expanded(child: tertiaryBudgetInput),
-                    Expanded(child: spellPowerInput),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
+                Expanded(child: shoulderBudgetInput),
+                Expanded(child: trinketBudgetInput),
+                Expanded(child: weaponBudget1HInput),
+                Expanded(child: rangedBudgetInput),
               ],
             ),
-          ),
-          // 分组3: 护甲值
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(
+            Row(
               spacing: 8,
               children: [
-                Text(
-                  '护甲值',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: clothShoulderArmorInput),
-                    Expanded(child: leatherShoulderArmorInput),
-                    Expanded(child: mailShoulderArmorInput),
-                    Expanded(child: plateShoulderArmorInput),
-                  ],
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: clothCloakArmorInput),
-                    Expanded(child: clothChestArmorInput),
-                    Expanded(child: leatherChestArmorInput),
-                    Expanded(child: mailChestArmorInput),
-                  ],
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: plateChestArmorInput),
-                    Expanded(child: SizedBox()),
-                    Expanded(child: SizedBox()),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
+                Expanded(child: primaryBudgetInput),
+                Expanded(child: tertiaryBudgetInput),
+                Expanded(child: spellPowerInput),
+                Expanded(child: SizedBox()),
               ],
             ),
-          ),
-          // 分组4: DPS值
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(
+          ]),
+          FormSection(title: '护甲值', children: [
+            Row(
               spacing: 8,
               children: [
-                Text(
-                  'DPS值',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: weaponDPS1HInput),
-                    Expanded(child: weaponDPS2HInput),
-                    Expanded(child: spellcasterDPS1HInput),
-                    Expanded(child: spellcasterDPS2HInput),
-                  ],
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: rangedDPSInput),
-                    Expanded(child: wandDPSInput),
-                    Expanded(child: SizedBox()),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
+                Expanded(child: clothShoulderArmorInput),
+                Expanded(child: leatherShoulderArmorInput),
+                Expanded(child: mailShoulderArmorInput),
+                Expanded(child: plateShoulderArmorInput),
               ],
             ),
-          ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(child: clothCloakArmorInput),
+                Expanded(child: clothChestArmorInput),
+                Expanded(child: leatherChestArmorInput),
+                Expanded(child: mailChestArmorInput),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(child: plateChestArmorInput),
+                Expanded(child: SizedBox()),
+                Expanded(child: SizedBox()),
+                Expanded(child: SizedBox()),
+              ],
+            ),
+          ]),
+          FormSection(title: 'DPS值', children: [
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(child: weaponDPS1HInput),
+                Expanded(child: weaponDPS2HInput),
+                Expanded(child: spellcasterDPS1HInput),
+                Expanded(child: spellcasterDPS2HInput),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(child: rangedDPSInput),
+                Expanded(child: wandDPSInput),
+                Expanded(child: SizedBox()),
+                Expanded(child: SizedBox()),
+              ],
+            ),
+          ]),
           Row(
             children: [
               ShadButton(

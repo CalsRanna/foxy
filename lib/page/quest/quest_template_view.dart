@@ -6,6 +6,7 @@ import 'package:foxy/page/quest_info/quest_info_selector.dart';
 import 'package:foxy/page/creature_template/char_title_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -1266,36 +1267,19 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
       ),
     ];
 
-    Widget section(String title, List<Widget> rows) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 0,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(title),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: rows),
-          ),
-        ],
-      );
-    }
-
     return SingleChildScrollView(
       padding: EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          section('基础信息', basicRows),
-          section('任务目标', objectiveRows),
-          section('基础奖励', basicRewardRows),
-          section('奖励物品', rewardItemRows),
-          section('奖励声望', rewardFactionRows),
-          section('任务文本', textRows),
-          section('位置与其他', miscRows),
+          FormSection(title: '基础信息', children: basicRows),
+          FormSection(title: '任务目标', children: objectiveRows),
+          FormSection(title: '基础奖励', children: basicRewardRows),
+          FormSection(title: '奖励物品', children: rewardItemRows),
+          FormSection(title: '奖励声望', children: rewardFactionRows),
+          FormSection(title: '任务文本', children: textRows),
+          FormSection(title: '位置与其他', children: miscRows),
           Row(
             spacing: 8,
             children: [
