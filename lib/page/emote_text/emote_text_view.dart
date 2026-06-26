@@ -41,8 +41,8 @@ class _EmoteTextViewState extends State<EmoteTextView> {
       final s = _getEmoteTextSignal(i);
       return FormItem(
         label: '表情文本$i',
-        child: FoxyNumberInput<int>(value: s.value, onChanged: (v) => s.value = v),
           placeholder: 'EmoteText$i',
+        child: FoxyNumberInput<int>(value: s.value, onChanged: (v) => s.value = v),
       );
     });
 
