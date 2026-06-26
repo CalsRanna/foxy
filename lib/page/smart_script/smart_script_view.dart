@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -386,33 +387,16 @@ class _SmartScriptViewState extends State<SmartScriptView> {
       ),
     ];
 
-    Widget section(String title, List<Widget> rows) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 0,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(title),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: rows),
-          ),
-        ],
-      );
-    }
-
     return SingleChildScrollView(
       padding: EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          section('基础信息', basicRows),
-          section('事件参数', eventRows),
-          section('动作参数', actionRows),
-          section('目标参数', targetRows),
+          FormSection(title: '基础信息', children: basicRows),
+          FormSection(title: '事件参数', children: eventRows),
+          FormSection(title: '动作参数', children: actionRows),
+          FormSection(title: '目标参数', children: targetRows),
           Row(
             spacing: 8,
             children: [

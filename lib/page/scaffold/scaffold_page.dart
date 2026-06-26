@@ -151,7 +151,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
         children.add(text);
       }
     }
-    var borderSide = BorderSide(color: Colors.grey.withValues(alpha: 0.5));
+    var borderSide = BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5));
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onPanStart: (details) {
