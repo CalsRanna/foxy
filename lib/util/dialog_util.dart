@@ -26,10 +26,16 @@ class DialogUtil {
               child: Text(cancelText),
               onPressed: () => Navigator.of(context).pop(false),
             ),
-            ShadButton.destructive(
-              child: Text(confirmText),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
+            if (destructive)
+              ShadButton.destructive(
+                child: Text(confirmText),
+                onPressed: () => Navigator.of(context).pop(true),
+              )
+            else
+              ShadButton(
+                child: Text(confirmText),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
           ],
         );
       },

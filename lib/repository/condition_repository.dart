@@ -49,9 +49,6 @@ class ConditionRepository with RepositoryMixin {
     json.remove('ElseGroup');
     json.remove('ConditionTypeOrReference');
     json.remove('ConditionTarget');
-    json.remove('ConditionValue1');
-    json.remove('ConditionValue2');
-    json.remove('ConditionValue3');
 
     var builder = laconic.table(_table);
     for (final entry in id.entries) {

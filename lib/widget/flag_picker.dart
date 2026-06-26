@@ -23,13 +23,14 @@ class FlagPicker extends StatefulWidget {
 
 class _FlagPickerState extends State<FlagPicker> {
   late final TextEditingController _displayController;
+  void Function()? _unsub;
   bool _isInternal = false;
 
   @override
   void initState() {
     super.initState();
     _displayController = TextEditingController(text: _format(widget.signal.value));
-    widget.signal.subscribe(_onSignalChanged);
+    _unsub = widget.signal.subscribe(_onSignalChanged);
   }
 
   @override
@@ -43,6 +44,7 @@ class _FlagPickerState extends State<FlagPicker> {
 
   @override
   void dispose() {
+    _unsub?.call();
     _displayController.dispose();
     super.dispose();
   }
