@@ -68,8 +68,9 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     // 已导入，无需操作
     if (vm.dbcImported.value) return;
 
-    // 自动导入进行中（config 中预设了路径），显示进度
-    if (vm.dbcImportProgress.value.isNotEmpty) {
+    // 路径已配置 → 自动导入（显示进度对话框并启动导入）
+    if (vm.dbcPath.value != null) {
+      vm.startImport();
       showShadDialog(
         context: context,
         builder: (ctx) => _DbcImportDialog(vm: dbcImportViewModel),
@@ -77,7 +78,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       return;
     }
 
-    // 未导入 → 显示提醒对话框
+    // 未配置路径 → 显示提醒对话框
     showShadDialog(
       context: context,
       builder: (ctx) => ShadDialog.alert(
@@ -213,22 +214,65 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
 const _kDbcDialogWidth = 480.0;
 
 /// 解析进度文本，返回 (进度比例, 当前文件, 行数)
+/// 支持格式：
+/// - '3 / 30' → 文件计数器
+/// - '3 / 30\n导入中：Spell (200 行)' → 计数器 + 当前文件进度
+/// - '3 / 30\nSpell: 导入失败（...）' → 计数器 + 错误信息
+/// - '3 / 30\nSpell: 已跳过' → 计数器 + 跳过信息
 (double? ratio, String currentFile, String detail) _parseProgress(String text) {
   if (text.isEmpty) return (null, '', '');
 
-  final doneTotal = RegExp(r'^(\d+)\s*/\s*(\d+)$').firstMatch(text);
+  final lines = text.split('\n');
+  final firstLine = lines.first;
+  String? secondLine;
+  if (lines.length > 1) secondLine = lines[1];
+
+  // 解析第一行的文件计数器: 'done / total'
+  final doneTotal = RegExp(r'^(\d+)\s*/\s*(\d+)$').firstMatch(firstLine);
+  double? ratio;
   if (doneTotal != null) {
     final done = int.parse(doneTotal.group(1)!);
     final total = int.parse(doneTotal.group(2)!);
-    return (done / total, '', '已处理 $done / $total 个文件');
+    ratio = done / total;
   }
 
-  final importing = RegExp(r'^导入中：(.+?)(?:\s*$|\s*\.{3}\s*$)').firstMatch(text);
+  // 解析第二行
+  if (secondLine != null) {
+    // 文件内进度: '导入中：Xxx (N 行)' 或 '导入中：Xxx ...'
+    final importing = RegExp(r'^导入中：(.+?)(?:\s*\.{3}\s*)?$').firstMatch(secondLine);
+    if (importing != null) {
+      return (ratio, importing.group(1)!, '');
+    }
+    final importingRows = RegExp(r'^导入中：(.+?)\s*\((\d+)\s*行\)$').firstMatch(secondLine);
+    if (importingRows != null) {
+      return (ratio, importingRows.group(1)!, '${importingRows.group(2)} 行');
+    }
+    // 错误信息: 'Xxx: 导入失败（...）'
+    final errorLine = RegExp(r'^(.+?):\s*导入失败（(.+)）$').firstMatch(secondLine);
+    if (errorLine != null) {
+      return (ratio, errorLine.group(1)!, '导入失败：${errorLine.group(2)}');
+    }
+    // 跳过信息: 'Xxx: 已跳过'
+    final skipLine = RegExp(r'^(.+?):\s*已跳过$').firstMatch(secondLine);
+    if (skipLine != null) {
+      return (ratio, skipLine.group(1)!, '已跳过');
+    }
+    return (ratio, secondLine, '');
+  }
+
+  // 第一行本身就是文件计数器
+  if (ratio != null) {
+    final done = int.parse(doneTotal!.group(1)!);
+    final total = int.parse(doneTotal.group(2)!);
+    return (ratio, '', '已处理 $done / $total 个文件');
+  }
+
+  // 单行文件进度（兼容旧格式，无文件计数器）
+  final importing = RegExp(r'^导入中：(.+?)(?:\s*\.{3}\s*)?$').firstMatch(firstLine);
   if (importing != null) {
     return (null, importing.group(1)!, '');
   }
-
-  final importingRows = RegExp(r'^导入中：(.+?)\s*\((\d+)\s*行\)$').firstMatch(text);
+  final importingRows = RegExp(r'^导入中：(.+?)\s*\((\d+)\s*行\)$').firstMatch(firstLine);
   if (importingRows != null) {
     return (null, importingRows.group(1)!, '${importingRows.group(2)} 行');
   }
