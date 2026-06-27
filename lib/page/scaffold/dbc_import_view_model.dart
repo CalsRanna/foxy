@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
@@ -26,25 +27,94 @@ class DbcImportViewModel {
   /// 错误信息，null 表示无错误
   final dbcImportError = signal<String?>(null);
 
+  /// 应用业务实际使用的 DBC 表名（foxy 库中，不含 foxy. 前缀）
+  static const requiredDbcTableNames = [
+    'dbc_achievement',
+    'dbc_area_table',
+    'dbc_char_titles',
+    'dbc_creature_display_info',
+    'dbc_creature_model_data',
+    'dbc_creature_spell_data',
+    'dbc_currency_types',
+    'dbc_emotes_text',
+    'dbc_faction',
+    'dbc_gem_properties',
+    'dbc_glyph_properties',
+    'dbc_item_display_info',
+    'dbc_item_extended_cost',
+    'dbc_item_random_properties',
+    'dbc_item_random_suffix',
+    'dbc_item_set',
+    'dbc_lock',
+    'dbc_map',
+    'dbc_quest_faction_reward',
+    'dbc_quest_info',
+    'dbc_quest_sort',
+    'dbc_scaling_stat_distribution',
+    'dbc_scaling_stat_values',
+    'dbc_spell',
+    'dbc_spell_duration',
+    'dbc_spell_icon',
+    'dbc_spell_item_enchantment',
+    'dbc_spell_range',
+    'dbc_talent',
+    'dbc_vehicle',
+  ];
+
   // ========== 导入流程 ==========
 
-  /// 从 config.yaml 加载并检查 DBC 状态
+  /// 检查 foxy 数据库中是否存在业务所需的全部 DBC 表（且有数据）。
+  /// 仅查询数据库状态，不启动导入。若 config 中已预设 dbc_path 则同步到信号。
   Future<void> checkAndImport() async {
     try {
       if (dbcImported.value) return;
 
+      // 1. 查询数据库中已有的 DBC 表
+      final missing = await _checkRequiredTablesExist();
+      if (missing.isEmpty) {
+        dbcImported.value = true;
+        return;
+      }
+
+      // 2. 有缺失 → 检查是否已配置 DBC 路径（不在此启动导入，由 UI 层决定时机）
       final config = await _loadConfig();
       final path = config['dbc_path'] as String?;
       if (path != null && path.isNotEmpty) {
         dbcPath.value = path;
       }
-
-      if (dbcPath.value == null) return;
-
-      await _runImport(Database.instance.laconic);
     } catch (e) {
       LoggerUtil.instance.e('检查DBC导入状态失败: $e');
       DialogUtil.instance.error('检查DBC导入状态失败: $e');
+    }
+  }
+
+  /// 启动 DBC 导入（需先设置 [dbcPath]）。
+  /// 调用后立即返回，导入进度通过 [dbcImportProgress] / [dbcImported] / [dbcImportError] 信号跟踪。
+  void startImport() {
+    if (dbcPath.value == null) return;
+    _runImport(Database.instance.laconic).catchError((_) {
+      // 错误已在 _runImport 内部通过 dbcImportError 信号处理
+    });
+  }
+
+  /// 查询 information_schema 检查必需表是否存在且有数据。
+  /// 返回缺失的表名列表（均缺失时返回完整列表）。
+  Future<List<String>> _checkRequiredTablesExist() async {
+    try {
+      final laconic = Database.instance.laconic;
+      final results = await laconic.select(
+        "SELECT TABLE_NAME FROM information_schema.TABLES "
+        "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME LIKE 'dbc_%' AND TABLE_ROWS > 0",
+      );
+      final existing =
+          results.map((r) => r['TABLE_NAME'] as String).toSet();
+      return requiredDbcTableNames
+          .where((t) => !existing.contains(t))
+          .toList();
+    } catch (e) {
+      LoggerUtil.instance.w('查询 DBC 表状态失败: $e');
+      // 查询失败视为全部缺失，触发导入流程
+      return requiredDbcTableNames.toList();
     }
   }
 
@@ -120,118 +190,100 @@ class DbcImportViewModel {
         password: config['password'] as String? ?? 'acore',
         files: fileDefs,
       );
+      if (fileDefs.isEmpty) {
+        dbcImportProgress.value = '';
+        dbcImportError.value =
+            '未在目录中找到可导入的 DBC 文件，请确认目录路径是否正确。\n'
+            '目录：${dbcPath.value}';
+        return;
+      }
+
       await Isolate.spawn<_WorkerArgs>(_importWorker, workerArgs);
 
-      // 初始化日志文件头
-      await _writeTimingHeader();
-      await for (final msg in receivePort) {
-        switch (msg) {
-          case (int done, int total):
-            dbcImportProgress.value = '$done / $total';
-          case (String fileName, int processed):
-            if (processed < 0) {
-              dbcImportProgress.value = '导入中：$fileName ...';
-            } else {
-              dbcImportProgress.value = '导入中：$fileName ($processed 行)';
-            }
-          case (String fileName, 'skip', _):
-            await _appendTimingLine(fileName, 'SKIP', 0, 0, 0, 0);
-          case (String fileName, 'err', String errMsg):
-            await _appendTimingLine(fileName, 'ERR', 0, 0, 0, 0, detail: errMsg);
-          case (
-            String fileName,
-            int parseUs,
-            int convertUs,
-            int insertUs,
-            int startedAt,
-          ):
-            await _appendTimingLine(
-              fileName,
-              'OK',
-              parseUs,
-              convertUs,
-              insertUs,
-              startedAt,
-            );
-          case (bool success, int imported, int skipped, List errs):
-            await _appendTimingSummary(
-              imported,
-              skipped,
-              errs.length,
-              errs.cast<String>(),
-            );
-            if (success) {
-              dbcImportProgress.value = '';
-              dbcImported.value = true;
-            } else {
-              final top = errs.take(3).join('\n');
-              dbcImportError.value =
-                  '导入完成，但部分文件失败：\n$top'
-                  '${errs.length > 3 ? '\n...等 ${errs.length} 个错误' : ''}';
-              dbcImportProgress.value = '';
-            }
+      var lastDone = 0;
+      var lastTotal = fileDefs.length;
+      var finalMessageReceived = false;
+
+      // 超时保护：10 分钟内无任何消息视为异常
+      Timer? timeout;
+      void resetTimeout() {
+        timeout?.cancel();
+        timeout = Timer(const Duration(minutes: 10), () {
+          if (!finalMessageReceived) {
+            LoggerUtil.instance.e('DBC 导入超时');
+            dbcImportProgress.value = '';
+            dbcImportError.value = 'DBC 导入超时（10 分钟无响应），请检查文件是否完整并重试';
             receivePort.close();
-          default:
-            break;
+          }
+        });
+      }
+
+      try {
+        resetTimeout();
+        await for (final msg in receivePort) {
+          resetTimeout();
+          switch (msg) {
+            case (int done, int total):
+              lastDone = done;
+              lastTotal = total;
+              dbcImportProgress.value = '$done / $total';
+            case (String fileName, int processed):
+              final prefix = lastTotal > 0 ? '$lastDone / $lastTotal\n' : '';
+              if (processed < 0) {
+                dbcImportProgress.value = '$prefix导入中：$fileName ...';
+              } else {
+                dbcImportProgress.value = '$prefix导入中：$fileName ($processed 行)';
+              }
+            case (String fileName, 'skip', _):
+              LoggerUtil.instance.i('DBC $fileName: 已跳过（表已有数据）');
+              dbcImportProgress.value = '$lastDone / $lastTotal\n$fileName: 已跳过';
+            case (String fileName, 'err', String errMsg):
+              LoggerUtil.instance.w('DBC $fileName: $errMsg');
+              dbcImportProgress.value = '$lastDone / $lastTotal\n$fileName: 导入失败（$errMsg）';
+            case (
+              String fileName,
+              int _,
+              int _,
+              int _,
+              int _,
+            ):
+              LoggerUtil.instance.i('DBC $fileName: 导入完成');
+            case (bool success, int imported, int skipped, List errs):
+              finalMessageReceived = true;
+              timeout?.cancel();
+              if (success) {
+                LoggerUtil.instance.i('DBC 导入完成: $imported 个文件, 跳过 $skipped 个');
+                dbcImportProgress.value = '';
+                dbcImported.value = true;
+              } else {
+                LoggerUtil.instance.w('DBC 导入完成但有错误: 成功 $imported, 跳过 $skipped, 失败 ${errs.length}');
+                for (final e in errs) {
+                  LoggerUtil.instance.w('  $e');
+                }
+                final top = errs.take(3).join('\n');
+                dbcImportError.value =
+                    '导入完成，但部分文件失败：\n$top'
+                    '${errs.length > 3 ? '\n...等 ${errs.length} 个错误' : ''}';
+                dbcImportProgress.value = '';
+              }
+              receivePort.close();
+            default:
+              break;
+          }
+        }
+      } finally {
+        timeout?.cancel();
+        receivePort.close();
+        if (!finalMessageReceived) {
+          LoggerUtil.instance.e('DBC 导入异常中断：工作者 isolate 未发送完成消息');
+          dbcImportProgress.value = '';
+          dbcImportError.value = 'DBC 导入异常中断，请检查文件是否完整并重试';
         }
       }
     } catch (e) {
       dbcImportProgress.value = '';
       dbcImportError.value = '导入出错：$e';
     }
-  }
-
-  String get _timingLogPath =>
-      p.join(Directory.current.path, 'dbc_import_timing.log');
-
-  Future<void> _writeTimingHeader() async {
-    final line =
-        '${'Time'.padRight(22)} ${'File'.padRight(28)} ${'Result'.padRight(8)} ${'Parse(ms)'.padRight(10)} ${'Convert(ms)'.padRight(12)} ${'Insert(ms)'.padRight(10)} Total(ms)';
-    await File(_timingLogPath).writeAsString('$line\n');
-  }
-
-  Future<void> _appendTimingLine(
-    String file,
-    String result,
-    int parseUs,
-    int convertUs,
-    int insertUs,
-    int startedAt, {
-    String? detail,
-  }) async {
-    final ts = DateTime.fromMicrosecondsSinceEpoch(
-      startedAt,
-    ).toIso8601String().padRight(22);
-    final parseMs = (parseUs ~/ 1000).toString();
-    final convertMs = (convertUs ~/ 1000).toString();
-    final insertMs = (insertUs ~/ 1000).toString();
-    final totalMs = ((parseUs + convertUs + insertUs) ~/ 1000).toString();
-    final line =
-        '$ts ${file.padRight(28)} ${result.padRight(8)} ${parseMs.padRight(10)} ${convertMs.padRight(12)} ${insertMs.padRight(10)} $totalMs';
-    if (detail != null) {
-      await File(_timingLogPath).writeAsString('$line  $detail\n', mode: FileMode.append);
-    } else {
-      await File(_timingLogPath).writeAsString('$line\n', mode: FileMode.append);
-    }
-  }
-
-  Future<void> _appendTimingSummary(
-    int imported,
-    int skipped,
-    int errors,
-    List<String> errorDetails,
-  ) async {
-    final buf = StringBuffer();
-    buf.writeln();
-    buf.writeln('Imported: $imported, Skipped: $skipped, Errors: $errors');
-    if (errorDetails.isNotEmpty) {
-      buf.writeln('--- Error details ---');
-      for (final err in errorDetails) {
-        buf.writeln('  $err');
-      }
-    }
-    await File(_timingLogPath).writeAsString(buf.toString(), mode: FileMode.append);
-    LoggerUtil.instance.i('DBC import timing log: $_timingLogPath');
   }
 
   // ========== 配置持久化 ==========
