@@ -551,12 +551,39 @@ String _readAndEscape(dynamic record, int index, String type, String sqlType) {
   };
 }
 
-/// MySQL 字符串字面量转义：\ → \\, ' → \', \0 → \0
+/// MySQL 字符串字面量转义。
+///
+/// 为什么这里不用参数化（prepared statement）？
+/// 复核 laconic_mysql 1.2.0 源码后确认：它对带 params 的语句走服务端真·预编译
+/// （COM_STMT_PREPARE），且每次调用都重新 prepare、无语句缓存；又因为
+/// mysql_client 的 PreparedStmt.execute 只接受单行参数，多行 INSERT 无法
+/// 一次 execute。本热路径是「单条 INSERT 含数千行 VALUES」的批量插入，
+/// 改用参数化会把每批 ~1 次 COM_QUERY 往返拆成「每行一次 prepare+execute+
+/// close」，对 dbc_spell（5 万行）会从约 10 次往返暴涨到约 15 万次。因此
+/// 保留字面多行批量路径以换取吞吐，转而在这里补全完整的 MySQL 转义集
+/// 以消除残留脆弱性。数据来自本地 DBC 文件，无注入面。
+///
+/// 转义集对齐 mysql_real_escape_string 的必要项：NUL、\n、\r、\、'、
+/// \x1a(Ctrl-Z)。固定用单引号定界，故 " 无需转义；\b/\t 裸字节在单引号
+/// 串 + backslash-escapes 默认模式下合法，不转以减小批量字节数。顺序须
+/// 先转反斜杠，避免后续插入的转义符被二次转义。
 String _escapeString(String s) {
-  if (!s.contains('\\') && !s.contains("'") && !s.contains('\x00')) {
+  if (!s.contains('\\') &&
+      !s.contains("'") &&
+      !s.contains('\x00') &&
+      !s.contains('\n') &&
+      !s.contains('\r') &&
+      !s.contains('\x1a')) {
     return "'$s'";
   }
-  return "'${s.replaceAll('\\', '\\\\').replaceAll("'", "\\'").replaceAll('\x00', '\\0')}'";
+  final out = s
+      .replaceAll('\\', '\\\\')
+      .replaceAll("'", "\\'")
+      .replaceAll('\x00', '\\0')
+      .replaceAll('\n', '\\n')
+      .replaceAll('\r', '\\r')
+      .replaceAll('\x1a', '\\Z');
+  return "'$out'";
 }
 
 // ========== 工具函数 ==========
