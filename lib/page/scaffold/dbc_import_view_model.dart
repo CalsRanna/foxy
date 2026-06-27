@@ -92,6 +92,11 @@ class DbcImportViewModel {
   }
 
   Future<void> retryImport() async {
+    // 未配置路径时不能导入：清空错误回到路径输入界面，避免 dbcPath.value! 崩溃
+    if (dbcPath.value == null) {
+      dbcImportError.value = null;
+      return;
+    }
     try {
       dbcImportError.value = null;
       _startImportWorker();
@@ -104,6 +109,7 @@ class DbcImportViewModel {
   // ========== 导入引擎 ==========
 
   void _startImportWorker() {
+    if (dbcImporting.value) return; // 防重入：setDbcPath/重试可能在导入中再次触发
     dbcImporting.value = true;
     dbcProgress.value = null;
     dbcProgressLabel.value = '准备导入...';
@@ -174,20 +180,39 @@ class DbcImportViewModel {
   // ========== 检查已有表 ==========
 
   Future<List<String>> _checkRequiredTablesExist() async {
+    final laconic = Database.instance.laconic;
+
+    // 1) 已存在的 dbc_* 表：仅判存在性，不依赖 InnoDB 估算的 TABLE_ROWS
+    //    （TABLE_ROWS 对 InnoDB 只是粗略估计，可能为 NULL 或陈旧，导致误判）
+    final Set<String> existing;
     try {
-      final laconic = Database.instance.laconic;
       final results = await laconic.select(
         "SELECT TABLE_NAME FROM information_schema.TABLES "
-        "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME LIKE 'dbc_%' AND TABLE_ROWS > 0",
+        "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME LIKE 'dbc_%'",
       );
-      final existing = results.map((r) => r['TABLE_NAME'] as String).toSet();
-      return requiredDbcTableNames
-          .where((t) => !existing.contains(t))
-          .toList();
+      existing = results.map((r) => r['TABLE_NAME'] as String).toSet();
     } catch (e) {
       LoggerUtil.instance.w('查询 DBC 表状态失败: $e');
       return requiredDbcTableNames.toList();
     }
+
+    // 2) 逐表确认非空：SELECT 1 ... LIMIT 1 比 information_schema.TABLE_ROWS 可靠；
+    //    单表探测失败时仅将该表视为缺失（保守触发导入，worker 会跳过已填充的表）
+    final missing = <String>[];
+    for (final table in requiredDbcTableNames) {
+      if (!existing.contains(table)) {
+        missing.add(table);
+        continue;
+      }
+      try {
+        final rows = await laconic.select('SELECT 1 FROM foxy.$table LIMIT 1');
+        if (rows.isEmpty) missing.add(table);
+      } catch (e) {
+        LoggerUtil.instance.w('检查表 $table 是否为空失败: $e');
+        missing.add(table);
+      }
+    }
+    return missing;
   }
 
   // ========== 配置持久化 ==========
@@ -243,8 +268,6 @@ typedef _WorkerArgs = ({
 Map<String, DbcSchema> _buildSchemaRegistry() {
   final schemas = [
     Definitions.achievement,
-    Definitions.achievementCategory,
-    Definitions.achievementCriteria,
     Definitions.areaTable,
     Definitions.charTitles,
     Definitions.creatureDisplayInfo,
@@ -355,6 +378,21 @@ Future<void> _importWorker(_WorkerArgs args) async {
   );
   try {
 
+    // 一次性查已存在的 dbc_* 表（仅判存在性），避免对不存在的表逐个 count
+    // 触发 ~30 次异常重连（首次导入时所有表都不存在）
+    final existingTables = <String>{};
+    try {
+      final existRows = await laconic.select(
+        "SELECT TABLE_NAME FROM information_schema.TABLES "
+        "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME LIKE 'dbc_%'",
+      );
+      for (final r in existRows) {
+        existingTables.add(r['TABLE_NAME'] as String);
+      }
+    } catch (_) {
+      // 查询失败不致命：退化为"逐表探测"，下面按不存在处理
+    }
+
     var imported = 0;
     var skipped = 0;
     final errors = <String>[];
@@ -363,30 +401,41 @@ Future<void> _importWorker(_WorkerArgs args) async {
       final file = fileDefs[i];
       sendPort.send(('正在处理 ${file.name}...',));
       try {
-        // 跳过已有数据的表（带超时：连接池可能复用死连接）
-        int count;
-        try {
-          count = await laconic
-              .table(file.tableName)
-              .count()
-              .timeout(const Duration(seconds: 10));
-        } on Exception {
-          await laconic.close();
-          laconic = Laconic(
-            MysqlDriver(MysqlConfig(
-              host: host, port: port, database: database,
-              username: username, password: password,
-            )),
-          );
-          count = 0;
-        }
-        if (count > 0) {
-          skipped++;
-          sendPort.send((file.name, imported + skipped + errors.length, total));
-          continue;
+        final tableShort = file.tableName.substring(5); // 去掉 'foxy.'
+        final exists = existingTables.contains(tableShort);
+
+        if (exists) {
+          // 表已存在：仅当确认无数据时才重建导入。
+          // count 失败一律跳过——绝不把"超时/连接故障"误判为空表后 DROP，
+          // 否则会清掉已有数据（含用户编辑）。
+          int count;
+          try {
+            count = await laconic
+                .table(file.tableName)
+                .count()
+                .timeout(const Duration(seconds: 10));
+          } on Exception catch (_) {
+            await laconic.close();
+            laconic = Laconic(
+              MysqlDriver(MysqlConfig(
+                host: host, port: port, database: database,
+                username: username, password: password,
+              )),
+            );
+            errors.add('${file.name}: 检查表行数失败，已跳过以防数据丢失');
+            skipped++;
+            sendPort.send((file.name, imported + skipped + errors.length, total));
+            continue;
+          }
+          if (count > 0) {
+            skipped++;
+            sendPort.send((file.name, imported + skipped + errors.length, total));
+            continue;
+          }
+          // count == 0：空表，安全重建（可能是上次导入失败留下的空壳）
         }
 
-        // 建表
+        // 表不存在或确认空 → 建表 + 导入
         await _createTable(laconic, file);
 
         // 读 DBC + 分批写入（事务包裹，单文件原子导入）
@@ -448,7 +497,10 @@ Future<int> _importFile(
   final recordCount = loader.recordCount;
   if (recordCount == 0) return 0;
 
-  const batchSize = 5000;
+  // 按累计字节封顶批大小，避免拼出超过 max_allowed_packet 的巨型 INSERT。
+  // 1 MiB 上限留有充足余量（旧版默认 4MB、新版 16/64MB）；buf.length 为字符数，
+  // 含中文时略低于实际 UTF-8 字节数，余量已覆盖。
+  const maxBatchBytes = 1 << 20;
   final cols = file.fields.map((f) => '`${f.name}`').join(', ');
   final sqlPrefix = 'INSERT INTO ${file.tableName} ($cols) VALUES ';
   var buf = StringBuffer(sqlPrefix);
@@ -466,7 +518,7 @@ Future<int> _importFile(
     buf.write(')');
     inBatch++;
 
-    if (inBatch >= batchSize) {
+    if (buf.length >= maxBatchBytes) {
       await laconic.statement(buf.toString());
       imported += inBatch;
       sendPort.send((
@@ -536,7 +588,7 @@ String _toSnakeCase(String input) {
 
 String _sqlTypeFromString(String type) {
   return switch (type) {
-    'id' => 'INT NOT NULL',
+    'id' => 'INT NOT NULL PRIMARY KEY',
     'int32' => 'INT',
     'uint8' => 'TINYINT UNSIGNED',
     'float' => 'FLOAT',
