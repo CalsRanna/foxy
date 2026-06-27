@@ -213,73 +213,6 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
 
 const _kDbcDialogWidth = 480.0;
 
-/// 解析进度文本，返回 (进度比例, 当前文件, 行数)
-/// 支持格式：
-/// - '3 / 30' → 文件计数器
-/// - '3 / 30\n导入中：Spell (200 行)' → 计数器 + 当前文件进度
-/// - '3 / 30\nSpell: 导入失败（...）' → 计数器 + 错误信息
-/// - '3 / 30\nSpell: 已跳过' → 计数器 + 跳过信息
-(double? ratio, String currentFile, String detail) _parseProgress(String text) {
-  if (text.isEmpty) return (null, '', '');
-
-  final lines = text.split('\n');
-  final firstLine = lines.first;
-  String? secondLine;
-  if (lines.length > 1) secondLine = lines[1];
-
-  // 解析第一行的文件计数器: 'done / total'
-  final doneTotal = RegExp(r'^(\d+)\s*/\s*(\d+)$').firstMatch(firstLine);
-  double? ratio;
-  if (doneTotal != null) {
-    final done = int.parse(doneTotal.group(1)!);
-    final total = int.parse(doneTotal.group(2)!);
-    ratio = done / total;
-  }
-
-  // 解析第二行
-  if (secondLine != null) {
-    // 文件内进度: '导入中：Xxx (N 行)' 或 '导入中：Xxx ...'
-    final importing = RegExp(r'^导入中：(.+?)(?:\s*\.{3}\s*)?$').firstMatch(secondLine);
-    if (importing != null) {
-      return (ratio, importing.group(1)!, '');
-    }
-    final importingRows = RegExp(r'^导入中：(.+?)\s*\((\d+)\s*行\)$').firstMatch(secondLine);
-    if (importingRows != null) {
-      return (ratio, importingRows.group(1)!, '${importingRows.group(2)} 行');
-    }
-    // 错误信息: 'Xxx: 导入失败（...）'
-    final errorLine = RegExp(r'^(.+?):\s*导入失败（(.+)）$').firstMatch(secondLine);
-    if (errorLine != null) {
-      return (ratio, errorLine.group(1)!, '导入失败：${errorLine.group(2)}');
-    }
-    // 跳过信息: 'Xxx: 已跳过'
-    final skipLine = RegExp(r'^(.+?):\s*已跳过$').firstMatch(secondLine);
-    if (skipLine != null) {
-      return (ratio, skipLine.group(1)!, '已跳过');
-    }
-    return (ratio, secondLine, '');
-  }
-
-  // 第一行本身就是文件计数器
-  if (ratio != null) {
-    final done = int.parse(doneTotal!.group(1)!);
-    final total = int.parse(doneTotal.group(2)!);
-    return (ratio, '', '已处理 $done / $total 个文件');
-  }
-
-  // 单行文件进度（兼容旧格式，无文件计数器）
-  final importing = RegExp(r'^导入中：(.+?)(?:\s*\.{3}\s*)?$').firstMatch(firstLine);
-  if (importing != null) {
-    return (null, importing.group(1)!, '');
-  }
-  final importingRows = RegExp(r'^导入中：(.+?)\s*\((\d+)\s*行\)$').firstMatch(firstLine);
-  if (importingRows != null) {
-    return (null, importingRows.group(1)!, '${importingRows.group(2)} 行');
-  }
-
-  return (null, text, '');
-}
-
 /// DBC 导入对话框，使用 showShadDialog 自带遮罩，不可关闭
 class _DbcImportDialog extends StatefulWidget {
   final DbcImportViewModel vm;
@@ -331,7 +264,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
   Widget _buildBody() {
     final error = _vm.dbcImportError.value;
     final path = _vm.dbcPath.value;
-    final progress = _vm.dbcImportProgress.value;
+    final importing = _vm.dbcImporting.value;
 
     if (error != null) {
       return _buildErrorBody(error);
@@ -339,7 +272,11 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
     if (path == null) {
       return _buildPathBody();
     }
-    return _buildProgressBody(progress);
+    if (importing) {
+      return _buildProgressBody();
+    }
+    // 正在扫描目录 / 准备中
+    return _buildProgressBody();
   }
 
   Widget _buildPathBody() {
@@ -425,10 +362,12 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
     _vm.setDbcPath(path);
   }
 
-  Widget _buildProgressBody(String progress) {
+  Widget _buildProgressBody() {
     final theme = ShadTheme.of(context);
-    final (ratio, file, detail) = _parseProgress(progress);
     final mutedStyle = theme.textTheme.muted.copyWith(fontSize: 12);
+    final ratio = _vm.dbcProgress.value;
+    final label = _vm.dbcProgressLabel.value;
+    final detail = _vm.dbcProgressDetail.value;
 
     return ShadDialog(
       closeIcon: const SizedBox.shrink(),
@@ -460,12 +399,12 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
               child: LinearProgressIndicator(value: ratio, minHeight: 6),
             ),
           ],
-          if (file.isNotEmpty) ...[
+          if (label.isNotEmpty) ...[
             Row(
               spacing: 8,
               children: [
                 Icon(LucideIcons.fileInput, size: 15, color: theme.colorScheme.mutedForeground),
-                Expanded(child: Text(file, style: const TextStyle(fontSize: 13))),
+                Expanded(child: Text(label, style: const TextStyle(fontSize: 13))),
               ],
             ),
             if (detail.isNotEmpty)
@@ -474,8 +413,8 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
                 child: Text(detail, style: mutedStyle),
               ),
           ],
-          if (ratio == null && file.isEmpty && detail.isEmpty)
-            Text(progress, style: const TextStyle(fontSize: 13)),
+          if (ratio == null && label.isEmpty)
+            Text('正在准备...', style: const TextStyle(fontSize: 13)),
         ],
       ),
     );
