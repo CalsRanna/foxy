@@ -118,7 +118,7 @@ class _SpellListPageState extends State<SpellListPage> {
     final headers = ['编号', '名称', '子名称', '描述', 'Buff描述'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var flexWidth = constraints.maxWidth - 480;
+        var flexWidth = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= templates.length) {
@@ -151,7 +151,7 @@ class _SpellListPageState extends State<SpellListPage> {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(flexWidth / 3),
-              2 => FixedTableSpanExtent(120),
+              2 => FixedTableSpanExtent(240),
               3 => FixedTableSpanExtent(flexWidth / 3),
               4 => FixedTableSpanExtent(flexWidth / 3),
               _ => null,
