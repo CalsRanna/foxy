@@ -9,8 +9,9 @@ import 'package:signals/signals_flutter.dart';
 @RoutePage()
 class AreaTableDetailPage extends StatefulWidget {
   final int? id;
+  final String? name;
 
-  const AreaTableDetailPage({super.key, this.id});
+  const AreaTableDetailPage({super.key, this.id, this.name});
 
   @override
   State<AreaTableDetailPage> createState() => _AreaTableDetailPageState();
@@ -43,7 +44,7 @@ class _AreaTableDetailPageState extends State<AreaTableDetailPage> {
   }
 
   Widget _buildHeader() {
-    var name = widget.id != null ? '区域 #${widget.id}' : '新建区域';
+    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '区域 #${widget.id}' : '新建区域');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

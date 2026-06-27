@@ -94,7 +94,7 @@ class EmoteTextListViewModel {
     routerFacade.navigateToDetail(
       id: routeId,
       label: label,
-      route: EmoteTextDetailRoute(id: id),
+      route: EmoteTextDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.emoteText,
     );
   }

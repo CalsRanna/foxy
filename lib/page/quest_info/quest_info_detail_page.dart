@@ -9,8 +9,9 @@ import 'package:signals/signals_flutter.dart';
 @RoutePage()
 class QuestInfoDetailPage extends StatefulWidget {
   final int? id;
+  final String? name;
 
-  const QuestInfoDetailPage({super.key, this.id});
+  const QuestInfoDetailPage({super.key, this.id, this.name});
 
   @override
   State<QuestInfoDetailPage> createState() => _QuestInfoDetailPageState();
@@ -43,7 +44,7 @@ class _QuestInfoDetailPageState extends State<QuestInfoDetailPage> {
   }
 
   Widget _buildHeader() {
-    var name = widget.id != null ? '任务信息 #${widget.id}' : '新建任务信息';
+    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '任务信息 #${widget.id}' : '新建任务信息');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

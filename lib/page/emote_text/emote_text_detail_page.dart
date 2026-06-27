@@ -9,8 +9,9 @@ import 'package:signals/signals_flutter.dart';
 @RoutePage()
 class EmoteTextDetailPage extends StatefulWidget {
   final int? id;
+  final String? name;
 
-  const EmoteTextDetailPage({super.key, this.id});
+  const EmoteTextDetailPage({super.key, this.id, this.name});
 
   @override
   State<EmoteTextDetailPage> createState() => _EmoteTextDetailPageState();
@@ -43,7 +44,7 @@ class _EmoteTextDetailPageState extends State<EmoteTextDetailPage> {
   }
 
   Widget _buildHeader() {
-    var name = widget.id != null ? '表情文本 #${widget.id}' : '新建表情文本';
+    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '表情文本 #${widget.id}' : '新建表情文本');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

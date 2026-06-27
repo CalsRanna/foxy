@@ -92,12 +92,13 @@ class QuestTemplateListViewModel {
   }
 
   /// 导航到详情页（null 表示新建）
-  void navigateToDetail({int? id}) {
+  void navigateToDetail({int? id, String? name}) {
+    final label = name?.isNotEmpty == true ? name! : '新建任务';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       id: id?.toString() ?? 'new',
-      label: id != null ? '任务 $id' : '新建任务',
-      route: QuestTemplateDetailRoute(entry: id),
+      label: label,
+      route: QuestTemplateDetailRoute(entry: id, name: name),
       parentMenu: RouterMenu.questTemplate,
     );
   }
