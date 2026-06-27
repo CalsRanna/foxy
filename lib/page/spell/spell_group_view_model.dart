@@ -14,9 +14,22 @@ class SpellGroupViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellGroupEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final groupId = signal<int>(0);
+  final groupIdController = TextEditingController();
 
   final _repository = GetIt.instance.get<SpellGroupRepository>();
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
     final data = await _repository.getSpellGroups(spellId.value);
@@ -25,17 +38,17 @@ class SpellGroupViewModel {
   }
 
   void resetForm() {
-    groupId.value = 0;
+    groupIdController.text = _fmt(0);
   }
 
   void fillForm(SpellGroupEntity data) {
-    groupId.value = data.id;
+    groupIdController.text = _fmt(data.id);
   }
 
   SpellGroupEntity collectFromForm() {
     final data = SpellGroupEntity(
       spellId: spellId.value,
-      id: groupId.value,
+      id: _pi(groupIdController.text),
     );
     return data;
   }
@@ -44,7 +57,7 @@ class SpellGroupViewModel {
     try {
       final nextId = await _repository.getNextId();
       resetForm();
-      groupId.value = nextId;
+      groupIdController.text = _fmt(nextId);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('法术组-创建失败: $e');
@@ -165,5 +178,7 @@ class SpellGroupViewModel {
     routerFacade.goBack();
   }
 
-  void dispose() {}
+  void dispose() {
+    groupIdController.dispose();
+  }
 }

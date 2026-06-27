@@ -186,8 +186,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FormItem(
             label: '金币花费',
             child: FoxyNumberInput<int>(
-              value: viewModel.moneyCost.value,
-              onChanged: (v) => viewModel.moneyCost.value = v,
+              controller: viewModel.moneyCostController,
               placeholder: 'MoneyCost',
             ),
           ),
@@ -196,8 +195,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FormItem(
             label: '需要技能线',
             child: FoxyNumberInput<int>(
-              value: viewModel.reqSkillLine.value,
-              onChanged: (v) => viewModel.reqSkillLine.value = v,
+              controller: viewModel.reqSkillLineController,
               placeholder: 'ReqSkillLine',
             ),
           ),
@@ -206,8 +204,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FormItem(
             label: '需要技能等级',
             child: FoxyNumberInput<int>(
-              value: viewModel.reqSkillRank.value,
-              onChanged: (v) => viewModel.reqSkillRank.value = v,
+              controller: viewModel.reqSkillRankController,
               placeholder: 'ReqSkillRank',
             ),
           ),
@@ -216,8 +213,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FormItem(
             label: '需要等级',
             child: FoxyNumberInput<int>(
-              value: viewModel.reqLevel.value,
-              onChanged: (v) => viewModel.reqLevel.value = v,
+              controller: viewModel.reqLevelController,
               placeholder: 'ReqLevel',
             ),
           ),

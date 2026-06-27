@@ -14,16 +14,29 @@ class GemPropertyDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final id = signal<int>(0);
+  final idController = TextEditingController();
 
   /// Property
-  final enchantId = signal<int>(0);
-  final maxCountInv = signal<int>(0);
-  final maxCountItem = signal<int>(0);
-  final type = signal<int>(0);
+  final enchantIdController = TextEditingController();
+  final maxCountInvController = TextEditingController();
+  final maxCountItemController = TextEditingController();
+  final typeController = TextEditingController();
 
   final property = signal(GemPropertyEntity());
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -55,11 +68,11 @@ class GemPropertyDetailViewModel {
   /// 从所有 Controller 收集数据构建 GemProperty
   GemPropertyEntity _collectFromControllers() {
     return GemPropertyEntity(
-      id: id.value,
-      enchantId: enchantId.value,
-      maxCountInv: maxCountInv.value,
-      maxCountItem: maxCountItem.value,
-      type: type.value,
+      id: _pi(idController.text),
+      enchantId: _pi(enchantIdController.text),
+      maxCountInv: _pi(maxCountInvController.text),
+      maxCountItem: _pi(maxCountItemController.text),
+      type: _pi(typeController.text),
     );
   }
 
@@ -74,7 +87,13 @@ class GemPropertyDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  void dispose() {}
+  void dispose() {
+    enchantIdController.dispose();
+    idController.dispose();
+    maxCountInvController.dispose();
+    maxCountItemController.dispose();
+    typeController.dispose();
+  }
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -87,10 +106,10 @@ class GemPropertyDetailViewModel {
   }
 
   void _initControllers(GemPropertyEntity gemProperty) {
-    id.value = gemProperty.id;
-    enchantId.value = gemProperty.enchantId;
-    maxCountInv.value = gemProperty.maxCountInv;
-    maxCountItem.value = gemProperty.maxCountItem;
-    type.value = gemProperty.type;
+    idController.text = _fmt(gemProperty.id);
+    enchantIdController.text = _fmt(gemProperty.enchantId);
+    maxCountInvController.text = _fmt(gemProperty.maxCountInv);
+    maxCountItemController.text = _fmt(gemProperty.maxCountItem);
+    typeController.text = _fmt(gemProperty.type);
   }
 }

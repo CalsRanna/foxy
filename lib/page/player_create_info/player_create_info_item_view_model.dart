@@ -14,9 +14,22 @@ class PlayerCreateInfoItemViewModel {
   int? _race;
   int? _class_;
 
-  final itemId = signal<int>(0);
-  final amount = signal<int>(1);
+  final itemIdController = TextEditingController();
+  final amountController = TextEditingController();
   final noteController = TextEditingController();
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -31,8 +44,8 @@ class PlayerCreateInfoItemViewModel {
   }
 
   void create() {
-    itemId.value = 0;
-    amount.value = 1;
+    itemIdController.text = _fmt(0);
+    amountController.text = _fmt(1);
     noteController.clear();
   }
 
@@ -42,8 +55,8 @@ class PlayerCreateInfoItemViewModel {
       final item = PlayerCreateInfoItemEntity(
         race: _race!,
         class_: _class_!,
-        itemid: itemId.value,
-        amount: amount.value,
+        itemid: _pi(itemIdController.text),
+        amount: _pi(amountController.text),
         note: noteController.text,
       );
       await _repository.storeItem(item);
@@ -73,6 +86,8 @@ class PlayerCreateInfoItemViewModel {
   }
 
   void dispose() {
+    amountController.dispose();
+    itemIdController.dispose();
     noteController.dispose();
   }
 }

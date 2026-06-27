@@ -201,8 +201,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FormItem(
             label: '模板ID',
             child: FoxyNumberInput<int>(
-              value: viewModel.id.value,
-              onChanged: (v) => viewModel.id.value = v,
+              controller: viewModel.idController,
               placeholder: 'ID',
             ),
           ),
@@ -238,8 +237,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              value: viewModel.verifiedBuild.value,
-              onChanged: (v) => viewModel.verifiedBuild.value = v,
+              controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

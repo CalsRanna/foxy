@@ -14,7 +14,7 @@ class ItemSetDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final id = signal<int>(0);
+  final idController = TextEditingController();
 
   /// Name lang
   final nameLangEnUSController = TextEditingController();
@@ -36,51 +36,64 @@ class ItemSetDetailViewModel {
   final nameLangFlags = signal<int>(0);
 
   /// Item IDs
-  final itemId0 = signal<int>(0);
-  final itemId1 = signal<int>(0);
-  final itemId2 = signal<int>(0);
-  final itemId3 = signal<int>(0);
-  final itemId4 = signal<int>(0);
-  final itemId5 = signal<int>(0);
-  final itemId6 = signal<int>(0);
-  final itemId7 = signal<int>(0);
-  final itemId8 = signal<int>(0);
-  final itemId9 = signal<int>(0);
-  final itemId10 = signal<int>(0);
-  final itemId11 = signal<int>(0);
-  final itemId12 = signal<int>(0);
-  final itemId13 = signal<int>(0);
-  final itemId14 = signal<int>(0);
-  final itemId15 = signal<int>(0);
-  final itemId16 = signal<int>(0);
+  final itemId0Controller = TextEditingController();
+  final itemId1Controller = TextEditingController();
+  final itemId2Controller = TextEditingController();
+  final itemId3Controller = TextEditingController();
+  final itemId4Controller = TextEditingController();
+  final itemId5Controller = TextEditingController();
+  final itemId6Controller = TextEditingController();
+  final itemId7Controller = TextEditingController();
+  final itemId8Controller = TextEditingController();
+  final itemId9Controller = TextEditingController();
+  final itemId10Controller = TextEditingController();
+  final itemId11Controller = TextEditingController();
+  final itemId12Controller = TextEditingController();
+  final itemId13Controller = TextEditingController();
+  final itemId14Controller = TextEditingController();
+  final itemId15Controller = TextEditingController();
+  final itemId16Controller = TextEditingController();
 
   /// Set Spell IDs
-  final setSpellId0 = signal<int>(0);
-  final setSpellId1 = signal<int>(0);
-  final setSpellId2 = signal<int>(0);
-  final setSpellId3 = signal<int>(0);
-  final setSpellId4 = signal<int>(0);
-  final setSpellId5 = signal<int>(0);
-  final setSpellId6 = signal<int>(0);
-  final setSpellId7 = signal<int>(0);
+  final setSpellId0Controller = TextEditingController();
+  final setSpellId1Controller = TextEditingController();
+  final setSpellId2Controller = TextEditingController();
+  final setSpellId3Controller = TextEditingController();
+  final setSpellId4Controller = TextEditingController();
+  final setSpellId5Controller = TextEditingController();
+  final setSpellId6Controller = TextEditingController();
+  final setSpellId7Controller = TextEditingController();
 
   /// Set Thresholds
-  final setThreshold0 = signal<int>(0);
-  final setThreshold1 = signal<int>(0);
-  final setThreshold2 = signal<int>(0);
-  final setThreshold3 = signal<int>(0);
-  final setThreshold4 = signal<int>(0);
-  final setThreshold5 = signal<int>(0);
-  final setThreshold6 = signal<int>(0);
-  final setThreshold7 = signal<int>(0);
+  final setThreshold0Controller = TextEditingController();
+  final setThreshold1Controller = TextEditingController();
+  final setThreshold2Controller = TextEditingController();
+  final setThreshold3Controller = TextEditingController();
+  final setThreshold4Controller = TextEditingController();
+  final setThreshold5Controller = TextEditingController();
+  final setThreshold6Controller = TextEditingController();
+  final setThreshold7Controller = TextEditingController();
 
   /// Required
-  final requiredSkill = signal<int>(0);
-  final requiredSkillRank = signal<int>(0);
+  final requiredSkillController = TextEditingController();
+  final requiredSkillRankController = TextEditingController();
 
   final itemSet = signal(ItemSetEntity());
 
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -112,7 +125,7 @@ class ItemSetDetailViewModel {
   /// 从所有 Controller 收集数据构建 ItemSetEntity
   ItemSetEntity _collectFromControllers() {
     return ItemSetEntity(
-      id: id.value,
+      id: _pi(idController.text),
       nameLangEnUS: nameLangEnUSController.text,
       nameLangKoKR: nameLangKoKRController.text,
       nameLangFrFR: nameLangFrFRController.text,
@@ -130,41 +143,41 @@ class ItemSetDetailViewModel {
       nameLangUnk2: nameLangUnk2Controller.text,
       nameLangUnk3: nameLangUnk3Controller.text,
       nameLangFlags: nameLangFlags.value,
-      itemId0: itemId0.value,
-      itemId1: itemId1.value,
-      itemId2: itemId2.value,
-      itemId3: itemId3.value,
-      itemId4: itemId4.value,
-      itemId5: itemId5.value,
-      itemId6: itemId6.value,
-      itemId7: itemId7.value,
-      itemId8: itemId8.value,
-      itemId9: itemId9.value,
-      itemId10: itemId10.value,
-      itemId11: itemId11.value,
-      itemId12: itemId12.value,
-      itemId13: itemId13.value,
-      itemId14: itemId14.value,
-      itemId15: itemId15.value,
-      itemId16: itemId16.value,
-      setSpellId0: setSpellId0.value,
-      setSpellId1: setSpellId1.value,
-      setSpellId2: setSpellId2.value,
-      setSpellId3: setSpellId3.value,
-      setSpellId4: setSpellId4.value,
-      setSpellId5: setSpellId5.value,
-      setSpellId6: setSpellId6.value,
-      setSpellId7: setSpellId7.value,
-      setThreshold0: setThreshold0.value,
-      setThreshold1: setThreshold1.value,
-      setThreshold2: setThreshold2.value,
-      setThreshold3: setThreshold3.value,
-      setThreshold4: setThreshold4.value,
-      setThreshold5: setThreshold5.value,
-      setThreshold6: setThreshold6.value,
-      setThreshold7: setThreshold7.value,
-      requiredSkill: requiredSkill.value,
-      requiredSkillRank: requiredSkillRank.value,
+      itemId0: _pi(itemId0Controller.text),
+      itemId1: _pi(itemId1Controller.text),
+      itemId2: _pi(itemId2Controller.text),
+      itemId3: _pi(itemId3Controller.text),
+      itemId4: _pi(itemId4Controller.text),
+      itemId5: _pi(itemId5Controller.text),
+      itemId6: _pi(itemId6Controller.text),
+      itemId7: _pi(itemId7Controller.text),
+      itemId8: _pi(itemId8Controller.text),
+      itemId9: _pi(itemId9Controller.text),
+      itemId10: _pi(itemId10Controller.text),
+      itemId11: _pi(itemId11Controller.text),
+      itemId12: _pi(itemId12Controller.text),
+      itemId13: _pi(itemId13Controller.text),
+      itemId14: _pi(itemId14Controller.text),
+      itemId15: _pi(itemId15Controller.text),
+      itemId16: _pi(itemId16Controller.text),
+      setSpellId0: _pi(setSpellId0Controller.text),
+      setSpellId1: _pi(setSpellId1Controller.text),
+      setSpellId2: _pi(setSpellId2Controller.text),
+      setSpellId3: _pi(setSpellId3Controller.text),
+      setSpellId4: _pi(setSpellId4Controller.text),
+      setSpellId5: _pi(setSpellId5Controller.text),
+      setSpellId6: _pi(setSpellId6Controller.text),
+      setSpellId7: _pi(setSpellId7Controller.text),
+      setThreshold0: _pi(setThreshold0Controller.text),
+      setThreshold1: _pi(setThreshold1Controller.text),
+      setThreshold2: _pi(setThreshold2Controller.text),
+      setThreshold3: _pi(setThreshold3Controller.text),
+      setThreshold4: _pi(setThreshold4Controller.text),
+      setThreshold5: _pi(setThreshold5Controller.text),
+      setThreshold6: _pi(setThreshold6Controller.text),
+      setThreshold7: _pi(setThreshold7Controller.text),
+      requiredSkill: _pi(requiredSkillController.text),
+      requiredSkillRank: _pi(requiredSkillRankController.text),
     );
   }
 
@@ -180,22 +193,58 @@ class ItemSetDetailViewModel {
   }
 
   void dispose() {
-    nameLangEnUSController.dispose();
-    nameLangKoKRController.dispose();
-    nameLangFrFRController.dispose();
+    idController.dispose();
+    itemId0Controller.dispose();
+    itemId10Controller.dispose();
+    itemId11Controller.dispose();
+    itemId12Controller.dispose();
+    itemId13Controller.dispose();
+    itemId14Controller.dispose();
+    itemId15Controller.dispose();
+    itemId16Controller.dispose();
+    itemId1Controller.dispose();
+    itemId2Controller.dispose();
+    itemId3Controller.dispose();
+    itemId4Controller.dispose();
+    itemId5Controller.dispose();
+    itemId6Controller.dispose();
+    itemId7Controller.dispose();
+    itemId8Controller.dispose();
+    itemId9Controller.dispose();
     nameLangDeDEController.dispose();
-    nameLangZhCNController.dispose();
-    nameLangZhTWController.dispose();
+    nameLangEnUSController.dispose();
     nameLangEsESController.dispose();
     nameLangEsMXController.dispose();
-    nameLangRuRUController.dispose();
-    nameLangJaJPController.dispose();
-    nameLangPtPTController.dispose();
-    nameLangPtBRController.dispose();
+    nameLangFrFRController.dispose();
     nameLangItITController.dispose();
+    nameLangJaJPController.dispose();
+    nameLangKoKRController.dispose();
+    nameLangPtBRController.dispose();
+    nameLangPtPTController.dispose();
+    nameLangRuRUController.dispose();
     nameLangUnk1Controller.dispose();
     nameLangUnk2Controller.dispose();
     nameLangUnk3Controller.dispose();
+    nameLangZhCNController.dispose();
+    nameLangZhTWController.dispose();
+    requiredSkillController.dispose();
+    requiredSkillRankController.dispose();
+    setSpellId0Controller.dispose();
+    setSpellId1Controller.dispose();
+    setSpellId2Controller.dispose();
+    setSpellId3Controller.dispose();
+    setSpellId4Controller.dispose();
+    setSpellId5Controller.dispose();
+    setSpellId6Controller.dispose();
+    setSpellId7Controller.dispose();
+    setThreshold0Controller.dispose();
+    setThreshold1Controller.dispose();
+    setThreshold2Controller.dispose();
+    setThreshold3Controller.dispose();
+    setThreshold4Controller.dispose();
+    setThreshold5Controller.dispose();
+    setThreshold6Controller.dispose();
+    setThreshold7Controller.dispose();
   }
 
   Future<void> initSignals({int? id}) async {
@@ -209,7 +258,7 @@ class ItemSetDetailViewModel {
   }
 
   void _initControllers(ItemSetEntity itemSet) {
-    id.value = itemSet.id;
+    idController.text = _fmt(itemSet.id);
     nameLangEnUSController.text = itemSet.nameLangEnUS;
     nameLangKoKRController.text = itemSet.nameLangKoKR;
     nameLangFrFRController.text = itemSet.nameLangFrFR;
@@ -227,40 +276,40 @@ class ItemSetDetailViewModel {
     nameLangUnk2Controller.text = itemSet.nameLangUnk2;
     nameLangUnk3Controller.text = itemSet.nameLangUnk3;
     nameLangFlags.value = itemSet.nameLangFlags;
-    itemId0.value = itemSet.itemId0;
-    itemId1.value = itemSet.itemId1;
-    itemId2.value = itemSet.itemId2;
-    itemId3.value = itemSet.itemId3;
-    itemId4.value = itemSet.itemId4;
-    itemId5.value = itemSet.itemId5;
-    itemId6.value = itemSet.itemId6;
-    itemId7.value = itemSet.itemId7;
-    itemId8.value = itemSet.itemId8;
-    itemId9.value = itemSet.itemId9;
-    itemId10.value = itemSet.itemId10;
-    itemId11.value = itemSet.itemId11;
-    itemId12.value = itemSet.itemId12;
-    itemId13.value = itemSet.itemId13;
-    itemId14.value = itemSet.itemId14;
-    itemId15.value = itemSet.itemId15;
-    itemId16.value = itemSet.itemId16;
-    setSpellId0.value = itemSet.setSpellId0;
-    setSpellId1.value = itemSet.setSpellId1;
-    setSpellId2.value = itemSet.setSpellId2;
-    setSpellId3.value = itemSet.setSpellId3;
-    setSpellId4.value = itemSet.setSpellId4;
-    setSpellId5.value = itemSet.setSpellId5;
-    setSpellId6.value = itemSet.setSpellId6;
-    setSpellId7.value = itemSet.setSpellId7;
-    setThreshold0.value = itemSet.setThreshold0;
-    setThreshold1.value = itemSet.setThreshold1;
-    setThreshold2.value = itemSet.setThreshold2;
-    setThreshold3.value = itemSet.setThreshold3;
-    setThreshold4.value = itemSet.setThreshold4;
-    setThreshold5.value = itemSet.setThreshold5;
-    setThreshold6.value = itemSet.setThreshold6;
-    setThreshold7.value = itemSet.setThreshold7;
-    requiredSkill.value = itemSet.requiredSkill;
-    requiredSkillRank.value = itemSet.requiredSkillRank;
+    itemId0Controller.text = _fmt(itemSet.itemId0);
+    itemId1Controller.text = _fmt(itemSet.itemId1);
+    itemId2Controller.text = _fmt(itemSet.itemId2);
+    itemId3Controller.text = _fmt(itemSet.itemId3);
+    itemId4Controller.text = _fmt(itemSet.itemId4);
+    itemId5Controller.text = _fmt(itemSet.itemId5);
+    itemId6Controller.text = _fmt(itemSet.itemId6);
+    itemId7Controller.text = _fmt(itemSet.itemId7);
+    itemId8Controller.text = _fmt(itemSet.itemId8);
+    itemId9Controller.text = _fmt(itemSet.itemId9);
+    itemId10Controller.text = _fmt(itemSet.itemId10);
+    itemId11Controller.text = _fmt(itemSet.itemId11);
+    itemId12Controller.text = _fmt(itemSet.itemId12);
+    itemId13Controller.text = _fmt(itemSet.itemId13);
+    itemId14Controller.text = _fmt(itemSet.itemId14);
+    itemId15Controller.text = _fmt(itemSet.itemId15);
+    itemId16Controller.text = _fmt(itemSet.itemId16);
+    setSpellId0Controller.text = _fmt(itemSet.setSpellId0);
+    setSpellId1Controller.text = _fmt(itemSet.setSpellId1);
+    setSpellId2Controller.text = _fmt(itemSet.setSpellId2);
+    setSpellId3Controller.text = _fmt(itemSet.setSpellId3);
+    setSpellId4Controller.text = _fmt(itemSet.setSpellId4);
+    setSpellId5Controller.text = _fmt(itemSet.setSpellId5);
+    setSpellId6Controller.text = _fmt(itemSet.setSpellId6);
+    setSpellId7Controller.text = _fmt(itemSet.setSpellId7);
+    setThreshold0Controller.text = _fmt(itemSet.setThreshold0);
+    setThreshold1Controller.text = _fmt(itemSet.setThreshold1);
+    setThreshold2Controller.text = _fmt(itemSet.setThreshold2);
+    setThreshold3Controller.text = _fmt(itemSet.setThreshold3);
+    setThreshold4Controller.text = _fmt(itemSet.setThreshold4);
+    setThreshold5Controller.text = _fmt(itemSet.setThreshold5);
+    setThreshold6Controller.text = _fmt(itemSet.setThreshold6);
+    setThreshold7Controller.text = _fmt(itemSet.setThreshold7);
+    requiredSkillController.text = _fmt(itemSet.requiredSkill);
+    requiredSkillRankController.text = _fmt(itemSet.requiredSkillRank);
   }
 }

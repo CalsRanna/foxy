@@ -16,12 +16,25 @@ class CreatureTemplateResistanceViewModel {
   final selectedIndex = signal<int?>(null);
   // 表单控制器
   final schoolController = ShadSelectController<int>();
-  final resistance = signal<int>(0);
-  final verifiedBuild = signal<int>(0);
+  final resistanceController = TextEditingController();
+  final verifiedBuildController = TextEditingController();
 
   final _repository = GetIt.instance.get<CreatureTemplateResistanceRepository>();
 
   /// 加载数据
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> load() async {
     final data = await _repository.getCreatureTemplateResistances(
       creatureId.value,
@@ -33,15 +46,15 @@ class CreatureTemplateResistanceViewModel {
   /// 重置表单
   void resetForm() {
     schoolController.value = {0};
-    resistance.value = 0;
-    verifiedBuild.value = 0;
+    resistanceController.text = _fmt(0);
+    verifiedBuildController.text = _fmt(0);
   }
 
   /// 填充表单
   void fillForm(CreatureTemplateResistanceEntity resistance) {
     schoolController.value = {resistance.school};
-    this.resistance.value = resistance.resistance;
-    verifiedBuild.value = resistance.verifiedBuild;
+    resistanceController.text = _fmt(resistance.resistance);
+    verifiedBuildController.text = _fmt(resistance.verifiedBuild);
   }
 
   /// 从表单收集数据
@@ -49,8 +62,8 @@ class CreatureTemplateResistanceViewModel {
     return CreatureTemplateResistanceEntity(
       creatureID: creatureId.value,
       school: schoolController.value.firstOrNull ?? 0,
-      resistance: resistance.value,
-      verifiedBuild: verifiedBuild.value,
+      resistance: _pi(resistanceController.text),
+      verifiedBuild: _pi(verifiedBuildController.text),
     );
   }
 
@@ -198,6 +211,8 @@ class CreatureTemplateResistanceViewModel {
 
   /// 清理资源
   void dispose() {
+    resistanceController.dispose();
     schoolController.dispose();
+    verifiedBuildController.dispose();
   }
 }

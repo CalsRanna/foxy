@@ -19,9 +19,22 @@ class ItemEnchantmentTemplateViewModel {
   int? editingEnch;
 
   final enchSignal = signal<int>(0);
-  final chance = signal<double>(0.0);
+  final chanceController = TextEditingController();
 
   final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  double _pd(String t) => double.tryParse(t) ?? 0.0;
 
   Future<void> load() async {
     final data = await _repository.getItemEnchantmentTemplatesByEntry(
@@ -36,19 +49,19 @@ class ItemEnchantmentTemplateViewModel {
 
   void resetForm() {
     enchSignal.value = 0;
-    chance.value = 0;
+    chanceController.text = _fmt(0);
   }
 
   void fillForm(BriefItemEnchantmentTemplateEntity model) {
     enchSignal.value = model.ench;
-    chance.value = model.chance;
+    chanceController.text = _fmt(model.chance);
   }
 
   ItemEnchantmentTemplateEntity collectFromForm() {
     return ItemEnchantmentTemplateEntity(
       entry: entry.value,
       ench: enchSignal.value,
-      chance: chance.value,
+      chance: _pd(chanceController.text),
     );
   }
 
@@ -194,5 +207,7 @@ class ItemEnchantmentTemplateViewModel {
     routerFacade.goBack();
   }
 
-  void dispose() {}
+  void dispose() {
+    chanceController.dispose();
+  }
 }

@@ -17,9 +17,22 @@ class PlayerCreateInfoActionViewModel {
   int? _class_;
   int? _oldButton;
 
-  final button = signal<int>(0);
-  final action = signal<int>(0);
-  final type = signal<int>(0);
+  final buttonController = TextEditingController();
+  final actionController = TextEditingController();
+  final typeController = TextEditingController();
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -35,18 +48,18 @@ class PlayerCreateInfoActionViewModel {
 
   void create() {
     _oldButton = null;
-    button.value = 0;
-    action.value = 0;
-    type.value = 0;
+    buttonController.text = _fmt(0);
+    actionController.text = _fmt(0);
+    typeController.text = _fmt(0);
   }
 
   void edit(int index) {
     if (index >= actions.value.length) return;
     final item = actions.value[index];
     _oldButton = item.button;
-    button.value = item.button;
-    action.value = item.action;
-    type.value = item.type;
+    buttonController.text = _fmt(item.button);
+    actionController.text = _fmt(item.action);
+    typeController.text = _fmt(item.type);
   }
 
   Future<void> save(BuildContext context) async {
@@ -97,11 +110,15 @@ class PlayerCreateInfoActionViewModel {
     return PlayerCreateInfoActionEntity(
       race: _race ?? 0,
       class_: _class_ ?? 0,
-      button: button.value,
-      action: action.value,
-      type: type.value,
+      button: _pi(buttonController.text),
+      action: _pi(actionController.text),
+      type: _pi(typeController.text),
     );
   }
 
-  void dispose() {}
+  void dispose() {
+    actionController.dispose();
+    buttonController.dispose();
+    typeController.dispose();
+  }
 }

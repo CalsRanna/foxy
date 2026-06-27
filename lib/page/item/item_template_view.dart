@@ -161,8 +161,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '声音覆盖',
       child: FoxyNumberInput<int>(
         placeholder: 'SoundOverrideSubclass',
-        value: viewModel.soundOverrideSubclass.value,
-        onChanged: (v) => viewModel.soundOverrideSubclass.value = v,
+        controller: viewModel.soundOverrideSubclassController,
       ),
     );
     final materialInput = FormItem(
@@ -240,8 +239,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '套装',
       child: FoxyNumberInput<int>(
         placeholder: 'itemset',
-        value: viewModel.itemset.value,
-        onChanged: (v) => viewModel.itemset.value = v,
+        controller: viewModel.itemsetController,
       ),
     );
     final randomPropertyInput = FormItem(
@@ -262,56 +260,49 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '最大耐久',
       child: FoxyNumberInput<int>(
         placeholder: 'MaxDurability',
-        value: viewModel.maxDurability.value,
-        onChanged: (v) => viewModel.maxDurability.value = v,
+        controller: viewModel.maxDurabilityController,
       ),
     );
     final buyPriceInput = FormItem(
       label: '购买价格',
       child: FoxyNumberInput<int>(
         placeholder: 'BuyPrice',
-        value: viewModel.buyPrice.value,
-        onChanged: (v) => viewModel.buyPrice.value = v,
+        controller: viewModel.buyPriceController,
       ),
     );
     final sellPriceInput = FormItem(
       label: '出售价格',
       child: FoxyNumberInput<int>(
         placeholder: 'SellPrice',
-        value: viewModel.sellPrice.value,
-        onChanged: (v) => viewModel.sellPrice.value = v,
+        controller: viewModel.sellPriceController,
       ),
     );
     final buyCountInput = FormItem(
       label: '购买数量',
       child: FoxyNumberInput<int>(
         placeholder: 'BuyCount',
-        value: viewModel.buyCount.value,
-        onChanged: (v) => viewModel.buyCount.value = v,
+        controller: viewModel.buyCountController,
       ),
     );
     final maxcountInput = FormItem(
       label: '最大数量',
       child: FoxyNumberInput<int>(
         placeholder: 'maxcount',
-        value: viewModel.maxcount.value,
-        onChanged: (v) => viewModel.maxcount.value = v,
+        controller: viewModel.maxcountController,
       ),
     );
     final stackableInput = FormItem(
       label: '堆叠数',
       child: FoxyNumberInput<int>(
         placeholder: 'stackable',
-        value: viewModel.stackable.value,
-        onChanged: (v) => viewModel.stackable.value = v,
+        controller: viewModel.stackableController,
       ),
     );
     final totemCategoryInput = FormItem(
       label: '图腾类别',
       child: FoxyNumberInput<int>(
         placeholder: 'TotemCategory',
-        value: viewModel.totemCategory.value,
-        onChanged: (v) => viewModel.totemCategory.value = v,
+        controller: viewModel.totemCategoryController,
       ),
     );
     final foodTypeInput = FormItem(
@@ -335,16 +326,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '容器槽位',
       child: FoxyNumberInput<int>(
         placeholder: 'ContainerSlots',
-        value: viewModel.containerSlots.value,
-        onChanged: (v) => viewModel.containerSlots.value = v,
+        controller: viewModel.containerSlotsController,
       ),
     );
     final itemLimitCategoryInput = FormItem(
       label: '限制类别',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemLimitCategory',
-        value: viewModel.itemLimitCategory.value,
-        onChanged: (v) => viewModel.itemLimitCategory.value = v,
+        controller: viewModel.itemLimitCategoryController,
       ),
     );
     final startquestInput = FormItem(
@@ -358,32 +347,28 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '持续时间',
       child: FoxyNumberInput<int>(
         placeholder: 'duration',
-        value: viewModel.duration.value,
-        onChanged: (v) => viewModel.duration.value = v,
+        controller: viewModel.durationController,
       ),
     );
     final disenchantIdInput = FormItem(
       label: '分解ID',
       child: FoxyNumberInput<int>(
         placeholder: 'DisenchantID',
-        value: viewModel.disenchantId.value,
-        onChanged: (v) => viewModel.disenchantId.value = v,
+        controller: viewModel.disenchantIdController,
       ),
     );
     final minMoneyLootInput = FormItem(
       label: '最小金钱',
       child: FoxyNumberInput<int>(
         placeholder: 'minMoneyLoot',
-        value: viewModel.minMoneyLoot.value,
-        onChanged: (v) => viewModel.minMoneyLoot.value = v,
+        controller: viewModel.minMoneyLootController,
       ),
     );
     final maxMoneyLootInput = FormItem(
       label: '最大金钱',
       child: FoxyNumberInput<int>(
         placeholder: 'maxMoneyLoot',
-        value: viewModel.maxMoneyLoot.value,
-        onChanged: (v) => viewModel.maxMoneyLoot.value = v,
+        controller: viewModel.maxMoneyLootController,
       ),
     );
 
@@ -481,24 +466,21 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '攻击延迟',
       child: FoxyNumberInput<int>(
         placeholder: 'delay',
-        value: viewModel.delay.value,
-        onChanged: (v) => viewModel.delay.value = v,
+        controller: viewModel.delayController,
       ),
     );
     final rangedModRangeInput = FormItem(
       label: '远程修正',
       child: FoxyNumberInput<int>(
         placeholder: 'RangedModRange',
-        value: viewModel.rangedModRange.value,
-        onChanged: (v) => viewModel.rangedModRange.value = v,
+        controller: viewModel.rangedModRangeController,
       ),
     );
     final armorDamageModifierInput = FormItem(
       label: '护甲修正',
       child: FoxyNumberInput<double>(
         placeholder: 'ArmorDamageModifier',
-        value: viewModel.armorDamageModifier.value,
-        onChanged: (v) => viewModel.armorDamageModifier.value = v,
+        controller: viewModel.armorDamageModifierController,
       ),
     );
     final ammoTypeInput = FormItem(
@@ -521,16 +503,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '最小伤害1',
       child: FoxyNumberInput<double>(
         placeholder: 'dmg_min1',
-        value: viewModel.dmgMin1.value,
-        onChanged: (v) => viewModel.dmgMin1.value = v,
+        controller: viewModel.dmgMin1Controller,
       ),
     );
     final dmgMax1Input = FormItem(
       label: '最大伤害1',
       child: FoxyNumberInput<double>(
         placeholder: 'dmg_max1',
-        value: viewModel.dmgMax1.value,
-        onChanged: (v) => viewModel.dmgMax1.value = v,
+        controller: viewModel.dmgMax1Controller,
       ),
     );
     final dmgType2Input = FormItem(
@@ -545,32 +525,28 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '最小伤害2',
       child: FoxyNumberInput<double>(
         placeholder: 'dmg_min2',
-        value: viewModel.dmgMin2.value,
-        onChanged: (v) => viewModel.dmgMin2.value = v,
+        controller: viewModel.dmgMin2Controller,
       ),
     );
     final dmgMax2Input = FormItem(
       label: '最大伤害2',
       child: FoxyNumberInput<double>(
         placeholder: 'dmg_max2',
-        value: viewModel.dmgMax2.value,
-        onChanged: (v) => viewModel.dmgMax2.value = v,
+        controller: viewModel.dmgMax2Controller,
       ),
     );
     final armorInput = FormItem(
       label: '护甲',
       child: FoxyNumberInput<int>(
         placeholder: 'armor',
-        value: viewModel.armor.value,
-        onChanged: (v) => viewModel.armor.value = v,
+        controller: viewModel.armorController,
       ),
     );
     final blockInput = FormItem(
       label: '格挡',
       child: FoxyNumberInput<int>(
         placeholder: 'block',
-        value: viewModel.block.value,
-        onChanged: (v) => viewModel.block.value = v,
+        controller: viewModel.blockController,
       ),
     );
 
@@ -639,8 +615,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '属性数量',
       child: FoxyNumberInput<int>(
         placeholder: 'StatsCount',
-        value: viewModel.statsCount.value,
-        onChanged: (v) => viewModel.statsCount.value = v,
+        controller: viewModel.statsCountController,
       ),
     );
 
@@ -649,48 +624,42 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '神圣抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'holy_res',
-        value: viewModel.holyRes.value,
-        onChanged: (v) => viewModel.holyRes.value = v,
+        controller: viewModel.holyResController,
       ),
     );
     final fireResInput = FormItem(
       label: '火焰抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'fire_res',
-        value: viewModel.fireRes.value,
-        onChanged: (v) => viewModel.fireRes.value = v,
+        controller: viewModel.fireResController,
       ),
     );
     final natureResInput = FormItem(
       label: '自然抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'nature_res',
-        value: viewModel.natureRes.value,
-        onChanged: (v) => viewModel.natureRes.value = v,
+        controller: viewModel.natureResController,
       ),
     );
     final shadowResInput = FormItem(
       label: '暗影抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'shadow_res',
-        value: viewModel.shadowRes.value,
-        onChanged: (v) => viewModel.shadowRes.value = v,
+        controller: viewModel.shadowResController,
       ),
     );
     final frostResInput = FormItem(
       label: '冰霜抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'frost_res',
-        value: viewModel.frostRes.value,
-        onChanged: (v) => viewModel.frostRes.value = v,
+        controller: viewModel.frostResController,
       ),
     );
     final arcaneResInput = FormItem(
       label: '奥术抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'arcane_res',
-        value: viewModel.arcaneRes.value,
-        onChanged: (v) => viewModel.arcaneRes.value = v,
+        controller: viewModel.arcaneResController,
       ),
     );
 
@@ -736,32 +705,28 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '物品等级',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemLevel',
-        value: viewModel.itemLevel.value,
-        onChanged: (v) => viewModel.itemLevel.value = v,
+        controller: viewModel.itemLevelController,
       ),
     );
     final requiredLevelInput = FormItem(
       label: '需求等级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredLevel',
-        value: viewModel.requiredLevel.value,
-        onChanged: (v) => viewModel.requiredLevel.value = v,
+        controller: viewModel.requiredLevelController,
       ),
     );
     final requiredSkillInput = FormItem(
       label: '需求技能',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredSkill',
-        value: viewModel.requiredSkill.value,
-        onChanged: (v) => viewModel.requiredSkill.value = v,
+        controller: viewModel.requiredSkillController,
       ),
     );
     final requiredSkillRankInput = FormItem(
       label: '技能等级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredSkillRank',
-        value: viewModel.requiredSkillRank.value,
-        onChanged: (v) => viewModel.requiredSkillRank.value = v,
+        controller: viewModel.requiredSkillRankController,
       ),
     );
     final requiredSpellInput = FormItem(
@@ -775,40 +740,35 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '荣誉等级',
       child: FoxyNumberInput<int>(
         placeholder: 'requiredhonorrank',
-        value: viewModel.requiredHonorRank.value,
-        onChanged: (v) => viewModel.requiredHonorRank.value = v,
+        controller: viewModel.requiredHonorRankController,
       ),
     );
     final requiredCityRankInput = FormItem(
       label: '城市等级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredCityRank',
-        value: viewModel.requiredCityRank.value,
-        onChanged: (v) => viewModel.requiredCityRank.value = v,
+        controller: viewModel.requiredCityRankController,
       ),
     );
     final requiredReputationFactionInput = FormItem(
       label: '声望阵营',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredReputationFaction',
-        value: viewModel.requiredReputationFaction.value,
-        onChanged: (v) => viewModel.requiredReputationFaction.value = v,
+        controller: viewModel.requiredReputationFactionController,
       ),
     );
     final requiredReputationRankInput = FormItem(
       label: '声望等级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredReputationRank',
-        value: viewModel.requiredReputationRank.value,
-        onChanged: (v) => viewModel.requiredReputationRank.value = v,
+        controller: viewModel.requiredReputationRankController,
       ),
     );
     final requiredDisenchantSkillInput = FormItem(
       label: '分解技能',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredDisenchantSkill',
-        value: viewModel.requiredDisenchantSkill.value,
-        onChanged: (v) => viewModel.requiredDisenchantSkill.value = v,
+        controller: viewModel.requiredDisenchantSkillController,
       ),
     );
     final mapIdInput = FormItem(
@@ -829,8 +789,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '节日ID',
       child: FoxyNumberInput<int>(
         placeholder: 'HolidayId',
-        value: viewModel.holidayId.value,
-        onChanged: (v) => viewModel.holidayId.value = v,
+        controller: viewModel.holidayIdController,
       ),
     );
     final lockidInput = FormItem(
@@ -885,16 +844,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '宝石属性',
       child: FoxyNumberInput<int>(
         placeholder: 'GemProperties',
-        value: viewModel.gemProperties.value,
-        onChanged: (v) => viewModel.gemProperties.value = v,
+        controller: viewModel.gemPropertiesController,
       ),
     );
     final socketBonusInput = FormItem(
       label: '插槽奖励',
       child: FoxyNumberInput<int>(
         placeholder: 'socketBonus',
-        value: viewModel.socketBonus.value,
-        onChanged: (v) => viewModel.socketBonus.value = v,
+        controller: viewModel.socketBonusController,
       ),
     );
     final socketColor1Input = FormItem(
@@ -1000,8 +957,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
         placeholder: 'VerifiedBuild',
-        value: viewModel.verifiedBuild.value,
-        onChanged: (v) => viewModel.verifiedBuild.value = v,
+        controller: viewModel.verifiedBuildController,
       ),
     );
 
@@ -1089,7 +1045,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
               children: [
                 Row(spacing: 8, children: [Expanded(child: statsCountInput)]),
                 Watch((_) {
-                  final count = viewModel.statsCount.value;
+                  final count = int.tryParse(viewModel.statsCountController.text) ?? 0;
                   final rows = <Row>[];
                   for (var i = 0; i < count && i < 10; i++) {
                     rows.add(

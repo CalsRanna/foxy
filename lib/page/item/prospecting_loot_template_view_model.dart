@@ -19,16 +19,30 @@ class ProspectingLootTemplateViewModel {
   int? editingItem;
 
   final itemController = TextEditingController();
-  final reference = signal<int>(0);
-  final chance = signal<double>(0.0);
+  final referenceController = TextEditingController();
+  final chanceController = TextEditingController();
   final questRequiredController = ShadSelectController<int>();
-  final lootMode = signal<int>(0);
-  final groupId = signal<int>(0);
-  final minCount = signal<int>(0);
-  final maxCount = signal<int>(0);
+  final lootModeController = TextEditingController();
+  final groupIdController = TextEditingController();
+  final minCountController = TextEditingController();
+  final maxCountController = TextEditingController();
   final commentController = TextEditingController();
 
   final repository = LootTemplateRepository(LootTableType.prospecting);
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+  double _pd(String t) => double.tryParse(t) ?? 0.0;
 
   Future<void> load() async {
     final data = await repository.getLootTemplates(entry.value);
@@ -41,25 +55,25 @@ class ProspectingLootTemplateViewModel {
 
   void resetForm() {
     itemController.clear();
-    reference.value = 0;
-    chance.value = 0;
+    referenceController.text = _fmt(0);
+    chanceController.text = _fmt(0);
     questRequiredController.value = {0};
-    lootMode.value = 1;
-    groupId.value = 0;
-    minCount.value = 1;
-    maxCount.value = 1;
+    lootModeController.text = _fmt(1);
+    groupIdController.text = _fmt(0);
+    minCountController.text = _fmt(1);
+    maxCountController.text = _fmt(1);
     commentController.clear();
   }
 
   void fillForm(BriefLootTemplateEntity loot) {
     itemController.text = loot.item.toString();
-    reference.value = loot.reference;
-    chance.value = loot.chance;
+    referenceController.text = _fmt(loot.reference);
+    chanceController.text = _fmt(loot.chance);
     questRequiredController.value = {loot.questRequired ? 1 : 0};
-    lootMode.value = loot.lootMode;
-    groupId.value = loot.groupId;
-    minCount.value = loot.minCount;
-    maxCount.value = loot.maxCount;
+    lootModeController.text = _fmt(loot.lootMode);
+    groupIdController.text = _fmt(loot.groupId);
+    minCountController.text = _fmt(loot.minCount);
+    maxCountController.text = _fmt(loot.maxCount);
     commentController.text = loot.comment;
   }
 
@@ -67,13 +81,13 @@ class ProspectingLootTemplateViewModel {
     return LootTemplateEntity(
       entry: entry.value,
       item: _parseInt(itemController.text),
-      reference: reference.value,
-      chance: chance.value,
+      reference: _pi(referenceController.text),
+      chance: _pd(chanceController.text),
       questRequired: questRequiredController.value.first == 1,
-      lootMode: lootMode.value,
-      groupId: groupId.value,
-      minCount: minCount.value,
-      maxCount: maxCount.value,
+      lootMode: _pi(lootModeController.text),
+      groupId: _pi(groupIdController.text),
+      minCount: _pi(minCountController.text),
+      maxCount: _pi(maxCountController.text),
       comment: commentController.text,
     );
   }
@@ -219,8 +233,14 @@ class ProspectingLootTemplateViewModel {
   }
 
   void dispose() {
-    itemController.dispose();
-    questRequiredController.dispose();
+    chanceController.dispose();
     commentController.dispose();
+    groupIdController.dispose();
+    itemController.dispose();
+    lootModeController.dispose();
+    maxCountController.dispose();
+    minCountController.dispose();
+    questRequiredController.dispose();
+    referenceController.dispose();
   }
 }

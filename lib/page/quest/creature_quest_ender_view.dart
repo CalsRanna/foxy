@@ -160,7 +160,7 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
           FormItem(
             label: '任务编号',
             child: FoxyNumberInput<int>(
-              value: viewModel.quest.value,
+              controller: viewModel.questController,
               readOnly: true,
             ),
           ),

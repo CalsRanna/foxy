@@ -22,9 +22,9 @@ class GameObjectTemplateDetailViewModel {
   final aiNameController = TextEditingController();
   final scriptNameController = TextEditingController();
 
-  final entry = signal<int>(0);
-  final displayId = signal<int>(0);
-  final size = signal<double>(0.0);
+  final entryController = TextEditingController();
+  final displayIdController = TextEditingController();
+  final sizeController = TextEditingController();
   final data0 = signal<int>(0);
   final data1 = signal<int>(0);
   final data2 = signal<int>(0);
@@ -49,9 +49,23 @@ class GameObjectTemplateDetailViewModel {
   final data21 = signal<int>(0);
   final data22 = signal<int>(0);
   final data23 = signal<int>(0);
-  final verifiedBuild = signal<int>(0);
+  final verifiedBuildController = TextEditingController();
 
   final template = signal(GameObjectTemplateEntity());
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+  double _pd(String t) => double.tryParse(t) ?? 0.0;
 
   Future<void> save(BuildContext context) async {
     try {
@@ -83,13 +97,13 @@ class GameObjectTemplateDetailViewModel {
 
   GameObjectTemplateEntity _collectFromControllers() {
     return GameObjectTemplateEntity(
-      entry: entry.value,
+      entry: _pi(entryController.text),
       name: nameController.text,
       castBarCaption: castBarCaptionController.text,
       iconName: iconNameController.text,
       type: _getSelectValue(typeController),
-      displayId: displayId.value,
-      size: size.value,
+      displayId: _pi(displayIdController.text),
+      size: _pd(sizeController.text),
       unk1: unk1Controller.text,
       data0: data0.value,
       data1: data1.value,
@@ -117,7 +131,7 @@ class GameObjectTemplateDetailViewModel {
       data23: data23.value,
       aiName: aiNameController.text,
       scriptName: scriptNameController.text,
-      verifiedBuild: verifiedBuild.value,
+      verifiedBuild: _pi(verifiedBuildController.text),
     );
   }
 
@@ -125,12 +139,16 @@ class GameObjectTemplateDetailViewModel {
       controller.value.firstOrNull ?? 0;
 
   void dispose() {
-    nameController.dispose();
-    castBarCaptionController.dispose();
-    iconNameController.dispose();
-    unk1Controller.dispose();
     aiNameController.dispose();
+    castBarCaptionController.dispose();
+    displayIdController.dispose();
+    entryController.dispose();
+    iconNameController.dispose();
+    nameController.dispose();
     scriptNameController.dispose();
+    sizeController.dispose();
+    unk1Controller.dispose();
+    verifiedBuildController.dispose();
   }
 
   Future<void> initSignals({int? entry}) async {
@@ -147,12 +165,12 @@ class GameObjectTemplateDetailViewModel {
   }
 
   void _initControllers(GameObjectTemplateEntity template) {
-    entry.value = template.entry;
+    entryController.text = _fmt(template.entry);
     nameController.text = template.name;
     castBarCaptionController.text = template.castBarCaption;
     iconNameController.text = template.iconName;
-    displayId.value = template.displayId;
-    size.value = template.size;
+    displayIdController.text = _fmt(template.displayId);
+    sizeController.text = _fmt(template.size);
     unk1Controller.text = template.unk1;
     data0.value = template.data0;
     data1.value = template.data1;
@@ -180,7 +198,7 @@ class GameObjectTemplateDetailViewModel {
     data23.value = template.data23;
     aiNameController.text = template.aiName;
     scriptNameController.text = template.scriptName;
-    verifiedBuild.value = template.verifiedBuild;
+    verifiedBuildController.text = _fmt(template.verifiedBuild);
   }
 
   void _logActivity(ActivityActionType action, GameObjectTemplateEntity t) {

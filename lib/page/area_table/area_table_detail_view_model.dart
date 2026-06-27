@@ -14,33 +14,47 @@ class AreaTableDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final id = signal<int>(0);
+  final idController = TextEditingController();
   final nameController = TextEditingController();
-  final continentId = signal<int>(0);
-  final parentAreaId = signal<int>(0);
-  final areaBit = signal<int>(0);
-  final flags = signal<int>(0);
-  final factionGroupMask = signal<int>(0);
-  final explorationLevel = signal<int>(0);
+  final continentIdController = TextEditingController();
+  final parentAreaIdController = TextEditingController();
+  final areaBitController = TextEditingController();
+  final flagsController = TextEditingController();
+  final factionGroupMaskController = TextEditingController();
+  final explorationLevelController = TextEditingController();
 
   /// Sound
-  final soundProviderPref = signal<int>(0);
-  final soundProviderPrefUnderwater = signal<int>(0);
-  final ambienceId = signal<int>(0);
-  final zoneMusic = signal<int>(0);
-  final introSound = signal<int>(0);
-  final ambientMultiplier = signal<double>(0.0);
-  final lightId = signal<int>(0);
-  final minElevation = signal<double>(0.0);
+  final soundProviderPrefController = TextEditingController();
+  final soundProviderPrefUnderwaterController = TextEditingController();
+  final ambienceIdController = TextEditingController();
+  final zoneMusicController = TextEditingController();
+  final introSoundController = TextEditingController();
+  final ambientMultiplierController = TextEditingController();
+  final lightIdController = TextEditingController();
+  final minElevationController = TextEditingController();
 
   /// Other
-  final liquidTypeId0 = signal<int>(0);
-  final liquidTypeId1 = signal<int>(0);
-  final liquidTypeId2 = signal<int>(0);
-  final liquidTypeId3 = signal<int>(0);
+  final liquidTypeId0Controller = TextEditingController();
+  final liquidTypeId1Controller = TextEditingController();
+  final liquidTypeId2Controller = TextEditingController();
+  final liquidTypeId3Controller = TextEditingController();
 
   final area = signal(AreaTableEntity());
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+  double _pd(String t) => double.tryParse(t) ?? 0.0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -72,26 +86,26 @@ class AreaTableDetailViewModel {
   /// 从所有 Controller 收集数据构建 AreaTable
   AreaTableEntity _collectFromControllers() {
     final t = AreaTableEntity(
-      id: id.value,
+      id: _pi(idController.text),
       areaNameLangZhCn: nameController.text,
-      continentId: continentId.value,
-      parentAreaId: parentAreaId.value,
-      areaBit: areaBit.value,
-      flags: flags.value,
-      factionGroupMask: factionGroupMask.value,
-      explorationLevel: explorationLevel.value,
-      soundProviderPref: soundProviderPref.value,
-      soundProviderPrefUnderwater: soundProviderPrefUnderwater.value,
-      ambienceId: ambienceId.value,
-      zoneMusic: zoneMusic.value,
-      introSound: introSound.value,
-      ambientMultiplier: ambientMultiplier.value,
-      lightId: lightId.value,
-      minElevation: minElevation.value,
-      liquidTypeId0: liquidTypeId0.value,
-      liquidTypeId1: liquidTypeId1.value,
-      liquidTypeId2: liquidTypeId2.value,
-      liquidTypeId3: liquidTypeId3.value,
+      continentId: _pi(continentIdController.text),
+      parentAreaId: _pi(parentAreaIdController.text),
+      areaBit: _pi(areaBitController.text),
+      flags: _pi(flagsController.text),
+      factionGroupMask: _pi(factionGroupMaskController.text),
+      explorationLevel: _pi(explorationLevelController.text),
+      soundProviderPref: _pi(soundProviderPrefController.text),
+      soundProviderPrefUnderwater: _pi(soundProviderPrefUnderwaterController.text),
+      ambienceId: _pi(ambienceIdController.text),
+      zoneMusic: _pi(zoneMusicController.text),
+      introSound: _pi(introSoundController.text),
+      ambientMultiplier: _pd(ambientMultiplierController.text),
+      lightId: _pi(lightIdController.text),
+      minElevation: _pd(minElevationController.text),
+      liquidTypeId0: _pi(liquidTypeId0Controller.text),
+      liquidTypeId1: _pi(liquidTypeId1Controller.text),
+      liquidTypeId2: _pi(liquidTypeId2Controller.text),
+      liquidTypeId3: _pi(liquidTypeId3Controller.text),
     );
 
     return t;
@@ -109,7 +123,26 @@ class AreaTableDetailViewModel {
   }
 
   void dispose() {
+    ambienceIdController.dispose();
+    ambientMultiplierController.dispose();
+    areaBitController.dispose();
+    continentIdController.dispose();
+    explorationLevelController.dispose();
+    factionGroupMaskController.dispose();
+    flagsController.dispose();
+    idController.dispose();
+    introSoundController.dispose();
+    lightIdController.dispose();
+    liquidTypeId0Controller.dispose();
+    liquidTypeId1Controller.dispose();
+    liquidTypeId2Controller.dispose();
+    liquidTypeId3Controller.dispose();
+    minElevationController.dispose();
     nameController.dispose();
+    parentAreaIdController.dispose();
+    soundProviderPrefController.dispose();
+    soundProviderPrefUnderwaterController.dispose();
+    zoneMusicController.dispose();
   }
 
   Future<void> initSignals({int? id}) async {
@@ -124,29 +157,29 @@ class AreaTableDetailViewModel {
 
   void _initControllers(AreaTableEntity table) {
     /// Basic
-    id.value = table.id;
+    idController.text = _fmt(table.id);
     nameController.text = table.areaNameLangZhCn;
-    continentId.value = table.continentId;
-    parentAreaId.value = table.parentAreaId;
-    areaBit.value = table.areaBit;
-    flags.value = table.flags;
-    factionGroupMask.value = table.factionGroupMask;
-    explorationLevel.value = table.explorationLevel;
+    continentIdController.text = _fmt(table.continentId);
+    parentAreaIdController.text = _fmt(table.parentAreaId);
+    areaBitController.text = _fmt(table.areaBit);
+    flagsController.text = _fmt(table.flags);
+    factionGroupMaskController.text = _fmt(table.factionGroupMask);
+    explorationLevelController.text = _fmt(table.explorationLevel);
 
     /// Sound
-    soundProviderPref.value = table.soundProviderPref;
-    soundProviderPrefUnderwater.value = table.soundProviderPrefUnderwater;
-    ambienceId.value = table.ambienceId;
-    zoneMusic.value = table.zoneMusic;
-    introSound.value = table.introSound;
-    ambientMultiplier.value = table.ambientMultiplier;
-    lightId.value = table.lightId;
-    minElevation.value = table.minElevation;
+    soundProviderPrefController.text = _fmt(table.soundProviderPref);
+    soundProviderPrefUnderwaterController.text = _fmt(table.soundProviderPrefUnderwater);
+    ambienceIdController.text = _fmt(table.ambienceId);
+    zoneMusicController.text = _fmt(table.zoneMusic);
+    introSoundController.text = _fmt(table.introSound);
+    ambientMultiplierController.text = _fmt(table.ambientMultiplier);
+    lightIdController.text = _fmt(table.lightId);
+    minElevationController.text = _fmt(table.minElevation);
 
     /// Other
-    liquidTypeId0.value = table.liquidTypeId0;
-    liquidTypeId1.value = table.liquidTypeId1;
-    liquidTypeId2.value = table.liquidTypeId2;
-    liquidTypeId3.value = table.liquidTypeId3;
+    liquidTypeId0Controller.text = _fmt(table.liquidTypeId0);
+    liquidTypeId1Controller.text = _fmt(table.liquidTypeId1);
+    liquidTypeId2Controller.text = _fmt(table.liquidTypeId2);
+    liquidTypeId3Controller.text = _fmt(table.liquidTypeId3);
   }
 }

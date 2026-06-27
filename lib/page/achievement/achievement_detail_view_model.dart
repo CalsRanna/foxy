@@ -14,10 +14,10 @@ class AchievementDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final id = signal<int>(0);
-  final faction = signal<int>(0);
-  final instanceId = signal<int>(0);
-  final supercedes = signal<int>(0);
+  final idController = TextEditingController();
+  final factionController = TextEditingController();
+  final instanceIdController = TextEditingController();
+  final supercedesController = TextEditingController();
 
   /// Title languages
   final titleLangEnUSController = TextEditingController();
@@ -58,11 +58,11 @@ class AchievementDetailViewModel {
   final descriptionLangFlags = signal<int>(0);
 
   /// Category / Points / UI / Flags / Icon
-  final category = signal<int>(0);
-  final points = signal<int>(0);
-  final uiOrder = signal<int>(0);
-  final flags = signal<int>(0);
-  final iconId = signal<int>(0);
+  final categoryController = TextEditingController();
+  final pointsController = TextEditingController();
+  final uiOrderController = TextEditingController();
+  final flagsController = TextEditingController();
+  final iconIdController = TextEditingController();
 
   /// Reward languages
   final rewardLangEnUSController = TextEditingController();
@@ -84,12 +84,25 @@ class AchievementDetailViewModel {
   final rewardLangFlags = signal<int>(0);
 
   /// Minimum / Shares
-  final minimumCriteria = signal<int>(0);
-  final sharesCriteria = signal<int>(0);
+  final minimumCriteriaController = TextEditingController();
+  final sharesCriteriaController = TextEditingController();
 
   final achievement = signal(AchievementEntity());
 
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -121,10 +134,10 @@ class AchievementDetailViewModel {
   /// 从所有 Controller 收集数据构建 AchievementEntity
   AchievementEntity _collectFromControllers() {
     return AchievementEntity(
-      id: id.value,
-      faction: faction.value,
-      instanceId: instanceId.value,
-      supercedes: supercedes.value,
+      id: _pi(idController.text),
+      faction: _pi(factionController.text),
+      instanceId: _pi(instanceIdController.text),
+      supercedes: _pi(supercedesController.text),
       titleLangEnUS: titleLangEnUSController.text,
       titleLangKoKR: titleLangKoKRController.text,
       titleLangFrFR: titleLangFrFRController.text,
@@ -159,11 +172,11 @@ class AchievementDetailViewModel {
       descriptionLangUnk2: descriptionLangUnk2Controller.text,
       descriptionLangUnk3: descriptionLangUnk3Controller.text,
       descriptionLangFlags: descriptionLangFlags.value,
-      category: category.value,
-      points: points.value,
-      uiOrder: uiOrder.value,
-      flags: flags.value,
-      iconId: iconId.value,
+      category: _pi(categoryController.text),
+      points: _pi(pointsController.text),
+      uiOrder: _pi(uiOrderController.text),
+      flags: _pi(flagsController.text),
+      iconId: _pi(iconIdController.text),
       rewardLangEnUS: rewardLangEnUSController.text,
       rewardLangKoKR: rewardLangKoKRController.text,
       rewardLangFrFR: rewardLangFrFRController.text,
@@ -181,8 +194,8 @@ class AchievementDetailViewModel {
       rewardLangUnk2: rewardLangUnk2Controller.text,
       rewardLangUnk3: rewardLangUnk3Controller.text,
       rewardLangFlags: rewardLangFlags.value,
-      minimumCriteria: minimumCriteria.value,
-      sharesCriteria: sharesCriteria.value,
+      minimumCriteria: _pi(minimumCriteriaController.text),
+      sharesCriteria: _pi(sharesCriteriaController.text),
     );
   }
 
@@ -198,54 +211,65 @@ class AchievementDetailViewModel {
   }
 
   void dispose() {
-    titleLangEnUSController.dispose();
-    titleLangKoKRController.dispose();
-    titleLangFrFRController.dispose();
-    titleLangDeDEController.dispose();
-    titleLangZhCNController.dispose();
-    titleLangZhTWController.dispose();
-    titleLangEsESController.dispose();
-    titleLangEsMXController.dispose();
-    titleLangRuRUController.dispose();
-    titleLangJaJPController.dispose();
-    titleLangPtPTController.dispose();
-    titleLangPtBRController.dispose();
-    titleLangItITController.dispose();
-    titleLangUnk1Controller.dispose();
-    titleLangUnk2Controller.dispose();
-    titleLangUnk3Controller.dispose();
-    descriptionLangEnUSController.dispose();
-    descriptionLangKoKRController.dispose();
-    descriptionLangFrFRController.dispose();
+    categoryController.dispose();
     descriptionLangDeDEController.dispose();
-    descriptionLangZhCNController.dispose();
-    descriptionLangZhTWController.dispose();
+    descriptionLangEnUSController.dispose();
     descriptionLangEsESController.dispose();
     descriptionLangEsMXController.dispose();
-    descriptionLangRuRUController.dispose();
-    descriptionLangJaJPController.dispose();
-    descriptionLangPtPTController.dispose();
-    descriptionLangPtBRController.dispose();
+    descriptionLangFrFRController.dispose();
     descriptionLangItITController.dispose();
+    descriptionLangJaJPController.dispose();
+    descriptionLangKoKRController.dispose();
+    descriptionLangPtBRController.dispose();
+    descriptionLangPtPTController.dispose();
+    descriptionLangRuRUController.dispose();
     descriptionLangUnk1Controller.dispose();
     descriptionLangUnk2Controller.dispose();
     descriptionLangUnk3Controller.dispose();
-    rewardLangEnUSController.dispose();
-    rewardLangKoKRController.dispose();
-    rewardLangFrFRController.dispose();
+    descriptionLangZhCNController.dispose();
+    descriptionLangZhTWController.dispose();
+    factionController.dispose();
+    flagsController.dispose();
+    iconIdController.dispose();
+    idController.dispose();
+    instanceIdController.dispose();
+    minimumCriteriaController.dispose();
+    pointsController.dispose();
     rewardLangDeDEController.dispose();
-    rewardLangZhCNController.dispose();
-    rewardLangZhTWController.dispose();
+    rewardLangEnUSController.dispose();
     rewardLangEsESController.dispose();
     rewardLangEsMXController.dispose();
-    rewardLangRuRUController.dispose();
-    rewardLangJaJPController.dispose();
-    rewardLangPtPTController.dispose();
-    rewardLangPtBRController.dispose();
+    rewardLangFrFRController.dispose();
     rewardLangItITController.dispose();
+    rewardLangJaJPController.dispose();
+    rewardLangKoKRController.dispose();
+    rewardLangPtBRController.dispose();
+    rewardLangPtPTController.dispose();
+    rewardLangRuRUController.dispose();
     rewardLangUnk1Controller.dispose();
     rewardLangUnk2Controller.dispose();
     rewardLangUnk3Controller.dispose();
+    rewardLangZhCNController.dispose();
+    rewardLangZhTWController.dispose();
+    sharesCriteriaController.dispose();
+    supercedesController.dispose();
+    titleLangDeDEController.dispose();
+    titleLangEnUSController.dispose();
+    titleLangEsESController.dispose();
+    titleLangEsMXController.dispose();
+    titleLangFrFRController.dispose();
+    titleLangItITController.dispose();
+    titleLangJaJPController.dispose();
+    titleLangKoKRController.dispose();
+    titleLangPtBRController.dispose();
+    titleLangPtPTController.dispose();
+    titleLangRuRUController.dispose();
+    titleLangUnk1Controller.dispose();
+    titleLangUnk2Controller.dispose();
+    titleLangUnk3Controller.dispose();
+    titleLangZhCNController.dispose();
+    titleLangZhTWController.dispose();
+    uiOrderController.dispose();
   }
 
   Future<void> initSignals({int? id}) async {
@@ -259,10 +283,10 @@ class AchievementDetailViewModel {
   }
 
   void _initControllers(AchievementEntity achievement) {
-    id.value = achievement.id;
-    faction.value = achievement.faction;
-    instanceId.value = achievement.instanceId;
-    supercedes.value = achievement.supercedes;
+    idController.text = _fmt(achievement.id);
+    factionController.text = _fmt(achievement.faction);
+    instanceIdController.text = _fmt(achievement.instanceId);
+    supercedesController.text = _fmt(achievement.supercedes);
     titleLangEnUSController.text = achievement.titleLangEnUS;
     titleLangKoKRController.text = achievement.titleLangKoKR;
     titleLangFrFRController.text = achievement.titleLangFrFR;
@@ -297,11 +321,11 @@ class AchievementDetailViewModel {
     descriptionLangUnk2Controller.text = achievement.descriptionLangUnk2;
     descriptionLangUnk3Controller.text = achievement.descriptionLangUnk3;
     descriptionLangFlags.value = achievement.descriptionLangFlags;
-    category.value = achievement.category;
-    points.value = achievement.points;
-    uiOrder.value = achievement.uiOrder;
-    flags.value = achievement.flags;
-    iconId.value = achievement.iconId;
+    categoryController.text = _fmt(achievement.category);
+    pointsController.text = _fmt(achievement.points);
+    uiOrderController.text = _fmt(achievement.uiOrder);
+    flagsController.text = _fmt(achievement.flags);
+    iconIdController.text = _fmt(achievement.iconId);
     rewardLangEnUSController.text = achievement.rewardLangEnUS;
     rewardLangKoKRController.text = achievement.rewardLangKoKR;
     rewardLangFrFRController.text = achievement.rewardLangFrFR;
@@ -319,7 +343,7 @@ class AchievementDetailViewModel {
     rewardLangUnk2Controller.text = achievement.rewardLangUnk2;
     rewardLangUnk3Controller.text = achievement.rewardLangUnk3;
     rewardLangFlags.value = achievement.rewardLangFlags;
-    minimumCriteria.value = achievement.minimumCriteria;
-    sharesCriteria.value = achievement.sharesCriteria;
+    minimumCriteriaController.text = _fmt(achievement.minimumCriteria);
+    sharesCriteriaController.text = _fmt(achievement.sharesCriteria);
   }
 }

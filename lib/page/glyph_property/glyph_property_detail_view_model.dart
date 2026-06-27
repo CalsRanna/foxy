@@ -14,15 +14,28 @@ class GlyphPropertyDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final id = signal<int>(0);
+  final idController = TextEditingController();
 
   /// Property
-  final spellId = signal<int>(0);
-  final glyphSlotFlags = signal<int>(0);
-  final spellIconId = signal<int>(0);
+  final spellIdController = TextEditingController();
+  final glyphSlotFlagsController = TextEditingController();
+  final spellIconIdController = TextEditingController();
 
   final property = signal(GlyphPropertyEntity());
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -54,10 +67,10 @@ class GlyphPropertyDetailViewModel {
   /// 从所有 Controller 收集数据构建 GlyphProperty
   GlyphPropertyEntity _collectFromControllers() {
     return GlyphPropertyEntity(
-      id: id.value,
-      spellId: spellId.value,
-      glyphSlotFlags: glyphSlotFlags.value,
-      spellIconId: spellIconId.value,
+      id: _pi(idController.text),
+      spellId: _pi(spellIdController.text),
+      glyphSlotFlags: _pi(glyphSlotFlagsController.text),
+      spellIconId: _pi(spellIconIdController.text),
     );
   }
 
@@ -72,7 +85,12 @@ class GlyphPropertyDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  void dispose() {}
+  void dispose() {
+    glyphSlotFlagsController.dispose();
+    idController.dispose();
+    spellIconIdController.dispose();
+    spellIdController.dispose();
+  }
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -86,11 +104,11 @@ class GlyphPropertyDetailViewModel {
 
   void _initControllers(GlyphPropertyEntity glyphProperty) {
     /// Basic
-    id.value = glyphProperty.id;
+    idController.text = _fmt(glyphProperty.id);
 
     /// Property
-    spellId.value = glyphProperty.spellId;
-    glyphSlotFlags.value = glyphProperty.glyphSlotFlags;
-    spellIconId.value = glyphProperty.spellIconId;
+    spellIdController.text = _fmt(glyphProperty.spellId);
+    glyphSlotFlagsController.text = _fmt(glyphProperty.glyphSlotFlags);
+    spellIconIdController.text = _fmt(glyphProperty.spellIconId);
   }
 }

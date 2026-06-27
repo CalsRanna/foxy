@@ -41,7 +41,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
             child: FormItem(
               label: '编号',
               child: FoxyNumberInput<int>(
-                value: vm.id.value,
+                controller: vm.idController,
                 readOnly: true,
               ),
             ),
@@ -51,8 +51,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '表情1',
               placeholder: 'Emote1',
               child: FoxyNumberInput<int>(
-                value: vm.emote1.value,
-                onChanged: (v) => vm.emote1.value = v,
+                controller: vm.emote1Controller,
               ),
             ),
           ),
@@ -61,8 +60,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '表情2',
               placeholder: 'Emote2',
               child: FoxyNumberInput<int>(
-                value: vm.emote2.value,
-                onChanged: (v) => vm.emote2.value = v,
+                controller: vm.emote2Controller,
               ),
             ),
           ),
@@ -71,8 +69,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '表情3',
               placeholder: 'Emote3',
               child: FoxyNumberInput<int>(
-                value: vm.emote3.value,
-                onChanged: (v) => vm.emote3.value = v,
+                controller: vm.emote3Controller,
               ),
             ),
           ),
@@ -86,8 +83,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '表情4',
               placeholder: 'Emote4',
               child: FoxyNumberInput<int>(
-                value: vm.emote4.value,
-                onChanged: (v) => vm.emote4.value = v,
+                controller: vm.emote4Controller,
               ),
             ),
           ),
@@ -96,8 +92,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '表情延迟1',
               placeholder: 'EmoteDelay1',
               child: FoxyNumberInput<int>(
-                value: vm.emoteDelay1.value,
-                onChanged: (v) => vm.emoteDelay1.value = v,
+                controller: vm.emoteDelay1Controller,
               ),
             ),
           ),
@@ -106,8 +101,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '表情延迟2',
               placeholder: 'EmoteDelay2',
               child: FoxyNumberInput<int>(
-                value: vm.emoteDelay2.value,
-                onChanged: (v) => vm.emoteDelay2.value = v,
+                controller: vm.emoteDelay2Controller,
               ),
             ),
           ),
@@ -116,8 +110,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '表情延迟3',
               placeholder: 'EmoteDelay3',
               child: FoxyNumberInput<int>(
-                value: vm.emoteDelay3.value,
-                onChanged: (v) => vm.emoteDelay3.value = v,
+                controller: vm.emoteDelay3Controller,
               ),
             ),
           ),
@@ -131,8 +124,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '表情延迟4',
               placeholder: 'EmoteDelay4',
               child: FoxyNumberInput<int>(
-                value: vm.emoteDelay4.value,
-                onChanged: (v) => vm.emoteDelay4.value = v,
+                controller: vm.emoteDelay4Controller,
               ),
             ),
           ),

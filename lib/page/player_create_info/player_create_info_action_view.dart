@@ -113,9 +113,9 @@ class _PlayerCreateInfoActionViewState extends State<PlayerCreateInfoActionView>
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 400),
         child: Column(mainAxisSize: MainAxisSize.min, spacing: 16, children: [
-          FormItem(label: '按钮', placeholder: 'button', child: FoxyNumberInput<int>(value: viewModel.button.value, onChanged: (v) => viewModel.button.value = v)),
-          FormItem(label: '动作', placeholder: 'action', child: FoxyNumberInput<int>(value: viewModel.action.value, onChanged: (v) => viewModel.action.value = v)),
-          FormItem(label: '类型', placeholder: 'type', child: FoxyNumberInput<int>(value: viewModel.type.value, onChanged: (v) => viewModel.type.value = v)),
+          FormItem(label: '按钮', placeholder: 'button', child: FoxyNumberInput<int>(controller: viewModel.buttonController)),
+          FormItem(label: '动作', placeholder: 'action', child: FoxyNumberInput<int>(controller: viewModel.actionController)),
+          FormItem(label: '类型', placeholder: 'type', child: FoxyNumberInput<int>(controller: viewModel.typeController)),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             ShadButton.outline(onPressed: () => Navigator.of(dialogContext).pop(), child: Text('取消')),
             SizedBox(width: 8),

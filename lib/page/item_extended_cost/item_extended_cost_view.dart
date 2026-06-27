@@ -35,8 +35,7 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        value: viewModel.id.value,
-        onChanged: (v) => viewModel.id.value = v,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -44,24 +43,21 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       label: '荣誉点数',
       child: FoxyNumberInput<int>(
         placeholder: 'HonorPoints',
-        value: viewModel.honorPoints.value,
-        onChanged: (v) => viewModel.honorPoints.value = v,
+        controller: viewModel.honorPointsController,
       ),
     );
     final arenaPointsInput = FormItem(
       label: '竞技场点数',
       child: FoxyNumberInput<int>(
         placeholder: 'ArenaPoints',
-        value: viewModel.arenaPoints.value,
-        onChanged: (v) => viewModel.arenaPoints.value = v,
+        controller: viewModel.arenaPointsController,
       ),
     );
     final arenaBracketInput = FormItem(
       label: '竞技场等级',
       child: FoxyNumberInput<int>(
         placeholder: 'ArenaBracket',
-        value: viewModel.arenaBracket.value,
-        onChanged: (v) => viewModel.arenaBracket.value = v,
+        controller: viewModel.arenaBracketController,
       ),
     );
 
@@ -70,16 +66,14 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       label: '所需评级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredArenaRating',
-        value: viewModel.requiredArenaRating.value,
-        onChanged: (v) => viewModel.requiredArenaRating.value = v,
+        controller: viewModel.requiredArenaRatingController,
       ),
     );
     final itemPurchaseGroupInput = FormItem(
       label: '购买组',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemPurchaseGroup',
-        value: viewModel.itemPurchaseGroup.value,
-        onChanged: (v) => viewModel.itemPurchaseGroup.value = v,
+        controller: viewModel.itemPurchaseGroupController,
       ),
     );
 
@@ -88,80 +82,70 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       label: '物品 ID 0',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID0',
-        value: viewModel.itemID0.value,
-        onChanged: (v) => viewModel.itemID0.value = v,
+        controller: viewModel.itemID0Controller,
       ),
     );
     final itemCount0Input = FormItem(
       label: '物品计数 0',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount0',
-        value: viewModel.itemCount0.value,
-        onChanged: (v) => viewModel.itemCount0.value = v,
+        controller: viewModel.itemCount0Controller,
       ),
     );
     final itemID1Input = FormItem(
       label: '物品 ID 1',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID1',
-        value: viewModel.itemID1.value,
-        onChanged: (v) => viewModel.itemID1.value = v,
+        controller: viewModel.itemID1Controller,
       ),
     );
     final itemCount1Input = FormItem(
       label: '物品计数 1',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount1',
-        value: viewModel.itemCount1.value,
-        onChanged: (v) => viewModel.itemCount1.value = v,
+        controller: viewModel.itemCount1Controller,
       ),
     );
     final itemID2Input = FormItem(
       label: '物品 ID 2',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID2',
-        value: viewModel.itemID2.value,
-        onChanged: (v) => viewModel.itemID2.value = v,
+        controller: viewModel.itemID2Controller,
       ),
     );
     final itemCount2Input = FormItem(
       label: '物品计数 2',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount2',
-        value: viewModel.itemCount2.value,
-        onChanged: (v) => viewModel.itemCount2.value = v,
+        controller: viewModel.itemCount2Controller,
       ),
     );
     final itemID3Input = FormItem(
       label: '物品 ID 3',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID3',
-        value: viewModel.itemID3.value,
-        onChanged: (v) => viewModel.itemID3.value = v,
+        controller: viewModel.itemID3Controller,
       ),
     );
     final itemCount3Input = FormItem(
       label: '物品计数 3',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount3',
-        value: viewModel.itemCount3.value,
-        onChanged: (v) => viewModel.itemCount3.value = v,
+        controller: viewModel.itemCount3Controller,
       ),
     );
     final itemID4Input = FormItem(
       label: '物品 ID 4',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID4',
-        value: viewModel.itemID4.value,
-        onChanged: (v) => viewModel.itemID4.value = v,
+        controller: viewModel.itemID4Controller,
       ),
     );
     final itemCount4Input = FormItem(
       label: '物品计数 4',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount4',
-        value: viewModel.itemCount4.value,
-        onChanged: (v) => viewModel.itemCount4.value = v,
+        controller: viewModel.itemCount4Controller,
       ),
     );
 

@@ -14,17 +14,30 @@ class SpellAreaViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellAreaEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final area = signal<int>(0);
-  final questStart = signal<int>(0);
-  final questEnd = signal<int>(0);
-  final auraSpell = signal<int>(0);
-  final racemask = signal<int>(0);
-  final gender = signal<int>(0);
-  final autocast = signal<int>(0);
-  final questStartStatus = signal<int>(0);
-  final questEndStatus = signal<int>(0);
+  final areaController = TextEditingController();
+  final questStartController = TextEditingController();
+  final questEndController = TextEditingController();
+  final auraSpellController = TextEditingController();
+  final racemaskController = TextEditingController();
+  final genderController = TextEditingController();
+  final autocastController = TextEditingController();
+  final questStartStatusController = TextEditingController();
+  final questEndStatusController = TextEditingController();
 
   final _repository = GetIt.instance.get<SpellAreaRepository>();
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
     final data = await _repository.getSpellAreas(spellId.value);
@@ -33,41 +46,41 @@ class SpellAreaViewModel {
   }
 
   void resetForm() {
-    area.value = 0;
-    questStart.value = 0;
-    questEnd.value = 0;
-    auraSpell.value = 0;
-    racemask.value = 0;
-    gender.value = 0;
-    autocast.value = 0;
-    questStartStatus.value = 0;
-    questEndStatus.value = 0;
+    areaController.text = _fmt(0);
+    questStartController.text = _fmt(0);
+    questEndController.text = _fmt(0);
+    auraSpellController.text = _fmt(0);
+    racemaskController.text = _fmt(0);
+    genderController.text = _fmt(0);
+    autocastController.text = _fmt(0);
+    questStartStatusController.text = _fmt(0);
+    questEndStatusController.text = _fmt(0);
   }
 
   void fillForm(SpellAreaEntity data) {
-    area.value = data.area;
-    questStart.value = data.questStart;
-    questEnd.value = data.questEnd;
-    auraSpell.value = data.auraSpell;
-    racemask.value = data.racemask;
-    gender.value = data.gender;
-    autocast.value = data.autocast;
-    questStartStatus.value = data.questStartStatus;
-    questEndStatus.value = data.questEndStatus;
+    areaController.text = _fmt(data.area);
+    questStartController.text = _fmt(data.questStart);
+    questEndController.text = _fmt(data.questEnd);
+    auraSpellController.text = _fmt(data.auraSpell);
+    racemaskController.text = _fmt(data.racemask);
+    genderController.text = _fmt(data.gender);
+    autocastController.text = _fmt(data.autocast);
+    questStartStatusController.text = _fmt(data.questStartStatus);
+    questEndStatusController.text = _fmt(data.questEndStatus);
   }
 
   SpellAreaEntity collectFromForm() {
     return SpellAreaEntity(
       spell: spellId.value,
-      area: area.value,
-      questStart: questStart.value,
-      questEnd: questEnd.value,
-      auraSpell: auraSpell.value,
-      racemask: racemask.value,
-      gender: gender.value,
-      autocast: autocast.value,
-      questStartStatus: questStartStatus.value,
-      questEndStatus: questEndStatus.value,
+      area: _pi(areaController.text),
+      questStart: _pi(questStartController.text),
+      questEnd: _pi(questEndController.text),
+      auraSpell: _pi(auraSpellController.text),
+      racemask: _pi(racemaskController.text),
+      gender: _pi(genderController.text),
+      autocast: _pi(autocastController.text),
+      questStartStatus: _pi(questStartStatusController.text),
+      questEndStatus: _pi(questEndStatusController.text),
     );
   }
 
@@ -201,5 +214,15 @@ class SpellAreaViewModel {
     routerFacade.goBack();
   }
 
-  void dispose() {}
+  void dispose() {
+    areaController.dispose();
+    auraSpellController.dispose();
+    autocastController.dispose();
+    genderController.dispose();
+    questEndController.dispose();
+    questEndStatusController.dispose();
+    questStartController.dispose();
+    questStartStatusController.dispose();
+    racemaskController.dispose();
+  }
 }

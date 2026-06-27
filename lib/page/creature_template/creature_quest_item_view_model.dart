@@ -15,13 +15,26 @@ class CreatureQuestItemViewModel {
   final items = signal<List<CreatureQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final idx = signal<int>(0);
+  final idxController = TextEditingController();
   final itemIdController = TextEditingController();
-  final verifiedBuild = signal<int>(0);
+  final verifiedBuildController = TextEditingController();
 
   final _repository = GetIt.instance.get<CreatureQuestItemRepository>();
 
   /// 加载数据
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> load() async {
     final data = await _repository.getCreatureQuestItems(creatureEntry.value);
     items.value = data;
@@ -30,25 +43,25 @@ class CreatureQuestItemViewModel {
 
   /// 重置表单
   void resetForm() {
-    idx.value = 0;
+    idxController.text = _fmt(0);
     itemIdController.clear();
-    verifiedBuild.value = 0;
+    verifiedBuildController.text = _fmt(0);
   }
 
   /// 填充表单
   void fillForm(CreatureQuestItemEntity questItem) {
-    idx.value = questItem.idx;
+    idxController.text = _fmt(questItem.idx);
     itemIdController.text = questItem.itemId.toString();
-    verifiedBuild.value = questItem.verifiedBuild;
+    verifiedBuildController.text = _fmt(questItem.verifiedBuild);
   }
 
   /// 从表单收集数据
   CreatureQuestItemEntity collectFromForm() {
     final questItem = CreatureQuestItemEntity(
       creatureEntry: creatureEntry.value,
-      idx: idx.value,
+      idx: _pi(idxController.text),
       itemId: _parseInt(itemIdController.text),
-      verifiedBuild: verifiedBuild.value,
+      verifiedBuild: _pi(verifiedBuildController.text),
     );
     return questItem;
   }
@@ -65,7 +78,7 @@ class CreatureQuestItemViewModel {
     try {
       final nextIdx = await _repository.getNextIdx(creatureEntry.value);
       resetForm();
-      idx.value = nextIdx;
+      idxController.text = _fmt(nextIdx);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物任务物品记录失败: $e');
@@ -204,6 +217,8 @@ class CreatureQuestItemViewModel {
 
   /// 清理资源
   void dispose() {
+    idxController.dispose();
     itemIdController.dispose();
+    verifiedBuildController.dispose();
   }
 }

@@ -207,8 +207,7 @@ class _PickpocketingLootTemplateViewState
           FormItem(
             label: '关联ID',
             child: FoxyNumberInput<int>(
-              value: viewModel.reference.value,
-              onChanged: (v) => viewModel.reference.value = v,
+              controller: viewModel.referenceController,
               placeholder: 'Reference (0=直接掉落)',
             ),
           ),
@@ -217,8 +216,7 @@ class _PickpocketingLootTemplateViewState
           FormItem(
             label: '掉落几率',
             child: FoxyNumberInput<double>(
-              value: viewModel.chance.value,
-              onChanged: (v) => viewModel.chance.value = v,
+              controller: viewModel.chanceController,
               placeholder: 'Chance (%)',
             ),
           ),
@@ -237,8 +235,7 @@ class _PickpocketingLootTemplateViewState
           FormItem(
             label: '掉落模式',
             child: FoxyNumberInput<int>(
-              value: viewModel.lootMode.value,
-              onChanged: (v) => viewModel.lootMode.value = v,
+              controller: viewModel.lootModeController,
               placeholder: 'LootMode',
             ),
           ),
@@ -247,8 +244,7 @@ class _PickpocketingLootTemplateViewState
           FormItem(
             label: '组ID',
             child: FoxyNumberInput<int>(
-              value: viewModel.groupId.value,
-              onChanged: (v) => viewModel.groupId.value = v,
+              controller: viewModel.groupIdController,
               placeholder: 'GroupId',
             ),
           ),
@@ -261,8 +257,7 @@ class _PickpocketingLootTemplateViewState
                 child: FormItem(
                   label: '最小数量',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.minCount.value,
-                    onChanged: (v) => viewModel.minCount.value = v,
+                    controller: viewModel.minCountController,
                     placeholder: 'MinCount',
                   ),
                 ),
@@ -271,8 +266,7 @@ class _PickpocketingLootTemplateViewState
                 child: FormItem(
                   label: '最大数量',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.maxCount.value,
-                    onChanged: (v) => viewModel.maxCount.value = v,
+                    controller: viewModel.maxCountController,
                     placeholder: 'MaxCount',
                   ),
                 ),

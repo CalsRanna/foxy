@@ -19,14 +19,27 @@ class NpcTrainerViewModel {
 
   // 表单控制器
   final spellID = signal<int>(0);
-  final moneyCost = signal<int>(0);
-  final reqSkillLine = signal<int>(0);
-  final reqSkillRank = signal<int>(0);
-  final reqLevel = signal<int>(0);
+  final moneyCostController = TextEditingController();
+  final reqSkillLineController = TextEditingController();
+  final reqSkillRankController = TextEditingController();
+  final reqLevelController = TextEditingController();
 
   final _repository = GetIt.instance.get<NpcTrainerRepository>();
 
   /// 加载数据
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> load() async {
     final data = await _repository.getNpcTrainers(id.value);
     items.value = data;
@@ -38,19 +51,19 @@ class NpcTrainerViewModel {
   /// 重置表单
   void resetForm() {
     spellID.value = 0;
-    moneyCost.value = 0;
-    reqSkillLine.value = 0;
-    reqSkillRank.value = 0;
-    reqLevel.value = 0;
+    moneyCostController.text = _fmt(0);
+    reqSkillLineController.text = _fmt(0);
+    reqSkillRankController.text = _fmt(0);
+    reqLevelController.text = _fmt(0);
   }
 
   /// 填充表单
   void fillForm(BriefNpcTrainerEntity trainer) {
     spellID.value = trainer.spellID;
-    moneyCost.value = trainer.moneyCost;
-    reqSkillLine.value = trainer.reqSkillLine;
-    reqSkillRank.value = trainer.reqSkillRank;
-    reqLevel.value = trainer.reqLevel;
+    moneyCostController.text = _fmt(trainer.moneyCost);
+    reqSkillLineController.text = _fmt(trainer.reqSkillLine);
+    reqSkillRankController.text = _fmt(trainer.reqSkillRank);
+    reqLevelController.text = _fmt(trainer.reqLevel);
   }
 
   /// 从表单收集数据
@@ -58,10 +71,10 @@ class NpcTrainerViewModel {
     return NpcTrainerEntity(
       id: id.value,
       spellID: spellID.value,
-      moneyCost: moneyCost.value,
-      reqSkillLine: reqSkillLine.value,
-      reqSkillRank: reqSkillRank.value,
-      reqLevel: reqLevel.value,
+      moneyCost: _pi(moneyCostController.text),
+      reqSkillLine: _pi(reqSkillLineController.text),
+      reqSkillRank: _pi(reqSkillRankController.text),
+      reqLevel: _pi(reqLevelController.text),
     );
   }
 
@@ -199,5 +212,10 @@ class NpcTrainerViewModel {
   }
 
   /// 清理资源
-  void dispose() {}
+  void dispose() {
+    moneyCostController.dispose();
+    reqLevelController.dispose();
+    reqSkillLineController.dispose();
+    reqSkillRankController.dispose();
+  }
 }

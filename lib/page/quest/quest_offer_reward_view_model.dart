@@ -13,18 +13,31 @@ class QuestOfferRewardViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
-  final id = signal<int>(0);
-  final emote1 = signal<int>(0);
-  final emote2 = signal<int>(0);
-  final emote3 = signal<int>(0);
-  final emote4 = signal<int>(0);
-  final emoteDelay1 = signal<int>(0);
-  final emoteDelay2 = signal<int>(0);
-  final emoteDelay3 = signal<int>(0);
-  final emoteDelay4 = signal<int>(0);
+  final idController = TextEditingController();
+  final emote1Controller = TextEditingController();
+  final emote2Controller = TextEditingController();
+  final emote3Controller = TextEditingController();
+  final emote4Controller = TextEditingController();
+  final emoteDelay1Controller = TextEditingController();
+  final emoteDelay2Controller = TextEditingController();
+  final emoteDelay3Controller = TextEditingController();
+  final emoteDelay4Controller = TextEditingController();
   final rewardTextController = TextEditingController();
 
   int _originalId = 0;
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> initSignals({required int questId}) async {
     try {
@@ -37,7 +50,7 @@ class QuestOfferRewardViewModel {
         final blank = await _repository.createQuestOfferReward(questId);
         _initSignals(blank);
       }
-      id.value = questId;
+      idController.text = _fmt(questId);
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
@@ -69,33 +82,42 @@ class QuestOfferRewardViewModel {
   }
 
   void _initSignals(QuestOfferRewardEntity model) {
-    emote1.value = model.emote1;
-    emote2.value = model.emote2;
-    emote3.value = model.emote3;
-    emote4.value = model.emote4;
-    emoteDelay1.value = model.emoteDelay1;
-    emoteDelay2.value = model.emoteDelay2;
-    emoteDelay3.value = model.emoteDelay3;
-    emoteDelay4.value = model.emoteDelay4;
+    emote1Controller.text = _fmt(model.emote1);
+    emote2Controller.text = _fmt(model.emote2);
+    emote3Controller.text = _fmt(model.emote3);
+    emote4Controller.text = _fmt(model.emote4);
+    emoteDelay1Controller.text = _fmt(model.emoteDelay1);
+    emoteDelay2Controller.text = _fmt(model.emoteDelay2);
+    emoteDelay3Controller.text = _fmt(model.emoteDelay3);
+    emoteDelay4Controller.text = _fmt(model.emoteDelay4);
     rewardTextController.text = model.rewardText;
   }
 
   QuestOfferRewardEntity _collect() {
     return QuestOfferRewardEntity(
       id: questId.value,
-      emote1: emote1.value,
-      emote2: emote2.value,
-      emote3: emote3.value,
-      emote4: emote4.value,
-      emoteDelay1: emoteDelay1.value,
-      emoteDelay2: emoteDelay2.value,
-      emoteDelay3: emoteDelay3.value,
-      emoteDelay4: emoteDelay4.value,
+      emote1: _pi(emote1Controller.text),
+      emote2: _pi(emote2Controller.text),
+      emote3: _pi(emote3Controller.text),
+      emote4: _pi(emote4Controller.text),
+      emoteDelay1: _pi(emoteDelay1Controller.text),
+      emoteDelay2: _pi(emoteDelay2Controller.text),
+      emoteDelay3: _pi(emoteDelay3Controller.text),
+      emoteDelay4: _pi(emoteDelay4Controller.text),
       rewardText: rewardTextController.text,
     );
   }
 
   void dispose() {
+    emote1Controller.dispose();
+    emote2Controller.dispose();
+    emote3Controller.dispose();
+    emote4Controller.dispose();
+    emoteDelay1Controller.dispose();
+    emoteDelay2Controller.dispose();
+    emoteDelay3Controller.dispose();
+    emoteDelay4Controller.dispose();
+    idController.dispose();
     rewardTextController.dispose();
   }
 }

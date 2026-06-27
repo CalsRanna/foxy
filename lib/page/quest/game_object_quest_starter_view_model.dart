@@ -11,8 +11,8 @@ class GameObjectQuestStarterViewModel {
   final questId = signal(0);
   final items = signal<List<BriefGameObjectQuestStarterEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final id = signal<int>(0);
-  final quest = signal<int>(0);
+  final idController = TextEditingController();
+  final questController = TextEditingController();
 
   int _originalId = 0;
   int _originalQuest = 0;
@@ -20,6 +20,19 @@ class GameObjectQuestStarterViewModel {
   final _repository = GetIt.instance.get<GameObjectQuestStarterRepository>();
 
   /// 加载数据
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> load() async {
     final data = await _repository.getGameObjectQuestStarters(questId.value);
     items.value = data;
@@ -28,21 +41,21 @@ class GameObjectQuestStarterViewModel {
 
   /// 重置表单
   void resetForm() {
-    id.value = 0;
-    quest.value = 0;
+    idController.text = _fmt(0);
+    questController.text = _fmt(0);
   }
 
   /// 填充表单
   void fillForm(GameObjectQuestStarterEntity model) {
-    id.value = model.id;
-    quest.value = model.quest;
+    idController.text = _fmt(model.id);
+    questController.text = _fmt(model.quest);
   }
 
   /// 从表单收集数据
   GameObjectQuestStarterEntity collectFromForm() {
     return GameObjectQuestStarterEntity(
-      id: id.value,
-      quest: quest.value,
+      id: _pi(idController.text),
+      quest: _pi(questController.text),
     );
   }
 
@@ -220,5 +233,8 @@ class GameObjectQuestStarterViewModel {
   }
 
   /// 清理资源
-  void dispose() {}
+  void dispose() {
+    idController.dispose();
+    questController.dispose();
+  }
 }

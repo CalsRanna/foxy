@@ -34,8 +34,7 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        value: viewModel.id.value,
-        onChanged: (v) => viewModel.id.value = v,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -43,24 +42,21 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
       label: '物品编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID',
-        value: viewModel.itemId.value,
-        onChanged: (v) => viewModel.itemId.value = v,
+        controller: viewModel.itemIdController,
       ),
     );
     final categoryIdInput = FormItem(
       label: '分类编号',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryID',
-        value: viewModel.categoryId.value,
-        onChanged: (v) => viewModel.categoryId.value = v,
+        controller: viewModel.categoryIdController,
       ),
     );
     final bitIndexInput = FormItem(
       label: '位索引',
       child: FoxyNumberInput<int>(
         placeholder: 'BitIndex',
-        value: viewModel.bitIndex.value,
-        onChanged: (v) => viewModel.bitIndex.value = v,
+        controller: viewModel.bitIndexController,
       ),
     );
 

@@ -13,12 +13,25 @@ class QuestRequestItemsViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
-  final id = signal<int>(0);
-  final emoteOnComplete = signal<int>(0);
-  final emoteOnIncomplete = signal<int>(0);
+  final idController = TextEditingController();
+  final emoteOnCompleteController = TextEditingController();
+  final emoteOnIncompleteController = TextEditingController();
   final completionTextController = TextEditingController();
 
   int _originalId = 0;
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> initSignals({required int questId}) async {
     try {
@@ -31,7 +44,7 @@ class QuestRequestItemsViewModel {
         final blank = await _repository.createQuestRequestItems(questId);
         _initSignals(blank);
       }
-      id.value = questId;
+      idController.text = _fmt(questId);
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
@@ -63,21 +76,24 @@ class QuestRequestItemsViewModel {
   }
 
   void _initSignals(QuestRequestItemsEntity model) {
-    emoteOnComplete.value = model.emoteOnComplete;
-    emoteOnIncomplete.value = model.emoteOnIncomplete;
+    emoteOnCompleteController.text = _fmt(model.emoteOnComplete);
+    emoteOnIncompleteController.text = _fmt(model.emoteOnIncomplete);
     completionTextController.text = model.completionText;
   }
 
   QuestRequestItemsEntity _collect() {
     return QuestRequestItemsEntity(
       id: questId.value,
-      emoteOnComplete: emoteOnComplete.value,
-      emoteOnIncomplete: emoteOnIncomplete.value,
+      emoteOnComplete: _pi(emoteOnCompleteController.text),
+      emoteOnIncomplete: _pi(emoteOnIncompleteController.text),
       completionText: completionTextController.text,
     );
   }
 
   void dispose() {
     completionTextController.dispose();
+    emoteOnCompleteController.dispose();
+    emoteOnIncompleteController.dispose();
+    idController.dispose();
   }
 }

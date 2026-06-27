@@ -79,8 +79,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                           label: '法术强度',
                           placeholder: 'direct_bonus',
                           child: FoxyNumberInput<double>(
-                            value: viewModel.directBonus.value,
-                            onChanged: (v) => viewModel.directBonus.value = v,
+                            controller: viewModel.directBonusController,
                           ),
                         ),
                       ),
@@ -89,8 +88,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                           label: '法术强度(dot)',
                           placeholder: 'dot_bonus',
                           child: FoxyNumberInput<double>(
-                            value: viewModel.dotBonus.value,
-                            onChanged: (v) => viewModel.dotBonus.value = v,
+                            controller: viewModel.dotBonusController,
                           ),
                         ),
                       ),
@@ -99,8 +97,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                           label: '攻击强度',
                           placeholder: 'ap_bonus',
                           child: FoxyNumberInput<double>(
-                            value: viewModel.apBonus.value,
-                            onChanged: (v) => viewModel.apBonus.value = v,
+                            controller: viewModel.apBonusController,
                           ),
                         ),
                       ),
@@ -109,8 +106,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                           label: '攻击强度(dot)',
                           placeholder: 'ap_dot_bonus',
                           child: FoxyNumberInput<double>(
-                            value: viewModel.apDotBonus.value,
-                            onChanged: (v) => viewModel.apDotBonus.value = v,
+                            controller: viewModel.apDotBonusController,
                           ),
                         ),
                       ),

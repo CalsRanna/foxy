@@ -209,8 +209,7 @@ class _DisenchantLootTemplateViewState
             label: '关联ID',
             placeholder: 'Reference (0=直接掉落)',
             child: FoxyNumberInput<int>(
-              value: viewModel.reference.value,
-              onChanged: (v) => viewModel.reference.value = v,
+              controller: viewModel.referenceController,
             ),
           ),
           SizedBox(height: 16),
@@ -219,8 +218,7 @@ class _DisenchantLootTemplateViewState
             label: '掉落几率',
             placeholder: 'Chance (%)',
             child: FoxyNumberInput<double>(
-              value: viewModel.chance.value,
-              onChanged: (v) => viewModel.chance.value = v,
+              controller: viewModel.chanceController,
             ),
           ),
           SizedBox(height: 16),
@@ -239,8 +237,7 @@ class _DisenchantLootTemplateViewState
             label: '掉落模式',
             placeholder: 'LootMode',
             child: FoxyNumberInput<int>(
-              value: viewModel.lootMode.value,
-              onChanged: (v) => viewModel.lootMode.value = v,
+              controller: viewModel.lootModeController,
             ),
           ),
           SizedBox(height: 16),
@@ -249,8 +246,7 @@ class _DisenchantLootTemplateViewState
             label: '组ID',
             placeholder: 'GroupId',
             child: FoxyNumberInput<int>(
-              value: viewModel.groupId.value,
-              onChanged: (v) => viewModel.groupId.value = v,
+              controller: viewModel.groupIdController,
             ),
           ),
           SizedBox(height: 16),
@@ -263,8 +259,7 @@ class _DisenchantLootTemplateViewState
                   label: '最小数量',
                   placeholder: 'MinCount',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.minCount.value,
-                    onChanged: (v) => viewModel.minCount.value = v,
+                    controller: viewModel.minCountController,
                   ),
                 ),
               ),
@@ -273,8 +268,7 @@ class _DisenchantLootTemplateViewState
                   label: '最大数量',
                   placeholder: 'MaxCount',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.maxCount.value,
-                    onChanged: (v) => viewModel.maxCount.value = v,
+                    controller: viewModel.maxCountController,
                   ),
                 ),
               ),

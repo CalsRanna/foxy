@@ -14,9 +14,9 @@ class EmoteTextDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final id = signal<int>(0);
+  final idController = TextEditingController();
   final nameController = TextEditingController();
-  final emoteId = signal<int>(0);
+  final emoteIdController = TextEditingController();
 
   /// EmoteText
   final emoteText0 = signal<int>(0);
@@ -38,6 +38,19 @@ class EmoteTextDetailViewModel {
 
   final emote = signal(EmoteTextEntity());
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -69,9 +82,9 @@ class EmoteTextDetailViewModel {
   /// 从所有 Controller 收集数据构建 EmoteText
   EmoteTextEntity _collectFromControllers() {
     return EmoteTextEntity(
-      id: id.value,
+      id: _pi(idController.text),
       name: nameController.text,
-      emoteId: emoteId.value,
+      emoteId: _pi(emoteIdController.text),
       emoteText0: emoteText0.value,
       emoteText1: emoteText1.value,
       emoteText2: emoteText2.value,
@@ -103,6 +116,8 @@ class EmoteTextDetailViewModel {
   }
 
   void dispose() {
+    emoteIdController.dispose();
+    idController.dispose();
     nameController.dispose();
   }
 
@@ -118,9 +133,9 @@ class EmoteTextDetailViewModel {
 
   void _initControllers(EmoteTextEntity emoteText) {
     /// Basic
-    id.value = emoteText.id;
+    idController.text = _fmt(emoteText.id);
     nameController.text = emoteText.name;
-    emoteId.value = emoteText.emoteId;
+    emoteIdController.text = _fmt(emoteText.emoteId);
 
     /// EmoteText
     emoteText0.value = emoteText.emoteText0;
