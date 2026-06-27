@@ -21,13 +21,13 @@ class GossipMenuOptionViewModel {
   final optionIdController = TextEditingController();
   final optionIconController = ShadSelectController<int>();
   final optionTextController = TextEditingController();
-  final optionBroadcastTextId = signal<int>(0);
+  final optionBroadcastTextIdController = TextEditingController();
   final optionTypeController = ShadSelectController<int>();
   final optionNpcFlag = signal<int>(0);
   final boxCodedController = TextEditingController();
   final boxMoneyController = TextEditingController();
   final boxTextController = TextEditingController();
-  final boxBroadcastTextId = signal<int>(0);
+  final boxBroadcastTextIdController = TextEditingController();
   final actionMenuIdController = TextEditingController();
   final actionPoiIdController = TextEditingController();
   final verifiedBuildController = TextEditingController();
@@ -157,10 +157,12 @@ class GossipMenuOptionViewModel {
   void dispose() {
     actionMenuIdController.dispose();
     actionPoiIdController.dispose();
+    boxBroadcastTextIdController.dispose();
     boxCodedController.dispose();
     boxMoneyController.dispose();
     boxTextController.dispose();
     menuIdController.dispose();
+    optionBroadcastTextIdController.dispose();
     optionIconController.dispose();
     optionIdController.dispose();
     optionTextController.dispose();
@@ -173,13 +175,13 @@ class GossipMenuOptionViewModel {
     optionIdController.text = o.optionId.toString();
     optionIconController.value = {o.optionIcon};
     optionTextController.text = o.optionText;
-    optionBroadcastTextId.value = o.optionBroadcastTextId;
+    optionBroadcastTextIdController.text = _fmt(o.optionBroadcastTextId);
     optionTypeController.value = {o.optionType};
     optionNpcFlag.value = o.optionNpcFlag;
     boxCodedController.text = o.boxCoded.toString();
     boxMoneyController.text = o.boxMoney.toString();
     boxTextController.text = o.boxText;
-    boxBroadcastTextId.value = o.boxBroadcastTextId;
+    boxBroadcastTextIdController.text = _fmt(o.boxBroadcastTextId);
     actionMenuIdController.text = _fmt(o.actionMenuId);
     actionPoiIdController.text = o.actionPoiId.toString();
     verifiedBuildController.text = o.verifiedBuild.toString();
@@ -193,7 +195,7 @@ class GossipMenuOptionViewModel {
           ? optionIconController.value.first
           : 0,
       optionText: optionTextController.text,
-      optionBroadcastTextId: optionBroadcastTextId.value,
+      optionBroadcastTextId: _pi(optionBroadcastTextIdController.text),
       optionType: optionTypeController.value.isNotEmpty
           ? optionTypeController.value.first
           : 0,
@@ -201,7 +203,7 @@ class GossipMenuOptionViewModel {
       boxCoded: int.tryParse(boxCodedController.text) ?? 0,
       boxMoney: int.tryParse(boxMoneyController.text) ?? 0,
       boxText: boxTextController.text,
-      boxBroadcastTextId: boxBroadcastTextId.value,
+      boxBroadcastTextId: _pi(boxBroadcastTextIdController.text),
       actionMenuId: _pi(actionMenuIdController.text),
       actionPoiId: int.tryParse(actionPoiIdController.text) ?? 0,
       verifiedBuild: int.tryParse(verifiedBuildController.text) ?? 0,

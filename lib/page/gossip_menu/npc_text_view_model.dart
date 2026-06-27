@@ -14,9 +14,22 @@ class NpcTextViewModel {
   final _repository = GetIt.instance.get<NpcTextRepository>();
   final _localeRepository = GetIt.instance.get<NpcTextLocaleRepository>();
 
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   final _controllers = <String, TextEditingController>{};
-  final _emoteSignals = <String, Signal<int>>{};
-  final _broadcastSignals = <int, Signal<int>>{};
+  final _emoteControllers = <String, TextEditingController>{};
+  final _broadcastControllers = <int, TextEditingController>{};
 
   final creating = signal(false);
   final currentTextId = signal(0);
@@ -27,12 +40,12 @@ class NpcTextViewModel {
     return _controllers.putIfAbsent(key, () => TextEditingController());
   }
 
-  Signal<int> emoteSignalOf(String key) {
-    return _emoteSignals.putIfAbsent(key, () => signal(0));
+  TextEditingController emoteControllerOf(String key) {
+    return _emoteControllers.putIfAbsent(key, () => TextEditingController());
   }
 
-  Signal<int> broadcastSignalOf(int n) {
-    return _broadcastSignals.putIfAbsent(n, () => signal<int>(0));
+  TextEditingController broadcastControllerOf(int n) {
+    return _broadcastControllers.putIfAbsent(n, () => TextEditingController());
   }
 
   /// 加载指定 textId 的数据到所有 controller
@@ -107,17 +120,25 @@ class NpcTextViewModel {
       c.dispose();
     }
     _controllers.clear();
+    for (final c in _emoteControllers.values) {
+      c.dispose();
+    }
+    _emoteControllers.clear();
+    for (final c in _broadcastControllers.values) {
+      c.dispose();
+    }
+    _broadcastControllers.clear();
   }
 
   void _clearAll() {
     for (final c in _controllers.values) {
       c.text = '';
     }
-    for (final s in _emoteSignals.values) {
-      s.value = 0;
+    for (final c in _emoteControllers.values) {
+      c.text = '';
     }
-    for (final s in _broadcastSignals.values) {
-      s.value = 0;
+    for (final c in _broadcastControllers.values) {
+      c.text = '';
     }
   }
 
@@ -132,7 +153,7 @@ class NpcTextViewModel {
       controllerOf('text${n}_1').text = e.text1;
       controllerOf('BroadcastTextID$n').text = e.broadcastTextId.toString();
       for (var i = 0; i < 6; i++) {
-        emoteSignalOf('em${n}_$i').value = e.emotes[i];
+        emoteControllerOf('em${n}_$i').text = _fmt(e.emotes[i]);
       }
     }
   }
@@ -157,10 +178,10 @@ class NpcTextViewModel {
           probability: double.tryParse(controllerOf('Probability$n').text) ?? 0,
           text0: controllerOf('text${n}_0').text,
           text1: controllerOf('text${n}_1').text,
-          broadcastTextId: broadcastSignalOf(n).value,
+          broadcastTextId: _pi(broadcastControllerOf(n).text),
           emotes: List.generate(
             6,
-            (i) => emoteSignalOf('em${n}_$i').value,
+            (i) => _pi(emoteControllerOf('em${n}_$i').text),
           ),
         );
       }),
