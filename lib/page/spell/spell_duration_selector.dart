@@ -17,11 +17,13 @@ class SpellDurationSelector extends StatefulWidget {
 
 class _SpellDurationSelectorState extends State<SpellDurationSelector> {
   final _displayController = TextEditingController();
+  void Function()? _unsub;
 
   @override
   void initState() {
     super.initState();
     _syncDisplay();
+    _unsub = widget.signal.subscribe((_) => _syncDisplay());
   }
 
   void _syncDisplay() {
@@ -31,6 +33,7 @@ class _SpellDurationSelectorState extends State<SpellDurationSelector> {
 
   @override
   void dispose() {
+    _unsub?.call();
     _displayController.dispose();
     super.dispose();
   }
