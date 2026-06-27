@@ -115,7 +115,11 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     ];
     final children = [
       Watch((_) => _buildLeftBar()),
-      const VerticalDivider(thickness: 1, width: 1),
+      VerticalDivider(
+        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+        thickness: 1,
+        width: 1,
+      ),
       Expanded(child: Column(children: rightColumnChildren)),
     ];
     final topWorkspace = Row(
@@ -152,7 +156,9 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
         children.add(text);
       }
     }
-    var borderSide = BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5));
+    var borderSide = BorderSide(
+      color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+    );
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onPanStart: (details) {
@@ -255,10 +261,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: _kDbcDialogWidth,
-      child: Watch((_) => _buildBody()),
-    );
+    return SizedBox(width: _kDbcDialogWidth, child: Watch((_) => _buildBody()));
   }
 
   Widget _buildBody() {
@@ -343,10 +346,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   spacing: 6,
-                  children: [
-                    Icon(LucideIcons.play, size: 15),
-                    Text('开始导入'),
-                  ],
+                  children: [Icon(LucideIcons.play, size: 15), Text('开始导入')],
                 ),
               ),
             ],
@@ -403,8 +403,14 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
             Row(
               spacing: 8,
               children: [
-                Icon(LucideIcons.fileInput, size: 15, color: theme.colorScheme.mutedForeground),
-                Expanded(child: Text(label, style: const TextStyle(fontSize: 13))),
+                Icon(
+                  LucideIcons.fileInput,
+                  size: 15,
+                  color: theme.colorScheme.mutedForeground,
+                ),
+                Expanded(
+                  child: Text(label, style: const TextStyle(fontSize: 13)),
+                ),
               ],
             ),
             if (detail.isNotEmpty)
@@ -428,7 +434,11 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
       title: Row(
         spacing: 10,
         children: [
-          Icon(LucideIcons.triangleAlert, size: 20, color: theme.colorScheme.destructive),
+          Icon(
+            LucideIcons.triangleAlert,
+            size: 20,
+            color: theme.colorScheme.destructive,
+          ),
           const Text('DBC 导入失败'),
         ],
       ),
@@ -456,10 +466,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
-                children: [
-                  Icon(LucideIcons.rotateCw, size: 15),
-                  Text('重试'),
-                ],
+                children: [Icon(LucideIcons.rotateCw, size: 15), Text('重试')],
               ),
             ),
           ),
