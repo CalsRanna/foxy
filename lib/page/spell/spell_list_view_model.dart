@@ -80,7 +80,7 @@ class SpellListViewModel {
     routerFacade.navigateToDetail(
       id: detailId,
       label: label,
-      route: SpellDetailRoute(id: id),
+      route: SpellDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.spell,
     );
   }

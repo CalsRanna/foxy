@@ -136,7 +136,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
           },
           onRowDoubleTap: (row) {
             final item = templates[row];
-            viewModel.navigateToDetail(id: item.id);
+            viewModel.navigateToDetail(id: item.id, name: item.displayTitle);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final item = templates[row];
@@ -146,7 +146,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(id: item.id),
+                  onPressed: () => viewModel.navigateToDetail(id: item.id, name: item.displayTitle),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(

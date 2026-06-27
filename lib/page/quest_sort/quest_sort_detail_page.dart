@@ -9,8 +9,9 @@ import 'package:signals/signals_flutter.dart';
 @RoutePage()
 class QuestSortDetailPage extends StatefulWidget {
   final int? id;
+  final String? name;
 
-  const QuestSortDetailPage({super.key, this.id});
+  const QuestSortDetailPage({super.key, this.id, this.name});
 
   @override
   State<QuestSortDetailPage> createState() => _QuestSortDetailPageState();
@@ -43,7 +44,7 @@ class _QuestSortDetailPageState extends State<QuestSortDetailPage> {
   }
 
   Widget _buildHeader() {
-    var name = widget.id != null ? '任务排序 #${widget.id}' : '新建任务排序';
+    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '任务排序 #${widget.id}' : '新建任务排序');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

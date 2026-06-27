@@ -80,7 +80,7 @@ class AreaTableListViewModel {
     routerFacade.navigateToDetail(
       id: routeId,
       label: label,
-      route: AreaTableDetailRoute(id: id),
+      route: AreaTableDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.areaTable,
     );
   }

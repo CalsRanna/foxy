@@ -95,7 +95,7 @@ class QuestSortListViewModel {
     routerFacade.navigateToDetail(
       id: routeId,
       label: label,
-      route: QuestSortDetailRoute(id: id),
+      route: QuestSortDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.questSort,
     );
   }

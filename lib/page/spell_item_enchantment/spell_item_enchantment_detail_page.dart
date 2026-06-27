@@ -9,8 +9,9 @@ import 'package:signals/signals_flutter.dart';
 @RoutePage()
 class SpellItemEnchantmentDetailPage extends StatefulWidget {
   final int? id;
+  final String? name;
 
-  const SpellItemEnchantmentDetailPage({super.key, this.id});
+  const SpellItemEnchantmentDetailPage({super.key, this.id, this.name});
 
   @override
   State<SpellItemEnchantmentDetailPage> createState() =>
@@ -45,7 +46,7 @@ class _SpellItemEnchantmentDetailPageState
   }
 
   Widget _buildHeader() {
-    var name = widget.id != null ? '法术附魔 #${widget.id}' : '新建法术附魔';
+    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '法术附魔 #${widget.id}' : '新建法术附魔');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

@@ -164,10 +164,11 @@ class AreaTableDetailRoute
   AreaTableDetailRoute({
     _i61.Key? key,
     int? id,
+    String? name,
     List<_i60.PageRouteInfo>? children,
   }) : super(
          AreaTableDetailRoute.name,
-         args: AreaTableDetailRouteArgs(key: key, id: id),
+         args: AreaTableDetailRouteArgs(key: key, id: id, name: name),
          initialChildren: children,
        );
 
@@ -179,32 +180,38 @@ class AreaTableDetailRoute
       final args = data.argsAs<AreaTableDetailRouteArgs>(
         orElse: () => const AreaTableDetailRouteArgs(),
       );
-      return _i3.AreaTableDetailPage(key: args.key, id: args.id);
+      return _i3.AreaTableDetailPage(
+        key: args.key,
+        id: args.id,
+        name: args.name,
+      );
     },
   );
 }
 
 class AreaTableDetailRouteArgs {
-  const AreaTableDetailRouteArgs({this.key, this.id});
+  const AreaTableDetailRouteArgs({this.key, this.id, this.name});
 
   final _i61.Key? key;
 
   final int? id;
 
+  final String? name;
+
   @override
   String toString() {
-    return 'AreaTableDetailRouteArgs{key: $key, id: $id}';
+    return 'AreaTableDetailRouteArgs{key: $key, id: $id, name: $name}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! AreaTableDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && id == other.id && name == other.name;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ id.hashCode ^ name.hashCode;
 }
 
 /// generated route for
@@ -511,10 +518,11 @@ class EmoteTextDetailRoute
   EmoteTextDetailRoute({
     _i61.Key? key,
     int? id,
+    String? name,
     List<_i60.PageRouteInfo>? children,
   }) : super(
          EmoteTextDetailRoute.name,
-         args: EmoteTextDetailRouteArgs(key: key, id: id),
+         args: EmoteTextDetailRouteArgs(key: key, id: id, name: name),
          initialChildren: children,
        );
 
@@ -526,32 +534,38 @@ class EmoteTextDetailRoute
       final args = data.argsAs<EmoteTextDetailRouteArgs>(
         orElse: () => const EmoteTextDetailRouteArgs(),
       );
-      return _i15.EmoteTextDetailPage(key: args.key, id: args.id);
+      return _i15.EmoteTextDetailPage(
+        key: args.key,
+        id: args.id,
+        name: args.name,
+      );
     },
   );
 }
 
 class EmoteTextDetailRouteArgs {
-  const EmoteTextDetailRouteArgs({this.key, this.id});
+  const EmoteTextDetailRouteArgs({this.key, this.id, this.name});
 
   final _i61.Key? key;
 
   final int? id;
 
+  final String? name;
+
   @override
   String toString() {
-    return 'EmoteTextDetailRouteArgs{key: $key, id: $id}';
+    return 'EmoteTextDetailRouteArgs{key: $key, id: $id, name: $name}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! EmoteTextDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && id == other.id && name == other.name;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ id.hashCode ^ name.hashCode;
 }
 
 /// generated route for
@@ -1240,10 +1254,11 @@ class QuestInfoDetailRoute
   QuestInfoDetailRoute({
     _i61.Key? key,
     int? id,
+    String? name,
     List<_i60.PageRouteInfo>? children,
   }) : super(
          QuestInfoDetailRoute.name,
-         args: QuestInfoDetailRouteArgs(key: key, id: id),
+         args: QuestInfoDetailRouteArgs(key: key, id: id, name: name),
          initialChildren: children,
        );
 
@@ -1255,32 +1270,38 @@ class QuestInfoDetailRoute
       final args = data.argsAs<QuestInfoDetailRouteArgs>(
         orElse: () => const QuestInfoDetailRouteArgs(),
       );
-      return _i36.QuestInfoDetailPage(key: args.key, id: args.id);
+      return _i36.QuestInfoDetailPage(
+        key: args.key,
+        id: args.id,
+        name: args.name,
+      );
     },
   );
 }
 
 class QuestInfoDetailRouteArgs {
-  const QuestInfoDetailRouteArgs({this.key, this.id});
+  const QuestInfoDetailRouteArgs({this.key, this.id, this.name});
 
   final _i61.Key? key;
 
   final int? id;
 
+  final String? name;
+
   @override
   String toString() {
-    return 'QuestInfoDetailRouteArgs{key: $key, id: $id}';
+    return 'QuestInfoDetailRouteArgs{key: $key, id: $id, name: $name}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! QuestInfoDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && id == other.id && name == other.name;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ id.hashCode ^ name.hashCode;
 }
 
 /// generated route for
@@ -1306,10 +1327,11 @@ class QuestSortDetailRoute
   QuestSortDetailRoute({
     _i61.Key? key,
     int? id,
+    String? name,
     List<_i60.PageRouteInfo>? children,
   }) : super(
          QuestSortDetailRoute.name,
-         args: QuestSortDetailRouteArgs(key: key, id: id),
+         args: QuestSortDetailRouteArgs(key: key, id: id, name: name),
          initialChildren: children,
        );
 
@@ -1321,32 +1343,38 @@ class QuestSortDetailRoute
       final args = data.argsAs<QuestSortDetailRouteArgs>(
         orElse: () => const QuestSortDetailRouteArgs(),
       );
-      return _i38.QuestSortDetailPage(key: args.key, id: args.id);
+      return _i38.QuestSortDetailPage(
+        key: args.key,
+        id: args.id,
+        name: args.name,
+      );
     },
   );
 }
 
 class QuestSortDetailRouteArgs {
-  const QuestSortDetailRouteArgs({this.key, this.id});
+  const QuestSortDetailRouteArgs({this.key, this.id, this.name});
 
   final _i61.Key? key;
 
   final int? id;
 
+  final String? name;
+
   @override
   String toString() {
-    return 'QuestSortDetailRouteArgs{key: $key, id: $id}';
+    return 'QuestSortDetailRouteArgs{key: $key, id: $id, name: $name}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! QuestSortDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && id == other.id && name == other.name;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ id.hashCode ^ name.hashCode;
 }
 
 /// generated route for
@@ -1854,10 +1882,15 @@ class SpellItemEnchantmentDetailRoute
   SpellItemEnchantmentDetailRoute({
     _i61.Key? key,
     int? id,
+    String? name,
     List<_i60.PageRouteInfo>? children,
   }) : super(
          SpellItemEnchantmentDetailRoute.name,
-         args: SpellItemEnchantmentDetailRouteArgs(key: key, id: id),
+         args: SpellItemEnchantmentDetailRouteArgs(
+           key: key,
+           id: id,
+           name: name,
+         ),
          initialChildren: children,
        );
 
@@ -1869,32 +1902,38 @@ class SpellItemEnchantmentDetailRoute
       final args = data.argsAs<SpellItemEnchantmentDetailRouteArgs>(
         orElse: () => const SpellItemEnchantmentDetailRouteArgs(),
       );
-      return _i53.SpellItemEnchantmentDetailPage(key: args.key, id: args.id);
+      return _i53.SpellItemEnchantmentDetailPage(
+        key: args.key,
+        id: args.id,
+        name: args.name,
+      );
     },
   );
 }
 
 class SpellItemEnchantmentDetailRouteArgs {
-  const SpellItemEnchantmentDetailRouteArgs({this.key, this.id});
+  const SpellItemEnchantmentDetailRouteArgs({this.key, this.id, this.name});
 
   final _i61.Key? key;
 
   final int? id;
 
+  final String? name;
+
   @override
   String toString() {
-    return 'SpellItemEnchantmentDetailRouteArgs{key: $key, id: $id}';
+    return 'SpellItemEnchantmentDetailRouteArgs{key: $key, id: $id, name: $name}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! SpellItemEnchantmentDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && id == other.id && name == other.name;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ id.hashCode ^ name.hashCode;
 }
 
 /// generated route for

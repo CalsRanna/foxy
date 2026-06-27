@@ -95,7 +95,7 @@ class QuestInfoListViewModel {
     routerFacade.navigateToDetail(
       id: routeId,
       label: label,
-      route: QuestInfoDetailRoute(id: id),
+      route: QuestInfoDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.questInfo,
     );
   }

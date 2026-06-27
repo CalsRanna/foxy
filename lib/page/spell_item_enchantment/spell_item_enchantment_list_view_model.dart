@@ -100,7 +100,7 @@ class SpellItemEnchantmentListViewModel {
     routerFacade.navigateToDetail(
       id: routeId,
       label: label,
-      route: SpellItemEnchantmentDetailRoute(id: id),
+      route: SpellItemEnchantmentDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.spellItemEnchantment,
     );
   }
