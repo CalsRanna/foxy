@@ -363,7 +363,7 @@ Future<void> _importWorker(_WorkerArgs args) async {
       final file = fileDefs[i];
       sendPort.send(('正在处理 ${file.name}...',));
       try {
-        // 跳过已有数据的表（带超时 + 断连重连）
+        // 跳过已有数据的表（带超时：连接池可能复用死连接）
         int count;
         try {
           count = await laconic
@@ -371,19 +371,12 @@ Future<void> _importWorker(_WorkerArgs args) async {
               .count()
               .timeout(const Duration(seconds: 10));
         } on Exception {
-          // 连接可能已断开，重建连接
-          sendPort.send(('重连数据库...',));
           await laconic.close();
           laconic = Laconic(
-            MysqlDriver(
-              MysqlConfig(
-                host: host,
-                port: port,
-                database: database,
-                username: username,
-                password: password,
-              ),
-            ),
+            MysqlDriver(MysqlConfig(
+              host: host, port: port, database: database,
+              username: username, password: password,
+            )),
           );
           count = 0;
         }
@@ -396,15 +389,17 @@ Future<void> _importWorker(_WorkerArgs args) async {
         // 建表
         await _createTable(laconic, file);
 
-        // 读 DBC + 分批写入
+        // 读 DBC + 分批写入（事务包裹，单文件原子导入）
         final dbcPath_ = p.join(dbcPath, '${file.name}.dbc');
-        final rowCount = await _importFile(
-          laconic,
-          dbcPath_,
-          file,
-          sendPort,
-          imported + skipped + errors.length,
-          total,
+        final rowCount = await laconic.transaction(
+          () => _importFile(
+            laconic,
+            dbcPath_,
+            file,
+            sendPort,
+            imported + skipped + errors.length,
+            total,
+          ),
         );
         if (rowCount > 0) {
           imported++;
@@ -453,58 +448,63 @@ Future<int> _importFile(
   final recordCount = loader.recordCount;
   if (recordCount == 0) return 0;
 
-  const batchSize = 200;
-  var batch = <Map<String, dynamic>>[];
+  const batchSize = 5000;
+  final cols = file.fields.map((f) => '`${f.name}`').join(', ');
+  final sqlPrefix = 'INSERT INTO ${file.tableName} ($cols) VALUES ';
+  var buf = StringBuffer(sqlPrefix);
+  var inBatch = 0;
   var imported = 0;
 
   for (final record in loader.records) {
-    final map = <String, dynamic>{};
-    for (final (:index, :name, :type, :sqlType) in file.fields) {
-      map[name] = switch (type) {
-        'string' => record.getString(index),
-        'float' => record.getFloat(index),
-        'int32' || 'id' => record.getInt(index),
-        'uint8' => record.getUint8(index),
-        'boolean' => record.getInt(index) != 0,
-        _ => null,
-      };
+    if (inBatch > 0) buf.write(',');
+    buf.write('(');
+    for (var fi = 0; fi < file.fields.length; fi++) {
+      if (fi > 0) buf.write(',');
+      final field = file.fields[fi];
+      buf.write(_readAndEscape(record, field.index, field.type, field.sqlType));
     }
-    batch.add(map);
+    buf.write(')');
+    inBatch++;
 
-    if (batch.length >= batchSize) {
-      await _safeInsert(laconic, file.tableName, batch);
-      imported += batch.length;
+    if (inBatch >= batchSize) {
+      await laconic.statement(buf.toString());
+      imported += inBatch;
       sendPort.send((
         '${file.name} ($imported / $recordCount)',
         completedFiles,
         totalFiles,
       ));
-      batch.clear();
+      buf = StringBuffer(sqlPrefix);
+      inBatch = 0;
     }
   }
 
-  if (batch.isNotEmpty) {
-    await _safeInsert(laconic, file.tableName, batch);
-    imported += batch.length;
+  if (inBatch > 0) {
+    await laconic.statement(buf.toString());
+    imported += inBatch;
   }
 
   return imported;
 }
 
-Future<void> _safeInsert(
-  Laconic laconic,
-  String table,
-  List<Map<String, dynamic>> records,
-) async {
-  if (records.isEmpty) return;
-  final cols = records.first.keys.map((c) => '`$c`').join(', ');
-  final row = '(${List.filled(records.first.length, '?').join(', ')})';
-  final rows = List.filled(records.length, row).join(', ');
-  final params = <Object?>[];
-  for (final record in records) {
-    params.addAll(record.values);
+/// 从 DBC 记录读取值并转为 SQL 字面量（内联值，无参数）
+String _readAndEscape(dynamic record, int index, String type, String sqlType) {
+  return switch (type) {
+    'string'  => _escapeString(record.getString(index) as String),
+    'float'   => record.getFloat(index).toString(),
+    'int32' || 'id' => record.getInt(index).toString(),
+    'uint8'   => record.getUint8(index).toString(),
+    'boolean' => record.getInt(index) != 0 ? '1' : '0',
+    _         => 'NULL',
+  };
+}
+
+/// MySQL 字符串字面量转义：\ → \\, ' → \', \0 → \0
+String _escapeString(String s) {
+  if (!s.contains('\\') && !s.contains("'") && !s.contains('\x00')) {
+    return "'$s'";
   }
-  await laconic.statement('INSERT INTO $table ($cols) VALUES $rows', params);
+  return "'${s.replaceAll('\\', '\\\\').replaceAll("'", "\\'").replaceAll('\x00', '\\0')}'";
 }
 
 // ========== 工具函数 ==========
