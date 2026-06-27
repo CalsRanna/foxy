@@ -108,10 +108,13 @@ class BootstrapViewModel {
     try {
       var currentDirectory = Directory.current;
       var path = join(currentDirectory.path, 'config.yaml');
+      LoggerUtil.instance.i(path);
       var file = File(path);
       if (!await file.exists()) await file.create(recursive: true);
       var content = await file.readAsString();
-      if (content.isNotEmpty) return Map<String, dynamic>.from(loadYaml(content));
+      if (content.isNotEmpty) {
+        return Map<String, dynamic>.from(loadYaml(content));
+      }
       var defaultConfig = {
         'host': '127.0.0.1',
         'port': '3306',
