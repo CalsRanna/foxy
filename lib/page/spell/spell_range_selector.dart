@@ -6,44 +6,28 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
 class SpellRangeSelector extends StatefulWidget {
-  final Signal<int> signal;
+  final TextEditingController controller;
   final String? placeholder;
 
-  const SpellRangeSelector({super.key, required this.signal, this.placeholder});
+  const SpellRangeSelector({super.key, required this.controller, this.placeholder});
 
   @override
   State<SpellRangeSelector> createState() => _SpellRangeSelectorState();
 }
 
 class _SpellRangeSelectorState extends State<SpellRangeSelector> {
-  final _displayController = TextEditingController();
-  void Function()? _unsub;
 
-  @override
-  void initState() {
-    super.initState();
-    _syncDisplay();
-    _unsub = widget.signal.subscribe((_) => _syncDisplay());
-  }
-
-  void _syncDisplay() {
-    final v = widget.signal.value;
-    _displayController.text = v == 0 ? '' : v.toString();
-  }
 
   @override
   void dispose() {
-    _unsub?.call();
-    _displayController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ShadInput(
-      controller: _displayController,
+      controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
-      readOnly: true,
       trailing: ShadButton.ghost(
         height: 20,
         padding: EdgeInsets.zero,
@@ -56,9 +40,10 @@ class _SpellRangeSelectorState extends State<SpellRangeSelector> {
 
   Future<void> _openDialog() async {
     final vm = SpellRangeSelectorViewModel();
-    if (widget.signal.value != 0) {
-      vm.idFilter.value = widget.signal.value.toString();
-      vm.selectedId.value = widget.signal.value;
+    final currentId = int.tryParse(widget.controller.text) ?? 0;
+    if (currentId != 0) {
+      vm.idFilter.value = currentId.toString();
+      vm.selectedId.value = currentId;
       await vm.search();
     }
 
@@ -68,8 +53,7 @@ class _SpellRangeSelectorState extends State<SpellRangeSelector> {
     );
     vm.dispose();
     if (result != null) {
-      widget.signal.value = result;
-      _syncDisplay();
+      widget.controller.text = result.toString();
     }
   }
 }
@@ -87,12 +71,6 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _idController.text = widget.vm.idFilter.value;
-    _nameController.text = widget.vm.nameFilter.value;
-  }
 
   @override
   void dispose() {

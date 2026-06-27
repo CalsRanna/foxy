@@ -18,7 +18,7 @@ class ItemEnchantmentTemplateViewModel {
   final editing = signal(false);
   int? editingEnch;
 
-  final enchSignal = signal<int>(0);
+  final enchSignalController = TextEditingController();
   final chanceController = TextEditingController();
 
   final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
@@ -35,6 +35,7 @@ class ItemEnchantmentTemplateViewModel {
   }
 
   double _pd(String t) => double.tryParse(t) ?? 0.0;
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
     final data = await _repository.getItemEnchantmentTemplatesByEntry(
@@ -48,19 +49,19 @@ class ItemEnchantmentTemplateViewModel {
   }
 
   void resetForm() {
-    enchSignal.value = 0;
+    enchSignalController.text = _fmt(0);
     chanceController.text = _fmt(0);
   }
 
   void fillForm(BriefItemEnchantmentTemplateEntity model) {
-    enchSignal.value = model.ench;
+    enchSignalController.text = _fmt(model.ench);
     chanceController.text = _fmt(model.chance);
   }
 
   ItemEnchantmentTemplateEntity collectFromForm() {
     return ItemEnchantmentTemplateEntity(
       entry: entry.value,
-      ench: enchSignal.value,
+      ench: _pi(enchSignalController.text),
       chance: _pd(chanceController.text),
     );
   }
@@ -72,7 +73,7 @@ class ItemEnchantmentTemplateViewModel {
         (max, e) => e.ench > max ? e.ench : max,
       );
       resetForm();
-      enchSignal.value = (maxEnch + 1);
+      enchSignalController.text = _fmt((maxEnch + 1));
       creating.value = true;
       editing.value = false;
       selectedIndex.value = null;
@@ -209,5 +210,6 @@ class ItemEnchantmentTemplateViewModel {
 
   void dispose() {
     chanceController.dispose();
+    enchSignalController.dispose();
   }
 }

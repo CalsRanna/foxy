@@ -152,7 +152,7 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
           FormItem(
             label: '生物编号',
             child: CreatureTemplateSelector(
-              signal: viewModel.id,
+              controller: viewModel.idController,
               placeholder: 'CreatureId',
             ),
           ),

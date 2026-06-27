@@ -97,7 +97,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FormItem(
               label: '任务信息',
               child: QuestInfoSelector(
-                signal: vm.questInfoId,
+                controller: vm.questInfoIdController,
                 placeholder: 'QuestInfoID',
               ),
             ),
@@ -490,7 +490,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FormItem(
               label: '奖励头衔',
               child: CharTitleSelector(
-                signal: vm.rewardTitle,
+                controller: vm.rewardTitleController,
                 placeholder: 'RewardTitle',
               ),
             ),

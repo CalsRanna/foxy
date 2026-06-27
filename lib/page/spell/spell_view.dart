@@ -63,14 +63,14 @@ class _SpellViewState extends State<SpellView> {
     final spellIconIDInput = FormItem(
       label: '图标',
       child: SpellIconSelector(
-        signal: vm.spellIconID,
+        controller: vm.spellIconIDController,
         placeholder: 'SpellIconID',
       ),
     );
     final activeIconIDInput = FormItem(
       label: '激活图标',
       child: SpellIconSelector(
-        signal: vm.activeIconID,
+        controller: vm.activeIconIDController,
         placeholder: 'ActiveIconID',
       ),
     );
@@ -144,14 +144,14 @@ class _SpellViewState extends State<SpellView> {
     final durationIndexInput = FormItem(
       label: '持续时间',
       child: SpellDurationSelector(
-        signal: vm.durationIndex,
+        controller: vm.durationIndexController,
         placeholder: 'DurationIndex',
       ),
     );
     final rangeIndexInput = FormItem(
       label: '施法范围',
       child: SpellRangeSelector(
-        signal: vm.rangeIndex,
+        controller: vm.rangeIndexController,
         placeholder: 'RangeIndex',
       ),
     );
@@ -287,7 +287,7 @@ class _SpellViewState extends State<SpellView> {
     final requiredAreasIDInput = FormItem(
       label: '需求区域',
       child: AreaTableSelector(
-        signal: vm.requiredAreasID,
+        controller: vm.requiredAreasIDController,
         placeholder: 'RequiredAreasID',
       ),
     );

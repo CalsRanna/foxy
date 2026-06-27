@@ -175,7 +175,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final displayIdInput = FormItem(
       label: '外观模型',
       child: ItemDisplayInfoSelector(
-        signal: viewModel.displayId,
+        controller: viewModel.displayIdController,
         placeholder: 'displayid',
       ),
     );
@@ -245,14 +245,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final randomPropertyInput = FormItem(
       label: '随机属性',
       child: ItemRandomPropertiesSelector(
-        signal: viewModel.randomProperty,
+        controller: viewModel.randomPropertyController,
         placeholder: 'RandomProperty',
       ),
     );
     final randomSuffixInput = FormItem(
       label: '随机后缀',
       child: ItemRandomSuffixSelector(
-        signal: viewModel.randomSuffix,
+        controller: viewModel.randomSuffixController,
         placeholder: 'RandomSuffix',
       ),
     );
@@ -339,7 +339,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final startquestInput = FormItem(
       label: '起始任务',
       child: QuestTemplateSelector(
-        signal: viewModel.startquest,
+        controller: viewModel.startquestController,
         placeholder: 'startquest',
       ),
     );
@@ -584,7 +584,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final scalingStatDistributionInput = FormItem(
       label: '缩放分布',
       child: ScalingStatDistributionSelector(
-        signal: viewModel.scalingStatDistribution,
+        controller: viewModel.scalingStatDistributionController,
         placeholder: 'ScalingStatDistribution',
       ),
     );
@@ -732,7 +732,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final requiredSpellInput = FormItem(
       label: '需求法术',
       child: SpellSelector(
-        signal: viewModel.requiredSpell,
+        controller: viewModel.requiredSpellController,
         placeholder: 'requiredspell',
       ),
     );
@@ -774,14 +774,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final mapIdInput = FormItem(
       label: '地图',
       child: MapSelector(
-        signal: viewModel.mapId,
+        controller: viewModel.mapIdController,
         placeholder: 'Map',
       ),
     );
     final areaInput = FormItem(
       label: '区域',
       child: AreaTableSelector(
-        signal: viewModel.area,
+        controller: viewModel.areaController,
         placeholder: 'area',
       ),
     );
@@ -795,7 +795,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final lockidInput = FormItem(
       label: '锁定ID',
       child: LockSelector(
-        signal: viewModel.lockid,
+        controller: viewModel.lockidController,
         placeholder: 'lockid',
       ),
     );
@@ -928,7 +928,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final pageTextInput = FormItem(
       label: '页面文本',
       child: PageTextSelector(
-        signal: viewModel.pageText,
+        controller: viewModel.pageTextController,
         placeholder: 'PageText',
       ),
     );
@@ -1114,7 +1114,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               child: FormItem(
                                 label: '法术${i + 1}',
                                 child: SpellSelector(
-                                  signal: viewModel.spellIds[i],
+                                  controller: viewModel.spellIds[i],
                                   placeholder: 'spellid_${i + 1}',
                                 ),
                               ),

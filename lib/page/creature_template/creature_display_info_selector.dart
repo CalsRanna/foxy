@@ -6,12 +6,12 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
 class CreatureDisplayInfoSelector extends StatefulWidget {
-  final Signal<int> signal;
+  final TextEditingController controller;
   final String? placeholder;
 
   const CreatureDisplayInfoSelector({
     super.key,
-    required this.signal,
+    required this.controller,
     this.placeholder,
   });
 
@@ -22,31 +22,18 @@ class CreatureDisplayInfoSelector extends StatefulWidget {
 
 class _CreatureDisplayInfoSelectorState
     extends State<CreatureDisplayInfoSelector> {
-  final _displayController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _syncDisplay();
-  }
-
-  void _syncDisplay() {
-    final v = widget.signal.value;
-    _displayController.text = v == 0 ? '' : v.toString();
-  }
 
   @override
   void dispose() {
-    _displayController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ShadInput(
-      controller: _displayController,
+      controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
-      readOnly: true,
       trailing: ShadButton.ghost(
         height: 20,
         padding: EdgeInsets.zero,
@@ -59,9 +46,10 @@ class _CreatureDisplayInfoSelectorState
 
   Future<void> _openDialog() async {
     final vm = CreatureDisplayInfoSelectorViewModel();
-    if (widget.signal.value != 0) {
-      vm.idFilter.value = widget.signal.value.toString();
-      vm.selectedId.value = widget.signal.value;
+    final currentId = int.tryParse(widget.controller.text) ?? 0;
+    if (currentId != 0) {
+      vm.idFilter.value = currentId.toString();
+      vm.selectedId.value = currentId;
       await vm.search();
     }
 
@@ -71,8 +59,7 @@ class _CreatureDisplayInfoSelectorState
     );
     vm.dispose();
     if (result != null) {
-      widget.signal.value = result;
-      _syncDisplay();
+      widget.controller.text = result.toString();
     }
   }
 }
@@ -90,12 +77,6 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _modelNameController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _idController.text = widget.vm.idFilter.value;
-    _modelNameController.text = widget.vm.modelNameFilter.value;
-  }
 
   @override
   void dispose() {

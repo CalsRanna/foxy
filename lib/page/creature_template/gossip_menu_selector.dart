@@ -6,12 +6,12 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
 class GossipMenuSelector extends StatefulWidget {
-  final Signal<int> signal;
+  final TextEditingController controller;
   final String? placeholder;
 
   const GossipMenuSelector({
     super.key,
-    required this.signal,
+    required this.controller,
     this.placeholder,
   });
 
@@ -20,31 +20,18 @@ class GossipMenuSelector extends StatefulWidget {
 }
 
 class _GossipMenuSelectorState extends State<GossipMenuSelector> {
-  final _displayController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _syncDisplay();
-  }
-
-  void _syncDisplay() {
-    final v = widget.signal.value;
-    _displayController.text = v == 0 ? '' : v.toString();
-  }
 
   @override
   void dispose() {
-    _displayController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ShadInput(
-      controller: _displayController,
+      controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
-      readOnly: true,
       trailing: ShadButton.ghost(
         height: 20,
         padding: EdgeInsets.zero,
@@ -57,9 +44,10 @@ class _GossipMenuSelectorState extends State<GossipMenuSelector> {
 
   Future<void> _openDialog() async {
     final vm = GossipMenuSelectorViewModel();
-    if (widget.signal.value != 0) {
-      vm.menuIdFilter.value = widget.signal.value.toString();
-      vm.selectedId.value = widget.signal.value;
+    final currentId = int.tryParse(widget.controller.text) ?? 0;
+    if (currentId != 0) {
+      vm.menuIdFilter.value = currentId.toString();
+      vm.selectedId.value = currentId;
       await vm.search();
     }
 
@@ -69,8 +57,7 @@ class _GossipMenuSelectorState extends State<GossipMenuSelector> {
     );
     vm.dispose();
     if (result != null) {
-      widget.signal.value = result;
-      _syncDisplay();
+      widget.controller.text = result.toString();
     }
   }
 }
@@ -88,12 +75,6 @@ class _DialogState extends State<_Dialog> {
   final _menuIdController = TextEditingController();
   final _textController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _menuIdController.text = widget.vm.menuIdFilter.value;
-    _textController.text = widget.vm.textFilter.value;
-  }
 
   @override
   void dispose() {

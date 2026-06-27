@@ -153,7 +153,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
           FormItem(
             label: '生物编号',
             child: CreatureTemplateSelector(
-              signal: viewModel.id,
+              controller: viewModel.idController,
               placeholder: 'CreatureId',
             ),
           ),

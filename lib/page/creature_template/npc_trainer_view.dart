@@ -177,7 +177,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FormItem(
             label: '技能',
             child: SpellSelector(
-              signal: viewModel.spellID,
+              controller: viewModel.spellIDController,
               placeholder: 'SpellID',
             ),
           ),

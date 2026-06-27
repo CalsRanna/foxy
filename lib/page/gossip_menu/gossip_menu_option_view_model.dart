@@ -28,12 +28,25 @@ class GossipMenuOptionViewModel {
   final boxMoneyController = TextEditingController();
   final boxTextController = TextEditingController();
   final boxBroadcastTextId = signal<int>(0);
-  final actionMenuId = signal<int>(0);
+  final actionMenuIdController = TextEditingController();
   final actionPoiIdController = TextEditingController();
   final verifiedBuildController = TextEditingController();
 
   int _originalMenuId = 0;
   int _originalOptionId = 0;
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> search(int menuId) async {
     currentMenuId.value = menuId;
@@ -142,15 +155,16 @@ class GossipMenuOptionViewModel {
   }
 
   void dispose() {
-    menuIdController.dispose();
-    optionIdController.dispose();
-    optionIconController.dispose();
-    optionTextController.dispose();
-    optionTypeController.dispose();
+    actionMenuIdController.dispose();
+    actionPoiIdController.dispose();
     boxCodedController.dispose();
     boxMoneyController.dispose();
     boxTextController.dispose();
-    actionPoiIdController.dispose();
+    menuIdController.dispose();
+    optionIconController.dispose();
+    optionIdController.dispose();
+    optionTextController.dispose();
+    optionTypeController.dispose();
     verifiedBuildController.dispose();
   }
 
@@ -166,7 +180,7 @@ class GossipMenuOptionViewModel {
     boxMoneyController.text = o.boxMoney.toString();
     boxTextController.text = o.boxText;
     boxBroadcastTextId.value = o.boxBroadcastTextId;
-    actionMenuId.value = o.actionMenuId;
+    actionMenuIdController.text = _fmt(o.actionMenuId);
     actionPoiIdController.text = o.actionPoiId.toString();
     verifiedBuildController.text = o.verifiedBuild.toString();
   }
@@ -188,7 +202,7 @@ class GossipMenuOptionViewModel {
       boxMoney: int.tryParse(boxMoneyController.text) ?? 0,
       boxText: boxTextController.text,
       boxBroadcastTextId: boxBroadcastTextId.value,
-      actionMenuId: actionMenuId.value,
+      actionMenuId: _pi(actionMenuIdController.text),
       actionPoiId: int.tryParse(actionPoiIdController.text) ?? 0,
       verifiedBuild: int.tryParse(verifiedBuildController.text) ?? 0,
     );

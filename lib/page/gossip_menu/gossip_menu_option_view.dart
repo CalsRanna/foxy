@@ -217,7 +217,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
             child: _labeled(
               '子选项编号',
               GossipMenuSelector(
-                signal: viewModel.actionMenuId,
+                controller: viewModel.actionMenuIdController,
                 placeholder: 'ActionMenuID',
               ),
             ),

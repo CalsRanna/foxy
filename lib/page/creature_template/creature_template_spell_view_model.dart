@@ -15,10 +15,23 @@ class CreatureTemplateSpellViewModel {
   final items = signal<List<CreatureTemplateSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final index = signal<int>(0);
-  final spell = signal<int>(0);
+  final spellController = TextEditingController();
   final verifiedBuild = signal<int>(0);
 
   final _repository = GetIt.instance.get<CreatureTemplateSpellRepository>();
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
     final data = await _repository.getCreatureTemplateSpells(creatureId.value);
@@ -28,13 +41,13 @@ class CreatureTemplateSpellViewModel {
 
   void resetForm() {
     index.value = 0;
-    spell.value = 0;
+    spellController.text = _fmt(0);
     verifiedBuild.value = 0;
   }
 
   void fillForm(CreatureTemplateSpellEntity spell) {
     index.value = spell.index;
-    this.spell.value = spell.spell;
+    spellController.text = _fmt(spell.spell);
     verifiedBuild.value = spell.verifiedBuild;
   }
 
@@ -42,7 +55,7 @@ class CreatureTemplateSpellViewModel {
     return CreatureTemplateSpellEntity(
       creatureID: creatureId.value,
       index: index.value,
-      spell: spell.value,
+      spell: _pi(spellController.text),
       verifiedBuild: verifiedBuild.value,
     );
   }
@@ -177,5 +190,7 @@ class CreatureTemplateSpellViewModel {
     routerFacade.goBack();
   }
 
-  void dispose() {}
+  void dispose() {
+    spellController.dispose();
+  }
 }

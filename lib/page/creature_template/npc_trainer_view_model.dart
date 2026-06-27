@@ -18,7 +18,7 @@ class NpcTrainerViewModel {
   final editing = signal(false);
 
   // 表单控制器
-  final spellID = signal<int>(0);
+  final spellIDController = TextEditingController();
   final moneyCostController = TextEditingController();
   final reqSkillLineController = TextEditingController();
   final reqSkillRankController = TextEditingController();
@@ -50,7 +50,7 @@ class NpcTrainerViewModel {
 
   /// 重置表单
   void resetForm() {
-    spellID.value = 0;
+    spellIDController.text = _fmt(0);
     moneyCostController.text = _fmt(0);
     reqSkillLineController.text = _fmt(0);
     reqSkillRankController.text = _fmt(0);
@@ -59,7 +59,7 @@ class NpcTrainerViewModel {
 
   /// 填充表单
   void fillForm(BriefNpcTrainerEntity trainer) {
-    spellID.value = trainer.spellID;
+    spellIDController.text = _fmt(trainer.spellID);
     moneyCostController.text = _fmt(trainer.moneyCost);
     reqSkillLineController.text = _fmt(trainer.reqSkillLine);
     reqSkillRankController.text = _fmt(trainer.reqSkillRank);
@@ -70,7 +70,7 @@ class NpcTrainerViewModel {
   NpcTrainerEntity collectFromForm() {
     return NpcTrainerEntity(
       id: id.value,
-      spellID: spellID.value,
+      spellID: _pi(spellIDController.text),
       moneyCost: _pi(moneyCostController.text),
       reqSkillLine: _pi(reqSkillLineController.text),
       reqSkillRank: _pi(reqSkillRankController.text),
@@ -217,5 +217,6 @@ class NpcTrainerViewModel {
     reqLevelController.dispose();
     reqSkillLineController.dispose();
     reqSkillRankController.dispose();
+    spellIDController.dispose();
   }
 }
