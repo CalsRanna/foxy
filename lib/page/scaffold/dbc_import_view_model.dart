@@ -13,16 +13,7 @@ import 'package:warcrafty/warcrafty.dart';
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
-class DbcImportViewModel {
-  final dbcImported = signal(false);
-  final dbcPath = signal<String?>(null);
-  final dbcImportError = signal<String?>(null);
-  final dbcImporting = signal(false);
-  final dbcProgress = signal<double?>(null);
-  final dbcProgressLabel = signal('');
-  final dbcProgressDetail = signal('');
-
-  static const requiredDbcTableNames = [
+const requiredDbcTableNames = [
     'dbc_achievement',
     'dbc_area_table',
     'dbc_char_titles',
@@ -53,7 +44,16 @@ class DbcImportViewModel {
     'dbc_spell_range',
     'dbc_talent',
     'dbc_vehicle',
-  ];
+];
+
+class DbcImportViewModel {
+  final dbcImported = signal(false);
+  final dbcPath = signal<String?>(null);
+  final dbcImportError = signal<String?>(null);
+  final dbcImporting = signal(false);
+  final dbcProgress = signal<double?>(null);
+  final dbcProgressLabel = signal('');
+  final dbcProgressDetail = signal('');
 
   // ========== 入口 ==========
 
@@ -114,51 +114,10 @@ class DbcImportViewModel {
 
   Future<void> _runInWorker() async {
     try {
-      // 1. 扫描目录
-      final registry = _buildSchemaRegistry();
-      final dir = Directory(dbcPath.value!);
-      final fileDefs = <_FileDef>[];
-
-      for (final entry in dir.listSync()) {
-        if (entry is! File) continue;
-        final nameWithExt = p.basename(entry.path);
-        if (!nameWithExt.endsWith('.dbc')) continue;
-        final name = nameWithExt.substring(0, nameWithExt.length - 4);
-        final schema = registry[name];
-        if (schema == null) continue;
-
-        final tableName = 'foxy.dbc_${_toSnakeCase(schema.name)}';
-        if (!requiredDbcTableNames.contains(tableName.substring(5))) continue;
-
-        fileDefs.add((
-          name: name,
-          tableName: tableName,
-          format: schema.format,
-          fields: [
-            for (final f in schema.fields)
-              if (!f.type.isSkip)
-                (
-                  index: f.index,
-                  name: f.name,
-                  type: f.type.name,
-                  sqlType: _sqlTypeFromString(f.type.name),
-                ),
-          ],
-        ));
-      }
-
-      if (fileDefs.isEmpty) {
-        dbcImporting.value = false;
-        dbcImportError.value = '未在目录中找到需要的 DBC 文件。\n目录：${dbcPath.value}';
-        return;
-      }
-
-      fileDefs.sort((a, b) => a.name.compareTo(b.name));
-
-      // 2. 读取 MySQL 配置
+      // 1. 读取 MySQL 配置
       final config = await _loadConfig();
 
-      // 3. 启动 worker isolate
+      // 2. 启动 worker isolate（目录扫描 + 导入全部在 isolate 内完成）
       final receivePort = ReceivePort();
       await Isolate.spawn(
         _importWorker,
@@ -170,17 +129,14 @@ class DbcImportViewModel {
           database: config['database'] as String? ?? 'acore_world',
           username: config['username'] as String? ?? 'acore',
           password: config['password'] as String? ?? 'acore',
-          files: fileDefs,
         ),
       );
 
-      var completed = 0;
-      final total = fileDefs.length;
-
       await for (final msg in receivePort) {
         switch (msg) {
+          case (String status,):
+            dbcProgressLabel.value = status;
           case (String status, int d, int t):
-            completed = d;
             dbcProgress.value = t > 0 ? d / t : null;
             dbcProgressLabel.value = status;
             dbcProgressDetail.value = '已处理 $d / $t 个文件';
@@ -280,7 +236,6 @@ typedef _WorkerArgs = ({
   String database,
   String username,
   String password,
-  List<_FileDef> files,
 });
 
 // ========== Schema 注册表 ==========
@@ -334,9 +289,59 @@ Future<void> _importWorker(_WorkerArgs args) async {
     :database,
     :username,
     :password,
-    :files,
   ) = args;
 
+  // ====== 阶段 0：扫描目录（在 isolate 内完成，不阻塞主线程）======
+  sendPort.send(('正在扫描 DBC 目录...',));
+  final registry = _buildSchemaRegistry();
+  final dir = Directory(dbcPath);
+  final fileDefs = <_FileDef>[];
+
+  if (!await dir.exists()) {
+    sendPort.send((false, 0, 0, ['目录不存在: $dbcPath']));
+    return;
+  }
+
+  await for (final entry in dir.list()) {
+    if (entry is! File) continue;
+    final nameWithExt = p.basename(entry.path);
+    if (!nameWithExt.endsWith('.dbc')) continue;
+    final name = nameWithExt.substring(0, nameWithExt.length - 4);
+    final schema = registry[name];
+    if (schema == null) continue;
+
+    final tableName = 'foxy.dbc_${_toSnakeCase(schema.name)}';
+    if (!requiredDbcTableNames.contains(tableName.substring(5))) continue;
+
+    fileDefs.add((
+      name: name,
+      tableName: tableName,
+      format: schema.format,
+      fields: [
+        for (final f in schema.fields)
+          if (!f.type.isSkip)
+            (
+              index: f.index,
+              name: f.name,
+              type: f.type.name,
+              sqlType: _sqlTypeFromString(f.type.name),
+            ),
+      ],
+    ));
+  }
+
+  if (fileDefs.isEmpty) {
+    sendPort.send((false, 0, 0, [
+      '未在目录中找到需要的 DBC 文件。\n目录：$dbcPath',
+    ]));
+    return;
+  }
+
+  fileDefs.sort((a, b) => a.name.compareTo(b.name));
+  final total = fileDefs.length;
+  sendPort.send(('找到 $total 个匹配文件，准备导入...', 0, total));
+
+  // ====== 阶段 1：连接数据库 ======
   Laconic? laconic;
   try {
     laconic = Laconic(
@@ -354,10 +359,9 @@ Future<void> _importWorker(_WorkerArgs args) async {
     var imported = 0;
     var skipped = 0;
     final errors = <String>[];
-    final total = files.length;
 
-    for (var i = 0; i < files.length; i++) {
-      final file = files[i];
+    for (var i = 0; i < fileDefs.length; i++) {
+      final file = fileDefs[i];
       try {
         // 跳过已有数据的表
         int count;
@@ -377,7 +381,14 @@ Future<void> _importWorker(_WorkerArgs args) async {
 
         // 读 DBC + 分批写入
         final dbcPath_ = p.join(dbcPath, '${file.name}.dbc');
-        final rowCount = await _importFile(laconic, dbcPath_, file);
+        final rowCount = await _importFile(
+          laconic,
+          dbcPath_,
+          file,
+          sendPort,
+          imported + skipped + errors.length,
+          total,
+        );
         if (rowCount > 0) {
           imported++;
         } else {
@@ -414,16 +425,20 @@ Future<int> _importFile(
   Laconic laconic,
   String filePath,
   _FileDef file,
+  SendPort sendPort,
+  int completedFiles,
+  int totalFiles,
 ) async {
   final f = File(filePath);
   if (!await f.exists()) return 0;
 
   final loader = DbcLoader(filePath, file.format);
-  if (loader.recordCount == 0) return 0;
+  final recordCount = loader.recordCount;
+  if (recordCount == 0) return 0;
 
   const batchSize = 200;
   var batch = <Map<String, dynamic>>[];
-  var total = 0;
+  var imported = 0;
 
   for (final record in loader.records) {
     final map = <String, dynamic>{};
@@ -441,17 +456,22 @@ Future<int> _importFile(
 
     if (batch.length >= batchSize) {
       await _safeInsert(laconic, file.tableName, batch);
-      total += batch.length;
+      imported += batch.length;
+      sendPort.send((
+        '${file.name} ($imported / $recordCount)',
+        completedFiles,
+        totalFiles,
+      ));
       batch.clear();
     }
   }
 
   if (batch.isNotEmpty) {
     await _safeInsert(laconic, file.tableName, batch);
-    total += batch.length;
+    imported += batch.length;
   }
 
-  return total;
+  return imported;
 }
 
 Future<void> _safeInsert(
