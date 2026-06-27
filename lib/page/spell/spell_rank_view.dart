@@ -53,7 +53,7 @@ class _SpellRankViewState extends State<SpellRankView> {
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var maxWidth = constraints.maxWidth;
-        var flexWidth = maxWidth - 320;
+        var flexWidth = maxWidth - 120;
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= items.length) {
@@ -78,7 +78,7 @@ class _SpellRankViewState extends State<SpellRankView> {
             return switch (index) {
               0 => FixedTableSpanExtent(flexWidth * 0.5),
               1 => FixedTableSpanExtent(flexWidth * 0.5),
-              2 => FixedTableSpanExtent(100),
+              2 => FixedTableSpanExtent(120),
               _ => null,
             };
           },
