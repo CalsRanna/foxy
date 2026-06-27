@@ -226,7 +226,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
             child: _labeled(
               '广播文本编号',
               BroadcastTextSelector(
-                signal: viewModel.optionBroadcastTextId,
+                controller: viewModel.optionBroadcastTextIdController,
                 placeholder: 'broadcast_text_id',
               ),
             ),
@@ -242,7 +242,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
             child: _labeled(
               'BoxBroadcastTextID',
               BroadcastTextSelector(
-                signal: viewModel.boxBroadcastTextId,
+                controller: viewModel.boxBroadcastTextIdController,
                 placeholder: 'box_broadcast_text_id',
               ),
             ),
