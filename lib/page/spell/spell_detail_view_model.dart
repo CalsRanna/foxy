@@ -253,6 +253,7 @@ class SpellDetailViewModel {
 
   SpellEntity _collectFromControllers() {
     final t = SpellEntity(
+      id: id.value,
       // === 基础文本 ===
       nameLangZhCN: nameLangZhCNController.text,
       nameSubtextLangZhCN: nameSubtextLangZhCNController.text,
@@ -662,6 +663,7 @@ class SpellDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
+      this.id.value = id;
       spell.value = await _repository.getSpell(id);
       _initControllers(spell.value);
     } catch (e, s) {
