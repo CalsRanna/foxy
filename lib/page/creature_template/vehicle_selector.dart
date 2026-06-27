@@ -50,6 +50,7 @@ class _VehicleSelectorState extends State<VehicleSelector> {
       vm.selectedId.value = currentId;
       await vm.search();
     }
+    if (!mounted) return;
 
     final result = await showShadDialog<int>(
       context: context,
