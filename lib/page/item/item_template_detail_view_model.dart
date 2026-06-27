@@ -22,15 +22,15 @@ class ItemTemplateDetailViewModel {
   final subclassController = ShadSelectController<int>();
   final soundOverrideSubclassController = TextEditingController();
   final materialController = ShadSelectController<int>();
-  final displayId = signal<int>(0);
+  final displayIdController = TextEditingController();
   final inventoryTypeController = ShadSelectController<int>();
   final sheathController = ShadSelectController<int>();
 
   /// Card 2: Set/Pricing/Container/Misc
   final bondingController = ShadSelectController<int>();
   final itemsetController = TextEditingController();
-  final randomProperty = signal<int>(0);
-  final randomSuffix = signal<int>(0);
+  final randomPropertyController = TextEditingController();
+  final randomSuffixController = TextEditingController();
   final maxDurabilityController = TextEditingController();
   final buyPriceController = TextEditingController();
   final sellPriceController = TextEditingController();
@@ -42,7 +42,7 @@ class ItemTemplateDetailViewModel {
   final bagFamily = signal<int>(0);
   final containerSlotsController = TextEditingController();
   final itemLimitCategoryController = TextEditingController();
-  final startquest = signal<int>(0);
+  final startquestController = TextEditingController();
   final durationController = TextEditingController();
   final disenchantIdController = TextEditingController();
   final minMoneyLootController = TextEditingController();
@@ -68,7 +68,7 @@ class ItemTemplateDetailViewModel {
   final blockController = TextEditingController();
 
   /// Card 5: Scaling Stats
-  final scalingStatDistribution = signal<int>(0);
+  final scalingStatDistributionController = TextEditingController();
   final scalingStatValue = signal<int>(0);
 
   /// Card 6: Stats (dynamic)
@@ -91,9 +91,9 @@ class ItemTemplateDetailViewModel {
   final arcaneResController = TextEditingController();
 
   /// Card 8: Spells (5 slots)
-  final List<Signal<int>> spellIds = List.generate(
+  final List<TextEditingController> spellIds = List.generate(
     5,
-    (_) => signal<int>(0),
+    (_) => TextEditingController(),
   );
   final List<ShadSelectController<int>> spellTriggerControllers = List.generate(
     5,
@@ -127,7 +127,7 @@ class ItemTemplateDetailViewModel {
   final requiredLevelController = TextEditingController();
   final requiredSkillController = TextEditingController();
   final requiredSkillRankController = TextEditingController();
-  final requiredSpell = signal<int>(0);
+  final requiredSpellController = TextEditingController();
   final requiredHonorRankController = TextEditingController();
   final requiredCityRankController = TextEditingController();
   final requiredReputationFactionController = TextEditingController();
@@ -135,7 +135,7 @@ class ItemTemplateDetailViewModel {
   final requiredDisenchantSkillController = TextEditingController();
 
   /// Card 10: Socket/Gem
-  final lockid = signal<int>(0);
+  final lockidController = TextEditingController();
   final gemPropertiesController = TextEditingController();
   final socketBonusController = TextEditingController();
   final List<ShadSelectController<int>> socketColorControllers = List.generate(
@@ -148,10 +148,10 @@ class ItemTemplateDetailViewModel {
   );
 
   /// Card 11: Page/Misc
-  final mapId = signal<int>(0);
-  final area = signal<int>(0);
+  final mapIdController = TextEditingController();
+  final areaController = TextEditingController();
   final holidayIdController = TextEditingController();
-  final pageText = signal<int>(0);
+  final pageTextController = TextEditingController();
   final pageMaterialController = ShadSelectController<int>();
   final languageIdController = ShadSelectController<int>();
   final scriptNameController = TextEditingController();
@@ -202,15 +202,15 @@ class ItemTemplateDetailViewModel {
     subclassController.value = {template.subclass};
     soundOverrideSubclassController.text = _fmt(template.soundOverrideSubclass);
     materialController.value = {template.material};
-    displayId.value = template.displayId;
+    displayIdController.text = _fmt(template.displayId);
     inventoryTypeController.value = {template.inventoryType};
     sheathController.value = {template.sheath};
 
     /// Card 2: Set/Pricing/Container/Misc
     bondingController.value = {template.bonding};
     itemsetController.text = _fmt(template.itemset);
-    randomProperty.value = template.randomProperty;
-    randomSuffix.value = template.randomSuffix;
+    randomPropertyController.text = _fmt(template.randomProperty);
+    randomSuffixController.text = _fmt(template.randomSuffix);
     maxDurabilityController.text = _fmt(template.maxDurability);
     buyPriceController.text = _fmt(template.buyPrice);
     sellPriceController.text = _fmt(template.sellPrice);
@@ -222,7 +222,7 @@ class ItemTemplateDetailViewModel {
     bagFamily.value = template.bagFamily;
     containerSlotsController.text = _fmt(template.containerSlots);
     itemLimitCategoryController.text = _fmt(template.itemLimitCategory);
-    startquest.value = template.startquest;
+    startquestController.text = _fmt(template.startquest);
     durationController.text = _fmt(template.duration);
     disenchantIdController.text = _fmt(template.disenchantId);
     minMoneyLootController.text = _fmt(template.minMoneyLoot);
@@ -248,7 +248,7 @@ class ItemTemplateDetailViewModel {
     blockController.text = _fmt(template.block);
 
     /// Card 5: Scaling Stats
-    scalingStatDistribution.value = template.scalingStatDistribution;
+    scalingStatDistributionController.text = _fmt(template.scalingStatDistribution);
     scalingStatValue.value = template.scalingStatValue;
 
     /// Card 6: Stats (dynamic)
@@ -269,7 +269,7 @@ class ItemTemplateDetailViewModel {
 
     /// Card 8: Spells (5 slots)
     for (var i = 0; i < 5; i++) {
-      spellIds[i].value = template.spellIds[i];
+      spellIds[i].text = _fmt(template.spellIds[i]);
       spellTriggerControllers[i].value = {template.spellTriggers[i]};
       spellCharges[i].value = template.spellCharges[i];
       spellPpmRates[i].value = template.spellPpmRates[i];
@@ -285,7 +285,7 @@ class ItemTemplateDetailViewModel {
     requiredLevelController.text = _fmt(template.requiredLevel);
     requiredSkillController.text = _fmt(template.requiredSkill);
     requiredSkillRankController.text = _fmt(template.requiredSkillRank);
-    requiredSpell.value = template.requiredSpell;
+    requiredSpellController.text = _fmt(template.requiredSpell);
     requiredHonorRankController.text = _fmt(template.requiredHonorRank);
     requiredCityRankController.text = _fmt(template.requiredCityRank);
     requiredReputationFactionController.text = _fmt(template.requiredReputationFaction);
@@ -293,7 +293,7 @@ class ItemTemplateDetailViewModel {
     requiredDisenchantSkillController.text = _fmt(template.requiredDisenchantSkill);
 
     /// Card 10: Socket/Gem
-    lockid.value = template.lockid;
+    lockidController.text = _fmt(template.lockid);
     gemPropertiesController.text = _fmt(template.gemProperties);
     socketBonusController.text = _fmt(template.socketBonus);
     for (var i = 0; i < 3; i++) {
@@ -302,10 +302,10 @@ class ItemTemplateDetailViewModel {
     }
 
     /// Card 11: Page/Misc
-    mapId.value = template.mapId;
-    area.value = template.area;
+    mapIdController.text = _fmt(template.mapId);
+    areaController.text = _fmt(template.area);
     holidayIdController.text = _fmt(template.holidayId);
-    pageText.value = template.pageText;
+    pageTextController.text = _fmt(template.pageText);
     pageMaterialController.value = {template.pageMaterial};
     languageIdController.value = {template.languageId};
     scriptNameController.text = template.scriptName;
@@ -323,15 +323,15 @@ class ItemTemplateDetailViewModel {
       subclass: _getSelectValue(subclassController),
       soundOverrideSubclass: _pi(soundOverrideSubclassController.text),
       material: _getSelectValue(materialController),
-      displayId: displayId.value,
+      displayId: _pi(displayIdController.text),
       inventoryType: _getSelectValue(inventoryTypeController),
       sheath: _getSelectValue(sheathController),
 
       /// Card 2: Set/Pricing/Container/Misc
       bonding: _getSelectValue(bondingController),
       itemset: _pi(itemsetController.text),
-      randomProperty: randomProperty.value,
-      randomSuffix: randomSuffix.value,
+      randomProperty: _pi(randomPropertyController.text),
+      randomSuffix: _pi(randomSuffixController.text),
       maxDurability: _pi(maxDurabilityController.text),
       buyPrice: _pi(buyPriceController.text),
       sellPrice: _pi(sellPriceController.text),
@@ -343,7 +343,7 @@ class ItemTemplateDetailViewModel {
       bagFamily: bagFamily.value,
       containerSlots: _pi(containerSlotsController.text),
       itemLimitCategory: _pi(itemLimitCategoryController.text),
-      startquest: startquest.value,
+      startquest: _pi(startquestController.text),
       duration: _pi(durationController.text),
       disenchantId: _pi(disenchantIdController.text),
       minMoneyLoot: _pi(minMoneyLootController.text),
@@ -369,7 +369,7 @@ class ItemTemplateDetailViewModel {
       block: _pi(blockController.text),
 
       /// Card 5: Scaling Stats
-      scalingStatDistribution: scalingStatDistribution.value,
+      scalingStatDistribution: _pi(scalingStatDistributionController.text),
       scalingStatValue: scalingStatValue.value,
 
       /// Card 6: Stats (dynamic)
@@ -391,7 +391,7 @@ class ItemTemplateDetailViewModel {
 
       /// Card 8: Spells (5 slots)
       spellIds: [
-        for (var i = 0; i < 5; i++) spellIds[i].value,
+        for (var i = 0; i < 5; i++) _pi(spellIds[i].text),
       ],
       spellTriggers: [
         for (var i = 0; i < 5; i++) _getSelectValue(spellTriggerControllers[i]),
@@ -419,7 +419,7 @@ class ItemTemplateDetailViewModel {
       requiredLevel: _pi(requiredLevelController.text),
       requiredSkill: _pi(requiredSkillController.text),
       requiredSkillRank: _pi(requiredSkillRankController.text),
-      requiredSpell: requiredSpell.value,
+      requiredSpell: _pi(requiredSpellController.text),
       requiredHonorRank: _pi(requiredHonorRankController.text),
       requiredCityRank: _pi(requiredCityRankController.text),
       requiredReputationFaction: _pi(requiredReputationFactionController.text),
@@ -427,7 +427,7 @@ class ItemTemplateDetailViewModel {
       requiredDisenchantSkill: _pi(requiredDisenchantSkillController.text),
 
       /// Card 10: Socket/Gem
-      lockid: lockid.value,
+      lockid: _pi(lockidController.text),
       gemProperties: _pi(gemPropertiesController.text),
       socketBonus: _pi(socketBonusController.text),
       socketColors: [
@@ -438,10 +438,10 @@ class ItemTemplateDetailViewModel {
       ],
 
       /// Card 11: Page/Misc
-      mapId: mapId.value,
-      area: area.value,
+      mapId: _pi(mapIdController.text),
+      area: _pi(areaController.text),
       holidayId: _pi(holidayIdController.text),
-      pageText: pageText.value,
+      pageText: _pi(pageTextController.text),
       pageMaterial: _getSelectValue(pageMaterialController),
       languageId: _getSelectValue(languageIdController),
       scriptName: scriptNameController.text,
@@ -498,8 +498,12 @@ class ItemTemplateDetailViewModel {
   }
 
   void dispose() {
+    for (final c in spellIds) {
+      c.dispose();
+    }
     ammoTypeController.dispose();
     arcaneResController.dispose();
+    areaController.dispose();
     armorController.dispose();
     armorDamageModifierController.dispose();
     blockController.dispose();
@@ -511,6 +515,7 @@ class ItemTemplateDetailViewModel {
     delayController.dispose();
     descriptionController.dispose();
     disenchantIdController.dispose();
+    displayIdController.dispose();
     dmgMax1Controller.dispose();
     dmgMax2Controller.dispose();
     dmgMin1Controller.dispose();
@@ -530,6 +535,8 @@ class ItemTemplateDetailViewModel {
     itemLimitCategoryController.dispose();
     itemsetController.dispose();
     languageIdController.dispose();
+    lockidController.dispose();
+    mapIdController.dispose();
     materialController.dispose();
     maxDurabilityController.dispose();
     maxMoneyLootController.dispose();
@@ -538,7 +545,10 @@ class ItemTemplateDetailViewModel {
     nameController.dispose();
     natureResController.dispose();
     pageMaterialController.dispose();
+    pageTextController.dispose();
     qualityController.dispose();
+    randomPropertyController.dispose();
+    randomSuffixController.dispose();
     rangedModRangeController.dispose();
     requiredCityRankController.dispose();
     requiredDisenchantSkillController.dispose();
@@ -548,6 +558,8 @@ class ItemTemplateDetailViewModel {
     requiredReputationRankController.dispose();
     requiredSkillController.dispose();
     requiredSkillRankController.dispose();
+    requiredSpellController.dispose();
+    scalingStatDistributionController.dispose();
     scriptNameController.dispose();
     sellPriceController.dispose();
     shadowResController.dispose();
@@ -555,6 +567,7 @@ class ItemTemplateDetailViewModel {
     socketBonusController.dispose();
     soundOverrideSubclassController.dispose();
     stackableController.dispose();
+    startquestController.dispose();
     statsCountController.dispose();
     subclassController.dispose();
     totemCategoryController.dispose();

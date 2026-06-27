@@ -17,22 +17,35 @@ class GossipMenuDetailViewModel {
   final menuIdController = TextEditingController();
 
   final menuId = signal(0);
-  final textId = signal<int>(0);
+  final textIdController = TextEditingController();
   final menu = signal(GossipMenuEntity());
   int? _originalMenuId;
   int? _originalTextId;
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> initSignals({int? menuId, int? textId}) async {
     try {
       if (menuId == null) {
         final nextMenuId = await _repository.getNextMenuId();
         this.menuId.value = nextMenuId;
-        this.textId.value = 0;
+        textIdController.text = _fmt(0);
         menu.value = GossipMenuEntity(menuId: nextMenuId, textId: 0);
         _originalMenuId = null;
         _originalTextId = null;
         menuIdController.text = nextMenuId.toString();
-        this.textId.value = 0;
+        textIdController.text = _fmt(0);
         return;
       }
       _originalMenuId = menuId;
@@ -42,7 +55,7 @@ class GossipMenuDetailViewModel {
         textId ?? 0,
       );
       this.menuId.value = existing.menuId;
-      this.textId.value = existing.textId;
+      textIdController.text = _fmt(existing.textId);
       menu.value = existing;
       menuIdController.text = this.menuId.value.toString();
     } catch (e) {
@@ -71,7 +84,7 @@ class GossipMenuDetailViewModel {
         _originalTextId = t.textId;
       }
       menuId.value = t.menuId;
-      textId.value = t.textId;
+      textIdController.text = _fmt(t.textId);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('对话菜单数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -89,7 +102,7 @@ class GossipMenuDetailViewModel {
   GossipMenuEntity _collectFromControllers() {
     return GossipMenuEntity(
       menuId: int.tryParse(menuIdController.text) ?? 0,
-      textId: textId.value,
+      textId: _pi(textIdController.text),
     );
   }
 
@@ -106,5 +119,6 @@ class GossipMenuDetailViewModel {
 
   void dispose() {
     menuIdController.dispose();
+    textIdController.dispose();
   }
 }

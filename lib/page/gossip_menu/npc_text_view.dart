@@ -28,9 +28,9 @@ class _NpcTextViewState extends State<NpcTextView> {
   @override
   void initState() {
     super.initState();
-    viewModel.load(parentViewModel.textId.value);
+    viewModel.load(int.tryParse(parentViewModel.textIdController.text) ?? 0);
     _disposer = effect(() {
-      final newTextId = parentViewModel.textId.value;
+      final newTextId = int.tryParse(parentViewModel.textIdController.text) ?? 0;
       viewModel.load(newTextId);
     });
   }

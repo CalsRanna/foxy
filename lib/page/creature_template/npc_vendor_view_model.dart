@@ -19,7 +19,7 @@ class NpcVendorViewModel {
   final itemController = TextEditingController();
   final maxcountController = TextEditingController();
   final incrtimeController = TextEditingController();
-  final extendedCost = signal<int>(0);
+  final extendedCostController = TextEditingController();
   final verifiedBuildController = TextEditingController();
 
   // 内部状态
@@ -53,7 +53,7 @@ class NpcVendorViewModel {
     itemController.clear();
     maxcountController.text = _fmt(0);
     incrtimeController.text = _fmt(0);
-    extendedCost.value = 0;
+    extendedCostController.text = _fmt(0);
     verifiedBuildController.text = _fmt(0);
   }
 
@@ -63,7 +63,7 @@ class NpcVendorViewModel {
     itemController.text = vendor.item.toString();
     maxcountController.text = _fmt(vendor.maxcount);
     incrtimeController.text = _fmt(vendor.incrtime);
-    extendedCost.value = vendor.extendedCost;
+    extendedCostController.text = _fmt(vendor.extendedCost);
     verifiedBuildController.text = _fmt(vendor.verifiedBuild);
   }
 
@@ -75,7 +75,7 @@ class NpcVendorViewModel {
       item: _parseInt(itemController.text),
       maxcount: _pi(maxcountController.text),
       incrtime: _pi(incrtimeController.text),
-      extendedCost: extendedCost.value,
+      extendedCost: _pi(extendedCostController.text),
       verifiedBuild: _pi(verifiedBuildController.text),
     );
   }
@@ -227,6 +227,7 @@ class NpcVendorViewModel {
 
   /// 清理资源
   void dispose() {
+    extendedCostController.dispose();
     incrtimeController.dispose();
     itemController.dispose();
     maxcountController.dispose();

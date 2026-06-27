@@ -112,7 +112,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final factionInput = FormItem(
       label: '阵营',
       child: DbcFactionSelector(
-        signal: viewModel.faction,
+        controller: viewModel.factionController,
         placeholder: 'faction',
       ),
     );
@@ -143,21 +143,21 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final petSpellDataIdInput = FormItem(
       label: '宠物技能',
       child: CreatureSpellDataSelector(
-        signal: viewModel.petSpellDataId,
+        controller: viewModel.petSpellDataIdController,
         placeholder: 'PetSpellDataId',
       ),
     );
     final vehicleIdInput = FormItem(
       label: '载具',
       child: VehicleSelector(
-        signal: viewModel.vehicleId,
+        controller: viewModel.vehicleIdController,
         placeholder: 'VehicleId',
       ),
     );
     final gossipMenuIdInput = FormItem(
       label: '对话',
       child: GossipMenuSelector(
-        signal: viewModel.gossipMenuId,
+        controller: viewModel.gossipMenuIdController,
         placeholder: 'gossip_menu_id',
       ),
     );
@@ -422,21 +422,21 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final lootInput = FormItem(
       label: '击杀掉落',
       child: LootTemplateSelector.creature(
-        signal: viewModel.lootId,
+        controller: viewModel.lootIdController,
         placeholder: 'lootid',
       ),
     );
     final pickpocketLootInput = FormItem(
       label: '偷窃掉落',
       child: LootTemplateSelector.pickpocket(
-        signal: viewModel.pickpocketLoot,
+        controller: viewModel.pickpocketLootController,
         placeholder: 'pickpocketloot',
       ),
     );
     final skinLootInput = FormItem(
       label: '剥皮掉落',
       child: LootTemplateSelector.skinning(
-        signal: viewModel.skinLoot,
+        controller: viewModel.skinLootController,
         placeholder: 'skinloot',
       ),
     );
@@ -538,35 +538,35 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final killCredit1Input = FormItem(
       label: '击杀关联1',
       child: CreatureTemplateSelector(
-        signal: viewModel.killCredit1,
+        controller: viewModel.killCredit1Controller,
         placeholder: 'KillCredit1',
       ),
     );
     final killCredit2input = FormItem(
       label: '击杀关联2',
       child: CreatureTemplateSelector(
-        signal: viewModel.killCredit2,
+        controller: viewModel.killCredit2Controller,
         placeholder: 'KillCredit2',
       ),
     );
     final difficultyEntry1Input = FormItem(
       label: '难度1',
       child: CreatureTemplateSelector(
-        signal: viewModel.difficultyEntry1,
+        controller: viewModel.difficultyEntry1Controller,
         placeholder: 'difficulty_entry_1',
       ),
     );
     final difficultyEntry2Input = FormItem(
       label: '难度2',
       child: CreatureTemplateSelector(
-        signal: viewModel.difficultyEntry2,
+        controller: viewModel.difficultyEntry2Controller,
         placeholder: 'difficulty_entry_2',
       ),
     );
     final difficultyEntry3Input = FormItem(
       label: '难度3',
       child: CreatureTemplateSelector(
-        signal: viewModel.difficultyEntry3,
+        controller: viewModel.difficultyEntry3Controller,
         placeholder: 'difficulty_entry_3',
       ),
     );

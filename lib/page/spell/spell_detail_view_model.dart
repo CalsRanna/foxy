@@ -24,8 +24,8 @@ class SpellDetailViewModel {
   final auraDescriptionLangFlagsController = TextEditingController();
 
   // === 图标/视觉 ===
-  final spellIconID = signal<int>(0);
-  final activeIconID = signal<int>(0);
+  final spellIconIDController = TextEditingController();
+  final activeIconIDController = TextEditingController();
   final spellVisualID0Controller = TextEditingController();
   final spellVisualID1Controller = TextEditingController();
 
@@ -39,8 +39,8 @@ class SpellDetailViewModel {
 
   // === 施法参数 ===
   final castingTimeIndexController = TextEditingController();
-  final durationIndex = signal<int>(0);
-  final rangeIndex = signal<int>(0);
+  final durationIndexController = TextEditingController();
+  final rangeIndexController = TextEditingController();
   final spellDescriptionVariableIDController = TextEditingController();
 
   // === 等级 ===
@@ -68,7 +68,7 @@ class SpellDetailViewModel {
   final speedController = TextEditingController();
 
   // === 需求 ===
-  final requiredAreasID = signal<int>(0);
+  final requiredAreasIDController = TextEditingController();
   final requiresSpellFocusController = TextEditingController();
   final facingCasterFlagsController = TextEditingController();
 
@@ -265,8 +265,8 @@ class SpellDetailViewModel {
       auraDescriptionLangFlags: _pi(auraDescriptionLangFlagsController.text),
 
       // === 图标/视觉 ===
-      spellIconID: spellIconID.value,
-      activeIconID: activeIconID.value,
+      spellIconID: _pi(spellIconIDController.text),
+      activeIconID: _pi(activeIconIDController.text),
       spellVisualID0: _pi(spellVisualID0Controller.text),
       spellVisualID1: _pi(spellVisualID1Controller.text),
 
@@ -280,8 +280,8 @@ class SpellDetailViewModel {
 
       // === 施法参数 ===
       castingTimeIndex: _pi(castingTimeIndexController.text),
-      durationIndex: durationIndex.value,
-      rangeIndex: rangeIndex.value,
+      durationIndex: _pi(durationIndexController.text),
+      rangeIndex: _pi(rangeIndexController.text),
       spellDescriptionVariableID: _pi(spellDescriptionVariableIDController.text),
 
       // === 等级 ===
@@ -309,7 +309,7 @@ class SpellDetailViewModel {
       speed: _pd(speedController.text),
 
       // === 需求 ===
-      requiredAreasID: requiredAreasID.value,
+      requiredAreasID: _pi(requiredAreasIDController.text),
       requiresSpellFocus: _pi(requiresSpellFocusController.text),
       facingCasterFlags: _pi(facingCasterFlagsController.text),
 
@@ -478,141 +478,129 @@ class SpellDetailViewModel {
   }
 
   void dispose() {
-    nameLangZhCNController.dispose();
-    nameSubtextLangZhCNController.dispose();
-    descriptionLangZhCNController.dispose();
-    auraDescriptionLangZhCNController.dispose();
-    nameLangFlagsController.dispose();
-    nameSubtextLangFlagsController.dispose();
-    descriptionLangFlagsController.dispose();
+    activeIconIDController.dispose();
+    attributesController.dispose();
+    attributesExBController.dispose();
+    attributesExCController.dispose();
+    attributesExController.dispose();
+    attributesExDController.dispose();
+    attributesExEController.dispose();
+    attributesExFController.dispose();
+    attributesExGController.dispose();
     auraDescriptionLangFlagsController.dispose();
-    spellVisualID0Controller.dispose();
-    spellVisualID1Controller.dispose();
-    categoryController.dispose();
-    schoolMaskController.dispose();
-    mechanicController.dispose();
-    defenseTypeController.dispose();
-    dispelTypeController.dispose();
-    preventionTypeController.dispose();
-    castingTimeIndexController.dispose();
-    spellDescriptionVariableIDController.dispose();
+    auraDescriptionLangZhCNController.dispose();
+    auraInterruptFlagsController.dispose();
     baseLevelController.dispose();
-    spellLevelController.dispose();
-    maxLevelController.dispose();
-    spellDifficultyIDController.dispose();
-    startRecoveryCategoryController.dispose();
-    startRecoveryTimeController.dispose();
-    recoveryTimeController.dispose();
-    categoryRecoveryTimeController.dispose();
-    targetCreatureTypeController.dispose();
-    targetsController.dispose();
-    maxTargetsController.dispose();
-    maxTargetLevelController.dispose();
+    casterAuraSpellController.dispose();
     casterAuraStateController.dispose();
-    targetAuraStateController.dispose();
-    spellMissileIDController.dispose();
-    speedController.dispose();
-    requiresSpellFocusController.dispose();
+    castingTimeIndexController.dispose();
+    categoryController.dispose();
+    categoryRecoveryTimeController.dispose();
+    channelInterruptFlagsController.dispose();
+    cumulativeAuraController.dispose();
+    defenseTypeController.dispose();
+    descriptionLangFlagsController.dispose();
+    descriptionLangZhCNController.dispose();
+    dispelTypeController.dispose();
+    durationIndexController.dispose();
+    effect0Controller.dispose();
+    effect1Controller.dispose();
+    effect2Controller.dispose();
+    effectAmplitude0Controller.dispose();
+    effectAmplitude1Controller.dispose();
+    effectAmplitude2Controller.dispose();
+    effectAura0Controller.dispose();
+    effectAura1Controller.dispose();
+    effectAura2Controller.dispose();
+    effectAuraPeriod0Controller.dispose();
+    effectAuraPeriod1Controller.dispose();
+    effectAuraPeriod2Controller.dispose();
+    effectBasePoints0Controller.dispose();
+    effectBasePoints1Controller.dispose();
+    effectBasePoints2Controller.dispose();
+    effectBonusCoefficient0Controller.dispose();
+    effectBonusCoefficient1Controller.dispose();
+    effectBonusCoefficient2Controller.dispose();
+    effectChainAmplitude0Controller.dispose();
+    effectChainAmplitude1Controller.dispose();
+    effectChainAmplitude2Controller.dispose();
+    effectChainTargets0Controller.dispose();
+    effectChainTargets1Controller.dispose();
+    effectChainTargets2Controller.dispose();
+    effectDieSides0Controller.dispose();
+    effectDieSides1Controller.dispose();
+    effectDieSides2Controller.dispose();
+    effectItemType0Controller.dispose();
+    effectItemType1Controller.dispose();
+    effectItemType2Controller.dispose();
+    effectMechanic0Controller.dispose();
+    effectMechanic1Controller.dispose();
+    effectMechanic2Controller.dispose();
+    effectMiscValue0Controller.dispose();
+    effectMiscValue1Controller.dispose();
+    effectMiscValue2Controller.dispose();
+    effectMiscValueB0Controller.dispose();
+    effectMiscValueB1Controller.dispose();
+    effectMiscValueB2Controller.dispose();
+    effectPointsPerCombo0Controller.dispose();
+    effectPointsPerCombo1Controller.dispose();
+    effectPointsPerCombo2Controller.dispose();
+    effectRadiusIndex0Controller.dispose();
+    effectRadiusIndex1Controller.dispose();
+    effectRadiusIndex2Controller.dispose();
+    effectRealPointsPerLevel0Controller.dispose();
+    effectRealPointsPerLevel1Controller.dispose();
+    effectRealPointsPerLevel2Controller.dispose();
+    effectSpellClassMaskA0Controller.dispose();
+    effectSpellClassMaskA1Controller.dispose();
+    effectSpellClassMaskA2Controller.dispose();
+    effectSpellClassMaskB0Controller.dispose();
+    effectSpellClassMaskB1Controller.dispose();
+    effectSpellClassMaskB2Controller.dispose();
+    effectSpellClassMaskC0Controller.dispose();
+    effectSpellClassMaskC1Controller.dispose();
+    effectSpellClassMaskC2Controller.dispose();
+    effectTriggerSpell0Controller.dispose();
+    effectTriggerSpell1Controller.dispose();
+    effectTriggerSpell2Controller.dispose();
+    equippedItemClassController.dispose();
+    equippedItemInvTypesController.dispose();
+    equippedItemSubclassController.dispose();
+    excludeCasterAuraSpellController.dispose();
+    excludeCasterAuraStateController.dispose();
+    excludeTargetAuraSpellController.dispose();
+    excludeTargetAuraStateController.dispose();
     facingCasterFlagsController.dispose();
-    powerDisplayIDController.dispose();
-    powerTypeController.dispose();
-    runeCostIDController.dispose();
+    implicitTargetA0Controller.dispose();
+    implicitTargetA1Controller.dispose();
+    implicitTargetA2Controller.dispose();
+    implicitTargetB0Controller.dispose();
+    implicitTargetB1Controller.dispose();
+    implicitTargetB2Controller.dispose();
+    interruptFlagsController.dispose();
     manaCostController.dispose();
     manaCostPctController.dispose();
     manaCostPerLevelController.dispose();
     manaPerSecondController.dispose();
     manaPerSecondPerLevelController.dispose();
-    interruptFlagsController.dispose();
-    auraInterruptFlagsController.dispose();
-    channelInterruptFlagsController.dispose();
-    attributesController.dispose();
-    attributesExController.dispose();
-    attributesExBController.dispose();
-    attributesExCController.dispose();
-    attributesExDController.dispose();
-    attributesExEController.dispose();
-    attributesExFController.dispose();
-    attributesExGController.dispose();
-    procTypeMaskController.dispose();
+    maxLevelController.dispose();
+    maxTargetLevelController.dispose();
+    maxTargetsController.dispose();
+    mechanicController.dispose();
+    minFactionIDController.dispose();
+    minReputationController.dispose();
+    modalNextSpellController.dispose();
+    nameLangFlagsController.dispose();
+    nameLangZhCNController.dispose();
+    nameSubtextLangFlagsController.dispose();
+    nameSubtextLangZhCNController.dispose();
+    powerDisplayIDController.dispose();
+    powerTypeController.dispose();
+    preventionTypeController.dispose();
     procChanceController.dispose();
     procChargesController.dispose();
-    spellClassSetController.dispose();
-    spellClassMask0Controller.dispose();
-    spellClassMask1Controller.dispose();
-    spellClassMask2Controller.dispose();
-    effect0Controller.dispose();
-    effectBasePoints0Controller.dispose();
-    effectDieSides0Controller.dispose();
-    effectRealPointsPerLevel0Controller.dispose();
-    effectMechanic0Controller.dispose();
-    effectChainTargets0Controller.dispose();
-    effectAura0Controller.dispose();
-    effectAuraPeriod0Controller.dispose();
-    effectAmplitude0Controller.dispose();
-    implicitTargetA0Controller.dispose();
-    implicitTargetB0Controller.dispose();
-    effectMiscValue0Controller.dispose();
-    effectMiscValueB0Controller.dispose();
-    effectRadiusIndex0Controller.dispose();
-    effectChainAmplitude0Controller.dispose();
-    effectBonusCoefficient0Controller.dispose();
-    effectItemType0Controller.dispose();
-    effectTriggerSpell0Controller.dispose();
-    effectPointsPerCombo0Controller.dispose();
-    effectSpellClassMaskA0Controller.dispose();
-    effectSpellClassMaskB0Controller.dispose();
-    effectSpellClassMaskC0Controller.dispose();
-    effect1Controller.dispose();
-    effectBasePoints1Controller.dispose();
-    effectDieSides1Controller.dispose();
-    effectRealPointsPerLevel1Controller.dispose();
-    effectMechanic1Controller.dispose();
-    effectChainTargets1Controller.dispose();
-    effectAura1Controller.dispose();
-    effectAuraPeriod1Controller.dispose();
-    effectAmplitude1Controller.dispose();
-    implicitTargetA1Controller.dispose();
-    implicitTargetB1Controller.dispose();
-    effectMiscValue1Controller.dispose();
-    effectMiscValueB1Controller.dispose();
-    effectRadiusIndex1Controller.dispose();
-    effectChainAmplitude1Controller.dispose();
-    effectBonusCoefficient1Controller.dispose();
-    effectItemType1Controller.dispose();
-    effectTriggerSpell1Controller.dispose();
-    effectPointsPerCombo1Controller.dispose();
-    effectSpellClassMaskA1Controller.dispose();
-    effectSpellClassMaskB1Controller.dispose();
-    effectSpellClassMaskC1Controller.dispose();
-    effect2Controller.dispose();
-    effectBasePoints2Controller.dispose();
-    effectDieSides2Controller.dispose();
-    effectRealPointsPerLevel2Controller.dispose();
-    effectMechanic2Controller.dispose();
-    effectChainTargets2Controller.dispose();
-    effectAura2Controller.dispose();
-    effectAuraPeriod2Controller.dispose();
-    effectAmplitude2Controller.dispose();
-    implicitTargetA2Controller.dispose();
-    implicitTargetB2Controller.dispose();
-    effectMiscValue2Controller.dispose();
-    effectMiscValueB2Controller.dispose();
-    effectRadiusIndex2Controller.dispose();
-    effectChainAmplitude2Controller.dispose();
-    effectBonusCoefficient2Controller.dispose();
-    effectItemType2Controller.dispose();
-    effectTriggerSpell2Controller.dispose();
-    effectPointsPerCombo2Controller.dispose();
-    effectSpellClassMaskA2Controller.dispose();
-    effectSpellClassMaskB2Controller.dispose();
-    effectSpellClassMaskC2Controller.dispose();
-    equippedItemClassController.dispose();
-    equippedItemSubclassController.dispose();
-    equippedItemInvTypesController.dispose();
-    requiredTotemCategoryID0Controller.dispose();
-    totem0Controller.dispose();
-    requiredTotemCategoryID1Controller.dispose();
-    totem1Controller.dispose();
+    procTypeMaskController.dispose();
+    rangeIndexController.dispose();
     reagent0Controller.dispose();
     reagent1Controller.dispose();
     reagent2Controller.dispose();
@@ -629,21 +617,38 @@ class SpellDetailViewModel {
     reagentCount5Controller.dispose();
     reagentCount6Controller.dispose();
     reagentCount7Controller.dispose();
-    casterAuraSpellController.dispose();
-    cumulativeAuraController.dispose();
-    minFactionIDController.dispose();
-    minReputationController.dispose();
-    excludeCasterAuraSpellController.dispose();
-    excludeCasterAuraStateController.dispose();
-    excludeTargetAuraSpellController.dispose();
-    excludeTargetAuraStateController.dispose();
-    spellPriorityController.dispose();
-    modalNextSpellController.dispose();
+    recoveryTimeController.dispose();
+    requiredAreasIDController.dispose();
     requiredAuraVisionController.dispose();
-    targetAuraSpellController.dispose();
-    stanceBarOrderController.dispose();
-    shapeshiftMask0Controller.dispose();
+    requiredTotemCategoryID0Controller.dispose();
+    requiredTotemCategoryID1Controller.dispose();
+    requiresSpellFocusController.dispose();
+    runeCostIDController.dispose();
+    schoolMaskController.dispose();
     shapeshiftExclude0Controller.dispose();
+    shapeshiftMask0Controller.dispose();
+    speedController.dispose();
+    spellClassMask0Controller.dispose();
+    spellClassMask1Controller.dispose();
+    spellClassMask2Controller.dispose();
+    spellClassSetController.dispose();
+    spellDescriptionVariableIDController.dispose();
+    spellDifficultyIDController.dispose();
+    spellIconIDController.dispose();
+    spellLevelController.dispose();
+    spellMissileIDController.dispose();
+    spellPriorityController.dispose();
+    spellVisualID0Controller.dispose();
+    spellVisualID1Controller.dispose();
+    stanceBarOrderController.dispose();
+    startRecoveryCategoryController.dispose();
+    startRecoveryTimeController.dispose();
+    targetAuraSpellController.dispose();
+    targetAuraStateController.dispose();
+    targetCreatureTypeController.dispose();
+    targetsController.dispose();
+    totem0Controller.dispose();
+    totem1Controller.dispose();
   }
 
   String _fmt(num v) {
@@ -683,8 +688,8 @@ class SpellDetailViewModel {
     auraDescriptionLangFlagsController.text = _fmt(template.auraDescriptionLangFlags);
 
     // === 图标/视觉 ===
-    spellIconID.value = template.spellIconID;
-    activeIconID.value = template.activeIconID;
+    spellIconIDController.text = _fmt(template.spellIconID);
+    activeIconIDController.text = _fmt(template.activeIconID);
     spellVisualID0Controller.text = _fmt(template.spellVisualID0);
     spellVisualID1Controller.text = _fmt(template.spellVisualID1);
 
@@ -698,8 +703,8 @@ class SpellDetailViewModel {
 
     // === 施法参数 ===
     castingTimeIndexController.text = _fmt(template.castingTimeIndex);
-    durationIndex.value = template.durationIndex;
-    rangeIndex.value = template.rangeIndex;
+    durationIndexController.text = _fmt(template.durationIndex);
+    rangeIndexController.text = _fmt(template.rangeIndex);
     spellDescriptionVariableIDController.text = _fmt(template.spellDescriptionVariableID);
 
     // === 等级 ===
@@ -727,7 +732,7 @@ class SpellDetailViewModel {
     speedController.text = _fmt(template.speed);
 
     // === 需求 ===
-    requiredAreasID.value = template.requiredAreasID;
+    requiredAreasIDController.text = _fmt(template.requiredAreasID);
     requiresSpellFocusController.text = _fmt(template.requiresSpellFocus);
     facingCasterFlagsController.text = _fmt(template.facingCasterFlags);
 

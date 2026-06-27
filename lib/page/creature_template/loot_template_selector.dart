@@ -7,14 +7,14 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
 class LootTemplateSelector extends StatefulWidget {
-  final Signal<int> signal;
+  final TextEditingController controller;
   final String? placeholder;
   final LootTableType tableType;
   final String title;
 
   const LootTemplateSelector({
     super.key,
-    required this.signal,
+    required this.controller,
     this.placeholder,
     required this.tableType,
     required this.title,
@@ -22,12 +22,12 @@ class LootTemplateSelector extends StatefulWidget {
 
   factory LootTemplateSelector.creature({
     Key? key,
-    required Signal<int> signal,
+    required TextEditingController controller,
     String? placeholder,
   }) {
     return LootTemplateSelector(
       key: key,
-      signal: signal,
+      controller: controller,
       placeholder: placeholder,
       tableType: LootTableType.creature,
       title: '击杀掉落',
@@ -36,12 +36,12 @@ class LootTemplateSelector extends StatefulWidget {
 
   factory LootTemplateSelector.pickpocket({
     Key? key,
-    required Signal<int> signal,
+    required TextEditingController controller,
     String? placeholder,
   }) {
     return LootTemplateSelector(
       key: key,
-      signal: signal,
+      controller: controller,
       placeholder: placeholder,
       tableType: LootTableType.pickpocket,
       title: '偷窃掉落',
@@ -50,12 +50,12 @@ class LootTemplateSelector extends StatefulWidget {
 
   factory LootTemplateSelector.skinning({
     Key? key,
-    required Signal<int> signal,
+    required TextEditingController controller,
     String? placeholder,
   }) {
     return LootTemplateSelector(
       key: key,
-      signal: signal,
+      controller: controller,
       placeholder: placeholder,
       tableType: LootTableType.skinning,
       title: '剥皮掉落',
@@ -67,31 +67,18 @@ class LootTemplateSelector extends StatefulWidget {
 }
 
 class _LootTemplateSelectorState extends State<LootTemplateSelector> {
-  final _displayController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _syncDisplay();
-  }
-
-  void _syncDisplay() {
-    final v = widget.signal.value;
-    _displayController.text = v == 0 ? '' : v.toString();
-  }
 
   @override
   void dispose() {
-    _displayController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ShadInput(
-      controller: _displayController,
+      controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
-      readOnly: true,
       trailing: ShadButton.ghost(
         height: 20,
         padding: EdgeInsets.zero,
@@ -104,9 +91,10 @@ class _LootTemplateSelectorState extends State<LootTemplateSelector> {
 
   Future<void> _openDialog() async {
     final vm = LootTemplateSelectorViewModel(widget.tableType);
-    if (widget.signal.value != 0) {
-      vm.entryFilter.value = widget.signal.value.toString();
-      vm.selectedId.value = widget.signal.value;
+    final currentId = int.tryParse(widget.controller.text) ?? 0;
+    if (currentId != 0) {
+      vm.entryFilter.value = currentId.toString();
+      vm.selectedId.value = currentId;
       await vm.search();
     }
 
@@ -116,8 +104,7 @@ class _LootTemplateSelectorState extends State<LootTemplateSelector> {
     );
     vm.dispose();
     if (result != null) {
-      widget.signal.value = result;
-      _syncDisplay();
+      widget.controller.text = result.toString();
     }
   }
 }
@@ -135,11 +122,6 @@ class _Dialog extends StatefulWidget {
 class _DialogState extends State<_Dialog> {
   final _entryController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _entryController.text = widget.vm.entryFilter.value;
-  }
 
   @override
   void dispose() {
