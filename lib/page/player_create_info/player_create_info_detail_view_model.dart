@@ -13,16 +13,30 @@ class PlayerCreateInfoDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
-  final race = signal<int>(0);
-  final playerClass = signal<int>(0);
-  final map = signal<int>(0);
-  final zone = signal<int>(0);
-  final positionX = signal<double>(0.0);
-  final positionY = signal<double>(0.0);
-  final positionZ = signal<double>(0.0);
-  final orientation = signal<double>(0.0);
+  final raceController = TextEditingController();
+  final playerClassController = TextEditingController();
+  final mapController = TextEditingController();
+  final zoneController = TextEditingController();
+  final positionXController = TextEditingController();
+  final positionYController = TextEditingController();
+  final positionZController = TextEditingController();
+  final orientationController = TextEditingController();
 
   final info = signal<PlayerCreateInfoEntity?>(null);
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+  double _pd(String t) => double.tryParse(t) ?? 0.0;
+
   Future<void> initSignals({int? race, int? playerClass}) async {
     if (race == null || playerClass == null) return;
     try {
@@ -39,14 +53,14 @@ class PlayerCreateInfoDetailViewModel {
   }
 
   void _initControllers(PlayerCreateInfoEntity i) {
-    race.value = i.race;
-    playerClass.value = i.class_;
-    map.value = i.map;
-    zone.value = i.zone;
-    positionX.value = i.positionX;
-    positionY.value = i.positionY;
-    positionZ.value = i.positionZ;
-    orientation.value = i.orientation;
+    raceController.text = _fmt(i.race);
+    playerClassController.text = _fmt(i.class_);
+    mapController.text = _fmt(i.map);
+    zoneController.text = _fmt(i.zone);
+    positionXController.text = _fmt(i.positionX);
+    positionYController.text = _fmt(i.positionY);
+    positionZController.text = _fmt(i.positionZ);
+    orientationController.text = _fmt(i.orientation);
   }
 
   Future<void> save(BuildContext context) async {
@@ -85,16 +99,25 @@ class PlayerCreateInfoDetailViewModel {
 
   PlayerCreateInfoEntity _collect() {
     return PlayerCreateInfoEntity(
-      race: race.value,
-      class_: playerClass.value,
-      map: map.value,
-      zone: zone.value,
-      positionX: positionX.value,
-      positionY: positionY.value,
-      positionZ: positionZ.value,
-      orientation: orientation.value,
+      race: _pi(raceController.text),
+      class_: _pi(playerClassController.text),
+      map: _pi(mapController.text),
+      zone: _pi(zoneController.text),
+      positionX: _pd(positionXController.text),
+      positionY: _pd(positionYController.text),
+      positionZ: _pd(positionZController.text),
+      orientation: _pd(orientationController.text),
     );
   }
 
-  void dispose() {}
+  void dispose() {
+    mapController.dispose();
+    orientationController.dispose();
+    playerClassController.dispose();
+    positionXController.dispose();
+    positionYController.dispose();
+    positionZController.dispose();
+    raceController.dispose();
+    zoneController.dispose();
+  }
 }

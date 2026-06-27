@@ -98,9 +98,9 @@ class _PlayerCreateInfoSpellCustomViewState extends State<PlayerCreateInfoSpellC
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 400),
         child: Column(mainAxisSize: MainAxisSize.min, spacing: 16, children: [
-          FormItem(label: '种族掩码', placeholder: 'racemask', child: FoxyNumberInput<int>(value: viewModel.racemask.value, onChanged: (v) => viewModel.racemask.value = v)),
-          FormItem(label: '职业掩码', placeholder: 'classmask', child: FoxyNumberInput<int>(value: viewModel.classmask.value, onChanged: (v) => viewModel.classmask.value = v)),
-          FormItem(label: '法术', placeholder: 'spell', child: FoxyNumberInput<int>(value: viewModel.spell.value, onChanged: (v) => viewModel.spell.value = v)),
+          FormItem(label: '种族掩码', placeholder: 'racemask', child: FoxyNumberInput<int>(controller: viewModel.racemaskController)),
+          FormItem(label: '职业掩码', placeholder: 'classmask', child: FoxyNumberInput<int>(controller: viewModel.classmaskController)),
+          FormItem(label: '法术', placeholder: 'spell', child: FoxyNumberInput<int>(controller: viewModel.spellController)),
           FormItem(controller: viewModel.noteController, label: '备注', placeholder: 'note'),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             ShadButton.outline(onPressed: () => Navigator.of(c).pop(), child: Text('取消')),

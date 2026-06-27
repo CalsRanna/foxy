@@ -14,17 +14,31 @@ class SpellLootTemplateViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final item = signal<int>(0);
-  final reference = signal<int>(0);
-  final chance = signal<double>(0.0);
-  final questRequired = signal<int>(0);
-  final lootMode = signal<int>(0);
-  final groupId = signal<int>(0);
-  final minCount = signal<int>(0);
-  final maxCount = signal<int>(0);
+  final itemController = TextEditingController();
+  final referenceController = TextEditingController();
+  final chanceController = TextEditingController();
+  final questRequiredController = TextEditingController();
+  final lootModeController = TextEditingController();
+  final groupIdController = TextEditingController();
+  final minCountController = TextEditingController();
+  final maxCountController = TextEditingController();
   final commentController = TextEditingController();
 
   final _repository = GetIt.instance.get<SpellLootTemplateRepository>();
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+  double _pd(String t) => double.tryParse(t) ?? 0.0;
 
   Future<void> load() async {
     final data = await _repository.getSpellLootTemplates(spellId.value);
@@ -33,40 +47,40 @@ class SpellLootTemplateViewModel {
   }
 
   void resetForm() {
-    item.value = 0;
-    reference.value = 0;
-    chance.value = 0.0;
-    questRequired.value = 0;
-    lootMode.value = 0;
-    groupId.value = 0;
-    minCount.value = 0;
-    maxCount.value = 0;
+    itemController.text = _fmt(0);
+    referenceController.text = _fmt(0);
+    chanceController.text = _fmt(0.0);
+    questRequiredController.text = _fmt(0);
+    lootModeController.text = _fmt(0);
+    groupIdController.text = _fmt(0);
+    minCountController.text = _fmt(0);
+    maxCountController.text = _fmt(0);
     commentController.clear();
   }
 
   void fillForm(SpellLootTemplateEntity data) {
-    item.value = data.item;
-    reference.value = data.reference;
-    chance.value = data.chance;
-    questRequired.value = data.questRequired;
-    lootMode.value = data.lootMode;
-    groupId.value = data.groupId;
-    minCount.value = data.minCount;
-    maxCount.value = data.maxCount;
+    itemController.text = _fmt(data.item);
+    referenceController.text = _fmt(data.reference);
+    chanceController.text = _fmt(data.chance);
+    questRequiredController.text = _fmt(data.questRequired);
+    lootModeController.text = _fmt(data.lootMode);
+    groupIdController.text = _fmt(data.groupId);
+    minCountController.text = _fmt(data.minCount);
+    maxCountController.text = _fmt(data.maxCount);
     commentController.text = data.comment;
   }
 
   SpellLootTemplateEntity collectFromForm() {
     final data = SpellLootTemplateEntity(
       entry: spellId.value,
-      item: item.value,
-      reference: reference.value,
-      chance: chance.value,
-      questRequired: questRequired.value,
-      lootMode: lootMode.value,
-      groupId: groupId.value,
-      minCount: minCount.value,
-      maxCount: maxCount.value,
+      item: _pi(itemController.text),
+      reference: _pi(referenceController.text),
+      chance: _pd(chanceController.text),
+      questRequired: _pi(questRequiredController.text),
+      lootMode: _pi(lootModeController.text),
+      groupId: _pi(groupIdController.text),
+      minCount: _pi(minCountController.text),
+      maxCount: _pi(maxCountController.text),
       comment: commentController.text,
     );
     return data;
@@ -196,6 +210,14 @@ class SpellLootTemplateViewModel {
   }
 
   void dispose() {
+    chanceController.dispose();
     commentController.dispose();
+    groupIdController.dispose();
+    itemController.dispose();
+    lootModeController.dispose();
+    maxCountController.dispose();
+    minCountController.dispose();
+    questRequiredController.dispose();
+    referenceController.dispose();
   }
 }

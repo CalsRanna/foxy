@@ -52,8 +52,7 @@ class _AchievementViewState extends State<AchievementView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        value: viewModel.id.value,
-        onChanged: (v) => viewModel.id.value = v,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -61,24 +60,21 @@ class _AchievementViewState extends State<AchievementView> {
       label: '阵营',
       child: FoxyNumberInput<int>(
         placeholder: 'Faction',
-        value: viewModel.faction.value,
-        onChanged: (v) => viewModel.faction.value = v,
+        controller: viewModel.factionController,
       ),
     );
     final instanceIdInput = FormItem(
       label: '实例编号',
       child: FoxyNumberInput<int>(
         placeholder: 'Instance_ID',
-        value: viewModel.instanceId.value,
-        onChanged: (v) => viewModel.instanceId.value = v,
+        controller: viewModel.instanceIdController,
       ),
     );
     final supercedesInput = FormItem(
       label: '前置成就',
       child: FoxyNumberInput<int>(
         placeholder: 'Supercedes',
-        value: viewModel.supercedes.value,
-        onChanged: (v) => viewModel.supercedes.value = v,
+        controller: viewModel.supercedesController,
       ),
     );
 
@@ -232,56 +228,49 @@ class _AchievementViewState extends State<AchievementView> {
       label: '类别',
       child: FoxyNumberInput<int>(
         placeholder: 'Category',
-        value: viewModel.category.value,
-        onChanged: (v) => viewModel.category.value = v,
+        controller: viewModel.categoryController,
       ),
     );
     final pointsInput = FormItem(
       label: '点数',
       child: FoxyNumberInput<int>(
         placeholder: 'Points',
-        value: viewModel.points.value,
-        onChanged: (v) => viewModel.points.value = v,
+        controller: viewModel.pointsController,
       ),
     );
     final uiOrderInput = FormItem(
       label: '排序',
       child: FoxyNumberInput<int>(
         placeholder: 'Ui_order',
-        value: viewModel.uiOrder.value,
-        onChanged: (v) => viewModel.uiOrder.value = v,
+        controller: viewModel.uiOrderController,
       ),
     );
     final flagsInput = FormItem(
       label: '标识',
       child: FoxyNumberInput<int>(
         placeholder: 'Flags',
-        value: viewModel.flags.value,
-        onChanged: (v) => viewModel.flags.value = v,
+        controller: viewModel.flagsController,
       ),
     );
     final iconIdInput = FormItem(
       label: '图标编号',
       child: FoxyNumberInput<int>(
         placeholder: 'IconID',
-        value: viewModel.iconId.value,
-        onChanged: (v) => viewModel.iconId.value = v,
+        controller: viewModel.iconIdController,
       ),
     );
     final minimumCriteriaInput = FormItem(
       label: '最小完成条件',
       child: FoxyNumberInput<int>(
         placeholder: 'Minimum_criteria',
-        value: viewModel.minimumCriteria.value,
-        onChanged: (v) => viewModel.minimumCriteria.value = v,
+        controller: viewModel.minimumCriteriaController,
       ),
     );
     final sharesCriteriaInput = FormItem(
       label: '共享条件',
       child: FoxyNumberInput<int>(
         placeholder: 'Shares_criteria',
-        value: viewModel.sharesCriteria.value,
-        onChanged: (v) => viewModel.sharesCriteria.value = v,
+        controller: viewModel.sharesCriteriaController,
       ),
     );
 

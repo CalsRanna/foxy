@@ -190,8 +190,7 @@ class _CreatureTemplateResistanceViewState
           FormItem(
             label: '抗性值',
             child: FoxyNumberInput<int>(
-              value: viewModel.resistance.value,
-              onChanged: (v) => viewModel.resistance.value = v,
+              controller: viewModel.resistanceController,
               placeholder: 'Resistance',
             ),
           ),
@@ -200,8 +199,7 @@ class _CreatureTemplateResistanceViewState
           FormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              value: viewModel.verifiedBuild.value,
-              onChanged: (v) => viewModel.verifiedBuild.value = v,
+              controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

@@ -38,8 +38,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: '编号',
       placeholder: 'entry',
       child: FoxyNumberInput<int>(
-        value: viewModel.entry.value,
-        onChanged: (v) => viewModel.entry.value = v,
+        controller: viewModel.entryController,
         readOnly: true,
       ),
     );
@@ -93,16 +92,14 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: '外观模型',
       placeholder: 'displayId',
       child: FoxyNumberInput<int>(
-        value: viewModel.displayId.value,
-        onChanged: (v) => viewModel.displayId.value = v,
+        controller: viewModel.displayIdController,
       ),
     );
     final sizeInput = FormItem(
       label: '尺寸',
       placeholder: 'size',
       child: FoxyNumberInput<double>(
-        value: viewModel.size.value,
-        onChanged: (v) => viewModel.size.value = v,
+        controller: viewModel.sizeController,
       ),
     );
     final unk1Input = FormItem(
@@ -148,8 +145,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: 'VerifiedBuild',
       placeholder: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
-        value: viewModel.verifiedBuild.value,
-        onChanged: (v) => viewModel.verifiedBuild.value = v,
+        controller: viewModel.verifiedBuildController,
       ),
     );
 

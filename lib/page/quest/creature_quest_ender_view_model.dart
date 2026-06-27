@@ -12,7 +12,7 @@ class CreatureQuestEnderViewModel {
   final items = signal<List<BriefCreatureQuestEnderEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final id = signal<int>(0);
-  final quest = signal<int>(0);
+  final questController = TextEditingController();
 
   int _originalId = 0;
   int _originalQuest = 0;
@@ -23,11 +23,24 @@ class CreatureQuestEnderViewModel {
   CreatureQuestEnderEntity collectFromForm() {
     return CreatureQuestEnderEntity(
       id: id.value,
-      quest: quest.value,
+      quest: _pi(questController.text),
     );
   }
 
   /// 复制记录
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> copy(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
@@ -127,7 +140,9 @@ class CreatureQuestEnderViewModel {
   }
 
   /// 清理资源
-  void dispose() {}
+  void dispose() {
+    questController.dispose();
+  }
 
   /// 编辑选中记录
   Future<void> edit() async {
@@ -153,7 +168,7 @@ class CreatureQuestEnderViewModel {
   /// 填充表单
   void fillForm(CreatureQuestEnderEntity model) {
     id.value = model.id;
-    quest.value = model.quest;
+    questController.text = _fmt(model.quest);
   }
 
   /// 初始化
@@ -177,7 +192,7 @@ class CreatureQuestEnderViewModel {
   /// 重置表单
   void resetForm() {
     id.value = 0;
-    quest.value = 0;
+    questController.text = _fmt(0);
   }
 
   /// 保存新记录

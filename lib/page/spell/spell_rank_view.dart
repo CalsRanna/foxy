@@ -163,8 +163,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                   label: '起始技能',
                   placeholder: 'first_spell_id',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.firstSpellId.value,
-                    onChanged: (v) => viewModel.firstSpellId.value = v,
+                    controller: viewModel.firstSpellIdController,
                   ),
                 ),
               ),
@@ -173,8 +172,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                   label: '技能',
                   placeholder: 'spell_id',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.rankSpellId.value,
-                    onChanged: (v) => viewModel.rankSpellId.value = v,
+                    controller: viewModel.rankSpellIdController,
                   ),
                 ),
               ),
@@ -183,8 +181,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                   label: '排行',
                   placeholder: 'rank',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.rank.value,
-                    onChanged: (v) => viewModel.rank.value = v,
+                    controller: viewModel.rankController,
                   ),
                 ),
               ),

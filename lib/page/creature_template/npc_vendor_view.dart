@@ -195,8 +195,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FormItem(
             label: '插槽',
             child: FoxyNumberInput<int>(
-              value: viewModel.slot.value,
-              onChanged: (v) => viewModel.slot.value = v,
+              controller: viewModel.slotController,
               placeholder: 'slot',
             ),
           ),
@@ -214,8 +213,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FormItem(
             label: '最大数量',
             child: FoxyNumberInput<int>(
-              value: viewModel.maxcount.value,
-              onChanged: (v) => viewModel.maxcount.value = v,
+              controller: viewModel.maxcountController,
               placeholder: 'maxcount (0=无限)',
             ),
           ),
@@ -224,8 +222,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FormItem(
             label: '补货时间',
             child: FoxyNumberInput<int>(
-              value: viewModel.incrtime.value,
-              onChanged: (v) => viewModel.incrtime.value = v,
+              controller: viewModel.incrtimeController,
               placeholder: 'incrtime (秒)',
             ),
           ),
@@ -243,8 +240,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              value: viewModel.verifiedBuild.value,
-              onChanged: (v) => viewModel.verifiedBuild.value = v,
+              controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

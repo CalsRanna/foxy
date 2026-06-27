@@ -187,8 +187,7 @@ class _ItemEnchantmentTemplateViewState
             label: '几率',
             placeholder: 'Chance (%)',
             child: FoxyNumberInput<double>(
-              value: viewModel.chance.value,
-              onChanged: (v) => viewModel.chance.value = v,
+              controller: viewModel.chanceController,
             ),
           ),
           SizedBox(height: 24),

@@ -14,13 +14,26 @@ class PageTextDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PageTextRepository>();
 
-  final id = signal<int>(0);
+  final idController = TextEditingController();
   final textController = TextEditingController();
-  final nextPageId = signal<int>(0);
-  final verifiedBuild = signal<int>(0);
+  final nextPageIdController = TextEditingController();
+  final verifiedBuildController = TextEditingController();
 
   final page = signal<PageTextEntity?>(null);
   final locales = signal<List<PageTextLocaleEntity>>([]);
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
@@ -33,10 +46,10 @@ class PageTextDetailViewModel {
   }
 
   void _initControllers(PageTextEntity pt) {
-    id.value = pt.id;
+    idController.text = _fmt(pt.id);
     textController.text = pt.text;
-    nextPageId.value = pt.nextPageId;
-    verifiedBuild.value = pt.verifiedBuild;
+    nextPageIdController.text = _fmt(pt.nextPageId);
+    verifiedBuildController.text = _fmt(pt.verifiedBuild);
   }
 
   Future<void> save(BuildContext context) async {
@@ -75,14 +88,17 @@ class PageTextDetailViewModel {
 
   PageTextEntity _collect() {
     return PageTextEntity(
-      id: id.value,
+      id: _pi(idController.text),
       text: textController.text,
-      nextPageId: nextPageId.value,
-      verifiedBuild: verifiedBuild.value,
+      nextPageId: _pi(nextPageIdController.text),
+      verifiedBuild: _pi(verifiedBuildController.text),
     );
   }
 
   void dispose() {
+    idController.dispose();
+    nextPageIdController.dispose();
     textController.dispose();
+    verifiedBuildController.dispose();
   }
 }

@@ -40,7 +40,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
             child: FormItem(
               label: '编号',
               child: FoxyNumberInput<int>(
-                value: vm.id.value,
+                controller: vm.idController,
                 readOnly: true,
               ),
             ),
@@ -50,8 +50,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '最大等级',
               placeholder: 'MaxLevel',
               child: FoxyNumberInput<int>(
-                value: vm.maxLevel.value,
-                onChanged: (v) => vm.maxLevel.value = v,
+                controller: vm.maxLevelController,
               ),
             ),
           ),
@@ -60,8 +59,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '允许职业',
               placeholder: 'AllowableClasses',
               child: FoxyNumberInput<int>(
-                value: vm.allowableClasses.value,
-                onChanged: (v) => vm.allowableClasses.value = v,
+                controller: vm.allowableClassesController,
               ),
             ),
           ),
@@ -70,8 +68,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '来源法术',
               placeholder: 'SourceSpellId',
               child: FoxyNumberInput<int>(
-                value: vm.sourceSpellId.value,
-                onChanged: (v) => vm.sourceSpellId.value = v,
+                controller: vm.sourceSpellIdController,
               ),
             ),
           ),
@@ -85,8 +82,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '前置任务',
               placeholder: 'PrevQuestID',
               child: FoxyNumberInput<int>(
-                value: vm.prevQuestId.value,
-                onChanged: (v) => vm.prevQuestId.value = v,
+                controller: vm.prevQuestIdController,
               ),
             ),
           ),
@@ -95,8 +91,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '后续任务',
               placeholder: 'NextQuestID',
               child: FoxyNumberInput<int>(
-                value: vm.nextQuestId.value,
-                onChanged: (v) => vm.nextQuestId.value = v,
+                controller: vm.nextQuestIdController,
               ),
             ),
           ),
@@ -105,8 +100,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '互斥组',
               placeholder: 'ExclusiveGroup',
               child: FoxyNumberInput<int>(
-                value: vm.exclusiveGroup.value,
-                onChanged: (v) => vm.exclusiveGroup.value = v,
+                controller: vm.exclusiveGroupController,
               ),
             ),
           ),
@@ -121,8 +115,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '奖励邮件模板',
               placeholder: 'RewardMailTemplateId',
               child: FoxyNumberInput<int>(
-                value: vm.rewardMailTemplateId.value,
-                onChanged: (v) => vm.rewardMailTemplateId.value = v,
+                controller: vm.rewardMailTemplateIdController,
               ),
             ),
           ),
@@ -131,8 +124,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '奖励邮件延迟',
               placeholder: 'RewardMailDelay',
               child: FoxyNumberInput<int>(
-                value: vm.rewardMailDelay.value,
-                onChanged: (v) => vm.rewardMailDelay.value = v,
+                controller: vm.rewardMailDelayController,
               ),
             ),
           ),
@@ -141,8 +133,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '需要技能',
               placeholder: 'RequiredSkillId',
               child: FoxyNumberInput<int>(
-                value: vm.requiredSkillId.value,
-                onChanged: (v) => vm.requiredSkillId.value = v,
+                controller: vm.requiredSkillIdController,
               ),
             ),
           ),
@@ -151,8 +142,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '需要技能点数',
               placeholder: 'RequiredSkillPoints',
               child: FoxyNumberInput<int>(
-                value: vm.requiredSkillPoints.value,
-                onChanged: (v) => vm.requiredSkillPoints.value = v,
+                controller: vm.requiredSkillPointsController,
               ),
             ),
           ),
@@ -166,8 +156,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '最低声望阵营',
               placeholder: 'RequiredMinRepFaction',
               child: FoxyNumberInput<int>(
-                value: vm.requiredMinRepFaction.value,
-                onChanged: (v) => vm.requiredMinRepFaction.value = v,
+                controller: vm.requiredMinRepFactionController,
               ),
             ),
           ),
@@ -176,8 +165,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '最高声望阵营',
               placeholder: 'RequiredMaxRepFaction',
               child: FoxyNumberInput<int>(
-                value: vm.requiredMaxRepFaction.value,
-                onChanged: (v) => vm.requiredMaxRepFaction.value = v,
+                controller: vm.requiredMaxRepFactionController,
               ),
             ),
           ),
@@ -186,8 +174,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '最低声望值',
               placeholder: 'RequiredMinRepValue',
               child: FoxyNumberInput<int>(
-                value: vm.requiredMinRepValue.value,
-                onChanged: (v) => vm.requiredMinRepValue.value = v,
+                controller: vm.requiredMinRepValueController,
               ),
             ),
           ),
@@ -196,8 +183,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '最高声望值',
               placeholder: 'RequiredMaxRepValue',
               child: FoxyNumberInput<int>(
-                value: vm.requiredMaxRepValue.value,
-                onChanged: (v) => vm.requiredMaxRepValue.value = v,
+                controller: vm.requiredMaxRepValueController,
               ),
             ),
           ),
@@ -211,8 +197,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '提供物品数量',
               placeholder: 'ProvidedItemCount',
               child: FoxyNumberInput<int>(
-                value: vm.providedItemCount.value,
-                onChanged: (v) => vm.providedItemCount.value = v,
+                controller: vm.providedItemCountController,
               ),
             ),
           ),
@@ -221,8 +206,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               label: '特殊标志',
               placeholder: 'SpecialFlags',
               child: FoxyNumberInput<int>(
-                value: vm.specialFlags.value,
-                onChanged: (v) => vm.specialFlags.value = v,
+                controller: vm.specialFlagsController,
               ),
             ),
           ),

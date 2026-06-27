@@ -51,7 +51,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FormItem(
                         label: '编号',
                         child: FoxyNumberInput<int>(
-                          value: viewModel.creatureId.value,
+                          controller: viewModel.creatureIdController,
                           placeholder: 'entry',
                           readOnly: true,
                         ),
@@ -61,8 +61,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FormItem(
                         label: '路径ID',
                         child: FoxyNumberInput<int>(
-                          value: viewModel.pathId.value,
-                          onChanged: (v) => viewModel.pathId.value = v,
+                          controller: viewModel.pathIdController,
                           placeholder: 'path_id',
                         ),
                       ),
@@ -71,8 +70,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FormItem(
                         label: '坐骑编号',
                         child: FoxyNumberInput<int>(
-                          value: viewModel.mount.value,
-                          onChanged: (v) => viewModel.mount.value = v,
+                          controller: viewModel.mountController,
                           placeholder: 'mount',
                         ),
                       ),
@@ -81,8 +79,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FormItem(
                         label: '表情',
                         child: FoxyNumberInput<int>(
-                          value: viewModel.emote.value,
-                          onChanged: (v) => viewModel.emote.value = v,
+                          controller: viewModel.emoteController,
                           placeholder: 'emote',
                         ),
                       ),
@@ -96,8 +93,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FormItem(
                         label: '覆盖标识1',
                         child: FoxyNumberInput<int>(
-                          value: viewModel.bytes1.value,
-                          onChanged: (v) => viewModel.bytes1.value = v,
+                          controller: viewModel.bytes1Controller,
                           placeholder: 'bytes1',
                         ),
                       ),
@@ -106,8 +102,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FormItem(
                         label: '覆盖标识2',
                         child: FoxyNumberInput<int>(
-                          value: viewModel.bytes2.value,
-                          onChanged: (v) => viewModel.bytes2.value = v,
+                          controller: viewModel.bytes2Controller,
                           placeholder: 'bytes2',
                         ),
                       ),
@@ -116,9 +111,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FormItem(
                         label: '可见距离类型',
                         child: FoxyNumberInput<int>(
-                          value: viewModel.visibilityDistanceType.value,
-                          onChanged: (v) =>
-                              viewModel.visibilityDistanceType.value = v,
+                          controller: viewModel.visibilityDistanceTypeController,
                           placeholder: 'visibilityDistanceType',
                         ),
                       ),

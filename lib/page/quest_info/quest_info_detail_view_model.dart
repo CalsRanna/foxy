@@ -13,11 +13,24 @@ class QuestInfoDetailViewModel {
   final _repository = GetIt.instance.get<QuestInfoRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final id = signal<int>(0);
+  final idController = TextEditingController();
   final nameController = TextEditingController();
 
   final info = signal(QuestInfoEntity());
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -49,7 +62,7 @@ class QuestInfoDetailViewModel {
   /// 从所有 Controller 收集数据构建 QuestInfo
   QuestInfoEntity _collectFromControllers() {
     return QuestInfoEntity(
-      id: id.value,
+      id: _pi(idController.text),
       infoNameLangZhCn: nameController.text,
     );
   }
@@ -66,6 +79,7 @@ class QuestInfoDetailViewModel {
   }
 
   void dispose() {
+    idController.dispose();
     nameController.dispose();
   }
 
@@ -80,7 +94,7 @@ class QuestInfoDetailViewModel {
   }
 
   void _initControllers(QuestInfoEntity table) {
-    id.value = table.id;
+    idController.text = _fmt(table.id);
     nameController.text = table.infoNameLangZhCn;
   }
 }

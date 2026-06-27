@@ -13,13 +13,26 @@ class SpellBonusDataViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
-  final directBonus = signal<double>(0.0);
-  final dotBonus = signal<double>(0.0);
-  final apBonus = signal<double>(0.0);
-  final apDotBonus = signal<double>(0.0);
+  final directBonusController = TextEditingController();
+  final dotBonusController = TextEditingController();
+  final apBonusController = TextEditingController();
+  final apDotBonusController = TextEditingController();
   final commentsController = TextEditingController();
 
   final bonusData = signal(SpellBonusDataEntity());
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  double _pd(String t) => double.tryParse(t) ?? 0.0;
 
   Future<void> load() async {
     final data = await _repository.getSpellBonusData(spellId.value);
@@ -49,19 +62,19 @@ class SpellBonusDataViewModel {
   SpellBonusDataEntity _collectFromControllers() {
     return SpellBonusDataEntity(
       entry: spellId.value,
-      directBonus: directBonus.value,
-      dotBonus: dotBonus.value,
-      apBonus: apBonus.value,
-      apDotBonus: apDotBonus.value,
+      directBonus: _pd(directBonusController.text),
+      dotBonus: _pd(dotBonusController.text),
+      apBonus: _pd(apBonusController.text),
+      apDotBonus: _pd(apDotBonusController.text),
       comments: commentsController.text,
     );
   }
 
   void initControllers(SpellBonusDataEntity data) {
-    directBonus.value = data.directBonus;
-    dotBonus.value = data.dotBonus;
-    apBonus.value = data.apBonus;
-    apDotBonus.value = data.apDotBonus;
+    directBonusController.text = _fmt(data.directBonus);
+    dotBonusController.text = _fmt(data.dotBonus);
+    apBonusController.text = _fmt(data.apBonus);
+    apDotBonusController.text = _fmt(data.apDotBonus);
     commentsController.text = data.comments;
   }
 
@@ -76,6 +89,10 @@ class SpellBonusDataViewModel {
   }
 
   void dispose() {
+    apBonusController.dispose();
+    apDotBonusController.dispose();
     commentsController.dispose();
+    directBonusController.dispose();
+    dotBonusController.dispose();
   }
 }

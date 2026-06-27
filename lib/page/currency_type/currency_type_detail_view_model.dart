@@ -13,14 +13,27 @@ class CurrencyTypeDetailViewModel {
   final _repository = GetIt.instance.get<CurrencyTypeRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final id = signal<int>(0);
-  final itemId = signal<int>(0);
-  final categoryId = signal<int>(0);
-  final bitIndex = signal<int>(0);
+  final idController = TextEditingController();
+  final itemIdController = TextEditingController();
+  final categoryIdController = TextEditingController();
+  final bitIndexController = TextEditingController();
 
   final currencyType = signal(CurrencyTypeEntity());
 
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -52,10 +65,10 @@ class CurrencyTypeDetailViewModel {
   /// 从所有 Controller 收集数据构建 CurrencyType
   CurrencyTypeEntity _collectFromControllers() {
     return CurrencyTypeEntity(
-      id: id.value,
-      itemId: itemId.value,
-      categoryId: categoryId.value,
-      bitIndex: bitIndex.value,
+      id: _pi(idController.text),
+      itemId: _pi(itemIdController.text),
+      categoryId: _pi(categoryIdController.text),
+      bitIndex: _pi(bitIndexController.text),
     );
   }
 
@@ -70,7 +83,12 @@ class CurrencyTypeDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  void dispose() {}
+  void dispose() {
+    bitIndexController.dispose();
+    categoryIdController.dispose();
+    idController.dispose();
+    itemIdController.dispose();
+  }
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -84,9 +102,9 @@ class CurrencyTypeDetailViewModel {
   }
 
   void _initControllers(CurrencyTypeEntity currencyType) {
-    id.value = currencyType.id;
-    itemId.value = currencyType.itemId;
-    categoryId.value = currencyType.categoryId;
-    bitIndex.value = currencyType.bitIndex;
+    idController.text = _fmt(currencyType.id);
+    itemIdController.text = _fmt(currencyType.itemId);
+    categoryIdController.text = _fmt(currencyType.categoryId);
+    bitIndexController.text = _fmt(currencyType.bitIndex);
   }
 }

@@ -13,12 +13,25 @@ class GameObjectTemplateAddonViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectId = signal<int>(0);
 
-  final faction = signal<int>(0);
-  final flags = signal<int>(0);
-  final minGold = signal<int>(0);
-  final maxGold = signal<int>(0);
+  final factionController = TextEditingController();
+  final flagsController = TextEditingController();
+  final minGoldController = TextEditingController();
+  final maxGoldController = TextEditingController();
 
   final addon = signal(GameObjectTemplateAddonEntity());
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
     final data = await _repository.getGameObjectTemplateAddon(
@@ -51,18 +64,18 @@ class GameObjectTemplateAddonViewModel {
   GameObjectTemplateAddonEntity _collectFromControllers() {
     return GameObjectTemplateAddonEntity(
       entry: gameObjectId.value,
-      faction: faction.value,
-      flags: flags.value,
-      minGold: minGold.value,
-      maxGold: maxGold.value,
+      faction: _pi(factionController.text),
+      flags: _pi(flagsController.text),
+      minGold: _pi(minGoldController.text),
+      maxGold: _pi(maxGoldController.text),
     );
   }
 
   void _initSignals(GameObjectTemplateAddonEntity data) {
-    faction.value = data.faction;
-    flags.value = data.flags;
-    minGold.value = data.minGold;
-    maxGold.value = data.maxGold;
+    factionController.text = _fmt(data.faction);
+    flagsController.text = _fmt(data.flags);
+    minGoldController.text = _fmt(data.minGold);
+    maxGoldController.text = _fmt(data.maxGold);
   }
 
   Future<void> initSignals({required int gameObjectId}) async {
@@ -75,5 +88,10 @@ class GameObjectTemplateAddonViewModel {
     }
   }
 
-  void dispose() {}
+  void dispose() {
+    factionController.dispose();
+    flagsController.dispose();
+    maxGoldController.dispose();
+    minGoldController.dispose();
+  }
 }

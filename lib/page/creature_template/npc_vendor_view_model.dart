@@ -15,12 +15,12 @@ class NpcVendorViewModel {
   final items = signal<List<BriefNpcVendorEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final slot = signal<int>(0);
+  final slotController = TextEditingController();
   final itemController = TextEditingController();
-  final maxcount = signal<int>(0);
-  final incrtime = signal<int>(0);
+  final maxcountController = TextEditingController();
+  final incrtimeController = TextEditingController();
   final extendedCost = signal<int>(0);
-  final verifiedBuild = signal<int>(0);
+  final verifiedBuildController = TextEditingController();
 
   // 内部状态
   int? _editingSlot;
@@ -28,6 +28,19 @@ class NpcVendorViewModel {
   final _repository = GetIt.instance.get<NpcVendorRepository>();
 
   /// 加载数据
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> load() async {
     final data = await _repository.getNpcVendors(entry.value);
     items.value = data;
@@ -36,34 +49,34 @@ class NpcVendorViewModel {
 
   /// 重置表单
   void resetForm() {
-    slot.value = 0;
+    slotController.text = _fmt(0);
     itemController.clear();
-    maxcount.value = 0;
-    incrtime.value = 0;
+    maxcountController.text = _fmt(0);
+    incrtimeController.text = _fmt(0);
     extendedCost.value = 0;
-    verifiedBuild.value = 0;
+    verifiedBuildController.text = _fmt(0);
   }
 
   /// 填充表单
   void fillForm(BriefNpcVendorEntity vendor) {
-    slot.value = vendor.slot;
+    slotController.text = _fmt(vendor.slot);
     itemController.text = vendor.item.toString();
-    maxcount.value = vendor.maxcount;
-    incrtime.value = vendor.incrtime;
+    maxcountController.text = _fmt(vendor.maxcount);
+    incrtimeController.text = _fmt(vendor.incrtime);
     extendedCost.value = vendor.extendedCost;
-    verifiedBuild.value = vendor.verifiedBuild;
+    verifiedBuildController.text = _fmt(vendor.verifiedBuild);
   }
 
   /// 从表单收集数据
   NpcVendorEntity collectFromForm() {
     return NpcVendorEntity(
       entry: entry.value,
-      slot: slot.value,
+      slot: _pi(slotController.text),
       item: _parseInt(itemController.text),
-      maxcount: maxcount.value,
-      incrtime: incrtime.value,
+      maxcount: _pi(maxcountController.text),
+      incrtime: _pi(incrtimeController.text),
       extendedCost: extendedCost.value,
-      verifiedBuild: verifiedBuild.value,
+      verifiedBuild: _pi(verifiedBuildController.text),
     );
   }
 
@@ -79,7 +92,7 @@ class NpcVendorViewModel {
     try {
       final nextSlot = await _repository.getNextSlot(entry.value);
       resetForm();
-      slot.value = nextSlot;
+      slotController.text = _fmt(nextSlot);
       selectedIndex.value = null;
       _editingSlot = null;
     } catch (e) {
@@ -214,6 +227,10 @@ class NpcVendorViewModel {
 
   /// 清理资源
   void dispose() {
+    incrtimeController.dispose();
     itemController.dispose();
+    maxcountController.dispose();
+    slotController.dispose();
+    verifiedBuildController.dispose();
   }
 }

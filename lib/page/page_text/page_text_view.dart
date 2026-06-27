@@ -34,8 +34,7 @@ class _PageTextViewState extends State<PageTextView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        value: viewModel.id.value,
-        onChanged: (v) => viewModel.id.value = v,
+        controller: viewModel.idController,
         readOnly: widget.id != null,
       ),
     );
@@ -48,16 +47,14 @@ class _PageTextViewState extends State<PageTextView> {
       label: '下一页编号',
       child: FoxyNumberInput<int>(
         placeholder: 'NextPageID',
-        value: viewModel.nextPageId.value,
-        onChanged: (v) => viewModel.nextPageId.value = v,
+        controller: viewModel.nextPageIdController,
       ),
     );
     final verifiedBuildInput = FormItem(
       label: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
         placeholder: 'VerifiedBuild',
-        value: viewModel.verifiedBuild.value,
-        onChanged: (v) => viewModel.verifiedBuild.value = v,
+        controller: viewModel.verifiedBuildController,
       ),
     );
 

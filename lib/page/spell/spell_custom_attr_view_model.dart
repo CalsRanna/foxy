@@ -13,9 +13,22 @@ class SpellCustomAttrViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
-  final attributes = signal<int>(0);
+  final attributesController = TextEditingController();
 
   final customAttr = signal(SpellCustomAttrEntity());
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
     final data = await _repository.getSpellCustomAttr(spellId.value);
@@ -45,13 +58,13 @@ class SpellCustomAttrViewModel {
   SpellCustomAttrEntity _collectFromControllers() {
     final data = SpellCustomAttrEntity(
       spellId: spellId.value,
-      attributes: attributes.value,
+      attributes: _pi(attributesController.text),
     );
     return data;
   }
 
   void initControllers(SpellCustomAttrEntity data) {
-    attributes.value = data.attributes;
+    attributesController.text = _fmt(data.attributes);
   }
 
   Future<void> initSignals({required int spellId}) async {
@@ -64,5 +77,7 @@ class SpellCustomAttrViewModel {
     }
   }
 
-  void dispose() {}
+  void dispose() {
+    attributesController.dispose();
+  }
 }

@@ -65,8 +65,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
                           label: '属性',
                           placeholder: 'attributes',
                           child: FoxyNumberInput<int>(
-                            value: viewModel.attributes.value,
-                            onChanged: (v) => viewModel.attributes.value = v,
+                            controller: viewModel.attributesController,
                           ),
                         ),
                       ),

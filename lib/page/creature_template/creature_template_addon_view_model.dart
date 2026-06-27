@@ -11,22 +11,35 @@ import 'package:signals/signals.dart';
 class CreatureTemplateAddonViewModel {
   final _repository = GetIt.instance.get<CreatureTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final creatureId = signal(0);
+  final creatureIdController = TextEditingController();
 
-  final pathId = signal<int>(0);
-  final mount = signal<int>(0);
-  final emote = signal<int>(0);
-  final bytes1 = signal<int>(0);
-  final bytes2 = signal<int>(0);
-  final visibilityDistanceType = signal<int>(0);
+  final pathIdController = TextEditingController();
+  final mountController = TextEditingController();
+  final emoteController = TextEditingController();
+  final bytes1Controller = TextEditingController();
+  final bytes2Controller = TextEditingController();
+  final visibilityDistanceTypeController = TextEditingController();
   final aurasController = TextEditingController();
 
   final addon = signal(CreatureTemplateAddonEntity());
 
   /// 从数据库加载数据
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> load() async {
     try {
-      final data = await _repository.getCreatureTemplateAddon(creatureId.value);
+      final data = await _repository.getCreatureTemplateAddon(_pi(creatureIdController.text));
       if (data != null) {
         addon.value = data;
         _initSignals(data);
@@ -60,32 +73,32 @@ class CreatureTemplateAddonViewModel {
   /// 从 Controller 收集数据构建 CreatureTemplateAddon
   CreatureTemplateAddonEntity _collectFromControllers() {
     return CreatureTemplateAddonEntity(
-      entry: creatureId.value,
-      pathId: pathId.value,
-      mount: mount.value,
-      emote: emote.value,
-      bytes1: bytes1.value,
-      bytes2: bytes2.value,
-      visibilityDistanceType: visibilityDistanceType.value,
+      entry: _pi(creatureIdController.text),
+      pathId: _pi(pathIdController.text),
+      mount: _pi(mountController.text),
+      emote: _pi(emoteController.text),
+      bytes1: _pi(bytes1Controller.text),
+      bytes2: _pi(bytes2Controller.text),
+      visibilityDistanceType: _pi(visibilityDistanceTypeController.text),
       auras: aurasController.text,
     );
   }
 
   /// 初始化 Controller 的值
   void _initSignals(CreatureTemplateAddonEntity data) {
-    pathId.value = data.pathId;
-    mount.value = data.mount;
-    emote.value = data.emote;
-    bytes1.value = data.bytes1;
-    bytes2.value = data.bytes2;
-    visibilityDistanceType.value = data.visibilityDistanceType;
+    pathIdController.text = _fmt(data.pathId);
+    mountController.text = _fmt(data.mount);
+    emoteController.text = _fmt(data.emote);
+    bytes1Controller.text = _fmt(data.bytes1);
+    bytes2Controller.text = _fmt(data.bytes2);
+    visibilityDistanceTypeController.text = _fmt(data.visibilityDistanceType);
     aurasController.text = data.auras;
   }
 
   /// 初始化 ViewModel
   Future<void> initSignals({required int creatureId}) async {
     try {
-      this.creatureId.value = creatureId;
+      creatureIdController.text = _fmt(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物附加失败: $e');
@@ -96,5 +109,12 @@ class CreatureTemplateAddonViewModel {
   /// 清理资源
   void dispose() {
     aurasController.dispose();
+    bytes1Controller.dispose();
+    bytes2Controller.dispose();
+    creatureIdController.dispose();
+    emoteController.dispose();
+    mountController.dispose();
+    pathIdController.dispose();
+    visibilityDistanceTypeController.dispose();
   }
 }

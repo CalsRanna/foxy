@@ -60,7 +60,7 @@ class _CreatureOnKillReputationViewState
                         child: FormItem(
                           label: '编号',
                           child: FoxyNumberInput<int>(
-                            value: viewModel.creatureId.value,
+                            controller: viewModel.creatureIdController,
                             placeholder: 'creature_id',
                             readOnly: true,
                           ),
@@ -70,9 +70,7 @@ class _CreatureOnKillReputationViewState
                         child: FormItem(
                           label: '区分阵营',
                           child: FoxyNumberInput<int>(
-                            value: viewModel.teamDependent.value,
-                            onChanged: (v) =>
-                                viewModel.teamDependent.value = v,
+                            controller: viewModel.teamDependentController,
                             placeholder: 'TeamDependent',
                           ),
                         ),
@@ -88,9 +86,7 @@ class _CreatureOnKillReputationViewState
                         child: FormItem(
                           label: '阵营1',
                           child: FoxyNumberInput<int>(
-                            value: viewModel.rewOnKillRepFaction1.value,
-                            onChanged: (v) =>
-                                viewModel.rewOnKillRepFaction1.value = v,
+                            controller: viewModel.rewOnKillRepFaction1Controller,
                             placeholder: 'RewOnKillRepFaction1',
                           ),
                         ),
@@ -99,9 +95,7 @@ class _CreatureOnKillReputationViewState
                         child: FormItem(
                           label: '阵营2',
                           child: FoxyNumberInput<int>(
-                            value: viewModel.rewOnKillRepFaction2.value,
-                            onChanged: (v) =>
-                                viewModel.rewOnKillRepFaction2.value = v,
+                            controller: viewModel.rewOnKillRepFaction2Controller,
                             placeholder: 'RewOnKillRepFaction2',
                           ),
                         ),
@@ -117,9 +111,7 @@ class _CreatureOnKillReputationViewState
                         child: FormItem(
                           label: '声望值1',
                           child: FoxyNumberInput<double>(
-                            value: viewModel.rewOnKillRepValue1.value,
-                            onChanged: (v) =>
-                                viewModel.rewOnKillRepValue1.value = v,
+                            controller: viewModel.rewOnKillRepValue1Controller,
                             placeholder: 'RewOnKillRepValue1',
                           ),
                         ),
@@ -128,9 +120,7 @@ class _CreatureOnKillReputationViewState
                         child: FormItem(
                           label: '声望值2',
                           child: FoxyNumberInput<double>(
-                            value: viewModel.rewOnKillRepValue2.value,
-                            onChanged: (v) =>
-                                viewModel.rewOnKillRepValue2.value = v,
+                            controller: viewModel.rewOnKillRepValue2Controller,
                             placeholder: 'RewOnKillRepValue2',
                           ),
                         ),

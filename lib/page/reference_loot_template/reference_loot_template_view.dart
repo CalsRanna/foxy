@@ -41,8 +41,7 @@ class _ReferenceLootTemplateViewState
       label: 'Entry',
       child: FoxyNumberInput<int>(
         placeholder: 'Entry',
-        value: viewModel.entry.value,
-        onChanged: (v) => viewModel.entry.value = v,
+        controller: viewModel.entryController,
       ),
     );
     final itemInput = FormItem(
@@ -56,16 +55,14 @@ class _ReferenceLootTemplateViewState
       label: '关联ID',
       child: FoxyNumberInput<int>(
         placeholder: 'Reference',
-        value: viewModel.reference.value,
-        onChanged: (v) => viewModel.reference.value = v,
+        controller: viewModel.referenceController,
       ),
     );
     final chanceInput = FormItem(
       label: '掉落几率',
       child: FoxyNumberInput<double>(
         placeholder: 'Chance (%)',
-        value: viewModel.chance.value,
-        onChanged: (v) => viewModel.chance.value = v,
+        controller: viewModel.chanceController,
       ),
     );
     final questRequiredInput = FormItem(
@@ -80,32 +77,28 @@ class _ReferenceLootTemplateViewState
       label: '掉落模式',
       child: FoxyNumberInput<int>(
         placeholder: 'LootMode',
-        value: viewModel.lootMode.value,
-        onChanged: (v) => viewModel.lootMode.value = v,
+        controller: viewModel.lootModeController,
       ),
     );
     final groupIdInput = FormItem(
       label: '组ID',
       child: FoxyNumberInput<int>(
         placeholder: 'GroupId',
-        value: viewModel.groupId.value,
-        onChanged: (v) => viewModel.groupId.value = v,
+        controller: viewModel.groupIdController,
       ),
     );
     final minCountInput = FormItem(
       label: '最小数量',
       child: FoxyNumberInput<int>(
         placeholder: 'MinCount',
-        value: viewModel.minCount.value,
-        onChanged: (v) => viewModel.minCount.value = v,
+        controller: viewModel.minCountController,
       ),
     );
     final maxCountInput = FormItem(
       label: '最大数量',
       child: FoxyNumberInput<int>(
         placeholder: 'MaxCount',
-        value: viewModel.maxCount.value,
-        onChanged: (v) => viewModel.maxCount.value = v,
+        controller: viewModel.maxCountController,
       ),
     );
     final commentInput = FormItem(

@@ -74,16 +74,14 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final minLevelInput = FormItem(
       label: '最低等级',
       child: FoxyNumberInput<int>(
-        value: viewModel.minLevel.value,
-        onChanged: (v) => viewModel.minLevel.value = v,
+        controller: viewModel.minLevelController,
         placeholder: 'minlevel',
       ),
     );
     final maxLevelInput = FormItem(
       label: '最高等级',
       child: FoxyNumberInput<int>(
-        value: viewModel.maxLevel.value,
-        onChanged: (v) => viewModel.maxLevel.value = v,
+        controller: viewModel.maxLevelController,
         placeholder: 'maxlevel',
       ),
     );
@@ -286,104 +284,91 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final damageModifierInput = FormItem(
       label: '伤害系数',
       child: FoxyNumberInput<double>(
-        value: viewModel.damageModifier.value,
-        onChanged: (v) => viewModel.damageModifier.value = v,
+        controller: viewModel.damageModifierController,
         placeholder: 'dmgschool',
       ),
     );
     final armorModifierInput = FormItem(
       label: '护甲系数',
       child: FoxyNumberInput<double>(
-        value: viewModel.armorModifier.value,
-        onChanged: (v) => viewModel.armorModifier.value = v,
+        controller: viewModel.armorModifierController,
         placeholder: 'ArmorModifier',
       ),
     );
     final baseAttackTimeInput = FormItem(
       label: '近战攻击间隔',
       child: FoxyNumberInput<int>(
-        value: viewModel.baseAttackTime.value,
-        onChanged: (v) => viewModel.baseAttackTime.value = v,
+        controller: viewModel.baseAttackTimeController,
         placeholder: 'BaseAttackTime',
       ),
     );
     final baseVarianceInput = FormItem(
       label: '近战攻击方差',
       child: FoxyNumberInput<double>(
-        value: viewModel.baseVariance.value,
-        onChanged: (v) => viewModel.baseVariance.value = v,
+        controller: viewModel.baseVarianceController,
         placeholder: 'BaseVariance',
       ),
     );
     final rangeAttackTimeInput = FormItem(
       label: '远程攻击间隔',
       child: FoxyNumberInput<int>(
-        value: viewModel.rangeAttackTime.value,
-        onChanged: (v) => viewModel.rangeAttackTime.value = v,
+        controller: viewModel.rangeAttackTimeController,
         placeholder: 'RangeAttackTime',
       ),
     );
     final rangeVarianceInput = FormItem(
       label: '远程攻击方差',
       child: FoxyNumberInput<double>(
-        value: viewModel.rangeVariance.value,
-        onChanged: (v) => viewModel.rangeVariance.value = v,
+        controller: viewModel.rangeVarianceController,
         placeholder: 'RangeVariance',
       ),
     );
     final healthModifierInput = FormItem(
       label: '生命值系数',
       child: FoxyNumberInput<double>(
-        value: viewModel.healthModifier.value,
-        onChanged: (v) => viewModel.healthModifier.value = v,
+        controller: viewModel.healthModifierController,
         placeholder: 'HealthModifier',
       ),
     );
     final manaModifierInput = FormItem(
       label: '法力值系数',
       child: FoxyNumberInput<double>(
-        value: viewModel.manaModifier.value,
-        onChanged: (v) => viewModel.manaModifier.value = v,
+        controller: viewModel.manaModifierController,
         placeholder: 'ManaModifier',
       ),
     );
     final experienceModifierInput = FormItem(
       label: '经验值系数',
       child: FoxyNumberInput<double>(
-        value: viewModel.experienceModifier.value,
-        onChanged: (v) => viewModel.experienceModifier.value = v,
+        controller: viewModel.experienceModifierController,
         placeholder: 'ExperienceModifier',
       ),
     );
     final speedWalkInput = FormItem(
       label: '行走速度',
       child: FoxyNumberInput<double>(
-        value: viewModel.speedWalk.value,
-        onChanged: (v) => viewModel.speedWalk.value = v,
+        controller: viewModel.speedWalkController,
         placeholder: 'speed_walk',
       ),
     );
     final speedRunInput = FormItem(
       label: '奔跑速度',
       child: FoxyNumberInput<double>(
-        value: viewModel.speedRun.value,
-        onChanged: (v) => viewModel.speedRun.value = v,
+        controller: viewModel.speedRunController,
         placeholder: 'speed_run',
       ),
     );
     final speedSwimInput = FormItem(
       label: '游泳速度',
       child: FoxyNumberInput<double>(
-        value: viewModel.speedSwim.value,
-        onChanged: (v) => viewModel.speedSwim.value = v,
+        controller: viewModel.speedSwimController,
         placeholder: 'speed_swim',
       ),
     );
     final speedFlightInput = FormItem(
       label: '飞行速度',
       child: FoxyNumberInput<double>(
-        value: viewModel.speedFlight.value,
-        onChanged: (v) => viewModel.speedFlight.value = v,
+        controller: viewModel.speedFlightController,
         placeholder: 'speed_flight',
       ),
     );
@@ -423,16 +408,14 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final minGoldInput = FormItem(
       label: '最小金钱掉落',
       child: FoxyNumberInput<int>(
-        value: viewModel.minGold.value,
-        onChanged: (v) => viewModel.minGold.value = v,
+        controller: viewModel.minGoldController,
         placeholder: 'mingold',
       ),
     );
     final maxGoldInput = FormItem(
       label: '最大金钱掉落',
       child: FoxyNumberInput<int>(
-        value: viewModel.maxGold.value,
-        onChanged: (v) => viewModel.maxGold.value = v,
+        controller: viewModel.maxGoldController,
         placeholder: 'maxgold',
       ),
     );
@@ -462,8 +445,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final movementIdInput = FormItem(
       label: '移动',
       child: FoxyNumberInput<int>(
-        value: viewModel.movementId.value,
-        onChanged: (v) => viewModel.movementId.value = v,
+        controller: viewModel.movementIdController,
         placeholder: 'movementId',
       ),
     );
@@ -478,16 +460,14 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final hoverHeightInput = FormItem(
       label: '盘旋高度',
       child: FoxyNumberInput<double>(
-        value: viewModel.hoverHeight.value,
-        onChanged: (v) => viewModel.hoverHeight.value = v,
+        controller: viewModel.hoverHeightController,
         placeholder: 'HoverHeight',
       ),
     );
     final detectionRangeInput = FormItem(
       label: '探测范围',
       child: FoxyNumberInput<double>(
-        value: viewModel.detectionRange.value,
-        onChanged: (v) => viewModel.detectionRange.value = v,
+        controller: viewModel.detectionRangeController,
         placeholder: 'detection_range',
       ),
     );
@@ -527,8 +507,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final creatureImmunitiesIdInput = FormItem(
       label: '免疫ID',
       child: FoxyNumberInput<int>(
-        value: viewModel.creatureImmunitiesId.value,
-        onChanged: (v) => viewModel.creatureImmunitiesId.value = v,
+        controller: viewModel.creatureImmunitiesIdController,
         placeholder: 'CreatureImmunitiesId',
       ),
     );
@@ -604,8 +583,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final verifiedBuildInput = FormItem(
       label: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
-        value: viewModel.verifiedBuild.value,
-        onChanged: (v) => viewModel.verifiedBuild.value = v,
+        controller: viewModel.verifiedBuildController,
         placeholder: 'VerifiedBuild',
       ),
     );

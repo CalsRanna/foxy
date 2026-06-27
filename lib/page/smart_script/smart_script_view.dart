@@ -27,8 +27,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '实体编号',
               placeholder: 'entryorguid',
               child: FoxyNumberInput<int>(
-                value: viewModel.entryOrGuid.value,
-                onChanged: (v) => viewModel.entryOrGuid.value = v,
+                controller: viewModel.entryOrGuidController,
               ),
             ),
           ),
@@ -37,8 +36,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '源类型',
               placeholder: 'source_type',
               child: FoxyNumberInput<int>(
-                value: viewModel.sourceType.value,
-                onChanged: (v) => viewModel.sourceType.value = v,
+                controller: viewModel.sourceTypeController,
               ),
             ),
           ),
@@ -47,8 +45,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: 'ID',
               placeholder: 'id',
               child: FoxyNumberInput<int>(
-                value: viewModel.id.value,
-                onChanged: (v) => viewModel.id.value = v,
+                controller: viewModel.idController,
               ),
             ),
           ),
@@ -57,8 +54,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '链接',
               placeholder: 'link',
               child: FoxyNumberInput<int>(
-                value: viewModel.link.value,
-                onChanged: (v) => viewModel.link.value = v,
+                controller: viewModel.linkController,
               ),
             ),
           ),
@@ -90,8 +86,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '事件类型',
               placeholder: 'event_type',
               child: FoxyNumberInput<int>(
-                value: viewModel.eventType.value,
-                onChanged: (v) => viewModel.eventType.value = v,
+                controller: viewModel.eventTypeController,
               ),
             ),
           ),
@@ -100,8 +95,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '阶段掩码',
               placeholder: 'event_phase_mask',
               child: FoxyNumberInput<int>(
-                value: viewModel.eventPhaseMask.value,
-                onChanged: (v) => viewModel.eventPhaseMask.value = v,
+                controller: viewModel.eventPhaseMaskController,
               ),
             ),
           ),
@@ -110,8 +104,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '触发几率',
               placeholder: 'event_chance',
               child: FoxyNumberInput<int>(
-                value: viewModel.eventChance.value,
-                onChanged: (v) => viewModel.eventChance.value = v,
+                controller: viewModel.eventChanceController,
               ),
             ),
           ),
@@ -120,8 +113,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '事件标识',
               placeholder: 'event_flags',
               child: FoxyNumberInput<int>(
-                value: viewModel.eventFlags.value,
-                onChanged: (v) => viewModel.eventFlags.value = v,
+                controller: viewModel.eventFlagsController,
               ),
             ),
           ),
@@ -135,8 +127,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '事件参数1',
               placeholder: 'event_param1',
               child: FoxyNumberInput<int>(
-                value: viewModel.eventParam1.value,
-                onChanged: (v) => viewModel.eventParam1.value = v,
+                controller: viewModel.eventParam1Controller,
               ),
             ),
           ),
@@ -145,8 +136,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '事件参数2',
               placeholder: 'event_param2',
               child: FoxyNumberInput<int>(
-                value: viewModel.eventParam2.value,
-                onChanged: (v) => viewModel.eventParam2.value = v,
+                controller: viewModel.eventParam2Controller,
               ),
             ),
           ),
@@ -155,8 +145,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '事件参数3',
               placeholder: 'event_param3',
               child: FoxyNumberInput<int>(
-                value: viewModel.eventParam3.value,
-                onChanged: (v) => viewModel.eventParam3.value = v,
+                controller: viewModel.eventParam3Controller,
               ),
             ),
           ),
@@ -165,8 +154,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '事件参数4',
               placeholder: 'event_param4',
               child: FoxyNumberInput<int>(
-                value: viewModel.eventParam4.value,
-                onChanged: (v) => viewModel.eventParam4.value = v,
+                controller: viewModel.eventParam4Controller,
               ),
             ),
           ),
@@ -180,8 +168,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '事件参数5',
               placeholder: 'event_param5',
               child: FoxyNumberInput<int>(
-                value: viewModel.eventParam5.value,
-                onChanged: (v) => viewModel.eventParam5.value = v,
+                controller: viewModel.eventParam5Controller,
               ),
             ),
           ),
@@ -201,8 +188,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '动作类型',
               placeholder: 'action_type',
               child: FoxyNumberInput<int>(
-                value: viewModel.actionType.value,
-                onChanged: (v) => viewModel.actionType.value = v,
+                controller: viewModel.actionTypeController,
               ),
             ),
           ),
@@ -211,8 +197,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '动作参数1',
               placeholder: 'action_param1',
               child: FoxyNumberInput<int>(
-                value: viewModel.actionParam1.value,
-                onChanged: (v) => viewModel.actionParam1.value = v,
+                controller: viewModel.actionParam1Controller,
               ),
             ),
           ),
@@ -221,8 +206,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '动作参数2',
               placeholder: 'action_param2',
               child: FoxyNumberInput<int>(
-                value: viewModel.actionParam2.value,
-                onChanged: (v) => viewModel.actionParam2.value = v,
+                controller: viewModel.actionParam2Controller,
               ),
             ),
           ),
@@ -231,8 +215,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '动作参数3',
               placeholder: 'action_param3',
               child: FoxyNumberInput<int>(
-                value: viewModel.actionParam3.value,
-                onChanged: (v) => viewModel.actionParam3.value = v,
+                controller: viewModel.actionParam3Controller,
               ),
             ),
           ),
@@ -246,8 +229,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '动作参数4',
               placeholder: 'action_param4',
               child: FoxyNumberInput<int>(
-                value: viewModel.actionParam4.value,
-                onChanged: (v) => viewModel.actionParam4.value = v,
+                controller: viewModel.actionParam4Controller,
               ),
             ),
           ),
@@ -256,8 +238,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '动作参数5',
               placeholder: 'action_param5',
               child: FoxyNumberInput<int>(
-                value: viewModel.actionParam5.value,
-                onChanged: (v) => viewModel.actionParam5.value = v,
+                controller: viewModel.actionParam5Controller,
               ),
             ),
           ),
@@ -266,8 +247,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '动作参数6',
               placeholder: 'action_param6',
               child: FoxyNumberInput<int>(
-                value: viewModel.actionParam6.value,
-                onChanged: (v) => viewModel.actionParam6.value = v,
+                controller: viewModel.actionParam6Controller,
               ),
             ),
           ),
@@ -285,8 +265,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '目标类型',
               placeholder: 'target_type',
               child: FoxyNumberInput<int>(
-                value: viewModel.targetType.value,
-                onChanged: (v) => viewModel.targetType.value = v,
+                controller: viewModel.targetTypeController,
               ),
             ),
           ),
@@ -295,8 +274,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '目标参数1',
               placeholder: 'target_param1',
               child: FoxyNumberInput<int>(
-                value: viewModel.targetParam1.value,
-                onChanged: (v) => viewModel.targetParam1.value = v,
+                controller: viewModel.targetParam1Controller,
               ),
             ),
           ),
@@ -305,8 +283,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '目标参数2',
               placeholder: 'target_param2',
               child: FoxyNumberInput<int>(
-                value: viewModel.targetParam2.value,
-                onChanged: (v) => viewModel.targetParam2.value = v,
+                controller: viewModel.targetParam2Controller,
               ),
             ),
           ),
@@ -315,8 +292,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '目标参数3',
               placeholder: 'target_param3',
               child: FoxyNumberInput<int>(
-                value: viewModel.targetParam3.value,
-                onChanged: (v) => viewModel.targetParam3.value = v,
+                controller: viewModel.targetParam3Controller,
               ),
             ),
           ),
@@ -330,8 +306,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '目标参数4',
               placeholder: 'target_param4',
               child: FoxyNumberInput<int>(
-                value: viewModel.targetParam4.value,
-                onChanged: (v) => viewModel.targetParam4.value = v,
+                controller: viewModel.targetParam4Controller,
               ),
             ),
           ),
@@ -340,8 +315,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: 'X坐标',
               placeholder: 'target_x',
               child: FoxyNumberInput<double>(
-                value: viewModel.targetX.value,
-                onChanged: (v) => viewModel.targetX.value = v,
+                controller: viewModel.targetXController,
               ),
             ),
           ),
@@ -350,8 +324,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: 'Y坐标',
               placeholder: 'target_y',
               child: FoxyNumberInput<double>(
-                value: viewModel.targetY.value,
-                onChanged: (v) => viewModel.targetY.value = v,
+                controller: viewModel.targetYController,
               ),
             ),
           ),
@@ -360,8 +333,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: 'Z坐标',
               placeholder: 'target_z',
               child: FoxyNumberInput<double>(
-                value: viewModel.targetZ.value,
-                onChanged: (v) => viewModel.targetZ.value = v,
+                controller: viewModel.targetZController,
               ),
             ),
           ),
@@ -375,8 +347,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               label: '朝向',
               placeholder: 'target_o',
               child: FoxyNumberInput<double>(
-                value: viewModel.targetO.value,
-                onChanged: (v) => viewModel.targetO.value = v,
+                controller: viewModel.targetOController,
               ),
             ),
           ),

@@ -173,8 +173,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '区域',
                   placeholder: 'area',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.area.value,
-                    onChanged: (v) => viewModel.area.value = v,
+                    controller: viewModel.areaController,
                   ),
                 ),
               ),
@@ -189,8 +188,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '开始任务',
                   placeholder: 'quest_start',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.questStart.value,
-                    onChanged: (v) => viewModel.questStart.value = v,
+                    controller: viewModel.questStartController,
                   ),
                 ),
               ),
@@ -199,8 +197,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '结束任务',
                   placeholder: 'quest_end',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.questEnd.value,
-                    onChanged: (v) => viewModel.questEnd.value = v,
+                    controller: viewModel.questEndController,
                   ),
                 ),
               ),
@@ -209,8 +206,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '开始任务掩码',
                   placeholder: 'quest_start_status',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.questStartStatus.value,
-                    onChanged: (v) => viewModel.questStartStatus.value = v,
+                    controller: viewModel.questStartStatusController,
                   ),
                 ),
               ),
@@ -219,8 +215,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '结束任务掩码',
                   placeholder: 'quest_end_status',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.questEndStatus.value,
-                    onChanged: (v) => viewModel.questEndStatus.value = v,
+                    controller: viewModel.questEndStatusController,
                   ),
                 ),
               ),
@@ -235,8 +230,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '光环',
                   placeholder: 'aura_spell',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.auraSpell.value,
-                    onChanged: (v) => viewModel.auraSpell.value = v,
+                    controller: viewModel.auraSpellController,
                   ),
                 ),
               ),
@@ -245,8 +239,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '种族掩码',
                   placeholder: 'racemask',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.racemask.value,
-                    onChanged: (v) => viewModel.racemask.value = v,
+                    controller: viewModel.racemaskController,
                   ),
                 ),
               ),
@@ -255,8 +248,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '性别',
                   placeholder: 'gender',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.gender.value,
-                    onChanged: (v) => viewModel.gender.value = v,
+                    controller: viewModel.genderController,
                   ),
                 ),
               ),
@@ -265,8 +257,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   label: '自动施放',
                   placeholder: 'autocast',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.autocast.value,
-                    onChanged: (v) => viewModel.autocast.value = v,
+                    controller: viewModel.autocastController,
                   ),
                 ),
               ),

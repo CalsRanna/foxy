@@ -14,33 +14,46 @@ class TalentDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final id = signal<int>(0);
-  final tabId = signal<int>(0);
-  final tierId = signal<int>(0);
-  final columnIndex = signal<int>(0);
-  final flags = signal<int>(0);
-  final requiredSpellId = signal<int>(0);
-  final spellRank0 = signal<int>(0);
-  final spellRank1 = signal<int>(0);
-  final spellRank2 = signal<int>(0);
-  final spellRank3 = signal<int>(0);
-  final spellRank4 = signal<int>(0);
-  final spellRank5 = signal<int>(0);
-  final spellRank6 = signal<int>(0);
-  final spellRank7 = signal<int>(0);
-  final spellRank8 = signal<int>(0);
-  final prereqTalent0 = signal<int>(0);
-  final prereqTalent1 = signal<int>(0);
-  final prereqTalent2 = signal<int>(0);
-  final prereqRank0 = signal<int>(0);
-  final prereqRank1 = signal<int>(0);
-  final prereqRank2 = signal<int>(0);
-  final categoryMask0 = signal<int>(0);
-  final categoryMask1 = signal<int>(0);
+  final idController = TextEditingController();
+  final tabIdController = TextEditingController();
+  final tierIdController = TextEditingController();
+  final columnIndexController = TextEditingController();
+  final flagsController = TextEditingController();
+  final requiredSpellIdController = TextEditingController();
+  final spellRank0Controller = TextEditingController();
+  final spellRank1Controller = TextEditingController();
+  final spellRank2Controller = TextEditingController();
+  final spellRank3Controller = TextEditingController();
+  final spellRank4Controller = TextEditingController();
+  final spellRank5Controller = TextEditingController();
+  final spellRank6Controller = TextEditingController();
+  final spellRank7Controller = TextEditingController();
+  final spellRank8Controller = TextEditingController();
+  final prereqTalent0Controller = TextEditingController();
+  final prereqTalent1Controller = TextEditingController();
+  final prereqTalent2Controller = TextEditingController();
+  final prereqRank0Controller = TextEditingController();
+  final prereqRank1Controller = TextEditingController();
+  final prereqRank2Controller = TextEditingController();
+  final categoryMask0Controller = TextEditingController();
+  final categoryMask1Controller = TextEditingController();
 
   final talent = signal(TalentEntity());
 
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -72,33 +85,57 @@ class TalentDetailViewModel {
   /// 从所有 Controller 收集数据构建 Talent
   TalentEntity _collectFromControllers() {
     return TalentEntity(
-      id: id.value,
-      tabId: tabId.value,
-      tierId: tierId.value,
-      columnIndex: columnIndex.value,
-      spellRank0: spellRank0.value,
-      spellRank1: spellRank1.value,
-      spellRank2: spellRank2.value,
-      spellRank3: spellRank3.value,
-      spellRank4: spellRank4.value,
-      spellRank5: spellRank5.value,
-      spellRank6: spellRank6.value,
-      spellRank7: spellRank7.value,
-      spellRank8: spellRank8.value,
-      prereqTalent0: prereqTalent0.value,
-      prereqTalent1: prereqTalent1.value,
-      prereqTalent2: prereqTalent2.value,
-      prereqRank0: prereqRank0.value,
-      prereqRank1: prereqRank1.value,
-      prereqRank2: prereqRank2.value,
-      flags: flags.value,
-      requiredSpellId: requiredSpellId.value,
-      categoryMask0: categoryMask0.value,
-      categoryMask1: categoryMask1.value,
+      id: _pi(idController.text),
+      tabId: _pi(tabIdController.text),
+      tierId: _pi(tierIdController.text),
+      columnIndex: _pi(columnIndexController.text),
+      spellRank0: _pi(spellRank0Controller.text),
+      spellRank1: _pi(spellRank1Controller.text),
+      spellRank2: _pi(spellRank2Controller.text),
+      spellRank3: _pi(spellRank3Controller.text),
+      spellRank4: _pi(spellRank4Controller.text),
+      spellRank5: _pi(spellRank5Controller.text),
+      spellRank6: _pi(spellRank6Controller.text),
+      spellRank7: _pi(spellRank7Controller.text),
+      spellRank8: _pi(spellRank8Controller.text),
+      prereqTalent0: _pi(prereqTalent0Controller.text),
+      prereqTalent1: _pi(prereqTalent1Controller.text),
+      prereqTalent2: _pi(prereqTalent2Controller.text),
+      prereqRank0: _pi(prereqRank0Controller.text),
+      prereqRank1: _pi(prereqRank1Controller.text),
+      prereqRank2: _pi(prereqRank2Controller.text),
+      flags: _pi(flagsController.text),
+      requiredSpellId: _pi(requiredSpellIdController.text),
+      categoryMask0: _pi(categoryMask0Controller.text),
+      categoryMask1: _pi(categoryMask1Controller.text),
     );
   }
 
-  void dispose() {}
+  void dispose() {
+    categoryMask0Controller.dispose();
+    categoryMask1Controller.dispose();
+    columnIndexController.dispose();
+    flagsController.dispose();
+    idController.dispose();
+    prereqRank0Controller.dispose();
+    prereqRank1Controller.dispose();
+    prereqRank2Controller.dispose();
+    prereqTalent0Controller.dispose();
+    prereqTalent1Controller.dispose();
+    prereqTalent2Controller.dispose();
+    requiredSpellIdController.dispose();
+    spellRank0Controller.dispose();
+    spellRank1Controller.dispose();
+    spellRank2Controller.dispose();
+    spellRank3Controller.dispose();
+    spellRank4Controller.dispose();
+    spellRank5Controller.dispose();
+    spellRank6Controller.dispose();
+    spellRank7Controller.dispose();
+    spellRank8Controller.dispose();
+    tabIdController.dispose();
+    tierIdController.dispose();
+  }
 
   void _logActivity(ActivityActionType action, TalentEntity t) {
     final log = ActivityLogEntity(
@@ -122,28 +159,28 @@ class TalentDetailViewModel {
   }
 
   void _initControllers(TalentEntity talent) {
-    id.value = talent.id;
-    tabId.value = talent.tabId;
-    tierId.value = talent.tierId;
-    columnIndex.value = talent.columnIndex;
-    spellRank0.value = talent.spellRank0;
-    spellRank1.value = talent.spellRank1;
-    spellRank2.value = talent.spellRank2;
-    spellRank3.value = talent.spellRank3;
-    spellRank4.value = talent.spellRank4;
-    spellRank5.value = talent.spellRank5;
-    spellRank6.value = talent.spellRank6;
-    spellRank7.value = talent.spellRank7;
-    spellRank8.value = talent.spellRank8;
-    prereqTalent0.value = talent.prereqTalent0;
-    prereqTalent1.value = talent.prereqTalent1;
-    prereqTalent2.value = talent.prereqTalent2;
-    prereqRank0.value = talent.prereqRank0;
-    prereqRank1.value = talent.prereqRank1;
-    prereqRank2.value = talent.prereqRank2;
-    flags.value = talent.flags;
-    requiredSpellId.value = talent.requiredSpellId;
-    categoryMask0.value = talent.categoryMask0;
-    categoryMask1.value = talent.categoryMask1;
+    idController.text = _fmt(talent.id);
+    tabIdController.text = _fmt(talent.tabId);
+    tierIdController.text = _fmt(talent.tierId);
+    columnIndexController.text = _fmt(talent.columnIndex);
+    spellRank0Controller.text = _fmt(talent.spellRank0);
+    spellRank1Controller.text = _fmt(talent.spellRank1);
+    spellRank2Controller.text = _fmt(talent.spellRank2);
+    spellRank3Controller.text = _fmt(talent.spellRank3);
+    spellRank4Controller.text = _fmt(talent.spellRank4);
+    spellRank5Controller.text = _fmt(talent.spellRank5);
+    spellRank6Controller.text = _fmt(talent.spellRank6);
+    spellRank7Controller.text = _fmt(talent.spellRank7);
+    spellRank8Controller.text = _fmt(talent.spellRank8);
+    prereqTalent0Controller.text = _fmt(talent.prereqTalent0);
+    prereqTalent1Controller.text = _fmt(talent.prereqTalent1);
+    prereqTalent2Controller.text = _fmt(talent.prereqTalent2);
+    prereqRank0Controller.text = _fmt(talent.prereqRank0);
+    prereqRank1Controller.text = _fmt(talent.prereqRank1);
+    prereqRank2Controller.text = _fmt(talent.prereqRank2);
+    flagsController.text = _fmt(talent.flags);
+    requiredSpellIdController.text = _fmt(talent.requiredSpellId);
+    categoryMask0Controller.text = _fmt(talent.categoryMask0);
+    categoryMask1Controller.text = _fmt(talent.categoryMask1);
   }
 }

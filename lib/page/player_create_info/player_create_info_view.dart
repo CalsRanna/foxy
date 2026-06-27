@@ -39,16 +39,16 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
         children: [
           ShadCard(padding: EdgeInsets.all(16), child: Column(spacing: 8, children: [
             Row(spacing: 8, children: [
-              Expanded(child: FormItem(label: '种族', placeholder: 'race', child: FoxyNumberInput<int>(value: viewModel.race.value, onChanged: (v) => viewModel.race.value = v))),
-              Expanded(child: FormItem(label: '职业', placeholder: 'class', child: FoxyNumberInput<int>(value: viewModel.playerClass.value, onChanged: (v) => viewModel.playerClass.value = v))),
-              Expanded(child: FormItem(label: '地图', placeholder: 'map', child: FoxyNumberInput<int>(value: viewModel.map.value, onChanged: (v) => viewModel.map.value = v))),
-              Expanded(child: FormItem(label: '区域', placeholder: 'zone', child: FoxyNumberInput<int>(value: viewModel.zone.value, onChanged: (v) => viewModel.zone.value = v))),
+              Expanded(child: FormItem(label: '种族', placeholder: 'race', child: FoxyNumberInput<int>(controller: viewModel.raceController))),
+              Expanded(child: FormItem(label: '职业', placeholder: 'class', child: FoxyNumberInput<int>(controller: viewModel.playerClassController))),
+              Expanded(child: FormItem(label: '地图', placeholder: 'map', child: FoxyNumberInput<int>(controller: viewModel.mapController))),
+              Expanded(child: FormItem(label: '区域', placeholder: 'zone', child: FoxyNumberInput<int>(controller: viewModel.zoneController))),
             ]),
             Row(spacing: 8, children: [
-              Expanded(child: FormItem(label: 'X坐标', placeholder: 'position_x', child: FoxyNumberInput<double>(value: viewModel.positionX.value, onChanged: (v) => viewModel.positionX.value = v))),
-              Expanded(child: FormItem(label: 'Y坐标', placeholder: 'position_y', child: FoxyNumberInput<double>(value: viewModel.positionY.value, onChanged: (v) => viewModel.positionY.value = v))),
-              Expanded(child: FormItem(label: 'Z坐标', placeholder: 'position_z', child: FoxyNumberInput<double>(value: viewModel.positionZ.value, onChanged: (v) => viewModel.positionZ.value = v))),
-              Expanded(child: FormItem(label: '朝向', placeholder: 'orientation', child: FoxyNumberInput<double>(value: viewModel.orientation.value, onChanged: (v) => viewModel.orientation.value = v))),
+              Expanded(child: FormItem(label: 'X坐标', placeholder: 'position_x', child: FoxyNumberInput<double>(controller: viewModel.positionXController))),
+              Expanded(child: FormItem(label: 'Y坐标', placeholder: 'position_y', child: FoxyNumberInput<double>(controller: viewModel.positionYController))),
+              Expanded(child: FormItem(label: 'Z坐标', placeholder: 'position_z', child: FoxyNumberInput<double>(controller: viewModel.positionZController))),
+              Expanded(child: FormItem(label: '朝向', placeholder: 'orientation', child: FoxyNumberInput<double>(controller: viewModel.orientationController))),
             ]),
           ])),
           Row(

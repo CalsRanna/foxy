@@ -161,7 +161,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
           FormItem(
             label: '任务编号',
             child: FoxyNumberInput<int>(
-              value: viewModel.quest.value,
+              controller: viewModel.questController,
               readOnly: true,
             ),
           ),

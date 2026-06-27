@@ -14,26 +14,39 @@ class ConditionDetailViewModel {
   final _repository = GetIt.instance.get<ConditionRepository>();
 
   // 主键字段
-  final sourceTypeOrReferenceId = signal<int>(0);
-  final sourceGroup = signal<int>(0);
-  final sourceEntry = signal<int>(0);
-  final sourceId = signal<int>(0);
-  final elseGroup = signal<int>(0);
-  final conditionTypeOrReference = signal<int>(0);
-  final conditionTarget = signal<int>(0);
-  final conditionValue1 = signal<int>(0);
-  final conditionValue2 = signal<int>(0);
-  final conditionValue3 = signal<int>(0);
+  final sourceTypeOrReferenceIdController = TextEditingController();
+  final sourceGroupController = TextEditingController();
+  final sourceEntryController = TextEditingController();
+  final sourceIdController = TextEditingController();
+  final elseGroupController = TextEditingController();
+  final conditionTypeOrReferenceController = TextEditingController();
+  final conditionTargetController = TextEditingController();
+  final conditionValue1Controller = TextEditingController();
+  final conditionValue2Controller = TextEditingController();
+  final conditionValue3Controller = TextEditingController();
 
   // 非键字段
-  final negativeCondition = signal<int>(0);
-  final errorType = signal<int>(0);
-  final errorTextId = signal<int>(0);
+  final negativeConditionController = TextEditingController();
+  final errorTypeController = TextEditingController();
+  final errorTextIdController = TextEditingController();
   final scriptNameController = TextEditingController();
   final commentController = TextEditingController();
 
   final condition = signal<ConditionEntity?>(null);
   Map<String, dynamic>? _originalCredential;
+
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> initSignals({Map<String, dynamic>? credential}) async {
     if (credential == null) return;
@@ -48,19 +61,19 @@ class ConditionDetailViewModel {
   }
 
   void _initControllers(ConditionEntity c) {
-    sourceTypeOrReferenceId.value = c.sourceTypeOrReferenceId;
-    sourceGroup.value = c.sourceGroup;
-    sourceEntry.value = c.sourceEntry;
-    sourceId.value = c.sourceId;
-    elseGroup.value = c.elseGroup;
-    conditionTypeOrReference.value = c.conditionTypeOrReference;
-    conditionTarget.value = c.conditionTarget;
-    conditionValue1.value = c.conditionValue1;
-    conditionValue2.value = c.conditionValue2;
-    conditionValue3.value = c.conditionValue3;
-    negativeCondition.value = c.negativeCondition;
-    errorType.value = c.errorType;
-    errorTextId.value = c.errorTextId;
+    sourceTypeOrReferenceIdController.text = _fmt(c.sourceTypeOrReferenceId);
+    sourceGroupController.text = _fmt(c.sourceGroup);
+    sourceEntryController.text = _fmt(c.sourceEntry);
+    sourceIdController.text = _fmt(c.sourceId);
+    elseGroupController.text = _fmt(c.elseGroup);
+    conditionTypeOrReferenceController.text = _fmt(c.conditionTypeOrReference);
+    conditionTargetController.text = _fmt(c.conditionTarget);
+    conditionValue1Controller.text = _fmt(c.conditionValue1);
+    conditionValue2Controller.text = _fmt(c.conditionValue2);
+    conditionValue3Controller.text = _fmt(c.conditionValue3);
+    negativeConditionController.text = _fmt(c.negativeCondition);
+    errorTypeController.text = _fmt(c.errorType);
+    errorTextIdController.text = _fmt(c.errorTextId);
     scriptNameController.text = c.scriptName;
     commentController.text = c.comment;
   }
@@ -94,19 +107,19 @@ class ConditionDetailViewModel {
 
   ConditionEntity _collectFromControllers() {
     final c = ConditionEntity(
-      sourceTypeOrReferenceId: sourceTypeOrReferenceId.value,
-      sourceGroup: sourceGroup.value,
-      sourceEntry: sourceEntry.value,
-      sourceId: sourceId.value,
-      elseGroup: elseGroup.value,
-      conditionTypeOrReference: conditionTypeOrReference.value,
-      conditionTarget: conditionTarget.value,
-      conditionValue1: conditionValue1.value,
-      conditionValue2: conditionValue2.value,
-      conditionValue3: conditionValue3.value,
-      negativeCondition: negativeCondition.value,
-      errorType: errorType.value,
-      errorTextId: errorTextId.value,
+      sourceTypeOrReferenceId: _pi(sourceTypeOrReferenceIdController.text),
+      sourceGroup: _pi(sourceGroupController.text),
+      sourceEntry: _pi(sourceEntryController.text),
+      sourceId: _pi(sourceIdController.text),
+      elseGroup: _pi(elseGroupController.text),
+      conditionTypeOrReference: _pi(conditionTypeOrReferenceController.text),
+      conditionTarget: _pi(conditionTargetController.text),
+      conditionValue1: _pi(conditionValue1Controller.text),
+      conditionValue2: _pi(conditionValue2Controller.text),
+      conditionValue3: _pi(conditionValue3Controller.text),
+      negativeCondition: _pi(negativeConditionController.text),
+      errorType: _pi(errorTypeController.text),
+      errorTextId: _pi(errorTextIdController.text),
       scriptName: scriptNameController.text,
       comment: commentController.text,
     );
@@ -125,7 +138,20 @@ class ConditionDetailViewModel {
   }
 
   void dispose() {
-    scriptNameController.dispose();
     commentController.dispose();
+    conditionTargetController.dispose();
+    conditionTypeOrReferenceController.dispose();
+    conditionValue1Controller.dispose();
+    conditionValue2Controller.dispose();
+    conditionValue3Controller.dispose();
+    elseGroupController.dispose();
+    errorTextIdController.dispose();
+    errorTypeController.dispose();
+    negativeConditionController.dispose();
+    scriptNameController.dispose();
+    sourceEntryController.dispose();
+    sourceGroupController.dispose();
+    sourceIdController.dispose();
+    sourceTypeOrReferenceIdController.dispose();
   }
 }

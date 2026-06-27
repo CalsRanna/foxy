@@ -35,8 +35,7 @@ class _GlyphPropertyViewState extends State<GlyphPropertyView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        value: viewModel.id.value,
-        onChanged: (v) => viewModel.id.value = v,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -46,24 +45,21 @@ class _GlyphPropertyViewState extends State<GlyphPropertyView> {
       label: '技能编号',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellID',
-        value: viewModel.spellId.value,
-        onChanged: (v) => viewModel.spellId.value = v,
+        controller: viewModel.spellIdController,
       ),
     );
     final glyphSlotFlagsInput = FormItem(
       label: '雕文槽标记',
       child: FoxyNumberInput<int>(
         placeholder: 'GlyphSlotFlags',
-        value: viewModel.glyphSlotFlags.value,
-        onChanged: (v) => viewModel.glyphSlotFlags.value = v,
+        controller: viewModel.glyphSlotFlagsController,
       ),
     );
     final spellIconIdInput = FormItem(
       label: '技能图标',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellIconID',
-        value: viewModel.spellIconId.value,
-        onChanged: (v) => viewModel.spellIconId.value = v,
+        controller: viewModel.spellIconIdController,
       ),
     );
 

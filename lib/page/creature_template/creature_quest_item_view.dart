@@ -180,8 +180,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           FormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
-              value: viewModel.idx.value,
-              onChanged: (v) => viewModel.idx.value = v,
+              controller: viewModel.idxController,
               placeholder: 'Idx',
             ),
           ),
@@ -199,8 +198,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           FormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              value: viewModel.verifiedBuild.value,
-              onChanged: (v) => viewModel.verifiedBuild.value = v,
+              controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

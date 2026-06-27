@@ -13,11 +13,24 @@ class QuestSortDetailViewModel {
   final _repository = GetIt.instance.get<QuestSortRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final id = signal<int>(0);
+  final idController = TextEditingController();
   final nameController = TextEditingController();
 
   final sort = signal(QuestSortEntity());
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -49,7 +62,7 @@ class QuestSortDetailViewModel {
   /// 从所有 Controller 收集数据构建 QuestSort
   QuestSortEntity _collectFromControllers() {
     return QuestSortEntity(
-      id: id.value,
+      id: _pi(idController.text),
       sortNameLangZhCn: nameController.text,
     );
   }
@@ -66,6 +79,7 @@ class QuestSortDetailViewModel {
   }
 
   void dispose() {
+    idController.dispose();
     nameController.dispose();
   }
 
@@ -80,7 +94,7 @@ class QuestSortDetailViewModel {
   }
 
   void _initControllers(QuestSortEntity table) {
-    id.value = table.id;
+    idController.text = _fmt(table.id);
     nameController.text = table.sortNameLangZhCn;
   }
 }

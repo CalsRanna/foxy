@@ -14,22 +14,35 @@ class QuestFactionRewardDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final id = signal<int>(0);
+  final idController = TextEditingController();
 
   /// Difficulty
-  final difficulty0 = signal<int>(0);
-  final difficulty1 = signal<int>(0);
-  final difficulty2 = signal<int>(0);
-  final difficulty3 = signal<int>(0);
-  final difficulty4 = signal<int>(0);
-  final difficulty5 = signal<int>(0);
-  final difficulty6 = signal<int>(0);
-  final difficulty7 = signal<int>(0);
-  final difficulty8 = signal<int>(0);
-  final difficulty9 = signal<int>(0);
+  final difficulty0Controller = TextEditingController();
+  final difficulty1Controller = TextEditingController();
+  final difficulty2Controller = TextEditingController();
+  final difficulty3Controller = TextEditingController();
+  final difficulty4Controller = TextEditingController();
+  final difficulty5Controller = TextEditingController();
+  final difficulty6Controller = TextEditingController();
+  final difficulty7Controller = TextEditingController();
+  final difficulty8Controller = TextEditingController();
+  final difficulty9Controller = TextEditingController();
 
   final reward = signal(QuestFactionRewardEntity());
   /// 保存到数据库
+  String _fmt(num v) {
+    if (v is double) {
+      final s = v.toString();
+      if (s.contains('.') && s.endsWith('0')) {
+        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+      }
+      return s;
+    }
+    return v.toString();
+  }
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -61,17 +74,17 @@ class QuestFactionRewardDetailViewModel {
   /// 从所有 Controller 收集数据构建 QuestFactionReward
   QuestFactionRewardEntity _collectFromControllers() {
     return QuestFactionRewardEntity(
-      id: id.value,
-      difficulty0: difficulty0.value,
-      difficulty1: difficulty1.value,
-      difficulty2: difficulty2.value,
-      difficulty3: difficulty3.value,
-      difficulty4: difficulty4.value,
-      difficulty5: difficulty5.value,
-      difficulty6: difficulty6.value,
-      difficulty7: difficulty7.value,
-      difficulty8: difficulty8.value,
-      difficulty9: difficulty9.value,
+      id: _pi(idController.text),
+      difficulty0: _pi(difficulty0Controller.text),
+      difficulty1: _pi(difficulty1Controller.text),
+      difficulty2: _pi(difficulty2Controller.text),
+      difficulty3: _pi(difficulty3Controller.text),
+      difficulty4: _pi(difficulty4Controller.text),
+      difficulty5: _pi(difficulty5Controller.text),
+      difficulty6: _pi(difficulty6Controller.text),
+      difficulty7: _pi(difficulty7Controller.text),
+      difficulty8: _pi(difficulty8Controller.text),
+      difficulty9: _pi(difficulty9Controller.text),
     );
   }
 
@@ -86,7 +99,19 @@ class QuestFactionRewardDetailViewModel {
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
   }
 
-  void dispose() {}
+  void dispose() {
+    difficulty0Controller.dispose();
+    difficulty1Controller.dispose();
+    difficulty2Controller.dispose();
+    difficulty3Controller.dispose();
+    difficulty4Controller.dispose();
+    difficulty5Controller.dispose();
+    difficulty6Controller.dispose();
+    difficulty7Controller.dispose();
+    difficulty8Controller.dispose();
+    difficulty9Controller.dispose();
+    idController.dispose();
+  }
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -100,18 +125,18 @@ class QuestFactionRewardDetailViewModel {
 
   void _initControllers(QuestFactionRewardEntity table) {
     /// Basic
-    id.value = table.id;
+    idController.text = _fmt(table.id);
 
     /// Difficulty
-    difficulty0.value = table.difficulty0;
-    difficulty1.value = table.difficulty1;
-    difficulty2.value = table.difficulty2;
-    difficulty3.value = table.difficulty3;
-    difficulty4.value = table.difficulty4;
-    difficulty5.value = table.difficulty5;
-    difficulty6.value = table.difficulty6;
-    difficulty7.value = table.difficulty7;
-    difficulty8.value = table.difficulty8;
-    difficulty9.value = table.difficulty9;
+    difficulty0Controller.text = _fmt(table.difficulty0);
+    difficulty1Controller.text = _fmt(table.difficulty1);
+    difficulty2Controller.text = _fmt(table.difficulty2);
+    difficulty3Controller.text = _fmt(table.difficulty3);
+    difficulty4Controller.text = _fmt(table.difficulty4);
+    difficulty5Controller.text = _fmt(table.difficulty5);
+    difficulty6Controller.text = _fmt(table.difficulty6);
+    difficulty7Controller.text = _fmt(table.difficulty7);
+    difficulty8Controller.text = _fmt(table.difficulty8);
+    difficulty9Controller.text = _fmt(table.difficulty9);
   }
 }

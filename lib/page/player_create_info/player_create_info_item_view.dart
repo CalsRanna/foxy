@@ -96,8 +96,8 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 400),
         child: Column(mainAxisSize: MainAxisSize.min, spacing: 16, children: [
-          FormItem(label: '物品ID', placeholder: 'itemid', child: FoxyNumberInput<int>(value: viewModel.itemId.value, onChanged: (v) => viewModel.itemId.value = v)),
-          FormItem(label: '数量', placeholder: 'amount', child: FoxyNumberInput<int>(value: viewModel.amount.value, onChanged: (v) => viewModel.amount.value = v)),
+          FormItem(label: '物品ID', placeholder: 'itemid', child: FoxyNumberInput<int>(controller: viewModel.itemIdController)),
+          FormItem(label: '数量', placeholder: 'amount', child: FoxyNumberInput<int>(controller: viewModel.amountController)),
           FormItem(controller: viewModel.noteController, label: '备注', placeholder: 'Note'),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             ShadButton.outline(onPressed: () => Navigator.of(c).pop(), child: Text('取消')),
