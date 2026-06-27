@@ -342,19 +342,18 @@ Future<void> _importWorker(_WorkerArgs args) async {
   sendPort.send(('找到 $total 个匹配文件，准备导入...', 0, total));
 
   // ====== 阶段 1：连接数据库 ======
-  Laconic? laconic;
-  try {
-    laconic = Laconic(
-      MysqlDriver(
-        MysqlConfig(
-          host: host,
-          port: port,
-          database: database,
-          username: username,
-          password: password,
-        ),
+  var laconic = Laconic(
+    MysqlDriver(
+      MysqlConfig(
+        host: host,
+        port: port,
+        database: database,
+        username: username,
+        password: password,
       ),
-    );
+    ),
+  );
+  try {
 
     var imported = 0;
     var skipped = 0;
@@ -362,12 +361,30 @@ Future<void> _importWorker(_WorkerArgs args) async {
 
     for (var i = 0; i < fileDefs.length; i++) {
       final file = fileDefs[i];
+      sendPort.send(('正在处理 ${file.name}...',));
       try {
-        // 跳过已有数据的表
+        // 跳过已有数据的表（带超时 + 断连重连）
         int count;
         try {
-          count = await laconic.table(file.tableName).count();
-        } on LaconicException {
+          count = await laconic
+              .table(file.tableName)
+              .count()
+              .timeout(const Duration(seconds: 10));
+        } on Exception {
+          // 连接可能已断开，重建连接
+          sendPort.send(('重连数据库...',));
+          await laconic.close();
+          laconic = Laconic(
+            MysqlDriver(
+              MysqlConfig(
+                host: host,
+                port: port,
+                database: database,
+                username: username,
+                password: password,
+              ),
+            ),
+          );
           count = 0;
         }
         if (count > 0) {
@@ -405,7 +422,7 @@ Future<void> _importWorker(_WorkerArgs args) async {
   } catch (e) {
     sendPort.send((false, 0, 0, ['Worker 错误: $e']));
   } finally {
-    await laconic?.close();
+    await laconic.close();
   }
 }
 
