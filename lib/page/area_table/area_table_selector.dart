@@ -17,11 +17,13 @@ class AreaTableSelector extends StatefulWidget {
 
 class _AreaTableSelectorState extends State<AreaTableSelector> {
   final _displayController = TextEditingController();
+  void Function()? _unsub;
 
   @override
   void initState() {
     super.initState();
     _syncDisplay();
+    _unsub = widget.signal.subscribe((_) => _syncDisplay());
   }
 
   void _syncDisplay() {
@@ -31,6 +33,7 @@ class _AreaTableSelectorState extends State<AreaTableSelector> {
 
   @override
   void dispose() {
+    _unsub?.call();
     _displayController.dispose();
     super.dispose();
   }
