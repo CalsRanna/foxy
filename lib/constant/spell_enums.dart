@@ -732,3 +732,88 @@ const kSpellReputationRankOptions = {
   6: '崇敬',
   7: '崇拜',
 };
+
+/// 属性类型（MiscValue when Effect=6, Aura=29 MOD_STAT）
+const kStatTypeOptions = {
+  -1: '全部属性',
+  0: '法力值',
+  1: '生命值',
+  3: '敏捷',
+  4: '力量',
+  5: '智力',
+  6: '精神',
+  7: '耐力',
+};
+
+/// 变形形态（MiscValue when Effect=6, Aura=36 MOD_SHAPESHIFT）
+const kShapeshiftFormOptions = {
+  0: '人形态',
+  1: '熊形态',
+  2: '水栖形态',
+  3: '猫形态',
+  4: '旅行形态',
+  5: '枭兽形态/食尸鬼',
+  6: '飞行形态',
+  7: '树人形态',
+  8: '迅捷飞行形态',
+  31: '树人形态(带技能)',
+};
+
+/// 速度类型（MiscValue when Effect=6, Aura=31 MOD_INCREASE_SPEED）
+const kSpeedTypeOptions = {
+  0: '步行',
+  1: '跑步',
+  2: '游泳',
+  3: '飞行',
+};
+
+/// 攻击强度类型（MiscValue when Effect=6, Aura=99 MOD_ATTACK_POWER）
+const kAttackPowerTypeOptions = {
+  1: '远程攻击强度',
+  2: '近战攻击强度',
+};
+
+/// SpellModOp（MiscValue when Effect=6, Aura=107/108 ADD_FLAT/PCT_MODIFIER）
+const kSpellModOpOptions = {
+  0: '伤害',
+  1: '持续时间',
+  2: '威胁',
+  3: '效果1',
+  4: '次数',
+  5: '范围',
+  6: '半径',
+  7: '暴击几率',
+  8: '所有效果',
+  9: '不退条',
+  10: '施法时间',
+  11: '冷却',
+  12: '效果2',
+  13: '忽略护甲',
+  14: '消耗',
+  15: '暴击伤害加成',
+  16: '抵抗未命中几率',
+  17: '跳跃目标数',
+  18: '成功几率',
+  19: '激活时间',
+  20: '伤害倍率',
+  21: '全局冷却',
+  22: '持续伤害',
+  23: '效果3',
+  24: '加成倍率',
+  26: '每分钟触发',
+  27: '数值倍率',
+  28: '驱散抵抗几率',
+  30: '失败退还消耗',
+};
+
+/// 能量类型（MiscValue when Effect=30 ENERGIZE）
+/// 复用 kSpellPowerTypeOptions，另补充
+const kEnergizePowerTypeOptions = {
+  0: '法力',
+  1: '怒气',
+  2: '集中值',
+  3: '能量',
+  4: '快乐值',
+  5: '符文',
+  6: '符能',
+};

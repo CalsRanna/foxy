@@ -1007,6 +1007,76 @@ class _SpellViewState extends State<SpellView> {
     );
   }
 
+  /// 根据 Effect 和 EffectAura 返回 MiscValue 的动态标签
+  String _miscValueLabel(int effect, int aura) {
+    if (effect == 0) return '杂项值';
+    switch (effect) {
+      case 6: // APPLY_AURA - 由 Aura 决定
+        return switch (aura) {
+          13 => '法术类型掩码',
+          22 => '抗性类型',
+          29 => '属性ID',
+          30 => '技能ID',
+          31 => '速度类型',
+          36 => '变形形态',
+          75 => '语言ID',
+          78 => '坐骑显示ID',
+          82 => '水下呼吸类型',
+          99 => '攻击强度类型',
+          107 || 108 => 'SpellModOp',
+          287 => '偏转几率%',
+          _ => '杂项值',
+        };
+      case 24: return '物品ID';
+      case 28: return '生物ID';
+      case 30: return '能量类型';
+      case 36: return '法术ID';
+      case 38: return '驱散掩码';
+      case 44: return '技能ID';
+      case 56: return '宠物ID';
+      case 64: return '触发法术ID';
+      case 77: return '脚本参数';
+      case 80: return '连击点数';
+      case 83: return '决斗类型';
+      case 118: return '技能ID';
+      default: return '杂项值';
+    }
+  }
+
+  /// MiscValueB 的动态标签
+  String _miscValueBLabel(int effect, int aura) {
+    if (effect == 0) return '杂项值B';
+    return switch (effect) {
+      6 => switch (aura) {
+        30 => '技能步进值',
+        _ => '杂项值B',
+      },
+      _ => '杂项值B',
+    };
+  }
+
+  /// 返回 MiscValue 对应的枚举选项，null 表示应使用普通数字输入
+  Map<int, String>? _miscValueOptions(int effect, int aura) {
+    if (effect == 0) return null;
+    if (effect == 6) {
+      return switch (aura) {
+        13 => kDamageSchoolOptions,      // MOD_DAMAGE_DONE
+        22 => kDamageSchoolOptions,      // MOD_RESISTANCE
+        29 => kStatTypeOptions,          // MOD_STAT
+        30 => null,                      // MOD_SKILL - 技能ID, 不是小枚举
+        31 => kSpeedTypeOptions,         // MOD_INCREASE_SPEED
+        36 => kShapeshiftFormOptions,    // MOD_SHAPESHIFT
+        99 => kAttackPowerTypeOptions,   // MOD_ATTACK_POWER
+        107 || 108 => kSpellModOpOptions, // ADD_FLAT/PCT_MODIFIER
+        _ => null,
+      };
+    }
+    return switch (effect) {
+      30 => kEnergizePowerTypeOptions,   // ENERGIZE
+      _ => null,
+    };
+  }
+
   /// 构建响应式效果区域
   /// 根据 [effectSignal] 和 [effectAuraSignal] 决定子字段的 readonly 状态
   Widget _buildEffectSection(int i) {
@@ -1032,6 +1102,7 @@ class _SpellViewState extends State<SpellView> {
           effectValue == 143;
       // 周期性光环
       final isPeriodic = const {3, 8, 23, 24, 53, 64, 89, 226, 227, 316}.contains(auraValue);
+      final miscOptions = _miscValueOptions(effectValue, auraValue);
 
       // Controllers by index
       final effCtrl = switch (i) { 0 => viewModel.effect0Controller, 1 => viewModel.effect1Controller, 2 => viewModel.effect2Controller, _ => viewModel.effect0Controller };
@@ -1108,13 +1179,17 @@ class _SpellViewState extends State<SpellView> {
             child: FoxyShadSelect<int>(controller: targetBCtrl, options: kSpellImplicitTargetOptions, placeholder: const Text('TargetB'), enabled: effectActive),
           )),
           Expanded(child: FormItem(
-            label: '杂项值',
-            child: FoxyNumberInput<int>(placeholder: 'MiscValue', controller: miscValueCtrl, readOnly: !effectActive),
+            label: _miscValueLabel(effectValue, auraValue),
+            child: _MiscValueInput(
+              textController: miscValueCtrl,
+              options: miscOptions,
+              readOnly: !effectActive,
+            ),
           )),
         ]),
         Row(spacing: 8, children: [
           Expanded(child: FormItem(
-            label: '杂项值B',
+            label: _miscValueBLabel(effectValue, auraValue),
             child: FoxyNumberInput<int>(placeholder: 'MiscValueB', controller: miscValueBCtrl, readOnly: !effectActive),
           )),
           Expanded(child: FormItem(
@@ -1165,5 +1240,80 @@ class _SpellViewState extends State<SpellView> {
         ]),
       ]);
     });
+  }
+}
+
+/// 根据上下文动态切换数字输入或下拉选择。
+/// 当 [options] 不为 null 时显示下拉框，否则显示普通数字输入。
+class _MiscValueInput extends StatefulWidget {
+  final TextEditingController textController;
+  final Map<int, String>? options;
+  final bool readOnly;
+
+  const _MiscValueInput({
+    required this.textController,
+    this.options,
+    this.readOnly = false,
+  });
+
+  @override
+  State<_MiscValueInput> createState() => _MiscValueInputState();
+}
+
+class _MiscValueInputState extends State<_MiscValueInput> {
+  ShadSelectController<int>? _selectController;
+
+  @override
+  void initState() {
+    super.initState();
+    _syncController();
+  }
+
+  @override
+  void didUpdateWidget(_MiscValueInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.options != widget.options) {
+      _selectController?.dispose();
+      _selectController = null;
+      _syncController();
+    }
+  }
+
+  @override
+  void dispose() {
+    _selectController?.dispose();
+    super.dispose();
+  }
+
+  void _syncController() {
+    if (widget.options != null) {
+      final curVal = int.tryParse(widget.textController.text) ?? 0;
+      _selectController = ShadSelectController<int>();
+      _selectController!.value = {curVal};
+      _selectController!.addListener(() {
+        final v = _selectController!.value.firstOrNull;
+        if (v != null) {
+          widget.textController.text = v.toString();
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final opts = widget.options;
+    if (opts != null && opts.isNotEmpty) {
+      return FoxyShadSelect<int>(
+        controller: _selectController!,
+        options: opts,
+        placeholder: const Text('选择...'),
+        enabled: !widget.readOnly,
+      );
+    }
+    return FoxyNumberInput<int>(
+      placeholder: 'MiscValue',
+      controller: widget.textController,
+      readOnly: widget.readOnly,
+    );
   }
 }
