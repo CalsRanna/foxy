@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/page/spell/spell_detail_view_model.dart';
@@ -1053,10 +1054,10 @@ class _SpellViewState extends State<SpellView> {
     switch (effect) {
       case 6: // APPLY_AURA - 由 Aura 决定
         return switch (aura) {
-          13 => '法术类型掩码',
-          22 => '抗性类型',
-          29 => '属性ID',
-          30 => '技能ID',
+          13 || 87 || 174 || 237 || 238 => '法术类型掩码',
+          22 || 83 => '抗性类型',
+          29 || 137 || 175 || 182 || 212 || 268 => '属性ID',
+          30 || 98 => '技能ID',
           31 => '速度类型',
           36 => '变形形态',
           75 => '语言ID',
@@ -1089,25 +1090,38 @@ class _SpellViewState extends State<SpellView> {
     return switch (effect) {
       6 => switch (aura) {
         30 => '技能步进值',
+        174 => '属性ID',
         _ => '杂项值B',
       },
       _ => '杂项值B',
     };
   }
 
-  /// 返回 MiscValue 对应的枚举选项，null 表示应使用普通数字输入
-  Map<int, String>? _miscValueOptions(int effect, int aura) {
+  /// 返回 MiscValueB 对应的枚举选项
+  dynamic _miscValueBOptions(int effect, int aura) {
+    if (effect == 0) return null;
+    return switch (effect) {
+      6 => switch (aura) {
+        174 => kStatsEnumOptions,   // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — 用 Stats 枚举！
+        _ => null,
+      },
+      _ => null,
+    };
+  }
+
+  /// 返回 MiscValue 对应的枚举选项，null=数字输入, Map=下拉框, List=FlagPicker
+  dynamic _miscValueOptions(int effect, int aura) {
     if (effect == 0) return null;
     if (effect == 6) {
       return switch (aura) {
-        13 => kDamageSchoolOptions,      // MOD_DAMAGE_DONE
-        22 => kDamageSchoolOptions,      // MOD_RESISTANCE
-        29 => kStatTypeOptions,          // MOD_STAT
-        30 => null,                      // MOD_SKILL - 技能ID, 不是小枚举
-        31 => kSpeedTypeOptions,         // MOD_INCREASE_SPEED
-        36 => kShapeshiftFormOptions,    // MOD_SHAPESHIFT
-        99 => kAttackPowerTypeOptions,   // MOD_ATTACK_POWER
-        107 || 108 => kSpellModOpOptions, // ADD_FLAT/PCT_MODIFIER
+        13 || 87 || 174 || 237 || 238 => kSpellSchoolMaskOptions,  // school mask → FlagPicker!
+        22 || 83 => kDamageSchoolOptions,         // 单值抗性 → 下拉
+        29 || 137 || 175 || 182 || 212 || 268 => kStatTypeOptions, // 单值属性 → 下拉
+        30 || 98 => null,                          // 技能ID → 数字
+        31 => kSpeedTypeOptions,
+        36 => kShapeshiftFormOptions,
+        99 => kAttackPowerTypeOptions,
+        107 || 108 => kSpellModOpOptions,
         _ => null,
       };
     }
@@ -1143,6 +1157,11 @@ class _SpellViewState extends State<SpellView> {
       // 周期性光环
       final isPeriodic = const {3, 8, 23, 24, 53, 64, 89, 226, 227, 316}.contains(auraValue);
       final miscOptions = _miscValueOptions(effectValue, auraValue);
+      final miscBOptions = _miscValueBOptions(effectValue, auraValue);
+      // 字段联动：某些子字段只在特定 Effect 下有意义
+      final needsItemType = const {24, 34, 53, 54, 99, 127, 157, 158}.contains(effectValue);
+      final needsTriggerSpell = const {32, 36, 64, 140, 141, 142, 148, 151}.contains(effectValue);
+      final needsComboPoints = effectValue == 80;
 
       // Controllers by index
       final effCtrl = switch (i) { 0 => viewModel.effect0Controller, 1 => viewModel.effect1Controller, 2 => viewModel.effect2Controller, _ => viewModel.effect0Controller };
@@ -1151,6 +1170,8 @@ class _SpellViewState extends State<SpellView> {
       final pointsPerLevelCtrl = switch (i) { 0 => viewModel.effectRealPointsPerLevel0Controller, 1 => viewModel.effectRealPointsPerLevel1Controller, 2 => viewModel.effectRealPointsPerLevel2Controller, _ => viewModel.effectRealPointsPerLevel0Controller };
       final mechanicCtrl = switch (i) { 0 => viewModel.effectMechanic0Controller, 1 => viewModel.effectMechanic1Controller, 2 => viewModel.effectMechanic2Controller, _ => viewModel.effectMechanic0Controller };
       final chainTargetsCtrl = switch (i) { 0 => viewModel.effectChainTargets0Controller, 1 => viewModel.effectChainTargets1Controller, 2 => viewModel.effectChainTargets2Controller, _ => viewModel.effectChainTargets0Controller };
+      final chainTargetsVal = int.tryParse(chainTargetsCtrl.text) ?? 0;
+      final needsChainAmplitude = chainTargetsVal > 0;
       final auraCtrl = switch (i) { 0 => viewModel.effectAura0Controller, 1 => viewModel.effectAura1Controller, 2 => viewModel.effectAura2Controller, _ => viewModel.effectAura0Controller };
       final auraPeriodCtrl = switch (i) { 0 => viewModel.effectAuraPeriod0Controller, 1 => viewModel.effectAuraPeriod1Controller, 2 => viewModel.effectAuraPeriod2Controller, _ => viewModel.effectAuraPeriod0Controller };
       final amplitudeCtrl = switch (i) { 0 => viewModel.effectAmplitude0Controller, 1 => viewModel.effectAmplitude1Controller, 2 => viewModel.effectAmplitude2Controller, _ => viewModel.effectAmplitude0Controller };
@@ -1230,7 +1251,11 @@ class _SpellViewState extends State<SpellView> {
         Row(spacing: 8, children: [
           Expanded(child: FormItem(
             label: _miscValueBLabel(effectValue, auraValue),
-            child: FoxyNumberInput<int>(placeholder: 'MiscValueB', controller: miscValueBCtrl, readOnly: !effectActive),
+            child: _MiscValueInput(
+              textController: miscValueBCtrl,
+              options: miscBOptions,
+              readOnly: !effectActive,
+            ),
           )),
           Expanded(child: FormItem(
             label: '半径',
@@ -1238,7 +1263,7 @@ class _SpellViewState extends State<SpellView> {
           )),
           Expanded(child: FormItem(
             label: '连锁振幅',
-            child: FoxyNumberInput<double>(placeholder: 'ChainAmplitude', controller: chainAmpCtrl, readOnly: !effectActive),
+            child: FoxyNumberInput<double>(placeholder: 'ChainAmplitude', controller: chainAmpCtrl, readOnly: !effectActive || !needsChainAmplitude),
           )),
           Expanded(child: FormItem(
             label: '加成系数',
@@ -1248,11 +1273,11 @@ class _SpellViewState extends State<SpellView> {
         Row(spacing: 8, children: [
           Expanded(child: FormItem(
             label: '物品类型',
-            child: FoxyShadSelect<int>(controller: itemTypeCtrl, options: kSpellItemClassOptions, placeholder: const Text('ItemType'), enabled: effectActive),
+            child: FoxyShadSelect<int>(controller: itemTypeCtrl, options: kSpellItemClassOptions, placeholder: const Text('ItemType'), enabled: effectActive && needsItemType),
           )),
           Expanded(child: FormItem(
             label: '触发法术',
-            child: FoxyNumberInput<int>(placeholder: 'TriggerSpell', controller: triggerSpellCtrl, readOnly: !effectActive),
+            child: FoxyNumberInput<int>(placeholder: 'TriggerSpell', controller: triggerSpellCtrl, readOnly: !effectActive || !needsTriggerSpell),
           )),
           Expanded(child: FormItem(
             label: '连锁目标',
@@ -1260,7 +1285,7 @@ class _SpellViewState extends State<SpellView> {
           )),
           Expanded(child: FormItem(
             label: '连击点数',
-            child: FoxyNumberInput<double>(placeholder: 'PointsPerCombo', controller: comboCtrl, readOnly: !effectActive),
+            child: FoxyNumberInput<double>(placeholder: 'PointsPerCombo', controller: comboCtrl, readOnly: !effectActive || !needsComboPoints),
           )),
         ]),
         Row(spacing: 8, children: [
@@ -1283,11 +1308,10 @@ class _SpellViewState extends State<SpellView> {
   }
 }
 
-/// 根据上下文动态切换数字输入或下拉选择。
-/// 当 [options] 不为 null 时显示下拉框，否则显示普通数字输入。
+/// 根据上下文动态切换 数字输入 / 下拉框 / FlagPicker。
 class _MiscValueInput extends StatefulWidget {
   final TextEditingController textController;
-  final Map<int, String>? options;
+  final dynamic options; // null=数字输入, Map=下拉框, List=FlagPicker
   final bool readOnly;
 
   const _MiscValueInput({
@@ -1302,11 +1326,19 @@ class _MiscValueInput extends StatefulWidget {
 
 class _MiscValueInputState extends State<_MiscValueInput> {
   ShadSelectController<int>? _selectController;
+  late final Signal<int> _flagSignal;
+  void Function()? _flagUnsub;
 
   @override
   void initState() {
     super.initState();
+    _flagSignal = signal(int.tryParse(widget.textController.text) ?? 0);
     _syncController();
+    if (_isFlagMode) {
+      _flagUnsub = _flagSignal.subscribe((v) {
+        widget.textController.text = v.toString();
+      });
+    }
   }
 
   @override
@@ -1315,37 +1347,55 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     if (oldWidget.options != widget.options) {
       _selectController?.dispose();
       _selectController = null;
-      _syncController();
+      // 模式切换时重新同步值
+      if (_isSelectMode) {
+        _syncController();
+      } else if (_isFlagMode) {
+        _flagSignal.value = int.tryParse(widget.textController.text) ?? 0;
+        _flagUnsub ??= _flagSignal.subscribe((v) {
+          widget.textController.text = v.toString();
+        });
+      }
     }
   }
 
   @override
   void dispose() {
     _selectController?.dispose();
+    _flagUnsub?.call();
     super.dispose();
   }
 
+  bool get _isFlagMode => widget.options is List<FlagItem>;
+  bool get _isSelectMode => widget.options is Map<int, String>;
+
   void _syncController() {
-    if (widget.options != null) {
+    if (_isSelectMode) {
       final curVal = int.tryParse(widget.textController.text) ?? 0;
       _selectController = ShadSelectController<int>();
       _selectController!.value = {curVal};
       _selectController!.addListener(() {
         final v = _selectController!.value.firstOrNull;
-        if (v != null) {
-          widget.textController.text = v.toString();
-        }
+        if (v != null) widget.textController.text = v.toString();
       });
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
-    final opts = widget.options;
-    if (opts != null && opts.isNotEmpty) {
+    if (_isFlagMode) {
+      return FlagPicker(
+        signal: _flagSignal,
+        flags: widget.options as List<FlagItem>,
+        title: '杂项值',
+        placeholder: 'MiscValue',
+      );
+    }
+    if (_isSelectMode) {
       return FoxyShadSelect<int>(
         controller: _selectController!,
-        options: opts,
+        options: widget.options as Map<int, String>,
         placeholder: const Text('选择...'),
         enabled: !widget.readOnly,
       );
