@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/spell_enums.dart';
+import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/page/spell/spell_detail_view_model.dart';
 import 'package:foxy/page/spell/spell_icon_selector.dart';
 import 'package:foxy/page/spell/spell_duration_selector.dart';
@@ -9,6 +10,7 @@ import 'package:foxy/page/area_table/area_table_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -103,9 +105,11 @@ class _SpellViewState extends State<SpellView> {
     );
     final schoolMaskInput = FormItem(
       label: '法术类型掩码',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.schoolMask,
+        flags: kSpellSchoolMaskOptions,
+        title: '法术类型掩码',
         placeholder: 'SchoolMask',
-        controller: vm.schoolMaskController,
       ),
     );
     final mechanicInput = FormItem(
@@ -242,9 +246,11 @@ class _SpellViewState extends State<SpellView> {
     );
     final targetsInput = FormItem(
       label: '目标限制',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.targets,
+        flags: kSpellCastTargetFlagsOptions,
+        title: '目标限制',
         placeholder: 'Targets',
-        controller: vm.targetsController,
       ),
     );
     final maxTargetsInput = FormItem(
@@ -309,9 +315,11 @@ class _SpellViewState extends State<SpellView> {
     );
     final facingCasterFlagsInput = FormItem(
       label: '施法朝向',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.facingCasterFlags,
+        flags: kSpellFacingFlagsOptions,
+        title: '施法朝向',
         placeholder: 'FacingCasterFlags',
-        controller: vm.facingCasterFlagsController,
       ),
     );
 
@@ -377,88 +385,112 @@ class _SpellViewState extends State<SpellView> {
     // === 标志位（所有属性标志） ===
     final interruptFlagsInput = FormItem(
       label: '打断标志',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.interruptFlags,
+        flags: kSpellInterruptFlagsOptions,
+        title: '打断标志',
         placeholder: 'InterruptFlags',
-        controller: vm.interruptFlagsController,
       ),
     );
     final auraInterruptFlagsInput = FormItem(
       label: '光环打断标志',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.auraInterruptFlags,
+        flags: kSpellAuraInterruptFlagsOptions,
+        title: '光环打断标志',
         placeholder: 'AuraInterruptFlags',
-        controller: vm.auraInterruptFlagsController,
       ),
     );
     final channelInterruptFlagsInput = FormItem(
       label: '引导打断标志',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.channelInterruptFlags,
+        flags: kSpellChannelInterruptFlagsOptions,
+        title: '引导打断标志',
         placeholder: 'ChannelInterruptFlags',
-        controller: vm.channelInterruptFlagsController,
       ),
     );
     final attributesInput = FormItem(
       label: '属性',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.attributes,
+        flags: kSpellAttr0Options,
+        title: '属性 (Attributes)',
         placeholder: 'Attributes',
-        controller: vm.attributesController,
       ),
     );
     final attributesExInput = FormItem(
       label: '属性Ex',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.attributesEx,
+        flags: kSpellAttr1Options,
+        title: '属性Ex (AttributesEx)',
         placeholder: 'AttributesEx',
-        controller: vm.attributesExController,
       ),
     );
     final attributesExBInput = FormItem(
       label: '属性ExB',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.attributesExB,
+        flags: kSpellAttr2Options,
+        title: '属性ExB (AttributesExB)',
         placeholder: 'AttributesExB',
-        controller: vm.attributesExBController,
       ),
     );
     final attributesExCInput = FormItem(
       label: '属性ExC',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.attributesExC,
+        flags: kSpellAttr3Options,
+        title: '属性ExC (AttributesExC)',
         placeholder: 'AttributesExC',
-        controller: vm.attributesExCController,
       ),
     );
     final attributesExDInput = FormItem(
       label: '属性ExD',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.attributesExD,
+        flags: kSpellAttr4Options,
+        title: '属性ExD (AttributesExD)',
         placeholder: 'AttributesExD',
-        controller: vm.attributesExDController,
       ),
     );
     final attributesExEInput = FormItem(
       label: '属性ExE',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.attributesExE,
+        flags: kSpellAttr5Options,
+        title: '属性ExE (AttributesExE)',
         placeholder: 'AttributesExE',
-        controller: vm.attributesExEController,
       ),
     );
     final attributesExFInput = FormItem(
       label: '属性ExF',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.attributesExF,
+        flags: kSpellAttr6Options,
+        title: '属性ExF (AttributesExF)',
         placeholder: 'AttributesExF',
-        controller: vm.attributesExFController,
       ),
     );
     final attributesExGInput = FormItem(
       label: '属性ExG',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.attributesExG,
+        flags: kSpellAttr7Options,
+        title: '属性ExG (AttributesExG)',
         placeholder: 'AttributesExG',
-        controller: vm.attributesExGController,
       ),
     );
 
     // === 触发 ===
     final procTypeMaskInput = FormItem(
       label: '触发类型掩码',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.procTypeMask,
+        flags: kSpellProcFlagsOptions,
+        title: '触发类型掩码',
         placeholder: 'ProcTypeMask',
-        controller: vm.procTypeMaskController,
       ),
     );
     final procChanceInput = FormItem(
@@ -506,9 +538,11 @@ class _SpellViewState extends State<SpellView> {
     );
     final equippedItemInvTypesInput = FormItem(
       label: '装备栏位',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.equippedItemInvTypes,
+        flags: kInventoryTypeOptions,
+        title: '装备栏位',
         placeholder: 'EquippedItemInvTypes',
-        controller: vm.equippedItemInvTypesController,
       ),
     );
 
@@ -665,16 +699,20 @@ class _SpellViewState extends State<SpellView> {
     );
     final shapeshiftMask0Input = FormItem(
       label: '变形掩码',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.shapeshiftMask0,
+        flags: kShapeshiftFormMaskOptions,
+        title: '变形掩码',
         placeholder: 'ShapeshiftMask0',
-        controller: vm.shapeshiftMask0Controller,
       ),
     );
     final shapeshiftExclude0Input = FormItem(
       label: '变形排除',
-      child: FoxyNumberInput<int>(
+      child: FlagPicker(
+        signal: vm.shapeshiftExclude0,
+        flags: kShapeshiftFormMaskOptions,
+        title: '变形排除',
         placeholder: 'ShapeshiftExclude0',
-        controller: vm.shapeshiftExclude0Controller,
       ),
     );
 
@@ -948,7 +986,6 @@ class _SpellViewState extends State<SpellView> {
           FormSection(title: '标志位', children: attributeFlagRows),
           FormSection(title: '触发', children: procRows),
           Watch((_) {
-            final familyActive = vm.spellClassSetSignal.value != 0;
             return FormSection(title: '法术分类掩码', children: [
               Row(
                 spacing: 8,
@@ -956,26 +993,29 @@ class _SpellViewState extends State<SpellView> {
                   Expanded(child: spellClassSetInput),
                   Expanded(child: FormItem(
                     label: '分类掩码1',
-                    child: FoxyNumberInput<int>(
+                    child: FlagPicker(
+                      signal: vm.spellClassMask0,
+                      flags: kSpellClassMaskBits,
+                      title: '分类掩码1',
                       placeholder: 'SpellClassMask0',
-                      controller: vm.spellClassMask0Controller,
-                      readOnly: !familyActive,
                     ),
                   )),
                   Expanded(child: FormItem(
                     label: '分类掩码2',
-                    child: FoxyNumberInput<int>(
+                    child: FlagPicker(
+                      signal: vm.spellClassMask1,
+                      flags: kSpellClassMaskBits,
+                      title: '分类掩码2',
                       placeholder: 'SpellClassMask1',
-                      controller: vm.spellClassMask1Controller,
-                      readOnly: !familyActive,
                     ),
                   )),
                   Expanded(child: FormItem(
                     label: '分类掩码3',
-                    child: FoxyNumberInput<int>(
+                    child: FlagPicker(
+                      signal: vm.spellClassMask2,
+                      flags: kSpellClassMaskBits,
+                      title: '分类掩码3',
                       placeholder: 'SpellClassMask2',
-                      controller: vm.spellClassMask2Controller,
-                      readOnly: !familyActive,
                     ),
                   )),
                 ],
@@ -1124,9 +1164,9 @@ class _SpellViewState extends State<SpellView> {
       final itemTypeCtrl = switch (i) { 0 => viewModel.effectItemType0Controller, 1 => viewModel.effectItemType1Controller, 2 => viewModel.effectItemType2Controller, _ => viewModel.effectItemType0Controller };
       final triggerSpellCtrl = switch (i) { 0 => viewModel.effectTriggerSpell0Controller, 1 => viewModel.effectTriggerSpell1Controller, 2 => viewModel.effectTriggerSpell2Controller, _ => viewModel.effectTriggerSpell0Controller };
       final comboCtrl = switch (i) { 0 => viewModel.effectPointsPerCombo0Controller, 1 => viewModel.effectPointsPerCombo1Controller, 2 => viewModel.effectPointsPerCombo2Controller, _ => viewModel.effectPointsPerCombo0Controller };
-      final maskACtrl = switch (i) { 0 => viewModel.effectSpellClassMaskA0Controller, 1 => viewModel.effectSpellClassMaskA1Controller, 2 => viewModel.effectSpellClassMaskA2Controller, _ => viewModel.effectSpellClassMaskA0Controller };
-      final maskBCtrl = switch (i) { 0 => viewModel.effectSpellClassMaskB0Controller, 1 => viewModel.effectSpellClassMaskB1Controller, 2 => viewModel.effectSpellClassMaskB2Controller, _ => viewModel.effectSpellClassMaskB0Controller };
-      final maskCCtrl = switch (i) { 0 => viewModel.effectSpellClassMaskC0Controller, 1 => viewModel.effectSpellClassMaskC1Controller, 2 => viewModel.effectSpellClassMaskC2Controller, _ => viewModel.effectSpellClassMaskC0Controller };
+      final maskACtrl = switch (i) { 0 => viewModel.effectSpellClassMaskA0, 1 => viewModel.effectSpellClassMaskA1, 2 => viewModel.effectSpellClassMaskA2, _ => viewModel.effectSpellClassMaskA0 };
+      final maskBCtrl = switch (i) { 0 => viewModel.effectSpellClassMaskB0, 1 => viewModel.effectSpellClassMaskB1, 2 => viewModel.effectSpellClassMaskB2, _ => viewModel.effectSpellClassMaskB0 };
+      final maskCCtrl = switch (i) { 0 => viewModel.effectSpellClassMaskC0, 1 => viewModel.effectSpellClassMaskC1, 2 => viewModel.effectSpellClassMaskC2, _ => viewModel.effectSpellClassMaskC0 };
 
       return FormSection(title: labels[i], children: [
         Row(spacing: 8, children: [
@@ -1226,15 +1266,15 @@ class _SpellViewState extends State<SpellView> {
         Row(spacing: 8, children: [
           Expanded(child: FormItem(
             label: '分类掩码A',
-            child: FoxyNumberInput<int>(placeholder: 'SpellClassMaskA', controller: maskACtrl, readOnly: !effectActive),
+            child: FlagPicker(signal: maskACtrl, flags: kSpellClassMaskBits, title: '分类掩码A', placeholder: 'MaskA'),
           )),
           Expanded(child: FormItem(
             label: '分类掩码B',
-            child: FoxyNumberInput<int>(placeholder: 'SpellClassMaskB', controller: maskBCtrl, readOnly: !effectActive),
+            child: FlagPicker(signal: maskBCtrl, flags: kSpellClassMaskBits, title: '分类掩码B', placeholder: 'MaskB'),
           )),
           Expanded(child: FormItem(
             label: '分类掩码C',
-            child: FoxyNumberInput<int>(placeholder: 'SpellClassMaskC', controller: maskCCtrl, readOnly: !effectActive),
+            child: FlagPicker(signal: maskCCtrl, flags: kSpellClassMaskBits, title: '分类掩码C', placeholder: 'MaskC'),
           )),
           Expanded(child: SizedBox()),
         ]),
