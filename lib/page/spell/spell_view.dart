@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/page/spell/spell_detail_view_model.dart';
 import 'package:foxy/page/spell/spell_icon_selector.dart';
 import 'package:foxy/page/spell/spell_duration_selector.dart';
@@ -6,9 +8,11 @@ import 'package:foxy/page/spell/spell_range_selector.dart';
 import 'package:foxy/page/area_table/area_table_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 class SpellView extends StatefulWidget {
   final int? id;
@@ -75,14 +79,14 @@ class _SpellViewState extends State<SpellView> {
       ),
     );
     final spellVisualID0Input = FormItem(
-      label: '视觉效果1',
+      label: '视觉',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellVisualID0',
         controller: vm.spellVisualID0Controller,
       ),
     );
     final spellVisualID1Input = FormItem(
-      label: '视觉效果2',
+      label: '视觉',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellVisualID1',
         controller: vm.spellVisualID1Controller,
@@ -106,30 +110,34 @@ class _SpellViewState extends State<SpellView> {
     );
     final mechanicInput = FormItem(
       label: '机制',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Mechanic',
+      child: FoxyShadSelect<int>(
         controller: vm.mechanicController,
+        options: kSpellMechanicOptions,
+        placeholder: const Text('Mechanic'),
       ),
     );
     final defenseTypeInput = FormItem(
-      label: '防御类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'DefenseType',
+      label: '伤害类型',
+      child: FoxyShadSelect<int>(
         controller: vm.defenseTypeController,
+        options: kSpellDmgClassOptions,
+        placeholder: const Text('DefenseType'),
       ),
     );
     final dispelTypeInput = FormItem(
       label: '驱散类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'DispelType',
+      child: FoxyShadSelect<int>(
         controller: vm.dispelTypeController,
+        options: kSpellDispelTypeOptions,
+        placeholder: const Text('DispelType'),
       ),
     );
     final preventionTypeInput = FormItem(
       label: '防止类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'PreventionType',
+      child: FoxyShadSelect<int>(
         controller: vm.preventionTypeController,
+        options: kSpellPreventionTypeOptions,
+        placeholder: const Text('PreventionType'),
       ),
     );
 
@@ -226,9 +234,10 @@ class _SpellViewState extends State<SpellView> {
     // === 目标 ===
     final targetCreatureTypeInput = FormItem(
       label: '目标生物类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'TargetCreatureType',
+      child: FoxyShadSelect<int>(
         controller: vm.targetCreatureTypeController,
+        options: kCreatureTypeOptions,
+        placeholder: const Text('TargetCreatureType'),
       ),
     );
     final targetsInput = FormItem(
@@ -316,9 +325,10 @@ class _SpellViewState extends State<SpellView> {
     );
     final powerTypeInput = FormItem(
       label: '能量类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'PowerType',
+      child: FoxyShadSelect<int>(
         controller: vm.powerTypeController,
+        options: kSpellPowerTypeOptions,
+        placeholder: const Text('PowerType'),
       ),
     );
     final runeCostIDInput = FormItem(
@@ -468,508 +478,23 @@ class _SpellViewState extends State<SpellView> {
 
     // === 法术分类掩码 ===
     final spellClassSetInput = FormItem(
-      label: '法术分类集',
-      child: FoxyNumberInput<int>(
-        placeholder: 'SpellClassSet',
+      label: '法术族',
+      child: FoxyShadSelect<int>(
         controller: vm.spellClassSetController,
-      ),
-    );
-    final spellClassMask0Input = FormItem(
-      label: '分类掩码1',
-      child: FoxyNumberInput<int>(
-        placeholder: 'SpellClassMask0',
-        controller: vm.spellClassMask0Controller,
-      ),
-    );
-    final spellClassMask1Input = FormItem(
-      label: '分类掩码2',
-      child: FoxyNumberInput<int>(
-        placeholder: 'SpellClassMask1',
-        controller: vm.spellClassMask1Controller,
-      ),
-    );
-    final spellClassMask2Input = FormItem(
-      label: '分类掩码3',
-      child: FoxyNumberInput<int>(
-        placeholder: 'SpellClassMask2',
-        controller: vm.spellClassMask2Controller,
+        options: kSpellFamilyNameOptions,
+        placeholder: const Text('SpellClassSet'),
       ),
     );
 
-    // === 效果0 ===
-    final effect0Input = FormItem(
-      label: '效果0类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Effect0',
-        controller: vm.effect0Controller,
-      ),
-    );
-    final effectBasePoints0Input = FormItem(
-      label: '效果0基础值',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectBasePoints0',
-        controller: vm.effectBasePoints0Controller,
-      ),
-    );
-    final effectDieSides0Input = FormItem(
-      label: '效果0波动值',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectDieSides0',
-        controller: vm.effectDieSides0Controller,
-      ),
-    );
-    final effectRealPointsPerLevel0Input = FormItem(
-      label: '效果0每级加成',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectRealPointsPerLevel0',
-        controller: vm.effectRealPointsPerLevel0Controller,
-      ),
-    );
-    final effectMechanic0Input = FormItem(
-      label: '效果0机制',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectMechanic0',
-        controller: vm.effectMechanic0Controller,
-      ),
-    );
-    final effectAura0Input = FormItem(
-      label: '效果0光环',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectAura0',
-        controller: vm.effectAura0Controller,
-      ),
-    );
-    final effectAuraPeriod0Input = FormItem(
-      label: '效果0光环周期',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectAuraPeriod0',
-        controller: vm.effectAuraPeriod0Controller,
-      ),
-    );
-    final effectAmplitude0Input = FormItem(
-      label: '效果0振幅',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectAmplitude0',
-        controller: vm.effectAmplitude0Controller,
-      ),
-    );
-    final implicitTargetA0Input = FormItem(
-      label: '效果0目标A',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ImplicitTargetA0',
-        controller: vm.implicitTargetA0Controller,
-      ),
-    );
-    final implicitTargetB0Input = FormItem(
-      label: '效果0目标B',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ImplicitTargetB0',
-        controller: vm.implicitTargetB0Controller,
-      ),
-    );
-    final effectMiscValue0Input = FormItem(
-      label: '效果0杂项值',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectMiscValue0',
-        controller: vm.effectMiscValue0Controller,
-      ),
-    );
-    final effectMiscValueB0Input = FormItem(
-      label: '效果0杂项值B',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectMiscValueB0',
-        controller: vm.effectMiscValueB0Controller,
-      ),
-    );
-    final effectRadiusIndex0Input = FormItem(
-      label: '效果0半径',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectRadiusIndex0',
-        controller: vm.effectRadiusIndex0Controller,
-      ),
-    );
-    final effectChainAmplitude0Input = FormItem(
-      label: '效果0连锁振幅',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectChainAmplitude0',
-        controller: vm.effectChainAmplitude0Controller,
-      ),
-    );
-    final effectBonusCoefficient0Input = FormItem(
-      label: '效果0加成系数',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectBonusCoefficient0',
-        controller: vm.effectBonusCoefficient0Controller,
-      ),
-    );
-    final effectItemType0Input = FormItem(
-      label: '效果0物品类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectItemType0',
-        controller: vm.effectItemType0Controller,
-      ),
-    );
-    final effectTriggerSpell0Input = FormItem(
-      label: '效果0触发法术',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectTriggerSpell0',
-        controller: vm.effectTriggerSpell0Controller,
-      ),
-    );
-    final effectChainTargets0Input = FormItem(
-      label: '效果0连锁目标',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectChainTargets0',
-        controller: vm.effectChainTargets0Controller,
-      ),
-    );
-    final effectPointsPerCombo0Input = FormItem(
-      label: '效果0连击点数',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectPointsPerCombo0',
-        controller: vm.effectPointsPerCombo0Controller,
-      ),
-    );
-    final effectSpellClassMaskA0Input = FormItem(
-      label: '效果0分类掩码A',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectSpellClassMaskA0',
-        controller: vm.effectSpellClassMaskA0Controller,
-      ),
-    );
-    final effectSpellClassMaskB0Input = FormItem(
-      label: '效果0分类掩码B',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectSpellClassMaskB0',
-        controller: vm.effectSpellClassMaskB0Controller,
-      ),
-    );
-    final effectSpellClassMaskC0Input = FormItem(
-      label: '效果0分类掩码C',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectSpellClassMaskC0',
-        controller: vm.effectSpellClassMaskC0Controller,
-      ),
-    );
-
-    // === 效果1 ===
-    final effect1Input = FormItem(
-      label: '效果1类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Effect1',
-        controller: vm.effect1Controller,
-      ),
-    );
-    final effectBasePoints1Input = FormItem(
-      label: '效果1基础值',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectBasePoints1',
-        controller: vm.effectBasePoints1Controller,
-      ),
-    );
-    final effectDieSides1Input = FormItem(
-      label: '效果1波动值',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectDieSides1',
-        controller: vm.effectDieSides1Controller,
-      ),
-    );
-    final effectRealPointsPerLevel1Input = FormItem(
-      label: '效果1每级加成',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectRealPointsPerLevel1',
-        controller: vm.effectRealPointsPerLevel1Controller,
-      ),
-    );
-    final effectMechanic1Input = FormItem(
-      label: '效果1机制',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectMechanic1',
-        controller: vm.effectMechanic1Controller,
-      ),
-    );
-    final effectAura1Input = FormItem(
-      label: '效果1光环',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectAura1',
-        controller: vm.effectAura1Controller,
-      ),
-    );
-    final effectAuraPeriod1Input = FormItem(
-      label: '效果1光环周期',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectAuraPeriod1',
-        controller: vm.effectAuraPeriod1Controller,
-      ),
-    );
-    final effectAmplitude1Input = FormItem(
-      label: '效果1振幅',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectAmplitude1',
-        controller: vm.effectAmplitude1Controller,
-      ),
-    );
-    final implicitTargetA1Input = FormItem(
-      label: '效果1目标A',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ImplicitTargetA1',
-        controller: vm.implicitTargetA1Controller,
-      ),
-    );
-    final implicitTargetB1Input = FormItem(
-      label: '效果1目标B',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ImplicitTargetB1',
-        controller: vm.implicitTargetB1Controller,
-      ),
-    );
-    final effectMiscValue1Input = FormItem(
-      label: '效果1杂项值',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectMiscValue1',
-        controller: vm.effectMiscValue1Controller,
-      ),
-    );
-    final effectMiscValueB1Input = FormItem(
-      label: '效果1杂项值B',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectMiscValueB1',
-        controller: vm.effectMiscValueB1Controller,
-      ),
-    );
-    final effectRadiusIndex1Input = FormItem(
-      label: '效果1半径',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectRadiusIndex1',
-        controller: vm.effectRadiusIndex1Controller,
-      ),
-    );
-    final effectChainAmplitude1Input = FormItem(
-      label: '效果1连锁振幅',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectChainAmplitude1',
-        controller: vm.effectChainAmplitude1Controller,
-      ),
-    );
-    final effectBonusCoefficient1Input = FormItem(
-      label: '效果1加成系数',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectBonusCoefficient1',
-        controller: vm.effectBonusCoefficient1Controller,
-      ),
-    );
-    final effectItemType1Input = FormItem(
-      label: '效果1物品类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectItemType1',
-        controller: vm.effectItemType1Controller,
-      ),
-    );
-    final effectTriggerSpell1Input = FormItem(
-      label: '效果1触发法术',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectTriggerSpell1',
-        controller: vm.effectTriggerSpell1Controller,
-      ),
-    );
-    final effectChainTargets1Input = FormItem(
-      label: '效果1连锁目标',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectChainTargets1',
-        controller: vm.effectChainTargets1Controller,
-      ),
-    );
-    final effectPointsPerCombo1Input = FormItem(
-      label: '效果1连击点数',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectPointsPerCombo1',
-        controller: vm.effectPointsPerCombo1Controller,
-      ),
-    );
-    final effectSpellClassMaskA1Input = FormItem(
-      label: '效果1分类掩码A',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectSpellClassMaskA1',
-        controller: vm.effectSpellClassMaskA1Controller,
-      ),
-    );
-    final effectSpellClassMaskB1Input = FormItem(
-      label: '效果1分类掩码B',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectSpellClassMaskB1',
-        controller: vm.effectSpellClassMaskB1Controller,
-      ),
-    );
-    final effectSpellClassMaskC1Input = FormItem(
-      label: '效果1分类掩码C',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectSpellClassMaskC1',
-        controller: vm.effectSpellClassMaskC1Controller,
-      ),
-    );
-
-    // === 效果2 ===
-    final effect2Input = FormItem(
-      label: '效果2类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Effect2',
-        controller: vm.effect2Controller,
-      ),
-    );
-    final effectBasePoints2Input = FormItem(
-      label: '效果2基础值',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectBasePoints2',
-        controller: vm.effectBasePoints2Controller,
-      ),
-    );
-    final effectDieSides2Input = FormItem(
-      label: '效果2波动值',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectDieSides2',
-        controller: vm.effectDieSides2Controller,
-      ),
-    );
-    final effectRealPointsPerLevel2Input = FormItem(
-      label: '效果2每级加成',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectRealPointsPerLevel2',
-        controller: vm.effectRealPointsPerLevel2Controller,
-      ),
-    );
-    final effectMechanic2Input = FormItem(
-      label: '效果2机制',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectMechanic2',
-        controller: vm.effectMechanic2Controller,
-      ),
-    );
-    final effectAura2Input = FormItem(
-      label: '效果2光环',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectAura2',
-        controller: vm.effectAura2Controller,
-      ),
-    );
-    final effectAuraPeriod2Input = FormItem(
-      label: '效果2光环周期',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectAuraPeriod2',
-        controller: vm.effectAuraPeriod2Controller,
-      ),
-    );
-    final effectAmplitude2Input = FormItem(
-      label: '效果2振幅',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectAmplitude2',
-        controller: vm.effectAmplitude2Controller,
-      ),
-    );
-    final implicitTargetA2Input = FormItem(
-      label: '效果2目标A',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ImplicitTargetA2',
-        controller: vm.implicitTargetA2Controller,
-      ),
-    );
-    final implicitTargetB2Input = FormItem(
-      label: '效果2目标B',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ImplicitTargetB2',
-        controller: vm.implicitTargetB2Controller,
-      ),
-    );
-    final effectMiscValue2Input = FormItem(
-      label: '效果2杂项值',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectMiscValue2',
-        controller: vm.effectMiscValue2Controller,
-      ),
-    );
-    final effectMiscValueB2Input = FormItem(
-      label: '效果2杂项值B',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectMiscValueB2',
-        controller: vm.effectMiscValueB2Controller,
-      ),
-    );
-    final effectRadiusIndex2Input = FormItem(
-      label: '效果2半径',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectRadiusIndex2',
-        controller: vm.effectRadiusIndex2Controller,
-      ),
-    );
-    final effectChainAmplitude2Input = FormItem(
-      label: '效果2连锁振幅',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectChainAmplitude2',
-        controller: vm.effectChainAmplitude2Controller,
-      ),
-    );
-    final effectBonusCoefficient2Input = FormItem(
-      label: '效果2加成系数',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectBonusCoefficient2',
-        controller: vm.effectBonusCoefficient2Controller,
-      ),
-    );
-    final effectItemType2Input = FormItem(
-      label: '效果2物品类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectItemType2',
-        controller: vm.effectItemType2Controller,
-      ),
-    );
-    final effectTriggerSpell2Input = FormItem(
-      label: '效果2触发法术',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectTriggerSpell2',
-        controller: vm.effectTriggerSpell2Controller,
-      ),
-    );
-    final effectChainTargets2Input = FormItem(
-      label: '效果2连锁目标',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectChainTargets2',
-        controller: vm.effectChainTargets2Controller,
-      ),
-    );
-    final effectPointsPerCombo2Input = FormItem(
-      label: '效果2连击点数',
-      child: FoxyNumberInput<double>(
-        placeholder: 'EffectPointsPerCombo2',
-        controller: vm.effectPointsPerCombo2Controller,
-      ),
-    );
-    final effectSpellClassMaskA2Input = FormItem(
-      label: '效果2分类掩码A',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectSpellClassMaskA2',
-        controller: vm.effectSpellClassMaskA2Controller,
-      ),
-    );
-    final effectSpellClassMaskB2Input = FormItem(
-      label: '效果2分类掩码B',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectSpellClassMaskB2',
-        controller: vm.effectSpellClassMaskB2Controller,
-      ),
-    );
-    final effectSpellClassMaskC2Input = FormItem(
-      label: '效果2分类掩码C',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectSpellClassMaskC2',
-        controller: vm.effectSpellClassMaskC2Controller,
-      ),
-    );
+    // 效果区域的输入框已移至响应式 _buildEffectSection 方法中
 
     // === 装备限制 ===
     final equippedItemClassInput = FormItem(
-      label: '装备职业',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EquippedItemClass',
+      label: '装备类型',
+      child: FoxyShadSelect<int>(
         controller: vm.equippedItemClassController,
+        options: kSpellItemClassOptions,
+        placeholder: const Text('EquippedItemClass'),
       ),
     );
     final equippedItemSubclassInput = FormItem(
@@ -1097,9 +622,10 @@ class _SpellViewState extends State<SpellView> {
     );
     final minReputationInput = FormItem(
       label: '最低声望等级',
-      child: FoxyNumberInput<int>(
-        placeholder: 'MinReputation',
+      child: FoxyShadSelect<int>(
         controller: vm.minReputationController,
+        options: kSpellReputationRankOptions,
+        placeholder: const Text('MinReputation'),
       ),
     );
     final spellPriorityInput = FormItem(
@@ -1329,189 +855,6 @@ class _SpellViewState extends State<SpellView> {
       ),
     ];
 
-    final spellClassRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: spellClassSetInput),
-          Expanded(child: spellClassMask0Input),
-          Expanded(child: spellClassMask1Input),
-          Expanded(child: spellClassMask2Input),
-        ],
-      ),
-    ];
-
-    final effect0Rows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effect0Input),
-          Expanded(child: effectBasePoints0Input),
-          Expanded(child: effectDieSides0Input),
-          Expanded(child: effectRealPointsPerLevel0Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectMechanic0Input),
-          Expanded(child: effectChainTargets0Input),
-          Expanded(child: effectAura0Input),
-          Expanded(child: effectAuraPeriod0Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectAmplitude0Input),
-          Expanded(child: implicitTargetA0Input),
-          Expanded(child: implicitTargetB0Input),
-          Expanded(child: effectMiscValue0Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectMiscValueB0Input),
-          Expanded(child: effectRadiusIndex0Input),
-          Expanded(child: effectChainAmplitude0Input),
-          Expanded(child: effectBonusCoefficient0Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectItemType0Input),
-          Expanded(child: effectTriggerSpell0Input),
-          Expanded(child: effectChainTargets0Input),
-          Expanded(child: effectPointsPerCombo0Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectSpellClassMaskA0Input),
-          Expanded(child: effectSpellClassMaskB0Input),
-          Expanded(child: effectSpellClassMaskC0Input),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    final effect1Rows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effect1Input),
-          Expanded(child: effectBasePoints1Input),
-          Expanded(child: effectDieSides1Input),
-          Expanded(child: effectRealPointsPerLevel1Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectMechanic1Input),
-          Expanded(child: effectChainTargets1Input),
-          Expanded(child: effectAura1Input),
-          Expanded(child: effectAuraPeriod1Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectAmplitude1Input),
-          Expanded(child: implicitTargetA1Input),
-          Expanded(child: implicitTargetB1Input),
-          Expanded(child: effectMiscValue1Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectMiscValueB1Input),
-          Expanded(child: effectRadiusIndex1Input),
-          Expanded(child: effectChainAmplitude1Input),
-          Expanded(child: effectBonusCoefficient1Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectItemType1Input),
-          Expanded(child: effectTriggerSpell1Input),
-          Expanded(child: effectChainTargets1Input),
-          Expanded(child: effectPointsPerCombo1Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectSpellClassMaskA1Input),
-          Expanded(child: effectSpellClassMaskB1Input),
-          Expanded(child: effectSpellClassMaskC1Input),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    final effect2Rows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effect2Input),
-          Expanded(child: effectBasePoints2Input),
-          Expanded(child: effectDieSides2Input),
-          Expanded(child: effectRealPointsPerLevel2Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectMechanic2Input),
-          Expanded(child: effectChainTargets2Input),
-          Expanded(child: effectAura2Input),
-          Expanded(child: effectAuraPeriod2Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectAmplitude2Input),
-          Expanded(child: implicitTargetA2Input),
-          Expanded(child: implicitTargetB2Input),
-          Expanded(child: effectMiscValue2Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectMiscValueB2Input),
-          Expanded(child: effectRadiusIndex2Input),
-          Expanded(child: effectChainAmplitude2Input),
-          Expanded(child: effectBonusCoefficient2Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectItemType2Input),
-          Expanded(child: effectTriggerSpell2Input),
-          Expanded(child: effectChainTargets2Input),
-          Expanded(child: effectPointsPerCombo2Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effectSpellClassMaskA2Input),
-          Expanded(child: effectSpellClassMaskB2Input),
-          Expanded(child: effectSpellClassMaskC2Input),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
     final equipRows = [
       Row(
         spacing: 8,
@@ -1604,10 +947,44 @@ class _SpellViewState extends State<SpellView> {
           FormSection(title: '能量消耗', children: powerRows),
           FormSection(title: '标志位', children: attributeFlagRows),
           FormSection(title: '触发', children: procRows),
-          FormSection(title: '法术分类掩码', children: spellClassRows),
-          FormSection(title: '效果0', children: effect0Rows),
-          FormSection(title: '效果1', children: effect1Rows),
-          FormSection(title: '效果2', children: effect2Rows),
+          Watch((_) {
+            final familyActive = vm.spellClassSetSignal.value != 0;
+            return FormSection(title: '法术分类掩码', children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: spellClassSetInput),
+                  Expanded(child: FormItem(
+                    label: '分类掩码1',
+                    child: FoxyNumberInput<int>(
+                      placeholder: 'SpellClassMask0',
+                      controller: vm.spellClassMask0Controller,
+                      readOnly: !familyActive,
+                    ),
+                  )),
+                  Expanded(child: FormItem(
+                    label: '分类掩码2',
+                    child: FoxyNumberInput<int>(
+                      placeholder: 'SpellClassMask1',
+                      controller: vm.spellClassMask1Controller,
+                      readOnly: !familyActive,
+                    ),
+                  )),
+                  Expanded(child: FormItem(
+                    label: '分类掩码3',
+                    child: FoxyNumberInput<int>(
+                      placeholder: 'SpellClassMask2',
+                      controller: vm.spellClassMask2Controller,
+                      readOnly: !familyActive,
+                    ),
+                  )),
+                ],
+              ),
+            ]);
+          }),
+          _buildEffectSection(0),
+          _buildEffectSection(1),
+          _buildEffectSection(2),
           FormSection(title: '装备限制', children: equipRows),
           FormSection(title: '图腾', children: totemRows),
           FormSection(title: '施法材料', children: reagentRows),
@@ -1628,5 +1005,165 @@ class _SpellViewState extends State<SpellView> {
         ],
       ),
     );
+  }
+
+  /// 构建响应式效果区域
+  /// 根据 [effectSignal] 和 [effectAuraSignal] 决定子字段的 readonly 状态
+  Widget _buildEffectSection(int i) {
+    final labels = ['效果1', '效果2', '效果3'];
+    return Watch((_) {
+      final effectValue = switch (i) {
+        0 => viewModel.effect0Signal.value,
+        1 => viewModel.effect1Signal.value,
+        2 => viewModel.effect2Signal.value,
+        _ => 0,
+      };
+      final auraValue = switch (i) {
+        0 => viewModel.effectAura0Signal.value,
+        1 => viewModel.effectAura1Signal.value,
+        2 => viewModel.effectAura2Signal.value,
+        _ => 0,
+      };
+      final effectActive = effectValue != 0;
+      // 只有 SPELL_EFFECT_APPLY_AURA(6) 或区域光环效果才需要光环字段
+      final needsAura = effectValue == 6 ||
+          effectValue == 27 || effectValue == 35 || effectValue == 65 ||
+          effectValue == 119 || effectValue == 128 || effectValue == 129 ||
+          effectValue == 143;
+      // 周期性光环
+      final isPeriodic = const {3, 8, 23, 24, 53, 64, 89, 226, 227, 316}.contains(auraValue);
+
+      // Controllers by index
+      final effCtrl = switch (i) { 0 => viewModel.effect0Controller, 1 => viewModel.effect1Controller, 2 => viewModel.effect2Controller, _ => viewModel.effect0Controller };
+      final basePointsCtrl = switch (i) { 0 => viewModel.effectBasePoints0Controller, 1 => viewModel.effectBasePoints1Controller, 2 => viewModel.effectBasePoints2Controller, _ => viewModel.effectBasePoints0Controller };
+      final dieSidesCtrl = switch (i) { 0 => viewModel.effectDieSides0Controller, 1 => viewModel.effectDieSides1Controller, 2 => viewModel.effectDieSides2Controller, _ => viewModel.effectDieSides0Controller };
+      final pointsPerLevelCtrl = switch (i) { 0 => viewModel.effectRealPointsPerLevel0Controller, 1 => viewModel.effectRealPointsPerLevel1Controller, 2 => viewModel.effectRealPointsPerLevel2Controller, _ => viewModel.effectRealPointsPerLevel0Controller };
+      final mechanicCtrl = switch (i) { 0 => viewModel.effectMechanic0Controller, 1 => viewModel.effectMechanic1Controller, 2 => viewModel.effectMechanic2Controller, _ => viewModel.effectMechanic0Controller };
+      final chainTargetsCtrl = switch (i) { 0 => viewModel.effectChainTargets0Controller, 1 => viewModel.effectChainTargets1Controller, 2 => viewModel.effectChainTargets2Controller, _ => viewModel.effectChainTargets0Controller };
+      final auraCtrl = switch (i) { 0 => viewModel.effectAura0Controller, 1 => viewModel.effectAura1Controller, 2 => viewModel.effectAura2Controller, _ => viewModel.effectAura0Controller };
+      final auraPeriodCtrl = switch (i) { 0 => viewModel.effectAuraPeriod0Controller, 1 => viewModel.effectAuraPeriod1Controller, 2 => viewModel.effectAuraPeriod2Controller, _ => viewModel.effectAuraPeriod0Controller };
+      final amplitudeCtrl = switch (i) { 0 => viewModel.effectAmplitude0Controller, 1 => viewModel.effectAmplitude1Controller, 2 => viewModel.effectAmplitude2Controller, _ => viewModel.effectAmplitude0Controller };
+      final targetACtrl = switch (i) { 0 => viewModel.implicitTargetA0Controller, 1 => viewModel.implicitTargetA1Controller, 2 => viewModel.implicitTargetA2Controller, _ => viewModel.implicitTargetA0Controller };
+      final targetBCtrl = switch (i) { 0 => viewModel.implicitTargetB0Controller, 1 => viewModel.implicitTargetB1Controller, 2 => viewModel.implicitTargetB2Controller, _ => viewModel.implicitTargetB0Controller };
+      final miscValueCtrl = switch (i) { 0 => viewModel.effectMiscValue0Controller, 1 => viewModel.effectMiscValue1Controller, 2 => viewModel.effectMiscValue2Controller, _ => viewModel.effectMiscValue0Controller };
+      final miscValueBCtrl = switch (i) { 0 => viewModel.effectMiscValueB0Controller, 1 => viewModel.effectMiscValueB1Controller, 2 => viewModel.effectMiscValueB2Controller, _ => viewModel.effectMiscValueB0Controller };
+      final radiusCtrl = switch (i) { 0 => viewModel.effectRadiusIndex0Controller, 1 => viewModel.effectRadiusIndex1Controller, 2 => viewModel.effectRadiusIndex2Controller, _ => viewModel.effectRadiusIndex0Controller };
+      final chainAmpCtrl = switch (i) { 0 => viewModel.effectChainAmplitude0Controller, 1 => viewModel.effectChainAmplitude1Controller, 2 => viewModel.effectChainAmplitude2Controller, _ => viewModel.effectChainAmplitude0Controller };
+      final bonusCoefCtrl = switch (i) { 0 => viewModel.effectBonusCoefficient0Controller, 1 => viewModel.effectBonusCoefficient1Controller, 2 => viewModel.effectBonusCoefficient2Controller, _ => viewModel.effectBonusCoefficient0Controller };
+      final itemTypeCtrl = switch (i) { 0 => viewModel.effectItemType0Controller, 1 => viewModel.effectItemType1Controller, 2 => viewModel.effectItemType2Controller, _ => viewModel.effectItemType0Controller };
+      final triggerSpellCtrl = switch (i) { 0 => viewModel.effectTriggerSpell0Controller, 1 => viewModel.effectTriggerSpell1Controller, 2 => viewModel.effectTriggerSpell2Controller, _ => viewModel.effectTriggerSpell0Controller };
+      final comboCtrl = switch (i) { 0 => viewModel.effectPointsPerCombo0Controller, 1 => viewModel.effectPointsPerCombo1Controller, 2 => viewModel.effectPointsPerCombo2Controller, _ => viewModel.effectPointsPerCombo0Controller };
+      final maskACtrl = switch (i) { 0 => viewModel.effectSpellClassMaskA0Controller, 1 => viewModel.effectSpellClassMaskA1Controller, 2 => viewModel.effectSpellClassMaskA2Controller, _ => viewModel.effectSpellClassMaskA0Controller };
+      final maskBCtrl = switch (i) { 0 => viewModel.effectSpellClassMaskB0Controller, 1 => viewModel.effectSpellClassMaskB1Controller, 2 => viewModel.effectSpellClassMaskB2Controller, _ => viewModel.effectSpellClassMaskB0Controller };
+      final maskCCtrl = switch (i) { 0 => viewModel.effectSpellClassMaskC0Controller, 1 => viewModel.effectSpellClassMaskC1Controller, 2 => viewModel.effectSpellClassMaskC2Controller, _ => viewModel.effectSpellClassMaskC0Controller };
+
+      return FormSection(title: labels[i], children: [
+        Row(spacing: 8, children: [
+          Expanded(child: FormItem(
+            label: '类型',
+            child: FoxyShadSelect<int>(controller: effCtrl, options: kSpellEffectOptions, placeholder: const Text('Effect')),
+          )),
+          Expanded(child: FormItem(
+            label: '基础值',
+            child: FoxyNumberInput<int>(placeholder: 'BasePoints', controller: basePointsCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '波动值',
+            child: FoxyNumberInput<int>(placeholder: 'DieSides', controller: dieSidesCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '每级加成',
+            child: FoxyNumberInput<double>(placeholder: 'RealPointsPerLevel', controller: pointsPerLevelCtrl, readOnly: !effectActive),
+          )),
+        ]),
+        Row(spacing: 8, children: [
+          Expanded(child: FormItem(
+            label: '机制',
+            child: FoxyShadSelect<int>(controller: mechanicCtrl, options: kSpellMechanicOptions, placeholder: const Text('Mechanic'), enabled: effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '连锁目标',
+            child: FoxyNumberInput<int>(placeholder: 'ChainTarget', controller: chainTargetsCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '光环',
+            child: FoxyShadSelect<int>(controller: auraCtrl, options: kSpellAuraTypeOptions, placeholder: const Text('Aura'), enabled: needsAura),
+          )),
+          Expanded(child: FormItem(
+            label: '光环周期',
+            child: FoxyNumberInput<int>(placeholder: 'AuraPeriod', controller: auraPeriodCtrl, readOnly: !(needsAura && isPeriodic)),
+          )),
+        ]),
+        Row(spacing: 8, children: [
+          Expanded(child: FormItem(
+            label: '振幅',
+            child: FoxyNumberInput<double>(placeholder: 'Amplitude', controller: amplitudeCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '目标A',
+            child: FoxyShadSelect<int>(controller: targetACtrl, options: kSpellImplicitTargetOptions, placeholder: const Text('TargetA'), enabled: effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '目标B',
+            child: FoxyShadSelect<int>(controller: targetBCtrl, options: kSpellImplicitTargetOptions, placeholder: const Text('TargetB'), enabled: effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '杂项值',
+            child: FoxyNumberInput<int>(placeholder: 'MiscValue', controller: miscValueCtrl, readOnly: !effectActive),
+          )),
+        ]),
+        Row(spacing: 8, children: [
+          Expanded(child: FormItem(
+            label: '杂项值B',
+            child: FoxyNumberInput<int>(placeholder: 'MiscValueB', controller: miscValueBCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '半径',
+            child: FoxyNumberInput<int>(placeholder: 'RadiusIndex', controller: radiusCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '连锁振幅',
+            child: FoxyNumberInput<double>(placeholder: 'ChainAmplitude', controller: chainAmpCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '加成系数',
+            child: FoxyNumberInput<double>(placeholder: 'BonusCoefficient', controller: bonusCoefCtrl, readOnly: !effectActive),
+          )),
+        ]),
+        Row(spacing: 8, children: [
+          Expanded(child: FormItem(
+            label: '物品类型',
+            child: FoxyShadSelect<int>(controller: itemTypeCtrl, options: kSpellItemClassOptions, placeholder: const Text('ItemType'), enabled: effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '触发法术',
+            child: FoxyNumberInput<int>(placeholder: 'TriggerSpell', controller: triggerSpellCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '连锁目标',
+            child: FoxyNumberInput<int>(placeholder: 'ChainTarget', controller: chainTargetsCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '连击点数',
+            child: FoxyNumberInput<double>(placeholder: 'PointsPerCombo', controller: comboCtrl, readOnly: !effectActive),
+          )),
+        ]),
+        Row(spacing: 8, children: [
+          Expanded(child: FormItem(
+            label: '分类掩码A',
+            child: FoxyNumberInput<int>(placeholder: 'SpellClassMaskA', controller: maskACtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '分类掩码B',
+            child: FoxyNumberInput<int>(placeholder: 'SpellClassMaskB', controller: maskBCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: FormItem(
+            label: '分类掩码C',
+            child: FoxyNumberInput<int>(placeholder: 'SpellClassMaskC', controller: maskCCtrl, readOnly: !effectActive),
+          )),
+          Expanded(child: SizedBox()),
+        ]),
+      ]);
+    });
   }
 }
