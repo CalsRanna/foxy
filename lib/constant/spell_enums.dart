@@ -733,7 +733,7 @@ const kSpellReputationRankOptions = {
   7: '崇拜',
 };
 
-/// 属性类型（MiscValue when Effect=6, Aura=29 MOD_STAT）
+/// 属性类型（MiscValue when Effect=6, Aura=29 MOD_STAT — 注意：这是 MOD_STAT 专用映射，和 Stats 枚举不同！）
 const kStatTypeOptions = {
   -1: '全部属性',
   0: '法力值',
@@ -743,6 +743,15 @@ const kStatTypeOptions = {
   5: '智力',
   6: '精神',
   7: '耐力',
+};
+
+/// Stats 枚举（MiscValue when Effect=6, Aura=174/175 直接使用 AC Stats 枚举值）
+const kStatsEnumOptions = {
+  0: '力量',
+  1: '敏捷',
+  2: '耐力',
+  3: '智力',
+  4: '精神',
 };
 
 /// 变形形态（MiscValue when Effect=6, Aura=36 MOD_SHAPESHIFT）
