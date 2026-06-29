@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/item/item_enchantment_template_selector.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/item_enchantment_template_picker_delegate.dart';
 import 'package:foxy/page/item/item_enchantment_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -176,7 +177,8 @@ class _ItemEnchantmentTemplateViewState
           // 附魔ID
           FormItem(
             label: '附魔ID',
-            child: ItemEnchantmentTemplateSelector(
+            child: FoxyEntityPicker(
+              delegate: itemEnchantmentTemplatePickerDelegate,
               controller: viewModel.enchSignalController,
               placeholder: 'Ench',
             ),

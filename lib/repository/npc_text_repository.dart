@@ -6,7 +6,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class NpcTextRepository with RepositoryMixin {
   static const _table = 'npc_text';
 
-  /// 搜索（用于 NpcTextSelector）
+  /// 搜索（用于 FoxyEntityPicker（npc_text））
   Future<List<NpcTextEntity>> getNpcTexts({
     String? id,
     String? text,

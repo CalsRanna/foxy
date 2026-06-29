@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/spell_picker_delegate.dart';
 import 'package:foxy/page/creature_template/creature_template_spell_view_model.dart';
-import 'package:foxy/page/creature_template/spell_selector.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
@@ -183,7 +184,8 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           // 技能
           FormItem(
             label: '技能',
-            child: SpellSelector(
+            child: FoxyEntityPicker(
+              delegate: spellPickerDelegate,
               controller: viewModel.spellController,
               placeholder: 'Spell',
             ),

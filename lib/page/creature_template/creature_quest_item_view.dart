@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/item_template_picker_delegate.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/page/creature_template/creature_quest_item_view_model.dart';
-import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/form_item.dart';
@@ -188,7 +189,8 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           // 物品
           FormItem(
             label: '物品',
-            child: ItemTemplateSelector(
+            child: FoxyEntityPicker(
+              delegate: itemTemplatePickerDelegate,
               controller: viewModel.itemIdController,
               placeholder: 'ItemId',
             ),

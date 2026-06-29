@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/vehicle_picker_delegate.dart';
+import 'package:foxy/widget/creature_spell_data_picker_delegate.dart';
+import 'package:foxy/widget/dbc_faction_picker_delegate.dart';
+import 'package:foxy/widget/creature_template_picker_delegate.dart';
+import 'package:foxy/widget/gossip_menu_picker_delegate.dart';
+import 'package:foxy/widget/loot_template_picker_delegate.dart';
+import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/page/creature_template/creature_spell_data_selector.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
-import 'package:foxy/page/creature_template/creature_template_selector.dart';
-import 'package:foxy/page/creature_template/dbc_faction_selector.dart';
-import 'package:foxy/page/creature_template/gossip_menu_selector.dart';
-import 'package:foxy/page/creature_template/loot_template_selector.dart';
-import 'package:foxy/page/creature_template/vehicle_selector.dart';
 import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -111,7 +113,8 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     );
     final factionInput = FormItem(
       label: '阵营',
-      child: DbcFactionSelector(
+      child: FoxyEntityPicker(
+        delegate: dbcFactionPickerDelegate,
         controller: viewModel.factionController,
         placeholder: 'faction',
       ),
@@ -142,21 +145,24 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     );
     final petSpellDataIdInput = FormItem(
       label: '宠物技能',
-      child: CreatureSpellDataSelector(
+      child: FoxyEntityPicker(
+        delegate: creatureSpellDataPickerDelegate,
         controller: viewModel.petSpellDataIdController,
         placeholder: 'PetSpellDataId',
       ),
     );
     final vehicleIdInput = FormItem(
       label: '载具',
-      child: VehicleSelector(
+      child: FoxyEntityPicker(
+        delegate: vehiclePickerDelegate,
         controller: viewModel.vehicleIdController,
         placeholder: 'VehicleId',
       ),
     );
     final gossipMenuIdInput = FormItem(
       label: '对话',
-      child: GossipMenuSelector(
+      child: FoxyEntityPicker(
+        delegate: gossipMenuPickerDelegate,
         controller: viewModel.gossipMenuIdController,
         placeholder: 'gossip_menu_id',
       ),
@@ -421,21 +427,24 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     );
     final lootInput = FormItem(
       label: '击杀掉落',
-      child: LootTemplateSelector.creature(
+      child: FoxyEntityPicker(
+        delegate: lootTemplatePickerDelegate(LootTableType.creature, '击杀掉落'),
         controller: viewModel.lootIdController,
         placeholder: 'lootid',
       ),
     );
     final pickpocketLootInput = FormItem(
       label: '偷窃掉落',
-      child: LootTemplateSelector.pickpocket(
+      child: FoxyEntityPicker(
+        delegate: lootTemplatePickerDelegate(LootTableType.pickpocket, '偷窃掉落'),
         controller: viewModel.pickpocketLootController,
         placeholder: 'pickpocketloot',
       ),
     );
     final skinLootInput = FormItem(
       label: '剥皮掉落',
-      child: LootTemplateSelector.skinning(
+      child: FoxyEntityPicker(
+        delegate: lootTemplatePickerDelegate(LootTableType.skinning, '剥皮掉落'),
         controller: viewModel.skinLootController,
         placeholder: 'skinloot',
       ),
@@ -537,35 +546,40 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     /// 难度与脚本输入
     final killCredit1Input = FormItem(
       label: '击杀关联1',
-      child: CreatureTemplateSelector(
+      child: FoxyEntityPicker(
+        delegate: creatureTemplatePickerDelegate,
         controller: viewModel.killCredit1Controller,
         placeholder: 'KillCredit1',
       ),
     );
     final killCredit2input = FormItem(
       label: '击杀关联2',
-      child: CreatureTemplateSelector(
+      child: FoxyEntityPicker(
+        delegate: creatureTemplatePickerDelegate,
         controller: viewModel.killCredit2Controller,
         placeholder: 'KillCredit2',
       ),
     );
     final difficultyEntry1Input = FormItem(
       label: '难度1',
-      child: CreatureTemplateSelector(
+      child: FoxyEntityPicker(
+        delegate: creatureTemplatePickerDelegate,
         controller: viewModel.difficultyEntry1Controller,
         placeholder: 'difficulty_entry_1',
       ),
     );
     final difficultyEntry2Input = FormItem(
       label: '难度2',
-      child: CreatureTemplateSelector(
+      child: FoxyEntityPicker(
+        delegate: creatureTemplatePickerDelegate,
         controller: viewModel.difficultyEntry2Controller,
         placeholder: 'difficulty_entry_2',
       ),
     );
     final difficultyEntry3Input = FormItem(
       label: '难度3',
-      child: CreatureTemplateSelector(
+      child: FoxyEntityPicker(
+        delegate: creatureTemplatePickerDelegate,
         controller: viewModel.difficultyEntry3Controller,
         placeholder: 'difficulty_entry_3',
       ),

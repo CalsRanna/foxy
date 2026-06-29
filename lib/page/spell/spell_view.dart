@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/spell_range_picker_delegate.dart';
+import 'package:foxy/widget/spell_icon_picker_delegate.dart';
+import 'package:foxy/widget/spell_duration_picker_delegate.dart';
+import 'package:foxy/widget/area_table_picker_delegate.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/page/spell/spell_detail_view_model.dart';
-import 'package:foxy/page/spell/spell_icon_selector.dart';
-import 'package:foxy/page/spell/spell_duration_selector.dart';
-import 'package:foxy/page/spell/spell_range_selector.dart';
-import 'package:foxy/page/area_table/area_table_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
@@ -69,14 +70,16 @@ class _SpellViewState extends State<SpellView> {
     // === 图标/视觉 ===
     final spellIconIDInput = FormItem(
       label: '图标',
-      child: SpellIconSelector(
+      child: FoxyEntityPicker(
+        delegate: spellIconPickerDelegate,
         controller: vm.spellIconIDController,
         placeholder: 'SpellIconID',
       ),
     );
     final activeIconIDInput = FormItem(
       label: '激活图标',
-      child: SpellIconSelector(
+      child: FoxyEntityPicker(
+        delegate: spellIconPickerDelegate,
         controller: vm.activeIconIDController,
         placeholder: 'ActiveIconID',
       ),
@@ -156,14 +159,16 @@ class _SpellViewState extends State<SpellView> {
     );
     final durationIndexInput = FormItem(
       label: '持续时间',
-      child: SpellDurationSelector(
+      child: FoxyEntityPicker(
+        delegate: spellDurationPickerDelegate,
         controller: vm.durationIndexController,
         placeholder: 'DurationIndex',
       ),
     );
     final rangeIndexInput = FormItem(
       label: '施法范围',
-      child: SpellRangeSelector(
+      child: FoxyEntityPicker(
+        delegate: spellRangePickerDelegate,
         controller: vm.rangeIndexController,
         placeholder: 'RangeIndex',
       ),
@@ -302,7 +307,8 @@ class _SpellViewState extends State<SpellView> {
     // === 需求 ===
     final requiredAreasIDInput = FormItem(
       label: '需求区域',
-      child: AreaTableSelector(
+      child: FoxyEntityPicker(
+        delegate: areaTablePickerDelegate,
         controller: vm.requiredAreasIDController,
         placeholder: 'RequiredAreasID',
       ),

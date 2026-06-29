@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/page_text_picker_delegate.dart';
+import 'package:foxy/widget/lock_picker_delegate.dart';
+import 'package:foxy/widget/map_picker_delegate.dart';
+import 'package:foxy/widget/scaling_stat_distribution_picker_delegate.dart';
+import 'package:foxy/widget/quest_template_picker_delegate.dart';
+import 'package:foxy/widget/item_random_suffix_picker_delegate.dart';
+import 'package:foxy/widget/item_random_properties_picker_delegate.dart';
+import 'package:foxy/widget/item_display_info_picker_delegate.dart';
+import 'package:foxy/widget/area_table_picker_delegate.dart';
+import 'package:foxy/widget/spell_picker_delegate.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_enums.dart';
 import 'package:foxy/constant/item_flags.dart';
-import 'package:foxy/page/creature_template/spell_selector.dart';
-import 'package:foxy/page/item/item_display_info_selector.dart';
-import 'package:foxy/page/item/item_random_properties_selector.dart';
-import 'package:foxy/page/item/item_random_suffix_selector.dart';
 import 'package:foxy/page/item/item_template_detail_view_model.dart';
 import 'package:foxy/page/item/item_template_locale_description_selector.dart';
 import 'package:foxy/page/item/item_template_locale_name_selector.dart';
-import 'package:foxy/page/item/page_text_selector.dart';
-import 'package:foxy/page/item/quest_template_selector.dart';
-import 'package:foxy/page/item/scaling_stat_distribution_selector.dart';
-import 'package:foxy/page/creature_template/map_selector.dart';
-import 'package:foxy/page/area_table/area_table_selector.dart';
-import 'package:foxy/page/item/lock_selector.dart';
 import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -174,7 +175,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final displayIdInput = FormItem(
       label: '外观模型',
-      child: ItemDisplayInfoSelector(
+      child: FoxyEntityPicker(
+        delegate: itemDisplayInfoPickerDelegate,
         controller: viewModel.displayIdController,
         placeholder: 'displayid',
       ),
@@ -244,14 +246,16 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final randomPropertyInput = FormItem(
       label: '随机属性',
-      child: ItemRandomPropertiesSelector(
+      child: FoxyEntityPicker(
+        delegate: itemRandomPropertiesPickerDelegate,
         controller: viewModel.randomPropertyController,
         placeholder: 'RandomProperty',
       ),
     );
     final randomSuffixInput = FormItem(
       label: '随机后缀',
-      child: ItemRandomSuffixSelector(
+      child: FoxyEntityPicker(
+        delegate: itemRandomSuffixPickerDelegate,
         controller: viewModel.randomSuffixController,
         placeholder: 'RandomSuffix',
       ),
@@ -338,7 +342,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final startquestInput = FormItem(
       label: '起始任务',
-      child: QuestTemplateSelector(
+      child: FoxyEntityPicker(
+        delegate: questTemplatePickerDelegate,
         controller: viewModel.startquestController,
         placeholder: 'startquest',
       ),
@@ -583,7 +588,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     /// ==================== Card 5: 缩放属性 ====================
     final scalingStatDistributionInput = FormItem(
       label: '缩放分布',
-      child: ScalingStatDistributionSelector(
+      child: FoxyEntityPicker(
+        delegate: scalingStatDistributionPickerDelegate,
         controller: viewModel.scalingStatDistributionController,
         placeholder: 'ScalingStatDistribution',
       ),
@@ -731,7 +737,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final requiredSpellInput = FormItem(
       label: '需求法术',
-      child: SpellSelector(
+      child: FoxyEntityPicker(
+        delegate: spellPickerDelegate,
         controller: viewModel.requiredSpellController,
         placeholder: 'requiredspell',
       ),
@@ -773,14 +780,16 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final mapIdInput = FormItem(
       label: '地图',
-      child: MapSelector(
+      child: FoxyEntityPicker(
+        delegate: mapPickerDelegate,
         controller: viewModel.mapIdController,
         placeholder: 'Map',
       ),
     );
     final areaInput = FormItem(
       label: '区域',
-      child: AreaTableSelector(
+      child: FoxyEntityPicker(
+        delegate: areaTablePickerDelegate,
         controller: viewModel.areaController,
         placeholder: 'area',
       ),
@@ -794,7 +803,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final lockidInput = FormItem(
       label: '锁定ID',
-      child: LockSelector(
+      child: FoxyEntityPicker(
+        delegate: lockPickerDelegate,
         controller: viewModel.lockidController,
         placeholder: 'lockid',
       ),
@@ -927,7 +937,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     /// ==================== Card 11: 其他/脚本 ====================
     final pageTextInput = FormItem(
       label: '页面文本',
-      child: PageTextSelector(
+      child: FoxyEntityPicker(
+        delegate: pageTextPickerDelegate,
         controller: viewModel.pageTextController,
         placeholder: 'PageText',
       ),
@@ -1113,7 +1124,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                             Expanded(
                               child: FormItem(
                                 label: '法术${i + 1}',
-                                child: SpellSelector(
+                                child: FoxyEntityPicker(
+                                  delegate: spellPickerDelegate,
                                   controller: viewModel.spellIds[i],
                                   placeholder: 'spellid_${i + 1}',
                                 ),

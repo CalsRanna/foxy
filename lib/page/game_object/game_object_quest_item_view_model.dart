@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/item_template_picker_delegate.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
-import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -181,7 +182,8 @@ class GameObjectQuestItemViewModel {
           FoxyNumberInput<int>(value: idx.value, onChanged: (v) => idx.value = v),
           SizedBox(
             height: 100,
-            child: ItemTemplateSelector(
+            child: FoxyEntityPicker(
+              delegate: itemTemplatePickerDelegate,
               controller: itemIdController,
               placeholder: '物品ID',
             ),
