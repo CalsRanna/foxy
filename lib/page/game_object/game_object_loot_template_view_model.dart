@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/item_template_picker_delegate.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -216,7 +216,7 @@ class GameObjectLootTemplateViewModel {
           SizedBox(
             height: 100,
             child: FoxyEntityPicker(
-              delegate: itemTemplatePickerDelegate,
+              delegate: EntityPickerDelegates.itemTemplate,
               controller: itemController,
               placeholder: '物品ID',
             ),

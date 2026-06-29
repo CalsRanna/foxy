@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/quest_info_picker_delegate.dart';
-import 'package:foxy/widget/char_title_picker_delegate.dart';
 import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_locale_selector.dart';
 import 'package:foxy/page/quest/area_table_or_quest_sort_selector.dart';
@@ -98,7 +97,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FormItem(
               label: '任务信息',
               child: FoxyEntityPicker(
-                delegate: questInfoPickerDelegate,
+                delegate: EntityPickerDelegates.questInfo,
                 controller: vm.questInfoIdController,
                 placeholder: 'QuestInfoID',
               ),
@@ -492,7 +491,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FormItem(
               label: '奖励头衔',
               child: FoxyEntityPicker(
-                delegate: charTitlePickerDelegate,
+                delegate: EntityPickerDelegates.charTitle,
                 controller: vm.rewardTitleController,
                 placeholder: 'RewardTitle',
               ),

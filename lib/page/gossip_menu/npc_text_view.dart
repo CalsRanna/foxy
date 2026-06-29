@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/emote_picker_delegate.dart';
-import 'package:foxy/widget/broadcast_text_picker_delegate.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
@@ -107,7 +106,7 @@ class _NpcTextViewState extends State<NpcTextView> {
               label: '广播文本',
               placeholder: 'BroadcastTextID$n',
               child: FoxyEntityPicker(
-                delegate: broadcastTextPickerDelegate,
+                delegate: EntityPickerDelegates.broadcastText,
                 controller: viewModel.broadcastControllerOf(n),
                 placeholder: 'BroadcastTextID$n',
               ),
@@ -124,7 +123,7 @@ class _NpcTextViewState extends State<NpcTextView> {
             label: '表演',
             placeholder: 'em${n}_$i',
             child: FoxyEntityPicker(
-              delegate: emotePickerDelegate,
+              delegate: EntityPickerDelegates.emote,
               controller: viewModel.emoteControllerOf('em${n}_$i'),
               placeholder: 'em${n}_$i',
             ),

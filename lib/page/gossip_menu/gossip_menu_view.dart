@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/npc_text_picker_delegate.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -24,7 +24,7 @@ class _GossipMenuViewState extends State<GossipMenuView> {
     );
     final textIdLabel = const Text('文本编号 (TextID)');
     final textIdInput = FoxyEntityPicker(
-      delegate: npcTextPickerDelegate,
+      delegate: EntityPickerDelegates.npcText,
       controller: viewModel.textIdController,
       placeholder: 'TextID',
     );

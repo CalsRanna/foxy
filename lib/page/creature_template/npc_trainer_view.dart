@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/spell_picker_delegate.dart';
 import 'package:foxy/page/creature_template/npc_trainer_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -178,7 +178,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FormItem(
             label: '技能',
             child: FoxyEntityPicker(
-              delegate: spellPickerDelegate,
+              delegate: EntityPickerDelegates.spell,
               controller: viewModel.spellIDController,
               placeholder: 'SpellID',
             ),

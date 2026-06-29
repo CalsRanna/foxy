@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/item_template_picker_delegate.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
@@ -211,7 +211,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FormItem(
             label: '主手武器',
             child: FoxyEntityPicker(
-              delegate: itemTemplatePickerDelegate,
+              delegate: EntityPickerDelegates.itemTemplate,
               controller: viewModel.itemID1Controller,
               placeholder: 'ItemID1',
             ),
@@ -221,7 +221,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FormItem(
             label: '副手武器',
             child: FoxyEntityPicker(
-              delegate: itemTemplatePickerDelegate,
+              delegate: EntityPickerDelegates.itemTemplate,
               controller: viewModel.itemID2Controller,
               placeholder: 'ItemID2',
             ),
@@ -231,7 +231,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FormItem(
             label: '远程武器',
             child: FoxyEntityPicker(
-              delegate: itemTemplatePickerDelegate,
+              delegate: EntityPickerDelegates.itemTemplate,
               controller: viewModel.itemID3Controller,
               placeholder: 'ItemID3',
             ),
