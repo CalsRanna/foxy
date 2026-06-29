@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/item_template_picker_delegate.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_view_model.dart';
-import 'package:foxy/page/creature_template/item_template_selector.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/form_item.dart';
@@ -46,7 +47,8 @@ class _ReferenceLootTemplateViewState
     );
     final itemInput = FormItem(
       label: '物品ID',
-      child: ItemTemplateSelector(
+      child: FoxyEntityPicker(
+        delegate: itemTemplatePickerDelegate,
         controller: viewModel.itemController,
         placeholder: 'Item',
       ),

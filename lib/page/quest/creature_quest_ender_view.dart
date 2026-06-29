@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/creature_template/creature_template_selector.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/creature_template_picker_delegate.dart';
 import 'package:foxy/page/quest/creature_quest_ender_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -151,7 +152,8 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
         children: [
           FormItem(
             label: '生物编号',
-            child: CreatureTemplateSelector(
+            child: FoxyEntityPicker(
+              delegate: creatureTemplatePickerDelegate,
               controller: viewModel.idController,
               placeholder: 'CreatureId',
             ),
