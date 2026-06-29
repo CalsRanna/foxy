@@ -49,8 +49,8 @@ class _CreatureModelInfoSelectorState extends State<CreatureModelInfoSelector> {
     if (currentId != 0) {
       vm.idFilter.value = currentId.toString();
       vm.selectedId.value = currentId;
-      await vm.search();
     }
+    await vm.search();
     if (!mounted) return;
 
     final result = await showShadDialog<int>(

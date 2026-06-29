@@ -44,8 +44,8 @@ class _SpellRangeSelectorState extends State<SpellRangeSelector> {
     if (currentId != 0) {
       vm.idFilter.value = currentId.toString();
       vm.selectedId.value = currentId;
-      await vm.search();
     }
+    await vm.search();
     if (!mounted) return;
 
     final result = await showShadDialog<int>(
