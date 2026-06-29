@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/area_table/area_table_selector_view_model.dart';
+import 'package:foxy/page/area_table/area_table_selector_controller.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals/signals_flutter.dart';
 
 class AreaTableSelector extends StatefulWidget {
   final TextEditingController controller;
@@ -39,20 +38,20 @@ class _AreaTableSelectorState extends State<AreaTableSelector> {
   }
 
   Future<void> _openDialog() async {
-    final vm = AreaTableSelectorViewModel();
+    final controller = AreaTableSelectorController();
     final currentId = int.tryParse(widget.controller.text) ?? 0;
     if (currentId != 0) {
-      vm.idFilter.value = currentId.toString();
-      vm.selectedId.value = currentId;
+      controller.idFilter = currentId.toString();
+      controller.selectedId = currentId;
     }
-    await vm.search();
+    await controller.search();
     if (!mounted) return;
 
     final result = await showShadDialog<int>(
       context: context,
-      builder: (context) => _Dialog(vm: vm),
+      builder: (context) => _Dialog(controller: controller),
     );
-    vm.dispose();
+    controller.dispose();
     if (result != null) {
       widget.controller.text = result.toString();
     }
@@ -60,9 +59,9 @@ class _AreaTableSelectorState extends State<AreaTableSelector> {
 }
 
 class _Dialog extends StatefulWidget {
-  final AreaTableSelectorViewModel vm;
+  final AreaTableSelectorController controller;
 
-  const _Dialog({required this.vm});
+  const _Dialog({required this.controller});
 
   @override
   State<_Dialog> createState() => _DialogState();
@@ -85,12 +84,12 @@ class _DialogState extends State<_Dialog> {
     return ShadDialog(
       title: Text('区域'),
       actions: [
-        Watch((_) {
+        ListenableBuilder(listenable: widget.controller, builder: (_, _) {
           return FoxyPagination(
-            page: widget.vm.page.value,
+            page: widget.controller.page,
             pageSize: 50,
-            total: widget.vm.total.value,
-            onChange: (p) => widget.vm.paginate(p),
+            total: widget.controller.total,
+            onChange: (p) => widget.controller.paginate(p),
           );
         }),
         Row(
@@ -102,7 +101,7 @@ class _DialogState extends State<_Dialog> {
               child: Text('取消'),
             ),
             ShadButton(
-              onPressed: () => Navigator.of(context).pop(widget.vm.selectedId.value),
+              onPressed: () => Navigator.of(context).pop(widget.controller.selectedId),
               child: Text('确定'),
             ),
           ],
@@ -138,10 +137,10 @@ class _DialogState extends State<_Dialog> {
           child: Row(spacing: 8, children: [
             ShadButton(
               onPressed: () {
-                widget.vm.idFilter.value = _idController.text;
-                widget.vm.nameFilter.value = _nameController.text;
-                widget.vm.page.value = 1;
-                widget.vm.search();
+                widget.controller.idFilter = _idController.text;
+                widget.controller.nameFilter = _nameController.text;
+                widget.controller.page = 1;
+                widget.controller.search();
               },
               size: ShadButtonSize.sm,
               child: Text('查询'),
@@ -150,7 +149,7 @@ class _DialogState extends State<_Dialog> {
               onPressed: () {
                 _idController.clear();
                 _nameController.clear();
-                widget.vm.reset();
+                widget.controller.reset();
               },
               size: ShadButtonSize.sm,
               child: Text('重置'),
@@ -166,9 +165,9 @@ class _DialogState extends State<_Dialog> {
     final screenHeight = MediaQuery.of(context).size.height;
     final tableMaxHeight = screenHeight * 0.5;
 
-    return Watch((_) {
-      final items = widget.vm.items.value;
-      final selectedId = widget.vm.selectedId.value;
+    return ListenableBuilder(listenable: widget.controller, builder: (_, _) {
+      final items = widget.controller.items;
+      final selectedId = widget.controller.selectedId;
 
       return ConstrainedBox(
         constraints: BoxConstraints(maxHeight: tableMaxHeight),
@@ -206,7 +205,7 @@ class _DialogState extends State<_Dialog> {
               },
               onRowTap: (row) {
                 if (row >= 0 && row < items.length) {
-                  widget.vm.select(items[row].id);
+                  widget.controller.select(items[row].id);
                 }
               },
               onRowDoubleTap: (row) {
