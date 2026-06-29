@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/vehicle_picker_delegate.dart';
-import 'package:foxy/widget/creature_spell_data_picker_delegate.dart';
-import 'package:foxy/widget/dbc_faction_picker_delegate.dart';
-import 'package:foxy/widget/creature_template_picker_delegate.dart';
-import 'package:foxy/widget/gossip_menu_picker_delegate.dart';
-import 'package:foxy/widget/loot_template_picker_delegate.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
@@ -114,7 +109,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final factionInput = FormItem(
       label: '阵营',
       child: FoxyEntityPicker(
-        delegate: dbcFactionPickerDelegate,
+        delegate: EntityPickerDelegates.dbcFaction,
         controller: viewModel.factionController,
         placeholder: 'faction',
       ),
@@ -146,7 +141,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final petSpellDataIdInput = FormItem(
       label: '宠物技能',
       child: FoxyEntityPicker(
-        delegate: creatureSpellDataPickerDelegate,
+        delegate: EntityPickerDelegates.creatureSpellData,
         controller: viewModel.petSpellDataIdController,
         placeholder: 'PetSpellDataId',
       ),
@@ -154,7 +149,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final vehicleIdInput = FormItem(
       label: '载具',
       child: FoxyEntityPicker(
-        delegate: vehiclePickerDelegate,
+        delegate: EntityPickerDelegates.vehicle,
         controller: viewModel.vehicleIdController,
         placeholder: 'VehicleId',
       ),
@@ -162,7 +157,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final gossipMenuIdInput = FormItem(
       label: '对话',
       child: FoxyEntityPicker(
-        delegate: gossipMenuPickerDelegate,
+        delegate: EntityPickerDelegates.gossipMenu,
         controller: viewModel.gossipMenuIdController,
         placeholder: 'gossip_menu_id',
       ),
@@ -428,7 +423,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final lootInput = FormItem(
       label: '击杀掉落',
       child: FoxyEntityPicker(
-        delegate: lootTemplatePickerDelegate(LootTableType.creature, '击杀掉落'),
+        delegate: EntityPickerDelegates.lootTemplate(LootTableType.creature, '击杀掉落'),
         controller: viewModel.lootIdController,
         placeholder: 'lootid',
       ),
@@ -436,7 +431,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final pickpocketLootInput = FormItem(
       label: '偷窃掉落',
       child: FoxyEntityPicker(
-        delegate: lootTemplatePickerDelegate(LootTableType.pickpocket, '偷窃掉落'),
+        delegate: EntityPickerDelegates.lootTemplate(LootTableType.pickpocket, '偷窃掉落'),
         controller: viewModel.pickpocketLootController,
         placeholder: 'pickpocketloot',
       ),
@@ -444,7 +439,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final skinLootInput = FormItem(
       label: '剥皮掉落',
       child: FoxyEntityPicker(
-        delegate: lootTemplatePickerDelegate(LootTableType.skinning, '剥皮掉落'),
+        delegate: EntityPickerDelegates.lootTemplate(LootTableType.skinning, '剥皮掉落'),
         controller: viewModel.skinLootController,
         placeholder: 'skinloot',
       ),
@@ -547,7 +542,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final killCredit1Input = FormItem(
       label: '击杀关联1',
       child: FoxyEntityPicker(
-        delegate: creatureTemplatePickerDelegate,
+        delegate: EntityPickerDelegates.creatureTemplate,
         controller: viewModel.killCredit1Controller,
         placeholder: 'KillCredit1',
       ),
@@ -555,7 +550,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final killCredit2input = FormItem(
       label: '击杀关联2',
       child: FoxyEntityPicker(
-        delegate: creatureTemplatePickerDelegate,
+        delegate: EntityPickerDelegates.creatureTemplate,
         controller: viewModel.killCredit2Controller,
         placeholder: 'KillCredit2',
       ),
@@ -563,7 +558,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final difficultyEntry1Input = FormItem(
       label: '难度1',
       child: FoxyEntityPicker(
-        delegate: creatureTemplatePickerDelegate,
+        delegate: EntityPickerDelegates.creatureTemplate,
         controller: viewModel.difficultyEntry1Controller,
         placeholder: 'difficulty_entry_1',
       ),
@@ -571,7 +566,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final difficultyEntry2Input = FormItem(
       label: '难度2',
       child: FoxyEntityPicker(
-        delegate: creatureTemplatePickerDelegate,
+        delegate: EntityPickerDelegates.creatureTemplate,
         controller: viewModel.difficultyEntry2Controller,
         placeholder: 'difficulty_entry_2',
       ),
@@ -579,7 +574,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final difficultyEntry3Input = FormItem(
       label: '难度3',
       child: FoxyEntityPicker(
-        delegate: creatureTemplatePickerDelegate,
+        delegate: EntityPickerDelegates.creatureTemplate,
         controller: viewModel.difficultyEntry3Controller,
         placeholder: 'difficulty_entry_3',
       ),

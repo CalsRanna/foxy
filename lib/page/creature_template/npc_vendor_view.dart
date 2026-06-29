@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/item_extended_cost_picker_delegate.dart';
-import 'package:foxy/widget/item_template_picker_delegate.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/page/creature_template/npc_vendor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
@@ -205,7 +204,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FormItem(
             label: '物品',
             child: FoxyEntityPicker(
-              delegate: itemTemplatePickerDelegate,
+              delegate: EntityPickerDelegates.itemTemplate,
               controller: viewModel.itemController,
               placeholder: 'item',
             ),
@@ -233,7 +232,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FormItem(
             label: '扩展价格',
             child: FoxyEntityPicker(
-              delegate: itemExtendedCostPickerDelegate,
+              delegate: EntityPickerDelegates.itemExtendedCost,
               controller: viewModel.extendedCostController,
               placeholder: 'ExtendedCost',
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/item_template_picker_delegate.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/page/item/disenchant_loot_template_view_model.dart';
@@ -200,7 +200,7 @@ class _DisenchantLootTemplateViewState
           FormItem(
             label: '掉落物品',
             child: FoxyEntityPicker(
-              delegate: itemTemplatePickerDelegate,
+              delegate: EntityPickerDelegates.itemTemplate,
               controller: viewModel.itemController,
               placeholder: 'Item',
             ),

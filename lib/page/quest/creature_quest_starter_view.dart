@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/creature_template_picker_delegate.dart';
 import 'package:foxy/page/quest/creature_quest_starter_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -154,7 +154,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
           FormItem(
             label: '生物编号',
             child: FoxyEntityPicker(
-              delegate: creatureTemplatePickerDelegate,
+              delegate: EntityPickerDelegates.creatureTemplate,
               controller: viewModel.idController,
               placeholder: 'CreatureId',
             ),

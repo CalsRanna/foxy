@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/spell_range_picker_delegate.dart';
-import 'package:foxy/widget/spell_icon_picker_delegate.dart';
-import 'package:foxy/widget/spell_duration_picker_delegate.dart';
-import 'package:foxy/widget/area_table_picker_delegate.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/spell_enums.dart';
@@ -71,7 +68,7 @@ class _SpellViewState extends State<SpellView> {
     final spellIconIDInput = FormItem(
       label: '图标',
       child: FoxyEntityPicker(
-        delegate: spellIconPickerDelegate,
+        delegate: EntityPickerDelegates.spellIcon,
         controller: vm.spellIconIDController,
         placeholder: 'SpellIconID',
       ),
@@ -79,7 +76,7 @@ class _SpellViewState extends State<SpellView> {
     final activeIconIDInput = FormItem(
       label: '激活图标',
       child: FoxyEntityPicker(
-        delegate: spellIconPickerDelegate,
+        delegate: EntityPickerDelegates.spellIcon,
         controller: vm.activeIconIDController,
         placeholder: 'ActiveIconID',
       ),
@@ -160,7 +157,7 @@ class _SpellViewState extends State<SpellView> {
     final durationIndexInput = FormItem(
       label: '持续时间',
       child: FoxyEntityPicker(
-        delegate: spellDurationPickerDelegate,
+        delegate: EntityPickerDelegates.spellDuration,
         controller: vm.durationIndexController,
         placeholder: 'DurationIndex',
       ),
@@ -168,7 +165,7 @@ class _SpellViewState extends State<SpellView> {
     final rangeIndexInput = FormItem(
       label: '施法范围',
       child: FoxyEntityPicker(
-        delegate: spellRangePickerDelegate,
+        delegate: EntityPickerDelegates.spellRange,
         controller: vm.rangeIndexController,
         placeholder: 'RangeIndex',
       ),
@@ -308,7 +305,7 @@ class _SpellViewState extends State<SpellView> {
     final requiredAreasIDInput = FormItem(
       label: '需求区域',
       child: FoxyEntityPicker(
-        delegate: areaTablePickerDelegate,
+        delegate: EntityPickerDelegates.areaTable,
         controller: vm.requiredAreasIDController,
         placeholder: 'RequiredAreasID',
       ),
