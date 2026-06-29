@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
-import 'package:foxy/page/creature_template/loot_template_selector_view_model.dart';
+import 'package:foxy/page/creature_template/loot_template_selector_controller.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals/signals_flutter.dart';
 
 class LootTemplateSelector extends StatefulWidget {
   final TextEditingController controller;
@@ -90,20 +89,20 @@ class _LootTemplateSelectorState extends State<LootTemplateSelector> {
   }
 
   Future<void> _openDialog() async {
-    final vm = LootTemplateSelectorViewModel(widget.tableType);
+    final controller = LootTemplateSelectorController(widget.tableType);
     final currentId = int.tryParse(widget.controller.text) ?? 0;
     if (currentId != 0) {
-      vm.entryFilter.value = currentId.toString();
-      vm.selectedId.value = currentId;
+      controller.entryFilter = currentId.toString();
+      controller.selectedId = currentId;
     }
-    await vm.search();
+    await controller.search();
     if (!mounted) return;
 
     final result = await showShadDialog<int>(
       context: context,
-      builder: (context) => _Dialog(vm: vm, title: widget.title),
+      builder: (context) => _Dialog(controller: controller, title: widget.title),
     );
-    vm.dispose();
+    controller.dispose();
     if (result != null) {
       widget.controller.text = result.toString();
     }
@@ -111,10 +110,10 @@ class _LootTemplateSelectorState extends State<LootTemplateSelector> {
 }
 
 class _Dialog extends StatefulWidget {
-  final LootTemplateSelectorViewModel vm;
+  final LootTemplateSelectorController controller;
   final String title;
 
-  const _Dialog({required this.vm, required this.title});
+  const _Dialog({required this.controller, required this.title});
 
   @override
   State<_Dialog> createState() => _DialogState();
@@ -135,12 +134,12 @@ class _DialogState extends State<_Dialog> {
     return ShadDialog(
       title: Text(widget.title),
       actions: [
-        Watch((_) {
+        ListenableBuilder(listenable: widget.controller, builder: (_, _) {
           return FoxyPagination(
-            page: widget.vm.page.value,
+            page: widget.controller.page,
             pageSize: 50,
-            total: widget.vm.total.value,
-            onChange: (p) => widget.vm.paginate(p),
+            total: widget.controller.total,
+            onChange: (p) => widget.controller.paginate(p),
           );
         }),
         Row(
@@ -152,7 +151,7 @@ class _DialogState extends State<_Dialog> {
               child: Text('取消'),
             ),
             ShadButton(
-              onPressed: () => Navigator.of(context).pop(widget.vm.selectedId.value),
+              onPressed: () => Navigator.of(context).pop(widget.controller.selectedId),
               child: Text('确定'),
             ),
           ],
@@ -183,9 +182,9 @@ class _DialogState extends State<_Dialog> {
           child: Row(spacing: 8, children: [
             ShadButton(
               onPressed: () {
-                widget.vm.entryFilter.value = _entryController.text;
-                widget.vm.page.value = 1;
-                widget.vm.search();
+                widget.controller.entryFilter = _entryController.text;
+                widget.controller.page = 1;
+                widget.controller.search();
               },
               size: ShadButtonSize.sm,
               child: Text('查询'),
@@ -193,7 +192,7 @@ class _DialogState extends State<_Dialog> {
             ShadButton.ghost(
               onPressed: () {
                 _entryController.clear();
-                widget.vm.reset();
+                widget.controller.reset();
               },
               size: ShadButtonSize.sm,
               child: Text('重置'),
@@ -209,9 +208,9 @@ class _DialogState extends State<_Dialog> {
     final screenHeight = MediaQuery.of(context).size.height;
     final tableMaxHeight = screenHeight * 0.5;
 
-    return Watch((_) {
-      final items = widget.vm.items.value;
-      final selectedId = widget.vm.selectedId.value;
+    return ListenableBuilder(listenable: widget.controller, builder: (_, _) {
+      final items = widget.controller.items;
+      final selectedId = widget.controller.selectedId;
 
       return ConstrainedBox(
         constraints: BoxConstraints(maxHeight: tableMaxHeight),
@@ -247,7 +246,7 @@ class _DialogState extends State<_Dialog> {
               },
               onRowTap: (row) {
                 if (row >= 0 && row < items.length) {
-                  widget.vm.select(items[row].entry);
+                  widget.controller.select(items[row].entry);
                 }
               },
               onRowDoubleTap: (row) {
