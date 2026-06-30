@@ -1,5 +1,5 @@
 name: foxy
-description: "A new Flutter project."
+description: "AzerothCore 数据库可视化管理工具 — 管理生物、物品、任务、法术等游戏数据。"
 publish_to: "none"
 version: 1.0.0+1
 
