@@ -60,10 +60,7 @@ class _GossipMenuViewState extends State<GossipMenuView> {
       onPressed: viewModel.pop,
       child: const Text('取消'),
     );
-    final actions = ShadCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(spacing: 8, children: [saveBtn, cancelBtn]),
-    );
+    final actions = Row(spacing: 8, children: [saveBtn, cancelBtn]);
 
     return Padding(
       padding: const EdgeInsets.only(top: 16),
