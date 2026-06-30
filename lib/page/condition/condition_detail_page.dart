@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/condition/condition_detail_view_model.dart';
 import 'package:foxy/page/condition/condition_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 
 @RoutePage()
 class ConditionDetailPage extends StatefulWidget {
@@ -16,8 +14,6 @@ class ConditionDetailPage extends StatefulWidget {
 }
 
 class _ConditionDetailPageState extends State<ConditionDetailPage> {
-  final viewModel = GetIt.instance.get<ConditionDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     final isNew = widget.credential == null;

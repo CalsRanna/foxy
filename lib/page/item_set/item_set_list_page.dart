@@ -21,6 +21,12 @@ class _ItemSetListPageState extends State<ItemSetListPage> {
   final viewModel = GetIt.instance.get<ItemSetListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('套装列表'),

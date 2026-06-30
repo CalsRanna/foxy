@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 
 @RoutePage()
 class ReferenceLootTemplateDetailPage extends StatefulWidget {
@@ -25,8 +23,6 @@ class ReferenceLootTemplateDetailPage extends StatefulWidget {
 
 class _ReferenceLootTemplateDetailPageState
     extends State<ReferenceLootTemplateDetailPage> {
-  final viewModel = GetIt.instance.get<ReferenceLootTemplateDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var label = widget.label?.isNotEmpty == true ? widget.label! : '新建关联掉落';

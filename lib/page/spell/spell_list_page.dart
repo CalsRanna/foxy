@@ -22,6 +22,12 @@ class _SpellListPageState extends State<SpellListPage> {
   final viewModel = GetIt.instance.get<SpellListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('法术列表'),

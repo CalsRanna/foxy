@@ -17,6 +17,12 @@ class _SmartScriptViewState extends State<SmartScriptView> {
   final viewModel = GetIt.instance.get<SmartScriptDetailViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final basicRows = [
       Row(

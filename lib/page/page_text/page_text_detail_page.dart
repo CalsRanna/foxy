@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/page_text/page_text_detail_view_model.dart';
 import 'package:foxy/page/page_text/page_text_view.dart';
 import 'package:foxy/page/page_text/page_text_locale_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 
 @RoutePage()
 class TextContentDetailPage extends StatefulWidget {
@@ -18,8 +16,6 @@ class TextContentDetailPage extends StatefulWidget {
 }
 
 class _TextContentDetailPageState extends State<TextContentDetailPage> {
-  final viewModel = GetIt.instance.get<PageTextDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var name = widget.label?.isNotEmpty == true ? widget.label! : '新建页面文本';

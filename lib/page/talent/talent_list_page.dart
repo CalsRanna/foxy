@@ -21,6 +21,12 @@ class _TalentListPageState extends State<TalentListPage> {
   final viewModel = GetIt.instance.get<TalentListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('天赋列表'),

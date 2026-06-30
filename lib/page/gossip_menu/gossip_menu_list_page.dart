@@ -27,6 +27,12 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
   }
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('对话列表'),

@@ -23,6 +23,12 @@ class _QuestFactionRewardListPageState
   final viewModel = GetIt.instance.get<QuestFactionRewardListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('任务声望列表'),

@@ -23,6 +23,12 @@ class _ScalingStatDistributionListPageState
   final viewModel = GetIt.instance.get<ScalingStatDistributionListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('属性缩放分布'),

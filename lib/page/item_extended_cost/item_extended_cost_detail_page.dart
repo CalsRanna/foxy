@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/item_extended_cost/item_extended_cost_detail_view_model.dart';
 import 'package:foxy/page/item_extended_cost/item_extended_cost_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -19,8 +17,6 @@ class ItemExtendedCostDetailPage extends StatefulWidget {
 
 class _ItemExtendedCostDetailPageState
     extends State<ItemExtendedCostDetailPage> {
-  final viewModel = GetIt.instance.get<ItemExtendedCostDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('扩展价格')];

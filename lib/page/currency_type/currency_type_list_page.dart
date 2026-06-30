@@ -21,6 +21,12 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
   final viewModel = GetIt.instance.get<CurrencyTypeListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('货币列表'),

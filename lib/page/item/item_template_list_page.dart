@@ -31,6 +31,12 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('物品列表'),

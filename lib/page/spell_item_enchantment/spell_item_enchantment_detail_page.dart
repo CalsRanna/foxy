@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -20,8 +18,6 @@ class SpellItemEnchantmentDetailPage extends StatefulWidget {
 
 class _SpellItemEnchantmentDetailPageState
     extends State<SpellItemEnchantmentDetailPage> {
-  final viewModel = GetIt.instance.get<SpellItemEnchantmentDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('法术附魔')];

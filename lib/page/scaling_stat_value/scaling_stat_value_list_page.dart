@@ -22,6 +22,12 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
   final viewModel = GetIt.instance.get<ScalingStatValueListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('缩放属性值列表'),

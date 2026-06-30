@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -19,9 +17,6 @@ class ScalingStatDistributionDetailPage extends StatefulWidget {
 
 class _ScalingStatDistributionDetailPageState
     extends State<ScalingStatDistributionDetailPage> {
-  final viewModel = GetIt.instance
-      .get<ScalingStatDistributionDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('属性缩放分布')];

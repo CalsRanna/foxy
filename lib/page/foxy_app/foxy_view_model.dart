@@ -1,12 +1,14 @@
+import 'package:signals/signals.dart';
+
 class FoxyViewModel {
-  bool hasLocaleTables = false;
-  bool localeEnabled = false;
+  final hasLocaleTables = signal(false);
+  final localeEnabled = signal(false);
 
   void setLocaleSettings({
     required bool hasLocaleTables,
     required bool localeEnabled,
   }) {
-    this.hasLocaleTables = hasLocaleTables;
-    this.localeEnabled = localeEnabled;
+    this.hasLocaleTables.value = hasLocaleTables;
+    this.localeEnabled.value = localeEnabled;
   }
 }

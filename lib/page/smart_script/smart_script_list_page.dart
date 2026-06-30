@@ -22,6 +22,12 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
   final viewModel = GetIt.instance.get<SmartScriptListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('脚本列表'),

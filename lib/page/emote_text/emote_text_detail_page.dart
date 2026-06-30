@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/emote_text/emote_text_detail_view_model.dart';
 import 'package:foxy/page/emote_text/emote_text_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -18,8 +16,6 @@ class EmoteTextDetailPage extends StatefulWidget {
 }
 
 class _EmoteTextDetailPageState extends State<EmoteTextDetailPage> {
-  final viewModel = GetIt.instance.get<EmoteTextDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('表情文本')];

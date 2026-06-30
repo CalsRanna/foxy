@@ -1,12 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/player_create_info/player_create_info_detail_view_model.dart';
 import 'package:foxy/page/player_create_info/player_create_info_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_action_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_item_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_spell_custom_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 
 @RoutePage()
 class PlayerCreateInfoDetailPage extends StatefulWidget {
@@ -28,8 +26,6 @@ class PlayerCreateInfoDetailPage extends StatefulWidget {
 
 class _PlayerCreateInfoDetailPageState
     extends State<PlayerCreateInfoDetailPage> {
-  final viewModel = GetIt.instance.get<PlayerCreateInfoDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     final isNew = widget.race == null;

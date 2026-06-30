@@ -21,6 +21,12 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
   final viewModel = GetIt.instance.get<GlyphPropertyListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('雕文属性列表'),

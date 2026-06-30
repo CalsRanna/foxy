@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_view.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view.dart';
 import 'package:foxy/page/creature_template/creature_loot_template_view.dart';
@@ -14,7 +13,6 @@ import 'package:foxy/page/creature_template/npc_vendor_view.dart';
 import 'package:foxy/page/creature_template/pickpocketing_loot_template_view.dart';
 import 'package:foxy/page/creature_template/skinning_loot_template_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -31,8 +29,6 @@ class CreatureTemplateDetailPage extends StatefulWidget {
 
 class _CreatureTemplateDetailPageState
     extends State<CreatureTemplateDetailPage> {
-  final viewModel = GetIt.instance.get<CreatureTemplateDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [

@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_area_view.dart';
 import 'package:foxy/page/spell/spell_bonus_data_view.dart';
 import 'package:foxy/page/spell/spell_custom_attr_view.dart';
-import 'package:foxy/page/spell/spell_detail_view_model.dart';
 import 'package:foxy/page/spell/spell_group_view.dart';
 import 'package:foxy/page/spell/spell_linked_spell_view.dart';
 import 'package:foxy/page/spell/spell_loot_template_view.dart';
 import 'package:foxy/page/spell/spell_rank_view.dart';
 import 'package:foxy/page/spell/spell_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -25,8 +23,6 @@ class SpellDetailPage extends StatefulWidget {
 }
 
 class _SpellDetailPageState extends State<SpellDetailPage> {
-  final viewModel = GetIt.instance.get<SpellDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var spellId = widget.id ?? 0;
