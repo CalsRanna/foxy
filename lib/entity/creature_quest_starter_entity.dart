@@ -15,10 +15,7 @@ class CreatureQuestStarterEntity {
     return {'id': id, 'quest': quest};
   }
 
-  CreatureQuestStarterEntity copyWith({
-    int? id,
-    int? quest,
-  }) {
+  CreatureQuestStarterEntity copyWith({int? id, int? quest}) {
     return CreatureQuestStarterEntity(
       id: id ?? this.id,
       quest: quest ?? this.quest,

@@ -107,12 +107,14 @@ class ConditionEntity {
     String? comment,
   }) {
     return ConditionEntity(
-      sourceTypeOrReferenceId: sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
+      sourceTypeOrReferenceId:
+          sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
       sourceGroup: sourceGroup ?? this.sourceGroup,
       sourceEntry: sourceEntry ?? this.sourceEntry,
       sourceId: sourceId ?? this.sourceId,
       elseGroup: elseGroup ?? this.elseGroup,
-      conditionTypeOrReference: conditionTypeOrReference ?? this.conditionTypeOrReference,
+      conditionTypeOrReference:
+          conditionTypeOrReference ?? this.conditionTypeOrReference,
       conditionTarget: conditionTarget ?? this.conditionTarget,
       conditionValue1: conditionValue1 ?? this.conditionValue1,
       conditionValue2: conditionValue2 ?? this.conditionValue2,

@@ -18,10 +18,7 @@ class GameObjectQuestEnderEntity {
     return {'id': id, 'quest': quest};
   }
 
-  GameObjectQuestEnderEntity copyWith({
-    int? id,
-    int? quest,
-  }) {
+  GameObjectQuestEnderEntity copyWith({int? id, int? quest}) {
     return GameObjectQuestEnderEntity(
       id: id ?? this.id,
       quest: quest ?? this.quest,

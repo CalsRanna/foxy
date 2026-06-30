@@ -74,7 +74,7 @@ import 'package:foxy/page/quest_sort/quest_sort_detail_view_model.dart';
 import 'package:foxy/page/quest_sort/quest_sort_list_view_model.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_list_view_model.dart';
-import 'package:foxy/page/scaffold/dbc_import_view_model.dart';
+import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_list_view_model.dart';
 import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart';
@@ -175,7 +175,6 @@ import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:get_it/get_it.dart';
 
 class DI {
@@ -275,9 +274,8 @@ class DI {
   }
 
   static void _registerViewModels() {
-    _instance.registerLazySingleton(() => FeatureViewModel());
+    _instance.registerSingleton(ScaffoldViewModel());
     _instance.registerFactory(() => BootstrapViewModel());
-    _instance.registerSingleton(DbcImportViewModel());
     _instance.registerFactory(() => DashboardViewModel());
     _instance.registerFactory(() => MoreViewModel());
     _instance.registerFactory(() => CreatureTemplateListViewModel());

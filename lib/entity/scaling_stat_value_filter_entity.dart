@@ -15,10 +15,7 @@ class ScalingStatValueFilterEntity {
     return {'id': id, 'charlevel': charlevel};
   }
 
-  ScalingStatValueFilterEntity copyWith({
-    String? id,
-    String? charlevel,
-  }) {
+  ScalingStatValueFilterEntity copyWith({String? id, String? charlevel}) {
     return ScalingStatValueFilterEntity(
       id: id ?? this.id,
       charlevel: charlevel ?? this.charlevel,

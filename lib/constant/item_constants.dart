@@ -34,7 +34,7 @@ const kItemSubclasses = [
     '食物和饮料', // Food & Drink
     '物品强化', // Item Enhancement
     '绷带', // Bandage
-    '其他' // Other
+    '其他', // Other
   ],
   // 1: 容器
   [
@@ -46,7 +46,7 @@ const kItemSubclasses = [
     '宝石袋', // Gem Bag
     '矿物袋', // Mining Bag
     '制皮材料包', // Leatherworking Bag
-    '铭文包' // Inscription Bag
+    '铭文包', // Inscription Bag
   ],
   // 2: 武器
   [
@@ -70,7 +70,7 @@ const kItemSubclasses = [
     '矛', // Spear
     '弩', // Crossbow
     '魔杖', // Wand
-    '钓鱼竿' // Fishing Pole
+    '钓鱼竿', // Fishing Pole
   ],
   // 3: 珠宝
   [
@@ -82,7 +82,7 @@ const kItemSubclasses = [
     '橙色', // Orange
     '多彩', // Meta
     '简单', // Simple
-    '棱彩' // Prismatic
+    '棱彩', // Prismatic
   ],
   // 4: 护甲
   [
@@ -96,7 +96,7 @@ const kItemSubclasses = [
     '圣契', // Libram
     '神像', // Idol
     '图腾', // Totem
-    '魔印' // Sigil
+    '魔印', // Sigil
   ],
   // 5: 药剂
   ['药剂'], // Reagent
@@ -106,7 +106,7 @@ const kItemSubclasses = [
     '闪电-弃用', // Bolt
     '箭', // Arrow
     '子弹', // Bullet
-    '投掷-弃用' // Thrown
+    '投掷-弃用', // Thrown
   ],
   // 7: 贸易品
   [
@@ -125,7 +125,7 @@ const kItemSubclasses = [
     '附魔', // Enchanting
     '原料', // Materials
     '护甲附魔', // Armor Enchant
-    '武器附魔' // Weapon Enchant
+    '武器附魔', // Weapon Enchant
   ],
   // 8: 通用-弃用
   ['通用-弃用'], // Generic
@@ -141,7 +141,7 @@ const kItemSubclasses = [
     '急救', // First Aid
     '附魔', // Enchanting
     '钓鱼', // Fishing
-    '珠宝加工' // Jewelcrafting
+    '珠宝加工', // Jewelcrafting
   ],
   // 10: 货币
   ['货币'], // Currency
@@ -150,14 +150,14 @@ const kItemSubclasses = [
     '箭袋-弃用', // Quiver Obsolete
     '弹药袋-弃用', // Ammo Pouch Obsolete
     '箭袋', // Quiver
-    '弹药袋' // Ammo Pouch
+    '弹药袋', // Ammo Pouch
   ],
   // 12: 任务
   ['任务'], // Quest
   // 13: 钥匙
   [
     '钥匙', // Key
-    '开锁工具' // Lockpick
+    '开锁工具', // Lockpick
   ],
   // 14: 永久的-弃用
   ['永久的-弃用'], // Permanent
@@ -168,7 +168,7 @@ const kItemSubclasses = [
     '伙伴', // Companion
     '节日', // Holiday
     '其他', // Other
-    '坐骑' // Mount
+    '坐骑', // Mount
   ],
   // 16: 雕文
   [
@@ -183,7 +183,7 @@ const kItemSubclasses = [
     '法师', // Mage
     '术士', // Warlock
     '无', // None
-    '德鲁伊' // Druid
+    '德鲁伊', // Druid
   ],
 ];
 

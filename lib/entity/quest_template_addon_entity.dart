@@ -121,8 +121,10 @@ class QuestTemplateAddonEntity {
       rewardMailDelay: rewardMailDelay ?? this.rewardMailDelay,
       requiredSkillId: requiredSkillId ?? this.requiredSkillId,
       requiredSkillPoints: requiredSkillPoints ?? this.requiredSkillPoints,
-      requiredMinRepFaction: requiredMinRepFaction ?? this.requiredMinRepFaction,
-      requiredMaxRepFaction: requiredMaxRepFaction ?? this.requiredMaxRepFaction,
+      requiredMinRepFaction:
+          requiredMinRepFaction ?? this.requiredMinRepFaction,
+      requiredMaxRepFaction:
+          requiredMaxRepFaction ?? this.requiredMaxRepFaction,
       requiredMinRepValue: requiredMinRepValue ?? this.requiredMinRepValue,
       requiredMaxRepValue: requiredMaxRepValue ?? this.requiredMaxRepValue,
       providedItemCount: providedItemCount ?? this.providedItemCount,

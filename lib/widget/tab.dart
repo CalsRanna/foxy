@@ -115,10 +115,7 @@ class _FoxyTabState extends State<FoxyTab> {
         AnimatedOpacity(
           opacity: _opacity,
           duration: Duration(milliseconds: 150),
-          child: LazyIndexedStack(
-            index: index,
-            children: widget.contents,
-          ),
+          child: LazyIndexedStack(index: index, children: widget.contents),
         ),
       ],
     );

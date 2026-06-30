@@ -3,16 +3,15 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/database/database.dart';
-import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
-import 'package:signals/signals.dart';
 import 'package:warcrafty/warcrafty.dart';
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
+/// DBC 与数据库同步所需的表名清单（导入/导出共用）。
 const requiredDbcTableNames = [
   'dbc_achievement',
   'dbc_area_table',
@@ -46,135 +45,42 @@ const requiredDbcTableNames = [
   'dbc_vehicle',
 ];
 
-class DbcImportViewModel {
-  final dbcImported = signal(false);
-  final dbcPath = signal<String?>(null);
-  final dbcImportError = signal<String?>(null);
-  final dbcImporting = signal(false);
-  final dbcProgress = signal<double?>(null);
-  final dbcProgressLabel = signal('');
-  final dbcProgressDetail = signal('');
+/// 同步进度事件。导入/导出过程通过 [DbcSyncUtil.import] 的流回传。
+sealed class DbcSyncProgress {}
 
-  // ========== 入口 ==========
+/// 单条状态文本（如「正在扫描 DBC 目录...」）。
+class DbcSyncStatus implements DbcSyncProgress {
+  final String status;
+  DbcSyncStatus(this.status);
+}
 
-  Future<void> checkAndImport() async {
-    try {
-      if (dbcImported.value) return;
-      final missing = await _checkRequiredTablesExist();
-      if (missing.isEmpty) {
-        dbcImported.value = true;
-        return;
-      }
-      final config = await _loadConfig();
-      final path = config['dbc_path'] as String?;
-      if (path != null && path.isNotEmpty) dbcPath.value = path;
-    } catch (e) {
-      LoggerUtil.instance.e('检查DBC导入状态失败: $e');
-      DialogUtil.instance.error('检查DBC导入状态失败: $e');
-    }
-  }
+/// 带进度计数的更新（status, 已完成, 总数）。
+class DbcSyncCount implements DbcSyncProgress {
+  final String status;
+  final int done;
+  final int total;
+  DbcSyncCount(this.status, this.done, this.total);
+}
 
-  void startImport() {
-    if (dbcPath.value == null || dbcImporting.value) return;
-    _startImportWorker();
-  }
+/// 导入流程的最终结果。
+class DbcSyncResult implements DbcSyncProgress {
+  final bool success;
+  final int imported;
+  final int skipped;
+  final List<String> errors;
+  DbcSyncResult(this.success, this.imported, this.skipped, this.errors);
+}
 
-  Future<void> setDbcPath(String path) async {
-    try {
-      dbcPath.value = path;
-      dbcImportError.value = null;
-      await _updateConfig('dbc_path', path);
-      _startImportWorker();
-    } catch (e) {
-      LoggerUtil.instance.e('设置DBC路径失败: $e');
-      DialogUtil.instance.error('设置DBC路径失败: $e');
-    }
-  }
-
-  Future<void> retryImport() async {
-    // 未配置路径时不能导入：清空错误回到路径输入界面，避免 dbcPath.value! 崩溃
-    if (dbcPath.value == null) {
-      dbcImportError.value = null;
-      return;
-    }
-    try {
-      dbcImportError.value = null;
-      _startImportWorker();
-    } catch (e) {
-      LoggerUtil.instance.e('重试DBC导入失败: $e');
-      DialogUtil.instance.error('重试DBC导入失败: $e');
-    }
-  }
-
-  // ========== 导入引擎 ==========
-
-  void _startImportWorker() {
-    if (dbcImporting.value) return; // 防重入：setDbcPath/重试可能在导入中再次触发
-    dbcImporting.value = true;
-    dbcProgress.value = null;
-    dbcProgressLabel.value = '准备导入...';
-    dbcProgressDetail.value = '';
-    dbcImportError.value = null;
-    _runInWorker().catchError((_) {});
-  }
-
-  Future<void> _runInWorker() async {
-    try {
-      // 1. 读取 MySQL 配置
-      final config = await _loadConfig();
-
-      // 2. 启动 worker isolate（目录扫描 + 导入全部在 isolate 内完成）
-      final receivePort = ReceivePort();
-      await Isolate.spawn(_importWorker, (
-        sendPort: receivePort.sendPort,
-        dbcPath: dbcPath.value!,
-        host: config['host'] as String? ?? '127.0.0.1',
-        port: int.tryParse(config['port'] as String? ?? '3306') ?? 3306,
-        database: config['database'] as String? ?? 'acore_world',
-        username: config['username'] as String? ?? 'acore',
-        password: config['password'] as String? ?? 'acore',
-      ));
-
-      await for (final msg in receivePort) {
-        switch (msg) {
-          case (String status,):
-            dbcProgressLabel.value = status;
-          case (String status, int d, int t):
-            dbcProgress.value = t > 0 ? d / t : null;
-            dbcProgressLabel.value = status;
-            dbcProgressDetail.value = '已处理 $d / $t 个文件';
-          case (bool success, int imported, int skipped, List errs):
-            receivePort.close();
-            dbcImporting.value = false;
-            dbcProgress.value = null;
-            dbcProgressLabel.value = '';
-            dbcProgressDetail.value = '';
-            if (success) {
-              LoggerUtil.instance.i('DBC 导入完成: $imported 个, 跳过 $skipped 个');
-              dbcImported.value = true;
-            } else {
-              final top = (errs as List<String>).take(3).join('\n');
-              dbcImportError.value =
-                  '导入完成，部分文件失败：\n$top'
-                  '${errs.length > 3 ? '\n...等 ${errs.length} 个错误' : ''}';
-            }
-          default:
-            break;
-        }
-      }
-
-      receivePort.close();
-    } catch (e) {
-      dbcImporting.value = false;
-      dbcProgress.value = null;
-      dbcImportError.value = '导入出错：$e';
-      LoggerUtil.instance.e('DBC 导入异常: $e');
-    }
-  }
-
-  // ========== 检查已有表 ==========
-
-  Future<List<String>> _checkRequiredTablesExist() async {
+/// DBC 文件与数据库之间的双向同步工具。
+///
+/// 当前实现导入（DBC → MySQL）；后续将扩展导出（MySQL → DBC）。
+/// 所有耗时操作在 worker isolate 内完成，通过返回的 [Stream] 报告进度，
+/// 不持有任何 UI 状态，便于单测与复用。
+class DbcSyncUtil {
+  /// 检查 [requiredDbcTableNames] 中缺失或为空的表名。
+  ///
+  /// 返回需要（重新）导入的表名清单；为空表示数据已就绪。
+  Future<List<String>> checkRequiredTablesExist() async {
     final laconic = Database.instance.laconic;
 
     // 1) 已存在的 dbc_* 表：仅判存在性，不依赖 InnoDB 估算的 TABLE_ROWS
@@ -210,9 +116,8 @@ class DbcImportViewModel {
     return missing;
   }
 
-  // ========== 配置持久化 ==========
-
-  Future<Map<String, dynamic>> _loadConfig() async {
+  /// 从 config.yaml 读取配置。
+  Future<Map<String, dynamic>> loadConfig() async {
     final file = File(_configPath);
     if (!await file.exists()) return {};
     final content = await file.readAsString();
@@ -220,7 +125,8 @@ class DbcImportViewModel {
     return Map<String, dynamic>.from(loadYaml(content));
   }
 
-  Future<void> _updateConfig(String key, String value) async {
+  /// 更新 config.yaml 中某个键。
+  Future<void> updateConfig(String key, String value) async {
     final file = File(_configPath);
     if (!await file.exists()) await file.create(recursive: true);
     final content = await file.readAsString();
@@ -232,6 +138,60 @@ class DbcImportViewModel {
     final editor = YamlEditor('');
     editor.update([], existingConfig);
     await file.writeAsString(editor.toString());
+  }
+
+  /// 启动导入：在 worker isolate 内扫描目录并批量写入数据库。
+  ///
+  /// 返回进度事件流：先发若干 [DbcSyncStatus]/[DbcSyncCount]，
+  /// 最后发一个 [DbcSyncResult] 后关闭。调用方应在流结束后清理状态。
+  Stream<DbcSyncProgress> import({
+    required String dbcPath,
+    required String host,
+    required int port,
+    required String database,
+    required String username,
+    required String password,
+  }) {
+    final controller = StreamController<DbcSyncProgress>();
+    final receivePort = ReceivePort();
+
+    () async {
+      try {
+        await Isolate.spawn(_importWorker, (
+          sendPort: receivePort.sendPort,
+          dbcPath: dbcPath,
+          host: host,
+          port: port,
+          database: database,
+          username: username,
+          password: password,
+        ));
+
+        await for (final msg in receivePort) {
+          switch (msg) {
+            case (String status,):
+              controller.add(DbcSyncStatus(status));
+            case (String status, int d, int t):
+              controller.add(DbcSyncCount(status, d, t));
+            case (bool success, int imported, int skipped, List errs):
+              controller.add(
+                DbcSyncResult(success, imported, skipped, errs.cast<String>()),
+              );
+              break;
+            default:
+              break;
+          }
+        }
+        receivePort.close();
+        await controller.close();
+      } catch (e) {
+        LoggerUtil.instance.e('DBC 导入异常: $e');
+        controller.add(DbcSyncResult(false, 0, 0, ['导入出错：$e']));
+        await controller.close();
+      }
+    }();
+
+    return controller.stream;
   }
 
   String get _configPath => p.join(Directory.current.path, 'config.yaml');
@@ -598,7 +558,7 @@ String _toSnakeCase(String input) {
             input[i - 1].toUpperCase() != input[i - 1]) {
           buffer.write('_');
         } else if (i + 1 < input.length &&
-            input[i + 1].toLowerCase() == input[i + 1]) {
+            input[i + 1].toLowerCase() == input[i - 1]) {
           buffer.write('_');
         }
       }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/view_model/feature_view_model.dart';
+import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/feature_card.dart';
 import 'package:get_it/get_it.dart';
@@ -14,8 +14,8 @@ class FrequentModuleComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     const textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
     const title = Text('常用功能', style: textStyle);
-    final featureViewModel = GetIt.instance.get<FeatureViewModel>();
-    final features = featureViewModel.favoriteFeatures;
+    final scaffoldViewModel = GetIt.instance.get<ScaffoldViewModel>();
+    final features = scaffoldViewModel.favoriteFeatures;
     final theme = Theme.of(context);
     final outline = theme.colorScheme.outline.withValues(alpha: 0.2);
     final kTotalColumns = 3;

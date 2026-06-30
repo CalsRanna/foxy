@@ -18,10 +18,7 @@ class GameObjectQuestStarterEntity {
     return {'id': id, 'quest': quest};
   }
 
-  GameObjectQuestStarterEntity copyWith({
-    int? id,
-    int? quest,
-  }) {
+  GameObjectQuestStarterEntity copyWith({int? id, int? quest}) {
     return GameObjectQuestStarterEntity(
       id: id ?? this.id,
       quest: quest ?? this.quest,

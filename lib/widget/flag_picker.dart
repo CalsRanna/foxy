@@ -29,7 +29,9 @@ class _FlagPickerState extends State<FlagPicker> {
   @override
   void initState() {
     super.initState();
-    _displayController = TextEditingController(text: _format(widget.signal.value));
+    _displayController = TextEditingController(
+      text: _format(widget.signal.value),
+    );
     _unsub = widget.signal.subscribe(_onSignalChanged);
   }
 

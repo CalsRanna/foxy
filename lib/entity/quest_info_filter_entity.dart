@@ -15,13 +15,7 @@ class QuestInfoFilterEntity {
     return {'id': id, 'name': name};
   }
 
-  QuestInfoFilterEntity copyWith({
-    String? id,
-    String? name,
-  }) {
-    return QuestInfoFilterEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
+  QuestInfoFilterEntity copyWith({String? id, String? name}) {
+    return QuestInfoFilterEntity(id: id ?? this.id, name: name ?? this.name);
   }
 }

@@ -16,10 +16,7 @@ class SpellCustomAttrEntity {
     return {'spell_id': spellId, 'attributes': attributes};
   }
 
-  SpellCustomAttrEntity copyWith({
-    int? spellId,
-    int? attributes,
-  }) {
+  SpellCustomAttrEntity copyWith({int? spellId, int? attributes}) {
     return SpellCustomAttrEntity(
       spellId: spellId ?? this.spellId,
       attributes: attributes ?? this.attributes,

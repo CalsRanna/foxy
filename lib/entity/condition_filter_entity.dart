@@ -2,7 +2,10 @@ class ConditionFilterEntity {
   final String sourceTypeOrReferenceId;
   final String sourceEntry;
 
-  const ConditionFilterEntity({this.sourceTypeOrReferenceId = '', this.sourceEntry = ''});
+  const ConditionFilterEntity({
+    this.sourceTypeOrReferenceId = '',
+    this.sourceEntry = '',
+  });
 
   factory ConditionFilterEntity.fromJson(Map<String, dynamic> json) {
     return ConditionFilterEntity(
@@ -12,7 +15,10 @@ class ConditionFilterEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {'sourceTypeOrReferenceId': sourceTypeOrReferenceId, 'sourceEntry': sourceEntry};
+    return {
+      'sourceTypeOrReferenceId': sourceTypeOrReferenceId,
+      'sourceEntry': sourceEntry,
+    };
   }
 
   ConditionFilterEntity copyWith({
@@ -20,7 +26,8 @@ class ConditionFilterEntity {
     String? sourceEntry,
   }) {
     return ConditionFilterEntity(
-      sourceTypeOrReferenceId: sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
+      sourceTypeOrReferenceId:
+          sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
       sourceEntry: sourceEntry ?? this.sourceEntry,
     );
   }

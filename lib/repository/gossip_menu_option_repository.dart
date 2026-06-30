@@ -60,9 +60,9 @@ class GossipMenuOptionRepository with RepositoryMixin {
   Future<GossipMenuOptionEntity> createGossipMenuOption({
     required int menuId,
   }) async {
-    final result = await laconic.table(_table).where('MenuID', menuId).select(
-      ['MAX(OptionID) as max_id'],
-    ).first();
+    final result = await laconic.table(_table).where('MenuID', menuId).select([
+      'MAX(OptionID) as max_id',
+    ]).first();
     final maxId = result.toMap()['max_id'] as int?;
     return GossipMenuOptionEntity(
       menuId: menuId,

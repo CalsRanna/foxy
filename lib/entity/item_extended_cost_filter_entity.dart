@@ -4,20 +4,14 @@ class ItemExtendedCostFilterEntity {
   const ItemExtendedCostFilterEntity({this.id = ''});
 
   factory ItemExtendedCostFilterEntity.fromJson(Map<String, dynamic> json) {
-    return ItemExtendedCostFilterEntity(
-      id: json['id'] ?? '',
-    );
+    return ItemExtendedCostFilterEntity(id: json['id'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
     return {'id': id};
   }
 
-  ItemExtendedCostFilterEntity copyWith({
-    String? id,
-  }) {
-    return ItemExtendedCostFilterEntity(
-      id: id ?? this.id,
-    );
+  ItemExtendedCostFilterEntity copyWith({String? id}) {
+    return ItemExtendedCostFilterEntity(id: id ?? this.id);
   }
 }

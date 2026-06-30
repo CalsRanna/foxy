@@ -28,9 +28,9 @@ class FoxyNumberInput<T extends num> extends StatefulWidget {
     this.placeholder,
     this.readOnly = false,
   }) : assert(
-          controller != null || value != null,
-          'FoxyNumberInput 必须提供 controller 或 value',
-        );
+         controller != null || value != null,
+         'FoxyNumberInput 必须提供 controller 或 value',
+       );
 
   @override
   State<FoxyNumberInput<T>> createState() => _FoxyNumberInputState<T>();

@@ -15,13 +15,7 @@ class QuestSortFilterEntity {
     return {'id': id, 'name': name};
   }
 
-  QuestSortFilterEntity copyWith({
-    String? id,
-    String? name,
-  }) {
-    return QuestSortFilterEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
+  QuestSortFilterEntity copyWith({String? id, String? name}) {
+    return QuestSortFilterEntity(id: id ?? this.id, name: name ?? this.name);
   }
 }

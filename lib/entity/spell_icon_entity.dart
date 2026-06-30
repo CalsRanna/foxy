@@ -15,10 +15,7 @@ class SpellIconEntity {
     return {'ID': id, 'TextureFilename': textureFilename};
   }
 
-  SpellIconEntity copyWith({
-    int? id,
-    String? textureFilename,
-  }) {
+  SpellIconEntity copyWith({int? id, String? textureFilename}) {
     return SpellIconEntity(
       id: id ?? this.id,
       textureFilename: textureFilename ?? this.textureFilename,

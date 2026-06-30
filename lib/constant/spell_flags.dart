@@ -464,9 +464,7 @@ const kInventoryTypeOptions = [
 ];
 
 /// 施法朝向标志（SpellFacingFlags）
-const kSpellFacingFlagsOptions = [
-  FlagItem(0x0001, '必须在正面'),
-];
+const kSpellFacingFlagsOptions = [FlagItem(0x0001, '必须在正面')];
 
 /// 分类掩码位（每bit对应法术族内一个具体法术）
 const kSpellClassMaskBits = [

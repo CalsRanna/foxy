@@ -43,7 +43,8 @@ class MapInfoEntity {
     return MapInfoEntity(
       id: id ?? this.id,
       mapNameLangZhCn: mapNameLangZhCn ?? this.mapNameLangZhCn,
-      mapDescription0LangZhCn: mapDescription0LangZhCn ?? this.mapDescription0LangZhCn,
+      mapDescription0LangZhCn:
+          mapDescription0LangZhCn ?? this.mapDescription0LangZhCn,
       instanceType: instanceType ?? this.instanceType,
       pvp: pvp ?? this.pvp,
     );

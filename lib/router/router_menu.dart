@@ -56,7 +56,7 @@ enum RouterMenu {
       RouterMenu.spell => const SpellListRoute(),
       RouterMenu.more => const MoreRoute(),
       RouterMenu.referenceLootTemplate =>
-          const ReferenceLootTemplateListRoute(),
+        const ReferenceLootTemplateListRoute(),
       RouterMenu.pageText => const TextContentListRoute(),
       RouterMenu.condition => const ConditionListRoute(),
       RouterMenu.playerCreateInfo => const PlayerCreateInfoListRoute(),
@@ -66,7 +66,8 @@ enum RouterMenu {
       RouterMenu.questSort => const QuestSortListRoute(),
       RouterMenu.questInfo => const QuestInfoListRoute(),
       RouterMenu.itemExtendedCost => const ItemExtendedCostListRoute(),
-      RouterMenu.scalingStatDistribution => const ScalingStatDistributionListRoute(),
+      RouterMenu.scalingStatDistribution =>
+        const ScalingStatDistributionListRoute(),
       RouterMenu.spellItemEnchantment => const SpellItemEnchantmentListRoute(),
       RouterMenu.gemProperty => const GemPropertyListRoute(),
       RouterMenu.glyphProperty => const GlyphPropertyListRoute(),

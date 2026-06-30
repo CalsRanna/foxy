@@ -19,11 +19,7 @@ class ItemEnchantmentTemplateEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'ench': ench,
-      'chance': chance,
-    };
+    return {'entry': entry, 'ench': ench, 'chance': chance};
   }
 
   ItemEnchantmentTemplateEntity copyWith({

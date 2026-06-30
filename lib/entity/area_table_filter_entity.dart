@@ -12,19 +12,10 @@ class AreaTableFilterEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-    };
+    return {'id': id, 'name': name};
   }
 
-  AreaTableFilterEntity copyWith({
-    String? id,
-    String? name,
-  }) {
-    return AreaTableFilterEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
+  AreaTableFilterEntity copyWith({String? id, String? name}) {
+    return AreaTableFilterEntity(id: id ?? this.id, name: name ?? this.name);
   }
 }

@@ -58,19 +58,10 @@ const kSpellDispelTypeOptions = {
 };
 
 /// SpellPreventionType 防止类型选项（来源: SharedDefines.h enum SpellPreventionType）
-const kSpellPreventionTypeOptions = {
-  0: '无',
-  1: '沉默',
-  2: '平静',
-};
+const kSpellPreventionTypeOptions = {0: '无', 1: '沉默', 2: '平静'};
 
 /// SpellDmgClass 伤害类型选项（来源: SharedDefines.h enum SpellDmgClass）
-const kSpellDmgClassOptions = {
-  0: '无',
-  1: '魔法',
-  2: '近战',
-  3: '远程',
-};
+const kSpellDmgClassOptions = {0: '无', 1: '魔法', 2: '近战', 3: '远程'};
 
 /// Powers 能量类型选项（来源: SharedDefines.h enum Powers）
 const kSpellPowerTypeOptions = {
@@ -746,13 +737,7 @@ const kStatTypeOptions = {
 };
 
 /// Stats 枚举（MiscValue when Effect=6, Aura=174/175 直接使用 AC Stats 枚举值）
-const kStatsEnumOptions = {
-  0: '力量',
-  1: '敏捷',
-  2: '耐力',
-  3: '智力',
-  4: '精神',
-};
+const kStatsEnumOptions = {0: '力量', 1: '敏捷', 2: '耐力', 3: '智力', 4: '精神'};
 
 /// 变形形态（MiscValue when Effect=6, Aura=36 MOD_SHAPESHIFT）
 const kShapeshiftFormOptions = {
@@ -769,18 +754,10 @@ const kShapeshiftFormOptions = {
 };
 
 /// 速度类型（MiscValue when Effect=6, Aura=31 MOD_INCREASE_SPEED）
-const kSpeedTypeOptions = {
-  0: '步行',
-  1: '跑步',
-  2: '游泳',
-  3: '飞行',
-};
+const kSpeedTypeOptions = {0: '步行', 1: '跑步', 2: '游泳', 3: '飞行'};
 
 /// 攻击强度类型（MiscValue when Effect=6, Aura=99 MOD_ATTACK_POWER）
-const kAttackPowerTypeOptions = {
-  1: '远程攻击强度',
-  2: '近战攻击强度',
-};
+const kAttackPowerTypeOptions = {1: '远程攻击强度', 2: '近战攻击强度'};
 
 /// SpellModOp（MiscValue when Effect=6, Aura=107/108 ADD_FLAT/PCT_MODIFIER）
 const kSpellModOpOptions = {

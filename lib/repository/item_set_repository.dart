@@ -23,14 +23,17 @@ class ItemSetRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
-    const fields = ['ID', 'Name_lang_zhCN', 'RequiredSkill', 'RequiredSkillRank'];
+    const fields = [
+      'ID',
+      'Name_lang_zhCN',
+      'RequiredSkill',
+      'RequiredSkillRank',
+    ];
     builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results
-        .map((e) => BriefItemSetEntity.fromJson(e.toMap()))
-        .toList();
+    return results.map((e) => BriefItemSetEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countItemSets({ItemSetFilterEntity? filter}) async {
@@ -71,7 +74,9 @@ class ItemSetRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select(['MAX(ID) as max_id']).first();
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
     var maxId = result.toMap()['max_id'] as int?;
     return (maxId ?? 0) + 1;
   }

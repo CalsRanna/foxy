@@ -17,9 +17,9 @@ class CreatureQuestStarterRepository with RepositoryMixin {
   Future<CreatureQuestStarterEntity> createCreatureQuestStarter(
     int questId,
   ) async {
-    final result = await laconic.table(_table).where('quest', questId).select(
-      ['MAX(id) as max_id'],
-    ).first();
+    final result = await laconic.table(_table).where('quest', questId).select([
+      'MAX(id) as max_id',
+    ]).first();
     final maxId = result.toMap()['max_id'] as int?;
     return CreatureQuestStarterEntity(
       quest: questId,

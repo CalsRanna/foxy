@@ -122,7 +122,8 @@ class AreaTableEntity {
       areaBit: areaBit ?? this.areaBit,
       flags: flags ?? this.flags,
       soundProviderPref: soundProviderPref ?? this.soundProviderPref,
-      soundProviderPrefUnderwater: soundProviderPrefUnderwater ?? this.soundProviderPrefUnderwater,
+      soundProviderPrefUnderwater:
+          soundProviderPrefUnderwater ?? this.soundProviderPrefUnderwater,
       ambienceId: ambienceId ?? this.ambienceId,
       zoneMusic: zoneMusic ?? this.zoneMusic,
       introSound: introSound ?? this.introSound,

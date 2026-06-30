@@ -298,7 +298,8 @@ class ItemTemplateEntity {
       // --- 武器与伤害 ---
       delay: json['delay'] ?? 0,
       rangedModRange:
-          ((json['RangedModRange'] ?? json['rangedModRange'] ?? 0) as num).toInt(),
+          ((json['RangedModRange'] ?? json['rangedModRange'] ?? 0) as num)
+              .toInt(),
       armorDamageModifier:
           (json['ArmorDamageModifier'] ?? json['armorDamageModifier'] ?? 0.0)
               as double,
@@ -629,7 +630,8 @@ class ItemTemplateEntity {
       quality: quality ?? this.quality,
       className: className ?? this.className,
       subclass: subclass ?? this.subclass,
-      soundOverrideSubclass: soundOverrideSubclass ?? this.soundOverrideSubclass,
+      soundOverrideSubclass:
+          soundOverrideSubclass ?? this.soundOverrideSubclass,
       material: material ?? this.material,
       displayId: displayId ?? this.displayId,
       inventoryType: inventoryType ?? this.inventoryType,
@@ -669,7 +671,8 @@ class ItemTemplateEntity {
       ammoType: ammoType ?? this.ammoType,
       armor: armor ?? this.armor,
       block: block ?? this.block,
-      scalingStatDistribution: scalingStatDistribution ?? this.scalingStatDistribution,
+      scalingStatDistribution:
+          scalingStatDistribution ?? this.scalingStatDistribution,
       scalingStatValue: scalingStatValue ?? this.scalingStatValue,
       statsCount: statsCount ?? this.statsCount,
       statTypes: statTypes ?? this.statTypes,
@@ -686,7 +689,8 @@ class ItemTemplateEntity {
       spellPpmRates: spellPpmRates ?? this.spellPpmRates,
       spellCooldowns: spellCooldowns ?? this.spellCooldowns,
       spellCategories: spellCategories ?? this.spellCategories,
-      spellCategoryCooldowns: spellCategoryCooldowns ?? this.spellCategoryCooldowns,
+      spellCategoryCooldowns:
+          spellCategoryCooldowns ?? this.spellCategoryCooldowns,
       allowableClass: allowableClass ?? this.allowableClass,
       allowableRace: allowableRace ?? this.allowableRace,
       itemLevel: itemLevel ?? this.itemLevel,
@@ -696,9 +700,12 @@ class ItemTemplateEntity {
       requiredSpell: requiredSpell ?? this.requiredSpell,
       requiredHonorRank: requiredHonorRank ?? this.requiredHonorRank,
       requiredCityRank: requiredCityRank ?? this.requiredCityRank,
-      requiredReputationFaction: requiredReputationFaction ?? this.requiredReputationFaction,
-      requiredReputationRank: requiredReputationRank ?? this.requiredReputationRank,
-      requiredDisenchantSkill: requiredDisenchantSkill ?? this.requiredDisenchantSkill,
+      requiredReputationFaction:
+          requiredReputationFaction ?? this.requiredReputationFaction,
+      requiredReputationRank:
+          requiredReputationRank ?? this.requiredReputationRank,
+      requiredDisenchantSkill:
+          requiredDisenchantSkill ?? this.requiredDisenchantSkill,
       mapId: mapId ?? this.mapId,
       area: area ?? this.area,
       holidayId: holidayId ?? this.holidayId,

@@ -8,10 +8,7 @@ class GossipMenuFilterEntity {
     return {'menuId': menuId, 'text': text};
   }
 
-  GossipMenuFilterEntity copyWith({
-    String? menuId,
-    String? text,
-  }) {
+  GossipMenuFilterEntity copyWith({String? menuId, String? text}) {
     return GossipMenuFilterEntity(
       menuId: menuId ?? this.menuId,
       text: text ?? this.text,

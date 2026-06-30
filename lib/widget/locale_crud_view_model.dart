@@ -38,7 +38,9 @@ class LocaleCrudViewModel {
     try {
       final jsonList = await onLoad(entry);
       rows.value = jsonList.map((json) {
-        return LocaleCrudRow(fields.map((f) => (json[f] ?? '').toString()).toList());
+        return LocaleCrudRow(
+          fields.map((f) => (json[f] ?? '').toString()).toList(),
+        );
       }).toList();
     } catch (_) {
       rows.value = [];
