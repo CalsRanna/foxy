@@ -4,6 +4,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -30,7 +31,8 @@ class _NpcTextViewState extends State<NpcTextView> {
     super.initState();
     viewModel.load(int.tryParse(parentViewModel.textIdController.text) ?? 0);
     _disposer = effect(() {
-      final newTextId = int.tryParse(parentViewModel.textIdController.text) ?? 0;
+      final newTextId =
+          int.tryParse(parentViewModel.textIdController.text) ?? 0;
       viewModel.load(newTextId);
     });
   }
@@ -45,112 +47,110 @@ class _NpcTextViewState extends State<NpcTextView> {
   @override
   Widget build(BuildContext context) {
     return Watch((_) {
-      final cards = <Widget>[_buildMetaCard()];
+      final sections = <Widget>[_buildMetaSection()];
       for (var n = 0; n < 8; n++) {
-        cards.add(_buildEntryCard(n));
+        sections.add(_buildEntrySection(n));
       }
-      cards.add(_buildActions());
-      return Padding(
-        padding: const EdgeInsets.only(top: 16),
-        child: Column(spacing: 16, children: cards),
+      sections.add(_buildActions());
+      return SingleChildScrollView(
+        padding: EdgeInsets.only(top: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: sections,
+        ),
       );
     });
   }
 
-  Widget _buildMetaCard() {
-    return ShadCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        spacing: 16,
-        children: [
-          Expanded(child: _field('ID', 'ID', viewModel.controllerOf('ID'))),
-          Expanded(
-            child: _field(
-              'VerifiedBuild',
-              'VerifiedBuild',
-              viewModel.controllerOf('VerifiedBuild'),
+  Widget _buildMetaSection() {
+    return FormSection(
+      title: '基本信息',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(child: _field('编号', 'ID', viewModel.controllerOf('ID'))),
+            Expanded(
+              child: _field(
+                'VerifiedBuild',
+                'VerifiedBuild',
+                viewModel.controllerOf('VerifiedBuild'),
+              ),
             ),
-          ),
-        ],
-      ),
+            Expanded(child: SizedBox()),
+            Expanded(child: SizedBox()),
+          ],
+        ),
+      ],
     );
   }
 
-  Widget _buildEntryCard(int n) {
-    final children = <Widget>[];
-    children.add(
-      Row(
-        spacing: 16,
-        children: [
-          Expanded(
-            child: _field('语言', 'lang$n', viewModel.controllerOf('lang$n')),
-          ),
-          Expanded(
-            child: _field(
-              '几率',
-              'Probability$n',
-              viewModel.controllerOf('Probability$n'),
+  Widget _buildEntrySection(int n) {
+    return FormSection(
+      title: '组 $n',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(
+              child: _field('语言', 'lang$n', viewModel.controllerOf('lang$n')),
             ),
-          ),
-        ],
-      ),
-    );
-    children.add(
-      Row(
-        spacing: 16,
-        children: [
-          Expanded(child: _fieldWithLocale('文本', 'text${n}_0', 'Text${n}_0')),
-          Expanded(child: _fieldWithLocale('文本', 'text${n}_1', 'Text${n}_1')),
-          Expanded(
-            child: FormItem(
-              label: '广播文本',
-              placeholder: 'BroadcastTextID$n',
-              child: FoxyEntityPicker(
-                delegate: EntityPickerDelegates.broadcastText,
-                controller: viewModel.broadcastControllerOf(n),
-                placeholder: 'BroadcastTextID$n',
+            Expanded(
+              child: _field(
+                '几率',
+                'Probability$n',
+                viewModel.controllerOf('Probability$n'),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-    final emotes = <Widget>[];
-    for (var i = 0; i < 6; i++) {
-      emotes.add(
-        Expanded(
-          child: FormItem(
-            label: '表演',
-            placeholder: 'em${n}_$i',
-            child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.emote,
-              controller: viewModel.emoteControllerOf('em${n}_$i'),
-              placeholder: 'em${n}_$i',
-            ),
-          ),
+            Expanded(child: SizedBox()),
+            Expanded(child: SizedBox()),
+          ],
         ),
-      );
-    }
-    children.add(Row(spacing: 16, children: emotes));
-
-    return ShadCard(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        spacing: 12,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [Text('组 $n'), ...children],
-      ),
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(child: _fieldWithLocale('文本', 'text${n}_0', 'Text${n}_0')),
+            Expanded(child: _fieldWithLocale('文本', 'text${n}_1', 'Text${n}_1')),
+            Expanded(
+              child: FormItem(
+                label: '广播文本',
+                placeholder: 'BroadcastTextID$n',
+                child: FoxyEntityPicker(
+                  delegate: EntityPickerDelegates.broadcastText,
+                  controller: viewModel.broadcastControllerOf(n),
+                  placeholder: 'BroadcastTextID$n',
+                ),
+              ),
+            ),
+            Expanded(child: SizedBox()),
+          ],
+        ),
+        Row(
+          spacing: 8,
+          children: [
+            for (var i = 0; i < 6; i++)
+              Expanded(
+                child: FormItem(
+                  label: '表演',
+                  placeholder: 'em${n}_$i',
+                  child: FoxyEntityPicker(
+                    delegate: EntityPickerDelegates.emote,
+                    controller: viewModel.emoteControllerOf('em${n}_$i'),
+                    placeholder: 'em${n}_$i',
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ],
     );
   }
 
   Widget _field(String label, String placeholder, TextEditingController c) {
-    return Column(
-      spacing: 6,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label),
-        ShadInput(controller: c, placeholder: Text(placeholder)),
-      ],
+    return FormItem(
+      label: label,
+      child: ShadInput(controller: c, placeholder: Text(placeholder)),
     );
   }
 
@@ -176,7 +176,7 @@ class _NpcTextViewState extends State<NpcTextView> {
       placeholder: Text(mainKey),
       trailing: toggleBtn,
     );
-    final children = <Widget>[Text(label), mainInput];
+    final children = <Widget>[mainInput];
     if (expanded) {
       children.add(
         ShadInput(
@@ -185,25 +185,26 @@ class _NpcTextViewState extends State<NpcTextView> {
         ),
       );
     }
-    return Column(
-      spacing: 6,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
+    return FormItem(
+      label: label,
+      child: Column(
+        spacing: 6,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
     );
   }
 
   Widget _buildActions() {
-    final saveBtn = ShadButton(
-      onPressed: viewModel.save,
-      child: const Text('保存'),
-    );
-    final backBtn = ShadButton.outline(
-      onPressed: parentViewModel.pop,
-      child: Text('返回'),
-    );
-    return ShadCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(spacing: 8, children: [saveBtn, backBtn]),
+    return Row(
+      children: [
+        ShadButton(onPressed: viewModel.save, child: const Text('保存')),
+        const SizedBox(width: 8),
+        ShadButton.ghost(
+          onPressed: parentViewModel.pop,
+          child: const Text('取消'),
+        ),
+      ],
     );
   }
 }

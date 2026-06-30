@@ -19,7 +19,8 @@ class CreatureTemplateResistanceViewModel {
   final resistanceController = TextEditingController();
   final verifiedBuildController = TextEditingController();
 
-  final _repository = GetIt.instance.get<CreatureTemplateResistanceRepository>();
+  final _repository = GetIt.instance
+      .get<CreatureTemplateResistanceRepository>();
 
   /// 加载数据
   String _fmt(num v) {
@@ -96,10 +97,7 @@ class CreatureTemplateResistanceViewModel {
 
     final r = items.value[index];
     try {
-      await _repository.copyCreatureTemplateResistance(
-        r.creatureID,
-        r.school,
-      );
+      await _repository.copyCreatureTemplateResistance(r.creatureID, r.school);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));

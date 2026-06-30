@@ -78,35 +78,39 @@ class _QuestTemplateLocaleSelectorState
       onLoad: (questId) async {
         final locales = await _repository.getQuestTemplateLocales(questId);
         return locales
-            .map((e) => {
-                  'locale': e.locale,
-                  'title': e.title,
-                  'details': e.details,
-                  'objectives': e.objectives,
-                  'endText': e.endText,
-                  'completedText': e.completedText,
-                  'objectiveText1': e.objectiveText1,
-                  'objectiveText2': e.objectiveText2,
-                  'objectiveText3': e.objectiveText3,
-                  'objectiveText4': e.objectiveText4,
-                })
+            .map(
+              (e) => {
+                'locale': e.locale,
+                'title': e.title,
+                'details': e.details,
+                'objectives': e.objectives,
+                'endText': e.endText,
+                'completedText': e.completedText,
+                'objectiveText1': e.objectiveText1,
+                'objectiveText2': e.objectiveText2,
+                'objectiveText3': e.objectiveText3,
+                'objectiveText4': e.objectiveText4,
+              },
+            )
             .toList();
       },
       onSave: (questId, data) async {
         final locales = data
-            .map((d) => QuestTemplateLocaleEntity(
-                  id: questId,
-                  locale: d['locale'] ?? '',
-                  title: d['title'] ?? '',
-                  details: d['details'] ?? '',
-                  objectives: d['objectives'] ?? '',
-                  endText: d['endText'] ?? '',
-                  completedText: d['completedText'] ?? '',
-                  objectiveText1: d['objectiveText1'] ?? '',
-                  objectiveText2: d['objectiveText2'] ?? '',
-                  objectiveText3: d['objectiveText3'] ?? '',
-                  objectiveText4: d['objectiveText4'] ?? '',
-                ))
+            .map(
+              (d) => QuestTemplateLocaleEntity(
+                id: questId,
+                locale: d['locale'] ?? '',
+                title: d['title'] ?? '',
+                details: d['details'] ?? '',
+                objectives: d['objectives'] ?? '',
+                endText: d['endText'] ?? '',
+                completedText: d['completedText'] ?? '',
+                objectiveText1: d['objectiveText1'] ?? '',
+                objectiveText2: d['objectiveText2'] ?? '',
+                objectiveText3: d['objectiveText3'] ?? '',
+                objectiveText4: d['objectiveText4'] ?? '',
+              ),
+            )
             .toList();
         await _repository.replaceAll(questId, locales);
       },

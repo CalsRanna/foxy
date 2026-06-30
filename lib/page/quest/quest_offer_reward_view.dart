@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/quest/quest_offer_reward_locale_selector.dart';
 import 'package:foxy/page/quest/quest_offer_reward_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -50,27 +51,21 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
             child: FormItem(
               label: '表情1',
               placeholder: 'Emote1',
-              child: FoxyNumberInput<int>(
-                controller: vm.emote1Controller,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.emote1Controller),
             ),
           ),
           Expanded(
             child: FormItem(
               label: '表情2',
               placeholder: 'Emote2',
-              child: FoxyNumberInput<int>(
-                controller: vm.emote2Controller,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.emote2Controller),
             ),
           ),
           Expanded(
             child: FormItem(
               label: '表情3',
               placeholder: 'Emote3',
-              child: FoxyNumberInput<int>(
-                controller: vm.emote3Controller,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.emote3Controller),
             ),
           ),
         ],
@@ -82,36 +77,28 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
             child: FormItem(
               label: '表情4',
               placeholder: 'Emote4',
-              child: FoxyNumberInput<int>(
-                controller: vm.emote4Controller,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.emote4Controller),
             ),
           ),
           Expanded(
             child: FormItem(
               label: '表情延迟1',
               placeholder: 'EmoteDelay1',
-              child: FoxyNumberInput<int>(
-                controller: vm.emoteDelay1Controller,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.emoteDelay1Controller),
             ),
           ),
           Expanded(
             child: FormItem(
               label: '表情延迟2',
               placeholder: 'EmoteDelay2',
-              child: FoxyNumberInput<int>(
-                controller: vm.emoteDelay2Controller,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.emoteDelay2Controller),
             ),
           ),
           Expanded(
             child: FormItem(
               label: '表情延迟3',
               placeholder: 'EmoteDelay3',
-              child: FoxyNumberInput<int>(
-                controller: vm.emoteDelay3Controller,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.emoteDelay3Controller),
             ),
           ),
         ],
@@ -123,9 +110,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
             child: FormItem(
               label: '表情延迟4',
               placeholder: 'EmoteDelay4',
-              child: FoxyNumberInput<int>(
-                controller: vm.emoteDelay4Controller,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.emoteDelay4Controller),
             ),
           ),
           Expanded(child: SizedBox()),
@@ -160,10 +145,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: rows),
-          ),
+          FormSection(title: '基本信息', children: rows),
           Row(
             spacing: 8,
             children: [

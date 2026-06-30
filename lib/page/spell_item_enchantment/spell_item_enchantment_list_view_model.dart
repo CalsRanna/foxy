@@ -84,7 +84,9 @@ class SpellItemEnchantmentListViewModel {
         page: 1,
         filter: filter,
       );
-      total.value = await _repository.countSpellItemEnchantments(filter: filter);
+      total.value = await _repository.countSpellItemEnchantments(
+        filter: filter,
+      );
     } catch (e) {
       LoggerUtil.instance.e('加载法术物品附魔列表失败: $e');
       DialogUtil.instance.error('加载法术物品附魔列表失败: $e');
@@ -136,7 +138,9 @@ class SpellItemEnchantmentListViewModel {
         page: page.value,
         filter: filter,
       );
-      total.value = await _repository.countSpellItemEnchantments(filter: filter);
+      total.value = await _repository.countSpellItemEnchantments(
+        filter: filter,
+      );
     } catch (e) {
       LoggerUtil.instance.e('刷新法术物品附魔列表失败: $e');
       DialogUtil.instance.error('刷新法术物品附魔列表失败: $e');

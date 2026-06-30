@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -114,12 +115,7 @@ class _QuestFactionRewardViewState extends State<QuestFactionRewardView> {
 
     /// 1. 基本信息
     final basicRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: idInput),
-        ],
-      ),
+      Row(spacing: 8, children: [Expanded(child: idInput)]),
     ];
 
     /// 2. 难度 (4+4+2)
@@ -157,24 +153,8 @@ class _QuestFactionRewardViewState extends State<QuestFactionRewardView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          // 基本信息
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('基本信息'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: basicRows),
-          ),
-          // 难度
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('难度(Difficulty)'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: difficultyRows),
-          ),
+          FormSection(title: '基本信息', children: basicRows),
+          FormSection(title: '难度(Difficulty)', children: difficultyRows),
           Row(
             children: [
               ShadButton(

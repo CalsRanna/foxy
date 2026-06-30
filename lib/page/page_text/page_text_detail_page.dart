@@ -28,7 +28,10 @@ class _TextContentDetailPageState extends State<TextContentDetailPage> {
       children: [
         Padding(
           padding: EdgeInsets.only(bottom: 12),
-          child: Text(name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          child: Text(
+            name,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
         ),
         FoxyTab(
           tabs: [Text('页面文本'), Text('本地化')],

@@ -36,6 +36,7 @@ class ItemExtendedCostDetailViewModel {
   final itemCount4Controller = TextEditingController();
 
   final cost = signal(ItemExtendedCostEntity());
+
   /// 保存到数据库
   String _fmt(num v) {
     if (v is double) {
@@ -133,9 +134,7 @@ class ItemExtendedCostDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      cost.value = (await _repository.getItemExtendedCost(
-        id,
-      ))!;
+      cost.value = (await _repository.getItemExtendedCost(id))!;
       _initControllers(cost.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载扩展价格(id=$id)失败', error: e, stackTrace: s);

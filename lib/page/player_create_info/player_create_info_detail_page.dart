@@ -14,13 +14,20 @@ class PlayerCreateInfoDetailPage extends StatefulWidget {
   final int? playerClass;
   final String? label;
 
-  const PlayerCreateInfoDetailPage({super.key, this.race, this.playerClass, this.label});
+  const PlayerCreateInfoDetailPage({
+    super.key,
+    this.race,
+    this.playerClass,
+    this.label,
+  });
 
   @override
-  State<PlayerCreateInfoDetailPage> createState() => _PlayerCreateInfoDetailPageState();
+  State<PlayerCreateInfoDetailPage> createState() =>
+      _PlayerCreateInfoDetailPageState();
 }
 
-class _PlayerCreateInfoDetailPageState extends State<PlayerCreateInfoDetailPage> {
+class _PlayerCreateInfoDetailPageState
+    extends State<PlayerCreateInfoDetailPage> {
   final viewModel = GetIt.instance.get<PlayerCreateInfoDetailViewModel>();
 
   @override
@@ -39,10 +46,22 @@ class _PlayerCreateInfoDetailPageState extends State<PlayerCreateInfoDetailPage>
         FoxyTab(
           tabs: [Text('出生信息'), Text('动作按钮'), Text('起始物品'), Text('自定义法术')],
           contents: [
-            PlayerCreateInfoView(race: widget.race, playerClass: widget.playerClass),
-            PlayerCreateInfoActionView(race: widget.race, playerClass: widget.playerClass),
-            PlayerCreateInfoItemView(race: widget.race, playerClass: widget.playerClass),
-            PlayerCreateInfoSpellCustomView(race: widget.race, playerClass: widget.playerClass),
+            PlayerCreateInfoView(
+              race: widget.race,
+              playerClass: widget.playerClass,
+            ),
+            PlayerCreateInfoActionView(
+              race: widget.race,
+              playerClass: widget.playerClass,
+            ),
+            PlayerCreateInfoItemView(
+              race: widget.race,
+              playerClass: widget.playerClass,
+            ),
+            PlayerCreateInfoSpellCustomView(
+              race: widget.race,
+              playerClass: widget.playerClass,
+            ),
           ],
         ),
       ],

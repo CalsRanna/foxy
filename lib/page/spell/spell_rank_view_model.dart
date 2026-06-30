@@ -63,13 +63,13 @@ class SpellRankViewModel {
   Future<void> create() async {
     try {
       resetForm();
-      firstSpellIdController.text = _fmt(items.value.isNotEmpty
-          ? items.value.first.firstSpellId
-          : 0);
+      firstSpellIdController.text = _fmt(
+        items.value.isNotEmpty ? items.value.first.firstSpellId : 0,
+      );
       rankSpellIdController.text = _fmt(spellId.value);
-      rankController.text = _fmt(items.value.isNotEmpty
-          ? (items.value.last.rank + 1)
-          : 1);
+      rankController.text = _fmt(
+        items.value.isNotEmpty ? (items.value.last.rank + 1) : 1,
+      );
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('法术等级-创建失败: $e');

@@ -41,7 +41,9 @@ class CreatureOnKillReputationViewModel {
   double _pd(String t) => double.tryParse(t) ?? 0.0;
 
   Future<void> load() async {
-    final data = await _repository.getCreatureOnKillReputation(_pi(creatureIdController.text));
+    final data = await _repository.getCreatureOnKillReputation(
+      _pi(creatureIdController.text),
+    );
     if (data != null) {
       reputation.value = data;
     }

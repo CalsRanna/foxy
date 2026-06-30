@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -10,11 +11,14 @@ class ScalingStatDistributionView extends StatefulWidget {
   const ScalingStatDistributionView({super.key, this.entry});
 
   @override
-  State<ScalingStatDistributionView> createState() => _ScalingStatDistributionViewState();
+  State<ScalingStatDistributionView> createState() =>
+      _ScalingStatDistributionViewState();
 }
 
-class _ScalingStatDistributionViewState extends State<ScalingStatDistributionView> {
-  final viewModel = GetIt.instance.get<ScalingStatDistributionDetailViewModel>();
+class _ScalingStatDistributionViewState
+    extends State<ScalingStatDistributionView> {
+  final viewModel = GetIt.instance
+      .get<ScalingStatDistributionDetailViewModel>();
 
   @override
   void initState() {
@@ -195,12 +199,7 @@ class _ScalingStatDistributionViewState extends State<ScalingStatDistributionVie
 
     /// 1. 基本信息
     final basicRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: idInput),
-        ],
-      ),
+      Row(spacing: 8, children: [Expanded(child: idInput)]),
     ];
 
     /// 2. StatID (0~9) 4+4+2
@@ -263,12 +262,7 @@ class _ScalingStatDistributionViewState extends State<ScalingStatDistributionVie
 
     /// 4. Maxlevel
     final otherRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: maxlevelInput),
-        ],
-      ),
+      Row(spacing: 8, children: [Expanded(child: maxlevelInput)]),
     ];
 
     return SingleChildScrollView(
@@ -277,42 +271,10 @@ class _ScalingStatDistributionViewState extends State<ScalingStatDistributionVie
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          // 基本信息
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('基本信息'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: basicRows),
-          ),
-          // StatID (0~9)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('StatID (0~9)'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: statIdRows),
-          ),
-          // Bonus (0~9)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('Bonus (0~9)'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: bonusRows),
-          ),
-          // Maxlevel
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('Maxlevel'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: otherRows),
-          ),
+          FormSection(title: '基本信息', children: basicRows),
+          FormSection(title: 'StatID (0~9)', children: statIdRows),
+          FormSection(title: 'Bonus (0~9)', children: bonusRows),
+          FormSection(title: 'Maxlevel', children: otherRows),
           Row(
             children: [
               ShadButton(

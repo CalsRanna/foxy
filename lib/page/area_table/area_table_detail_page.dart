@@ -22,19 +22,12 @@ class _AreaTableDetailPageState extends State<AreaTableDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('区域'),
-    ];
+    var tabs = [Text('区域')];
 
-    var tabContents = [
-      AreaTableView(entry: widget.id),
-    ];
+    var tabContents = [AreaTableView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(
@@ -44,7 +37,9 @@ class _AreaTableDetailPageState extends State<AreaTableDetailPage> {
   }
 
   Widget _buildHeader() {
-    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '区域 #${widget.id}' : '新建区域');
+    var name = widget.name?.isNotEmpty == true
+        ? widget.name!
+        : (widget.id != null ? '区域 #${widget.id}' : '新建区域');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/quest/quest_request_items_locale_selector.dart';
 import 'package:foxy/page/quest/quest_request_items_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -94,10 +95,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: rows),
-          ),
+          FormSection(title: '基本信息', children: rows),
           Row(
             spacing: 8,
             children: [

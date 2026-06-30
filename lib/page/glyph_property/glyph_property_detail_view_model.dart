@@ -22,6 +22,7 @@ class GlyphPropertyDetailViewModel {
   final spellIconIdController = TextEditingController();
 
   final property = signal(GlyphPropertyEntity());
+
   /// 保存到数据库
   String _fmt(num v) {
     if (v is double) {

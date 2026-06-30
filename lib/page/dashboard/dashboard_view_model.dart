@@ -40,7 +40,8 @@ class DashboardViewModel {
       coreRevision.value = versionEntity.coreRevision;
       databaseVersion.value = versionEntity.dbVersion;
       var packageInfo = await PackageInfo.fromPlatform();
-      softwareVersion.value = '${packageInfo.version}+${packageInfo.buildNumber}';
+      softwareVersion.value =
+          '${packageInfo.version}+${packageInfo.buildNumber}';
       await _loadRecentActivities();
     } catch (e) {
       LoggerUtil.instance.e('加载仪表板数据失败: $e');

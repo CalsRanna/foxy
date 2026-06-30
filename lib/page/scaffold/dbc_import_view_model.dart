@@ -14,36 +14,36 @@ import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
 const requiredDbcTableNames = [
-    'dbc_achievement',
-    'dbc_area_table',
-    'dbc_char_titles',
-    'dbc_creature_display_info',
-    'dbc_creature_model_data',
-    'dbc_creature_spell_data',
-    'dbc_currency_types',
-    'dbc_emotes_text',
-    'dbc_faction',
-    'dbc_gem_properties',
-    'dbc_glyph_properties',
-    'dbc_item_display_info',
-    'dbc_item_extended_cost',
-    'dbc_item_random_properties',
-    'dbc_item_random_suffix',
-    'dbc_item_set',
-    'dbc_lock',
-    'dbc_map',
-    'dbc_quest_faction_reward',
-    'dbc_quest_info',
-    'dbc_quest_sort',
-    'dbc_scaling_stat_distribution',
-    'dbc_scaling_stat_values',
-    'dbc_spell',
-    'dbc_spell_duration',
-    'dbc_spell_icon',
-    'dbc_spell_item_enchantment',
-    'dbc_spell_range',
-    'dbc_talent',
-    'dbc_vehicle',
+  'dbc_achievement',
+  'dbc_area_table',
+  'dbc_char_titles',
+  'dbc_creature_display_info',
+  'dbc_creature_model_data',
+  'dbc_creature_spell_data',
+  'dbc_currency_types',
+  'dbc_emotes_text',
+  'dbc_faction',
+  'dbc_gem_properties',
+  'dbc_glyph_properties',
+  'dbc_item_display_info',
+  'dbc_item_extended_cost',
+  'dbc_item_random_properties',
+  'dbc_item_random_suffix',
+  'dbc_item_set',
+  'dbc_lock',
+  'dbc_map',
+  'dbc_quest_faction_reward',
+  'dbc_quest_info',
+  'dbc_quest_sort',
+  'dbc_scaling_stat_distribution',
+  'dbc_scaling_stat_values',
+  'dbc_spell',
+  'dbc_spell_duration',
+  'dbc_spell_icon',
+  'dbc_spell_item_enchantment',
+  'dbc_spell_range',
+  'dbc_talent',
+  'dbc_vehicle',
 ];
 
 class DbcImportViewModel {
@@ -125,18 +125,15 @@ class DbcImportViewModel {
 
       // 2. 启动 worker isolate（目录扫描 + 导入全部在 isolate 内完成）
       final receivePort = ReceivePort();
-      await Isolate.spawn(
-        _importWorker,
-        (
-          sendPort: receivePort.sendPort,
-          dbcPath: dbcPath.value!,
-          host: config['host'] as String? ?? '127.0.0.1',
-          port: int.tryParse(config['port'] as String? ?? '3306') ?? 3306,
-          database: config['database'] as String? ?? 'acore_world',
-          username: config['username'] as String? ?? 'acore',
-          password: config['password'] as String? ?? 'acore',
-        ),
-      );
+      await Isolate.spawn(_importWorker, (
+        sendPort: receivePort.sendPort,
+        dbcPath: dbcPath.value!,
+        host: config['host'] as String? ?? '127.0.0.1',
+        port: int.tryParse(config['port'] as String? ?? '3306') ?? 3306,
+        database: config['database'] as String? ?? 'acore_world',
+        username: config['username'] as String? ?? 'acore',
+        password: config['password'] as String? ?? 'acore',
+      ));
 
       await for (final msg in receivePort) {
         switch (msg) {
@@ -153,9 +150,7 @@ class DbcImportViewModel {
             dbcProgressLabel.value = '';
             dbcProgressDetail.value = '';
             if (success) {
-              LoggerUtil.instance.i(
-                'DBC 导入完成: $imported 个, 跳过 $skipped 个',
-              );
+              LoggerUtil.instance.i('DBC 导入完成: $imported 个, 跳过 $skipped 个');
               dbcImported.value = true;
             } else {
               final top = (errs as List<String>).take(3).join('\n');
@@ -304,15 +299,8 @@ Map<String, DbcSchema> _buildSchemaRegistry() {
 // ========== Worker Isolate ==========
 
 Future<void> _importWorker(_WorkerArgs args) async {
-  final (
-    :sendPort,
-    :dbcPath,
-    :host,
-    :port,
-    :database,
-    :username,
-    :password,
-  ) = args;
+  final (:sendPort, :dbcPath, :host, :port, :database, :username, :password) =
+      args;
 
   // ====== 阶段 0：扫描目录（在 isolate 内完成，不阻塞主线程）======
   sendPort.send(('正在扫描 DBC 目录...',));
@@ -354,9 +342,7 @@ Future<void> _importWorker(_WorkerArgs args) async {
   }
 
   if (fileDefs.isEmpty) {
-    sendPort.send((false, 0, 0, [
-      '未在目录中找到需要的 DBC 文件。\n目录：$dbcPath',
-    ]));
+    sendPort.send((false, 0, 0, ['未在目录中找到需要的 DBC 文件。\n目录：$dbcPath']));
     return;
   }
 
@@ -377,7 +363,6 @@ Future<void> _importWorker(_WorkerArgs args) async {
     ),
   );
   try {
-
     // 一次性查已存在的 dbc_* 表（仅判存在性），避免对不存在的表逐个 count
     // 触发 ~30 次异常重连（首次导入时所有表都不存在）
     final existingTables = <String>{};
@@ -417,19 +402,32 @@ Future<void> _importWorker(_WorkerArgs args) async {
           } on Exception catch (_) {
             await laconic.close();
             laconic = Laconic(
-              MysqlDriver(MysqlConfig(
-                host: host, port: port, database: database,
-                username: username, password: password,
-              )),
+              MysqlDriver(
+                MysqlConfig(
+                  host: host,
+                  port: port,
+                  database: database,
+                  username: username,
+                  password: password,
+                ),
+              ),
             );
             errors.add('${file.name}: 检查表行数失败，已跳过以防数据丢失');
             skipped++;
-            sendPort.send((file.name, imported + skipped + errors.length, total));
+            sendPort.send((
+              file.name,
+              imported + skipped + errors.length,
+              total,
+            ));
             continue;
           }
           if (count > 0) {
             skipped++;
-            sendPort.send((file.name, imported + skipped + errors.length, total));
+            sendPort.send((
+              file.name,
+              imported + skipped + errors.length,
+              total,
+            ));
             continue;
           }
           // count == 0：空表，安全重建（可能是上次导入失败留下的空壳）
@@ -471,8 +469,7 @@ Future<void> _importWorker(_WorkerArgs args) async {
 }
 
 Future<void> _createTable(Laconic laconic, _FileDef file) async {
-  final cols =
-      file.fields.map((f) => '`${f.name}` ${f.sqlType}').join(',\n  ');
+  final cols = file.fields.map((f) => '`${f.name}` ${f.sqlType}').join(',\n  ');
   if (cols.isEmpty) return;
 
   await laconic.statement('DROP TABLE IF EXISTS ${file.tableName}');
@@ -542,12 +539,12 @@ Future<int> _importFile(
 /// 从 DBC 记录读取值并转为 SQL 字面量（内联值，无参数）
 String _readAndEscape(dynamic record, int index, String type, String sqlType) {
   return switch (type) {
-    'string'  => _escapeString(record.getString(index) as String),
-    'float'   => record.getFloat(index).toString(),
+    'string' => _escapeString(record.getString(index) as String),
+    'float' => record.getFloat(index).toString(),
     'int32' || 'id' => record.getInt(index).toString(),
-    'uint8'   => record.getUint8(index).toString(),
+    'uint8' => record.getUint8(index).toString(),
     'boolean' => record.getInt(index) != 0 ? '1' : '0',
-    _         => 'NULL',
+    _ => 'NULL',
   };
 }
 

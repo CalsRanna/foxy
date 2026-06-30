@@ -21,19 +21,12 @@ class _ItemSetDetailPageState extends State<ItemSetDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('套装'),
-    ];
+    var tabs = [Text('套装')];
 
-    var tabContents = [
-      ItemSetView(entry: widget.id),
-    ];
+    var tabContents = [ItemSetView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

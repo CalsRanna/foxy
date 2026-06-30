@@ -83,7 +83,14 @@ class _ProspectingLootTemplateViewState
               ),
               1 => ShadTableCell(
                 child: loot.reference != 0
-                    ? Text('关联掉落', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)))
+                    ? Text(
+                        '关联掉落',
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.5),
+                        ),
+                      )
                     : Text(
                         loot.displayName,
                         style: TextStyle(color: qualityColor),

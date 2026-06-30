@@ -22,19 +22,12 @@ class _QuestSortDetailPageState extends State<QuestSortDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('任务排序'),
-    ];
+    var tabs = [Text('任务排序')];
 
-    var tabContents = [
-      QuestSortView(entry: widget.id),
-    ];
+    var tabContents = [QuestSortView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(
@@ -44,7 +37,9 @@ class _QuestSortDetailPageState extends State<QuestSortDetailPage> {
   }
 
   Widget _buildHeader() {
-    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '任务排序 #${widget.id}' : '新建任务排序');
+    var name = widget.name?.isNotEmpty == true
+        ? widget.name!
+        : (widget.id != null ? '任务排序 #${widget.id}' : '新建任务排序');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

@@ -10,6 +10,7 @@ import 'package:foxy/page/item/item_template_locale_description_selector.dart';
 import 'package:foxy/page/item/item_template_locale_name_selector.dart';
 import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
@@ -311,7 +312,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final bagFamilyInput = FormItem(
       label: '背包类别',
       child: FlagPicker(
-          signal: viewModel.bagFamily,
+        signal: viewModel.bagFamily,
         flags: kItemBagFamilyOptions,
         title: '背包类别',
         placeholder: 'BagFamily',
@@ -990,246 +991,160 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          // 1. 基本信息
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('基本信息'),
+          FormSection(title: '基本信息', children: basicRows),
+          FormSection(title: '套装/价格/容器/杂项', children: setPricingRows),
+          FormSection(title: '标识', children: flagsRows),
+          FormSection(title: '伤害/护甲', children: damageArmorRows),
+          FormSection(title: '缩放属性', children: scalingRows),
+          FormSection(
+            title: '属性',
+            children: [
+              Row(spacing: 8, children: [Expanded(child: statsCountInput)]),
+              Watch((_) {
+                final count =
+                    int.tryParse(viewModel.statsCountController.text) ?? 0;
+                final rows = <Row>[];
+                for (var i = 0; i < count && i < 10; i++) {
+                  rows.add(
+                    Row(
+                      spacing: 8,
+                      children: [
+                        Expanded(
+                          child: FormItem(
+                            label: '属性类型${i + 1}',
+                            child: FoxyShadSelect<int>(
+                              controller: viewModel.statTypeControllers[i],
+                              options: kItemStatTypeOptions,
+                              placeholder: Text('stat_type_${i + 1}'),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: FormItem(
+                            label: '属性值${i + 1}',
+                            child: FoxyNumberInput<int>(
+                              placeholder: 'stat_value_${i + 1}',
+                              value: viewModel.statValues[i].value,
+                              onChanged: (v) =>
+                                  viewModel.statValues[i].value = v,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return Column(spacing: 8, children: rows);
+              }),
+            ],
           ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: basicRows),
-          ),
-          // 2. 套装/价格/容器/杂项
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('套装/价格/容器/杂项'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: setPricingRows),
-          ),
-          // 3. 标识
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('标识'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: flagsRows),
-          ),
-          // 4. 伤害/护甲
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('伤害/护甲'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: damageArmorRows),
-          ),
-          // 5. 缩放属性
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('缩放属性'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: scalingRows),
-          ),
-          // 6. 属性
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('属性'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              spacing: 8,
-              children: [
-                Row(spacing: 8, children: [Expanded(child: statsCountInput)]),
-                Watch((_) {
-                  final count = int.tryParse(viewModel.statsCountController.text) ?? 0;
-                  final rows = <Row>[];
-                  for (var i = 0; i < count && i < 10; i++) {
-                    rows.add(
+          FormSection(title: '抗性', children: resistanceRows),
+          FormSection(
+            title: '法术',
+            children: [
+              for (var i = 0; i < 5; i++)
+                ShadCard(
+                  padding: EdgeInsets.all(12),
+                  child: Column(
+                    spacing: 8,
+                    children: [
                       Row(
                         spacing: 8,
                         children: [
                           Expanded(
                             child: FormItem(
-                              label: '属性类型${i + 1}',
-                              child: FoxyShadSelect<int>(
-                                controller: viewModel.statTypeControllers[i],
-                                options: kItemStatTypeOptions,
-                                placeholder: Text('stat_type_${i + 1}'),
+                              label: '法术${i + 1}',
+                              child: FoxyEntityPicker(
+                                delegate: EntityPickerDelegates.spell,
+                                controller: viewModel.spellIds[i],
+                                placeholder: 'spellid_${i + 1}',
                               ),
                             ),
                           ),
                           Expanded(
                             child: FormItem(
-                              label: '属性值${i + 1}',
+                              label: '触发类型',
+                              child: FoxyShadSelect<int>(
+                                controller:
+                                    viewModel.spellTriggerControllers[i],
+                                options: kItemSpellTriggerOptions,
+                                placeholder: Text('spelltrigger_${i + 1}'),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: FormItem(
+                              label: '充能',
                               child: FoxyNumberInput<int>(
-                                placeholder: 'stat_value_${i + 1}',
-                                value: viewModel.statValues[i].value,
+                                placeholder: 'spellcharges_${i + 1}',
+                                value: viewModel.spellCharges[i].value,
                                 onChanged: (v) =>
-                                    viewModel.statValues[i].value = v,
+                                    viewModel.spellCharges[i].value = v,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: FormItem(
+                              label: 'PPM率',
+                              child: FoxyNumberInput<double>(
+                                placeholder: 'spellppmRate_${i + 1}',
+                                value: viewModel.spellPpmRates[i].value,
+                                onChanged: (v) =>
+                                    viewModel.spellPpmRates[i].value = v,
                               ),
                             ),
                           ),
                         ],
                       ),
-                    );
-                  }
-                  return Column(spacing: 8, children: rows);
-                }),
-              ],
-            ),
-          ),
-          // 7. 抗性
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('抗性'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: resistanceRows),
-          ),
-          // 8. 法术
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('法术'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              spacing: 8,
-              children: [
-                for (var i = 0; i < 5; i++)
-                  ShadCard(
-                    padding: EdgeInsets.all(12),
-                    child: Column(
-                      spacing: 8,
-                      children: [
-                        Row(
-                          spacing: 8,
-                          children: [
-                            Expanded(
-                              child: FormItem(
-                                label: '法术${i + 1}',
-                                child: FoxyEntityPicker(
-                                  delegate: EntityPickerDelegates.spell,
-                                  controller: viewModel.spellIds[i],
-                                  placeholder: 'spellid_${i + 1}',
-                                ),
+                      Row(
+                        spacing: 8,
+                        children: [
+                          Expanded(
+                            child: FormItem(
+                              label: '冷却',
+                              child: FoxyNumberInput<int>(
+                                placeholder: 'spellcooldown_${i + 1}',
+                                value: viewModel.spellCooldowns[i].value,
+                                onChanged: (v) =>
+                                    viewModel.spellCooldowns[i].value = v,
                               ),
                             ),
-                            Expanded(
-                              child: FormItem(
-                                label: '触发类型',
-                                child: FoxyShadSelect<int>(
-                                  controller:
-                                      viewModel.spellTriggerControllers[i],
-                                  options: kItemSpellTriggerOptions,
-                                  placeholder: Text('spelltrigger_${i + 1}'),
-                                ),
+                          ),
+                          Expanded(
+                            child: FormItem(
+                              label: '类别',
+                              child: FoxyNumberInput<int>(
+                                placeholder: 'spellcategory_${i + 1}',
+                                value: viewModel.spellCategories[i].value,
+                                onChanged: (v) =>
+                                    viewModel.spellCategories[i].value = v,
                               ),
                             ),
-                            Expanded(
-                              child: FormItem(
-                                label: '充能',
-                                child: FoxyNumberInput<int>(
-                                  placeholder: 'spellcharges_${i + 1}',
-                                  value: viewModel.spellCharges[i].value,
-                                  onChanged: (v) =>
-                                      viewModel.spellCharges[i].value = v,
-                                ),
+                          ),
+                          Expanded(
+                            child: FormItem(
+                              label: '类别冷却',
+                              child: FoxyNumberInput<int>(
+                                placeholder: 'spellcategorycooldown_${i + 1}',
+                                value:
+                                    viewModel.spellCategoryCooldowns[i].value,
+                                onChanged: (v) =>
+                                    viewModel.spellCategoryCooldowns[i].value =
+                                        v,
                               ),
                             ),
-                            Expanded(
-                              child: FormItem(
-                                label: 'PPM率',
-                                child: FoxyNumberInput<double>(
-                                  placeholder: 'spellppmRate_${i + 1}',
-                                  value: viewModel.spellPpmRates[i].value,
-                                  onChanged: (v) =>
-                                      viewModel.spellPpmRates[i].value = v,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          spacing: 8,
-                          children: [
-                            Expanded(
-                              child: FormItem(
-                                label: '冷却',
-                                child: FoxyNumberInput<int>(
-                                  placeholder: 'spellcooldown_${i + 1}',
-                                  value: viewModel.spellCooldowns[i].value,
-                                  onChanged: (v) =>
-                                      viewModel.spellCooldowns[i].value = v,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: FormItem(
-                                label: '类别',
-                                child: FoxyNumberInput<int>(
-                                  placeholder: 'spellcategory_${i + 1}',
-                                  value: viewModel.spellCategories[i].value,
-                                  onChanged: (v) =>
-                                      viewModel.spellCategories[i].value = v,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: FormItem(
-                                label: '类别冷却',
-                                child: FoxyNumberInput<int>(
-                                  placeholder: 'spellcategorycooldown_${i + 1}',
-                                  value: viewModel
-                                      .spellCategoryCooldowns[i].value,
-                                  onChanged: (v) => viewModel
-                                      .spellCategoryCooldowns[i].value = v,
-                                ),
-                              ),
-                            ),
-                            Expanded(child: SizedBox()),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          Expanded(child: SizedBox()),
+                        ],
+                      ),
+                    ],
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
-          // 9. 需求
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('需求'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: requirementRows),
-          ),
-          // 10. 插槽/宝石
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('插槽/宝石'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: socketGemRows),
-          ),
-          // 11. 其他/脚本
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('其他/脚本'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: miscRows),
-          ),
+          FormSection(title: '需求', children: requirementRows),
+          FormSection(title: '插槽/宝石', children: socketGemRows),
+          FormSection(title: '其他/脚本', children: miscRows),
           // 保存/取消按钮
           Row(
             children: [

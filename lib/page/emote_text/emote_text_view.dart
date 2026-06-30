@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/emote_text/emote_text_detail_view_model.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -32,17 +33,37 @@ class _EmoteTextViewState extends State<EmoteTextView> {
   @override
   Widget build(BuildContext context) {
     /// Basic
-  final idInput = FormItem(label: '编号', child: FoxyNumberInput<int>(placeholder: 'ID', controller: viewModel.idController, readOnly: true));
-    final nameInput = FormItem(controller: viewModel.nameController, label: '名称', placeholder: 'Name');
-  final emoteIdInput = FormItem(label: '表情编号', child: FoxyNumberInput<int>(placeholder: 'EmoteID', controller: viewModel.emoteIdController));
+    final idInput = FormItem(
+      label: '编号',
+      child: FoxyNumberInput<int>(
+        placeholder: 'ID',
+        controller: viewModel.idController,
+        readOnly: true,
+      ),
+    );
+    final nameInput = FormItem(
+      controller: viewModel.nameController,
+      label: '名称',
+      placeholder: 'Name',
+    );
+    final emoteIdInput = FormItem(
+      label: '表情编号',
+      child: FoxyNumberInput<int>(
+        placeholder: 'EmoteID',
+        controller: viewModel.emoteIdController,
+      ),
+    );
 
     /// EmoteText
     final emoteTextInputs = List.generate(16, (i) {
       final s = _getEmoteTextSignal(i);
       return FormItem(
         label: '表情文本$i',
-          placeholder: 'EmoteText$i',
-        child: FoxyNumberInput<int>(value: s.value, onChanged: (v) => s.value = v),
+        placeholder: 'EmoteText$i',
+        child: FoxyNumberInput<int>(
+          value: s.value,
+          onChanged: (v) => s.value = v,
+        ),
       );
     });
 
@@ -79,24 +100,8 @@ class _EmoteTextViewState extends State<EmoteTextView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          // 基本信息
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('基本信息'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: basicRows),
-          ),
-          // 表情文本
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('EmoteText 字段'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: emoteTextRows),
-          ),
+          FormSection(title: '基本信息', children: basicRows),
+          FormSection(title: 'EmoteText 字段', children: emoteTextRows),
           Row(
             children: [
               ShadButton(

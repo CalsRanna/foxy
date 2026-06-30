@@ -99,12 +99,11 @@ class _ItemSetListPageState extends State<ItemSetListPage> {
             final item = items[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 =>
-                ShadTableCell(child: Text(item.nameLangZhCN.toString())),
-              2 =>
-                ShadTableCell(child: Text(item.requiredSkill.toString())),
-              3 =>
-                ShadTableCell(child: Text(item.requiredSkillRank.toString())),
+              1 => ShadTableCell(child: Text(item.nameLangZhCN.toString())),
+              2 => ShadTableCell(child: Text(item.requiredSkill.toString())),
+              3 => ShadTableCell(
+                child: Text(item.requiredSkillRank.toString()),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },

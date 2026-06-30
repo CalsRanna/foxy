@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/quest/quest_template_addon_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -49,9 +50,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
             child: FormItem(
               label: '最大等级',
               placeholder: 'MaxLevel',
-              child: FoxyNumberInput<int>(
-                controller: vm.maxLevelController,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.maxLevelController),
             ),
           ),
           Expanded(
@@ -81,18 +80,14 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
             child: FormItem(
               label: '前置任务',
               placeholder: 'PrevQuestID',
-              child: FoxyNumberInput<int>(
-                controller: vm.prevQuestIdController,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.prevQuestIdController),
             ),
           ),
           Expanded(
             child: FormItem(
               label: '后续任务',
               placeholder: 'NextQuestID',
-              child: FoxyNumberInput<int>(
-                controller: vm.nextQuestIdController,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.nextQuestIdController),
             ),
           ),
           Expanded(
@@ -222,10 +217,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: rows),
-          ),
+          FormSection(title: '基本信息', children: rows),
           Row(
             spacing: 8,
             children: [

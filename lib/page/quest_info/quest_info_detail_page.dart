@@ -22,19 +22,12 @@ class _QuestInfoDetailPageState extends State<QuestInfoDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('任务信息'),
-    ];
+    var tabs = [Text('任务信息')];
 
-    var tabContents = [
-      QuestInfoView(entry: widget.id),
-    ];
+    var tabContents = [QuestInfoView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(
@@ -44,7 +37,9 @@ class _QuestInfoDetailPageState extends State<QuestInfoDetailPage> {
   }
 
   Widget _buildHeader() {
-    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '任务信息 #${widget.id}' : '新建任务信息');
+    var name = widget.name?.isNotEmpty == true
+        ? widget.name!
+        : (widget.id != null ? '任务信息 #${widget.id}' : '新建任务信息');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

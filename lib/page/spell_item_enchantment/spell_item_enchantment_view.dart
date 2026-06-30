@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -264,33 +265,9 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          // 基本信息
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('基本信息'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: basicRows),
-          ),
-          // 效果信息
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('效果信息'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: effectRows),
-          ),
-          // 其他
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('其他'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: otherRows),
-          ),
+          FormSection(title: '基本信息', children: basicRows),
+          FormSection(title: '效果信息', children: effectRows),
+          FormSection(title: '其他', children: otherRows),
           Row(
             children: [
               ShadButton(

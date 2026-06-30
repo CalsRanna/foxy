@@ -14,7 +14,8 @@ class PlayerCreateInfoItemView extends StatefulWidget {
   const PlayerCreateInfoItemView({super.key, this.race, this.playerClass});
 
   @override
-  State<PlayerCreateInfoItemView> createState() => _PlayerCreateInfoItemViewState();
+  State<PlayerCreateInfoItemView> createState() =>
+      _PlayerCreateInfoItemViewState();
 }
 
 class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
@@ -36,12 +37,17 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 16),
-      child: Column(spacing: 16, children: [
-        Row(children: [
-          ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
-        ]),
-        Watch((_) => _buildTable()),
-      ]),
+      child: Column(
+        spacing: 16,
+        children: [
+          Row(
+            children: [
+              ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
+            ],
+          ),
+          Watch((_) => _buildTable()),
+        ],
+      ),
     );
   }
 
@@ -66,22 +72,21 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
             1 => FixedTableSpanExtent(120),
             _ => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
           },
-          header: (context, index) => ShadTableCell.header(
-            child: Text(['物品ID', '数量', '备注'][index]),
-          ),
-      onRowSecondaryTapDownWithDetails: (row, details) {
-        showFoxyContextMenu(
-          context: context,
-          position: details.globalPosition,
-          items: [
-            ShadContextMenuItem(
-              leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: () => viewModel.delete(context, items[row]),
-              child: Text('删除'),
-            ),
-          ],
-        );
-      },
+          header: (context, index) =>
+              ShadTableCell.header(child: Text(['物品ID', '数量', '备注'][index])),
+          onRowSecondaryTapDownWithDetails: (row, details) {
+            showFoxyContextMenu(
+              context: context,
+              position: details.globalPosition,
+              items: [
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () => viewModel.delete(context, items[row]),
+                  child: Text('删除'),
+                ),
+              ],
+            );
+          },
           rowCount: items.length,
           shrinkWrap: true,
         );
@@ -91,25 +96,57 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
 
   void _showCreateDialog() {
     viewModel.create();
-    showShadDialog(context: context, builder: (c) => ShadDialog(
-      title: Text('新增起始物品'),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 400),
-        child: Column(mainAxisSize: MainAxisSize.min, spacing: 16, children: [
-          FormItem(label: '物品ID', placeholder: 'itemid', child: FoxyNumberInput<int>(controller: viewModel.itemIdController)),
-          FormItem(label: '数量', placeholder: 'amount', child: FoxyNumberInput<int>(controller: viewModel.amountController)),
-          FormItem(controller: viewModel.noteController, label: '备注', placeholder: 'Note'),
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            ShadButton.outline(onPressed: () => Navigator.of(c).pop(), child: Text('取消')),
-            SizedBox(width: 8),
-            ShadButton(onPressed: () async {
-              await viewModel.save(c);
-              if (!c.mounted) return;
-              Navigator.of(c).pop();
-            }, child: Text('保存')),
-          ]),
-        ]),
+    showShadDialog(
+      context: context,
+      builder: (c) => ShadDialog(
+        title: Text('新增起始物品'),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 16,
+            children: [
+              FormItem(
+                label: '物品ID',
+                placeholder: 'itemid',
+                child: FoxyNumberInput<int>(
+                  controller: viewModel.itemIdController,
+                ),
+              ),
+              FormItem(
+                label: '数量',
+                placeholder: 'amount',
+                child: FoxyNumberInput<int>(
+                  controller: viewModel.amountController,
+                ),
+              ),
+              FormItem(
+                controller: viewModel.noteController,
+                label: '备注',
+                placeholder: 'Note',
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ShadButton.outline(
+                    onPressed: () => Navigator.of(c).pop(),
+                    child: Text('取消'),
+                  ),
+                  SizedBox(width: 8),
+                  ShadButton(
+                    onPressed: () async {
+                      await viewModel.save(c);
+                      if (!c.mounted) return;
+                      Navigator.of(c).pop();
+                    },
+                    child: Text('保存'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
-    ));
+    );
   }
 }

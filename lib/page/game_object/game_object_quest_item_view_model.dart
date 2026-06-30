@@ -179,7 +179,10 @@ class GameObjectQuestItemViewModel {
               placeholder: Text('游戏对象编号'),
             ),
           ),
-          FoxyNumberInput<int>(value: idx.value, onChanged: (v) => idx.value = v),
+          FoxyNumberInput<int>(
+            value: idx.value,
+            onChanged: (v) => idx.value = v,
+          ),
           SizedBox(
             height: 100,
             child: FoxyEntityPicker(

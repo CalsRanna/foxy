@@ -45,20 +45,41 @@ class _ConditionListPageState extends State<ConditionListPage> {
   Widget _buildFilter() {
     return ShadCard(
       padding: const EdgeInsets.all(16),
-      child: Row(spacing: 16, children: [
-        Expanded(child: ShadInput(
-          controller: viewModel.sourceTypeController,
-          placeholder: Text('SourceTypeOrReferenceId'),
-        )),
-        Expanded(child: ShadInput(
-          controller: viewModel.sourceEntryController,
-          placeholder: Text('SourceEntry'),
-        )),
-        Expanded(flex: 2, child: Row(spacing: 16, children: [
-          ShadButton(onPressed: viewModel.search, size: ShadButtonSize.sm, child: Text('查询')),
-          ShadButton.ghost(onPressed: viewModel.reset, size: ShadButtonSize.sm, child: Text('重置')),
-        ])),
-      ]),
+      child: Row(
+        spacing: 16,
+        children: [
+          Expanded(
+            child: ShadInput(
+              controller: viewModel.sourceTypeController,
+              placeholder: Text('SourceTypeOrReferenceId'),
+            ),
+          ),
+          Expanded(
+            child: ShadInput(
+              controller: viewModel.sourceEntryController,
+              placeholder: Text('SourceEntry'),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Row(
+              spacing: 16,
+              children: [
+                ShadButton(
+                  onPressed: viewModel.search,
+                  size: ShadButtonSize.sm,
+                  child: Text('查询'),
+                ),
+                ShadButton.ghost(
+                  onPressed: viewModel.reset,
+                  size: ShadButtonSize.sm,
+                  child: Text('重置'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -71,11 +92,26 @@ class _ConditionListPageState extends State<ConditionListPage> {
     final conditions = viewModel.conditions.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
-    var pagination = FoxyPagination(page: page, pageSize: 50, total: total, onChange: viewModel.paginate);
+    var pagination = FoxyPagination(
+      page: page,
+      pageSize: 50,
+      total: total,
+      onChange: viewModel.paginate,
+    );
     final toolbar = Row(children: [createButton, const Spacer(), pagination]);
 
-    final headers = ['SourceType', 'SourceGroup', 'SourceEntry', 'SourceId', 'ElseGroup',
-                     'ConditionType', 'CondTarget', 'Value1', 'Value2', 'Value3'];
+    final headers = [
+      'SourceType',
+      'SourceGroup',
+      'SourceEntry',
+      'SourceId',
+      'ElseGroup',
+      'ConditionType',
+      'CondTarget',
+      'Value1',
+      'Value2',
+      'Value3',
+    ];
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
@@ -83,16 +119,28 @@ class _ConditionListPageState extends State<ConditionListPage> {
           builder: (context, vicinity) {
             final condition = conditions[vicinity.row];
             return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(condition.sourceTypeOrReferenceId.toString())),
+              0 => ShadTableCell(
+                child: Text(condition.sourceTypeOrReferenceId.toString()),
+              ),
               1 => ShadTableCell(child: Text(condition.sourceGroup.toString())),
               2 => ShadTableCell(child: Text(condition.sourceEntry.toString())),
               3 => ShadTableCell(child: Text(condition.sourceId.toString())),
               4 => ShadTableCell(child: Text(condition.elseGroup.toString())),
-              5 => ShadTableCell(child: Text(condition.conditionTypeOrReference.toString())),
-              6 => ShadTableCell(child: Text(condition.conditionTarget.toString())),
-              7 => ShadTableCell(child: Text(condition.conditionValue1.toString())),
-              8 => ShadTableCell(child: Text(condition.conditionValue2.toString())),
-              9 => ShadTableCell(child: Text(condition.conditionValue3.toString())),
+              5 => ShadTableCell(
+                child: Text(condition.conditionTypeOrReference.toString()),
+              ),
+              6 => ShadTableCell(
+                child: Text(condition.conditionTarget.toString()),
+              ),
+              7 => ShadTableCell(
+                child: Text(condition.conditionValue1.toString()),
+              ),
+              8 => ShadTableCell(
+                child: Text(condition.conditionValue2.toString()),
+              ),
+              9 => ShadTableCell(
+                child: Text(condition.conditionValue3.toString()),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -113,8 +161,10 @@ class _ConditionListPageState extends State<ConditionListPage> {
               _ => null,
             };
           },
-          header: (context, index) => ShadTableCell.header(child: Text(headers[index])),
-          onRowDoubleTap: (row) => viewModel.navigateToDetail(condition: conditions[row]),
+          header: (context, index) =>
+              ShadTableCell.header(child: Text(headers[index])),
+          onRowDoubleTap: (row) =>
+              viewModel.navigateToDetail(condition: conditions[row]),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
@@ -122,7 +172,8 @@ class _ConditionListPageState extends State<ConditionListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(condition: conditions[row]),
+                  onPressed: () =>
+                      viewModel.navigateToDetail(condition: conditions[row]),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
@@ -146,7 +197,13 @@ class _ConditionListPageState extends State<ConditionListPage> {
 
     return ShadCard(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Column(spacing: 16, children: [toolbar, Expanded(child: layoutBuilder)]),
+      child: Column(
+        spacing: 16,
+        children: [
+          toolbar,
+          Expanded(child: layoutBuilder),
+        ],
+      ),
     );
   }
 }

@@ -62,7 +62,9 @@ class GameObjectQuestStarterViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final blank = await _repository.createGameObjectQuestStarter(questId.value);
+      final blank = await _repository.createGameObjectQuestStarter(
+        questId.value,
+      );
       resetForm();
       fillForm(blank);
       _originalId = blank.id;

@@ -75,7 +75,9 @@ class ScalingStatValueListViewModel {
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '缩放属性值 #$id' : '新建缩放属性值';
-    final routeId = id != null ? 'scaling_stat_value_$id' : 'scaling_stat_value_new';
+    final routeId = id != null
+        ? 'scaling_stat_value_$id'
+        : 'scaling_stat_value_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       id: routeId,

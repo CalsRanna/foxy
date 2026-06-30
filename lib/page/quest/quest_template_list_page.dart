@@ -146,7 +146,10 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(id: item.id, name: item.displayTitle),
+                  onPressed: () => viewModel.navigateToDetail(
+                    id: item.id,
+                    name: item.displayTitle,
+                  ),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(

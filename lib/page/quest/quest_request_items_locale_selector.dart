@@ -56,19 +56,20 @@ class _QuestRequestItemsLocaleSelectorState
       onLoad: (questId) async {
         final locales = await _repository.getQuestRequestItemsLocales(questId);
         return locales
-            .map((e) => {
-                  'locale': e.locale,
-                  'completionText': e.completionText,
-                })
+            .map(
+              (e) => {'locale': e.locale, 'completionText': e.completionText},
+            )
             .toList();
       },
       onSave: (questId, data) async {
         final locales = data
-            .map((d) => QuestRequestItemsLocaleEntity(
-                  id: questId,
-                  locale: d['locale'] ?? '',
-                  completionText: d['completionText'] ?? '',
-                ))
+            .map(
+              (d) => QuestRequestItemsLocaleEntity(
+                id: questId,
+                locale: d['locale'] ?? '',
+                completionText: d['completionText'] ?? '',
+              ),
+            )
             .toList();
         await _repository.replaceAll(questId, locales);
       },

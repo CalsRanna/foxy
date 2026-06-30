@@ -86,7 +86,8 @@ class _CreatureOnKillReputationViewState
                         child: FormItem(
                           label: '阵营1',
                           child: FoxyNumberInput<int>(
-                            controller: viewModel.rewOnKillRepFaction1Controller,
+                            controller:
+                                viewModel.rewOnKillRepFaction1Controller,
                             placeholder: 'RewOnKillRepFaction1',
                           ),
                         ),
@@ -95,7 +96,8 @@ class _CreatureOnKillReputationViewState
                         child: FormItem(
                           label: '阵营2',
                           child: FoxyNumberInput<int>(
-                            controller: viewModel.rewOnKillRepFaction2Controller,
+                            controller:
+                                viewModel.rewOnKillRepFaction2Controller,
                             placeholder: 'RewOnKillRepFaction2',
                           ),
                         ),

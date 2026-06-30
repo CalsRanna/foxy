@@ -8,6 +8,7 @@ import 'package:foxy/page/creature_template/creature_template_detail_view_model.
 import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
 import 'package:foxy/widget/flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
@@ -423,7 +424,10 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final lootInput = FormItem(
       label: '击杀掉落',
       child: FoxyEntityPicker(
-        delegate: EntityPickerDelegates.lootTemplate(LootTableType.creature, '击杀掉落'),
+        delegate: EntityPickerDelegates.lootTemplate(
+          LootTableType.creature,
+          '击杀掉落',
+        ),
         controller: viewModel.lootIdController,
         placeholder: 'lootid',
       ),
@@ -431,7 +435,10 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final pickpocketLootInput = FormItem(
       label: '偷窃掉落',
       child: FoxyEntityPicker(
-        delegate: EntityPickerDelegates.lootTemplate(LootTableType.pickpocket, '偷窃掉落'),
+        delegate: EntityPickerDelegates.lootTemplate(
+          LootTableType.pickpocket,
+          '偷窃掉落',
+        ),
         controller: viewModel.pickpocketLootController,
         placeholder: 'pickpocketloot',
       ),
@@ -439,7 +446,10 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final skinLootInput = FormItem(
       label: '剥皮掉落',
       child: FoxyEntityPicker(
-        delegate: EntityPickerDelegates.lootTemplate(LootTableType.skinning, '剥皮掉落'),
+        delegate: EntityPickerDelegates.lootTemplate(
+          LootTableType.skinning,
+          '剥皮掉落',
+        ),
         controller: viewModel.skinLootController,
         placeholder: 'skinloot',
       ),
@@ -643,65 +653,12 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          // 基础信息
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('基础信息'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: basicRows),
-          ),
-          // 类型阵营
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('类型阵营'),
-          ),
-
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: typeRows),
-          ),
-          // 战斗属性
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('战斗属性'),
-          ),
-
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: combatRows),
-          ),
-          // 移动属性
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('移动属性'),
-          ),
-
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: movementRows),
-          ),
-          // 标识免疫
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('标识免疫'),
-          ),
-
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: flagImmuneRows),
-          ),
-          // 掉落难度与脚本
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('掉落难度与脚本'),
-          ),
-
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: lootDifficultyScriptRows),
-          ),
+          FormSection(title: '基础信息', children: basicRows),
+          FormSection(title: '类型阵营', children: typeRows),
+          FormSection(title: '战斗属性', children: combatRows),
+          FormSection(title: '移动属性', children: movementRows),
+          FormSection(title: '标识免疫', children: flagImmuneRows),
+          FormSection(title: '掉落难度与脚本', children: lootDifficultyScriptRows),
           Row(
             children: [
               ShadButton(

@@ -93,8 +93,7 @@ class CurrencyTypeDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      currencyType.value =
-          (await _repository.getCurrencyType(id))!;
+      currencyType.value = (await _repository.getCurrencyType(id))!;
       _initControllers(currencyType.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载货币(id=$id)失败', error: e, stackTrace: s);

@@ -29,6 +29,7 @@ class QuestFactionRewardDetailViewModel {
   final difficulty9Controller = TextEditingController();
 
   final reward = signal(QuestFactionRewardEntity());
+
   /// 保存到数据库
   String _fmt(num v) {
     if (v is double) {

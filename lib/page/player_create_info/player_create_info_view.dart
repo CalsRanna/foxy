@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/player_create_info/player_create_info_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -37,20 +38,93 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          ShadCard(padding: EdgeInsets.all(16), child: Column(spacing: 8, children: [
-            Row(spacing: 8, children: [
-              Expanded(child: FormItem(label: '种族', placeholder: 'race', child: FoxyNumberInput<int>(controller: viewModel.raceController))),
-              Expanded(child: FormItem(label: '职业', placeholder: 'class', child: FoxyNumberInput<int>(controller: viewModel.playerClassController))),
-              Expanded(child: FormItem(label: '地图', placeholder: 'map', child: FoxyNumberInput<int>(controller: viewModel.mapController))),
-              Expanded(child: FormItem(label: '区域', placeholder: 'zone', child: FoxyNumberInput<int>(controller: viewModel.zoneController))),
-            ]),
-            Row(spacing: 8, children: [
-              Expanded(child: FormItem(label: 'X坐标', placeholder: 'position_x', child: FoxyNumberInput<double>(controller: viewModel.positionXController))),
-              Expanded(child: FormItem(label: 'Y坐标', placeholder: 'position_y', child: FoxyNumberInput<double>(controller: viewModel.positionYController))),
-              Expanded(child: FormItem(label: 'Z坐标', placeholder: 'position_z', child: FoxyNumberInput<double>(controller: viewModel.positionZController))),
-              Expanded(child: FormItem(label: '朝向', placeholder: 'orientation', child: FoxyNumberInput<double>(controller: viewModel.orientationController))),
-            ]),
-          ])),
+          FormSection(
+            title: '基本信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FormItem(
+                      label: '种族',
+                      placeholder: 'race',
+                      child: FoxyNumberInput<int>(
+                        controller: viewModel.raceController,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FormItem(
+                      label: '职业',
+                      placeholder: 'class',
+                      child: FoxyNumberInput<int>(
+                        controller: viewModel.playerClassController,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FormItem(
+                      label: '地图',
+                      placeholder: 'map',
+                      child: FoxyNumberInput<int>(
+                        controller: viewModel.mapController,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FormItem(
+                      label: '区域',
+                      placeholder: 'zone',
+                      child: FoxyNumberInput<int>(
+                        controller: viewModel.zoneController,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FormItem(
+                      label: 'X坐标',
+                      placeholder: 'position_x',
+                      child: FoxyNumberInput<double>(
+                        controller: viewModel.positionXController,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FormItem(
+                      label: 'Y坐标',
+                      placeholder: 'position_y',
+                      child: FoxyNumberInput<double>(
+                        controller: viewModel.positionYController,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FormItem(
+                      label: 'Z坐标',
+                      placeholder: 'position_z',
+                      child: FoxyNumberInput<double>(
+                        controller: viewModel.positionZController,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FormItem(
+                      label: '朝向',
+                      placeholder: 'orientation',
+                      child: FoxyNumberInput<double>(
+                        controller: viewModel.orientationController,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
           Row(
             children: [
               ShadButton(
@@ -58,7 +132,10 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                 child: Text('保存'),
               ),
               SizedBox(width: 8),
-              ShadButton.ghost(onPressed: () => viewModel.pop(), child: Text('取消')),
+              ShadButton.ghost(
+                onPressed: () => viewModel.pop(),
+                child: Text('取消'),
+              ),
             ],
           ),
         ],

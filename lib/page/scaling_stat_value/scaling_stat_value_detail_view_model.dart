@@ -154,8 +154,7 @@ class ScalingStatValueDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      scalingStatValue.value =
-          (await _repository.getScalingStatValue(id))!;
+      scalingStatValue.value = (await _repository.getScalingStatValue(id))!;
       _initControllers(scalingStatValue.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载缩放属性值(id=$id)失败', error: e, stackTrace: s);
@@ -172,10 +171,16 @@ class ScalingStatValueDetailViewModel {
     primaryBudgetController.text = _fmt(scalingStatValue.primaryBudget);
     tertiaryBudgetController.text = _fmt(scalingStatValue.tertiaryBudget);
     spellPowerController.text = _fmt(scalingStatValue.spellPower);
-    clothShoulderArmorController.text = _fmt(scalingStatValue.clothShoulderArmor);
-    leatherShoulderArmorController.text = _fmt(scalingStatValue.leatherShoulderArmor);
+    clothShoulderArmorController.text = _fmt(
+      scalingStatValue.clothShoulderArmor,
+    );
+    leatherShoulderArmorController.text = _fmt(
+      scalingStatValue.leatherShoulderArmor,
+    );
     mailShoulderArmorController.text = _fmt(scalingStatValue.mailShoulderArmor);
-    plateShoulderArmorController.text = _fmt(scalingStatValue.plateShoulderArmor);
+    plateShoulderArmorController.text = _fmt(
+      scalingStatValue.plateShoulderArmor,
+    );
     clothCloakArmorController.text = _fmt(scalingStatValue.clothCloakArmor);
     clothChestArmorController.text = _fmt(scalingStatValue.clothChestArmor);
     leatherChestArmorController.text = _fmt(scalingStatValue.leatherChestArmor);

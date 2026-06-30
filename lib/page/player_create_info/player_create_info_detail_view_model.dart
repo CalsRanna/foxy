@@ -68,7 +68,10 @@ class PlayerCreateInfoDetailViewModel {
     try {
       final data = _collect();
       if (current != null) {
-        await _repository.updatePlayerCreateInfo(current.buildCredential(), data);
+        await _repository.updatePlayerCreateInfo(
+          current.buildCredential(),
+          data,
+        );
         info.value = data;
         _logActivity(ActivityActionType.update, data);
       } else {

@@ -61,12 +61,14 @@ class _CreatureTemplateLocaleNameSelectorState
       },
       onSave: (entry, data) async {
         final locales = data
-            .map((d) => CreatureTemplateLocaleEntity(
-              entry: entry,
-              locale: d['locale'] ?? '',
-              name: d['name'] ?? '',
-              title: d['title'] ?? '',
-            ))
+            .map(
+              (d) => CreatureTemplateLocaleEntity(
+                entry: entry,
+                locale: d['locale'] ?? '',
+                name: d['name'] ?? '',
+                title: d['title'] ?? '',
+              ),
+            )
             .toList();
         await _repository.saveCreatureTemplateLocales(entry, locales);
       },

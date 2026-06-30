@@ -17,6 +17,7 @@ class QuestSortDetailViewModel {
   final nameController = TextEditingController();
 
   final sort = signal(QuestSortEntity());
+
   /// 保存到数据库
   String _fmt(num v) {
     if (v is double) {

@@ -114,9 +114,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(
-              id: items[row].id,
-            );
+            viewModel.navigateToDetail(id: items[row].id);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -126,9 +124,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(
-                      id: items[row].id,
-                    );
+                    viewModel.navigateToDetail(id: items[row].id);
                   },
                   child: Text('编辑'),
                 ),

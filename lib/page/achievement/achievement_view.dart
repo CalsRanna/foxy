@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/achievement/achievement_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -78,22 +79,19 @@ class _AchievementViewState extends State<AchievementView> {
       ),
     );
 
-    return ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(child: idInput),
-              Expanded(child: factionInput),
-              Expanded(child: instanceIdInput),
-              Expanded(child: supercedesInput),
-            ],
-          ),
-        ],
-      ),
+    return FormSection(
+      title: '基础信息',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(child: idInput),
+            Expanded(child: factionInput),
+            Expanded(child: instanceIdInput),
+            Expanded(child: supercedesInput),
+          ],
+        ),
+      ],
     );
   }
 
@@ -119,23 +117,19 @@ class _AchievementViewState extends State<AchievementView> {
       placeholder: 'Title_lang_koKR',
     );
 
-    return ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
-          Text('标题文本', style: TextStyle(fontWeight: FontWeight.bold)),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(child: enUsInput),
-              Expanded(child: zhCnInput),
-              Expanded(child: zhTwInput),
-              Expanded(child: koKrInput),
-            ],
-          ),
-        ],
-      ),
+    return FormSection(
+      title: '标题文本',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(child: enUsInput),
+            Expanded(child: zhCnInput),
+            Expanded(child: zhTwInput),
+            Expanded(child: koKrInput),
+          ],
+        ),
+      ],
     );
   }
 
@@ -161,23 +155,19 @@ class _AchievementViewState extends State<AchievementView> {
       placeholder: 'Description_lang_koKR',
     );
 
-    return ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
-          Text('描述文本', style: TextStyle(fontWeight: FontWeight.bold)),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(child: enUsInput),
-              Expanded(child: zhCnInput),
-              Expanded(child: zhTwInput),
-              Expanded(child: koKrInput),
-            ],
-          ),
-        ],
-      ),
+    return FormSection(
+      title: '描述文本',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(child: enUsInput),
+            Expanded(child: zhCnInput),
+            Expanded(child: zhTwInput),
+            Expanded(child: koKrInput),
+          ],
+        ),
+      ],
     );
   }
 
@@ -203,23 +193,19 @@ class _AchievementViewState extends State<AchievementView> {
       placeholder: 'Reward_lang_koKR',
     );
 
-    return ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
-          Text('奖励文本', style: TextStyle(fontWeight: FontWeight.bold)),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(child: enUsInput),
-              Expanded(child: zhCnInput),
-              Expanded(child: zhTwInput),
-              Expanded(child: koKrInput),
-            ],
-          ),
-        ],
-      ),
+    return FormSection(
+      title: '奖励文本',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(child: enUsInput),
+            Expanded(child: zhCnInput),
+            Expanded(child: zhTwInput),
+            Expanded(child: koKrInput),
+          ],
+        ),
+      ],
     );
   }
 
@@ -274,47 +260,37 @@ class _AchievementViewState extends State<AchievementView> {
       ),
     );
 
-    return ShadCard(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        spacing: 8,
-        children: [
-          Text('其他', style: TextStyle(fontWeight: FontWeight.bold)),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(child: categoryInput),
-              Expanded(child: pointsInput),
-              Expanded(child: uiOrderInput),
-              Expanded(child: flagsInput),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(child: iconIdInput),
-              Expanded(child: minimumCriteriaInput),
-              Expanded(child: sharesCriteriaInput),
-              Expanded(child: SizedBox()),
-            ],
-          ),
-        ],
-      ),
+    return FormSection(
+      title: '其他',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(child: categoryInput),
+            Expanded(child: pointsInput),
+            Expanded(child: uiOrderInput),
+            Expanded(child: flagsInput),
+          ],
+        ),
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(child: iconIdInput),
+            Expanded(child: minimumCriteriaInput),
+            Expanded(child: sharesCriteriaInput),
+            Expanded(child: SizedBox()),
+          ],
+        ),
+      ],
     );
   }
 
   Widget _buildActions() {
     return Row(
       children: [
-        ShadButton(
-          onPressed: () => viewModel.save(context),
-          child: Text('保存'),
-        ),
+        ShadButton(onPressed: () => viewModel.save(context), child: Text('保存')),
         const SizedBox(width: 8),
-        ShadButton.ghost(
-          onPressed: () => viewModel.pop(),
-          child: Text('取消'),
-        ),
+        ShadButton.ghost(onPressed: () => viewModel.pop(), child: Text('取消')),
       ],
     );
   }
