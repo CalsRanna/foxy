@@ -2,18 +2,18 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/view_model/feature_view_model.dart';
+import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class MoreViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final featureViewModel = GetIt.instance.get<FeatureViewModel>();
+  final scaffoldViewModel = GetIt.instance.get<ScaffoldViewModel>();
 
   final searchController = TextEditingController();
   final filteredModules = signal<List<FeatureEntity>>([]);
 
-  List<FeatureEntity> get _allModules => featureViewModel.allFeatures.value;
+  List<FeatureEntity> get _allModules => scaffoldViewModel.allFeatures.value;
 
   void initSignals() {
     filteredModules.value = List.of(_allModules);
@@ -45,12 +45,12 @@ class MoreViewModel {
   }
 
   Future<void> togglePinned(FeatureEntity feature) async {
-    await featureViewModel.togglePinned(feature.id);
+    await scaffoldViewModel.togglePinned(feature.id);
     search();
   }
 
   Future<void> toggleFavorite(FeatureEntity feature) async {
-    await featureViewModel.toggleFavorite(feature.id);
+    await scaffoldViewModel.toggleFavorite(feature.id);
     // 刷新搜索结果
     search();
   }

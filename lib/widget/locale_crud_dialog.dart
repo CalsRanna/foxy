@@ -37,10 +37,7 @@ class LocaleCrudDialog extends StatelessWidget {
       description: Text('编号: $entry'),
       constraints: BoxConstraints(maxWidth: 720),
       actions: [
-        ShadButton.outline(
-          onPressed: () => vm.addRow(),
-          child: Text('添加'),
-        ),
+        ShadButton.outline(onPressed: () => vm.addRow(), child: Text('添加')),
         const Spacer(),
         ShadButton.outline(
           onPressed: () => Navigator.of(dialogContext).pop(),
@@ -49,10 +46,14 @@ class LocaleCrudDialog extends StatelessWidget {
         Watch((_) {
           final saving = vm.saving.value;
           return ShadButton(
-            onPressed: saving ? null : () async {
-              await vm.save();
-              if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-            },
+            onPressed: saving
+                ? null
+                : () async {
+                    await vm.save();
+                    if (dialogContext.mounted) {
+                      Navigator.of(dialogContext).pop();
+                    }
+                  },
             child: saving ? Text('保存中...') : Text('保存'),
           );
         }),
@@ -76,9 +77,7 @@ class LocaleCrudDialog extends StatelessWidget {
       child: Row(
         children: [
           for (var label in vm.fieldLabels)
-            Expanded(
-              child: Text(label, style: theme.textTheme.muted),
-            ),
+            Expanded(child: Text(label, style: theme.textTheme.muted)),
           SizedBox(width: 40),
         ],
       ),
@@ -105,9 +104,7 @@ class LocaleCrudDialog extends StatelessWidget {
               spacing: 16,
               children: [
                 for (var c in row.controllers)
-                  Expanded(
-                    child: ShadInput(controller: c),
-                  ),
+                  Expanded(child: ShadInput(controller: c)),
                 SizedBox(
                   width: 40,
                   child: ShadButton.ghost(

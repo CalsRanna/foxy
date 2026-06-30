@@ -5,11 +5,10 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:foxy/page/scaffold/dbc_import_view_model.dart';
+import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:foxy/widget/window_button.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -48,22 +47,21 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
 class _NavigateSettingIntent extends Intent {}
 
 class _ScaffoldPageState extends State<ScaffoldPage> {
-  final dbcImportViewModel = GetIt.instance.get<DbcImportViewModel>();
+  final viewModel = GetIt.instance.get<ScaffoldViewModel>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final featureViewModel = GetIt.instance.get<FeatureViewModel>();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await dbcImportViewModel.checkAndImport();
+      await viewModel.checkAndImport();
       if (!mounted) return;
       _showDbcDialog();
     });
   }
 
   void _showDbcDialog() {
-    final vm = dbcImportViewModel;
+    final vm = viewModel;
 
     // 已导入，无需操作
     if (vm.dbcImported.value) return;
@@ -73,7 +71,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       vm.startImport();
       showShadDialog(
         context: context,
-        builder: (ctx) => _DbcImportDialog(vm: dbcImportViewModel),
+        builder: (ctx) => _DbcImportDialog(vm: viewModel),
       );
       return;
     }
@@ -180,7 +178,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 
   List<RouterMenu> get _menus {
-    final pinned = featureViewModel.pinnedFeatures
+    final pinned = viewModel.pinnedFeatures
         .map((f) => RouterMenu.values.byName(f.routerMenu))
         .toList();
     return [
@@ -233,7 +231,7 @@ const _kDbcDialogWidth = 480.0;
 
 /// DBC 导入对话框，使用 showShadDialog 自带遮罩，不可关闭
 class _DbcImportDialog extends StatefulWidget {
-  final DbcImportViewModel vm;
+  final ScaffoldViewModel vm;
   const _DbcImportDialog({required this.vm});
 
   @override
@@ -241,7 +239,7 @@ class _DbcImportDialog extends StatefulWidget {
 }
 
 class _DbcImportDialogState extends State<_DbcImportDialog> {
-  DbcImportViewModel get _vm => widget.vm;
+  ScaffoldViewModel get _vm => widget.vm;
   final _pathController = TextEditingController();
   final _pathFocus = FocusNode();
   void Function()? _unsub;

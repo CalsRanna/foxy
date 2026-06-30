@@ -12,13 +12,7 @@ class WaypointDataEntity {
     return {'id': id, 'points': points};
   }
 
-  WaypointDataEntity copyWith({
-    int? id,
-    int? points,
-  }) {
-    return WaypointDataEntity(
-      id: id ?? this.id,
-      points: points ?? this.points,
-    );
+  WaypointDataEntity copyWith({int? id, int? points}) {
+    return WaypointDataEntity(id: id ?? this.id, points: points ?? this.points);
   }
 }

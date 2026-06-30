@@ -3,7 +3,9 @@ class ScalingStatDistributionFilterEntity {
 
   const ScalingStatDistributionFilterEntity({this.id = ''});
 
-  factory ScalingStatDistributionFilterEntity.fromJson(Map<String, dynamic> json) {
+  factory ScalingStatDistributionFilterEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return ScalingStatDistributionFilterEntity(id: json['id'] ?? '');
   }
 
@@ -11,11 +13,7 @@ class ScalingStatDistributionFilterEntity {
     return {'id': id};
   }
 
-  ScalingStatDistributionFilterEntity copyWith({
-    String? id,
-  }) {
-    return ScalingStatDistributionFilterEntity(
-      id: id ?? this.id,
-    );
+  ScalingStatDistributionFilterEntity copyWith({String? id}) {
+    return ScalingStatDistributionFilterEntity(id: id ?? this.id);
   }
 }

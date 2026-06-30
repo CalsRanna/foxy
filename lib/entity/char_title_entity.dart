@@ -15,10 +15,7 @@ class CharTitleEntity {
     return {'ID': id, 'Name_lang_zhCN': nameLangZhCn};
   }
 
-  CharTitleEntity copyWith({
-    int? id,
-    String? nameLangZhCn,
-  }) {
+  CharTitleEntity copyWith({int? id, String? nameLangZhCn}) {
     return CharTitleEntity(
       id: id ?? this.id,
       nameLangZhCn: nameLangZhCn ?? this.nameLangZhCn,

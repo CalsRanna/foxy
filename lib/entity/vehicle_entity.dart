@@ -232,27 +232,36 @@ class VehicleEntity {
       seatID6: seatID6 ?? this.seatID6,
       seatID7: seatID7 ?? this.seatID7,
       mouseLookOffsetPitch: mouseLookOffsetPitch ?? this.mouseLookOffsetPitch,
-      cameraFadeDistScalarMin: cameraFadeDistScalarMin ?? this.cameraFadeDistScalarMin,
-      cameraFadeDistScalarMax: cameraFadeDistScalarMax ?? this.cameraFadeDistScalarMax,
+      cameraFadeDistScalarMin:
+          cameraFadeDistScalarMin ?? this.cameraFadeDistScalarMin,
+      cameraFadeDistScalarMax:
+          cameraFadeDistScalarMax ?? this.cameraFadeDistScalarMax,
       cameraPitchOffset: cameraPitchOffset ?? this.cameraPitchOffset,
       facingLimitRight: facingLimitRight ?? this.facingLimitRight,
       facingLimitLeft: facingLimitLeft ?? this.facingLimitLeft,
-      msslTrgtTurnLingering: msslTrgtTurnLingering ?? this.msslTrgtTurnLingering,
-      msslTrgtPitchLingering: msslTrgtPitchLingering ?? this.msslTrgtPitchLingering,
-      msslTrgtMouseLingering: msslTrgtMouseLingering ?? this.msslTrgtMouseLingering,
+      msslTrgtTurnLingering:
+          msslTrgtTurnLingering ?? this.msslTrgtTurnLingering,
+      msslTrgtPitchLingering:
+          msslTrgtPitchLingering ?? this.msslTrgtPitchLingering,
+      msslTrgtMouseLingering:
+          msslTrgtMouseLingering ?? this.msslTrgtMouseLingering,
       msslTrgtEndOpacity: msslTrgtEndOpacity ?? this.msslTrgtEndOpacity,
       msslTrgtArcSpeed: msslTrgtArcSpeed ?? this.msslTrgtArcSpeed,
       msslTrgtArcRepeat: msslTrgtArcRepeat ?? this.msslTrgtArcRepeat,
       msslTrgtArcWidth: msslTrgtArcWidth ?? this.msslTrgtArcWidth,
-      msslTrgtImpactRadius0: msslTrgtImpactRadius0 ?? this.msslTrgtImpactRadius0,
-      msslTrgtImpactRadius1: msslTrgtImpactRadius1 ?? this.msslTrgtImpactRadius1,
+      msslTrgtImpactRadius0:
+          msslTrgtImpactRadius0 ?? this.msslTrgtImpactRadius0,
+      msslTrgtImpactRadius1:
+          msslTrgtImpactRadius1 ?? this.msslTrgtImpactRadius1,
       msslTrgtArcTexture: msslTrgtArcTexture ?? this.msslTrgtArcTexture,
-      msslTrgtImpactTexture: msslTrgtImpactTexture ?? this.msslTrgtImpactTexture,
+      msslTrgtImpactTexture:
+          msslTrgtImpactTexture ?? this.msslTrgtImpactTexture,
       msslTrgtImpactModel0: msslTrgtImpactModel0 ?? this.msslTrgtImpactModel0,
       msslTrgtImpactModel1: msslTrgtImpactModel1 ?? this.msslTrgtImpactModel1,
       cameraYawOffset: cameraYawOffset ?? this.cameraYawOffset,
       uiLocomotionType: uiLocomotionType ?? this.uiLocomotionType,
-      msslTrgtImpactTexRadius: msslTrgtImpactTexRadius ?? this.msslTrgtImpactTexRadius,
+      msslTrgtImpactTexRadius:
+          msslTrgtImpactTexRadius ?? this.msslTrgtImpactTexRadius,
       vehicleUIIndicatorID: vehicleUIIndicatorID ?? this.vehicleUIIndicatorID,
       powerDisplayID0: powerDisplayID0 ?? this.powerDisplayID0,
       powerDisplayID1: powerDisplayID1 ?? this.powerDisplayID1,

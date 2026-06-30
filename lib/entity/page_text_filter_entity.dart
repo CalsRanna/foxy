@@ -5,23 +5,14 @@ class PageTextFilterEntity {
   const PageTextFilterEntity({this.id = '', this.text = ''});
 
   factory PageTextFilterEntity.fromJson(Map<String, dynamic> json) {
-    return PageTextFilterEntity(
-      id: json['id'] ?? '',
-      text: json['text'] ?? '',
-    );
+    return PageTextFilterEntity(id: json['id'] ?? '', text: json['text'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
     return {'id': id, 'text': text};
   }
 
-  PageTextFilterEntity copyWith({
-    String? id,
-    String? text,
-  }) {
-    return PageTextFilterEntity(
-      id: id ?? this.id,
-      text: text ?? this.text,
-    );
+  PageTextFilterEntity copyWith({String? id, String? text}) {
+    return PageTextFilterEntity(id: id ?? this.id, text: text ?? this.text);
   }
 }

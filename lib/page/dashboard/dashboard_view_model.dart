@@ -5,7 +5,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/view_model/feature_view_model.dart';
+import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:signals/signals.dart';
@@ -13,7 +13,7 @@ import 'package:signals/signals.dart';
 class DashboardViewModel {
   final _repository = GetIt.instance.get<VersionRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final featureViewModel = GetIt.instance.get<FeatureViewModel>();
+  final scaffoldViewModel = GetIt.instance.get<ScaffoldViewModel>();
   final _activityRepo = GetIt.instance.get<ActivityLogRepository>();
 
   final coreVersion = signal('');
@@ -23,7 +23,7 @@ class DashboardViewModel {
   final recentActivities = signal(<ActivityLogEntity>[]);
 
   void navigateToMenu(RouterMenu menu) {
-    final feature = featureViewModel.allFeatures.value
+    final feature = scaffoldViewModel.allFeatures.value
         .where((f) => f.routerMenu == menu.name)
         .firstOrNull;
     final isPinned = feature?.isPinned ?? true;

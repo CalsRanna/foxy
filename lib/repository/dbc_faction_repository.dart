@@ -11,11 +11,7 @@ class DbcFactionRepository with RepositoryMixin {
       builder = builder.where('ID', id);
     }
     if (name != null && name.isNotEmpty) {
-      builder = builder.where(
-        'Name_lang_zhCN',
-        '%$name%',
-        comparator: 'like',
-      );
+      builder = builder.where('Name_lang_zhCN', '%$name%', comparator: 'like');
     }
     return await builder.count();
   }
@@ -35,11 +31,7 @@ class DbcFactionRepository with RepositoryMixin {
       builder = builder.where('ID', id);
     }
     if (name != null && name.isNotEmpty) {
-      builder = builder.where(
-        'Name_lang_zhCN',
-        '%$name%',
-        comparator: 'like',
-      );
+      builder = builder.where('Name_lang_zhCN', '%$name%', comparator: 'like');
     }
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();

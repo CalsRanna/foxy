@@ -15,10 +15,7 @@ class AchievementFilterEntity {
     return {'id': id, 'title': title};
   }
 
-  AchievementFilterEntity copyWith({
-    String? id,
-    String? title,
-  }) {
+  AchievementFilterEntity copyWith({String? id, String? title}) {
     return AchievementFilterEntity(
       id: id ?? this.id,
       title: title ?? this.title,

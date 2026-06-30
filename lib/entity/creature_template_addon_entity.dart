@@ -63,7 +63,8 @@ class CreatureTemplateAddonEntity {
       emote: emote ?? this.emote,
       bytes1: bytes1 ?? this.bytes1,
       bytes2: bytes2 ?? this.bytes2,
-      visibilityDistanceType: visibilityDistanceType ?? this.visibilityDistanceType,
+      visibilityDistanceType:
+          visibilityDistanceType ?? this.visibilityDistanceType,
       auras: auras ?? this.auras,
     );
   }

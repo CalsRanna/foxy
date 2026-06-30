@@ -104,7 +104,8 @@ class GossipMenuOptionEntity {
       optionId: optionId ?? this.optionId,
       optionIcon: optionIcon ?? this.optionIcon,
       optionText: optionText ?? this.optionText,
-      optionBroadcastTextId: optionBroadcastTextId ?? this.optionBroadcastTextId,
+      optionBroadcastTextId:
+          optionBroadcastTextId ?? this.optionBroadcastTextId,
       optionType: optionType ?? this.optionType,
       optionNpcFlag: optionNpcFlag ?? this.optionNpcFlag,
       boxCoded: boxCoded ?? this.boxCoded,

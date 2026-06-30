@@ -86,7 +86,10 @@ class PageTextRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> savePageTextLocales(int id, List<PageTextLocaleEntity> locales) async {
+  Future<void> savePageTextLocales(
+    int id,
+    List<PageTextLocaleEntity> locales,
+  ) async {
     await laconic.transaction(() async {
       await laconic.table(_localeTable).where('ID', id).delete();
       if (locales.isEmpty) return;

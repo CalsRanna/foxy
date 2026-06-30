@@ -18,8 +18,12 @@ class EntityPickerColumn<T> {
   final String Function(T)? text;
   final Widget Function(T)? cell;
   final double? width;
-  const EntityPickerColumn({required this.header, this.text, this.cell, this.width})
-      : assert(text != null || cell != null, 'text 或 cell 至少提供一个');
+  const EntityPickerColumn({
+    required this.header,
+    this.text,
+    this.cell,
+    this.width,
+  }) : assert(text != null || cell != null, 'text 或 cell 至少提供一个');
 }
 
 /// 每个实体提供的查询/渲染配置。纯数据 + 闭包，不持有可变状态，
@@ -210,29 +214,35 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   Widget _buildFilter() {
     return ShadCard(
       padding: const EdgeInsets.all(16),
-      child: Row(spacing: 8, children: [
-        for (int i = 0; i < _filterControllers.length; i++)
+      child: Row(
+        spacing: 8,
+        children: [
+          for (int i = 0; i < _filterControllers.length; i++)
+            Expanded(
+              child: ShadInput(
+                controller: _filterControllers[i],
+                placeholder: Text(widget.delegate.filters[i].placeholder),
+              ),
+            ),
           Expanded(
-            child: ShadInput(
-              controller: _filterControllers[i],
-              placeholder: Text(widget.delegate.filters[i].placeholder),
+            child: Row(
+              spacing: 8,
+              children: [
+                ShadButton(
+                  onPressed: _doSearch,
+                  size: ShadButtonSize.sm,
+                  child: Text('查询'),
+                ),
+                ShadButton.ghost(
+                  onPressed: _reset,
+                  size: ShadButtonSize.sm,
+                  child: Text('重置'),
+                ),
+              ],
             ),
           ),
-        Expanded(
-          child: Row(spacing: 8, children: [
-            ShadButton(
-              onPressed: _doSearch,
-              size: ShadButtonSize.sm,
-              child: Text('查询'),
-            ),
-            ShadButton.ghost(
-              onPressed: _reset,
-              size: ShadButtonSize.sm,
-              child: Text('重置'),
-            ),
-          ]),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
@@ -265,9 +275,8 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
             columnCount: columns.length,
             rowCount: _items.length,
             pinnedRowCount: 1,
-            header: (context, column) => ShadTableCell.header(
-              child: Text(columns[column].header),
-            ),
+            header: (context, column) =>
+                ShadTableCell.header(child: Text(columns[column].header)),
             columnSpanExtent: (column) {
               final w = columns[column].width;
               return FixedTableSpanExtent(w ?? flexWidth);
@@ -301,7 +310,11 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
               if (col.cell != null) {
                 cellWidget = col.cell!(item);
               } else if (isFlex) {
-                cellWidget = Text(col.text!(item), maxLines: 1, overflow: TextOverflow.ellipsis);
+                cellWidget = Text(
+                  col.text!(item),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                );
               } else {
                 cellWidget = Text(col.text!(item));
               }

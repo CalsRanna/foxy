@@ -15,10 +15,7 @@ class SpellItemEnchantmentFilterEntity {
     return {'id': id, 'name': name};
   }
 
-  SpellItemEnchantmentFilterEntity copyWith({
-    String? id,
-    String? name,
-  }) {
+  SpellItemEnchantmentFilterEntity copyWith({String? id, String? name}) {
     return SpellItemEnchantmentFilterEntity(
       id: id ?? this.id,
       name: name ?? this.name,

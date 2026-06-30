@@ -8,10 +8,7 @@ class QuestTemplateFilterEntity {
     return {'id': id, 'title': title};
   }
 
-  QuestTemplateFilterEntity copyWith({
-    String? id,
-    String? title,
-  }) {
+  QuestTemplateFilterEntity copyWith({String? id, String? title}) {
     return QuestTemplateFilterEntity(
       id: id ?? this.id,
       title: title ?? this.title,

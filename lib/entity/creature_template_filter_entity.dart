@@ -3,7 +3,11 @@ class CreatureTemplateFilterEntity {
   final String name;
   final String subName;
 
-  const CreatureTemplateFilterEntity({this.entry = '', this.name = '', this.subName = ''});
+  const CreatureTemplateFilterEntity({
+    this.entry = '',
+    this.name = '',
+    this.subName = '',
+  });
 
   Map<String, dynamic> toJson() {
     return {'entry': entry, 'name': name, 'subName': subName};

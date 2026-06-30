@@ -5,10 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/database/database.dart';
 import 'package:foxy/database/migration_runner.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/repository/setting_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router.gr.dart';
-import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
@@ -68,7 +68,7 @@ class BootstrapViewModel {
       await MigrationRunner(Database.instance.laconic).run();
 
       // 加载 features 数据
-      await GetIt.instance.get<FeatureViewModel>().load();
+      await GetIt.instance.get<ScaffoldViewModel>().loadFeatures();
 
       await _updateConfig();
       DialogUtil.instance.dismiss();

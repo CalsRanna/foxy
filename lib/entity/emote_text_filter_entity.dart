@@ -15,13 +15,7 @@ class EmoteTextFilterEntity {
     return {'id': id, 'name': name};
   }
 
-  EmoteTextFilterEntity copyWith({
-    String? id,
-    String? name,
-  }) {
-    return EmoteTextFilterEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
+  EmoteTextFilterEntity copyWith({String? id, String? name}) {
+    return EmoteTextFilterEntity(id: id ?? this.id, name: name ?? this.name);
   }
 }

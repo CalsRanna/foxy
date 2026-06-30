@@ -9,9 +9,7 @@ class NpcTextLocaleRepository with RepositoryMixin {
   /// 按 ID 查询该 NpcText 的所有 locale
   Future<List<NpcTextLocaleEntity>> getNpcTextLocales({required int id}) async {
     final results = await laconic.table(_table).where('ID', id).get();
-    return results
-        .map((e) => NpcTextLocaleEntity.fromJson(e.toMap()))
-        .toList();
+    return results.map((e) => NpcTextLocaleEntity.fromJson(e.toMap())).toList();
   }
 
   /// 按 ID + Locale 查找

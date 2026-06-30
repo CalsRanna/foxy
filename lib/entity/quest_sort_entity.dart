@@ -15,10 +15,7 @@ class QuestSortEntity {
     return {'ID': id, 'SortName_Lang_zhCN': sortNameLangZhCn};
   }
 
-  QuestSortEntity copyWith({
-    int? id,
-    String? sortNameLangZhCn,
-  }) {
+  QuestSortEntity copyWith({int? id, String? sortNameLangZhCn}) {
     return QuestSortEntity(
       id: id ?? this.id,
       sortNameLangZhCn: sortNameLangZhCn ?? this.sortNameLangZhCn,

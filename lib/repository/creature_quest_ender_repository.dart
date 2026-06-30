@@ -42,9 +42,9 @@ class CreatureQuestEnderRepository with RepositoryMixin {
 
   /// 取指定 quest 下的下一个 id（MAX(id) + 1）
   Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int questId) async {
-    final result = await laconic.table(_table).where('quest', questId).select(
-      ['MAX(id) as max_id'],
-    ).first();
+    final result = await laconic.table(_table).where('quest', questId).select([
+      'MAX(id) as max_id',
+    ]).first();
     final maxId = result.toMap()['max_id'] as int?;
     return CreatureQuestEnderEntity(
       quest: questId,

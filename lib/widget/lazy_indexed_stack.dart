@@ -34,10 +34,7 @@ class _LazyIndexedStackState extends State<LazyIndexedStack> {
       children: [
         for (int i = 0; i < widget.children.length; i++)
           if (_visited.contains(i))
-            Offstage(
-              offstage: i != widget.index,
-              child: widget.children[i],
-            ),
+            Offstage(offstage: i != widget.index, child: widget.children[i]),
       ],
     );
   }

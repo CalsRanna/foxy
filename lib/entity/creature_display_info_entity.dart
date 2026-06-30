@@ -100,7 +100,8 @@ class CreatureDisplayInfoEntity {
       id: id ?? this.id,
       modelId: modelId ?? this.modelId,
       soundId: soundId ?? this.soundId,
-      extendedDisplayInfoId: extendedDisplayInfoId ?? this.extendedDisplayInfoId,
+      extendedDisplayInfoId:
+          extendedDisplayInfoId ?? this.extendedDisplayInfoId,
       creatureModelScale: creatureModelScale ?? this.creatureModelScale,
       creatureModelAlpha: creatureModelAlpha ?? this.creatureModelAlpha,
       textureVariation0: textureVariation0 ?? this.textureVariation0,
@@ -112,7 +113,8 @@ class CreatureDisplayInfoEntity {
       npcSoundID: npcSoundID ?? this.npcSoundID,
       particleColorID: particleColorID ?? this.particleColorID,
       creatureGeosetData: creatureGeosetData ?? this.creatureGeosetData,
-      objectEffectPackageID: objectEffectPackageID ?? this.objectEffectPackageID,
+      objectEffectPackageID:
+          objectEffectPackageID ?? this.objectEffectPackageID,
     );
   }
 }

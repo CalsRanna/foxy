@@ -11,11 +11,7 @@ class QuestFactionRewardFilterEntity {
     return {'id': id};
   }
 
-  QuestFactionRewardFilterEntity copyWith({
-    String? id,
-  }) {
-    return QuestFactionRewardFilterEntity(
-      id: id ?? this.id,
-    );
+  QuestFactionRewardFilterEntity copyWith({String? id}) {
+    return QuestFactionRewardFilterEntity(id: id ?? this.id);
   }
 }

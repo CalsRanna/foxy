@@ -637,12 +637,15 @@ class QuestTemplateEntity {
       suggestedGroupNum: suggestedGroupNum ?? this.suggestedGroupNum,
       requiredFactionId1: requiredFactionId1 ?? this.requiredFactionId1,
       requiredFactionId2: requiredFactionId2 ?? this.requiredFactionId2,
-      requiredFactionValue1: requiredFactionValue1 ?? this.requiredFactionValue1,
-      requiredFactionValue2: requiredFactionValue2 ?? this.requiredFactionValue2,
+      requiredFactionValue1:
+          requiredFactionValue1 ?? this.requiredFactionValue1,
+      requiredFactionValue2:
+          requiredFactionValue2 ?? this.requiredFactionValue2,
       rewardNextQuest: rewardNextQuest ?? this.rewardNextQuest,
       rewardXpDifficulty: rewardXpDifficulty ?? this.rewardXpDifficulty,
       rewardMoney: rewardMoney ?? this.rewardMoney,
-      rewardMoneyDifficulty: rewardMoneyDifficulty ?? this.rewardMoneyDifficulty,
+      rewardMoneyDifficulty:
+          rewardMoneyDifficulty ?? this.rewardMoneyDifficulty,
       rewardDisplaySpell: rewardDisplaySpell ?? this.rewardDisplaySpell,
       rewardSpell: rewardSpell ?? this.rewardSpell,
       rewardHonor: rewardHonor ?? this.rewardHonor,
@@ -667,17 +670,23 @@ class QuestTemplateEntity {
       itemDrop4: itemDrop4 ?? this.itemDrop4,
       itemDropQuantity4: itemDropQuantity4 ?? this.itemDropQuantity4,
       rewardChoiceItemId1: rewardChoiceItemId1 ?? this.rewardChoiceItemId1,
-      rewardChoiceItemQuantity1: rewardChoiceItemQuantity1 ?? this.rewardChoiceItemQuantity1,
+      rewardChoiceItemQuantity1:
+          rewardChoiceItemQuantity1 ?? this.rewardChoiceItemQuantity1,
       rewardChoiceItemId2: rewardChoiceItemId2 ?? this.rewardChoiceItemId2,
-      rewardChoiceItemQuantity2: rewardChoiceItemQuantity2 ?? this.rewardChoiceItemQuantity2,
+      rewardChoiceItemQuantity2:
+          rewardChoiceItemQuantity2 ?? this.rewardChoiceItemQuantity2,
       rewardChoiceItemId3: rewardChoiceItemId3 ?? this.rewardChoiceItemId3,
-      rewardChoiceItemQuantity3: rewardChoiceItemQuantity3 ?? this.rewardChoiceItemQuantity3,
+      rewardChoiceItemQuantity3:
+          rewardChoiceItemQuantity3 ?? this.rewardChoiceItemQuantity3,
       rewardChoiceItemId4: rewardChoiceItemId4 ?? this.rewardChoiceItemId4,
-      rewardChoiceItemQuantity4: rewardChoiceItemQuantity4 ?? this.rewardChoiceItemQuantity4,
+      rewardChoiceItemQuantity4:
+          rewardChoiceItemQuantity4 ?? this.rewardChoiceItemQuantity4,
       rewardChoiceItemId5: rewardChoiceItemId5 ?? this.rewardChoiceItemId5,
-      rewardChoiceItemQuantity5: rewardChoiceItemQuantity5 ?? this.rewardChoiceItemQuantity5,
+      rewardChoiceItemQuantity5:
+          rewardChoiceItemQuantity5 ?? this.rewardChoiceItemQuantity5,
       rewardChoiceItemId6: rewardChoiceItemId6 ?? this.rewardChoiceItemId6,
-      rewardChoiceItemQuantity6: rewardChoiceItemQuantity6 ?? this.rewardChoiceItemQuantity6,
+      rewardChoiceItemQuantity6:
+          rewardChoiceItemQuantity6 ?? this.rewardChoiceItemQuantity6,
       poiContinent: poiContinent ?? this.poiContinent,
       poiX: poiX ?? this.poiX,
       poiY: poiY ?? this.poiY,
@@ -687,19 +696,24 @@ class QuestTemplateEntity {
       rewardArenaPoints: rewardArenaPoints ?? this.rewardArenaPoints,
       rewardFactionId1: rewardFactionId1 ?? this.rewardFactionId1,
       rewardFactionValue1: rewardFactionValue1 ?? this.rewardFactionValue1,
-      rewardFactionOverride1: rewardFactionOverride1 ?? this.rewardFactionOverride1,
+      rewardFactionOverride1:
+          rewardFactionOverride1 ?? this.rewardFactionOverride1,
       rewardFactionId2: rewardFactionId2 ?? this.rewardFactionId2,
       rewardFactionValue2: rewardFactionValue2 ?? this.rewardFactionValue2,
-      rewardFactionOverride2: rewardFactionOverride2 ?? this.rewardFactionOverride2,
+      rewardFactionOverride2:
+          rewardFactionOverride2 ?? this.rewardFactionOverride2,
       rewardFactionId3: rewardFactionId3 ?? this.rewardFactionId3,
       rewardFactionValue3: rewardFactionValue3 ?? this.rewardFactionValue3,
-      rewardFactionOverride3: rewardFactionOverride3 ?? this.rewardFactionOverride3,
+      rewardFactionOverride3:
+          rewardFactionOverride3 ?? this.rewardFactionOverride3,
       rewardFactionId4: rewardFactionId4 ?? this.rewardFactionId4,
       rewardFactionValue4: rewardFactionValue4 ?? this.rewardFactionValue4,
-      rewardFactionOverride4: rewardFactionOverride4 ?? this.rewardFactionOverride4,
+      rewardFactionOverride4:
+          rewardFactionOverride4 ?? this.rewardFactionOverride4,
       rewardFactionId5: rewardFactionId5 ?? this.rewardFactionId5,
       rewardFactionValue5: rewardFactionValue5 ?? this.rewardFactionValue5,
-      rewardFactionOverride5: rewardFactionOverride5 ?? this.rewardFactionOverride5,
+      rewardFactionOverride5:
+          rewardFactionOverride5 ?? this.rewardFactionOverride5,
       timeAllowed: timeAllowed ?? this.timeAllowed,
       allowableRaces: allowableRaces ?? this.allowableRaces,
       logTitle: logTitle ?? this.logTitle,
@@ -711,10 +725,14 @@ class QuestTemplateEntity {
       requiredNpcOrGo2: requiredNpcOrGo2 ?? this.requiredNpcOrGo2,
       requiredNpcOrGo3: requiredNpcOrGo3 ?? this.requiredNpcOrGo3,
       requiredNpcOrGo4: requiredNpcOrGo4 ?? this.requiredNpcOrGo4,
-      requiredNpcOrGoCount1: requiredNpcOrGoCount1 ?? this.requiredNpcOrGoCount1,
-      requiredNpcOrGoCount2: requiredNpcOrGoCount2 ?? this.requiredNpcOrGoCount2,
-      requiredNpcOrGoCount3: requiredNpcOrGoCount3 ?? this.requiredNpcOrGoCount3,
-      requiredNpcOrGoCount4: requiredNpcOrGoCount4 ?? this.requiredNpcOrGoCount4,
+      requiredNpcOrGoCount1:
+          requiredNpcOrGoCount1 ?? this.requiredNpcOrGoCount1,
+      requiredNpcOrGoCount2:
+          requiredNpcOrGoCount2 ?? this.requiredNpcOrGoCount2,
+      requiredNpcOrGoCount3:
+          requiredNpcOrGoCount3 ?? this.requiredNpcOrGoCount3,
+      requiredNpcOrGoCount4:
+          requiredNpcOrGoCount4 ?? this.requiredNpcOrGoCount4,
       requiredItemId1: requiredItemId1 ?? this.requiredItemId1,
       requiredItemId2: requiredItemId2 ?? this.requiredItemId2,
       requiredItemId3: requiredItemId3 ?? this.requiredItemId3,
