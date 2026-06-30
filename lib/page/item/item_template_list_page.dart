@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/util/item_helpers.dart';
 import 'package:foxy/entity/item_template_entity.dart';
@@ -54,71 +53,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   Widget _buildFilter() {
     return ShadCard(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 12,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildClassButtons(),
-          _buildSubclassButtons(),
-          _buildSearchInputs(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildClassButtons() {
-    final selectedClassId = viewModel.selectedClassId.value;
-    final children = kItemClasses.asMap().entries.map((entry) {
-      final isSelected = entry.key == selectedClassId;
-      return ShadButton.raw(
-        variant: isSelected
-            ? ShadButtonVariant.secondary
-            : ShadButtonVariant.ghost,
-        onPressed: () => viewModel.selectClass(entry.key),
-        size: ShadButtonSize.sm,
-        child: Text(entry.value),
-      );
-    }).toList();
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(spacing: 8, children: children),
-    );
-  }
-
-  Widget _buildSubclassButtons() {
-    final selectedClassId = viewModel.selectedClassId.value;
-    if (selectedClassId < 0) return const SizedBox.shrink();
-
-    final selectedSubclass = viewModel.selectedSubclass.value;
-    final subclasses = viewModel.currentSubclasses;
-    if (subclasses.isEmpty) return const SizedBox.shrink();
-
-    final children = [
-      ShadButton.raw(
-        variant: selectedSubclass < 0
-            ? ShadButtonVariant.secondary
-            : ShadButtonVariant.ghost,
-        onPressed: viewModel.clearSubclass,
-        size: ShadButtonSize.sm,
-        child: Text('全部'),
-      ),
-      ...subclasses.asMap().entries.map((entry) {
-        final isSelected = entry.key == selectedSubclass;
-        return ShadButton.raw(
-          variant: isSelected
-              ? ShadButtonVariant.secondary
-              : ShadButtonVariant.ghost,
-          onPressed: () => viewModel.selectSubclass(entry.key),
-          size: ShadButtonSize.sm,
-          child: Text(entry.value),
-        );
-      }),
-    ];
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(spacing: 8, children: children),
+      child: _buildSearchInputs(),
     );
   }
 
