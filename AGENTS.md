@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to coding agent when working with code in this repository.
 
 ## 项目概述
 
@@ -58,21 +58,24 @@ ViewModel 通过 `GetIt.instance.get<T>()` 获取, 使用 signals 的 `signal()`
 - **Entity**: 纯数据类, 字段对应 MySQL 列名 (snake_case), 包含 `fromJson(Map)` 工厂构造函数和 `toJson()` 方法
 - **Brief 实体** (如 `BriefCreatureTemplateEntity`): 列表页用的精简版实体, 通过 LEFT JOIN locale 表获取本地化字段
 - **Filter 实体** (如 `CreatureTemplateFilterEntity`): 封装列表筛选条件
-- **Repository**: 通过 `RepositoryMixin` 混入获得 `laconic` 实例和 `kPageSize = 50` 常量。方法命名遵循以下约定:
-  - 列表查询: `get<Entities>({FilterEntity? filter, int page = 1})` — filter 封装为实体, page 有默认值
+- **Repository**: 通过 `RepositoryMixin` 混入, 从 `Database.instance.laconic` 获取 Laconic 实例, 统一 `kPageSize = 50` 分页。方法命名遵循以下约定:
+  - 列表查询: `getBrief<Entities>({FilterEntity? filter, int page = 1})` — 返回 `Brief<Entity>Entity` 精简实体 (LEFT JOIN locale 表获取本地化字段)
   - 计数: `count<Entities>({FilterEntity? filter})`
   - 单条查询: `get<Entity>(int id)` 或 `get<Entity>(Map<String, dynamic> id)` (复合主键)
   - 新增: `store<Entity>(Entity entity)`
-  - 更新: `update<Entity>(dynamic id, Entity entity)`
+  - 更新: `update<Entity>(Entity entity)` — 按实体主键更新
   - 删除: `destroy<Entity>(dynamic id)`
-  - 复制: `copy<Entity>(dynamic id)`
+  - 复制: `copy<Entity>(int id)`
   - 子表本地化: `get<Entity>Locales(int id)` / `save<Entity>Locales(int id, List<LocaleEntity> locales)`
 
 ### 数据库层
 
-- `config.yaml`: MySQL 连接配置 (`host`, `port`, `database`, `username`, `password`)
-- `lib/database/migration_runner.dart`: 按顺序执行 migration, 通过 `foxy.migrations` 表跟踪已执行的迁移
-- `repository/repository_mixin.dart`: 从 `FoxyViewModel` 获取 `Laconic` 实例, 所有 Repository 混入此 mixin
+- `config.yaml`: MySQL 连接配置 (`host`, `port`, `database`, `username`, `password`, 可选 `dbc_path`、`locale_enabled`)
+- `lib/database/database.dart`: `Database` 单例 (`Database.instance`), 封装 `Laconic` 实例, 提供 `connect(MysqlConfig)` / `close()` / `laconic` getter
+- `lib/database/migration_runner.dart`: `MigrationRunner` 按时间戳顺序执行 migration, 通过 `foxy.migrations` 表跟踪已执行迁移; 迁移创建 `foxy.features`、`foxy.activity_log` 等自用表并写入模块种子数据
+- `lib/database/migration/`: 迁移脚本 (命名 `migration_<YYYYMMDDHHMM>.dart`), 新增迁移需在 `MigrationRunner.run()` 的列表中按顺序注册
+- `repository/repository_mixin.dart`: `RepositoryMixin` 通过 `Database.instance.laconic` 获取 Laconic 实例并定义 `kPageSize = 50`, 所有 Repository 混入此 mixin
+- `util/dbc_sync_util.dart`: `DbcSyncUtil` 封装 DBC 文件导入 (worker isolate 内执行), 写入 30 个 `foxy.dbc_*` 表, 由 `ScaffoldViewModel` 消费进度流
 
 ### 路由
 
@@ -84,6 +87,6 @@ ViewModel 通过 `GetIt.instance.get<T>()` 获取, 使用 signals 的 `signal()`
 ### 依赖注入 (lib/di.dart)
 
 `DI.ensureInitialized()` 在 `main()` 中调用, 集中注册所有 ViewModel:
-- `registerSingleton`: `RouterFacade`, `FoxyViewModel`, `DbcImportViewModel`
-- `registerLazySingleton`: 列表页 ViewModel (保持分页状态)
-- `registerFactory`: 详情页 ViewModel (每次创建新实例)
+- `registerSingleton`: `RouterFacade`, `FoxyViewModel`, `ScaffoldViewModel` (ScaffoldViewModel 聚合功能模块清单与 DBC 导入状态)
+- `registerLazySingleton`: 列表页 ViewModel + 各 Repository (保持分页状态)
+- `registerFactory`: 详情页 ViewModel + 子 Tab ViewModel (每次创建新实例)
