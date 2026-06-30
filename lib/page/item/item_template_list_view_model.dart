@@ -152,7 +152,6 @@ class ItemTemplateListViewModel {
     );
   }
 
-
   Future<List<BriefItemTemplateEntity>> _fetchItems() async {
     final filter = ItemTemplateFilterEntity(
       entry: entryController.text,

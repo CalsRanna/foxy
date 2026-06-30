@@ -21,19 +21,12 @@ class _GemPropertyDetailPageState extends State<GemPropertyDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('宝石属性'),
-    ];
+    var tabs = [Text('宝石属性')];
 
-    var tabContents = [
-      GemPropertyView(entry: widget.id),
-    ];
+    var tabContents = [GemPropertyView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

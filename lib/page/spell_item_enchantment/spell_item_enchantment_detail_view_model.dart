@@ -48,6 +48,7 @@ class SpellItemEnchantmentDetailViewModel {
   final minLevelController = TextEditingController();
 
   final enchantment = signal(SpellItemEnchantmentEntity());
+
   /// 保存到数据库
   String _fmt(num v) {
     if (v is double) {

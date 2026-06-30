@@ -44,18 +44,14 @@ class _SmartScriptViewState extends State<SmartScriptView> {
             child: FormItem(
               label: 'ID',
               placeholder: 'id',
-              child: FoxyNumberInput<int>(
-                controller: viewModel.idController,
-              ),
+              child: FoxyNumberInput<int>(controller: viewModel.idController),
             ),
           ),
           Expanded(
             child: FormItem(
               label: '链接',
               placeholder: 'link',
-              child: FoxyNumberInput<int>(
-                controller: viewModel.linkController,
-              ),
+              child: FoxyNumberInput<int>(controller: viewModel.linkController),
             ),
           ),
         ],

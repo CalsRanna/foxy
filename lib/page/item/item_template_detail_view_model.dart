@@ -77,10 +77,7 @@ class ItemTemplateDetailViewModel {
     10,
     (_) => ShadSelectController<int>(),
   );
-  final List<Signal<int>> statValues = List.generate(
-    10,
-    (_) => signal<int>(0),
-  );
+  final List<Signal<int>> statValues = List.generate(10, (_) => signal<int>(0));
 
   /// Card 7: Resistances
   final holyResController = TextEditingController();
@@ -160,6 +157,7 @@ class ItemTemplateDetailViewModel {
   /// Signals
   final entry = signal<int>(0);
   final template = signal(ItemTemplateEntity());
+
   /// Computed conditions
   bool get hasEnchantment =>
       template.value.randomProperty != 0 || template.value.randomSuffix != 0;
@@ -248,7 +246,9 @@ class ItemTemplateDetailViewModel {
     blockController.text = _fmt(template.block);
 
     /// Card 5: Scaling Stats
-    scalingStatDistributionController.text = _fmt(template.scalingStatDistribution);
+    scalingStatDistributionController.text = _fmt(
+      template.scalingStatDistribution,
+    );
     scalingStatValue.value = template.scalingStatValue;
 
     /// Card 6: Stats (dynamic)
@@ -288,9 +288,15 @@ class ItemTemplateDetailViewModel {
     requiredSpellController.text = _fmt(template.requiredSpell);
     requiredHonorRankController.text = _fmt(template.requiredHonorRank);
     requiredCityRankController.text = _fmt(template.requiredCityRank);
-    requiredReputationFactionController.text = _fmt(template.requiredReputationFaction);
-    requiredReputationRankController.text = _fmt(template.requiredReputationRank);
-    requiredDisenchantSkillController.text = _fmt(template.requiredDisenchantSkill);
+    requiredReputationFactionController.text = _fmt(
+      template.requiredReputationFaction,
+    );
+    requiredReputationRankController.text = _fmt(
+      template.requiredReputationRank,
+    );
+    requiredDisenchantSkillController.text = _fmt(
+      template.requiredDisenchantSkill,
+    );
 
     /// Card 10: Socket/Gem
     lockidController.text = _fmt(template.lockid);
@@ -377,9 +383,7 @@ class ItemTemplateDetailViewModel {
       statTypes: [
         for (var i = 0; i < 10; i++) _getSelectValue(statTypeControllers[i]),
       ],
-      statValues: [
-        for (var i = 0; i < 10; i++) statValues[i].value,
-      ],
+      statValues: [for (var i = 0; i < 10; i++) statValues[i].value],
 
       /// Card 7: Resistances
       holyRes: _pi(holyResController.text),
@@ -390,24 +394,14 @@ class ItemTemplateDetailViewModel {
       arcaneRes: _pi(arcaneResController.text),
 
       /// Card 8: Spells (5 slots)
-      spellIds: [
-        for (var i = 0; i < 5; i++) _pi(spellIds[i].text),
-      ],
+      spellIds: [for (var i = 0; i < 5; i++) _pi(spellIds[i].text)],
       spellTriggers: [
         for (var i = 0; i < 5; i++) _getSelectValue(spellTriggerControllers[i]),
       ],
-      spellCharges: [
-        for (var i = 0; i < 5; i++) spellCharges[i].value,
-      ],
-      spellPpmRates: [
-        for (var i = 0; i < 5; i++) spellPpmRates[i].value,
-      ],
-      spellCooldowns: [
-        for (var i = 0; i < 5; i++) spellCooldowns[i].value,
-      ],
-      spellCategories: [
-        for (var i = 0; i < 5; i++) spellCategories[i].value,
-      ],
+      spellCharges: [for (var i = 0; i < 5; i++) spellCharges[i].value],
+      spellPpmRates: [for (var i = 0; i < 5; i++) spellPpmRates[i].value],
+      spellCooldowns: [for (var i = 0; i < 5; i++) spellCooldowns[i].value],
+      spellCategories: [for (var i = 0; i < 5; i++) spellCategories[i].value],
       spellCategoryCooldowns: [
         for (var i = 0; i < 5; i++) spellCategoryCooldowns[i].value,
       ],
@@ -433,9 +427,7 @@ class ItemTemplateDetailViewModel {
       socketColors: [
         for (var i = 0; i < 3; i++) _getSelectValue(socketColorControllers[i]),
       ],
-      socketContents: [
-        for (var i = 0; i < 3; i++) socketContents[i].value,
-      ],
+      socketContents: [for (var i = 0; i < 3; i++) socketContents[i].value],
 
       /// Card 11: Page/Misc
       mapId: _pi(mapIdController.text),

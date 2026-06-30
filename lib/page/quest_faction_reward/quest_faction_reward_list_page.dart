@@ -18,7 +18,8 @@ class QuestFactionRewardListPage extends StatefulWidget {
       _QuestFactionRewardListPageState();
 }
 
-class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage> {
+class _QuestFactionRewardListPageState
+    extends State<QuestFactionRewardListPage> {
   final viewModel = GetIt.instance.get<QuestFactionRewardListViewModel>();
 
   @override
@@ -131,9 +132,7 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(
-              id: rewards[row].id,
-            );
+            viewModel.navigateToDetail(id: rewards[row].id);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -143,9 +142,7 @@ class _QuestFactionRewardListPageState extends State<QuestFactionRewardListPage>
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(
-                      id: rewards[row].id,
-                    );
+                    viewModel.navigateToDetail(id: rewards[row].id);
                   },
                   child: Text('编辑'),
                 ),

@@ -33,9 +33,7 @@ class _ConditionDetailPageState extends State<ConditionDetailPage> {
         ),
         FoxyTab(
           tabs: [Text('条件')],
-          contents: [
-            ConditionView(credential: widget.credential),
-          ],
+          contents: [ConditionView(credential: widget.credential)],
         ),
       ],
     );

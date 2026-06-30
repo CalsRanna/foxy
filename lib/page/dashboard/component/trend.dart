@@ -11,7 +11,9 @@ class Trend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (activities.isEmpty) {
-      final mutedColor = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5);
+      final mutedColor = Theme.of(
+        context,
+      ).colorScheme.onSurface.withValues(alpha: 0.5);
       return FoxyCard(
         title: const Text('动态'),
         child: Padding(
@@ -100,7 +102,11 @@ class _TrendItem extends StatelessWidget {
           ),
           Text(
             _timeAgo(activity.createdAt),
-            style: textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+            style: textTheme.bodySmall?.copyWith(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
           ),
         ],
       ),

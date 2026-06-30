@@ -40,6 +40,7 @@ class AreaTableDetailViewModel {
   final liquidTypeId3Controller = TextEditingController();
 
   final area = signal(AreaTableEntity());
+
   /// 保存到数据库
   String _fmt(num v) {
     if (v is double) {
@@ -95,7 +96,9 @@ class AreaTableDetailViewModel {
       factionGroupMask: _pi(factionGroupMaskController.text),
       explorationLevel: _pi(explorationLevelController.text),
       soundProviderPref: _pi(soundProviderPrefController.text),
-      soundProviderPrefUnderwater: _pi(soundProviderPrefUnderwaterController.text),
+      soundProviderPrefUnderwater: _pi(
+        soundProviderPrefUnderwaterController.text,
+      ),
       ambienceId: _pi(ambienceIdController.text),
       zoneMusic: _pi(zoneMusicController.text),
       introSound: _pi(introSoundController.text),
@@ -168,7 +171,9 @@ class AreaTableDetailViewModel {
 
     /// Sound
     soundProviderPrefController.text = _fmt(table.soundProviderPref);
-    soundProviderPrefUnderwaterController.text = _fmt(table.soundProviderPrefUnderwater);
+    soundProviderPrefUnderwaterController.text = _fmt(
+      table.soundProviderPrefUnderwater,
+    );
     ambienceIdController.text = _fmt(table.ambienceId);
     zoneMusicController.text = _fmt(table.zoneMusic);
     introSoundController.text = _fmt(table.introSound);

@@ -37,6 +37,7 @@ class EmoteTextDetailViewModel {
   final emoteText15 = signal<int>(0);
 
   final emote = signal(EmoteTextEntity());
+
   /// 保存到数据库
   String _fmt(num v) {
     if (v is double) {

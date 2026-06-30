@@ -14,7 +14,8 @@ class ItemExtendedCostListPage extends StatefulWidget {
   const ItemExtendedCostListPage({super.key});
 
   @override
-  State<ItemExtendedCostListPage> createState() => _ItemExtendedCostListPageState();
+  State<ItemExtendedCostListPage> createState() =>
+      _ItemExtendedCostListPageState();
 }
 
 class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
@@ -120,9 +121,7 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(
-              id: items[row].id,
-            );
+            viewModel.navigateToDetail(id: items[row].id);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -132,9 +131,7 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(
-                      id: items[row].id,
-                    );
+                    viewModel.navigateToDetail(id: items[row].id);
                   },
                   child: Text('编辑'),
                 ),

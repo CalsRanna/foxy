@@ -10,7 +10,8 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ScalingStatDistributionDetailViewModel {
-  final _repository = GetIt.instance.get<ScalingStatDistributionSoloRepository>();
+  final _repository = GetIt.instance
+      .get<ScalingStatDistributionSoloRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -38,6 +39,7 @@ class ScalingStatDistributionDetailViewModel {
   final maxlevelController = TextEditingController();
 
   final distribution = signal(ScalingStatDistributionEntity());
+
   /// 保存到数据库
   String _fmt(num v) {
     if (v is double) {

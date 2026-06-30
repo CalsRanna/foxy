@@ -61,11 +61,13 @@ class _QuestOfferRewardLocaleSelectorState
       },
       onSave: (questId, data) async {
         final locales = data
-            .map((d) => QuestOfferRewardLocaleEntity(
-                  id: questId,
-                  locale: d['locale'] ?? '',
-                  rewardText: d['rewardText'] ?? '',
-                ))
+            .map(
+              (d) => QuestOfferRewardLocaleEntity(
+                id: questId,
+                locale: d['locale'] ?? '',
+                rewardText: d['rewardText'] ?? '',
+              ),
+            )
             .toList();
         await _repository.replaceAll(questId, locales);
       },

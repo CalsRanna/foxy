@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/condition/condition_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -143,52 +144,64 @@ class _ConditionViewState extends State<ConditionView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('来源信息'),
+          FormSection(
+            title: '来源信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: sourceTypeInput),
+                  Expanded(child: sourceGroupInput),
+                  Expanded(child: sourceEntryInput),
+                  Expanded(child: sourceIdInput),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: elseGroupInput),
+                  Expanded(flex: 3, child: SizedBox()),
+                ],
+              ),
+            ],
           ),
-          ShadCard(padding: EdgeInsets.all(16), child: Column(spacing: 8, children: [
-            Row(spacing: 8, children: [
-              Expanded(child: sourceTypeInput),
-              Expanded(child: sourceGroupInput),
-              Expanded(child: sourceEntryInput),
-              Expanded(child: sourceIdInput),
-            ]),
-            Row(spacing: 8, children: [
-              Expanded(child: elseGroupInput),
-              Expanded(flex: 3, child: SizedBox()),
-            ]),
-          ])),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('条件信息'),
+          FormSection(
+            title: '条件信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: conditionTypeInput),
+                  Expanded(child: conditionTargetInput),
+                  Expanded(child: negativeConditionInput),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: conditionValue1Input),
+                  Expanded(child: conditionValue2Input),
+                  Expanded(child: conditionValue3Input),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
           ),
-          ShadCard(padding: EdgeInsets.all(16), child: Column(spacing: 8, children: [
-            Row(spacing: 8, children: [
-              Expanded(child: conditionTypeInput),
-              Expanded(child: conditionTargetInput),
-              Expanded(child: negativeConditionInput),
-              Expanded(child: SizedBox()),
-            ]),
-            Row(spacing: 8, children: [
-              Expanded(child: conditionValue1Input),
-              Expanded(child: conditionValue2Input),
-              Expanded(child: conditionValue3Input),
-              Expanded(child: SizedBox()),
-            ]),
-          ])),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('错误与脚本'),
+          FormSection(
+            title: '错误与脚本',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: errorTypeInput),
+                  Expanded(child: errorTextIdInput),
+                  Expanded(child: scriptNameInput),
+                  Expanded(child: commentInput),
+                ],
+              ),
+            ],
           ),
-          ShadCard(padding: EdgeInsets.all(16), child: Column(spacing: 8, children: [
-            Row(spacing: 8, children: [
-              Expanded(child: errorTypeInput),
-              Expanded(child: errorTextIdInput),
-              Expanded(child: scriptNameInput),
-              Expanded(child: commentInput),
-            ]),
-          ])),
           Row(
             children: [
               ShadButton(
@@ -196,7 +209,10 @@ class _ConditionViewState extends State<ConditionView> {
                 child: Text('保存'),
               ),
               SizedBox(width: 8),
-              ShadButton.ghost(onPressed: () => viewModel.pop(), child: Text('取消')),
+              ShadButton.ghost(
+                onPressed: () => viewModel.pop(),
+                child: Text('取消'),
+              ),
             ],
           ),
         ],

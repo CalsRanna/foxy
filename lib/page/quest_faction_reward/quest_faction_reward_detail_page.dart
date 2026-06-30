@@ -23,19 +23,12 @@ class _QuestFactionRewardDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('任务声望'),
-    ];
+    var tabs = [Text('任务声望')];
 
-    var tabContents = [
-      QuestFactionRewardView(entry: widget.id),
-    ];
+    var tabContents = [QuestFactionRewardView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

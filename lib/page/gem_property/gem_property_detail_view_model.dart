@@ -23,6 +23,7 @@ class GemPropertyDetailViewModel {
   final typeController = TextEditingController();
 
   final property = signal(GemPropertyEntity());
+
   /// 保存到数据库
   String _fmt(num v) {
     if (v is double) {

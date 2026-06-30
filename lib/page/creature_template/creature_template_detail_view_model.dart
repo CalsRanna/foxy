@@ -78,6 +78,7 @@ class CreatureTemplateDetailViewModel {
 
   final entry = signal(0);
   final template = signal(CreatureTemplateEntity());
+
   /// 保存模板到数据库
   String _fmt(num v) {
     if (v is double) {
@@ -248,9 +249,7 @@ class CreatureTemplateDetailViewModel {
   Future<void> initSignals({int? entry}) async {
     if (entry == null) return;
     try {
-      template.value = await _repository.getCreatureTemplate(
-        entry,
-      );
+      template.value = await _repository.getCreatureTemplate(entry);
       _initControllers(template.value);
     } catch (e, s) {
       LoggerUtil.instance.e('加载生物模板(entry=$entry)失败', error: e, stackTrace: s);

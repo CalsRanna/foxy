@@ -214,86 +214,98 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(title: '基础信息', children: [
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: idInput),
-                Expanded(child: charlevelInput),
-                Expanded(child: SizedBox()),
-                Expanded(child: SizedBox()),
-              ],
-            ),
-          ]),
-          FormSection(title: '预算值', children: [
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: shoulderBudgetInput),
-                Expanded(child: trinketBudgetInput),
-                Expanded(child: weaponBudget1HInput),
-                Expanded(child: rangedBudgetInput),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: primaryBudgetInput),
-                Expanded(child: tertiaryBudgetInput),
-                Expanded(child: spellPowerInput),
-                Expanded(child: SizedBox()),
-              ],
-            ),
-          ]),
-          FormSection(title: '护甲值', children: [
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: clothShoulderArmorInput),
-                Expanded(child: leatherShoulderArmorInput),
-                Expanded(child: mailShoulderArmorInput),
-                Expanded(child: plateShoulderArmorInput),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: clothCloakArmorInput),
-                Expanded(child: clothChestArmorInput),
-                Expanded(child: leatherChestArmorInput),
-                Expanded(child: mailChestArmorInput),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: plateChestArmorInput),
-                Expanded(child: SizedBox()),
-                Expanded(child: SizedBox()),
-                Expanded(child: SizedBox()),
-              ],
-            ),
-          ]),
-          FormSection(title: 'DPS值', children: [
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: weaponDPS1HInput),
-                Expanded(child: weaponDPS2HInput),
-                Expanded(child: spellcasterDPS1HInput),
-                Expanded(child: spellcasterDPS2HInput),
-              ],
-            ),
-            Row(
-              spacing: 8,
-              children: [
-                Expanded(child: rangedDPSInput),
-                Expanded(child: wandDPSInput),
-                Expanded(child: SizedBox()),
-                Expanded(child: SizedBox()),
-              ],
-            ),
-          ]),
+          FormSection(
+            title: '基础信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: idInput),
+                  Expanded(child: charlevelInput),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
+          FormSection(
+            title: '预算值',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: shoulderBudgetInput),
+                  Expanded(child: trinketBudgetInput),
+                  Expanded(child: weaponBudget1HInput),
+                  Expanded(child: rangedBudgetInput),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: primaryBudgetInput),
+                  Expanded(child: tertiaryBudgetInput),
+                  Expanded(child: spellPowerInput),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
+          FormSection(
+            title: '护甲值',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: clothShoulderArmorInput),
+                  Expanded(child: leatherShoulderArmorInput),
+                  Expanded(child: mailShoulderArmorInput),
+                  Expanded(child: plateShoulderArmorInput),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: clothCloakArmorInput),
+                  Expanded(child: clothChestArmorInput),
+                  Expanded(child: leatherChestArmorInput),
+                  Expanded(child: mailChestArmorInput),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: plateChestArmorInput),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
+          FormSection(
+            title: 'DPS值',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: weaponDPS1HInput),
+                  Expanded(child: weaponDPS2HInput),
+                  Expanded(child: spellcasterDPS1HInput),
+                  Expanded(child: spellcasterDPS2HInput),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: rangedDPSInput),
+                  Expanded(child: wandDPSInput),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
           Row(
             children: [
               ShadButton(

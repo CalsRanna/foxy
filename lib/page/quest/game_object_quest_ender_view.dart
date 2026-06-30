@@ -152,9 +152,7 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
           FormItem(
             label: '物体编号',
             placeholder: 'GameobjectId',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.idController,
-            ),
+            child: FoxyNumberInput<int>(controller: viewModel.idController),
           ),
           SizedBox(height: 16),
           FormItem(

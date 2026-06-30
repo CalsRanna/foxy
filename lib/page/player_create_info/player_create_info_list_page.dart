@@ -14,7 +14,8 @@ class PlayerCreateInfoListPage extends StatefulWidget {
   const PlayerCreateInfoListPage({super.key});
 
   @override
-  State<PlayerCreateInfoListPage> createState() => _PlayerCreateInfoListPageState();
+  State<PlayerCreateInfoListPage> createState() =>
+      _PlayerCreateInfoListPageState();
 }
 
 class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
@@ -45,20 +46,41 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
   Widget _buildFilter() {
     return ShadCard(
       padding: const EdgeInsets.all(16),
-      child: Row(spacing: 16, children: [
-        Expanded(child: ShadInput(
-          controller: viewModel.raceController,
-          placeholder: Text('种族 (race)'),
-        )),
-        Expanded(child: ShadInput(
-          controller: viewModel.classController,
-          placeholder: Text('职业 (class)'),
-        )),
-        Expanded(flex: 2, child: Row(spacing: 16, children: [
-          ShadButton(onPressed: viewModel.search, size: ShadButtonSize.sm, child: Text('查询')),
-          ShadButton.ghost(onPressed: viewModel.reset, size: ShadButtonSize.sm, child: Text('重置')),
-        ])),
-      ]),
+      child: Row(
+        spacing: 16,
+        children: [
+          Expanded(
+            child: ShadInput(
+              controller: viewModel.raceController,
+              placeholder: Text('种族 (race)'),
+            ),
+          ),
+          Expanded(
+            child: ShadInput(
+              controller: viewModel.classController,
+              placeholder: Text('职业 (class)'),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Row(
+              spacing: 16,
+              children: [
+                ShadButton(
+                  onPressed: viewModel.search,
+                  size: ShadButtonSize.sm,
+                  child: Text('查询'),
+                ),
+                ShadButton.ghost(
+                  onPressed: viewModel.reset,
+                  size: ShadButtonSize.sm,
+                  child: Text('重置'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -71,7 +93,12 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
     final infos = viewModel.infos.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
-    var pagination = FoxyPagination(page: page, pageSize: 50, total: total, onChange: viewModel.paginate);
+    var pagination = FoxyPagination(
+      page: page,
+      pageSize: 50,
+      total: total,
+      onChange: viewModel.paginate,
+    );
     final toolbar = Row(children: [createButton, const Spacer(), pagination]);
 
     final headers = ['种族', '职业', '地图', '区域', 'X坐标', 'Y坐标', 'Z坐标', '朝向'];
@@ -86,10 +113,18 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
               1 => ShadTableCell(child: Text(info.class_.toString())),
               2 => ShadTableCell(child: Text(info.map.toString())),
               3 => ShadTableCell(child: Text(info.zone.toString())),
-              4 => ShadTableCell(child: Text(info.positionX.toStringAsFixed(2))),
-              5 => ShadTableCell(child: Text(info.positionY.toStringAsFixed(2))),
-              6 => ShadTableCell(child: Text(info.positionZ.toStringAsFixed(2))),
-              7 => ShadTableCell(child: Text(info.orientation.toStringAsFixed(2))),
+              4 => ShadTableCell(
+                child: Text(info.positionX.toStringAsFixed(2)),
+              ),
+              5 => ShadTableCell(
+                child: Text(info.positionY.toStringAsFixed(2)),
+              ),
+              6 => ShadTableCell(
+                child: Text(info.positionZ.toStringAsFixed(2)),
+              ),
+              7 => ShadTableCell(
+                child: Text(info.orientation.toStringAsFixed(2)),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -108,7 +143,8 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
               _ => null,
             };
           },
-          header: (context, index) => ShadTableCell.header(child: Text(headers[index])),
+          header: (context, index) =>
+              ShadTableCell.header(child: Text(headers[index])),
           onRowDoubleTap: (row) => viewModel.navigateToDetail(info: infos[row]),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -141,7 +177,13 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
 
     return ShadCard(
       padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Column(spacing: 16, children: [toolbar, Expanded(child: layoutBuilder)]),
+      child: Column(
+        spacing: 16,
+        children: [
+          toolbar,
+          Expanded(child: layoutBuilder),
+        ],
+      ),
     );
   }
 }

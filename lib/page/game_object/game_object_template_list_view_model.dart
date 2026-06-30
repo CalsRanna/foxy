@@ -73,11 +73,7 @@ class GameObjectTemplateListViewModel {
     }
   }
 
-  void navigateToDetail(
-    BuildContext context, {
-    int? entry,
-    String? name,
-  }) {
+  void navigateToDetail(BuildContext context, {int? entry, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建游戏对象';
     final id = entry != null ? 'gameobject_$entry' : 'gameobject_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();

@@ -14,7 +14,8 @@ import 'package:signals/signals.dart';
 
 class ScalingStatDistributionListViewModel {
   final idController = TextEditingController();
-  final _repository = GetIt.instance.get<ScalingStatDistributionSoloRepository>();
+  final _repository = GetIt.instance
+      .get<ScalingStatDistributionSoloRepository>();
 
   final page = signal(1);
   final distributions = signal(<ScalingStatDistributionEntity>[]);

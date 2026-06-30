@@ -13,27 +13,22 @@ class ItemExtendedCostDetailPage extends StatefulWidget {
   const ItemExtendedCostDetailPage({super.key, this.id});
 
   @override
-  State<ItemExtendedCostDetailPage> createState() => _ItemExtendedCostDetailPageState();
+  State<ItemExtendedCostDetailPage> createState() =>
+      _ItemExtendedCostDetailPageState();
 }
 
-class _ItemExtendedCostDetailPageState extends State<ItemExtendedCostDetailPage> {
+class _ItemExtendedCostDetailPageState
+    extends State<ItemExtendedCostDetailPage> {
   final viewModel = GetIt.instance.get<ItemExtendedCostDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('扩展价格'),
-    ];
+    var tabs = [Text('扩展价格')];
 
-    var tabContents = [
-      ItemExtendedCostView(entry: widget.id),
-    ];
+    var tabContents = [ItemExtendedCostView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

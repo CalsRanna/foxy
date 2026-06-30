@@ -14,10 +14,12 @@ class PlayerCreateInfoActionView extends StatefulWidget {
   const PlayerCreateInfoActionView({super.key, this.race, this.playerClass});
 
   @override
-  State<PlayerCreateInfoActionView> createState() => _PlayerCreateInfoActionViewState();
+  State<PlayerCreateInfoActionView> createState() =>
+      _PlayerCreateInfoActionViewState();
 }
 
-class _PlayerCreateInfoActionViewState extends State<PlayerCreateInfoActionView> {
+class _PlayerCreateInfoActionViewState
+    extends State<PlayerCreateInfoActionView> {
   final viewModel = GetIt.instance.get<PlayerCreateInfoActionViewModel>();
 
   @override
@@ -39,9 +41,11 @@ class _PlayerCreateInfoActionViewState extends State<PlayerCreateInfoActionView>
       child: Column(
         spacing: 16,
         children: [
-          Row(children: [
-            ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
-          ]),
+          Row(
+            children: [
+              ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
+            ],
+          ),
           Watch((_) => _buildTable()),
         ],
       ),
@@ -71,7 +75,8 @@ class _PlayerCreateInfoActionViewState extends State<PlayerCreateInfoActionView>
             1 => FixedTableSpanExtent(120),
             _ => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
           },
-          header: (context, index) => ShadTableCell.header(child: Text(headers[index])),
+          header: (context, index) =>
+              ShadTableCell.header(child: Text(headers[index])),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
@@ -99,12 +104,18 @@ class _PlayerCreateInfoActionViewState extends State<PlayerCreateInfoActionView>
 
   void _showCreateDialog() {
     viewModel.create();
-    showShadDialog(context: context, builder: (c) => _buildDialog(c, isEditing: false));
+    showShadDialog(
+      context: context,
+      builder: (c) => _buildDialog(c, isEditing: false),
+    );
   }
 
   void _showEditDialog(int index) {
     viewModel.edit(index);
-    showShadDialog(context: context, builder: (c) => _buildDialog(c, isEditing: true));
+    showShadDialog(
+      context: context,
+      builder: (c) => _buildDialog(c, isEditing: true),
+    );
   }
 
   Widget _buildDialog(BuildContext dialogContext, {required bool isEditing}) {
@@ -112,24 +123,53 @@ class _PlayerCreateInfoActionViewState extends State<PlayerCreateInfoActionView>
       title: Text(isEditing ? '编辑动作' : '新增动作'),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 400),
-        child: Column(mainAxisSize: MainAxisSize.min, spacing: 16, children: [
-          FormItem(label: '按钮', placeholder: 'button', child: FoxyNumberInput<int>(controller: viewModel.buttonController)),
-          FormItem(label: '动作', placeholder: 'action', child: FoxyNumberInput<int>(controller: viewModel.actionController)),
-          FormItem(label: '类型', placeholder: 'type', child: FoxyNumberInput<int>(controller: viewModel.typeController)),
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            ShadButton.outline(onPressed: () => Navigator.of(dialogContext).pop(), child: Text('取消')),
-            SizedBox(width: 8),
-            ShadButton(onPressed: () async {
-              if (isEditing) {
-                await viewModel.update(dialogContext);
-              } else {
-                await viewModel.save(dialogContext);
-              }
-              if (!dialogContext.mounted) return;
-              Navigator.of(dialogContext).pop();
-            }, child: Text(isEditing ? '更新' : '保存')),
-          ]),
-        ]),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 16,
+          children: [
+            FormItem(
+              label: '按钮',
+              placeholder: 'button',
+              child: FoxyNumberInput<int>(
+                controller: viewModel.buttonController,
+              ),
+            ),
+            FormItem(
+              label: '动作',
+              placeholder: 'action',
+              child: FoxyNumberInput<int>(
+                controller: viewModel.actionController,
+              ),
+            ),
+            FormItem(
+              label: '类型',
+              placeholder: 'type',
+              child: FoxyNumberInput<int>(controller: viewModel.typeController),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ShadButton.outline(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: Text('取消'),
+                ),
+                SizedBox(width: 8),
+                ShadButton(
+                  onPressed: () async {
+                    if (isEditing) {
+                      await viewModel.update(dialogContext);
+                    } else {
+                      await viewModel.save(dialogContext);
+                    }
+                    if (!dialogContext.mounted) return;
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

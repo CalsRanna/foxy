@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/page_text/page_text_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -64,22 +65,20 @@ class _PageTextViewState extends State<PageTextView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              spacing: 8,
-              children: [
-                Row(spacing: 8, children: [
+          FormSection(
+            title: '基本信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
                   Expanded(child: idInput),
                   Expanded(child: nextPageIdInput),
                   Expanded(child: verifiedBuildInput),
                   Expanded(child: SizedBox()),
-                ]),
-                Row(spacing: 8, children: [
-                  Expanded(flex: 4, child: textInput),
-                ]),
-              ],
-            ),
+                ],
+              ),
+              Row(spacing: 8, children: [Expanded(flex: 4, child: textInput)]),
+            ],
           ),
           Row(
             children: [
@@ -88,7 +87,10 @@ class _PageTextViewState extends State<PageTextView> {
                 child: Text('保存'),
               ),
               SizedBox(width: 8),
-              ShadButton.ghost(onPressed: () => viewModel.pop(), child: Text('取消')),
+              ShadButton.ghost(
+                onPressed: () => viewModel.pop(),
+                child: Text('取消'),
+              ),
             ],
           ),
         ],

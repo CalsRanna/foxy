@@ -3,6 +3,7 @@ import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
 import 'package:foxy/page/game_object/game_object_template_locale_name_selector.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
@@ -91,16 +92,12 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
     final displayIdInput = FormItem(
       label: '外观模型',
       placeholder: 'displayId',
-      child: FoxyNumberInput<int>(
-        controller: viewModel.displayIdController,
-      ),
+      child: FoxyNumberInput<int>(controller: viewModel.displayIdController),
     );
     final sizeInput = FormItem(
       label: '尺寸',
       placeholder: 'size',
-      child: FoxyNumberInput<double>(
-        controller: viewModel.sizeController,
-      ),
+      child: FoxyNumberInput<double>(controller: viewModel.sizeController),
     );
     final unk1Input = FormItem(
       controller: viewModel.unk1Controller,
@@ -167,38 +164,10 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('基础信息'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: basicRows),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('类型与外观'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: typeRows),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('动态数据'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: dataRows),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('AI与脚本'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: otherRows),
-          ),
+          FormSection(title: '基础信息', children: basicRows),
+          FormSection(title: '类型与外观', children: typeRows),
+          FormSection(title: '动态数据', children: dataRows),
+          FormSection(title: 'AI与脚本', children: otherRows),
           Row(
             children: [
               ShadButton(

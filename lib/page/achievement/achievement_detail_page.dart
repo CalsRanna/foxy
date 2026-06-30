@@ -21,19 +21,12 @@ class _AchievementDetailPageState extends State<AchievementDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('成就'),
-    ];
+    var tabs = [Text('成就')];
 
-    var tabContents = [
-      AchievementView(entry: widget.id),
-    ];
+    var tabContents = [AchievementView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

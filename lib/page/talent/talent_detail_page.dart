@@ -21,19 +21,12 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('天赋'),
-    ];
+    var tabs = [Text('天赋')];
 
-    var tabContents = [
-      TalentView(entry: widget.id),
-    ];
+    var tabContents = [TalentView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

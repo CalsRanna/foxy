@@ -21,19 +21,12 @@ class _CurrencyTypeDetailPageState extends State<CurrencyTypeDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('货币'),
-    ];
+    var tabs = [Text('货币')];
 
-    var tabContents = [
-      CurrencyTypeView(entry: widget.id),
-    ];
+    var tabContents = [CurrencyTypeView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

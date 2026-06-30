@@ -39,7 +39,9 @@ class CreatureTemplateAddonViewModel {
 
   Future<void> load() async {
     try {
-      final data = await _repository.getCreatureTemplateAddon(_pi(creatureIdController.text));
+      final data = await _repository.getCreatureTemplateAddon(
+        _pi(creatureIdController.text),
+      );
       if (data != null) {
         addon.value = data;
         _initSignals(data);

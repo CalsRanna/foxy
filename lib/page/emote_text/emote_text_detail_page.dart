@@ -22,19 +22,12 @@ class _EmoteTextDetailPageState extends State<EmoteTextDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('表情文本'),
-    ];
+    var tabs = [Text('表情文本')];
 
-    var tabContents = [
-      EmoteTextView(entry: widget.id),
-    ];
+    var tabContents = [EmoteTextView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(
@@ -44,7 +37,9 @@ class _EmoteTextDetailPageState extends State<EmoteTextDetailPage> {
   }
 
   Widget _buildHeader() {
-    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '表情文本 #${widget.id}' : '新建表情文本');
+    var name = widget.name?.isNotEmpty == true
+        ? widget.name!
+        : (widget.id != null ? '表情文本 #${widget.id}' : '新建表情文本');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

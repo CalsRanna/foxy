@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/talent/talent_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -203,122 +204,102 @@ class _TalentViewState extends State<TalentView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('基础信息'),
+          FormSection(
+            title: '基础信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: idInput),
+                  Expanded(child: tabIdInput),
+                  Expanded(child: tierIdInput),
+                  Expanded(child: columnIndexInput),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: flagsInput),
+                  Expanded(child: requiredSpellIdInput),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
           ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              spacing: 8,
-              children: [
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: idInput),
-                    Expanded(child: tabIdInput),
-                    Expanded(child: tierIdInput),
-                    Expanded(child: columnIndexInput),
-                  ],
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: flagsInput),
-                    Expanded(child: requiredSpellIdInput),
-                    Expanded(child: SizedBox()),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
-              ],
-            ),
+          FormSection(
+            title: '法术等级',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: spellRank0Input),
+                  Expanded(child: spellRank1Input),
+                  Expanded(child: spellRank2Input),
+                  Expanded(child: spellRank3Input),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: spellRank4Input),
+                  Expanded(child: spellRank5Input),
+                  Expanded(child: spellRank6Input),
+                  Expanded(child: spellRank7Input),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: spellRank8Input),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('法术等级'),
+          FormSection(
+            title: '前置天赋',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: prereqTalent0Input),
+                  Expanded(child: prereqTalent1Input),
+                  Expanded(child: prereqTalent2Input),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
           ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              spacing: 8,
-              children: [
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: spellRank0Input),
-                    Expanded(child: spellRank1Input),
-                    Expanded(child: spellRank2Input),
-                    Expanded(child: spellRank3Input),
-                  ],
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: spellRank4Input),
-                    Expanded(child: spellRank5Input),
-                    Expanded(child: spellRank6Input),
-                    Expanded(child: spellRank7Input),
-                  ],
-                ),
-                Row(
-                  spacing: 8,
-                  children: [
-                    Expanded(child: spellRank8Input),
-                    Expanded(child: SizedBox()),
-                    Expanded(child: SizedBox()),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
-              ],
-            ),
+          FormSection(
+            title: '前置等级',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: prereqRank0Input),
+                  Expanded(child: prereqRank1Input),
+                  Expanded(child: prereqRank2Input),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('前置天赋'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Row(
-              spacing: 8,
-              children: [
-                Expanded(child: prereqTalent0Input),
-                Expanded(child: prereqTalent1Input),
-                Expanded(child: prereqTalent2Input),
-                Expanded(child: SizedBox()),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('前置等级'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Row(
-              spacing: 8,
-              children: [
-                Expanded(child: prereqRank0Input),
-                Expanded(child: prereqRank1Input),
-                Expanded(child: prereqRank2Input),
-                Expanded(child: SizedBox()),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('分类掩码'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Row(
-              spacing: 8,
-              children: [
-                Expanded(child: categoryMask0Input),
-                Expanded(child: categoryMask1Input),
-                Expanded(child: SizedBox()),
-                Expanded(child: SizedBox()),
-              ],
-            ),
+          FormSection(
+            title: '分类掩码',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: categoryMask0Input),
+                  Expanded(child: categoryMask1Input),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
           ),
           // 保存 + 取消按钮
           Row(

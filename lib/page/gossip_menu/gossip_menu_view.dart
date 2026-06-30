@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
+import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -17,54 +19,54 @@ class _GossipMenuViewState extends State<GossipMenuView> {
 
   @override
   Widget build(BuildContext context) {
-    final menuIdLabel = const Text('编号 (MenuID)');
-    final menuIdInput = ShadInput(
-      controller: viewModel.menuIdController,
-      placeholder: const Text('MenuID'),
+    final menuIdInput = FormItem(
+      label: '编号',
+      child: ShadInput(
+        controller: viewModel.menuIdController,
+        placeholder: const Text('MenuID'),
+      ),
     );
-    final textIdLabel = const Text('文本编号 (TextID)');
-    final textIdInput = FoxyEntityPicker(
-      delegate: EntityPickerDelegates.npcText,
-      controller: viewModel.textIdController,
-      placeholder: 'TextID',
-    );
-
-    final form = ShadCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        spacing: 16,
-        children: [
-          Expanded(
-            child: Column(
-              spacing: 6,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [menuIdLabel, menuIdInput],
-            ),
-          ),
-          Expanded(
-            child: Column(
-              spacing: 6,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [textIdLabel, textIdInput],
-            ),
-          ),
-        ],
+    final textIdInput = FormItem(
+      label: '文本编号',
+      child: FoxyEntityPicker(
+        delegate: EntityPickerDelegates.npcText,
+        controller: viewModel.textIdController,
+        placeholder: 'TextID',
       ),
     );
 
-    final saveBtn = ShadButton(
-      onPressed: () => viewModel.save(context),
-      child: const Text('保存'),
-    );
-    final cancelBtn = ShadButton.ghost(
-      onPressed: viewModel.pop,
-      child: const Text('取消'),
-    );
-    final actions = Row(spacing: 8, children: [saveBtn, cancelBtn]);
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(spacing: 16, children: [form, actions]),
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(top: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: [
+          FormSection(
+            title: '基本信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: menuIdInput),
+                  Expanded(child: textIdInput),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              ShadButton(
+                onPressed: () => viewModel.save(context),
+                child: Text('保存'),
+              ),
+              const SizedBox(width: 8),
+              ShadButton.ghost(onPressed: viewModel.pop, child: Text('取消')),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

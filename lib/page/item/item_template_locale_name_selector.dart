@@ -61,11 +61,13 @@ class _ItemTemplateLocaleNameSelectorState
       },
       onSave: (entry, data) async {
         final locales = data
-            .map((d) => ItemTemplateLocaleEntity(
-                  id: entry,
-                  locale: d['locale'] ?? '',
-                  name: d['name'] ?? '',
-                ))
+            .map(
+              (d) => ItemTemplateLocaleEntity(
+                id: entry,
+                locale: d['locale'] ?? '',
+                name: d['name'] ?? '',
+              ),
+            )
             .toList();
         await _repository.replaceAll(entry, locales);
       },

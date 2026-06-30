@@ -86,7 +86,10 @@ class CreatureTemplateSpellViewModel {
 
     final spell = items.value[idx];
     try {
-      await _repository.copyCreatureTemplateSpell(spell.creatureID, spell.index);
+      await _repository.copyCreatureTemplateSpell(
+        spell.creatureID,
+        spell.index,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));

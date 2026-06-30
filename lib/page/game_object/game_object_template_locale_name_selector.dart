@@ -63,11 +63,13 @@ class _GameObjectTemplateLocaleNameSelectorState
       },
       onSave: (entry, data) async {
         final locales = data
-            .map((d) => GameObjectTemplateLocaleEntity(
-                  entry: entry,
-                  locale: d['locale'] ?? '',
-                  name: d['name'] ?? '',
-                ))
+            .map(
+              (d) => GameObjectTemplateLocaleEntity(
+                entry: entry,
+                locale: d['locale'] ?? '',
+                name: d['name'] ?? '',
+              ),
+            )
             .toList();
         await _repository.saveGameObjectTemplateLocales(entry, locales);
       },

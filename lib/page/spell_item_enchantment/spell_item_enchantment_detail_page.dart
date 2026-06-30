@@ -24,19 +24,12 @@ class _SpellItemEnchantmentDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('法术附魔'),
-    ];
+    var tabs = [Text('法术附魔')];
 
-    var tabContents = [
-      SpellItemEnchantmentView(entry: widget.id),
-    ];
+    var tabContents = [SpellItemEnchantmentView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(
@@ -46,7 +39,9 @@ class _SpellItemEnchantmentDetailPageState
   }
 
   Widget _buildHeader() {
-    var name = widget.name?.isNotEmpty == true ? widget.name! : (widget.id != null ? '法术附魔 #${widget.id}' : '新建法术附魔');
+    var name = widget.name?.isNotEmpty == true
+        ? widget.name!
+        : (widget.id != null ? '法术附魔 #${widget.id}' : '新建法术附魔');
     var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(name, style: textStyle);
     var edgeInsets = EdgeInsets.only(bottom: 12);

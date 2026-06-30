@@ -114,7 +114,9 @@ class _ReferenceLootTemplateListPageState
               ),
               2 => ShadTableCell(child: Text(template.reference.toString())),
               3 => ShadTableCell(child: Text('${template.chance}%')),
-              4 => ShadTableCell(child: Text(template.questRequired ? '是' : '否')),
+              4 => ShadTableCell(
+                child: Text(template.questRequired ? '是' : '否'),
+              ),
               5 => ShadTableCell(child: Text(template.minCount.toString())),
               6 => ShadTableCell(child: Text(template.maxCount.toString())),
               _ => ShadTableCell(child: SizedBox()),
@@ -161,13 +163,18 @@ class _ReferenceLootTemplateListPageState
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyReferenceLootTemplate(templates[row].entry, templates[row].item),
+                  onPressed: () => viewModel.copyReferenceLootTemplate(
+                    templates[row].entry,
+                    templates[row].item,
+                  ),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () =>
-                      viewModel.deleteReferenceLootTemplate(templates[row].entry, templates[row].item),
+                  onPressed: () => viewModel.deleteReferenceLootTemplate(
+                    templates[row].entry,
+                    templates[row].item,
+                  ),
                   child: Text('删除'),
                 ),
               ],

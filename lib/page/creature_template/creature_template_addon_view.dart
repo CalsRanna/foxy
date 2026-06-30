@@ -111,7 +111,8 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FormItem(
                         label: '可见距离类型',
                         child: FoxyNumberInput<int>(
-                          controller: viewModel.visibilityDistanceTypeController,
+                          controller:
+                              viewModel.visibilityDistanceTypeController,
                           placeholder: 'visibilityDistanceType',
                         ),
                       ),

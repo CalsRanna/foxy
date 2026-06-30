@@ -23,19 +23,12 @@ class _ScalingStatValueDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('缩放属性值'),
-    ];
+    var tabs = [Text('缩放属性值')];
 
-    var tabContents = [
-      ScalingStatValueView(entry: widget.id),
-    ];
+    var tabContents = [ScalingStatValueView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

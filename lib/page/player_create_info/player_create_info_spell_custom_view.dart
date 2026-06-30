@@ -11,13 +11,19 @@ import 'package:signals_flutter/signals_flutter.dart';
 class PlayerCreateInfoSpellCustomView extends StatefulWidget {
   final int? race;
   final int? playerClass;
-  const PlayerCreateInfoSpellCustomView({super.key, this.race, this.playerClass});
+  const PlayerCreateInfoSpellCustomView({
+    super.key,
+    this.race,
+    this.playerClass,
+  });
 
   @override
-  State<PlayerCreateInfoSpellCustomView> createState() => _PlayerCreateInfoSpellCustomViewState();
+  State<PlayerCreateInfoSpellCustomView> createState() =>
+      _PlayerCreateInfoSpellCustomViewState();
 }
 
-class _PlayerCreateInfoSpellCustomViewState extends State<PlayerCreateInfoSpellCustomView> {
+class _PlayerCreateInfoSpellCustomViewState
+    extends State<PlayerCreateInfoSpellCustomView> {
   final viewModel = GetIt.instance.get<PlayerCreateInfoSpellCustomViewModel>();
 
   @override
@@ -36,12 +42,17 @@ class _PlayerCreateInfoSpellCustomViewState extends State<PlayerCreateInfoSpellC
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 16),
-      child: Column(spacing: 16, children: [
-        Row(children: [
-          ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
-        ]),
-        Watch((_) => _buildTable()),
-      ]),
+      child: Column(
+        spacing: 16,
+        children: [
+          Row(
+            children: [
+              ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
+            ],
+          ),
+          Watch((_) => _buildTable()),
+        ],
+      ),
     );
   }
 
@@ -71,19 +82,19 @@ class _PlayerCreateInfoSpellCustomViewState extends State<PlayerCreateInfoSpellC
           header: (context, index) => ShadTableCell.header(
             child: Text(['种族掩码', '职业掩码', '法术', '备注'][index]),
           ),
-      onRowSecondaryTapDownWithDetails: (row, details) {
-        showFoxyContextMenu(
-          context: context,
-          position: details.globalPosition,
-          items: [
-            ShadContextMenuItem(
-              leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: () => viewModel.delete(context, spells[row]),
-              child: Text('删除'),
-            ),
-          ],
-        );
-      },
+          onRowSecondaryTapDownWithDetails: (row, details) {
+            showFoxyContextMenu(
+              context: context,
+              position: details.globalPosition,
+              items: [
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () => viewModel.delete(context, spells[row]),
+                  child: Text('删除'),
+                ),
+              ],
+            );
+          },
           rowCount: spells.length,
           shrinkWrap: true,
         );
@@ -93,26 +104,64 @@ class _PlayerCreateInfoSpellCustomViewState extends State<PlayerCreateInfoSpellC
 
   void _showCreateDialog() {
     viewModel.create();
-    showShadDialog(context: context, builder: (c) => ShadDialog(
-      title: Text('新增自定义法术'),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 400),
-        child: Column(mainAxisSize: MainAxisSize.min, spacing: 16, children: [
-          FormItem(label: '种族掩码', placeholder: 'racemask', child: FoxyNumberInput<int>(controller: viewModel.racemaskController)),
-          FormItem(label: '职业掩码', placeholder: 'classmask', child: FoxyNumberInput<int>(controller: viewModel.classmaskController)),
-          FormItem(label: '法术', placeholder: 'spell', child: FoxyNumberInput<int>(controller: viewModel.spellController)),
-          FormItem(controller: viewModel.noteController, label: '备注', placeholder: 'note'),
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            ShadButton.outline(onPressed: () => Navigator.of(c).pop(), child: Text('取消')),
-            SizedBox(width: 8),
-            ShadButton(onPressed: () async {
-              await viewModel.save(c);
-              if (!c.mounted) return;
-              Navigator.of(c).pop();
-            }, child: Text('保存')),
-          ]),
-        ]),
+    showShadDialog(
+      context: context,
+      builder: (c) => ShadDialog(
+        title: Text('新增自定义法术'),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 16,
+            children: [
+              FormItem(
+                label: '种族掩码',
+                placeholder: 'racemask',
+                child: FoxyNumberInput<int>(
+                  controller: viewModel.racemaskController,
+                ),
+              ),
+              FormItem(
+                label: '职业掩码',
+                placeholder: 'classmask',
+                child: FoxyNumberInput<int>(
+                  controller: viewModel.classmaskController,
+                ),
+              ),
+              FormItem(
+                label: '法术',
+                placeholder: 'spell',
+                child: FoxyNumberInput<int>(
+                  controller: viewModel.spellController,
+                ),
+              ),
+              FormItem(
+                controller: viewModel.noteController,
+                label: '备注',
+                placeholder: 'note',
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ShadButton.outline(
+                    onPressed: () => Navigator.of(c).pop(),
+                    child: Text('取消'),
+                  ),
+                  SizedBox(width: 8),
+                  ShadButton(
+                    onPressed: () async {
+                      await viewModel.save(c);
+                      if (!c.mounted) return;
+                      Navigator.of(c).pop();
+                    },
+                    child: Text('保存'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
-    ));
+    );
   }
 }

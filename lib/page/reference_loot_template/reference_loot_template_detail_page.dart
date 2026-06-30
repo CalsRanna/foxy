@@ -35,16 +35,15 @@ class _ReferenceLootTemplateDetailPageState
       children: [
         Padding(
           padding: EdgeInsets.only(bottom: 12),
-          child: Text(label,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          child: Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
         ),
         FoxyTab(
           tabs: [Text('关联掉落')],
           contents: [
-            ReferenceLootTemplateView(
-              entry: widget.entry,
-              item: widget.item,
-            ),
+            ReferenceLootTemplateView(entry: widget.entry, item: widget.item),
           ],
         ),
       ],

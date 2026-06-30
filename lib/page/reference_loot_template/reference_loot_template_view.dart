@@ -6,6 +6,7 @@ import 'package:foxy/page/reference_loot_template/reference_loot_template_detail
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -20,8 +21,7 @@ class ReferenceLootTemplateView extends StatefulWidget {
       _ReferenceLootTemplateViewState();
 }
 
-class _ReferenceLootTemplateViewState
-    extends State<ReferenceLootTemplateView> {
+class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
   final viewModel = GetIt.instance.get<ReferenceLootTemplateDetailViewModel>();
 
   @override
@@ -110,23 +110,32 @@ class _ReferenceLootTemplateViewState
     );
 
     final basicRows = [
-      Row(spacing: 8, children: [
-        Expanded(child: entryInput),
-        Expanded(child: itemInput),
-        Expanded(child: referenceInput),
-        Expanded(child: chanceInput),
-      ]),
-      Row(spacing: 8, children: [
-        Expanded(child: questRequiredInput),
-        Expanded(child: lootModeInput),
-        Expanded(child: groupIdInput),
-        Expanded(child: SizedBox()),
-      ]),
-      Row(spacing: 8, children: [
-        Expanded(child: minCountInput),
-        Expanded(child: maxCountInput),
-        Expanded(flex: 2, child: commentInput),
-      ]),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: entryInput),
+          Expanded(child: itemInput),
+          Expanded(child: referenceInput),
+          Expanded(child: chanceInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: questRequiredInput),
+          Expanded(child: lootModeInput),
+          Expanded(child: groupIdInput),
+          Expanded(child: SizedBox()),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: minCountInput),
+          Expanded(child: maxCountInput),
+          Expanded(flex: 2, child: commentInput),
+        ],
+      ),
     ];
 
     return SingleChildScrollView(
@@ -135,14 +144,7 @@ class _ReferenceLootTemplateViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('基本信息'),
-          ),
-          ShadCard(
-            padding: EdgeInsets.all(16),
-            child: Column(spacing: 8, children: basicRows),
-          ),
+          FormSection(title: '基本信息', children: basicRows),
           Row(
             children: [
               ShadButton(

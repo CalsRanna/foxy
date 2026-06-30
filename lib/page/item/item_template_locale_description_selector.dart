@@ -56,19 +56,18 @@ class _ItemTemplateLocaleDescriptionSelectorState
       onLoad: (entry) async {
         final locales = await _repository.getItemTemplateLocales(entry);
         return locales
-            .map((e) => {
-                  'locale': e.locale,
-                  'description': e.description,
-                })
+            .map((e) => {'locale': e.locale, 'description': e.description})
             .toList();
       },
       onSave: (entry, data) async {
         final locales = data
-            .map((d) => ItemTemplateLocaleEntity(
-                  id: entry,
-                  locale: d['locale'] ?? '',
-                  description: d['description'] ?? '',
-                ))
+            .map(
+              (d) => ItemTemplateLocaleEntity(
+                id: entry,
+                locale: d['locale'] ?? '',
+                description: d['description'] ?? '',
+              ),
+            )
             .toList();
         await _repository.replaceAll(entry, locales);
       },

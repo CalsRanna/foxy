@@ -13,27 +13,23 @@ class ScalingStatDistributionDetailPage extends StatefulWidget {
   const ScalingStatDistributionDetailPage({super.key, this.id});
 
   @override
-  State<ScalingStatDistributionDetailPage> createState() => _ScalingStatDistributionDetailPageState();
+  State<ScalingStatDistributionDetailPage> createState() =>
+      _ScalingStatDistributionDetailPageState();
 }
 
-class _ScalingStatDistributionDetailPageState extends State<ScalingStatDistributionDetailPage> {
-  final viewModel = GetIt.instance.get<ScalingStatDistributionDetailViewModel>();
+class _ScalingStatDistributionDetailPageState
+    extends State<ScalingStatDistributionDetailPage> {
+  final viewModel = GetIt.instance
+      .get<ScalingStatDistributionDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [
-      Text('属性缩放分布'),
-    ];
+    var tabs = [Text('属性缩放分布')];
 
-    var tabContents = [
-      ScalingStatDistributionView(entry: widget.id),
-    ];
+    var tabContents = [ScalingStatDistributionView(entry: widget.id)];
 
     var tabBar = Watch((_) {
-      return FoxyTab(
-        tabs: tabs,
-        contents: tabContents,
-      );
+      return FoxyTab(tabs: tabs, contents: tabContents);
     });
 
     return ListView(

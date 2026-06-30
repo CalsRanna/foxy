@@ -7,6 +7,8 @@ import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/flag_picker.dart';
+import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
@@ -151,13 +153,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       padding: const EdgeInsets.only(top: 16),
       child: ShadCard(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        child: Column(
-          spacing: 16,
-          children: [
-            toolbar,
-            table,
-          ],
-        ),
+        child: Column(spacing: 16, children: [toolbar, table]),
       ),
     );
   }
@@ -166,147 +162,159 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
     final iconOptions = kGossipOptionIcons;
     final typeOptions = kGossipOptionTypes;
 
-    final fields = <Widget>[
-      Row(
-        spacing: 16,
-        children: [
-          Expanded(child: _textField('编号', viewModel.optionIdController)),
-          Expanded(child: _textField('对话编号', viewModel.menuIdController)),
-        ],
-      ),
-      Row(
-        spacing: 16,
-        children: [
-          Expanded(
-            child: _labeled(
-              '类型',
-              FoxyShadSelect<int>(
-                controller: viewModel.optionTypeController,
-                options: typeOptions,
-                placeholder: const Text('OptionType'),
-              ),
-            ),
-          ),
-          Expanded(
-            child: _labeled(
-              'NPC标识',
-              FlagPicker(
-                signal: viewModel.optionNpcFlag,
-                flags: kNpcFlagOptions,
-                title: 'Npc标识编辑器',
-                placeholder: 'OptionNpcFlag',
-              ),
-            ),
-          ),
-          Expanded(
-            child: _labeled(
-              '图标',
-              FoxyShadSelect<int>(
-                controller: viewModel.optionIconController,
-                options: iconOptions,
-                placeholder: const Text('OptionIcon'),
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 16,
-        children: [
-          Expanded(child: _textField('文本', viewModel.optionTextController)),
-          Expanded(
-            child: _labeled(
-              '子选项编号',
-              FoxyEntityPicker(
-                delegate: EntityPickerDelegates.gossipMenu,
-                controller: viewModel.actionMenuIdController,
-                placeholder: 'ActionMenuID',
-              ),
-            ),
-          ),
-          Expanded(
-            child: _labeled(
-              '广播文本编号',
-              FoxyEntityPicker(
-                delegate: EntityPickerDelegates.broadcastText,
-                controller: viewModel.optionBroadcastTextIdController,
-                placeholder: 'broadcast_text_id',
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 16,
-        children: [
-          Expanded(child: _textField('BoxMoney', viewModel.boxMoneyController)),
-          Expanded(child: _textField('BoxCoded', viewModel.boxCodedController)),
-          Expanded(
-            child: _labeled(
-              'BoxBroadcastTextID',
-              FoxyEntityPicker(
-                delegate: EntityPickerDelegates.broadcastText,
-                controller: viewModel.boxBroadcastTextIdController,
-                placeholder: 'box_broadcast_text_id',
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 16,
-        children: [
-          Expanded(child: _textField('BoxText', viewModel.boxTextController)),
-          Expanded(
-            child: _textField('ActionPoiID', viewModel.actionPoiIdController),
-          ),
-          Expanded(
-            child: _textField(
-              'VerifiedBuild',
-              viewModel.verifiedBuildController,
-            ),
-          ),
-        ],
-      ),
-    ];
-
-    final form = ShadCard(
-      padding: const EdgeInsets.all(16),
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(top: 16),
       child: Column(
-        spacing: 12,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: fields,
+        spacing: 16,
+        children: [
+          FormSection(
+            title: '选项信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: _textField('编号', viewModel.optionIdController),
+                  ),
+                  Expanded(
+                    child: _textField('对话编号', viewModel.menuIdController),
+                  ),
+                  Expanded(child: SizedBox()),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: _labeled(
+                      '类型',
+                      FoxyShadSelect<int>(
+                        controller: viewModel.optionTypeController,
+                        options: typeOptions,
+                        placeholder: const Text('OptionType'),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: _labeled(
+                      'NPC标识',
+                      FlagPicker(
+                        signal: viewModel.optionNpcFlag,
+                        flags: kNpcFlagOptions,
+                        title: 'Npc标识编辑器',
+                        placeholder: 'OptionNpcFlag',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: _labeled(
+                      '图标',
+                      FoxyShadSelect<int>(
+                        controller: viewModel.optionIconController,
+                        options: iconOptions,
+                        placeholder: const Text('OptionIcon'),
+                      ),
+                    ),
+                  ),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: _textField('文本', viewModel.optionTextController),
+                  ),
+                  Expanded(
+                    child: _labeled(
+                      '子选项编号',
+                      FoxyEntityPicker(
+                        delegate: EntityPickerDelegates.gossipMenu,
+                        controller: viewModel.actionMenuIdController,
+                        placeholder: 'ActionMenuID',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: _labeled(
+                      '广播文本编号',
+                      FoxyEntityPicker(
+                        delegate: EntityPickerDelegates.broadcastText,
+                        controller: viewModel.optionBroadcastTextIdController,
+                        placeholder: 'broadcast_text_id',
+                      ),
+                    ),
+                  ),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: _textField('BoxMoney', viewModel.boxMoneyController),
+                  ),
+                  Expanded(
+                    child: _textField('BoxCoded', viewModel.boxCodedController),
+                  ),
+                  Expanded(
+                    child: _labeled(
+                      'BoxBroadcastTextID',
+                      FoxyEntityPicker(
+                        delegate: EntityPickerDelegates.broadcastText,
+                        controller: viewModel.boxBroadcastTextIdController,
+                        placeholder: 'box_broadcast_text_id',
+                      ),
+                    ),
+                  ),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: _textField('BoxText', viewModel.boxTextController),
+                  ),
+                  Expanded(
+                    child: _textField(
+                      'ActionPoiID',
+                      viewModel.actionPoiIdController,
+                    ),
+                  ),
+                  Expanded(
+                    child: _textField(
+                      'VerifiedBuild',
+                      viewModel.verifiedBuildController,
+                    ),
+                  ),
+                  Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              ShadButton(onPressed: viewModel.save, child: const Text('保存')),
+              const SizedBox(width: 8),
+              ShadButton.ghost(onPressed: viewModel.cancel, child: Text('取消')),
+            ],
+          ),
+        ],
       ),
-    );
-
-    final saveBtn = ShadButton(
-      onPressed: viewModel.save,
-      child: const Text('保存'),
-    );
-    final cancelBtn = ShadButton.outline(
-      onPressed: viewModel.cancel,
-      child: Text('返回'),
-    );
-    final actions = ShadCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(spacing: 8, children: [saveBtn, cancelBtn]),
-    );
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(spacing: 16, children: [form, actions]),
     );
   }
 
   Widget _textField(String label, TextEditingController c) {
-    return _labeled(label, ShadInput(controller: c, placeholder: Text(label)));
+    return FormItem(
+      label: label,
+      child: ShadInput(controller: c, placeholder: Text(label)),
+    );
   }
 
   Widget _labeled(String label, Widget child) {
-    return Column(
-      spacing: 6,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Text(label), child],
-    );
+    return FormItem(label: label, child: child);
   }
 }

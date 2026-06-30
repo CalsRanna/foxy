@@ -247,17 +247,29 @@ class QuestTemplateDetailViewModel {
     itemDropQuantity4Controller.text = _fmt(t.itemDropQuantity4);
 
     rewardChoiceItemId1Controller.text = _fmt(t.rewardChoiceItemId1);
-    rewardChoiceItemQuantity1Controller.text = _fmt(t.rewardChoiceItemQuantity1);
+    rewardChoiceItemQuantity1Controller.text = _fmt(
+      t.rewardChoiceItemQuantity1,
+    );
     rewardChoiceItemId2Controller.text = _fmt(t.rewardChoiceItemId2);
-    rewardChoiceItemQuantity2Controller.text = _fmt(t.rewardChoiceItemQuantity2);
+    rewardChoiceItemQuantity2Controller.text = _fmt(
+      t.rewardChoiceItemQuantity2,
+    );
     rewardChoiceItemId3Controller.text = _fmt(t.rewardChoiceItemId3);
-    rewardChoiceItemQuantity3Controller.text = _fmt(t.rewardChoiceItemQuantity3);
+    rewardChoiceItemQuantity3Controller.text = _fmt(
+      t.rewardChoiceItemQuantity3,
+    );
     rewardChoiceItemId4Controller.text = _fmt(t.rewardChoiceItemId4);
-    rewardChoiceItemQuantity4Controller.text = _fmt(t.rewardChoiceItemQuantity4);
+    rewardChoiceItemQuantity4Controller.text = _fmt(
+      t.rewardChoiceItemQuantity4,
+    );
     rewardChoiceItemId5Controller.text = _fmt(t.rewardChoiceItemId5);
-    rewardChoiceItemQuantity5Controller.text = _fmt(t.rewardChoiceItemQuantity5);
+    rewardChoiceItemQuantity5Controller.text = _fmt(
+      t.rewardChoiceItemQuantity5,
+    );
     rewardChoiceItemId6Controller.text = _fmt(t.rewardChoiceItemId6);
-    rewardChoiceItemQuantity6Controller.text = _fmt(t.rewardChoiceItemQuantity6);
+    rewardChoiceItemQuantity6Controller.text = _fmt(
+      t.rewardChoiceItemQuantity6,
+    );
 
     poiContinentController.text = _fmt(t.poiContinent);
     poiXController.text = _fmt(t.poiX);
@@ -439,7 +451,6 @@ class QuestTemplateDetailViewModel {
     if (value == null) throw Exception('输入值 "$text" 不是有效数字');
     return value;
   }
-
 
   void _logActivity(ActivityActionType action, QuestTemplateEntity t) {
     final log = ActivityLogEntity(

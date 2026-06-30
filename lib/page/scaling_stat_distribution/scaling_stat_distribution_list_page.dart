@@ -14,10 +14,12 @@ class ScalingStatDistributionListPage extends StatefulWidget {
   const ScalingStatDistributionListPage({super.key});
 
   @override
-  State<ScalingStatDistributionListPage> createState() => _ScalingStatDistributionListPageState();
+  State<ScalingStatDistributionListPage> createState() =>
+      _ScalingStatDistributionListPageState();
 }
 
-class _ScalingStatDistributionListPageState extends State<ScalingStatDistributionListPage> {
+class _ScalingStatDistributionListPageState
+    extends State<ScalingStatDistributionListPage> {
   final viewModel = GetIt.instance.get<ScalingStatDistributionListViewModel>();
 
   @override
@@ -117,9 +119,7 @@ class _ScalingStatDistributionListPageState extends State<ScalingStatDistributio
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(
-              id: items[row].id,
-            );
+            viewModel.navigateToDetail(id: items[row].id);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -129,9 +129,7 @@ class _ScalingStatDistributionListPageState extends State<ScalingStatDistributio
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(
-                      id: items[row].id,
-                    );
+                    viewModel.navigateToDetail(id: items[row].id);
                   },
                   child: Text('编辑'),
                 ),
