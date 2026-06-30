@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/currency_type/currency_type_detail_view_model.dart';
 import 'package:foxy/page/currency_type/currency_type_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -17,8 +15,6 @@ class CurrencyTypeDetailPage extends StatefulWidget {
 }
 
 class _CurrencyTypeDetailPageState extends State<CurrencyTypeDetailPage> {
-  final viewModel = GetIt.instance.get<CurrencyTypeDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('货币')];

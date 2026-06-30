@@ -21,6 +21,12 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
   final viewModel = GetIt.instance.get<GemPropertyListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('宝石属性列表'),

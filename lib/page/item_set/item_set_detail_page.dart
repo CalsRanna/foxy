@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/item_set/item_set_detail_view_model.dart';
 import 'package:foxy/page/item_set/item_set_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -17,8 +15,6 @@ class ItemSetDetailPage extends StatefulWidget {
 }
 
 class _ItemSetDetailPageState extends State<ItemSetDetailPage> {
-  final viewModel = GetIt.instance.get<ItemSetDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('套装')];

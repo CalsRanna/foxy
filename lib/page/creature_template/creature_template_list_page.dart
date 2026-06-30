@@ -22,6 +22,12 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
   final viewModel = GetIt.instance.get<CreatureTemplateListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('生物列表'),

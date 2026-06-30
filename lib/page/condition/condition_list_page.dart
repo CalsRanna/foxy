@@ -21,6 +21,12 @@ class _ConditionListPageState extends State<ConditionListPage> {
   final viewModel = GetIt.instance.get<ConditionListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),

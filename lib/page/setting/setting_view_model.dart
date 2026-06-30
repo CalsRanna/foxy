@@ -5,31 +5,20 @@ import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
-import 'package:signals/signals.dart';
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
 
 class SettingViewModel {
-  final localeEnabled = signal(false);
-  final hasLocaleTables = signal(false);
+  FoxyViewModel get _foxyViewModel => GetIt.instance.get<FoxyViewModel>();
 
   Future<void> initSignals() async {
-    try {
-      var foxyViewModel = GetIt.instance.get<FoxyViewModel>();
-      hasLocaleTables.value = foxyViewModel.hasLocaleTables;
-      localeEnabled.value = foxyViewModel.localeEnabled;
-    } catch (e) {
-      LoggerUtil.instance.e('加载设置失败: $e');
-      DialogUtil.instance.error('加载设置失败: $e');
-    }
+    // FoxyViewModel 的 signal 由 bootstrap 阶段填充，无需额外加载。
   }
 
   Future<void> setLocaleEnabled(bool value) async {
     try {
-      if (!hasLocaleTables.value && value) return;
-      localeEnabled.value = value;
-      var foxyViewModel = GetIt.instance.get<FoxyViewModel>();
-      foxyViewModel.localeEnabled = value;
+      if (!_foxyViewModel.hasLocaleTables.value && value) return;
+      _foxyViewModel.localeEnabled.value = value;
       await _updateConfig();
     } catch (e) {
       LoggerUtil.instance.e('设置本地化开关失败: $e');
@@ -46,7 +35,7 @@ class SettingViewModel {
       var content = await file.readAsString();
       var yaml = loadYaml(content) as Map;
       var config = Map<String, dynamic>.from(yaml);
-      config['locale_enabled'] = localeEnabled.value;
+      config['locale_enabled'] = _foxyViewModel.localeEnabled.value;
       var editor = YamlEditor('');
       editor.update([], config);
       await file.writeAsString(editor.toString());

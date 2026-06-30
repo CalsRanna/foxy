@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/quest_info/quest_info_detail_view_model.dart';
 import 'package:foxy/page/quest_info/quest_info_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -18,8 +16,6 @@ class QuestInfoDetailPage extends StatefulWidget {
 }
 
 class _QuestInfoDetailPageState extends State<QuestInfoDetailPage> {
-  final viewModel = GetIt.instance.get<QuestInfoDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('任务信息')];

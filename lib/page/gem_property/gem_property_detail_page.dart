@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/gem_property/gem_property_detail_view_model.dart';
 import 'package:foxy/page/gem_property/gem_property_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -17,8 +15,6 @@ class GemPropertyDetailPage extends StatefulWidget {
 }
 
 class _GemPropertyDetailPageState extends State<GemPropertyDetailPage> {
-  final viewModel = GetIt.instance.get<GemPropertyDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('宝石属性')];

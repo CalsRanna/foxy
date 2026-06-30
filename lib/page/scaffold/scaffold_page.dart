@@ -5,11 +5,11 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/page/scaffold/dbc_import_view_model.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/view_model/feature_view_model.dart';
 import 'package:foxy/widget/window_button.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -48,9 +48,9 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
 class _NavigateSettingIntent extends Intent {}
 
 class _ScaffoldPageState extends State<ScaffoldPage> {
-  final viewModel = GetIt.instance.get<ScaffoldViewModel>();
   final dbcImportViewModel = GetIt.instance.get<DbcImportViewModel>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
+  final featureViewModel = GetIt.instance.get<FeatureViewModel>();
 
   @override
   void initState() {
@@ -179,8 +179,20 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     );
   }
 
+  List<RouterMenu> get _menus {
+    final pinned = featureViewModel.pinnedFeatures
+        .map((f) => RouterMenu.values.byName(f.routerMenu))
+        .toList();
+    return [
+      RouterMenu.dashboard,
+      ...pinned,
+      RouterMenu.more,
+      RouterMenu.setting,
+    ];
+  }
+
   Widget _buildLeftBar() {
-    var iconButtons = viewModel.menus.map(_buildLeftBarTile).toList();
+    var iconButtons = _menus.map(_buildLeftBarTile).toList();
     var children = [
       const SizedBox(height: 16),
       Text('FOXY', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
@@ -195,7 +207,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
 
   Widget _buildLeftBarTile(RouterMenu menu) {
     final colorScheme = Theme.of(context).colorScheme;
-    final active = viewModel.activeMenu == menu;
+    final active = routerFacade.activeMenu == menu;
     final backgroundColor = active ? colorScheme.primary : null;
     final iconColor = active ? Colors.white : colorScheme.onSurface;
     var padding = Padding(
@@ -203,7 +215,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       child: Icon(menu.icon, size: 16, color: iconColor),
     );
     var iconButton = IconButton(
-      onPressed: () => viewModel.navigatePage(menu),
+      onPressed: () => routerFacade.navigateToMenu(menu),
       icon: padding,
       isSelected: active,
       style: ButtonStyle(

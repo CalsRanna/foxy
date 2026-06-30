@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -15,6 +16,7 @@ class BasicSettingPage extends StatefulWidget {
 
 class _BasicSettingPageState extends State<BasicSettingPage> {
   final viewModel = GetIt.instance.get<SettingViewModel>();
+  final foxyViewModel = GetIt.instance.get<FoxyViewModel>();
 
   @override
   void initState() {
@@ -49,8 +51,8 @@ class _BasicSettingPageState extends State<BasicSettingPage> {
 
   Widget _buildLocaleSwitch() {
     return Watch((_) {
-      final hasLocaleTables = viewModel.hasLocaleTables.value;
-      final localeEnabled = viewModel.localeEnabled.value;
+      final hasLocaleTables = foxyViewModel.hasLocaleTables.value;
+      final localeEnabled = foxyViewModel.localeEnabled.value;
 
       return _SettingItem(
         title: '启用多语言支持',

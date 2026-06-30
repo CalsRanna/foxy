@@ -21,6 +21,12 @@ class _TextContentListPageState extends State<TextContentListPage> {
   final viewModel = GetIt.instance.get<PageTextListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('页面文本列表'),

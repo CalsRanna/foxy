@@ -1,12 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
 import 'package:foxy/page/game_object/game_object_template_view.dart';
 import 'package:foxy/page/game_object/game_object_template_addon_view.dart';
 import 'package:foxy/page/game_object/game_object_quest_item_view.dart';
 import 'package:foxy/page/game_object/game_object_loot_template_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -23,8 +21,6 @@ class GameObjectTemplateDetailPage extends StatefulWidget {
 
 class _GameObjectTemplateDetailPageState
     extends State<GameObjectTemplateDetailPage> {
-  final viewModel = GetIt.instance.get<GameObjectTemplateDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('游戏对象模板'), Text('模版补充'), Text('任务物品'), Text('物品掉落')];

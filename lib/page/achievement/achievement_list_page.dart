@@ -21,6 +21,12 @@ class _AchievementListPageState extends State<AchievementListPage> {
   final viewModel = GetIt.instance.get<AchievementListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('成就列表'),

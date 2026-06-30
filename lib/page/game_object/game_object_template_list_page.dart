@@ -23,6 +23,12 @@ class _GameObjectTemplateListPageState
   final viewModel = GetIt.instance.get<GameObjectTemplateListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('游戏对象列表'),

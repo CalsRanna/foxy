@@ -22,6 +22,12 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
   final viewModel = GetIt.instance.get<ItemExtendedCostListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('扩展价格列表'),

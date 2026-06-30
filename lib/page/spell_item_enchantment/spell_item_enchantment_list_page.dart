@@ -23,6 +23,12 @@ class _SpellItemEnchantmentListPageState
   final viewModel = GetIt.instance.get<SpellItemEnchantmentListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('法术附魔列表'),

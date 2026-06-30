@@ -21,6 +21,12 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
   final viewModel = GetIt.instance.get<EmoteTextListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('表情文本列表'),

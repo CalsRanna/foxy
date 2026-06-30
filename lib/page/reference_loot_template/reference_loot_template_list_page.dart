@@ -24,6 +24,12 @@ class _ReferenceLootTemplateListPageState
   final viewModel = GetIt.instance.get<ReferenceLootTemplateListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('关联掉落列表'),

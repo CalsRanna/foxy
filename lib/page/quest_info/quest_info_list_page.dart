@@ -21,6 +21,12 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
   final viewModel = GetIt.instance.get<QuestInfoListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('任务信息列表'),

@@ -27,6 +27,12 @@ class _MorePageState extends State<MorePage> {
   }
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('更多功能'),

@@ -18,6 +18,12 @@ class _GossipMenuViewState extends State<GossipMenuView> {
   final viewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final menuIdInput = FormItem(
       label: '编号',

@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/quest_sort/quest_sort_detail_view_model.dart';
 import 'package:foxy/page/quest_sort/quest_sort_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
@@ -18,8 +16,6 @@ class QuestSortDetailPage extends StatefulWidget {
 }
 
 class _QuestSortDetailPageState extends State<QuestSortDetailPage> {
-  final viewModel = GetIt.instance.get<QuestSortDetailViewModel>();
-
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('任务排序')];

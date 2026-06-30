@@ -21,6 +21,12 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
   final viewModel = GetIt.instance.get<AreaTableListViewModel>();
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('区域列表'),
