@@ -72,6 +72,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       builder: (context, constraints) {
         final width = constraints.maxWidth - (80 + 120 + 120 + 120 + 120);
         return FoxyShadTable(
+          shrinkWrap: true,
           columnCount: headers.length,
           rowCount: options.length,
           pinnedRowCount: 1,
@@ -154,7 +155,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
           spacing: 16,
           children: [
             toolbar,
-            SizedBox(height: 400, child: table),
+            table,
           ],
         ),
       ),

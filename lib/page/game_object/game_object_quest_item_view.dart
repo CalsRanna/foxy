@@ -79,49 +79,48 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
             ),
           ],
         ),
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              var width = constraints.maxWidth - 240;
-              return FoxyShadTable(
-                builder: (context, vicinity) {
-                  final item = items[vicinity.row];
-                  final nameStyle = TextStyle(
-                    color: _getQualityColor(item.itemQuality),
-                  );
-                  return switch (vicinity.column) {
-                    0 => ShadTableCell(child: Text(item.idx.toString())),
-                    1 => ShadTableCell(
-                      child: Text(item.displayName, style: nameStyle),
-                    ),
-                    2 => ShadTableCell(
-                      child: Text(item.verifiedBuild.toString()),
-                    ),
-                    _ => ShadTableCell(child: SizedBox()),
-                  };
-                },
-                columnCount: headers.length,
-                columnSpanExtent: (index) {
-                  return switch (index) {
-                    0 => FixedTableSpanExtent(120),
-                    1 => FixedTableSpanExtent(width),
-                    2 => FixedTableSpanExtent(120),
-                    _ => null,
-                  };
-                },
-                header: (context, index) {
-                  return ShadTableCell.header(child: Text(headers[index]));
-                },
-                onRowTap: (row) => viewModel.selectRow(row),
-                onRowDoubleTap: (row) {
-                  viewModel.selectRow(row);
-                  viewModel.edit(context);
-                },
-                pinnedRowCount: 1,
-                rowCount: items.length,
-              );
-            },
-          ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            var width = constraints.maxWidth - 240;
+            return FoxyShadTable(
+              shrinkWrap: true,
+              builder: (context, vicinity) {
+                final item = items[vicinity.row];
+                final nameStyle = TextStyle(
+                  color: _getQualityColor(item.itemQuality),
+                );
+                return switch (vicinity.column) {
+                  0 => ShadTableCell(child: Text(item.idx.toString())),
+                  1 => ShadTableCell(
+                    child: Text(item.displayName, style: nameStyle),
+                  ),
+                  2 => ShadTableCell(
+                    child: Text(item.verifiedBuild.toString()),
+                  ),
+                  _ => ShadTableCell(child: SizedBox()),
+                };
+              },
+              columnCount: headers.length,
+              columnSpanExtent: (index) {
+                return switch (index) {
+                  0 => FixedTableSpanExtent(120),
+                  1 => FixedTableSpanExtent(width),
+                  2 => FixedTableSpanExtent(120),
+                  _ => null,
+                };
+              },
+              header: (context, index) {
+                return ShadTableCell.header(child: Text(headers[index]));
+              },
+              onRowTap: (row) => viewModel.selectRow(row),
+              onRowDoubleTap: (row) {
+                viewModel.selectRow(row);
+                viewModel.edit(context);
+              },
+              pinnedRowCount: 1,
+              rowCount: items.length,
+            );
+          },
         ),
       ],
     );
