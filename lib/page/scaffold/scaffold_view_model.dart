@@ -19,11 +19,13 @@ class ScaffoldViewModel {
 
   final allFeatures = signal<List<FeatureEntity>>([]);
 
-  List<FeatureEntity> get pinnedFeatures =>
-      allFeatures.value.where((f) => f.isPinned).toList();
+  late final pinnedFeatures = computed(
+    () => allFeatures.value.where((f) => f.isPinned).toList(),
+  );
 
-  List<FeatureEntity> get favoriteFeatures =>
-      allFeatures.value.where((f) => f.isFavorite).toList();
+  late final favoriteFeatures = computed(
+    () => allFeatures.value.where((f) => f.isFavorite).toList(),
+  );
 
   Future<void> loadFeatures() async {
     allFeatures.value = await _featureRepository.getFeatures();

@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/widget/card.dart';
 import 'package:foxy/widget/feature_card.dart';
-import 'package:get_it/get_it.dart';
 
+/// 仪表盘「常用功能」网格。仅接收已过滤的收藏功能列表，不依赖任何
+/// ViewModel；过滤与响应式由 [DashboardViewModel] 侧的 `computed` 负责。
 class FrequentModuleComponent extends StatelessWidget {
+  final List<FeatureEntity> features;
   final void Function(RouterMenu menu)? onMenuTap;
 
-  const FrequentModuleComponent({super.key, this.onMenuTap});
+  const FrequentModuleComponent({
+    super.key,
+    required this.features,
+    this.onMenuTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     const textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
     const title = Text('常用功能', style: textStyle);
-    final scaffoldViewModel = GetIt.instance.get<ScaffoldViewModel>();
-    final features = scaffoldViewModel.favoriteFeatures;
-    final theme = Theme.of(context);
-    final outline = theme.colorScheme.outline.withValues(alpha: 0.2);
-    final kTotalColumns = 3;
+    const kTotalColumns = 3;
 
     if (features.isEmpty) {
       return FoxyCard(
@@ -33,6 +35,8 @@ class FrequentModuleComponent extends StatelessWidget {
       );
     }
 
+    final theme = Theme.of(context);
+    final outline = theme.colorScheme.outline.withValues(alpha: 0.2);
     final totalRows = (features.length + kTotalColumns - 1) ~/ kTotalColumns;
 
     final tiles = features.map((feature) {
@@ -63,7 +67,6 @@ class FrequentModuleComponent extends StatelessWidget {
       );
     }).toList();
 
-    // 按每行 3 个分组，不足的用空白占位
     final rows = <Widget>[];
     for (var i = 0; i < tiles.length; i += kTotalColumns) {
       final end = (i + kTotalColumns > tiles.length)
