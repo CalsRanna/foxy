@@ -17,7 +17,7 @@ class Trend extends StatelessWidget {
       return FoxyCard(
         title: const Text('动态'),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24),
+          padding: const EdgeInsets.symmetric(vertical: 80),
           child: Center(
             child: Text('暂无动态', style: TextStyle(color: mutedColor)),
           ),

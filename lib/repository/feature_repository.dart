@@ -6,7 +6,8 @@ class FeatureRepository with RepositoryMixin {
     final rows = await laconic
         .table('foxy.features')
         .select(['*'])
-        .orderBy('sort_order')
+        .orderBy('category')
+        .orderBy('router_menu')
         .get();
 
     return rows.map((row) => FeatureEntity.fromJson(row.toMap())).toList();

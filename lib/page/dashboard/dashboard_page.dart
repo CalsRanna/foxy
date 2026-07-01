@@ -37,7 +37,7 @@ class _DashboardPageRoute extends State<DashboardPage> {
 
   Widget _buildWorkspace() {
     final leftChildren = [
-      FrequentModuleComponent(onMenuTap: viewModel.navigateToMenu),
+      Watch((_) => FrequentModuleComponent(onMenuTap: viewModel.navigateToMenu)),
       SizedBox(height: 16),
       Watch((_) => Trend(activities: viewModel.recentActivities.value)),
     ];
