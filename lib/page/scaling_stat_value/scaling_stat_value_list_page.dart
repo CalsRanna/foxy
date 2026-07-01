@@ -109,7 +109,7 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
     ];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 120;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
@@ -129,8 +129,7 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(120),
-              _ => FixedTableSpanExtent(width / 6),
+              _ => FixedTableSpanExtent(width / 7),
             };
           },
           header: (context, index) {

@@ -108,7 +108,7 @@ class _QuestFactionRewardListPageState
     ];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 120;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = rewards[vicinity.row];

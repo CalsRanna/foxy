@@ -117,7 +117,7 @@ class _ItemSetListPageState extends State<ItemSetListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 3),
+              1 => FixedTableSpanExtent(width),
               2 => FixedTableSpanExtent(120),
               3 => FixedTableSpanExtent(120),
               _ => null,

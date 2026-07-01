@@ -101,7 +101,7 @@ class _SpellItemEnchantmentListPageState
     final headers = ['编号', '名称', '充能', '效果0', '效果1', '效果2'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 600;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
@@ -119,7 +119,7 @@ class _SpellItemEnchantmentListPageState
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 2),
+              1 => FixedTableSpanExtent(width),
               2 => FixedTableSpanExtent(120),
               3 => FixedTableSpanExtent(120),
               4 => FixedTableSpanExtent(120),

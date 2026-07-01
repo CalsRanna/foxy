@@ -99,7 +99,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
     final headers = ['编号', '名称', '大陆', '最低海拔', '区域音乐', '探索等级'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 480;
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= areas.length) {
@@ -121,7 +121,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(width / 2),
-              2 => FixedTableSpanExtent(120),
+              2 => FixedTableSpanExtent(width / 2),
               3 => FixedTableSpanExtent(120),
               4 => FixedTableSpanExtent(120),
               5 => FixedTableSpanExtent(120),

@@ -99,7 +99,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
     final headers = ['编号', '名称', '表情编号'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 240;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = emotes[vicinity.row];
@@ -114,7 +114,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 2),
+              1 => FixedTableSpanExtent(width),
               2 => FixedTableSpanExtent(120),
               _ => null,
             };

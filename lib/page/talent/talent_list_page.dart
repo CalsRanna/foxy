@@ -94,7 +94,7 @@ class _TalentListPageState extends State<TalentListPage> {
     final headers = ['编号', '标签页', '层', '列', '法术'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 480;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
@@ -111,10 +111,10 @@ class _TalentListPageState extends State<TalentListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 4),
+              1 => FixedTableSpanExtent(120),
               2 => FixedTableSpanExtent(120),
               3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(width),
               _ => null,
             };
           },
