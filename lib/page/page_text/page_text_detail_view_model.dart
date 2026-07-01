@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -21,16 +22,7 @@ class PageTextDetailViewModel {
 
   final page = signal<PageTextEntity?>(null);
   final locales = signal<List<PageTextLocaleEntity>>([]);
-  String _fmt(num v) {
-    if (v is double) {
-      final s = v.toString();
-      if (s.contains('.') && s.endsWith('0')) {
-        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-      }
-      return s;
-    }
-    return v.toString();
-  }
+  String _fmt(num v) => formatNum(v);
 
   int _pi(String t) => int.tryParse(t) ?? 0;
 

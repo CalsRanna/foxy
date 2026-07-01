@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -17,16 +18,7 @@ class SpellCustomAttrViewModel {
 
   final customAttr = signal(SpellCustomAttrEntity());
 
-  String _fmt(num v) {
-    if (v is double) {
-      final s = v.toString();
-      if (s.contains('.') && s.endsWith('0')) {
-        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-      }
-      return s;
-    }
-    return v.toString();
-  }
+  String _fmt(num v) => formatNum(v);
 
   int _pi(String t) => int.tryParse(t) ?? 0;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -30,16 +31,7 @@ class ItemLootTemplateViewModel {
 
   final repository = LootTemplateRepository(LootTableType.item);
 
-  String _fmt(num v) {
-    if (v is double) {
-      final s = v.toString();
-      if (s.contains('.') && s.endsWith('0')) {
-        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-      }
-      return s;
-    }
-    return v.toString();
-  }
+  String _fmt(num v) => formatNum(v);
 
   int _pi(String t) => int.tryParse(t) ?? 0;
   double _pd(String t) => double.tryParse(t) ?? 0.0;

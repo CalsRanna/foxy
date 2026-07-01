@@ -4,6 +4,7 @@ import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/page/spell/spell_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/game_asset_icon.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:get_it/get_it.dart';
@@ -80,18 +81,11 @@ class _SpellListPageState extends State<SpellListPage> {
   }
 
   Widget _buildIconAndName(BriefSpellEntity spell) {
-    final icon = spell.textureFilename
-        .toLowerCase()
-        .replaceAll('\\', '/')
-        .replaceAll('interface/icons', 'asset/icon');
-    var image = Image.asset(
-      '$icon.png',
-      height: 40,
-      width: 40,
-      fit: BoxFit.cover,
-    );
     var children = [
-      ClipRRect(borderRadius: BorderRadius.circular(6), child: image),
+      ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: GameAssetIcon(rawPath: spell.textureFilename),
+      ),
       Expanded(
         child: Text(
           spell.displayName,

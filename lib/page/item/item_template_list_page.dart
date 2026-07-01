@@ -6,6 +6,7 @@ import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/page/item/item_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/game_asset_icon.dart';
 import 'package:foxy/widget/header.dart';
 import 'package:foxy/widget/pagination.dart';
 import 'package:get_it/get_it.dart';
@@ -91,22 +92,11 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   Widget _buildIconAndName(BriefItemTemplateEntity item, Color qualityColor) {
-    var icon = item.inventoryIcon
-        .toString()
-        .toLowerCase()
-        .replaceAll('\\', '/')
-        .replaceAll('interface/icons', 'asset/icon');
-    if (!icon.startsWith('asset/icon/')) {
-      icon = 'asset/icon/$icon';
-    }
-    var image = Image.asset(
-      '$icon.png',
-      height: 40,
-      width: 40,
-      fit: BoxFit.cover,
-    );
     var children = [
-      ClipRRect(borderRadius: BorderRadius.circular(6), child: image),
+      ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: GameAssetIcon(rawPath: item.inventoryIcon),
+      ),
       const SizedBox(width: 8),
       Expanded(
         child: Text(
