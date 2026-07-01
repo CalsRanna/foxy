@@ -175,6 +175,7 @@ import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/event_bus.dart';
 import 'package:get_it/get_it.dart';
 
 class DI {
@@ -183,6 +184,7 @@ class DI {
   static void ensureInitialized() {
     _instance.registerSingleton(RouterFacade());
     _instance.registerSingleton(FoxyViewModel());
+    _instance.registerSingleton(EventBus());
     _registerRepositories();
     _registerViewModels();
   }
