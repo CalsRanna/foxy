@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/event/activity_logged_event.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/util/event_bus.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
@@ -17,7 +19,8 @@ class DashboardViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final scaffoldViewModel = GetIt.instance.get<ScaffoldViewModel>();
   final _activityRepo = GetIt.instance.get<ActivityLogRepository>();
-  StreamSubscription<ActivityLogEntity>? _activitySub;
+  final _eventBus = GetIt.instance.get<EventBus>();
+  StreamSubscription<ActivityLoggedEvent>? _activitySub;
 
   final coreVersion = signal('');
   final coreRevision = signal('');
@@ -46,7 +49,9 @@ class DashboardViewModel {
       softwareVersion.value =
           '${packageInfo.version}+${packageInfo.buildNumber}';
       await _loadRecentActivities();
-      _activitySub ??= _activityRepo.activityLogged.listen(_onActivityLogged);
+      _activitySub ??= _eventBus
+          .on<ActivityLoggedEvent>()
+          .listen((e) => _onActivityLogged(e.log));
     } catch (e) {
       LoggerUtil.instance.e('加载仪表板数据失败: $e');
       DialogUtil.instance.error('加载仪表板数据失败: $e');
