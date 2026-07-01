@@ -94,7 +94,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
     final headers = ['编号', '附魔编号', '最大数量(背包)', '最大数量(物品)', '类型'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 480;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
@@ -111,7 +111,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 2),
+              1 => FixedTableSpanExtent(width),
               2 => FixedTableSpanExtent(120),
               3 => FixedTableSpanExtent(120),
               4 => FixedTableSpanExtent(120),

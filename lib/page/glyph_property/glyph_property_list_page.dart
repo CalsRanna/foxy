@@ -94,7 +94,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
     final headers = ['编号', '技能编号', '雕文槽标记', '技能图标'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 120;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];

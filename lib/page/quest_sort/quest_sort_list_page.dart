@@ -99,7 +99,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
     final headers = ['编号', '名称'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 360;
+        var width = constraints.maxWidth - 120;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = sorts[vicinity.row];
@@ -113,7 +113,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width / 2),
+              1 => FixedTableSpanExtent(width),
               _ => null,
             };
           },
