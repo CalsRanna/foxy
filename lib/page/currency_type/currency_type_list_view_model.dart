@@ -63,8 +63,12 @@ class CurrencyTypeListViewModel {
 
   Future<void> initSignals() async {
     try {
-      currencyTypes.value = await _repository.getBriefCurrencyTypes();
-      total.value = await _repository.countCurrencyTypes();
+      final (items, count) = await (
+        _repository.getBriefCurrencyTypes(),
+        _repository.countCurrencyTypes(),
+      ).wait;
+      currencyTypes.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载货币列表失败: $e');
       DialogUtil.instance.error('加载货币列表失败: $e');
@@ -106,11 +110,12 @@ class CurrencyTypeListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      currencyTypes.value = await _repository.getBriefCurrencyTypes(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countCurrencyTypes(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefCurrencyTypes(page: page.value, filter: filter),
+        _repository.countCurrencyTypes(filter: filter),
+      ).wait;
+      currencyTypes.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新货币列表失败: $e');
       DialogUtil.instance.error('刷新货币列表失败: $e');

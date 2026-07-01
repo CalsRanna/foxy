@@ -65,8 +65,12 @@ class SpellListViewModel {
 
   Future<void> initSignals() async {
     try {
-      spells.value = await _repository.getBriefSpells();
-      total.value = await _repository.countSpells();
+      final (items, count) = await (
+        _repository.getBriefSpells(),
+        _repository.countSpells(),
+      ).wait;
+      spells.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载法术列表失败: $e');
       DialogUtil.instance.error('加载法术列表失败: $e');
@@ -109,11 +113,12 @@ class SpellListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      spells.value = await _repository.getBriefSpells(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countSpells(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefSpells(page: page.value, filter: filter),
+        _repository.countSpells(filter: filter),
+      ).wait;
+      spells.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新法术列表失败: $e');
       DialogUtil.instance.error('刷新法术列表失败: $e');

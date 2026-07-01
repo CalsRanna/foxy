@@ -43,8 +43,12 @@ class ItemTemplateListViewModel {
 
   Future<void> initSignals() async {
     try {
-      templates.value = await _repository.getBriefItemTemplates();
-      total.value = await _repository.countItemTemplates();
+      final (items, count) = await (
+        _repository.getBriefItemTemplates(),
+        _repository.countItemTemplates(),
+      ).wait;
+      templates.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载物品列表失败: $e');
       DialogUtil.instance.error('加载物品列表失败: $e');
@@ -176,8 +180,9 @@ class ItemTemplateListViewModel {
 
   Future<void> _refresh() async {
     try {
-      templates.value = await _fetchItems();
-      total.value = await _count();
+      final (items, count) = await (_fetchItems(), _count()).wait;
+      templates.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新物品列表失败: $e');
       DialogUtil.instance.error('刷新物品列表失败: $e');

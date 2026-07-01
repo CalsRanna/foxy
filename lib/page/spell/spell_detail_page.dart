@@ -9,7 +9,6 @@ import 'package:foxy/page/spell/spell_loot_template_view.dart';
 import 'package:foxy/page/spell/spell_rank_view.dart';
 import 'package:foxy/page/spell/spell_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class SpellDetailPage extends StatefulWidget {
@@ -49,9 +48,7 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
       SpellLootTemplateView(spellId: spellId),
     ];
 
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

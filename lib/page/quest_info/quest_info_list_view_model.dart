@@ -80,8 +80,12 @@ class QuestInfoListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = QuestInfoFilterEntity();
-      infos.value = await _repository.getQuestInfos(page: 1, filter: filter);
-      total.value = await _repository.countQuestInfos(filter: filter);
+      final (items, count) = await (
+        _repository.getQuestInfos(page: 1, filter: filter),
+        _repository.countQuestInfos(filter: filter),
+      ).wait;
+      infos.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载任务信息列表失败: $e');
       DialogUtil.instance.error('加载任务信息列表失败: $e');
@@ -127,11 +131,12 @@ class QuestInfoListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      infos.value = await _repository.getQuestInfos(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countQuestInfos(filter: filter);
+      final (items, count) = await (
+        _repository.getQuestInfos(page: page.value, filter: filter),
+        _repository.countQuestInfos(filter: filter),
+      ).wait;
+      infos.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新任务信息列表失败: $e');
       DialogUtil.instance.error('刷新任务信息列表失败: $e');

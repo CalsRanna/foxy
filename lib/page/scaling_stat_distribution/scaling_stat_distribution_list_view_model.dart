@@ -76,13 +76,12 @@ class ScalingStatDistributionListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = ScalingStatDistributionFilterEntity();
-      distributions.value = await _repository.getScalingStatDistributions(
-        page: 1,
-        filter: filter,
-      );
-      total.value = await _repository.countScalingStatDistributions(
-        filter: filter,
-      );
+      final (items, count) = await (
+        _repository.getScalingStatDistributions(page: 1, filter: filter),
+        _repository.countScalingStatDistributions(filter: filter),
+      ).wait;
+      distributions.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载属性缩放分布列表失败: $e');
       DialogUtil.instance.error('加载属性缩放分布列表失败: $e');
@@ -126,13 +125,15 @@ class ScalingStatDistributionListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      distributions.value = await _repository.getScalingStatDistributions(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countScalingStatDistributions(
-        filter: filter,
-      );
+      final (items, count) = await (
+        _repository.getScalingStatDistributions(
+          page: page.value,
+          filter: filter,
+        ),
+        _repository.countScalingStatDistributions(filter: filter),
+      ).wait;
+      distributions.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新属性缩放分布列表失败: $e');
       DialogUtil.instance.error('刷新属性缩放分布列表失败: $e');

@@ -25,11 +25,12 @@ class PageTextListViewModel {
 
   Future<void> initSignals() async {
     try {
-      pages.value = await _repository.getPageTexts(
-        filter: _buildFilter(),
-        page: page.value,
-      );
-      total.value = await _repository.countPageTexts(filter: _buildFilter());
+      final (items, count) = await (
+        _repository.getPageTexts(filter: _buildFilter(), page: page.value),
+        _repository.countPageTexts(filter: _buildFilter()),
+      ).wait;
+      pages.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载页面文本列表失败: $e');
       DialogUtil.instance.error('加载页面文本列表失败: $e');
@@ -124,11 +125,12 @@ class PageTextListViewModel {
 
   Future<void> _refresh() async {
     try {
-      pages.value = await _repository.getPageTexts(
-        filter: _buildFilter(),
-        page: page.value,
-      );
-      total.value = await _repository.countPageTexts(filter: _buildFilter());
+      final (items, count) = await (
+        _repository.getPageTexts(filter: _buildFilter(), page: page.value),
+        _repository.countPageTexts(filter: _buildFilter()),
+      ).wait;
+      pages.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新页面文本列表失败: $e');
       DialogUtil.instance.error('刷新页面文本列表失败: $e');

@@ -75,11 +75,12 @@ class ItemExtendedCostListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = ItemExtendedCostFilterEntity();
-      costs.value = await _repository.getItemExtendedCosts(
-        page: 1,
-        filter: filter,
-      );
-      total.value = await _repository.countItemExtendedCosts(filter: filter);
+      final (items, count) = await (
+        _repository.getItemExtendedCosts(page: 1, filter: filter),
+        _repository.countItemExtendedCosts(filter: filter),
+      ).wait;
+      costs.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载物品扩展消耗列表失败: $e');
       DialogUtil.instance.error('加载物品扩展消耗列表失败: $e');
@@ -123,11 +124,12 @@ class ItemExtendedCostListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      costs.value = await _repository.getItemExtendedCosts(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countItemExtendedCosts(filter: filter);
+      final (items, count) = await (
+        _repository.getItemExtendedCosts(page: page.value, filter: filter),
+        _repository.countItemExtendedCosts(filter: filter),
+      ).wait;
+      costs.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新物品扩展消耗列表失败: $e');
       DialogUtil.instance.error('刷新物品扩展消耗列表失败: $e');

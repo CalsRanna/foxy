@@ -65,8 +65,12 @@ class GameObjectTemplateListViewModel {
 
   Future<void> initSignals() async {
     try {
-      templates.value = await _repository.getBriefGameObjectTemplates();
-      total.value = await _repository.countGameObjectTemplates();
+      final (items, count) = await (
+        _repository.getBriefGameObjectTemplates(),
+        _repository.countGameObjectTemplates(),
+      ).wait;
+      templates.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载游戏对象列表失败: $e');
       DialogUtil.instance.error('加载游戏对象列表失败: $e');
@@ -112,11 +116,15 @@ class GameObjectTemplateListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      templates.value = await _repository.getBriefGameObjectTemplates(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countGameObjectTemplates(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefGameObjectTemplates(
+          page: page.value,
+          filter: filter,
+        ),
+        _repository.countGameObjectTemplates(filter: filter),
+      ).wait;
+      templates.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新游戏对象列表失败: $e');
       DialogUtil.instance.error('刷新游戏对象列表失败: $e');

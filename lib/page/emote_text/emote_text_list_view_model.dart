@@ -79,8 +79,12 @@ class EmoteTextListViewModel {
 
   Future<void> initSignals() async {
     try {
-      emotes.value = await _repository.getEmoteTexts(page: 1);
-      total.value = await _repository.countEmoteTexts();
+      final (items, count) = await (
+        _repository.getEmoteTexts(page: 1),
+        _repository.countEmoteTexts(),
+      ).wait;
+      emotes.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载表情文本列表失败: $e');
       DialogUtil.instance.error('加载表情文本列表失败: $e');
@@ -126,11 +130,12 @@ class EmoteTextListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      emotes.value = await _repository.getEmoteTexts(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countEmoteTexts(filter: filter);
+      final (items, count) = await (
+        _repository.getEmoteTexts(page: page.value, filter: filter),
+        _repository.countEmoteTexts(filter: filter),
+      ).wait;
+      emotes.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新表情文本列表失败: $e');
       DialogUtil.instance.error('刷新表情文本列表失败: $e');

@@ -65,8 +65,12 @@ class ItemSetListViewModel {
 
   Future<void> initSignals() async {
     try {
-      itemSets.value = await _repository.getBriefItemSets();
-      total.value = await _repository.countItemSets();
+      final (items, count) = await (
+        _repository.getBriefItemSets(),
+        _repository.countItemSets(),
+      ).wait;
+      itemSets.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载套装列表失败: $e');
       DialogUtil.instance.error('加载套装列表失败: $e');
@@ -112,11 +116,12 @@ class ItemSetListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      itemSets.value = await _repository.getBriefItemSets(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countItemSets(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefItemSets(page: page.value, filter: filter),
+        _repository.countItemSets(filter: filter),
+      ).wait;
+      itemSets.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新套装列表失败: $e');
       DialogUtil.instance.error('刷新套装列表失败: $e');

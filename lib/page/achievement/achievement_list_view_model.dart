@@ -65,8 +65,12 @@ class AchievementListViewModel {
 
   Future<void> initSignals() async {
     try {
-      achievements.value = await _repository.getBriefAchievements();
-      total.value = await _repository.countAchievements();
+      final (items, count) = await (
+        _repository.getBriefAchievements(),
+        _repository.countAchievements(),
+      ).wait;
+      achievements.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载成就列表失败: $e');
       DialogUtil.instance.error('加载成就列表失败: $e');
@@ -112,11 +116,12 @@ class AchievementListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      achievements.value = await _repository.getBriefAchievements(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countAchievements(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefAchievements(page: page.value, filter: filter),
+        _repository.countAchievements(filter: filter),
+      ).wait;
+      achievements.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新成就列表失败: $e');
       DialogUtil.instance.error('刷新成就列表失败: $e');

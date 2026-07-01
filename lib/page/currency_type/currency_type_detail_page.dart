@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/currency_type/currency_type_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class CurrencyTypeDetailPage extends StatefulWidget {
@@ -21,9 +20,7 @@ class _CurrencyTypeDetailPageState extends State<CurrencyTypeDetailPage> {
 
     var tabContents = [CurrencyTypeView(entry: widget.id)];
 
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

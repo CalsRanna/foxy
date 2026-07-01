@@ -24,8 +24,12 @@ class GossipMenuListViewModel {
 
   Future<void> initSignals() async {
     try {
-      menus.value = await _repository.getBriefGossipMenus();
-      total.value = await _repository.countGossipMenus();
+      final (items, count) = await (
+        _repository.getBriefGossipMenus(),
+        _repository.countGossipMenus(),
+      ).wait;
+      menus.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载对话菜单列表失败: $e');
       DialogUtil.instance.error('加载对话菜单列表失败: $e');
@@ -107,11 +111,12 @@ class GossipMenuListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      menus.value = await _repository.getBriefGossipMenus(
-        filter: filter,
-        page: page.value,
-      );
-      total.value = await _repository.countGossipMenus(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefGossipMenus(filter: filter, page: page.value),
+        _repository.countGossipMenus(filter: filter),
+      ).wait;
+      menus.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新对话菜单列表失败: $e');
       DialogUtil.instance.error('刷新对话菜单列表失败: $e');
