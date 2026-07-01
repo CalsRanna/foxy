@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/widget/card.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 class Trend extends StatelessWidget {
   final List<ActivityLogEntity> activities;
@@ -10,16 +10,20 @@ class Trend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+
     if (activities.isEmpty) {
-      final mutedColor = Theme.of(
-        context,
-      ).colorScheme.onSurface.withValues(alpha: 0.5);
       return FoxyCard(
         title: const Text('动态'),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 80),
           child: Center(
-            child: Text('暂无动态', style: TextStyle(color: mutedColor)),
+            child: Text(
+              '暂无动态',
+              style: theme.textTheme.muted.copyWith(
+                color: theme.colorScheme.mutedForeground,
+              ),
+            ),
           ),
         ),
       );
@@ -45,6 +49,42 @@ class _TrendItem extends StatelessWidget {
 
   const _TrendItem({required this.activity});
 
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+
+    final name = activity.entityName.isNotEmpty
+        ? activity.entityName
+        : '#${activity.entityId}';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      child: Row(
+        children: [
+          Icon(
+            _actionIcon(activity.actionType),
+            size: 14,
+            color: _actionColor(activity.actionType),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '${activity.actionType.label} $name',
+              style: theme.textTheme.small,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Text(
+            _timeAgo(activity.createdAt),
+            style: theme.textTheme.muted.copyWith(
+              color: theme.colorScheme.mutedForeground,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   IconData _actionIcon(ActivityActionType type) {
     return switch (type) {
       ActivityActionType.create => LucideIcons.plus,
@@ -54,12 +94,12 @@ class _TrendItem extends StatelessWidget {
     };
   }
 
-  Color _actionColor(ActivityActionType type, ColorScheme colorScheme) {
+  Color _actionColor(ActivityActionType type) {
     return switch (type) {
-      ActivityActionType.create => Colors.green,
-      ActivityActionType.update => Colors.blue,
-      ActivityActionType.delete => Colors.red,
-      ActivityActionType.copy => Colors.orange,
+      ActivityActionType.create => _kCreateColor,
+      ActivityActionType.update => _kUpdateColor,
+      ActivityActionType.delete => _kDeleteColor,
+      ActivityActionType.copy => _kCopyColor,
     };
   }
 
@@ -72,46 +112,6 @@ class _TrendItem extends StatelessWidget {
     if (diff.inDays < 30) return '${diff.inDays} 天前';
     return '${dateTime.month}-${dateTime.day}';
   }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final textTheme = theme.textTheme;
-
-    final name = activity.entityName.isNotEmpty
-        ? activity.entityName
-        : '#${activity.entityId}';
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-      child: Row(
-        children: [
-          Icon(
-            _actionIcon(activity.actionType),
-            size: 14,
-            color: _actionColor(activity.actionType, colorScheme),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              '${activity.actionType.label} $name',
-              style: textTheme.bodySmall,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Text(
-            _timeAgo(activity.createdAt),
-            style: textTheme.bodySmall?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.5),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class _Divider extends StatelessWidget {
@@ -122,6 +122,16 @@ class _Divider extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final outline = colorScheme.outline;
-    return Divider(color: outline.withValues(alpha: 0.2), height: 1);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Divider(color: outline.withValues(alpha: 0.2), height: 1),
+    );
   }
 }
+
+/// 动作图标色取自 shadcn 各色系的 `primary`（light），与 shadcn 调色板保持一致，
+/// 替代原先硬编码的 Material `Colors.green/blue/red/orange`。
+final _kCreateColor = ShadGreenColorScheme.light().primary;
+final _kUpdateColor = ShadBlueColorScheme.light().primary;
+final _kDeleteColor = ShadRedColorScheme.light().primary;
+final _kCopyColor = ShadOrangeColorScheme.light().primary;
