@@ -178,7 +178,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 
   List<RouterMenu> get _menus {
-    final pinned = viewModel.pinnedFeatures
+    final pinned = viewModel.pinnedFeatures.value
         .map((f) => RouterMenu.values.byName(f.routerMenu))
         .toList();
     return [
