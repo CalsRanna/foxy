@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
@@ -80,16 +81,7 @@ class CreatureTemplateDetailViewModel {
   final template = signal(CreatureTemplateEntity());
 
   /// 保存模板到数据库
-  String _fmt(num v) {
-    if (v is double) {
-      final s = v.toString();
-      if (s.contains('.') && s.endsWith('0')) {
-        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-      }
-      return s;
-    }
-    return v.toString();
-  }
+  String _fmt(num v) => formatNum(v);
 
   int _pi(String t) => int.tryParse(t) ?? 0;
   double _pd(String t) => double.tryParse(t) ?? 0.0;

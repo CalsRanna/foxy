@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
@@ -166,16 +167,7 @@ class ItemTemplateDetailViewModel {
   bool get hasProspectingLoot => (template.value.flags & 262144) != 0;
   bool get hasMillingLoot => (template.value.flags & 536870912) != 0;
 
-  String _fmt(num v) {
-    if (v is double) {
-      final s = v.toString();
-      if (s.contains('.') && s.endsWith('0')) {
-        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-      }
-      return s;
-    }
-    return v.toString();
-  }
+  String _fmt(num v) => formatNum(v);
 
   int _pi(String t) => int.tryParse(t) ?? 0;
   double _pd(String t) => double.tryParse(t) ?? 0.0;

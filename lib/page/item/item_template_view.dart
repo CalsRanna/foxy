@@ -41,9 +41,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
   }
 
   // Convert kItemClasses List<String> to Map<int, String>
-  Map<int, String> get _itemClassOptions {
-    return kItemClasses.asMap().map((k, v) => MapEntry(k, v));
-  }
+  Map<int, String> get _itemClassOptions => _kItemClassOptions;
 
   // Get subclass options based on selected class
   Map<int, String> get _currentSubclassOptions {
@@ -54,48 +52,16 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
   }
 
   // Convert kItemInventoryTypes List<String> to Map<int, String>
-  Map<int, String> get _inventoryTypeOptions {
-    return kItemInventoryTypes.asMap().map((k, v) => MapEntry(k, v));
-  }
+  Map<int, String> get _inventoryTypeOptions => _kInventoryTypeOptions;
 
   // Ammo type options
-  Map<int, String> get _ammoTypeOptions {
-    return {0: '无', 2: '箭', 3: '子弹'};
-  }
+  Map<int, String> get _ammoTypeOptions => _kAmmoTypeOptions;
 
   // Page material options
-  Map<int, String> get _pageMaterialOptions {
-    return {
-      0: '纸质',
-      1: '石头',
-      2: '大理石',
-      3: '银质',
-      4: '青铜',
-      5: '铁质',
-      6: '铜质',
-      7: '未知',
-    };
-  }
+  Map<int, String> get _pageMaterialOptions => _kPageMaterialOptions;
 
   // Language options
-  Map<int, String> get _languageOptions {
-    return {
-      0: '通用语',
-      1: '兽人语',
-      2: '矮人语',
-      3: '达纳苏斯语',
-      6: '亡灵语',
-      7: '牛头人语',
-      8: '侏儒语',
-      10: '血精灵语',
-      11: '德莱尼语',
-      12: '龙语',
-      13: '恶魔语',
-      14: '泰坦语',
-      33: '纳迦语',
-      35: '亡灵语',
-    };
-  }
+  Map<int, String> get _languageOptions => _kLanguageOptions;
 
   @override
   Widget build(BuildContext context) {
@@ -1164,3 +1130,39 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
   }
 }
+
+// 模块级常量选项表：稳定引用，供 FoxyShadSelect 缓存其 ShadOption 列表。
+// （此前这些是每次 build 重建 Map 的 getter，破坏了下拉选项缓存。）
+final Map<int, String> _kItemClassOptions = kItemClasses.asMap();
+
+final Map<int, String> _kInventoryTypeOptions = kItemInventoryTypes.asMap();
+
+const Map<int, String> _kAmmoTypeOptions = {0: '无', 2: '箭', 3: '子弹'};
+
+const Map<int, String> _kPageMaterialOptions = {
+  0: '纸质',
+  1: '石头',
+  2: '大理石',
+  3: '银质',
+  4: '青铜',
+  5: '铁质',
+  6: '铜质',
+  7: '未知',
+};
+
+const Map<int, String> _kLanguageOptions = {
+  0: '通用语',
+  1: '兽人语',
+  2: '矮人语',
+  3: '达纳苏斯语',
+  6: '亡灵语',
+  7: '牛头人语',
+  8: '侏儒语',
+  10: '血精灵语',
+  11: '德莱尼语',
+  12: '龙语',
+  13: '恶魔语',
+  14: '泰坦语',
+  33: '纳迦语',
+  35: '亡灵语',
+};

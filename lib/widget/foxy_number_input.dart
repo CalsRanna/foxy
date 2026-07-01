@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 数字输入框。
@@ -71,13 +72,7 @@ class _FoxyNumberInputState<T extends num> extends State<FoxyNumberInput<T>> {
   }
 
   String _format(T value) {
-    if (T == double) {
-      final s = value.toString();
-      if (s.contains('.') && s.endsWith('0')) {
-        return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-      }
-      return s;
-    }
+    if (T == double) return formatNum(value);
     return value.toString();
   }
 
