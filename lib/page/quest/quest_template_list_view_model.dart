@@ -106,11 +106,12 @@ class QuestTemplateListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      templates.value = await _repository.getBriefQuestTemplates(
-        filter: filter,
-        page: page.value,
-      );
-      total.value = await _repository.countQuestTemplates(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefQuestTemplates(filter: filter, page: page.value),
+        _repository.countQuestTemplates(filter: filter),
+      ).wait;
+      templates.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新任务列表失败: $e');
       DialogUtil.instance.error('刷新任务列表失败: $e');

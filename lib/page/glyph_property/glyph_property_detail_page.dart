@@ -4,7 +4,6 @@ import 'package:foxy/page/glyph_property/glyph_property_detail_view_model.dart';
 import 'package:foxy/page/glyph_property/glyph_property_view.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class GlyphPropertyDetailPage extends StatefulWidget {
@@ -35,9 +34,7 @@ class _GlyphPropertyDetailPageState extends State<GlyphPropertyDetailPage> {
   Widget build(BuildContext context) {
     var tabs = [Text('属性信息')];
     var tabContents = [GlyphPropertyView(entry: widget.id)];
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [_buildHeader(), tabBar],

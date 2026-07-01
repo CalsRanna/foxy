@@ -5,7 +5,6 @@ import 'package:foxy/page/game_object/game_object_template_addon_view.dart';
 import 'package:foxy/page/game_object/game_object_quest_item_view.dart';
 import 'package:foxy/page/game_object/game_object_loot_template_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class GameObjectTemplateDetailPage extends StatefulWidget {
@@ -32,9 +31,7 @@ class _GameObjectTemplateDetailPageState
       GameObjectLootTemplateView(gameObjectId: widget.entry ?? 0),
     ];
 
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

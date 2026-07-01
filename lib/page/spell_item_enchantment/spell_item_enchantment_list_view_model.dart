@@ -80,13 +80,12 @@ class SpellItemEnchantmentListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = SpellItemEnchantmentFilterEntity();
-      enchantments.value = await _repository.getSpellItemEnchantments(
-        page: 1,
-        filter: filter,
-      );
-      total.value = await _repository.countSpellItemEnchantments(
-        filter: filter,
-      );
+      final (items, count) = await (
+        _repository.getSpellItemEnchantments(page: 1, filter: filter),
+        _repository.countSpellItemEnchantments(filter: filter),
+      ).wait;
+      enchantments.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载法术物品附魔列表失败: $e');
       DialogUtil.instance.error('加载法术物品附魔列表失败: $e');
@@ -134,13 +133,12 @@ class SpellItemEnchantmentListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      enchantments.value = await _repository.getSpellItemEnchantments(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countSpellItemEnchantments(
-        filter: filter,
-      );
+      final (items, count) = await (
+        _repository.getSpellItemEnchantments(page: page.value, filter: filter),
+        _repository.countSpellItemEnchantments(filter: filter),
+      ).wait;
+      enchantments.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新法术物品附魔列表失败: $e');
       DialogUtil.instance.error('刷新法术物品附魔列表失败: $e');

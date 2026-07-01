@@ -65,8 +65,12 @@ class AreaTableListViewModel {
 
   Future<void> initSignals() async {
     try {
-      areas.value = await _repository.getBriefAreaTables();
-      total.value = await _repository.countAreaTables();
+      final (items, count) = await (
+        _repository.getBriefAreaTables(),
+        _repository.countAreaTables(),
+      ).wait;
+      areas.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载区域表列表失败: $e');
       DialogUtil.instance.error('加载区域表列表失败: $e');
@@ -112,11 +116,12 @@ class AreaTableListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      areas.value = await _repository.getBriefAreaTables(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countAreaTables(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefAreaTables(page: page.value, filter: filter),
+        _repository.countAreaTables(filter: filter),
+      ).wait;
+      areas.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新区域表列表失败: $e');
       DialogUtil.instance.error('刷新区域表列表失败: $e');

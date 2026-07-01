@@ -75,11 +75,12 @@ class GlyphPropertyListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = GlyphPropertyFilterEntity();
-      properties.value = await _repository.getGlyphProperties(
-        page: 1,
-        filter: filter,
-      );
-      total.value = await _repository.countGlyphProperties(filter: filter);
+      final (items, count) = await (
+        _repository.getGlyphProperties(page: 1, filter: filter),
+        _repository.countGlyphProperties(filter: filter),
+      ).wait;
+      properties.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载雕文属性列表失败: $e');
       DialogUtil.instance.error('加载雕文属性列表失败: $e');
@@ -121,11 +122,12 @@ class GlyphPropertyListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      properties.value = await _repository.getGlyphProperties(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countGlyphProperties(filter: filter);
+      final (items, count) = await (
+        _repository.getGlyphProperties(page: page.value, filter: filter),
+        _repository.countGlyphProperties(filter: filter),
+      ).wait;
+      properties.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新雕文属性列表失败: $e');
       DialogUtil.instance.error('刷新雕文属性列表失败: $e');

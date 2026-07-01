@@ -13,7 +13,6 @@ import 'package:foxy/page/creature_template/npc_vendor_view.dart';
 import 'package:foxy/page/creature_template/pickpocketing_loot_template_view.dart';
 import 'package:foxy/page/creature_template/skinning_loot_template_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class CreatureTemplateDetailPage extends StatefulWidget {
@@ -75,9 +74,7 @@ class _CreatureTemplateDetailPageState
     ];
 
     // Tab容器
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

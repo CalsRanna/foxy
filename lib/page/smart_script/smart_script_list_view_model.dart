@@ -81,8 +81,12 @@ class SmartScriptListViewModel {
 
   Future<void> initSignals() async {
     try {
-      scripts.value = await _repository.getBriefSmartScripts();
-      total.value = await _repository.countSmartScripts();
+      final (items, count) = await (
+        _repository.getBriefSmartScripts(),
+        _repository.countSmartScripts(),
+      ).wait;
+      scripts.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载SmartAI脚本列表失败: $e');
       DialogUtil.instance.error('加载SmartAI脚本列表失败: $e');
@@ -141,11 +145,12 @@ class SmartScriptListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      scripts.value = await _repository.getBriefSmartScripts(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countSmartScripts(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefSmartScripts(page: page.value, filter: filter),
+        _repository.countSmartScripts(filter: filter),
+      ).wait;
+      scripts.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新SmartAI脚本列表失败: $e');
       DialogUtil.instance.error('刷新SmartAI脚本列表失败: $e');

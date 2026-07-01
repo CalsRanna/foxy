@@ -97,14 +97,50 @@ class DbcSyncUtil {
       return requiredDbcTableNames.toList();
     }
 
-    // 2) 逐表确认非空：SELECT 1 ... LIMIT 1 比 information_schema.TABLE_ROWS 可靠；
-    //    单表探测失败时仅将该表视为缺失（保守触发导入，worker 会跳过已填充的表）
+    // 2) 不存在的表直接计入缺失；存在的表待批量判空。
     final missing = <String>[];
+    final present = <String>[];
     for (final table in requiredDbcTableNames) {
-      if (!existing.contains(table)) {
+      if (existing.contains(table)) {
+        present.add(table);
+      } else {
         missing.add(table);
-        continue;
       }
+    }
+    if (present.isEmpty) return missing;
+
+    // 3) 一次性批量判空：对已存在的表做 UNION ALL EXISTS，把最多 ~29 次往返
+    //    压成 1 次。EXISTS 比 information_schema.TABLE_ROWS 可靠（后者对 InnoDB
+    //    只是估算，可能为 NULL 或陈旧）。批量查询失败时退化为逐表探测——探测
+    //    失败一律视为缺失（保守触发导入，worker 会跳过已填充的表，绝不误删数据）。
+    try {
+      final union = present
+          .map(
+            (t) =>
+                "SELECT '$t' AS t, "
+                "EXISTS(SELECT 1 FROM foxy.$t) AS has_rows",
+          )
+          .join(' UNION ALL ');
+      final rows = await laconic.select(union);
+      final nonEmpty = <String>{
+        for (final r in rows)
+          if (_truthy(r['has_rows'])) r['t'] as String,
+      };
+      for (final table in present) {
+        if (!nonEmpty.contains(table)) missing.add(table);
+      }
+    } catch (e) {
+      LoggerUtil.instance.w('批量检查 DBC 表是否为空失败，退化为逐表探测: $e');
+      missing.addAll(await _probeTablesIndividually(present));
+    }
+    return missing;
+  }
+
+  /// 逐表探测非空（批量查询失败时的兜底路径）。探测失败的表按缺失处理。
+  Future<List<String>> _probeTablesIndividually(List<String> tables) async {
+    final laconic = Database.instance.laconic;
+    final missing = <String>[];
+    for (final table in tables) {
       try {
         final rows = await laconic.select('SELECT 1 FROM foxy.$table LIMIT 1');
         if (rows.isEmpty) missing.add(table);
@@ -115,6 +151,9 @@ class DbcSyncUtil {
     }
     return missing;
   }
+
+  /// EXISTS 经 typedAssoc 通常回传 int 1/0；容忍 bool/String 形态以防驱动差异。
+  static bool _truthy(Object? v) => v == 1 || v == true || v == '1';
 
   /// 从 config.yaml 读取配置。
   Future<Map<String, dynamic>> loadConfig() async {

@@ -24,8 +24,9 @@ class ReferenceLootTemplateListViewModel {
 
   Future<void> initSignals() async {
     try {
-      templates.value = await _searchEntries();
-      total.value = await _countEntries();
+      final (items, count) = await (_searchEntries(), _countEntries()).wait;
+      templates.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载引用掉落模板列表失败: $e');
       DialogUtil.instance.error('加载引用掉落模板列表失败: $e');
@@ -41,8 +42,9 @@ class ReferenceLootTemplateListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    templates.value = await _searchEntries();
-    total.value = await _countEntries();
+    final (items, count) = await (_searchEntries(), _countEntries()).wait;
+    templates.value = items;
+    total.value = count;
   }
 
   Future<void> paginate(int page) async {
@@ -139,8 +141,9 @@ class ReferenceLootTemplateListViewModel {
 
   Future<void> _refresh() async {
     try {
-      templates.value = await _searchEntries();
-      total.value = await _countEntries();
+      final (items, count) = await (_searchEntries(), _countEntries()).wait;
+      templates.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新引用掉落模板列表失败: $e');
       DialogUtil.instance.error('刷新引用掉落模板列表失败: $e');

@@ -80,8 +80,12 @@ class QuestSortListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = QuestSortFilterEntity();
-      sorts.value = await _repository.getQuestSorts(page: 1, filter: filter);
-      total.value = await _repository.countQuestSorts(filter: filter);
+      final (items, count) = await (
+        _repository.getQuestSorts(page: 1, filter: filter),
+        _repository.countQuestSorts(filter: filter),
+      ).wait;
+      sorts.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载任务排序列表失败: $e');
       DialogUtil.instance.error('加载任务排序列表失败: $e');
@@ -127,11 +131,12 @@ class QuestSortListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      sorts.value = await _repository.getQuestSorts(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countQuestSorts(filter: filter);
+      final (items, count) = await (
+        _repository.getQuestSorts(page: page.value, filter: filter),
+        _repository.countQuestSorts(filter: filter),
+      ).wait;
+      sorts.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新任务排序列表失败: $e');
       DialogUtil.instance.error('刷新任务排序列表失败: $e');

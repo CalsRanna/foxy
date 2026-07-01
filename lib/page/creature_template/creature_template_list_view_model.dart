@@ -67,8 +67,12 @@ class CreatureTemplateListViewModel {
 
   Future<void> initSignals() async {
     try {
-      templates.value = await _repository.getBriefCreatureTemplates();
-      total.value = await _repository.countCreatureTemplates();
+      final (items, count) = await (
+        _repository.getBriefCreatureTemplates(),
+        _repository.countCreatureTemplates(),
+      ).wait;
+      templates.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载生物列表失败: $e');
       DialogUtil.instance.error('加载生物列表失败: $e');
@@ -116,11 +120,12 @@ class CreatureTemplateListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      templates.value = await _repository.getBriefCreatureTemplates(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countCreatureTemplates(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefCreatureTemplates(page: page.value, filter: filter),
+        _repository.countCreatureTemplates(filter: filter),
+      ).wait;
+      templates.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新生物列表失败: $e');
       DialogUtil.instance.error('刷新生物列表失败: $e');

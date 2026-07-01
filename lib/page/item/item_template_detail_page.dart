@@ -7,7 +7,6 @@ import 'package:foxy/page/item/disenchant_loot_template_view.dart';
 import 'package:foxy/page/item/prospecting_loot_template_view.dart';
 import 'package:foxy/page/item/milling_loot_template_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class ItemTemplateDetailPage extends StatefulWidget {
@@ -41,9 +40,7 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
       MillingLootTemplateView(entry: widget.entry ?? 0),
     ];
 
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

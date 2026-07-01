@@ -65,8 +65,12 @@ class ScalingStatValueListViewModel {
 
   Future<void> initSignals() async {
     try {
-      scalingStatValues.value = await _repository.getBriefScalingStatValues();
-      total.value = await _repository.countScalingStatValues();
+      final (items, count) = await (
+        _repository.getBriefScalingStatValues(),
+        _repository.countScalingStatValues(),
+      ).wait;
+      scalingStatValues.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载缩放属性值列表失败: $e');
       DialogUtil.instance.error('加载缩放属性值列表失败: $e');
@@ -114,11 +118,12 @@ class ScalingStatValueListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      scalingStatValues.value = await _repository.getBriefScalingStatValues(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countScalingStatValues(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefScalingStatValues(page: page.value, filter: filter),
+        _repository.countScalingStatValues(filter: filter),
+      ).wait;
+      scalingStatValues.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新缩放属性值列表失败: $e');
       DialogUtil.instance.error('刷新缩放属性值列表失败: $e');

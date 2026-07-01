@@ -11,7 +11,6 @@ import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_view.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class QuestTemplateDetailPage extends StatefulWidget {
@@ -64,9 +63,7 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
       GameObjectQuestEnderView(questId: widget.entry ?? 0),
     ];
 
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

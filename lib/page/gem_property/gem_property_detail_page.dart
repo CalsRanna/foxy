@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/gem_property/gem_property_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class GemPropertyDetailPage extends StatefulWidget {
@@ -21,9 +20,7 @@ class _GemPropertyDetailPageState extends State<GemPropertyDetailPage> {
 
     var tabContents = [GemPropertyView(entry: widget.id)];
 
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

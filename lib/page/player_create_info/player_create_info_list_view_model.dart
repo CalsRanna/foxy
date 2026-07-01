@@ -25,8 +25,9 @@ class PlayerCreateInfoListViewModel {
 
   Future<void> initSignals() async {
     try {
-      infos.value = await _search();
-      total.value = await _count();
+      final (items, count) = await (_search(), _count()).wait;
+      infos.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载角色创建信息列表失败: $e');
       DialogUtil.instance.error('加载角色创建信息列表失败: $e');
@@ -42,8 +43,9 @@ class PlayerCreateInfoListViewModel {
     raceController.clear();
     classController.clear();
     page.value = 1;
-    infos.value = await _search();
-    total.value = await _count();
+    final (items, count) = await (_search(), _count()).wait;
+    infos.value = items;
+    total.value = count;
   }
 
   Future<void> paginate(int page) async {
@@ -134,8 +136,9 @@ class PlayerCreateInfoListViewModel {
 
   Future<void> _refresh() async {
     try {
-      infos.value = await _search();
-      total.value = await _count();
+      final (items, count) = await (_search(), _count()).wait;
+      infos.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新角色创建信息列表失败: $e');
       DialogUtil.instance.error('刷新角色创建信息列表失败: $e');

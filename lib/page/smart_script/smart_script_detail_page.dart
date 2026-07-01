@@ -4,7 +4,6 @@ import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_view.dart';
 import 'package:foxy/widget/tab.dart';
 import 'package:get_it/get_it.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class SmartScriptDetailPage extends StatefulWidget {
@@ -49,9 +48,7 @@ class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
   Widget build(BuildContext context) {
     var tabs = [const Text('脚本详情')];
     var tabContents = [const SmartScriptView()];
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

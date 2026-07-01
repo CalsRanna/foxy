@@ -60,11 +60,12 @@ class QuestFactionRewardListViewModel {
   Future<void> initSignals() async {
     try {
       final filter = QuestFactionRewardFilterEntity();
-      rewards.value = await _repository.getQuestFactionRewards(
-        page: 1,
-        filter: filter,
-      );
-      total.value = await _repository.countQuestFactionRewards(filter: filter);
+      final (items, count) = await (
+        _repository.getQuestFactionRewards(page: 1, filter: filter),
+        _repository.countQuestFactionRewards(filter: filter),
+      ).wait;
+      rewards.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载任务阵营奖励列表失败: $e');
       DialogUtil.instance.error('加载任务阵营奖励列表失败: $e');
@@ -108,11 +109,12 @@ class QuestFactionRewardListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      rewards.value = await _repository.getQuestFactionRewards(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countQuestFactionRewards(filter: filter);
+      final (items, count) = await (
+        _repository.getQuestFactionRewards(page: page.value, filter: filter),
+        _repository.countQuestFactionRewards(filter: filter),
+      ).wait;
+      rewards.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新任务阵营奖励列表失败: $e');
       DialogUtil.instance.error('刷新任务阵营奖励列表失败: $e');

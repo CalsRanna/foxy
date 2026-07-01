@@ -25,8 +25,9 @@ class ConditionListViewModel {
 
   Future<void> initSignals() async {
     try {
-      conditions.value = await _search();
-      total.value = await _count();
+      final (items, count) = await (_search(), _count()).wait;
+      conditions.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载条件列表失败: $e');
       DialogUtil.instance.error('加载条件列表失败: $e');
@@ -42,8 +43,9 @@ class ConditionListViewModel {
     sourceTypeController.clear();
     sourceEntryController.clear();
     page.value = 1;
-    conditions.value = await _search();
-    total.value = await _count();
+    final (items, count) = await (_search(), _count()).wait;
+    conditions.value = items;
+    total.value = count;
   }
 
   Future<void> paginate(int page) async {
@@ -124,8 +126,9 @@ class ConditionListViewModel {
 
   Future<void> _refresh() async {
     try {
-      conditions.value = await _search();
-      total.value = await _count();
+      final (items, count) = await (_search(), _count()).wait;
+      conditions.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新条件列表失败: $e');
       DialogUtil.instance.error('刷新条件列表失败: $e');

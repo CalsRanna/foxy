@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/item_extended_cost/item_extended_cost_view.dart';
 import 'package:foxy/widget/tab.dart';
-import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
 class ItemExtendedCostDetailPage extends StatefulWidget {
@@ -23,9 +22,7 @@ class _ItemExtendedCostDetailPageState
 
     var tabContents = [ItemExtendedCostView(entry: widget.id)];
 
-    var tabBar = Watch((_) {
-      return FoxyTab(tabs: tabs, contents: tabContents);
-    });
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(
       padding: const EdgeInsets.all(16),

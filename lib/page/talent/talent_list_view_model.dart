@@ -63,8 +63,12 @@ class TalentListViewModel {
 
   Future<void> initSignals() async {
     try {
-      talents.value = await _repository.getBriefTalents();
-      total.value = await _repository.countTalents();
+      final (items, count) = await (
+        _repository.getBriefTalents(),
+        _repository.countTalents(),
+      ).wait;
+      talents.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('加载天赋列表失败: $e');
       DialogUtil.instance.error('加载天赋列表失败: $e');
@@ -106,11 +110,12 @@ class TalentListViewModel {
   Future<void> _refresh() async {
     try {
       final filter = _buildFilter();
-      talents.value = await _repository.getBriefTalents(
-        page: page.value,
-        filter: filter,
-      );
-      total.value = await _repository.countTalents(filter: filter);
+      final (items, count) = await (
+        _repository.getBriefTalents(page: page.value, filter: filter),
+        _repository.countTalents(filter: filter),
+      ).wait;
+      talents.value = items;
+      total.value = count;
     } catch (e) {
       LoggerUtil.instance.e('刷新天赋列表失败: $e');
       DialogUtil.instance.error('刷新天赋列表失败: $e');
