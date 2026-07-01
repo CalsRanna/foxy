@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
@@ -15,6 +17,7 @@ class DashboardViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final scaffoldViewModel = GetIt.instance.get<ScaffoldViewModel>();
   final _activityRepo = GetIt.instance.get<ActivityLogRepository>();
+  StreamSubscription<ActivityLogEntity>? _activitySub;
 
   final coreVersion = signal('');
   final coreRevision = signal('');
@@ -43,6 +46,7 @@ class DashboardViewModel {
       softwareVersion.value =
           '${packageInfo.version}+${packageInfo.buildNumber}';
       await _loadRecentActivities();
+      _activitySub ??= _activityRepo.activityLogged.listen(_onActivityLogged);
     } catch (e) {
       LoggerUtil.instance.e('加载仪表板数据失败: $e');
       DialogUtil.instance.error('加载仪表板数据失败: $e');
@@ -56,5 +60,17 @@ class DashboardViewModel {
       LoggerUtil.instance.e('加载最近活动失败: $e');
       DialogUtil.instance.error('加载最近活动失败: $e');
     }
+  }
+
+  /// 收到新活动日志事件时将其前插到最近活动列表（与 DB 的 id desc 顺序一致），
+  /// 使仪表盘「动态」模块即时更新，无需等待重新加载。
+  void _onActivityLogged(ActivityLogEntity log) {
+    final updated = [log, ...recentActivities.value];
+    if (updated.length > 20) updated.removeRange(20, updated.length);
+    recentActivities.value = updated;
+  }
+
+  void dispose() {
+    _activitySub?.cancel();
   }
 }

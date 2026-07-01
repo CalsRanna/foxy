@@ -28,6 +28,12 @@ class _DashboardPageRoute extends State<DashboardPage> {
   }
 
   @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.all(16.0),
