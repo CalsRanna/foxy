@@ -11,9 +11,34 @@ import 'package:signals/signals.dart';
 /// 应用根外壳的 ViewModel：聚合「功能模块清单」与「DBC 数据导入」两块
 /// 应用级运行时状态。两者生命周期相同（整个 app 运行期），由 scaffold
 /// 阶段消费。
+/// 导出对话框中单个可选 DBC 表的数据模型（不可变，通过 [copyWith] 更新选中状态）。
+class DbcExportItem {
+  final String tableShort;
+  final String dbcFileName;
+  final int recordCount;
+  final bool selected;
+
+  const DbcExportItem({
+    required this.tableShort,
+    required this.dbcFileName,
+    this.recordCount = 0,
+    this.selected = true,
+  });
+
+  DbcExportItem copyWith({bool? selected}) {
+    return DbcExportItem(
+      tableShort: tableShort,
+      dbcFileName: dbcFileName,
+      recordCount: recordCount,
+      selected: selected ?? this.selected,
+    );
+  }
+}
+
 class ScaffoldViewModel {
   final _featureRepository = GetIt.instance.get<FeatureRepository>();
   final _dbcSync = DbcSyncUtil();
+  final _dbcExport = DbcExportUtil();
 
   // ========== 功能模块 ==========
 
@@ -122,6 +147,74 @@ class ScaffoldViewModel {
     }
   }
 
+  // ========== DBC 导出 ==========
+
+  final dbcExportItems = signal<List<DbcExportItem>>([]);
+  final dbcExporting = signal(false);
+  final dbcExportProgress = signal<double?>(null);
+  final dbcExportProgressLabel = signal('');
+  final dbcExportProgressDetail = signal('');
+  final dbcExportError = signal<String?>(null);
+  final dbcExportSuccess = signal(false);
+  StreamSubscription<DbcSyncProgress>? _exportSub;
+
+  /// 加载可导出表清单及行数预览（供导出对话框展示）。
+  Future<void> loadExportItems() async {
+    try {
+      final counts = await _dbcExport.getTableRecordCounts();
+      dbcExportItems.value = kTableSchemaMap.entries.map((e) {
+        return DbcExportItem(
+          tableShort: e.key,
+          dbcFileName: kTableDbcNameMap[e.key] ?? '${e.value.name}.dbc',
+          recordCount: counts[e.key] ?? 0,
+          selected: true,
+        );
+      }).toList()
+        ..sort((a, b) => a.dbcFileName.compareTo(b.dbcFileName));
+    } catch (e) {
+      LoggerUtil.instance.e('加载导出表清单失败: $e');
+    }
+  }
+
+  /// 执行导出：将用户选中的表写回 .dbc 文件。
+  Future<bool> exportDbc(String outputDir) async {
+    final selected = dbcExportItems.value
+        .where((e) => e.selected)
+        .map((e) => e.tableShort)
+        .toList();
+    LoggerUtil.instance
+        .i('exportDbc 被调用, outputDir=$outputDir, selected=$selected');
+    if (selected.isEmpty) {
+      LoggerUtil.instance.e('exportDbc: 没有选中的表，取消导出');
+      return false;
+    }
+    if (dbcExporting.value) {
+      LoggerUtil.instance.e('exportDbc: 正在导出中，忽略重复点击');
+      return false;
+    }
+
+    dbcExporting.value = true;
+    dbcExportProgress.value = null;
+    dbcExportProgressLabel.value = '准备导出...';
+    dbcExportProgressDetail.value = '';
+    dbcExportError.value = null;
+    dbcExportSuccess.value = false;
+
+    return _runExport(outputDir, selected);
+  }
+
+  /// 重新导出（重试）。
+  Future<bool> retryExport(String outputDir) async {
+    dbcExportError.value = null;
+    dbcExportSuccess.value = false;
+    final selected = dbcExportItems.value
+        .where((e) => e.selected)
+        .map((e) => e.tableShort)
+        .toList();
+    if (selected.isEmpty) return false;
+    return _runExport(outputDir, selected);
+  }
+
   void _startImportWorker() {
     if (dbcImporting.value) return; // 防重入：setDbcPath/重试可能在导入中再次触发
     final path = dbcPath.value;
@@ -192,6 +285,72 @@ class ScaffoldViewModel {
       dbcProgress.value = null;
       dbcImportError.value = '导入出错：$e';
       LoggerUtil.instance.e('DBC 导入异常: $e');
+    }
+  }
+
+  Future<bool> _runExport(String outputDir, List<String> tableShorts) async {
+    try {
+      final config = await _dbcSync.loadConfig();
+      final stream = _dbcExport.export(
+        outputDir: outputDir,
+        tableShorts: tableShorts,
+        host: config['host'] as String? ?? '127.0.0.1',
+        port: int.tryParse(config['port'] as String? ?? '3306') ?? 3306,
+        database: config['database'] as String? ?? 'acore_world',
+        username: config['username'] as String? ?? 'acore',
+        password: config['password'] as String? ?? 'acore',
+      );
+
+      final completer = Completer<bool>();
+      _exportSub = stream.listen(
+        (progress) {
+          switch (progress) {
+            case DbcSyncStatus(:final status):
+              dbcExportProgressLabel.value = status;
+            case DbcSyncCount(:final status, :final done, :final total):
+              dbcExportProgress.value = total > 0 ? done / total : null;
+              dbcExportProgressLabel.value = status;
+              dbcExportProgressDetail.value = '已处理 $done / $total 个文件';
+            case DbcSyncResult(
+              :final success,
+              :final imported,
+              :final skipped,
+              :final errors,
+            ):
+              _exportSub?.cancel();
+              _exportSub = null;
+              dbcExporting.value = false;
+              dbcExportProgress.value = null;
+              dbcExportProgressLabel.value = '';
+              dbcExportProgressDetail.value = '';
+              if (success) {
+                LoggerUtil.instance.i('DBC 导出完成: $imported 个, 跳过 $skipped 个');
+                dbcExportSuccess.value = true;
+                completer.complete(true);
+              } else {
+                final top = errors.take(3).join('\n');
+                dbcExportError.value =
+                    '导出完成，部分文件失败：\n$top'
+                    '${errors.length > 3 ? '\n...等 ${errors.length} 个错误' : ''}';
+                completer.complete(false);
+              }
+          }
+        },
+        onDone: () {
+          if (dbcExporting.value) {
+            dbcExporting.value = false;
+            dbcExportProgress.value = null;
+          }
+          if (!completer.isCompleted) completer.complete(false);
+        },
+      );
+      return completer.future;
+    } catch (e) {
+      dbcExporting.value = false;
+      dbcExportProgress.value = null;
+      dbcExportError.value = '导出出错：$e';
+      LoggerUtil.instance.e('DBC 导出异常: $e');
+      return false;
     }
   }
 }
