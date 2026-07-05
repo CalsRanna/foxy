@@ -45,7 +45,15 @@ const requiredDbcTableNames = [
   'dbc_vehicle',
 ];
 
-/// 同步进度事件。导入/导出过程通过 [DbcSyncUtil.import] 的流回传。
+// ========== DBC 导出：表名映射 ==========
+
+/// 表短名（如 "dbc_faction"）→ [DbcSchema] 的映射，供导出使用。
+final Map<String, DbcSchema> kTableSchemaMap = _buildTableSchemaMap();
+
+/// 表短名 → DBC 文件名（如 "Faction.dbc"）。
+final Map<String, String> kTableDbcNameMap = _buildTableDbcNameMap();
+
+/// 同步进度事件。导入/导出过程通过 [DbcSyncUtil.import] / [DbcExportUtil.export] 的流回传。
 sealed class DbcSyncProgress {}
 
 /// 单条状态文本（如「正在扫描 DBC 目录...」）。
@@ -236,6 +244,91 @@ class DbcSyncUtil {
   String get _configPath => p.join(Directory.current.path, 'config.yaml');
 }
 
+// ========== DBC 导出工具 ==========
+
+/// DBC 导出工具：将 MySQL 中的 DBC 数据写回 .dbc 文件。
+///
+/// 所有耗时操作在 worker isolate 内完成，通过 [export] 返回的 [Stream] 报告进度。
+class DbcExportUtil {
+  /// 获取可导出表的行数预览（批量查询，一次往返）。
+  Future<Map<String, int>> getTableRecordCounts() async {
+    final laconic = Database.instance.laconic;
+    final tables = kTableSchemaMap.keys.toList();
+    if (tables.isEmpty) return {};
+
+    try {
+      final union = tables
+          .map((t) => "SELECT '$t' AS t, COUNT(*) AS c FROM foxy.$t")
+          .join(' UNION ALL ');
+      final rows = await laconic.select(union);
+      final counts = <String, int>{};
+      for (final r in rows) {
+        counts[r['t'] as String] = (r['c'] as num).toInt();
+      }
+      return counts;
+    } catch (_) {
+      // 批量查询失败时返回全零（UI 可据此隐藏行数显示）
+      return {for (final t in tables) t: 0};
+    }
+  }
+
+  /// 启动导出：在 worker isolate 内从 MySQL 读取选定表并写入 .dbc 文件。
+  ///
+  /// [outputDir] 输出目录，[tableShorts] 用户选中的表短名集合。
+  /// 返回进度事件流，最后发一个 [DbcSyncResult] 后关闭。
+  Stream<DbcSyncProgress> export({
+    required String outputDir,
+    required List<String> tableShorts,
+    required String host,
+    required int port,
+    required String database,
+    required String username,
+    required String password,
+  }) {
+    final controller = StreamController<DbcSyncProgress>();
+    final receivePort = ReceivePort();
+
+    () async {
+      try {
+        await Isolate.spawn(_exportWorker, (
+          sendPort: receivePort.sendPort,
+          outputDir: outputDir,
+          tableShorts: tableShorts,
+          host: host,
+          port: port,
+          database: database,
+          username: username,
+          password: password,
+        ));
+
+        await for (final msg in receivePort) {
+          switch (msg) {
+            case (String status,):
+              controller.add(DbcSyncStatus(status));
+            case (String status, int d, int t):
+              controller.add(DbcSyncCount(status, d, t));
+            case (bool success, int exported, int skipped, List errs):
+              controller.add(
+                DbcSyncResult(success, exported, skipped, errs.cast<String>()),
+              );
+              break;
+            default:
+              break;
+          }
+        }
+        receivePort.close();
+        await controller.close();
+      } catch (e) {
+        LoggerUtil.instance.e('DBC 导出异常: $e');
+        controller.add(DbcSyncResult(false, 0, 0, ['导出出错：$e']));
+        await controller.close();
+      }
+    }();
+
+    return controller.stream;
+  }
+}
+
 // ========== 类型定义 ==========
 
 typedef _FieldDef = ({int index, String name, String type, String sqlType});
@@ -250,6 +343,17 @@ typedef _FileDef = ({
 typedef _WorkerArgs = ({
   SendPort sendPort,
   String dbcPath,
+  String host,
+  int port,
+  String database,
+  String username,
+  String password,
+});
+
+typedef _ExportWorkerArgs = ({
+  SendPort sendPort,
+  String outputDir,
+  List<String> tableShorts,
   String host,
   int port,
   String database,
@@ -619,4 +723,174 @@ String _sqlTypeFromString(String type) {
     'boolean' => 'TINYINT(1)',
     _ => 'INT',
   };
+}
+
+// ========== 导出表映射构建 ==========
+
+Map<String, DbcSchema> _buildTableSchemaMap() {
+  final schemas = [
+    Definitions.achievement,
+    Definitions.areaTable,
+    Definitions.charTitles,
+    Definitions.creatureDisplayInfo,
+    Definitions.creatureModelData,
+    Definitions.creatureSpellData,
+    Definitions.currencyTypes,
+    Definitions.emotesText,
+    Definitions.faction,
+    Definitions.gemProperties,
+    Definitions.glyphProperties,
+    Definitions.itemDisplayInfo,
+    Definitions.itemExtendedCost,
+    Definitions.itemRandomProperties,
+    Definitions.itemRandomSuffix,
+    Definitions.itemSet,
+    Definitions.lock,
+    Definitions.map,
+    Definitions.questFactionReward,
+    Definitions.questInfo,
+    Definitions.questSort,
+    Definitions.scalingStatDistribution,
+    Definitions.scalingStatValues,
+    Definitions.spell,
+    Definitions.spellDuration,
+    Definitions.spellIcon,
+    Definitions.spellItemEnchantment,
+    Definitions.spellRange,
+    Definitions.talent,
+    Definitions.vehicle,
+  ];
+  final map = <String, DbcSchema>{};
+  for (final s in schemas) {
+    final tableShort = 'dbc_${_toSnakeCase(s.name)}';
+    if (requiredDbcTableNames.contains(tableShort)) {
+      map[tableShort] = s;
+    }
+  }
+  return map;
+}
+
+Map<String, String> _buildTableDbcNameMap() {
+  final map = <String, String>{};
+  for (final e in kTableSchemaMap.entries) {
+    map[e.key] = '${e.value.name}.dbc';
+  }
+  return map;
+}
+
+// ========== 导出 Worker ==========
+
+Future<void> _exportWorker(_ExportWorkerArgs args) async {
+  final (:sendPort, :outputDir, :tableShorts, :host, :port, :database,
+      :username, :password) = args;
+
+  // 验证输出目录
+  final outDir = Directory(outputDir);
+  if (!await outDir.exists()) {
+    sendPort.send((false, 0, 0, ['输出目录不存在: $outputDir']));
+    return;
+  }
+
+  sendPort.send(('正在连接数据库...',));
+
+  final config = MysqlConfig(
+    host: host, port: port, database: database,
+    username: username, password: password,
+  );
+  var laconic = Laconic(MysqlDriver(config));
+
+  try {
+    var exported = 0;
+    var skipped = 0;
+    final errors = <String>[];
+    final total = tableShorts.length;
+
+    for (var i = 0; i < tableShorts.length; i++) {
+      final tableShort = tableShorts[i];
+      final schema = kTableSchemaMap[tableShort];
+      if (schema == null) {
+        errors.add('$tableShort: 未知的 DBC 表');
+        continue;
+      }
+      final fileName = kTableDbcNameMap[tableShort]!;
+
+      sendPort.send(('正在导出 $fileName...',));
+
+      try {
+        // 读取全量行（DbcWriter 需要所有记录以构建 string block）
+        final rows = await laconic
+            .select('SELECT * FROM foxy.$tableShort ORDER BY ID');
+
+        if (rows.isEmpty) {
+          skipped++;
+          sendPort.send((fileName, exported + skipped + errors.length, total));
+          continue;
+        }
+
+        // 转换为 DBC 记录格式
+        final records = rows.map((r) => _rowToRecordList(r.toMap(), schema)).toList();
+
+        // 写入 .dbc 文件
+        final outPath = p.join(outputDir, fileName);
+        final writer = DbcWriter(outPath, schema.format);
+        await writer.writeAsync(records);
+
+        exported++;
+      } catch (e) {
+        errors.add('$fileName: $e');
+      }
+
+      sendPort.send((fileName, exported + skipped + errors.length, total));
+    }
+
+    sendPort.send((errors.isEmpty, exported, skipped, errors));
+  } catch (e) {
+    sendPort.send((false, 0, 0, ['导出 Worker 错误: $e']));
+  } finally {
+    await laconic.close();
+  }
+}
+
+/// 将 MySQL 查询结果的一行转换为按 DBC format 串顺序排列的 [List<dynamic>]。
+///
+/// 以 format 字符为准决定目标类型（而非 schema field type），
+/// 解决 locale flag 字段（schema=int32，format=s）的类型不匹配。
+List<dynamic> _rowToRecordList(Map<String, dynamic> row, DbcSchema schema) {
+  final fieldByIndex = <int, Field>{};
+  for (final f in schema.fields) {
+    fieldByIndex[f.index] = f;
+  }
+
+  final result = <dynamic>[];
+  for (var i = 0; i < schema.format.length; i++) {
+    final formatChar = schema.format[i];
+    final f = fieldByIndex[i];
+    final raw = f != null ? row[f.name] : null;
+
+    dynamic value;
+    if (f == null) {
+      value = 0;
+    } else {
+      value = switch (f.type) {
+        FieldType.id || FieldType.int32 => (raw as int?) ?? 0,
+        FieldType.uint8 => ((raw as int?) ?? 0).clamp(0, 255),
+        FieldType.float => ((raw as num?)?.toDouble()) ?? 0.0,
+        FieldType.string => (raw as String?) ?? '',
+        FieldType.boolean => (raw == 1),
+        FieldType.unused || FieldType.unusedByte || FieldType.sort => 0,
+      };
+    }
+
+    // 用 format 字符做最终类型纠正：DbcWriter 按 format 判断类型
+    if (formatChar == 's' && value is! String) {
+      value = value.toString();
+    } else if (formatChar == 'i' && value is! int) {
+      value = (num.tryParse(value.toString())?.toInt()) ?? 0;
+    } else if (formatChar == 'f' && value is! double) {
+      value = (num.tryParse(value.toString())?.toDouble()) ?? 0.0;
+    }
+
+    result.add(value);
+  }
+  return result;
 }
