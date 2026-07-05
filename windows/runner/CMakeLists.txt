@@ -38,3 +38,11 @@ target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
 
 # Run the Flutter tool portions of the build. This must not be removed.
 add_dependencies(${BINARY_NAME} flutter_assemble)
+
+# Copy game icons to the output directory after each build.
+# CMAKE_SOURCE_DIR = <project>/windows/, so ../ goes to project root.
+add_custom_command(TARGET ${BINARY_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/../asset/icon"
+    "$<TARGET_FILE_DIR:${BINARY_NAME}>/data/icon"
+)
