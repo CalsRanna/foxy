@@ -6,13 +6,13 @@ import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_enums.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/page/item/item_template_detail_view_model.dart';
-import 'package:foxy/page/item/item_template_locale_description_selector.dart';
-import 'package:foxy/page/item/item_template_locale_name_selector.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/locale_picker_delegates.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -74,18 +74,20 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final nameInput = FormItem(
       label: '名称',
-      child: ItemTemplateLocaleNameSelector(
+      child: FoxyLocalePicker(
         entry: widget.entry,
         controller: viewModel.nameController,
+        delegate: LocalePickerDelegates.itemName,
         placeholder: 'name',
         title: '名称',
       ),
     );
     final descriptionInput = FormItem(
       label: '描述',
-      child: ItemTemplateLocaleDescriptionSelector(
+      child: FoxyLocalePicker(
         entry: widget.entry,
         controller: viewModel.descriptionController,
+        delegate: LocalePickerDelegates.itemDescription,
         placeholder: 'description',
         title: '描述',
       ),

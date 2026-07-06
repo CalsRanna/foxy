@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
-import 'package:foxy/page/game_object/game_object_template_locale_name_selector.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/locale_picker_delegates.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -45,21 +46,22 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
     );
     final nameInput = FormItem(
       label: '名称',
-      child: GameObjectTemplateLocaleNameSelector(
+      child: FoxyLocalePicker(
         entry: widget.entry,
         controller: viewModel.nameController,
+        delegate: LocalePickerDelegates.gameObjectName,
         placeholder: 'name',
         title: '名称',
       ),
     );
     final castBarCaptionInput = FormItem(
       label: '使用说明',
-      child: GameObjectTemplateLocaleNameSelector(
+      child: FoxyLocalePicker(
         entry: widget.entry,
         controller: viewModel.castBarCaptionController,
+        delegate: LocalePickerDelegates.gameObjectCaption,
         placeholder: 'castBarCaption',
         title: '使用说明',
-        isCaption: true,
       ),
     );
     final iconNameInput = FormItem(

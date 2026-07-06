@@ -5,11 +5,12 @@ import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
-import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -48,18 +49,20 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     );
     final nameInput = FormItem(
       label: '名称',
-      child: CreatureTemplateLocaleNameSelector(
+      child: FoxyLocalePicker(
         entry: widget.entry,
         controller: viewModel.nameController,
+        delegate: LocalePickerDelegates.creatureTemplateName,
         placeholder: 'name',
         title: '名称',
       ),
     );
     final subNameInput = FormItem(
       label: '称号',
-      child: CreatureTemplateLocaleNameSelector(
+      child: FoxyLocalePicker(
         entry: widget.entry,
         controller: viewModel.subNameController,
+        delegate: LocalePickerDelegates.creatureTemplateName,
         placeholder: 'subname',
         title: '称号',
       ),
