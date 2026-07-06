@@ -37,7 +37,7 @@ void showFoxyContextMenu({
           child: GestureDetector(
             onTap: () => controller.hide(),
             onSecondaryTap: () => controller.hide(),
-            behavior: HitTestBehavior.translucent,
+            child: Container(color: Colors.transparent),
           ),
         ),
         Positioned(
