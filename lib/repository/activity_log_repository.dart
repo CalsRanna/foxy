@@ -26,4 +26,8 @@ class ActivityLogRepository with RepositoryMixin {
 
     return rows.map((row) => ActivityLogEntity.fromJson(row.toMap())).toList();
   }
+
+  Future<int> countActivityLogs() async {
+    return laconic.table(_table).count();
+  }
 }

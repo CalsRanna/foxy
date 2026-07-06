@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/event/activity_logged_event.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/repository/feature_repository.dart';
 import 'package:foxy/util/event_bus.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -21,12 +22,15 @@ class DashboardViewModel {
   final _activityRepo = GetIt.instance.get<ActivityLogRepository>();
   final _eventBus = GetIt.instance.get<EventBus>();
   StreamSubscription<ActivityLoggedEvent>? _activitySub;
+  final _featureRepository = GetIt.instance.get<FeatureRepository>();
 
   final coreVersion = signal('');
   final coreRevision = signal('');
   final databaseVersion = signal('');
   final softwareVersion = signal('');
   final recentActivities = signal(<ActivityLogEntity>[]);
+  final featureCount = signal(0);
+  final activityCount = signal(0);
 
   void navigateToMenu(RouterMenu menu) {
     final feature = scaffoldViewModel.allFeatures.value
@@ -49,9 +53,11 @@ class DashboardViewModel {
       softwareVersion.value =
           '${packageInfo.version}+${packageInfo.buildNumber}';
       await _loadRecentActivities();
-      _activitySub ??= _eventBus
-          .on<ActivityLoggedEvent>()
-          .listen((e) => _onActivityLogged(e.log));
+      featureCount.value = await _featureRepository.countFeatures();
+      activityCount.value = await _activityRepo.countActivityLogs();
+      _activitySub ??= _eventBus.on<ActivityLoggedEvent>().listen(
+        (e) => _onActivityLogged(e.log),
+      );
     } catch (e) {
       LoggerUtil.instance.e('加载仪表板数据失败: $e');
       DialogUtil.instance.error('加载仪表板数据失败: $e');
@@ -73,6 +79,7 @@ class DashboardViewModel {
     final updated = [log, ...recentActivities.value];
     if (updated.length > 20) updated.removeRange(20, updated.length);
     recentActivities.value = updated;
+    activityCount.value += 1;
   }
 
   void dispose() {
