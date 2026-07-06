@@ -8,7 +8,7 @@ import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/page/item/item_template_detail_view_model.dart';
 import 'package:foxy/page/item/item_template_locale_description_selector.dart';
 import 'package:foxy/page/item/item_template_locale_name_selector.dart';
-import 'package:foxy/widget/flag_picker.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -277,7 +277,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final bagFamilyInput = FormItem(
       label: '背包类别',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.bagFamilyController,
         flags: kItemBagFamilyOptions,
         title: '背包类别',
@@ -387,7 +387,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     /// ==================== Card 3: 标识 ====================
     final flagsInput = FormItem(
       label: '物品标识',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.flagsController,
         flags: kItemFlagOptions,
         title: '物品标识',
@@ -397,7 +397,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final flagsExtraInput = FormItem(
       label: '额外标识',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.flagsExtraController,
         flags: kItemFlagsExtraOptions,
         title: '额外标识',
@@ -407,7 +407,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final flagsCustomInput = FormItem(
       label: '自定义标识',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.flagsCustomController,
         flags: kItemFlagsCustomOptions,
         title: '自定义标识',
@@ -558,7 +558,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final scalingStatValueInput = FormItem(
       label: '缩放值',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.scalingStatValueController,
         flags: kItemScalingStatValueOptions,
         title: '缩放值',
@@ -654,7 +654,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     /// ==================== Card 9: 需求 ====================
     final allowableClassInput = FormItem(
       label: '允许职业',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.allowableClassController,
         flags: kAllowableClassOptions,
         title: '允许职业',
@@ -664,7 +664,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     );
     final allowableRaceInput = FormItem(
       label: '允许种族',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.allowableRaceController,
         flags: kAllowableRaceOptions,
         title: '允许种族',

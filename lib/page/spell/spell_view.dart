@@ -9,7 +9,7 @@ import 'package:foxy/page/spell/spell_detail_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/flag_picker.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -106,7 +106,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final schoolMaskInput = FormItem(
       label: '法术类型掩码',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.schoolMaskFlagController,
         flags: kSpellSchoolMaskOptions,
         title: '法术类型掩码',
@@ -250,7 +250,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final targetsInput = FormItem(
       label: '目标限制',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.targetsController,
         flags: kSpellCastTargetFlagsOptions,
         title: '目标限制',
@@ -321,7 +321,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final facingCasterFlagsInput = FormItem(
       label: '施法朝向',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.facingCasterFlagsController,
         flags: kSpellFacingFlagsOptions,
         title: '施法朝向',
@@ -392,7 +392,7 @@ class _SpellViewState extends State<SpellView> {
     // === 标志位（所有属性标志） ===
     final interruptFlagsInput = FormItem(
       label: '打断标志',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.interruptFlagsController,
         flags: kSpellInterruptFlagsOptions,
         title: '打断标志',
@@ -402,7 +402,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final auraInterruptFlagsInput = FormItem(
       label: '光环打断标志',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.auraInterruptFlagsController,
         flags: kSpellAuraInterruptFlagsOptions,
         title: '光环打断标志',
@@ -412,7 +412,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final channelInterruptFlagsInput = FormItem(
       label: '引导打断标志',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.channelInterruptFlagsController,
         flags: kSpellChannelInterruptFlagsOptions,
         title: '引导打断标志',
@@ -422,7 +422,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final attributesInput = FormItem(
       label: '属性',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.attributesController,
         flags: kSpellAttr0Options,
         title: '属性 (Attributes)',
@@ -432,7 +432,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final attributesExInput = FormItem(
       label: '属性Ex',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.attributesExController,
         flags: kSpellAttr1Options,
         title: '属性Ex (AttributesEx)',
@@ -442,7 +442,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final attributesExBInput = FormItem(
       label: '属性ExB',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.attributesExBController,
         flags: kSpellAttr2Options,
         title: '属性ExB (AttributesExB)',
@@ -452,7 +452,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final attributesExCInput = FormItem(
       label: '属性ExC',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.attributesExCController,
         flags: kSpellAttr3Options,
         title: '属性ExC (AttributesExC)',
@@ -462,7 +462,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final attributesExDInput = FormItem(
       label: '属性ExD',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.attributesExDController,
         flags: kSpellAttr4Options,
         title: '属性ExD (AttributesExD)',
@@ -472,7 +472,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final attributesExEInput = FormItem(
       label: '属性ExE',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.attributesExEController,
         flags: kSpellAttr5Options,
         title: '属性ExE (AttributesExE)',
@@ -482,7 +482,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final attributesExFInput = FormItem(
       label: '属性ExF',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.attributesExFController,
         flags: kSpellAttr6Options,
         title: '属性ExF (AttributesExF)',
@@ -492,7 +492,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final attributesExGInput = FormItem(
       label: '属性ExG',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.attributesExGController,
         flags: kSpellAttr7Options,
         title: '属性ExG (AttributesExG)',
@@ -504,7 +504,7 @@ class _SpellViewState extends State<SpellView> {
     // === 触发 ===
     final procTypeMaskInput = FormItem(
       label: '触发类型掩码',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.procTypeMaskController,
         flags: kSpellProcFlagsOptions,
         title: '触发类型掩码',
@@ -557,7 +557,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final equippedItemInvTypesInput = FormItem(
       label: '装备栏位',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.equippedItemInvTypesController,
         flags: kInventoryTypeOptions,
         title: '装备栏位',
@@ -719,7 +719,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final shapeshiftMask0Input = FormItem(
       label: '变形掩码',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.shapeshiftMask0Controller,
         flags: kShapeshiftFormMaskOptions,
         title: '变形掩码',
@@ -729,7 +729,7 @@ class _SpellViewState extends State<SpellView> {
     );
     final shapeshiftExclude0Input = FormItem(
       label: '变形排除',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: vm.shapeshiftExclude0Controller,
         flags: kShapeshiftFormMaskOptions,
         title: '变形排除',
@@ -1018,7 +1018,7 @@ class _SpellViewState extends State<SpellView> {
                     Expanded(
                       child: FormItem(
                         label: '分类掩码1',
-                        child: FlagPicker(
+                        child: FoxyFlagPicker(
                           controller: vm.spellClassMask0Controller,
                           flags: kSpellClassMaskBits,
                           title: '分类掩码1',
@@ -1030,7 +1030,7 @@ class _SpellViewState extends State<SpellView> {
                     Expanded(
                       child: FormItem(
                         label: '分类掩码2',
-                        child: FlagPicker(
+                        child: FoxyFlagPicker(
                           controller: vm.spellClassMask1Controller,
                           flags: kSpellClassMaskBits,
                           title: '分类掩码2',
@@ -1042,7 +1042,7 @@ class _SpellViewState extends State<SpellView> {
                     Expanded(
                       child: FormItem(
                         label: '分类掩码3',
-                        child: FlagPicker(
+                        child: FoxyFlagPicker(
                           controller: vm.spellClassMask2Controller,
                           flags: kSpellClassMaskBits,
                           title: '分类掩码3',
@@ -1641,7 +1641,7 @@ class _SpellViewState extends State<SpellView> {
               Expanded(
                 child: FormItem(
                   label: '分类掩码A',
-                  child: FlagPicker(
+                  child: FoxyFlagPicker(
                     controller: maskAController,
                     flags: kSpellClassMaskBits,
                     title: '分类掩码A',
@@ -1653,7 +1653,7 @@ class _SpellViewState extends State<SpellView> {
               Expanded(
                 child: FormItem(
                   label: '分类掩码B',
-                  child: FlagPicker(
+                  child: FoxyFlagPicker(
                     controller: maskBController,
                     flags: kSpellClassMaskBits,
                     title: '分类掩码B',
@@ -1665,7 +1665,7 @@ class _SpellViewState extends State<SpellView> {
               Expanded(
                 child: FormItem(
                   label: '分类掩码C',
-                  child: FlagPicker(
+                  child: FoxyFlagPicker(
                     controller: maskCController,
                     flags: kSpellClassMaskBits,
                     title: '分类掩码C',
@@ -1721,8 +1721,9 @@ class _MiscValueInputState extends State<_MiscValueInput> {
       if (_isSelectMode) {
         _syncController();
       } else if (_isFlagMode) {
-        _flagDisplayController.text =
-            formatFlagValue(int.tryParse(widget.textController.text) ?? 0);
+        _flagDisplayController.text = formatFlagValue(
+          int.tryParse(widget.textController.text) ?? 0,
+        );
       }
     }
   }
@@ -1752,7 +1753,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   @override
   Widget build(BuildContext context) {
     if (_isFlagMode) {
-      return FlagPicker(
+      return FoxyFlagPicker(
         controller: _flagDisplayController,
         flags: widget.options as List<FlagItem>,
         title: '杂项值',

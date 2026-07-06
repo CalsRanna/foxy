@@ -6,7 +6,7 @@ import 'package:foxy/constant/gossip_menu_option_constants.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/flag_picker.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
@@ -200,7 +200,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   Expanded(
                     child: _labeled(
                       'NPC标识',
-                      FlagPicker(
+                      FoxyFlagPicker(
                         controller: viewModel.optionNpcFlagController,
                         flags: kNpcFlagOptions,
                         title: 'Npc标识编辑器',

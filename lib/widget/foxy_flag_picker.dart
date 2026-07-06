@@ -13,14 +13,14 @@ String formatFlagValue(int value) {
 /// [controller] 的文本由调用方在初始化时设置（通过 [formatFlagValue]），
 /// 弹窗确认后组件自动写回 [controller]。
 /// [onChanged] 在用户选择新值后回调，用于更新外部状态（如 signal）。
-class FlagPicker extends StatefulWidget {
+class FoxyFlagPicker extends StatefulWidget {
   final TextEditingController controller;
   final List<FlagItem> flags;
   final String title;
   final String? placeholder;
   final ValueChanged<int>? onChanged;
 
-  const FlagPicker({
+  const FoxyFlagPicker({
     super.key,
     required this.controller,
     required this.flags,
@@ -30,10 +30,10 @@ class FlagPicker extends StatefulWidget {
   });
 
   @override
-  State<FlagPicker> createState() => _FlagPickerState();
+  State<FoxyFlagPicker> createState() => _FoxyFlagPickerState();
 }
 
-class _FlagPickerState extends State<FlagPicker> {
+class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
   @override
   Widget build(BuildContext context) {
     return ShadInput(
