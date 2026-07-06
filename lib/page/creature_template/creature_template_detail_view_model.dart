@@ -6,6 +6,7 @@ import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/widget/flag_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -32,11 +33,17 @@ class CreatureTemplateDetailViewModel {
   final gossipMenuIdController = TextEditingController();
 
   final npcFlag = signal<int>(0);
+  final npcFlagController = TextEditingController();
   final typeFlag = signal<int>(0);
+  final typeFlagController = TextEditingController();
   final dynamicFlag = signal<int>(0);
+  final dynamicFlagController = TextEditingController();
   final extraFlag = signal<int>(0);
+  final extraFlagController = TextEditingController();
   final unitFlag = signal<int>(0);
+  final unitFlagController = TextEditingController();
   final unitFlag2 = signal<int>(0);
+  final unitFlag2Controller = TextEditingController();
 
   final creatureImmunitiesIdController = TextEditingController();
 
@@ -198,9 +205,11 @@ class CreatureTemplateDetailViewModel {
     difficultyEntry1Controller.dispose();
     difficultyEntry2Controller.dispose();
     difficultyEntry3Controller.dispose();
+    dynamicFlagController.dispose();
     entryController.dispose();
     expController.dispose();
     experienceModifierController.dispose();
+    extraFlagController.dispose();
     lootIdController.dispose();
     pickpocketLootController.dispose();
     skinLootController.dispose();
@@ -220,6 +229,7 @@ class CreatureTemplateDetailViewModel {
     movementIdController.dispose();
     movementTypeController.dispose();
     nameController.dispose();
+    npcFlagController.dispose();
     petSpellDataIdController.dispose();
     racialLeaderController.dispose();
     rangeAttackTimeController.dispose();
@@ -233,7 +243,10 @@ class CreatureTemplateDetailViewModel {
     speedWalkController.dispose();
     subNameController.dispose();
     typeController.dispose();
+    typeFlagController.dispose();
     unitClassController.dispose();
+    unitFlagController.dispose();
+    unitFlag2Controller.dispose();
     vehicleIdController.dispose();
     verifiedBuildController.dispose();
   }
@@ -267,11 +280,17 @@ class CreatureTemplateDetailViewModel {
     gossipMenuIdController.text = _fmt(template.gossipMenuId);
 
     npcFlag.value = template.npcFlag;
+    npcFlagController.text = formatFlagValue(template.npcFlag);
     typeFlag.value = template.typeFlags;
+    typeFlagController.text = formatFlagValue(template.typeFlags);
     dynamicFlag.value = template.dynamicFlags;
+    dynamicFlagController.text = formatFlagValue(template.dynamicFlags);
     extraFlag.value = template.flagsExtra;
+    extraFlagController.text = formatFlagValue(template.flagsExtra);
     unitFlag.value = template.unitFlags;
+    unitFlagController.text = formatFlagValue(template.unitFlags);
     unitFlag2.value = template.unitFlags2;
+    unitFlag2Controller.text = formatFlagValue(template.unitFlags2);
 
     creatureImmunitiesIdController.text = _fmt(template.creatureImmunitiesId);
 

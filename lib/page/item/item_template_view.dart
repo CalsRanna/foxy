@@ -278,10 +278,11 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final bagFamilyInput = FormItem(
       label: '背包类别',
       child: FlagPicker(
-        signal: viewModel.bagFamily,
+        controller: viewModel.bagFamilyController,
         flags: kItemBagFamilyOptions,
         title: '背包类别',
         placeholder: 'BagFamily',
+        onChanged: (v) => viewModel.bagFamily.value = v,
       ),
     );
     final containerSlotsInput = FormItem(
@@ -387,28 +388,31 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final flagsInput = FormItem(
       label: '物品标识',
       child: FlagPicker(
-        signal: viewModel.flags,
+        controller: viewModel.flagsController,
         flags: kItemFlagOptions,
         title: '物品标识',
         placeholder: 'flags',
+        onChanged: (v) => viewModel.flags.value = v,
       ),
     );
     final flagsExtraInput = FormItem(
       label: '额外标识',
       child: FlagPicker(
-        signal: viewModel.flagsExtra,
+        controller: viewModel.flagsExtraController,
         flags: kItemFlagsExtraOptions,
         title: '额外标识',
         placeholder: 'flagsExtra',
+        onChanged: (v) => viewModel.flagsExtra.value = v,
       ),
     );
     final flagsCustomInput = FormItem(
       label: '自定义标识',
       child: FlagPicker(
-        signal: viewModel.flagsCustom,
+        controller: viewModel.flagsCustomController,
         flags: kItemFlagsCustomOptions,
         title: '自定义标识',
         placeholder: 'flagsCustom',
+        onChanged: (v) => viewModel.flagsCustom.value = v,
       ),
     );
 
@@ -555,10 +559,11 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final scalingStatValueInput = FormItem(
       label: '缩放值',
       child: FlagPicker(
-        signal: viewModel.scalingStatValue,
+        controller: viewModel.scalingStatValueController,
         flags: kItemScalingStatValueOptions,
         title: '缩放值',
         placeholder: 'ScalingStatValue',
+        onChanged: (v) => viewModel.scalingStatValue.value = v,
       ),
     );
 
@@ -650,19 +655,21 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final allowableClassInput = FormItem(
       label: '允许职业',
       child: FlagPicker(
-        signal: viewModel.allowableClass,
+        controller: viewModel.allowableClassController,
         flags: kAllowableClassOptions,
         title: '允许职业',
         placeholder: 'AllowableClass',
+        onChanged: (v) => viewModel.allowableClass.value = v,
       ),
     );
     final allowableRaceInput = FormItem(
       label: '允许种族',
       child: FlagPicker(
-        signal: viewModel.allowableRace,
+        controller: viewModel.allowableRaceController,
         flags: kAllowableRaceOptions,
         title: '允许种族',
         placeholder: 'AllowableRace',
+        onChanged: (v) => viewModel.allowableRace.value = v,
       ),
     );
     final itemLevelInput = FormItem(

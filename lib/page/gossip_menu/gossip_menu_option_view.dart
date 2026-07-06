@@ -201,10 +201,11 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                     child: _labeled(
                       'NPC标识',
                       FlagPicker(
-                        signal: viewModel.optionNpcFlag,
+                        controller: viewModel.optionNpcFlagController,
                         flags: kNpcFlagOptions,
                         title: 'Npc标识编辑器',
                         placeholder: 'OptionNpcFlag',
+                        onChanged: (v) => viewModel.optionNpcFlag.value = v,
                       ),
                     ),
                   ),

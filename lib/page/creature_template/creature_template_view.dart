@@ -222,55 +222,61 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final npcFlagInput = FormItem(
       label: 'NPC标识',
       child: FlagPicker(
-        signal: viewModel.npcFlag,
+        controller: viewModel.npcFlagController,
         flags: kNpcFlagOptions,
         title: 'NPC标识',
         placeholder: 'npcflag',
+        onChanged: (v) => viewModel.npcFlag.value = v,
       ),
     );
     final typeFlagInput = FormItem(
       label: '类型标识',
       child: FlagPicker(
-        signal: viewModel.typeFlag,
+        controller: viewModel.typeFlagController,
         flags: kCreatureTypeFlagOptions,
         title: '类型标识',
         placeholder: 'type_flags',
+        onChanged: (v) => viewModel.typeFlag.value = v,
       ),
     );
     final dynamicFlagInput = FormItem(
       label: '动态标识',
       child: FlagPicker(
-        signal: viewModel.dynamicFlag,
+        controller: viewModel.dynamicFlagController,
         flags: kDynamicFlagOptions,
         title: '动态标识',
         placeholder: 'dynamicflags',
+        onChanged: (v) => viewModel.dynamicFlag.value = v,
       ),
     );
     final extraFlagInput = FormItem(
       label: '额外标识',
       child: FlagPicker(
-        signal: viewModel.extraFlag,
+        controller: viewModel.extraFlagController,
         flags: kFlagsExtraOptions,
         title: '额外标识',
         placeholder: 'flags_extra',
+        onChanged: (v) => viewModel.extraFlag.value = v,
       ),
     );
     final unitFlagInput = FormItem(
       label: '单位标识',
       child: FlagPicker(
-        signal: viewModel.unitFlag,
+        controller: viewModel.unitFlagController,
         flags: kUnitFlagOptions,
         title: '单位标识',
         placeholder: 'unit_flags',
+        onChanged: (v) => viewModel.unitFlag.value = v,
       ),
     );
     final unitFlag2Input = FormItem(
       label: '单位标识2',
       child: FlagPicker(
-        signal: viewModel.unitFlag2,
+        controller: viewModel.unitFlag2Controller,
         flags: kUnitFlag2Options,
         title: '单位标识2',
         placeholder: 'unit_flags2',
+        onChanged: (v) => viewModel.unitFlag2.value = v,
       ),
     );
 

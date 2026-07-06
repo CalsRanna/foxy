@@ -107,10 +107,11 @@ class _SpellViewState extends State<SpellView> {
     final schoolMaskInput = FormItem(
       label: '法术类型掩码',
       child: FlagPicker(
-        signal: vm.schoolMask,
+        controller: vm.schoolMaskFlagController,
         flags: kSpellSchoolMaskOptions,
         title: '法术类型掩码',
         placeholder: 'SchoolMask',
+        onChanged: (v) => vm.schoolMask.value = v,
       ),
     );
     final mechanicInput = FormItem(
@@ -250,10 +251,11 @@ class _SpellViewState extends State<SpellView> {
     final targetsInput = FormItem(
       label: '目标限制',
       child: FlagPicker(
-        signal: vm.targets,
+        controller: vm.targetsController,
         flags: kSpellCastTargetFlagsOptions,
         title: '目标限制',
         placeholder: 'Targets',
+        onChanged: (v) => vm.targets.value = v,
       ),
     );
     final maxTargetsInput = FormItem(
@@ -320,10 +322,11 @@ class _SpellViewState extends State<SpellView> {
     final facingCasterFlagsInput = FormItem(
       label: '施法朝向',
       child: FlagPicker(
-        signal: vm.facingCasterFlags,
+        controller: vm.facingCasterFlagsController,
         flags: kSpellFacingFlagsOptions,
         title: '施法朝向',
         placeholder: 'FacingCasterFlags',
+        onChanged: (v) => vm.facingCasterFlags.value = v,
       ),
     );
 
@@ -390,100 +393,111 @@ class _SpellViewState extends State<SpellView> {
     final interruptFlagsInput = FormItem(
       label: '打断标志',
       child: FlagPicker(
-        signal: vm.interruptFlags,
+        controller: vm.interruptFlagsController,
         flags: kSpellInterruptFlagsOptions,
         title: '打断标志',
         placeholder: 'InterruptFlags',
+        onChanged: (v) => vm.interruptFlags.value = v,
       ),
     );
     final auraInterruptFlagsInput = FormItem(
       label: '光环打断标志',
       child: FlagPicker(
-        signal: vm.auraInterruptFlags,
+        controller: vm.auraInterruptFlagsController,
         flags: kSpellAuraInterruptFlagsOptions,
         title: '光环打断标志',
         placeholder: 'AuraInterruptFlags',
+        onChanged: (v) => vm.auraInterruptFlags.value = v,
       ),
     );
     final channelInterruptFlagsInput = FormItem(
       label: '引导打断标志',
       child: FlagPicker(
-        signal: vm.channelInterruptFlags,
+        controller: vm.channelInterruptFlagsController,
         flags: kSpellChannelInterruptFlagsOptions,
         title: '引导打断标志',
         placeholder: 'ChannelInterruptFlags',
+        onChanged: (v) => vm.channelInterruptFlags.value = v,
       ),
     );
     final attributesInput = FormItem(
       label: '属性',
       child: FlagPicker(
-        signal: vm.attributes,
+        controller: vm.attributesController,
         flags: kSpellAttr0Options,
         title: '属性 (Attributes)',
         placeholder: 'Attributes',
+        onChanged: (v) => vm.attributes.value = v,
       ),
     );
     final attributesExInput = FormItem(
       label: '属性Ex',
       child: FlagPicker(
-        signal: vm.attributesEx,
+        controller: vm.attributesExController,
         flags: kSpellAttr1Options,
         title: '属性Ex (AttributesEx)',
         placeholder: 'AttributesEx',
+        onChanged: (v) => vm.attributesEx.value = v,
       ),
     );
     final attributesExBInput = FormItem(
       label: '属性ExB',
       child: FlagPicker(
-        signal: vm.attributesExB,
+        controller: vm.attributesExBController,
         flags: kSpellAttr2Options,
         title: '属性ExB (AttributesExB)',
         placeholder: 'AttributesExB',
+        onChanged: (v) => vm.attributesExB.value = v,
       ),
     );
     final attributesExCInput = FormItem(
       label: '属性ExC',
       child: FlagPicker(
-        signal: vm.attributesExC,
+        controller: vm.attributesExCController,
         flags: kSpellAttr3Options,
         title: '属性ExC (AttributesExC)',
         placeholder: 'AttributesExC',
+        onChanged: (v) => vm.attributesExC.value = v,
       ),
     );
     final attributesExDInput = FormItem(
       label: '属性ExD',
       child: FlagPicker(
-        signal: vm.attributesExD,
+        controller: vm.attributesExDController,
         flags: kSpellAttr4Options,
         title: '属性ExD (AttributesExD)',
         placeholder: 'AttributesExD',
+        onChanged: (v) => vm.attributesExD.value = v,
       ),
     );
     final attributesExEInput = FormItem(
       label: '属性ExE',
       child: FlagPicker(
-        signal: vm.attributesExE,
+        controller: vm.attributesExEController,
         flags: kSpellAttr5Options,
         title: '属性ExE (AttributesExE)',
         placeholder: 'AttributesExE',
+        onChanged: (v) => vm.attributesExE.value = v,
       ),
     );
     final attributesExFInput = FormItem(
       label: '属性ExF',
       child: FlagPicker(
-        signal: vm.attributesExF,
+        controller: vm.attributesExFController,
         flags: kSpellAttr6Options,
         title: '属性ExF (AttributesExF)',
         placeholder: 'AttributesExF',
+        onChanged: (v) => vm.attributesExF.value = v,
       ),
     );
     final attributesExGInput = FormItem(
       label: '属性ExG',
       child: FlagPicker(
-        signal: vm.attributesExG,
+        controller: vm.attributesExGController,
         flags: kSpellAttr7Options,
         title: '属性ExG (AttributesExG)',
         placeholder: 'AttributesExG',
+        onChanged: (v) => vm.attributesExG.value = v,
       ),
     );
 
@@ -491,10 +505,11 @@ class _SpellViewState extends State<SpellView> {
     final procTypeMaskInput = FormItem(
       label: '触发类型掩码',
       child: FlagPicker(
-        signal: vm.procTypeMask,
+        controller: vm.procTypeMaskController,
         flags: kSpellProcFlagsOptions,
         title: '触发类型掩码',
         placeholder: 'ProcTypeMask',
+        onChanged: (v) => vm.procTypeMask.value = v,
       ),
     );
     final procChanceInput = FormItem(
@@ -543,10 +558,11 @@ class _SpellViewState extends State<SpellView> {
     final equippedItemInvTypesInput = FormItem(
       label: '装备栏位',
       child: FlagPicker(
-        signal: vm.equippedItemInvTypes,
+        controller: vm.equippedItemInvTypesController,
         flags: kInventoryTypeOptions,
         title: '装备栏位',
         placeholder: 'EquippedItemInvTypes',
+        onChanged: (v) => vm.equippedItemInvTypes.value = v,
       ),
     );
 
@@ -704,19 +720,21 @@ class _SpellViewState extends State<SpellView> {
     final shapeshiftMask0Input = FormItem(
       label: '变形掩码',
       child: FlagPicker(
-        signal: vm.shapeshiftMask0,
+        controller: vm.shapeshiftMask0Controller,
         flags: kShapeshiftFormMaskOptions,
         title: '变形掩码',
         placeholder: 'ShapeshiftMask0',
+        onChanged: (v) => vm.shapeshiftMask0.value = v,
       ),
     );
     final shapeshiftExclude0Input = FormItem(
       label: '变形排除',
       child: FlagPicker(
-        signal: vm.shapeshiftExclude0,
+        controller: vm.shapeshiftExclude0Controller,
         flags: kShapeshiftFormMaskOptions,
         title: '变形排除',
         placeholder: 'ShapeshiftExclude0',
+        onChanged: (v) => vm.shapeshiftExclude0.value = v,
       ),
     );
 
@@ -1001,10 +1019,11 @@ class _SpellViewState extends State<SpellView> {
                       child: FormItem(
                         label: '分类掩码1',
                         child: FlagPicker(
-                          signal: vm.spellClassMask0,
+                          controller: vm.spellClassMask0Controller,
                           flags: kSpellClassMaskBits,
                           title: '分类掩码1',
                           placeholder: 'SpellClassMask0',
+                          onChanged: (v) => vm.spellClassMask0.value = v,
                         ),
                       ),
                     ),
@@ -1012,10 +1031,11 @@ class _SpellViewState extends State<SpellView> {
                       child: FormItem(
                         label: '分类掩码2',
                         child: FlagPicker(
-                          signal: vm.spellClassMask1,
+                          controller: vm.spellClassMask1Controller,
                           flags: kSpellClassMaskBits,
                           title: '分类掩码2',
                           placeholder: 'SpellClassMask1',
+                          onChanged: (v) => vm.spellClassMask1.value = v,
                         ),
                       ),
                     ),
@@ -1023,10 +1043,11 @@ class _SpellViewState extends State<SpellView> {
                       child: FormItem(
                         label: '分类掩码3',
                         child: FlagPicker(
-                          signal: vm.spellClassMask2,
+                          controller: vm.spellClassMask2Controller,
                           flags: kSpellClassMaskBits,
                           title: '分类掩码3',
                           placeholder: 'SpellClassMask2',
+                          onChanged: (v) => vm.spellClassMask2.value = v,
                         ),
                       ),
                     ),
@@ -1350,17 +1371,35 @@ class _SpellViewState extends State<SpellView> {
         2 => viewModel.effectSpellClassMaskA2,
         _ => viewModel.effectSpellClassMaskA0,
       };
+      final maskAController = switch (i) {
+        0 => viewModel.effectSpellClassMaskA0Controller,
+        1 => viewModel.effectSpellClassMaskA1Controller,
+        2 => viewModel.effectSpellClassMaskA2Controller,
+        _ => viewModel.effectSpellClassMaskA0Controller,
+      };
       final maskBCtrl = switch (i) {
         0 => viewModel.effectSpellClassMaskB0,
         1 => viewModel.effectSpellClassMaskB1,
         2 => viewModel.effectSpellClassMaskB2,
         _ => viewModel.effectSpellClassMaskB0,
       };
+      final maskBController = switch (i) {
+        0 => viewModel.effectSpellClassMaskB0Controller,
+        1 => viewModel.effectSpellClassMaskB1Controller,
+        2 => viewModel.effectSpellClassMaskB2Controller,
+        _ => viewModel.effectSpellClassMaskB0Controller,
+      };
       final maskCCtrl = switch (i) {
         0 => viewModel.effectSpellClassMaskC0,
         1 => viewModel.effectSpellClassMaskC1,
         2 => viewModel.effectSpellClassMaskC2,
         _ => viewModel.effectSpellClassMaskC0,
+      };
+      final maskCController = switch (i) {
+        0 => viewModel.effectSpellClassMaskC0Controller,
+        1 => viewModel.effectSpellClassMaskC1Controller,
+        2 => viewModel.effectSpellClassMaskC2Controller,
+        _ => viewModel.effectSpellClassMaskC0Controller,
       };
 
       return FormSection(
@@ -1603,10 +1642,11 @@ class _SpellViewState extends State<SpellView> {
                 child: FormItem(
                   label: '分类掩码A',
                   child: FlagPicker(
-                    signal: maskACtrl,
+                    controller: maskAController,
                     flags: kSpellClassMaskBits,
                     title: '分类掩码A',
                     placeholder: 'MaskA',
+                    onChanged: (v) => maskACtrl.value = v,
                   ),
                 ),
               ),
@@ -1614,10 +1654,11 @@ class _SpellViewState extends State<SpellView> {
                 child: FormItem(
                   label: '分类掩码B',
                   child: FlagPicker(
-                    signal: maskBCtrl,
+                    controller: maskBController,
                     flags: kSpellClassMaskBits,
                     title: '分类掩码B',
                     placeholder: 'MaskB',
+                    onChanged: (v) => maskBCtrl.value = v,
                   ),
                 ),
               ),
@@ -1625,10 +1666,11 @@ class _SpellViewState extends State<SpellView> {
                 child: FormItem(
                   label: '分类掩码C',
                   child: FlagPicker(
-                    signal: maskCCtrl,
+                    controller: maskCController,
                     flags: kSpellClassMaskBits,
                     title: '分类掩码C',
                     placeholder: 'MaskC',
+                    onChanged: (v) => maskCCtrl.value = v,
                   ),
                 ),
               ),
@@ -1659,19 +1701,15 @@ class _MiscValueInput extends StatefulWidget {
 
 class _MiscValueInputState extends State<_MiscValueInput> {
   ShadSelectController<int>? _selectController;
-  late final Signal<int> _flagSignal;
-  void Function()? _flagUnsub;
+  late final TextEditingController _flagDisplayController;
 
   @override
   void initState() {
     super.initState();
-    _flagSignal = signal(int.tryParse(widget.textController.text) ?? 0);
+    _flagDisplayController = TextEditingController(
+      text: formatFlagValue(int.tryParse(widget.textController.text) ?? 0),
+    );
     _syncController();
-    if (_isFlagMode) {
-      _flagUnsub = _flagSignal.subscribe((v) {
-        widget.textController.text = v.toString();
-      });
-    }
   }
 
   @override
@@ -1680,14 +1718,11 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     if (oldWidget.options != widget.options) {
       _selectController?.dispose();
       _selectController = null;
-      // 模式切换时重新同步值
       if (_isSelectMode) {
         _syncController();
       } else if (_isFlagMode) {
-        _flagSignal.value = int.tryParse(widget.textController.text) ?? 0;
-        _flagUnsub ??= _flagSignal.subscribe((v) {
-          widget.textController.text = v.toString();
-        });
+        _flagDisplayController.text =
+            formatFlagValue(int.tryParse(widget.textController.text) ?? 0);
       }
     }
   }
@@ -1695,7 +1730,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   @override
   void dispose() {
     _selectController?.dispose();
-    _flagUnsub?.call();
+    _flagDisplayController.dispose();
     super.dispose();
   }
 
@@ -1718,10 +1753,11 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   Widget build(BuildContext context) {
     if (_isFlagMode) {
       return FlagPicker(
-        signal: _flagSignal,
+        controller: _flagDisplayController,
         flags: widget.options as List<FlagItem>,
         title: '杂项值',
         placeholder: 'MiscValue',
+        onChanged: (v) => widget.textController.text = v.toString(),
       );
     }
     if (_isSelectMode) {
