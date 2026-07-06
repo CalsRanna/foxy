@@ -185,7 +185,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FormItem(
             label: '商人ID',
             child: FoxyNumberInput<int>(
-              value: widget.creatureId,
+              controller: viewModel.creatureIdController,
               placeholder: 'Entry',
               readOnly: true,
             ),

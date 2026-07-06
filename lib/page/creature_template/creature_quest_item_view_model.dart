@@ -16,6 +16,7 @@ class CreatureQuestItemViewModel {
   final items = signal<List<CreatureQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
+  final creatureIdController = TextEditingController();
   final idxController = TextEditingController();
   final itemIdController = TextEditingController();
   final verifiedBuildController = TextEditingController();
@@ -195,6 +196,7 @@ class CreatureQuestItemViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       creatureEntry.value = creatureId;
+      creatureIdController.text = _fmt(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物任务物品失败: $e');
@@ -209,6 +211,7 @@ class CreatureQuestItemViewModel {
 
   /// 清理资源
   void dispose() {
+    creatureIdController.dispose();
     idxController.dispose();
     itemIdController.dispose();
     verifiedBuildController.dispose();

@@ -5,7 +5,6 @@ import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals/signals.dart';
 
 class EmoteTextView extends StatefulWidget {
   final int? entry;
@@ -56,13 +55,11 @@ class _EmoteTextViewState extends State<EmoteTextView> {
 
     /// EmoteText
     final emoteTextInputs = List.generate(16, (i) {
-      final s = _getEmoteTextSignal(i);
       return FormItem(
         label: '表情文本$i',
         placeholder: 'EmoteText$i',
         child: FoxyNumberInput<int>(
-          value: s.value,
-          onChanged: (v) => s.value = v,
+          controller: viewModel.emoteTextControllers[i],
         ),
       );
     });
@@ -120,25 +117,4 @@ class _EmoteTextViewState extends State<EmoteTextView> {
     );
   }
 
-  Signal<int> _getEmoteTextSignal(int index) {
-    return switch (index) {
-      0 => viewModel.emoteText0,
-      1 => viewModel.emoteText1,
-      2 => viewModel.emoteText2,
-      3 => viewModel.emoteText3,
-      4 => viewModel.emoteText4,
-      5 => viewModel.emoteText5,
-      6 => viewModel.emoteText6,
-      7 => viewModel.emoteText7,
-      8 => viewModel.emoteText8,
-      9 => viewModel.emoteText9,
-      10 => viewModel.emoteText10,
-      11 => viewModel.emoteText11,
-      12 => viewModel.emoteText12,
-      13 => viewModel.emoteText13,
-      14 => viewModel.emoteText14,
-      15 => viewModel.emoteText15,
-      _ => throw ArgumentError('Invalid emoteText index: $index'),
-    };
-  }
 }

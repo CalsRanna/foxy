@@ -16,6 +16,7 @@ class CreatureTemplateResistanceViewModel {
   final items = signal<List<CreatureTemplateResistanceEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
+  final creatureIdController = TextEditingController();
   final schoolController = ShadSelectController<int>();
   final resistanceController = TextEditingController();
   final verifiedBuildController = TextEditingController();
@@ -187,6 +188,7 @@ class CreatureTemplateResistanceViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       this.creatureId.value = creatureId;
+      creatureIdController.text = _fmt(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物抗性失败: $e');
@@ -201,6 +203,7 @@ class CreatureTemplateResistanceViewModel {
 
   /// 清理资源
   void dispose() {
+    creatureIdController.dispose();
     resistanceController.dispose();
     schoolController.dispose();
     verifiedBuildController.dispose();

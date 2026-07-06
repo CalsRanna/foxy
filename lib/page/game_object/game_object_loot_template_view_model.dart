@@ -5,6 +5,7 @@ import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -19,13 +20,13 @@ class GameObjectLootTemplateViewModel {
   final items = signal<List<BriefLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final itemController = TextEditingController();
-  final reference = signal<int>(0);
-  final chance = signal<double>(0.0);
+  final referenceController = TextEditingController();
+  final chanceController = TextEditingController();
   final questRequiredController = ShadSelectController<int>();
-  final lootMode = signal<int>(0);
-  final groupId = signal<int>(0);
-  final minCount = signal<int>(0);
-  final maxCount = signal<int>(0);
+  final lootModeController = TextEditingController();
+  final groupIdController = TextEditingController();
+  final minCountController = TextEditingController();
+  final maxCountController = TextEditingController();
   final commentController = TextEditingController();
 
   int? editingItem;
@@ -38,26 +39,26 @@ class GameObjectLootTemplateViewModel {
 
   void resetForm() {
     itemController.clear();
-    reference.value = 0;
-    chance.value = 0.0;
+    referenceController.text = _fmt(0);
+    chanceController.text = _fmt(0.0);
     questRequiredController.value = {0};
-    lootMode.value = 1;
-    groupId.value = 0;
-    minCount.value = 1;
-    maxCount.value = 1;
+    lootModeController.text = _fmt(1);
+    groupIdController.text = _fmt(0);
+    minCountController.text = _fmt(1);
+    maxCountController.text = _fmt(1);
     commentController.clear();
     editingItem = null;
   }
 
   void fillForm(BriefLootTemplateEntity loot) {
     itemController.text = loot.item.toString();
-    reference.value = loot.reference;
-    chance.value = loot.chance;
+    referenceController.text = _fmt(loot.reference);
+    chanceController.text = _fmt(loot.chance);
     questRequiredController.value = {loot.questRequired ? 1 : 0};
-    lootMode.value = loot.lootMode;
-    groupId.value = loot.groupId;
-    minCount.value = loot.minCount;
-    maxCount.value = loot.maxCount;
+    lootModeController.text = _fmt(loot.lootMode);
+    groupIdController.text = _fmt(loot.groupId);
+    minCountController.text = _fmt(loot.minCount);
+    maxCountController.text = _fmt(loot.maxCount);
     commentController.text = loot.comment;
     editingItem = loot.item;
   }
@@ -66,16 +67,22 @@ class GameObjectLootTemplateViewModel {
     return LootTemplateEntity(
       entry: gameObjectId.value,
       item: _parseInt(itemController.text),
-      reference: reference.value,
-      chance: chance.value,
+      reference: _pi(referenceController.text),
+      chance: _pd(chanceController.text),
       questRequired: _getSelectValue(questRequiredController) == 1,
-      lootMode: lootMode.value,
-      groupId: groupId.value,
-      minCount: minCount.value,
-      maxCount: maxCount.value,
+      lootMode: _pi(lootModeController.text),
+      groupId: _pi(groupIdController.text),
+      minCount: _pi(minCountController.text),
+      maxCount: _pi(maxCountController.text),
       comment: commentController.text,
     );
   }
+
+  String _fmt(num v) => formatNum(v);
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
+
+  double _pd(String t) => double.tryParse(t) ?? 0.0;
 
   int _parseInt(String text) {
     if (text.isEmpty) return 0;
@@ -189,9 +196,15 @@ class GameObjectLootTemplateViewModel {
   }
 
   void dispose() {
-    itemController.dispose();
-    questRequiredController.dispose();
+    chanceController.dispose();
     commentController.dispose();
+    groupIdController.dispose();
+    itemController.dispose();
+    lootModeController.dispose();
+    maxCountController.dispose();
+    minCountController.dispose();
+    questRequiredController.dispose();
+    referenceController.dispose();
   }
 
   Widget _buildDialogForm(BuildContext context) {
@@ -222,12 +235,10 @@ class GameObjectLootTemplateViewModel {
             ),
           ),
           FoxyNumberInput<int>(
-            value: reference.value,
-            onChanged: (v) => reference.value = v,
+            controller: referenceController,
           ),
           FoxyNumberInput<double>(
-            value: chance.value,
-            onChanged: (v) => chance.value = v,
+            controller: chanceController,
             placeholder: '掉落几率',
           ),
           FormItem(
@@ -239,13 +250,11 @@ class GameObjectLootTemplateViewModel {
             ),
           ),
           FoxyNumberInput<int>(
-            value: lootMode.value,
-            onChanged: (v) => lootMode.value = v,
+            controller: lootModeController,
             placeholder: '掉落模式',
           ),
           FoxyNumberInput<int>(
-            value: groupId.value,
-            onChanged: (v) => groupId.value = v,
+            controller: groupIdController,
             placeholder: '组ID',
           ),
           Row(
@@ -253,15 +262,13 @@ class GameObjectLootTemplateViewModel {
             children: [
               Expanded(
                 child: FoxyNumberInput<int>(
-                  value: minCount.value,
-                  onChanged: (v) => minCount.value = v,
+                  controller: minCountController,
                   placeholder: '最小数量',
                 ),
               ),
               Expanded(
                 child: FoxyNumberInput<int>(
-                  value: maxCount.value,
-                  onChanged: (v) => maxCount.value = v,
+                  controller: maxCountController,
                   placeholder: '最大数量',
                 ),
               ),

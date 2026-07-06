@@ -171,7 +171,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           FormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              value: widget.creatureId,
+              controller: viewModel.creatureIdController,
               placeholder: 'CreatureEntry',
               readOnly: true,
             ),

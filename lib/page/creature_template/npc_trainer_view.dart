@@ -168,7 +168,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FormItem(
             label: '训练师ID',
             child: FoxyNumberInput<int>(
-              value: widget.creatureId,
+              controller: viewModel.creatureIdController,
               placeholder: 'ID',
               readOnly: true,
             ),

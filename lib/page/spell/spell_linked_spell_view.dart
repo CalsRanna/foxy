@@ -164,8 +164,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                   label: '链接技能',
                   placeholder: 'spell_effect',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.spellEffect.value,
-                    onChanged: (v) => viewModel.spellEffect.value = v,
+                    controller: viewModel.spellEffectController,
                   ),
                 ),
               ),
@@ -174,8 +173,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                   label: '类型',
                   placeholder: 'type',
                   child: FoxyNumberInput<int>(
-                    value: viewModel.type.value,
-                    onChanged: (v) => viewModel.type.value = v,
+                    controller: viewModel.typeController,
                   ),
                 ),
               ),

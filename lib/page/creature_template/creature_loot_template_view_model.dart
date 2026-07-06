@@ -23,6 +23,7 @@ class CreatureLootTemplateViewModel {
   int? editingItem; // 正在编辑的原始Item值
 
   // 表单控制器
+  final creatureIdController = TextEditingController();
   final itemController = TextEditingController();
   final referenceController = TextEditingController();
   final chanceController = TextEditingController();
@@ -242,6 +243,7 @@ class CreatureLootTemplateViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       this.creatureId.value = creatureId;
+      creatureIdController.text = _fmt(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物掉落失败: $e');
@@ -257,6 +259,7 @@ class CreatureLootTemplateViewModel {
   /// 清理资源
   void dispose() {
     chanceController.dispose();
+    creatureIdController.dispose();
     commentController.dispose();
     groupIdController.dispose();
     itemController.dispose();

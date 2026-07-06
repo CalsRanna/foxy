@@ -857,24 +857,21 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '插槽内容1',
       child: FoxyNumberInput<int>(
         placeholder: 'socketContent_1',
-        value: viewModel.socketContents[0].value,
-        onChanged: (v) => viewModel.socketContents[0].value = v,
+        controller: viewModel.socketContents[0],
       ),
     );
     final socketContent2Input = FormItem(
       label: '插槽内容2',
       child: FoxyNumberInput<int>(
         placeholder: 'socketContent_2',
-        value: viewModel.socketContents[1].value,
-        onChanged: (v) => viewModel.socketContents[1].value = v,
+        controller: viewModel.socketContents[1],
       ),
     );
     final socketContent3Input = FormItem(
       label: '插槽内容3',
       child: FoxyNumberInput<int>(
         placeholder: 'socketContent_3',
-        value: viewModel.socketContents[2].value,
-        onChanged: (v) => viewModel.socketContents[2].value = v,
+        controller: viewModel.socketContents[2],
       ),
     );
 
@@ -997,9 +994,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                             label: '属性值${i + 1}',
                             child: FoxyNumberInput<int>(
                               placeholder: 'stat_value_${i + 1}',
-                              value: viewModel.statValues[i].value,
-                              onChanged: (v) =>
-                                  viewModel.statValues[i].value = v,
+                              controller: viewModel.statValues[i],
                             ),
                           ),
                         ),
@@ -1050,9 +1045,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '充能',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcharges_${i + 1}',
-                                value: viewModel.spellCharges[i].value,
-                                onChanged: (v) =>
-                                    viewModel.spellCharges[i].value = v,
+                                controller: viewModel.spellCharges[i],
                               ),
                             ),
                           ),
@@ -1061,9 +1054,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: 'PPM率',
                               child: FoxyNumberInput<double>(
                                 placeholder: 'spellppmRate_${i + 1}',
-                                value: viewModel.spellPpmRates[i].value,
-                                onChanged: (v) =>
-                                    viewModel.spellPpmRates[i].value = v,
+                                controller: viewModel.spellPpmRates[i],
                               ),
                             ),
                           ),
@@ -1077,9 +1068,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '冷却',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcooldown_${i + 1}',
-                                value: viewModel.spellCooldowns[i].value,
-                                onChanged: (v) =>
-                                    viewModel.spellCooldowns[i].value = v,
+                                controller: viewModel.spellCooldowns[i],
                               ),
                             ),
                           ),
@@ -1088,9 +1077,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '类别',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcategory_${i + 1}',
-                                value: viewModel.spellCategories[i].value,
-                                onChanged: (v) =>
-                                    viewModel.spellCategories[i].value = v,
+                                controller: viewModel.spellCategories[i],
                               ),
                             ),
                           ),
@@ -1099,11 +1086,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '类别冷却',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcategorycooldown_${i + 1}',
-                                value:
-                                    viewModel.spellCategoryCooldowns[i].value,
-                                onChanged: (v) =>
-                                    viewModel.spellCategoryCooldowns[i].value =
-                                        v,
+                                controller:
+                                    viewModel.spellCategoryCooldowns[i],
                               ),
                             ),
                           ),

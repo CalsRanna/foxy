@@ -38,8 +38,7 @@ class _GameObjectTemplateAddonViewState
       label: '编号',
       placeholder: 'entry',
       child: FoxyNumberInput<int>(
-        value: widget.gameObjectId,
-        onChanged: (_) {},
+        controller: viewModel.gameObjectIdController,
         readOnly: true,
       ),
     );

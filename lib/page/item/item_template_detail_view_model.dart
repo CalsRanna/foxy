@@ -84,7 +84,7 @@ class ItemTemplateDetailViewModel {
     10,
     (_) => ShadSelectController<int>(),
   );
-  final List<Signal<int>> statValues = List.generate(10, (_) => signal<int>(0));
+  final List<TextEditingController> statValues = List.generate(10, (_) => TextEditingController());
 
   /// Card 7: Resistances
   final holyResController = TextEditingController();
@@ -103,25 +103,25 @@ class ItemTemplateDetailViewModel {
     5,
     (_) => ShadSelectController<int>(),
   );
-  final List<Signal<int>> spellCharges = List.generate(
+  final List<TextEditingController> spellCharges = List.generate(
     5,
-    (_) => signal<int>(0),
+    (_) => TextEditingController(),
   );
-  final List<Signal<double>> spellPpmRates = List.generate(
+  final List<TextEditingController> spellPpmRates = List.generate(
     5,
-    (_) => signal<double>(0.0),
+    (_) => TextEditingController(),
   );
-  final List<Signal<int>> spellCooldowns = List.generate(
+  final List<TextEditingController> spellCooldowns = List.generate(
     5,
-    (_) => signal<int>(0),
+    (_) => TextEditingController(),
   );
-  final List<Signal<int>> spellCategories = List.generate(
+  final List<TextEditingController> spellCategories = List.generate(
     5,
-    (_) => signal<int>(0),
+    (_) => TextEditingController(),
   );
-  final List<Signal<int>> spellCategoryCooldowns = List.generate(
+  final List<TextEditingController> spellCategoryCooldowns = List.generate(
     5,
-    (_) => signal<int>(0),
+    (_) => TextEditingController(),
   );
 
   /// Card 9: Requirements
@@ -148,9 +148,9 @@ class ItemTemplateDetailViewModel {
     3,
     (_) => ShadSelectController<int>(),
   );
-  final List<Signal<int>> socketContents = List.generate(
+  final List<TextEditingController> socketContents = List.generate(
     3,
-    (_) => signal<int>(0),
+    (_) => TextEditingController(),
   );
 
   /// Card 11: Page/Misc
@@ -263,7 +263,7 @@ class ItemTemplateDetailViewModel {
     statsCountController.text = _fmt(template.statsCount);
     for (var i = 0; i < 10; i++) {
       statTypeControllers[i].value = {template.statTypes[i]};
-      statValues[i].value = template.statValues[i];
+      statValues[i].text = _fmt(template.statValues[i]);
     }
 
     /// Card 7: Resistances
@@ -278,11 +278,11 @@ class ItemTemplateDetailViewModel {
     for (var i = 0; i < 5; i++) {
       spellIds[i].text = _fmt(template.spellIds[i]);
       spellTriggerControllers[i].value = {template.spellTriggers[i]};
-      spellCharges[i].value = template.spellCharges[i];
-      spellPpmRates[i].value = template.spellPpmRates[i];
-      spellCooldowns[i].value = template.spellCooldowns[i];
-      spellCategories[i].value = template.spellCategories[i];
-      spellCategoryCooldowns[i].value = template.spellCategoryCooldowns[i];
+      spellCharges[i].text = _fmt(template.spellCharges[i]);
+      spellPpmRates[i].text = _fmt(template.spellPpmRates[i]);
+      spellCooldowns[i].text = _fmt(template.spellCooldowns[i]);
+      spellCategories[i].text = _fmt(template.spellCategories[i]);
+      spellCategoryCooldowns[i].text = _fmt(template.spellCategoryCooldowns[i]);
     }
 
     /// Card 9: Requirements
@@ -313,7 +313,7 @@ class ItemTemplateDetailViewModel {
     socketBonusController.text = _fmt(template.socketBonus);
     for (var i = 0; i < 3; i++) {
       socketColorControllers[i].value = {template.socketColors[i]};
-      socketContents[i].value = template.socketContents[i];
+      socketContents[i].text = _fmt(template.socketContents[i]);
     }
 
     /// Card 11: Page/Misc
@@ -392,7 +392,7 @@ class ItemTemplateDetailViewModel {
       statTypes: [
         for (var i = 0; i < 10; i++) _getSelectValue(statTypeControllers[i]),
       ],
-      statValues: [for (var i = 0; i < 10; i++) statValues[i].value],
+      statValues: [for (var i = 0; i < 10; i++) _pi(statValues[i].text)],
 
       /// Card 7: Resistances
       holyRes: _pi(holyResController.text),
@@ -407,12 +407,12 @@ class ItemTemplateDetailViewModel {
       spellTriggers: [
         for (var i = 0; i < 5; i++) _getSelectValue(spellTriggerControllers[i]),
       ],
-      spellCharges: [for (var i = 0; i < 5; i++) spellCharges[i].value],
-      spellPpmRates: [for (var i = 0; i < 5; i++) spellPpmRates[i].value],
-      spellCooldowns: [for (var i = 0; i < 5; i++) spellCooldowns[i].value],
-      spellCategories: [for (var i = 0; i < 5; i++) spellCategories[i].value],
+      spellCharges: [for (var i = 0; i < 5; i++) _pi(spellCharges[i].text)],
+      spellPpmRates: [for (var i = 0; i < 5; i++) _pd(spellPpmRates[i].text)],
+      spellCooldowns: [for (var i = 0; i < 5; i++) _pi(spellCooldowns[i].text)],
+      spellCategories: [for (var i = 0; i < 5; i++) _pi(spellCategories[i].text)],
       spellCategoryCooldowns: [
-        for (var i = 0; i < 5; i++) spellCategoryCooldowns[i].value,
+        for (var i = 0; i < 5; i++) _pi(spellCategoryCooldowns[i].text),
       ],
 
       /// Card 9: Requirements
@@ -436,7 +436,7 @@ class ItemTemplateDetailViewModel {
       socketColors: [
         for (var i = 0; i < 3; i++) _getSelectValue(socketColorControllers[i]),
       ],
-      socketContents: [for (var i = 0; i < 3; i++) socketContents[i].value],
+      socketContents: [for (var i = 0; i < 3; i++) _pi(socketContents[i].text)],
 
       /// Card 11: Page/Misc
       mapId: _pi(mapIdController.text),
@@ -500,6 +500,27 @@ class ItemTemplateDetailViewModel {
 
   void dispose() {
     for (final c in spellIds) {
+      c.dispose();
+    }
+    for (final c in statValues) {
+      c.dispose();
+    }
+    for (final c in spellCharges) {
+      c.dispose();
+    }
+    for (final c in spellPpmRates) {
+      c.dispose();
+    }
+    for (final c in spellCooldowns) {
+      c.dispose();
+    }
+    for (final c in spellCategories) {
+      c.dispose();
+    }
+    for (final c in spellCategoryCooldowns) {
+      c.dispose();
+    }
+    for (final c in socketContents) {
       c.dispose();
     }
     allowableClassController.dispose();
