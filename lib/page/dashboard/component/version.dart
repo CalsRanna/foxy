@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/card.dart';
+import 'package:foxy/widget/foxy_card.dart';
 
 class Version extends StatelessWidget {
   final String coreVersion;

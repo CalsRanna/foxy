@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -48,7 +48,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                   spacing: 16,
                   children: [
                     Expanded(
-                      child: FormItem(
+                      child: FoxyFormItem(
                         label: '编号',
                         child: FoxyNumberInput<int>(
                           controller: viewModel.creatureIdController,
@@ -58,7 +58,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       ),
                     ),
                     Expanded(
-                      child: FormItem(
+                      child: FoxyFormItem(
                         label: '路径ID',
                         child: FoxyNumberInput<int>(
                           controller: viewModel.pathIdController,
@@ -67,7 +67,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       ),
                     ),
                     Expanded(
-                      child: FormItem(
+                      child: FoxyFormItem(
                         label: '坐骑编号',
                         child: FoxyNumberInput<int>(
                           controller: viewModel.mountController,
@@ -76,7 +76,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       ),
                     ),
                     Expanded(
-                      child: FormItem(
+                      child: FoxyFormItem(
                         label: '表情',
                         child: FoxyNumberInput<int>(
                           controller: viewModel.emoteController,
@@ -90,7 +90,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                   spacing: 16,
                   children: [
                     Expanded(
-                      child: FormItem(
+                      child: FoxyFormItem(
                         label: '覆盖标识1',
                         child: FoxyNumberInput<int>(
                           controller: viewModel.bytes1Controller,
@@ -99,7 +99,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       ),
                     ),
                     Expanded(
-                      child: FormItem(
+                      child: FoxyFormItem(
                         label: '覆盖标识2',
                         child: FoxyNumberInput<int>(
                           controller: viewModel.bytes2Controller,
@@ -108,7 +108,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       ),
                     ),
                     Expanded(
-                      child: FormItem(
+                      child: FoxyFormItem(
                         label: '可见距离类型',
                         child: FoxyNumberInput<int>(
                           controller:
@@ -118,7 +118,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       ),
                     ),
                     Expanded(
-                      child: FormItem(
+                      child: FoxyFormItem(
                         controller: viewModel.aurasController,
                         label: '光环列表',
                         placeholder: 'auras',

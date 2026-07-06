@@ -3,7 +3,7 @@ import 'package:foxy/page/spell/spell_loot_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -166,7 +166,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   controller: TextEditingController(
                     text: widget.spellId.toString(),
                   ),
@@ -176,7 +176,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '物品',
                   placeholder: 'Item',
                   child: FoxyNumberInput<int>(
@@ -191,7 +191,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '关联',
                   placeholder: 'Reference',
                   child: FoxyNumberInput<int>(
@@ -200,7 +200,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '几率',
                   placeholder: 'Chance',
                   child: FoxyNumberInput<double>(
@@ -209,7 +209,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '需要任务',
                   placeholder: 'QuestRequired',
                   child: FoxyNumberInput<int>(
@@ -224,7 +224,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '掉落模式',
                   placeholder: 'LootMode',
                   child: FoxyNumberInput<int>(
@@ -233,7 +233,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '组ID',
                   placeholder: 'GroudId',
                   child: FoxyNumberInput<int>(
@@ -242,7 +242,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '最小数量',
                   placeholder: 'MinCount',
                   child: FoxyNumberInput<int>(
@@ -251,7 +251,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '最大数量',
                   placeholder: 'MaxCount',
                   child: FoxyNumberInput<int>(
@@ -262,7 +262,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             ],
           ),
           SizedBox(height: 16),
-          FormItem(
+          FoxyFormItem(
             controller: viewModel.commentController,
             label: '注解',
             placeholder: 'Comment',

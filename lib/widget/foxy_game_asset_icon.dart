@@ -10,14 +10,14 @@ import 'package:path/path.dart' as p;
 ///
 /// 图标由 CMake install 步骤从 `asset/icon/` 拷贝到输出目录，不在 Flutter
 /// asset bundle 中，以避免每次构建重建 150MB 的 asset bundle。
-class GameAssetIcon extends StatelessWidget {
+class FoxyGameAssetIcon extends StatelessWidget {
   /// DBC 原始图标路径（反斜杠、大小写不敏感，可含 `interface/icons` 前缀）。
   final String rawPath;
 
   /// 显示边长（正方形）。
   final double size;
 
-  const GameAssetIcon({super.key, required this.rawPath, this.size = 40});
+  const FoxyGameAssetIcon({super.key, required this.rawPath, this.size = 40});
 
   /// 图标目录路径（懒加载，基于 exe 所在目录）。
   static final String _iconDir = () {

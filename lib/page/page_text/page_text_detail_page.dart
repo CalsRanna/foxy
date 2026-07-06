@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/page_text/page_text_view.dart';
 import 'package:foxy/page/page_text/page_text_locale_view.dart';
-import 'package:foxy/widget/tab.dart';
+import 'package:foxy/widget/foxy_tab.dart';
 
 @RoutePage()
 class TextContentDetailPage extends StatefulWidget {

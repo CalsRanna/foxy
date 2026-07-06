@@ -5,11 +5,15 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 ///
 /// 所有模块的 section 标题和卡片间距保持一致：
 /// 标题距卡片 8px，每行字段间距 8px。
-class FormSection extends StatelessWidget {
+class FoxyFormSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const FormSection({super.key, required this.title, required this.children});
+  const FoxyFormSection({
+    super.key,
+    required this.title,
+    required this.children,
+  });
 
   @override
   Widget build(BuildContext context) {

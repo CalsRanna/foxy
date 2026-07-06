@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/locale_crud_dialog.dart';
+import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 每个多语言实体提供的加载/保存配置。纯数据 + 闭包，不持有可变状态，
@@ -8,7 +8,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 ///
 /// 对齐 [EntityPickerDelegate] 范式：数据契约集中在 delegate，调用点只
 /// 提供 controller/title/placeholder 等展示参数。
-class LocalePickerDelegate {
+class FoxyLocalePickerDelegate {
   /// 多语言表的字段名（对应 entity 列），首项约定为 'locale'。
   final List<String> fields;
 
@@ -21,18 +21,18 @@ class LocalePickerDelegate {
   /// 保存指定 entry 的多语言数据（data 键为 [fields]）。
   final Future<void> Function(int entry, List<Map<String, String>> data) onSave;
 
-  const LocalePickerDelegate({
+  const FoxyLocalePickerDelegate({
     required this.fields,
     required this.fieldLabels,
     required this.onLoad,
     required this.onSave,
   }) : assert(
-          fields.length == fieldLabels.length,
-          'fields 与 fieldLabels 长度必须一致',
-        );
+         fields.length == fieldLabels.length,
+         'fields 与 fieldLabels 长度必须一致',
+       );
 }
 
-/// 多语言字段选择器：ShadInput + 地球按钮，点击打开 [LocaleCrudDialog]
+/// 多语言字段选择器：ShadInput + 地球按钮，点击打开 [FoxyLocaleCrudDialog]
 /// 编辑该 entry 的多语言数据。状态完全由弹窗内部 setState 管理，无 signals。
 ///
 /// 与 [FoxyEntityPicker] 对齐：通过 [delegate] 注入数据/持久化逻辑，
@@ -54,7 +54,7 @@ class FoxyLocalePicker extends StatefulWidget {
   final bool readOnly;
 
   /// 数据/持久化配置。
-  final LocalePickerDelegate delegate;
+  final FoxyLocalePickerDelegate delegate;
 
   const FoxyLocalePicker({
     super.key,
@@ -90,7 +90,7 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
   Future<void> _openLocaleDialog() async {
     final entry = widget.entry;
     if (entry == null) return;
-    await LocaleCrudDialog.show(
+    await FoxyLocaleCrudDialog.show(
       context,
       title: widget.title,
       entry: entry,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -189,7 +189,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 生物ID（只读）
-          FormItem(
+          FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
@@ -199,7 +199,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           ),
           SizedBox(height: 16),
           // 模板ID
-          FormItem(
+          FoxyFormItem(
             label: '模板ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.idController,
@@ -208,37 +208,37 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           ),
           SizedBox(height: 16),
           // 主手武器
-          FormItem(
+          FoxyFormItem(
             label: '主手武器',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemID1Controller,
               placeholder: 'ItemID1',
             ),
           ),
           SizedBox(height: 16),
           // 副手武器
-          FormItem(
+          FoxyFormItem(
             label: '副手武器',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemID2Controller,
               placeholder: 'ItemID2',
             ),
           ),
           SizedBox(height: 16),
           // 远程武器
-          FormItem(
+          FoxyFormItem(
             label: '远程武器',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemID3Controller,
               placeholder: 'ItemID3',
             ),
           ),
           SizedBox(height: 16),
           // VerifiedBuild
-          FormItem(
+          FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
               controller: viewModel.verifiedBuildController,

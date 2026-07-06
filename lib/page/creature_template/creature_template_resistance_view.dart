@@ -4,7 +4,7 @@ import 'package:foxy/page/creature_template/creature_template_resistance_view_mo
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -167,7 +167,7 @@ class _CreatureTemplateResistanceViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 生物ID（只读）
-          FormItem(
+          FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
@@ -177,7 +177,7 @@ class _CreatureTemplateResistanceViewState
           ),
           SizedBox(height: 16),
           // 抗性类型
-          FormItem(
+          FoxyFormItem(
             label: '抗性类型',
             child: FoxyShadSelect<int>(
               controller: viewModel.schoolController,
@@ -187,7 +187,7 @@ class _CreatureTemplateResistanceViewState
           ),
           SizedBox(height: 16),
           // 抗性值
-          FormItem(
+          FoxyFormItem(
             label: '抗性值',
             child: FoxyNumberInput<int>(
               controller: viewModel.resistanceController,
@@ -196,7 +196,7 @@ class _CreatureTemplateResistanceViewState
           ),
           SizedBox(height: 16),
           // VerifiedBuild
-          FormItem(
+          FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
               controller: viewModel.verifiedBuildController,

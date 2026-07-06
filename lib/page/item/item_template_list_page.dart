@@ -6,9 +6,9 @@ import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/page/item/item_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/game_asset_icon.dart';
-import 'package:foxy/widget/header.dart';
-import 'package:foxy/widget/pagination.dart';
+import 'package:foxy/widget/foxy_game_asset_icon.dart';
+import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -95,7 +95,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     var children = [
       ClipRRect(
         borderRadius: BorderRadius.circular(6),
-        child: GameAssetIcon(rawPath: item.inventoryIcon),
+        child: FoxyGameAssetIcon(rawPath: item.inventoryIcon),
       ),
       const SizedBox(width: 8),
       Expanded(

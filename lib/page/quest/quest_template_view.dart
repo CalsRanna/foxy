@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
-import 'package:foxy/widget/locale_picker_delegates.dart';
+import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/page/quest/area_table_or_quest_sort_selector.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -44,7 +44,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '编号',
               child: FoxyNumberInput<int>(
                 controller: vm.idController,
@@ -53,7 +53,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '任务类型',
               child: FoxyNumberInput<int>(
                 placeholder: 'QuestType',
@@ -62,7 +62,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '任务等级',
               child: FoxyNumberInput<int>(
                 placeholder: 'QuestLevel',
@@ -71,7 +71,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '最低等级',
               child: FoxyNumberInput<int>(
                 placeholder: 'MinLevel',
@@ -85,7 +85,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '任务分类',
               child: AreaTableOrQuestSortSelector(
                 controller: vm.questSortIdController,
@@ -95,17 +95,17 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '任务信息',
               child: FoxyEntityPicker(
-                delegate: EntityPickerDelegates.questInfo,
+                delegate: FoxyEntityPickerDelegates.questInfo,
                 controller: vm.questInfoIdController,
                 placeholder: 'QuestInfoID',
               ),
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '建议组人数',
               child: FoxyNumberInput<int>(
                 placeholder: 'SuggestedGroupNum',
@@ -114,7 +114,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '标志',
               child: FoxyNumberInput<int>(
                 placeholder: 'Flags',
@@ -128,7 +128,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要阵营1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredFactionId1',
@@ -137,7 +137,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要阵营2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredFactionId2',
@@ -146,7 +146,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '阵营值1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredFactionValue1',
@@ -155,7 +155,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '阵营值2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredFactionValue2',
@@ -173,7 +173,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要NPC/GO1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredNpcOrGo1',
@@ -182,7 +182,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要NPC/GO2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredNpcOrGo2',
@@ -191,7 +191,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要NPC/GO3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredNpcOrGo3',
@@ -200,7 +200,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要NPC/GO4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredNpcOrGo4',
@@ -214,7 +214,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要数量1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredNpcOrGoCount1',
@@ -223,7 +223,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要数量2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredNpcOrGoCount2',
@@ -232,7 +232,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要数量3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredNpcOrGoCount3',
@@ -241,7 +241,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要数量4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredNpcOrGoCount4',
@@ -255,7 +255,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要物品1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemId1',
@@ -264,7 +264,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要物品2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemId2',
@@ -273,7 +273,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要物品3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemId3',
@@ -282,7 +282,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要物品4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemId4',
@@ -296,7 +296,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要物品5',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemId5',
@@ -305,7 +305,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要物品6',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemId6',
@@ -314,7 +314,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '物品数量1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemCount1',
@@ -323,7 +323,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '物品数量2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemCount2',
@@ -337,7 +337,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '物品数量3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemCount3',
@@ -346,7 +346,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '物品数量4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemCount4',
@@ -355,7 +355,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '物品数量5',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemCount5',
@@ -364,7 +364,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '物品数量6',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredItemCount6',
@@ -378,7 +378,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '起始物品',
               child: FoxyNumberInput<int>(
                 placeholder: 'StartItem',
@@ -387,7 +387,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '需要击杀',
               child: FoxyNumberInput<int>(
                 placeholder: 'RequiredPlayerKills',
@@ -407,7 +407,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '下一个任务',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardNextQuest',
@@ -416,7 +416,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '经验难度',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardXPDifficulty',
@@ -425,7 +425,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '金币奖励',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardMoney',
@@ -434,7 +434,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '金币难度',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardMoneyDifficulty',
@@ -448,7 +448,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '展示法术',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardDisplaySpell',
@@ -457,7 +457,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '法术奖励',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardSpell',
@@ -466,7 +466,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '荣誉奖励',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardHonor',
@@ -475,7 +475,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '杀敌荣誉',
               child: FoxyNumberInput<double>(
                 placeholder: 'RewardKillHonor',
@@ -489,17 +489,17 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励头衔',
               child: FoxyEntityPicker(
-                delegate: EntityPickerDelegates.charTitle,
+                delegate: FoxyEntityPickerDelegates.charTitle,
                 controller: vm.rewardTitleController,
                 placeholder: 'RewardTitle',
               ),
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励天赋',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardTalents',
@@ -508,7 +508,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '竞技场点数',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardArenaPoints',
@@ -527,7 +527,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励物品1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardItem1',
@@ -536,7 +536,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励数量1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardAmount1',
@@ -545,7 +545,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励物品2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardItem2',
@@ -554,7 +554,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励数量2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardAmount2',
@@ -568,7 +568,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励物品3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardItem3',
@@ -577,7 +577,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励数量3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardAmount3',
@@ -586,7 +586,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励物品4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardItem4',
@@ -595,7 +595,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '奖励数量4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardAmount4',
@@ -609,7 +609,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选奖励1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemID1',
@@ -618,7 +618,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选数量1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemQuantity1',
@@ -627,7 +627,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选奖励2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemID2',
@@ -636,7 +636,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选数量2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemQuantity2',
@@ -650,7 +650,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选奖励3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemID3',
@@ -659,7 +659,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选数量3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemQuantity3',
@@ -668,7 +668,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选奖励4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemID4',
@@ -677,7 +677,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选数量4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemQuantity4',
@@ -691,7 +691,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选奖励5',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemID5',
@@ -700,7 +700,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选数量5',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemQuantity5',
@@ -709,7 +709,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选奖励6',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemID6',
@@ -718,7 +718,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '可选数量6',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardChoiceItemQuantity6',
@@ -732,7 +732,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '掉落物品1',
               child: FoxyNumberInput<int>(
                 placeholder: 'ItemDrop1',
@@ -741,7 +741,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '掉落数量1',
               child: FoxyNumberInput<int>(
                 placeholder: 'ItemDropQuantity1',
@@ -750,7 +750,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '掉落物品2',
               child: FoxyNumberInput<int>(
                 placeholder: 'ItemDrop2',
@@ -759,7 +759,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '掉落数量2',
               child: FoxyNumberInput<int>(
                 placeholder: 'ItemDropQuantity2',
@@ -773,7 +773,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '掉落物品3',
               child: FoxyNumberInput<int>(
                 placeholder: 'ItemDrop3',
@@ -782,7 +782,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '掉落数量3',
               child: FoxyNumberInput<int>(
                 placeholder: 'ItemDropQuantity3',
@@ -791,7 +791,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '掉落物品4',
               child: FoxyNumberInput<int>(
                 placeholder: 'ItemDrop4',
@@ -800,7 +800,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '掉落数量4',
               child: FoxyNumberInput<int>(
                 placeholder: 'ItemDropQuantity4',
@@ -818,7 +818,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望阵营1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionID1',
@@ -827,7 +827,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望值1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionValue1',
@@ -836,7 +836,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望覆盖1',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionOverride1',
@@ -851,7 +851,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望阵营2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionID2',
@@ -860,7 +860,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望值2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionValue2',
@@ -869,7 +869,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望覆盖2',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionOverride2',
@@ -884,7 +884,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望阵营3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionID3',
@@ -893,7 +893,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望值3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionValue3',
@@ -902,7 +902,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望覆盖3',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionOverride3',
@@ -917,7 +917,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望阵营4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionID4',
@@ -926,7 +926,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望值4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionValue4',
@@ -935,7 +935,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望覆盖4',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionOverride4',
@@ -950,7 +950,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望阵营5',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionID5',
@@ -959,7 +959,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望值5',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionValue5',
@@ -968,7 +968,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '声望覆盖5',
               child: FoxyNumberInput<int>(
                 placeholder: 'RewardFactionOverride5',
@@ -987,24 +987,24 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '日志标题',
               child: FoxyLocalePicker(
                 entry: widget.questId,
                 controller: vm.logTitleController,
-                delegate: LocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'LogTitle',
                 title: '日志标题',
               ),
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '日志描述',
               child: FoxyLocalePicker(
                 entry: widget.questId,
                 controller: vm.logDescriptionController,
-                delegate: LocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'LogDescription',
                 title: '日志描述',
               ),
@@ -1018,24 +1018,24 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '任务描述',
               child: FoxyLocalePicker(
                 entry: widget.questId,
                 controller: vm.questDescriptionController,
-                delegate: LocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'QuestDescription',
                 title: '任务描述',
               ),
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '区域描述',
               child: FoxyLocalePicker(
                 entry: widget.questId,
                 controller: vm.areaDescriptionController,
-                delegate: LocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'AreaDescription',
                 title: '区域描述',
               ),
@@ -1049,12 +1049,12 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '完成日志',
               child: FoxyLocalePicker(
                 entry: widget.questId,
                 controller: vm.questCompletionLogController,
-                delegate: LocalePickerDelegates.questTemplate,
+                delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'QuestCompletionLog',
                 title: '完成日志',
               ),
@@ -1069,28 +1069,28 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               controller: vm.objectiveText1Controller,
               label: '目标文本1',
               placeholder: 'ObjectiveText1',
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               controller: vm.objectiveText2Controller,
               label: '目标文本2',
               placeholder: 'ObjectiveText2',
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               controller: vm.objectiveText3Controller,
               label: '目标文本3',
               placeholder: 'ObjectiveText3',
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               controller: vm.objectiveText4Controller,
               label: '目标文本4',
               placeholder: 'ObjectiveText4',
@@ -1106,7 +1106,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: 'POI大陆',
               child: FoxyNumberInput<int>(
                 placeholder: 'POIContinent',
@@ -1115,7 +1115,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: 'POI X',
               child: FoxyNumberInput<double>(
                 placeholder: 'POIx',
@@ -1124,7 +1124,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: 'POI Y',
               child: FoxyNumberInput<double>(
                 placeholder: 'POIy',
@@ -1133,7 +1133,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: 'POI优先级',
               child: FoxyNumberInput<int>(
                 placeholder: 'POIPriority',
@@ -1147,7 +1147,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '允许时间',
               child: FoxyNumberInput<int>(
                 placeholder: 'TimeAllowed',
@@ -1156,7 +1156,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '允许种族',
               child: FoxyNumberInput<int>(
                 placeholder: 'AllowableRaces',
@@ -1165,7 +1165,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               label: '未知0',
               child: FoxyNumberInput<int>(
                 placeholder: 'Unknown0',
@@ -1174,7 +1174,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FormItem(
+            child: FoxyFormItem(
               controller: vm.verifiedBuildController,
               label: '验证版本',
               placeholder: 'VerifiedBuild',
@@ -1190,13 +1190,13 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(title: '基础信息', children: basicRows),
-          FormSection(title: '任务目标', children: objectiveRows),
-          FormSection(title: '基础奖励', children: basicRewardRows),
-          FormSection(title: '奖励物品', children: rewardItemRows),
-          FormSection(title: '奖励声望', children: rewardFactionRows),
-          FormSection(title: '任务文本', children: textRows),
-          FormSection(title: '位置与其他', children: miscRows),
+          FoxyFormSection(title: '基础信息', children: basicRows),
+          FoxyFormSection(title: '任务目标', children: objectiveRows),
+          FoxyFormSection(title: '基础奖励', children: basicRewardRows),
+          FoxyFormSection(title: '奖励物品', children: rewardItemRows),
+          FoxyFormSection(title: '奖励声望', children: rewardFactionRows),
+          FoxyFormSection(title: '任务文本', children: textRows),
+          FoxyFormSection(title: '位置与其他', children: miscRows),
           Row(
             spacing: 8,
             children: [

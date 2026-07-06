@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -38,36 +38,36 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
 
   @override
   Widget build(BuildContext context) {
-    final entryInput = FormItem(
+    final entryInput = FoxyFormItem(
       label: 'Entry',
       child: FoxyNumberInput<int>(
         placeholder: 'Entry',
         controller: viewModel.entryController,
       ),
     );
-    final itemInput = FormItem(
+    final itemInput = FoxyFormItem(
       label: '物品ID',
       child: FoxyEntityPicker(
-        delegate: EntityPickerDelegates.itemTemplate,
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
         controller: viewModel.itemController,
         placeholder: 'Item',
       ),
     );
-    final referenceInput = FormItem(
+    final referenceInput = FoxyFormItem(
       label: '关联ID',
       child: FoxyNumberInput<int>(
         placeholder: 'Reference',
         controller: viewModel.referenceController,
       ),
     );
-    final chanceInput = FormItem(
+    final chanceInput = FoxyFormItem(
       label: '掉落几率',
       child: FoxyNumberInput<double>(
         placeholder: 'Chance (%)',
         controller: viewModel.chanceController,
       ),
     );
-    final questRequiredInput = FormItem(
+    final questRequiredInput = FoxyFormItem(
       label: '需要任务',
       child: FoxyShadSelect<int>(
         controller: viewModel.questRequiredController,
@@ -75,35 +75,35 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
         placeholder: Text('QuestRequired'),
       ),
     );
-    final lootModeInput = FormItem(
+    final lootModeInput = FoxyFormItem(
       label: '掉落模式',
       child: FoxyNumberInput<int>(
         placeholder: 'LootMode',
         controller: viewModel.lootModeController,
       ),
     );
-    final groupIdInput = FormItem(
+    final groupIdInput = FoxyFormItem(
       label: '组ID',
       child: FoxyNumberInput<int>(
         placeholder: 'GroupId',
         controller: viewModel.groupIdController,
       ),
     );
-    final minCountInput = FormItem(
+    final minCountInput = FoxyFormItem(
       label: '最小数量',
       child: FoxyNumberInput<int>(
         placeholder: 'MinCount',
         controller: viewModel.minCountController,
       ),
     );
-    final maxCountInput = FormItem(
+    final maxCountInput = FoxyFormItem(
       label: '最大数量',
       child: FoxyNumberInput<int>(
         placeholder: 'MaxCount',
         controller: viewModel.maxCountController,
       ),
     );
-    final commentInput = FormItem(
+    final commentInput = FoxyFormItem(
       controller: viewModel.commentController,
       label: '备注',
       placeholder: 'Comment',
@@ -144,7 +144,7 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(title: '基本信息', children: basicRows),
+          FoxyFormSection(title: '基本信息', children: basicRows),
           Row(
             children: [
               ShadButton(

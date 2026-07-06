@@ -4,7 +4,7 @@ import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_view.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view.dart';
-import 'package:foxy/widget/tab.dart';
+import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 
 @RoutePage()

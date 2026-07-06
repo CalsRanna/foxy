@@ -3,9 +3,9 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 多语言 CRUD 对话框。
 ///
-/// 通过 [LocaleCrudDialog.show] 静态方法弹窗，内部自动加载数据并管理
+/// 通过 [FoxyLocaleCrudDialog.show] 静态方法弹窗，内部自动加载数据并管理
 /// [TextEditingController] 生命周期。保存时通过 [onSave] 回调将数据交给调用方。
-class LocaleCrudDialog extends StatefulWidget {
+class FoxyLocaleCrudDialog extends StatefulWidget {
   final String title;
   final int entry;
   final List<String> fields;
@@ -13,7 +13,7 @@ class LocaleCrudDialog extends StatefulWidget {
   final List<List<String>> initialRows;
   final Future<void> Function(List<Map<String, String>> data) onSave;
 
-  const LocaleCrudDialog({
+  const FoxyLocaleCrudDialog({
     super.key,
     required this.title,
     required this.entry,
@@ -43,7 +43,7 @@ class LocaleCrudDialog extends StatefulWidget {
     }).toList();
     return showShadDialog<bool>(
       context: context,
-      builder: (_) => LocaleCrudDialog(
+      builder: (_) => FoxyLocaleCrudDialog(
         title: title,
         entry: entry,
         fields: fields,
@@ -55,10 +55,10 @@ class LocaleCrudDialog extends StatefulWidget {
   }
 
   @override
-  State<LocaleCrudDialog> createState() => _LocaleCrudDialogState();
+  State<FoxyLocaleCrudDialog> createState() => _FoxyLocaleCrudDialogState();
 }
 
-class _LocaleCrudDialogState extends State<LocaleCrudDialog> {
+class _FoxyLocaleCrudDialogState extends State<FoxyLocaleCrudDialog> {
   late List<List<TextEditingController>> _rows;
   bool _saving = false;
 

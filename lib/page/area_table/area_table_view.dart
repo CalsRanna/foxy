@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/area_table/area_table_detail_view_model.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -32,7 +32,7 @@ class _AreaTableViewState extends State<AreaTableView> {
   @override
   Widget build(BuildContext context) {
     /// Basic
-    final idInput = FormItem(
+    final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
@@ -40,47 +40,47 @@ class _AreaTableViewState extends State<AreaTableView> {
         readOnly: true,
       ),
     );
-    final nameInput = FormItem(
+    final nameInput = FoxyFormItem(
       controller: viewModel.nameController,
       label: '名称',
       placeholder: 'AreaName_lang_zhCN',
     );
-    final continentIdInput = FormItem(
+    final continentIdInput = FoxyFormItem(
       label: '大陆',
       child: FoxyNumberInput<int>(
         placeholder: 'ContinentID',
         controller: viewModel.continentIdController,
       ),
     );
-    final parentAreaIdInput = FormItem(
+    final parentAreaIdInput = FoxyFormItem(
       label: '父级区域',
       child: FoxyNumberInput<int>(
         placeholder: 'ParentAreaID',
         controller: viewModel.parentAreaIdController,
       ),
     );
-    final areaBitInput = FormItem(
+    final areaBitInput = FoxyFormItem(
       label: '区域掩码',
       child: FoxyNumberInput<int>(
         placeholder: 'AreaBit',
         controller: viewModel.areaBitController,
       ),
     );
-    final flagsInput = FormItem(
+    final flagsInput = FoxyFormItem(
       label: '标识',
       child: FoxyNumberInput<int>(
         placeholder: 'Flags',
         controller: viewModel.flagsController,
       ),
     );
-    final factionGroupMaskInput = FormItem(
+    final factionGroupMaskInput = FoxyFormItem(
       label: '声望组掩码',
       child: FoxyNumberInput<int>(
         placeholder: 'FactionGroupMask',
         controller: viewModel.factionGroupMaskController,
       ),
     );
-    final explorationLevelInput = FormItem(
+    final explorationLevelInput = FoxyFormItem(
       label: '探索等级',
       child: FoxyNumberInput<int>(
         placeholder: 'ExplorationLevel',
@@ -89,56 +89,56 @@ class _AreaTableViewState extends State<AreaTableView> {
     );
 
     /// Sound
-    final ambientMultiplierInput = FormItem(
+    final ambientMultiplierInput = FoxyFormItem(
       label: '环境系数',
       child: FoxyNumberInput<double>(
         placeholder: 'Ambient_multiplier',
         controller: viewModel.ambientMultiplierController,
       ),
     );
-    final ambienceIdInput = FormItem(
+    final ambienceIdInput = FoxyFormItem(
       label: '环境',
       child: FoxyNumberInput<int>(
         placeholder: 'AmbienceID',
         controller: viewModel.ambienceIdController,
       ),
     );
-    final zoneMusicInput = FormItem(
+    final zoneMusicInput = FoxyFormItem(
       label: '区域音乐',
       child: FoxyNumberInput<int>(
         placeholder: 'ZoneMusic',
         controller: viewModel.zoneMusicController,
       ),
     );
-    final introSoundInput = FormItem(
+    final introSoundInput = FoxyFormItem(
       label: 'IntroSound',
       child: FoxyNumberInput<int>(
         placeholder: 'IntroSound',
         controller: viewModel.introSoundController,
       ),
     );
-    final soundProviderPrefInput = FormItem(
+    final soundProviderPrefInput = FoxyFormItem(
       label: '音效偏好',
       child: FoxyNumberInput<int>(
         placeholder: 'SoundProviderPref',
         controller: viewModel.soundProviderPrefController,
       ),
     );
-    final soundProviderPrefUnderwaterInput = FormItem(
+    final soundProviderPrefUnderwaterInput = FoxyFormItem(
       label: '水下音效',
       child: FoxyNumberInput<int>(
         placeholder: 'SoundProviderPrefUnderwater',
         controller: viewModel.soundProviderPrefUnderwaterController,
       ),
     );
-    final lightIdInput = FormItem(
+    final lightIdInput = FoxyFormItem(
       label: '光线',
       child: FoxyNumberInput<int>(
         placeholder: 'LightID',
         controller: viewModel.lightIdController,
       ),
     );
-    final minElevationInput = FormItem(
+    final minElevationInput = FoxyFormItem(
       label: '最低海拔',
       child: FoxyNumberInput<double>(
         placeholder: 'MinElevation',
@@ -147,28 +147,28 @@ class _AreaTableViewState extends State<AreaTableView> {
     );
 
     /// Liquid
-    final liquidTypeId0Input = FormItem(
+    final liquidTypeId0Input = FoxyFormItem(
       label: '液体类型0',
       child: FoxyNumberInput<int>(
         placeholder: 'LiquidTypeID0',
         controller: viewModel.liquidTypeId0Controller,
       ),
     );
-    final liquidTypeId1Input = FormItem(
+    final liquidTypeId1Input = FoxyFormItem(
       label: '液体类型1',
       child: FoxyNumberInput<int>(
         placeholder: 'LiquidTypeID1',
         controller: viewModel.liquidTypeId1Controller,
       ),
     );
-    final liquidTypeId2Input = FormItem(
+    final liquidTypeId2Input = FoxyFormItem(
       label: '液体类型2',
       child: FoxyNumberInput<int>(
         placeholder: 'LiquidTypeID2',
         controller: viewModel.liquidTypeId2Controller,
       ),
     );
-    final liquidTypeId3Input = FormItem(
+    final liquidTypeId3Input = FoxyFormItem(
       label: '液体类型3',
       child: FoxyNumberInput<int>(
         placeholder: 'LiquidTypeID3',
@@ -239,9 +239,9 @@ class _AreaTableViewState extends State<AreaTableView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(title: '基本信息', children: basicRows),
-          FormSection(title: '环境与音效', children: soundRows),
-          FormSection(title: '液体类型', children: liquidRows),
+          FoxyFormSection(title: '基本信息', children: basicRows),
+          FoxyFormSection(title: '环境与音效', children: soundRows),
+          FoxyFormSection(title: '液体类型', children: liquidRows),
           Row(
             children: [
               ShadButton(

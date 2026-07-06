@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/page/creature_template/npc_vendor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -182,7 +182,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 商人ID（只读）
-          FormItem(
+          FoxyFormItem(
             label: '商人ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
@@ -192,7 +192,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           ),
           SizedBox(height: 16),
           // 插槽
-          FormItem(
+          FoxyFormItem(
             label: '插槽',
             child: FoxyNumberInput<int>(
               controller: viewModel.slotController,
@@ -201,17 +201,17 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           ),
           SizedBox(height: 16),
           // 物品
-          FormItem(
+          FoxyFormItem(
             label: '物品',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemController,
               placeholder: 'item',
             ),
           ),
           SizedBox(height: 16),
           // 最大数量
-          FormItem(
+          FoxyFormItem(
             label: '最大数量',
             child: FoxyNumberInput<int>(
               controller: viewModel.maxcountController,
@@ -220,7 +220,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           ),
           SizedBox(height: 16),
           // 补货时间
-          FormItem(
+          FoxyFormItem(
             label: '补货时间',
             child: FoxyNumberInput<int>(
               controller: viewModel.incrtimeController,
@@ -229,17 +229,17 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           ),
           SizedBox(height: 16),
           // 扩展价格
-          FormItem(
+          FoxyFormItem(
             label: '扩展价格',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemExtendedCost,
+              delegate: FoxyEntityPickerDelegates.itemExtendedCost,
               controller: viewModel.extendedCostController,
               placeholder: 'ExtendedCost',
             ),
           ),
           SizedBox(height: 16),
           // VerifiedBuild
-          FormItem(
+          FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
               controller: viewModel.verifiedBuildController,

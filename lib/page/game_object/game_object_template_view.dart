@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/locale_picker_delegates.dart';
+import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -36,7 +36,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
   @override
   Widget build(BuildContext context) {
     /// 基础信息
-    final entryInput = FormItem(
+    final entryInput = FoxyFormItem(
       label: '编号',
       placeholder: 'entry',
       child: FoxyNumberInput<int>(
@@ -44,27 +44,27 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
         readOnly: true,
       ),
     );
-    final nameInput = FormItem(
+    final nameInput = FoxyFormItem(
       label: '名称',
       child: FoxyLocalePicker(
         entry: widget.entry,
         controller: viewModel.nameController,
-        delegate: LocalePickerDelegates.gameObjectName,
+        delegate: FoxyLocalePickerDelegates.gameObjectName,
         placeholder: 'name',
         title: '名称',
       ),
     );
-    final castBarCaptionInput = FormItem(
+    final castBarCaptionInput = FoxyFormItem(
       label: '使用说明',
       child: FoxyLocalePicker(
         entry: widget.entry,
         controller: viewModel.castBarCaptionController,
-        delegate: LocalePickerDelegates.gameObjectCaption,
+        delegate: FoxyLocalePickerDelegates.gameObjectCaption,
         placeholder: 'castBarCaption',
         title: '使用说明',
       ),
     );
-    final iconNameInput = FormItem(
+    final iconNameInput = FoxyFormItem(
       controller: viewModel.iconNameController,
       label: '鼠标形状',
       placeholder: 'IconName',
@@ -83,7 +83,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
     ];
 
     /// 类型与外观
-    final typeInput = FormItem(
+    final typeInput = FoxyFormItem(
       label: '类型',
       child: FoxyShadSelect<int>(
         controller: viewModel.typeController,
@@ -91,17 +91,17 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
         placeholder: const Text('类型'),
       ),
     );
-    final displayIdInput = FormItem(
+    final displayIdInput = FoxyFormItem(
       label: '外观模型',
       placeholder: 'displayId',
       child: FoxyNumberInput<int>(controller: viewModel.displayIdController),
     );
-    final sizeInput = FormItem(
+    final sizeInput = FoxyFormItem(
       label: '尺寸',
       placeholder: 'size',
       child: FoxyNumberInput<double>(controller: viewModel.sizeController),
     );
-    final unk1Input = FormItem(
+    final unk1Input = FoxyFormItem(
       controller: viewModel.unk1Controller,
       label: '未知字段',
       placeholder: 'unk1',
@@ -130,17 +130,17 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
     }
 
     /// AI与脚本
-    final aiNameInput = FormItem(
+    final aiNameInput = FoxyFormItem(
       controller: viewModel.aiNameController,
       label: 'AI',
       placeholder: 'AIName',
     );
-    final scriptNameInput = FormItem(
+    final scriptNameInput = FoxyFormItem(
       controller: viewModel.scriptNameController,
       label: '脚本',
       placeholder: 'ScriptName',
     );
-    final verifiedBuildInput = FormItem(
+    final verifiedBuildInput = FoxyFormItem(
       label: 'VerifiedBuild',
       placeholder: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
@@ -166,10 +166,10 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(title: '基础信息', children: basicRows),
-          FormSection(title: '类型与外观', children: typeRows),
-          FormSection(title: '动态数据', children: dataRows),
-          FormSection(title: 'AI与脚本', children: otherRows),
+          FoxyFormSection(title: '基础信息', children: basicRows),
+          FoxyFormSection(title: '类型与外观', children: typeRows),
+          FoxyFormSection(title: '动态数据', children: dataRows),
+          FoxyFormSection(title: 'AI与脚本', children: otherRows),
           Row(
             children: [
               ShadButton(
@@ -188,13 +188,11 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
     );
   }
 
-  FormItem _buildDataInput(int index) {
-    return FormItem(
+  FoxyFormItem _buildDataInput(int index) {
+    return FoxyFormItem(
       label: 'Data$index',
       placeholder: 'Data$index',
-      child: FoxyNumberInput<int>(
-        controller: viewModel.dataControllers[index],
-      ),
+      child: FoxyNumberInput<int>(controller: viewModel.dataControllers[index]),
     );
   }
 }

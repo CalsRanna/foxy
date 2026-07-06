@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_quality.dart';
@@ -7,7 +7,7 @@ import 'package:foxy/page/creature_template/pickpocketing_loot_template_view_mod
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -193,7 +193,7 @@ class _PickpocketingLootTemplateViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 生物ID（只读）
-          FormItem(
+          FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
@@ -203,17 +203,17 @@ class _PickpocketingLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 物品ID
-          FormItem(
+          FoxyFormItem(
             label: '物品ID',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemController,
               placeholder: 'Item',
             ),
           ),
           SizedBox(height: 16),
           // 关联ID
-          FormItem(
+          FoxyFormItem(
             label: '关联ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.referenceController,
@@ -222,7 +222,7 @@ class _PickpocketingLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 掉落几率
-          FormItem(
+          FoxyFormItem(
             label: '掉落几率',
             child: FoxyNumberInput<double>(
               controller: viewModel.chanceController,
@@ -231,7 +231,7 @@ class _PickpocketingLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 需要任务
-          FormItem(
+          FoxyFormItem(
             label: '需要任务',
             child: FoxyShadSelect<int>(
               controller: viewModel.questRequiredController,
@@ -241,7 +241,7 @@ class _PickpocketingLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 掉落模式
-          FormItem(
+          FoxyFormItem(
             label: '掉落模式',
             child: FoxyNumberInput<int>(
               controller: viewModel.lootModeController,
@@ -250,7 +250,7 @@ class _PickpocketingLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 组ID
-          FormItem(
+          FoxyFormItem(
             label: '组ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.groupIdController,
@@ -263,7 +263,7 @@ class _PickpocketingLootTemplateViewState
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '最小数量',
                   child: FoxyNumberInput<int>(
                     controller: viewModel.minCountController,
@@ -272,7 +272,7 @@ class _PickpocketingLootTemplateViewState
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '最大数量',
                   child: FoxyNumberInput<int>(
                     controller: viewModel.maxCountController,
@@ -284,7 +284,7 @@ class _PickpocketingLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 备注
-          FormItem(
+          FoxyFormItem(
             controller: viewModel.commentController,
             label: '备注',
             placeholder: 'Comment',

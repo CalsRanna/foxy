@@ -6,7 +6,7 @@ import 'package:foxy/page/dashboard/component/trend.dart';
 import 'package:foxy/page/dashboard/component/version.dart';
 import 'package:foxy/page/dashboard/component/welcome.dart';
 import 'package:foxy/page/dashboard/dashboard_view_model.dart';
-import 'package:foxy/widget/header.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_quality.dart';
@@ -8,7 +8,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -194,7 +194,7 @@ class _DisenchantLootTemplateViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 分解ID（只读）
-          FormItem(
+          FoxyFormItem(
             controller: TextEditingController(
               text: viewModel.entry.value.toString(),
             ),
@@ -204,17 +204,17 @@ class _DisenchantLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 物品ID
-          FormItem(
+          FoxyFormItem(
             label: '掉落物品',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemController,
               placeholder: 'Item',
             ),
           ),
           SizedBox(height: 16),
           // 关联ID
-          FormItem(
+          FoxyFormItem(
             label: '关联ID',
             placeholder: 'Reference (0=直接掉落)',
             child: FoxyNumberInput<int>(
@@ -223,7 +223,7 @@ class _DisenchantLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 掉落几率
-          FormItem(
+          FoxyFormItem(
             label: '掉落几率',
             placeholder: 'Chance (%)',
             child: FoxyNumberInput<double>(
@@ -232,7 +232,7 @@ class _DisenchantLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 需要任务
-          FormItem(
+          FoxyFormItem(
             label: '需要任务',
             child: FoxyShadSelect<int>(
               controller: viewModel.questRequiredController,
@@ -242,7 +242,7 @@ class _DisenchantLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 掉落模式
-          FormItem(
+          FoxyFormItem(
             label: '掉落模式',
             placeholder: 'LootMode',
             child: FoxyNumberInput<int>(
@@ -251,7 +251,7 @@ class _DisenchantLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 组ID
-          FormItem(
+          FoxyFormItem(
             label: '组ID',
             placeholder: 'GroupId',
             child: FoxyNumberInput<int>(
@@ -264,7 +264,7 @@ class _DisenchantLootTemplateViewState
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '最小数量',
                   placeholder: 'MinCount',
                   child: FoxyNumberInput<int>(
@@ -273,7 +273,7 @@ class _DisenchantLootTemplateViewState
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '最大数量',
                   placeholder: 'MaxCount',
                   child: FoxyNumberInput<int>(
@@ -285,7 +285,7 @@ class _DisenchantLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 备注
-          FormItem(
+          FoxyFormItem(
             controller: viewModel.commentController,
             label: '备注',
             placeholder: 'Comment',

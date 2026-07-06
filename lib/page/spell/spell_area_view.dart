@@ -3,7 +3,7 @@ import 'package:foxy/page/spell/spell_area_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -159,7 +159,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   controller: TextEditingController(
                     text: widget.spellId.toString(),
                   ),
@@ -169,7 +169,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '区域',
                   placeholder: 'area',
                   child: FoxyNumberInput<int>(
@@ -184,7 +184,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '开始任务',
                   placeholder: 'quest_start',
                   child: FoxyNumberInput<int>(
@@ -193,7 +193,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '结束任务',
                   placeholder: 'quest_end',
                   child: FoxyNumberInput<int>(
@@ -202,7 +202,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '开始任务掩码',
                   placeholder: 'quest_start_status',
                   child: FoxyNumberInput<int>(
@@ -211,7 +211,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '结束任务掩码',
                   placeholder: 'quest_end_status',
                   child: FoxyNumberInput<int>(
@@ -226,7 +226,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '光环',
                   placeholder: 'aura_spell',
                   child: FoxyNumberInput<int>(
@@ -235,7 +235,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '种族掩码',
                   placeholder: 'racemask',
                   child: FoxyNumberInput<int>(
@@ -244,7 +244,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '性别',
                   placeholder: 'gender',
                   child: FoxyNumberInput<int>(
@@ -253,7 +253,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '自动施放',
                   placeholder: 'autocast',
                   child: FoxyNumberInput<int>(

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
@@ -186,20 +186,16 @@ class GameObjectQuestItemViewModel {
               placeholder: Text('游戏对象编号'),
             ),
           ),
-          FoxyNumberInput<int>(
-            controller: idxController,
-          ),
+          FoxyNumberInput<int>(controller: idxController),
           SizedBox(
             height: 100,
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: itemIdController,
               placeholder: '物品ID',
             ),
           ),
-          FoxyNumberInput<int>(
-            controller: verifiedBuildController,
-          ),
+          FoxyNumberInput<int>(controller: verifiedBuildController),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             spacing: 12,

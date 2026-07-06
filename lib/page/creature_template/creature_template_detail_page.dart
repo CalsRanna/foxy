@@ -12,7 +12,7 @@ import 'package:foxy/page/creature_template/npc_trainer_view.dart';
 import 'package:foxy/page/creature_template/npc_vendor_view.dart';
 import 'package:foxy/page/creature_template/pickpocketing_loot_template_view.dart';
 import 'package:foxy/page/creature_template/skinning_loot_template_view.dart';
-import 'package:foxy/widget/tab.dart';
+import 'package:foxy/widget/foxy_tab.dart';
 
 @RoutePage()
 class CreatureTemplateDetailPage extends StatefulWidget {

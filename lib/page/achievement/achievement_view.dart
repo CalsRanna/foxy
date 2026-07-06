@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/achievement/achievement_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -49,7 +49,7 @@ class _AchievementViewState extends State<AchievementView> {
   }
 
   Widget _buildBasicInfoCard() {
-    final idInput = FormItem(
+    final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
@@ -57,21 +57,21 @@ class _AchievementViewState extends State<AchievementView> {
         readOnly: true,
       ),
     );
-    final factionInput = FormItem(
+    final factionInput = FoxyFormItem(
       label: '阵营',
       child: FoxyNumberInput<int>(
         placeholder: 'Faction',
         controller: viewModel.factionController,
       ),
     );
-    final instanceIdInput = FormItem(
+    final instanceIdInput = FoxyFormItem(
       label: '实例编号',
       child: FoxyNumberInput<int>(
         placeholder: 'Instance_ID',
         controller: viewModel.instanceIdController,
       ),
     );
-    final supercedesInput = FormItem(
+    final supercedesInput = FoxyFormItem(
       label: '前置成就',
       child: FoxyNumberInput<int>(
         placeholder: 'Supercedes',
@@ -79,7 +79,7 @@ class _AchievementViewState extends State<AchievementView> {
       ),
     );
 
-    return FormSection(
+    return FoxyFormSection(
       title: '基础信息',
       children: [
         Row(
@@ -96,28 +96,28 @@ class _AchievementViewState extends State<AchievementView> {
   }
 
   Widget _buildTitleCard() {
-    final enUsInput = FormItem(
+    final enUsInput = FoxyFormItem(
       controller: viewModel.titleLangEnUSController,
       label: '标题(enUS)',
       placeholder: 'Title_lang_enUS',
     );
-    final zhCnInput = FormItem(
+    final zhCnInput = FoxyFormItem(
       controller: viewModel.titleLangZhCNController,
       label: '标题(zhCN)',
       placeholder: 'Title_lang_zhCN',
     );
-    final zhTwInput = FormItem(
+    final zhTwInput = FoxyFormItem(
       controller: viewModel.titleLangZhTWController,
       label: '标题(zhTW)',
       placeholder: 'Title_lang_zhTW',
     );
-    final koKrInput = FormItem(
+    final koKrInput = FoxyFormItem(
       controller: viewModel.titleLangKoKRController,
       label: '标题(koKR)',
       placeholder: 'Title_lang_koKR',
     );
 
-    return FormSection(
+    return FoxyFormSection(
       title: '标题文本',
       children: [
         Row(
@@ -134,28 +134,28 @@ class _AchievementViewState extends State<AchievementView> {
   }
 
   Widget _buildDescriptionCard() {
-    final enUsInput = FormItem(
+    final enUsInput = FoxyFormItem(
       controller: viewModel.descriptionLangEnUSController,
       label: '描述(enUS)',
       placeholder: 'Description_lang_enUS',
     );
-    final zhCnInput = FormItem(
+    final zhCnInput = FoxyFormItem(
       controller: viewModel.descriptionLangZhCNController,
       label: '描述(zhCN)',
       placeholder: 'Description_lang_zhCN',
     );
-    final zhTwInput = FormItem(
+    final zhTwInput = FoxyFormItem(
       controller: viewModel.descriptionLangZhTWController,
       label: '描述(zhTW)',
       placeholder: 'Description_lang_zhTW',
     );
-    final koKrInput = FormItem(
+    final koKrInput = FoxyFormItem(
       controller: viewModel.descriptionLangKoKRController,
       label: '描述(koKR)',
       placeholder: 'Description_lang_koKR',
     );
 
-    return FormSection(
+    return FoxyFormSection(
       title: '描述文本',
       children: [
         Row(
@@ -172,28 +172,28 @@ class _AchievementViewState extends State<AchievementView> {
   }
 
   Widget _buildRewardCard() {
-    final enUsInput = FormItem(
+    final enUsInput = FoxyFormItem(
       controller: viewModel.rewardLangEnUSController,
       label: '奖励(enUS)',
       placeholder: 'Reward_lang_enUS',
     );
-    final zhCnInput = FormItem(
+    final zhCnInput = FoxyFormItem(
       controller: viewModel.rewardLangZhCNController,
       label: '奖励(zhCN)',
       placeholder: 'Reward_lang_zhCN',
     );
-    final zhTwInput = FormItem(
+    final zhTwInput = FoxyFormItem(
       controller: viewModel.rewardLangZhTWController,
       label: '奖励(zhTW)',
       placeholder: 'Reward_lang_zhTW',
     );
-    final koKrInput = FormItem(
+    final koKrInput = FoxyFormItem(
       controller: viewModel.rewardLangKoKRController,
       label: '奖励(koKR)',
       placeholder: 'Reward_lang_koKR',
     );
 
-    return FormSection(
+    return FoxyFormSection(
       title: '奖励文本',
       children: [
         Row(
@@ -210,49 +210,49 @@ class _AchievementViewState extends State<AchievementView> {
   }
 
   Widget _buildOtherCard() {
-    final categoryInput = FormItem(
+    final categoryInput = FoxyFormItem(
       label: '类别',
       child: FoxyNumberInput<int>(
         placeholder: 'Category',
         controller: viewModel.categoryController,
       ),
     );
-    final pointsInput = FormItem(
+    final pointsInput = FoxyFormItem(
       label: '点数',
       child: FoxyNumberInput<int>(
         placeholder: 'Points',
         controller: viewModel.pointsController,
       ),
     );
-    final uiOrderInput = FormItem(
+    final uiOrderInput = FoxyFormItem(
       label: '排序',
       child: FoxyNumberInput<int>(
         placeholder: 'Ui_order',
         controller: viewModel.uiOrderController,
       ),
     );
-    final flagsInput = FormItem(
+    final flagsInput = FoxyFormItem(
       label: '标识',
       child: FoxyNumberInput<int>(
         placeholder: 'Flags',
         controller: viewModel.flagsController,
       ),
     );
-    final iconIdInput = FormItem(
+    final iconIdInput = FoxyFormItem(
       label: '图标编号',
       child: FoxyNumberInput<int>(
         placeholder: 'IconID',
         controller: viewModel.iconIdController,
       ),
     );
-    final minimumCriteriaInput = FormItem(
+    final minimumCriteriaInput = FoxyFormItem(
       label: '最小完成条件',
       child: FoxyNumberInput<int>(
         placeholder: 'Minimum_criteria',
         controller: viewModel.minimumCriteriaController,
       ),
     );
-    final sharesCriteriaInput = FormItem(
+    final sharesCriteriaInput = FoxyFormItem(
       label: '共享条件',
       child: FoxyNumberInput<int>(
         placeholder: 'Shares_criteria',
@@ -260,7 +260,7 @@ class _AchievementViewState extends State<AchievementView> {
       ),
     );
 
-    return FormSection(
+    return FoxyFormSection(
       title: '其他',
       children: [
         Row(

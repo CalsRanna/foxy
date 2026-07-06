@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/creature_template/npc_trainer_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -165,7 +165,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 训练师ID（只读）
-          FormItem(
+          FoxyFormItem(
             label: '训练师ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
@@ -175,17 +175,17 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           ),
           SizedBox(height: 16),
           // 技能
-          FormItem(
+          FoxyFormItem(
             label: '技能',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.spell,
+              delegate: FoxyEntityPickerDelegates.spell,
               controller: viewModel.spellIDController,
               placeholder: 'SpellID',
             ),
           ),
           SizedBox(height: 16),
           // 金币花费
-          FormItem(
+          FoxyFormItem(
             label: '金币花费',
             child: FoxyNumberInput<int>(
               controller: viewModel.moneyCostController,
@@ -194,7 +194,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           ),
           SizedBox(height: 16),
           // 需要技能线
-          FormItem(
+          FoxyFormItem(
             label: '需要技能线',
             child: FoxyNumberInput<int>(
               controller: viewModel.reqSkillLineController,
@@ -203,7 +203,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           ),
           SizedBox(height: 16),
           // 需要技能等级
-          FormItem(
+          FoxyFormItem(
             label: '需要技能等级',
             child: FoxyNumberInput<int>(
               controller: viewModel.reqSkillRankController,
@@ -212,7 +212,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           ),
           SizedBox(height: 16),
           // 需要等级
-          FormItem(
+          FoxyFormItem(
             label: '需要等级',
             child: FoxyNumberInput<int>(
               controller: viewModel.reqLevelController,

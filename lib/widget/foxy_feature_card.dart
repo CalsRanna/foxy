@@ -31,14 +31,14 @@ const _kFeatureIconMap = <String, IconData>{
   'sparkles': LucideIcons.sparkles,
 };
 
-class FeatureCard extends StatefulWidget {
+class FoxyFeatureCard extends StatefulWidget {
   final FeatureEntity feature;
   final bool seamless;
   final Border? border;
   final VoidCallback onTap;
   final void Function(Offset position)? onSecondaryTap;
 
-  const FeatureCard({
+  const FoxyFeatureCard({
     super.key,
     required this.feature,
     this.seamless = false,
@@ -48,10 +48,10 @@ class FeatureCard extends StatefulWidget {
   });
 
   @override
-  State<FeatureCard> createState() => _FeatureCardState();
+  State<FoxyFeatureCard> createState() => _FoxyFeatureCardState();
 }
 
-class _FeatureCardState extends State<FeatureCard> {
+class _FoxyFeatureCardState extends State<FoxyFeatureCard> {
   @override
   Widget build(BuildContext context) {
     final surface = Theme.of(context).colorScheme.surface;

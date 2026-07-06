@@ -3,7 +3,7 @@ import 'package:foxy/page/spell/spell_linked_spell_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -149,7 +149,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FormItem(
+          FoxyFormItem(
             controller: TextEditingController(text: widget.spellId.toString()),
             label: '触发技能',
             placeholder: 'spell_trigger',
@@ -160,7 +160,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '链接技能',
                   placeholder: 'spell_effect',
                   child: FoxyNumberInput<int>(
@@ -169,7 +169,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '类型',
                   placeholder: 'type',
                   child: FoxyNumberInput<int>(
@@ -180,7 +180,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
             ],
           ),
           SizedBox(height: 16),
-          FormItem(
+          FoxyFormItem(
             controller: viewModel.commentController,
             label: '注解',
             placeholder: 'comment',

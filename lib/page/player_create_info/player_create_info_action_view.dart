@@ -3,7 +3,7 @@ import 'package:foxy/page/player_create_info/player_create_info_action_view_mode
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -127,21 +127,21 @@ class _PlayerCreateInfoActionViewState
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
           children: [
-            FormItem(
+            FoxyFormItem(
               label: '按钮',
               placeholder: 'button',
               child: FoxyNumberInput<int>(
                 controller: viewModel.buttonController,
               ),
             ),
-            FormItem(
+            FoxyFormItem(
               label: '动作',
               placeholder: 'action',
               child: FoxyNumberInput<int>(
                 controller: viewModel.actionController,
               ),
             ),
-            FormItem(
+            FoxyFormItem(
               label: '类型',
               placeholder: 'type',
               child: FoxyNumberInput<int>(controller: viewModel.typeController),

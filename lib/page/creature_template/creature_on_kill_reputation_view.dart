@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
@@ -57,7 +57,7 @@ class _CreatureOnKillReputationViewState
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '编号',
                           child: FoxyNumberInput<int>(
                             controller: viewModel.creatureIdController,
@@ -67,7 +67,7 @@ class _CreatureOnKillReputationViewState
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '区分阵营',
                           child: FoxyNumberInput<int>(
                             controller: viewModel.teamDependentController,
@@ -83,7 +83,7 @@ class _CreatureOnKillReputationViewState
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '阵营1',
                           child: FoxyNumberInput<int>(
                             controller:
@@ -93,7 +93,7 @@ class _CreatureOnKillReputationViewState
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '阵营2',
                           child: FoxyNumberInput<int>(
                             controller:
@@ -110,7 +110,7 @@ class _CreatureOnKillReputationViewState
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '声望值1',
                           child: FoxyNumberInput<double>(
                             controller: viewModel.rewOnKillRepValue1Controller,
@@ -119,7 +119,7 @@ class _CreatureOnKillReputationViewState
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '声望值2',
                           child: FoxyNumberInput<double>(
                             controller: viewModel.rewOnKillRepValue2Controller,
@@ -135,7 +135,7 @@ class _CreatureOnKillReputationViewState
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '最高声望等级1',
                           child: FoxyShadSelect<int>(
                             controller: viewModel.maxStanding1Controller,
@@ -145,7 +145,7 @@ class _CreatureOnKillReputationViewState
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '最高声望等级2',
                           child: FoxyShadSelect<int>(
                             controller: viewModel.maxStanding2Controller,
@@ -162,7 +162,7 @@ class _CreatureOnKillReputationViewState
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '包括声望组1',
                           child: FoxyShadSelect<int>(
                             controller: viewModel.isTeamAward1Controller,
@@ -172,7 +172,7 @@ class _CreatureOnKillReputationViewState
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '包括声望组2',
                           child: FoxyShadSelect<int>(
                             controller: viewModel.isTeamAward2Controller,

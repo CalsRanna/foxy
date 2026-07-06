@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/item_set/item_set_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -49,14 +49,14 @@ class _ItemSetViewState extends State<ItemSetView> {
   }
 
   Widget _buildBasicInfo() {
-    return FormSection(
+    return FoxyFormSection(
       title: '基本信息',
       children: [
         Row(
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '编号',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ID',
@@ -66,7 +66,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '需求技能',
                 child: FoxyNumberInput<int>(
                   placeholder: 'RequiredSkill',
@@ -75,7 +75,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '需求技能等级',
                 child: FoxyNumberInput<int>(
                   placeholder: 'RequiredSkillRank',
@@ -91,35 +91,35 @@ class _ItemSetViewState extends State<ItemSetView> {
   }
 
   Widget _buildNameText() {
-    return FormSection(
+    return FoxyFormSection(
       title: '名称文本',
       children: [
         Row(
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 controller: viewModel.nameLangEnUSController,
                 label: '英文名称',
                 placeholder: 'enUS',
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 controller: viewModel.nameLangZhCNController,
                 label: '简体中文名称',
                 placeholder: 'zhCN',
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 controller: viewModel.nameLangZhTWController,
                 label: '繁体中文名称',
                 placeholder: 'zhTW',
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 controller: viewModel.nameLangKoKRController,
                 label: '韩文名称',
                 placeholder: 'koKR',
@@ -132,14 +132,14 @@ class _ItemSetViewState extends State<ItemSetView> {
   }
 
   Widget _buildItemIds() {
-    return FormSection(
+    return FoxyFormSection(
       title: '套装物品',
       children: [
         Row(
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品0',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID0',
@@ -148,7 +148,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品1',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID1',
@@ -157,7 +157,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品2',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID2',
@@ -166,7 +166,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品3',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID3',
@@ -180,7 +180,7 @@ class _ItemSetViewState extends State<ItemSetView> {
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品4',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID4',
@@ -189,7 +189,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品5',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID5',
@@ -198,7 +198,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品6',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID6',
@@ -207,7 +207,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品7',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID7',
@@ -221,7 +221,7 @@ class _ItemSetViewState extends State<ItemSetView> {
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品8',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID8',
@@ -230,7 +230,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品9',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID9',
@@ -239,7 +239,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品10',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID10',
@@ -248,7 +248,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品11',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID11',
@@ -262,7 +262,7 @@ class _ItemSetViewState extends State<ItemSetView> {
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品12',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID12',
@@ -271,7 +271,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品13',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID13',
@@ -280,7 +280,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品14',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID14',
@@ -289,7 +289,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品15',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID15',
@@ -303,7 +303,7 @@ class _ItemSetViewState extends State<ItemSetView> {
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '物品16',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ItemID16',
@@ -321,14 +321,14 @@ class _ItemSetViewState extends State<ItemSetView> {
   }
 
   Widget _buildSetSpellIds() {
-    return FormSection(
+    return FoxyFormSection(
       title: '套装法术',
       children: [
         Row(
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '法术0',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetSpellID0',
@@ -337,7 +337,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '法术1',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetSpellID1',
@@ -346,7 +346,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '法术2',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetSpellID2',
@@ -355,7 +355,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '法术3',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetSpellID3',
@@ -369,7 +369,7 @@ class _ItemSetViewState extends State<ItemSetView> {
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '法术4',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetSpellID4',
@@ -378,7 +378,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '法术5',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetSpellID5',
@@ -387,7 +387,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '法术6',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetSpellID6',
@@ -396,7 +396,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '法术7',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetSpellID7',
@@ -411,14 +411,14 @@ class _ItemSetViewState extends State<ItemSetView> {
   }
 
   Widget _buildSetThresholds() {
-    return FormSection(
+    return FoxyFormSection(
       title: '触发阈值',
       children: [
         Row(
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '门槛0',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold0',
@@ -427,7 +427,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '门槛1',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold1',
@@ -436,7 +436,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '门槛2',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold2',
@@ -445,7 +445,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '门槛3',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold3',
@@ -459,7 +459,7 @@ class _ItemSetViewState extends State<ItemSetView> {
           spacing: 8,
           children: [
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '门槛4',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold4',
@@ -468,7 +468,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '门槛5',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold5',
@@ -477,7 +477,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '门槛6',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold6',
@@ -486,7 +486,7 @@ class _ItemSetViewState extends State<ItemSetView> {
               ),
             ),
             Expanded(
-              child: FormItem(
+              child: FoxyFormItem(
                 label: '门槛7',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold7',

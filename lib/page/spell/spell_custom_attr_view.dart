@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_custom_attr_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -51,7 +51,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           controller: TextEditingController(
                             text: widget.spellId.toString(),
                           ),
@@ -61,7 +61,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '属性',
                           placeholder: 'attributes',
                           child: FoxyNumberInput<int>(

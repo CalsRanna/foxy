@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/creature_template/creature_template_spell_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -162,7 +162,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 生物ID（只读）
-          FormItem(
+          FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
@@ -172,7 +172,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           ),
           SizedBox(height: 16),
           // 索引
-          FormItem(
+          FoxyFormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
               controller: viewModel.indexController,
@@ -181,17 +181,17 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           ),
           SizedBox(height: 16),
           // 技能
-          FormItem(
+          FoxyFormItem(
             label: '技能',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.spell,
+              delegate: FoxyEntityPickerDelegates.spell,
               controller: viewModel.spellController,
               placeholder: 'Spell',
             ),
           ),
           SizedBox(height: 16),
           // VerifiedBuild
-          FormItem(
+          FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
               controller: viewModel.verifiedBuildController,

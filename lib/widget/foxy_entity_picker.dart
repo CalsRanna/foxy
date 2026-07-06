@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/pagination.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 一个筛选输入框（输入编号）。
-class EntityPickerFilter {
+class FoxyEntityPickerFilter {
   final String placeholder;
-  const EntityPickerFilter(this.placeholder);
+  const FoxyEntityPickerFilter(this.placeholder);
 }
 
 /// 表格的一列。[width] 为 null 表示弹性列（与其他弹性列均分剩余宽度）。
 /// 普通列用 [text]；需要自定义样式（如带颜色）的列用 [cell]，二者提供其一。
-class EntityPickerColumn<T> {
+class FoxyEntityPickerColumn<T> {
   final String header;
   final String Function(T)? text;
   final Widget Function(T)? cell;
   final double? width;
-  const EntityPickerColumn({
+  const FoxyEntityPickerColumn({
     required this.header,
     this.text,
     this.cell,
@@ -28,17 +28,17 @@ class EntityPickerColumn<T> {
 
 /// 每个实体提供的查询/渲染配置。纯数据 + 闭包，不持有可变状态，
 /// 因此同一实例可被多个 [FoxyEntityPicker] 共享。
-class EntityPickerDelegate<T> {
+class FoxyEntityPickerDelegate<T> {
   final String title;
   final String errorLabel;
-  final List<EntityPickerFilter> filters;
-  final List<EntityPickerColumn<T>> columns;
+  final List<FoxyEntityPickerFilter> filters;
+  final List<FoxyEntityPickerColumn<T>> columns;
   final int Function(T) idOf;
   final Future<List<T>> Function(int page, List<String> values) fetch;
   final Future<int> Function(List<String> values) count;
   final String? emptyText;
 
-  const EntityPickerDelegate({
+  const FoxyEntityPickerDelegate({
     required this.title,
     required this.errorLabel,
     required this.filters,
@@ -54,7 +54,7 @@ class EntityPickerDelegate<T> {
 /// 双击行或确定回填选中 id。状态完全由弹窗内部 setState 管理，无 signals。
 class FoxyEntityPicker<T> extends StatefulWidget {
   final TextEditingController controller;
-  final EntityPickerDelegate<T> delegate;
+  final FoxyEntityPickerDelegate<T> delegate;
   final String? placeholder;
 
   const FoxyEntityPicker({
@@ -101,7 +101,7 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
 }
 
 class _EntityPickerDialog<T> extends StatefulWidget {
-  final EntityPickerDelegate<T> delegate;
+  final FoxyEntityPickerDelegate<T> delegate;
   final int initialValue;
 
   const _EntityPickerDialog({
