@@ -13,6 +13,10 @@ class FeatureRepository with RepositoryMixin {
     return rows.map((row) => FeatureEntity.fromJson(row.toMap())).toList();
   }
 
+  Future<int> countFeatures() async {
+    return laconic.table('foxy.features').count();
+  }
+
   Future<void> updatePinned(int id, bool pinned) async {
     await laconic.table('foxy.features').where('id', id).update({
       'is_pinned': pinned ? 1 : 0,

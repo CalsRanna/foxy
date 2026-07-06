@@ -37,7 +37,17 @@ class _DashboardPageRoute extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.all(16.0),
-      children: [_Header(), Welcome(), SizedBox(height: 16), _buildWorkspace()],
+      children: [
+        _Header(),
+        Watch(
+          (context) => Welcome(
+            activityLogCount: viewModel.activityCount.value,
+            featureCount: viewModel.featureCount.value,
+          ),
+        ),
+        SizedBox(height: 16),
+        _buildWorkspace(),
+      ],
     );
   }
 
