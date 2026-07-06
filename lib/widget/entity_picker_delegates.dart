@@ -64,6 +64,7 @@ import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/game_asset_icon.dart';
 import 'package:get_it/get_it.dart';
 
 class EntityPickerDelegates {
@@ -830,7 +831,16 @@ class EntityPickerDelegates {
       ),
       EntityPickerColumn(
         header: '图标文件',
-        text: (SpellIconEntity t) => t.textureFilename,
+        cell: (entity) => Row(
+          spacing: 8,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: GameAssetIcon(rawPath: entity.textureFilename),
+            ),
+            Expanded(child: Text(entity.textureFilename)),
+          ],
+        ),
       ),
     ],
     idOf: (SpellIconEntity t) => t.id,
