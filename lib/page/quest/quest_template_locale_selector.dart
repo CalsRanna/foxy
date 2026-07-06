@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
 import 'package:foxy/repository/quest_template_locale_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
-import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:get_it/get_it.dart';
 
@@ -49,7 +48,9 @@ class _QuestTemplateLocaleSelectorState
 
   Future<void> _openLocaleDialog() async {
     if (widget.questId == null) return;
-    final vm = LocaleCrudViewModel(
+    await LocaleCrudDialog.show(
+      context,
+      title: widget.title,
       entry: widget.questId!,
       fields: [
         'locale',
@@ -75,8 +76,9 @@ class _QuestTemplateLocaleSelectorState
         '目标文本3',
         '目标文本4',
       ],
-      onLoad: (questId) async {
-        final locales = await _repository.getQuestTemplateLocales(questId);
+      onLoad: () async {
+        final locales =
+            await _repository.getQuestTemplateLocales(widget.questId!);
         return locales
             .map(
               (e) => {
@@ -94,11 +96,11 @@ class _QuestTemplateLocaleSelectorState
             )
             .toList();
       },
-      onSave: (questId, data) async {
+      onSave: (data) async {
         final locales = data
             .map(
               (d) => QuestTemplateLocaleEntity(
-                id: questId,
+                id: widget.questId!,
                 locale: d['locale'] ?? '',
                 title: d['title'] ?? '',
                 details: d['details'] ?? '',
@@ -112,14 +114,8 @@ class _QuestTemplateLocaleSelectorState
               ),
             )
             .toList();
-        await _repository.replaceAll(questId, locales);
+        await _repository.replaceAll(widget.questId!, locales);
       },
     );
-    await LocaleCrudDialog(
-      title: widget.title,
-      entry: widget.questId!,
-      vm: vm,
-    ).show(context);
-    vm.dispose();
   }
 }
