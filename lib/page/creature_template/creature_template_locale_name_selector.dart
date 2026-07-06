@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
-import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:get_it/get_it.dart';
 
@@ -49,35 +48,36 @@ class _CreatureTemplateLocaleNameSelectorState
 
   Future<void> _openLocaleDialog() async {
     if (widget.entry == null) return;
-    final vm = LocaleCrudViewModel(
+    await LocaleCrudDialog.show(
+      context,
+      title: widget.title,
       entry: widget.entry!,
       fields: ['locale', 'name', 'title'],
       fieldLabels: ['语言', '名称', '称号'],
-      onLoad: (entry) async {
-        final locales = await _repository.getCreatureTemplateLocales(entry);
+      onLoad: () async {
+        final locales =
+            await _repository.getCreatureTemplateLocales(widget.entry!);
         return locales
-            .map((e) => {'locale': e.locale, 'name': e.name, 'title': e.title})
+            .map((e) => {
+                  'locale': e.locale,
+                  'name': e.name,
+                  'title': e.title,
+                })
             .toList();
       },
-      onSave: (entry, data) async {
+      onSave: (data) async {
         final locales = data
             .map(
               (d) => CreatureTemplateLocaleEntity(
-                entry: entry,
+                entry: widget.entry!,
                 locale: d['locale'] ?? '',
                 name: d['name'] ?? '',
                 title: d['title'] ?? '',
               ),
             )
             .toList();
-        await _repository.saveCreatureTemplateLocales(entry, locales);
+        await _repository.saveCreatureTemplateLocales(widget.entry!, locales);
       },
     );
-    await LocaleCrudDialog(
-      title: widget.title,
-      entry: widget.entry!,
-      vm: vm,
-    ).show(context);
-    vm.dispose();
   }
 }

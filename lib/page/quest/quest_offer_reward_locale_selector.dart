@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
-import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:get_it/get_it.dart';
 
@@ -49,34 +48,31 @@ class _QuestOfferRewardLocaleSelectorState
 
   Future<void> _openLocaleDialog() async {
     if (widget.questId == null) return;
-    final vm = LocaleCrudViewModel(
+    await LocaleCrudDialog.show(
+      context,
+      title: widget.title,
       entry: widget.questId!,
       fields: ['locale', 'rewardText'],
       fieldLabels: ['语言', '奖励文本'],
-      onLoad: (questId) async {
-        final locales = await _repository.getQuestOfferRewardLocales(questId);
+      onLoad: () async {
+        final locales =
+            await _repository.getQuestOfferRewardLocales(widget.questId!);
         return locales
             .map((e) => {'locale': e.locale, 'rewardText': e.rewardText})
             .toList();
       },
-      onSave: (questId, data) async {
+      onSave: (data) async {
         final locales = data
             .map(
               (d) => QuestOfferRewardLocaleEntity(
-                id: questId,
+                id: widget.questId!,
                 locale: d['locale'] ?? '',
                 rewardText: d['rewardText'] ?? '',
               ),
             )
             .toList();
-        await _repository.replaceAll(questId, locales);
+        await _repository.replaceAll(widget.questId!, locales);
       },
     );
-    await LocaleCrudDialog(
-      title: widget.title,
-      entry: widget.questId!,
-      vm: vm,
-    ).show(context);
-    vm.dispose();
   }
 }

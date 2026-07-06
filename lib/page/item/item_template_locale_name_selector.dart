@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/repository/item_template_locale_repository.dart';
 import 'package:foxy/widget/locale_crud_dialog.dart';
-import 'package:foxy/widget/locale_crud_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:get_it/get_it.dart';
 
@@ -49,34 +48,31 @@ class _ItemTemplateLocaleNameSelectorState
 
   Future<void> _openLocaleDialog() async {
     if (widget.entry == null) return;
-    final vm = LocaleCrudViewModel(
+    await LocaleCrudDialog.show(
+      context,
+      title: widget.title,
       entry: widget.entry!,
       fields: ['locale', 'name'],
       fieldLabels: ['语言', '名称'],
-      onLoad: (entry) async {
-        final locales = await _repository.getItemTemplateLocales(entry);
+      onLoad: () async {
+        final locales =
+            await _repository.getItemTemplateLocales(widget.entry!);
         return locales
             .map((e) => {'locale': e.locale, 'name': e.name})
             .toList();
       },
-      onSave: (entry, data) async {
+      onSave: (data) async {
         final locales = data
             .map(
               (d) => ItemTemplateLocaleEntity(
-                id: entry,
+                id: widget.entry!,
                 locale: d['locale'] ?? '',
                 name: d['name'] ?? '',
               ),
             )
             .toList();
-        await _repository.replaceAll(entry, locales);
+        await _repository.replaceAll(widget.entry!, locales);
       },
     );
-    await LocaleCrudDialog(
-      title: widget.title,
-      entry: widget.entry!,
-      vm: vm,
-    ).show(context);
-    vm.dispose();
   }
 }
