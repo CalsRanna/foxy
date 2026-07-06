@@ -6,6 +6,7 @@ import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/widget/flag_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -41,6 +42,7 @@ class ItemTemplateDetailViewModel {
   final totemCategoryController = TextEditingController();
   final foodTypeController = ShadSelectController<int>();
   final bagFamily = signal<int>(0);
+  final bagFamilyController = TextEditingController();
   final containerSlotsController = TextEditingController();
   final itemLimitCategoryController = TextEditingController();
   final startquestController = TextEditingController();
@@ -51,8 +53,11 @@ class ItemTemplateDetailViewModel {
 
   /// Card 3: Flags
   final flags = signal<int>(0);
+  final flagsController = TextEditingController();
   final flagsExtra = signal<int>(0);
+  final flagsExtraController = TextEditingController();
   final flagsCustom = signal<int>(0);
+  final flagsCustomController = TextEditingController();
 
   /// Card 4: Damage/Armor
   final delayController = TextEditingController();
@@ -71,6 +76,7 @@ class ItemTemplateDetailViewModel {
   /// Card 5: Scaling Stats
   final scalingStatDistributionController = TextEditingController();
   final scalingStatValue = signal<int>(0);
+  final scalingStatValueController = TextEditingController();
 
   /// Card 6: Stats (dynamic)
   final statsCountController = TextEditingController();
@@ -120,7 +126,9 @@ class ItemTemplateDetailViewModel {
 
   /// Card 9: Requirements
   final allowableClass = signal<int>(0);
+  final allowableClassController = TextEditingController();
   final allowableRace = signal<int>(0);
+  final allowableRaceController = TextEditingController();
   final itemLevelController = TextEditingController();
   final requiredLevelController = TextEditingController();
   final requiredSkillController = TextEditingController();
@@ -210,6 +218,7 @@ class ItemTemplateDetailViewModel {
     totemCategoryController.text = _fmt(template.totemCategory);
     foodTypeController.value = {template.foodType};
     bagFamily.value = template.bagFamily;
+    bagFamilyController.text = formatFlagValue(template.bagFamily);
     containerSlotsController.text = _fmt(template.containerSlots);
     itemLimitCategoryController.text = _fmt(template.itemLimitCategory);
     startquestController.text = _fmt(template.startquest);
@@ -220,8 +229,11 @@ class ItemTemplateDetailViewModel {
 
     /// Card 3: Flags
     flags.value = template.flags;
+    flagsController.text = formatFlagValue(template.flags);
     flagsExtra.value = template.flagsExtra;
+    flagsExtraController.text = formatFlagValue(template.flagsExtra);
     flagsCustom.value = template.flagsCustom;
+    flagsCustomController.text = formatFlagValue(template.flagsCustom);
 
     /// Card 4: Damage/Armor
     delayController.text = _fmt(template.delay);
@@ -242,6 +254,7 @@ class ItemTemplateDetailViewModel {
       template.scalingStatDistribution,
     );
     scalingStatValue.value = template.scalingStatValue;
+    scalingStatValueController.text = formatFlagValue(template.scalingStatValue);
 
     /// Card 6: Stats (dynamic)
     statsCountController.text = _fmt(template.statsCount);
@@ -272,7 +285,9 @@ class ItemTemplateDetailViewModel {
 
     /// Card 9: Requirements
     allowableClass.value = template.allowableClass;
+    allowableClassController.text = formatFlagValue(template.allowableClass);
     allowableRace.value = template.allowableRace;
+    allowableRaceController.text = formatFlagValue(template.allowableRace);
     itemLevelController.text = _fmt(template.itemLevel);
     requiredLevelController.text = _fmt(template.requiredLevel);
     requiredSkillController.text = _fmt(template.requiredSkill);
@@ -485,11 +500,14 @@ class ItemTemplateDetailViewModel {
     for (final c in spellIds) {
       c.dispose();
     }
+    allowableClassController.dispose();
+    allowableRaceController.dispose();
     ammoTypeController.dispose();
     arcaneResController.dispose();
     areaController.dispose();
     armorController.dispose();
     armorDamageModifierController.dispose();
+    bagFamilyController.dispose();
     blockController.dispose();
     bondingController.dispose();
     buyCountController.dispose();
@@ -509,6 +527,9 @@ class ItemTemplateDetailViewModel {
     durationController.dispose();
     entryController.dispose();
     fireResController.dispose();
+    flagsController.dispose();
+    flagsCustomController.dispose();
+    flagsExtraController.dispose();
     foodTypeController.dispose();
     frostResController.dispose();
     gemPropertiesController.dispose();
@@ -544,6 +565,7 @@ class ItemTemplateDetailViewModel {
     requiredSkillRankController.dispose();
     requiredSpellController.dispose();
     scalingStatDistributionController.dispose();
+    scalingStatValueController.dispose();
     scriptNameController.dispose();
     sellPriceController.dispose();
     shadowResController.dispose();

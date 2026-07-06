@@ -4,6 +4,7 @@ import 'package:foxy/util/format_util.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/widget/flag_picker.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
@@ -25,6 +26,7 @@ class GossipMenuOptionViewModel {
   final optionBroadcastTextIdController = TextEditingController();
   final optionTypeController = ShadSelectController<int>();
   final optionNpcFlag = signal<int>(0);
+  final optionNpcFlagController = TextEditingController();
   final boxCodedController = TextEditingController();
   final boxMoneyController = TextEditingController();
   final boxTextController = TextEditingController();
@@ -159,6 +161,7 @@ class GossipMenuOptionViewModel {
     optionIdController.dispose();
     optionTextController.dispose();
     optionTypeController.dispose();
+    optionNpcFlagController.dispose();
     verifiedBuildController.dispose();
   }
 
@@ -170,6 +173,7 @@ class GossipMenuOptionViewModel {
     optionBroadcastTextIdController.text = _fmt(o.optionBroadcastTextId);
     optionTypeController.value = {o.optionType};
     optionNpcFlag.value = o.optionNpcFlag;
+    optionNpcFlagController.text = formatFlagValue(o.optionNpcFlag);
     boxCodedController.text = o.boxCoded.toString();
     boxMoneyController.text = o.boxMoney.toString();
     boxTextController.text = o.boxText;

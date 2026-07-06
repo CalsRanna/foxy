@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals/signals.dart';
 
+/// 格式化标志位整数值为显示文本，如 "123 (0x0000007B)"。
+String formatFlagValue(int value) {
+  final hex = value.toRadixString(16).toUpperCase().padLeft(8, '0');
+  return '$value (0x$hex)';
+}
+
+/// 纯展示组件：显示已格式化的标志位值，点击弹出标志位编辑器。
+///
+/// [controller] 的文本由调用方在初始化时设置（通过 [formatFlagValue]），
+/// 弹窗确认后组件自动写回 [controller]。
+/// [onChanged] 在用户选择新值后回调，用于更新外部状态（如 signal）。
 class FlagPicker extends StatefulWidget {
-  final Signal<int> signal;
+  final TextEditingController controller;
   final List<FlagItem> flags;
   final String title;
   final String? placeholder;
+  final ValueChanged<int>? onChanged;
 
   const FlagPicker({
     super.key,
-    required this.signal,
+    required this.controller,
     required this.flags,
     required this.title,
     this.placeholder,
+    this.onChanged,
   });
 
   @override
@@ -22,49 +34,10 @@ class FlagPicker extends StatefulWidget {
 }
 
 class _FlagPickerState extends State<FlagPicker> {
-  late final TextEditingController _displayController;
-  void Function()? _unsub;
-  bool _isInternal = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _displayController = TextEditingController(
-      text: _format(widget.signal.value),
-    );
-    _unsub = widget.signal.subscribe(_onSignalChanged);
-  }
-
-  @override
-  void didUpdateWidget(FlagPicker oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (_isInternal) return;
-    if (widget.signal.value != oldWidget.signal.value) {
-      _displayController.text = _format(widget.signal.value);
-    }
-  }
-
-  @override
-  void dispose() {
-    _unsub?.call();
-    _displayController.dispose();
-    super.dispose();
-  }
-
-  void _onSignalChanged(int _) {
-    if (_isInternal) return;
-    _displayController.text = _format(widget.signal.value);
-  }
-
-  String _format(int value) {
-    final hex = value.toRadixString(16).toUpperCase().padLeft(8, '0');
-    return '$value (0x$hex)';
-  }
-
   @override
   Widget build(BuildContext context) {
     return ShadInput(
-      controller: _displayController,
+      controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
       readOnly: true,
       trailing: ShadButton.ghost(
@@ -77,6 +50,11 @@ class _FlagPickerState extends State<FlagPicker> {
     );
   }
 
+  int get _currentValue {
+    final text = widget.controller.text;
+    return int.tryParse(text.split(' ').first) ?? 0;
+  }
+
   Future<void> _openDialog() async {
     final result = await showShadDialog<int>(
       context: context,
@@ -84,14 +62,13 @@ class _FlagPickerState extends State<FlagPicker> {
         return _FlagPickerDialog(
           title: widget.title,
           flags: widget.flags,
-          initialValue: widget.signal.value,
+          initialValue: _currentValue,
         );
       },
     );
     if (result != null) {
-      _isInternal = true;
-      widget.signal.value = result;
-      _isInternal = false;
+      widget.controller.text = formatFlagValue(result);
+      widget.onChanged?.call(result);
     }
   }
 }
