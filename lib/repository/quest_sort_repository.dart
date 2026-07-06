@@ -71,7 +71,7 @@ class QuestSortRepository with RepositoryMixin {
       builder = builder.where(
         'SortName_Lang_zhCN',
         '%${filter.name}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;

@@ -82,7 +82,7 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
       builder = builder.where(
         'Name_lang_zhCN',
         '%${filter.name}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;

@@ -132,14 +132,14 @@ class CreatureTemplateRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['ct.name', 'ctl.Name'],
         '%${filter.name}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     if (filter.subName.isNotEmpty) {
       builder = builder.whereAny(
         ['ct.subname', 'ctl.Title'],
         '%${filter.subName}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;

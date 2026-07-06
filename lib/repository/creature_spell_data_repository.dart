@@ -36,7 +36,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
           'ds_4.Name_lang_zhCN',
         ],
         '%$spell%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return await builder.count();
@@ -93,7 +93,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
           'ds_4.Name_lang_zhCN',
         ],
         '%$spell%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     builder = builder.limit(kPageSize).offset(offset);

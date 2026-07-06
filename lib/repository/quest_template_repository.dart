@@ -93,7 +93,7 @@ class QuestTemplateRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['qt.LogTitle', 'qtl.Title'],
         '%${filter.title}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;

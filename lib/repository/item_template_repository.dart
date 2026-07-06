@@ -116,14 +116,14 @@ class ItemTemplateRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['it.name', 'itl.Name'],
         '%${filter.name}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     if (filter.description.isNotEmpty) {
       builder = builder.whereAny(
         ['it.description', 'itl.Description'],
         '%${filter.description}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     if (filter.classId >= 0) {

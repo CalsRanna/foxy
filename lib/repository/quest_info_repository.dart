@@ -71,7 +71,7 @@ class QuestInfoRepository with RepositoryMixin {
       builder = builder.where(
         'InfoName_Lang_zhCN',
         '%${filter.name}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;

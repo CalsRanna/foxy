@@ -110,7 +110,7 @@ class PageTextRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['pt.Text', 'ptl.Text'],
         '%${filter.text}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;

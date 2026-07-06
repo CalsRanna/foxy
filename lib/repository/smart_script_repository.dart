@@ -131,7 +131,7 @@ class SmartScriptRepository with RepositoryMixin {
       builder = builder.where(
         'comment',
         '%${filter.comment}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;

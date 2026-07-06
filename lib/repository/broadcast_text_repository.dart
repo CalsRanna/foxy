@@ -23,7 +23,7 @@ class BroadcastTextRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['MaleText', 'FemaleText'],
         '%$text%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     builder = builder.limit(kPageSize).offset(offset);
@@ -45,7 +45,7 @@ class BroadcastTextRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['MaleText', 'FemaleText'],
         '%$text%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder.count();

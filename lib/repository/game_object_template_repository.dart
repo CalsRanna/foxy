@@ -125,7 +125,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['gt.name', 'gtl.name'],
         '%${filter.name}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;
