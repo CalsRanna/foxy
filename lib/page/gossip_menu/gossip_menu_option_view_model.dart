@@ -25,7 +25,6 @@ class GossipMenuOptionViewModel {
   final optionTextController = TextEditingController();
   final optionBroadcastTextIdController = TextEditingController();
   final optionTypeController = ShadSelectController<int>();
-  final optionNpcFlag = signal<int>(0);
   final optionNpcFlagController = TextEditingController();
   final boxCodedController = TextEditingController();
   final boxMoneyController = TextEditingController();
@@ -172,7 +171,6 @@ class GossipMenuOptionViewModel {
     optionTextController.text = o.optionText;
     optionBroadcastTextIdController.text = _fmt(o.optionBroadcastTextId);
     optionTypeController.value = {o.optionType};
-    optionNpcFlag.value = o.optionNpcFlag;
     optionNpcFlagController.text = formatFlagValue(o.optionNpcFlag);
     boxCodedController.text = o.boxCoded.toString();
     boxMoneyController.text = o.boxMoney.toString();
@@ -195,7 +193,7 @@ class GossipMenuOptionViewModel {
       optionType: optionTypeController.value.isNotEmpty
           ? optionTypeController.value.first
           : 0,
-      optionNpcFlag: optionNpcFlag.value,
+      optionNpcFlag: parseFlagValue(optionNpcFlagController.text),
       boxCoded: int.tryParse(boxCodedController.text) ?? 0,
       boxMoney: int.tryParse(boxMoneyController.text) ?? 0,
       boxText: boxTextController.text,

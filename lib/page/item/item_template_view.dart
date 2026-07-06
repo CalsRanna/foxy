@@ -284,7 +284,6 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
         flags: kItemBagFamilyOptions,
         title: '背包类别',
         placeholder: 'BagFamily',
-        onChanged: (v) => viewModel.bagFamily.value = v,
       ),
     );
     final containerSlotsInput = FormItem(
@@ -394,7 +393,6 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
         flags: kItemFlagOptions,
         title: '物品标识',
         placeholder: 'flags',
-        onChanged: (v) => viewModel.flags.value = v,
       ),
     );
     final flagsExtraInput = FormItem(
@@ -404,7 +402,6 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
         flags: kItemFlagsExtraOptions,
         title: '额外标识',
         placeholder: 'flagsExtra',
-        onChanged: (v) => viewModel.flagsExtra.value = v,
       ),
     );
     final flagsCustomInput = FormItem(
@@ -414,7 +411,6 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
         flags: kItemFlagsCustomOptions,
         title: '自定义标识',
         placeholder: 'flagsCustom',
-        onChanged: (v) => viewModel.flagsCustom.value = v,
       ),
     );
 
@@ -565,7 +561,6 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
         flags: kItemScalingStatValueOptions,
         title: '缩放值',
         placeholder: 'ScalingStatValue',
-        onChanged: (v) => viewModel.scalingStatValue.value = v,
       ),
     );
 
@@ -661,7 +656,6 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
         flags: kAllowableClassOptions,
         title: '允许职业',
         placeholder: 'AllowableClass',
-        onChanged: (v) => viewModel.allowableClass.value = v,
       ),
     );
     final allowableRaceInput = FormItem(
@@ -671,7 +665,6 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
         flags: kAllowableRaceOptions,
         title: '允许种族',
         placeholder: 'AllowableRace',
-        onChanged: (v) => viewModel.allowableRace.value = v,
       ),
     );
     final itemLevelInput = FormItem(

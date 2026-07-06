@@ -111,7 +111,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellSchoolMaskOptions,
         title: '法术类型掩码',
         placeholder: 'SchoolMask',
-        onChanged: (v) => vm.schoolMask.value = v,
       ),
     );
     final mechanicInput = FormItem(
@@ -255,7 +254,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellCastTargetFlagsOptions,
         title: '目标限制',
         placeholder: 'Targets',
-        onChanged: (v) => vm.targets.value = v,
       ),
     );
     final maxTargetsInput = FormItem(
@@ -326,7 +324,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellFacingFlagsOptions,
         title: '施法朝向',
         placeholder: 'FacingCasterFlags',
-        onChanged: (v) => vm.facingCasterFlags.value = v,
       ),
     );
 
@@ -397,7 +394,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellInterruptFlagsOptions,
         title: '打断标志',
         placeholder: 'InterruptFlags',
-        onChanged: (v) => vm.interruptFlags.value = v,
       ),
     );
     final auraInterruptFlagsInput = FormItem(
@@ -407,7 +403,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellAuraInterruptFlagsOptions,
         title: '光环打断标志',
         placeholder: 'AuraInterruptFlags',
-        onChanged: (v) => vm.auraInterruptFlags.value = v,
       ),
     );
     final channelInterruptFlagsInput = FormItem(
@@ -417,7 +412,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellChannelInterruptFlagsOptions,
         title: '引导打断标志',
         placeholder: 'ChannelInterruptFlags',
-        onChanged: (v) => vm.channelInterruptFlags.value = v,
       ),
     );
     final attributesInput = FormItem(
@@ -427,7 +421,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellAttr0Options,
         title: '属性 (Attributes)',
         placeholder: 'Attributes',
-        onChanged: (v) => vm.attributes.value = v,
       ),
     );
     final attributesExInput = FormItem(
@@ -437,7 +430,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellAttr1Options,
         title: '属性Ex (AttributesEx)',
         placeholder: 'AttributesEx',
-        onChanged: (v) => vm.attributesEx.value = v,
       ),
     );
     final attributesExBInput = FormItem(
@@ -447,7 +439,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellAttr2Options,
         title: '属性ExB (AttributesExB)',
         placeholder: 'AttributesExB',
-        onChanged: (v) => vm.attributesExB.value = v,
       ),
     );
     final attributesExCInput = FormItem(
@@ -457,7 +448,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellAttr3Options,
         title: '属性ExC (AttributesExC)',
         placeholder: 'AttributesExC',
-        onChanged: (v) => vm.attributesExC.value = v,
       ),
     );
     final attributesExDInput = FormItem(
@@ -467,7 +457,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellAttr4Options,
         title: '属性ExD (AttributesExD)',
         placeholder: 'AttributesExD',
-        onChanged: (v) => vm.attributesExD.value = v,
       ),
     );
     final attributesExEInput = FormItem(
@@ -477,7 +466,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellAttr5Options,
         title: '属性ExE (AttributesExE)',
         placeholder: 'AttributesExE',
-        onChanged: (v) => vm.attributesExE.value = v,
       ),
     );
     final attributesExFInput = FormItem(
@@ -487,7 +475,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellAttr6Options,
         title: '属性ExF (AttributesExF)',
         placeholder: 'AttributesExF',
-        onChanged: (v) => vm.attributesExF.value = v,
       ),
     );
     final attributesExGInput = FormItem(
@@ -497,7 +484,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellAttr7Options,
         title: '属性ExG (AttributesExG)',
         placeholder: 'AttributesExG',
-        onChanged: (v) => vm.attributesExG.value = v,
       ),
     );
 
@@ -509,7 +495,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kSpellProcFlagsOptions,
         title: '触发类型掩码',
         placeholder: 'ProcTypeMask',
-        onChanged: (v) => vm.procTypeMask.value = v,
       ),
     );
     final procChanceInput = FormItem(
@@ -562,7 +547,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kInventoryTypeOptions,
         title: '装备栏位',
         placeholder: 'EquippedItemInvTypes',
-        onChanged: (v) => vm.equippedItemInvTypes.value = v,
       ),
     );
 
@@ -724,7 +708,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kShapeshiftFormMaskOptions,
         title: '变形掩码',
         placeholder: 'ShapeshiftMask0',
-        onChanged: (v) => vm.shapeshiftMask0.value = v,
       ),
     );
     final shapeshiftExclude0Input = FormItem(
@@ -734,7 +717,6 @@ class _SpellViewState extends State<SpellView> {
         flags: kShapeshiftFormMaskOptions,
         title: '变形排除',
         placeholder: 'ShapeshiftExclude0',
-        onChanged: (v) => vm.shapeshiftExclude0.value = v,
       ),
     );
 
@@ -1023,7 +1005,6 @@ class _SpellViewState extends State<SpellView> {
                           flags: kSpellClassMaskBits,
                           title: '分类掩码1',
                           placeholder: 'SpellClassMask0',
-                          onChanged: (v) => vm.spellClassMask0.value = v,
                         ),
                       ),
                     ),
@@ -1035,7 +1016,6 @@ class _SpellViewState extends State<SpellView> {
                           flags: kSpellClassMaskBits,
                           title: '分类掩码2',
                           placeholder: 'SpellClassMask1',
-                          onChanged: (v) => vm.spellClassMask1.value = v,
                         ),
                       ),
                     ),
@@ -1047,7 +1027,6 @@ class _SpellViewState extends State<SpellView> {
                           flags: kSpellClassMaskBits,
                           title: '分类掩码3',
                           placeholder: 'SpellClassMask2',
-                          onChanged: (v) => vm.spellClassMask2.value = v,
                         ),
                       ),
                     ),
@@ -1365,35 +1344,17 @@ class _SpellViewState extends State<SpellView> {
         2 => viewModel.effectPointsPerCombo2Controller,
         _ => viewModel.effectPointsPerCombo0Controller,
       };
-      final maskACtrl = switch (i) {
-        0 => viewModel.effectSpellClassMaskA0,
-        1 => viewModel.effectSpellClassMaskA1,
-        2 => viewModel.effectSpellClassMaskA2,
-        _ => viewModel.effectSpellClassMaskA0,
-      };
       final maskAController = switch (i) {
         0 => viewModel.effectSpellClassMaskA0Controller,
         1 => viewModel.effectSpellClassMaskA1Controller,
         2 => viewModel.effectSpellClassMaskA2Controller,
         _ => viewModel.effectSpellClassMaskA0Controller,
       };
-      final maskBCtrl = switch (i) {
-        0 => viewModel.effectSpellClassMaskB0,
-        1 => viewModel.effectSpellClassMaskB1,
-        2 => viewModel.effectSpellClassMaskB2,
-        _ => viewModel.effectSpellClassMaskB0,
-      };
       final maskBController = switch (i) {
         0 => viewModel.effectSpellClassMaskB0Controller,
         1 => viewModel.effectSpellClassMaskB1Controller,
         2 => viewModel.effectSpellClassMaskB2Controller,
         _ => viewModel.effectSpellClassMaskB0Controller,
-      };
-      final maskCCtrl = switch (i) {
-        0 => viewModel.effectSpellClassMaskC0,
-        1 => viewModel.effectSpellClassMaskC1,
-        2 => viewModel.effectSpellClassMaskC2,
-        _ => viewModel.effectSpellClassMaskC0,
       };
       final maskCController = switch (i) {
         0 => viewModel.effectSpellClassMaskC0Controller,
@@ -1646,7 +1607,6 @@ class _SpellViewState extends State<SpellView> {
                     flags: kSpellClassMaskBits,
                     title: '分类掩码A',
                     placeholder: 'MaskA',
-                    onChanged: (v) => maskACtrl.value = v,
                   ),
                 ),
               ),
@@ -1658,7 +1618,6 @@ class _SpellViewState extends State<SpellView> {
                     flags: kSpellClassMaskBits,
                     title: '分类掩码B',
                     placeholder: 'MaskB',
-                    onChanged: (v) => maskBCtrl.value = v,
                   ),
                 ),
               ),
@@ -1670,7 +1629,6 @@ class _SpellViewState extends State<SpellView> {
                     flags: kSpellClassMaskBits,
                     title: '分类掩码C',
                     placeholder: 'MaskC',
-                    onChanged: (v) => maskCCtrl.value = v,
                   ),
                 ),
               ),
@@ -1709,6 +1667,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     _flagDisplayController = TextEditingController(
       text: formatFlagValue(int.tryParse(widget.textController.text) ?? 0),
     );
+    _flagDisplayController.addListener(_syncTextController);
     _syncController();
   }
 
@@ -1730,6 +1689,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
 
   @override
   void dispose() {
+    _flagDisplayController.removeListener(_syncTextController);
     _selectController?.dispose();
     _flagDisplayController.dispose();
     super.dispose();
@@ -1737,6 +1697,12 @@ class _MiscValueInputState extends State<_MiscValueInput> {
 
   bool get _isFlagMode => widget.options is List<FlagItem>;
   bool get _isSelectMode => widget.options is Map<int, String>;
+
+  /// 将 [_flagDisplayController] 的格式化文本同步回 [widget.textController]（纯数字），
+  /// 供 VM 读取。替代原 [FoxyFlagPicker.onChanged] 的回写。
+  void _syncTextController() {
+    widget.textController.text = parseFlagValue(_flagDisplayController.text).toString();
+  }
 
   void _syncController() {
     if (_isSelectMode) {
@@ -1758,7 +1724,6 @@ class _MiscValueInputState extends State<_MiscValueInput> {
         flags: widget.options as List<FlagItem>,
         title: '杂项值',
         placeholder: 'MiscValue',
-        onChanged: (v) => widget.textController.text = v.toString(),
       );
     }
     if (_isSelectMode) {
