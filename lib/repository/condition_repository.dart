@@ -1,3 +1,4 @@
+import 'package:foxy/entity/brief_condition_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/condition_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -5,16 +6,31 @@ import 'package:foxy/repository/repository_mixin.dart';
 class ConditionRepository with RepositoryMixin {
   static const _table = 'conditions';
 
-  Future<List<ConditionEntity>> getConditions({
+  Future<List<BriefConditionEntity>> getBriefConditions({
     required ConditionFilterEntity filter,
     required int page,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
+    const fields = [
+      'SourceTypeOrReferenceId',
+      'SourceGroup',
+      'SourceEntry',
+      'SourceId',
+      'ElseGroup',
+      'ConditionTypeOrReference',
+      'ConditionTarget',
+      'ConditionValue1',
+      'ConditionValue2',
+      'ConditionValue3',
+      'Comment',
+    ];
+    var builder = laconic.table(_table).select(fields);
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results.map((e) => ConditionEntity.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefConditionEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<int> countConditions({required ConditionFilterEntity filter}) async {
