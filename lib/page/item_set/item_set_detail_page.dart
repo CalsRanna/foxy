@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/item_set/item_set_view.dart';
-import 'package:foxy/widget/tab.dart';
+import 'package:foxy/widget/foxy_tab.dart';
 
 @RoutePage()
 class ItemSetDetailPage extends StatefulWidget {

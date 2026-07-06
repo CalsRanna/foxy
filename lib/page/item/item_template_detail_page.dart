@@ -6,7 +6,7 @@ import 'package:foxy/page/item/item_loot_template_view.dart';
 import 'package:foxy/page/item/disenchant_loot_template_view.dart';
 import 'package:foxy/page/item/prospecting_loot_template_view.dart';
 import 'package:foxy/page/item/milling_loot_template_view.dart';
-import 'package:foxy/widget/tab.dart';
+import 'package:foxy/widget/foxy_tab.dart';
 
 @RoutePage()
 class ItemTemplateDetailPage extends StatefulWidget {

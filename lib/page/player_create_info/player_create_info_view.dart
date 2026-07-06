@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/player_create_info/player_create_info_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -38,14 +38,14 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(
+          FoxyFormSection(
             title: '基本信息',
             children: [
               Row(
                 spacing: 8,
                 children: [
                   Expanded(
-                    child: FormItem(
+                    child: FoxyFormItem(
                       label: '种族',
                       placeholder: 'race',
                       child: FoxyNumberInput<int>(
@@ -54,7 +54,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                     ),
                   ),
                   Expanded(
-                    child: FormItem(
+                    child: FoxyFormItem(
                       label: '职业',
                       placeholder: 'class',
                       child: FoxyNumberInput<int>(
@@ -63,7 +63,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                     ),
                   ),
                   Expanded(
-                    child: FormItem(
+                    child: FoxyFormItem(
                       label: '地图',
                       placeholder: 'map',
                       child: FoxyNumberInput<int>(
@@ -72,7 +72,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                     ),
                   ),
                   Expanded(
-                    child: FormItem(
+                    child: FoxyFormItem(
                       label: '区域',
                       placeholder: 'zone',
                       child: FoxyNumberInput<int>(
@@ -86,7 +86,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                 spacing: 8,
                 children: [
                   Expanded(
-                    child: FormItem(
+                    child: FoxyFormItem(
                       label: 'X坐标',
                       placeholder: 'position_x',
                       child: FoxyNumberInput<double>(
@@ -95,7 +95,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                     ),
                   ),
                   Expanded(
-                    child: FormItem(
+                    child: FoxyFormItem(
                       label: 'Y坐标',
                       placeholder: 'position_y',
                       child: FoxyNumberInput<double>(
@@ -104,7 +104,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                     ),
                   ),
                   Expanded(
-                    child: FormItem(
+                    child: FoxyFormItem(
                       label: 'Z坐标',
                       placeholder: 'position_z',
                       child: FoxyNumberInput<double>(
@@ -113,7 +113,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                     ),
                   ),
                   Expanded(
-                    child: FormItem(
+                    child: FoxyFormItem(
                       label: '朝向',
                       placeholder: 'orientation',
                       child: FoxyNumberInput<double>(

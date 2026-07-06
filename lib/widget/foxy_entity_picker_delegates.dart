@@ -64,25 +64,28 @@ import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/widget/game_asset_icon.dart';
+import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:get_it/get_it.dart';
 
-class EntityPickerDelegates {
-  static final areaTable = EntityPickerDelegate<AreaTableEntity>(
+class FoxyEntityPickerDelegates {
+  static final areaTable = FoxyEntityPickerDelegate<AreaTableEntity>(
     title: '区域',
     errorLabel: '搜索区域失败',
-    filters: const [EntityPickerFilter('区域ID'), EntityPickerFilter('区域名称')],
+    filters: const [
+      FoxyEntityPickerFilter('区域ID'),
+      FoxyEntityPickerFilter('区域名称'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (AreaTableEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '名称',
         text: (AreaTableEntity t) => t.areaNameLangZhCn,
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '地区编号',
         width: 120,
         text: (AreaTableEntity t) => t.continentId.toString(),
@@ -98,21 +101,24 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final broadcastText = EntityPickerDelegate<BroadcastTextEntity>(
+  static final broadcastText = FoxyEntityPickerDelegate<BroadcastTextEntity>(
     title: '广播文本',
     errorLabel: '搜索广播文本失败',
-    filters: const [EntityPickerFilter('广播文本ID'), EntityPickerFilter('文本内容')],
+    filters: const [
+      FoxyEntityPickerFilter('广播文本ID'),
+      FoxyEntityPickerFilter('文本内容'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (BroadcastTextEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '文本',
         text: (BroadcastTextEntity t) => t.maleText,
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '语言',
         width: 120,
         text: (BroadcastTextEntity t) => t.languageId.toString(),
@@ -132,17 +138,20 @@ class EntityPickerDelegates {
         ),
   );
 
-  static final charTitle = EntityPickerDelegate<CharTitleEntity>(
+  static final charTitle = FoxyEntityPickerDelegate<CharTitleEntity>(
     title: '称号',
     errorLabel: '搜索称号失败',
-    filters: const [EntityPickerFilter('称号ID'), EntityPickerFilter('称号名称')],
+    filters: const [
+      FoxyEntityPickerFilter('称号ID'),
+      FoxyEntityPickerFilter('称号名称'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (CharTitleEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '名称',
         text: (CharTitleEntity t) => t.nameLangZhCn,
       ),
@@ -160,29 +169,32 @@ class EntityPickerDelegates {
   );
 
   static final creatureSpellData =
-      EntityPickerDelegate<BriefCreatureSpellDataEntity>(
+      FoxyEntityPickerDelegate<BriefCreatureSpellDataEntity>(
         title: '宠物技能',
         errorLabel: '搜索宠物技能失败',
-        filters: const [EntityPickerFilter('编号'), EntityPickerFilter('技能名称')],
+        filters: const [
+          FoxyEntityPickerFilter('编号'),
+          FoxyEntityPickerFilter('技能名称'),
+        ],
         columns: [
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '编号',
             width: 120,
             text: (BriefCreatureSpellDataEntity t) => t.id.toString(),
           ),
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '技能1',
             text: (BriefCreatureSpellDataEntity t) => t.spellName1,
           ),
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '技能2',
             text: (BriefCreatureSpellDataEntity t) => t.spellName2,
           ),
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '技能3',
             text: (BriefCreatureSpellDataEntity t) => t.spellName3,
           ),
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '技能4',
             text: (BriefCreatureSpellDataEntity t) => t.spellName4,
           ),
@@ -204,21 +216,24 @@ class EntityPickerDelegates {
       );
 
   static final creatureTemplate =
-      EntityPickerDelegate<BriefCreatureTemplateEntity>(
+      FoxyEntityPickerDelegate<BriefCreatureTemplateEntity>(
         title: '生物模板',
         errorLabel: '搜索生物模板失败',
-        filters: const [EntityPickerFilter('编号'), EntityPickerFilter('名称')],
+        filters: const [
+          FoxyEntityPickerFilter('编号'),
+          FoxyEntityPickerFilter('名称'),
+        ],
         columns: [
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '编号',
             width: 120,
             text: (BriefCreatureTemplateEntity t) => t.entry.toString(),
           ),
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '名称',
             text: (BriefCreatureTemplateEntity t) => t.displayName,
           ),
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '等级',
             width: 120,
             text: (BriefCreatureTemplateEntity t) =>
@@ -239,21 +254,24 @@ class EntityPickerDelegates {
             ),
       );
 
-  static final dbcFaction = EntityPickerDelegate<DbcFactionEntity>(
+  static final dbcFaction = FoxyEntityPickerDelegate<DbcFactionEntity>(
     title: '阵营',
     errorLabel: '搜索阵营失败',
-    filters: const [EntityPickerFilter('阵营ID'), EntityPickerFilter('阵营名称')],
+    filters: const [
+      FoxyEntityPickerFilter('阵营ID'),
+      FoxyEntityPickerFilter('阵营名称'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (DbcFactionEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '名称',
         text: (DbcFactionEntity t) => t.nameLangZhCn,
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '描述',
         text: (DbcFactionEntity t) => t.descriptionLangZhCn,
       ),
@@ -271,18 +289,21 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final emote = EntityPickerDelegate<EmoteTextEntity>(
+  static final emote = FoxyEntityPickerDelegate<EmoteTextEntity>(
     title: '表情',
     errorLabel: '搜索表情失败',
-    filters: const [EntityPickerFilter('表情ID'), EntityPickerFilter('表情名称')],
+    filters: const [
+      FoxyEntityPickerFilter('表情ID'),
+      FoxyEntityPickerFilter('表情名称'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (EmoteTextEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(header: '名称', text: (EmoteTextEntity t) => t.name),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(header: '名称', text: (EmoteTextEntity t) => t.name),
+      FoxyEntityPickerColumn(
         header: '表情编号',
         width: 120,
         text: (EmoteTextEntity t) => t.emoteId.toString(),
@@ -298,22 +319,25 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final gossipMenu = EntityPickerDelegate<BriefGossipMenuEntity>(
+  static final gossipMenu = FoxyEntityPickerDelegate<BriefGossipMenuEntity>(
     title: '对话菜单',
     errorLabel: '搜索对话菜单失败',
-    filters: const [EntityPickerFilter('菜单ID'), EntityPickerFilter('文本内容')],
+    filters: const [
+      FoxyEntityPickerFilter('菜单ID'),
+      FoxyEntityPickerFilter('文本内容'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '菜单ID',
         width: 120,
         text: (BriefGossipMenuEntity t) => t.menuId.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '文本ID',
         width: 120,
         text: (BriefGossipMenuEntity t) => t.textId.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '文本内容',
         text: (BriefGossipMenuEntity t) => t.text,
       ),
@@ -329,51 +353,59 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final itemDisplayInfo = EntityPickerDelegate<ItemDisplayInfoEntity>(
-    title: '物品显示信息',
-    errorLabel: '搜索显示信息失败',
-    filters: const [EntityPickerFilter('显示信息ID'), EntityPickerFilter('模型名称')],
-    columns: [
-      EntityPickerColumn(
-        header: '编号',
-        width: 120,
-        text: (ItemDisplayInfoEntity t) => t.id.toString(),
-      ),
-      EntityPickerColumn(
-        header: '模型名称',
-        text: (ItemDisplayInfoEntity t) => t.modelName0,
-      ),
-      EntityPickerColumn(
-        header: '图标',
-        text: (ItemDisplayInfoEntity t) => t.inventoryIcon0,
-      ),
-    ],
-    idOf: (ItemDisplayInfoEntity t) => t.id,
-    fetch: (page, v) =>
-        GetIt.instance.get<ItemDisplayInfoRepository>().getItemDisplayInfos(
-          id: v[0].isEmpty ? null : v[0],
-          name: v[1].isEmpty ? null : v[1],
-          page: page,
-        ),
-    count: (v) =>
-        GetIt.instance.get<ItemDisplayInfoRepository>().countItemDisplayInfos(
-          id: v[0].isEmpty ? null : v[0],
-          name: v[1].isEmpty ? null : v[1],
-        ),
-  );
+  static final itemDisplayInfo =
+      FoxyEntityPickerDelegate<ItemDisplayInfoEntity>(
+        title: '物品显示信息',
+        errorLabel: '搜索显示信息失败',
+        filters: const [
+          FoxyEntityPickerFilter('显示信息ID'),
+          FoxyEntityPickerFilter('模型名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (ItemDisplayInfoEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '模型名称',
+            text: (ItemDisplayInfoEntity t) => t.modelName0,
+          ),
+          FoxyEntityPickerColumn(
+            header: '图标',
+            text: (ItemDisplayInfoEntity t) => t.inventoryIcon0,
+          ),
+        ],
+        idOf: (ItemDisplayInfoEntity t) => t.id,
+        fetch: (page, v) =>
+            GetIt.instance.get<ItemDisplayInfoRepository>().getItemDisplayInfos(
+              id: v[0].isEmpty ? null : v[0],
+              name: v[1].isEmpty ? null : v[1],
+              page: page,
+            ),
+        count: (v) => GetIt.instance
+            .get<ItemDisplayInfoRepository>()
+            .countItemDisplayInfos(
+              id: v[0].isEmpty ? null : v[0],
+              name: v[1].isEmpty ? null : v[1],
+            ),
+      );
 
   static final itemEnchantmentTemplate =
-      EntityPickerDelegate<BriefItemEnchantmentTemplateEntity>(
+      FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>(
         title: '附魔',
         errorLabel: '搜索附魔失败',
-        filters: const [EntityPickerFilter('编号'), EntityPickerFilter('名称')],
+        filters: const [
+          FoxyEntityPickerFilter('编号'),
+          FoxyEntityPickerFilter('名称'),
+        ],
         columns: [
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '编号',
             width: 120,
             text: (BriefItemEnchantmentTemplateEntity t) => t.entry.toString(),
           ),
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '名称',
             text: (BriefItemEnchantmentTemplateEntity t) => t.name,
           ),
@@ -390,55 +422,62 @@ class EntityPickerDelegates {
             .countItemEnchantmentTemplates(entry: v[0].isEmpty ? null : v[0]),
       );
 
-  static final itemExtendedCost = EntityPickerDelegate<ItemExtendedCostEntity>(
-    title: '选择扩展价格',
-    errorLabel: '搜索扩展价格失败',
-    emptyText: '暂无数据',
-    filters: const [EntityPickerFilter('编号')],
-    columns: [
-      EntityPickerColumn(
-        header: '编号',
-        width: 120,
-        text: (ItemExtendedCostEntity t) => t.id.toString(),
-      ),
-      EntityPickerColumn(
-        header: '荣誉点数',
-        width: 120,
-        text: (ItemExtendedCostEntity t) => t.honorPoints.toString(),
-      ),
-      EntityPickerColumn(
-        header: '竞技场点数',
-        width: 120,
-        text: (ItemExtendedCostEntity t) => t.arenaPoints.toString(),
-      ),
-      EntityPickerColumn(
-        header: '竞技场等级',
-        text: (ItemExtendedCostEntity t) => t.arenaBracket.toString(),
-      ),
-    ],
-    idOf: (ItemExtendedCostEntity t) => t.id,
-    fetch: (page, v) =>
-        GetIt.instance.get<ItemExtendedCostRepository>().getItemExtendedCosts(
-          filter: ItemExtendedCostFilterEntity(id: v[0]),
-          page: page,
-        ),
-    count: (v) => GetIt.instance
-        .get<ItemExtendedCostRepository>()
-        .countItemExtendedCosts(filter: ItemExtendedCostFilterEntity(id: v[0])),
-  );
+  static final itemExtendedCost =
+      FoxyEntityPickerDelegate<ItemExtendedCostEntity>(
+        title: '选择扩展价格',
+        errorLabel: '搜索扩展价格失败',
+        emptyText: '暂无数据',
+        filters: const [FoxyEntityPickerFilter('编号')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (ItemExtendedCostEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '荣誉点数',
+            width: 120,
+            text: (ItemExtendedCostEntity t) => t.honorPoints.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '竞技场点数',
+            width: 120,
+            text: (ItemExtendedCostEntity t) => t.arenaPoints.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '竞技场等级',
+            text: (ItemExtendedCostEntity t) => t.arenaBracket.toString(),
+          ),
+        ],
+        idOf: (ItemExtendedCostEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<ItemExtendedCostRepository>()
+            .getItemExtendedCosts(
+              filter: ItemExtendedCostFilterEntity(id: v[0]),
+              page: page,
+            ),
+        count: (v) => GetIt.instance
+            .get<ItemExtendedCostRepository>()
+            .countItemExtendedCosts(
+              filter: ItemExtendedCostFilterEntity(id: v[0]),
+            ),
+      );
 
   static final itemRandomProperties =
-      EntityPickerDelegate<ItemRandomPropertiesEntity>(
+      FoxyEntityPickerDelegate<ItemRandomPropertiesEntity>(
         title: '随机属性',
         errorLabel: '搜索随机属性失败',
-        filters: const [EntityPickerFilter('属性ID'), EntityPickerFilter('属性名称')],
+        filters: const [
+          FoxyEntityPickerFilter('属性ID'),
+          FoxyEntityPickerFilter('属性名称'),
+        ],
         columns: [
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '编号',
             width: 120,
             text: (ItemRandomPropertiesEntity t) => t.id.toString(),
           ),
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '名称',
             text: (ItemRandomPropertiesEntity t) =>
                 t.nameLangZhCn.isNotEmpty ? t.nameLangZhCn : t.name,
@@ -460,55 +499,60 @@ class EntityPickerDelegates {
             ),
       );
 
-  static final itemRandomSuffix = EntityPickerDelegate<ItemRandomSuffixEntity>(
-    title: '随机后缀',
-    errorLabel: '搜索随机后缀失败',
-    filters: const [EntityPickerFilter('后缀ID'), EntityPickerFilter('后缀名称')],
-    columns: [
-      EntityPickerColumn(
-        header: '编号',
-        width: 120,
-        text: (ItemRandomSuffixEntity t) => t.id.toString(),
-      ),
-      EntityPickerColumn(
-        header: '名称',
-        text: (ItemRandomSuffixEntity t) => t.nameLangZhCn,
-      ),
-      EntityPickerColumn(
-        header: '内部名称',
-        text: (ItemRandomSuffixEntity t) => t.internalName,
-      ),
-    ],
-    idOf: (ItemRandomSuffixEntity t) => t.id,
-    fetch: (page, v) =>
-        GetIt.instance.get<ItemRandomSuffixRepository>().getItemRandomSuffixes(
-          id: v[0].isEmpty ? null : v[0],
-          name: v[1].isEmpty ? null : v[1],
-          page: page,
-        ),
-    count: (v) => GetIt.instance
-        .get<ItemRandomSuffixRepository>()
-        .countItemRandomSuffixes(
-          id: v[0].isEmpty ? null : v[0],
-          name: v[1].isEmpty ? null : v[1],
-        ),
-  );
+  static final itemRandomSuffix =
+      FoxyEntityPickerDelegate<ItemRandomSuffixEntity>(
+        title: '随机后缀',
+        errorLabel: '搜索随机后缀失败',
+        filters: const [
+          FoxyEntityPickerFilter('后缀ID'),
+          FoxyEntityPickerFilter('后缀名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (ItemRandomSuffixEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (ItemRandomSuffixEntity t) => t.nameLangZhCn,
+          ),
+          FoxyEntityPickerColumn(
+            header: '内部名称',
+            text: (ItemRandomSuffixEntity t) => t.internalName,
+          ),
+        ],
+        idOf: (ItemRandomSuffixEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<ItemRandomSuffixRepository>()
+            .getItemRandomSuffixes(
+              id: v[0].isEmpty ? null : v[0],
+              name: v[1].isEmpty ? null : v[1],
+              page: page,
+            ),
+        count: (v) => GetIt.instance
+            .get<ItemRandomSuffixRepository>()
+            .countItemRandomSuffixes(
+              id: v[0].isEmpty ? null : v[0],
+              name: v[1].isEmpty ? null : v[1],
+            ),
+      );
 
-  static final itemTemplate = EntityPickerDelegate<BriefItemTemplateEntity>(
+  static final itemTemplate = FoxyEntityPickerDelegate<BriefItemTemplateEntity>(
     title: '物品',
     errorLabel: '搜索失败',
     filters: const [
-      EntityPickerFilter('编号'),
-      EntityPickerFilter('名称'),
-      EntityPickerFilter('描述'),
+      FoxyEntityPickerFilter('编号'),
+      FoxyEntityPickerFilter('名称'),
+      FoxyEntityPickerFilter('描述'),
     ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (BriefItemTemplateEntity t) => t.entry.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '名称',
         cell: (BriefItemTemplateEntity t) {
           final color = kItemQualityColors[t.quality] ?? Colors.white;
@@ -520,12 +564,12 @@ class EntityPickerDelegates {
           );
         },
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '物品等级',
         width: 120,
         text: (BriefItemTemplateEntity t) => t.itemLevel.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '需求等级',
         width: 120,
         text: (BriefItemTemplateEntity t) => t.requiredLevel.toString(),
@@ -551,27 +595,27 @@ class EntityPickerDelegates {
         ),
   );
 
-  static final lock = EntityPickerDelegate<LockEntity>(
+  static final lock = FoxyEntityPickerDelegate<LockEntity>(
     title: '锁',
     errorLabel: '搜索锁失败',
-    filters: const [EntityPickerFilter('锁ID')],
+    filters: const [FoxyEntityPickerFilter('锁ID')],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (LockEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '类型',
         width: 120,
         text: (LockEntity t) => t.type0.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '索引',
         width: 120,
         text: (LockEntity t) => t.index0.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '技能',
         text: (LockEntity t) => t.skill0.toString(),
       ),
@@ -586,22 +630,22 @@ class EntityPickerDelegates {
     ),
   );
 
-  static EntityPickerDelegate<BriefLootTemplateEntity> lootTemplate(
+  static FoxyEntityPickerDelegate<BriefLootTemplateEntity> lootTemplate(
     LootTableType tableType,
     String title,
   ) {
     final repository = LootTemplateRepository(tableType);
-    return EntityPickerDelegate<BriefLootTemplateEntity>(
+    return FoxyEntityPickerDelegate<BriefLootTemplateEntity>(
       title: title,
       errorLabel: '搜索掉落模板失败',
-      filters: const [EntityPickerFilter('掉落编号')],
+      filters: const [FoxyEntityPickerFilter('掉落编号')],
       columns: [
-        EntityPickerColumn(
+        FoxyEntityPickerColumn(
           header: '掉落编号',
           width: 120,
           text: (BriefLootTemplateEntity t) => t.entry.toString(),
         ),
-        EntityPickerColumn(
+        FoxyEntityPickerColumn(
           header: '物品数量',
           text: (BriefLootTemplateEntity t) => t.itemCount.toString(),
         ),
@@ -616,26 +660,29 @@ class EntityPickerDelegates {
     );
   }
 
-  static final map = EntityPickerDelegate<MapInfoEntity>(
+  static final map = FoxyEntityPickerDelegate<MapInfoEntity>(
     title: '地图',
     errorLabel: '搜索地图失败',
-    filters: const [EntityPickerFilter('地图ID'), EntityPickerFilter('地图名称')],
+    filters: const [
+      FoxyEntityPickerFilter('地图ID'),
+      FoxyEntityPickerFilter('地图名称'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (MapInfoEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '名称',
         text: (MapInfoEntity t) => t.mapNameLangZhCn,
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '类型',
         width: 120,
         text: (MapInfoEntity t) => t.instanceType.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: 'PVP',
         width: 120,
         text: (MapInfoEntity t) => t.pvp.toString(),
@@ -653,17 +700,20 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final npcText = EntityPickerDelegate<NpcTextEntity>(
+  static final npcText = FoxyEntityPickerDelegate<NpcTextEntity>(
     title: 'NPC 文本',
     errorLabel: '搜索NPC文本失败',
-    filters: const [EntityPickerFilter('ID'), EntityPickerFilter('文本内容')],
+    filters: const [
+      FoxyEntityPickerFilter('ID'),
+      FoxyEntityPickerFilter('文本内容'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: 'ID',
         width: 120,
         text: (NpcTextEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '文本（text0_0 / text0_1）',
         text: (NpcTextEntity t) => t.entries[0].text0.isNotEmpty
             ? t.entries[0].text0
@@ -683,17 +733,17 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final pageText = EntityPickerDelegate<PageTextEntity>(
+  static final pageText = FoxyEntityPickerDelegate<PageTextEntity>(
     title: '页面文本',
     errorLabel: '搜索页面文本失败',
-    filters: const [EntityPickerFilter('编号')],
+    filters: const [FoxyEntityPickerFilter('编号')],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (PageTextEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(header: '文本', text: (PageTextEntity t) => t.text),
+      FoxyEntityPickerColumn(header: '文本', text: (PageTextEntity t) => t.text),
     ],
     idOf: (PageTextEntity t) => t.id,
     fetch: (page, v) => GetIt.instance.get<PageTextRepository>().getPageTexts(
@@ -705,17 +755,20 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final questInfo = EntityPickerDelegate<QuestInfoEntity>(
+  static final questInfo = FoxyEntityPickerDelegate<QuestInfoEntity>(
     title: '任务信息',
     errorLabel: '搜索任务信息失败',
-    filters: const [EntityPickerFilter('任务信息ID'), EntityPickerFilter('信息名称')],
+    filters: const [
+      FoxyEntityPickerFilter('任务信息ID'),
+      FoxyEntityPickerFilter('信息名称'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (QuestInfoEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '名称',
         text: (QuestInfoEntity t) => t.infoNameLangZhCn,
       ),
@@ -730,45 +783,50 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final questTemplate = EntityPickerDelegate<BriefQuestTemplateEntity>(
-    title: '任务',
-    errorLabel: '搜索任务失败',
-    filters: const [EntityPickerFilter('编号'), EntityPickerFilter('名称')],
-    columns: [
-      EntityPickerColumn(
-        header: '编号',
-        width: 120,
-        text: (BriefQuestTemplateEntity t) => t.id.toString(),
-      ),
-      EntityPickerColumn(
-        header: '名称',
-        text: (BriefQuestTemplateEntity t) => t.displayTitle,
-      ),
-    ],
-    idOf: (BriefQuestTemplateEntity t) => t.id,
-    fetch: (page, v) =>
-        GetIt.instance.get<QuestTemplateRepository>().getBriefQuestTemplates(
-          filter: QuestTemplateFilterEntity(id: v[0], title: v[1]),
-          page: page,
-        ),
-    count: (v) =>
-        GetIt.instance.get<QuestTemplateRepository>().countQuestTemplates(
-          filter: QuestTemplateFilterEntity(id: v[0], title: v[1]),
-        ),
-  );
+  static final questTemplate =
+      FoxyEntityPickerDelegate<BriefQuestTemplateEntity>(
+        title: '任务',
+        errorLabel: '搜索任务失败',
+        filters: const [
+          FoxyEntityPickerFilter('编号'),
+          FoxyEntityPickerFilter('名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefQuestTemplateEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefQuestTemplateEntity t) => t.displayTitle,
+          ),
+        ],
+        idOf: (BriefQuestTemplateEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<QuestTemplateRepository>()
+            .getBriefQuestTemplates(
+              filter: QuestTemplateFilterEntity(id: v[0], title: v[1]),
+              page: page,
+            ),
+        count: (v) =>
+            GetIt.instance.get<QuestTemplateRepository>().countQuestTemplates(
+              filter: QuestTemplateFilterEntity(id: v[0], title: v[1]),
+            ),
+      );
 
   static final scalingStatDistribution =
-      EntityPickerDelegate<BriefItemEnchantmentTemplateEntity>(
+      FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>(
         title: '属性缩放分布',
         errorLabel: '搜索缩放分布失败',
-        filters: const [EntityPickerFilter('编号')],
+        filters: const [FoxyEntityPickerFilter('编号')],
         columns: [
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '编号',
             width: 120,
             text: (BriefItemEnchantmentTemplateEntity t) => t.entry.toString(),
           ),
-          EntityPickerColumn(
+          FoxyEntityPickerColumn(
             header: '名称',
             text: (BriefItemEnchantmentTemplateEntity t) => t.name,
           ),
@@ -785,27 +843,27 @@ class EntityPickerDelegates {
             .countScalingStatDistributions(id: v[0].isEmpty ? null : v[0]),
       );
 
-  static final spellDuration = EntityPickerDelegate<SpellDurationEntity>(
+  static final spellDuration = FoxyEntityPickerDelegate<SpellDurationEntity>(
     title: '施法时间',
     errorLabel: '搜索持续时间失败',
-    filters: const [EntityPickerFilter('持续时间ID')],
+    filters: const [FoxyEntityPickerFilter('持续时间ID')],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (SpellDurationEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '持续时间',
         width: 120,
         text: (SpellDurationEntity t) => t.duration.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '每级增加值',
         width: 120,
         text: (SpellDurationEntity t) => t.durationPerLevel.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '最大持续时间',
         text: (SpellDurationEntity t) => t.maxDuration.toString(),
       ),
@@ -819,24 +877,27 @@ class EntityPickerDelegates {
         .countSpellDurations(id: v[0].isEmpty ? null : v[0]),
   );
 
-  static final spellIcon = EntityPickerDelegate<SpellIconEntity>(
+  static final spellIcon = FoxyEntityPickerDelegate<SpellIconEntity>(
     title: '技能图标',
     errorLabel: '搜索图标失败',
-    filters: const [EntityPickerFilter('图标ID'), EntityPickerFilter('文件名')],
+    filters: const [
+      FoxyEntityPickerFilter('图标ID'),
+      FoxyEntityPickerFilter('文件名'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (SpellIconEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '图标文件',
         cell: (entity) => Row(
           spacing: 8,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: GameAssetIcon(rawPath: entity.textureFilename),
+              child: FoxyGameAssetIcon(rawPath: entity.textureFilename),
             ),
             Expanded(child: Text(entity.textureFilename)),
           ],
@@ -855,27 +916,27 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final spell = EntityPickerDelegate<SpellEntity>(
+  static final spell = FoxyEntityPickerDelegate<SpellEntity>(
     title: '技能',
     errorLabel: '搜索技能失败',
-    filters: const [EntityPickerFilter('编号'), EntityPickerFilter('名称')],
+    filters: const [FoxyEntityPickerFilter('编号'), FoxyEntityPickerFilter('名称')],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (SpellEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '名称',
         width: 240,
         text: (SpellEntity t) => t.nameLangZhCN,
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '子名称',
         width: 120,
         text: (SpellEntity t) => t.nameSubtextLangZhCN,
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '描述',
         text: (SpellEntity t) => t.descriptionLangZhCN,
       ),
@@ -909,26 +970,29 @@ class EntityPickerDelegates {
     },
   );
 
-  static final spellRange = EntityPickerDelegate<SpellRangeEntity>(
+  static final spellRange = FoxyEntityPickerDelegate<SpellRangeEntity>(
     title: '技能射程',
     errorLabel: '搜索射程失败',
-    filters: const [EntityPickerFilter('射程ID'), EntityPickerFilter('射程名称')],
+    filters: const [
+      FoxyEntityPickerFilter('射程ID'),
+      FoxyEntityPickerFilter('射程名称'),
+    ],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (SpellRangeEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '名称',
         text: (SpellRangeEntity t) => t.displayNameLangZhCn,
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '最小射程',
         width: 120,
         text: (SpellRangeEntity t) => t.rangeMin0.toStringAsFixed(1),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '最大射程',
         width: 120,
         text: (SpellRangeEntity t) => t.rangeMax0.toStringAsFixed(1),
@@ -947,22 +1011,22 @@ class EntityPickerDelegates {
     ),
   );
 
-  static final vehicle = EntityPickerDelegate<VehicleEntity>(
+  static final vehicle = FoxyEntityPickerDelegate<VehicleEntity>(
     title: '载具',
     errorLabel: '搜索载具失败',
-    filters: const [EntityPickerFilter('载具ID')],
+    filters: const [FoxyEntityPickerFilter('载具ID')],
     columns: [
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
         text: (VehicleEntity t) => t.id.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '标识',
         width: 120,
         text: (VehicleEntity t) => t.flags.toString(),
       ),
-      EntityPickerColumn(
+      FoxyEntityPickerColumn(
         header: '转向速度',
         text: (VehicleEntity t) => t.turnSpeed.toString(),
       ),

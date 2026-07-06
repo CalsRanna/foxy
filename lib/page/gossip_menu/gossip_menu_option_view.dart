@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
@@ -7,8 +7,8 @@ import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
@@ -168,7 +168,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(
+          FoxyFormSection(
             title: '选项信息',
             children: [
               Row(
@@ -231,7 +231,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                     child: _labeled(
                       '子选项编号',
                       FoxyEntityPicker(
-                        delegate: EntityPickerDelegates.gossipMenu,
+                        delegate: FoxyEntityPickerDelegates.gossipMenu,
                         controller: viewModel.actionMenuIdController,
                         placeholder: 'ActionMenuID',
                       ),
@@ -241,7 +241,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                     child: _labeled(
                       '广播文本编号',
                       FoxyEntityPicker(
-                        delegate: EntityPickerDelegates.broadcastText,
+                        delegate: FoxyEntityPickerDelegates.broadcastText,
                         controller: viewModel.optionBroadcastTextIdController,
                         placeholder: 'broadcast_text_id',
                       ),
@@ -263,7 +263,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                     child: _labeled(
                       'BoxBroadcastTextID',
                       FoxyEntityPicker(
-                        delegate: EntityPickerDelegates.broadcastText,
+                        delegate: FoxyEntityPickerDelegates.broadcastText,
                         controller: viewModel.boxBroadcastTextIdController,
                         placeholder: 'box_broadcast_text_id',
                       ),
@@ -308,13 +308,13 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   }
 
   Widget _textField(String label, TextEditingController c) {
-    return FormItem(
+    return FoxyFormItem(
       label: label,
       child: ShadInput(controller: c, placeholder: Text(label)),
     );
   }
 
   Widget _labeled(String label, Widget child) {
-    return FormItem(label: label, child: child);
+    return FoxyFormItem(label: label, child: child);
   }
 }

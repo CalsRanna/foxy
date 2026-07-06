@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -7,7 +7,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
@@ -229,19 +229,17 @@ class GameObjectLootTemplateViewModel {
           SizedBox(
             height: 100,
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: itemController,
               placeholder: '物品ID',
             ),
           ),
-          FoxyNumberInput<int>(
-            controller: referenceController,
-          ),
+          FoxyNumberInput<int>(controller: referenceController),
           FoxyNumberInput<double>(
             controller: chanceController,
             placeholder: '掉落几率',
           ),
-          FormItem(
+          FoxyFormItem(
             label: '需要任务',
             child: FoxyShadSelect<int>(
               controller: questRequiredController,

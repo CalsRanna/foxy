@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/item/item_enchantment_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -167,7 +167,7 @@ class _ItemEnchantmentTemplateViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 物品ID（只读）
-          FormItem(
+          FoxyFormItem(
             controller: TextEditingController(text: widget.entry.toString()),
             label: '物品ID',
             placeholder: 'Entry',
@@ -175,17 +175,17 @@ class _ItemEnchantmentTemplateViewState
           ),
           SizedBox(height: 16),
           // 附魔ID
-          FormItem(
+          FoxyFormItem(
             label: '附魔ID',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemEnchantmentTemplate,
+              delegate: FoxyEntityPickerDelegates.itemEnchantmentTemplate,
               controller: viewModel.enchSignalController,
               placeholder: 'Ench',
             ),
           ),
           SizedBox(height: 16),
           // 几率
-          FormItem(
+          FoxyFormItem(
             label: '几率',
             placeholder: 'Chance (%)',
             child: FoxyNumberInput<double>(

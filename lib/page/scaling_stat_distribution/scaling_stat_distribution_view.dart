@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -35,7 +35,7 @@ class _ScalingStatDistributionViewState
   @override
   Widget build(BuildContext context) {
     /// Basic
-    final idInput = FormItem(
+    final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
@@ -45,70 +45,70 @@ class _ScalingStatDistributionViewState
     );
 
     /// StatID 0~9
-    final statId0Input = FormItem(
+    final statId0Input = FoxyFormItem(
       label: 'StatID0',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID0',
         controller: viewModel.statId0Controller,
       ),
     );
-    final statId1Input = FormItem(
+    final statId1Input = FoxyFormItem(
       label: 'StatID1',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID1',
         controller: viewModel.statId1Controller,
       ),
     );
-    final statId2Input = FormItem(
+    final statId2Input = FoxyFormItem(
       label: 'StatID2',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID2',
         controller: viewModel.statId2Controller,
       ),
     );
-    final statId3Input = FormItem(
+    final statId3Input = FoxyFormItem(
       label: 'StatID3',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID3',
         controller: viewModel.statId3Controller,
       ),
     );
-    final statId4Input = FormItem(
+    final statId4Input = FoxyFormItem(
       label: 'StatID4',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID4',
         controller: viewModel.statId4Controller,
       ),
     );
-    final statId5Input = FormItem(
+    final statId5Input = FoxyFormItem(
       label: 'StatID5',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID5',
         controller: viewModel.statId5Controller,
       ),
     );
-    final statId6Input = FormItem(
+    final statId6Input = FoxyFormItem(
       label: 'StatID6',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID6',
         controller: viewModel.statId6Controller,
       ),
     );
-    final statId7Input = FormItem(
+    final statId7Input = FoxyFormItem(
       label: 'StatID7',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID7',
         controller: viewModel.statId7Controller,
       ),
     );
-    final statId8Input = FormItem(
+    final statId8Input = FoxyFormItem(
       label: 'StatID8',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID8',
         controller: viewModel.statId8Controller,
       ),
     );
-    final statId9Input = FormItem(
+    final statId9Input = FoxyFormItem(
       label: 'StatID9',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID9',
@@ -117,70 +117,70 @@ class _ScalingStatDistributionViewState
     );
 
     /// Bonus 0~9
-    final bonus0Input = FormItem(
+    final bonus0Input = FoxyFormItem(
       label: 'Bonus0',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus0',
         controller: viewModel.bonus0Controller,
       ),
     );
-    final bonus1Input = FormItem(
+    final bonus1Input = FoxyFormItem(
       label: 'Bonus1',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus1',
         controller: viewModel.bonus1Controller,
       ),
     );
-    final bonus2Input = FormItem(
+    final bonus2Input = FoxyFormItem(
       label: 'Bonus2',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus2',
         controller: viewModel.bonus2Controller,
       ),
     );
-    final bonus3Input = FormItem(
+    final bonus3Input = FoxyFormItem(
       label: 'Bonus3',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus3',
         controller: viewModel.bonus3Controller,
       ),
     );
-    final bonus4Input = FormItem(
+    final bonus4Input = FoxyFormItem(
       label: 'Bonus4',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus4',
         controller: viewModel.bonus4Controller,
       ),
     );
-    final bonus5Input = FormItem(
+    final bonus5Input = FoxyFormItem(
       label: 'Bonus5',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus5',
         controller: viewModel.bonus5Controller,
       ),
     );
-    final bonus6Input = FormItem(
+    final bonus6Input = FoxyFormItem(
       label: 'Bonus6',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus6',
         controller: viewModel.bonus6Controller,
       ),
     );
-    final bonus7Input = FormItem(
+    final bonus7Input = FoxyFormItem(
       label: 'Bonus7',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus7',
         controller: viewModel.bonus7Controller,
       ),
     );
-    final bonus8Input = FormItem(
+    final bonus8Input = FoxyFormItem(
       label: 'Bonus8',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus8',
         controller: viewModel.bonus8Controller,
       ),
     );
-    final bonus9Input = FormItem(
+    final bonus9Input = FoxyFormItem(
       label: 'Bonus9',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus9',
@@ -189,7 +189,7 @@ class _ScalingStatDistributionViewState
     );
 
     /// Other
-    final maxlevelInput = FormItem(
+    final maxlevelInput = FoxyFormItem(
       label: 'Maxlevel',
       child: FoxyNumberInput<int>(
         placeholder: 'Maxlevel',
@@ -271,10 +271,10 @@ class _ScalingStatDistributionViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(title: '基本信息', children: basicRows),
-          FormSection(title: 'StatID (0~9)', children: statIdRows),
-          FormSection(title: 'Bonus (0~9)', children: bonusRows),
-          FormSection(title: 'Maxlevel', children: otherRows),
+          FoxyFormSection(title: '基本信息', children: basicRows),
+          FoxyFormSection(title: 'StatID (0~9)', children: statIdRows),
+          FoxyFormSection(title: 'Bonus (0~9)', children: bonusRows),
+          FoxyFormSection(title: 'Maxlevel', children: otherRows),
           Row(
             children: [
               ShadButton(

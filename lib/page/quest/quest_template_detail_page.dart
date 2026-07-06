@@ -9,7 +9,7 @@ import 'package:foxy/page/quest/quest_request_items_view.dart';
 import 'package:foxy/page/quest/quest_template_addon_view.dart';
 import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_view.dart';
-import 'package:foxy/widget/tab.dart';
+import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 
 @RoutePage()

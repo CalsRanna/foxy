@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/game_object/game_object_template_addon_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -34,7 +34,7 @@ class _GameObjectTemplateAddonViewState
 
   @override
   Widget build(BuildContext context) {
-    final entryInput = FormItem(
+    final entryInput = FoxyFormItem(
       label: '编号',
       placeholder: 'entry',
       child: FoxyNumberInput<int>(
@@ -43,22 +43,22 @@ class _GameObjectTemplateAddonViewState
       ),
     );
     return Watch((_) {
-      final factionInput = FormItem(
+      final factionInput = FoxyFormItem(
         label: '阵营',
         placeholder: 'faction',
         child: FoxyNumberInput<int>(controller: viewModel.factionController),
       );
-      final flagsInput = FormItem(
+      final flagsInput = FoxyFormItem(
         label: '标志位',
         placeholder: 'flags',
         child: FoxyNumberInput<int>(controller: viewModel.flagsController),
       );
-      final minGoldInput = FormItem(
+      final minGoldInput = FoxyFormItem(
         label: '最小金钱',
         placeholder: 'mingold',
         child: FoxyNumberInput<int>(controller: viewModel.minGoldController),
       );
-      final maxGoldInput = FormItem(
+      final maxGoldInput = FoxyFormItem(
         label: '最大金钱',
         placeholder: 'maxgold',
         child: FoxyNumberInput<int>(controller: viewModel.maxGoldController),

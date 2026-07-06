@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/condition/condition_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -32,35 +32,35 @@ class _ConditionViewState extends State<ConditionView> {
   @override
   Widget build(BuildContext context) {
     // 来源信息
-    final sourceTypeInput = FormItem(
+    final sourceTypeInput = FoxyFormItem(
       label: '源类型/关联',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceTypeOrReferenceId',
         controller: viewModel.sourceTypeOrReferenceIdController,
       ),
     );
-    final sourceGroupInput = FormItem(
+    final sourceGroupInput = FoxyFormItem(
       label: 'SourceGroup',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceGroup',
         controller: viewModel.sourceGroupController,
       ),
     );
-    final sourceEntryInput = FormItem(
+    final sourceEntryInput = FoxyFormItem(
       label: 'SourceEntry',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceEntry',
         controller: viewModel.sourceEntryController,
       ),
     );
-    final sourceIdInput = FormItem(
+    final sourceIdInput = FoxyFormItem(
       label: 'SourceId',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceId',
         controller: viewModel.sourceIdController,
       ),
     );
-    final elseGroupInput = FormItem(
+    final elseGroupInput = FoxyFormItem(
       label: 'ElseGroup',
       child: FoxyNumberInput<int>(
         placeholder: 'ElseGroup',
@@ -69,42 +69,42 @@ class _ConditionViewState extends State<ConditionView> {
     );
 
     // 条件信息
-    final conditionTypeInput = FormItem(
+    final conditionTypeInput = FoxyFormItem(
       label: '条件类型/关联',
       child: FoxyNumberInput<int>(
         placeholder: 'ConditionTypeOrReference',
         controller: viewModel.conditionTypeOrReferenceController,
       ),
     );
-    final conditionTargetInput = FormItem(
+    final conditionTargetInput = FoxyFormItem(
       label: 'ConditionTarget',
       child: FoxyNumberInput<int>(
         placeholder: 'ConditionTarget',
         controller: viewModel.conditionTargetController,
       ),
     );
-    final conditionValue1Input = FormItem(
+    final conditionValue1Input = FoxyFormItem(
       label: 'ConditionValue1',
       child: FoxyNumberInput<int>(
         placeholder: 'ConditionValue1',
         controller: viewModel.conditionValue1Controller,
       ),
     );
-    final conditionValue2Input = FormItem(
+    final conditionValue2Input = FoxyFormItem(
       label: 'ConditionValue2',
       child: FoxyNumberInput<int>(
         placeholder: 'ConditionValue2',
         controller: viewModel.conditionValue2Controller,
       ),
     );
-    final conditionValue3Input = FormItem(
+    final conditionValue3Input = FoxyFormItem(
       label: 'ConditionValue3',
       child: FoxyNumberInput<int>(
         placeholder: 'ConditionValue3',
         controller: viewModel.conditionValue3Controller,
       ),
     );
-    final negativeConditionInput = FormItem(
+    final negativeConditionInput = FoxyFormItem(
       label: '否定条件',
       child: FoxyNumberInput<int>(
         placeholder: 'NegativeCondition',
@@ -113,26 +113,26 @@ class _ConditionViewState extends State<ConditionView> {
     );
 
     // 错误与脚本
-    final errorTypeInput = FormItem(
+    final errorTypeInput = FoxyFormItem(
       label: '错误类型',
       child: FoxyNumberInput<int>(
         placeholder: 'ErrorType',
         controller: viewModel.errorTypeController,
       ),
     );
-    final errorTextIdInput = FormItem(
+    final errorTextIdInput = FoxyFormItem(
       label: '错误文本编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ErrorTextId',
         controller: viewModel.errorTextIdController,
       ),
     );
-    final scriptNameInput = FormItem(
+    final scriptNameInput = FoxyFormItem(
       controller: viewModel.scriptNameController,
       label: '脚本名称',
       placeholder: 'ScriptName',
     );
-    final commentInput = FormItem(
+    final commentInput = FoxyFormItem(
       controller: viewModel.commentController,
       label: '注解',
       placeholder: 'Comment',
@@ -144,7 +144,7 @@ class _ConditionViewState extends State<ConditionView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(
+          FoxyFormSection(
             title: '来源信息',
             children: [
               Row(
@@ -165,7 +165,7 @@ class _ConditionViewState extends State<ConditionView> {
               ),
             ],
           ),
-          FormSection(
+          FoxyFormSection(
             title: '条件信息',
             children: [
               Row(
@@ -188,7 +188,7 @@ class _ConditionViewState extends State<ConditionView> {
               ),
             ],
           ),
-          FormSection(
+          FoxyFormSection(
             title: '错误与脚本',
             children: [
               Row(

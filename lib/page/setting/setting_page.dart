@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/router/router.gr.dart';
-import 'package:foxy/widget/header.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 @RoutePage()

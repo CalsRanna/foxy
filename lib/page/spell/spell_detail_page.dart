@@ -8,7 +8,7 @@ import 'package:foxy/page/spell/spell_linked_spell_view.dart';
 import 'package:foxy/page/spell/spell_loot_template_view.dart';
 import 'package:foxy/page/spell/spell_rank_view.dart';
 import 'package:foxy/page/spell/spell_view.dart';
-import 'package:foxy/widget/tab.dart';
+import 'package:foxy/widget/foxy_tab.dart';
 
 @RoutePage()
 class SpellDetailPage extends StatefulWidget {

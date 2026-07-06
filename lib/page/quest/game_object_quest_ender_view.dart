@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/quest/game_object_quest_ender_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -149,13 +149,13 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FormItem(
+          FoxyFormItem(
             label: '物体编号',
             placeholder: 'GameobjectId',
             child: FoxyNumberInput<int>(controller: viewModel.idController),
           ),
           SizedBox(height: 16),
-          FormItem(
+          FoxyFormItem(
             label: '任务编号',
             child: FoxyNumberInput<int>(
               controller: viewModel.questController,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_bonus_data_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -51,7 +51,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           controller: TextEditingController(
                             text: widget.spellId.toString(),
                           ),
@@ -61,7 +61,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           controller: viewModel.commentsController,
                           label: '备注',
                           placeholder: 'comments',
@@ -75,7 +75,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '法术强度',
                           placeholder: 'direct_bonus',
                           child: FoxyNumberInput<double>(
@@ -84,7 +84,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '法术强度(dot)',
                           placeholder: 'dot_bonus',
                           child: FoxyNumberInput<double>(
@@ -93,7 +93,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '攻击强度',
                           placeholder: 'ap_bonus',
                           child: FoxyNumberInput<double>(
@@ -102,7 +102,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         ),
                       ),
                       Expanded(
-                        child: FormItem(
+                        child: FoxyFormItem(
                           label: '攻击强度(dot)',
                           placeholder: 'ap_dot_bonus',
                           child: FoxyNumberInput<double>(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/widget/card.dart';
-import 'package:foxy/widget/feature_card.dart';
+import 'package:foxy/widget/foxy_card.dart';
+import 'package:foxy/widget/foxy_feature_card.dart';
 
 /// 仪表盘「常用功能」网格。仅接收已过滤的收藏功能列表，不依赖任何
 /// ViewModel；过滤与响应式由 [DashboardViewModel] 侧的 `computed` 负责。
@@ -55,7 +55,7 @@ class FrequentModuleComponent extends StatelessWidget {
 
       return SizedBox(
         height: 160,
-        child: FeatureCard(
+        child: FoxyFeatureCard(
           seamless: true,
           feature: feature,
           border: border,

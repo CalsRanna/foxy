@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/widget/card.dart';
+import 'package:foxy/widget/foxy_card.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class Trend extends StatelessWidget {

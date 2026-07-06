@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class FormItem extends StatelessWidget {
+class FoxyFormItem extends StatelessWidget {
   final TextEditingController? controller;
   final String? label;
   final String? placeholder;
   final bool readOnly;
   final Widget? child;
 
-  const FormItem({
+  const FoxyFormItem({
     super.key,
     this.controller,
     this.label,

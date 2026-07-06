@@ -17,8 +17,8 @@ import 'package:get_it/get_it.dart';
 ///
 /// 对齐 [EntityPickerDelegates] 范式：每个实体一个 `static final` delegate，
 /// 纯数据 + 闭包，不持有可变状态，可被多个 [FoxyLocalePicker] 共享。
-class LocalePickerDelegates {
-  static final creatureTemplateName = LocalePickerDelegate(
+class FoxyLocalePickerDelegates {
+  static final creatureTemplateName = FoxyLocalePickerDelegate(
     fields: ['locale', 'name', 'title'],
     fieldLabels: ['语言', '名称', '称号'],
     onLoad: (entry) async {
@@ -44,15 +44,13 @@ class LocalePickerDelegates {
     },
   );
 
-  static final gameObjectName = LocalePickerDelegate(
+  static final gameObjectName = FoxyLocalePickerDelegate(
     fields: ['locale', 'name'],
     fieldLabels: ['语言', '名称'],
     onLoad: (entry) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
       final locales = await repo.getGameObjectTemplateLocales(entry);
-      return locales
-          .map((e) => {'locale': e.locale, 'name': e.name})
-          .toList();
+      return locales.map((e) => {'locale': e.locale, 'name': e.name}).toList();
     },
     onSave: (entry, data) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
@@ -69,15 +67,13 @@ class LocalePickerDelegates {
     },
   );
 
-  static final gameObjectCaption = LocalePickerDelegate(
+  static final gameObjectCaption = FoxyLocalePickerDelegate(
     fields: ['locale', 'name'],
     fieldLabels: ['语言', '使用说明'],
     onLoad: (entry) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
       final locales = await repo.getGameObjectTemplateLocales(entry);
-      return locales
-          .map((e) => {'locale': e.locale, 'name': e.name})
-          .toList();
+      return locales.map((e) => {'locale': e.locale, 'name': e.name}).toList();
     },
     onSave: (entry, data) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
@@ -94,15 +90,13 @@ class LocalePickerDelegates {
     },
   );
 
-  static final itemName = LocalePickerDelegate(
+  static final itemName = FoxyLocalePickerDelegate(
     fields: ['locale', 'name'],
     fieldLabels: ['语言', '名称'],
     onLoad: (entry) async {
       final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
       final locales = await repo.getItemTemplateLocales(entry);
-      return locales
-          .map((e) => {'locale': e.locale, 'name': e.name})
-          .toList();
+      return locales.map((e) => {'locale': e.locale, 'name': e.name}).toList();
     },
     onSave: (entry, data) async {
       final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
@@ -119,7 +113,7 @@ class LocalePickerDelegates {
     },
   );
 
-  static final itemDescription = LocalePickerDelegate(
+  static final itemDescription = FoxyLocalePickerDelegate(
     fields: ['locale', 'description'],
     fieldLabels: ['语言', '描述'],
     onLoad: (entry) async {
@@ -144,7 +138,7 @@ class LocalePickerDelegates {
     },
   );
 
-  static final questTemplate = LocalePickerDelegate(
+  static final questTemplate = FoxyLocalePickerDelegate(
     fields: [
       'locale',
       'title',
@@ -212,7 +206,7 @@ class LocalePickerDelegates {
     },
   );
 
-  static final questOfferReward = LocalePickerDelegate(
+  static final questOfferReward = FoxyLocalePickerDelegate(
     fields: ['locale', 'rewardText'],
     fieldLabels: ['语言', '奖励文本'],
     onLoad: (entry) async {
@@ -237,7 +231,7 @@ class LocalePickerDelegates {
     },
   );
 
-  static final questRequestItems = LocalePickerDelegate(
+  static final questRequestItems = FoxyLocalePickerDelegate(
     fields: ['locale', 'completionText'],
     fieldLabels: ['语言', '完成文本'],
     onLoad: (entry) async {

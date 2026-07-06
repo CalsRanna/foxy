@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/page/more/more_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/feature_card.dart';
-import 'package:foxy/widget/header.dart';
+import 'package:foxy/widget/foxy_feature_card.dart';
+import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -101,7 +101,7 @@ class _MorePageState extends State<MorePage> {
         itemCount: modules.length,
         itemBuilder: (context, index) {
           final module = modules[index];
-          return FeatureCard(
+          return FoxyFeatureCard(
             feature: module,
             onTap: () => viewModel.navigateToModule(module),
             onSecondaryTap: (position) =>

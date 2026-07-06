@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/talent/talent_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -31,7 +31,7 @@ class _TalentViewState extends State<TalentView> {
 
   @override
   Widget build(BuildContext context) {
-    final idInput = FormItem(
+    final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
@@ -39,35 +39,35 @@ class _TalentViewState extends State<TalentView> {
         readOnly: true,
       ),
     );
-    final tabIdInput = FormItem(
+    final tabIdInput = FoxyFormItem(
       label: '标签页',
       child: FoxyNumberInput<int>(
         placeholder: 'TabID',
         controller: viewModel.tabIdController,
       ),
     );
-    final tierIdInput = FormItem(
+    final tierIdInput = FoxyFormItem(
       label: '层',
       child: FoxyNumberInput<int>(
         placeholder: 'TierID',
         controller: viewModel.tierIdController,
       ),
     );
-    final columnIndexInput = FormItem(
+    final columnIndexInput = FoxyFormItem(
       label: '列',
       child: FoxyNumberInput<int>(
         placeholder: 'ColumnIndex',
         controller: viewModel.columnIndexController,
       ),
     );
-    final flagsInput = FormItem(
+    final flagsInput = FoxyFormItem(
       label: '标志',
       child: FoxyNumberInput<int>(
         placeholder: 'Flags',
         controller: viewModel.flagsController,
       ),
     );
-    final requiredSpellIdInput = FormItem(
+    final requiredSpellIdInput = FoxyFormItem(
       label: '必需法术',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredSpellID',
@@ -75,63 +75,63 @@ class _TalentViewState extends State<TalentView> {
       ),
     );
 
-    final spellRank0Input = FormItem(
+    final spellRank0Input = FoxyFormItem(
       label: '法术等级0',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank0',
         controller: viewModel.spellRank0Controller,
       ),
     );
-    final spellRank1Input = FormItem(
+    final spellRank1Input = FoxyFormItem(
       label: '法术等级1',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank1',
         controller: viewModel.spellRank1Controller,
       ),
     );
-    final spellRank2Input = FormItem(
+    final spellRank2Input = FoxyFormItem(
       label: '法术等级2',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank2',
         controller: viewModel.spellRank2Controller,
       ),
     );
-    final spellRank3Input = FormItem(
+    final spellRank3Input = FoxyFormItem(
       label: '法术等级3',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank3',
         controller: viewModel.spellRank3Controller,
       ),
     );
-    final spellRank4Input = FormItem(
+    final spellRank4Input = FoxyFormItem(
       label: '法术等级4',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank4',
         controller: viewModel.spellRank4Controller,
       ),
     );
-    final spellRank5Input = FormItem(
+    final spellRank5Input = FoxyFormItem(
       label: '法术等级5',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank5',
         controller: viewModel.spellRank5Controller,
       ),
     );
-    final spellRank6Input = FormItem(
+    final spellRank6Input = FoxyFormItem(
       label: '法术等级6',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank6',
         controller: viewModel.spellRank6Controller,
       ),
     );
-    final spellRank7Input = FormItem(
+    final spellRank7Input = FoxyFormItem(
       label: '法术等级7',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank7',
         controller: viewModel.spellRank7Controller,
       ),
     );
-    final spellRank8Input = FormItem(
+    final spellRank8Input = FoxyFormItem(
       label: '法术等级8',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank8',
@@ -139,21 +139,21 @@ class _TalentViewState extends State<TalentView> {
       ),
     );
 
-    final prereqTalent0Input = FormItem(
+    final prereqTalent0Input = FoxyFormItem(
       label: '前置天赋0',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqTalent0',
         controller: viewModel.prereqTalent0Controller,
       ),
     );
-    final prereqTalent1Input = FormItem(
+    final prereqTalent1Input = FoxyFormItem(
       label: '前置天赋1',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqTalent1',
         controller: viewModel.prereqTalent1Controller,
       ),
     );
-    final prereqTalent2Input = FormItem(
+    final prereqTalent2Input = FoxyFormItem(
       label: '前置天赋2',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqTalent2',
@@ -161,21 +161,21 @@ class _TalentViewState extends State<TalentView> {
       ),
     );
 
-    final prereqRank0Input = FormItem(
+    final prereqRank0Input = FoxyFormItem(
       label: '前置等级0',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqRank0',
         controller: viewModel.prereqRank0Controller,
       ),
     );
-    final prereqRank1Input = FormItem(
+    final prereqRank1Input = FoxyFormItem(
       label: '前置等级1',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqRank1',
         controller: viewModel.prereqRank1Controller,
       ),
     );
-    final prereqRank2Input = FormItem(
+    final prereqRank2Input = FoxyFormItem(
       label: '前置等级2',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqRank2',
@@ -183,14 +183,14 @@ class _TalentViewState extends State<TalentView> {
       ),
     );
 
-    final categoryMask0Input = FormItem(
+    final categoryMask0Input = FoxyFormItem(
       label: '掩码0',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryMask0',
         controller: viewModel.categoryMask0Controller,
       ),
     );
-    final categoryMask1Input = FormItem(
+    final categoryMask1Input = FoxyFormItem(
       label: '掩码1',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryMask1',
@@ -204,7 +204,7 @@ class _TalentViewState extends State<TalentView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(
+          FoxyFormSection(
             title: '基础信息',
             children: [
               Row(
@@ -227,7 +227,7 @@ class _TalentViewState extends State<TalentView> {
               ),
             ],
           ),
-          FormSection(
+          FoxyFormSection(
             title: '法术等级',
             children: [
               Row(
@@ -259,7 +259,7 @@ class _TalentViewState extends State<TalentView> {
               ),
             ],
           ),
-          FormSection(
+          FoxyFormSection(
             title: '前置天赋',
             children: [
               Row(
@@ -273,7 +273,7 @@ class _TalentViewState extends State<TalentView> {
               ),
             ],
           ),
-          FormSection(
+          FoxyFormSection(
             title: '前置等级',
             children: [
               Row(
@@ -287,7 +287,7 @@ class _TalentViewState extends State<TalentView> {
               ),
             ],
           ),
-          FormSection(
+          FoxyFormSection(
             title: '分类掩码',
             children: [
               Row(

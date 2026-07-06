@@ -3,7 +3,7 @@ import 'package:foxy/page/spell/spell_rank_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -159,7 +159,7 @@ class _SpellRankViewState extends State<SpellRankView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '起始技能',
                   placeholder: 'first_spell_id',
                   child: FoxyNumberInput<int>(
@@ -168,7 +168,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '技能',
                   placeholder: 'spell_id',
                   child: FoxyNumberInput<int>(
@@ -177,7 +177,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                 ),
               ),
               Expanded(
-                child: FormItem(
+                child: FoxyFormItem(
                   label: '排行',
                   placeholder: 'rank',
                   child: FoxyNumberInput<int>(

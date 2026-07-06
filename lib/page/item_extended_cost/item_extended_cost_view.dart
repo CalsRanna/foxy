@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/item_extended_cost/item_extended_cost_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -32,7 +32,7 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
   @override
   Widget build(BuildContext context) {
     /// Basic
-    final idInput = FormItem(
+    final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
@@ -40,21 +40,21 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
         readOnly: true,
       ),
     );
-    final honorPointsInput = FormItem(
+    final honorPointsInput = FoxyFormItem(
       label: '荣誉点数',
       child: FoxyNumberInput<int>(
         placeholder: 'HonorPoints',
         controller: viewModel.honorPointsController,
       ),
     );
-    final arenaPointsInput = FormItem(
+    final arenaPointsInput = FoxyFormItem(
       label: '竞技场点数',
       child: FoxyNumberInput<int>(
         placeholder: 'ArenaPoints',
         controller: viewModel.arenaPointsController,
       ),
     );
-    final arenaBracketInput = FormItem(
+    final arenaBracketInput = FoxyFormItem(
       label: '竞技场等级',
       child: FoxyNumberInput<int>(
         placeholder: 'ArenaBracket',
@@ -63,14 +63,14 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
     );
 
     /// Other
-    final requiredArenaRatingInput = FormItem(
+    final requiredArenaRatingInput = FoxyFormItem(
       label: '所需评级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredArenaRating',
         controller: viewModel.requiredArenaRatingController,
       ),
     );
-    final itemPurchaseGroupInput = FormItem(
+    final itemPurchaseGroupInput = FoxyFormItem(
       label: '购买组',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemPurchaseGroup',
@@ -79,70 +79,70 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
     );
 
     /// ItemID + ItemCount
-    final itemID0Input = FormItem(
+    final itemID0Input = FoxyFormItem(
       label: '物品 ID 0',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID0',
         controller: viewModel.itemID0Controller,
       ),
     );
-    final itemCount0Input = FormItem(
+    final itemCount0Input = FoxyFormItem(
       label: '物品计数 0',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount0',
         controller: viewModel.itemCount0Controller,
       ),
     );
-    final itemID1Input = FormItem(
+    final itemID1Input = FoxyFormItem(
       label: '物品 ID 1',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID1',
         controller: viewModel.itemID1Controller,
       ),
     );
-    final itemCount1Input = FormItem(
+    final itemCount1Input = FoxyFormItem(
       label: '物品计数 1',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount1',
         controller: viewModel.itemCount1Controller,
       ),
     );
-    final itemID2Input = FormItem(
+    final itemID2Input = FoxyFormItem(
       label: '物品 ID 2',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID2',
         controller: viewModel.itemID2Controller,
       ),
     );
-    final itemCount2Input = FormItem(
+    final itemCount2Input = FoxyFormItem(
       label: '物品计数 2',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount2',
         controller: viewModel.itemCount2Controller,
       ),
     );
-    final itemID3Input = FormItem(
+    final itemID3Input = FoxyFormItem(
       label: '物品 ID 3',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID3',
         controller: viewModel.itemID3Controller,
       ),
     );
-    final itemCount3Input = FormItem(
+    final itemCount3Input = FoxyFormItem(
       label: '物品计数 3',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount3',
         controller: viewModel.itemCount3Controller,
       ),
     );
-    final itemID4Input = FormItem(
+    final itemID4Input = FoxyFormItem(
       label: '物品 ID 4',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID4',
         controller: viewModel.itemID4Controller,
       ),
     );
-    final itemCount4Input = FormItem(
+    final itemCount4Input = FoxyFormItem(
       label: '物品计数 4',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount4',
@@ -219,9 +219,9 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(title: '基本信息', children: basicRows),
-          FormSection(title: '物品与计数', children: itemRows),
-          FormSection(title: '其他', children: otherRows),
+          FoxyFormSection(title: '基本信息', children: basicRows),
+          FoxyFormSection(title: '物品与计数', children: itemRows),
+          FoxyFormSection(title: '其他', children: otherRows),
           Row(
             children: [
               ShadButton(

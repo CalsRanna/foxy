@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/page_text/page_text_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -31,7 +31,7 @@ class _PageTextViewState extends State<PageTextView> {
 
   @override
   Widget build(BuildContext context) {
-    final idInput = FormItem(
+    final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
@@ -39,19 +39,19 @@ class _PageTextViewState extends State<PageTextView> {
         readOnly: widget.id != null,
       ),
     );
-    final textInput = FormItem(
+    final textInput = FoxyFormItem(
       controller: viewModel.textController,
       label: '文本',
       placeholder: 'Text',
     );
-    final nextPageIdInput = FormItem(
+    final nextPageIdInput = FoxyFormItem(
       label: '下一页编号',
       child: FoxyNumberInput<int>(
         placeholder: 'NextPageID',
         controller: viewModel.nextPageIdController,
       ),
     );
-    final verifiedBuildInput = FormItem(
+    final verifiedBuildInput = FoxyFormItem(
       label: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
         placeholder: 'VerifiedBuild',
@@ -65,7 +65,7 @@ class _PageTextViewState extends State<PageTextView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(
+          FoxyFormSection(
             title: '基本信息',
             children: [
               Row(

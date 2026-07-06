@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/currency_type/currency_type_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -31,7 +31,7 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
 
   @override
   Widget build(BuildContext context) {
-    final idInput = FormItem(
+    final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
@@ -39,21 +39,21 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
         readOnly: true,
       ),
     );
-    final itemIdInput = FormItem(
+    final itemIdInput = FoxyFormItem(
       label: '物品编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID',
         controller: viewModel.itemIdController,
       ),
     );
-    final categoryIdInput = FormItem(
+    final categoryIdInput = FoxyFormItem(
       label: '分类编号',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryID',
         controller: viewModel.categoryIdController,
       ),
     );
-    final bitIndexInput = FormItem(
+    final bitIndexInput = FoxyFormItem(
       label: '位索引',
       child: FoxyNumberInput<int>(
         placeholder: 'BitIndex',
@@ -67,7 +67,7 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(
+          FoxyFormSection(
             title: '基本信息',
             children: [
               Row(

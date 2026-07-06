@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/glyph_property/glyph_property_detail_view_model.dart';
-import 'package:foxy/widget/form_item.dart';
-import 'package:foxy/widget/form_section.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -32,7 +32,7 @@ class _GlyphPropertyViewState extends State<GlyphPropertyView> {
   @override
   Widget build(BuildContext context) {
     /// Basic
-    final idInput = FormItem(
+    final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
@@ -42,21 +42,21 @@ class _GlyphPropertyViewState extends State<GlyphPropertyView> {
     );
 
     /// Property
-    final spellIdInput = FormItem(
+    final spellIdInput = FoxyFormItem(
       label: '技能编号',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellID',
         controller: viewModel.spellIdController,
       ),
     );
-    final glyphSlotFlagsInput = FormItem(
+    final glyphSlotFlagsInput = FoxyFormItem(
       label: '雕文槽标记',
       child: FoxyNumberInput<int>(
         placeholder: 'GlyphSlotFlags',
         controller: viewModel.glyphSlotFlagsController,
       ),
     );
-    final spellIconIdInput = FormItem(
+    final spellIconIdInput = FoxyFormItem(
       label: '技能图标',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellIconID',
@@ -83,7 +83,7 @@ class _GlyphPropertyViewState extends State<GlyphPropertyView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FormSection(title: '属性信息', children: propertyRows),
+          FoxyFormSection(title: '属性信息', children: propertyRows),
           Row(
             children: [
               ShadButton(

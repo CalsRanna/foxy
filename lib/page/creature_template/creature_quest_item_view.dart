@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/page/creature_template/creature_quest_item_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/form_item.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -168,7 +168,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 生物ID（只读）
-          FormItem(
+          FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
@@ -178,7 +178,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           ),
           SizedBox(height: 16),
           // 索引
-          FormItem(
+          FoxyFormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
               controller: viewModel.idxController,
@@ -187,17 +187,17 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           ),
           SizedBox(height: 16),
           // 物品
-          FormItem(
+          FoxyFormItem(
             label: '物品',
             child: FoxyEntityPicker(
-              delegate: EntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemIdController,
               placeholder: 'ItemId',
             ),
           ),
           SizedBox(height: 16),
           // VerifiedBuild
-          FormItem(
+          FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
               controller: viewModel.verifiedBuildController,

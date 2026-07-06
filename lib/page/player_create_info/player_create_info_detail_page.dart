@@ -4,7 +4,7 @@ import 'package:foxy/page/player_create_info/player_create_info_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_action_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_item_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_spell_custom_view.dart';
-import 'package:foxy/widget/tab.dart';
+import 'package:foxy/widget/foxy_tab.dart';
 
 @RoutePage()
 class PlayerCreateInfoDetailPage extends StatefulWidget {
