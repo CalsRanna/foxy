@@ -90,10 +90,13 @@ class _FoxyFeatureCardState extends State<FoxyFeatureCard> {
     );
     final title = Row(
       crossAxisAlignment: CrossAxisAlignment.center,
+      spacing: 16,
       children: [
         Icon(iconData),
-        const SizedBox(width: 16),
         Expanded(child: titleColumn),
+        if (!widget.seamless && widget.feature.isPinned) Icon(LucideIcons.pin),
+        if (!widget.seamless && widget.feature.isFavorite)
+          Icon(LucideIcons.star),
       ],
     );
     final descriptionStyle = TextStyle(
