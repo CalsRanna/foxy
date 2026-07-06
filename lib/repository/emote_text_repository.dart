@@ -68,7 +68,7 @@ class EmoteTextRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.where('Name', '%${filter.name}%', operator: 'like');
+      builder = builder.where('Name', '%${filter.name}%', comparator: 'like');
     }
     return builder;
   }

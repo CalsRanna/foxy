@@ -92,7 +92,7 @@ class SpellRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['ds.Name_lang_zhCN', 'ds.Name_lang_enUS'],
         '%${filter.name}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;

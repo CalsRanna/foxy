@@ -513,18 +513,18 @@ packages:
     dependency: "direct main"
     description:
       name: laconic
-      sha256: "95c8f2bac5b0d9271b2d7afacd9df0500b0888dc0793acafe0317ce9b5beb406"
+      sha256: "87d1ba300e18eea3169a848c318db64694742c2d1946db43ebdb38c0f6af708f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   laconic_mysql:
     dependency: "direct main"
     description:
       name: laconic_mysql
-      sha256: e8a9515cf99fcc84cdd3214b9886423a9304290e15755f6c666b22575e921b92
+      sha256: f25b763cbe7ff168a53f9076b2d5e7b8cdf139b949bc41481599b117aacd854f
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.3.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -1158,10 +1158,10 @@ packages:
     dependency: "direct main"
     description:
       name: warcrafty
-      sha256: c7089f995a5c4fc3c291950e9a3838dc642f1e4e8221e65ac9bc3350a25a458f
+      sha256: "62c0c9c52fc27ce3526a99469e8814496d7d1d97e2195fa728601fb5452ce4d2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   watcher:
     dependency: transitive
     description:

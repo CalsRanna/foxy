@@ -115,7 +115,7 @@ class GossipMenuRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['nt.text0_0', 'nt.text0_1', 'ntl.Text0_0', 'ntl.Text0_1'],
         '%${filter.text}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;

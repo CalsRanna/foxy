@@ -50,7 +50,7 @@ class LootTemplateRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['it.name', 'itl.Name'],
         '%$name%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return await builder.count();
@@ -110,7 +110,7 @@ class LootTemplateRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['it.name', 'itl.Name'],
         '%$name%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     builder = builder.limit(kPageSize).offset(offset);

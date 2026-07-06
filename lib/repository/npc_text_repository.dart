@@ -29,7 +29,7 @@ class NpcTextRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['text0_0', 'text0_1'],
         '%$text%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     builder = builder.limit(kPageSize).offset(offset);
@@ -46,7 +46,7 @@ class NpcTextRepository with RepositoryMixin {
       builder = builder.whereAny(
         ['text0_0', 'text0_1'],
         '%$text%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return await builder.count();

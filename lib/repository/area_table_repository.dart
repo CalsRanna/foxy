@@ -94,7 +94,7 @@ class AreaTableRepository with RepositoryMixin {
       builder = builder.where(
         'AreaName_lang_zhCN',
         '%${filter.name}%',
-        operator: 'like',
+        comparator: 'like',
       );
     }
     return builder;
