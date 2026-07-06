@@ -1,0 +1,63 @@
+// Condition Type 枚举常量定义
+// 数据来源：AzerothCore ConditionMgr.h - ConditionTypes
+
+/// ConditionTypeOrReference 条件类型标签
+/// 非负值对应条件类型；负值表示引用另一组条件
+const kConditionTypeLabels = <int, String>{
+  0: '无', // CONDITION_NONE
+  1: '光环', // CONDITION_AURA
+  2: '物品', // CONDITION_ITEM
+  3: '已装备物品', // CONDITION_ITEM_EQUIPPED
+  4: '区域', // CONDITION_ZONEID
+  5: '声望等级', // CONDITION_REPUTATION_RANK
+  6: '阵营', // CONDITION_TEAM
+  7: '技能', // CONDITION_SKILL
+  8: '任务已奖励', // CONDITION_QUESTREWARDED
+  9: '任务已接取', // CONDITION_QUESTTAKEN
+  10: '醉酒状态', // CONDITION_DRUNKENSTATE
+  11: '世界状态', // CONDITION_WORLD_STATE
+  12: '活动激活', // CONDITION_ACTIVE_EVENT
+  13: '副本信息', // CONDITION_INSTANCE_INFO
+  14: '无任务', // CONDITION_QUEST_NONE
+  15: '职业', // CONDITION_CLASS
+  16: '种族', // CONDITION_RACE
+  17: '成就', // CONDITION_ACHIEVEMENT
+  18: '头衔', // CONDITION_TITLE
+  19: '生成掩码', // CONDITION_SPAWNMASK
+  20: '性别', // CONDITION_GENDER
+  21: '单位状态', // CONDITION_UNIT_STATE
+  22: '地图', // CONDITION_MAPID
+  23: '区域ID', // CONDITION_AREAID
+  24: '生物类型', // CONDITION_CREATURE_TYPE
+  25: '法术', // CONDITION_SPELL
+  26: '相位掩码', // CONDITION_PHASEMASK
+  27: '等级', // CONDITION_LEVEL
+  28: '任务完成', // CONDITION_QUEST_COMPLETE
+  29: '附近生物', // CONDITION_NEAR_CREATURE
+  30: '附近游戏对象', // CONDITION_NEAR_GAMEOBJECT
+  31: '对象条目/GUID', // CONDITION_OBJECT_ENTRY_GUID
+  32: '类型掩码', // CONDITION_TYPE_MASK
+  33: '关系', // CONDITION_RELATION_TO
+  34: '反应', // CONDITION_REACTION_TO
+  35: '距离', // CONDITION_DISTANCE_TO
+  36: '存活', // CONDITION_ALIVE
+  37: '生命值', // CONDITION_HP_VAL
+  38: '生命值百分比', // CONDITION_HP_PCT
+  39: '服务器成就', // CONDITION_REALM_ACHIEVEMENT
+  40: '在水中', // CONDITION_IN_WATER
+  41: '地形切换', // CONDITION_TERRAIN_SWAP (3.3.5a 不使用)
+  42: '站立状态', // CONDITION_STAND_STATE
+  43: '日常任务完成', // CONDITION_DAILY_QUEST_DONE
+  44: '被魅惑', // CONDITION_CHARMED
+  45: '宠物类型', // CONDITION_PET_TYPE
+  46: '飞行', // CONDITION_TAXI
+  47: '任务状态', // CONDITION_QUESTSTATE
+  48: '任务目标进度', // CONDITION_QUEST_OBJECTIVE_PROGRESS
+  49: '难度', // CONDITION_DIFFICULTY_ID
+  101: '任务满足互斥', // CONDITION_QUEST_SATISFY_EXCLUSIVE
+  102: '拥有光环类型', // CONDITION_HAS_AURA_TYPE
+  103: '世界脚本', // CONDITION_WORLD_SCRIPT
+  104: 'AI数据', // CONDITION_AI_DATA
+  105: '排队随机副本', // CONDITION_PLAYER_QUEUED_RANDOM_DUNGEON
+  106: '单位战斗中', // CONDITION_UNIT_IN_COMBAT
+};

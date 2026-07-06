@@ -106,64 +106,39 @@ class _ConditionListPageState extends State<ConditionListPage> {
     );
     final toolbar = Row(children: [createButton, const Spacer(), pagination]);
 
-    final headers = [
-      'SourceType',
-      'SourceGroup',
-      'SourceEntry',
-      'SourceId',
-      'ElseGroup',
-      'ConditionType',
-      'CondTarget',
-      'Value1',
-      'Value2',
-      'Value3',
-    ];
+    final headers = ['来源条目', '来源类型', '条件类型', '参数1', '说明'];
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
+        var flexWidth = constraints.maxWidth - 120;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final condition = conditions[vicinity.row];
             return switch (vicinity.column) {
-              0 => ShadTableCell(
-                child: Text(condition.sourceTypeOrReferenceId.toString()),
-              ),
-              1 => ShadTableCell(child: Text(condition.sourceGroup.toString())),
-              2 => ShadTableCell(child: Text(condition.sourceEntry.toString())),
-              3 => ShadTableCell(child: Text(condition.sourceId.toString())),
-              4 => ShadTableCell(child: Text(condition.elseGroup.toString())),
-              5 => ShadTableCell(
-                child: Text(condition.conditionTypeOrReference.toString()),
-              ),
-              6 => ShadTableCell(
-                child: Text(condition.conditionTarget.toString()),
-              ),
-              7 => ShadTableCell(
+              0 => ShadTableCell(child: Text(condition.sourceEntry.toString())),
+              1 => ShadTableCell(child: Text(condition.sourceTypeLabel)),
+              2 => ShadTableCell(child: Text(condition.conditionTypeLabel)),
+              3 => ShadTableCell(
                 child: Text(condition.conditionValue1.toString()),
               ),
-              8 => ShadTableCell(
-                child: Text(condition.conditionValue2.toString()),
-              ),
-              9 => ShadTableCell(
-                child: Text(condition.conditionValue3.toString()),
+              4 => ShadTableCell(
+                child: Text(
+                  condition.comment,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
           columnCount: headers.length,
           columnSpanExtent: (index) {
-            var flexWidth = constraints.maxWidth - 1080;
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(120),
-              2 => FixedTableSpanExtent(120),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              5 => FixedTableSpanExtent(120),
-              6 => FixedTableSpanExtent(120),
-              7 => FixedTableSpanExtent(120),
-              8 => FixedTableSpanExtent(120),
-              9 => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
+              1 => FixedTableSpanExtent(flexWidth / 4),
+              2 => FixedTableSpanExtent(flexWidth / 4),
+              3 => FixedTableSpanExtent(flexWidth / 4),
+              4 => FixedTableSpanExtent(flexWidth / 4),
               _ => null,
             };
           },

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/condition_entity.dart';
+import 'package:foxy/entity/brief_condition_entity.dart';
 import 'package:foxy/entity/condition_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
@@ -18,7 +18,7 @@ class ConditionListViewModel {
   final _repository = GetIt.instance.get<ConditionRepository>();
 
   final page = signal(1);
-  final conditions = signal<List<ConditionEntity>>([]);
+  final conditions = signal<List<BriefConditionEntity>>([]);
   final total = signal(0);
 
   final routerFacade = GetIt.instance.get<RouterFacade>();
@@ -53,16 +53,18 @@ class ConditionListViewModel {
     await _refresh();
   }
 
-  void navigateToDetail({ConditionEntity? condition}) {
+  void navigateToDetail({BriefConditionEntity? condition}) {
     final id = condition != null
         ? 'condition_${condition.sourceTypeOrReferenceId}_${condition.sourceEntry}'
         : 'condition_new';
     final label = condition != null
-        ? 'Condition ${condition.sourceTypeOrReferenceId}-${condition.sourceEntry}'
+        ? (condition.comment.isNotEmpty
+            ? condition.comment
+            : 'Condition ${condition.sourceTypeOrReferenceId}-${condition.sourceEntry}')
         : '新建条件';
 
-    // 将 Condition 对象序列化为查询参数
-    final credential = condition?.toJson();
+    // 用主键 credential 序列化传递给详情页
+    final credential = condition?.buildCredential();
 
     routerFacade.navigateToDetail(
       id: id,
@@ -72,7 +74,7 @@ class ConditionListViewModel {
     );
   }
 
-  Future<void> copyCondition(ConditionEntity condition) async {
+  Future<void> copyCondition(BriefConditionEntity condition) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -90,7 +92,7 @@ class ConditionListViewModel {
     }
   }
 
-  Future<void> deleteCondition(ConditionEntity condition) async {
+  Future<void> deleteCondition(BriefConditionEntity condition) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
@@ -116,8 +118,11 @@ class ConditionListViewModel {
     );
   }
 
-  Future<List<ConditionEntity>> _search() async {
-    return _repository.getConditions(filter: _buildFilter(), page: page.value);
+  Future<List<BriefConditionEntity>> _search() async {
+    return _repository.getBriefConditions(
+      filter: _buildFilter(),
+      page: page.value,
+    );
   }
 
   Future<int> _count() async {
@@ -135,7 +140,7 @@ class ConditionListViewModel {
     }
   }
 
-  void _logActivity(ActivityActionType action, ConditionEntity c) {
+  void _logActivity(ActivityActionType action, BriefConditionEntity c) {
     final log = ActivityLogEntity(
       module: 'conditions',
       actionType: action,
