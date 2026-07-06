@@ -20,22 +20,7 @@ class EmoteTextDetailViewModel {
   final emoteIdController = TextEditingController();
 
   /// EmoteText
-  final emoteText0 = signal<int>(0);
-  final emoteText1 = signal<int>(0);
-  final emoteText2 = signal<int>(0);
-  final emoteText3 = signal<int>(0);
-  final emoteText4 = signal<int>(0);
-  final emoteText5 = signal<int>(0);
-  final emoteText6 = signal<int>(0);
-  final emoteText7 = signal<int>(0);
-  final emoteText8 = signal<int>(0);
-  final emoteText9 = signal<int>(0);
-  final emoteText10 = signal<int>(0);
-  final emoteText11 = signal<int>(0);
-  final emoteText12 = signal<int>(0);
-  final emoteText13 = signal<int>(0);
-  final emoteText14 = signal<int>(0);
-  final emoteText15 = signal<int>(0);
+  final emoteTextControllers = List.generate(16, (_) => TextEditingController());
 
   final emote = signal(EmoteTextEntity());
 
@@ -78,22 +63,22 @@ class EmoteTextDetailViewModel {
       id: _pi(idController.text),
       name: nameController.text,
       emoteId: _pi(emoteIdController.text),
-      emoteText0: emoteText0.value,
-      emoteText1: emoteText1.value,
-      emoteText2: emoteText2.value,
-      emoteText3: emoteText3.value,
-      emoteText4: emoteText4.value,
-      emoteText5: emoteText5.value,
-      emoteText6: emoteText6.value,
-      emoteText7: emoteText7.value,
-      emoteText8: emoteText8.value,
-      emoteText9: emoteText9.value,
-      emoteText10: emoteText10.value,
-      emoteText11: emoteText11.value,
-      emoteText12: emoteText12.value,
-      emoteText13: emoteText13.value,
-      emoteText14: emoteText14.value,
-      emoteText15: emoteText15.value,
+      emoteText0: _pi(emoteTextControllers[0].text),
+      emoteText1: _pi(emoteTextControllers[1].text),
+      emoteText2: _pi(emoteTextControllers[2].text),
+      emoteText3: _pi(emoteTextControllers[3].text),
+      emoteText4: _pi(emoteTextControllers[4].text),
+      emoteText5: _pi(emoteTextControllers[5].text),
+      emoteText6: _pi(emoteTextControllers[6].text),
+      emoteText7: _pi(emoteTextControllers[7].text),
+      emoteText8: _pi(emoteTextControllers[8].text),
+      emoteText9: _pi(emoteTextControllers[9].text),
+      emoteText10: _pi(emoteTextControllers[10].text),
+      emoteText11: _pi(emoteTextControllers[11].text),
+      emoteText12: _pi(emoteTextControllers[12].text),
+      emoteText13: _pi(emoteTextControllers[13].text),
+      emoteText14: _pi(emoteTextControllers[14].text),
+      emoteText15: _pi(emoteTextControllers[15].text),
     );
   }
 
@@ -110,6 +95,9 @@ class EmoteTextDetailViewModel {
 
   void dispose() {
     emoteIdController.dispose();
+    for (final c in emoteTextControllers) {
+      c.dispose();
+    }
     idController.dispose();
     nameController.dispose();
   }
@@ -131,21 +119,21 @@ class EmoteTextDetailViewModel {
     emoteIdController.text = _fmt(emoteText.emoteId);
 
     /// EmoteText
-    emoteText0.value = emoteText.emoteText0;
-    emoteText1.value = emoteText.emoteText1;
-    emoteText2.value = emoteText.emoteText2;
-    emoteText3.value = emoteText.emoteText3;
-    emoteText4.value = emoteText.emoteText4;
-    emoteText5.value = emoteText.emoteText5;
-    emoteText6.value = emoteText.emoteText6;
-    emoteText7.value = emoteText.emoteText7;
-    emoteText8.value = emoteText.emoteText8;
-    emoteText9.value = emoteText.emoteText9;
-    emoteText10.value = emoteText.emoteText10;
-    emoteText11.value = emoteText.emoteText11;
-    emoteText12.value = emoteText.emoteText12;
-    emoteText13.value = emoteText.emoteText13;
-    emoteText14.value = emoteText.emoteText14;
-    emoteText15.value = emoteText.emoteText15;
+    emoteTextControllers[0].text = _fmt(emoteText.emoteText0);
+    emoteTextControllers[1].text = _fmt(emoteText.emoteText1);
+    emoteTextControllers[2].text = _fmt(emoteText.emoteText2);
+    emoteTextControllers[3].text = _fmt(emoteText.emoteText3);
+    emoteTextControllers[4].text = _fmt(emoteText.emoteText4);
+    emoteTextControllers[5].text = _fmt(emoteText.emoteText5);
+    emoteTextControllers[6].text = _fmt(emoteText.emoteText6);
+    emoteTextControllers[7].text = _fmt(emoteText.emoteText7);
+    emoteTextControllers[8].text = _fmt(emoteText.emoteText8);
+    emoteTextControllers[9].text = _fmt(emoteText.emoteText9);
+    emoteTextControllers[10].text = _fmt(emoteText.emoteText10);
+    emoteTextControllers[11].text = _fmt(emoteText.emoteText11);
+    emoteTextControllers[12].text = _fmt(emoteText.emoteText12);
+    emoteTextControllers[13].text = _fmt(emoteText.emoteText13);
+    emoteTextControllers[14].text = _fmt(emoteText.emoteText14);
+    emoteTextControllers[15].text = _fmt(emoteText.emoteText15);
   }
 }

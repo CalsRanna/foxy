@@ -192,7 +192,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              value: widget.creatureId,
+              controller: viewModel.creatureIdController,
               placeholder: 'CreatureID',
               readOnly: true,
             ),

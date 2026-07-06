@@ -165,7 +165,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           FormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              value: widget.creatureId,
+              controller: viewModel.creatureIdController,
               placeholder: 'CreatureID',
               readOnly: true,
             ),
@@ -175,8 +175,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           FormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
-              value: viewModel.index.value,
-              onChanged: (v) => viewModel.index.value = v,
+              controller: viewModel.indexController,
               placeholder: 'Index',
             ),
           ),
@@ -195,8 +194,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           FormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              value: viewModel.verifiedBuild.value,
-              onChanged: (v) => viewModel.verifiedBuild.value = v,
+              controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

@@ -19,6 +19,7 @@ class NpcTrainerViewModel {
   final editing = signal(false);
 
   // 表单控制器
+  final creatureIdController = TextEditingController();
   final spellIDController = TextEditingController();
   final moneyCostController = TextEditingController();
   final reqSkillLineController = TextEditingController();
@@ -191,6 +192,7 @@ class NpcTrainerViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       id.value = creatureId;
+      creatureIdController.text = _fmt(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化NPC训练师失败: $e');
@@ -205,6 +207,7 @@ class NpcTrainerViewModel {
 
   /// 清理资源
   void dispose() {
+    creatureIdController.dispose();
     moneyCostController.dispose();
     reqLevelController.dispose();
     reqSkillLineController.dispose();

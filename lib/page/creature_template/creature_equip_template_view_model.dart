@@ -16,6 +16,7 @@ class CreatureEquipTemplateViewModel {
   final items = signal<List<BriefCreatureEquipTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
+  final creatureIdController = TextEditingController();
   final idController = TextEditingController();
   final itemID1Controller = TextEditingController();
   final itemID2Controller = TextEditingController();
@@ -200,6 +201,7 @@ class CreatureEquipTemplateViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       this.creatureId.value = creatureId;
+      creatureIdController.text = _fmt(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物装备失败: $e');
@@ -214,6 +216,7 @@ class CreatureEquipTemplateViewModel {
 
   /// 清理资源
   void dispose() {
+    creatureIdController.dispose();
     idController.dispose();
     itemID1Controller.dispose();
     itemID2Controller.dispose();

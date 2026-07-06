@@ -16,6 +16,7 @@ class NpcVendorViewModel {
   final items = signal<List<BriefNpcVendorEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
+  final creatureIdController = TextEditingController();
   final slotController = TextEditingController();
   final itemController = TextEditingController();
   final maxcountController = TextEditingController();
@@ -205,6 +206,7 @@ class NpcVendorViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       entry.value = creatureId;
+      creatureIdController.text = _fmt(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化NPC商人失败: $e');
@@ -219,6 +221,7 @@ class NpcVendorViewModel {
 
   /// 清理资源
   void dispose() {
+    creatureIdController.dispose();
     extendedCostController.dispose();
     incrtimeController.dispose();
     itemController.dispose();

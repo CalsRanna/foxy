@@ -15,9 +15,10 @@ class CreatureTemplateSpellViewModel {
   final creatureId = signal(0);
   final items = signal<List<CreatureTemplateSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final index = signal<int>(0);
+  final creatureIdController = TextEditingController();
+  final indexController = TextEditingController();
   final spellController = TextEditingController();
-  final verifiedBuild = signal<int>(0);
+  final verifiedBuildController = TextEditingController();
 
   final _repository = GetIt.instance.get<CreatureTemplateSpellRepository>();
 
@@ -32,23 +33,23 @@ class CreatureTemplateSpellViewModel {
   }
 
   void resetForm() {
-    index.value = 0;
+    indexController.text = _fmt(0);
     spellController.text = _fmt(0);
-    verifiedBuild.value = 0;
+    verifiedBuildController.text = _fmt(0);
   }
 
   void fillForm(CreatureTemplateSpellEntity spell) {
-    index.value = spell.index;
+    indexController.text = _fmt(spell.index);
     spellController.text = _fmt(spell.spell);
-    verifiedBuild.value = spell.verifiedBuild;
+    verifiedBuildController.text = _fmt(spell.verifiedBuild);
   }
 
   CreatureTemplateSpellEntity collectFromForm() {
     return CreatureTemplateSpellEntity(
       creatureID: creatureId.value,
-      index: index.value,
+      index: _pi(indexController.text),
       spell: _pi(spellController.text),
-      verifiedBuild: verifiedBuild.value,
+      verifiedBuild: _pi(verifiedBuildController.text),
     );
   }
 
@@ -56,7 +57,7 @@ class CreatureTemplateSpellViewModel {
     try {
       final nextIndex = await _repository.getNextIndex(creatureId.value);
       resetForm();
-      index.value = nextIndex;
+      indexController.text = _fmt(nextIndex);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物法术记录失败: $e');
@@ -174,6 +175,7 @@ class CreatureTemplateSpellViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       this.creatureId.value = creatureId;
+      creatureIdController.text = _fmt(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物法术失败: $e');
@@ -186,6 +188,9 @@ class CreatureTemplateSpellViewModel {
   }
 
   void dispose() {
+    creatureIdController.dispose();
+    indexController.dispose();
     spellController.dispose();
+    verifiedBuildController.dispose();
   }
 }

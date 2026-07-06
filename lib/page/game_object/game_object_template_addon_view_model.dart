@@ -16,6 +16,7 @@ class GameObjectTemplateAddonViewModel {
 
   final factionController = TextEditingController();
   final flagsController = TextEditingController();
+  final gameObjectIdController = TextEditingController();
   final minGoldController = TextEditingController();
   final maxGoldController = TextEditingController();
 
@@ -73,6 +74,7 @@ class GameObjectTemplateAddonViewModel {
   Future<void> initSignals({required int gameObjectId}) async {
     try {
       this.gameObjectId.value = gameObjectId;
+      gameObjectIdController.text = _fmt(gameObjectId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
@@ -83,6 +85,7 @@ class GameObjectTemplateAddonViewModel {
   void dispose() {
     factionController.dispose();
     flagsController.dispose();
+    gameObjectIdController.dispose();
     maxGoldController.dispose();
     minGoldController.dispose();
   }

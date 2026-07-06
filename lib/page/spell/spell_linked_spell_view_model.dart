@@ -3,6 +3,7 @@ import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -14,11 +15,15 @@ class SpellLinkedSpellViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellLinkedSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final spellEffect = signal<int>(0);
-  final type = signal<int>(0);
+  final spellEffectController = TextEditingController();
+  final typeController = TextEditingController();
   final commentController = TextEditingController();
 
   final _repository = GetIt.instance.get<SpellLinkedSpellRepository>();
+
+  String _fmt(num v) => formatNum(v);
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
     final data = await _repository.getSpellLinkedSpells(spellId.value);
@@ -27,22 +32,22 @@ class SpellLinkedSpellViewModel {
   }
 
   void resetForm() {
-    spellEffect.value = 0;
-    type.value = 0;
+    spellEffectController.text = _fmt(0);
+    typeController.text = _fmt(0);
     commentController.clear();
   }
 
   void fillForm(SpellLinkedSpellEntity data) {
-    spellEffect.value = data.spellEffect;
-    type.value = data.type;
+    spellEffectController.text = _fmt(data.spellEffect);
+    typeController.text = _fmt(data.type);
     commentController.text = data.comment;
   }
 
   SpellLinkedSpellEntity collectFromForm() {
     final data = SpellLinkedSpellEntity(
       spellTrigger: spellId.value,
-      spellEffect: spellEffect.value,
-      type: type.value,
+      spellEffect: _pi(spellEffectController.text),
+      type: _pi(typeController.text),
       comment: commentController.text,
     );
     return data;
@@ -176,5 +181,7 @@ class SpellLinkedSpellViewModel {
 
   void dispose() {
     commentController.dispose();
+    spellEffectController.dispose();
+    typeController.dispose();
   }
 }

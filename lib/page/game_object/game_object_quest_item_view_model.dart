@@ -5,6 +5,7 @@ import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
@@ -16,9 +17,9 @@ class GameObjectQuestItemViewModel {
   final gameObjectEntry = signal<int>(0);
   final items = signal<List<GameObjectQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final idx = signal<int>(0);
+  final idxController = TextEditingController();
   final itemIdController = TextEditingController();
-  final verifiedBuild = signal<int>(0);
+  final verifiedBuildController = TextEditingController();
   final _repository = GetIt.instance.get<GameObjectQuestItemRepository>();
 
   Future<void> load() async {
@@ -28,25 +29,29 @@ class GameObjectQuestItemViewModel {
   }
 
   void resetForm() {
-    idx.value = 0;
+    idxController.text = _fmt(0);
     itemIdController.clear();
-    verifiedBuild.value = 0;
+    verifiedBuildController.text = _fmt(0);
   }
 
   void fillForm(GameObjectQuestItemEntity questItem) {
-    idx.value = questItem.idx;
+    idxController.text = _fmt(questItem.idx);
     itemIdController.text = questItem.itemId.toString();
-    verifiedBuild.value = questItem.verifiedBuild;
+    verifiedBuildController.text = _fmt(questItem.verifiedBuild);
   }
 
   GameObjectQuestItemEntity collectFromForm() {
     return GameObjectQuestItemEntity(
       gameObjectEntry: gameObjectEntry.value,
-      idx: idx.value,
+      idx: _pi(idxController.text),
       itemId: _parseInt(itemIdController.text),
-      verifiedBuild: verifiedBuild.value,
+      verifiedBuild: _pi(verifiedBuildController.text),
     );
   }
+
+  String _fmt(num v) => formatNum(v);
+
+  int _pi(String t) => int.tryParse(t) ?? 0;
 
   int _parseInt(String text) {
     if (text.isEmpty) return 0;
@@ -60,7 +65,7 @@ class GameObjectQuestItemViewModel {
       resetForm();
       final nextIdx = await _repository.getNextIdx(gameObjectEntry.value);
       if (!context.mounted) return;
-      idx.value = nextIdx;
+      idxController.text = _fmt(nextIdx);
       await showShadDialog(
         context: context,
         builder: (context) => _buildDialogForm(context, isNew: true),
@@ -158,7 +163,9 @@ class GameObjectQuestItemViewModel {
   }
 
   void dispose() {
+    idxController.dispose();
     itemIdController.dispose();
+    verifiedBuildController.dispose();
   }
 
   Widget _buildDialogForm(BuildContext context, {required bool isNew}) {
@@ -180,8 +187,7 @@ class GameObjectQuestItemViewModel {
             ),
           ),
           FoxyNumberInput<int>(
-            value: idx.value,
-            onChanged: (v) => idx.value = v,
+            controller: idxController,
           ),
           SizedBox(
             height: 100,
@@ -192,8 +198,7 @@ class GameObjectQuestItemViewModel {
             ),
           ),
           FoxyNumberInput<int>(
-            value: verifiedBuild.value,
-            onChanged: (v) => verifiedBuild.value = v,
+            controller: verifiedBuildController,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

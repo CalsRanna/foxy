@@ -187,39 +187,11 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
   }
 
   FormItem _buildDataInput(int index) {
-    final signals = [
-      viewModel.data0,
-      viewModel.data1,
-      viewModel.data2,
-      viewModel.data3,
-      viewModel.data4,
-      viewModel.data5,
-      viewModel.data6,
-      viewModel.data7,
-      viewModel.data8,
-      viewModel.data9,
-      viewModel.data10,
-      viewModel.data11,
-      viewModel.data12,
-      viewModel.data13,
-      viewModel.data14,
-      viewModel.data15,
-      viewModel.data16,
-      viewModel.data17,
-      viewModel.data18,
-      viewModel.data19,
-      viewModel.data20,
-      viewModel.data21,
-      viewModel.data22,
-      viewModel.data23,
-    ];
-    final s = signals[index];
     return FormItem(
       label: 'Data$index',
       placeholder: 'Data$index',
       child: FoxyNumberInput<int>(
-        value: s.value,
-        onChanged: (v) => s.value = v,
+        controller: viewModel.dataControllers[index],
       ),
     );
   }
