@@ -6,7 +6,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_locale_name_selector.dart';
-import 'package:foxy/widget/flag_picker.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -221,7 +221,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     /// Flag
     final npcFlagInput = FormItem(
       label: 'NPC标识',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.npcFlagController,
         flags: kNpcFlagOptions,
         title: 'NPC标识',
@@ -231,7 +231,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     );
     final typeFlagInput = FormItem(
       label: '类型标识',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.typeFlagController,
         flags: kCreatureTypeFlagOptions,
         title: '类型标识',
@@ -241,7 +241,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     );
     final dynamicFlagInput = FormItem(
       label: '动态标识',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.dynamicFlagController,
         flags: kDynamicFlagOptions,
         title: '动态标识',
@@ -251,7 +251,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     );
     final extraFlagInput = FormItem(
       label: '额外标识',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.extraFlagController,
         flags: kFlagsExtraOptions,
         title: '额外标识',
@@ -261,7 +261,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     );
     final unitFlagInput = FormItem(
       label: '单位标识',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.unitFlagController,
         flags: kUnitFlagOptions,
         title: '单位标识',
@@ -271,7 +271,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     );
     final unitFlag2Input = FormItem(
       label: '单位标识2',
-      child: FlagPicker(
+      child: FoxyFlagPicker(
         controller: viewModel.unitFlag2Controller,
         flags: kUnitFlag2Options,
         title: '单位标识2',

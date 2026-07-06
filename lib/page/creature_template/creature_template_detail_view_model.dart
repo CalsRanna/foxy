@@ -6,7 +6,7 @@ import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/widget/flag_picker.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';

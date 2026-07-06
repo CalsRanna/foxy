@@ -4,7 +4,7 @@ import 'package:foxy/util/format_util.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/widget/flag_picker.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
