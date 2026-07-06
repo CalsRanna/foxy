@@ -8,17 +8,28 @@ String formatFlagValue(int value) {
   return '$value (0x$hex)';
 }
 
+/// 将 [formatFlagValue] 产生的显示文本解析回 int。
+/// 
+/// [controller] 存储格式化文本（如 "123 (0x0000007B)"），VM 在 save 时
+/// 用此函数读取原始值，与 [FoxyEntityPicker]/[FoxyNumberInput] 的
+/// controller-only 契约一致。
+int parseFlagValue(String text) {
+  return int.tryParse(text.split(' ').first) ?? 0;
+}
+
 /// 纯展示组件：显示已格式化的标志位值，点击弹出标志位编辑器。
 ///
 /// [controller] 的文本由调用方在初始化时设置（通过 [formatFlagValue]），
-/// 弹窗确认后组件自动写回 [controller]。
-/// [onChanged] 在用户选择新值后回调，用于更新外部状态（如 signal）。
+/// 弹窗确认后组件自动写回 [controller]（格式化文本）。VM 在 save 时
+/// 用 [parseFlagValue] 从 controller 文本读取原始 int 值。
+///
+/// 与 [FoxyEntityPicker]/[FoxyNumberInput] 对齐：纯 controller 模式，
+/// 无 onChanged 双向绑定。
 class FoxyFlagPicker extends StatefulWidget {
   final TextEditingController controller;
   final List<FlagItem> flags;
   final String title;
   final String? placeholder;
-  final ValueChanged<int>? onChanged;
 
   const FoxyFlagPicker({
     super.key,
@@ -26,7 +37,6 @@ class FoxyFlagPicker extends StatefulWidget {
     required this.flags,
     required this.title,
     this.placeholder,
-    this.onChanged,
   });
 
   @override
@@ -68,7 +78,6 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
     );
     if (result != null) {
       widget.controller.text = formatFlagValue(result);
-      widget.onChanged?.call(result);
     }
   }
 }

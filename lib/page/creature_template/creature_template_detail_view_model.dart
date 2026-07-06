@@ -32,17 +32,11 @@ class CreatureTemplateDetailViewModel {
   final vehicleIdController = TextEditingController();
   final gossipMenuIdController = TextEditingController();
 
-  final npcFlag = signal<int>(0);
   final npcFlagController = TextEditingController();
-  final typeFlag = signal<int>(0);
   final typeFlagController = TextEditingController();
-  final dynamicFlag = signal<int>(0);
   final dynamicFlagController = TextEditingController();
-  final extraFlag = signal<int>(0);
   final extraFlagController = TextEditingController();
-  final unitFlag = signal<int>(0);
   final unitFlagController = TextEditingController();
-  final unitFlag2 = signal<int>(0);
   final unitFlag2Controller = TextEditingController();
 
   final creatureImmunitiesIdController = TextEditingController();
@@ -141,12 +135,12 @@ class CreatureTemplateDetailViewModel {
       petSpellDataId: _pi(petSpellDataIdController.text),
       vehicleId: _pi(vehicleIdController.text),
       gossipMenuId: _pi(gossipMenuIdController.text),
-      npcFlag: npcFlag.value,
-      typeFlags: typeFlag.value,
-      dynamicFlags: dynamicFlag.value,
-      flagsExtra: extraFlag.value,
-      unitFlags: unitFlag.value,
-      unitFlags2: unitFlag2.value,
+      npcFlag: parseFlagValue(npcFlagController.text),
+      typeFlags: parseFlagValue(typeFlagController.text),
+      dynamicFlags: parseFlagValue(dynamicFlagController.text),
+      flagsExtra: parseFlagValue(extraFlagController.text),
+      unitFlags: parseFlagValue(unitFlagController.text),
+      unitFlags2: parseFlagValue(unitFlag2Controller.text),
       creatureImmunitiesId: _pi(creatureImmunitiesIdController.text),
       exp: _getSelectValue(expController),
       damageSchool: _getSelectValue(damageSchoolController),
@@ -279,17 +273,11 @@ class CreatureTemplateDetailViewModel {
     vehicleIdController.text = _fmt(template.vehicleId);
     gossipMenuIdController.text = _fmt(template.gossipMenuId);
 
-    npcFlag.value = template.npcFlag;
     npcFlagController.text = formatFlagValue(template.npcFlag);
-    typeFlag.value = template.typeFlags;
     typeFlagController.text = formatFlagValue(template.typeFlags);
-    dynamicFlag.value = template.dynamicFlags;
     dynamicFlagController.text = formatFlagValue(template.dynamicFlags);
-    extraFlag.value = template.flagsExtra;
     extraFlagController.text = formatFlagValue(template.flagsExtra);
-    unitFlag.value = template.unitFlags;
     unitFlagController.text = formatFlagValue(template.unitFlags);
-    unitFlag2.value = template.unitFlags2;
     unitFlag2Controller.text = formatFlagValue(template.unitFlags2);
 
     creatureImmunitiesIdController.text = _fmt(template.creatureImmunitiesId);

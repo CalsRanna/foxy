@@ -205,7 +205,6 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                         flags: kNpcFlagOptions,
                         title: 'Npc标识编辑器',
                         placeholder: 'OptionNpcFlag',
-                        onChanged: (v) => viewModel.optionNpcFlag.value = v,
                       ),
                     ),
                   ),

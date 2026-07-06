@@ -229,7 +229,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
         flags: kNpcFlagOptions,
         title: 'NPC标识',
         placeholder: 'npcflag',
-        onChanged: (v) => viewModel.npcFlag.value = v,
       ),
     );
     final typeFlagInput = FormItem(
@@ -239,7 +238,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
         flags: kCreatureTypeFlagOptions,
         title: '类型标识',
         placeholder: 'type_flags',
-        onChanged: (v) => viewModel.typeFlag.value = v,
       ),
     );
     final dynamicFlagInput = FormItem(
@@ -249,7 +247,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
         flags: kDynamicFlagOptions,
         title: '动态标识',
         placeholder: 'dynamicflags',
-        onChanged: (v) => viewModel.dynamicFlag.value = v,
       ),
     );
     final extraFlagInput = FormItem(
@@ -259,7 +256,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
         flags: kFlagsExtraOptions,
         title: '额外标识',
         placeholder: 'flags_extra',
-        onChanged: (v) => viewModel.extraFlag.value = v,
       ),
     );
     final unitFlagInput = FormItem(
@@ -269,7 +265,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
         flags: kUnitFlagOptions,
         title: '单位标识',
         placeholder: 'unit_flags',
-        onChanged: (v) => viewModel.unitFlag.value = v,
       ),
     );
     final unitFlag2Input = FormItem(
@@ -279,7 +274,6 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
         flags: kUnitFlag2Options,
         title: '单位标识2',
         placeholder: 'unit_flags2',
-        onChanged: (v) => viewModel.unitFlag2.value = v,
       ),
     );
 
