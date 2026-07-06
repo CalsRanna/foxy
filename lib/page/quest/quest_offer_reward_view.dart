@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/quest/quest_offer_reward_locale_selector.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
+import 'package:foxy/widget/locale_picker_delegates.dart';
 import 'package:foxy/page/quest/quest_offer_reward_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/form_section.dart';
@@ -124,9 +125,10 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           Expanded(
             child: FormItem(
               label: '奖励文本',
-              child: QuestOfferRewardLocaleSelector(
-                questId: widget.questId,
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.rewardTextController,
+                delegate: LocalePickerDelegates.questOfferReward,
                 placeholder: 'RewardText',
                 title: '奖励文本',
               ),

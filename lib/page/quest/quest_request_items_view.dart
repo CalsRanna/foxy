@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/quest/quest_request_items_locale_selector.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
+import 'package:foxy/widget/locale_picker_delegates.dart';
 import 'package:foxy/page/quest/quest_request_items_view_model.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/form_section.dart';
@@ -74,9 +75,10 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
           Expanded(
             child: FormItem(
               label: '完成文本',
-              child: QuestRequestItemsLocaleSelector(
-                questId: widget.questId,
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.completionTextController,
+                delegate: LocalePickerDelegates.questRequestItems,
                 placeholder: 'CompletionText',
                 title: '完成文本',
               ),

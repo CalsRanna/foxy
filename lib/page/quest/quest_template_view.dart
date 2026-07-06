@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:foxy/widget/entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
-import 'package:foxy/page/quest/quest_template_locale_selector.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
+import 'package:foxy/widget/locale_picker_delegates.dart';
 import 'package:foxy/page/quest/area_table_or_quest_sort_selector.dart';
 import 'package:foxy/widget/form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -988,9 +989,10 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FormItem(
               label: '日志标题',
-              child: QuestTemplateLocaleSelector(
-                questId: widget.questId,
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.logTitleController,
+                delegate: LocalePickerDelegates.questTemplate,
                 placeholder: 'LogTitle',
                 title: '日志标题',
               ),
@@ -999,9 +1001,10 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FormItem(
               label: '日志描述',
-              child: QuestTemplateLocaleSelector(
-                questId: widget.questId,
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.logDescriptionController,
+                delegate: LocalePickerDelegates.questTemplate,
                 placeholder: 'LogDescription',
                 title: '日志描述',
               ),
@@ -1017,9 +1020,10 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FormItem(
               label: '任务描述',
-              child: QuestTemplateLocaleSelector(
-                questId: widget.questId,
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.questDescriptionController,
+                delegate: LocalePickerDelegates.questTemplate,
                 placeholder: 'QuestDescription',
                 title: '任务描述',
               ),
@@ -1028,9 +1032,10 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FormItem(
               label: '区域描述',
-              child: QuestTemplateLocaleSelector(
-                questId: widget.questId,
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.areaDescriptionController,
+                delegate: LocalePickerDelegates.questTemplate,
                 placeholder: 'AreaDescription',
                 title: '区域描述',
               ),
@@ -1046,9 +1051,10 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FormItem(
               label: '完成日志',
-              child: QuestTemplateLocaleSelector(
-                questId: widget.questId,
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.questCompletionLogController,
+                delegate: LocalePickerDelegates.questTemplate,
                 placeholder: 'QuestCompletionLog',
                 title: '完成日志',
               ),
