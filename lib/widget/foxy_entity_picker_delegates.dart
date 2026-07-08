@@ -916,7 +916,7 @@ class FoxyEntityPickerDelegates {
     ),
   );
 
-  static final spell = FoxyEntityPickerDelegate<SpellEntity>(
+  static final spell = FoxyEntityPickerDelegate<BriefSpellEntity>(
     title: '技能',
     errorLabel: '搜索技能失败',
     filters: const [FoxyEntityPickerFilter('编号'), FoxyEntityPickerFilter('名称')],
@@ -924,41 +924,31 @@ class FoxyEntityPickerDelegates {
       FoxyEntityPickerColumn(
         header: '编号',
         width: 120,
-        text: (SpellEntity t) => t.id.toString(),
+        text: (BriefSpellEntity t) => t.id.toString(),
       ),
       FoxyEntityPickerColumn(
         header: '名称',
         width: 240,
-        text: (SpellEntity t) => t.nameLangZhCN,
+        text: (BriefSpellEntity t) => t.displayName,
       ),
       FoxyEntityPickerColumn(
         header: '子名称',
         width: 120,
-        text: (SpellEntity t) => t.nameSubtextLangZhCN,
+        text: (BriefSpellEntity t) => t.displaySubtext,
       ),
       FoxyEntityPickerColumn(
         header: '描述',
-        text: (SpellEntity t) => t.descriptionLangZhCN,
+        text: (BriefSpellEntity t) => t.displayDescription,
       ),
     ],
-    idOf: (SpellEntity t) => t.id,
+    idOf: (BriefSpellEntity t) => t.id,
     fetch: (page, v) async {
       final repo = GetIt.instance.get<SpellRepository>();
       final filter = SpellFilterEntity(
         id: v[0].isEmpty ? '' : v[0],
         name: v[1].isEmpty ? '' : v[1],
       );
-      final briefs = await repo.getBriefSpells(page: page, filter: filter);
-      return briefs
-          .map(
-            (b) => SpellEntity(
-              id: b.id,
-              nameLangZhCN: b.name,
-              nameSubtextLangZhCN: b.subtext,
-              descriptionLangZhCN: b.description,
-            ),
-          )
-          .toList();
+      return repo.getBriefSpells(page: page, filter: filter);
     },
     count: (v) {
       final repo = GetIt.instance.get<SpellRepository>();

@@ -79,6 +79,38 @@ class ItemSetDetailViewModel {
   final requiredSkillController = TextEditingController();
   final requiredSkillRankController = TextEditingController();
 
+  /// 按索引访问套装物品/法术控制器
+  List<TextEditingController> get itemIdControllers => [
+        itemId0Controller,
+        itemId1Controller,
+        itemId2Controller,
+        itemId3Controller,
+        itemId4Controller,
+        itemId5Controller,
+        itemId6Controller,
+        itemId7Controller,
+        itemId8Controller,
+        itemId9Controller,
+        itemId10Controller,
+        itemId11Controller,
+        itemId12Controller,
+        itemId13Controller,
+        itemId14Controller,
+        itemId15Controller,
+        itemId16Controller,
+      ];
+
+  List<TextEditingController> get setSpellIdControllers => [
+        setSpellId0Controller,
+        setSpellId1Controller,
+        setSpellId2Controller,
+        setSpellId3Controller,
+        setSpellId4Controller,
+        setSpellId5Controller,
+        setSpellId6Controller,
+        setSpellId7Controller,
+      ];
+
   final itemSet = signal(ItemSetEntity());
 
   /// 保存到数据库

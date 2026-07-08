@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/item_set/item_set_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
@@ -132,280 +134,59 @@ class _ItemSetViewState extends State<ItemSetView> {
   }
 
   Widget _buildItemIds() {
-    return FoxyFormSection(
+    return _buildPickerSection(
       title: '套装物品',
-      children: [
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品0',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID0',
-                  controller: viewModel.itemId0Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品1',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID1',
-                  controller: viewModel.itemId1Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品2',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID2',
-                  controller: viewModel.itemId2Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品3',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID3',
-                  controller: viewModel.itemId3Controller,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品4',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID4',
-                  controller: viewModel.itemId4Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品5',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID5',
-                  controller: viewModel.itemId5Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品6',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID6',
-                  controller: viewModel.itemId6Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品7',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID7',
-                  controller: viewModel.itemId7Controller,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品8',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID8',
-                  controller: viewModel.itemId8Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品9',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID9',
-                  controller: viewModel.itemId9Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品10',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID10',
-                  controller: viewModel.itemId10Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品11',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID11',
-                  controller: viewModel.itemId11Controller,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品12',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID12',
-                  controller: viewModel.itemId12Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品13',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID13',
-                  controller: viewModel.itemId13Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品14',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID14',
-                  controller: viewModel.itemId14Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品15',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID15',
-                  controller: viewModel.itemId15Controller,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '物品16',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'ItemID16',
-                  controller: viewModel.itemId16Controller,
-                ),
-              ),
-            ),
-            Expanded(child: SizedBox()),
-            Expanded(child: SizedBox()),
-            Expanded(child: SizedBox()),
-          ],
-        ),
-      ],
+      count: 17,
+      delegate: FoxyEntityPickerDelegates.itemTemplate,
+      controllers: viewModel.itemIdControllers,
+      labelPrefix: '物品',
+      placeholderPrefix: 'ItemID',
     );
   }
 
   Widget _buildSetSpellIds() {
-    return FoxyFormSection(
+    return _buildPickerSection(
       title: '套装法术',
+      count: 8,
+      delegate: FoxyEntityPickerDelegates.spell,
+      controllers: viewModel.setSpellIdControllers,
+      labelPrefix: '法术',
+      placeholderPrefix: 'SetSpellID',
+    );
+  }
+
+  /// 按每行 4 个构建编号选择器网格，不足 4 个的位置用空白占位。
+  Widget _buildPickerSection<T>({
+    required String title,
+    required int count,
+    required FoxyEntityPickerDelegate<T> delegate,
+    required List<TextEditingController> controllers,
+    required String labelPrefix,
+    required String placeholderPrefix,
+  }) {
+    final rowCount = (count + 3) ~/ 4;
+    return FoxyFormSection(
+      title: title,
       children: [
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '法术0',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetSpellID0',
-                  controller: viewModel.setSpellId0Controller,
+        for (int r = 0; r < rowCount; r++)
+          Row(
+            spacing: 8,
+            children: [
+              for (int c = 0; c < 4; c++)
+                Expanded(
+                  child: (r * 4 + c < count)
+                      ? FoxyFormItem(
+                          label: '$labelPrefix${r * 4 + c}',
+                          child: FoxyEntityPicker<T>(
+                            delegate: delegate,
+                            controller: controllers[r * 4 + c],
+                            placeholder: '$placeholderPrefix${r * 4 + c}',
+                          ),
+                        )
+                      : const SizedBox(),
                 ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '法术1',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetSpellID1',
-                  controller: viewModel.setSpellId1Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '法术2',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetSpellID2',
-                  controller: viewModel.setSpellId2Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '法术3',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetSpellID3',
-                  controller: viewModel.setSpellId3Controller,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '法术4',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetSpellID4',
-                  controller: viewModel.setSpellId4Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '法术5',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetSpellID5',
-                  controller: viewModel.setSpellId5Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '法术6',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetSpellID6',
-                  controller: viewModel.setSpellId6Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '法术7',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetSpellID7',
-                  controller: viewModel.setSpellId7Controller,
-                ),
-              ),
-            ),
-          ],
-        ),
+            ],
+          ),
       ],
     );
   }
