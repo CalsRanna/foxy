@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/condition_source_type.dart';
+import 'package:foxy/constant/condition_type.dart';
+import 'package:foxy/constant/condition_value_config.dart';
 import 'package:foxy/page/condition/condition_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 class ConditionView extends StatefulWidget {
   final Map<String, dynamic>? credential;
@@ -34,34 +41,35 @@ class _ConditionViewState extends State<ConditionView> {
     // 来源信息
     final sourceTypeInput = FoxyFormItem(
       label: '源类型/关联',
-      child: FoxyNumberInput<int>(
-        placeholder: 'SourceTypeOrReferenceId',
+      child: FoxyShadSelect<int>(
         controller: viewModel.sourceTypeOrReferenceIdController,
+        options: kConditionSourceTypeLabels,
+        placeholder: const Text('SourceTypeOrReferenceId'),
       ),
     );
     final sourceGroupInput = FoxyFormItem(
-      label: 'SourceGroup',
+      label: '来源组',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceGroup',
         controller: viewModel.sourceGroupController,
       ),
     );
     final sourceEntryInput = FoxyFormItem(
-      label: 'SourceEntry',
+      label: '来源条目',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceEntry',
         controller: viewModel.sourceEntryController,
       ),
     );
     final sourceIdInput = FoxyFormItem(
-      label: 'SourceId',
+      label: '来源ID',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceId',
         controller: viewModel.sourceIdController,
       ),
     );
     final elseGroupInput = FoxyFormItem(
-      label: 'ElseGroup',
+      label: '否则组',
       child: FoxyNumberInput<int>(
         placeholder: 'ElseGroup',
         controller: viewModel.elseGroupController,
@@ -71,37 +79,18 @@ class _ConditionViewState extends State<ConditionView> {
     // 条件信息
     final conditionTypeInput = FoxyFormItem(
       label: '条件类型/关联',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ConditionTypeOrReference',
+      child: FoxyShadSelect<int>(
         controller: viewModel.conditionTypeOrReferenceController,
+        options: kConditionTypeLabels,
+        placeholder: const Text('ConditionTypeOrReference'),
+        maxHeight: 320,
       ),
     );
     final conditionTargetInput = FoxyFormItem(
-      label: 'ConditionTarget',
+      label: '条件目标',
       child: FoxyNumberInput<int>(
         placeholder: 'ConditionTarget',
         controller: viewModel.conditionTargetController,
-      ),
-    );
-    final conditionValue1Input = FoxyFormItem(
-      label: 'ConditionValue1',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ConditionValue1',
-        controller: viewModel.conditionValue1Controller,
-      ),
-    );
-    final conditionValue2Input = FoxyFormItem(
-      label: 'ConditionValue2',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ConditionValue2',
-        controller: viewModel.conditionValue2Controller,
-      ),
-    );
-    final conditionValue3Input = FoxyFormItem(
-      label: 'ConditionValue3',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ConditionValue3',
-        controller: viewModel.conditionValue3Controller,
       ),
     );
     final negativeConditionInput = FoxyFormItem(
@@ -111,6 +100,36 @@ class _ConditionViewState extends State<ConditionView> {
         controller: viewModel.negativeConditionController,
       ),
     );
+
+    // 参数1/2/3：随条件类型联动（label 与参数1控件类型）
+    final valueInputs = Watch((_) {
+      final type = viewModel.selectedConditionType.value;
+      final cfg = conditionValueConfig(type);
+      final value1Input = _buildValue1Input(cfg, viewModel);
+      final value2Input = FoxyFormItem(
+        label: cfg.displayLabel2,
+        child: FoxyNumberInput<int>(
+          placeholder: 'ConditionValue2',
+          controller: viewModel.conditionValue2Controller,
+        ),
+      );
+      final value3Input = FoxyFormItem(
+        label: cfg.displayLabel3,
+        child: FoxyNumberInput<int>(
+          placeholder: 'ConditionValue3',
+          controller: viewModel.conditionValue3Controller,
+        ),
+      );
+      return Row(
+        spacing: 8,
+        children: [
+          Expanded(child: value1Input),
+          Expanded(child: value2Input),
+          Expanded(child: value3Input),
+          Expanded(child: SizedBox()),
+        ],
+      );
+    });
 
     // 错误与脚本
     final errorTypeInput = FoxyFormItem(
@@ -177,15 +196,7 @@ class _ConditionViewState extends State<ConditionView> {
                   Expanded(child: SizedBox()),
                 ],
               ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(child: conditionValue1Input),
-                  Expanded(child: conditionValue2Input),
-                  Expanded(child: conditionValue3Input),
-                  Expanded(child: SizedBox()),
-                ],
-              ),
+              valueInputs,
             ],
           ),
           FoxyFormSection(
@@ -218,5 +229,94 @@ class _ConditionViewState extends State<ConditionView> {
         ],
       ),
     );
+  }
+
+  /// 参数1控件：随条件类型在 entity picker / 数字输入间切换
+  Widget _buildValue1Input(
+    ConditionValueConfig cfg,
+    ConditionDetailViewModel viewModel,
+  ) {
+    switch (cfg.value1Picker) {
+      case ConditionValue1Picker.quest:
+        return FoxyFormItem(
+          label: cfg.label1,
+          child: FoxyEntityPicker(
+            delegate: FoxyEntityPickerDelegates.questTemplate,
+            controller: viewModel.conditionValue1Controller,
+            placeholder: 'ConditionValue1',
+          ),
+        );
+      case ConditionValue1Picker.spell:
+        return FoxyFormItem(
+          label: cfg.label1,
+          child: FoxyEntityPicker(
+            delegate: FoxyEntityPickerDelegates.spell,
+            controller: viewModel.conditionValue1Controller,
+            placeholder: 'ConditionValue1',
+          ),
+        );
+      case ConditionValue1Picker.item:
+        return FoxyFormItem(
+          label: cfg.label1,
+          child: FoxyEntityPicker(
+            delegate: FoxyEntityPickerDelegates.itemTemplate,
+            controller: viewModel.conditionValue1Controller,
+            placeholder: 'ConditionValue1',
+          ),
+        );
+      case ConditionValue1Picker.map:
+        return FoxyFormItem(
+          label: cfg.label1,
+          child: FoxyEntityPicker(
+            delegate: FoxyEntityPickerDelegates.map,
+            controller: viewModel.conditionValue1Controller,
+            placeholder: 'ConditionValue1',
+          ),
+        );
+      case ConditionValue1Picker.area:
+        return FoxyFormItem(
+          label: cfg.label1,
+          child: FoxyEntityPicker(
+            delegate: FoxyEntityPickerDelegates.areaTable,
+            controller: viewModel.conditionValue1Controller,
+            placeholder: 'ConditionValue1',
+          ),
+        );
+      case ConditionValue1Picker.faction:
+        return FoxyFormItem(
+          label: cfg.label1,
+          child: FoxyEntityPicker(
+            delegate: FoxyEntityPickerDelegates.dbcFaction,
+            controller: viewModel.conditionValue1Controller,
+            placeholder: 'ConditionValue1',
+          ),
+        );
+      case ConditionValue1Picker.title:
+        return FoxyFormItem(
+          label: cfg.label1,
+          child: FoxyEntityPicker(
+            delegate: FoxyEntityPickerDelegates.charTitle,
+            controller: viewModel.conditionValue1Controller,
+            placeholder: 'ConditionValue1',
+          ),
+        );
+      case ConditionValue1Picker.creature:
+        return FoxyFormItem(
+          label: cfg.label1,
+          child: FoxyEntityPicker(
+            delegate: FoxyEntityPickerDelegates.creatureTemplate,
+            controller: viewModel.conditionValue1Controller,
+            placeholder: 'ConditionValue1',
+          ),
+        );
+      case ConditionValue1Picker.none:
+        return FoxyFormItem(
+          label: cfg.label1,
+          child: FoxyNumberInput<int>(
+            placeholder: 'ConditionValue1',
+            controller: viewModel.conditionValue1Controller,
+          ),
+        );
+    }
   }
 }
