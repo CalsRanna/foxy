@@ -15,12 +15,12 @@ class ConditionDetailViewModel {
   final _repository = GetIt.instance.get<ConditionRepository>();
 
   // 主键字段
-  final sourceTypeOrReferenceIdController = TextEditingController();
+  final sourceTypeOrReferenceIdController = ShadSelectController<int>();
   final sourceGroupController = TextEditingController();
   final sourceEntryController = TextEditingController();
   final sourceIdController = TextEditingController();
   final elseGroupController = TextEditingController();
-  final conditionTypeOrReferenceController = TextEditingController();
+  final conditionTypeOrReferenceController = ShadSelectController<int>();
   final conditionTargetController = TextEditingController();
   final conditionValue1Controller = TextEditingController();
   final conditionValue2Controller = TextEditingController();
@@ -34,13 +34,23 @@ class ConditionDetailViewModel {
   final commentController = TextEditingController();
 
   final condition = signal<ConditionEntity?>(null);
+  /// 当前选中的条件类型，驱动参数1/2/3 的 label 与控件联动重建
+  final selectedConditionType = signal(0);
   Map<String, dynamic>? _originalCredential;
 
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t) => int.tryParse(t) ?? 0;
 
+  int _getSelectValue(ShadSelectController<int> controller) =>
+      controller.value.firstOrNull ?? 0;
+
+  void _setSelectValue(ShadSelectController<int> controller, int value) =>
+      controller.value = {value};
+
   Future<void> initSignals({Map<String, dynamic>? credential}) async {
+    // 监听条件类型变化，驱动 View 重建参数区域
+    conditionTypeOrReferenceController.addListener(_onConditionTypeChange);
     if (credential == null) return;
     _originalCredential = credential;
     try {
@@ -52,13 +62,20 @@ class ConditionDetailViewModel {
     }
   }
 
+  void _onConditionTypeChange() {
+    selectedConditionType.value = _getSelectValue(
+      conditionTypeOrReferenceController,
+    );
+  }
+
   void _initControllers(ConditionEntity c) {
-    sourceTypeOrReferenceIdController.text = _fmt(c.sourceTypeOrReferenceId);
+    _setSelectValue(sourceTypeOrReferenceIdController, c.sourceTypeOrReferenceId);
     sourceGroupController.text = _fmt(c.sourceGroup);
     sourceEntryController.text = _fmt(c.sourceEntry);
     sourceIdController.text = _fmt(c.sourceId);
     elseGroupController.text = _fmt(c.elseGroup);
-    conditionTypeOrReferenceController.text = _fmt(c.conditionTypeOrReference);
+    _setSelectValue(conditionTypeOrReferenceController, c.conditionTypeOrReference);
+    selectedConditionType.value = c.conditionTypeOrReference;
     conditionTargetController.text = _fmt(c.conditionTarget);
     conditionValue1Controller.text = _fmt(c.conditionValue1);
     conditionValue2Controller.text = _fmt(c.conditionValue2);
@@ -99,12 +116,12 @@ class ConditionDetailViewModel {
 
   ConditionEntity _collectFromControllers() {
     final c = ConditionEntity(
-      sourceTypeOrReferenceId: _pi(sourceTypeOrReferenceIdController.text),
+      sourceTypeOrReferenceId: _getSelectValue(sourceTypeOrReferenceIdController),
       sourceGroup: _pi(sourceGroupController.text),
       sourceEntry: _pi(sourceEntryController.text),
       sourceId: _pi(sourceIdController.text),
       elseGroup: _pi(elseGroupController.text),
-      conditionTypeOrReference: _pi(conditionTypeOrReferenceController.text),
+      conditionTypeOrReference: _getSelectValue(conditionTypeOrReferenceController),
       conditionTarget: _pi(conditionTargetController.text),
       conditionValue1: _pi(conditionValue1Controller.text),
       conditionValue2: _pi(conditionValue2Controller.text),
@@ -130,6 +147,7 @@ class ConditionDetailViewModel {
   }
 
   void dispose() {
+    conditionTypeOrReferenceController.removeListener(_onConditionTypeChange);
     commentController.dispose();
     conditionTargetController.dispose();
     conditionTypeOrReferenceController.dispose();
