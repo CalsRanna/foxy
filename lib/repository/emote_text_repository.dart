@@ -6,15 +6,24 @@ import 'package:laconic/laconic.dart';
 class EmoteTextRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_emotes_text';
 
-  Future<List<EmoteTextEntity>> getEmoteTexts({
+  Future<List<BriefEmoteTextEntity>> getBriefEmoteTexts({
     int page = 1,
     EmoteTextFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
+    const fields = ['ID', 'Name', 'EmoteID'];
+    builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
+    return results
+        .map((e) => BriefEmoteTextEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<EmoteTextEntity>> getEmoteTexts() async {
+    var results = await laconic.table(_table).get();
     return results.map((e) => EmoteTextEntity.fromJson(e.toMap())).toList();
   }
 
@@ -25,22 +34,27 @@ class EmoteTextRepository with RepositoryMixin {
   }
 
   Future<EmoteTextEntity?> getEmoteText(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return EmoteTextEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return EmoteTextEntity.fromJson(results.first.toMap());
   }
 
-  Future<int> storeEmoteText(EmoteTextEntity data) async {
-    var json = data.toJson();
+  Future<EmoteTextEntity> createEmoteText() async {
+    return const EmoteTextEntity();
+  }
+
+  Future<int> storeEmoteText(EmoteTextEntity emoteText) async {
+    var json = emoteText.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
   }
 
-  Future<void> updateEmoteText(EmoteTextEntity data) async {
-    var json = data.toJson();
+  Future<void> updateEmoteText(EmoteTextEntity emoteText) async {
+    var json = emoteText.toJson();
     json.remove('ID');
-    await laconic.table(_table).where('ID', data.id).update(json);
+    await laconic.table(_table).where('ID', emoteText.id).update(json);
   }
 
   Future<void> destroyEmoteText(int id) async {
@@ -56,6 +70,19 @@ class EmoteTextRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
+  Future<void> saveEmoteText(EmoteTextEntity emoteText) async {
+    if (emoteText.id == 0) {
+      await storeEmoteText(emoteText);
+      return;
+    }
+    var existing = await getEmoteText(emoteText.id);
+    if (existing != null) {
+      await updateEmoteText(emoteText);
+    } else {
+      await laconic.table(_table).insert([emoteText.toJson()]);
+    }
+  }
+
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',
@@ -64,7 +91,10 @@ class EmoteTextRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, EmoteTextFilterEntity? filter) {
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    EmoteTextFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

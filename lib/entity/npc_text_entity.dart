@@ -43,6 +43,49 @@ class NpcTextEntity {
   }
 }
 
+/// NPC 文本列表/Picker 展示模型
+class BriefNpcTextEntity {
+  final int id;
+  final String text0;
+  final String text1;
+
+  String get displayText => text0.isNotEmpty ? text0 : text1;
+
+  const BriefNpcTextEntity({
+    this.id = 0,
+    this.text0 = '',
+    this.text1 = '',
+  });
+
+  factory BriefNpcTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefNpcTextEntity(
+      id: json['ID'] ?? json['id'] ?? 0,
+      text0: json['text0_0']?.toString() ?? '',
+      text1: json['text0_1']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'text0_0': text0,
+      'text0_1': text1,
+    };
+  }
+
+  BriefNpcTextEntity copyWith({
+    int? id,
+    String? text0,
+    String? text1,
+  }) {
+    return BriefNpcTextEntity(
+      id: id ?? this.id,
+      text0: text0 ?? this.text0,
+      text1: text1 ?? this.text1,
+    );
+  }
+}
+
 /// npc_text 的单组数据
 class NpcTextEntryEntity {
   final String lang;

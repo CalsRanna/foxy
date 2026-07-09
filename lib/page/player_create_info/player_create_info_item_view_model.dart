@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/util/format_util.dart';
-import 'package:foxy/repository/player_create_info_repository.dart';
+import 'package:foxy/repository/player_create_info_item_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -9,7 +9,7 @@ import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
 class PlayerCreateInfoItemViewModel {
-  final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
+  final _repository = GetIt.instance.get<PlayerCreateInfoItemRepository>();
 
   final items = signal<List<PlayerCreateInfoItemEntity>>([]);
   int? _race;
@@ -28,7 +28,10 @@ class PlayerCreateInfoItemViewModel {
       _race = race;
       _class_ = class_;
       if (race == null || class_ == null) return;
-      items.value = await _repository.getItems(race, class_);
+      items.value = await _repository.getBriefPlayerCreateInfoItems(
+        race,
+        class_,
+      );
     } catch (e) {
       LoggerUtil.instance.e('加载角色物品失败: $e');
       DialogUtil.instance.error('加载角色物品失败: $e');
@@ -51,8 +54,11 @@ class PlayerCreateInfoItemViewModel {
         amount: _pi(amountController.text),
         note: noteController.text,
       );
-      await _repository.storeItem(item);
-      items.value = await _repository.getItems(_race!, _class_!);
+      await _repository.storePlayerCreateInfoItem(item);
+      items.value = await _repository.getBriefPlayerCreateInfoItems(
+        _race!,
+        _class_!,
+      );
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
     } catch (e) {
@@ -67,8 +73,15 @@ class PlayerCreateInfoItemViewModel {
   ) async {
     if (_race == null || _class_ == null) return;
     try {
-      await _repository.deleteItem(_race!, _class_!, item.itemid);
-      items.value = await _repository.getItems(_race!, _class_!);
+      await _repository.destroyPlayerCreateInfoItem(
+        _race!,
+        _class_!,
+        item.itemid,
+      );
+      items.value = await _repository.getBriefPlayerCreateInfoItems(
+        _race!,
+        _class_!,
+      );
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
     } catch (e) {

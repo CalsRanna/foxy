@@ -176,8 +176,10 @@ class ItemTemplateDetailViewModel {
   Future<void> initSignals({int? entry}) async {
     if (entry == null || entry <= 0) return;
     try {
-      template.value = await _repository.getItemTemplate(entry);
-      _initControllers(template.value);
+      final result = await _repository.getItemTemplate(entry);
+      if (result == null) return;
+      template.value = result;
+      _initControllers(result);
     } catch (e, s) {
       LoggerUtil.instance.e('加载物品模板(entry=$entry)失败', error: e, stackTrace: s);
     }

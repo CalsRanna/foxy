@@ -1,12 +1,9 @@
 import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
-/// item_template_locale 表的数据访问层
-/// 复合主键: (ID, Locale)
 class ItemTemplateLocaleRepository with RepositoryMixin {
   static const _table = 'item_template_locale';
 
-  /// 按 ID 查询该 ItemTemplate 的所有 locale
   Future<List<ItemTemplateLocaleEntity>> getItemTemplateLocales(int id) async {
     final results = await laconic.table(_table).where('ID', id).get();
     return results
@@ -14,16 +11,60 @@ class ItemTemplateLocaleRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 删除-然后-重新插入模式（replaceAll）
-  Future<void> replaceAll(
+  Future<ItemTemplateLocaleEntity?> getItemTemplateLocale(
+    int id,
+    String locale,
+  ) async {
+    var results = await laconic
+        .table(_table)
+        .where('ID', id)
+        .where('locale', locale)
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return ItemTemplateLocaleEntity.fromJson(results.first.toMap());
+  }
+
+  Future<void> storeItemTemplateLocale(ItemTemplateLocaleEntity model) async {
+    await laconic.table(_table).insert([model.toJson()]);
+  }
+
+  Future<void> updateItemTemplateLocale(
+    int id,
+    String locale,
+    ItemTemplateLocaleEntity model,
+  ) async {
+    final json = model.toJson();
+    json.remove('ID');
+    json.remove('locale');
+    await laconic
+        .table(_table)
+        .where('ID', id)
+        .where('locale', locale)
+        .update(json);
+  }
+
+  Future<void> destroyItemTemplateLocale(int id, String locale) async {
+    await laconic
+        .table(_table)
+        .where('ID', id)
+        .where('locale', locale)
+        .delete();
+  }
+
+  Future<void> saveItemTemplateLocales(
     int id,
     List<ItemTemplateLocaleEntity> locales,
   ) async {
-    await laconic.table(_table).where('ID', id).delete();
-    if (locales.isNotEmpty) {
-      await laconic
-          .table(_table)
-          .insert(locales.map((l) => l.toJson()).toList());
-    }
+    await laconic.transaction(() async {
+      await laconic.table(_table).where('ID', id).delete();
+      if (locales.isEmpty) return;
+      final jsons = locales.map((e) {
+        final json = e.toJson();
+        json['ID'] = id;
+        return json;
+      }).toList();
+      await laconic.table(_table).insert(jsons);
+    });
   }
 }

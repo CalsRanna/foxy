@@ -188,8 +188,10 @@ class QuestTemplateDetailViewModel {
   Future<void> initSignals({int? questId}) async {
     if (questId == null) return;
     try {
-      template.value = await _repository.getQuestTemplate(questId);
-      _initSignals(template.value);
+      final result = await _repository.getQuestTemplate(questId);
+      if (result == null) return;
+      template.value = result;
+      _initSignals(result);
     } catch (e) {
       LoggerUtil.instance.e('加载任务详情失败: $e');
       DialogUtil.instance.error('加载任务详情失败: $e');

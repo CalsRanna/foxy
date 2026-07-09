@@ -5,12 +5,21 @@ import 'package:laconic/laconic.dart';
 class LockRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_lock';
 
-  Future<List<LockEntity>> getLocks({String? id, required int page}) async {
+  Future<List<BriefLockEntity>> getBriefLocks({
+    int page = 1,
+    String? id,
+  }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
+    builder = builder.select(['ID', 'Type0', 'Index0', 'Skill0']);
     builder = _applyFilter(builder, id: id);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
+    return results.map((e) => BriefLockEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<List<LockEntity>> getLocks() async {
+    var results = await laconic.table(_table).get();
     return results.map((e) => LockEntity.fromJson(e.toMap())).toList();
   }
 
@@ -18,6 +27,64 @@ class LockRepository with RepositoryMixin {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, id: id);
     return builder.count();
+  }
+
+  Future<LockEntity?> getLock(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return LockEntity.fromJson(results.first.toMap());
+  }
+
+  Future<LockEntity> createLock() async {
+    return const LockEntity();
+  }
+
+  Future<int> storeLock(LockEntity lock) async {
+    var json = lock.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateLock(LockEntity lock) async {
+    var json = lock.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', lock.id).update(json);
+  }
+
+  Future<void> destroyLock(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<void> copyLock(int id) async {
+    var source = await getLock(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveLock(LockEntity lock) async {
+    if (lock.id == 0) {
+      await storeLock(lock);
+      return;
+    }
+    var existing = await getLock(lock.id);
+    if (existing != null) {
+      await updateLock(lock);
+    } else {
+      await laconic.table(_table).insert([lock.toJson()]);
+    }
+  }
+
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, {String? id}) {

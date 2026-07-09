@@ -5,16 +5,24 @@ import 'package:laconic/laconic.dart';
 class ItemRandomSuffixRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_random_suffix';
 
-  Future<List<ItemRandomSuffixEntity>> getItemRandomSuffixes({
+  Future<List<BriefItemRandomSuffixEntity>> getBriefItemRandomSuffixes({
+    int page = 1,
     String? id,
     String? name,
-    required int page,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
+    builder = builder.select(['ID', 'Name_lang_zhCN', 'InternalName']);
     builder = _applyFilter(builder, id: id, name: name);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
+    return results
+        .map((e) => BriefItemRandomSuffixEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<ItemRandomSuffixEntity>> getItemRandomSuffixes() async {
+    var results = await laconic.table(_table).get();
     return results
         .map((e) => ItemRandomSuffixEntity.fromJson(e.toMap()))
         .toList();
@@ -26,12 +34,78 @@ class ItemRandomSuffixRepository with RepositoryMixin {
     return builder.count();
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, {String? id, String? name}) {
+  Future<ItemRandomSuffixEntity?> getItemRandomSuffix(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return ItemRandomSuffixEntity.fromJson(results.first.toMap());
+  }
+
+  Future<ItemRandomSuffixEntity> createItemRandomSuffix() async {
+    return const ItemRandomSuffixEntity();
+  }
+
+  Future<int> storeItemRandomSuffix(ItemRandomSuffixEntity suffix) async {
+    var json = suffix.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateItemRandomSuffix(ItemRandomSuffixEntity suffix) async {
+    var json = suffix.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', suffix.id).update(json);
+  }
+
+  Future<void> destroyItemRandomSuffix(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<void> copyItemRandomSuffix(int id) async {
+    var source = await getItemRandomSuffix(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveItemRandomSuffix(ItemRandomSuffixEntity suffix) async {
+    if (suffix.id == 0) {
+      await storeItemRandomSuffix(suffix);
+      return;
+    }
+    var existing = await getItemRandomSuffix(suffix.id);
+    if (existing != null) {
+      await updateItemRandomSuffix(suffix);
+    } else {
+      await laconic.table(_table).insert([suffix.toJson()]);
+    }
+  }
+
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder, {
+    String? id,
+    String? name,
+  }) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }
     if (name != null && name.isNotEmpty) {
-      builder = builder.where('Name_lang_zhCN', '%$name%', comparator: 'like');
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%$name%',
+        comparator: 'like',
+      );
     }
     return builder;
   }

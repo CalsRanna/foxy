@@ -30,7 +30,7 @@ class CreatureTemplateResistanceViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getCreatureTemplateResistances(
+    final data = await _repository.getBriefCreatureTemplateResistances(
       creatureId.value,
     );
     items.value = data;

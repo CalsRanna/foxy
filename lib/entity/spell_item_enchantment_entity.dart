@@ -151,3 +151,62 @@ class SpellItemEnchantmentEntity {
     );
   }
 }
+
+/// 法术附魔列表展示模型
+class BriefSpellItemEnchantmentEntity {
+  final int id;
+  final String nameLangZhCn;
+  final int charges;
+  final int effect0;
+  final int effect1;
+  final int effect2;
+
+  const BriefSpellItemEnchantmentEntity({
+    this.id = 0,
+    this.nameLangZhCn = '',
+    this.charges = 0,
+    this.effect0 = 0,
+    this.effect1 = 0,
+    this.effect2 = 0,
+  });
+
+  factory BriefSpellItemEnchantmentEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellItemEnchantmentEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCn: json['Name_lang_zhCN'] ?? '',
+      charges: json['Charges'] ?? 0,
+      effect0: json['Effect0'] ?? 0,
+      effect1: json['Effect1'] ?? 0,
+      effect2: json['Effect2'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Name_lang_zhCN': nameLangZhCn,
+      'Charges': charges,
+      'Effect0': effect0,
+      'Effect1': effect1,
+      'Effect2': effect2,
+    };
+  }
+
+  BriefSpellItemEnchantmentEntity copyWith({
+    int? id,
+    String? nameLangZhCn,
+    int? charges,
+    int? effect0,
+    int? effect1,
+    int? effect2,
+  }) {
+    return BriefSpellItemEnchantmentEntity(
+      id: id ?? this.id,
+      nameLangZhCn: nameLangZhCn ?? this.nameLangZhCn,
+      charges: charges ?? this.charges,
+      effect0: effect0 ?? this.effect0,
+      effect1: effect1 ?? this.effect1,
+      effect2: effect2 ?? this.effect2,
+    );
+  }
+}

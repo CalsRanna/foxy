@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellGroupRepository with RepositoryMixin {
   static const _table = 'spell_group';
 
-  Future<List<SpellGroupEntity>> getSpellGroups(int spellId) async {
+  Future<List<SpellGroupEntity>> getBriefSpellGroups(int spellId) async {
     var builder = laconic.table('$_table AS sg');
     const fields = [
       'sg.*',
@@ -22,12 +22,19 @@ class SpellGroupRepository with RepositoryMixin {
   }
 
   Future<SpellGroupEntity?> getSpellGroup(int id, int spellId) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('id', id)
         .where('spell_id', spellId)
-        .first();
-    return SpellGroupEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return SpellGroupEntity.fromJson(results.first.toMap());
+  }
+
+  Future<SpellGroupEntity> createSpellGroup(int spellId) async {
+    var nextId = await getNextId();
+    return SpellGroupEntity(id: nextId, spellId: spellId);
   }
 
   Future<void> storeSpellGroup(SpellGroupEntity data) async {
@@ -35,15 +42,17 @@ class SpellGroupRepository with RepositoryMixin {
   }
 
   Future<void> updateSpellGroup(
-    SpellGroupEntity oldData,
-    SpellGroupEntity newData,
+    int id,
+    int spellId,
+    SpellGroupEntity data,
   ) async {
-    var json = newData.toJson();
+    var json = data.toJson();
     json.remove('id');
+    json.remove('spell_id');
     await laconic
         .table(_table)
-        .where('id', oldData.id)
-        .where('spell_id', oldData.spellId)
+        .where('id', id)
+        .where('spell_id', spellId)
         .update(json);
   }
 
@@ -55,15 +64,21 @@ class SpellGroupRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellGroupEntity> copySpellGroup(SpellGroupEntity data) async {
-    var json = data.toJson();
-    var maxIdResult = await laconic.table(_table).select([
-      'MAX(id) AS maxId',
-    ]).first();
-    var maxId = (maxIdResult.toMap()['maxId'] ?? 0) as int;
-    json['id'] = maxId + 1;
+  Future<void> copySpellGroup(int id, int spellId) async {
+    var source = await getSpellGroup(id, spellId);
+    if (source == null) return;
+    var json = source.toJson();
+    json['id'] = await getNextId();
     await laconic.table(_table).insert([json]);
-    return SpellGroupEntity.fromJson(json);
+  }
+
+  Future<void> saveSpellGroup(SpellGroupEntity data) async {
+    var existing = await getSpellGroup(data.id, data.spellId);
+    if (existing != null) {
+      await updateSpellGroup(data.id, data.spellId, data);
+    } else {
+      await storeSpellGroup(data);
+    }
   }
 
   Future<int> getNextId() async {

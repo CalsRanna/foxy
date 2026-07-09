@@ -7,37 +7,6 @@ class ItemTemplateRepository with RepositoryMixin {
   static const _table = 'item_template';
   static const _localeTable = 'item_template_locale';
 
-  Future<int> countItemTemplates({ItemTemplateFilterEntity? filter}) async {
-    var builder = laconic.table('$_table AS it');
-    builder.select(['it.entry']);
-    builder = builder.leftJoin(
-      '$_localeTable AS itl',
-      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-    );
-    builder = _applyFilter(builder, filter);
-    return await builder.count();
-  }
-
-  Future<void> copyItemTemplate(int entry) async {
-    var template = await getItemTemplate(entry);
-    var json = template.toJson();
-    var newEntry = await _getNextEntry();
-    json['entry'] = newEntry;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<int> _getNextEntry() async {
-    var result = await laconic.table(_table).select([
-      'MAX(entry) as max_entry',
-    ]).first();
-    var maxEntry = result.toMap()['max_entry'] as int?;
-    return (maxEntry ?? 0) + 1;
-  }
-
-  Future<void> destroyItemTemplate(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
-  }
-
   Future<List<BriefItemTemplateEntity>> getBriefItemTemplates({
     int page = 1,
     ItemTemplateFilterEntity? filter,
@@ -73,7 +42,23 @@ class ItemTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemTemplateEntity> getItemTemplate(int entry) async {
+  Future<List<ItemTemplateEntity>> getItemTemplates() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => ItemTemplateEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<int> countItemTemplates({ItemTemplateFilterEntity? filter}) async {
+    var builder = laconic.table('$_table AS it');
+    builder.select(['it.entry']);
+    builder = builder.leftJoin(
+      '$_localeTable AS itl',
+      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+    );
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<ItemTemplateEntity?> getItemTemplate(int entry) async {
     var builder = laconic.table('$_table AS it');
     const fields = [
       'it.*',
@@ -90,9 +75,14 @@ class ItemTemplateRepository with RepositoryMixin {
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
-    builder = builder.where('it.entry', entry);
-    var result = await builder.first();
-    return ItemTemplateEntity.fromJson(result.toMap());
+    builder = builder.where('it.entry', entry).limit(1);
+    var results = await builder.get();
+    if (results.isEmpty) return null;
+    return ItemTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<ItemTemplateEntity> createItemTemplate() async {
+    return const ItemTemplateEntity();
   }
 
   Future<int> storeItemTemplate(ItemTemplateEntity template) async {
@@ -109,7 +99,44 @@ class ItemTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('entry', template.entry).update(json);
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, ItemTemplateFilterEntity? filter) {
+  Future<void> destroyItemTemplate(int entry) async {
+    await laconic.table(_table).where('entry', entry).delete();
+  }
+
+  Future<void> copyItemTemplate(int entry) async {
+    var template = await getItemTemplate(entry);
+    if (template == null) return;
+    var json = template.toJson();
+    var newEntry = await _getNextEntry();
+    json['entry'] = newEntry;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveItemTemplate(ItemTemplateEntity template) async {
+    if (template.entry == 0) {
+      await storeItemTemplate(template);
+      return;
+    }
+    var existing = await getItemTemplate(template.entry);
+    if (existing != null) {
+      await updateItemTemplate(template);
+    } else {
+      await laconic.table(_table).insert([template.toJson()]);
+    }
+  }
+
+  Future<int> _getNextEntry() async {
+    var result = await laconic.table(_table).select([
+      'MAX(entry) as max_entry',
+    ]).first();
+    var maxEntry = result.toMap()['max_entry'] as int?;
+    return (maxEntry ?? 0) + 1;
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ItemTemplateFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
       builder = builder.where('it.entry', filter.entry);

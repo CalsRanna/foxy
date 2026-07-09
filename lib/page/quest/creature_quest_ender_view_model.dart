@@ -58,10 +58,7 @@ class CreatureQuestEnderViewModel {
 
     if (confirmed == true) {
       try {
-        await _repository.copyCreatureQuestEnder({
-          'id': item.id,
-          'quest': item.quest,
-        });
+        await _repository.copyCreatureQuestEnder(item.id, item.quest);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('复制成功'));
@@ -115,10 +112,7 @@ class CreatureQuestEnderViewModel {
 
     if (confirmed == true) {
       try {
-        await _repository.destroyCreatureQuestEnder({
-          'id': item.id,
-          'quest': item.quest,
-        });
+        await _repository.destroyCreatureQuestEnder(item.id, item.quest);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -144,10 +138,7 @@ class CreatureQuestEnderViewModel {
       if (index == null || index < 0 || index >= items.value.length) return;
 
       final item = items.value[index];
-      final existing = await _repository.getCreatureQuestEnder({
-        'id': item.id,
-        'quest': item.quest,
-      });
+      final existing = await _repository.getCreatureQuestEnder(item.id, item.quest);
       if (existing == null) return;
       fillForm(existing);
       _originalId = item.id;
@@ -177,7 +168,7 @@ class CreatureQuestEnderViewModel {
 
   /// 加载数据
   Future<void> load() async {
-    final data = await _repository.getCreatureQuestEnders(questId.value);
+    final data = await _repository.getBriefCreatureQuestEnders(questId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -215,10 +206,7 @@ class CreatureQuestEnderViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await _repository.updateCreatureQuestEnder({
-        'id': _originalId,
-        'quest': _originalQuest,
-      }, model);
+      await _repository.updateCreatureQuestEnder(_originalId, _originalQuest, model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

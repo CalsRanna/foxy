@@ -6,18 +6,6 @@ import 'package:laconic/laconic.dart';
 class TalentRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_talent';
 
-  Future<List<TalentEntity>> getTalents({
-    int page = 1,
-    TalentFilterEntity? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results.map((e) => TalentEntity.fromJson(e.toMap())).toList();
-  }
-
   Future<List<BriefTalentEntity>> getBriefTalents({
     int page = 1,
     TalentFilterEntity? filter,
@@ -32,6 +20,11 @@ class TalentRepository with RepositoryMixin {
     return results.map((e) => BriefTalentEntity.fromJson(e.toMap())).toList();
   }
 
+  Future<List<TalentEntity>> getTalents() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => TalentEntity.fromJson(e.toMap())).toList();
+  }
+
   Future<int> countTalents({TalentFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -39,8 +32,13 @@ class TalentRepository with RepositoryMixin {
   }
 
   Future<TalentEntity?> getTalent(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return TalentEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return TalentEntity.fromJson(results.first.toMap());
+  }
+
+  Future<TalentEntity> createTalent() async {
+    return const TalentEntity();
   }
 
   Future<int> storeTalent(TalentEntity talent) async {
@@ -68,6 +66,19 @@ class TalentRepository with RepositoryMixin {
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveTalent(TalentEntity talent) async {
+    if (talent.id == 0) {
+      await storeTalent(talent);
+      return;
+    }
+    var existing = await getTalent(talent.id);
+    if (existing != null) {
+      await updateTalent(talent);
+    } else {
+      await laconic.table(_table).insert([talent.toJson()]);
+    }
   }
 
   Future<int> _getNextId() async {

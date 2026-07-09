@@ -4,10 +4,8 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureTemplateResistanceRepository with RepositoryMixin {
   static const _table = 'creature_template_resistance';
 
-  /// 获取指定生物的所有抗性
-  Future<List<CreatureTemplateResistanceEntity>> getCreatureTemplateResistances(
-    int creatureID,
-  ) async {
+  Future<List<CreatureTemplateResistanceEntity>>
+  getBriefCreatureTemplateResistances(int creatureID) async {
     var builder = laconic.table(_table);
     builder = builder.select(['*']);
     builder = builder.where('CreatureID', creatureID);
@@ -18,27 +16,36 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 查找单条记录
   Future<CreatureTemplateResistanceEntity?> getCreatureTemplateResistance(
     int creatureID,
     int school,
   ) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('CreatureID', creatureID)
         .where('School', school)
-        .first();
-    return CreatureTemplateResistanceEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return CreatureTemplateResistanceEntity.fromJson(results.first.toMap());
   }
 
-  /// 新增抗性
+  Future<CreatureTemplateResistanceEntity> createCreatureTemplateResistance(
+    int creatureID,
+  ) async {
+    var nextSchool = await getNextSchool(creatureID);
+    return CreatureTemplateResistanceEntity(
+      creatureID: creatureID,
+      school: nextSchool,
+    );
+  }
+
   Future<void> storeCreatureTemplateResistance(
     CreatureTemplateResistanceEntity resistance,
   ) async {
     await laconic.table(_table).insert([resistance.toJson()]);
   }
 
-  /// 更新抗性
   Future<void> updateCreatureTemplateResistance(
     CreatureTemplateResistanceEntity resistance,
   ) async {
@@ -52,7 +59,6 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
         .update(json);
   }
 
-  /// 删除抗性
   Future<void> destroyCreatureTemplateResistance(
     int creatureID,
     int school,
@@ -64,38 +70,32 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
         .delete();
   }
 
-  /// 复制抗性
-  Future<CreatureTemplateResistanceEntity> copyCreatureTemplateResistance(
+  Future<void> copyCreatureTemplateResistance(
     int creatureID,
     int school,
   ) async {
-    // 获取最大School
-    var maxSchoolResult = await laconic
-        .table(_table)
-        .select(['MAX(School) AS maxSchool'])
-        .where('CreatureID', creatureID)
-        .first();
-    var maxSchool = (maxSchoolResult.toMap()['maxSchool'] ?? 0) as int;
-
-    // 获取源记录
     var source = await getCreatureTemplateResistance(creatureID, school);
-    if (source == null) {
-      throw Exception('源记录不存在');
-    }
-
-    // 创建新记录
-    var newResistance = CreatureTemplateResistanceEntity(
-      creatureID: source.creatureID,
-      school: maxSchool + 1,
-      resistance: source.resistance,
-      verifiedBuild: source.verifiedBuild,
-    );
-
-    await storeCreatureTemplateResistance(newResistance);
-    return newResistance;
+    if (source == null) return;
+    var nextSchool = await getNextSchool(creatureID);
+    var json = source.toJson();
+    json['School'] = nextSchool;
+    await laconic.table(_table).insert([json]);
   }
 
-  /// 获取下一个可用的School
+  Future<void> saveCreatureTemplateResistance(
+    CreatureTemplateResistanceEntity resistance,
+  ) async {
+    var existing = await getCreatureTemplateResistance(
+      resistance.creatureID,
+      resistance.school,
+    );
+    if (existing != null) {
+      await updateCreatureTemplateResistance(resistance);
+    } else {
+      await storeCreatureTemplateResistance(resistance);
+    }
+  }
+
   Future<int> getNextSchool(int creatureID) async {
     var maxResult = await laconic
         .table(_table)

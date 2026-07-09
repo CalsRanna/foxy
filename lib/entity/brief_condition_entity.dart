@@ -45,7 +45,7 @@ class BriefConditionEntity {
     return kConditionTypeLabels[id] ?? id.toString();
   }
 
-  /// 构建用于查找/更新/删除的主键 credential
+  /// 构建用于路由传参的主键 map（仅 7 列复合主键，非 Repository API）
   Map<String, dynamic> buildCredential() {
     return {
       'SourceTypeOrReferenceId': sourceTypeOrReferenceId,
@@ -55,9 +55,6 @@ class BriefConditionEntity {
       'ElseGroup': elseGroup,
       'ConditionTypeOrReference': conditionTypeOrReference,
       'ConditionTarget': conditionTarget,
-      'ConditionValue1': conditionValue1,
-      'ConditionValue2': conditionValue2,
-      'ConditionValue3': conditionValue3,
     };
   }
 

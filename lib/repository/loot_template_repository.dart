@@ -23,18 +23,18 @@ class LootTemplateRepository with RepositoryMixin {
 
   String get _table => tableType.tableName;
 
-  Future<int> countLootTemplates({String? entry}) async {
-    var builder = laconic.table(_table);
-    builder = builder.select(['DISTINCT Entry']);
-    if (entry != null && entry.isNotEmpty) {
-      builder = builder.where('Entry', entry);
-    }
-    return await builder.count();
-  }
-
-  /// 获取符合过滤条件的行数计数
-  Future<int> countLootTemplateRows({String? entry, String? name}) async {
+  Future<List<BriefLootTemplateEntity>> getBriefLootTemplates(
+    int entry,
+  ) async {
     var builder = laconic.table('$_table AS lt');
+    const fields = [
+      'lt.*',
+      'it.name',
+      'itl.Name AS localeName',
+      'it.Quality',
+      'didi.InventoryIcon0',
+    ];
+    builder = builder.select(fields);
     builder = builder.leftJoin(
       'item_template AS it',
       (join) => join.on('lt.Item', 'it.entry'),
@@ -43,40 +43,19 @@ class LootTemplateRepository with RepositoryMixin {
       'item_template_locale AS itl',
       (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
     );
-    if (entry != null && entry.isNotEmpty) {
-      builder = builder.where('lt.Entry', entry);
-    }
-    if (name != null && name.isNotEmpty) {
-      builder = builder.whereAny(
-        ['it.name', 'itl.Name'],
-        '%$name%',
-        comparator: 'like',
-      );
-    }
-    return await builder.count();
-  }
-
-  /// 获取不同的 Entry 列表（用于选择器）
-  Future<List<BriefLootTemplateEntity>> getLootTemplateDistinctEntries({
-    String? entry,
-    int page = 1,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select(['Entry', 'COUNT(*) as ItemCount']);
-    if (entry != null && entry.isNotEmpty) {
-      builder = builder.where('Entry', entry);
-    }
-    builder = builder.groupBy('Entry');
-    builder = builder.limit(kPageSize).offset(offset);
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info AS didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
+    builder = builder.where('lt.Entry', entry);
     var results = await builder.get();
     return results
         .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
         .toList();
   }
 
-  /// 搜索掉落（带物品名称过滤+分页）
-  Future<List<BriefLootTemplateEntity>> getLootTemplatesByEntry({
+  /// Paginated search for list pages / pickers (row-level with item name).
+  Future<List<BriefLootTemplateEntity>> getBriefLootTemplateRows({
     String? entry,
     String? name,
     int page = 1,
@@ -120,17 +99,36 @@ class LootTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 获取指定 Entry 的所有掉落项（带物品信息）
-  Future<List<BriefLootTemplateEntity>> getLootTemplates(int entry) async {
+  /// Distinct entry groups for pickers.
+  Future<List<BriefLootTemplateEntity>> getBriefLootTemplateEntries({
+    String? entry,
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select(['Entry', 'COUNT(*) as ItemCount']);
+    if (entry != null && entry.isNotEmpty) {
+      builder = builder.where('Entry', entry);
+    }
+    builder = builder.groupBy('Entry');
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countLootTemplates({String? entry}) async {
+    var builder = laconic.table(_table);
+    builder = builder.select(['DISTINCT Entry']);
+    if (entry != null && entry.isNotEmpty) {
+      builder = builder.where('Entry', entry);
+    }
+    return builder.count();
+  }
+
+  Future<int> countLootTemplateRows({String? entry, String? name}) async {
     var builder = laconic.table('$_table AS lt');
-    const fields = [
-      'lt.*',
-      'it.name',
-      'itl.Name AS localeName',
-      'it.Quality',
-      'didi.InventoryIcon0',
-    ];
-    builder = builder.select(fields);
     builder = builder.leftJoin(
       'item_template AS it',
       (join) => join.on('lt.Item', 'it.entry'),
@@ -139,48 +137,54 @@ class LootTemplateRepository with RepositoryMixin {
       'item_template_locale AS itl',
       (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
     );
-    builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
-      (join) => join.on('it.displayid', 'didi.ID'),
-    );
-    builder = builder.where('lt.Entry', entry);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
-        .toList();
+    if (entry != null && entry.isNotEmpty) {
+      builder = builder.where('lt.Entry', entry);
+    }
+    if (name != null && name.isNotEmpty) {
+      builder = builder.whereAny(
+        ['it.name', 'itl.Name'],
+        '%$name%',
+        comparator: 'like',
+      );
+    }
+    return builder.count();
   }
 
-  /// 查找单条记录
   Future<LootTemplateEntity?> getLootTemplate(int entry, int item) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('Entry', entry)
         .where('Item', item)
-        .first();
-    return LootTemplateEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return LootTemplateEntity.fromJson(results.first.toMap());
   }
 
-  /// 新增掉落
+  Future<LootTemplateEntity> createLootTemplate(int entry) async {
+    var nextItem = await getNextItemId(entry);
+    return LootTemplateEntity(entry: entry, item: nextItem);
+  }
+
   Future<void> storeLootTemplate(LootTemplateEntity loot) async {
     await laconic.table(_table).insert([loot.toJson()]);
   }
 
-  /// 更新掉落
   Future<void> updateLootTemplate(
-    LootTemplateEntity loot, {
-    int? oldItem,
-  }) async {
+    int entry,
+    int item,
+    LootTemplateEntity loot,
+  ) async {
     var json = loot.toJson();
     json.remove('Entry');
-    if (oldItem == null) json.remove('Item');
+    // allow Item change in payload
     await laconic
         .table(_table)
-        .where('Entry', loot.entry)
-        .where('Item', oldItem ?? loot.item)
+        .where('Entry', entry)
+        .where('Item', item)
         .update(json);
   }
 
-  /// 删除掉落
   Future<void> destroyLootTemplate(int entry, int item) async {
     await laconic
         .table(_table)
@@ -189,40 +193,27 @@ class LootTemplateRepository with RepositoryMixin {
         .delete();
   }
 
-  /// 复制掉落（获取新的Item ID）
-  Future<LootTemplateEntity> copyLootTemplate(int entry, int item) async {
-    // 获取最大Item
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(Item) AS maxItem'])
-        .where('Entry', entry)
-        .first();
-    var maxItem = (maxResult.toMap()['maxItem'] ?? 0) as int;
-
-    // 获取源记录
+  Future<void> copyLootTemplate(int entry, int item) async {
     var source = await getLootTemplate(entry, item);
-    if (source == null) {
-      throw Exception('源记录不存在');
+    if (source == null) return;
+    var nextItem = await getNextItemId(entry);
+    var json = source.toJson();
+    json['Item'] = nextItem;
+    if (source.reference != 0) {
+      json['Reference'] = nextItem;
     }
-
-    var newLoot = LootTemplateEntity(
-      entry: source.entry,
-      item: maxItem + 1,
-      reference: source.reference != 0 ? maxItem + 1 : source.reference,
-      chance: source.chance,
-      questRequired: source.questRequired,
-      lootMode: source.lootMode,
-      groupId: source.groupId,
-      minCount: source.minCount,
-      maxCount: source.maxCount,
-      comment: source.comment,
-    );
-
-    await storeLootTemplate(newLoot);
-    return newLoot;
+    await laconic.table(_table).insert([json]);
   }
 
-  /// 获取下一个可用的Item ID
+  Future<void> saveLootTemplate(LootTemplateEntity loot) async {
+    var existing = await getLootTemplate(loot.entry, loot.item);
+    if (existing != null) {
+      await updateLootTemplate(loot.entry, loot.item, loot);
+    } else {
+      await storeLootTemplate(loot);
+    }
+  }
+
   Future<int> getNextItemId(int entry) async {
     var maxResult = await laconic
         .table(_table)

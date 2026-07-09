@@ -8,43 +8,6 @@ class CreatureTemplateRepository with RepositoryMixin {
   static const _table = 'creature_template';
   static const _localeTable = 'creature_template_locale';
 
-  Future<void> copyCreatureTemplate(int entry) async {
-    var template = await getCreatureTemplate(entry);
-    var json = template.toJson();
-    var newEntry = await _getNextEntry();
-    json['entry'] = newEntry;
-    // 处理 MySQL 保留字
-    if (json.containsKey('rank')) {
-      json['`rank`'] = json.remove('rank');
-    }
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<int> _getNextEntry() async {
-    var result = await laconic.table(_table).select([
-      'MAX(entry) as max_entry',
-    ]).first();
-    var maxEntry = result.toMap()['max_entry'] as int?;
-    return (maxEntry ?? 0) + 1;
-  }
-
-  Future<int> countCreatureTemplates({
-    CreatureTemplateFilterEntity? filter,
-  }) async {
-    var builder = laconic.table('$_table AS ct');
-    builder.select(['ct.entry']);
-    builder = builder.leftJoin(
-      'creature_template_locale AS ctl',
-      (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
-    );
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
-  Future<void> destroyCreatureTemplate(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
-  }
-
   Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
     int page = 1,
     CreatureTemplateFilterEntity? filter,
@@ -73,19 +36,45 @@ class CreatureTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureTemplateEntity> getCreatureTemplate(int entry) async {
-    var result = await laconic.table(_table).where('entry', entry).first();
-    return CreatureTemplateEntity.fromJson(result.toMap());
+  Future<List<CreatureTemplateEntity>> getCreatureTemplates() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => CreatureTemplateEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countCreatureTemplates({
+    CreatureTemplateFilterEntity? filter,
+  }) async {
+    var builder = laconic.table('$_table AS ct');
+    builder.select(['ct.entry']);
+    builder = builder.leftJoin(
+      'creature_template_locale AS ctl',
+      (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
+    );
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<CreatureTemplateEntity?> getCreatureTemplate(int entry) async {
+    var results = await laconic
+        .table(_table)
+        .where('entry', entry)
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return CreatureTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<CreatureTemplateEntity> createCreatureTemplate() async {
+    return const CreatureTemplateEntity();
   }
 
   Future<int> storeCreatureTemplate(CreatureTemplateEntity template) async {
     var json = template.toJson();
     var newEntry = await _getNextEntry();
     json['entry'] = newEntry;
-    // 处理 MySQL 保留字
-    if (json.containsKey('rank')) {
-      json['`rank`'] = json.remove('rank');
-    }
+    _handleReservedWords(json);
     await laconic.table(_table).insert([json]);
     return newEntry;
   }
@@ -93,11 +82,37 @@ class CreatureTemplateRepository with RepositoryMixin {
   Future<void> updateCreatureTemplate(CreatureTemplateEntity template) async {
     var json = template.toJson();
     json.remove('entry');
-    // 处理 MySQL 保留字
-    if (json.containsKey('rank')) {
-      json['`rank`'] = json.remove('rank');
-    }
+    _handleReservedWords(json);
     await laconic.table(_table).where('entry', template.entry).update(json);
+  }
+
+  Future<void> destroyCreatureTemplate(int entry) async {
+    await laconic.table(_table).where('entry', entry).delete();
+  }
+
+  Future<void> copyCreatureTemplate(int entry) async {
+    var template = await getCreatureTemplate(entry);
+    if (template == null) return;
+    var json = template.toJson();
+    var newEntry = await _getNextEntry();
+    json['entry'] = newEntry;
+    _handleReservedWords(json);
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveCreatureTemplate(CreatureTemplateEntity template) async {
+    if (template.entry == 0) {
+      await storeCreatureTemplate(template);
+      return;
+    }
+    var existing = await getCreatureTemplate(template.entry);
+    if (existing != null) {
+      await updateCreatureTemplate(template);
+    } else {
+      var json = template.toJson();
+      _handleReservedWords(json);
+      await laconic.table(_table).insert([json]);
+    }
   }
 
   Future<List<CreatureTemplateLocaleEntity>> getCreatureTemplateLocales(
@@ -125,7 +140,18 @@ class CreatureTemplateRepository with RepositoryMixin {
     });
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, CreatureTemplateFilterEntity? filter) {
+  Future<int> _getNextEntry() async {
+    var result = await laconic.table(_table).select([
+      'MAX(entry) as max_entry',
+    ]).first();
+    var maxEntry = result.toMap()['max_entry'] as int?;
+    return (maxEntry ?? 0) + 1;
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    CreatureTemplateFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
       builder = builder.where('ct.entry', filter.entry);
@@ -145,5 +171,11 @@ class CreatureTemplateRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  void _handleReservedWords(Map<String, dynamic> json) {
+    if (json.containsKey('rank')) {
+      json['`rank`'] = json.remove('rank');
+    }
   }
 }

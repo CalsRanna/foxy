@@ -18,7 +18,7 @@ class EmoteTextListViewModel {
   final _repository = GetIt.instance.get<EmoteTextRepository>();
 
   final page = signal(1);
-  final emotes = signal(<EmoteTextEntity>[]);
+  final emotes = signal(<BriefEmoteTextEntity>[]);
   final total = signal(0);
 
   Future<void> copyEmoteText(int id) async {
@@ -80,7 +80,7 @@ class EmoteTextListViewModel {
   Future<void> initSignals() async {
     try {
       final (items, count) = await (
-        _repository.getEmoteTexts(page: 1),
+        _repository.getBriefEmoteTexts(page: 1),
         _repository.countEmoteTexts(),
       ).wait;
       emotes.value = items;
@@ -131,7 +131,7 @@ class EmoteTextListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getEmoteTexts(page: page.value, filter: filter),
+        _repository.getBriefEmoteTexts(page: page.value, filter: filter),
         _repository.countEmoteTexts(filter: filter),
       ).wait;
       emotes.value = items;

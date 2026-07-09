@@ -61,7 +61,7 @@ class NpcTextViewModel {
         creating.value = false;
         _applyMainToControllers(main);
       }
-      final locales = await _localeRepository.getNpcTextLocales(id: textId);
+      final locales = await _localeRepository.getNpcTextLocales(textId);
       NpcTextLocaleEntity? zhCN;
       for (final l in locales) {
         if (l.locale == 'zhCN') {
@@ -83,10 +83,10 @@ class NpcTextViewModel {
     try {
       final main = _collectMainFromControllers();
       if (creating.value) {
-        await _repository.storeNpcText(main);
+        await _repository.saveNpcText(main);
         creating.value = false;
       } else {
-        await _repository.updateNpcText(currentTextId.value, main);
+        await _repository.updateNpcText(main);
       }
       currentTextId.value = main.id;
 

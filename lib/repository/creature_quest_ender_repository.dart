@@ -1,13 +1,10 @@
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
-/// creature_questender 表的数据访问层
-/// 复合主键: (id, quest)
 class CreatureQuestEnderRepository with RepositoryMixin {
   static const _table = 'creature_questender';
 
-  /// 按 quest 搜索该任务下的所有任务结束者（带 creature_template + locale JOIN）
-  Future<List<BriefCreatureQuestEnderEntity>> getCreatureQuestEnders(
+  Future<List<BriefCreatureQuestEnderEntity>> getBriefCreatureQuestEnders(
     int questId,
   ) async {
     const fields = ['cqe.id', 'cqe.quest', 'ct.name', 'ctl.Name'];
@@ -28,19 +25,20 @@ class CreatureQuestEnderRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 按复合键查找
   Future<CreatureQuestEnderEntity?> getCreatureQuestEnder(
-    Map<String, dynamic> id,
+    int id,
+    int quest,
   ) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
-    final result = await builder.first();
-    return CreatureQuestEnderEntity.fromJson(result.toMap());
+    var results = await laconic
+        .table(_table)
+        .where('id', id)
+        .where('quest', quest)
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return CreatureQuestEnderEntity.fromJson(results.first.toMap());
   }
 
-  /// 取指定 quest 下的下一个 id（MAX(id) + 1）
   Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int questId) async {
     final result = await laconic.table(_table).where('quest', questId).select([
       'MAX(id) as max_id',
@@ -57,32 +55,37 @@ class CreatureQuestEnderRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureQuestEnder(
-    Map<String, dynamic> id,
+    int id,
+    int quest,
     CreatureQuestEnderEntity model,
   ) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
     final json = model.toJson();
-    for (final k in id.keys) {
-      json.remove(k);
-    }
-    await builder.update(json);
+    json.remove('id');
+    json.remove('quest');
+    await laconic
+        .table(_table)
+        .where('id', id)
+        .where('quest', quest)
+        .update(json);
   }
 
-  Future<void> destroyCreatureQuestEnder(Map<String, dynamic> id) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
-    await builder.delete();
+  Future<void> destroyCreatureQuestEnder(int id, int quest) async {
+    await laconic.table(_table).where('id', id).where('quest', quest).delete();
   }
 
-  Future<void> copyCreatureQuestEnder(Map<String, dynamic> id) async {
-    final original = await getCreatureQuestEnder(id);
+  Future<void> copyCreatureQuestEnder(int id, int quest) async {
+    final original = await getCreatureQuestEnder(id, quest);
     if (original == null) return;
     final next = await createCreatureQuestEnder(original.quest);
     await storeCreatureQuestEnder(next);
+  }
+
+  Future<void> saveCreatureQuestEnder(CreatureQuestEnderEntity model) async {
+    var existing = await getCreatureQuestEnder(model.id, model.quest);
+    if (existing != null) {
+      await updateCreatureQuestEnder(model.id, model.quest, model);
+    } else {
+      await storeCreatureQuestEnder(model);
+    }
   }
 }

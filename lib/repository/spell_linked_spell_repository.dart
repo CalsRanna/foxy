@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellLinkedSpellRepository with RepositoryMixin {
   static const _table = 'spell_linked_spell';
 
-  Future<List<SpellLinkedSpellEntity>> getSpellLinkedSpells(
+  Future<List<SpellLinkedSpellEntity>> getBriefSpellLinkedSpells(
     int spellTrigger,
   ) async {
     var results = await laconic
@@ -21,12 +21,20 @@ class SpellLinkedSpellRepository with RepositoryMixin {
     int spellTrigger,
     int spellEffect,
   ) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('spell_trigger', spellTrigger)
         .where('spell_effect', spellEffect)
-        .first();
-    return SpellLinkedSpellEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return SpellLinkedSpellEntity.fromJson(results.first.toMap());
+  }
+
+  Future<SpellLinkedSpellEntity> createSpellLinkedSpell(
+    int spellTrigger,
+  ) async {
+    return SpellLinkedSpellEntity(spellTrigger: spellTrigger);
   }
 
   Future<void> storeSpellLinkedSpell(SpellLinkedSpellEntity data) async {
@@ -34,16 +42,17 @@ class SpellLinkedSpellRepository with RepositoryMixin {
   }
 
   Future<void> updateSpellLinkedSpell(
-    SpellLinkedSpellEntity oldData,
-    SpellLinkedSpellEntity newData,
+    int spellTrigger,
+    int spellEffect,
+    SpellLinkedSpellEntity data,
   ) async {
-    var json = newData.toJson();
+    var json = data.toJson();
     json.remove('spell_trigger');
     json.remove('spell_effect');
     await laconic
         .table(_table)
-        .where('spell_trigger', oldData.spellTrigger)
-        .where('spell_effect', oldData.spellEffect)
+        .where('spell_trigger', spellTrigger)
+        .where('spell_effect', spellEffect)
         .update(json);
   }
 
@@ -58,16 +67,31 @@ class SpellLinkedSpellRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<SpellLinkedSpellEntity> copySpellLinkedSpell(
-    SpellLinkedSpellEntity data,
-  ) async {
-    var json = data.toJson();
+  Future<void> copySpellLinkedSpell(int spellTrigger, int spellEffect) async {
+    var source = await getSpellLinkedSpell(spellTrigger, spellEffect);
+    if (source == null) return;
+    var json = source.toJson();
     var maxEffectResult = await laconic.table(_table).select([
       'MAX(spell_effect) AS maxEffect',
     ]).first();
     var maxEffect = (maxEffectResult.toMap()['maxEffect'] ?? 0) as int;
     json['spell_effect'] = maxEffect + 1;
     await laconic.table(_table).insert([json]);
-    return SpellLinkedSpellEntity.fromJson(json);
+  }
+
+  Future<void> saveSpellLinkedSpell(SpellLinkedSpellEntity data) async {
+    var existing = await getSpellLinkedSpell(
+      data.spellTrigger,
+      data.spellEffect,
+    );
+    if (existing != null) {
+      await updateSpellLinkedSpell(
+        data.spellTrigger,
+        data.spellEffect,
+        data,
+      );
+    } else {
+      await storeSpellLinkedSpell(data);
+    }
   }
 }

@@ -43,9 +43,10 @@ class SkinningLootTemplateViewModel {
     final template = await _creatureRepository.getCreatureTemplate(
       creatureId.value,
     );
+    if (template == null) return;
     creatureTemplate.value = template;
 
-    final data = await repository.getLootTemplates(template.skinLoot);
+    final data = await repository.getBriefLootTemplates(template.skinLoot);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -207,7 +208,7 @@ class SkinningLootTemplateViewModel {
     try {
       final loot = collectFromForm();
       final oldItem = items.value[selectedIndex.value!].item;
-      await repository.updateLootTemplate(loot, oldItem: oldItem);
+      await repository.updateLootTemplate(loot.entry, oldItem, loot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

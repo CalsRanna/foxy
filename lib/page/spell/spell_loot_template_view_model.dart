@@ -33,7 +33,7 @@ class SpellLootTemplateViewModel {
   double _pd(String t) => double.tryParse(t) ?? 0.0;
 
   Future<void> load() async {
-    final data = await _repository.getSpellLootTemplates(spellId.value);
+    final data = await _repository.getBriefSpellLootTemplates(spellId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -100,7 +100,7 @@ class SpellLootTemplateViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final loot = items.value[index];
     try {
-      await _repository.copySpellLootTemplate(loot);
+      await _repository.copySpellLootTemplate(loot.entry, loot.item);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -169,7 +169,11 @@ class SpellLootTemplateViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await _repository.updateSpellLootTemplate(oldData, newData);
+      await _repository.updateSpellLootTemplate(
+        oldData.entry,
+        oldData.item,
+        newData,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

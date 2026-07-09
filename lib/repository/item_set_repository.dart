@@ -6,18 +6,6 @@ import 'package:laconic/laconic.dart';
 class ItemSetRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_set';
 
-  Future<List<ItemSetEntity>> getItemSets({
-    int page = 1,
-    ItemSetFilterEntity? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results.map((e) => ItemSetEntity.fromJson(e.toMap())).toList();
-  }
-
   Future<List<BriefItemSetEntity>> getBriefItemSets({
     int page = 1,
     ItemSetFilterEntity? filter,
@@ -37,6 +25,11 @@ class ItemSetRepository with RepositoryMixin {
     return results.map((e) => BriefItemSetEntity.fromJson(e.toMap())).toList();
   }
 
+  Future<List<ItemSetEntity>> getItemSets() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => ItemSetEntity.fromJson(e.toMap())).toList();
+  }
+
   Future<int> countItemSets({ItemSetFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -44,8 +37,13 @@ class ItemSetRepository with RepositoryMixin {
   }
 
   Future<ItemSetEntity?> getItemSet(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return ItemSetEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return ItemSetEntity.fromJson(results.first.toMap());
+  }
+
+  Future<ItemSetEntity> createItemSet() async {
+    return const ItemSetEntity();
   }
 
   Future<int> storeItemSet(ItemSetEntity itemSet) async {
@@ -75,6 +73,19 @@ class ItemSetRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
+  Future<void> saveItemSet(ItemSetEntity itemSet) async {
+    if (itemSet.id == 0) {
+      await storeItemSet(itemSet);
+      return;
+    }
+    var existing = await getItemSet(itemSet.id);
+    if (existing != null) {
+      await updateItemSet(itemSet);
+    } else {
+      await laconic.table(_table).insert([itemSet.toJson()]);
+    }
+  }
+
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',
@@ -89,7 +100,11 @@ class ItemSetRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.where('Name_lang_zhCN', '%${filter.name}%');
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%${filter.name}%',
+        comparator: 'like',
+      );
     }
     return builder;
   }

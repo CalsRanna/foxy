@@ -24,7 +24,7 @@ class SpellGroupViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getSpellGroups(spellId.value);
+    final data = await _repository.getBriefSpellGroups(spellId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -69,7 +69,7 @@ class SpellGroupViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final group = items.value[index];
     try {
-      await _repository.copySpellGroup(group);
+      await _repository.copySpellGroup(group.id, group.spellId);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -138,7 +138,7 @@ class SpellGroupViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await _repository.updateSpellGroup(oldData, newData);
+      await _repository.updateSpellGroup(oldData.id, oldData.spellId, newData);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

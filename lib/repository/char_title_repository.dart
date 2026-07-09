@@ -5,16 +5,24 @@ import 'package:laconic/laconic.dart';
 class CharTitleRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_char_titles';
 
-  Future<List<CharTitleEntity>> getCharTitles({
+  Future<List<BriefCharTitleEntity>> getBriefCharTitles({
+    int page = 1,
     String? id,
     String? name,
-    required int page,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
+    builder = builder.select(['ID', 'Name_lang_zhCN']);
     builder = _applyFilter(builder, id: id, name: name);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
+    return results
+        .map((e) => BriefCharTitleEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<CharTitleEntity>> getCharTitles() async {
+    var results = await laconic.table(_table).get();
     return results.map((e) => CharTitleEntity.fromJson(e.toMap())).toList();
   }
 
@@ -24,12 +32,78 @@ class CharTitleRepository with RepositoryMixin {
     return builder.count();
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, {String? id, String? name}) {
+  Future<CharTitleEntity?> getCharTitle(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return CharTitleEntity.fromJson(results.first.toMap());
+  }
+
+  Future<CharTitleEntity> createCharTitle() async {
+    return const CharTitleEntity();
+  }
+
+  Future<int> storeCharTitle(CharTitleEntity title) async {
+    var json = title.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateCharTitle(CharTitleEntity title) async {
+    var json = title.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', title.id).update(json);
+  }
+
+  Future<void> destroyCharTitle(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<void> copyCharTitle(int id) async {
+    var source = await getCharTitle(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveCharTitle(CharTitleEntity title) async {
+    if (title.id == 0) {
+      await storeCharTitle(title);
+      return;
+    }
+    var existing = await getCharTitle(title.id);
+    if (existing != null) {
+      await updateCharTitle(title);
+    } else {
+      await laconic.table(_table).insert([title.toJson()]);
+    }
+  }
+
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder, {
+    String? id,
+    String? name,
+  }) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }
     if (name != null && name.isNotEmpty) {
-      builder = builder.where('Name_lang_zhCN', '%$name%', comparator: 'like');
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%$name%',
+        comparator: 'like',
+      );
     }
     return builder;
   }

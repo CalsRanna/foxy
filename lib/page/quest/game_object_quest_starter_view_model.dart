@@ -26,7 +26,7 @@ class GameObjectQuestStarterViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getGameObjectQuestStarters(questId.value);
+    final data = await _repository.getBriefGameObjectQuestStarters(questId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -75,10 +75,7 @@ class GameObjectQuestStarterViewModel {
       if (index == null || index < 0 || index >= items.value.length) return;
 
       final item = items.value[index];
-      final existing = await _repository.getGameObjectQuestStarter({
-        'id': item.id,
-        'quest': item.quest,
-      });
+      final existing = await _repository.getGameObjectQuestStarter(item.id, item.quest);
       if (existing == null) return;
       fillForm(existing);
       _originalId = item.id;
@@ -109,10 +106,7 @@ class GameObjectQuestStarterViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await _repository.updateGameObjectQuestStarter({
-        'id': _originalId,
-        'quest': _originalQuest,
-      }, model);
+      await _repository.updateGameObjectQuestStarter(_originalId, _originalQuest, model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));
@@ -150,10 +144,7 @@ class GameObjectQuestStarterViewModel {
 
     if (confirmed == true) {
       try {
-        await _repository.copyGameObjectQuestStarter({
-          'id': item.id,
-          'quest': item.quest,
-        });
+        await _repository.copyGameObjectQuestStarter(item.id, item.quest);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('复制成功'));
@@ -192,10 +183,7 @@ class GameObjectQuestStarterViewModel {
 
     if (confirmed == true) {
       try {
-        await _repository.destroyGameObjectQuestStarter({
-          'id': item.id,
-          'quest': item.quest,
-        });
+        await _repository.destroyGameObjectQuestStarter(item.id, item.quest);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

@@ -18,7 +18,7 @@ class ScalingStatDistributionListViewModel {
       .get<ScalingStatDistributionSoloRepository>();
 
   final page = signal(1);
-  final distributions = signal(<ScalingStatDistributionEntity>[]);
+  final distributions = signal(<BriefScalingStatDistributionEntity>[]);
   final total = signal(0);
 
   Future<void> copyScalingStatDistribution(int id) async {
@@ -77,7 +77,7 @@ class ScalingStatDistributionListViewModel {
     try {
       final filter = ScalingStatDistributionFilterEntity();
       final (items, count) = await (
-        _repository.getScalingStatDistributions(page: 1, filter: filter),
+        _repository.getBriefScalingStatDistributions(page: 1, filter: filter),
         _repository.countScalingStatDistributions(filter: filter),
       ).wait;
       distributions.value = items;
@@ -126,7 +126,7 @@ class ScalingStatDistributionListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getScalingStatDistributions(
+        _repository.getBriefScalingStatDistributions(
           page: page.value,
           filter: filter,
         ),

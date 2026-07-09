@@ -1,16 +1,13 @@
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
-/// gossip_menu_option 表的数据访问层
-/// 复合主键: (MenuID, OptionID)
 class GossipMenuOptionRepository with RepositoryMixin {
   static const _table = 'gossip_menu_option';
   static const _localeTable = 'gossip_menu_option_locale';
 
-  /// 按 MenuID 搜索该菜单下的所有选项（带 locale JOIN）
-  Future<List<GossipMenuOptionEntity>> getGossipMenuOptions({
-    required int menuId,
-  }) async {
+  Future<List<GossipMenuOptionEntity>> getBriefGossipMenuOptions(
+    int menuId,
+  ) async {
     const fields = [
       'gmo.MenuID',
       'gmo.OptionID',
@@ -44,22 +41,21 @@ class GossipMenuOptionRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 按复合键查找
   Future<GossipMenuOptionEntity?> getGossipMenuOption(
-    Map<String, dynamic> id,
+    int menuId,
+    int optionId,
   ) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
-    final result = await builder.first();
-    return GossipMenuOptionEntity.fromJson(result.toMap());
+    var results = await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('OptionID', optionId)
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return GossipMenuOptionEntity.fromJson(results.first.toMap());
   }
 
-  /// 取指定 MenuID 下的下一个 OptionID
-  Future<GossipMenuOptionEntity> createGossipMenuOption({
-    required int menuId,
-  }) async {
+  Future<GossipMenuOptionEntity> createGossipMenuOption(int menuId) async {
     final result = await laconic.table(_table).where('MenuID', menuId).select([
       'MAX(OptionID) as max_id',
     ]).first();
@@ -70,37 +66,48 @@ class GossipMenuOptionRepository with RepositoryMixin {
     );
   }
 
-  Future<void> updateGossipMenuOption(
-    Map<String, dynamic> id,
-    GossipMenuOptionEntity model,
-  ) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
-    final json = model.toJson();
-    for (final k in id.keys) {
-      json.remove(k);
-    }
-    await builder.update(json);
-  }
-
   Future<void> storeGossipMenuOption(GossipMenuOptionEntity model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
-  Future<void> destroyGossipMenuOption(Map<String, dynamic> id) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
-    await builder.delete();
+  Future<void> updateGossipMenuOption(
+    int menuId,
+    int optionId,
+    GossipMenuOptionEntity model,
+  ) async {
+    final json = model.toJson();
+    json.remove('MenuID');
+    json.remove('OptionID');
+    await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('OptionID', optionId)
+        .update(json);
   }
 
-  Future<void> copyGossipMenuOption(Map<String, dynamic> id) async {
-    final original = await getGossipMenuOption(id);
+  Future<void> destroyGossipMenuOption(int menuId, int optionId) async {
+    await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('OptionID', optionId)
+        .delete();
+  }
+
+  Future<void> copyGossipMenuOption(int menuId, int optionId) async {
+    final original = await getGossipMenuOption(menuId, optionId);
     if (original == null) return;
-    final next = await createGossipMenuOption(menuId: original.menuId);
-    await storeGossipMenuOption(next);
+    final next = await createGossipMenuOption(original.menuId);
+    final json = original.toJson();
+    json['OptionID'] = next.optionId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveGossipMenuOption(GossipMenuOptionEntity model) async {
+    var existing = await getGossipMenuOption(model.menuId, model.optionId);
+    if (existing != null) {
+      await updateGossipMenuOption(model.menuId, model.optionId, model);
+    } else {
+      await storeGossipMenuOption(model);
+    }
   }
 }

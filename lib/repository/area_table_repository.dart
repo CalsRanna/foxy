@@ -6,18 +6,6 @@ import 'package:laconic/laconic.dart';
 class AreaTableRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_area_table';
 
-  Future<List<AreaTableEntity>> getAreaTables({
-    int page = 1,
-    AreaTableFilterEntity? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results.map((e) => AreaTableEntity.fromJson(e.toMap())).toList();
-  }
-
   Future<List<BriefAreaTableEntity>> getBriefAreaTables({
     int page = 1,
     AreaTableFilterEntity? filter,
@@ -41,6 +29,11 @@ class AreaTableRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<List<AreaTableEntity>> getAreaTables() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => AreaTableEntity.fromJson(e.toMap())).toList();
+  }
+
   Future<int> countAreaTables({AreaTableFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -48,8 +41,13 @@ class AreaTableRepository with RepositoryMixin {
   }
 
   Future<AreaTableEntity?> getAreaTable(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return AreaTableEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return AreaTableEntity.fromJson(results.first.toMap());
+  }
+
+  Future<AreaTableEntity> createAreaTable() async {
+    return const AreaTableEntity();
   }
 
   Future<int> storeAreaTable(AreaTableEntity area) async {
@@ -79,6 +77,19 @@ class AreaTableRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
+  Future<void> saveAreaTable(AreaTableEntity area) async {
+    if (area.id == 0) {
+      await storeAreaTable(area);
+      return;
+    }
+    var existing = await getAreaTable(area.id);
+    if (existing != null) {
+      await updateAreaTable(area);
+    } else {
+      await laconic.table(_table).insert([area.toJson()]);
+    }
+  }
+
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',
@@ -87,7 +98,10 @@ class AreaTableRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, AreaTableFilterEntity? filter) {
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    AreaTableFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

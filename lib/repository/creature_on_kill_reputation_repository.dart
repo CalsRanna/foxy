@@ -4,25 +4,30 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureOnKillReputationRepository with RepositoryMixin {
   static const _table = 'creature_onkill_reputation';
 
-  /// 获取指定生物的击杀声望
   Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
     int creatureID,
   ) async {
-    var builder = laconic.table(_table);
-    builder = builder.select(['*']);
-    builder = builder.where('creature_id', creatureID);
-    var result = await builder.first();
-    return CreatureOnKillReputationEntity.fromJson(result.toMap());
+    var results = await laconic
+        .table(_table)
+        .where('creature_id', creatureID)
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return CreatureOnKillReputationEntity.fromJson(results.first.toMap());
   }
 
-  /// 新增击杀声望
+  Future<CreatureOnKillReputationEntity> createCreatureOnKillReputation([
+    int creatureID = 0,
+  ]) async {
+    return CreatureOnKillReputationEntity(creatureID: creatureID);
+  }
+
   Future<void> storeCreatureOnKillReputation(
     CreatureOnKillReputationEntity rep,
   ) async {
     await laconic.table(_table).insert([rep.toJson()]);
   }
 
-  /// 更新击杀声望
   Future<void> updateCreatureOnKillReputation(
     CreatureOnKillReputationEntity rep,
   ) async {
@@ -34,15 +39,35 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
         .update(json);
   }
 
-  /// 保存（新增或更新）
+  Future<void> destroyCreatureOnKillReputation(int creatureID) async {
+    await laconic.table(_table).where('creature_id', creatureID).delete();
+  }
+
+  Future<void> copyCreatureOnKillReputation(int creatureID) async {
+    var source = await getCreatureOnKillReputation(creatureID);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextCreatureId();
+    json['creature_id'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
   Future<void> saveCreatureOnKillReputation(
     CreatureOnKillReputationEntity rep,
   ) async {
     var existing = await getCreatureOnKillReputation(rep.creatureID);
-    if (existing == null) {
-      await storeCreatureOnKillReputation(rep);
-    } else {
+    if (existing != null) {
       await updateCreatureOnKillReputation(rep);
+    } else {
+      await storeCreatureOnKillReputation(rep);
     }
+  }
+
+  Future<int> _getNextCreatureId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(creature_id) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
   }
 }

@@ -6,15 +6,24 @@ import 'package:laconic/laconic.dart';
 class GlyphPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_glyph_properties';
 
-  Future<List<GlyphPropertyEntity>> getGlyphProperties({
+  Future<List<BriefGlyphPropertyEntity>> getBriefGlyphProperties({
     int page = 1,
     GlyphPropertyFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
+    const fields = ['ID', 'SpellID', 'GlyphSlotFlags', 'SpellIconID'];
+    builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
+    return results
+        .map((e) => BriefGlyphPropertyEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<GlyphPropertyEntity>> getGlyphProperties() async {
+    var results = await laconic.table(_table).get();
     return results.map((e) => GlyphPropertyEntity.fromJson(e.toMap())).toList();
   }
 
@@ -25,8 +34,13 @@ class GlyphPropertyRepository with RepositoryMixin {
   }
 
   Future<GlyphPropertyEntity?> getGlyphProperty(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return GlyphPropertyEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return GlyphPropertyEntity.fromJson(results.first.toMap());
+  }
+
+  Future<GlyphPropertyEntity> createGlyphProperty() async {
+    return const GlyphPropertyEntity();
   }
 
   Future<int> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
@@ -56,6 +70,19 @@ class GlyphPropertyRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
+  Future<void> saveGlyphProperty(GlyphPropertyEntity glyphProperty) async {
+    if (glyphProperty.id == 0) {
+      await storeGlyphProperty(glyphProperty);
+      return;
+    }
+    var existing = await getGlyphProperty(glyphProperty.id);
+    if (existing != null) {
+      await updateGlyphProperty(glyphProperty);
+    } else {
+      await laconic.table(_table).insert([glyphProperty.toJson()]);
+    }
+  }
+
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',
@@ -64,7 +91,10 @@ class GlyphPropertyRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, GlyphPropertyFilterEntity? filter) {
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    GlyphPropertyFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

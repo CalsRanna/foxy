@@ -17,7 +17,7 @@ class GemPropertyListViewModel {
   final _repository = GetIt.instance.get<GemPropertyRepository>();
 
   final page = signal(1);
-  final properties = signal(<GemPropertyEntity>[]);
+  final properties = signal(<BriefGemPropertyEntity>[]);
   final total = signal(0);
 
   Future<void> copyGemProperty(int id) async {
@@ -64,7 +64,7 @@ class GemPropertyListViewModel {
   Future<void> initSignals() async {
     try {
       final (items, count) = await (
-        _repository.getGemProperties(),
+        _repository.getBriefGemProperties(),
         _repository.countGemProperties(),
       ).wait;
       properties.value = items;
@@ -111,7 +111,7 @@ class GemPropertyListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getGemProperties(page: page.value, filter: filter),
+        _repository.getBriefGemProperties(page: page.value, filter: filter),
         _repository.countGemProperties(filter: filter),
       ).wait;
       properties.value = items;

@@ -120,7 +120,7 @@ class ReferenceLootTemplateListViewModel {
 
   Future<List<BriefLootTemplateEntity>> _searchEntries() async {
     final filter = _buildFilter();
-    return repository.getLootTemplatesByEntry(
+    return repository.getBriefLootTemplateRows(
       entry: filter['Entry'],
       name: filter['name'],
       page: page.value,

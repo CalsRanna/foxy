@@ -35,7 +35,7 @@ class NpcVendorViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getNpcVendors(entry.value);
+    final data = await _repository.getBriefNpcVendors(entry.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -183,7 +183,11 @@ class NpcVendorViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final vendor = collectFromForm();
-      await _repository.updateNpcVendor(vendor, oldSlot: _editingSlot);
+      await _repository.updateNpcVendor(
+        entry.value,
+        _editingSlot ?? vendor.slot,
+        vendor,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

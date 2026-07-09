@@ -8,9 +8,9 @@ class PageTextRepository with RepositoryMixin {
   static const _table = 'page_text';
   static const _localeTable = 'page_text_locale';
 
-  Future<List<PageTextEntity>> getPageTexts({
-    required PageTextFilterEntity filter,
-    required int page,
+  Future<List<BriefPageTextEntity>> getBriefPageTexts({
+    int page = 1,
+    PageTextFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS pt');
@@ -28,10 +28,17 @@ class PageTextRepository with RepositoryMixin {
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
+    return results
+        .map((e) => BriefPageTextEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<PageTextEntity>> getPageTexts() async {
+    var results = await laconic.table(_table).get();
     return results.map((e) => PageTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countPageTexts({required PageTextFilterEntity filter}) async {
+  Future<int> countPageTexts({PageTextFilterEntity? filter}) async {
     var builder = laconic.table('$_table AS pt');
     builder = builder.leftJoin(
       '$_localeTable AS ptl',
@@ -41,23 +48,28 @@ class PageTextRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<PageTextEntity> getPageText(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return PageTextEntity.fromJson(result.toMap());
+  Future<PageTextEntity?> getPageText(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return PageTextEntity.fromJson(results.first.toMap());
+  }
+
+  Future<PageTextEntity> createPageText() async {
+    return const PageTextEntity();
   }
 
   Future<int> storePageText(PageTextEntity pageText) async {
     var json = pageText.toJson();
-    var newId = await _getNextId();
-    json['ID'] = newId;
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
-    return newId;
+    return nextId;
   }
 
-  Future<void> updatePageText(int id, PageTextEntity pageText) async {
+  Future<void> updatePageText(PageTextEntity pageText) async {
     var json = pageText.toJson();
     json.remove('ID');
-    await laconic.table(_table).where('ID', id).update(json);
+    await laconic.table(_table).where('ID', pageText.id).update(json);
   }
 
   Future<void> destroyPageText(int id) async {
@@ -65,22 +77,27 @@ class PageTextRepository with RepositoryMixin {
   }
 
   Future<void> copyPageText(int id) async {
-    var text = await getPageText(id);
-    var json = text.toJson();
-    var newId = await _getNextId();
-    json['ID'] = newId;
+    var source = await getPageText(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
 
-  Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+  Future<void> savePageText(PageTextEntity pageText) async {
+    if (pageText.id == 0) {
+      await storePageText(pageText);
+      return;
+    }
+    var existing = await getPageText(pageText.id);
+    if (existing != null) {
+      await updatePageText(pageText);
+    } else {
+      await laconic.table(_table).insert([pageText.toJson()]);
+    }
   }
 
-  // Locale operations
   Future<List<PageTextLocaleEntity>> getPageTextLocales(int id) async {
     var results = await laconic.table(_localeTable).where('ID', id).get();
     return results
@@ -104,7 +121,19 @@ class PageTextRepository with RepositoryMixin {
     });
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, PageTextFilterEntity filter) {
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    PageTextFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('pt.ID', filter.id);
     }

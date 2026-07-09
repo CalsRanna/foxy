@@ -249,8 +249,10 @@ class CreatureTemplateDetailViewModel {
   Future<void> initSignals({int? entry}) async {
     if (entry == null) return;
     try {
-      template.value = await _repository.getCreatureTemplate(entry);
-      _initControllers(template.value);
+      final result = await _repository.getCreatureTemplate(entry);
+      if (result == null) return;
+      template.value = result;
+      _initControllers(result);
     } catch (e, s) {
       LoggerUtil.instance.e('加载生物模板(entry=$entry)失败', error: e, stackTrace: s);
     }

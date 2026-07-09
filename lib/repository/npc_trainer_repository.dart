@@ -4,8 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class NpcTrainerRepository with RepositoryMixin {
   static const _table = 'npc_trainer';
 
-  /// 获取指定训练师的所有技能（带技能信息）
-  Future<List<BriefNpcTrainerEntity>> getNpcTrainers(int id) async {
+  Future<List<BriefNpcTrainerEntity>> getBriefNpcTrainers(int id) async {
     var builder = laconic.table('$_table AS nt');
     const fields = [
       'nt.*',
@@ -25,34 +24,40 @@ class NpcTrainerRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 查找单条记录
   Future<NpcTrainerEntity?> getNpcTrainer(int id, int spellID) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('ID', id)
         .where('SpellID', spellID)
-        .first();
-    return NpcTrainerEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return NpcTrainerEntity.fromJson(results.first.toMap());
   }
 
-  /// 新增训练师技能
+  Future<NpcTrainerEntity> createNpcTrainer(int id) async {
+    return NpcTrainerEntity(id: id);
+  }
+
   Future<void> storeNpcTrainer(NpcTrainerEntity trainer) async {
     await laconic.table(_table).insert([trainer.toJson()]);
   }
 
-  /// 更新训练师技能
-  Future<void> updateNpcTrainer(NpcTrainerEntity trainer) async {
+  Future<void> updateNpcTrainer(
+    int id,
+    int spellID,
+    NpcTrainerEntity trainer,
+  ) async {
     var json = trainer.toJson();
     json.remove('ID');
     json.remove('SpellID');
     await laconic
         .table(_table)
-        .where('ID', trainer.id)
-        .where('SpellID', trainer.spellID)
+        .where('ID', id)
+        .where('SpellID', spellID)
         .update(json);
   }
 
-  /// 删除训练师技能
   Future<void> destroyNpcTrainer(int id, int spellID) async {
     await laconic
         .table(_table)
@@ -61,34 +66,26 @@ class NpcTrainerRepository with RepositoryMixin {
         .delete();
   }
 
-  /// 复制训练师技能
-  Future<NpcTrainerEntity> copyNpcTrainer(int id, int spellID) async {
-    // 获取最大SpellID
+  Future<void> copyNpcTrainer(int id, int spellID) async {
+    var source = await getNpcTrainer(id, spellID);
+    if (source == null) return;
     var maxSpellResult = await laconic
         .table(_table)
         .select(['MAX(SpellID) AS maxSpellID'])
         .where('ID', id)
         .first();
     var maxSpellID = (maxSpellResult.toMap()['maxSpellID'] ?? 0) as int;
+    var json = source.toJson();
+    json['SpellID'] = maxSpellID + 1;
+    await laconic.table(_table).insert([json]);
+  }
 
-    // 获取源记录
-    var source = await getNpcTrainer(id, spellID);
-    if (source == null) {
-      throw Exception('源记录不存在');
+  Future<void> saveNpcTrainer(NpcTrainerEntity trainer) async {
+    var existing = await getNpcTrainer(trainer.id, trainer.spellID);
+    if (existing != null) {
+      await updateNpcTrainer(trainer.id, trainer.spellID, trainer);
+    } else {
+      await storeNpcTrainer(trainer);
     }
-
-    // 创建新记录
-    var newTrainer = NpcTrainerEntity(
-      id: source.id,
-      spellID: maxSpellID + 1,
-      moneyCost: source.moneyCost,
-      reqSkillLine: source.reqSkillLine,
-      reqSkillRank: source.reqSkillRank,
-      reqLevel: source.reqLevel,
-      reqSpell: source.reqSpell,
-    );
-
-    await storeNpcTrainer(newTrainer);
-    return newTrainer;
   }
 }

@@ -37,7 +37,7 @@ class ItemLootTemplateViewModel {
   double _pd(String t) => double.tryParse(t) ?? 0.0;
 
   Future<void> load() async {
-    final data = await repository.getLootTemplates(entry.value);
+    final data = await repository.getBriefLootTemplates(entry.value);
     items.value = data;
     selectedIndex.value = null;
     creating.value = false;
@@ -192,7 +192,7 @@ class ItemLootTemplateViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
-      await repository.updateLootTemplate(loot, oldItem: editingItem);
+      await repository.updateLootTemplate(loot.entry, editingItem ?? loot.item, loot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

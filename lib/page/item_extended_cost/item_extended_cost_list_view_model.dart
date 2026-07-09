@@ -17,7 +17,7 @@ class ItemExtendedCostListViewModel {
   final _repository = GetIt.instance.get<ItemExtendedCostRepository>();
 
   final page = signal(1);
-  final costs = signal(<ItemExtendedCostEntity>[]);
+  final costs = signal(<BriefItemExtendedCostEntity>[]);
   final total = signal(0);
 
   Future<void> copyItemExtendedCost(int id) async {
@@ -76,7 +76,7 @@ class ItemExtendedCostListViewModel {
     try {
       final filter = ItemExtendedCostFilterEntity();
       final (items, count) = await (
-        _repository.getItemExtendedCosts(page: 1, filter: filter),
+        _repository.getBriefItemExtendedCosts(page: 1, filter: filter),
         _repository.countItemExtendedCosts(filter: filter),
       ).wait;
       costs.value = items;
@@ -125,7 +125,10 @@ class ItemExtendedCostListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getItemExtendedCosts(page: page.value, filter: filter),
+        _repository.getBriefItemExtendedCosts(
+          page: page.value,
+          filter: filter,
+        ),
         _repository.countItemExtendedCosts(filter: filter),
       ).wait;
       costs.value = items;

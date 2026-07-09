@@ -5,16 +5,27 @@ import 'package:laconic/laconic.dart';
 class MapInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_map';
 
-  Future<List<MapInfoEntity>> getMapInfos({
+  Future<List<BriefMapInfoEntity>> getBriefMapInfos({
+    int page = 1,
     String? id,
     String? name,
-    required int page,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
+    builder = builder.select([
+      'ID',
+      'MapName_lang_zhCN',
+      'InstanceType',
+      'PVP',
+    ]);
     builder = _applyFilter(builder, id: id, name: name);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
+    return results.map((e) => BriefMapInfoEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<List<MapInfoEntity>> getMapInfos() async {
+    var results = await laconic.table(_table).get();
     return results.map((e) => MapInfoEntity.fromJson(e.toMap())).toList();
   }
 
@@ -24,7 +35,69 @@ class MapInfoRepository with RepositoryMixin {
     return builder.count();
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, {String? id, String? name}) {
+  Future<MapInfoEntity?> getMapInfo(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return MapInfoEntity.fromJson(results.first.toMap());
+  }
+
+  Future<MapInfoEntity> createMapInfo() async {
+    return const MapInfoEntity();
+  }
+
+  Future<int> storeMapInfo(MapInfoEntity map) async {
+    var json = map.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateMapInfo(MapInfoEntity map) async {
+    var json = map.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', map.id).update(json);
+  }
+
+  Future<void> destroyMapInfo(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<void> copyMapInfo(int id) async {
+    var source = await getMapInfo(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveMapInfo(MapInfoEntity map) async {
+    if (map.id == 0) {
+      await storeMapInfo(map);
+      return;
+    }
+    var existing = await getMapInfo(map.id);
+    if (existing != null) {
+      await updateMapInfo(map);
+    } else {
+      await laconic.table(_table).insert([map.toJson()]);
+    }
+  }
+
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder, {
+    String? id,
+    String? name,
+  }) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }

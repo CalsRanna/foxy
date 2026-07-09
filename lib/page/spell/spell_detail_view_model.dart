@@ -679,8 +679,10 @@ class SpellDetailViewModel {
     if (id == null) return;
     try {
       this.id.value = id;
-      spell.value = await _repository.getSpell(id);
-      _initControllers(spell.value);
+      final result = await _repository.getSpell(id);
+      if (result == null) return;
+      spell.value = result;
+      _initControllers(result);
       _wireEffectSignals();
     } catch (e, s) {
       LoggerUtil.instance.e('加载法术(id=$id)失败', error: e, stackTrace: s);

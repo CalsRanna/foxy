@@ -22,3 +22,29 @@ class CharTitleEntity {
     );
   }
 }
+
+/// 称号列表/Picker 展示模型
+class BriefCharTitleEntity {
+  final int id;
+  final String nameLangZhCn;
+
+  const BriefCharTitleEntity({this.id = 0, this.nameLangZhCn = ''});
+
+  factory BriefCharTitleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCharTitleEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCn: json['Name_lang_zhCN'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'Name_lang_zhCN': nameLangZhCn};
+  }
+
+  BriefCharTitleEntity copyWith({int? id, String? nameLangZhCn}) {
+    return BriefCharTitleEntity(
+      id: id ?? this.id,
+      nameLangZhCn: nameLangZhCn ?? this.nameLangZhCn,
+    );
+  }
+}

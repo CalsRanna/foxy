@@ -1,32 +1,106 @@
 import 'package:foxy/entity/waypoint_data_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
+/// 路径点表按 path `id` 聚合展示（points = COUNT(point)）。
+/// 写操作以 path id 为粒度：destroy/copy 作用于该 id 下全部 point 行。
 class WaypointDataRepository with RepositoryMixin {
   static const _table = 'waypoint_data';
 
-  Future<List<WaypointDataEntity>> getWaypointDatas({
+  Future<List<BriefWaypointDataEntity>> getBriefWaypointDatas({
+    int page = 1,
     String? id,
-    required int page,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['id', 'COUNT(point) as points']);
     builder = builder.groupBy('id');
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('id', id);
-    }
+    builder = _applyFilter(builder, id: id);
     builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefWaypointDataEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<WaypointDataEntity>> getWaypointDatas() async {
+    var builder = laconic.table(_table);
+    builder = builder.select(['id', 'COUNT(point) as points']);
+    builder = builder.groupBy('id');
     var results = await builder.get();
     return results.map((e) => WaypointDataEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countWaypointDatas({String? id}) async {
     var builder = laconic.table(_table);
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('id', id);
-    }
+    builder = _applyFilter(builder, id: id);
     builder = builder.select(['id', 'COUNT(point) as points']);
     builder = builder.groupBy('id');
     return builder.count();
+  }
+
+  Future<WaypointDataEntity?> getWaypointData(int id) async {
+    var builder = laconic.table(_table);
+    builder = builder.select(['id', 'COUNT(point) as points']);
+    builder = builder.where('id', id);
+    builder = builder.groupBy('id');
+    builder = builder.limit(1);
+    var results = await builder.get();
+    if (results.isEmpty) return null;
+    return WaypointDataEntity.fromJson(results.first.toMap());
+  }
+
+  Future<WaypointDataEntity> createWaypointData() async {
+    return const WaypointDataEntity();
+  }
+
+  /// 仅分配下一 path id，不插入 point 行（聚合实体无点位数据）。
+  Future<int> storeWaypointData(WaypointDataEntity data) async {
+    return _getNextId();
+  }
+
+  /// 聚合实体无可更新字段，空操作。
+  Future<void> updateWaypointData(WaypointDataEntity data) async {}
+
+  Future<void> destroyWaypointData(int id) async {
+    await laconic.table(_table).where('id', id).delete();
+  }
+
+  Future<void> copyWaypointData(int id) async {
+    var rows = await laconic.table(_table).where('id', id).get();
+    if (rows.isEmpty) return;
+    var nextId = await _getNextId();
+    var inserts = rows.map((row) {
+      var json = Map<String, dynamic>.from(row.toMap());
+      json['id'] = nextId;
+      return json;
+    }).toList();
+    await laconic.table(_table).insert(inserts);
+  }
+
+  Future<void> saveWaypointData(WaypointDataEntity data) async {
+    if (data.id == 0) {
+      await storeWaypointData(data);
+      return;
+    }
+    var existing = await getWaypointData(data.id);
+    if (existing != null) {
+      await updateWaypointData(data);
+    }
+  }
+
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(id) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, {String? id}) {
+    if (id != null && id.isNotEmpty) {
+      builder = builder.where('id', id);
+    }
+    return builder;
   }
 }

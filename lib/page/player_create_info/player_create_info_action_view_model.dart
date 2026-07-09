@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/util/format_util.dart';
-import 'package:foxy/repository/player_create_info_repository.dart';
+import 'package:foxy/repository/player_create_info_action_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -11,7 +11,7 @@ import 'package:signals/signals.dart';
 
 class PlayerCreateInfoActionViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
+  final _repository = GetIt.instance.get<PlayerCreateInfoActionRepository>();
 
   final actions = signal<List<PlayerCreateInfoActionEntity>>([]);
   int? _race;
@@ -31,7 +31,10 @@ class PlayerCreateInfoActionViewModel {
       _race = race;
       _class_ = class_;
       if (race == null || class_ == null) return;
-      actions.value = await _repository.getActions(race, class_);
+      actions.value = await _repository.getBriefPlayerCreateInfoActions(
+        race,
+        class_,
+      );
     } catch (e) {
       LoggerUtil.instance.e('加载角色动作失败: $e');
       DialogUtil.instance.error('加载角色动作失败: $e');
@@ -58,8 +61,11 @@ class PlayerCreateInfoActionViewModel {
     if (_race == null || _class_ == null) return;
     try {
       final item = _collect();
-      await _repository.storeAction(item);
-      actions.value = await _repository.getActions(_race!, _class_!);
+      await _repository.storePlayerCreateInfoAction(item);
+      actions.value = await _repository.getBriefPlayerCreateInfoActions(
+        _race!,
+        _class_!,
+      );
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
     } catch (e) {
@@ -72,8 +78,16 @@ class PlayerCreateInfoActionViewModel {
     if (_race == null || _class_ == null) return;
     try {
       final item = _collect();
-      await _repository.updateAction(item, oldButton: _oldButton);
-      actions.value = await _repository.getActions(_race!, _class_!);
+      await _repository.updatePlayerCreateInfoAction(
+        _race!,
+        _class_!,
+        _oldButton ?? item.button,
+        item,
+      );
+      actions.value = await _repository.getBriefPlayerCreateInfoActions(
+        _race!,
+        _class_!,
+      );
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
     } catch (e) {
@@ -88,8 +102,15 @@ class PlayerCreateInfoActionViewModel {
   ) async {
     if (_race == null || _class_ == null) return;
     try {
-      await _repository.deleteAction(_race!, _class_!, item.button);
-      actions.value = await _repository.getActions(_race!, _class_!);
+      await _repository.destroyPlayerCreateInfoAction(
+        _race!,
+        _class_!,
+        item.button,
+      );
+      actions.value = await _repository.getBriefPlayerCreateInfoActions(
+        _race!,
+        _class_!,
+      );
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
     } catch (e) {

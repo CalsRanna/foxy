@@ -4,8 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureQuestItemRepository with RepositoryMixin {
   static const _table = 'creature_questitem';
 
-  /// 获取指定生物的所有任务物品（带物品信息）
-  Future<List<CreatureQuestItemEntity>> getCreatureQuestItems(
+  Future<List<CreatureQuestItemEntity>> getBriefCreatureQuestItems(
     int creatureEntry,
   ) async {
     var builder = laconic.table('$_table AS cq');
@@ -37,25 +36,31 @@ class CreatureQuestItemRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 查找单条记录
   Future<CreatureQuestItemEntity?> getCreatureQuestItem(
     int creatureEntry,
     int idx,
   ) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('CreatureEntry', creatureEntry)
         .where('Idx', idx)
-        .first();
-    return CreatureQuestItemEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return CreatureQuestItemEntity.fromJson(results.first.toMap());
   }
 
-  /// 新增任务物品
+  Future<CreatureQuestItemEntity> createCreatureQuestItem(
+    int creatureEntry,
+  ) async {
+    var nextIdx = await getNextIdx(creatureEntry);
+    return CreatureQuestItemEntity(creatureEntry: creatureEntry, idx: nextIdx);
+  }
+
   Future<void> storeCreatureQuestItem(CreatureQuestItemEntity questItem) async {
     await laconic.table(_table).insert([questItem.toJson()]);
   }
 
-  /// 更新任务物品
   Future<void> updateCreatureQuestItem(
     CreatureQuestItemEntity questItem,
   ) async {
@@ -69,7 +74,6 @@ class CreatureQuestItemRepository with RepositoryMixin {
         .update(json);
   }
 
-  /// 删除任务物品
   Future<void> destroyCreatureQuestItem(int creatureEntry, int idx) async {
     await laconic
         .table(_table)
@@ -78,36 +82,27 @@ class CreatureQuestItemRepository with RepositoryMixin {
         .delete();
   }
 
-  /// 复制任务物品
-  Future<CreatureQuestItemEntity> copyCreatureQuestItem(
-    int creatureEntry,
-    int idx,
-  ) async {
-    // 获取最大Idx
-    var maxIdxResult = await laconic
-        .table(_table)
-        .select(['MAX(Idx) AS maxIdx'])
-        .where('CreatureEntry', creatureEntry)
-        .first();
-    var maxIdx = (maxIdxResult.toMap()['maxIdx'] ?? 0) as int;
-
-    // 获取源记录
+  Future<void> copyCreatureQuestItem(int creatureEntry, int idx) async {
     var source = await getCreatureQuestItem(creatureEntry, idx);
-    if (source == null) {
-      throw Exception('源记录不存在');
-    }
-
-    // 创建新记录
-    var newQuestItem = CreatureQuestItemEntity.fromJson({
-      ...source.toJson(),
-      'Idx': maxIdx + 1,
-    });
-
-    await storeCreatureQuestItem(newQuestItem);
-    return newQuestItem;
+    if (source == null) return;
+    var nextIdx = await getNextIdx(creatureEntry);
+    var json = source.toJson();
+    json['Idx'] = nextIdx;
+    await laconic.table(_table).insert([json]);
   }
 
-  /// 获取下一个可用的Idx
+  Future<void> saveCreatureQuestItem(CreatureQuestItemEntity questItem) async {
+    var existing = await getCreatureQuestItem(
+      questItem.creatureEntry,
+      questItem.idx,
+    );
+    if (existing != null) {
+      await updateCreatureQuestItem(questItem);
+    } else {
+      await storeCreatureQuestItem(questItem);
+    }
+  }
+
   Future<int> getNextIdx(int creatureEntry) async {
     var maxResult = await laconic
         .table(_table)

@@ -23,7 +23,7 @@ class GameObjectQuestItemViewModel {
   final _repository = GetIt.instance.get<GameObjectQuestItemRepository>();
 
   Future<void> load() async {
-    items.value = await _repository.getGameObjectQuestItems(
+    items.value = await _repository.getBriefGameObjectQuestItems(
       gameObjectEntry.value,
     );
   }

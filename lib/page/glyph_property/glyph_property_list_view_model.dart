@@ -17,7 +17,7 @@ class GlyphPropertyListViewModel {
   final _repository = GetIt.instance.get<GlyphPropertyRepository>();
 
   final page = signal(1);
-  final properties = signal(<GlyphPropertyEntity>[]);
+  final properties = signal(<BriefGlyphPropertyEntity>[]);
   final total = signal(0);
 
   Future<void> copyGlyphProperty(int id) async {
@@ -76,7 +76,7 @@ class GlyphPropertyListViewModel {
     try {
       final filter = GlyphPropertyFilterEntity();
       final (items, count) = await (
-        _repository.getGlyphProperties(page: 1, filter: filter),
+        _repository.getBriefGlyphProperties(page: 1, filter: filter),
         _repository.countGlyphProperties(filter: filter),
       ).wait;
       properties.value = items;
@@ -123,7 +123,7 @@ class GlyphPropertyListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getGlyphProperties(page: page.value, filter: filter),
+        _repository.getBriefGlyphProperties(page: page.value, filter: filter),
         _repository.countGlyphProperties(filter: filter),
       ).wait;
       properties.value = items;

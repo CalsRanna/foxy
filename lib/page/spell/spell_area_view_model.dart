@@ -32,7 +32,7 @@ class SpellAreaViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getSpellAreas(spellId.value);
+    final data = await _repository.getBriefSpellAreas(spellId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -98,7 +98,14 @@ class SpellAreaViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final area = items.value[index];
     try {
-      await _repository.copySpellArea(area);
+      await _repository.copySpellArea(
+        area.spell,
+        area.area,
+        area.questStart,
+        area.auraSpell,
+        area.racemask,
+        area.gender,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -174,7 +181,15 @@ class SpellAreaViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await _repository.updateSpellArea(oldData, newData);
+      await _repository.updateSpellArea(
+        oldData.spell,
+        oldData.area,
+        oldData.questStart,
+        oldData.auraSpell,
+        oldData.racemask,
+        oldData.gender,
+        newData,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));
