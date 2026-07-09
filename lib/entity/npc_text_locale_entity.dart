@@ -47,3 +47,28 @@ class NpcTextLocaleEntity {
     );
   }
 }
+
+/// 列表 / Picker 精简行：ID + locale
+class BriefNpcTextLocaleEntity {
+  final int id;
+  final String locale;
+
+  const BriefNpcTextLocaleEntity({
+    this.id = 0,
+    this.locale = 'zhCN',
+  });
+
+  factory BriefNpcTextLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefNpcTextLocaleEntity(
+      id: (json['ID'] ?? json['id'] ?? 0) as int,
+      locale: json['Locale']?.toString() ?? 'zhCN',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Locale': locale,
+    };
+  }
+}

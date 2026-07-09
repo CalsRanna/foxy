@@ -559,3 +559,4 @@ DBC 同表多语言（§4.3.B）追加：
 | 2026-07-10 | 明确关联查询用 laconic join/leftJoin；与 Filter、主键参数分开写清 |
 | 2026-07-10 | 自我复查：将 §10 批注写入正文；消除与「只读子集 / get 非空 / copy 返回值」等矛盾 |
 | 2026-07-10 | 本地化分两态：分表 locale（独立表/Repository）vs DBC 同表多语言列（无 Locale Repository） |
+| 2026-07-10 | 落地：DBC 导出经 `DbcExportRegistry` → Repository.`get{Entities}`；1:1 子表与 Locale 仓储补全标准 CRUD |

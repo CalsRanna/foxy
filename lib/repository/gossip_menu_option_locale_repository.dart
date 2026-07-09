@@ -4,13 +4,30 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GossipMenuOptionLocaleRepository with RepositoryMixin {
   static const _table = 'gossip_menu_option_locale';
 
-  Future<List<GossipMenuOptionLocaleEntity>> getGossipMenuOptionLocales(
-    int menuId,
-  ) async {
-    final results = await laconic.table(_table).where('MenuID', menuId).get();
+  Future<List<BriefGossipMenuOptionLocaleEntity>>
+  getBriefGossipMenuOptionLocales({int page = 1}) async {
+    final offset = (page - 1) * kPageSize;
+    final results = await laconic
+        .table(_table)
+        .select(['MenuID', 'OptionID', 'Locale', 'OptionText'])
+        .limit(kPageSize)
+        .offset(offset)
+        .get();
+    return results
+        .map((e) => BriefGossipMenuOptionLocaleEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<GossipMenuOptionLocaleEntity>>
+  getGossipMenuOptionLocaleEntities() async {
+    final results = await laconic.table(_table).get();
     return results
         .map((e) => GossipMenuOptionLocaleEntity.fromJson(e.toMap()))
         .toList();
+  }
+
+  Future<int> countGossipMenuOptionLocales() async {
+    return laconic.table(_table).count();
   }
 
   Future<GossipMenuOptionLocaleEntity?> getGossipMenuOptionLocale(
@@ -29,10 +46,40 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
     return GossipMenuOptionLocaleEntity.fromJson(results.first.toMap());
   }
 
+  Future<GossipMenuOptionLocaleEntity> createGossipMenuOptionLocale({
+    int menuId = 0,
+    int optionId = 0,
+    String locale = 'zhCN',
+  }) async {
+    return GossipMenuOptionLocaleEntity(
+      menuId: menuId,
+      optionId: optionId,
+      locale: locale,
+    );
+  }
+
   Future<void> storeGossipMenuOptionLocale(
     GossipMenuOptionLocaleEntity model,
   ) async {
     await laconic.table(_table).insert([model.toJson()]);
+  }
+
+  Future<void> updateGossipMenuOptionLocale(
+    int menuId,
+    int optionId,
+    String locale,
+    GossipMenuOptionLocaleEntity model,
+  ) async {
+    final json = model.toJson();
+    json.remove('MenuID');
+    json.remove('OptionID');
+    json.remove('Locale');
+    await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('OptionID', optionId)
+        .where('Locale', locale)
+        .update(json);
   }
 
   Future<void> destroyGossipMenuOptionLocale(
@@ -46,6 +93,45 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
         .where('OptionID', optionId)
         .where('Locale', locale)
         .delete();
+  }
+
+  Future<void> copyGossipMenuOptionLocale(
+    int menuId,
+    int optionId,
+    String locale,
+  ) async {
+    // Locales are keyed by locale string; shallow copy is a no-op without a new locale.
+    final source = await getGossipMenuOptionLocale(menuId, optionId, locale);
+    if (source == null) return;
+  }
+
+  Future<void> saveGossipMenuOptionLocale(
+    GossipMenuOptionLocaleEntity model,
+  ) async {
+    final existing = await getGossipMenuOptionLocale(
+      model.menuId,
+      model.optionId,
+      model.locale,
+    );
+    if (existing == null) {
+      await storeGossipMenuOptionLocale(model);
+    } else {
+      await updateGossipMenuOptionLocale(
+        model.menuId,
+        model.optionId,
+        model.locale,
+        model,
+      );
+    }
+  }
+
+  Future<List<GossipMenuOptionLocaleEntity>> getGossipMenuOptionLocales(
+    int menuId,
+  ) async {
+    final results = await laconic.table(_table).where('MenuID', menuId).get();
+    return results
+        .map((e) => GossipMenuOptionLocaleEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> saveGossipMenuOptionLocales(

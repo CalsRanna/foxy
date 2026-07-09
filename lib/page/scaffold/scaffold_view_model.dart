@@ -290,15 +290,10 @@ class ScaffoldViewModel {
 
   Future<bool> _runExport(String outputDir, List<String> tableShorts) async {
     try {
-      final config = await _dbcSync.loadConfig();
+      // 数据经 Repository.get{Entities} 读取（DbcExportRegistry），不再在 isolate 内 SELECT *
       final stream = _dbcExport.export(
         outputDir: outputDir,
         tableShorts: tableShorts,
-        host: config['host'] as String? ?? '127.0.0.1',
-        port: int.tryParse(config['port'] as String? ?? '3306') ?? 3306,
-        database: config['database'] as String? ?? 'acore_world',
-        username: config['username'] as String? ?? 'acore',
-        password: config['password'] as String? ?? 'acore',
       );
 
       final completer = Completer<bool>();

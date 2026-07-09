@@ -4,6 +4,35 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureTemplateAddonRepository with RepositoryMixin {
   static const _table = 'creature_template_addon';
 
+  Future<List<BriefCreatureTemplateAddonEntity>>
+  getBriefCreatureTemplateAddons({int page = 1}) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select([
+      'entry',
+      'path_id',
+      'mount',
+      'emote',
+      'auras',
+    ]);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefCreatureTemplateAddonEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<CreatureTemplateAddonEntity>> getCreatureTemplateAddons() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => CreatureTemplateAddonEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countCreatureTemplateAddons() async {
+    return laconic.table(_table).count();
+  }
+
   Future<CreatureTemplateAddonEntity?> getCreatureTemplateAddon(
     int entry,
   ) async {

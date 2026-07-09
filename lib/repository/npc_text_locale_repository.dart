@@ -4,9 +4,30 @@ import 'package:foxy/repository/repository_mixin.dart';
 class NpcTextLocaleRepository with RepositoryMixin {
   static const _table = 'npc_text_locale';
 
-  Future<List<NpcTextLocaleEntity>> getNpcTextLocales(int id) async {
-    final results = await laconic.table(_table).where('ID', id).get();
-    return results.map((e) => NpcTextLocaleEntity.fromJson(e.toMap())).toList();
+  Future<List<BriefNpcTextLocaleEntity>> getBriefNpcTextLocales({
+    int page = 1,
+  }) async {
+    final offset = (page - 1) * kPageSize;
+    final results = await laconic
+        .table(_table)
+        .select(['ID', 'Locale'])
+        .limit(kPageSize)
+        .offset(offset)
+        .get();
+    return results
+        .map((e) => BriefNpcTextLocaleEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<NpcTextLocaleEntity>> getNpcTextLocaleEntities() async {
+    final results = await laconic.table(_table).get();
+    return results
+        .map((e) => NpcTextLocaleEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countNpcTextLocales() async {
+    return laconic.table(_table).count();
   }
 
   Future<NpcTextLocaleEntity?> getNpcTextLocale(int id, String locale) async {
@@ -67,6 +88,11 @@ class NpcTextLocaleRepository with RepositoryMixin {
     } else {
       await updateNpcTextLocale(model.id, model.locale, model);
     }
+  }
+
+  Future<List<NpcTextLocaleEntity>> getNpcTextLocales(int id) async {
+    final results = await laconic.table(_table).where('ID', id).get();
+    return results.map((e) => NpcTextLocaleEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveNpcTextLocales(

@@ -4,6 +4,37 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureOnKillReputationRepository with RepositoryMixin {
   static const _table = 'creature_onkill_reputation';
 
+  Future<List<BriefCreatureOnKillReputationEntity>>
+  getBriefCreatureOnKillReputations({int page = 1}) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select([
+      'creature_id',
+      'RewOnKillRepFaction1',
+      'RewOnKillRepFaction2',
+      'RewOnKillRepValue1',
+      'RewOnKillRepValue2',
+      'TeamDependent',
+    ]);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefCreatureOnKillReputationEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<CreatureOnKillReputationEntity>>
+  getCreatureOnKillReputations() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => CreatureOnKillReputationEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countCreatureOnKillReputations() async {
+    return laconic.table(_table).count();
+  }
+
   Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
     int creatureID,
   ) async {

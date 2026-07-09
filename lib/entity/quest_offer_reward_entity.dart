@@ -90,6 +90,35 @@ class QuestOfferRewardEntity {
   }
 }
 
+/// 任务完成奖励文本列表/Picker 展示模型
+class BriefQuestOfferRewardEntity {
+  final int id;
+  final int emote1;
+  final String rewardText;
+
+  const BriefQuestOfferRewardEntity({
+    this.id = 0,
+    this.emote1 = 0,
+    this.rewardText = '',
+  });
+
+  factory BriefQuestOfferRewardEntity.fromJson(Map<String, dynamic> json) {
+    return BriefQuestOfferRewardEntity(
+      id: json['ID'] ?? 0,
+      emote1: json['Emote1'] ?? 0,
+      rewardText: json['RewardText']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Emote1': emote1,
+      'RewardText': rewardText,
+    };
+  }
+}
+
 /// quest_offer_reward_locale 本地化模型（复合键: ID + Locale）
 class QuestOfferRewardLocaleEntity {
   final int id;
@@ -135,5 +164,36 @@ class QuestOfferRewardLocaleEntity {
       rewardText: rewardText ?? this.rewardText,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
+  }
+}
+
+/// 列表 / Picker 精简行：ID + locale + 奖励文本
+class BriefQuestOfferRewardLocaleEntity {
+  final int id;
+  final String locale;
+  final String rewardText;
+
+  const BriefQuestOfferRewardLocaleEntity({
+    this.id = 0,
+    this.locale = 'zhCN',
+    this.rewardText = '',
+  });
+
+  factory BriefQuestOfferRewardLocaleEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefQuestOfferRewardLocaleEntity(
+      id: (json['ID'] ?? json['id'] ?? 0) as int,
+      locale: json['locale']?.toString() ?? 'zhCN',
+      rewardText: json['RewardText']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'locale': locale,
+      'RewardText': rewardText,
+    };
   }
 }

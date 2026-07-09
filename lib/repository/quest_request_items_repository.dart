@@ -4,6 +4,35 @@ import 'package:foxy/repository/repository_mixin.dart';
 class QuestRequestItemsRepository with RepositoryMixin {
   static const _table = 'quest_request_items';
 
+  Future<List<BriefQuestRequestItemsEntity>> getBriefQuestRequestItems({
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select([
+      'ID',
+      'EmoteOnComplete',
+      'EmoteOnIncomplete',
+      'CompletionText',
+    ]);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefQuestRequestItemsEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<QuestRequestItemsEntity>> getQuestRequestItemsList() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => QuestRequestItemsEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countQuestRequestItems() async {
+    return laconic.table(_table).count();
+  }
+
   Future<QuestRequestItemsEntity?> getQuestRequestItems(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
