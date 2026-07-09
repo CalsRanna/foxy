@@ -1123,20 +1123,21 @@ class _SpellViewState extends State<SpellView> {
   }
 
   /// 返回 MiscValueB 对应的枚举选项
-  dynamic _miscValueBOptions(int effect, int aura) {
+  MiscValueOptions? _miscValueBOptions(int effect, int aura) {
     if (effect == 0) return null;
     return switch (effect) {
       6 => switch (aura) {
-        174 =>
-          kStatsEnumOptions, // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — 用 Stats 枚举！
+        174 => MiscValueDropdown(
+          kStatsEnumOptions,
+        ), // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — 用 Stats 枚举！
         _ => null,
       },
       _ => null,
     };
   }
 
-  /// 返回 MiscValue 对应的枚举选项，null=数字输入, Map=下拉框, List=FlagPicker
-  dynamic _miscValueOptions(int effect, int aura) {
+  /// 返回 MiscValue 对应的枚举选项。
+  MiscValueOptions? _miscValueOptions(int effect, int aura) {
     if (effect == 0) return null;
     if (effect == 6) {
       return switch (aura) {
@@ -1144,19 +1145,23 @@ class _SpellViewState extends State<SpellView> {
         87 ||
         174 ||
         237 ||
-        238 => kSpellSchoolMaskOptions, // school mask → FlagPicker!
-        22 || 83 => kDamageSchoolOptions, // 单值抗性 → 下拉
-        29 || 137 || 175 || 182 || 212 || 268 => kStatTypeOptions, // 单值属性 → 下拉
+        238 => MiscValueFlagPicker(
+          kSpellSchoolMaskOptions,
+        ), // school mask → FlagPicker!
+        22 || 83 => MiscValueDropdown(kDamageSchoolOptions), // 单值抗性 → 下拉
+        29 || 137 || 175 || 182 || 212 || 268 => MiscValueDropdown(
+          kStatTypeOptions,
+        ), // 单值属性 → 下拉
         30 || 98 => null, // 技能ID → 数字
-        31 => kSpeedTypeOptions,
-        36 => kShapeshiftFormOptions,
-        99 => kAttackPowerTypeOptions,
-        107 || 108 => kSpellModOpOptions,
+        31 => MiscValueDropdown(kSpeedTypeOptions),
+        36 => MiscValueDropdown(kShapeshiftFormOptions),
+        99 => MiscValueDropdown(kAttackPowerTypeOptions),
+        107 || 108 => MiscValueDropdown(kSpellModOpOptions),
         _ => null,
       };
     }
     return switch (effect) {
-      30 => kEnergizePowerTypeOptions, // ENERGIZE
+      30 => MiscValueDropdown(kEnergizePowerTypeOptions), // ENERGIZE
       _ => null,
     };
   }
@@ -1641,10 +1646,24 @@ class _SpellViewState extends State<SpellView> {
   }
 }
 
+/// MiscValue 的三态输入模式。
+sealed class MiscValueOptions {
+  const MiscValueOptions();
+}
+class MiscValueNumber extends MiscValueOptions {}
+class MiscValueDropdown extends MiscValueOptions {
+  final Map<int, String> items;
+  const MiscValueDropdown(this.items);
+}
+class MiscValueFlagPicker extends MiscValueOptions {
+  final List<FlagItem> flags;
+  const MiscValueFlagPicker(this.flags);
+}
+
 /// 根据上下文动态切换 数字输入 / 下拉框 / FlagPicker。
 class _MiscValueInput extends StatefulWidget {
   final TextEditingController textController;
-  final dynamic options; // null=数字输入, Map=下拉框, List=FlagPicker
+  final MiscValueOptions? options;
   final bool readOnly;
 
   const _MiscValueInput({
@@ -1695,8 +1714,8 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     super.dispose();
   }
 
-  bool get _isFlagMode => widget.options is List<FlagItem>;
-  bool get _isSelectMode => widget.options is Map<int, String>;
+  bool get _isFlagMode => widget.options is MiscValueFlagPicker;
+  bool get _isSelectMode => widget.options is MiscValueDropdown;
 
   /// 将 [_flagDisplayController] 的格式化文本同步回 [widget.textController]（纯数字），
   /// 供 VM 读取。替代原 [FoxyFlagPicker.onChanged] 的回写。
@@ -1723,7 +1742,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     if (_isFlagMode) {
       return FoxyFlagPicker(
         controller: _flagDisplayController,
-        flags: widget.options as List<FlagItem>,
+        flags: (widget.options! as MiscValueFlagPicker).flags,
         title: '杂项值',
         placeholder: 'MiscValue',
       );
@@ -1731,7 +1750,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     if (_isSelectMode) {
       return FoxyShadSelect<int>(
         controller: _selectController!,
-        options: widget.options as Map<int, String>,
+        options: (widget.options! as MiscValueDropdown).items,
         placeholder: const Text('选择...'),
         enabled: !widget.readOnly,
       );
