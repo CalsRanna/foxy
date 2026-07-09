@@ -34,7 +34,7 @@ class GameObjectLootTemplateViewModel {
   final repository = LootTemplateRepository(LootTableType.gameobject);
 
   Future<void> load() async {
-    items.value = await repository.getLootTemplates(gameObjectId.value);
+    items.value = await repository.getBriefLootTemplates(gameObjectId.value);
   }
 
   void resetForm() {
@@ -169,7 +169,7 @@ class GameObjectLootTemplateViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
-      await repository.updateLootTemplate(loot, oldItem: editingItem);
+      await repository.updateLootTemplate(loot.entry, editingItem ?? loot.item, loot);
       await load();
       if (context.mounted) Navigator.of(context).pop();
     } catch (e) {

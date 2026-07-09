@@ -56,17 +56,23 @@ ViewModel 通过 `GetIt.instance.get<T>()` 获取, 使用 signals 的 `signal()`
 ### 实体与 Repository
 
 - **Entity**: 纯数据类, 字段对应 MySQL 列名 (snake_case), 包含 `fromJson(Map)` 工厂构造函数和 `toJson()` 方法
-- **Brief 实体** (如 `BriefCreatureTemplateEntity`): 列表页用的精简版实体, 通过 LEFT JOIN locale 表获取本地化字段
-- **Filter 实体** (如 `CreatureTemplateFilterEntity`): 封装列表筛选条件
-- **Repository**: 通过 `RepositoryMixin` 混入, 从 `Database.instance.laconic` 获取 Laconic 实例, 统一 `kPageSize = 50` 分页。方法命名遵循以下约定:
-  - 列表查询: `getBrief<Entities>({FilterEntity? filter, int page = 1})` — 返回 `Brief<Entity>Entity` 精简实体 (LEFT JOIN locale 表获取本地化字段)
-  - 计数: `count<Entities>({FilterEntity? filter})`
-  - 单条查询: `get<Entity>(int id)` 或 `get<Entity>(Map<String, dynamic> id)` (复合主键)
-  - 新增: `store<Entity>(Entity entity)`
-  - 更新: `update<Entity>(Entity entity)` — 按实体主键更新
-  - 删除: `destroy<Entity>(dynamic id)`
-  - 复制: `copy<Entity>(int id)`
-  - 子表本地化: `get<Entity>Locales(int id)` / `save<Entity>Locales(int id, List<LocaleEntity> locales)`
+- **Brief 实体** (如 `BriefCreatureTemplateEntity`): 列表页与 Entity Picker **共用**的精简版实体；**Brief ≡ 分页列表列集**，Picker 列 ⊆ Brief
+- **Filter 实体** (如 `CreatureTemplateFilterEntity`): 列表与 Picker 共用的筛选条件
+- **Repository**: 通过 `RepositoryMixin` 混入, 从 `Database.instance.laconic` 获取 Laconic 实例, 统一 `kPageSize = 50` 分页。**一表一 Repository**（`static const _table`，无主从分类）。完整 CRUD 契约见 [`docs/repository_crud_template.md`](docs/repository_crud_template.md)。方法命名约定:
+  - 分页精简列表: `getBrief{Entities}({int page = 1, FilterEntity? filter})` — **仅**列表页 / Picker；可 `leftJoin` 关联展示列
+  - 全量完整列表: `get{Entities}()` — **全列全行、无 page/filter**；供 DBC 导出等批处理，**禁止**给 UI 列表用
+  - 计数: `count{Entities}({FilterEntity? filter})` — 与 `getBrief*` 共用 filter / join
+  - 单条: `get{Entity}(...)` → `Future<{Entity}Entity?>` — 用 `.limit(1).get()` 空→null（勿用 laconic `first()`，会抛）；复合主键**多参数**，禁止 `Map`
+  - 内存占位: `create{Entity}()` — 不落库
+  - 插入: `store{Entity}(semanticName)` — 参数用语义名；自动主键返回 `Future<int>`
+  - 更新: `update{Entity}(...)`
+  - 删除: `destroy{Entity}(...)` — 不用 `delete*`
+  - 复制: `copy{Entity}(...)` → `Future<void>`
+  - Upsert: `save{Entity}(...)` — 主键 0→store；否则 get 后 update 或按给定主键 insert
+  - 分表 locale（过渡）: `get{Entity}Locales` / `save{Entity}Locales`；DBC 同表多语言列无 Locale Repository
+  - LIKE: 始终 `comparator: 'like'`，值为 `'%$kw%'`
+  - 公开方法顺序: getBrief → get*s → count → get → create → store → update → destroy → copy → save → locales → 其它公开辅助
+  - 私有方法顺序: `_getNextId` / `_getNextEntry` → `_applyFilter` → 其它
 
 ### 数据库层
 

@@ -127,8 +127,10 @@ class GameObjectTemplateDetailViewModel {
   Future<void> initSignals({int? entry}) async {
     if (entry == null) return;
     try {
-      template.value = await _repository.getGameObjectTemplate(entry);
-      _initControllers(template.value);
+      final result = await _repository.getGameObjectTemplate(entry);
+      if (result == null) return;
+      template.value = result;
+      _initControllers(result);
     } catch (e) {
       LoggerUtil.instance.e('加载游戏对象详情失败: $e');
       DialogUtil.instance.error('加载游戏对象详情失败: $e');

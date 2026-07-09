@@ -15,7 +15,7 @@ class QuestFactionRewardListViewModel {
   final _repository = GetIt.instance.get<QuestFactionRewardRepository>();
 
   final page = signal(1);
-  final rewards = signal(<QuestFactionRewardEntity>[]);
+  final rewards = signal(<BriefQuestFactionRewardEntity>[]);
   final total = signal(0);
 
   Future<void> copyQuestFactionReward(int id) async {
@@ -61,7 +61,7 @@ class QuestFactionRewardListViewModel {
     try {
       final filter = QuestFactionRewardFilterEntity();
       final (items, count) = await (
-        _repository.getQuestFactionRewards(page: 1, filter: filter),
+        _repository.getBriefQuestFactionRewards(page: 1, filter: filter),
         _repository.countQuestFactionRewards(filter: filter),
       ).wait;
       rewards.value = items;
@@ -110,7 +110,10 @@ class QuestFactionRewardListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getQuestFactionRewards(page: page.value, filter: filter),
+        _repository.getBriefQuestFactionRewards(
+          page: page.value,
+          filter: filter,
+        ),
         _repository.countQuestFactionRewards(filter: filter),
       ).wait;
       rewards.value = items;

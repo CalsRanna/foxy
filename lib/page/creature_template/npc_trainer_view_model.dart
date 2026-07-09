@@ -34,7 +34,7 @@ class NpcTrainerViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getNpcTrainers(id.value);
+    final data = await _repository.getBriefNpcTrainers(id.value);
     items.value = data;
     selectedIndex.value = null;
     creating.value = false;
@@ -169,7 +169,7 @@ class NpcTrainerViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final trainer = collectFromForm();
-      await _repository.updateNpcTrainer(trainer);
+      await _repository.updateNpcTrainer(trainer.id, trainer.spellID, trainer);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

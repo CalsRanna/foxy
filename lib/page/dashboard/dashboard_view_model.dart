@@ -66,7 +66,7 @@ class DashboardViewModel {
 
   Future<void> _loadRecentActivities() async {
     try {
-      recentActivities.value = await _activityRepo.getRecentActivityLogs();
+      recentActivities.value = await _activityRepo.getActivityLogs();
     } catch (e) {
       LoggerUtil.instance.e('加载最近活动失败: $e');
       DialogUtil.instance.error('加载最近活动失败: $e');

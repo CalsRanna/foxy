@@ -18,7 +18,7 @@ class PageTextListViewModel {
   final _repository = GetIt.instance.get<PageTextRepository>();
 
   final page = signal(1);
-  final pages = signal<List<PageTextEntity>>([]);
+  final pages = signal<List<BriefPageTextEntity>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
@@ -26,7 +26,10 @@ class PageTextListViewModel {
   Future<void> initSignals() async {
     try {
       final (items, count) = await (
-        _repository.getPageTexts(filter: _buildFilter(), page: page.value),
+        _repository.getBriefPageTexts(
+          filter: _buildFilter(),
+          page: page.value,
+        ),
         _repository.countPageTexts(filter: _buildFilter()),
       ).wait;
       pages.value = items;
@@ -126,7 +129,10 @@ class PageTextListViewModel {
   Future<void> _refresh() async {
     try {
       final (items, count) = await (
-        _repository.getPageTexts(filter: _buildFilter(), page: page.value),
+        _repository.getBriefPageTexts(
+          filter: _buildFilter(),
+          page: page.value,
+        ),
         _repository.countPageTexts(filter: _buildFilter()),
       ).wait;
       pages.value = items;

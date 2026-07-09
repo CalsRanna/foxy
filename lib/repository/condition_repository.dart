@@ -8,8 +8,8 @@ class ConditionRepository with RepositoryMixin {
   static const _table = 'conditions';
 
   Future<List<BriefConditionEntity>> getBriefConditions({
-    required ConditionFilterEntity filter,
-    required int page,
+    int page = 1,
+    ConditionFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     const fields = [
@@ -34,19 +34,43 @@ class ConditionRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countConditions({required ConditionFilterEntity filter}) async {
+  Future<List<ConditionEntity>> getConditions() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => ConditionEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<int> countConditions({ConditionFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<ConditionEntity> getCondition(Map<String, dynamic> id) async {
-    var builder = laconic.table(_table);
-    for (final entry in id.entries) {
-      builder = builder.where(entry.key, entry.value);
-    }
-    var result = await builder.first();
-    return ConditionEntity.fromJson(result.toMap());
+  Future<ConditionEntity?> getCondition(
+    int sourceTypeOrReferenceId,
+    int sourceGroup,
+    int sourceEntry,
+    int sourceId,
+    int elseGroup,
+    int conditionTypeOrReference,
+    int conditionTarget,
+  ) async {
+    var results = await laconic
+        .table(_table)
+        .where('SourceTypeOrReferenceId', sourceTypeOrReferenceId)
+        .where('SourceGroup', sourceGroup)
+        .where('SourceEntry', sourceEntry)
+        .where('SourceId', sourceId)
+        .where('ElseGroup', elseGroup)
+        .where('ConditionTypeOrReference', conditionTypeOrReference)
+        .where('ConditionTarget', conditionTarget)
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return ConditionEntity.fromJson(results.first.toMap());
+  }
+
+  Future<ConditionEntity> createCondition() async {
+    return const ConditionEntity();
   }
 
   Future<void> storeCondition(ConditionEntity condition) async {
@@ -54,11 +78,16 @@ class ConditionRepository with RepositoryMixin {
   }
 
   Future<void> updateCondition(
-    Map<String, dynamic> id,
+    int sourceTypeOrReferenceId,
+    int sourceGroup,
+    int sourceEntry,
+    int sourceId,
+    int elseGroup,
+    int conditionTypeOrReference,
+    int conditionTarget,
     ConditionEntity condition,
   ) async {
     var json = condition.toJson();
-    // 移除主键字段，只更新非键字段
     json.remove('SourceTypeOrReferenceId');
     json.remove('SourceGroup');
     json.remove('SourceEntry');
@@ -66,30 +95,95 @@ class ConditionRepository with RepositoryMixin {
     json.remove('ElseGroup');
     json.remove('ConditionTypeOrReference');
     json.remove('ConditionTarget');
-
-    var builder = laconic.table(_table);
-    for (final entry in id.entries) {
-      builder = builder.where(entry.key, entry.value);
-    }
-    await builder.update(json);
+    await laconic
+        .table(_table)
+        .where('SourceTypeOrReferenceId', sourceTypeOrReferenceId)
+        .where('SourceGroup', sourceGroup)
+        .where('SourceEntry', sourceEntry)
+        .where('SourceId', sourceId)
+        .where('ElseGroup', elseGroup)
+        .where('ConditionTypeOrReference', conditionTypeOrReference)
+        .where('ConditionTarget', conditionTarget)
+        .update(json);
   }
 
-  Future<void> destroyCondition(Map<String, dynamic> id) async {
-    var builder = laconic.table(_table);
-    for (final entry in id.entries) {
-      builder = builder.where(entry.key, entry.value);
-    }
-    await builder.delete();
+  Future<void> destroyCondition(
+    int sourceTypeOrReferenceId,
+    int sourceGroup,
+    int sourceEntry,
+    int sourceId,
+    int elseGroup,
+    int conditionTypeOrReference,
+    int conditionTarget,
+  ) async {
+    await laconic
+        .table(_table)
+        .where('SourceTypeOrReferenceId', sourceTypeOrReferenceId)
+        .where('SourceGroup', sourceGroup)
+        .where('SourceEntry', sourceEntry)
+        .where('SourceId', sourceId)
+        .where('ElseGroup', elseGroup)
+        .where('ConditionTypeOrReference', conditionTypeOrReference)
+        .where('ConditionTarget', conditionTarget)
+        .delete();
   }
 
-  Future<void> copyCondition(Map<String, dynamic> id) async {
-    var source = await getCondition(id);
+  Future<void> copyCondition(
+    int sourceTypeOrReferenceId,
+    int sourceGroup,
+    int sourceEntry,
+    int sourceId,
+    int elseGroup,
+    int conditionTypeOrReference,
+    int conditionTarget,
+  ) async {
+    var source = await getCondition(
+      sourceTypeOrReferenceId,
+      sourceGroup,
+      sourceEntry,
+      sourceId,
+      elseGroup,
+      conditionTypeOrReference,
+      conditionTarget,
+    );
+    if (source == null) return;
     var json = source.toJson();
-    json['ConditionValue3'] = (json['ConditionValue3'] as int) + 1;
+    // Shift ElseGroup (part of PK) so the copy is unique
+    json['ElseGroup'] = elseGroup + 1;
     await laconic.table(_table).insert([json]);
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, ConditionFilterEntity filter) {
+  Future<void> saveCondition(ConditionEntity condition) async {
+    var existing = await getCondition(
+      condition.sourceTypeOrReferenceId,
+      condition.sourceGroup,
+      condition.sourceEntry,
+      condition.sourceId,
+      condition.elseGroup,
+      condition.conditionTypeOrReference,
+      condition.conditionTarget,
+    );
+    if (existing != null) {
+      await updateCondition(
+        condition.sourceTypeOrReferenceId,
+        condition.sourceGroup,
+        condition.sourceEntry,
+        condition.sourceId,
+        condition.elseGroup,
+        condition.conditionTypeOrReference,
+        condition.conditionTarget,
+        condition,
+      );
+    } else {
+      await storeCondition(condition);
+    }
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ConditionFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
     if (filter.sourceTypeOrReferenceId.isNotEmpty) {
       builder = builder.where(
         'SourceTypeOrReferenceId',

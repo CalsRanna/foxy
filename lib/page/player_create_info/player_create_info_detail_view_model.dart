@@ -33,6 +33,7 @@ class PlayerCreateInfoDetailViewModel {
     if (race == null || playerClass == null) return;
     try {
       final result = await _repository.getPlayerCreateInfo(race, playerClass);
+      if (result == null) return;
       info.value = result;
       _initControllers(result);
     } catch (e, s) {
@@ -61,7 +62,8 @@ class PlayerCreateInfoDetailViewModel {
       final data = _collect();
       if (current != null) {
         await _repository.updatePlayerCreateInfo(
-          current.buildCredential(),
+          current.race,
+          current.class_,
           data,
         );
         info.value = data;

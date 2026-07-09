@@ -18,7 +18,7 @@ class SpellItemEnchantmentListViewModel {
   final _repository = GetIt.instance.get<SpellItemEnchantmentSoloRepository>();
 
   final page = signal(1);
-  final enchantments = signal(<SpellItemEnchantmentEntity>[]);
+  final enchantments = signal(<BriefSpellItemEnchantmentEntity>[]);
   final total = signal(0);
 
   Future<void> copySpellItemEnchantment(int id) async {
@@ -81,7 +81,7 @@ class SpellItemEnchantmentListViewModel {
     try {
       final filter = SpellItemEnchantmentFilterEntity();
       final (items, count) = await (
-        _repository.getSpellItemEnchantments(page: 1, filter: filter),
+        _repository.getBriefSpellItemEnchantments(page: 1, filter: filter),
         _repository.countSpellItemEnchantments(filter: filter),
       ).wait;
       enchantments.value = items;
@@ -134,7 +134,10 @@ class SpellItemEnchantmentListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getSpellItemEnchantments(page: page.value, filter: filter),
+        _repository.getBriefSpellItemEnchantments(
+          page: page.value,
+          filter: filter,
+        ),
         _repository.countSpellItemEnchantments(filter: filter),
       ).wait;
       enchantments.value = items;

@@ -76,7 +76,7 @@ class PlayerCreateInfoListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyPlayerCreateInfo(info.buildCredential());
+      await _repository.copyPlayerCreateInfo(info.race, info.class_);
       _logActivity(ActivityActionType.copy, info.race);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -95,7 +95,7 @@ class PlayerCreateInfoListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyPlayerCreateInfo(info.buildCredential());
+      await _repository.destroyPlayerCreateInfo(info.race, info.class_);
       _logActivity(ActivityActionType.delete, info.race);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -124,7 +124,7 @@ class PlayerCreateInfoListViewModel {
   }
 
   Future<List<PlayerCreateInfoEntity>> _search() async {
-    return _repository.getPlayerCreateInfos(
+    return _repository.getBriefPlayerCreateInfos(
       filter: _buildFilter(),
       page: page.value,
     );

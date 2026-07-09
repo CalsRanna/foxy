@@ -1,81 +1,60 @@
 import 'package:foxy/entity/npc_text_entity.dart';
+import 'package:foxy/entity/npc_text_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
-/// npc_text 表的数据访问层
-/// 单主键: ID
 class NpcTextRepository with RepositoryMixin {
   static const _table = 'npc_text';
 
-  /// 搜索（用于 FoxyEntityPicker（npc_text））
-  Future<List<NpcTextEntity>> getNpcTexts({
-    String? id,
-    String? text,
+  Future<List<BriefNpcTextEntity>> getBriefNpcTexts({
     int page = 1,
+    NpcTextFilterEntity? filter,
   }) async {
-    return getNpcTextsPaginated(id: id, text: text, page: page);
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    const fields = ['ID', 'text0_0', 'text0_1'];
+    builder = builder.select(fields);
+    builder = _applyFilter(builder, filter);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefNpcTextEntity.fromJson(e.toMap()))
+        .toList();
   }
 
-  Future<List<NpcTextEntity>> getNpcTextsPaginated({
-    String? id,
-    String? text,
-    required int page,
-  }) async {
-    final offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
-    }
-    if (text != null && text.isNotEmpty) {
-      builder = builder.whereAny(
-        ['text0_0', 'text0_1'],
-        '%$text%',
-        comparator: 'like',
-      );
-    }
-    builder = builder.limit(kPageSize).offset(offset);
-    final results = await builder.get();
+  Future<List<NpcTextEntity>> getNpcTexts() async {
+    var results = await laconic.table(_table).get();
     return results.map((e) => NpcTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countNpcTexts({String? id, String? text}) async {
+  Future<int> countNpcTexts({NpcTextFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
-    }
-    if (text != null && text.isNotEmpty) {
-      builder = builder.whereAny(
-        ['text0_0', 'text0_1'],
-        '%$text%',
-        comparator: 'like',
-      );
-    }
-    return await builder.count();
+    builder = _applyFilter(builder, filter);
+    return builder.count();
   }
 
-  /// 按 ID 查找
   Future<NpcTextEntity?> getNpcText(int id) async {
-    final result = await laconic.table(_table).where('ID', id).first();
-    return NpcTextEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return NpcTextEntity.fromJson(results.first.toMap());
   }
 
-  /// create：返回下一个可用 ID 的空白对象（不落库）
   Future<NpcTextEntity> createNpcText() async {
-    final result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    final maxId = result.toMap()['max_id'] as int?;
-    final model = NpcTextEntity(id: (maxId ?? 0) + 1);
-    return model;
+    return const NpcTextEntity();
   }
 
-  Future<void> updateNpcText(int id, NpcTextEntity model) async {
-    final json = model.toJson();
+  Future<int> storeNpcText(NpcTextEntity npcText) async {
+    var json = npcText.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateNpcText(NpcTextEntity npcText) async {
+    var json = npcText.toJson();
     json.remove('ID');
-    await laconic.table(_table).where('ID', id).update(json);
-  }
-
-  Future<void> storeNpcText(NpcTextEntity model) async {
-    await laconic.table(_table).insert([model.toJson()]);
+    await laconic.table(_table).where('ID', npcText.id).update(json);
   }
 
   Future<void> destroyNpcText(int id) async {
@@ -83,14 +62,50 @@ class NpcTextRepository with RepositoryMixin {
   }
 
   Future<void> copyNpcText(int id) async {
-    final original = await getNpcText(id);
-    if (original == null) return;
-    final next = await createNpcText();
-    final copy = NpcTextEntity(
-      id: next.id,
-      verifiedBuild: original.verifiedBuild,
-      entries: original.entries,
-    );
-    await storeNpcText(copy);
+    var source = await getNpcText(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveNpcText(NpcTextEntity npcText) async {
+    if (npcText.id == 0) {
+      await storeNpcText(npcText);
+      return;
+    }
+    var existing = await getNpcText(npcText.id);
+    if (existing != null) {
+      await updateNpcText(npcText);
+    } else {
+      await laconic.table(_table).insert([npcText.toJson()]);
+    }
+  }
+
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    NpcTextFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
+    }
+    if (filter.text.isNotEmpty) {
+      builder = builder.whereAny(
+        ['text0_0', 'text0_1'],
+        '%${filter.text}%',
+        comparator: 'like',
+      );
+    }
+    return builder;
   }
 }

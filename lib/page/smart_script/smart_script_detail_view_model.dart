@@ -122,13 +122,15 @@ class SmartScriptDetailViewModel {
     _origLink = link;
     isNew.value = false;
     try {
-      script.value = await _repository.getSmartScript(
+      final result = await _repository.getSmartScript(
         entryOrGuid,
         sourceType,
         id,
         link,
       );
-      _initControllers(script.value);
+      if (result == null) return;
+      script.value = result;
+      _initControllers(result);
     } catch (e, s) {
       LoggerUtil.instance.e(
         '加载脚本(entryOrGuid=$entryOrGuid, id=$id)失败',

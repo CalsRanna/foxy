@@ -6,18 +6,6 @@ import 'package:laconic/laconic.dart';
 class CurrencyTypeRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_currency_types';
 
-  Future<List<CurrencyTypeEntity>> getCurrencyTypes({
-    int page = 1,
-    CurrencyTypeFilterEntity? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results.map((e) => CurrencyTypeEntity.fromJson(e.toMap())).toList();
-  }
-
   Future<List<BriefCurrencyTypeEntity>> getBriefCurrencyTypes({
     int page = 1,
     CurrencyTypeFilterEntity? filter,
@@ -49,6 +37,11 @@ class CurrencyTypeRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<List<CurrencyTypeEntity>> getCurrencyTypes() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => CurrencyTypeEntity.fromJson(e.toMap())).toList();
+  }
+
   Future<int> countCurrencyTypes({CurrencyTypeFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -56,8 +49,13 @@ class CurrencyTypeRepository with RepositoryMixin {
   }
 
   Future<CurrencyTypeEntity?> getCurrencyType(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return CurrencyTypeEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return CurrencyTypeEntity.fromJson(results.first.toMap());
+  }
+
+  Future<CurrencyTypeEntity> createCurrencyType() async {
+    return const CurrencyTypeEntity();
   }
 
   Future<int> storeCurrencyType(CurrencyTypeEntity currencyType) async {
@@ -87,6 +85,19 @@ class CurrencyTypeRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
+  Future<void> saveCurrencyType(CurrencyTypeEntity currencyType) async {
+    if (currencyType.id == 0) {
+      await storeCurrencyType(currencyType);
+      return;
+    }
+    var existing = await getCurrencyType(currencyType.id);
+    if (existing != null) {
+      await updateCurrencyType(currencyType);
+    } else {
+      await laconic.table(_table).insert([currencyType.toJson()]);
+    }
+  }
+
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',
@@ -95,7 +106,10 @@ class CurrencyTypeRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, CurrencyTypeFilterEntity? filter) {
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    CurrencyTypeFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

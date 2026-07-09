@@ -70,7 +70,7 @@ class ReferenceLootTemplateDetailViewModel {
     try {
       final data = _collectFromControllers();
       if (oItem != null) {
-        await repository.updateLootTemplate(data, oldItem: oItem);
+        await repository.updateLootTemplate(data.entry, oItem, data);
         template.value = data;
         _logActivity(ActivityActionType.update, data);
       } else {

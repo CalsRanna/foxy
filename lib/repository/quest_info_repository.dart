@@ -6,15 +6,24 @@ import 'package:laconic/laconic.dart';
 class QuestInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_info';
 
-  Future<List<QuestInfoEntity>> getQuestInfos({
+  Future<List<BriefQuestInfoEntity>> getBriefQuestInfos({
     int page = 1,
     QuestInfoFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
+    const fields = ['ID', 'InfoName_Lang_zhCN'];
+    builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
+    return results
+        .map((e) => BriefQuestInfoEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<QuestInfoEntity>> getQuestInfos() async {
+    var results = await laconic.table(_table).get();
     return results.map((e) => QuestInfoEntity.fromJson(e.toMap())).toList();
   }
 
@@ -25,22 +34,27 @@ class QuestInfoRepository with RepositoryMixin {
   }
 
   Future<QuestInfoEntity?> getQuestInfo(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return QuestInfoEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return QuestInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<int> storeQuestInfo(QuestInfoEntity data) async {
-    var json = data.toJson();
+  Future<QuestInfoEntity> createQuestInfo() async {
+    return const QuestInfoEntity();
+  }
+
+  Future<int> storeQuestInfo(QuestInfoEntity questInfo) async {
+    var json = questInfo.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
   }
 
-  Future<void> updateQuestInfo(QuestInfoEntity data) async {
-    var json = data.toJson();
+  Future<void> updateQuestInfo(QuestInfoEntity questInfo) async {
+    var json = questInfo.toJson();
     json.remove('ID');
-    await laconic.table(_table).where('ID', data.id).update(json);
+    await laconic.table(_table).where('ID', questInfo.id).update(json);
   }
 
   Future<void> destroyQuestInfo(int id) async {
@@ -56,6 +70,19 @@ class QuestInfoRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
+  Future<void> saveQuestInfo(QuestInfoEntity questInfo) async {
+    if (questInfo.id == 0) {
+      await storeQuestInfo(questInfo);
+      return;
+    }
+    var existing = await getQuestInfo(questInfo.id);
+    if (existing != null) {
+      await updateQuestInfo(questInfo);
+    } else {
+      await laconic.table(_table).insert([questInfo.toJson()]);
+    }
+  }
+
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',
@@ -64,7 +91,10 @@ class QuestInfoRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, QuestInfoFilterEntity? filter) {
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    QuestInfoFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

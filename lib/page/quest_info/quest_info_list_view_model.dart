@@ -18,7 +18,7 @@ class QuestInfoListViewModel {
   final _repository = GetIt.instance.get<QuestInfoRepository>();
 
   final page = signal(1);
-  final infos = signal(<QuestInfoEntity>[]);
+  final infos = signal(<BriefQuestInfoEntity>[]);
   final total = signal(0);
 
   Future<void> copyQuestInfo(int id) async {
@@ -81,7 +81,7 @@ class QuestInfoListViewModel {
     try {
       final filter = QuestInfoFilterEntity();
       final (items, count) = await (
-        _repository.getQuestInfos(page: 1, filter: filter),
+        _repository.getBriefQuestInfos(page: 1, filter: filter),
         _repository.countQuestInfos(filter: filter),
       ).wait;
       infos.value = items;
@@ -132,7 +132,7 @@ class QuestInfoListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getQuestInfos(page: page.value, filter: filter),
+        _repository.getBriefQuestInfos(page: page.value, filter: filter),
         _repository.countQuestInfos(filter: filter),
       ).wait;
       infos.value = items;

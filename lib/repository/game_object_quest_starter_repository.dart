@@ -1,15 +1,11 @@
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
-/// gameobject_queststarter 表的数据访问层
-/// 复合主键: (id, quest)
 class GameObjectQuestStarterRepository with RepositoryMixin {
   static const _table = 'gameobject_queststarter';
 
-  /// 按 quest 搜索该任务下的所有任务给予者（带 gameobject_template JOIN，无 locale）
-  Future<List<BriefGameObjectQuestStarterEntity>> getGameObjectQuestStarters(
-    int questId,
-  ) async {
+  Future<List<BriefGameObjectQuestStarterEntity>>
+  getBriefGameObjectQuestStarters(int questId) async {
     const fields = ['gos.id', 'gos.quest', 'got.name'];
     var builder = laconic.table('$_table AS gos');
     builder = builder.select(fields);
@@ -24,19 +20,20 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 按复合键查找
   Future<GameObjectQuestStarterEntity?> getGameObjectQuestStarter(
-    Map<String, dynamic> id,
+    int id,
+    int quest,
   ) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
-    final result = await builder.first();
-    return GameObjectQuestStarterEntity.fromJson(result.toMap());
+    var results = await laconic
+        .table(_table)
+        .where('id', id)
+        .where('quest', quest)
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return GameObjectQuestStarterEntity.fromJson(results.first.toMap());
   }
 
-  /// 取指定 quest 下的下一个 id（MAX(id) + 1）
   Future<GameObjectQuestStarterEntity> createGameObjectQuestStarter(
     int questId,
   ) async {
@@ -57,32 +54,39 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
   }
 
   Future<void> updateGameObjectQuestStarter(
-    Map<String, dynamic> id,
+    int id,
+    int quest,
     GameObjectQuestStarterEntity model,
   ) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
     final json = model.toJson();
-    for (final k in id.keys) {
-      json.remove(k);
-    }
-    await builder.update(json);
+    json.remove('id');
+    json.remove('quest');
+    await laconic
+        .table(_table)
+        .where('id', id)
+        .where('quest', quest)
+        .update(json);
   }
 
-  Future<void> destroyGameObjectQuestStarter(Map<String, dynamic> id) async {
-    var builder = laconic.table(_table);
-    id.forEach((k, v) {
-      builder = builder.where(k, v);
-    });
-    await builder.delete();
+  Future<void> destroyGameObjectQuestStarter(int id, int quest) async {
+    await laconic.table(_table).where('id', id).where('quest', quest).delete();
   }
 
-  Future<void> copyGameObjectQuestStarter(Map<String, dynamic> id) async {
-    final original = await getGameObjectQuestStarter(id);
+  Future<void> copyGameObjectQuestStarter(int id, int quest) async {
+    final original = await getGameObjectQuestStarter(id, quest);
     if (original == null) return;
     final next = await createGameObjectQuestStarter(original.quest);
     await storeGameObjectQuestStarter(next);
+  }
+
+  Future<void> saveGameObjectQuestStarter(
+    GameObjectQuestStarterEntity model,
+  ) async {
+    var existing = await getGameObjectQuestStarter(model.id, model.quest);
+    if (existing != null) {
+      await updateGameObjectQuestStarter(model.id, model.quest, model);
+    } else {
+      await storeGameObjectQuestStarter(model);
+    }
   }
 }

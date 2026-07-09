@@ -31,7 +31,7 @@ class CreatureEquipTemplateViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getCreatureEquipTemplates(creatureId.value);
+    final data = await _repository.getBriefCreatureEquipTemplates(creatureId.value);
     items.value = data;
     selectedIndex.value = null;
   }

@@ -4,8 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class NpcVendorRepository with RepositoryMixin {
   static const _table = 'npc_vendor';
 
-  /// 获取指定NPC的所有商品（带物品信息）
-  Future<List<BriefNpcVendorEntity>> getNpcVendors(int entry) async {
+  Future<List<BriefNpcVendorEntity>> getBriefNpcVendors(int entry) async {
     var builder = laconic.table('$_table AS nv');
     const fields = [
       'nv.*',
@@ -35,34 +34,41 @@ class NpcVendorRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 查找单条记录
   Future<NpcVendorEntity?> getNpcVendor(int entry, int slot) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('entry', entry)
         .where('slot', slot)
-        .first();
-    return NpcVendorEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return NpcVendorEntity.fromJson(results.first.toMap());
   }
 
-  /// 新增商品
+  Future<NpcVendorEntity> createNpcVendor(int entry) async {
+    var nextSlot = await getNextSlot(entry);
+    return NpcVendorEntity(entry: entry, slot: nextSlot);
+  }
+
   Future<void> storeNpcVendor(NpcVendorEntity vendor) async {
     await laconic.table(_table).insert([vendor.toJson()]);
   }
 
-  /// 更新商品
-  Future<void> updateNpcVendor(NpcVendorEntity vendor, {int? oldSlot}) async {
+  Future<void> updateNpcVendor(
+    int entry,
+    int slot,
+    NpcVendorEntity vendor,
+  ) async {
     var json = vendor.toJson();
     json.remove('entry');
-    if (oldSlot == null) json.remove('slot');
+    // allow slot change in payload
     await laconic
         .table(_table)
-        .where('entry', vendor.entry)
-        .where('slot', oldSlot ?? vendor.slot)
+        .where('entry', entry)
+        .where('slot', slot)
         .update(json);
   }
 
-  /// 删除商品
   Future<void> destroyNpcVendor(int entry, int slot) async {
     await laconic
         .table(_table)
@@ -71,38 +77,24 @@ class NpcVendorRepository with RepositoryMixin {
         .delete();
   }
 
-  /// 复制商品
-  Future<NpcVendorEntity> copyNpcVendor(int entry, int slot) async {
-    // 获取最大slot
-    var maxSlotResult = await laconic
-        .table(_table)
-        .select(['MAX(slot) AS maxSlot'])
-        .where('entry', entry)
-        .first();
-    var maxSlot = (maxSlotResult.toMap()['maxSlot'] ?? 0) as int;
-
-    // 获取源记录
+  Future<void> copyNpcVendor(int entry, int slot) async {
     var source = await getNpcVendor(entry, slot);
-    if (source == null) {
-      throw Exception('源记录不存在');
-    }
-
-    // 创建新记录
-    var newVendor = NpcVendorEntity(
-      entry: source.entry,
-      slot: maxSlot + 1,
-      item: source.item,
-      maxcount: source.maxcount,
-      incrtime: source.incrtime,
-      extendedCost: source.extendedCost,
-      verifiedBuild: source.verifiedBuild,
-    );
-
-    await storeNpcVendor(newVendor);
-    return newVendor;
+    if (source == null) return;
+    var nextSlot = await getNextSlot(entry);
+    var json = source.toJson();
+    json['slot'] = nextSlot;
+    await laconic.table(_table).insert([json]);
   }
 
-  /// 获取下一个可用的slot
+  Future<void> saveNpcVendor(NpcVendorEntity vendor) async {
+    var existing = await getNpcVendor(vendor.entry, vendor.slot);
+    if (existing != null) {
+      await updateNpcVendor(vendor.entry, vendor.slot, vendor);
+    } else {
+      await storeNpcVendor(vendor);
+    }
+  }
+
   Future<int> getNextSlot(int entry) async {
     var maxResult = await laconic
         .table(_table)

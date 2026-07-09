@@ -22,3 +22,29 @@ class QuestSortEntity {
     );
   }
 }
+
+/// 任务排序列表/Picker 展示模型
+class BriefQuestSortEntity {
+  final int id;
+  final String sortNameLangZhCn;
+
+  const BriefQuestSortEntity({this.id = 0, this.sortNameLangZhCn = ''});
+
+  factory BriefQuestSortEntity.fromJson(Map<String, dynamic> json) {
+    return BriefQuestSortEntity(
+      id: json['ID'] ?? 0,
+      sortNameLangZhCn: json['SortName_Lang_zhCN'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'SortName_Lang_zhCN': sortNameLangZhCn};
+  }
+
+  BriefQuestSortEntity copyWith({int? id, String? sortNameLangZhCn}) {
+    return BriefQuestSortEntity(
+      id: id ?? this.id,
+      sortNameLangZhCn: sortNameLangZhCn ?? this.sortNameLangZhCn,
+    );
+  }
+}

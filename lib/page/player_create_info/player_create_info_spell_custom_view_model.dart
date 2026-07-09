@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/util/format_util.dart';
-import 'package:foxy/repository/player_create_info_repository.dart';
+import 'package:foxy/repository/player_create_info_spell_custom_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -9,7 +9,8 @@ import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
 class PlayerCreateInfoSpellCustomViewModel {
-  final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
+  final _repository =
+      GetIt.instance.get<PlayerCreateInfoSpellCustomRepository>();
 
   final spells = signal<List<PlayerCreateInfoSpellCustomEntity>>([]);
   int? _race;
@@ -29,7 +30,10 @@ class PlayerCreateInfoSpellCustomViewModel {
       _race = race;
       _class_ = class_;
       if (race == null || class_ == null) return;
-      spells.value = await _repository.getSpellCustoms(race, class_);
+      spells.value = await _repository.getBriefPlayerCreateInfoSpellCustoms(
+        race,
+        class_,
+      );
     } catch (e) {
       LoggerUtil.instance.e('加载角色自定义法术失败: $e');
       DialogUtil.instance.error('加载角色自定义法术失败: $e');
@@ -52,8 +56,11 @@ class PlayerCreateInfoSpellCustomViewModel {
         spell: _pi(spellController.text),
         note: noteController.text,
       );
-      await _repository.storeSpellCustom(item);
-      spells.value = await _repository.getSpellCustoms(_race!, _class_!);
+      await _repository.storePlayerCreateInfoSpellCustom(item);
+      spells.value = await _repository.getBriefPlayerCreateInfoSpellCustoms(
+        _race!,
+        _class_!,
+      );
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
     } catch (e) {
@@ -68,12 +75,15 @@ class PlayerCreateInfoSpellCustomViewModel {
   ) async {
     if (_race == null || _class_ == null) return;
     try {
-      await _repository.deleteSpellCustom(
+      await _repository.destroyPlayerCreateInfoSpellCustom(
         item.racemask,
         item.classmask,
         item.spell,
       );
-      spells.value = await _repository.getSpellCustoms(_race!, _class_!);
+      spells.value = await _repository.getBriefPlayerCreateInfoSpellCustoms(
+        _race!,
+        _class_!,
+      );
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
     } catch (e) {

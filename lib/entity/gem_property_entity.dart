@@ -54,12 +54,14 @@ class BriefGemPropertyEntity {
   final int id;
   final int enchantId;
   final int maxCountInv;
+  final int maxCountItem;
   final int type;
 
   const BriefGemPropertyEntity({
     this.id = 0,
     this.enchantId = 0,
     this.maxCountInv = 0,
+    this.maxCountItem = 0,
     this.type = 0,
   });
 
@@ -68,6 +70,7 @@ class BriefGemPropertyEntity {
       id: json['ID'] ?? 0,
       enchantId: json['Enchant_ID'] ?? 0,
       maxCountInv: json['Maxcount_inv'] ?? 0,
+      maxCountItem: json['Maxcount_item'] ?? 0,
       type: json['Type'] ?? 0,
     );
   }
@@ -77,6 +80,7 @@ class BriefGemPropertyEntity {
       'ID': id,
       'Enchant_ID': enchantId,
       'Maxcount_inv': maxCountInv,
+      'Maxcount_item': maxCountItem,
       'Type': type,
     };
   }
@@ -85,12 +89,14 @@ class BriefGemPropertyEntity {
     int? id,
     int? enchantId,
     int? maxCountInv,
+    int? maxCountItem,
     int? type,
   }) {
     return BriefGemPropertyEntity(
       id: id ?? this.id,
       enchantId: enchantId ?? this.enchantId,
       maxCountInv: maxCountInv ?? this.maxCountInv,
+      maxCountItem: maxCountItem ?? this.maxCountItem,
       type: type ?? this.type,
     );
   }

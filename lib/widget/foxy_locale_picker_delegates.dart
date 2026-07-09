@@ -109,7 +109,7 @@ class FoxyLocalePickerDelegates {
             ),
           )
           .toList();
-      await repo.replaceAll(entry, locales);
+      await repo.saveItemTemplateLocales(entry, locales);
     },
   );
 
@@ -134,7 +134,7 @@ class FoxyLocalePickerDelegates {
             ),
           )
           .toList();
-      await repo.replaceAll(entry, locales);
+      await repo.saveItemTemplateLocales(entry, locales);
     },
   );
 
@@ -202,7 +202,7 @@ class FoxyLocalePickerDelegates {
             ),
           )
           .toList();
-      await repo.replaceAll(entry, locales);
+      await repo.saveQuestTemplateLocales(entry, locales);
     },
   );
 
@@ -227,7 +227,7 @@ class FoxyLocalePickerDelegates {
             ),
           )
           .toList();
-      await repo.replaceAll(entry, locales);
+      await repo.saveQuestOfferRewardLocales(entry, locales);
     },
   );
 
@@ -252,7 +252,7 @@ class FoxyLocalePickerDelegates {
             ),
           )
           .toList();
-      await repo.replaceAll(entry, locales);
+      await repo.saveQuestRequestItemsLocales(entry, locales);
     },
   );
 }

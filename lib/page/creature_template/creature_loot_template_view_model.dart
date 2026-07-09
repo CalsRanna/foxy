@@ -47,9 +47,10 @@ class CreatureLootTemplateViewModel {
     final template = await _creatureRepository.getCreatureTemplate(
       creatureId.value,
     );
+    if (template == null) return;
     creatureTemplate.value = template;
 
-    final data = await repository.getLootTemplates(template.lootId);
+    final data = await repository.getBriefLootTemplates(template.lootId);
     items.value = data;
     selectedIndex.value = null;
     creating.value = false;
@@ -220,7 +221,7 @@ class CreatureLootTemplateViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
-      await repository.updateLootTemplate(loot, oldItem: editingItem);
+      await repository.updateLootTemplate(loot.entry, editingItem ?? loot.item, loot);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

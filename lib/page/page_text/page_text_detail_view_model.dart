@@ -29,8 +29,10 @@ class PageTextDetailViewModel {
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
     try {
-      page.value = await _repository.getPageText(id);
-      _initControllers(page.value!);
+      final entity = await _repository.getPageText(id);
+      if (entity == null) return;
+      page.value = entity;
+      _initControllers(entity);
       locales.value = await _repository.getPageTextLocales(id);
     } catch (e, s) {
       LoggerUtil.instance.e('加载页面文本(ID=$id)失败', error: e, stackTrace: s);
@@ -49,9 +51,10 @@ class PageTextDetailViewModel {
       final data = _collect();
       final existing = page.value;
       if (existing != null) {
-        await _repository.updatePageText(existing.id, data);
-        page.value = data;
-        _logActivity(ActivityActionType.update, data);
+        final updated = data.copyWith(id: existing.id);
+        await _repository.updatePageText(updated);
+        page.value = updated;
+        _logActivity(ActivityActionType.update, updated);
       } else {
         final id = await _repository.storePageText(data);
         idController.text = '$id';

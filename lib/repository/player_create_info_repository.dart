@@ -4,12 +4,14 @@ import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class PlayerCreateInfoRepository with RepositoryMixin {
-  Future<List<PlayerCreateInfoEntity>> getPlayerCreateInfos({
-    required PlayerCreateInfoFilterEntity filter,
-    required int page,
+  static const _table = 'playercreateinfo';
+
+  Future<List<PlayerCreateInfoEntity>> getBriefPlayerCreateInfos({
+    PlayerCreateInfoFilterEntity? filter,
+    int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('playercreateinfo');
+    var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
@@ -19,163 +21,80 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   Future<int> countPlayerCreateInfos({
-    required PlayerCreateInfoFilterEntity filter,
+    PlayerCreateInfoFilterEntity? filter,
   }) async {
-    var builder = laconic.table('playercreateinfo');
+    var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
-  Future<PlayerCreateInfoEntity> getPlayerCreateInfo(
+  Future<PlayerCreateInfoEntity?> getPlayerCreateInfo(
     int race,
     int class_,
   ) async {
-    var result = await laconic
-        .table('playercreateinfo')
+    var results = await laconic
+        .table(_table)
         .where('race', race)
         .where('class', class_)
-        .first();
-    return PlayerCreateInfoEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return PlayerCreateInfoEntity.fromJson(results.first.toMap());
+  }
+
+  Future<PlayerCreateInfoEntity> createPlayerCreateInfo() async {
+    return const PlayerCreateInfoEntity();
   }
 
   Future<void> storePlayerCreateInfo(PlayerCreateInfoEntity info) async {
-    await laconic.table('playercreateinfo').insert([info.toJson()]);
+    await laconic.table(_table).insert([info.toJson()]);
   }
 
   Future<void> updatePlayerCreateInfo(
-    Map<String, dynamic> id,
+    int race,
+    int class_,
     PlayerCreateInfoEntity info,
   ) async {
     var json = info.toJson();
     json.remove('race');
     json.remove('class');
-    var builder = laconic.table('playercreateinfo');
-    for (final entry in id.entries) {
-      builder = builder.where(entry.key, entry.value);
-    }
-    await builder.update(json);
-  }
-
-  Future<void> destroyPlayerCreateInfo(Map<String, dynamic> id) async {
-    var builder = laconic.table('playercreateinfo');
-    for (final entry in id.entries) {
-      builder = builder.where(entry.key, entry.value);
-    }
-    await builder.delete();
-  }
-
-  Future<void> copyPlayerCreateInfo(Map<String, dynamic> id) async {
-    var source = await getPlayerCreateInfo(
-      id['race'] as int,
-      id['class'] as int,
-    );
-    var json = source.toJson();
-    json['class'] = (json['class'] as int) + 1;
-    await laconic.table('playercreateinfo').insert([json]);
-  }
-
-  // ---- Sub-table: action ----
-  Future<List<PlayerCreateInfoActionEntity>> getActions(
-    int race,
-    int class_,
-  ) async {
-    var results = await laconic
-        .table('playercreateinfo_action')
+    await laconic
+        .table(_table)
         .where('race', race)
         .where('class', class_)
-        .get();
-    return results
-        .map((e) => PlayerCreateInfoActionEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<void> storeAction(PlayerCreateInfoActionEntity action) async {
-    await laconic.table('playercreateinfo_action').insert([action.toJson()]);
-  }
-
-  Future<void> updateAction(
-    PlayerCreateInfoActionEntity action, {
-    int? oldButton,
-  }) async {
-    var json = action.toJson();
-    json.remove('race');
-    json.remove('class');
-    await laconic
-        .table('playercreateinfo_action')
-        .where('race', action.race)
-        .where('class', action.class_)
-        .where('button', oldButton ?? action.button)
         .update(json);
   }
 
-  Future<void> deleteAction(int race, int class_, int button) async {
+  Future<void> destroyPlayerCreateInfo(int race, int class_) async {
     await laconic
-        .table('playercreateinfo_action')
+        .table(_table)
         .where('race', race)
         .where('class', class_)
-        .where('button', button)
         .delete();
   }
 
-  // ---- Sub-table: item ----
-  Future<List<PlayerCreateInfoItemEntity>> getItems(
-    int race,
-    int class_,
-  ) async {
-    var results = await laconic
-        .table('playercreateinfo_item')
-        .where('race', race)
-        .where('class', class_)
-        .get();
-    return results
-        .map((e) => PlayerCreateInfoItemEntity.fromJson(e.toMap()))
-        .toList();
+  Future<void> copyPlayerCreateInfo(int race, int class_) async {
+    var source = await getPlayerCreateInfo(race, class_);
+    if (source == null) return;
+    var json = source.toJson();
+    json['class'] = (json['class'] as int) + 1;
+    await laconic.table(_table).insert([json]);
   }
 
-  Future<void> storeItem(PlayerCreateInfoItemEntity item) async {
-    await laconic.table('playercreateinfo_item').insert([item.toJson()]);
+  Future<void> savePlayerCreateInfo(PlayerCreateInfoEntity info) async {
+    var existing = await getPlayerCreateInfo(info.race, info.class_);
+    if (existing != null) {
+      await updatePlayerCreateInfo(info.race, info.class_, info);
+    } else {
+      await storePlayerCreateInfo(info);
+    }
   }
 
-  Future<void> deleteItem(int race, int class_, int itemid) async {
-    await laconic
-        .table('playercreateinfo_item')
-        .where('race', race)
-        .where('class', class_)
-        .where('itemid', itemid)
-        .delete();
-  }
-
-  // ---- Sub-table: spell_custom ----
-  Future<List<PlayerCreateInfoSpellCustomEntity>> getSpellCustoms(
-    int racemask,
-    int classmask,
-  ) async {
-    var results = await laconic
-        .table('playercreateinfo_spell_custom')
-        .where('racemask', racemask)
-        .where('classmask', classmask)
-        .get();
-    return results
-        .map((e) => PlayerCreateInfoSpellCustomEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<void> storeSpellCustom(PlayerCreateInfoSpellCustomEntity spell) async {
-    await laconic.table('playercreateinfo_spell_custom').insert([
-      spell.toJson(),
-    ]);
-  }
-
-  Future<void> deleteSpellCustom(int racemask, int classmask, int spell) async {
-    await laconic
-        .table('playercreateinfo_spell_custom')
-        .where('racemask', racemask)
-        .where('classmask', classmask)
-        .where('spell', spell)
-        .delete();
-  }
-
-  QueryBuilder _applyFilter(QueryBuilder builder, PlayerCreateInfoFilterEntity filter) {
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    PlayerCreateInfoFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
     if (filter.race.isNotEmpty) {
       builder = builder.where('race', filter.race);
     }

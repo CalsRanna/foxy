@@ -6,20 +6,6 @@ import 'package:laconic/laconic.dart';
 class ScalingStatValueRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_values';
 
-  Future<List<ScalingStatValueEntity>> getScalingStatValues({
-    int page = 1,
-    ScalingStatValueFilterEntity? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => ScalingStatValueEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
   Future<List<BriefScalingStatValueEntity>> getBriefScalingStatValues({
     int page = 1,
     ScalingStatValueFilterEntity? filter,
@@ -45,6 +31,13 @@ class ScalingStatValueRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<List<ScalingStatValueEntity>> getScalingStatValues() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => ScalingStatValueEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
   Future<int> countScalingStatValues({
     ScalingStatValueFilterEntity? filter,
   }) async {
@@ -54,8 +47,13 @@ class ScalingStatValueRepository with RepositoryMixin {
   }
 
   Future<ScalingStatValueEntity?> getScalingStatValue(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return ScalingStatValueEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return ScalingStatValueEntity.fromJson(results.first.toMap());
+  }
+
+  Future<ScalingStatValueEntity> createScalingStatValue() async {
+    return const ScalingStatValueEntity();
   }
 
   Future<int> storeScalingStatValue(ScalingStatValueEntity value) async {
@@ -85,6 +83,19 @@ class ScalingStatValueRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
+  Future<void> saveScalingStatValue(ScalingStatValueEntity value) async {
+    if (value.id == 0) {
+      await storeScalingStatValue(value);
+      return;
+    }
+    var existing = await getScalingStatValue(value.id);
+    if (existing != null) {
+      await updateScalingStatValue(value);
+    } else {
+      await laconic.table(_table).insert([value.toJson()]);
+    }
+  }
+
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',
@@ -93,7 +104,10 @@ class ScalingStatValueRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, ScalingStatValueFilterEntity? filter) {
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ScalingStatValueFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

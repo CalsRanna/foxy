@@ -1,31 +1,25 @@
 import 'package:foxy/entity/quest_request_items_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
-/// quest_request_items 表的数据访问层
-///
-/// 1:1 子表，主键 ID 与 quest_template 共享。
-/// 仅提供 find/create/store/update 四个操作。
 class QuestRequestItemsRepository with RepositoryMixin {
   static const _table = 'quest_request_items';
 
-  /// 根据 ID 查找
   Future<QuestRequestItemsEntity?> getQuestRequestItems(int id) async {
-    final result = await laconic.table(_table).where('ID', id).first();
-    return QuestRequestItemsEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return QuestRequestItemsEntity.fromJson(results.first.toMap());
   }
 
-  /// 创建：返回与 quest_template ID 关联的空白对象（不落库）
-  Future<QuestRequestItemsEntity> createQuestRequestItems(int id) async {
-    final model = QuestRequestItemsEntity(id: id);
-    return model;
+  Future<QuestRequestItemsEntity> createQuestRequestItems([
+    int id = 0,
+  ]) async {
+    return QuestRequestItemsEntity(id: id);
   }
 
-  /// 存储（insert）
   Future<void> storeQuestRequestItems(QuestRequestItemsEntity model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 
-  /// 更新（根据 ID）
   Future<void> updateQuestRequestItems(
     int id,
     QuestRequestItemsEntity model,
@@ -33,5 +27,35 @@ class QuestRequestItemsRepository with RepositoryMixin {
     final json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);
+  }
+
+  Future<void> destroyQuestRequestItems(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<void> copyQuestRequestItems(int id) async {
+    var source = await getQuestRequestItems(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveQuestRequestItems(QuestRequestItemsEntity model) async {
+    var existing = await getQuestRequestItems(model.id);
+    if (existing != null) {
+      await updateQuestRequestItems(model.id, model);
+    } else {
+      await storeQuestRequestItems(model);
+    }
+  }
+
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
   }
 }

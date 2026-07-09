@@ -54,7 +54,16 @@ class ConditionDetailViewModel {
     if (credential == null) return;
     _originalCredential = credential;
     try {
-      final result = await _repository.getCondition(credential);
+      final result = await _repository.getCondition(
+        credential['SourceTypeOrReferenceId'] as int,
+        credential['SourceGroup'] as int,
+        credential['SourceEntry'] as int,
+        credential['SourceId'] as int,
+        credential['ElseGroup'] as int,
+        credential['ConditionTypeOrReference'] as int,
+        credential['ConditionTarget'] as int,
+      );
+      if (result == null) return;
       condition.value = result;
       _initControllers(result);
     } catch (e, s) {
@@ -93,7 +102,17 @@ class ConditionDetailViewModel {
       if (_originalCredential == null) {
         await _repository.storeCondition(data);
       } else {
-        await _repository.updateCondition(_originalCredential!, data);
+        final c = _originalCredential!;
+        await _repository.updateCondition(
+          c['SourceTypeOrReferenceId'] as int,
+          c['SourceGroup'] as int,
+          c['SourceEntry'] as int,
+          c['SourceId'] as int,
+          c['ElseGroup'] as int,
+          c['ConditionTypeOrReference'] as int,
+          c['ConditionTarget'] as int,
+          data,
+        );
       }
       condition.value = data;
       _logActivity(

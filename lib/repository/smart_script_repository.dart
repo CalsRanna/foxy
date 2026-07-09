@@ -6,28 +6,6 @@ import 'package:laconic/laconic.dart';
 class SmartScriptRepository with RepositoryMixin {
   static const _table = 'smart_scripts';
 
-  Future<int> countSmartScripts({SmartScriptFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder.select(['entryorguid']);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
-  Future<void> destroySmartScript(
-    int entryOrGuid,
-    int sourceType,
-    int id,
-    int link,
-  ) async {
-    await laconic
-        .table(_table)
-        .where('entryorguid', entryOrGuid)
-        .where('source_type', sourceType)
-        .where('id', id)
-        .where('link', link)
-        .delete();
-  }
-
   Future<List<BriefSmartScriptEntity>> getBriefSmartScripts({
     int page = 1,
     SmartScriptFilterEntity? filter,
@@ -57,25 +35,50 @@ class SmartScriptRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SmartScriptEntity> getSmartScript(
+  Future<List<SmartScriptEntity>> getSmartScripts() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => SmartScriptEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<int> countSmartScripts({SmartScriptFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder.select(['entryorguid']);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<SmartScriptEntity?> getSmartScript(
     int entryOrGuid,
     int sourceType,
     int id,
     int link,
   ) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('entryorguid', entryOrGuid)
         .where('source_type', sourceType)
         .where('id', id)
         .where('link', link)
-        .first();
-    return SmartScriptEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return SmartScriptEntity.fromJson(results.first.toMap());
+  }
+
+  Future<SmartScriptEntity> createSmartScript({
+    int entryOrGuid = 0,
+    int sourceType = 0,
+  }) async {
+    var nextId = await _getNextId(entryOrGuid, sourceType);
+    return SmartScriptEntity(
+      entryOrGuid: entryOrGuid,
+      sourceType: sourceType,
+      id: nextId,
+    );
   }
 
   Future<void> storeSmartScript(SmartScriptEntity script) async {
-    var json = script.toJson();
-    await laconic.table(_table).insert([json]);
+    await laconic.table(_table).insert([script.toJson()]);
   }
 
   Future<void> updateSmartScript(
@@ -99,6 +102,21 @@ class SmartScriptRepository with RepositoryMixin {
         .update(json);
   }
 
+  Future<void> destroySmartScript(
+    int entryOrGuid,
+    int sourceType,
+    int id,
+    int link,
+  ) async {
+    await laconic
+        .table(_table)
+        .where('entryorguid', entryOrGuid)
+        .where('source_type', sourceType)
+        .where('id', id)
+        .where('link', link)
+        .delete();
+  }
+
   Future<void> copySmartScript(
     int entryOrGuid,
     int sourceType,
@@ -106,10 +124,31 @@ class SmartScriptRepository with RepositoryMixin {
     int link,
   ) async {
     var script = await getSmartScript(entryOrGuid, sourceType, id, link);
+    if (script == null) return;
     var json = script.toJson();
     var nextId = await _getNextId(entryOrGuid, sourceType);
     json['id'] = nextId;
     await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveSmartScript(SmartScriptEntity script) async {
+    var existing = await getSmartScript(
+      script.entryOrGuid,
+      script.sourceType,
+      script.id,
+      script.link,
+    );
+    if (existing != null) {
+      await updateSmartScript(
+        script.entryOrGuid,
+        script.sourceType,
+        script.id,
+        script.link,
+        script,
+      );
+    } else {
+      await storeSmartScript(script);
+    }
   }
 
   Future<int> _getNextId(int entryOrGuid, int sourceType) async {
@@ -123,7 +162,10 @@ class SmartScriptRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, SmartScriptFilterEntity? filter) {
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    SmartScriptFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.entryOrGuid.isNotEmpty) {
       builder = builder.where('entryorguid', filter.entryOrGuid);

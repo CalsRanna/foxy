@@ -74,8 +74,8 @@ class _DialogState extends State<_Dialog> {
   final _idController = TextEditingController();
   final _nameController = TextEditingController();
 
-  List<AreaTableEntity> _areaItems = [];
-  List<QuestSortEntity> _questItems = [];
+  List<BriefAreaTableEntity> _areaItems = [];
+  List<BriefQuestSortEntity> _questItems = [];
   int _total = 0;
   int _page = 1;
   int? _selectedId;
@@ -339,7 +339,7 @@ class _DialogState extends State<_Dialog> {
           id: _idController.text,
           name: _nameController.text,
         );
-        final items = await repository.getAreaTables(
+        final items = await repository.getBriefAreaTables(
           filter: filter,
           page: _page,
         );
@@ -357,7 +357,7 @@ class _DialogState extends State<_Dialog> {
           id: _idController.text,
           name: _nameController.text,
         );
-        final items = await repository.getQuestSorts(
+        final items = await repository.getBriefQuestSorts(
           filter: filter,
           page: _page,
         );

@@ -26,7 +26,7 @@ class SpellRankViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getSpellRanks(spellId.value);
+    final data = await _repository.getBriefSpellRanks(spellId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -81,7 +81,7 @@ class SpellRankViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final rank = items.value[index];
     try {
-      await _repository.copySpellRank(rank);
+      await _repository.copySpellRank(rank.firstSpellId, rank.rank);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -150,7 +150,11 @@ class SpellRankViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await _repository.updateSpellRank(oldData, newData);
+      await _repository.updateSpellRank(
+        oldData.firstSpellId,
+        oldData.rank,
+        newData,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

@@ -6,25 +6,6 @@ import 'package:laconic/laconic.dart';
 class SpellRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell';
 
-  Future<int> countSpells({SpellFilterEntity? filter}) async {
-    var builder = laconic.table('$_table AS ds');
-    builder.select(['ds.ID']);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
-  Future<void> copySpell(int id) async {
-    var template = await getSpell(id);
-    var json = template.toJson();
-    var newId = await _getNextId();
-    json['ID'] = newId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> destroySpell(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
   Future<List<BriefSpellEntity>> getBriefSpells({
     int page = 1,
     SpellFilterEntity? filter,
@@ -58,23 +39,66 @@ class SpellRepository with RepositoryMixin {
     return results.map((e) => BriefSpellEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<SpellEntity> getSpell(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return SpellEntity.fromJson(result.toMap());
+  Future<List<SpellEntity>> getSpells() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => SpellEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> storeSpell(SpellEntity template) async {
-    var json = template.toJson();
+  Future<int> countSpells({SpellFilterEntity? filter}) async {
+    var builder = laconic.table('$_table AS ds');
+    builder.select(['ds.ID']);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<SpellEntity?> getSpell(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return SpellEntity.fromJson(results.first.toMap());
+  }
+
+  Future<SpellEntity> createSpell() async {
+    return const SpellEntity();
+  }
+
+  Future<int> storeSpell(SpellEntity spell) async {
+    var json = spell.toJson();
     var newId = await _getNextId();
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
     return newId;
   }
 
-  Future<void> updateSpell(SpellEntity template) async {
-    var json = template.toJson();
+  Future<void> updateSpell(SpellEntity spell) async {
+    var json = spell.toJson();
     json.remove('ID');
-    await laconic.table(_table).where('ID', template.id).update(json);
+    await laconic.table(_table).where('ID', spell.id).update(json);
+  }
+
+  Future<void> destroySpell(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<void> copySpell(int id) async {
+    var source = await getSpell(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var newId = await _getNextId();
+    json['ID'] = newId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveSpell(SpellEntity spell) async {
+    if (spell.id == 0) {
+      await storeSpell(spell);
+      return;
+    }
+    var existing = await getSpell(spell.id);
+    if (existing != null) {
+      await updateSpell(spell);
+    } else {
+      await laconic.table(_table).insert([spell.toJson()]);
+    }
   }
 
   Future<int> _getNextId() async {

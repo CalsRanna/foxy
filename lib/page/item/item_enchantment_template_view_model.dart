@@ -30,7 +30,7 @@ class ItemEnchantmentTemplateViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getItemEnchantmentTemplatesByEntry(
+    final data = await _repository.getBriefItemEnchantmentTemplatesByEntry(
       entry.value,
     );
     items.value = data;
@@ -166,8 +166,9 @@ class ItemEnchantmentTemplateViewModel {
     try {
       final model = collectFromForm();
       await _repository.updateItemEnchantmentTemplate(
+        model.entry,
+        editingEnch ?? model.ench,
         model,
-        oldEnch: editingEnch,
       );
       await load();
       if (!context.mounted) return;

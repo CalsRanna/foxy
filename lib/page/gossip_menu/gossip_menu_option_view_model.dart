@@ -43,13 +43,13 @@ class GossipMenuOptionViewModel {
 
   Future<void> search(int menuId) async {
     currentMenuId.value = menuId;
-    options.value = await _repository.getGossipMenuOptions(menuId: menuId);
+    options.value = await _repository.getBriefGossipMenuOptions(menuId);
   }
 
   Future<void> create() async {
     try {
       final blank = await _repository.createGossipMenuOption(
-        menuId: currentMenuId.value,
+        currentMenuId.value,
       );
       _applyToControllers(blank);
       _originalMenuId = blank.menuId;
@@ -64,10 +64,7 @@ class GossipMenuOptionViewModel {
 
   Future<void> edit(int menuId, int optionId) async {
     try {
-      final existing = await _repository.getGossipMenuOption({
-        'MenuID': menuId,
-        'OptionID': optionId,
-      });
+      final existing = await _repository.getGossipMenuOption(menuId, optionId);
       if (existing == null) return;
       _applyToControllers(existing);
       _originalMenuId = menuId;
@@ -86,10 +83,11 @@ class GossipMenuOptionViewModel {
       if (creating.value) {
         await _repository.storeGossipMenuOption(model);
       } else {
-        await _repository.updateGossipMenuOption({
-          'MenuID': _originalMenuId,
-          'OptionID': _originalOptionId,
-        }, model);
+        await _repository.updateGossipMenuOption(
+          _originalMenuId,
+          _originalOptionId,
+          model,
+        );
       }
       DialogUtil.instance.success('保存成功');
       creating.value = false;
@@ -114,10 +112,7 @@ class GossipMenuOptionViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyGossipMenuOption({
-        'MenuID': menuId,
-        'OptionID': optionId,
-      });
+      await _repository.copyGossipMenuOption(menuId, optionId);
       DialogUtil.instance.success('复制成功');
       await search(currentMenuId.value);
     } catch (e) {
@@ -135,10 +130,7 @@ class GossipMenuOptionViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyGossipMenuOption({
-        'MenuID': menuId,
-        'OptionID': optionId,
-      });
+      await _repository.destroyGossipMenuOption(menuId, optionId);
       DialogUtil.instance.success('删除成功');
       await search(currentMenuId.value);
     } catch (e) {

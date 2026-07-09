@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GameObjectQuestItemRepository with RepositoryMixin {
   static const _table = 'gameobject_questitem';
 
-  Future<List<GameObjectQuestItemEntity>> getGameObjectQuestItems(
+  Future<List<GameObjectQuestItemEntity>> getBriefGameObjectQuestItems(
     int gameObjectEntry,
   ) async {
     var builder = laconic.table('$_table AS gq');
@@ -40,12 +40,24 @@ class GameObjectQuestItemRepository with RepositoryMixin {
     int gameObjectEntry,
     int idx,
   ) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('GameObjectEntry', gameObjectEntry)
         .where('Idx', idx)
-        .first();
-    return GameObjectQuestItemEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return GameObjectQuestItemEntity.fromJson(results.first.toMap());
+  }
+
+  Future<GameObjectQuestItemEntity> createGameObjectQuestItem(
+    int gameObjectEntry,
+  ) async {
+    var nextIdx = await getNextIdx(gameObjectEntry);
+    return GameObjectQuestItemEntity(
+      gameObjectEntry: gameObjectEntry,
+      idx: nextIdx,
+    );
   }
 
   Future<void> storeGameObjectQuestItem(
@@ -75,24 +87,27 @@ class GameObjectQuestItemRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<GameObjectQuestItemEntity> copyGameObjectQuestItem(
-    int gameObjectEntry,
-    int idx,
-  ) async {
-    var maxIdxResult = await laconic
-        .table(_table)
-        .select(['MAX(Idx) AS maxIdx'])
-        .where('GameObjectEntry', gameObjectEntry)
-        .first();
-    var maxIdx = (maxIdxResult.toMap()['maxIdx'] ?? 0) as int;
+  Future<void> copyGameObjectQuestItem(int gameObjectEntry, int idx) async {
     var source = await getGameObjectQuestItem(gameObjectEntry, idx);
-    if (source == null) throw Exception('源记录不存在');
-    var newQuestItem = GameObjectQuestItemEntity.fromJson({
-      ...source.toJson(),
-      'Idx': maxIdx + 1,
-    });
-    await storeGameObjectQuestItem(newQuestItem);
-    return newQuestItem;
+    if (source == null) return;
+    var nextIdx = await getNextIdx(gameObjectEntry);
+    var json = source.toJson();
+    json['Idx'] = nextIdx;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveGameObjectQuestItem(
+    GameObjectQuestItemEntity questItem,
+  ) async {
+    var existing = await getGameObjectQuestItem(
+      questItem.gameObjectEntry,
+      questItem.idx,
+    );
+    if (existing != null) {
+      await updateGameObjectQuestItem(questItem);
+    } else {
+      await storeGameObjectQuestItem(questItem);
+    }
   }
 
   Future<int> getNextIdx(int gameObjectEntry) async {

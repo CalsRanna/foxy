@@ -26,7 +26,7 @@ class GameObjectQuestEnderViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getGameObjectQuestEnders(questId.value);
+    final data = await _repository.getBriefGameObjectQuestEnders(questId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -73,10 +73,7 @@ class GameObjectQuestEnderViewModel {
       if (index == null || index < 0 || index >= items.value.length) return;
 
       final item = items.value[index];
-      final existing = await _repository.getGameObjectQuestEnder({
-        'id': item.id,
-        'quest': item.quest,
-      });
+      final existing = await _repository.getGameObjectQuestEnder(item.id, item.quest);
       if (existing == null) return;
       fillForm(existing);
       _originalId = item.id;
@@ -107,10 +104,7 @@ class GameObjectQuestEnderViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await _repository.updateGameObjectQuestEnder({
-        'id': _originalId,
-        'quest': _originalQuest,
-      }, model);
+      await _repository.updateGameObjectQuestEnder(_originalId, _originalQuest, model);
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));
@@ -148,10 +142,7 @@ class GameObjectQuestEnderViewModel {
 
     if (confirmed == true) {
       try {
-        await _repository.copyGameObjectQuestEnder({
-          'id': item.id,
-          'quest': item.quest,
-        });
+        await _repository.copyGameObjectQuestEnder(item.id, item.quest);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('复制成功'));
@@ -190,10 +181,7 @@ class GameObjectQuestEnderViewModel {
 
     if (confirmed == true) {
       try {
-        await _repository.destroyGameObjectQuestEnder({
-          'id': item.id,
-          'quest': item.quest,
-        });
+        await _repository.destroyGameObjectQuestEnder(item.id, item.quest);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));

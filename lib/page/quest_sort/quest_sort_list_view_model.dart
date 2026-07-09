@@ -18,7 +18,7 @@ class QuestSortListViewModel {
   final _repository = GetIt.instance.get<QuestSortRepository>();
 
   final page = signal(1);
-  final sorts = signal(<QuestSortEntity>[]);
+  final sorts = signal(<BriefQuestSortEntity>[]);
   final total = signal(0);
 
   Future<void> copyQuestSort(int id) async {
@@ -81,7 +81,7 @@ class QuestSortListViewModel {
     try {
       final filter = QuestSortFilterEntity();
       final (items, count) = await (
-        _repository.getQuestSorts(page: 1, filter: filter),
+        _repository.getBriefQuestSorts(page: 1, filter: filter),
         _repository.countQuestSorts(filter: filter),
       ).wait;
       sorts.value = items;
@@ -132,7 +132,7 @@ class QuestSortListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getQuestSorts(page: page.value, filter: filter),
+        _repository.getBriefQuestSorts(page: page.value, filter: filter),
         _repository.countQuestSorts(filter: filter),
       ).wait;
       sorts.value = items;

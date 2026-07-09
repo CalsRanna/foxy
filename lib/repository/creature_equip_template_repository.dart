@@ -4,13 +4,10 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureEquipTemplateRepository with RepositoryMixin {
   static const _table = 'creature_equip_template';
 
-  /// 获取指定生物的所有装备模板（带物品信息）
-  Future<List<BriefCreatureEquipTemplateEntity>> getCreatureEquipTemplates(
+  Future<List<BriefCreatureEquipTemplateEntity>> getBriefCreatureEquipTemplates(
     int creatureID,
   ) async {
     var builder = laconic.table('$_table AS cet');
-
-    // 选择字段，包含3个装备槽的完整信息
     const fields = [
       'cet.*',
       'it1.name as name_1',
@@ -26,10 +23,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
       'it3.Quality as Quality_3',
       'didi3.InventoryIcon0 as Icon_3',
     ];
-
     builder = builder.select(fields);
-
-    // 装备1的JOIN
     builder = builder.leftJoin(
       'item_template AS it1',
       (join) => join.on('cet.ItemID1', 'it1.entry'),
@@ -42,8 +36,6 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
       'foxy.dbc_item_display_info AS didi1',
       (join) => join.on('it1.displayid', 'didi1.ID'),
     );
-
-    // 装备2的JOIN
     builder = builder.leftJoin(
       'item_template AS it2',
       (join) => join.on('cet.ItemID2', 'it2.entry'),
@@ -56,8 +48,6 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
       'foxy.dbc_item_display_info AS didi2',
       (join) => join.on('it2.displayid', 'didi2.ID'),
     );
-
-    // 装备3的JOIN
     builder = builder.leftJoin(
       'item_template AS it3',
       (join) => join.on('cet.ItemID3', 'it3.entry'),
@@ -70,7 +60,6 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
       'foxy.dbc_item_display_info AS didi3',
       (join) => join.on('it3.displayid', 'didi3.ID'),
     );
-
     builder = builder.where('cet.CreatureID', creatureID);
     builder = builder.orderBy('cet.ID');
     var results = await builder.get();
@@ -79,27 +68,33 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  /// 查找单条记录
   Future<CreatureEquipTemplateEntity?> getCreatureEquipTemplate(
     int creatureID,
     int id,
   ) async {
-    var result = await laconic
+    var results = await laconic
         .table(_table)
         .where('CreatureID', creatureID)
         .where('ID', id)
-        .first();
-    return CreatureEquipTemplateEntity.fromJson(result.toMap());
+        .limit(1)
+        .get();
+    if (results.isEmpty) return null;
+    return CreatureEquipTemplateEntity.fromJson(results.first.toMap());
   }
 
-  /// 新增装备模板
+  Future<CreatureEquipTemplateEntity> createCreatureEquipTemplate(
+    int creatureID,
+  ) async {
+    var nextId = await getNextId(creatureID);
+    return CreatureEquipTemplateEntity(creatureID: creatureID, id: nextId);
+  }
+
   Future<void> storeCreatureEquipTemplate(
     CreatureEquipTemplateEntity equip,
   ) async {
     await laconic.table(_table).insert([equip.toJson()]);
   }
 
-  /// 更新装备模板
   Future<void> updateCreatureEquipTemplate(
     CreatureEquipTemplateEntity equip,
   ) async {
@@ -113,7 +108,6 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
         .update(json);
   }
 
-  /// 删除装备模板
   Future<void> destroyCreatureEquipTemplate(int creatureID, int id) async {
     await laconic
         .table(_table)
@@ -122,35 +116,26 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
         .delete();
   }
 
-  /// 复制装备模板
-  Future<CreatureEquipTemplateEntity> copyCreatureEquipTemplate(
-    int creatureID,
-    int id,
-  ) async {
-    // 获取最大ID
-    var maxIdResult = await laconic
-        .table(_table)
-        .select(['MAX(ID) AS maxId'])
-        .where('CreatureID', creatureID)
-        .first();
-    var maxId = (maxIdResult.toMap()['maxId'] ?? 0) as int;
-
-    // 获取源记录
+  Future<void> copyCreatureEquipTemplate(int creatureID, int id) async {
     var source = await getCreatureEquipTemplate(creatureID, id);
-    if (source == null) {
-      throw Exception('源记录不存在');
-    }
-
-    // 创建新记录
-    final sourceJson = source.toJson();
-    sourceJson['ID'] = maxId + 1;
-    var newEquip = CreatureEquipTemplateEntity.fromJson(sourceJson);
-
-    await storeCreatureEquipTemplate(newEquip);
-    return newEquip;
+    if (source == null) return;
+    var nextId = await getNextId(creatureID);
+    var json = source.toJson();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
   }
 
-  /// 获取下一个可用的ID
+  Future<void> saveCreatureEquipTemplate(
+    CreatureEquipTemplateEntity equip,
+  ) async {
+    var existing = await getCreatureEquipTemplate(equip.creatureID, equip.id);
+    if (existing != null) {
+      await updateCreatureEquipTemplate(equip);
+    } else {
+      await storeCreatureEquipTemplate(equip);
+    }
+  }
+
   Future<int> getNextId(int creatureID) async {
     var maxResult = await laconic
         .table(_table)

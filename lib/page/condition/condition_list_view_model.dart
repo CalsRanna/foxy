@@ -78,11 +78,19 @@ class ConditionListViewModel {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制该条件？ConditionValue3 将自动+1。',
+        description: '是否复制该条件？ElseGroup 将自动+1。',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyCondition(condition.buildCredential());
+      await _repository.copyCondition(
+        condition.sourceTypeOrReferenceId,
+        condition.sourceGroup,
+        condition.sourceEntry,
+        condition.sourceId,
+        condition.elseGroup,
+        condition.conditionTypeOrReference,
+        condition.conditionTarget,
+      );
       _logActivity(ActivityActionType.copy, condition);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -101,7 +109,15 @@ class ConditionListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyCondition(condition.buildCredential());
+      await _repository.destroyCondition(
+        condition.sourceTypeOrReferenceId,
+        condition.sourceGroup,
+        condition.sourceEntry,
+        condition.sourceId,
+        condition.elseGroup,
+        condition.conditionTypeOrReference,
+        condition.conditionTarget,
+      );
       _logActivity(ActivityActionType.delete, condition);
       DialogUtil.instance.success('删除成功');
       await _refresh();

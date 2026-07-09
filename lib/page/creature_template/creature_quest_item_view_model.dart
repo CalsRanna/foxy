@@ -29,7 +29,7 @@ class CreatureQuestItemViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getCreatureQuestItems(creatureEntry.value);
+    final data = await _repository.getBriefCreatureQuestItems(creatureEntry.value);
     items.value = data;
     selectedIndex.value = null;
   }

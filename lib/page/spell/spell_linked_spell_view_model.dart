@@ -26,7 +26,7 @@ class SpellLinkedSpellViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getSpellLinkedSpells(spellId.value);
+    final data = await _repository.getBriefSpellLinkedSpells(spellId.value);
     items.value = data;
     selectedIndex.value = null;
   }
@@ -75,7 +75,10 @@ class SpellLinkedSpellViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final linked = items.value[index];
     try {
-      await _repository.copySpellLinkedSpell(linked);
+      await _repository.copySpellLinkedSpell(
+        linked.spellTrigger,
+        linked.spellEffect,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('复制成功'));
@@ -147,7 +150,11 @@ class SpellLinkedSpellViewModel {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
-      await _repository.updateSpellLinkedSpell(oldData, newData);
+      await _repository.updateSpellLinkedSpell(
+        oldData.spellTrigger,
+        oldData.spellEffect,
+        newData,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

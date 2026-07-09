@@ -6,18 +6,6 @@ import 'package:laconic/laconic.dart';
 class AchievementRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_achievement';
 
-  Future<List<AchievementEntity>> getAchievements({
-    int page = 1,
-    AchievementFilterEntity? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results.map((e) => AchievementEntity.fromJson(e.toMap())).toList();
-  }
-
   Future<List<BriefAchievementEntity>> getBriefAchievements({
     int page = 1,
     AchievementFilterEntity? filter,
@@ -39,6 +27,11 @@ class AchievementRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<List<AchievementEntity>> getAchievements() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => AchievementEntity.fromJson(e.toMap())).toList();
+  }
+
   Future<int> countAchievements({AchievementFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -46,8 +39,13 @@ class AchievementRepository with RepositoryMixin {
   }
 
   Future<AchievementEntity?> getAchievement(int id) async {
-    var result = await laconic.table(_table).where('ID', id).first();
-    return AchievementEntity.fromJson(result.toMap());
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return AchievementEntity.fromJson(results.first.toMap());
+  }
+
+  Future<AchievementEntity> createAchievement() async {
+    return const AchievementEntity();
   }
 
   Future<int> storeAchievement(AchievementEntity achievement) async {
@@ -77,6 +75,19 @@ class AchievementRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
+  Future<void> saveAchievement(AchievementEntity achievement) async {
+    if (achievement.id == 0) {
+      await storeAchievement(achievement);
+      return;
+    }
+    var existing = await getAchievement(achievement.id);
+    if (existing != null) {
+      await updateAchievement(achievement);
+    } else {
+      await laconic.table(_table).insert([achievement.toJson()]);
+    }
+  }
+
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',
@@ -85,13 +96,20 @@ class AchievementRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilterEntity? filter) {
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    AchievementFilterEntity? filter,
+  ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }
     if (filter.title.isNotEmpty) {
-      builder = builder.where('Title_lang_zhCN', '%${filter.title}%');
+      builder = builder.where(
+        'Title_lang_zhCN',
+        '%${filter.title}%',
+        comparator: 'like',
+      );
     }
     return builder;
   }

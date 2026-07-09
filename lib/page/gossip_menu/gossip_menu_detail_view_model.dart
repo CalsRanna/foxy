@@ -43,6 +43,7 @@ class GossipMenuDetailViewModel {
       _originalMenuId = menuId;
       _originalTextId = textId ?? 0;
       final existing = await _repository.getGossipMenu(menuId, textId ?? 0);
+      if (existing == null) return;
       this.menuId.value = existing.menuId;
       textIdController.text = _fmt(existing.textId);
       menu.value = existing;

@@ -142,7 +142,10 @@ import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
+import 'package:foxy/repository/player_create_info_action_repository.dart';
+import 'package:foxy/repository/player_create_info_item_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
+import 'package:foxy/repository/player_create_info_spell_custom_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
@@ -240,6 +243,11 @@ class DI {
     _instance.registerLazySingleton(() => NpcVendorRepository());
     _instance.registerLazySingleton(() => PageTextRepository());
     _instance.registerLazySingleton(() => PlayerCreateInfoRepository());
+    _instance.registerLazySingleton(() => PlayerCreateInfoActionRepository());
+    _instance.registerLazySingleton(() => PlayerCreateInfoItemRepository());
+    _instance.registerLazySingleton(
+      () => PlayerCreateInfoSpellCustomRepository(),
+    );
     _instance.registerLazySingleton(() => QuestFactionRewardRepository());
     _instance.registerLazySingleton(() => QuestInfoRepository());
     _instance.registerLazySingleton(() => QuestOfferRewardLocaleRepository());

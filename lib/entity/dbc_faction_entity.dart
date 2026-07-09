@@ -182,3 +182,44 @@ class DbcFactionEntity {
     );
   }
 }
+
+/// 阵营列表/Picker 展示模型
+class BriefDbcFactionEntity {
+  final int id;
+  final String nameLangZhCn;
+  final String descriptionLangZhCn;
+
+  const BriefDbcFactionEntity({
+    this.id = 0,
+    this.nameLangZhCn = '',
+    this.descriptionLangZhCn = '',
+  });
+
+  factory BriefDbcFactionEntity.fromJson(Map<String, dynamic> json) {
+    return BriefDbcFactionEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCn: json['Name_lang_zhCN'] ?? '',
+      descriptionLangZhCn: json['Description_lang_zhCN'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Name_lang_zhCN': nameLangZhCn,
+      'Description_lang_zhCN': descriptionLangZhCn,
+    };
+  }
+
+  BriefDbcFactionEntity copyWith({
+    int? id,
+    String? nameLangZhCn,
+    String? descriptionLangZhCn,
+  }) {
+    return BriefDbcFactionEntity(
+      id: id ?? this.id,
+      nameLangZhCn: nameLangZhCn ?? this.nameLangZhCn,
+      descriptionLangZhCn: descriptionLangZhCn ?? this.descriptionLangZhCn,
+    );
+  }
+}

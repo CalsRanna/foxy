@@ -269,3 +269,40 @@ class VehicleEntity {
     );
   }
 }
+
+/// 载具列表/Picker 展示模型
+class BriefVehicleEntity {
+  final int id;
+  final int flags;
+  final double turnSpeed;
+
+  const BriefVehicleEntity({
+    this.id = 0,
+    this.flags = 0,
+    this.turnSpeed = 0,
+  });
+
+  factory BriefVehicleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefVehicleEntity(
+      id: json['ID'] ?? json['id'] ?? 0,
+      flags: json['Flags'] ?? json['flags'] ?? 0,
+      turnSpeed: json['TurnSpeed'] ?? json['turnSpeed'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Flags': flags,
+      'TurnSpeed': turnSpeed,
+    };
+  }
+
+  BriefVehicleEntity copyWith({int? id, int? flags, double? turnSpeed}) {
+    return BriefVehicleEntity(
+      id: id ?? this.id,
+      flags: flags ?? this.flags,
+      turnSpeed: turnSpeed ?? this.turnSpeed,
+    );
+  }
+}

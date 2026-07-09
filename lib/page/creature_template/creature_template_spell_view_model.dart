@@ -27,7 +27,7 @@ class CreatureTemplateSpellViewModel {
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> load() async {
-    final data = await _repository.getCreatureTemplateSpells(creatureId.value);
+    final data = await _repository.getBriefCreatureTemplateSpells(creatureId.value);
     items.value = data;
     selectedIndex.value = null;
   }
