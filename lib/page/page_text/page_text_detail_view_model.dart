@@ -53,8 +53,9 @@ class PageTextDetailViewModel {
         page.value = data;
         _logActivity(ActivityActionType.update, data);
       } else {
-        await _repository.storePageText(data);
-        page.value = data;
+        final id = await _repository.storePageText(data);
+        idController.text = '$id';
+        page.value = data.copyWith(id: id);
         _logActivity(ActivityActionType.create, data);
       }
       if (!context.mounted) return;

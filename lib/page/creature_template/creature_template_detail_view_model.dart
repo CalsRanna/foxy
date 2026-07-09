@@ -92,7 +92,8 @@ class CreatureTemplateDetailViewModel {
       final t = _collectFromControllers();
       final isNew = t.entry == 0;
       if (isNew) {
-        await _repository.storeCreatureTemplate(t);
+        final id = await _repository.storeCreatureTemplate(t);
+        entryController.text = '$id';
       } else {
         await _repository.updateCreatureTemplate(t);
       }

@@ -33,7 +33,8 @@ class EmoteTextDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeEmoteText(t);
+        final id = await _repository.storeEmoteText(t);
+        idController.text = '$id';
       } else {
         await _repository.updateEmoteText(t);
       }

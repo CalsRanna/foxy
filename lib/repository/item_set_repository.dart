@@ -48,11 +48,12 @@ class ItemSetRepository with RepositoryMixin {
     return ItemSetEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeItemSet(ItemSetEntity itemSet) async {
+  Future<int> storeItemSet(ItemSetEntity itemSet) async {
     var json = itemSet.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateItemSet(ItemSetEntity itemSet) async {

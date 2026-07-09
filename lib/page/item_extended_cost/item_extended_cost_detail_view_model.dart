@@ -47,7 +47,8 @@ class ItemExtendedCostDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeItemExtendedCost(t);
+        final id = await _repository.storeItemExtendedCost(t);
+        idController.text = '$id';
       } else {
         await _repository.updateItemExtendedCost(t);
       }

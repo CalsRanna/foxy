@@ -95,11 +95,12 @@ class ItemTemplateRepository with RepositoryMixin {
     return ItemTemplateEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeItemTemplate(ItemTemplateEntity template) async {
+  Future<int> storeItemTemplate(ItemTemplateEntity template) async {
     var json = template.toJson();
     var newEntry = await _getNextEntry();
     json['entry'] = newEntry;
     await laconic.table(_table).insert([json]);
+    return newEntry;
   }
 
   Future<void> updateItemTemplate(ItemTemplateEntity template) async {

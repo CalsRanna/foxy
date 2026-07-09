@@ -30,7 +30,8 @@ class CurrencyTypeDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeCurrencyType(t);
+        final id = await _repository.storeCurrencyType(t);
+        idController.text = '$id';
       } else {
         await _repository.updateCurrencyType(t);
       }

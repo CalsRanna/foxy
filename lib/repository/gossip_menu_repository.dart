@@ -85,11 +85,12 @@ class GossipMenuRepository with RepositoryMixin {
     return GossipMenuEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeGossipMenu(GossipMenuEntity model) async {
+  Future<int> storeGossipMenu(GossipMenuEntity model) async {
     var json = model.toJson();
     var newMenuId = await getNextMenuId();
     json['MenuID'] = newMenuId;
     await laconic.table(_table).insert([json]);
+    return newMenuId;
   }
 
   Future<void> updateGossipMenu(

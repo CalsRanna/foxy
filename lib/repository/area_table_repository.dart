@@ -52,11 +52,12 @@ class AreaTableRepository with RepositoryMixin {
     return AreaTableEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeAreaTable(AreaTableEntity area) async {
+  Future<int> storeAreaTable(AreaTableEntity area) async {
     var json = area.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateAreaTable(AreaTableEntity area) async {

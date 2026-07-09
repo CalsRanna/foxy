@@ -240,7 +240,8 @@ class SpellDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeSpell(t);
+        final newId = await _repository.storeSpell(t);
+        id.value = newId;
       } else {
         await _repository.updateSpell(t);
       }

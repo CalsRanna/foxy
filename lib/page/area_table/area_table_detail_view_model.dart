@@ -52,7 +52,8 @@ class AreaTableDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeAreaTable(t);
+        final id = await _repository.storeAreaTable(t);
+        idController.text = '$id';
       } else {
         await _repository.updateAreaTable(t);
       }

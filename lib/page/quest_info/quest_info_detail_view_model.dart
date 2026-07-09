@@ -28,7 +28,8 @@ class QuestInfoDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeQuestInfo(t);
+        final id = await _repository.storeQuestInfo(t);
+        idController.text = '$id';
       } else {
         await _repository.updateQuestInfo(t);
       }

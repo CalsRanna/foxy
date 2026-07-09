@@ -33,11 +33,12 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return ItemExtendedCostEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeItemExtendedCost(ItemExtendedCostEntity data) async {
+  Future<int> storeItemExtendedCost(ItemExtendedCostEntity data) async {
     var json = data.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateItemExtendedCost(ItemExtendedCostEntity data) async {

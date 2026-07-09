@@ -50,11 +50,12 @@ class AchievementRepository with RepositoryMixin {
     return AchievementEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeAchievement(AchievementEntity achievement) async {
+  Future<int> storeAchievement(AchievementEntity achievement) async {
     var json = achievement.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateAchievement(AchievementEntity achievement) async {

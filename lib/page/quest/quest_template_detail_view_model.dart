@@ -160,7 +160,8 @@ class QuestTemplateDetailViewModel {
     try {
       final t = _collect();
       if (t.id == 0) {
-        await _repository.storeQuestTemplate(t);
+        final id = await _repository.storeQuestTemplate(t);
+        idController.text = '$id';
       } else {
         await _repository.updateQuestTemplate(t);
       }
