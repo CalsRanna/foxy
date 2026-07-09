@@ -2,6 +2,7 @@ import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class PageTextRepository with RepositoryMixin {
   static const _table = 'page_text';
@@ -102,7 +103,7 @@ class PageTextRepository with RepositoryMixin {
     });
   }
 
-  dynamic _applyFilter(dynamic builder, PageTextFilterEntity filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, PageTextFilterEntity filter) {
     if (filter.id.isNotEmpty) {
       builder = builder.where('pt.ID', filter.id);
     }

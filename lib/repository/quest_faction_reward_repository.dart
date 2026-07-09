@@ -1,6 +1,7 @@
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class QuestFactionRewardRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_faction_reward';
@@ -66,8 +67,8 @@ class QuestFactionRewardRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(
-    dynamic builder,
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
     QuestFactionRewardFilterEntity? filter,
   ) {
     if (filter == null) return builder;

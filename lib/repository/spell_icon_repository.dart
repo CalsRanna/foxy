@@ -1,5 +1,6 @@
 import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class SpellIconRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_icon';
@@ -23,7 +24,7 @@ class SpellIconRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
+  QueryBuilder _applyFilter(QueryBuilder builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }

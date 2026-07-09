@@ -1,5 +1,6 @@
 import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class ItemDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_display_info';
@@ -25,7 +26,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
+  QueryBuilder _applyFilter(QueryBuilder builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }

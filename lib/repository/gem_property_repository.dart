@@ -1,6 +1,7 @@
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class GemPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_gem_properties';
@@ -78,7 +79,7 @@ class GemPropertyRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, GemPropertyFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, GemPropertyFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

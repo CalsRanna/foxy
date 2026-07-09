@@ -1,6 +1,7 @@
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class SpellItemEnchantmentSoloRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_item_enchantment';
@@ -70,8 +71,8 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(
-    dynamic builder,
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
     SpellItemEnchantmentFilterEntity? filter,
   ) {
     if (filter == null) return builder;

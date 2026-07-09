@@ -1,5 +1,6 @@
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class ItemRandomSuffixRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_random_suffix';
@@ -25,7 +26,7 @@ class ItemRandomSuffixRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
+  QueryBuilder _applyFilter(QueryBuilder builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }

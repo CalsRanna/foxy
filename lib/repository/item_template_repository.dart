@@ -1,6 +1,7 @@
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class ItemTemplateRepository with RepositoryMixin {
   static const _table = 'item_template';
@@ -107,7 +108,7 @@ class ItemTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('entry', template.entry).update(json);
   }
 
-  dynamic _applyFilter(dynamic builder, ItemTemplateFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, ItemTemplateFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
       builder = builder.where('it.entry', filter.entry);

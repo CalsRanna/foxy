@@ -1,6 +1,7 @@
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class ScalingStatValueRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_values';
@@ -91,7 +92,7 @@ class ScalingStatValueRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, ScalingStatValueFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, ScalingStatValueFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

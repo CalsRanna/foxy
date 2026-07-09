@@ -1,6 +1,7 @@
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/item_set_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class ItemSetRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_set';
@@ -81,7 +82,7 @@ class ItemSetRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, ItemSetFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, ItemSetFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

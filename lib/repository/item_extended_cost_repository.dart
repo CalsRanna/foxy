@@ -1,6 +1,7 @@
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class ItemExtendedCostRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
@@ -66,7 +67,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, ItemExtendedCostFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, ItemExtendedCostFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

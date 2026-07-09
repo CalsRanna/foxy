@@ -1,6 +1,7 @@
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class QuestInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_info';
@@ -62,7 +63,7 @@ class QuestInfoRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, QuestInfoFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, QuestInfoFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
