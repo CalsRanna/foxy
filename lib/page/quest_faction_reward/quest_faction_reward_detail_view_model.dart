@@ -40,7 +40,8 @@ class QuestFactionRewardDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeQuestFactionReward(t);
+        final id = await _repository.storeQuestFactionReward(t);
+        idController.text = '$id';
       } else {
         await _repository.updateQuestFactionReward(t);
       }

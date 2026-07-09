@@ -122,7 +122,8 @@ class ItemSetDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeItemSet(t);
+        final id = await _repository.storeItemSet(t);
+        idController.text = '$id';
       } else {
         await _repository.updateItemSet(t);
       }

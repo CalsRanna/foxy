@@ -34,7 +34,8 @@ class GemPropertyDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeGemProperty(t);
+        final id = await _repository.storeGemProperty(t);
+        idController.text = '$id';
       } else {
         await _repository.updateGemProperty(t);
       }

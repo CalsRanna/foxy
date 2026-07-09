@@ -50,7 +50,8 @@ class ScalingStatDistributionDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeScalingStatDistribution(t);
+        final id = await _repository.storeScalingStatDistribution(t);
+        idController.text = '$id';
       } else {
         await _repository.updateScalingStatDistribution(t);
       }

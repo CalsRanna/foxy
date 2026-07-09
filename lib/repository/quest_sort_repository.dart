@@ -29,11 +29,12 @@ class QuestSortRepository with RepositoryMixin {
     return QuestSortEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeQuestSort(QuestSortEntity data) async {
+  Future<int> storeQuestSort(QuestSortEntity data) async {
     var json = data.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateQuestSort(QuestSortEntity data) async {

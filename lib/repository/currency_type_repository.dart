@@ -60,11 +60,12 @@ class CurrencyTypeRepository with RepositoryMixin {
     return CurrencyTypeEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeCurrencyType(CurrencyTypeEntity currencyType) async {
+  Future<int> storeCurrencyType(CurrencyTypeEntity currencyType) async {
     var json = currencyType.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateCurrencyType(CurrencyTypeEntity currencyType) async {

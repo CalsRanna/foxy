@@ -99,7 +99,8 @@ class AchievementDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeAchievement(t);
+        final id = await _repository.storeAchievement(t);
+        idController.text = '$id';
       } else {
         await _repository.updateAchievement(t);
       }

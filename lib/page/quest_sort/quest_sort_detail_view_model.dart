@@ -28,7 +28,8 @@ class QuestSortDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeQuestSort(t);
+        final id = await _repository.storeQuestSort(t);
+        idController.text = '$id';
       } else {
         await _repository.updateQuestSort(t);
       }

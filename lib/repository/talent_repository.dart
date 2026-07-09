@@ -43,11 +43,12 @@ class TalentRepository with RepositoryMixin {
     return TalentEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeTalent(TalentEntity talent) async {
+  Future<int> storeTalent(TalentEntity talent) async {
     var json = talent.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateTalent(TalentEntity talent) async {

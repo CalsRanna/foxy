@@ -57,10 +57,12 @@ class GossipMenuDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (_originalMenuId == null) {
-        await _repository.storeGossipMenu(t);
+        final id = await _repository.storeGossipMenu(t);
+        menuIdController.text = '$id';
+        menuId.value = id;
         menu.value = t;
         _logActivity(ActivityActionType.create, t);
-        _originalMenuId = t.menuId;
+        _originalMenuId = id;
         _originalTextId = t.textId;
       } else {
         await _repository.updateGossipMenu(

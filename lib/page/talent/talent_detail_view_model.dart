@@ -50,7 +50,8 @@ class TalentDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeTalent(t);
+        final id = await _repository.storeTalent(t);
+        idController.text = '$id';
       } else {
         await _repository.updateTalent(t);
       }

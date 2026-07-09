@@ -72,13 +72,14 @@ class GameObjectTemplateRepository with RepositoryMixin {
     return GameObjectTemplateEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeGameObjectTemplate(
+  Future<int> storeGameObjectTemplate(
     GameObjectTemplateEntity template,
   ) async {
     var json = template.toJson();
     var newEntry = await _getNextEntry();
     json['entry'] = newEntry;
     await laconic.table(_table).insert([json]);
+    return newEntry;
   }
 
   Future<void> updateGameObjectTemplate(

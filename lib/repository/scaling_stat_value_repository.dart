@@ -58,11 +58,12 @@ class ScalingStatValueRepository with RepositoryMixin {
     return ScalingStatValueEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeScalingStatValue(ScalingStatValueEntity value) async {
+  Future<int> storeScalingStatValue(ScalingStatValueEntity value) async {
     var json = value.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateScalingStatValue(ScalingStatValueEntity value) async {

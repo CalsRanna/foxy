@@ -51,7 +51,8 @@ class ScalingStatValueDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeScalingStatValue(t);
+        final id = await _repository.storeScalingStatValue(t);
+        idController.text = '$id';
       } else {
         await _repository.updateScalingStatValue(t);
       }

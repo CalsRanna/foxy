@@ -41,7 +41,8 @@ class GameObjectTemplateDetailViewModel {
       final t = _collectFromControllers();
       final isNew = t.entry == 0;
       if (isNew) {
-        await _repository.storeGameObjectTemplate(t);
+        final id = await _repository.storeGameObjectTemplate(t);
+        entryController.text = '$id';
       } else {
         await _repository.updateGameObjectTemplate(t);
       }

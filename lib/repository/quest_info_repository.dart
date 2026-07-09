@@ -29,11 +29,12 @@ class QuestInfoRepository with RepositoryMixin {
     return QuestInfoEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeQuestInfo(QuestInfoEntity data) async {
+  Future<int> storeQuestInfo(QuestInfoEntity data) async {
     var json = data.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateQuestInfo(QuestInfoEntity data) async {

@@ -440,7 +440,8 @@ class ItemTemplateDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.entry == 0) {
-        await _repository.storeItemTemplate(t);
+        final id = await _repository.storeItemTemplate(t);
+        entryController.text = '$id';
       } else {
         await _repository.updateItemTemplate(t);
       }

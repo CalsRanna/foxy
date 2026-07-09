@@ -33,7 +33,8 @@ class GlyphPropertyDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeGlyphProperty(t);
+        final id = await _repository.storeGlyphProperty(t);
+        idController.text = '$id';
       } else {
         await _repository.updateGlyphProperty(t);
       }

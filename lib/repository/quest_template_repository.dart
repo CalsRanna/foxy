@@ -71,11 +71,12 @@ class QuestTemplateRepository with RepositoryMixin {
     return QuestTemplateEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeQuestTemplate(QuestTemplateEntity model) async {
+  Future<int> storeQuestTemplate(QuestTemplateEntity model) async {
     var json = model.toJson();
     var newId = await _getNextId();
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
+    return newId;
   }
 
   Future<void> updateQuestTemplate(QuestTemplateEntity model) async {

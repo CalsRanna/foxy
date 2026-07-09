@@ -29,11 +29,12 @@ class EmoteTextRepository with RepositoryMixin {
     return EmoteTextEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeEmoteText(EmoteTextEntity data) async {
+  Future<int> storeEmoteText(EmoteTextEntity data) async {
     var json = data.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateEmoteText(EmoteTextEntity data) async {

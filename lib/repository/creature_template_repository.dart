@@ -78,7 +78,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     return CreatureTemplateEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeCreatureTemplate(CreatureTemplateEntity template) async {
+  Future<int> storeCreatureTemplate(CreatureTemplateEntity template) async {
     var json = template.toJson();
     var newEntry = await _getNextEntry();
     json['entry'] = newEntry;
@@ -87,6 +87,7 @@ class CreatureTemplateRepository with RepositoryMixin {
       json['`rank`'] = json.remove('rank');
     }
     await laconic.table(_table).insert([json]);
+    return newEntry;
   }
 
   Future<void> updateCreatureTemplate(CreatureTemplateEntity template) async {

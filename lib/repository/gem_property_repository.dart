@@ -45,11 +45,12 @@ class GemPropertyRepository with RepositoryMixin {
     return GemPropertyEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeGemProperty(GemPropertyEntity gemProperty) async {
+  Future<int> storeGemProperty(GemPropertyEntity gemProperty) async {
     var json = gemProperty.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateGemProperty(GemPropertyEntity gemProperty) async {

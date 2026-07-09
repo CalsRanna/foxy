@@ -59,7 +59,8 @@ class SpellItemEnchantmentDetailViewModel {
     try {
       final t = _collectFromControllers();
       if (t.id == 0) {
-        await _repository.storeSpellItemEnchantment(t);
+        final id = await _repository.storeSpellItemEnchantment(t);
+        idController.text = '$id';
       } else {
         await _repository.updateSpellItemEnchantment(t);
       }

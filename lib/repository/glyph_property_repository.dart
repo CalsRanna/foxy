@@ -29,11 +29,12 @@ class GlyphPropertyRepository with RepositoryMixin {
     return GlyphPropertyEntity.fromJson(result.toMap());
   }
 
-  Future<void> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
+  Future<int> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
     var json = glyphProperty.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
   Future<void> updateGlyphProperty(GlyphPropertyEntity glyphProperty) async {
