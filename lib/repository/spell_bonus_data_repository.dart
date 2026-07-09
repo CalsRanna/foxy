@@ -4,6 +4,37 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellBonusDataRepository with RepositoryMixin {
   static const _table = 'spell_bonus_data';
 
+  Future<List<BriefSpellBonusDataEntity>> getBriefSpellBonusDatas({
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select([
+      'entry',
+      'direct_bonus',
+      'dot_bonus',
+      'ap_bonus',
+      'ap_dot_bonus',
+      'comments',
+    ]);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefSpellBonusDataEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<SpellBonusDataEntity>> getSpellBonusDatas() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => SpellBonusDataEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countSpellBonusDatas() async {
+    return laconic.table(_table).count();
+  }
+
   Future<SpellBonusDataEntity?> getSpellBonusData(int entry) async {
     var results = await laconic
         .table(_table)

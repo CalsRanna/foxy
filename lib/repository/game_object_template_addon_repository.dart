@@ -4,6 +4,36 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GameObjectTemplateAddonRepository with RepositoryMixin {
   static const _table = 'gameobject_template_addon';
 
+  Future<List<BriefGameObjectTemplateAddonEntity>>
+  getBriefGameObjectTemplateAddons({int page = 1}) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select([
+      'entry',
+      'faction',
+      'flags',
+      'mingold',
+      'maxgold',
+    ]);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefGameObjectTemplateAddonEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<GameObjectTemplateAddonEntity>>
+  getGameObjectTemplateAddons() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => GameObjectTemplateAddonEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countGameObjectTemplateAddons() async {
+    return laconic.table(_table).count();
+  }
+
   Future<GameObjectTemplateAddonEntity?> getGameObjectTemplateAddon(
     int entry,
   ) async {

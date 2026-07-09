@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/database/database.dart';
+import 'package:foxy/util/dbc_export_registry.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -248,79 +249,101 @@ class DbcSyncUtil {
 
 /// DBC 导出工具：将 MySQL 中的 DBC 数据写回 .dbc 文件。
 ///
-/// 所有耗时操作在 worker isolate 内完成，通过 [export] 返回的 [Stream] 报告进度。
+/// 数据经 [DbcExportRegistry]（Repository.`get{Entities}`）读取；写文件在主 isolate
+/// 异步完成，通过 [export] 返回的 [Stream] 报告进度。
 class DbcExportUtil {
-  /// 获取可导出表的行数预览（批量查询，一次往返）。
+  /// 获取可导出表的行数预览（经各 Repository.`count*`）。
   Future<Map<String, int>> getTableRecordCounts() async {
-    final laconic = Database.instance.laconic;
     final tables = kTableSchemaMap.keys.toList();
     if (tables.isEmpty) return {};
 
     try {
-      final union = tables
-          .map((t) => "SELECT '$t' AS t, COUNT(*) AS c FROM foxy.$t")
-          .join(' UNION ALL ');
-      final rows = await laconic.select(union);
       final counts = <String, int>{};
-      for (final r in rows) {
-        counts[r['t'] as String] = (r['c'] as num).toInt();
+      for (final t in tables) {
+        counts[t] = await DbcExportRegistry.countRows(t);
       }
       return counts;
     } catch (_) {
-      // 批量查询失败时返回全零（UI 可据此隐藏行数显示）
       return {for (final t in tables) t: 0};
     }
   }
 
-  /// 启动导出：在 worker isolate 内从 MySQL 读取选定表并写入 .dbc 文件。
+  /// 启动导出：经 Repository 读全表，再写入 .dbc 文件。
   ///
   /// [outputDir] 输出目录，[tableShorts] 用户选中的表短名集合。
+  /// 兼容旧调用方的 [host]/[port]/[database]/[username]/[password] 参数（已忽略，
+  /// 读写均使用当前 [Database] / GetIt 仓储）。
   /// 返回进度事件流，最后发一个 [DbcSyncResult] 后关闭。
   Stream<DbcSyncProgress> export({
     required String outputDir,
     required List<String> tableShorts,
-    required String host,
-    required int port,
-    required String database,
-    required String username,
-    required String password,
+    String? host,
+    int? port,
+    String? database,
+    String? username,
+    String? password,
   }) {
     final controller = StreamController<DbcSyncProgress>();
-    final receivePort = ReceivePort();
 
     () async {
       try {
-        await Isolate.spawn(_exportWorker, (
-          sendPort: receivePort.sendPort,
-          outputDir: outputDir,
-          tableShorts: tableShorts,
-          host: host,
-          port: port,
-          database: database,
-          username: username,
-          password: password,
-        ));
-
-        await for (final msg in receivePort) {
-          switch (msg) {
-            case (String status,):
-              controller.add(DbcSyncStatus(status));
-            case (String status, int d, int t):
-              controller.add(DbcSyncCount(status, d, t));
-            case (bool success, int exported, int skipped, List errs):
-              controller.add(
-                DbcSyncResult(success, exported, skipped, errs.cast<String>()),
-              );
-              break;
-            default:
-              break;
-          }
+        final outDir = Directory(outputDir);
+        if (!await outDir.exists()) {
+          controller.add(DbcSyncResult(false, 0, 0, ['输出目录不存在: $outputDir']));
+          await controller.close();
+          return;
         }
-        receivePort.close();
-        await controller.close();
+
+        var exported = 0;
+        var skipped = 0;
+        final errors = <String>[];
+        final total = tableShorts.length;
+
+        for (var i = 0; i < tableShorts.length; i++) {
+          final tableShort = tableShorts[i];
+          final schema = kTableSchemaMap[tableShort];
+          if (schema == null) {
+            errors.add('$tableShort: 未知的 DBC 表');
+            continue;
+          }
+          final fileName = kTableDbcNameMap[tableShort]!;
+
+          controller.add(DbcSyncStatus('正在读取 $fileName...'));
+
+          try {
+            final rows = await DbcExportRegistry.loadRows(tableShort);
+
+            if (rows.isEmpty) {
+              skipped++;
+              controller.add(
+                DbcSyncCount(fileName, exported + skipped + errors.length, total),
+              );
+              continue;
+            }
+
+            controller.add(DbcSyncStatus('正在写入 $fileName...'));
+
+            final records =
+                rows.map((r) => _rowToRecordList(r, schema)).toList();
+            final outPath = p.join(outputDir, fileName);
+            final writer = DbcWriter(outPath, schema.format);
+            await writer.writeAsync(records);
+
+            exported++;
+          } catch (e) {
+            errors.add('$fileName: $e');
+          }
+
+          controller.add(
+            DbcSyncCount(fileName, exported + skipped + errors.length, total),
+          );
+        }
+
+        controller.add(DbcSyncResult(errors.isEmpty, exported, skipped, errors));
       } catch (e) {
         LoggerUtil.instance.e('DBC 导出异常: $e');
         controller.add(DbcSyncResult(false, 0, 0, ['导出出错：$e']));
+      } finally {
         await controller.close();
       }
     }();
@@ -343,17 +366,6 @@ typedef _FileDef = ({
 typedef _WorkerArgs = ({
   SendPort sendPort,
   String dbcPath,
-  String host,
-  int port,
-  String database,
-  String username,
-  String password,
-});
-
-typedef _ExportWorkerArgs = ({
-  SendPort sendPort,
-  String outputDir,
-  List<String> tableShorts,
   String host,
   int port,
   String database,
@@ -778,80 +790,7 @@ Map<String, String> _buildTableDbcNameMap() {
   return map;
 }
 
-// ========== 导出 Worker ==========
-
-Future<void> _exportWorker(_ExportWorkerArgs args) async {
-  final (:sendPort, :outputDir, :tableShorts, :host, :port, :database,
-      :username, :password) = args;
-
-  // 验证输出目录
-  final outDir = Directory(outputDir);
-  if (!await outDir.exists()) {
-    sendPort.send((false, 0, 0, ['输出目录不存在: $outputDir']));
-    return;
-  }
-
-  sendPort.send(('正在连接数据库...',));
-
-  final config = MysqlConfig(
-    host: host, port: port, database: database,
-    username: username, password: password,
-  );
-  var laconic = Laconic(MysqlDriver(config));
-
-  try {
-    var exported = 0;
-    var skipped = 0;
-    final errors = <String>[];
-    final total = tableShorts.length;
-
-    for (var i = 0; i < tableShorts.length; i++) {
-      final tableShort = tableShorts[i];
-      final schema = kTableSchemaMap[tableShort];
-      if (schema == null) {
-        errors.add('$tableShort: 未知的 DBC 表');
-        continue;
-      }
-      final fileName = kTableDbcNameMap[tableShort]!;
-
-      sendPort.send(('正在导出 $fileName...',));
-
-      try {
-        // 读取全量行（DbcWriter 需要所有记录以构建 string block）
-        final rows = await laconic
-            .select('SELECT * FROM foxy.$tableShort ORDER BY ID');
-
-        if (rows.isEmpty) {
-          skipped++;
-          sendPort.send((fileName, exported + skipped + errors.length, total));
-          continue;
-        }
-
-        // 转换为 DBC 记录格式
-        final records = rows.map((r) => _rowToRecordList(r.toMap(), schema)).toList();
-
-        // 写入 .dbc 文件
-        final outPath = p.join(outputDir, fileName);
-        final writer = DbcWriter(outPath, schema.format);
-        await writer.writeAsync(records);
-
-        exported++;
-      } catch (e) {
-        errors.add('$fileName: $e');
-      }
-
-      sendPort.send((fileName, exported + skipped + errors.length, total));
-    }
-
-    sendPort.send((errors.isEmpty, exported, skipped, errors));
-  } catch (e) {
-    sendPort.send((false, 0, 0, ['导出 Worker 错误: $e']));
-  } finally {
-    await laconic.close();
-  }
-}
-
-/// 将 MySQL 查询结果的一行转换为按 DBC format 串顺序排列的 [List<dynamic>]。
+/// 将一行 Map（来自 Repository 实体 toJson 或表行）转换为按 DBC format 串顺序排列的 [List<dynamic>]。
 ///
 /// 以 format 字符为准决定目标类型（而非 schema field type），
 /// 解决 locale flag 字段（schema=int32，format=s）的类型不匹配。

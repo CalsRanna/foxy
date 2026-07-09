@@ -4,6 +4,30 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellCustomAttrRepository with RepositoryMixin {
   static const _table = 'spell_custom_attr';
 
+  Future<List<BriefSpellCustomAttrEntity>> getBriefSpellCustomAttrs({
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select(['spell_id', 'attributes']);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefSpellCustomAttrEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<SpellCustomAttrEntity>> getSpellCustomAttrs() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => SpellCustomAttrEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countSpellCustomAttrs() async {
+    return laconic.table(_table).count();
+  }
+
   Future<SpellCustomAttrEntity?> getSpellCustomAttr(int spellId) async {
     var results = await laconic
         .table(_table)

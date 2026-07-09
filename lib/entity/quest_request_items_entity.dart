@@ -54,6 +54,39 @@ class QuestRequestItemsEntity {
   }
 }
 
+/// 任务请求物品文本列表/Picker 展示模型
+class BriefQuestRequestItemsEntity {
+  final int id;
+  final int emoteOnComplete;
+  final int emoteOnIncomplete;
+  final String completionText;
+
+  const BriefQuestRequestItemsEntity({
+    this.id = 0,
+    this.emoteOnComplete = 0,
+    this.emoteOnIncomplete = 0,
+    this.completionText = '',
+  });
+
+  factory BriefQuestRequestItemsEntity.fromJson(Map<String, dynamic> json) {
+    return BriefQuestRequestItemsEntity(
+      id: json['ID'] ?? 0,
+      emoteOnComplete: json['EmoteOnComplete'] ?? 0,
+      emoteOnIncomplete: json['EmoteOnIncomplete'] ?? 0,
+      completionText: json['CompletionText']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'EmoteOnComplete': emoteOnComplete,
+      'EmoteOnIncomplete': emoteOnIncomplete,
+      'CompletionText': completionText,
+    };
+  }
+}
+
 /// quest_request_items_locale 本地化模型（复合键: ID + Locale）
 class QuestRequestItemsLocaleEntity {
   final int id;
@@ -99,5 +132,36 @@ class QuestRequestItemsLocaleEntity {
       completionText: completionText ?? this.completionText,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
+  }
+}
+
+/// 列表 / Picker 精简行：ID + locale + 完成文本
+class BriefQuestRequestItemsLocaleEntity {
+  final int id;
+  final String locale;
+  final String completionText;
+
+  const BriefQuestRequestItemsLocaleEntity({
+    this.id = 0,
+    this.locale = 'zhCN',
+    this.completionText = '',
+  });
+
+  factory BriefQuestRequestItemsLocaleEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefQuestRequestItemsLocaleEntity(
+      id: (json['ID'] ?? json['id'] ?? 0) as int,
+      locale: json['locale']?.toString() ?? 'zhCN',
+      completionText: json['CompletionText']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'locale': locale,
+      'CompletionText': completionText,
+    };
   }
 }

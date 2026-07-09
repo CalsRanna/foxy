@@ -4,6 +4,36 @@ import 'package:foxy/repository/repository_mixin.dart';
 class QuestTemplateAddonRepository with RepositoryMixin {
   static const _table = 'quest_template_addon';
 
+  Future<List<BriefQuestTemplateAddonEntity>> getBriefQuestTemplateAddons({
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select([
+      'ID',
+      'MaxLevel',
+      'PrevQuestID',
+      'NextQuestID',
+      'SpecialFlags',
+    ]);
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefQuestTemplateAddonEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<QuestTemplateAddonEntity>> getQuestTemplateAddons() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => QuestTemplateAddonEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countQuestTemplateAddons() async {
+    return laconic.table(_table).count();
+  }
+
   Future<QuestTemplateAddonEntity?> getQuestTemplateAddon(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;

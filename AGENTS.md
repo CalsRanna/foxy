@@ -81,7 +81,7 @@ ViewModel 通过 `GetIt.instance.get<T>()` 获取, 使用 signals 的 `signal()`
 - `lib/database/migration_runner.dart`: `MigrationRunner` 按时间戳顺序执行 migration, 通过 `foxy.migrations` 表跟踪已执行迁移; 迁移创建 `foxy.features`、`foxy.activity_log` 等自用表并写入模块种子数据
 - `lib/database/migration/`: 迁移脚本 (命名 `migration_<YYYYMMDDHHMM>.dart`), 新增迁移需在 `MigrationRunner.run()` 的列表中按顺序注册
 - `repository/repository_mixin.dart`: `RepositoryMixin` 通过 `Database.instance.laconic` 获取 Laconic 实例并定义 `kPageSize = 50`, 所有 Repository 混入此 mixin
-- `util/dbc_sync_util.dart`: `DbcSyncUtil` 封装 DBC 文件导入 (worker isolate 内执行), 写入 30 个 `foxy.dbc_*` 表, 由 `ScaffoldViewModel` 消费进度流
+- `util/dbc_sync_util.dart`: `DbcSyncUtil` 封装 DBC 导入 (worker isolate); `DbcExportUtil` 导出经 `DbcExportRegistry` 调用各 Repository 的 `get{Entities}` / `count*`, 再写 `.dbc` 文件, 由 `ScaffoldViewModel` 消费进度流
 
 ### 路由
 

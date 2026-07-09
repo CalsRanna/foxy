@@ -51,3 +51,32 @@ class ItemTemplateLocaleEntity {
     );
   }
 }
+
+/// 列表 / Picker 精简行：ID + locale + 展示名
+class BriefItemTemplateLocaleEntity {
+  final int id;
+  final String locale;
+  final String name;
+
+  const BriefItemTemplateLocaleEntity({
+    this.id = 0,
+    this.locale = 'zhCN',
+    this.name = '',
+  });
+
+  factory BriefItemTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemTemplateLocaleEntity(
+      id: (json['ID'] ?? json['id'] ?? 0) as int,
+      locale: json['locale']?.toString() ?? 'zhCN',
+      name: json['Name']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'locale': locale,
+      'Name': name,
+    };
+  }
+}
