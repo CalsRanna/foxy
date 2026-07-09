@@ -1,6 +1,7 @@
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class SpellRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell';
@@ -83,7 +84,7 @@ class SpellRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, SpellFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, SpellFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ds.ID', filter.id);

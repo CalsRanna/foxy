@@ -1,5 +1,6 @@
 import 'package:foxy/entity/spell_duration_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class SpellDurationRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_duration';
@@ -22,7 +23,7 @@ class SpellDurationRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(dynamic builder, {String? id}) {
+  QueryBuilder _applyFilter(QueryBuilder builder, {String? id}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }

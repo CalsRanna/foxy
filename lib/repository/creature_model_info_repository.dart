@@ -1,5 +1,6 @@
 import 'package:foxy/entity/creature_model_info_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class CreatureModelInfoRepository with RepositoryMixin {
   static const _table = 'creature_model_info';
@@ -24,7 +25,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(dynamic builder, {String? id}) {
+  QueryBuilder _applyFilter(QueryBuilder builder, {String? id}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('DisplayID', id);
     }

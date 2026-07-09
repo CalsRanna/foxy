@@ -1,6 +1,7 @@
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class GossipMenuRepository with RepositoryMixin {
   static const _table = 'gossip_menu';
@@ -106,7 +107,7 @@ class GossipMenuRepository with RepositoryMixin {
         .update(json);
   }
 
-  dynamic _applyFilter(dynamic builder, GossipMenuFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, GossipMenuFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.menuId.isNotEmpty) {
       builder = builder.where('gm.MenuID', filter.menuId);

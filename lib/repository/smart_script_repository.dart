@@ -1,6 +1,7 @@
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class SmartScriptRepository with RepositoryMixin {
   static const _table = 'smart_scripts';
@@ -122,7 +123,7 @@ class SmartScriptRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, SmartScriptFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, SmartScriptFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.entryOrGuid.isNotEmpty) {
       builder = builder.where('entryorguid', filter.entryOrGuid);

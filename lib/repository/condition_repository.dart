@@ -2,6 +2,7 @@ import 'package:foxy/entity/brief_condition_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/condition_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class ConditionRepository with RepositoryMixin {
   static const _table = 'conditions';
@@ -88,7 +89,7 @@ class ConditionRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
-  dynamic _applyFilter(dynamic builder, ConditionFilterEntity filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, ConditionFilterEntity filter) {
     if (filter.sourceTypeOrReferenceId.isNotEmpty) {
       builder = builder.where(
         'SourceTypeOrReferenceId',

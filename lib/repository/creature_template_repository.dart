@@ -2,6 +2,7 @@ import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
 import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class CreatureTemplateRepository with RepositoryMixin {
   static const _table = 'creature_template';
@@ -123,7 +124,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     });
   }
 
-  dynamic _applyFilter(dynamic builder, CreatureTemplateFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, CreatureTemplateFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
       builder = builder.where('ct.entry', filter.entry);

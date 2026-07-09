@@ -1,6 +1,7 @@
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class ScalingStatDistributionSoloRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
@@ -72,8 +73,8 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(
-    dynamic builder,
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
     ScalingStatDistributionFilterEntity? filter,
   ) {
     if (filter == null) return builder;

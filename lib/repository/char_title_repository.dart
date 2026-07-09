@@ -1,5 +1,6 @@
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class CharTitleRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_char_titles';
@@ -23,7 +24,7 @@ class CharTitleRepository with RepositoryMixin {
     return builder.count();
   }
 
-  dynamic _applyFilter(dynamic builder, {String? id, String? name}) {
+  QueryBuilder _applyFilter(QueryBuilder builder, {String? id, String? name}) {
     if (id != null && id.isNotEmpty) {
       builder = builder.where('ID', id);
     }

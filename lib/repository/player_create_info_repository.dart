@@ -1,6 +1,7 @@
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class PlayerCreateInfoRepository with RepositoryMixin {
   Future<List<PlayerCreateInfoEntity>> getPlayerCreateInfos({
@@ -174,7 +175,7 @@ class PlayerCreateInfoRepository with RepositoryMixin {
         .delete();
   }
 
-  dynamic _applyFilter(dynamic builder, PlayerCreateInfoFilterEntity filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, PlayerCreateInfoFilterEntity filter) {
     if (filter.race.isNotEmpty) {
       builder = builder.where('race', filter.race);
     }

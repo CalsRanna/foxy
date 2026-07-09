@@ -1,6 +1,7 @@
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class AreaTableRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_area_table';
@@ -85,7 +86,7 @@ class AreaTableRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, AreaTableFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, AreaTableFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

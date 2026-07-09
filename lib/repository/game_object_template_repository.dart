@@ -2,6 +2,7 @@ import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class GameObjectTemplateRepository with RepositoryMixin {
   static const _table = 'gameobject_template';
@@ -113,8 +114,8 @@ class GameObjectTemplateRepository with RepositoryMixin {
     });
   }
 
-  dynamic _applyFilter(
-    dynamic builder,
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
     GameObjectTemplateFilterEntity? filter,
   ) {
     if (filter == null) return builder;

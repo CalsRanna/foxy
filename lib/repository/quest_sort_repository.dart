@@ -1,6 +1,7 @@
 import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class QuestSortRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_sort';
@@ -62,7 +63,7 @@ class QuestSortRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  dynamic _applyFilter(dynamic builder, QuestSortFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, QuestSortFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

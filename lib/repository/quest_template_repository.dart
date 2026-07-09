@@ -1,6 +1,7 @@
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class QuestTemplateRepository with RepositoryMixin {
   static const _table = 'quest_template';
@@ -83,7 +84,7 @@ class QuestTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', model.id).update(json);
   }
 
-  dynamic _applyFilter(dynamic builder, QuestTemplateFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, QuestTemplateFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       var idValue = int.tryParse(filter.id) ?? 0;
