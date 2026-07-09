@@ -1,332 +1,252 @@
 # Foxy
 
-基于 Flutter 的 AzerothCore 数据库可视化管理工具。通过跨平台桌面应用，提供对魔兽世界服务端全部核心游戏数据的编辑管理能力。连接 MySQL 数据库，支持直接读写 creature_template、item_template、quest_template 等 AzerothCore 核心表，并提供 DBC 文件导入、数据本地化编辑、操作日志追踪等高级功能。
+**AzerothCore 数据库可视化管理工具** — 用桌面端图形界面管理生物、物品、任务、法术等 World of Warcraft 服务端游戏数据。
 
-## 功能模块
+> 基于 Flutter 重构，目标是做最好用的魔兽世界（AzerothCore）数据编辑器。
 
-### 生物模板 (creature_template)
-编辑生物属性、阵营、战斗数值、移动速度、掉落、标识位等全部字段。关联子表通过标签页管理：
-- 模板补充 (creature_template_addon)、击杀声望 (creature_onkill_reputation)
-- 抗性 (creature_template_resistance)、技能 (creature_template_spell)
-- 装备模板 (creature_equip_template)、任务物品 (creature_quest_item)
-- 商人 (npc_vendor)、训练师 (npc_trainer)
-- 击杀掉落 (creature_loot_template)、偷窃掉落 (pickpocketing_loot_template)、剥皮掉落 (skinning_loot_template)
+---
 
-### 物品模板 (item_template)
-编辑物品基础属性。关联子表：
-- 附魔模板 (item_enchantment_template)、物品掉落 (item_loot_template)
-- 分解掉落 (disenchant_loot_template)、选矿掉落 (prospecting_loot_template)
-- 研磨掉落 (milling_loot_template)
+## 功能特性
 
-### 任务模板 (quest_template)
-编辑任务定义。关联子表：
-- 模板补充 (quest_template_addon)、提交物品 (quest_request_items)、发放奖励 (quest_offer_reward)
-- 开始生物 (creature_queststarter)、结束生物 (creature_questender)
-- 开始物体 (gameobject_queststarter)、结束物体 (gameobject_questender)
+### 核心数据管理
 
-### 游戏对象模板 (gameobject_template)
-编辑游戏对象定义及掉落、任务物品子表。
-
-### 法术 (spell)
-法术基础属性编辑。关联子表：
-- 附魔 (spell_item_enchantment)、范围 (spell_range)、时长 (spell_duration)
-- 效果加成 (spell_bonus_data)、自定义属性 (spell_custom_attr)、区域 (spell_area)
-- 分组 (spell_group)、关联法术 (spell_linked_spell)、等级 (spell_rank)
-- 掉落 (spell_loot_template)
-
-### 对话菜单 (gossip_menu)
-编辑 NPC 对话菜单，关联对话选项 (gossip_menu_option) 和 NPC 文本 (npc_text)。
-
-### 智能脚本 (smart_scripts)
-管理 AI 行为脚本的事件、条件、动作定义。
-
-### 其他模块
 | 模块 | 说明 |
 |------|------|
-| 关联掉落 | reference_loot_template 统一管理 |
-| 页面文本 | page_text 及多语言本地化 |
-| 条件 | condition 表，用于各类条件判断 |
-| 出生信息 | player_create_info，管理角色创建数据 |
-| 区域 | area_table 区域定义 |
-| 表情文本 | emote_text 表情动画文本 |
-| 任务声望 | quest_faction_reward 任务阵营声望奖励 |
-| 任务排序 | quest_sort 任务排序配置 |
-| 任务信息 | quest_info 任务难度提示信息 |
-| 扩展价格 | item_extended_cost 物品扩展消耗 |
-| 货币 | currency_type 货币定义 |
-| 套装 | item_set 套装列表 |
-| 天赋 | talent 天赋列表 |
-| 成就 | achievement 成就列表 |
-| 缩放属性值 | scaling_stat_value 属性缩放数值 |
-| 属性缩放分布 | scaling_stat_distribution |
-| 法术附魔 | spell_item_enchantment |
-| 宝石属性 | gem_properties（基于 DBC 数据） |
-| 雕文属性 | glyph_properties（基于 DBC 数据） |
+| **生物 (Creature)** | 模板、补充数据、抗性、技能、装备、击杀声望、商人/训练师、掉落（击杀/偷窃/剥皮） |
+| **物品 (Item)** | 模板、附魔、分解/勘探/研磨掉落等 |
+| **任务 (Quest)** | 模板、Addon、接取/交还、奖励文本、生物/物体起止点 |
+| **游戏对象 (GameObject)** | 模板、Addon、任务物品、掉落 |
+| **对话 (Gossip)** | 菜单、选项、NPC 文本及本地化 |
+| **内建脚本 (SmartAI)** | `smart_scripts` 列表与详情编辑 |
+| **法术 (Spell)** | 法术本体及相关：区域、加成、自定义属性、分组、链接、等级、掉落等 |
+| **条件 (Conditions)** | 条件类型与动态取值配置 |
+| **出生信息** | 角色创建数据、物品、动作、自定义法术 |
 
-### 系统功能
-- **工作台首页**: 显示服务器版本信息、数据库版本、操作趋势统计、常用模块快捷入口
-- **侧边栏定制**: 在"更多"页面中可将任意模块固定到侧边栏或收藏到首页
-- **面包屑导航**: 多级路径导航，支持点击任意层级跳转
-- **DBC 导入**: 自动从客户端 DBC 文件导入 30 个数据表（阵营、技能、图标、载具等）以增强数据展示
-- **操作日志**: 记录增删改操作历史，首页展示趋势图
-- **多语言支持**: 支持 locale 本地化表编辑（简体中文等）
-- **设置**: 基本设置 + 数据库连接配置
+### 扩展与 DBC 数据
+
+支持更多模块（通过「更多」入口访问，可钉到侧边栏 / 收藏到工作台）：
+
+- 关联掉落、页面文本、区域、表情文本
+- 任务声望 / 排序 / 信息
+- 扩展价格、属性缩放分布与缩放属性值
+- 法术附魔、宝石属性、雕文属性
+- 天赋、货币、套装、成就
+
+### 其它能力
+
+- **DBC 导入 / 导出**：从客户端 DBC 目录导入到 MySQL（`foxy.dbc_*`），或将库内数据导出为 `.dbc` 文件
+- **多语言 (Locale)**：检测世界库 `*_locale` 表后可开关本地化显示（如 zhCN）
+- **工作台**：常用模块、最近活动趋势、核心/数据库/软件版本信息
+- **功能收藏与钉选**：侧边栏与首页可自定义常用入口
+- **无边框桌面窗口**：窗口尺寸记忆、自定义标题栏
+
+---
 
 ## 技术栈
 
-| 类别 | 技术 |
+| 类别 | 选型 |
 |------|------|
-| 框架 | Flutter (macOS / Windows / Linux) |
-| Dart SDK | ^3.9.2 |
-| 状态管理 | signals (^6.0.2) + signals_flutter |
-| 依赖注入 | get_it (^9.0.5) |
-| 路由 | auto_route (^10.2.0) |
-| 数据库驱动 | mysql_client (^0.0.27) |
-| 查询构建器 | laconic (^2.2.0) + laconic_mysql (^1.2.0) |
-| UI 组件库 | shadcn_ui (^0.43.0) |
-| 图标库 | lucide_icons_flutter (^3.1.14) |
-| 桌面窗口 | window_manager (^0.5.1) |
-| DBC 解析 | warcrafty (^1.0.1) |
-| 配置管理 | yaml (^3.1.3) + yaml_edit (^2.2.2) |
-| 文件选择 | file_selector (^1.1.0) |
-| 本地存储 | shared_preferences (^2.3.5) |
-| 应用信息 | package_info_plus (^9.0.0) |
-| URL 启动 | url_launcher (^6.3.1) |
-| 路径处理 | path (^1.9.1) |
-| 集合工具 | collection (any) |
+| 框架 | [Flutter](https://flutter.dev) / Dart 3.9+ |
+| UI | [shadcn_ui](https://pub.dev/packages/shadcn_ui)、Lucide Icons |
+| 状态 | [signals](https://pub.dev/packages/signals) / signals_flutter |
+| 依赖注入 | [get_it](https://pub.dev/packages/get_it) |
+| 路由 | [auto_route](https://pub.dev/packages/auto_route) |
+| 数据库 | MySQL（[laconic](https://pub.dev/packages/laconic) + laconic_mysql） |
+| DBC | [warcrafty](https://pub.dev/packages/warcrafty) |
+| 桌面窗口 | window_manager |
+| 配置 | YAML（`config.yaml`） |
+
+**目标平台**：优先 Windows 桌面；工程同时包含 Linux / macOS 等平台脚手架。
+
+**服务端目标**：[AzerothCore](https://www.azerothcore.org/) 的 `acore_world`（及兼容结构的世界库）。
+
+---
+
+## 架构概览
+
+采用 **Page + ViewModel + Repository + Entity** 分层：
+
+```
+┌─────────────────────────────────────────────┐
+│  Page / Widget（UI，auto_route 路由页面）     │
+├─────────────────────────────────────────────┤
+│  ViewModel（signals 状态，GetIt 注入）        │
+├─────────────────────────────────────────────┤
+│  Repository（统一 CRUD，RepositoryMixin）     │
+├─────────────────────────────────────────────┤
+│  Entity / Filter Entity                     │
+├─────────────────────────────────────────────┤
+│  Database（Laconic → MySQL）                 │
+│    · acore_world：游戏世界数据                │
+│    · foxy：应用元数据 + DBC 镜像表            │
+└─────────────────────────────────────────────┘
+```
+
+### 关键约定
+
+- **一张表一个 Repository**，公开 API 统一为：  
+  `getBrief*` / `get*s` / `count*` / `get*` / `create*` / `store*` / `update*` / `destroy*` / `copy*` / `save*`
+- 列表页与实体选择器（Entity Picker）共用 **Brief 实体 + 分页**；全量 `get{Entities}` 主要用于 DBC 导出等批处理
+- 连接成功后自动运行 **MigrationRunner**，创建/升级 `foxy` 库（features、migrations、DBC 相关表等）
+
+更细的 Repository 约定见 [`docs/repository_crud_template.md`](docs/repository_crud_template.md)。
+
+---
 
 ## 环境要求
 
-- Flutter SDK ^3.9.2
-- MySQL 数据库（AzerothCore 结构，包含 acore_world 数据库）
-- DBC 文件目录（可选，用于数据增强功能）
+- [Flutter SDK](https://docs.flutter.dev/get-started/install)（与 `pubspec.yaml` 中 `sdk: ^3.9.2` 匹配）
+- MySQL 5.7+ / 8.x（可访问 AzerothCore 世界库）
+- 已部署的 **AzerothCore**（或等价）`acore_world` 数据库
+- （可选）客户端 **DBC** 目录，用于首次导入成就、法术、区域等客户端表数据
+
+---
 
 ## 快速开始
 
+### 1. 克隆与依赖
+
 ```bash
-# 1. 安装依赖
+git clone https://github.com/CalsRanna/foxy.git
+cd foxy
 flutter pub get
-
-# 2. 生成 auto_route 路由代码（首次运行或修改路由后必做）
-dart run build_runner build
-
-# 3. 在项目根目录创建 config.yaml（参见下方配置说明）
-
-# 4. 运行
-flutter run
 ```
 
-## 配置文件
+### 2. 代码生成（路由等）
 
-在项目根目录创建 `config.yaml`：
+修改 `lib/router/` 或带 `@RoutePage` 的页面后，需要重新生成：
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+### 3. 运行
+
+```bash
+# Windows 桌面（推荐）
+flutter run -d windows
+
+# 或其它已配置的桌面目标
+flutter run -d linux
+flutter run -d macos
+```
+
+### 4. 连接数据库
+
+启动后进入 **引导页**，填写 MySQL 连接信息并连接：
+
+| 项 | 示例 |
+|----|------|
+| 地址 | `127.0.0.1` |
+| 端口 | `3306` |
+| 数据库 | `acore_world` |
+| 用户名 / 密码 | 你的 MySQL 账号 |
+
+连接成功后会：
+
+1. 写入工作目录下的 `config.yaml`（该文件已在 `.gitignore` 中，勿提交密钥）
+2. 确保存在 `foxy` 库并执行迁移
+3. 检测 locale 表并进入主界面
+
+### 5. 导入 DBC（推荐）
+
+进入主界面后，若所需 `foxy.dbc_*` 表缺失或为空，会提示配置 **DBC 目录** 并导入。也可在 `config.yaml` 中预先配置：
 
 ```yaml
-host: 127.0.0.1          # MySQL 主机地址
-port: "3306"              # MySQL 端口
-database: acore_world     # AzerothCore world 数据库名
-username: acore           # 数据库用户名
-password: acore           # 数据库密码
-dbc_path: /path/to/dbc    # (可选) DBC 文件目录路径
+host: 127.0.0.1
+port: "3306"
+database: acore_world
+username: your_user
+password: your_password
+dbc_path: D:\path\to\AzerothCore\data\dbc
 ```
 
-首次启动时，应用会显示引导页面，可在此界面填写连接信息。配置会自动保存到 `config.yaml`。
+导入在后台 Isolate 中执行，进度通过对话框展示。设置页支持将当前库内 DBC 数据 **导出** 为 `.dbc` 文件。
 
-`dbc_path` 指向客户端 DBC 文件所在目录（如 `D:\Simulators\AzerothCore\code\env\dist\dbc`），配置后应用启动时会将 30 个 DBC 数据表导入到 `foxy.dbc_*` 表中，用于下拉选择器等数据增强展示。
+---
 
 ## 项目结构
 
 ```
 lib/
-├── entity/                          # 数据实体，对应 MySQL 表结构
-│   ├── *_entity.dart                #   完整实体（fromJson / toJson）
-│   ├── *_filter_entity.dart         #   列表筛选条件实体
-│   └── *_locale_entity.dart         #   本地化表实体
-├── repository/                      # 数据访问层（Repository 模式）
-│   ├── repository_mixin.dart        #   混入提供 laconic 实例和 kPageSize 常量
-│   ├── *_repository.dart            #   各模块数据库操作（CRUD + 分页查询）
-│   └── setting_repository.dart      #   设置相关查询
-├── page/                            # 页面模块（MVVM，Page + ViewModel 同目录）
-│   ├── bootstrap/                   #   数据库连接引导页（配置填写 + 版本检测）
-│   │   ├── bootstrap_page.dart
-│   │   ├── bootstrap_view_model.dart
-│   │   ├── bootstrap_simulator_form.dart
-│   │   └── bootstrap_window_header.dart
-│   ├── scaffold/                    #   主窗架（侧边栏 + 面包屑 + 窗口管理 + DBC 导入）
-│   │   ├── scaffold_page.dart
-│   │   ├── scaffold_view_model.dart
-│   │   └── dbc_import_view_model.dart
-│   ├── dashboard/                   #   工作台首页
-│   │   ├── dashboard_page.dart
-│   │   ├── dashboard_view_model.dart
-│   │   └── component/               #   首页子组件（欢迎、版本、趋势、常用模块、简介）
-│   ├── foxy_app/                    #   应用入口组件
-│   │   ├── foxy_app.dart            #   ShadApp.router 配置
-│   │   └── foxy_view_model.dart     #   全局状态（laconic 实例、locale 设置）
-│   ├── creature_template/           #   生物模板（详情页 12 个子 Tab）
-│   │   ├── creature_template_list_page.dart
-│   │   ├── creature_template_list_view_model.dart
-│   │   ├── creature_template_detail_page.dart
-│   │   ├── creature_template_detail_view_model.dart
-│   │   ├── creature_template_view.dart     #   主属性表单
-│   │   ├── creature_template_addon_view.dart
-│   │   ├── creature_equip_template_view.dart
-│   │   ├── creature_loot_template_view.dart
-│   │   ├── ...                              #   其他子 Tab 视图
-│   │   └── *_selector.dart                  #   关联数据选择器组件
-│   ├── item/                         #   物品模板（详情页含附魔模板、4 种掉落子 Tab）
-│   ├── quest/                       #   任务模板（详情页含 addon、请求物品、奖励、起止生物/物体子 Tab）
-│   ├── game_object/                 #   游戏对象模板（详情页含 addon、掉落、任务物品子 Tab）
-│   ├── spell/                       #   法术（详情页含 area、bonus、custom_attr、group、linked、loot、rank 子 Tab）
-│   ├── gossip_menu/                 #   对话菜单（详情页含 option、npc_text 子 Tab）
-│   ├── smart_script/                #   智能脚本
-│   ├── setting/                     #   设置页（基本设置 / 数据库设置子路由）
-│   ├── more/                        #   更多模块页（网格展示 + 搜索 + 固定/收藏）
-│   ├── reference_loot_template/     #   关联掉落
-│   ├── page_text/                   #   页面文本（含本地化子视图）
-│   ├── condition/                   #   条件
-│   ├── player_create_info/          #   出生信息（详情页含 action、item、spell_custom 子 Tab）
-│   ├── area_table/                  #   区域
-│   ├── emote_text/                  #   表情文本
-│   ├── quest_faction_reward/        #   任务声望
-│   ├── quest_sort/                  #   任务排序
-│   ├── quest_info/                  #   任务信息
-│   ├── item_extended_cost/          #   扩展价格
-│   ├── scaling_stat_distribution/   #   属性缩放分布
-│   ├── scaling_stat_value/          #   缩放属性值
-│   ├── spell_item_enchantment/      #   法术附魔
-│   ├── gem_property/                #   宝石属性
-│   ├── glyph_property/              #   雕文属性
-│   ├── talent/                      #   天赋列表
-│   ├── currency_type/               #   货币
-│   ├── item_set/                    #   套装列表
-│   └── achievement/                 #   成就列表
-├── widget/                          # 可复用 UI 组件
-│   ├── foxy_shad_table.dart         #   表格组件（支持双击编辑、右键菜单、固定表头）
-│   ├── foxy_shad_select.dart        #   下拉选择器扩展
-│   ├── foxy_entity_picker.dart       #   实体选择器（关联数据拾取）
-│   ├── foxy_number_input.dart       #   数字输入组件
-│   ├── entity_picker_delegates.dart #   实体选择器委托实现
-│   ├── flag_picker.dart             #   位标识选择器（多选位标志）
-│   ├── form_item.dart               #   表单行组件（label + input）
-│   ├── form_section.dart            #   表单分组容器
-│   ├── header.dart                  #   页面标题组件
-│   ├── pagination.dart              #   分页组件（每页 50 条）
-│   ├── tab.dart                     #   标签页容器（基于 expandable_page_view）
-│   ├── lazy_indexed_stack.dart      #   懒加载索引栈
-│   ├── feature_card.dart            #   功能模块卡片
-│   ├── locale_crud_dialog.dart      #   本地化 CRUD 对话框（+ locale_crud_view_model.dart）
-│   ├── context_menu.dart            #   右键菜单
-│   ├── card.dart                    #   卡片组件
-│   └── window_button.dart           #   自定义窗口按钮
-├── router/                          # 路由系统
-│   ├── router.dart                  #   @AutoRouterConfig 根配置
-│   ├── router_menu.dart             #   侧边栏菜单枚举（RouterMenu, 含图标和标签）
-│   ├── router_facade.dart           #   路由门面（面包屑 path signal + 导航方法）
-│   ├── router_node.dart             #   面包屑节点数据类
-│   └── router.gr.dart               #   auto_route 生成的路由代码（build_runner 生成）
-├── database/                        # 数据库连接与迁移
-│   ├── database.dart                #   Database 单例（封装 Laconic 实例）
-│   ├── migration_runner.dart        #   迁移执行器（按时间戳顺序执行）
-│   └── migration/                   #   迁移脚本（创建 foxy.features、foxy.activity_log 等自用表）
-├── constant/                        # 常量定义
-│   ├── creature_flags.dart          #   生物 flags 位标识选项（npcflag, unit_flags 等）
-│   ├── creature_enums.dart          #   生物枚举
-│   ├── item_flags.dart              #   物品 flags 位标识选项
-│   ├── item_enums.dart              #   物品枚举
-│   ├── item_constants.dart          #   物品常量
-│   ├── item_quality.dart            #   物品品质
-│   ├── spell_flags.dart             #   法术 flags 位标识选项
-│   ├── spell_enums.dart             #   法术枚举
-│   ├── game_object_constants.dart   #   游戏对象常量
-│   ├── smart_script_constants.dart  #   智能脚本常量
-│   └── gossip_menu_option_constants.dart
-├── util/                            # 工具类
-│   ├── dbc_sync_util.dart           #   DBC 文件导入工具（worker isolate + 进度流）
-│   ├── dialog_util.dart             #   对话框工具（loading / confirm / success / error）
-│   ├── logger_util.dart             #   日志工具（基于 logger 包）
-│   ├── window_initializer.dart      #   窗口初始化（尺寸记忆、透明背景、无系统标题栏）
-│   ├── shared_preferences_util.dart #   本地存储工具
-│   └── item_helpers.dart            #   物品辅助函数
-└── di.dart                          # GetIt 依赖注入注册中心（所有 ViewModel 集中注册）
+├── main.dart                 # 入口：窗口初始化、DI、runApp
+├── di.dart                   # GetIt 注册 Repository / ViewModel
+├── constant/                 # 枚举、Flags、条件类型等常量
+├── database/                 # 连接封装、Migration 与 Runner
+├── entity/                   # 数据实体与 Filter 实体
+├── page/                     # 按业务域划分的页面与 ViewModel
+│   ├── bootstrap/            # 启动连接页
+│   ├── dashboard/            # 工作台
+│   ├── scaffold/             # 主壳：侧边栏、DBC 导入
+│   ├── creature_template/    # 生物（多 Tab 关联表）
+│   ├── item/ / quest/ / …    # 其它业务模块
+│   └── setting/              # 基本设置、数据库设置、DBC 导出
+├── repository/               # 数据访问层
+├── router/                   # auto_route 配置与菜单
+├── util/                     # DBC 同步、日志、对话框、事件总线等
+└── widget/                   # 通用组件（表格、分页、表单、Picker…）
+
+docs/
+├── database_acore_world_schema.md   # 世界库表结构参考
+├── database_foxy_schema.md          # foxy 库表结构参考
+└── repository_crud_template.md      # Repository CRUD 约定
+
+asset/                        # 图片与图标资源
+config.yaml                   # 本地连接配置（不入库）
 ```
 
-## 开发命令
+---
+
+## 开发说明
+
+### 新增一个业务模块（简要）
+
+1. 在 `entity/` 增加实体与 Filter（含 Brief 实体若需列表/选择器）
+2. 在 `repository/` 按模板实现 CRUD（见 `docs/repository_crud_template.md`）
+3. 在 `page/<module>/` 实现 List / Detail 页面与 ViewModel
+4. 注册路由（`router.dart` + `build_runner`）与菜单（`router_menu.dart`）
+5. 在 `di.dart` 注册 Repository 与 ViewModel
+6. 如需侧边栏/更多页展示，通过 `foxy.features` 迁移或数据维护功能入口
+
+### 常用命令
 
 ```bash
-flutter run                          # 开发运行（默认 macOS）
-flutter run -d windows               # Windows 平台运行
-flutter analyze                      # 静态分析（基于 flutter_lints）
-flutter test                         # 运行测试
-flutter build macos                  # 构建 macOS 应用
-flutter build windows                # 构建 Windows 应用
-flutter clean                        # 清理构建产物
-dart run build_runner build          # 生成 auto_route 路由代码
-dart run build_runner build --delete-conflicting-outputs  # 强制重新生成（覆盖冲突）
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+flutter run -d windows
+flutter analyze
+flutter test
 ```
 
-## 架构
+### 数据库说明
 
-### 分层架构
+| 库 | 用途 |
+|----|------|
+| **acore_world**（可配置） | AzerothCore 世界数据：生物/物品/任务模板、SmartAI、掉落等 |
+| **foxy**（应用自动创建） | 功能清单 `features`、迁移记录 `migrations`、DBC 镜像表 `dbc_*`、活动日志等 |
 
-```
-UI (Page + Widget)
-    ↓ Watch(signal) / navigate
-ViewModel (signals 状态 + 业务逻辑)
-    ↓ Repository
-Repository (laconic 查询构建)
-    ↓ mysql_client
-MySQL (AzerothCore)
-```
+跨库查询 DBC 时使用全名，例如 `foxy.dbc_spell`。
 
-### MVVM 模式
+---
 
-每个功能模块由 **Page** 和 **ViewModel** 组成，同目录内聚：
+## 截图与愿景
 
-- **Page** (`StatefulWidget`): 负责 UI 布局，通过 `GetIt.instance.get<T>()` 获取 ViewModel，使用 `Watch((_) => ...)` 订阅 signal 变化自动重建。
-- **ViewModel**: 包含所有业务逻辑。通过 `signal()` / `listSignal()` 管理响应式状态。处理表单数据、列表分页、CRUD 操作、操作日志记录。
+应用内介绍原文：
 
-列表页 ViewModel 通过 `registerLazySingleton` 注册（保持分页状态），详情页 ViewModel 通过 `registerFactory` 注册（每次创建新实例）。
+> 希望新的 Foxy 能继续实现最初的愿景，**做最好的魔兽世界编辑器**。
 
-### Entity / Repository 模式
+旧版因模拟器迭代而落后，本仓库为 **Flutter 桌面重构版**，在保持可视化编辑体验的同时，用更精简的技术栈提升维护效率与执行性能。
 
-- **Entity**: 纯数据类，每个类通过 `fromJson(Map<String, dynamic>)` 工厂构造函数从数据库行构建，提供 `toJson()` 序列化回去。字段名保持与 MySQL 列名一致（snake_case）。
-- **Brief 实体** (如 `BriefCreatureTemplateEntity`): 列表页精简版，JOIN locale 表获取本地化字段，`displayName` / `displaySubName` getter 优先展示本地化值。
-- **Filter 实体** (如 `CreatureTemplateFilterEntity`): 封装列表筛选参数。
-- **Repository**: 通过 `RepositoryMixin` 混入，从 `Database.instance.laconic` 获得 Laconic 查询构建器，统一 `kPageSize = 50` 分页。所有查询通过 laconic 的链式 API（`.select()`, `.where()`, `.leftJoin()`, `.limit()`, `.offset()`）构建。
+---
 
-### 依赖注入 (DI)
+## 许可证
 
-全部依赖在 `lib/di.dart` 的 `DI.ensureInitialized()` 中注册，`main()` 启动时调用：
+[MIT License](LICENSE) © 2026 Cals Ranna
 
-```
-main() → WindowInitializer.ensureInitialized() → DI.ensureInitialized() → SignalsObserver.instance = null → runApp(FoxyApp())
-```
+---
 
-注册层次：
-- **Singleton**: `RouterFacade`, `FoxyViewModel`, `ScaffoldViewModel`（全局唯一；ScaffoldViewModel 聚合功能模块清单与 DBC 导入状态）
-- **LazySingleton**: 列表页 ViewModel、各 Repository（首次访问时创建，保持分页状态）
-- **Factory**: 详情页 ViewModel、子 Tab ViewModel（每次获取新建实例）
+## 相关链接
 
-### 路由系统
-
-`lib/router/router.dart` 是 `@AutoRouterConfig` 注解的根配置。路由结构：
-
-```
-/ → BootstrapPage (初始页)
-  └─ ScaffoldRoute (主窗架，内部嵌套 AutoRouter)
-       ├─ DashboardRoute (首页)
-       ├─ CreatureTemplateListRoute (列表页)
-       ├─ CreatureTemplateDetailRoute (详情页，可选参数 entry/name)
-       ├─ ItemTemplateListRoute / ItemTemplateDetailRoute
-       └─ ... (其他模块同模式)
-```
-
-`RouterFacade` 维护面包屑导航状态 (`signal<List<RouterNode>>`)，提供 `navigateToMenu`、`navigateToDetail`、`goBack`、`navigateToBreadcrumb` 等方法。侧边栏菜单定义在 `RouterMenu` 枚举中，每个枚举值关联页面路由、Lucide 图标和中文标签。
-
-### 数据库层
-
-数据库连接由 `Database` 单例（`lib/database/database.dart`）持有，通过 `laconic_mysql` 的 `MysqlDriver` 驱动。`RepositoryMixin` 从 `Database.instance.laconic` 获取查询构建器，统一 `kPageSize = 50` 分页。
-
-应用连接成功后自动运行 `MigrationRunner`：在目标服务器上创建 `foxy` 数据库和 `foxy.migrations` 追踪表，按时间戳顺序执行迁移脚本（`lib/database/migration/migration_<时间戳>.dart`），已执行的迁移会被跳过。迁移负责创建 `foxy.features`（功能模块清单）、`foxy.activity_log`（操作日志）等自用表并写入模块种子数据。
-
-DBC 导入由 `DbcSyncUtil`（`lib/util/dbc_sync_util.dart`）封装，在独立 `Isolate` 中用 `warcrafty` 解析客户端 DBC 文件，通过 laconic 写入 30 个 `foxy.dbc_*` 表（见 `requiredDbcTableNames`）。导入进度通过 `Stream<DbcSyncProgress>` 回传，由 `ScaffoldViewModel` 消费并驱动首页与侧边栏的数据增强展示。
+- 仓库：https://github.com/CalsRanna/foxy
+- AzerothCore：https://www.azerothcore.org/
+- 表结构与开发约定：见 [`docs/`](docs/) 目录
