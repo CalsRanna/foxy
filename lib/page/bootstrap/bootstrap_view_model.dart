@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/database/database.dart';
@@ -9,19 +7,18 @@ import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/repository/setting_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/util/config_util.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path/path.dart';
 import 'package:signals/signals.dart';
-import 'package:yaml/yaml.dart';
-import 'package:yaml_edit/yaml_edit.dart';
 
 class BootstrapViewModel {
   final _settingRepo = GetIt.instance.get<SettingRepository>();
   final _repository = GetIt.instance.get<VersionRepository>();
+  final _configUtil = GetIt.instance.get<ConfigUtil>();
   final version = signal('');
 
   final hostController = TextEditingController();
@@ -49,7 +46,7 @@ class BootstrapViewModel {
 
       // Check for locale tables and load locale settings
       var hasLocaleTables = await _settingRepo.hasLocaleTables();
-      var savedConfig = await _loadConfig();
+      var savedConfig = await _configUtil.load();
       var localeEnabled = savedConfig['locale_enabled'] == true;
       // Auto-enable locale if tables exist and not explicitly set
       if (hasLocaleTables && !savedConfig.containsKey('locale_enabled')) {
@@ -90,12 +87,12 @@ class BootstrapViewModel {
 
   Future<void> initSignals() async {
     try {
-      var config = await _loadConfig();
-      hostController.text = config['host'] ?? '127.0.0.1';
-      portController.text = config['port'] ?? '3306';
-      databaseController.text = config['database'] ?? '';
-      usernameController.text = config['username'] ?? '';
-      passwordController.text = config['password'] ?? '';
+      var config = await _configUtil.load();
+      hostController.text = config['host']?.toString() ?? '127.0.0.1';
+      portController.text = config['port']?.toString() ?? '3306';
+      databaseController.text = config['database']?.toString() ?? '';
+      usernameController.text = config['username']?.toString() ?? '';
+      passwordController.text = config['password']?.toString() ?? '';
       final packageInfo = await PackageInfo.fromPlatform();
       version.value = '${packageInfo.version}+${packageInfo.buildNumber}';
     } catch (e) {
@@ -104,63 +101,15 @@ class BootstrapViewModel {
     }
   }
 
-  Future<Map<String, dynamic>> _loadConfig() async {
-    try {
-      var currentDirectory = Directory.current;
-      var path = join(currentDirectory.path, 'config.yaml');
-      LoggerUtil.instance.i(path);
-      var file = File(path);
-      if (!await file.exists()) await file.create(recursive: true);
-      var content = await file.readAsString();
-      if (content.isNotEmpty) {
-        return Map<String, dynamic>.from(loadYaml(content));
-      }
-      var defaultConfig = {
-        'host': '127.0.0.1',
-        'port': '3306',
-        'database': '',
-        'username': '',
-        'password': '',
-      };
-      var editor = YamlEditor('');
-      editor.update([], defaultConfig);
-      await file.writeAsString(editor.toString());
-      return defaultConfig;
-    } catch (e) {
-      LoggerUtil.instance.e('读取配置文件失败: $e');
-      DialogUtil.instance.error('读取配置文件失败: $e');
-      return {
-        'host': '127.0.0.1',
-        'port': '3306',
-        'database': '',
-        'username': '',
-        'password': '',
-      };
-    }
-  }
-
   Future<void> _updateConfig() async {
     try {
-      var currentDirectory = Directory.current;
-      var path = join(currentDirectory.path, 'config.yaml');
-      var file = File(path);
-      if (!await file.exists()) await file.create(recursive: true);
-      var content = await file.readAsString();
-      Map<String, dynamic> existingConfig = {};
-      if (content.isNotEmpty) {
-        existingConfig = Map<String, dynamic>.from(loadYaml(content));
-      }
-      var config = {
-        ...existingConfig,
+      await _configUtil.update({
         'host': hostController.text,
         'port': portController.text,
         'database': databaseController.text,
         'username': usernameController.text,
         'password': passwordController.text,
-      };
-      var editor = YamlEditor('');
-      editor.update([], config);
-      await file.writeAsString(editor.toString());
+      });
     } catch (e) {
       LoggerUtil.instance.e('保存配置文件失败: $e');
       DialogUtil.instance.error('保存配置文件失败: $e');

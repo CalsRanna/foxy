@@ -1,0 +1,113 @@
+import 'package:foxy/entity/creature_model_data_entity.dart';
+import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
+
+class CreatureModelDataRepository with RepositoryMixin {
+  static const _table = 'foxy.dbc_creature_model_data';
+
+  Future<List<BriefCreatureModelDataEntity>> getBriefCreatureModelDatas({
+    int page = 1,
+    String? id,
+    String? modelName,
+  }) async {
+    final offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table).select([
+      'ID',
+      'ModelName',
+      'SizeClass',
+      'ModelScale',
+    ]);
+    builder = _applyFilter(builder, id: id, modelName: modelName);
+    final results = await builder
+        .orderBy('ID')
+        .limit(kPageSize)
+        .offset(offset)
+        .get();
+    return results
+        .map((e) => BriefCreatureModelDataEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<CreatureModelDataEntity>> getCreatureModelDatas() async {
+    final results = await laconic.table(_table).orderBy('ID').get();
+    return results
+        .map((e) => CreatureModelDataEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<int> countCreatureModelDatas({String? id, String? modelName}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, id: id, modelName: modelName);
+    return builder.count();
+  }
+
+  Future<CreatureModelDataEntity?> getCreatureModelData(int id) async {
+    final results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return CreatureModelDataEntity.fromJson(results.first.toMap());
+  }
+
+  Future<CreatureModelDataEntity> createCreatureModelData() async {
+    return const CreatureModelDataEntity();
+  }
+
+  Future<int> storeCreatureModelData(CreatureModelDataEntity entity) async {
+    final json = entity.toJson();
+    final nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateCreatureModelData(CreatureModelDataEntity entity) async {
+    final json = entity.toJson()..remove('ID');
+    await laconic.table(_table).where('ID', entity.id).update(json);
+  }
+
+  Future<void> destroyCreatureModelData(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<void> copyCreatureModelData(int id) async {
+    final source = await getCreatureModelData(id);
+    if (source == null) return;
+    final json = source.toJson();
+    json['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<void> saveCreatureModelData(CreatureModelDataEntity entity) async {
+    if (entity.id == 0) {
+      await storeCreatureModelData(entity);
+      return;
+    }
+    final existing = await getCreatureModelData(entity.id);
+    if (existing != null) {
+      await updateCreatureModelData(entity);
+    } else {
+      await laconic.table(_table).insert([entity.toJson()]);
+    }
+  }
+
+  Future<int> _getNextId() async {
+    final result = await laconic.table(_table).select([
+      'MAX(ID) as max_id',
+    ]).first();
+    final maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder, {
+    String? id,
+    String? modelName,
+  }) {
+    if (id != null && id.isNotEmpty) {
+      builder = builder.where('ID', id);
+    }
+    if (modelName != null && modelName.isNotEmpty) {
+      builder = builder.where('ModelName', '%$modelName%', comparator: 'like');
+    }
+    return builder;
+  }
+}

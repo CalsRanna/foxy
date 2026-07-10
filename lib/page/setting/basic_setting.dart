@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
-import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -19,7 +18,6 @@ class BasicSettingPage extends StatefulWidget {
 class _BasicSettingPageState extends State<BasicSettingPage> {
   final viewModel = GetIt.instance.get<SettingViewModel>();
   final foxyViewModel = GetIt.instance.get<FoxyViewModel>();
-  final scaffoldViewModel = GetIt.instance.get<ScaffoldViewModel>();
 
   @override
   void initState() {
@@ -64,7 +62,7 @@ class _BasicSettingPageState extends State<BasicSettingPage> {
   void _showExportDialog() {
     showShadDialog(
       context: context,
-      builder: (ctx) => _DbcExportDialog(vm: scaffoldViewModel),
+      builder: (ctx) => _DbcExportDialog(vm: viewModel),
     );
   }
 
@@ -100,7 +98,7 @@ class _BasicSettingPageState extends State<BasicSettingPage> {
 const _kDbcExportDialogWidth = 560.0;
 
 class _DbcExportDialog extends StatefulWidget {
-  final ScaffoldViewModel vm;
+  final SettingViewModel vm;
   const _DbcExportDialog({required this.vm});
 
   @override
@@ -108,7 +106,7 @@ class _DbcExportDialog extends StatefulWidget {
 }
 
 class _DbcExportDialogState extends State<_DbcExportDialog> {
-  ScaffoldViewModel get _vm => widget.vm;
+  SettingViewModel get _vm => widget.vm;
   final _dirController = TextEditingController();
   String? _outputDir;
   bool _loaded = false;
@@ -221,10 +219,9 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(6),
               child: Material(
-                color: Theme.of(context)
-                    .colorScheme
-                    .surfaceContainerHighest
-                    .withValues(alpha: 0.4),
+                color: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   itemCount: items.length,
@@ -273,17 +270,13 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
                 child: const Text('取消'),
               ),
               ShadButton(
-                onPressed:
-                    selectedCount == 0 || _outputDir == null
-                        ? null
-                        : () => _vm.exportDbc(_outputDir!),
+                onPressed: selectedCount == 0 || _outputDir == null
+                    ? null
+                    : () => _vm.exportDbc(_outputDir!),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   spacing: 6,
-                  children: [
-                    Icon(LucideIcons.play, size: 15),
-                    Text('开始导出'),
-                  ],
+                  children: [Icon(LucideIcons.play, size: 15), Text('开始导出')],
                 ),
               ),
             ],
@@ -295,8 +288,7 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
 
   Widget _buildTableRow(DbcExportItem item) {
     final theme = Theme.of(context);
-    final countText =
-        item.recordCount > 0 ? '  (${item.recordCount} 条)' : '';
+    final countText = item.recordCount > 0 ? '  (${item.recordCount} 条)' : '';
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -307,7 +299,7 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
             onChanged: (v) {
               final items = [..._vm.dbcExportItems.value];
               final idx = items.indexWhere(
-                (e) => e.tableShort == item.tableShort,
+                (e) => e.tableName == item.tableName,
               );
               if (idx != -1) items[idx] = item.copyWith(selected: v);
               _vm.dbcExportItems.value = items;
@@ -358,10 +350,7 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('总体进度', style: mutedStyle),
-                Text(
-                  '${(ratio * 100).toStringAsFixed(0)}%',
-                  style: mutedStyle,
-                ),
+                Text('${(ratio * 100).toStringAsFixed(0)}%', style: mutedStyle),
               ],
             ),
             ClipRRect(

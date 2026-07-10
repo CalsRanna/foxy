@@ -102,6 +102,7 @@ import 'package:foxy/repository/broadcast_text_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/repository/creature_display_info_repository.dart';
+import 'package:foxy/repository/creature_model_data_repository.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
 import 'package:foxy/repository/creature_model_info_repository.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
@@ -179,6 +180,9 @@ import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/event_bus.dart';
+import 'package:foxy/util/config_util.dart';
+import 'package:foxy/util/dbc_export_registry.dart';
+import 'package:foxy/util/dbc_sync_util.dart';
 import 'package:get_it/get_it.dart';
 
 class DI {
@@ -189,6 +193,7 @@ class DI {
     _instance.registerSingleton(FoxyViewModel());
     _instance.registerSingleton(EventBus());
     _registerRepositories();
+    _registerUtils();
     _registerViewModels();
   }
 
@@ -200,6 +205,7 @@ class DI {
     _instance.registerLazySingleton(() => CharTitleRepository());
     _instance.registerLazySingleton(() => ConditionRepository());
     _instance.registerLazySingleton(() => CreatureDisplayInfoRepository());
+    _instance.registerLazySingleton(() => CreatureModelDataRepository());
     _instance.registerLazySingleton(() => CreatureEquipTemplateRepository());
     _instance.registerLazySingleton(() => CreatureModelInfoRepository());
     _instance.registerLazySingleton(() => CreatureOnKillReputationRepository());
@@ -281,6 +287,12 @@ class DI {
     _instance.registerLazySingleton(() => VehicleRepository());
     _instance.registerLazySingleton(() => VersionRepository());
     _instance.registerLazySingleton(() => WaypointDataRepository());
+  }
+
+  static void _registerUtils() {
+    _instance.registerLazySingleton(() => ConfigUtil());
+    _instance.registerLazySingleton(() => DbcSyncUtil());
+    _instance.registerLazySingleton(() => DbcExportRegistry());
   }
 
   static void _registerViewModels() {
