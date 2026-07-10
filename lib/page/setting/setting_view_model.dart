@@ -1,15 +1,50 @@
-import 'dart:io';
-
+import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/util/config_util.dart';
+import 'package:foxy/util/dbc_export_registry.dart';
+import 'package:foxy/util/dbc_sync_progress.dart';
+import 'package:foxy/util/dbc_sync_util.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
-import 'package:path/path.dart';
-import 'package:yaml/yaml.dart';
-import 'package:yaml_edit/yaml_edit.dart';
+import 'package:signals/signals.dart';
+
+class DbcExportItem {
+  final DbcDefinition definition;
+  final int recordCount;
+  final bool selected;
+
+  const DbcExportItem({
+    required this.definition,
+    this.recordCount = 0,
+    this.selected = true,
+  });
+
+  String get tableName => definition.tableName;
+  String get dbcFileName => definition.fileName;
+
+  DbcExportItem copyWith({bool? selected}) {
+    return DbcExportItem(
+      definition: definition,
+      recordCount: recordCount,
+      selected: selected ?? this.selected,
+    );
+  }
+}
 
 class SettingViewModel {
-  FoxyViewModel get _foxyViewModel => GetIt.instance.get<FoxyViewModel>();
+  final _foxyViewModel = GetIt.instance.get<FoxyViewModel>();
+  final _configUtil = GetIt.instance.get<ConfigUtil>();
+  final _dbcSync = GetIt.instance.get<DbcSyncUtil>();
+  final _dbcExportRegistry = GetIt.instance.get<DbcExportRegistry>();
+
+  final dbcExportItems = signal<List<DbcExportItem>>([]);
+  final dbcExporting = signal(false);
+  final dbcExportProgress = signal<double?>(null);
+  final dbcExportProgressLabel = signal('');
+  final dbcExportProgressDetail = signal('');
+  final dbcExportError = signal<String?>(null);
+  final dbcExportSuccess = signal(false);
 
   Future<void> initSignals() async {
     // FoxyViewModel 的 signal 由 bootstrap 阶段填充，无需额外加载。
@@ -19,29 +54,112 @@ class SettingViewModel {
     try {
       if (!_foxyViewModel.hasLocaleTables.value && value) return;
       _foxyViewModel.localeEnabled.value = value;
-      await _updateConfig();
-    } catch (e) {
-      LoggerUtil.instance.e('设置本地化开关失败: $e');
-      DialogUtil.instance.error('设置本地化开关失败: $e');
+      await _configUtil.update({'locale_enabled': value});
+    } catch (error) {
+      LoggerUtil.instance.e('设置本地化开关失败: $error');
+      DialogUtil.instance.error('设置本地化开关失败: $error');
     }
   }
 
-  Future<void> _updateConfig() async {
+  Future<void> loadExportItems() async {
+    final items = <DbcExportItem>[];
+    for (final definition in dbcDefinitions) {
+      final countResult = await _dbcExportRegistry.countRows(
+        definition.tableName,
+      );
+      if (!countResult.success) {
+        LoggerUtil.instance.w(
+          '计算 ${definition.tableName} 行数失败: ${countResult.error}',
+        );
+      }
+      items.add(
+        DbcExportItem(
+          definition: definition,
+          recordCount: countResult.count ?? 0,
+        ),
+      );
+    }
+    items.sort((left, right) => left.dbcFileName.compareTo(right.dbcFileName));
+    dbcExportItems.value = items;
+  }
+
+  Future<bool> exportDbc(String outputDirectory) {
+    return _startExport(outputDirectory);
+  }
+
+  Future<bool> retryExport(String outputDirectory) {
+    return _startExport(outputDirectory);
+  }
+
+  Future<bool> _startExport(String outputDirectory) async {
+    final selected = dbcExportItems.value
+        .where((item) => item.selected)
+        .toList();
+    if (selected.isEmpty || dbcExporting.value) return false;
+
+    dbcExporting.value = true;
+    dbcExportProgress.value = 0;
+    dbcExportProgressLabel.value = '准备导出...';
+    dbcExportProgressDetail.value = '';
+    dbcExportError.value = null;
+    dbcExportSuccess.value = false;
+
     try {
-      var currentDirectory = Directory.current;
-      var path = join(currentDirectory.path, 'config.yaml');
-      var file = File(path);
-      if (!await file.exists()) return;
-      var content = await file.readAsString();
-      var yaml = loadYaml(content) as Map;
-      var config = Map<String, dynamic>.from(yaml);
-      config['locale_enabled'] = _foxyViewModel.localeEnabled.value;
-      var editor = YamlEditor('');
-      editor.update([], config);
-      await file.writeAsString(editor.toString());
-    } catch (e) {
-      LoggerUtil.instance.e('保存设置失败: $e');
-      DialogUtil.instance.error('保存设置失败: $e');
+      DbcSyncResult? result;
+      final stream = _dbcSync.export(
+        definitions: selected.map((item) => item.definition).toList(),
+        outputDirectory: outputDirectory,
+        loadRows: _dbcExportRegistry.loadRows,
+      );
+
+      await for (final progress in stream) {
+        switch (progress) {
+          case DbcSyncStatus(:final message):
+            dbcExportProgressLabel.value = message;
+          case DbcSyncCount(
+            :final fileName,
+            :final completedFiles,
+            :final totalFiles,
+            :final processedRows,
+          ):
+            dbcExportProgress.value = totalFiles > 0
+                ? completedFiles / totalFiles
+                : null;
+            dbcExportProgressLabel.value = fileName;
+            final rowText = processedRows > 0 ? '，$processedRows 行' : '';
+            dbcExportProgressDetail.value =
+                '已处理 $completedFiles / $totalFiles 个文件$rowText';
+          case DbcSyncResult():
+            result = progress;
+        }
+      }
+
+      if (result == null) {
+        throw StateError('DBC 导出任务结束但未返回结果');
+      }
+
+      if (result.success) {
+        LoggerUtil.instance.i(
+          'DBC 导出完成: ${result.completed} 个, 跳过 ${result.skipped} 个',
+        );
+        dbcExportSuccess.value = true;
+        return true;
+      }
+
+      final top = result.errors.take(3).join('\n');
+      dbcExportError.value =
+          '导出完成，部分文件失败：\n$top'
+          '${result.errors.length > 3 ? '\n...等 ${result.errors.length} 个错误' : ''}';
+      return false;
+    } catch (error) {
+      LoggerUtil.instance.e('DBC 导出异常: $error');
+      dbcExportError.value = '导出出错：$error';
+      return false;
+    } finally {
+      dbcExporting.value = false;
+      dbcExportProgress.value = null;
+      dbcExportProgressLabel.value = '';
+      dbcExportProgressDetail.value = '';
     }
   }
 }

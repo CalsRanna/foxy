@@ -378,6 +378,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
     final ratio = _vm.dbcProgress.value;
     final label = _vm.dbcProgressLabel.value;
     final detail = _vm.dbcProgressDetail.value;
+    final cancelling = _vm.dbcImportCancelling.value;
 
     return ShadDialog(
       closeIcon: const SizedBox.shrink(),
@@ -431,6 +432,13 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
           ],
           if (ratio == null && label.isEmpty)
             Text('正在准备...', style: const TextStyle(fontSize: 13)),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ShadButton.outline(
+              onPressed: cancelling ? null : _vm.cancelImport,
+              child: Text(cancelling ? '正在取消...' : '取消导入'),
+            ),
+          ),
         ],
       ),
     );
