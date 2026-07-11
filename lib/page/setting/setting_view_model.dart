@@ -80,6 +80,8 @@ class SettingViewModel {
   final dbcImportError = signal<String?>(null);
   final dbcImportSuccess = signal(false);
   final dbcImportSuccessMessage = signal('');
+  /// 每次 startImport 递增；取消/过期 attempt 用 token 判定，避免旧任务复活。
+  int _importAttemptId = 0;
 
   List<DbcExportItem> get selectableItems =>
       dbcExportItems.value.where((item) => item.canSelect).toList();
@@ -294,7 +296,10 @@ class SettingViewModel {
 
   Future<void> setImportPath(String path) async {
     final trimmed = path.trim();
-    if (trimmed.isEmpty) return;
+    if (trimmed.isEmpty) {
+      dbcImportPath.value = null;
+      return;
+    }
     try {
       dbcImportPath.value = trimmed;
       clearImportFeedback();
@@ -305,6 +310,12 @@ class SettingViewModel {
     }
   }
 
+  /// 仅更新内存路径（输入框 onChanged），不立即写盘。
+  void setImportPathLocal(String path) {
+    final trimmed = path.trim();
+    dbcImportPath.value = trimmed.isEmpty ? null : trimmed;
+  }
+
   Future<void> startImport() async {
     final path = dbcImportPath.value?.trim();
     if (path == null || path.isEmpty) {
@@ -312,23 +323,8 @@ class SettingViewModel {
       return;
     }
     if (dbcImporting.value || _dbcSync.isRunning) return;
-    await setImportPath(path);
-    if (dbcImportError.value != null) return;
-    _startImportWorker(path);
-  }
-
-  Future<void> retryImport() async {
-    clearImportFeedback();
-    await startImport();
-  }
-
-  Future<void> cancelImport() async {
-    if (!dbcImporting.value || dbcImportCancelling.value) return;
-    dbcImportCancelling.value = true;
-    await _dbcSync.cancel();
-  }
-
-  void _startImportWorker(String path) {
+    // 先占坑，防止 await 配置写入期间双击穿透。
+    final attemptId = ++_importAttemptId;
     dbcImporting.value = true;
     dbcImportCancelling.value = false;
     dbcImportProgress.value = 0;
@@ -337,10 +333,54 @@ class SettingViewModel {
     dbcImportError.value = null;
     dbcImportSuccess.value = false;
     dbcImportSuccessMessage.value = '';
-    unawaited(_runImport(path));
+    try {
+      await setImportPath(path);
+      if (!_isCurrentImportAttempt(attemptId)) return;
+      if (dbcImportError.value != null) {
+        _resetImportProgress();
+        return;
+      }
+      if (_dbcSync.isRunning) {
+        _resetImportProgress();
+        dbcImportError.value = '已有 DBC 任务正在运行';
+        return;
+      }
+      unawaited(_runImport(path, attemptId: attemptId));
+    } catch (error) {
+      if (!_isCurrentImportAttempt(attemptId)) return;
+      _resetImportProgress();
+      dbcImportError.value = '导入出错：$error';
+    }
   }
 
-  Future<void> _runImport(String directory) async {
+  Future<void> retryImport() async {
+    if (dbcImporting.value || _dbcSync.isRunning) return;
+    clearImportFeedback();
+    await startImport();
+  }
+
+  Future<void> cancelImport() async {
+    if (!dbcImporting.value || dbcImportCancelling.value) return;
+    dbcImportCancelling.value = true;
+    if (_dbcSync.isRunning) {
+      // worker 已启动：由 DbcSyncUtil 终态回调收尾，勿递增 attempt（否则结果被丢弃）。
+      await _dbcSync.cancel();
+    } else {
+      // 准备阶段：使当前 attempt 失效，旧的 await 恢复后不会再启动 worker。
+      _importAttemptId++;
+      _resetImportProgress();
+      dbcImportError.value = '导入已取消';
+    }
+  }
+
+  bool _isCurrentImportAttempt(int attemptId) =>
+      attemptId == _importAttemptId;
+
+  Future<void> _runImport(
+    String directory, {
+    required int attemptId,
+  }) async {
+    if (!_isCurrentImportAttempt(attemptId)) return;
     try {
       final config = await _configUtil.load();
       final mysqlConfig = MysqlConfig(
@@ -350,6 +390,7 @@ class SettingViewModel {
         username: config['username']?.toString() ?? 'acore',
         password: config['password']?.toString() ?? 'acore',
       );
+      if (!_isCurrentImportAttempt(attemptId)) return;
       final stream = _dbcSync.import(
         directory: directory,
         mysqlConfig: mysqlConfig,
@@ -381,11 +422,13 @@ class SettingViewModel {
         }
       }
 
+      if (!_isCurrentImportAttempt(attemptId)) return;
       if (result == null) {
         throw StateError('DBC 导入任务结束但未返回结果');
       }
       await _handleImportResult(result);
     } catch (error) {
+      if (!_isCurrentImportAttempt(attemptId)) return;
       _resetImportProgress();
       dbcImportError.value = '导入出错：$error';
       LoggerUtil.instance.e('DBC 导入异常: $error');
@@ -402,7 +445,7 @@ class SettingViewModel {
     if (result.success) {
       final message =
           '导入完成：写入 ${result.completed} 个文件'
-          '${result.skipped > 0 ? '，跳过 ${result.skipped} 个非空表' : ''}。';
+          '${result.skipped > 0 ? '，跳过 ${result.skipped} 个' : ''}。';
       LoggerUtil.instance.i(message);
       dbcImportSuccessMessage.value = message;
       dbcImportSuccess.value = true;

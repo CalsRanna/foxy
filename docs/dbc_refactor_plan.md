@@ -24,9 +24,9 @@
 - 不在 `lib/` 下新增独立 `dbc/` 顶级目录。
 - 不新增 Service、Domain、Application、Port 或 Adapter 层。
 - 不在 Foxy 内重新实现 DBC Header、Reader、Writer 或 string block。
-- 不在首轮重构中改变「非空 DBC 表自动跳过」的启动导入语义。
 - 不在首轮重构中强制引入分批导出 Repository API。
 - 不把配置读写、SQL 错误或文件细节放进 Page。
+- 导入语义以 DBC 为权威来源：扫描到的 DBC **始终覆盖**数据库中对应表（含非空表）；用户若需保留库内数据应自行备份。
 
 ## 3. 架构边界
 
@@ -385,27 +385,28 @@ typedef DbcImportWorkerArgs = ({
 
 ### 9.3 staging 导入
 
-保留首轮重构的 bootstrap 语义：
+产品语义：**DBC 为权威来源**，扫描到的每个 DBC 文件都会写入并替换对应正式表（含非空表）。用户若需保留库内数据，应在导入前自行备份。
 
 ```text
-目标表非空
-  → 跳过
-
-目标表不存在或为空
-  → 创建 staging 表
+目标表存在且结构兼容
+  → CREATE TABLE staging LIKE target
   → DbcLoader 加载文件
   → 分批写入 staging
   → 校验 staging 行数
-  → 替换正式表
+  → RENAME 替换正式表（旧表进 backup 后删除）
+
+目标表不存在，或结构不兼容
+  → 按 DBC schema 创建 staging
+  → 写入 / 校验 / RENAME 替换（同上）
 ```
 
 创建 staging：
 
-- 目标表存在：`CREATE TABLE staging LIKE target`。
-- 目标表不存在：根据 `schema.fields` 创建。
+- 目标表存在且结构兼容：`CREATE TABLE staging LIKE target`（保留索引、约束、排序规则）。
+- 目标表不存在或不兼容：根据 `schema.fields` 创建。
 - staging 表名包含任务 ID，避免残留表冲突。
 
-对于已存在的空目标表，提交使用同一条 `RENAME TABLE` 交换：
+提交使用 `RENAME TABLE` 交换：
 
 ```sql
 RENAME TABLE
@@ -779,9 +780,10 @@ Future<void> writeStream(
 - 目录不存在。
 - 文件扩展名大小写。
 - 同一定义匹配多个文件。
-- 目标表不存在。
-- 目标表为空。
-- 目标表非空时跳过。
+- 目标表不存在时创建并导入。
+- 目标表为空时写入并替换。
+- 目标表非空时以 DBC 覆盖替换。
+- 结构不兼容时按 schema 重建 staging 并替换。
 - DBC 格式错误。
 - 字符串包含引号、反斜杠、换行、NUL 和 Ctrl-Z。
 - 中途 SQL 失败。
@@ -791,7 +793,7 @@ Future<void> writeStream(
 
 ### 17.3 导出
 
-- 空表跳过。
+- 空表跳过（导出侧：无行则不写文件）。
 - JSON 缺少必需字段。
 - int/float/bool 类型不匹配。
 - `uint8` 数值越界。

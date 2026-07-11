@@ -130,14 +130,22 @@ class ScaffoldViewModel {
     dbcCheckIncompatible.value = false;
   }
 
-  /// 允许用户在检查失败后仍尝试重新导入（例如结构不兼容时覆盖修复）。
-  Future<void> prepareManualImport() async {
+  /// 允许用户在检查失败后仍尝试重新导入。
+  /// 若已配置路径则直接启动导入，避免对话框停在假进度。
+  Future<void> prepareManualImport({bool startIfPathReady = false}) async {
     clearDbcCheckError();
     dbcImportError.value = null;
-    if (dbcPath.value != null && dbcPath.value!.isNotEmpty) return;
-    final config = await _configUtil.load();
-    final path = config['dbc_path']?.toString();
-    if (path != null && path.isNotEmpty) dbcPath.value = path;
+    if (dbcPath.value == null || dbcPath.value!.isEmpty) {
+      final config = await _configUtil.load();
+      final path = config['dbc_path']?.toString();
+      if (path != null && path.isNotEmpty) dbcPath.value = path;
+    }
+    if (startIfPathReady &&
+        dbcPath.value != null &&
+        dbcPath.value!.isNotEmpty &&
+        !dbcImporting.value) {
+      startImport();
+    }
   }
 
   void startImport() {
@@ -146,12 +154,16 @@ class ScaffoldViewModel {
   }
 
   Future<void> setDbcPath(String path) async {
+    final previous = dbcPath.value;
     try {
-      dbcPath.value = path;
       dbcImportError.value = null;
       await _configUtil.update({'dbc_path': path});
+      // 仅在配置写入成功后更新内存路径，避免失败后陷入假进度。
+      dbcPath.value = path;
       _startImportWorker();
     } catch (error) {
+      dbcPath.value = previous;
+      dbcImportError.value = '设置 DBC 路径失败: $error';
       LoggerUtil.instance.e('设置 DBC 路径失败: $error');
       DialogUtil.instance.error('设置 DBC 路径失败: $error');
     }

@@ -265,7 +265,8 @@ class SpellDetailViewModel {
   }
 
   SpellEntity _collectFromControllers() {
-    final t = SpellEntity(
+    // 基于已加载实体覆盖 UI 字段，避免把未展示的多语言/扩展字段写成默认空值。
+    final t = spell.value.copyWith(
       id: id.value,
       // === 基础文本 ===
       nameLangZhCN: nameLangZhCNController.text,

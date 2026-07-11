@@ -86,7 +86,8 @@ class SpellItemEnchantmentDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 SpellItemEnchantment
   SpellItemEnchantmentEntity _collectFromControllers() {
-    final t = SpellItemEnchantmentEntity(
+    // 基于已加载实体覆盖 UI 字段，避免清空未展示的多语言等列。
+    final t = enchantment.value.copyWith(
       id: _pi(idController.text),
       nameLangZhCN: nameController.text,
       charges: _pi(chargesController.text),
