@@ -46,8 +46,17 @@ class CreatureTemplateRepository with RepositoryMixin {
   Future<int> countCreatureTemplates({
     CreatureTemplateFilterEntity? filter,
   }) async {
+    final needsLocaleJoin =
+        filter != null &&
+        (filter.name.isNotEmpty || filter.subName.isNotEmpty);
+    if (!needsLocaleJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.entry.isNotEmpty) {
+        builder = builder.where('entry', filter.entry);
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS ct');
-    builder.select(['ct.entry']);
     builder = builder.leftJoin(
       'creature_template_locale AS ctl',
       (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),

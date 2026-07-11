@@ -1,4 +1,5 @@
 import 'package:foxy/entity/item_random_properties_entity.dart';
+import 'package:foxy/entity/item_random_properties_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -8,13 +9,12 @@ class ItemRandomPropertiesRepository with RepositoryMixin {
   Future<List<BriefItemRandomPropertiesEntity>>
   getBriefItemRandomProperties({
     int page = 1,
-    String? id,
-    String? name,
+    ItemRandomPropertiesFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['ID', 'Name', 'Name_lang_zhCN']);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -29,9 +29,11 @@ class ItemRandomPropertiesRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countItemRandomProperties({String? id, String? name}) async {
+  Future<int> countItemRandomProperties({
+    ItemRandomPropertiesFilterEntity? filter,
+  }) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -100,17 +102,17 @@ class ItemRandomPropertiesRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? name,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+    QueryBuilder builder,
+    ItemRandomPropertiesFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    if (name != null && name.isNotEmpty) {
+    if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name_lang_zhCN',
-        '%$name%',
+        '%${filter.name}%',
         comparator: 'like',
       );
     }

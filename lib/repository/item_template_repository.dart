@@ -48,8 +48,25 @@ class ItemTemplateRepository with RepositoryMixin {
   }
 
   Future<int> countItemTemplates({ItemTemplateFilterEntity? filter}) async {
+    final needsLocaleJoin =
+        filter != null &&
+        (filter.name.isNotEmpty || filter.description.isNotEmpty);
+    if (!needsLocaleJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null) {
+        if (filter.entry.isNotEmpty) {
+          builder = builder.where('entry', filter.entry);
+        }
+        if (filter.classId >= 0) {
+          builder = builder.where('class', filter.classId);
+        }
+        if (filter.subclass >= 0) {
+          builder = builder.where('subclass', filter.subclass);
+        }
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS it');
-    builder.select(['it.entry']);
     builder = builder.leftJoin(
       '$_localeTable AS itl',
       (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),

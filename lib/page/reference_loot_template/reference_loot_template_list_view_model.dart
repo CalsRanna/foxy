@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -119,24 +120,21 @@ class ReferenceLootTemplateListViewModel {
   }
 
   Future<List<BriefLootTemplateEntity>> _searchEntries() async {
-    final filter = _buildFilter();
     return repository.getBriefLootTemplateRows(
-      entry: filter['Entry'],
-      name: filter['name'],
+      filter: _buildFilter(),
       page: page.value,
     );
   }
 
   Future<int> _countEntries() async {
-    final filter = _buildFilter();
-    return repository.countLootTemplateRows(
-      entry: filter['Entry'],
-      name: filter['name'],
-    );
+    return repository.countLootTemplateRows(filter: _buildFilter());
   }
 
-  Map<String, String> _buildFilter() {
-    return {'Entry': entryController.text, 'name': nameController.text};
+  LootTemplateFilterEntity _buildFilter() {
+    return LootTemplateFilterEntity(
+      entry: entryController.text,
+      name: nameController.text,
+    );
   }
 
   Future<void> _refresh() async {

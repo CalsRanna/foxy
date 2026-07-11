@@ -1,4 +1,5 @@
 import 'package:foxy/entity/creature_model_info_entity.dart';
+import 'package:foxy/entity/creature_model_info_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,7 +8,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
 
   Future<List<BriefCreatureModelInfoEntity>> getBriefCreatureModelInfos({
     int page = 1,
-    String? id,
+    CreatureModelInfoFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -18,7 +19,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
       'Gender',
       'DisplayID_Other_Gender',
     ]);
-    builder = _applyFilter(builder, id: id);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -33,9 +34,11 @@ class CreatureModelInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countCreatureModelInfos({String? id}) async {
+  Future<int> countCreatureModelInfos({
+    CreatureModelInfoFilterEntity? filter,
+  }) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -104,9 +107,13 @@ class CreatureModelInfoRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, {String? id}) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('DisplayID', id);
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    CreatureModelInfoFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('DisplayID', filter.id);
     }
     return builder;
   }

@@ -1,4 +1,5 @@
 import 'package:foxy/entity/vehicle_entity.dart';
+import 'package:foxy/entity/vehicle_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,12 +8,12 @@ class VehicleRepository with RepositoryMixin {
 
   Future<List<BriefVehicleEntity>> getBriefVehicles({
     int page = 1,
-    String? id,
+    VehicleFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['ID', 'Flags', 'TurnSpeed']);
-    builder = _applyFilter(builder, id: id);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefVehicleEntity.fromJson(e.toMap())).toList();
@@ -23,9 +24,9 @@ class VehicleRepository with RepositoryMixin {
     return results.map((e) => VehicleEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countVehicles({String? id}) async {
+  Future<int> countVehicles({VehicleFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -87,9 +88,13 @@ class VehicleRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, {String? id}) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    VehicleFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
     return builder;
   }

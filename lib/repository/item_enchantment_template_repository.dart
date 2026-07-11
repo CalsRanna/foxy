@@ -1,4 +1,5 @@
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
+import 'package:foxy/entity/item_enchantment_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -6,12 +7,13 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   static const _table = 'item_enchantment_template';
 
   Future<List<BriefItemEnchantmentTemplateEntity>>
-  getBriefItemEnchantmentTemplates({String? entry, int page = 1}) async {
+  getBriefItemEnchantmentTemplates({
+    ItemEnchantmentTemplateFilterEntity? filter,
+    int page = 1,
+  }) async {
     var offset = (page - 1) * kPageSize;
     var builder = _briefBuilder();
-    if (entry != null && entry.isNotEmpty) {
-      builder = builder.where('iet.entry', entry);
-    }
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -29,16 +31,17 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countItemEnchantmentTemplates({String? entry}) async {
+  Future<int> countItemEnchantmentTemplates({
+    ItemEnchantmentTemplateFilterEntity? filter,
+  }) async {
+    // Keep join + whereNotNull so count matches brief rows (valid ench only).
     var builder = laconic.table('$_table AS iet');
     builder = builder.leftJoin(
       'foxy.dbc_item_random_properties AS dirp',
       (join) => join.on('iet.ench', 'dirp.ID'),
     );
     builder = builder.whereNotNull('dirp.ID');
-    if (entry != null && entry.isNotEmpty) {
-      builder = builder.where('iet.entry', entry);
-    }
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -155,6 +158,17 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
       (join) => join.on('dirp.Enchantment_5', 'dsie_5.ID'),
     );
     builder = builder.whereNotNull('dirp.ID');
+    return builder;
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ItemEnchantmentTemplateFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.entry.isNotEmpty) {
+      builder = builder.where('iet.entry', filter.entry);
+    }
     return builder;
   }
 }

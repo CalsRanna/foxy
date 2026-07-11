@@ -41,8 +41,16 @@ class QuestTemplateRepository with RepositoryMixin {
   }
 
   Future<int> countQuestTemplates({QuestTemplateFilterEntity? filter}) async {
+    final needsLocaleJoin = filter != null && filter.title.isNotEmpty;
+    if (!needsLocaleJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.id.isNotEmpty) {
+        var idValue = int.tryParse(filter.id) ?? 0;
+        builder = builder.where('ID', idValue);
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS qt');
-    builder.select(['qt.ID']);
     builder = builder.leftJoin(
       'quest_template_locale AS qtl',
       (join) => join.on('qt.ID', 'qtl.ID').on('qtl.locale', '"zhCN"'),

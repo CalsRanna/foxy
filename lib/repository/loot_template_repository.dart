@@ -1,5 +1,7 @@
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 enum LootTableType {
   creature('creature_loot_template'),
@@ -56,8 +58,7 @@ class LootTemplateRepository with RepositoryMixin {
 
   /// Paginated search for list pages / pickers (row-level with item name).
   Future<List<BriefLootTemplateEntity>> getBriefLootTemplateRows({
-    String? entry,
-    String? name,
+    LootTemplateFilterEntity? filter,
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
@@ -82,16 +83,7 @@ class LootTemplateRepository with RepositoryMixin {
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
-    if (entry != null && entry.isNotEmpty) {
-      builder = builder.where('lt.Entry', entry);
-    }
-    if (name != null && name.isNotEmpty) {
-      builder = builder.whereAny(
-        ['it.name', 'itl.Name'],
-        '%$name%',
-        comparator: 'like',
-      );
-    }
+    builder = _applyRowFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -101,14 +93,14 @@ class LootTemplateRepository with RepositoryMixin {
 
   /// Distinct entry groups for pickers.
   Future<List<BriefLootTemplateEntity>> getBriefLootTemplateEntries({
-    String? entry,
+    LootTemplateFilterEntity? filter,
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['Entry', 'COUNT(*) as ItemCount']);
-    if (entry != null && entry.isNotEmpty) {
-      builder = builder.where('Entry', entry);
+    if (filter != null && filter.entry.isNotEmpty) {
+      builder = builder.where('Entry', filter.entry);
     }
     builder = builder.groupBy('Entry');
     builder = builder.limit(kPageSize).offset(offset);
@@ -118,16 +110,24 @@ class LootTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countLootTemplates({String? entry}) async {
+  Future<int> countLootTemplates({LootTemplateFilterEntity? filter}) async {
     var builder = laconic.table(_table);
     builder = builder.select(['DISTINCT Entry']);
-    if (entry != null && entry.isNotEmpty) {
-      builder = builder.where('Entry', entry);
+    if (filter != null && filter.entry.isNotEmpty) {
+      builder = builder.where('Entry', filter.entry);
     }
     return builder.count();
   }
 
-  Future<int> countLootTemplateRows({String? entry, String? name}) async {
+  Future<int> countLootTemplateRows({LootTemplateFilterEntity? filter}) async {
+    final needsNameJoin = filter != null && filter.name.isNotEmpty;
+    if (!needsNameJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.entry.isNotEmpty) {
+        builder = builder.where('Entry', filter.entry);
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS lt');
     builder = builder.leftJoin(
       'item_template AS it',
@@ -137,16 +137,7 @@ class LootTemplateRepository with RepositoryMixin {
       'item_template_locale AS itl',
       (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
     );
-    if (entry != null && entry.isNotEmpty) {
-      builder = builder.where('lt.Entry', entry);
-    }
-    if (name != null && name.isNotEmpty) {
-      builder = builder.whereAny(
-        ['it.name', 'itl.Name'],
-        '%$name%',
-        comparator: 'like',
-      );
-    }
+    builder = _applyRowFilter(builder, filter);
     return builder.count();
   }
 
@@ -222,5 +213,23 @@ class LootTemplateRepository with RepositoryMixin {
         .first();
     var maxItem = (maxResult.toMap()['maxItem'] ?? 0) as int;
     return maxItem + 1;
+  }
+
+  QueryBuilder _applyRowFilter(
+    QueryBuilder builder,
+    LootTemplateFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.entry.isNotEmpty) {
+      builder = builder.where('lt.Entry', filter.entry);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.whereAny(
+        ['it.name', 'itl.Name'],
+        '%${filter.name}%',
+        comparator: 'like',
+      );
+    }
+    return builder;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:foxy/entity/dbc_faction_entity.dart';
+import 'package:foxy/entity/dbc_faction_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,8 +8,7 @@ class DbcFactionRepository with RepositoryMixin {
 
   Future<List<BriefDbcFactionEntity>> getBriefDbcFactions({
     int page = 1,
-    String? id,
-    String? name,
+    DbcFactionFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -17,7 +17,7 @@ class DbcFactionRepository with RepositoryMixin {
       'Name_lang_zhCN',
       'Description_lang_zhCN',
     ]);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -30,9 +30,9 @@ class DbcFactionRepository with RepositoryMixin {
     return results.map((e) => DbcFactionEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countDbcFactions({String? id, String? name}) async {
+  Future<int> countDbcFactions({DbcFactionFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -95,17 +95,17 @@ class DbcFactionRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? name,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+    QueryBuilder builder,
+    DbcFactionFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    if (name != null && name.isNotEmpty) {
+    if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name_lang_zhCN',
-        '%$name%',
+        '%${filter.name}%',
         comparator: 'like',
       );
     }

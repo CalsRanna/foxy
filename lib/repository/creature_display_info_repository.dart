@@ -1,4 +1,5 @@
 import 'package:foxy/entity/creature_display_info_entity.dart';
+import 'package:foxy/entity/creature_display_info_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -8,8 +9,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
 
   Future<List<BriefCreatureDisplayInfoEntity>> getBriefCreatureDisplayInfos({
     int page = 1,
-    String? id,
-    String? modelName,
+    CreatureDisplayInfoFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS cdi');
@@ -22,7 +22,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
       'cmd.ModelName',
     ]);
     builder = _joinModelData(builder);
-    builder = _applyFilter(builder, id: id, modelName: modelName);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -38,12 +38,19 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   }
 
   Future<int> countCreatureDisplayInfos({
-    String? id,
-    String? modelName,
+    CreatureDisplayInfoFilterEntity? filter,
   }) async {
+    final needsModelJoin = filter != null && filter.modelName.isNotEmpty;
+    if (!needsModelJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.id.isNotEmpty) {
+        builder = builder.where('ID', filter.id);
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS cdi');
     builder = _joinModelData(builder);
-    builder = _applyFilter(builder, id: id, modelName: modelName);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -117,17 +124,17 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? modelName,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('cdi.ID', id);
+    QueryBuilder builder,
+    CreatureDisplayInfoFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('cdi.ID', filter.id);
     }
-    if (modelName != null && modelName.isNotEmpty) {
+    if (filter.modelName.isNotEmpty) {
       builder = builder.where(
         'cmd.ModelName',
-        '%$modelName%',
+        '%${filter.modelName}%',
         comparator: 'like',
       );
     }

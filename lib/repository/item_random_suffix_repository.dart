@@ -1,4 +1,5 @@
 import 'package:foxy/entity/item_random_suffix_entity.dart';
+import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,13 +8,12 @@ class ItemRandomSuffixRepository with RepositoryMixin {
 
   Future<List<BriefItemRandomSuffixEntity>> getBriefItemRandomSuffixes({
     int page = 1,
-    String? id,
-    String? name,
+    ItemRandomSuffixFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['ID', 'Name_lang_zhCN', 'InternalName']);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -28,9 +28,11 @@ class ItemRandomSuffixRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countItemRandomSuffixes({String? id, String? name}) async {
+  Future<int> countItemRandomSuffixes({
+    ItemRandomSuffixFilterEntity? filter,
+  }) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -93,17 +95,17 @@ class ItemRandomSuffixRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? name,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+    QueryBuilder builder,
+    ItemRandomSuffixFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    if (name != null && name.isNotEmpty) {
+    if (filter.name.isNotEmpty) {
       builder = builder.where(
         'Name_lang_zhCN',
-        '%$name%',
+        '%${filter.name}%',
         comparator: 'like',
       );
     }

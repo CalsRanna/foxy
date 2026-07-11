@@ -1,4 +1,5 @@
 import 'package:foxy/entity/spell_duration_entity.dart';
+import 'package:foxy/entity/spell_duration_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,7 +8,7 @@ class SpellDurationRepository with RepositoryMixin {
 
   Future<List<BriefSpellDurationEntity>> getBriefSpellDurations({
     int page = 1,
-    String? id,
+    SpellDurationFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -17,7 +18,7 @@ class SpellDurationRepository with RepositoryMixin {
       'DurationPerLevel',
       'MaxDuration',
     ]);
-    builder = _applyFilter(builder, id: id);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -30,9 +31,9 @@ class SpellDurationRepository with RepositoryMixin {
     return results.map((e) => SpellDurationEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countSpellDurations({String? id}) async {
+  Future<int> countSpellDurations({SpellDurationFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -94,9 +95,13 @@ class SpellDurationRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, {String? id}) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    SpellDurationFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
     return builder;
   }

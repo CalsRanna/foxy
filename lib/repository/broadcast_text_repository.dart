@@ -1,4 +1,5 @@
 import 'package:foxy/entity/broadcast_text_entity.dart';
+import 'package:foxy/entity/broadcast_text_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,8 +8,7 @@ class BroadcastTextRepository with RepositoryMixin {
 
   Future<List<BriefBroadcastTextEntity>> getBriefBroadcastTexts({
     int page = 1,
-    String? id,
-    String? text,
+    BroadcastTextFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -17,7 +17,7 @@ class BroadcastTextRepository with RepositoryMixin {
       'LanguageID',
       "COALESCE(NULLIF(MaleText, ''), FemaleText) as display_text",
     ]);
-    builder = _applyFilter(builder, id: id, text: text);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) {
@@ -33,9 +33,9 @@ class BroadcastTextRepository with RepositoryMixin {
     return results.map((e) => BroadcastTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countBroadcastTexts({String? id, String? text}) async {
+  Future<int> countBroadcastTexts({BroadcastTextFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id, text: text);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -98,17 +98,17 @@ class BroadcastTextRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? text,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+    QueryBuilder builder,
+    BroadcastTextFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    if (text != null && text.isNotEmpty) {
+    if (filter.text.isNotEmpty) {
       builder = builder.whereAny(
         ['MaleText', 'FemaleText'],
-        '%$text%',
+        '%${filter.text}%',
         comparator: 'like',
       );
     }

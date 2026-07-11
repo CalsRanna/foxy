@@ -1,4 +1,5 @@
 import 'package:foxy/entity/creature_model_data_entity.dart';
+import 'package:foxy/entity/creature_model_data_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,8 +8,7 @@ class CreatureModelDataRepository with RepositoryMixin {
 
   Future<List<BriefCreatureModelDataEntity>> getBriefCreatureModelDatas({
     int page = 1,
-    String? id,
-    String? modelName,
+    CreatureModelDataFilterEntity? filter,
   }) async {
     final offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table).select([
@@ -17,7 +17,7 @@ class CreatureModelDataRepository with RepositoryMixin {
       'SizeClass',
       'ModelScale',
     ]);
-    builder = _applyFilter(builder, id: id, modelName: modelName);
+    builder = _applyFilter(builder, filter);
     final results = await builder
         .orderBy('ID')
         .limit(kPageSize)
@@ -35,9 +35,11 @@ class CreatureModelDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countCreatureModelDatas({String? id, String? modelName}) async {
+  Future<int> countCreatureModelDatas({
+    CreatureModelDataFilterEntity? filter,
+  }) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id, modelName: modelName);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -98,15 +100,19 @@ class CreatureModelDataRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? modelName,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+    QueryBuilder builder,
+    CreatureModelDataFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    if (modelName != null && modelName.isNotEmpty) {
-      builder = builder.where('ModelName', '%$modelName%', comparator: 'like');
+    if (filter.modelName.isNotEmpty) {
+      builder = builder.where(
+        'ModelName',
+        '%${filter.modelName}%',
+        comparator: 'like',
+      );
     }
     return builder;
   }
