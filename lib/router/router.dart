@@ -13,10 +13,6 @@ class FoxyRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes {
-    final settingChildren = [
-      AutoRoute(page: BasicSettingRoute.page, initial: true),
-      AutoRoute(page: DatabaseSettingRoute.page),
-    ];
     final children = [
       /// Scaffold
       AutoRoute(page: DashboardRoute.page),
@@ -27,7 +23,7 @@ class FoxyRouter extends RootStackRouter {
       AutoRoute(page: QuestTemplateDetailRoute.page),
       AutoRoute(page: GossipMenuListRoute.page),
       AutoRoute(page: SmartScriptListRoute.page),
-      AutoRoute(page: SettingRoute.page, children: settingChildren),
+      AutoRoute(page: SettingRoute.page),
 
       /// Creature Template
       AutoRoute(page: CreatureTemplateDetailRoute.page),

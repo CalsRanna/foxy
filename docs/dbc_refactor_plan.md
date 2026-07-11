@@ -108,7 +108,8 @@ lib/
 │   │   ├── scaffold_page.dart
 │   │   └── scaffold_view_model.dart
 │   └── setting/
-│       ├── basic_setting.dart
+│       ├── setting_page.dart
+│       ├── dbc_sync_dialogs.dart
 │       └── setting_view_model.dart
 ├── repository/
 │   ├── creature_model_data_repository.dart

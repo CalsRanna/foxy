@@ -110,7 +110,7 @@ lib/
 │   ├── spell/                        # 法术（含 6 个关联 Tab：区域/加成/自定义属性/分组/链接/等级/掉落）
 │   ├── condition/                    # 条件
 │   ├── player_create_info/           # 出生信息
-│   ├── setting/                      # 基本设置 + 数据库设置 + DBC 导出
+│   ├── setting/                      # DBC 导入 / 导出管理
 │   ├── more/                         # 「更多」入口（可钉到侧边栏/收藏）
 │   ├── reference_loot_template/      # 关联掉落
 │   ├── page_text/                    # 页面文本（含 locale）

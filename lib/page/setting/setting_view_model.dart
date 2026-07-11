@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/util/config_util.dart';
 import 'package:foxy/util/dbc_export_registry.dart';
 import 'package:foxy/util/dbc_sync_progress.dart';
 import 'package:foxy/util/dbc_sync_util.dart';
-import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -49,14 +47,9 @@ class DbcExportItem {
 }
 
 class SettingViewModel {
-  final _foxyViewModel = GetIt.instance.get<FoxyViewModel>();
   final _configUtil = GetIt.instance.get<ConfigUtil>();
   final _dbcSync = GetIt.instance.get<DbcSyncUtil>();
   final _dbcExportRegistry = GetIt.instance.get<DbcExportRegistry>();
-
-  /// 供 Page 订阅；底层状态仍由 [FoxyViewModel] 持有。
-  Signal<bool> get hasLocaleTables => _foxyViewModel.hasLocaleTables;
-  Signal<bool> get localeEnabled => _foxyViewModel.localeEnabled;
 
   // ========== 导出 ==========
 
@@ -80,6 +73,7 @@ class SettingViewModel {
   final dbcImportError = signal<String?>(null);
   final dbcImportSuccess = signal(false);
   final dbcImportSuccessMessage = signal('');
+
   /// 每次 startImport 递增；取消/过期 attempt 用 token 判定，避免旧任务复活。
   int _importAttemptId = 0;
 
@@ -101,21 +95,6 @@ class SettingViewModel {
 
   bool get isDbcBusy =>
       dbcExporting.value || dbcImporting.value || _dbcSync.isRunning;
-
-  Future<void> initSignals() async {
-    // FoxyViewModel 的 signal 由 bootstrap 阶段填充，无需额外加载。
-  }
-
-  Future<void> setLocaleEnabled(bool value) async {
-    try {
-      if (!hasLocaleTables.value && value) return;
-      localeEnabled.value = value;
-      await _configUtil.update({'locale_enabled': value});
-    } catch (error) {
-      LoggerUtil.instance.e('设置本地化开关失败: $error');
-      DialogUtil.instance.error('设置本地化开关失败: $error');
-    }
-  }
 
   // ---------- 导出 ----------
 
@@ -373,13 +352,9 @@ class SettingViewModel {
     }
   }
 
-  bool _isCurrentImportAttempt(int attemptId) =>
-      attemptId == _importAttemptId;
+  bool _isCurrentImportAttempt(int attemptId) => attemptId == _importAttemptId;
 
-  Future<void> _runImport(
-    String directory, {
-    required int attemptId,
-  }) async {
+  Future<void> _runImport(String directory, {required int attemptId}) async {
     if (!_isCurrentImportAttempt(attemptId)) return;
     try {
       final config = await _configUtil.load();
