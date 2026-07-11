@@ -115,45 +115,22 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
 
       final tableShort = file.tableName.substring('foxy.'.length);
       final targetExists = existingTables.contains(tableShort);
+      // 导入语义：DBC 为权威来源，始终用 DBC 内容替换正式表（含非空表）。
+      // 用户若需保留库内数据，应自行备份。
+      var compatible = false;
       if (targetExists) {
         try {
-          final count = await connection
-              .table(file.tableName)
-              .count()
-              .timeout(const Duration(seconds: 10));
-          if (count > 0) {
-            skipped++;
-            _sendCount(
-              sendPort,
-              '${file.name}.dbc',
-              index + 1,
-              files.length,
-              count,
-              count,
-            );
-            continue;
-          }
-        } catch (error) {
+          compatible = await _tableMatchesSchema(
+            connection,
+            tableShort,
+            file.fields,
+          );
+        } catch (_) {
           await connection.close();
           connection = createConnection();
           laconic = connection;
-          errors.add(
-            _workerError(
-              tableName: tableShort,
-              fileName: '${file.name}.dbc',
-              stage: 'reading',
-              message: '检查表行数失败，已跳过以防数据丢失：$error',
-            ),
-          );
-          _sendCount(
-            sendPort,
-            '${file.name}.dbc',
-            index + 1,
-            files.length,
-            0,
-            null,
-          );
-          continue;
+          // 探测失败时按不兼容处理，用 schema 建 staging，避免 LIKE 坏表。
+          compatible = false;
         }
       }
 
@@ -171,7 +148,9 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           '正在准备 ${file.name}.dbc 导入表...',
           '${file.name}.dbc',
         );
-        if (targetExists) {
+        // 兼容且已存在：LIKE 保留索引/约束/排序规则。
+        // 不存在或不兼容：按 DBC schema 推导 DDL。
+        if (targetExists && compatible) {
           await connection.statement(
             'CREATE TABLE $staging LIKE ${file.tableName}',
           );
@@ -335,6 +314,27 @@ Future<List<_FileDef>> _scanDirectory(String directory) async {
 
   return matched.values.toList()
     ..sort((left, right) => left.name.compareTo(right.name));
+}
+
+/// 检查正式表是否包含当前 DBC schema 所需的全部列（大小写不敏感）。
+Future<bool> _tableMatchesSchema(
+  Laconic connection,
+  String tableShort,
+  List<_FieldDef> fields,
+) async {
+  final rows = await connection.select(
+    "SELECT COLUMN_NAME FROM information_schema.COLUMNS "
+    "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME = '$tableShort'",
+  );
+  final actual = {
+    for (final row in rows) (row['COLUMN_NAME'] as String).toLowerCase(),
+  };
+  for (final field in fields) {
+    if (!actual.contains(field.name.toLowerCase())) {
+      return false;
+    }
+  }
+  return true;
 }
 
 Future<void> _createTable(

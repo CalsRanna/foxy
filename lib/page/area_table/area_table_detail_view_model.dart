@@ -79,7 +79,8 @@ class AreaTableDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 AreaTable
   AreaTableEntity _collectFromControllers() {
-    final t = AreaTableEntity(
+    // 基于已加载实体覆盖 UI 字段，避免清空未展示的多语言等列。
+    final t = area.value.copyWith(
       id: _pi(idController.text),
       areaNameLangZhCN: nameController.text,
       continentId: _pi(continentIdController.text),

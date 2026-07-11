@@ -80,6 +80,7 @@ Widget _pathField({
   required TextEditingController controller,
   required String placeholder,
   required VoidCallback onBrowse,
+  ValueChanged<String>? onChanged,
   ValueChanged<String>? onSubmitted,
   bool enabled = true,
 }) {
@@ -95,6 +96,7 @@ Widget _pathField({
             padding: EdgeInsets.only(left: 10),
             child: Icon(LucideIcons.folderSearch, size: 16),
           ),
+          onChanged: onChanged,
           onSubmitted: onSubmitted,
         ),
       ),
@@ -190,11 +192,13 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
     final dir = await getDirectoryPath();
     if (dir == null || !mounted) return;
     _pathController.text = dir;
+    _vm.setImportPathLocal(dir);
+    setState(() {});
     await _vm.setImportPath(dir);
   }
 
   Future<void> _start() async {
-    await _vm.setImportPath(_pathController.text);
+    _vm.setImportPathLocal(_pathController.text);
     await _vm.startImport();
   }
 
@@ -276,7 +280,11 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
               child: const Text('关闭'),
             ),
             ShadButton(
-              onPressed: _pathController.text.trim().isEmpty ? null : _start,
+              onPressed:
+                  (_vm.dbcImportPath.value == null ||
+                      _vm.dbcImportPath.value!.trim().isEmpty)
+                  ? null
+                  : _start,
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
@@ -292,13 +300,17 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
               _mutedHint(
                 context,
                 '选择包含 Spell.dbc、Faction.dbc 等文件的客户端 DBC 目录。'
-                '已有数据的表会自动跳过，不会覆盖。',
+                '导入以 DBC 为准：将覆盖数据库中对应表的数据；若需保留库内数据请先自行备份。',
               ),
               Text('源目录', style: theme.textTheme.small.copyWith(fontWeight: FontWeight.w600)),
               _pathField(
                 controller: _pathController,
                 placeholder: '选择或输入 DBC 目录路径',
                 onBrowse: _browse,
+                onChanged: (value) {
+                  _vm.setImportPathLocal(value);
+                  setState(() {});
+                },
                 onSubmitted: (_) => _start(),
               ),
               if (error != null)
@@ -507,6 +519,12 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                 controller: _dirController,
                 placeholder: '选择导出目录',
                 onBrowse: _browse,
+                onChanged: (value) {
+                  final trimmed = value.trim();
+                  setState(() {
+                    _outputDir = trimmed.isEmpty ? null : trimmed;
+                  });
+                },
               ),
               if (error != null)
                 Column(

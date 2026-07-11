@@ -55,7 +55,8 @@ class QuestSortDetailViewModel {
 
   /// 从所有 Controller 收集数据构建 QuestSort
   QuestSortEntity _collectFromControllers() {
-    return QuestSortEntity(
+    // 基于已加载实体覆盖 UI 字段，避免清空未展示的多语言等列。
+    return sort.value.copyWith(
       id: _pi(idController.text),
       sortNameLangZhCN: nameController.text,
     );

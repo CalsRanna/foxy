@@ -77,6 +77,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       vm.startImport();
       showShadDialog(
         context: context,
+        barrierDismissible: false,
         builder: (ctx) => _DbcImportDialog(vm: viewModel),
       );
       return;
@@ -102,6 +103,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
               Navigator.of(ctx).pop();
               showShadDialog(
                 context: context,
+                barrierDismissible: false,
                 builder: (ctx) => _DbcImportDialog(vm: vm),
               );
             },
@@ -129,7 +131,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
             Text(
               incompatible
                   ? '当前数据库中的 DBC 表与应用期望的字段结构不一致。'
-                    '可重新检查，或通过重新导入覆盖修复。'
+                    '可重新检查，或重新导入（以 DBC 为准覆盖库内对应表）。'
                   : '无法完成 DBC 表状态检查。请确认数据库连接正常后重试。',
               style: theme.textTheme.muted.copyWith(fontSize: 13),
             ),
@@ -168,13 +170,14 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
             },
           ),
           ShadButton(
-            child: Text(incompatible ? '重新导入修复' : '尝试导入'),
+            child: Text(incompatible ? '重新导入' : '尝试导入'),
             onPressed: () async {
               Navigator.of(ctx).pop();
-              await vm.prepareManualImport();
+              await vm.prepareManualImport(startIfPathReady: true);
               if (!mounted) return;
               showShadDialog(
                 context: context,
+                barrierDismissible: false,
                 builder: (importCtx) => _DbcImportDialog(vm: vm),
               );
             },
@@ -525,6 +528,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
 
   Widget _buildErrorBody(String error) {
     final theme = ShadTheme.of(context);
+    final isCancelled = error.contains('取消');
     return ShadDialog(
       closeIcon: const SizedBox.shrink(),
       constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
@@ -532,11 +536,11 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
         spacing: 10,
         children: [
           Icon(
-            LucideIcons.triangleAlert,
+            isCancelled ? LucideIcons.circleX : LucideIcons.triangleAlert,
             size: 20,
             color: theme.colorScheme.destructive,
           ),
-          const Text('DBC 导入失败'),
+          Text(isCancelled ? 'DBC 导入已取消' : 'DBC 导入失败'),
         ],
       ),
       child: Column(
@@ -558,13 +562,29 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: ShadButton(
-              onPressed: _vm.retryImport,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.rotateCw, size: 15), Text('重试')],
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 8,
+              children: [
+                ShadButton.outline(
+                  onPressed: () {
+                    _vm.dbcImportError.value = null;
+                    Navigator.of(context).maybePop();
+                  },
+                  child: const Text('关闭'),
+                ),
+                ShadButton(
+                  onPressed: _vm.retryImport,
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 6,
+                    children: [
+                      Icon(LucideIcons.rotateCw, size: 15),
+                      Text('重试'),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],

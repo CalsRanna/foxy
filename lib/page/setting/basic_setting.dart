@@ -62,8 +62,8 @@ class _BasicSettingPageState extends State<BasicSettingPage> {
           _SettingItem(
             title: '导入 DBC 文件',
             description:
-                '选择魔兽客户端中的 DBC 目录，将数据写入 foxy 库。'
-                '已有数据的表会自动跳过。',
+                '选择魔兽客户端中的 DBC 目录，以 DBC 为准写入 foxy 库并覆盖对应表。'
+                '若需保留库内数据请先自行备份。',
             trailing: ShadButton(
               size: ShadButtonSize.sm,
               onPressed: busy ? null : _showImportDialog,
@@ -102,6 +102,7 @@ class _BasicSettingPageState extends State<BasicSettingPage> {
   void _showImportDialog() {
     showShadDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => DbcImportDialog(vm: viewModel),
     );
   }
@@ -109,6 +110,7 @@ class _BasicSettingPageState extends State<BasicSettingPage> {
   void _showExportDialog() {
     showShadDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => DbcExportDialog(vm: viewModel),
     );
   }
