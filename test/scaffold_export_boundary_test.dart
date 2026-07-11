@@ -15,9 +15,9 @@ void main() {
     expect(source.contains('DbcExport'), isFalse);
   });
 
-  test('BasicSettingPage 源码不获取 ScaffoldViewModel / FoxyViewModel', () async {
+  test('SettingPage 只通过 SettingViewModel 管理 DBC', () async {
     final source = await File(
-      'lib/page/setting/basic_setting.dart',
+      'lib/page/setting/setting_page.dart',
     ).readAsString();
     expect(source.contains('ScaffoldViewModel'), isFalse);
     expect(source.contains('FoxyViewModel'), isFalse);
@@ -26,6 +26,8 @@ void main() {
     expect(source.contains('SettingViewModel'), isTrue);
     expect(source.contains('DbcImportDialog'), isTrue);
     expect(source.contains('DbcExportDialog'), isTrue);
+    expect(source.contains('DatabaseSetting'), isFalse);
+    expect(source.contains('localeEnabled'), isFalse);
   });
 
   test('DbcExportItem 与 SettingViewModel 选择语义可组合', () {

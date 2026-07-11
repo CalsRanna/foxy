@@ -180,7 +180,7 @@ lib/
 │   ├── scaffold/             # 主壳：侧边栏、DBC 导入
 │   ├── creature_template/    # 生物（多 Tab 关联表）
 │   ├── item/ / quest/ / …    # 其它业务模块
-│   └── setting/              # 基本设置、数据库设置、DBC 导出
+│   └── setting/              # DBC 导入 / 导出管理
 ├── repository/               # 数据访问层
 ├── router/                   # auto_route 配置与菜单
 ├── util/                     # DBC 同步、日志、对话框、事件总线等

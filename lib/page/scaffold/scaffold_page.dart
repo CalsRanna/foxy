@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
-import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/window_button.dart';
@@ -37,9 +36,7 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
   _NavigateSettingAction() : super(onInvoke: handleInvoke);
 
   static Object? handleInvoke(_NavigateSettingIntent intent) {
-    final context = primaryFocus?.context;
-    if (context == null) return null;
-    AutoRouter.of(context).push(const BasicSettingRoute());
+    GetIt.instance.get<RouterFacade>().navigateToMenu(RouterMenu.setting);
     return null;
   }
 }
