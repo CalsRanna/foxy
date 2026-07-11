@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
 import 'package:foxy/entity/area_table_entity.dart';
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -50,16 +51,18 @@ class AreaTableDetailViewModel {
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      if (t.id == 0) {
+      var t = _collectFromControllers();
+      final isCreate = t.id == 0;
+      if (isCreate) {
         final id = await _repository.storeAreaTable(t);
+        t = t.copyWith(id: id);
         idController.text = '$id';
       } else {
         await _repository.updateAreaTable(t);
       }
       area.value = t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
       if (!context.mounted) return;
@@ -70,6 +73,29 @@ class AreaTableDetailViewModel {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
+  }
+
+  /// 弹窗保存区域名称本地化后，合并回当前 Entity 并同步主语言输入框。
+  void applyAreaNameLocales(List<DbcLocaleFieldValue> values) {
+    area.value = area.value.copyWith(
+      areaNameLangEnUS: values.valueOf('enUS'),
+      areaNameLangKoKR: values.valueOf('koKR'),
+      areaNameLangFrFR: values.valueOf('frFR'),
+      areaNameLangDeDE: values.valueOf('deDE'),
+      areaNameLangZhCN: values.valueOf('zhCN'),
+      areaNameLangZhTW: values.valueOf('zhTW'),
+      areaNameLangEsES: values.valueOf('esES'),
+      areaNameLangEsMX: values.valueOf('esMX'),
+      areaNameLangRuRU: values.valueOf('ruRU'),
+      areaNameLangJaJP: values.valueOf('jaJP'),
+      areaNameLangPtPT: values.valueOf('ptPT'),
+      areaNameLangPtBR: values.valueOf('ptBR'),
+      areaNameLangItIT: values.valueOf('itIT'),
+      areaNameLangUnk1: values.valueOf('unk1'),
+      areaNameLangUnk2: values.valueOf('unk2'),
+      areaNameLangUnk3: values.valueOf('unk3'),
+    );
+    nameController.text = values.zhCN;
   }
 
   /// 退出页面

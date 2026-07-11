@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -19,23 +20,24 @@ class QuestInfoDetailViewModel {
 
   final info = signal(QuestInfoEntity());
 
-  /// 保存到数据库
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t) => int.tryParse(t) ?? 0;
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      if (t.id == 0) {
+      var t = _collectFromControllers();
+      final isCreate = t.id == 0;
+      if (isCreate) {
         final id = await _repository.storeQuestInfo(t);
+        t = t.copyWith(id: id);
         idController.text = '$id';
       } else {
         await _repository.updateQuestInfo(t);
       }
       info.value = t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
       if (!context.mounted) return;
@@ -48,14 +50,33 @@ class QuestInfoDetailViewModel {
     }
   }
 
-  /// 退出页面
+  void applyInfoNameLocales(List<DbcLocaleFieldValue> values) {
+    info.value = info.value.copyWith(
+      infoNameLangEnUS: values.valueOf('enUS'),
+      infoNameLangKoKR: values.valueOf('koKR'),
+      infoNameLangFrFR: values.valueOf('frFR'),
+      infoNameLangDeDE: values.valueOf('deDE'),
+      infoNameLangZhCN: values.valueOf('zhCN'),
+      infoNameLangZhTW: values.valueOf('zhTW'),
+      infoNameLangEsES: values.valueOf('esES'),
+      infoNameLangEsMX: values.valueOf('esMX'),
+      infoNameLangRuRU: values.valueOf('ruRU'),
+      infoNameLangJaJP: values.valueOf('jaJP'),
+      infoNameLangPtPT: values.valueOf('ptPT'),
+      infoNameLangPtBR: values.valueOf('ptBR'),
+      infoNameLangItIT: values.valueOf('itIT'),
+      infoNameLangUnk1: values.valueOf('unk1'),
+      infoNameLangUnk2: values.valueOf('unk2'),
+      infoNameLangUnk3: values.valueOf('unk3'),
+    );
+    nameController.text = values.zhCN;
+  }
+
   void pop() {
     routerFacade.goBack();
   }
 
-  /// 从所有 Controller 收集数据构建 QuestInfo
   QuestInfoEntity _collectFromControllers() {
-    // 基于已加载实体覆盖 UI 字段，避免清空未展示的多语言等列。
     return info.value.copyWith(
       id: _pi(idController.text),
       infoNameLangZhCN: nameController.text,

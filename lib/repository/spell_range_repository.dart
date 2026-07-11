@@ -1,10 +1,15 @@
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_filter_entity.dart';
+import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class SpellRangeRepository with RepositoryMixin {
+class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_spell_range';
+
+  @override
+  String get dbcLocaleTableName => _table;
 
   Future<List<BriefSpellRangeEntity>> getBriefSpellRanges({
     int page = 1,
@@ -87,6 +92,17 @@ class SpellRangeRepository with RepositoryMixin {
     }
   }
 
+
+  Future<List<DbcLocaleFieldValue>> getSpellRangeLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveSpellRangeLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',

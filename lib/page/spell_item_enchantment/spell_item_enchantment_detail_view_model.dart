@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -57,16 +58,18 @@ class SpellItemEnchantmentDetailViewModel {
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      if (t.id == 0) {
+      var t = _collectFromControllers();
+      final isCreate = t.id == 0;
+      if (isCreate) {
         final id = await _repository.storeSpellItemEnchantment(t);
+        t = t.copyWith(id: id);
         idController.text = '$id';
       } else {
         await _repository.updateSpellItemEnchantment(t);
       }
       enchantment.value = t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
       if (!context.mounted) return;
@@ -77,6 +80,28 @@ class SpellItemEnchantmentDetailViewModel {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
+  }
+
+  void applyNameLocales(List<DbcLocaleFieldValue> values) {
+    enchantment.value = enchantment.value.copyWith(
+      nameLangEnUS: values.valueOf('enUS'),
+      nameLangKoKR: values.valueOf('koKR'),
+      nameLangFrFR: values.valueOf('frFR'),
+      nameLangDeDE: values.valueOf('deDE'),
+      nameLangZhCN: values.valueOf('zhCN'),
+      nameLangZhTW: values.valueOf('zhTW'),
+      nameLangEsES: values.valueOf('esES'),
+      nameLangEsMX: values.valueOf('esMX'),
+      nameLangRuRU: values.valueOf('ruRU'),
+      nameLangJaJP: values.valueOf('jaJP'),
+      nameLangPtPT: values.valueOf('ptPT'),
+      nameLangPtBR: values.valueOf('ptBR'),
+      nameLangItIT: values.valueOf('itIT'),
+      nameLangUnk1: values.valueOf('unk1'),
+      nameLangUnk2: values.valueOf('unk2'),
+      nameLangUnk3: values.valueOf('unk3'),
+    );
+    nameController.text = values.zhCN;
   }
 
   /// 退出页面

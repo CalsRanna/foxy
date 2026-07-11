@@ -1,10 +1,15 @@
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
+import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class ItemRandomSuffixRepository with RepositoryMixin {
+class ItemRandomSuffixRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_item_random_suffix';
+
+  @override
+  String get dbcLocaleTableName => _table;
 
   Future<List<BriefItemRandomSuffixEntity>> getBriefItemRandomSuffixes({
     int page = 1,
@@ -86,6 +91,17 @@ class ItemRandomSuffixRepository with RepositoryMixin {
     }
   }
 
+
+  Future<List<DbcLocaleFieldValue>> getItemRandomSuffixLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveItemRandomSuffixLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',
