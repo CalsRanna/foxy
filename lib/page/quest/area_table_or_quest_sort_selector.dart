@@ -289,7 +289,7 @@ class _DialogState extends State<_Dialog> {
                   0 => ShadTableCell(child: Text(item.id.toString())),
                   1 => ShadTableCell(
                     child: Text(
-                      item.areaNameLangZhCn,
+                      item.areaNameLangZhCN,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -303,7 +303,7 @@ class _DialogState extends State<_Dialog> {
                 final item = _questItems[vicinity.row];
                 return switch (vicinity.column) {
                   0 => ShadTableCell(child: Text(item.id.toString())),
-                  1 => ShadTableCell(child: Text(item.sortNameLangZhCn)),
+                  1 => ShadTableCell(child: Text(item.sortNameLangZhCN)),
                   _ => ShadTableCell(child: SizedBox()),
                 };
               }

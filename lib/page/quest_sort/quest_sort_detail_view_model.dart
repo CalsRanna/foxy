@@ -57,7 +57,7 @@ class QuestSortDetailViewModel {
   QuestSortEntity _collectFromControllers() {
     return QuestSortEntity(
       id: _pi(idController.text),
-      sortNameLangZhCn: nameController.text,
+      sortNameLangZhCN: nameController.text,
     );
   }
 
@@ -66,7 +66,7 @@ class QuestSortDetailViewModel {
       module: 'quest_sort',
       actionType: action,
       entityId: t.id,
-      entityName: t.sortNameLangZhCn,
+      entityName: t.sortNameLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
@@ -89,6 +89,6 @@ class QuestSortDetailViewModel {
 
   void _initControllers(QuestSortEntity table) {
     idController.text = _fmt(table.id);
-    nameController.text = table.sortNameLangZhCn;
+    nameController.text = table.sortNameLangZhCN;
   }
 }

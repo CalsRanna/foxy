@@ -54,7 +54,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
     );
     var nameInput = ShadInput(
       controller: viewModel.nameController,
-      placeholder: Text('名称（InfoName_Lang_zhCN）'),
+      placeholder: Text('名称（InfoName_lang_zhCN）'),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
@@ -105,7 +105,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
             final item = infos[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.infoNameLangZhCn)),
+              1 => ShadTableCell(child: Text(item.infoNameLangZhCN)),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -123,7 +123,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               id: infos[row].id,
-              name: infos[row].infoNameLangZhCn,
+              name: infos[row].infoNameLangZhCN,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -136,7 +136,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
                   onPressed: () {
                     viewModel.navigateToDetail(
                       id: infos[row].id,
-                      name: infos[row].infoNameLangZhCn,
+                      name: infos[row].infoNameLangZhCN,
                     );
                   },
                   child: Text('编辑'),

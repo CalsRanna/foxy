@@ -57,7 +57,7 @@ class QuestInfoDetailViewModel {
   QuestInfoEntity _collectFromControllers() {
     return QuestInfoEntity(
       id: _pi(idController.text),
-      infoNameLangZhCn: nameController.text,
+      infoNameLangZhCN: nameController.text,
     );
   }
 
@@ -66,7 +66,7 @@ class QuestInfoDetailViewModel {
       module: 'quest_info',
       actionType: action,
       entityId: t.id,
-      entityName: t.infoNameLangZhCn,
+      entityName: t.infoNameLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
@@ -89,6 +89,6 @@ class QuestInfoDetailViewModel {
 
   void _initControllers(QuestInfoEntity table) {
     idController.text = _fmt(table.id);
-    nameController.text = table.infoNameLangZhCn;
+    nameController.text = table.infoNameLangZhCN;
   }
 }

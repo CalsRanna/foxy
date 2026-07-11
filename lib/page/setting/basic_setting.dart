@@ -115,6 +115,8 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
   @override
   void initState() {
     super.initState();
+    // 避免上次导出成功后 signal 仍为 true，导致对话框一打开就被立刻关闭。
+    _vm.dbcExportSuccess.value = false;
     _unsub = _vm.dbcExportSuccess.subscribe(_onExportSuccessChanged);
     _vm.loadExportItems().then((_) {
       if (mounted) setState(() => _loaded = true);

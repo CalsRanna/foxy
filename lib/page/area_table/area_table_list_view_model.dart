@@ -131,7 +131,7 @@ class AreaTableListViewModel {
   void _logActivity(ActivityActionType action, int id) {
     final areas = this.areas.value;
     final area = areas.where((a) => a.id == id).firstOrNull;
-    final name = area?.areaNameLangZhCn ?? '';
+    final name = area?.areaNameLangZhCN ?? '';
     final log = ActivityLogEntity(
       module: 'area_table',
       actionType: action,

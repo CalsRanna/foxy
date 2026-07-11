@@ -88,7 +88,7 @@ class SpellItemEnchantmentDetailViewModel {
   SpellItemEnchantmentEntity _collectFromControllers() {
     final t = SpellItemEnchantmentEntity(
       id: _pi(idController.text),
-      nameLangZhCn: nameController.text,
+      nameLangZhCN: nameController.text,
       charges: _pi(chargesController.text),
       effect0: _pi(effect0Controller.text),
       effect1: _pi(effect1Controller.text),
@@ -118,7 +118,7 @@ class SpellItemEnchantmentDetailViewModel {
       module: 'spell_item_enchantment',
       actionType: action,
       entityId: t.id,
-      entityName: t.nameLangZhCn,
+      entityName: t.nameLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
@@ -161,7 +161,7 @@ class SpellItemEnchantmentDetailViewModel {
 
   void _initControllers(SpellItemEnchantmentEntity entry) {
     idController.text = _fmt(entry.id);
-    nameController.text = entry.nameLangZhCn;
+    nameController.text = entry.nameLangZhCN;
     chargesController.text = _fmt(entry.charges);
     effect0Controller.text = _fmt(entry.effect0);
     effect1Controller.text = _fmt(entry.effect1);

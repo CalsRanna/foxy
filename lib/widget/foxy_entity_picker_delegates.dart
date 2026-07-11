@@ -86,7 +86,7 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称',
-        text: (BriefAreaTableEntity t) => t.areaNameLangZhCn,
+        text: (BriefAreaTableEntity t) => t.areaNameLangZhCN,
       ),
       FoxyEntityPickerColumn(
         header: '地区编号',
@@ -156,7 +156,7 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称',
-        text: (BriefCharTitleEntity t) => t.nameLangZhCn,
+        text: (BriefCharTitleEntity t) => t.nameLangZhCN,
       ),
     ],
     idOf: (BriefCharTitleEntity t) => t.id,
@@ -272,11 +272,11 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称',
-        text: (BriefDbcFactionEntity t) => t.nameLangZhCn,
+        text: (BriefDbcFactionEntity t) => t.nameLangZhCN,
       ),
       FoxyEntityPickerColumn(
         header: '描述',
-        text: (BriefDbcFactionEntity t) => t.descriptionLangZhCn,
+        text: (BriefDbcFactionEntity t) => t.descriptionLangZhCN,
       ),
     ],
     idOf: (BriefDbcFactionEntity t) => t.id,
@@ -487,7 +487,7 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '名称',
             text: (BriefItemRandomPropertiesEntity t) =>
-                t.nameLangZhCn.isNotEmpty ? t.nameLangZhCn : t.name,
+                t.nameLangZhCN.isNotEmpty ? t.nameLangZhCN : t.name,
           ),
         ],
         idOf: (BriefItemRandomPropertiesEntity t) => t.id,
@@ -522,7 +522,7 @@ class FoxyEntityPickerDelegates {
           ),
           FoxyEntityPickerColumn(
             header: '名称',
-            text: (BriefItemRandomSuffixEntity t) => t.nameLangZhCn,
+            text: (BriefItemRandomSuffixEntity t) => t.nameLangZhCN,
           ),
           FoxyEntityPickerColumn(
             header: '内部名称',
@@ -682,7 +682,7 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称',
-        text: (BriefMapInfoEntity t) => t.mapNameLangZhCn,
+        text: (BriefMapInfoEntity t) => t.mapNameLangZhCN,
       ),
       FoxyEntityPickerColumn(
         header: '类型',
@@ -777,7 +777,7 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称',
-        text: (BriefQuestInfoEntity t) => t.infoNameLangZhCn,
+        text: (BriefQuestInfoEntity t) => t.infoNameLangZhCN,
       ),
     ],
     idOf: (BriefQuestInfoEntity t) => t.id,
@@ -985,7 +985,7 @@ class FoxyEntityPickerDelegates {
       ),
       FoxyEntityPickerColumn(
         header: '名称',
-        text: (BriefSpellRangeEntity t) => t.displayNameLangZhCn,
+        text: (BriefSpellRangeEntity t) => t.displayNameLangZhCN,
       ),
       FoxyEntityPickerColumn(
         header: '最小射程',

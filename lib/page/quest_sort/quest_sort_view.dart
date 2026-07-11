@@ -42,7 +42,7 @@ class _QuestSortViewState extends State<QuestSortView> {
     final nameInput = FoxyFormItem(
       controller: viewModel.nameController,
       label: '名称',
-      placeholder: 'SortName_Lang_zhCN',
+      placeholder: 'SortName_lang_zhCN',
     );
 
     return SingleChildScrollView(
