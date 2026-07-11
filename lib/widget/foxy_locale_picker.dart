@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/widget/dbc_locale_field_editor.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 每个多语言实体提供的加载/保存配置。纯数据 + 闭包，不持有可变状态，
-/// 因此同一实例可被多个 [FoxyLocalePicker] 共享（同一 entity 的多个字段
-/// 复用同一 delegate，仅 [FoxyLocalePicker.title] 不同）。
+/// 多语言编辑器入口的共同抽象。
 ///
-/// 对齐 [EntityPickerDelegate] 范式：数据契约集中在 delegate，调用点只
-/// 提供 controller/title/placeholder 等展示参数。
-class FoxyLocalePickerDelegate {
+/// 普通数据库 locale 分表与 DBC locstring 共用输入框 + 地球按钮入口，
+/// 但使用独立的强类型 Delegate 与编辑器主体，不在同一主体内堆叠条件分支。
+sealed class FoxyLocaleEditorDelegate {
+  const FoxyLocaleEditorDelegate();
+}
+
+/// 普通数据库 `*_locale` 分表编辑契约：动态语言行，可添加/删除。
+final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
   /// 多语言表的字段名（对应 entity 列），首项约定为 'locale'。
   final List<String> fields;
 
@@ -21,7 +26,7 @@ class FoxyLocalePickerDelegate {
   /// 保存指定 entry 的多语言数据（data 键为 [fields]）。
   final Future<void> Function(int entry, List<Map<String, String>> data) onSave;
 
-  const FoxyLocalePickerDelegate({
+  const DatabaseLocaleEditorDelegate({
     required this.fields,
     required this.fieldLabels,
     required this.onLoad,
@@ -32,13 +37,29 @@ class FoxyLocalePickerDelegate {
        );
 }
 
-/// 多语言字段选择器：ShadInput + 地球按钮，点击打开 [FoxyLocaleCrudDialog]
-/// 编辑该 entry 的多语言数据。状态完全由弹窗内部 setState 管理，无 signals。
+/// 兼容旧名称。
+typedef FoxyLocalePickerDelegate = DatabaseLocaleEditorDelegate;
+
+/// DBC 宽表单字段本地化编辑契约：固定 16 行，局部更新主记录。
+final class DbcLocaleFieldEditorDelegate extends FoxyLocaleEditorDelegate {
+  final DbcLocaleFieldDefinition field;
+  final Future<List<DbcLocaleFieldValue>> Function(int entry) onLoad;
+  final Future<void> Function(int entry, List<DbcLocaleFieldValue> values)
+  onSave;
+
+  const DbcLocaleFieldEditorDelegate({
+    required this.field,
+    required this.onLoad,
+    required this.onSave,
+  });
+}
+
+/// 多语言字段选择器：ShadInput + 地球按钮。
 ///
-/// 与 [FoxyEntityPicker] 对齐：通过 [delegate] 注入数据/持久化逻辑，
-/// 调用点只提供展示参数。收敛各模块散落的 `<Module>LocaleXxxSelector`。
+/// 根据 [delegate] 类型分派到 [DatabaseLocaleEditor] 或 [DbcLocaleFieldEditor]。
+/// 新建记录 [entry] 为 null 时禁用地球按钮。
 class FoxyLocalePicker extends StatefulWidget {
-  /// 所属记录的主键（如 creature entry、quest id）。为 null 时禁用按钮。
+  /// 所属记录的主键。为 null 时禁用地球按钮。
   final int? entry;
 
   /// 主输入框的 controller（通常由 ViewModel 持有，回填主语言值）。
@@ -54,7 +75,12 @@ class FoxyLocalePicker extends StatefulWidget {
   final bool readOnly;
 
   /// 数据/持久化配置。
-  final FoxyLocalePickerDelegate delegate;
+  final FoxyLocaleEditorDelegate delegate;
+
+  /// DBC 字段保存成功后回调，用于同步 ViewModel Entity 与主语言 Controller。
+  ///
+  /// 仅在 [DbcLocaleFieldEditorDelegate] 保存成功时调用。
+  final void Function(List<DbcLocaleFieldValue> values)? onSaved;
 
   const FoxyLocalePicker({
     super.key,
@@ -64,6 +90,7 @@ class FoxyLocalePicker extends StatefulWidget {
     required this.delegate,
     this.placeholder,
     this.readOnly = false,
+    this.onSaved,
   });
 
   @override
@@ -73,6 +100,7 @@ class FoxyLocalePicker extends StatefulWidget {
 class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
   @override
   Widget build(BuildContext context) {
+    final canOpen = widget.entry != null;
     return ShadInput(
       controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
@@ -81,7 +109,8 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
         height: 20,
         width: 20,
         padding: EdgeInsets.zero,
-        onPressed: _openLocaleDialog,
+        enabled: canOpen,
+        onPressed: canOpen ? _openLocaleDialog : null,
         child: Icon(LucideIcons.globe, size: 12),
       ),
     );
@@ -90,14 +119,46 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
   Future<void> _openLocaleDialog() async {
     final entry = widget.entry;
     if (entry == null) return;
-    await FoxyLocaleCrudDialog.show(
-      context,
-      title: widget.title,
-      entry: entry,
-      fields: widget.delegate.fields,
-      fieldLabels: widget.delegate.fieldLabels,
-      onLoad: () => widget.delegate.onLoad(entry),
-      onSave: (data) => widget.delegate.onSave(entry, data),
-    );
+
+    switch (widget.delegate) {
+      case DatabaseLocaleEditorDelegate(
+        :final fields,
+        :final fieldLabels,
+        :final onLoad,
+        :final onSave,
+      ):
+        await DatabaseLocaleEditor.show(
+          context,
+          title: widget.title,
+          entry: entry,
+          fields: fields,
+          fieldLabels: fieldLabels,
+          onLoad: () => onLoad(entry),
+          onSave: (data) => onSave(entry, data),
+        );
+      case DbcLocaleFieldEditorDelegate(
+        :final field,
+        :final onLoad,
+        :final onSave,
+      ):
+        final saved = await DbcLocaleFieldEditor.show(
+          context,
+          title: widget.title,
+          entry: entry,
+          field: field,
+          // 合并主输入框草稿：避免「主框改了未保存 → 弹窗只改其它语言
+          // → 把库里旧 zhCN 写回并冲掉主框」的丢失。
+          onLoad: () async {
+            final loaded = await onLoad(entry);
+            final controller = widget.controller;
+            if (controller == null) return loaded;
+            return loaded.withPrimaryDraft(controller.text);
+          },
+          onSave: (values) => onSave(entry, values),
+        );
+        if (saved != null) {
+          widget.onSaved?.call(saved);
+        }
+    }
   }
 }

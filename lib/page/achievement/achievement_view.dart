@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/achievement/achievement_detail_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
+import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 class AchievementView extends StatefulWidget {
   final int? entry;
@@ -96,37 +99,31 @@ class _AchievementViewState extends State<AchievementView> {
   }
 
   Widget _buildTitleCard() {
-    final enUsInput = FoxyFormItem(
-      controller: viewModel.titleLangEnUSController,
-      label: '标题(enUS)',
-      placeholder: 'Title_lang_enUS',
-    );
-    final zhCnInput = FoxyFormItem(
-      controller: viewModel.titleLangZhCNController,
-      label: '标题(zhCN)',
-      placeholder: 'Title_lang_zhCN',
-    );
-    final zhTwInput = FoxyFormItem(
-      controller: viewModel.titleLangZhTWController,
-      label: '标题(zhTW)',
-      placeholder: 'Title_lang_zhTW',
-    );
-    final koKrInput = FoxyFormItem(
-      controller: viewModel.titleLangKoKRController,
-      label: '标题(koKR)',
-      placeholder: 'Title_lang_koKR',
-    );
-
     return FoxyFormSection(
       title: '标题文本',
       children: [
         Row(
           spacing: 8,
           children: [
-            Expanded(child: enUsInput),
-            Expanded(child: zhCnInput),
-            Expanded(child: zhTwInput),
-            Expanded(child: koKrInput),
+            Expanded(
+              child: FoxyFormItem(
+                label: '标题',
+                child: Watch((_) {
+                  final id = viewModel.achievement.value.id;
+                  return FoxyLocalePicker(
+                    entry: id == 0 ? null : id,
+                    controller: viewModel.titleLangZhCNController,
+                    title: '标题本地化',
+                    placeholder: 'Title_lang_zhCN',
+                    delegate: FoxyLocalePickerDelegates.dbcAchievementTitle,
+                    onSaved: viewModel.applyTitleLocales,
+                  );
+                }),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
           ],
         ),
       ],
@@ -134,37 +131,32 @@ class _AchievementViewState extends State<AchievementView> {
   }
 
   Widget _buildDescriptionCard() {
-    final enUsInput = FoxyFormItem(
-      controller: viewModel.descriptionLangEnUSController,
-      label: '描述(enUS)',
-      placeholder: 'Description_lang_enUS',
-    );
-    final zhCnInput = FoxyFormItem(
-      controller: viewModel.descriptionLangZhCNController,
-      label: '描述(zhCN)',
-      placeholder: 'Description_lang_zhCN',
-    );
-    final zhTwInput = FoxyFormItem(
-      controller: viewModel.descriptionLangZhTWController,
-      label: '描述(zhTW)',
-      placeholder: 'Description_lang_zhTW',
-    );
-    final koKrInput = FoxyFormItem(
-      controller: viewModel.descriptionLangKoKRController,
-      label: '描述(koKR)',
-      placeholder: 'Description_lang_koKR',
-    );
-
     return FoxyFormSection(
       title: '描述文本',
       children: [
         Row(
           spacing: 8,
           children: [
-            Expanded(child: enUsInput),
-            Expanded(child: zhCnInput),
-            Expanded(child: zhTwInput),
-            Expanded(child: koKrInput),
+            Expanded(
+              child: FoxyFormItem(
+                label: '描述',
+                child: Watch((_) {
+                  final id = viewModel.achievement.value.id;
+                  return FoxyLocalePicker(
+                    entry: id == 0 ? null : id,
+                    controller: viewModel.descriptionLangZhCNController,
+                    title: '描述本地化',
+                    placeholder: 'Description_lang_zhCN',
+                    delegate:
+                        FoxyLocalePickerDelegates.dbcAchievementDescription,
+                    onSaved: viewModel.applyDescriptionLocales,
+                  );
+                }),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
           ],
         ),
       ],
@@ -172,37 +164,31 @@ class _AchievementViewState extends State<AchievementView> {
   }
 
   Widget _buildRewardCard() {
-    final enUsInput = FoxyFormItem(
-      controller: viewModel.rewardLangEnUSController,
-      label: '奖励(enUS)',
-      placeholder: 'Reward_lang_enUS',
-    );
-    final zhCnInput = FoxyFormItem(
-      controller: viewModel.rewardLangZhCNController,
-      label: '奖励(zhCN)',
-      placeholder: 'Reward_lang_zhCN',
-    );
-    final zhTwInput = FoxyFormItem(
-      controller: viewModel.rewardLangZhTWController,
-      label: '奖励(zhTW)',
-      placeholder: 'Reward_lang_zhTW',
-    );
-    final koKrInput = FoxyFormItem(
-      controller: viewModel.rewardLangKoKRController,
-      label: '奖励(koKR)',
-      placeholder: 'Reward_lang_koKR',
-    );
-
     return FoxyFormSection(
       title: '奖励文本',
       children: [
         Row(
           spacing: 8,
           children: [
-            Expanded(child: enUsInput),
-            Expanded(child: zhCnInput),
-            Expanded(child: zhTwInput),
-            Expanded(child: koKrInput),
+            Expanded(
+              child: FoxyFormItem(
+                label: '奖励',
+                child: Watch((_) {
+                  final id = viewModel.achievement.value.id;
+                  return FoxyLocalePicker(
+                    entry: id == 0 ? null : id,
+                    controller: viewModel.rewardLangZhCNController,
+                    title: '奖励文本本地化',
+                    placeholder: 'Reward_lang_zhCN',
+                    delegate: FoxyLocalePickerDelegates.dbcAchievementReward,
+                    onSaved: viewModel.applyRewardLocales,
+                  );
+                }),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
           ],
         ),
       ],

@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:get_it/get_it.dart';
@@ -238,16 +239,18 @@ class SpellDetailViewModel {
   final spellClassSetSignal = signal<int>(0);
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      if (t.id == 0) {
+      var t = _collectFromControllers();
+      final isCreate = t.id == 0;
+      if (isCreate) {
         final newId = await _repository.storeSpell(t);
         id.value = newId;
+        t = t.copyWith(id: newId);
       } else {
         await _repository.updateSpell(t);
       }
       spell.value = t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
       if (!context.mounted) return;
@@ -258,6 +261,94 @@ class SpellDetailViewModel {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
+  }
+
+  void applyNameLocales(List<DbcLocaleFieldValue> values) {
+    spell.value = spell.value.copyWith(
+      nameLangEnUS: values.valueOf('enUS'),
+      nameLangKoKR: values.valueOf('koKR'),
+      nameLangFrFR: values.valueOf('frFR'),
+      nameLangDeDE: values.valueOf('deDE'),
+      nameLangZhCN: values.valueOf('zhCN'),
+      nameLangZhTW: values.valueOf('zhTW'),
+      nameLangEsES: values.valueOf('esES'),
+      nameLangEsMX: values.valueOf('esMX'),
+      nameLangRuRU: values.valueOf('ruRU'),
+      nameLangJaJP: values.valueOf('jaJP'),
+      nameLangPtPT: values.valueOf('ptPT'),
+      nameLangPtBR: values.valueOf('ptBR'),
+      nameLangItIT: values.valueOf('itIT'),
+      nameLangUnk1: values.valueOf('unk1'),
+      nameLangUnk2: values.valueOf('unk2'),
+      nameLangUnk3: values.valueOf('unk3'),
+    );
+    nameLangZhCNController.text = values.zhCN;
+  }
+
+  void applyNameSubtextLocales(List<DbcLocaleFieldValue> values) {
+    spell.value = spell.value.copyWith(
+      nameSubtextLangEnUS: values.valueOf('enUS'),
+      nameSubtextLangKoKR: values.valueOf('koKR'),
+      nameSubtextLangFrFR: values.valueOf('frFR'),
+      nameSubtextLangDeDE: values.valueOf('deDE'),
+      nameSubtextLangZhCN: values.valueOf('zhCN'),
+      nameSubtextLangZhTW: values.valueOf('zhTW'),
+      nameSubtextLangEsES: values.valueOf('esES'),
+      nameSubtextLangEsMX: values.valueOf('esMX'),
+      nameSubtextLangRuRU: values.valueOf('ruRU'),
+      nameSubtextLangJaJP: values.valueOf('jaJP'),
+      nameSubtextLangPtPT: values.valueOf('ptPT'),
+      nameSubtextLangPtBR: values.valueOf('ptBR'),
+      nameSubtextLangItIT: values.valueOf('itIT'),
+      nameSubtextLangUnk1: values.valueOf('unk1'),
+      nameSubtextLangUnk2: values.valueOf('unk2'),
+      nameSubtextLangUnk3: values.valueOf('unk3'),
+    );
+    nameSubtextLangZhCNController.text = values.zhCN;
+  }
+
+  void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
+    spell.value = spell.value.copyWith(
+      descriptionLangEnUS: values.valueOf('enUS'),
+      descriptionLangKoKR: values.valueOf('koKR'),
+      descriptionLangFrFR: values.valueOf('frFR'),
+      descriptionLangDeDE: values.valueOf('deDE'),
+      descriptionLangZhCN: values.valueOf('zhCN'),
+      descriptionLangZhTW: values.valueOf('zhTW'),
+      descriptionLangEsES: values.valueOf('esES'),
+      descriptionLangEsMX: values.valueOf('esMX'),
+      descriptionLangRuRU: values.valueOf('ruRU'),
+      descriptionLangJaJP: values.valueOf('jaJP'),
+      descriptionLangPtPT: values.valueOf('ptPT'),
+      descriptionLangPtBR: values.valueOf('ptBR'),
+      descriptionLangItIT: values.valueOf('itIT'),
+      descriptionLangUnk1: values.valueOf('unk1'),
+      descriptionLangUnk2: values.valueOf('unk2'),
+      descriptionLangUnk3: values.valueOf('unk3'),
+    );
+    descriptionLangZhCNController.text = values.zhCN;
+  }
+
+  void applyAuraDescriptionLocales(List<DbcLocaleFieldValue> values) {
+    spell.value = spell.value.copyWith(
+      auraDescriptionLangEnUS: values.valueOf('enUS'),
+      auraDescriptionLangKoKR: values.valueOf('koKR'),
+      auraDescriptionLangFrFR: values.valueOf('frFR'),
+      auraDescriptionLangDeDE: values.valueOf('deDE'),
+      auraDescriptionLangZhCN: values.valueOf('zhCN'),
+      auraDescriptionLangZhTW: values.valueOf('zhTW'),
+      auraDescriptionLangEsES: values.valueOf('esES'),
+      auraDescriptionLangEsMX: values.valueOf('esMX'),
+      auraDescriptionLangRuRU: values.valueOf('ruRU'),
+      auraDescriptionLangJaJP: values.valueOf('jaJP'),
+      auraDescriptionLangPtPT: values.valueOf('ptPT'),
+      auraDescriptionLangPtBR: values.valueOf('ptBR'),
+      auraDescriptionLangItIT: values.valueOf('itIT'),
+      auraDescriptionLangUnk1: values.valueOf('unk1'),
+      auraDescriptionLangUnk2: values.valueOf('unk2'),
+      auraDescriptionLangUnk3: values.valueOf('unk3'),
+    );
+    auraDescriptionLangZhCNController.text = values.zhCN;
   }
 
   void pop() {

@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/achievement_entity.dart';
-import 'package:foxy/util/format_util.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -97,16 +98,18 @@ class AchievementDetailViewModel {
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      if (t.id == 0) {
+      var t = _collectFromControllers();
+      final isCreate = t.id == 0;
+      if (isCreate) {
         final id = await _repository.storeAchievement(t);
+        t = t.copyWith(id: id);
         idController.text = '$id';
       } else {
         await _repository.updateAchievement(t);
       }
       achievement.value = t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
       if (!context.mounted) return;
@@ -117,6 +120,112 @@ class AchievementDetailViewModel {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
+  }
+
+  void applyTitleLocales(List<DbcLocaleFieldValue> values) {
+    _applyLangControllers(
+      values,
+      enUS: titleLangEnUSController,
+      koKR: titleLangKoKRController,
+      frFR: titleLangFrFRController,
+      deDE: titleLangDeDEController,
+      zhCN: titleLangZhCNController,
+      zhTW: titleLangZhTWController,
+      esES: titleLangEsESController,
+      esMX: titleLangEsMXController,
+      ruRU: titleLangRuRUController,
+      jaJP: titleLangJaJPController,
+      ptPT: titleLangPtPTController,
+      ptBR: titleLangPtBRController,
+      itIT: titleLangItITController,
+      unk1: titleLangUnk1Controller,
+      unk2: titleLangUnk2Controller,
+      unk3: titleLangUnk3Controller,
+    );
+    achievement.value = _collectFromControllers();
+  }
+
+  void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
+    _applyLangControllers(
+      values,
+      enUS: descriptionLangEnUSController,
+      koKR: descriptionLangKoKRController,
+      frFR: descriptionLangFrFRController,
+      deDE: descriptionLangDeDEController,
+      zhCN: descriptionLangZhCNController,
+      zhTW: descriptionLangZhTWController,
+      esES: descriptionLangEsESController,
+      esMX: descriptionLangEsMXController,
+      ruRU: descriptionLangRuRUController,
+      jaJP: descriptionLangJaJPController,
+      ptPT: descriptionLangPtPTController,
+      ptBR: descriptionLangPtBRController,
+      itIT: descriptionLangItITController,
+      unk1: descriptionLangUnk1Controller,
+      unk2: descriptionLangUnk2Controller,
+      unk3: descriptionLangUnk3Controller,
+    );
+    achievement.value = _collectFromControllers();
+  }
+
+  void applyRewardLocales(List<DbcLocaleFieldValue> values) {
+    _applyLangControllers(
+      values,
+      enUS: rewardLangEnUSController,
+      koKR: rewardLangKoKRController,
+      frFR: rewardLangFrFRController,
+      deDE: rewardLangDeDEController,
+      zhCN: rewardLangZhCNController,
+      zhTW: rewardLangZhTWController,
+      esES: rewardLangEsESController,
+      esMX: rewardLangEsMXController,
+      ruRU: rewardLangRuRUController,
+      jaJP: rewardLangJaJPController,
+      ptPT: rewardLangPtPTController,
+      ptBR: rewardLangPtBRController,
+      itIT: rewardLangItITController,
+      unk1: rewardLangUnk1Controller,
+      unk2: rewardLangUnk2Controller,
+      unk3: rewardLangUnk3Controller,
+    );
+    achievement.value = _collectFromControllers();
+  }
+
+  void _applyLangControllers(
+    List<DbcLocaleFieldValue> values, {
+    required TextEditingController enUS,
+    required TextEditingController koKR,
+    required TextEditingController frFR,
+    required TextEditingController deDE,
+    required TextEditingController zhCN,
+    required TextEditingController zhTW,
+    required TextEditingController esES,
+    required TextEditingController esMX,
+    required TextEditingController ruRU,
+    required TextEditingController jaJP,
+    required TextEditingController ptPT,
+    required TextEditingController ptBR,
+    required TextEditingController itIT,
+    required TextEditingController unk1,
+    required TextEditingController unk2,
+    required TextEditingController unk3,
+  }) {
+    enUS.text = values.valueOf('enUS');
+    koKR.text = values.valueOf('koKR');
+    frFR.text = values.valueOf('frFR');
+    deDE.text = values.valueOf('deDE');
+    zhCN.text = values.valueOf('zhCN');
+    zhTW.text = values.valueOf('zhTW');
+    esES.text = values.valueOf('esES');
+    esMX.text = values.valueOf('esMX');
+    ruRU.text = values.valueOf('ruRU');
+    jaJP.text = values.valueOf('jaJP');
+    ptPT.text = values.valueOf('ptPT');
+    ptBR.text = values.valueOf('ptBR');
+    itIT.text = values.valueOf('itIT');
+    unk1.text = values.valueOf('unk1');
+    unk2.text = values.valueOf('unk2');
+    unk3.text = values.valueOf('unk3');
   }
 
   /// 退出页面

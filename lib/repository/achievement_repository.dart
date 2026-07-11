@@ -1,10 +1,15 @@
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/achievement_filter_entity.dart';
+import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class AchievementRepository with RepositoryMixin {
+class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_achievement';
+
+  @override
+  String get dbcLocaleTableName => _table;
 
   Future<List<BriefAchievementEntity>> getBriefAchievements({
     int page = 1,
@@ -87,6 +92,17 @@ class AchievementRepository with RepositoryMixin {
       await laconic.table(_table).insert([achievement.toJson()]);
     }
   }
+
+  Future<List<DbcLocaleFieldValue>> getAchievementLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveAchievementLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([

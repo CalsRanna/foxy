@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -120,16 +121,18 @@ class ItemSetDetailViewModel {
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      if (t.id == 0) {
+      var t = _collectFromControllers();
+      final isCreate = t.id == 0;
+      if (isCreate) {
         final id = await _repository.storeItemSet(t);
+        t = t.copyWith(id: id);
         idController.text = '$id';
       } else {
         await _repository.updateItemSet(t);
       }
       itemSet.value = t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
       if (!context.mounted) return;
@@ -140,6 +143,26 @@ class ItemSetDetailViewModel {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
+  }
+
+  void applyNameLocales(List<DbcLocaleFieldValue> values) {
+    nameLangEnUSController.text = values.valueOf('enUS');
+    nameLangKoKRController.text = values.valueOf('koKR');
+    nameLangFrFRController.text = values.valueOf('frFR');
+    nameLangDeDEController.text = values.valueOf('deDE');
+    nameLangZhCNController.text = values.valueOf('zhCN');
+    nameLangZhTWController.text = values.valueOf('zhTW');
+    nameLangEsESController.text = values.valueOf('esES');
+    nameLangEsMXController.text = values.valueOf('esMX');
+    nameLangRuRUController.text = values.valueOf('ruRU');
+    nameLangJaJPController.text = values.valueOf('jaJP');
+    nameLangPtPTController.text = values.valueOf('ptPT');
+    nameLangPtBRController.text = values.valueOf('ptBR');
+    nameLangItITController.text = values.valueOf('itIT');
+    nameLangUnk1Controller.text = values.valueOf('unk1');
+    nameLangUnk2Controller.text = values.valueOf('unk2');
+    nameLangUnk3Controller.text = values.valueOf('unk3');
+    itemSet.value = _collectFromControllers();
   }
 
   /// 退出页面

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 多语言 CRUD 对话框。
+/// 普通数据库 `*_locale` 分表的动态行编辑器。
 ///
-/// 通过 [FoxyLocaleCrudDialog.show] 静态方法弹窗，内部自动加载数据并管理
-/// [TextEditingController] 生命周期。保存时通过 [onSave] 回调将数据交给调用方。
-class FoxyLocaleCrudDialog extends StatefulWidget {
+/// 支持按实际数据添加和删除 locale 行。
+class DatabaseLocaleEditor extends StatefulWidget {
   final String title;
   final int entry;
   final List<String> fields;
@@ -13,7 +13,7 @@ class FoxyLocaleCrudDialog extends StatefulWidget {
   final List<List<String>> initialRows;
   final Future<void> Function(List<Map<String, String>> data) onSave;
 
-  const FoxyLocaleCrudDialog({
+  const DatabaseLocaleEditor({
     super.key,
     required this.title,
     required this.entry,
@@ -36,14 +36,26 @@ class FoxyLocaleCrudDialog extends StatefulWidget {
     required Future<List<Map<String, String>>> Function() onLoad,
     required Future<void> Function(List<Map<String, String>> data) onSave,
   }) async {
-    final jsonList = await onLoad();
+    late final List<Map<String, String>> jsonList;
+    try {
+      jsonList = await onLoad();
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载多语言失败: $title', error: e, stackTrace: s);
+      if (!context.mounted) return null;
+      try {
+        ShadSonner.of(context).show(
+          ShadToast(description: Text('加载失败: $e')),
+        );
+      } catch (_) {}
+      return null;
+    }
     if (!context.mounted) return null;
     final initialRows = jsonList.map((json) {
       return fields.map((f) => json[f] ?? '').toList();
     }).toList();
     return showShadDialog<bool>(
       context: context,
-      builder: (_) => FoxyLocaleCrudDialog(
+      builder: (_) => DatabaseLocaleEditor(
         title: title,
         entry: entry,
         fields: fields,
@@ -55,12 +67,16 @@ class FoxyLocaleCrudDialog extends StatefulWidget {
   }
 
   @override
-  State<FoxyLocaleCrudDialog> createState() => _FoxyLocaleCrudDialogState();
+  State<DatabaseLocaleEditor> createState() => _DatabaseLocaleEditorState();
 }
 
-class _FoxyLocaleCrudDialogState extends State<FoxyLocaleCrudDialog> {
+/// 兼容旧名称。
+typedef FoxyLocaleCrudDialog = DatabaseLocaleEditor;
+
+class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
   late List<List<TextEditingController>> _rows;
   bool _saving = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -96,7 +112,10 @@ class _FoxyLocaleCrudDialogState extends State<FoxyLocaleCrudDialog> {
   }
 
   Future<void> _save() async {
-    setState(() => _saving = true);
+    setState(() {
+      _saving = true;
+      _errorMessage = null;
+    });
     try {
       final data = _rows.map((row) {
         final map = <String, String>{};
@@ -109,6 +128,19 @@ class _FoxyLocaleCrudDialogState extends State<FoxyLocaleCrudDialog> {
       if (mounted) {
         Navigator.of(context).pop(true);
       }
+    } catch (e, s) {
+      LoggerUtil.instance.e(
+        '保存多语言失败: ${widget.title}',
+        error: e,
+        stackTrace: s,
+      );
+      if (!mounted) return;
+      setState(() => _errorMessage = '保存失败: $e');
+      try {
+        ShadSonner.of(context).show(
+          ShadToast(description: Text('保存失败: $e')),
+        );
+      } catch (_) {}
     } finally {
       if (mounted) {
         setState(() => _saving = false);
@@ -138,6 +170,26 @@ class _FoxyLocaleCrudDialogState extends State<FoxyLocaleCrudDialog> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (_errorMessage != null) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.destructive.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: theme.colorScheme.destructive.withValues(alpha: 0.4),
+                ),
+              ),
+              child: Text(
+                _errorMessage!,
+                style: theme.textTheme.small.copyWith(
+                  color: theme.colorScheme.destructive,
+                ),
+              ),
+            ),
+          ],
           _buildHeader(theme),
           Flexible(child: _buildTable()),
         ],

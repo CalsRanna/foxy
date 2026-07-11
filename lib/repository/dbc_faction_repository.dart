@@ -1,10 +1,15 @@
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_filter_entity.dart';
+import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class DbcFactionRepository with RepositoryMixin {
+class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_faction';
+
+  @override
+  String get dbcLocaleTableName => _table;
 
   Future<List<BriefDbcFactionEntity>> getBriefDbcFactions({
     int page = 1,
@@ -86,6 +91,17 @@ class DbcFactionRepository with RepositoryMixin {
     }
   }
 
+
+  Future<List<DbcLocaleFieldValue>> getDbcFactionLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<void> saveDbcFactionLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
   Future<int> _getNextId() async {
     var result = await laconic.table(_table).select([
       'MAX(ID) as max_id',

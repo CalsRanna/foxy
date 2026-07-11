@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/page/spell/spell_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
+import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_flag_picker.dart';
-import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -42,26 +44,62 @@ class _SpellViewState extends State<SpellView> {
   Widget build(BuildContext context) {
     final vm = viewModel;
 
-    // === 基础文本 ===
+    // === 基础文本（主表单展示 zhCN，地球按钮编辑 16 语言）===
     final nameInput = FoxyFormItem(
-      controller: vm.nameLangZhCNController,
       label: '名称',
-      placeholder: 'Name_Lang_zhCN',
+      child: Watch((_) {
+        final entry = vm.id.value == 0 ? null : vm.id.value;
+        return FoxyLocalePicker(
+          entry: entry,
+          controller: vm.nameLangZhCNController,
+          title: '法术名称本地化',
+          placeholder: 'Name_Lang_zhCN',
+          delegate: FoxyLocalePickerDelegates.dbcSpellName,
+          onSaved: vm.applyNameLocales,
+        );
+      }),
     );
     final subtextInput = FoxyFormItem(
-      controller: vm.nameSubtextLangZhCNController,
       label: '子名称',
-      placeholder: 'NameSubtext_Lang_zhCN',
+      child: Watch((_) {
+        final entry = vm.id.value == 0 ? null : vm.id.value;
+        return FoxyLocalePicker(
+          entry: entry,
+          controller: vm.nameSubtextLangZhCNController,
+          title: '法术副标题本地化',
+          placeholder: 'NameSubtext_Lang_zhCN',
+          delegate: FoxyLocalePickerDelegates.dbcSpellNameSubtext,
+          onSaved: vm.applyNameSubtextLocales,
+        );
+      }),
     );
     final descriptionInput = FoxyFormItem(
-      controller: vm.descriptionLangZhCNController,
       label: '描述',
-      placeholder: 'Description_Lang_zhCN',
+      child: Watch((_) {
+        final entry = vm.id.value == 0 ? null : vm.id.value;
+        return FoxyLocalePicker(
+          entry: entry,
+          controller: vm.descriptionLangZhCNController,
+          title: '法术描述本地化',
+          placeholder: 'Description_Lang_zhCN',
+          delegate: FoxyLocalePickerDelegates.dbcSpellDescription,
+          onSaved: vm.applyDescriptionLocales,
+        );
+      }),
     );
     final auraDescriptionInput = FoxyFormItem(
-      controller: vm.auraDescriptionLangZhCNController,
       label: 'Buff描述',
-      placeholder: 'AuraDescription_Lang_zhCN',
+      child: Watch((_) {
+        final entry = vm.id.value == 0 ? null : vm.id.value;
+        return FoxyLocalePicker(
+          entry: entry,
+          controller: vm.auraDescriptionLangZhCNController,
+          title: '光环描述本地化',
+          placeholder: 'AuraDescription_Lang_zhCN',
+          delegate: FoxyLocalePickerDelegates.dbcSpellAuraDescription,
+          onSaved: vm.applyAuraDescriptionLocales,
+        );
+      }),
     );
 
     // === 图标/视觉 ===

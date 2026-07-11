@@ -3,10 +3,13 @@ import 'package:foxy/page/item_set/item_set_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
-import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
+import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 class ItemSetView extends StatefulWidget {
   final int? entry;
@@ -101,32 +104,23 @@ class _ItemSetViewState extends State<ItemSetView> {
           children: [
             Expanded(
               child: FoxyFormItem(
-                controller: viewModel.nameLangEnUSController,
-                label: '英文名称',
-                placeholder: 'enUS',
+                label: '名称',
+                child: Watch((_) {
+                  final id = viewModel.itemSet.value.id;
+                  return FoxyLocalePicker(
+                    entry: id == 0 ? null : id,
+                    controller: viewModel.nameLangZhCNController,
+                    title: '套装名称本地化',
+                    placeholder: 'Name_lang_zhCN',
+                    delegate: FoxyLocalePickerDelegates.dbcItemSetName,
+                    onSaved: viewModel.applyNameLocales,
+                  );
+                }),
               ),
             ),
-            Expanded(
-              child: FoxyFormItem(
-                controller: viewModel.nameLangZhCNController,
-                label: '简体中文名称',
-                placeholder: 'zhCN',
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                controller: viewModel.nameLangZhTWController,
-                label: '繁体中文名称',
-                placeholder: 'zhTW',
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                controller: viewModel.nameLangKoKRController,
-                label: '韩文名称',
-                placeholder: 'koKR',
-              ),
-            ),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
           ],
         ),
       ],
