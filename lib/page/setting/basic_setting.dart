@@ -175,8 +175,10 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
   }
 
   Widget _buildSelectionBody(List<DbcExportItem> items) {
-    final selectedCount = items.where((e) => e.selected).length;
-    final allSelected = selectedCount == items.length;
+    final selectedCount = _vm.selectedExportableItems.length;
+    final selectableCount = _vm.selectableItems.length;
+    final allSelected = _vm.allSelectableSelected;
+    final failureCount = _vm.countFailureCount;
     final theme = ShadTheme.of(context);
 
     return ShadDialog(
@@ -194,22 +196,38 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 14,
         children: [
+          if (failureCount > 0)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.destructive.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: theme.colorScheme.destructive.withValues(alpha: 0.2),
+                ),
+              ),
+              child: Text(
+                '$failureCount 张表行数统计失败，已禁用勾选；悬停可查看错误详情。',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: theme.colorScheme.destructive,
+                ),
+              ),
+            ),
           Row(
             children: [
               ShadButton.ghost(
                 size: ShadButtonSize.sm,
-                onPressed: () {
-                  final newVal = !allSelected;
-                  _vm.dbcExportItems.value = [
-                    for (final item in _vm.dbcExportItems.value)
-                      item.copyWith(selected: newVal),
-                  ];
-                },
+                onPressed: selectableCount == 0
+                    ? null
+                    : () => _vm.setAllSelectableSelected(!allSelected),
                 child: Text(allSelected ? '取消全选' : '全选'),
               ),
               const Spacer(),
               Text(
-                '已选 $selectedCount / ${items.length}',
+                '已选 $selectedCount / $selectableCount'
+                '${failureCount > 0 ? '（失败 $failureCount）' : ''}',
                 style: theme.textTheme.muted.copyWith(fontSize: 12),
               ),
             ],
@@ -292,30 +310,25 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
     final countColor = item.countFailed
         ? shad.colorScheme.destructive
         : theme.colorScheme.onSurface.withValues(alpha: 0.55);
+    final nameColor = item.countFailed
+        ? theme.colorScheme.onSurface.withValues(alpha: 0.55)
+        : theme.colorScheme.onSurface;
 
-    return Padding(
+    final row = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Row(
         children: [
           ShadCheckbox(
             value: item.selected,
-            onChanged: (v) {
-              final items = [..._vm.dbcExportItems.value];
-              final idx = items.indexWhere(
-                (e) => e.tableName == item.tableName,
-              );
-              if (idx != -1) items[idx] = item.copyWith(selected: v);
-              _vm.dbcExportItems.value = items;
-            },
+            onChanged: item.canSelect
+                ? (v) => _vm.setItemSelected(item.tableName, v)
+                : null,
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text.rich(
               TextSpan(
-                style: TextStyle(
-                  fontSize: 13,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: TextStyle(fontSize: 13, color: nameColor),
                 children: [
                   TextSpan(text: item.dbcFileName),
                   TextSpan(
@@ -327,8 +340,22 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
+          if (item.countFailed)
+            Icon(
+              LucideIcons.circleAlert,
+              size: 15,
+              color: shad.colorScheme.destructive,
+            ),
         ],
       ),
+    );
+
+    if (!item.countFailed) return row;
+
+    return Tooltip(
+      message: item.countError ?? '行数统计失败',
+      waitDuration: const Duration(milliseconds: 300),
+      child: row,
     );
   }
 
