@@ -12,7 +12,7 @@ void main() {
 
       expect(empty.countFailed, isFalse);
       expect(empty.canSelect, isTrue);
-      expect(empty.recordCountLabel, '空');
+      expect(empty.recordCountLabel, '空表');
 
       expect(filled.recordCountLabel, '12 条');
       expect(filled.canSelect, isTrue);

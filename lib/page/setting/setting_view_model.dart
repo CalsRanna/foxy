@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/util/config_util.dart';
@@ -7,6 +9,7 @@ import 'package:foxy/util/dbc_sync_util.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
+import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:signals/signals.dart';
 
 class DbcExportItem {
@@ -31,7 +34,7 @@ class DbcExportItem {
   String get recordCountLabel {
     if (countFailed) return '计数失败';
     final count = recordCount ?? 0;
-    if (count == 0) return '空';
+    if (count == 0) return '空表';
     return '$count 条';
   }
 
@@ -55,6 +58,8 @@ class SettingViewModel {
   Signal<bool> get hasLocaleTables => _foxyViewModel.hasLocaleTables;
   Signal<bool> get localeEnabled => _foxyViewModel.localeEnabled;
 
+  // ========== 导出 ==========
+
   final dbcExportItems = signal<List<DbcExportItem>>([]);
   final dbcExporting = signal(false);
   final dbcExportProgress = signal<double?>(null);
@@ -62,6 +67,19 @@ class SettingViewModel {
   final dbcExportProgressDetail = signal('');
   final dbcExportError = signal<String?>(null);
   final dbcExportSuccess = signal(false);
+  final dbcExportSuccessMessage = signal('');
+
+  // ========== 导入 ==========
+
+  final dbcImportPath = signal<String?>(null);
+  final dbcImporting = signal(false);
+  final dbcImportCancelling = signal(false);
+  final dbcImportProgress = signal<double?>(null);
+  final dbcImportProgressLabel = signal('');
+  final dbcImportProgressDetail = signal('');
+  final dbcImportError = signal<String?>(null);
+  final dbcImportSuccess = signal(false);
+  final dbcImportSuccessMessage = signal('');
 
   List<DbcExportItem> get selectableItems =>
       dbcExportItems.value.where((item) => item.canSelect).toList();
@@ -79,6 +97,9 @@ class SettingViewModel {
     return selectable.every((item) => item.selected);
   }
 
+  bool get isDbcBusy =>
+      dbcExporting.value || dbcImporting.value || _dbcSync.isRunning;
+
   Future<void> initSignals() async {
     // FoxyViewModel 的 signal 由 bootstrap 阶段填充，无需额外加载。
   }
@@ -92,6 +113,17 @@ class SettingViewModel {
       LoggerUtil.instance.e('设置本地化开关失败: $error');
       DialogUtil.instance.error('设置本地化开关失败: $error');
     }
+  }
+
+  // ---------- 导出 ----------
+
+  /// 打开导出对话框时：清空反馈，并返回配置中的默认输出目录（dbc_path）。
+  Future<String?> prepareExportDialog() async {
+    clearExportFeedback();
+    final config = await _configUtil.load();
+    final path = config['dbc_path']?.toString().trim();
+    if (path == null || path.isEmpty) return null;
+    return path;
   }
 
   Future<void> loadExportItems() async {
@@ -144,6 +176,12 @@ class SettingViewModel {
     ];
   }
 
+  void clearExportFeedback() {
+    dbcExportError.value = null;
+    dbcExportSuccess.value = false;
+    dbcExportSuccessMessage.value = '';
+  }
+
   Future<bool> exportDbc(String outputDirectory) {
     return _startExport(outputDirectory);
   }
@@ -158,13 +196,15 @@ class SettingViewModel {
         .toList();
     if (invalidSelected.isNotEmpty) {
       dbcExportError.value =
-          '以下表行数统计失败，无法导出，请取消勾选或修复数据库后重试：\n'
+          '以下表行数统计失败，无法导出：\n'
           '${invalidSelected.map((item) => item.dbcFileName).join('\n')}';
       return false;
     }
 
     final selected = selectedExportableItems;
-    if (selected.isEmpty || dbcExporting.value) return false;
+    if (selected.isEmpty || dbcExporting.value || _dbcSync.isRunning) {
+      return false;
+    }
 
     dbcExporting.value = true;
     dbcExportProgress.value = 0;
@@ -172,6 +212,7 @@ class SettingViewModel {
     dbcExportProgressDetail.value = '';
     dbcExportError.value = null;
     dbcExportSuccess.value = false;
+    dbcExportSuccessMessage.value = '';
 
     try {
       DbcSyncResult? result;
@@ -208,17 +249,19 @@ class SettingViewModel {
       }
 
       if (result.success) {
-        LoggerUtil.instance.i(
-          'DBC 导出完成: ${result.completed} 个, 跳过 ${result.skipped} 个',
-        );
+        final message =
+            '成功导出 ${result.completed} 个文件'
+            '${result.skipped > 0 ? '，跳过 ${result.skipped} 个空表' : ''}。';
+        LoggerUtil.instance.i('DBC 导出完成: $message');
+        dbcExportSuccessMessage.value = message;
         dbcExportSuccess.value = true;
         return true;
       }
 
-      final top = result.errors.take(3).join('\n');
+      final top = result.errors.take(5).join('\n');
       dbcExportError.value =
-          '导出完成，部分文件失败：\n$top'
-          '${result.errors.length > 3 ? '\n...等 ${result.errors.length} 个错误' : ''}';
+          '导出结束，部分文件失败（成功 ${result.completed}，跳过 ${result.skipped}）：\n$top'
+          '${result.errors.length > 5 ? '\n...等 ${result.errors.length} 个错误' : ''}';
       return false;
     } catch (error) {
       LoggerUtil.instance.e('DBC 导出异常: $error');
@@ -230,5 +273,160 @@ class SettingViewModel {
       dbcExportProgressLabel.value = '';
       dbcExportProgressDetail.value = '';
     }
+  }
+
+  // ---------- 导入 ----------
+
+  Future<void> prepareImportDialog() async {
+    clearImportFeedback();
+    final config = await _configUtil.load();
+    final path = config['dbc_path']?.toString();
+    if (path != null && path.isNotEmpty) {
+      dbcImportPath.value = path;
+    }
+  }
+
+  void clearImportFeedback() {
+    dbcImportError.value = null;
+    dbcImportSuccess.value = false;
+    dbcImportSuccessMessage.value = '';
+  }
+
+  Future<void> setImportPath(String path) async {
+    final trimmed = path.trim();
+    if (trimmed.isEmpty) return;
+    try {
+      dbcImportPath.value = trimmed;
+      clearImportFeedback();
+      await _configUtil.update({'dbc_path': trimmed});
+    } catch (error) {
+      LoggerUtil.instance.e('设置 DBC 路径失败: $error');
+      dbcImportError.value = '设置路径失败：$error';
+    }
+  }
+
+  Future<void> startImport() async {
+    final path = dbcImportPath.value?.trim();
+    if (path == null || path.isEmpty) {
+      dbcImportError.value = '请先选择 DBC 文件目录。';
+      return;
+    }
+    if (dbcImporting.value || _dbcSync.isRunning) return;
+    await setImportPath(path);
+    if (dbcImportError.value != null) return;
+    _startImportWorker(path);
+  }
+
+  Future<void> retryImport() async {
+    clearImportFeedback();
+    await startImport();
+  }
+
+  Future<void> cancelImport() async {
+    if (!dbcImporting.value || dbcImportCancelling.value) return;
+    dbcImportCancelling.value = true;
+    await _dbcSync.cancel();
+  }
+
+  void _startImportWorker(String path) {
+    dbcImporting.value = true;
+    dbcImportCancelling.value = false;
+    dbcImportProgress.value = 0;
+    dbcImportProgressLabel.value = '准备导入...';
+    dbcImportProgressDetail.value = '';
+    dbcImportError.value = null;
+    dbcImportSuccess.value = false;
+    dbcImportSuccessMessage.value = '';
+    unawaited(_runImport(path));
+  }
+
+  Future<void> _runImport(String directory) async {
+    try {
+      final config = await _configUtil.load();
+      final mysqlConfig = MysqlConfig(
+        host: config['host']?.toString() ?? '127.0.0.1',
+        port: _parsePort(config['port']),
+        database: config['database']?.toString() ?? 'acore_world',
+        username: config['username']?.toString() ?? 'acore',
+        password: config['password']?.toString() ?? 'acore',
+      );
+      final stream = _dbcSync.import(
+        directory: directory,
+        mysqlConfig: mysqlConfig,
+      );
+
+      DbcSyncResult? result;
+      await for (final progress in stream) {
+        switch (progress) {
+          case DbcSyncStatus(:final message):
+            dbcImportProgressLabel.value = message;
+          case DbcSyncCount(
+            :final fileName,
+            :final completedFiles,
+            :final totalFiles,
+            :final processedRows,
+            :final totalRows,
+          ):
+            dbcImportProgress.value = totalFiles > 0
+                ? completedFiles / totalFiles
+                : null;
+            dbcImportProgressLabel.value = fileName;
+            final rowText = totalRows == null
+                ? ''
+                : '，当前文件 $processedRows / $totalRows 行';
+            dbcImportProgressDetail.value =
+                '已处理 $completedFiles / $totalFiles 个文件$rowText';
+          case DbcSyncResult():
+            result = progress;
+        }
+      }
+
+      if (result == null) {
+        throw StateError('DBC 导入任务结束但未返回结果');
+      }
+      await _handleImportResult(result);
+    } catch (error) {
+      _resetImportProgress();
+      dbcImportError.value = '导入出错：$error';
+      LoggerUtil.instance.e('DBC 导入异常: $error');
+    }
+  }
+
+  Future<void> _handleImportResult(DbcSyncResult result) async {
+    if (result.cancelled) {
+      _resetImportProgress();
+      dbcImportError.value = '导入已取消';
+      return;
+    }
+
+    if (result.success) {
+      final message =
+          '导入完成：写入 ${result.completed} 个文件'
+          '${result.skipped > 0 ? '，跳过 ${result.skipped} 个非空表' : ''}。';
+      LoggerUtil.instance.i(message);
+      dbcImportSuccessMessage.value = message;
+      dbcImportSuccess.value = true;
+      _resetImportProgress();
+      return;
+    }
+
+    _resetImportProgress();
+    final top = result.errors.take(5).join('\n');
+    dbcImportError.value =
+        '导入结束，部分文件失败（成功 ${result.completed}，跳过 ${result.skipped}）：\n$top'
+        '${result.errors.length > 5 ? '\n...等 ${result.errors.length} 个错误' : ''}';
+  }
+
+  void _resetImportProgress() {
+    dbcImporting.value = false;
+    dbcImportCancelling.value = false;
+    dbcImportProgress.value = null;
+    dbcImportProgressLabel.value = '';
+    dbcImportProgressDetail.value = '';
+  }
+
+  static int _parsePort(Object? value) {
+    if (value is int) return value;
+    return int.tryParse(value?.toString() ?? '') ?? 3306;
   }
 }

@@ -24,6 +24,8 @@ void main() {
     expect(source.contains('foxy_view_model'), isFalse);
     expect(source.contains('scaffold_view_model'), isFalse);
     expect(source.contains('SettingViewModel'), isTrue);
+    expect(source.contains('DbcImportDialog'), isTrue);
+    expect(source.contains('DbcExportDialog'), isTrue);
   });
 
   test('DbcExportItem 与 SettingViewModel 选择语义可组合', () {
