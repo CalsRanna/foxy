@@ -25,6 +25,7 @@ class DbcExportItem {
   String get tableName => definition.tableName;
   String get dbcFileName => definition.fileName;
   bool get countFailed => countError != null;
+  bool get canSelect => !countFailed;
 
   /// 列表展示用的行数文案：区分空表与计数失败。
   String get recordCountLabel {
@@ -62,6 +63,22 @@ class SettingViewModel {
   final dbcExportError = signal<String?>(null);
   final dbcExportSuccess = signal(false);
 
+  List<DbcExportItem> get selectableItems =>
+      dbcExportItems.value.where((item) => item.canSelect).toList();
+
+  List<DbcExportItem> get selectedExportableItems => dbcExportItems.value
+      .where((item) => item.selected && item.canSelect)
+      .toList();
+
+  int get countFailureCount =>
+      dbcExportItems.value.where((item) => item.countFailed).length;
+
+  bool get allSelectableSelected {
+    final selectable = selectableItems;
+    if (selectable.isEmpty) return false;
+    return selectable.every((item) => item.selected);
+  }
+
   Future<void> initSignals() async {
     // FoxyViewModel 的 signal 由 bootstrap 阶段填充，无需额外加载。
   }
@@ -91,6 +108,7 @@ class SettingViewModel {
           DbcExportItem(
             definition: definition,
             countError: countResult.error.toString(),
+            selected: false,
           ),
         );
         continue;
@@ -106,6 +124,26 @@ class SettingViewModel {
     dbcExportItems.value = items;
   }
 
+  void setItemSelected(String tableName, bool selected) {
+    final items = [...dbcExportItems.value];
+    final index = items.indexWhere((item) => item.tableName == tableName);
+    if (index == -1) return;
+    final item = items[index];
+    if (item.countFailed) return;
+    items[index] = item.copyWith(selected: selected);
+    dbcExportItems.value = items;
+  }
+
+  void setAllSelectableSelected(bool selected) {
+    dbcExportItems.value = [
+      for (final item in dbcExportItems.value)
+        if (item.countFailed)
+          item.copyWith(selected: false)
+        else
+          item.copyWith(selected: selected),
+    ];
+  }
+
   Future<bool> exportDbc(String outputDirectory) {
     return _startExport(outputDirectory);
   }
@@ -115,9 +153,17 @@ class SettingViewModel {
   }
 
   Future<bool> _startExport(String outputDirectory) async {
-    final selected = dbcExportItems.value
-        .where((item) => item.selected)
+    final invalidSelected = dbcExportItems.value
+        .where((item) => item.selected && item.countFailed)
         .toList();
+    if (invalidSelected.isNotEmpty) {
+      dbcExportError.value =
+          '以下表行数统计失败，无法导出，请取消勾选或修复数据库后重试：\n'
+          '${invalidSelected.map((item) => item.dbcFileName).join('\n')}';
+      return false;
+    }
+
+    final selected = selectedExportableItems;
     if (selected.isEmpty || dbcExporting.value) return false;
 
     dbcExporting.value = true;

@@ -69,6 +69,8 @@ class ScaffoldViewModel {
   final dbcImportError = signal<String?>(null);
   /// 表检查本身失败（查询错误 / 结构不兼容），与「表缺失待导入」区分。
   final dbcCheckError = signal<String?>(null);
+  /// 是否因表结构不兼容阻塞（可引导用户重新导入修复）。
+  final dbcCheckIncompatible = signal(false);
   final dbcImporting = signal(false);
   final dbcImportCancelling = signal(false);
   final dbcProgress = signal<double?>(null);
@@ -79,6 +81,7 @@ class ScaffoldViewModel {
     try {
       if (dbcImported.value) return;
       dbcCheckError.value = null;
+      dbcCheckIncompatible.value = false;
 
       final results = await _dbcSync.checkTables();
       final blocking = results
@@ -92,24 +95,11 @@ class ScaffoldViewModel {
         final hasIncompatible = blocking.any(
           (result) => result.state == DbcTableState.incompatible,
         );
-        final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
-        final details = blocking
-            .take(5)
-            .map((result) {
-              final message = result.message;
-              if (message == null || message.isEmpty) {
-                return '${result.tableName} (${result.state.name})';
-              }
-              return '${result.tableName}: $message';
-            })
-            .join('\n');
-        final suffix = blocking.length > 5
-            ? '\n...等 ${blocking.length} 张表'
-            : '';
-        final message = '$title\n$details$suffix';
+        final message = formatDbcCheckBlockingMessage(blocking);
         dbcCheckError.value = message;
+        dbcCheckIncompatible.value = hasIncompatible;
         LoggerUtil.instance.e(message);
-        DialogUtil.instance.error(message);
+        // 不在此弹通用错误框：由 ScaffoldPage 展示带恢复操作的专用对话框。
         return;
       }
 
@@ -130,10 +120,24 @@ class ScaffoldViewModel {
       if (path != null && path.isNotEmpty) dbcPath.value = path;
     } catch (error) {
       LoggerUtil.instance.e('检查 DBC 导入状态失败: $error');
-      final message = '检查 DBC 导入状态失败: $error';
-      dbcCheckError.value = message;
-      DialogUtil.instance.error(message);
+      dbcCheckError.value = '检查 DBC 导入状态失败: $error';
+      dbcCheckIncompatible.value = false;
     }
+  }
+
+  void clearDbcCheckError() {
+    dbcCheckError.value = null;
+    dbcCheckIncompatible.value = false;
+  }
+
+  /// 允许用户在检查失败后仍尝试重新导入（例如结构不兼容时覆盖修复）。
+  Future<void> prepareManualImport() async {
+    clearDbcCheckError();
+    dbcImportError.value = null;
+    if (dbcPath.value != null && dbcPath.value!.isNotEmpty) return;
+    final config = await _configUtil.load();
+    final path = config['dbc_path']?.toString();
+    if (path != null && path.isNotEmpty) dbcPath.value = path;
   }
 
   void startImport() {
@@ -289,4 +293,24 @@ class ScaffoldViewModel {
     dbcProgressLabel.value = '';
     dbcProgressDetail.value = '';
   }
+}
+
+/// 将 error / incompatible 检查结果格式化为用户可读摘要。
+String formatDbcCheckBlockingMessage(List<DbcTableCheckResult> blocking) {
+  final hasIncompatible = blocking.any(
+    (result) => result.state == DbcTableState.incompatible,
+  );
+  final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
+  final details = blocking
+      .take(5)
+      .map((result) {
+        final message = result.message;
+        if (message == null || message.isEmpty) {
+          return '${result.tableName} (${result.state.name})';
+        }
+        return '${result.tableName}: $message';
+      })
+      .join('\n');
+  final suffix = blocking.length > 5 ? '\n...等 ${blocking.length} 张表' : '';
+  return '$title\n$details$suffix';
 }

@@ -66,8 +66,11 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     // 已导入，无需操作
     if (vm.dbcImported.value) return;
 
-    // 检查失败 / 表结构不兼容：已用 DialogUtil 报错，禁止误开「未导入」或自动导入。
-    if (vm.dbcCheckError.value != null) return;
+    // 检查失败 / 表结构不兼容：专用恢复对话框，禁止误开「未导入」或自动导入。
+    if (vm.dbcCheckError.value != null) {
+      _showDbcCheckErrorDialog();
+      return;
+    }
 
     // 路径已配置 → 自动导入（显示进度对话框并启动导入）
     if (vm.dbcPath.value != null) {
@@ -100,6 +103,79 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
               showShadDialog(
                 context: context,
                 builder: (ctx) => _DbcImportDialog(vm: vm),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDbcCheckErrorDialog() {
+    final vm = viewModel;
+    final message = vm.dbcCheckError.value ?? 'DBC 表检查失败';
+    final incompatible = vm.dbcCheckIncompatible.value;
+    final theme = ShadTheme.of(context);
+
+    showShadDialog(
+      context: context,
+      builder: (ctx) => ShadDialog.alert(
+        title: Text(incompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败'),
+        description: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 10,
+          children: [
+            Text(
+              incompatible
+                  ? '当前数据库中的 DBC 表与应用期望的字段结构不一致。'
+                    '可重新检查，或通过重新导入覆盖修复。'
+                  : '无法完成 DBC 表状态检查。请确认数据库连接正常后重试。',
+              style: theme.textTheme.muted.copyWith(fontSize: 13),
+            ),
+            Container(
+              width: double.infinity,
+              constraints: const BoxConstraints(maxHeight: 180),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.destructive.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: theme.colorScheme.destructive.withValues(alpha: 0.2),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: SelectableText(
+                  message,
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          ShadButton.outline(
+            child: const Text('稍后再说'),
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+          ShadButton.outline(
+            child: const Text('重新检查'),
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              await vm.checkAndImport();
+              if (!mounted) return;
+              _showDbcDialog();
+            },
+          ),
+          ShadButton(
+            child: Text(incompatible ? '重新导入修复' : '尝试导入'),
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              await vm.prepareManualImport();
+              if (!mounted) return;
+              showShadDialog(
+                context: context,
+                builder: (importCtx) => _DbcImportDialog(vm: vm),
               );
             },
           ),
