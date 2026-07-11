@@ -67,6 +67,8 @@ class ScaffoldViewModel {
   final dbcImported = signal(false);
   final dbcPath = signal<String?>(null);
   final dbcImportError = signal<String?>(null);
+  /// 表检查本身失败（查询错误 / 结构不兼容），与「表缺失待导入」区分。
+  final dbcCheckError = signal<String?>(null);
   final dbcImporting = signal(false);
   final dbcImportCancelling = signal(false);
   final dbcProgress = signal<double?>(null);
@@ -76,7 +78,49 @@ class ScaffoldViewModel {
   Future<void> checkAndImport() async {
     try {
       if (dbcImported.value) return;
-      final missing = await _dbcSync.checkRequiredTablesExist();
+      dbcCheckError.value = null;
+
+      final results = await _dbcSync.checkTables();
+      final blocking = results
+          .where(
+            (result) =>
+                result.state == DbcTableState.error ||
+                result.state == DbcTableState.incompatible,
+          )
+          .toList();
+      if (blocking.isNotEmpty) {
+        final hasIncompatible = blocking.any(
+          (result) => result.state == DbcTableState.incompatible,
+        );
+        final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
+        final details = blocking
+            .take(5)
+            .map((result) {
+              final message = result.message;
+              if (message == null || message.isEmpty) {
+                return '${result.tableName} (${result.state.name})';
+              }
+              return '${result.tableName}: $message';
+            })
+            .join('\n');
+        final suffix = blocking.length > 5
+            ? '\n...等 ${blocking.length} 张表'
+            : '';
+        final message = '$title\n$details$suffix';
+        dbcCheckError.value = message;
+        LoggerUtil.instance.e(message);
+        DialogUtil.instance.error(message);
+        return;
+      }
+
+      final missing = results
+          .where(
+            (result) =>
+                result.state == DbcTableState.missing ||
+                result.state == DbcTableState.empty,
+          )
+          .map((result) => result.tableName)
+          .toList();
       if (missing.isEmpty) {
         dbcImported.value = true;
         return;
@@ -86,7 +130,9 @@ class ScaffoldViewModel {
       if (path != null && path.isNotEmpty) dbcPath.value = path;
     } catch (error) {
       LoggerUtil.instance.e('检查 DBC 导入状态失败: $error');
-      DialogUtil.instance.error('检查 DBC 导入状态失败: $error');
+      final message = '检查 DBC 导入状态失败: $error';
+      dbcCheckError.value = message;
+      DialogUtil.instance.error(message);
     }
   }
 

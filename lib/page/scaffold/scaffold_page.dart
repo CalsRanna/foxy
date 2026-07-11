@@ -66,6 +66,9 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     // 已导入，无需操作
     if (vm.dbcImported.value) return;
 
+    // 检查失败 / 表结构不兼容：已用 DialogUtil 报错，禁止误开「未导入」或自动导入。
+    if (vm.dbcCheckError.value != null) return;
+
     // 路径已配置 → 自动导入（显示进度对话框并启动导入）
     if (vm.dbcPath.value != null) {
       vm.startImport();

@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/foxy_app/foxy_view_model.dart';
 import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -17,7 +16,6 @@ class BasicSettingPage extends StatefulWidget {
 
 class _BasicSettingPageState extends State<BasicSettingPage> {
   final viewModel = GetIt.instance.get<SettingViewModel>();
-  final foxyViewModel = GetIt.instance.get<FoxyViewModel>();
 
   @override
   void initState() {
@@ -75,8 +73,8 @@ class _BasicSettingPageState extends State<BasicSettingPage> {
 
   Widget _buildLocaleSwitch() {
     return Watch((_) {
-      final hasLocaleTables = foxyViewModel.hasLocaleTables.value;
-      final localeEnabled = foxyViewModel.localeEnabled.value;
+      final hasLocaleTables = viewModel.hasLocaleTables.value;
+      final localeEnabled = viewModel.localeEnabled.value;
 
       return _SettingItem(
         title: '启用多语言支持',
@@ -290,7 +288,10 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
 
   Widget _buildTableRow(DbcExportItem item) {
     final theme = Theme.of(context);
-    final countText = item.recordCount > 0 ? '  (${item.recordCount} 条)' : '';
+    final shad = ShadTheme.of(context);
+    final countColor = item.countFailed
+        ? shad.colorScheme.destructive
+        : theme.colorScheme.onSurface.withValues(alpha: 0.55);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -309,11 +310,19 @@ class _DbcExportDialogState extends State<_DbcExportDialog> {
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              '${item.dbcFileName}$countText',
-              style: TextStyle(
-                fontSize: 13,
-                color: theme.colorScheme.onSurface,
+            child: Text.rich(
+              TextSpan(
+                style: TextStyle(
+                  fontSize: 13,
+                  color: theme.colorScheme.onSurface,
+                ),
+                children: [
+                  TextSpan(text: item.dbcFileName),
+                  TextSpan(
+                    text: '  (${item.recordCountLabel})',
+                    style: TextStyle(fontSize: 12, color: countColor),
+                  ),
+                ],
               ),
               overflow: TextOverflow.ellipsis,
             ),
