@@ -44,8 +44,15 @@ class GameObjectTemplateRepository with RepositoryMixin {
   Future<int> countGameObjectTemplates({
     GameObjectTemplateFilterEntity? filter,
   }) async {
+    final needsLocaleJoin = filter != null && filter.name.isNotEmpty;
+    if (!needsLocaleJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.entry.isNotEmpty) {
+        builder = builder.where('entry', filter.entry);
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS gt');
-    builder.select(['gt.entry']);
     builder = builder.leftJoin(
       'gameobject_template_locale AS gtl',
       (join) => join.on('gt.entry', 'gtl.entry').on('gtl.locale', '"zhCN"'),

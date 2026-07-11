@@ -1,4 +1,5 @@
 import 'package:foxy/entity/item_display_info_entity.dart';
+import 'package:foxy/entity/item_display_info_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,13 +8,12 @@ class ItemDisplayInfoRepository with RepositoryMixin {
 
   Future<List<BriefItemDisplayInfoEntity>> getBriefItemDisplayInfos({
     int page = 1,
-    String? id,
-    String? name,
+    ItemDisplayInfoFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['ID', 'ModelName0', 'InventoryIcon0']);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -28,9 +28,11 @@ class ItemDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countItemDisplayInfos({String? id, String? name}) async {
+  Future<int> countItemDisplayInfos({
+    ItemDisplayInfoFilterEntity? filter,
+  }) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -93,17 +95,17 @@ class ItemDisplayInfoRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? name,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+    QueryBuilder builder,
+    ItemDisplayInfoFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    if (name != null && name.isNotEmpty) {
+    if (filter.name.isNotEmpty) {
       builder = builder.where(
         'ModelName0',
-        '%$name%',
+        '%${filter.name}%',
         comparator: 'like',
       );
     }

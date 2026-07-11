@@ -43,8 +43,15 @@ class GossipMenuRepository with RepositoryMixin {
   }
 
   Future<int> countGossipMenus({GossipMenuFilterEntity? filter}) async {
+    final needsTextJoin = filter != null && filter.text.isNotEmpty;
+    if (!needsTextJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.menuId.isNotEmpty) {
+        builder = builder.where('MenuID', filter.menuId);
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS gm');
-    builder.select(['gm.MenuID']);
     builder = builder.leftJoin(
       'npc_text AS nt',
       (join) => join.on('gm.TextID', 'nt.ID'),

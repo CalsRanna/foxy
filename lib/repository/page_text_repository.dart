@@ -39,6 +39,14 @@ class PageTextRepository with RepositoryMixin {
   }
 
   Future<int> countPageTexts({PageTextFilterEntity? filter}) async {
+    final needsLocaleJoin = filter != null && filter.text.isNotEmpty;
+    if (!needsLocaleJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.id.isNotEmpty) {
+        builder = builder.where('ID', filter.id);
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS pt');
     builder = builder.leftJoin(
       '$_localeTable AS ptl',

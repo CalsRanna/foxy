@@ -1,4 +1,5 @@
 import 'package:foxy/entity/spell_range_entity.dart';
+import 'package:foxy/entity/spell_range_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,8 +8,7 @@ class SpellRangeRepository with RepositoryMixin {
 
   Future<List<BriefSpellRangeEntity>> getBriefSpellRanges({
     int page = 1,
-    String? id,
-    String? name,
+    SpellRangeFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -18,7 +18,7 @@ class SpellRangeRepository with RepositoryMixin {
       'RangeMax0',
       'DisplayName_lang_zhCN',
     ]);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -31,9 +31,9 @@ class SpellRangeRepository with RepositoryMixin {
     return results.map((e) => SpellRangeEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countSpellRanges({String? id, String? name}) async {
+  Future<int> countSpellRanges({SpellRangeFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -96,17 +96,17 @@ class SpellRangeRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? name,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+    QueryBuilder builder,
+    SpellRangeFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    if (name != null && name.isNotEmpty) {
+    if (filter.name.isNotEmpty) {
       builder = builder.where(
         'DisplayName_lang_zhCN',
-        '%$name%',
+        '%${filter.name}%',
         comparator: 'like',
       );
     }

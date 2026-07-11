@@ -1,4 +1,5 @@
 import 'package:foxy/entity/waypoint_data_entity.dart';
+import 'package:foxy/entity/waypoint_data_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -9,13 +10,13 @@ class WaypointDataRepository with RepositoryMixin {
 
   Future<List<BriefWaypointDataEntity>> getBriefWaypointDatas({
     int page = 1,
-    String? id,
+    WaypointDataFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['id', 'COUNT(point) as points']);
     builder = builder.groupBy('id');
-    builder = _applyFilter(builder, id: id);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -31,9 +32,9 @@ class WaypointDataRepository with RepositoryMixin {
     return results.map((e) => WaypointDataEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countWaypointDatas({String? id}) async {
+  Future<int> countWaypointDatas({WaypointDataFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id);
+    builder = _applyFilter(builder, filter);
     builder = builder.select(['id', 'COUNT(point) as points']);
     builder = builder.groupBy('id');
     return builder.count();
@@ -97,9 +98,13 @@ class WaypointDataRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, {String? id}) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('id', id);
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    WaypointDataFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('id', filter.id);
     }
     return builder;
   }

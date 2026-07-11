@@ -1,4 +1,5 @@
 import 'package:foxy/entity/spell_icon_entity.dart';
+import 'package:foxy/entity/spell_icon_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,13 +8,12 @@ class SpellIconRepository with RepositoryMixin {
 
   Future<List<BriefSpellIconEntity>> getBriefSpellIcons({
     int page = 1,
-    String? id,
-    String? name,
+    SpellIconFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['ID', 'TextureFilename']);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -26,9 +26,9 @@ class SpellIconRepository with RepositoryMixin {
     return results.map((e) => SpellIconEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countSpellIcons({String? id, String? name}) async {
+  Future<int> countSpellIcons({SpellIconFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -91,17 +91,17 @@ class SpellIconRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? name,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+    QueryBuilder builder,
+    SpellIconFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    if (name != null && name.isNotEmpty) {
+    if (filter.name.isNotEmpty) {
       builder = builder.where(
         'TextureFilename',
-        '%$name%',
+        '%${filter.name}%',
         comparator: 'like',
       );
     }

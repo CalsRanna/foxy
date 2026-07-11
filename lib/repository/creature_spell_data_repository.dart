@@ -1,4 +1,5 @@
 import 'package:foxy/entity/creature_spell_data_entity.dart';
+import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -8,8 +9,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
 
   Future<List<BriefCreatureSpellDataEntity>> getBriefCreatureSpellDatas({
     int page = 1,
-    String? id,
-    String? spell,
+    CreatureSpellDataFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     const fields = [
@@ -30,7 +30,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
     var builder = laconic.table('$_table AS dcsd');
     builder = builder.select(fields);
     builder = _joinSpells(builder);
-    builder = _applyFilter(builder, id: id, spell: spell);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -45,10 +45,20 @@ class CreatureSpellDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countCreatureSpellDatas({String? id, String? spell}) async {
+  Future<int> countCreatureSpellDatas({
+    CreatureSpellDataFilterEntity? filter,
+  }) async {
+    final needsSpellJoin = filter != null && filter.spell.isNotEmpty;
+    if (!needsSpellJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.id.isNotEmpty) {
+        builder = builder.where('ID', filter.id);
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS dcsd');
     builder = _joinSpells(builder);
-    builder = _applyFilter(builder, id: id, spell: spell);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -131,14 +141,14 @@ class CreatureSpellDataRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? spell,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('dcsd.ID', id);
+    QueryBuilder builder,
+    CreatureSpellDataFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('dcsd.ID', filter.id);
     }
-    if (spell != null && spell.isNotEmpty) {
+    if (filter.spell.isNotEmpty) {
       builder = builder.whereAny(
         [
           'ds_1.Name_lang_zhCN',
@@ -146,7 +156,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
           'ds_3.Name_lang_zhCN',
           'ds_4.Name_lang_zhCN',
         ],
-        '%$spell%',
+        '%${filter.spell}%',
         comparator: 'like',
       );
     }

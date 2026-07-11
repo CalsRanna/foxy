@@ -1,4 +1,5 @@
 import 'package:foxy/entity/map_info_entity.dart';
+import 'package:foxy/entity/map_info_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,8 +8,7 @@ class MapInfoRepository with RepositoryMixin {
 
   Future<List<BriefMapInfoEntity>> getBriefMapInfos({
     int page = 1,
-    String? id,
-    String? name,
+    MapInfoFilterEntity? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -18,7 +18,7 @@ class MapInfoRepository with RepositoryMixin {
       'InstanceType',
       'PVP',
     ]);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefMapInfoEntity.fromJson(e.toMap())).toList();
@@ -29,9 +29,9 @@ class MapInfoRepository with RepositoryMixin {
     return results.map((e) => MapInfoEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countMapInfos({String? id, String? name}) async {
+  Future<int> countMapInfos({MapInfoFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder = _applyFilter(builder, id: id, name: name);
+    builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
@@ -94,17 +94,17 @@ class MapInfoRepository with RepositoryMixin {
   }
 
   QueryBuilder _applyFilter(
-    QueryBuilder builder, {
-    String? id,
-    String? name,
-  }) {
-    if (id != null && id.isNotEmpty) {
-      builder = builder.where('ID', id);
+    QueryBuilder builder,
+    MapInfoFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    if (name != null && name.isNotEmpty) {
+    if (filter.name.isNotEmpty) {
       builder = builder.where(
         'MapName_lang_zhCN',
-        '%$name%',
+        '%${filter.name}%',
         comparator: 'like',
       );
     }
