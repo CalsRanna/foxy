@@ -61,7 +61,7 @@ class QuestInfoListViewModel {
   void _logActivity(ActivityActionType action, int id) {
     final infos = this.infos.value;
     final info = infos.where((i) => i.id == id).firstOrNull;
-    final name = info?.infoNameLangZhCn ?? '';
+    final name = info?.infoNameLangZhCN ?? '';
     final log = ActivityLogEntity(
       module: 'quest_info',
       actionType: action,

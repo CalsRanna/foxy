@@ -107,7 +107,7 @@ class _SpellItemEnchantmentListPageState
             final item = items[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.nameLangZhCn)),
+              1 => ShadTableCell(child: Text(item.nameLangZhCN)),
               2 => ShadTableCell(child: Text(item.charges.toString())),
               3 => ShadTableCell(child: Text(item.effect0.toString())),
               4 => ShadTableCell(child: Text(item.effect1.toString())),
@@ -133,7 +133,7 @@ class _SpellItemEnchantmentListPageState
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               id: items[row].id,
-              name: items[row].nameLangZhCn,
+              name: items[row].nameLangZhCN,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -146,7 +146,7 @@ class _SpellItemEnchantmentListPageState
                   onPressed: () {
                     viewModel.navigateToDetail(
                       id: items[row].id,
-                      name: items[row].nameLangZhCn,
+                      name: items[row].nameLangZhCN,
                     );
                   },
                   child: Text('编辑'),

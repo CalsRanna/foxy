@@ -12,7 +12,7 @@ class QuestSortRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
-    const fields = ['ID', 'SortName_Lang_zhCN'];
+    const fields = ['ID', 'SortName_lang_zhCN'];
     builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
     builder = builder.limit(kPageSize).offset(offset);
@@ -101,7 +101,7 @@ class QuestSortRepository with RepositoryMixin {
     }
     if (filter.name.isNotEmpty) {
       builder = builder.where(
-        'SortName_Lang_zhCN',
+        'SortName_lang_zhCN',
         '%${filter.name}%',
         comparator: 'like',
       );

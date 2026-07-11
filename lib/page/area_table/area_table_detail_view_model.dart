@@ -81,7 +81,7 @@ class AreaTableDetailViewModel {
   AreaTableEntity _collectFromControllers() {
     final t = AreaTableEntity(
       id: _pi(idController.text),
-      areaNameLangZhCn: nameController.text,
+      areaNameLangZhCN: nameController.text,
       continentId: _pi(continentIdController.text),
       parentAreaId: _pi(parentAreaIdController.text),
       areaBit: _pi(areaBitController.text),
@@ -112,7 +112,7 @@ class AreaTableDetailViewModel {
       module: 'area_table',
       actionType: action,
       entityId: t.id,
-      entityName: t.areaNameLangZhCn,
+      entityName: t.areaNameLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
@@ -154,7 +154,7 @@ class AreaTableDetailViewModel {
   void _initControllers(AreaTableEntity table) {
     /// Basic
     idController.text = _fmt(table.id);
-    nameController.text = table.areaNameLangZhCn;
+    nameController.text = table.areaNameLangZhCN;
     continentIdController.text = _fmt(table.continentId);
     parentAreaIdController.text = _fmt(table.parentAreaId);
     areaBitController.text = _fmt(table.areaBit);

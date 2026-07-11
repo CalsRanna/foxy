@@ -61,7 +61,7 @@ class QuestSortListViewModel {
   void _logActivity(ActivityActionType action, int id) {
     final sorts = this.sorts.value;
     final sort = sorts.where((s) => s.id == id).firstOrNull;
-    final name = sort?.sortNameLangZhCn ?? '';
+    final name = sort?.sortNameLangZhCN ?? '';
     final log = ActivityLogEntity(
       module: 'quest_sort',
       actionType: action,

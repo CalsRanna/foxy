@@ -42,7 +42,7 @@ class _QuestInfoViewState extends State<QuestInfoView> {
     final nameInput = FoxyFormItem(
       controller: viewModel.nameController,
       label: '名称',
-      placeholder: 'InfoName_Lang_zhCN',
+      placeholder: 'InfoName_lang_zhCN',
     );
 
     final rows = [

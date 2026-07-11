@@ -22,6 +22,8 @@ class DbcSyncUtil {
   Future<void> Function(DbcSyncResult result)? _finishActive;
   String? _activeJobId;
   bool _cancelRequested = false;
+  /// 强制 kill 后，onExit/onError 应上报 cancelled 而非普通失败。
+  bool _forceCancelTerminal = false;
   bool _running = false;
   DbcSyncOperation? _operation;
 
@@ -387,9 +389,16 @@ class DbcSyncUtil {
           await done.future.timeout(const Duration(seconds: 3));
           return;
         } on TimeoutException {
+          _forceCancelTerminal = true;
           _activeIsolate?.kill(priority: Isolate.immediate);
           final jobId = _activeJobId;
-          if (jobId != null) await _cleanupStaging(jobId);
+          if (jobId != null) {
+            try {
+              await _cleanupStaging(jobId).timeout(const Duration(seconds: 5));
+            } on TimeoutException {
+              LoggerUtil.instance.w('DBC 取消后清理 staging 表超时: $jobId');
+            }
+          }
           final finish = _finishActive;
           if (finish != null) {
             await finish(
@@ -502,6 +511,20 @@ class DbcSyncUtil {
       });
 
       errorSubscription = errorPort.listen((message) {
+        if (_forceCancelTerminal || _cancelRequested) {
+          unawaited(
+            finish(
+              const DbcSyncResult(
+                operation: DbcSyncOperation.import,
+                completed: 0,
+                skipped: 0,
+                errors: [],
+                cancelled: true,
+              ),
+            ),
+          );
+          return;
+        }
         final text = message is List && message.isNotEmpty
             ? message.first.toString()
             : message.toString();
@@ -525,6 +548,18 @@ class DbcSyncUtil {
       exitSubscription = exitPort.listen((_) async {
         await Future<void>.delayed(const Duration(milliseconds: 20));
         if (!terminal) {
+          if (_forceCancelTerminal || _cancelRequested) {
+            await finish(
+              const DbcSyncResult(
+                operation: DbcSyncOperation.import,
+                completed: 0,
+                skipped: 0,
+                errors: [],
+                cancelled: true,
+              ),
+            );
+            return;
+          }
           await finish(
             const DbcSyncResult(
               operation: DbcSyncOperation.import,
@@ -582,6 +617,7 @@ class DbcSyncUtil {
     _activeJobId = null;
     _activeDone = null;
     _cancelRequested = false;
+    _forceCancelTerminal = false;
     _operation = null;
     _running = false;
   }

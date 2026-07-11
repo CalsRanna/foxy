@@ -61,7 +61,7 @@ class SpellItemEnchantmentListViewModel {
   void _logActivity(ActivityActionType action, int id) {
     final enchantments = this.enchantments.value;
     final enchantment = enchantments.where((e) => e.id == id).firstOrNull;
-    final name = enchantment?.nameLangZhCn ?? '';
+    final name = enchantment?.nameLangZhCN ?? '';
     final log = ActivityLogEntity(
       module: 'spell_item_enchantment',
       actionType: action,

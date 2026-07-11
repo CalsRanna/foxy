@@ -108,7 +108,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
             final item = areas[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.areaNameLangZhCn)),
+              1 => ShadTableCell(child: Text(item.areaNameLangZhCN)),
               2 => ShadTableCell(child: Text(item.continentId.toString())),
               3 => ShadTableCell(child: Text(item.minElevation.toString())),
               4 => ShadTableCell(child: Text(item.zoneMusic.toString())),
@@ -134,7 +134,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               id: areas[row].id,
-              name: areas[row].areaNameLangZhCn,
+              name: areas[row].areaNameLangZhCN,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -147,7 +147,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
                   onPressed: () {
                     viewModel.navigateToDetail(
                       id: areas[row].id,
-                      name: areas[row].areaNameLangZhCn,
+                      name: areas[row].areaNameLangZhCN,
                     );
                   },
                   child: Text('编辑'),

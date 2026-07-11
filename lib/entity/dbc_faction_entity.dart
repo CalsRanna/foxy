@@ -23,9 +23,39 @@ class DbcFactionEntity {
   final double parentFactionMod1;
   final int parentFactionCap0;
   final int parentFactionCap1;
-  final String nameLangZhCn;
-  final String descriptionLangZhCn;
+  final String nameLangEnUS;
+  final String nameLangKoKR;
+  final String nameLangFrFR;
+  final String nameLangDeDE;
+  final String nameLangZhCN;
+  final String nameLangZhTW;
+  final String nameLangEsES;
+  final String nameLangEsMX;
+  final String nameLangRuRU;
+  final String nameLangJaJP;
+  final String nameLangPtPT;
+  final String nameLangPtBR;
+  final String nameLangItIT;
+  final String nameLangUnk1;
+  final String nameLangUnk2;
+  final String nameLangUnk3;
   final int nameLangFlags;
+  final String descriptionLangEnUS;
+  final String descriptionLangKoKR;
+  final String descriptionLangFrFR;
+  final String descriptionLangDeDE;
+  final String descriptionLangZhCN;
+  final String descriptionLangZhTW;
+  final String descriptionLangEsES;
+  final String descriptionLangEsMX;
+  final String descriptionLangRuRU;
+  final String descriptionLangJaJP;
+  final String descriptionLangPtPT;
+  final String descriptionLangPtBR;
+  final String descriptionLangItIT;
+  final String descriptionLangUnk1;
+  final String descriptionLangUnk2;
+  final String descriptionLangUnk3;
   final int descriptionLangFlags;
 
   const DbcFactionEntity({
@@ -52,9 +82,39 @@ class DbcFactionEntity {
     this.parentFactionMod1 = 0.0,
     this.parentFactionCap0 = 0,
     this.parentFactionCap1 = 0,
-    this.nameLangZhCn = '',
-    this.descriptionLangZhCn = '',
+    this.nameLangEnUS = '',
+    this.nameLangKoKR = '',
+    this.nameLangFrFR = '',
+    this.nameLangDeDE = '',
+    this.nameLangZhCN = '',
+    this.nameLangZhTW = '',
+    this.nameLangEsES = '',
+    this.nameLangEsMX = '',
+    this.nameLangRuRU = '',
+    this.nameLangJaJP = '',
+    this.nameLangPtPT = '',
+    this.nameLangPtBR = '',
+    this.nameLangItIT = '',
+    this.nameLangUnk1 = '',
+    this.nameLangUnk2 = '',
+    this.nameLangUnk3 = '',
     this.nameLangFlags = 0,
+    this.descriptionLangEnUS = '',
+    this.descriptionLangKoKR = '',
+    this.descriptionLangFrFR = '',
+    this.descriptionLangDeDE = '',
+    this.descriptionLangZhCN = '',
+    this.descriptionLangZhTW = '',
+    this.descriptionLangEsES = '',
+    this.descriptionLangEsMX = '',
+    this.descriptionLangRuRU = '',
+    this.descriptionLangJaJP = '',
+    this.descriptionLangPtPT = '',
+    this.descriptionLangPtBR = '',
+    this.descriptionLangItIT = '',
+    this.descriptionLangUnk1 = '',
+    this.descriptionLangUnk2 = '',
+    this.descriptionLangUnk3 = '',
     this.descriptionLangFlags = 0,
   });
 
@@ -79,13 +139,43 @@ class DbcFactionEntity {
       reputationFlags2: json['ReputationFlags2'] ?? 0,
       reputationFlags3: json['ReputationFlags3'] ?? 0,
       parentFactionId: json['ParentFactionID'] ?? 0,
-      parentFactionMod0: json['ParentFactionMod0'] ?? 0.0,
-      parentFactionMod1: json['ParentFactionMod1'] ?? 0.0,
+      parentFactionMod0: (json['ParentFactionMod0'] as num?)?.toDouble() ?? 0.0,
+      parentFactionMod1: (json['ParentFactionMod1'] as num?)?.toDouble() ?? 0.0,
       parentFactionCap0: json['ParentFactionCap0'] ?? 0,
       parentFactionCap1: json['ParentFactionCap1'] ?? 0,
-      nameLangZhCn: json['Name_lang_zhCN'] ?? '',
-      descriptionLangZhCn: json['Description_lang_zhCN'] ?? '',
+      nameLangEnUS: json['Name_lang_enUS'] ?? '',
+      nameLangKoKR: json['Name_lang_koKR'] ?? '',
+      nameLangFrFR: json['Name_lang_frFR'] ?? '',
+      nameLangDeDE: json['Name_lang_deDE'] ?? '',
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+      nameLangZhTW: json['Name_lang_zhTW'] ?? '',
+      nameLangEsES: json['Name_lang_esES'] ?? '',
+      nameLangEsMX: json['Name_lang_esMX'] ?? '',
+      nameLangRuRU: json['Name_lang_ruRU'] ?? '',
+      nameLangJaJP: json['Name_lang_jaJP'] ?? '',
+      nameLangPtPT: json['Name_lang_ptPT'] ?? '',
+      nameLangPtBR: json['Name_lang_ptBR'] ?? '',
+      nameLangItIT: json['Name_lang_itIT'] ?? '',
+      nameLangUnk1: json['Name_lang_unk1'] ?? '',
+      nameLangUnk2: json['Name_lang_unk2'] ?? '',
+      nameLangUnk3: json['Name_lang_unk3'] ?? '',
       nameLangFlags: json['Name_lang_Flags'] ?? 0,
+      descriptionLangEnUS: json['Description_lang_enUS'] ?? '',
+      descriptionLangKoKR: json['Description_lang_koKR'] ?? '',
+      descriptionLangFrFR: json['Description_lang_frFR'] ?? '',
+      descriptionLangDeDE: json['Description_lang_deDE'] ?? '',
+      descriptionLangZhCN: json['Description_lang_zhCN'] ?? '',
+      descriptionLangZhTW: json['Description_lang_zhTW'] ?? '',
+      descriptionLangEsES: json['Description_lang_esES'] ?? '',
+      descriptionLangEsMX: json['Description_lang_esMX'] ?? '',
+      descriptionLangRuRU: json['Description_lang_ruRU'] ?? '',
+      descriptionLangJaJP: json['Description_lang_jaJP'] ?? '',
+      descriptionLangPtPT: json['Description_lang_ptPT'] ?? '',
+      descriptionLangPtBR: json['Description_lang_ptBR'] ?? '',
+      descriptionLangItIT: json['Description_lang_itIT'] ?? '',
+      descriptionLangUnk1: json['Description_lang_unk1'] ?? '',
+      descriptionLangUnk2: json['Description_lang_unk2'] ?? '',
+      descriptionLangUnk3: json['Description_lang_unk3'] ?? '',
       descriptionLangFlags: json['Description_lang_Flags'] ?? 0,
     );
   }
@@ -115,9 +205,39 @@ class DbcFactionEntity {
       'ParentFactionMod1': parentFactionMod1,
       'ParentFactionCap0': parentFactionCap0,
       'ParentFactionCap1': parentFactionCap1,
-      'Name_lang_zhCN': nameLangZhCn,
-      'Description_lang_zhCN': descriptionLangZhCn,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
+      'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
       'Name_lang_Flags': nameLangFlags,
+      'Description_lang_enUS': descriptionLangEnUS,
+      'Description_lang_koKR': descriptionLangKoKR,
+      'Description_lang_frFR': descriptionLangFrFR,
+      'Description_lang_deDE': descriptionLangDeDE,
+      'Description_lang_zhCN': descriptionLangZhCN,
+      'Description_lang_zhTW': descriptionLangZhTW,
+      'Description_lang_esES': descriptionLangEsES,
+      'Description_lang_esMX': descriptionLangEsMX,
+      'Description_lang_ruRU': descriptionLangRuRU,
+      'Description_lang_jaJP': descriptionLangJaJP,
+      'Description_lang_ptPT': descriptionLangPtPT,
+      'Description_lang_ptBR': descriptionLangPtBR,
+      'Description_lang_itIT': descriptionLangItIT,
+      'Description_lang_unk1': descriptionLangUnk1,
+      'Description_lang_unk2': descriptionLangUnk2,
+      'Description_lang_unk3': descriptionLangUnk3,
       'Description_lang_Flags': descriptionLangFlags,
     };
   }
@@ -146,9 +266,39 @@ class DbcFactionEntity {
     double? parentFactionMod1,
     int? parentFactionCap0,
     int? parentFactionCap1,
-    String? nameLangZhCn,
-    String? descriptionLangZhCn,
+    String? nameLangEnUS,
+    String? nameLangKoKR,
+    String? nameLangFrFR,
+    String? nameLangDeDE,
+    String? nameLangZhCN,
+    String? nameLangZhTW,
+    String? nameLangEsES,
+    String? nameLangEsMX,
+    String? nameLangRuRU,
+    String? nameLangJaJP,
+    String? nameLangPtPT,
+    String? nameLangPtBR,
+    String? nameLangItIT,
+    String? nameLangUnk1,
+    String? nameLangUnk2,
+    String? nameLangUnk3,
     int? nameLangFlags,
+    String? descriptionLangEnUS,
+    String? descriptionLangKoKR,
+    String? descriptionLangFrFR,
+    String? descriptionLangDeDE,
+    String? descriptionLangZhCN,
+    String? descriptionLangZhTW,
+    String? descriptionLangEsES,
+    String? descriptionLangEsMX,
+    String? descriptionLangRuRU,
+    String? descriptionLangJaJP,
+    String? descriptionLangPtPT,
+    String? descriptionLangPtBR,
+    String? descriptionLangItIT,
+    String? descriptionLangUnk1,
+    String? descriptionLangUnk2,
+    String? descriptionLangUnk3,
     int? descriptionLangFlags,
   }) {
     return DbcFactionEntity(
@@ -175,51 +325,82 @@ class DbcFactionEntity {
       parentFactionMod1: parentFactionMod1 ?? this.parentFactionMod1,
       parentFactionCap0: parentFactionCap0 ?? this.parentFactionCap0,
       parentFactionCap1: parentFactionCap1 ?? this.parentFactionCap1,
-      nameLangZhCn: nameLangZhCn ?? this.nameLangZhCn,
-      descriptionLangZhCn: descriptionLangZhCn ?? this.descriptionLangZhCn,
+      nameLangEnUS: nameLangEnUS ?? this.nameLangEnUS,
+      nameLangKoKR: nameLangKoKR ?? this.nameLangKoKR,
+      nameLangFrFR: nameLangFrFR ?? this.nameLangFrFR,
+      nameLangDeDE: nameLangDeDE ?? this.nameLangDeDE,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+      nameLangZhTW: nameLangZhTW ?? this.nameLangZhTW,
+      nameLangEsES: nameLangEsES ?? this.nameLangEsES,
+      nameLangEsMX: nameLangEsMX ?? this.nameLangEsMX,
+      nameLangRuRU: nameLangRuRU ?? this.nameLangRuRU,
+      nameLangJaJP: nameLangJaJP ?? this.nameLangJaJP,
+      nameLangPtPT: nameLangPtPT ?? this.nameLangPtPT,
+      nameLangPtBR: nameLangPtBR ?? this.nameLangPtBR,
+      nameLangItIT: nameLangItIT ?? this.nameLangItIT,
+      nameLangUnk1: nameLangUnk1 ?? this.nameLangUnk1,
+      nameLangUnk2: nameLangUnk2 ?? this.nameLangUnk2,
+      nameLangUnk3: nameLangUnk3 ?? this.nameLangUnk3,
       nameLangFlags: nameLangFlags ?? this.nameLangFlags,
+      descriptionLangEnUS: descriptionLangEnUS ?? this.descriptionLangEnUS,
+      descriptionLangKoKR: descriptionLangKoKR ?? this.descriptionLangKoKR,
+      descriptionLangFrFR: descriptionLangFrFR ?? this.descriptionLangFrFR,
+      descriptionLangDeDE: descriptionLangDeDE ?? this.descriptionLangDeDE,
+      descriptionLangZhCN: descriptionLangZhCN ?? this.descriptionLangZhCN,
+      descriptionLangZhTW: descriptionLangZhTW ?? this.descriptionLangZhTW,
+      descriptionLangEsES: descriptionLangEsES ?? this.descriptionLangEsES,
+      descriptionLangEsMX: descriptionLangEsMX ?? this.descriptionLangEsMX,
+      descriptionLangRuRU: descriptionLangRuRU ?? this.descriptionLangRuRU,
+      descriptionLangJaJP: descriptionLangJaJP ?? this.descriptionLangJaJP,
+      descriptionLangPtPT: descriptionLangPtPT ?? this.descriptionLangPtPT,
+      descriptionLangPtBR: descriptionLangPtBR ?? this.descriptionLangPtBR,
+      descriptionLangItIT: descriptionLangItIT ?? this.descriptionLangItIT,
+      descriptionLangUnk1: descriptionLangUnk1 ?? this.descriptionLangUnk1,
+      descriptionLangUnk2: descriptionLangUnk2 ?? this.descriptionLangUnk2,
+      descriptionLangUnk3: descriptionLangUnk3 ?? this.descriptionLangUnk3,
       descriptionLangFlags: descriptionLangFlags ?? this.descriptionLangFlags,
     );
   }
 }
 
+
 /// 阵营列表/Picker 展示模型
 class BriefDbcFactionEntity {
   final int id;
-  final String nameLangZhCn;
-  final String descriptionLangZhCn;
+  final String nameLangZhCN;
+  final String descriptionLangZhCN;
 
   const BriefDbcFactionEntity({
     this.id = 0,
-    this.nameLangZhCn = '',
-    this.descriptionLangZhCn = '',
+    this.nameLangZhCN = '',
+    this.descriptionLangZhCN = '',
   });
 
   factory BriefDbcFactionEntity.fromJson(Map<String, dynamic> json) {
     return BriefDbcFactionEntity(
       id: json['ID'] ?? 0,
-      nameLangZhCn: json['Name_lang_zhCN'] ?? '',
-      descriptionLangZhCn: json['Description_lang_zhCN'] ?? '',
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+      descriptionLangZhCN: json['Description_lang_zhCN'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
-      'Name_lang_zhCN': nameLangZhCn,
-      'Description_lang_zhCN': descriptionLangZhCn,
+      'Name_lang_zhCN': nameLangZhCN,
+      'Description_lang_zhCN': descriptionLangZhCN,
     };
   }
 
   BriefDbcFactionEntity copyWith({
     int? id,
-    String? nameLangZhCn,
-    String? descriptionLangZhCn,
+    String? nameLangZhCN,
+    String? descriptionLangZhCN,
   }) {
     return BriefDbcFactionEntity(
       id: id ?? this.id,
-      nameLangZhCn: nameLangZhCn ?? this.nameLangZhCn,
-      descriptionLangZhCn: descriptionLangZhCn ?? this.descriptionLangZhCn,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+      descriptionLangZhCN: descriptionLangZhCN ?? this.descriptionLangZhCN,
     );
   }
 }

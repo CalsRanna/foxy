@@ -54,7 +54,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
     );
     var nameInput = ShadInput(
       controller: viewModel.nameController,
-      placeholder: Text('名称（SortName_Lang_zhCN）'),
+      placeholder: Text('名称（SortName_lang_zhCN）'),
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
@@ -105,7 +105,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
             final item = sorts[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.sortNameLangZhCn)),
+              1 => ShadTableCell(child: Text(item.sortNameLangZhCN)),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -123,7 +123,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
               id: sorts[row].id,
-              name: sorts[row].sortNameLangZhCn,
+              name: sorts[row].sortNameLangZhCN,
             );
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
@@ -136,7 +136,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
                   onPressed: () {
                     viewModel.navigateToDetail(
                       id: sorts[row].id,
-                      name: sorts[row].sortNameLangZhCn,
+                      name: sorts[row].sortNameLangZhCN,
                     );
                   },
                   child: Text('编辑'),
