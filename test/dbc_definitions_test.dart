@@ -51,4 +51,32 @@ void main() {
       );
     }
   });
+
+  test('所有 DBC 定义都有非空 Schema 与 format', () {
+    for (final definition in dbcDefinitions) {
+      expect(definition.schema.fields, isNotEmpty, reason: definition.tableName);
+      expect(definition.schema.format, isNotEmpty, reason: definition.tableName);
+      expect(definition.schema.name, isNotEmpty, reason: definition.tableName);
+    }
+  });
+
+  test('未注册的导出表 loadRows/countRows 返回明确错误', () async {
+    final registry = GetIt.instance.get<DbcExportRegistry>();
+
+    await expectLater(
+      registry.loadRows('dbc_not_registered_table'),
+      throwsA(
+        isA<StateError>().having(
+          (error) => error.message,
+          'message',
+          contains('未注册的 DBC 导出表'),
+        ),
+      ),
+    );
+
+    final count = await registry.countRows('dbc_not_registered_table');
+    expect(count.success, isFalse);
+    expect(count.error, isA<StateError>());
+    expect(count.error.toString(), contains('未注册的 DBC 导出表'));
+  });
 }

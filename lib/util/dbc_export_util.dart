@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
@@ -7,6 +8,24 @@ import 'package:warcrafty/warcrafty.dart';
 enum DbcExportPhase { writing, validating, committing }
 
 class DbcExportUtil {
+  /// 供单元测试校验类型规范化规则（uint8 / bool / 字符串等）。
+  @visibleForTesting
+  dynamic normalizeValueForTest(
+    Object? value, {
+    required String format,
+    String schemaName = 'Test',
+    String fieldName = 'Field',
+    int recordIndex = 0,
+  }) {
+    return _normalizeValue(
+      value,
+      format: format,
+      schemaName: schemaName,
+      fieldName: fieldName,
+      recordIndex: recordIndex,
+    );
+  }
+
   Future<void> write({
     required DbcDefinition definition,
     required List<Map<String, dynamic>> rows,
