@@ -11,22 +11,34 @@ import 'package:signals/signals.dart';
 
 class DbcExportItem {
   final DbcDefinition definition;
-  final int recordCount;
+  final int? recordCount;
+  final String? countError;
   final bool selected;
 
   const DbcExportItem({
     required this.definition,
-    this.recordCount = 0,
+    this.recordCount,
+    this.countError,
     this.selected = true,
   });
 
   String get tableName => definition.tableName;
   String get dbcFileName => definition.fileName;
+  bool get countFailed => countError != null;
+
+  /// 列表展示用的行数文案：区分空表与计数失败。
+  String get recordCountLabel {
+    if (countFailed) return '计数失败';
+    final count = recordCount ?? 0;
+    if (count == 0) return '空';
+    return '$count 条';
+  }
 
   DbcExportItem copyWith({bool? selected}) {
     return DbcExportItem(
       definition: definition,
       recordCount: recordCount,
+      countError: countError,
       selected: selected ?? this.selected,
     );
   }
@@ -37,6 +49,10 @@ class SettingViewModel {
   final _configUtil = GetIt.instance.get<ConfigUtil>();
   final _dbcSync = GetIt.instance.get<DbcSyncUtil>();
   final _dbcExportRegistry = GetIt.instance.get<DbcExportRegistry>();
+
+  /// 供 Page 订阅；底层状态仍由 [FoxyViewModel] 持有。
+  Signal<bool> get hasLocaleTables => _foxyViewModel.hasLocaleTables;
+  Signal<bool> get localeEnabled => _foxyViewModel.localeEnabled;
 
   final dbcExportItems = signal<List<DbcExportItem>>([]);
   final dbcExporting = signal(false);
@@ -52,8 +68,8 @@ class SettingViewModel {
 
   Future<void> setLocaleEnabled(bool value) async {
     try {
-      if (!_foxyViewModel.hasLocaleTables.value && value) return;
-      _foxyViewModel.localeEnabled.value = value;
+      if (!hasLocaleTables.value && value) return;
+      localeEnabled.value = value;
       await _configUtil.update({'locale_enabled': value});
     } catch (error) {
       LoggerUtil.instance.e('设置本地化开关失败: $error');
@@ -71,6 +87,13 @@ class SettingViewModel {
         LoggerUtil.instance.w(
           '计算 ${definition.tableName} 行数失败: ${countResult.error}',
         );
+        items.add(
+          DbcExportItem(
+            definition: definition,
+            countError: countResult.error.toString(),
+          ),
+        );
+        continue;
       }
       items.add(
         DbcExportItem(
