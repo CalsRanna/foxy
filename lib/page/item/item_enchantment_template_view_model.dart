@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -20,16 +19,17 @@ class ItemEnchantmentTemplateViewModel {
   final editing = signal(false);
   int? editingEnch;
 
-  final enchSignalController = TextEditingController();
-  final chanceController = TextEditingController();
+  final entryController = IntFieldController();
+  final enchController = IntFieldController();
+  final chanceController = DoubleFieldController();
+
+  late final _controllers = <FieldController>[
+    entryController,
+    enchController,
+    chanceController,
+  ];
 
   final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
-
-  String _fmt(num v) => formatNum(v);
-
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefItemEnchantmentTemplatesByEntry(
@@ -43,20 +43,20 @@ class ItemEnchantmentTemplateViewModel {
   }
 
   void resetForm() {
-    enchSignalController.text = _fmt(0);
-    chanceController.text = _fmt(0);
+    enchController.init(0);
+    chanceController.init(0.0);
   }
 
   void fillForm(BriefItemEnchantmentTemplateEntity model) {
-    enchSignalController.text = _fmt(model.ench);
-    chanceController.text = _fmt(model.chance);
+    enchController.init(model.ench);
+    chanceController.init(model.chance);
   }
 
   ItemEnchantmentTemplateEntity collectFromForm() {
     return ItemEnchantmentTemplateEntity(
       entry: entry.value,
-      ench: _pi(enchSignalController.text),
-      chance: _pd(chanceController.text),
+      ench: enchController.collect(),
+      chance: chanceController.collect(),
     );
   }
 
@@ -67,7 +67,7 @@ class ItemEnchantmentTemplateViewModel {
         (max, e) => e.ench > max ? e.ench : max,
       );
       resetForm();
-      enchSignalController.text = _fmt((maxEnch + 1));
+      enchController.init(maxEnch + 1);
       creating.value = true;
       editing.value = false;
       selectedIndex.value = null;
@@ -192,6 +192,7 @@ class ItemEnchantmentTemplateViewModel {
   Future<void> initSignals({required int entry}) async {
     try {
       this.entry.value = entry;
+      entryController.init(entry);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
@@ -204,7 +205,8 @@ class ItemEnchantmentTemplateViewModel {
   }
 
   void dispose() {
-    chanceController.dispose();
-    enchSignalController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

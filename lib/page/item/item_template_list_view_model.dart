@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
@@ -9,15 +8,23 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ItemTemplateListViewModel {
   int _refreshToken = 0;
-  final entryController = TextEditingController();
-  final nameController = TextEditingController();
-  final descriptionController = TextEditingController();
+  final entryController = StringFieldController();
+  final nameController = StringFieldController();
+  final descriptionController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    entryController,
+    nameController,
+    descriptionController,
+  ];
+
   final _repository = GetIt.instance.get<ItemTemplateRepository>();
 
   final page = signal(1);
@@ -59,9 +66,9 @@ class ItemTemplateListViewModel {
   }
 
   void dispose() {
-    entryController.dispose();
-    nameController.dispose();
-    descriptionController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> search() async {
@@ -75,9 +82,9 @@ class ItemTemplateListViewModel {
   }
 
   Future<void> reset() async {
-    entryController.clear();
-    nameController.clear();
-    descriptionController.clear();
+    entryController.init('');
+    nameController.init('');
+    descriptionController.init('');
     selectedClassId.value = -1;
     selectedSubclass.value = -1;
     page.value = 1;
@@ -161,9 +168,9 @@ class ItemTemplateListViewModel {
 
   Future<List<BriefItemTemplateEntity>> _fetchItems() async {
     final filter = ItemTemplateFilterEntity(
-      entry: entryController.text,
-      name: nameController.text,
-      description: descriptionController.text,
+      entry: entryController.collect(),
+      name: nameController.collect(),
+      description: descriptionController.collect(),
       classId: selectedClassId.value,
       subclass: selectedSubclass.value,
     );
@@ -172,9 +179,9 @@ class ItemTemplateListViewModel {
 
   Future<int> _count() async {
     final filter = ItemTemplateFilterEntity(
-      entry: entryController.text,
-      name: nameController.text,
-      description: descriptionController.text,
+      entry: entryController.collect(),
+      name: nameController.collect(),
+      description: descriptionController.collect(),
       classId: selectedClassId.value,
       subclass: selectedSubclass.value,
     );

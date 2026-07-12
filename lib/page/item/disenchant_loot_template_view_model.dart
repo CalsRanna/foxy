@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -20,23 +19,31 @@ class DisenchantLootTemplateViewModel {
   final editing = signal(false);
   int? editingItem;
 
-  final itemController = TextEditingController();
-  final referenceController = TextEditingController();
-  final chanceController = TextEditingController();
-  final questRequiredController = ShadSelectController<int>();
-  final lootModeController = TextEditingController();
-  final groupIdController = TextEditingController();
-  final minCountController = TextEditingController();
-  final maxCountController = TextEditingController();
-  final commentController = TextEditingController();
+  final entryController = IntFieldController();
+  final itemController = IntFieldController();
+  final referenceController = IntFieldController();
+  final chanceController = DoubleFieldController();
+  final questRequiredController = SelectFieldController<int>(fallback: 0);
+  final lootModeController = IntFieldController();
+  final groupIdController = IntFieldController();
+  final minCountController = IntFieldController();
+  final maxCountController = IntFieldController();
+  final commentController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    entryController,
+    itemController,
+    referenceController,
+    chanceController,
+    questRequiredController,
+    lootModeController,
+    groupIdController,
+    minCountController,
+    maxCountController,
+    commentController,
+  ];
 
   final repository = LootTemplateRepository(LootTableType.disenchant);
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final data = await repository.getBriefLootTemplates(entry.value);
@@ -48,56 +55,49 @@ class DisenchantLootTemplateViewModel {
   }
 
   void resetForm() {
-    itemController.clear();
-    referenceController.text = _fmt(0);
-    chanceController.text = _fmt(0);
-    questRequiredController.value = {0};
-    lootModeController.text = _fmt(1);
-    groupIdController.text = _fmt(0);
-    minCountController.text = _fmt(1);
-    maxCountController.text = _fmt(1);
-    commentController.clear();
+    itemController.init(0);
+    referenceController.init(0);
+    chanceController.init(0.0);
+    questRequiredController.init(0);
+    lootModeController.init(1);
+    groupIdController.init(0);
+    minCountController.init(1);
+    maxCountController.init(1);
+    commentController.init('');
   }
 
   void fillForm(BriefLootTemplateEntity loot) {
-    itemController.text = loot.item.toString();
-    referenceController.text = _fmt(loot.reference);
-    chanceController.text = _fmt(loot.chance);
-    questRequiredController.value = {loot.questRequired ? 1 : 0};
-    lootModeController.text = _fmt(loot.lootMode);
-    groupIdController.text = _fmt(loot.groupId);
-    minCountController.text = _fmt(loot.minCount);
-    maxCountController.text = _fmt(loot.maxCount);
-    commentController.text = loot.comment;
+    itemController.init(loot.item);
+    referenceController.init(loot.reference);
+    chanceController.init(loot.chance);
+    questRequiredController.init(loot.questRequired ? 1 : 0);
+    lootModeController.init(loot.lootMode);
+    groupIdController.init(loot.groupId);
+    minCountController.init(loot.minCount);
+    maxCountController.init(loot.maxCount);
+    commentController.init(loot.comment);
   }
 
   LootTemplateEntity collectFromForm() {
     return LootTemplateEntity(
       entry: entry.value,
-      item: _parseInt(itemController.text),
-      reference: _pi(referenceController.text),
-      chance: _pd(chanceController.text),
-      questRequired: questRequiredController.value.first == 1,
-      lootMode: _pi(lootModeController.text),
-      groupId: _pi(groupIdController.text),
-      minCount: _pi(minCountController.text),
-      maxCount: _pi(maxCountController.text),
-      comment: commentController.text,
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   Future<void> create() async {
     try {
       final nextItem = await repository.getNextItemId(entry.value);
       resetForm();
-      itemController.text = nextItem.toString();
+      itemController.init(nextItem);
       creating.value = true;
       editing.value = false;
       selectedIndex.value = null;
@@ -216,9 +216,10 @@ class DisenchantLootTemplateViewModel {
     }
   }
 
-  Future<void> initSignals({required int disenchantId}) async {
+  Future<void> initSignals({required int itemId}) async {
     try {
-      entry.value = disenchantId;
+      entry.value = itemId;
+      entryController.init(itemId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
@@ -231,14 +232,8 @@ class DisenchantLootTemplateViewModel {
   }
 
   void dispose() {
-    chanceController.dispose();
-    commentController.dispose();
-    groupIdController.dispose();
-    itemController.dispose();
-    lootModeController.dispose();
-    maxCountController.dispose();
-    minCountController.dispose();
-    questRequiredController.dispose();
-    referenceController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
