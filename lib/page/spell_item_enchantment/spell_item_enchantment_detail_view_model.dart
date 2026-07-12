@@ -5,8 +5,7 @@ import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -17,54 +16,75 @@ class SpellItemEnchantmentDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
-  final nameController = TextEditingController();
-  final chargesController = TextEditingController();
+  final idController = IntFieldController();
+  final nameController = StringFieldController();
+  final chargesController = IntFieldController();
 
   /// Effect
-  final effect0Controller = TextEditingController();
-  final effect1Controller = TextEditingController();
-  final effect2Controller = TextEditingController();
+  final effect0Controller = IntFieldController();
+  final effect1Controller = IntFieldController();
+  final effect2Controller = IntFieldController();
 
   /// EffectPointsMin
-  final effectPointsMin0Controller = TextEditingController();
-  final effectPointsMin1Controller = TextEditingController();
-  final effectPointsMin2Controller = TextEditingController();
+  final effectPointsMin0Controller = IntFieldController();
+  final effectPointsMin1Controller = IntFieldController();
+  final effectPointsMin2Controller = IntFieldController();
 
   /// EffectPointsMax
-  final effectPointsMax0Controller = TextEditingController();
-  final effectPointsMax1Controller = TextEditingController();
-  final effectPointsMax2Controller = TextEditingController();
+  final effectPointsMax0Controller = IntFieldController();
+  final effectPointsMax1Controller = IntFieldController();
+  final effectPointsMax2Controller = IntFieldController();
 
   /// EffectArg
-  final effectArg0Controller = TextEditingController();
-  final effectArg1Controller = TextEditingController();
-  final effectArg2Controller = TextEditingController();
+  final effectArg0Controller = IntFieldController();
+  final effectArg1Controller = IntFieldController();
+  final effectArg2Controller = IntFieldController();
 
   /// Other
-  final itemVisualController = TextEditingController();
-  final flagsController = TextEditingController();
-  final srcItemIdController = TextEditingController();
-  final conditionIdController = TextEditingController();
-  final requiredSkillIdController = TextEditingController();
-  final requiredSkillRankController = TextEditingController();
-  final minLevelController = TextEditingController();
+  final itemVisualController = IntFieldController();
+  final flagsController = IntFieldController();
+  final srcItemIdController = IntFieldController();
+  final conditionIdController = IntFieldController();
+  final requiredSkillIdController = IntFieldController();
+  final requiredSkillRankController = IntFieldController();
+  final minLevelController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    nameController,
+    chargesController,
+    effect0Controller,
+    effect1Controller,
+    effect2Controller,
+    effectPointsMin0Controller,
+    effectPointsMin1Controller,
+    effectPointsMin2Controller,
+    effectPointsMax0Controller,
+    effectPointsMax1Controller,
+    effectPointsMax2Controller,
+    effectArg0Controller,
+    effectArg1Controller,
+    effectArg2Controller,
+    itemVisualController,
+    flagsController,
+    srcItemIdController,
+    conditionIdController,
+    requiredSkillIdController,
+    requiredSkillRankController,
+    minLevelController,
+  ];
 
   final enchantment = signal(SpellItemEnchantmentEntity());
-
-  /// 保存到数据库
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
-      final isCreate = (await _repository.getSpellItemEnchantment(t.id)) == null;
+      final isCreate =
+          (await _repository.getSpellItemEnchantment(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeSpellItemEnchantment(t);
         t = t.copyWith(id: id);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateSpellItemEnchantment(t);
       }
@@ -102,7 +122,7 @@ class SpellItemEnchantmentDetailViewModel {
       nameLangUnk2: values.valueOf('unk2'),
       nameLangUnk3: values.valueOf('unk3'),
     );
-    nameController.text = values.zhCN;
+    nameController.init(values.zhCN);
   }
 
   /// 退出页面
@@ -113,31 +133,30 @@ class SpellItemEnchantmentDetailViewModel {
   /// 从所有 Controller 收集数据构建 SpellItemEnchantment
   SpellItemEnchantmentEntity _collectFromControllers() {
     // 基于已加载实体覆盖 UI 字段，避免清空未展示的多语言等列。
-    final t = enchantment.value.copyWith(
-      id: _pi(idController.text),
-      nameLangZhCN: nameController.text,
-      charges: _pi(chargesController.text),
-      effect0: _pi(effect0Controller.text),
-      effect1: _pi(effect1Controller.text),
-      effect2: _pi(effect2Controller.text),
-      effectPointsMin0: _pi(effectPointsMin0Controller.text),
-      effectPointsMin1: _pi(effectPointsMin1Controller.text),
-      effectPointsMin2: _pi(effectPointsMin2Controller.text),
-      effectPointsMax0: _pi(effectPointsMax0Controller.text),
-      effectPointsMax1: _pi(effectPointsMax1Controller.text),
-      effectPointsMax2: _pi(effectPointsMax2Controller.text),
-      effectArg0: _pi(effectArg0Controller.text),
-      effectArg1: _pi(effectArg1Controller.text),
-      effectArg2: _pi(effectArg2Controller.text),
-      itemVisual: _pi(itemVisualController.text),
-      flags: _pi(flagsController.text),
-      srcItemId: _pi(srcItemIdController.text),
-      conditionId: _pi(conditionIdController.text),
-      requiredSkillId: _pi(requiredSkillIdController.text),
-      requiredSkillRank: _pi(requiredSkillRankController.text),
-      minLevel: _pi(minLevelController.text),
+    return enchantment.value.copyWith(
+      id: idController.collect(),
+      nameLangZhCN: nameController.collect(),
+      charges: chargesController.collect(),
+      effect0: effect0Controller.collect(),
+      effect1: effect1Controller.collect(),
+      effect2: effect2Controller.collect(),
+      effectPointsMin0: effectPointsMin0Controller.collect(),
+      effectPointsMin1: effectPointsMin1Controller.collect(),
+      effectPointsMin2: effectPointsMin2Controller.collect(),
+      effectPointsMax0: effectPointsMax0Controller.collect(),
+      effectPointsMax1: effectPointsMax1Controller.collect(),
+      effectPointsMax2: effectPointsMax2Controller.collect(),
+      effectArg0: effectArg0Controller.collect(),
+      effectArg1: effectArg1Controller.collect(),
+      effectArg2: effectArg2Controller.collect(),
+      itemVisual: itemVisualController.collect(),
+      flags: flagsController.collect(),
+      srcItemId: srcItemIdController.collect(),
+      conditionId: conditionIdController.collect(),
+      requiredSkillId: requiredSkillIdController.collect(),
+      requiredSkillRank: requiredSkillRankController.collect(),
+      minLevel: minLevelController.collect(),
     );
-    return t;
   }
 
   void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
@@ -152,28 +171,9 @@ class SpellItemEnchantmentDetailViewModel {
   }
 
   void dispose() {
-    chargesController.dispose();
-    conditionIdController.dispose();
-    effect0Controller.dispose();
-    effect1Controller.dispose();
-    effect2Controller.dispose();
-    effectArg0Controller.dispose();
-    effectArg1Controller.dispose();
-    effectArg2Controller.dispose();
-    effectPointsMax0Controller.dispose();
-    effectPointsMax1Controller.dispose();
-    effectPointsMax2Controller.dispose();
-    effectPointsMin0Controller.dispose();
-    effectPointsMin1Controller.dispose();
-    effectPointsMin2Controller.dispose();
-    flagsController.dispose();
-    idController.dispose();
-    itemVisualController.dispose();
-    minLevelController.dispose();
-    nameController.dispose();
-    requiredSkillIdController.dispose();
-    requiredSkillRankController.dispose();
-    srcItemIdController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals({int? id}) async {
@@ -192,27 +192,27 @@ class SpellItemEnchantmentDetailViewModel {
   }
 
   void _initControllers(SpellItemEnchantmentEntity entry) {
-    idController.text = _fmt(entry.id);
-    nameController.text = entry.nameLangZhCN;
-    chargesController.text = _fmt(entry.charges);
-    effect0Controller.text = _fmt(entry.effect0);
-    effect1Controller.text = _fmt(entry.effect1);
-    effect2Controller.text = _fmt(entry.effect2);
-    effectPointsMin0Controller.text = _fmt(entry.effectPointsMin0);
-    effectPointsMin1Controller.text = _fmt(entry.effectPointsMin1);
-    effectPointsMin2Controller.text = _fmt(entry.effectPointsMin2);
-    effectPointsMax0Controller.text = _fmt(entry.effectPointsMax0);
-    effectPointsMax1Controller.text = _fmt(entry.effectPointsMax1);
-    effectPointsMax2Controller.text = _fmt(entry.effectPointsMax2);
-    effectArg0Controller.text = _fmt(entry.effectArg0);
-    effectArg1Controller.text = _fmt(entry.effectArg1);
-    effectArg2Controller.text = _fmt(entry.effectArg2);
-    itemVisualController.text = _fmt(entry.itemVisual);
-    flagsController.text = _fmt(entry.flags);
-    srcItemIdController.text = _fmt(entry.srcItemId);
-    conditionIdController.text = _fmt(entry.conditionId);
-    requiredSkillIdController.text = _fmt(entry.requiredSkillId);
-    requiredSkillRankController.text = _fmt(entry.requiredSkillRank);
-    minLevelController.text = _fmt(entry.minLevel);
+    idController.init(entry.id);
+    nameController.init(entry.nameLangZhCN);
+    chargesController.init(entry.charges);
+    effect0Controller.init(entry.effect0);
+    effect1Controller.init(entry.effect1);
+    effect2Controller.init(entry.effect2);
+    effectPointsMin0Controller.init(entry.effectPointsMin0);
+    effectPointsMin1Controller.init(entry.effectPointsMin1);
+    effectPointsMin2Controller.init(entry.effectPointsMin2);
+    effectPointsMax0Controller.init(entry.effectPointsMax0);
+    effectPointsMax1Controller.init(entry.effectPointsMax1);
+    effectPointsMax2Controller.init(entry.effectPointsMax2);
+    effectArg0Controller.init(entry.effectArg0);
+    effectArg1Controller.init(entry.effectArg1);
+    effectArg2Controller.init(entry.effectArg2);
+    itemVisualController.init(entry.itemVisual);
+    flagsController.init(entry.flags);
+    srcItemIdController.init(entry.srcItemId);
+    conditionIdController.init(entry.conditionId);
+    requiredSkillIdController.init(entry.requiredSkillId);
+    requiredSkillRankController.init(entry.requiredSkillRank);
+    minLevelController.init(entry.minLevel);
   }
 }
