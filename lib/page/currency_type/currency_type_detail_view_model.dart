@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -15,17 +14,19 @@ class CurrencyTypeDetailViewModel {
   final _repository = GetIt.instance.get<CurrencyTypeRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final idController = TextEditingController();
-  final itemIdController = TextEditingController();
-  final categoryIdController = TextEditingController();
-  final bitIndexController = TextEditingController();
+  final idController = IntFieldController();
+  final itemIdController = IntFieldController();
+  final categoryIdController = IntFieldController();
+  final bitIndexController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    itemIdController,
+    categoryIdController,
+    bitIndexController,
+  ];
 
   final currencyType = signal(CurrencyTypeEntity());
-
-  /// 保存到数据库
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -33,12 +34,14 @@ class CurrencyTypeDetailViewModel {
       final existed = await _repository.getCurrencyType(t.id);
       if (existed == null) {
         final id = await _repository.storeCurrencyType(t);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateCurrencyType(t);
       }
       final isCreate = existed == null;
-      currencyType.value = isCreate ? t.copyWith(id: int.tryParse(idController.text) ?? t.id) : t;
+      currencyType.value = isCreate
+          ? t.copyWith(id: idController.collect())
+          : t;
       _logActivity(
         isCreate ? ActivityActionType.create : ActivityActionType.update,
         currencyType.value,
@@ -61,10 +64,10 @@ class CurrencyTypeDetailViewModel {
   /// 从所有 Controller 收集数据构建 CurrencyType
   CurrencyTypeEntity _collectFromControllers() {
     return CurrencyTypeEntity(
-      id: _pi(idController.text),
-      itemId: _pi(itemIdController.text),
-      categoryId: _pi(categoryIdController.text),
-      bitIndex: _pi(bitIndexController.text),
+      id: idController.collect(),
+      itemId: itemIdController.collect(),
+      categoryId: categoryIdController.collect(),
+      bitIndex: bitIndexController.collect(),
     );
   }
 
@@ -80,10 +83,9 @@ class CurrencyTypeDetailViewModel {
   }
 
   void dispose() {
-    bitIndexController.dispose();
-    categoryIdController.dispose();
-    idController.dispose();
-    itemIdController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals({int? id}) async {
@@ -102,9 +104,9 @@ class CurrencyTypeDetailViewModel {
   }
 
   void _initControllers(CurrencyTypeEntity currencyType) {
-    idController.text = _fmt(currencyType.id);
-    itemIdController.text = _fmt(currencyType.itemId);
-    categoryIdController.text = _fmt(currencyType.categoryId);
-    bitIndexController.text = _fmt(currencyType.bitIndex);
+    idController.init(currencyType.id);
+    itemIdController.init(currencyType.itemId);
+    categoryIdController.init(currencyType.categoryId);
+    bitIndexController.init(currencyType.bitIndex);
   }
 }
