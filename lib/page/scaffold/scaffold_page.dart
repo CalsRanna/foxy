@@ -328,7 +328,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
   @override
   void initState() {
     super.initState();
-    _pathController.controller.addListener(() {
+    _pathController.addListener(() {
       if (mounted) setState(() {});
     });
     _unsub = _vm.dbcImported.subscribe(_onImportedChanged);

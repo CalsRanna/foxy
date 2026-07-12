@@ -206,7 +206,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: 'Data$index',
       child: FoxyNumberInput<int>(
         placeholder: 'Data$index',
-        controller: viewModel.dataControllers[index],
+        controller: viewModel.dataController(index),
       ),
     );
   }

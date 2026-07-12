@@ -98,6 +98,39 @@ class ItemSetDetailViewModel with FieldControllerMixin {
   late final setSpellId6Controller = registerController(IntFieldController());
   late final setSpellId7Controller = registerController(IntFieldController());
 
+  IntFieldController itemIdController(int i) => switch (i) {
+    0 => itemId0Controller,
+    1 => itemId1Controller,
+    2 => itemId2Controller,
+    3 => itemId3Controller,
+    4 => itemId4Controller,
+    5 => itemId5Controller,
+    6 => itemId6Controller,
+    7 => itemId7Controller,
+    8 => itemId8Controller,
+    9 => itemId9Controller,
+    10 => itemId10Controller,
+    11 => itemId11Controller,
+    12 => itemId12Controller,
+    13 => itemId13Controller,
+    14 => itemId14Controller,
+    15 => itemId15Controller,
+    16 => itemId16Controller,
+    _ => itemId0Controller,
+  };
+
+  IntFieldController setSpellIdController(int i) => switch (i) {
+    0 => setSpellId0Controller,
+    1 => setSpellId1Controller,
+    2 => setSpellId2Controller,
+    3 => setSpellId3Controller,
+    4 => setSpellId4Controller,
+    5 => setSpellId5Controller,
+    6 => setSpellId6Controller,
+    7 => setSpellId7Controller,
+    _ => setSpellId0Controller,
+  };
+
   /// Set Thresholds
   late final setThreshold0Controller = registerController(IntFieldController());
   late final setThreshold1Controller = registerController(IntFieldController());
@@ -113,38 +146,6 @@ class ItemSetDetailViewModel with FieldControllerMixin {
   late final requiredSkillRankController = registerController(
     IntFieldController(),
   );
-
-  /// 按索引访问套装物品/法术控制器
-  List<IntFieldController> get itemIdControllers => [
-    itemId0Controller,
-    itemId1Controller,
-    itemId2Controller,
-    itemId3Controller,
-    itemId4Controller,
-    itemId5Controller,
-    itemId6Controller,
-    itemId7Controller,
-    itemId8Controller,
-    itemId9Controller,
-    itemId10Controller,
-    itemId11Controller,
-    itemId12Controller,
-    itemId13Controller,
-    itemId14Controller,
-    itemId15Controller,
-    itemId16Controller,
-  ];
-
-  List<IntFieldController> get setSpellIdControllers => [
-    setSpellId0Controller,
-    setSpellId1Controller,
-    setSpellId2Controller,
-    setSpellId3Controller,
-    setSpellId4Controller,
-    setSpellId5Controller,
-    setSpellId6Controller,
-    setSpellId7Controller,
-  ];
 
   final itemSet = signal(ItemSetEntity());
 

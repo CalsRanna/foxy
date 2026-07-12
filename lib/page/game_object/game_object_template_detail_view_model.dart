@@ -30,10 +30,59 @@ class GameObjectTemplateDetailViewModel with FieldControllerMixin {
   late final entryController = registerController(IntFieldController());
   late final displayIdController = registerController(IntFieldController());
   late final sizeController = registerController(DoubleFieldController());
-  late final dataControllers = List.generate(
-    24,
-    (_) => registerController(IntFieldController()),
-  );
+  late final data0Controller = registerController(IntFieldController());
+  late final data1Controller = registerController(IntFieldController());
+  late final data2Controller = registerController(IntFieldController());
+  late final data3Controller = registerController(IntFieldController());
+  late final data4Controller = registerController(IntFieldController());
+  late final data5Controller = registerController(IntFieldController());
+  late final data6Controller = registerController(IntFieldController());
+  late final data7Controller = registerController(IntFieldController());
+  late final data8Controller = registerController(IntFieldController());
+  late final data9Controller = registerController(IntFieldController());
+  late final data10Controller = registerController(IntFieldController());
+  late final data11Controller = registerController(IntFieldController());
+  late final data12Controller = registerController(IntFieldController());
+  late final data13Controller = registerController(IntFieldController());
+  late final data14Controller = registerController(IntFieldController());
+  late final data15Controller = registerController(IntFieldController());
+  late final data16Controller = registerController(IntFieldController());
+  late final data17Controller = registerController(IntFieldController());
+  late final data18Controller = registerController(IntFieldController());
+  late final data19Controller = registerController(IntFieldController());
+  late final data20Controller = registerController(IntFieldController());
+  late final data21Controller = registerController(IntFieldController());
+  late final data22Controller = registerController(IntFieldController());
+  late final data23Controller = registerController(IntFieldController());
+
+  IntFieldController dataController(int i) => switch (i) {
+    0 => data0Controller,
+    1 => data1Controller,
+    2 => data2Controller,
+    3 => data3Controller,
+    4 => data4Controller,
+    5 => data5Controller,
+    6 => data6Controller,
+    7 => data7Controller,
+    8 => data8Controller,
+    9 => data9Controller,
+    10 => data10Controller,
+    11 => data11Controller,
+    12 => data12Controller,
+    13 => data13Controller,
+    14 => data14Controller,
+    15 => data15Controller,
+    16 => data16Controller,
+    17 => data17Controller,
+    18 => data18Controller,
+    19 => data19Controller,
+    20 => data20Controller,
+    21 => data21Controller,
+    22 => data22Controller,
+    23 => data23Controller,
+    _ => data0Controller,
+  };
+
   late final verifiedBuildController = registerController(IntFieldController());
 
   final template = signal(GameObjectTemplateEntity());
@@ -76,30 +125,30 @@ class GameObjectTemplateDetailViewModel with FieldControllerMixin {
       displayId: displayIdController.collect(),
       size: sizeController.collect(),
       unk1: unk1Controller.collect(),
-      data0: dataControllers[0].collect(),
-      data1: dataControllers[1].collect(),
-      data2: dataControllers[2].collect(),
-      data3: dataControllers[3].collect(),
-      data4: dataControllers[4].collect(),
-      data5: dataControllers[5].collect(),
-      data6: dataControllers[6].collect(),
-      data7: dataControllers[7].collect(),
-      data8: dataControllers[8].collect(),
-      data9: dataControllers[9].collect(),
-      data10: dataControllers[10].collect(),
-      data11: dataControllers[11].collect(),
-      data12: dataControllers[12].collect(),
-      data13: dataControllers[13].collect(),
-      data14: dataControllers[14].collect(),
-      data15: dataControllers[15].collect(),
-      data16: dataControllers[16].collect(),
-      data17: dataControllers[17].collect(),
-      data18: dataControllers[18].collect(),
-      data19: dataControllers[19].collect(),
-      data20: dataControllers[20].collect(),
-      data21: dataControllers[21].collect(),
-      data22: dataControllers[22].collect(),
-      data23: dataControllers[23].collect(),
+      data0: data0Controller.collect(),
+      data1: data1Controller.collect(),
+      data2: data2Controller.collect(),
+      data3: data3Controller.collect(),
+      data4: data4Controller.collect(),
+      data5: data5Controller.collect(),
+      data6: data6Controller.collect(),
+      data7: data7Controller.collect(),
+      data8: data8Controller.collect(),
+      data9: data9Controller.collect(),
+      data10: data10Controller.collect(),
+      data11: data11Controller.collect(),
+      data12: data12Controller.collect(),
+      data13: data13Controller.collect(),
+      data14: data14Controller.collect(),
+      data15: data15Controller.collect(),
+      data16: data16Controller.collect(),
+      data17: data17Controller.collect(),
+      data18: data18Controller.collect(),
+      data19: data19Controller.collect(),
+      data20: data20Controller.collect(),
+      data21: data21Controller.collect(),
+      data22: data22Controller.collect(),
+      data23: data23Controller.collect(),
       aiName: aiNameController.collect(),
       scriptName: scriptNameController.collect(),
       verifiedBuild: verifiedBuildController.collect(),
@@ -137,30 +186,30 @@ class GameObjectTemplateDetailViewModel with FieldControllerMixin {
     displayIdController.init(template.displayId);
     sizeController.init(template.size);
     unk1Controller.init(template.unk1);
-    dataControllers[0].init(template.data0);
-    dataControllers[1].init(template.data1);
-    dataControllers[2].init(template.data2);
-    dataControllers[3].init(template.data3);
-    dataControllers[4].init(template.data4);
-    dataControllers[5].init(template.data5);
-    dataControllers[6].init(template.data6);
-    dataControllers[7].init(template.data7);
-    dataControllers[8].init(template.data8);
-    dataControllers[9].init(template.data9);
-    dataControllers[10].init(template.data10);
-    dataControllers[11].init(template.data11);
-    dataControllers[12].init(template.data12);
-    dataControllers[13].init(template.data13);
-    dataControllers[14].init(template.data14);
-    dataControllers[15].init(template.data15);
-    dataControllers[16].init(template.data16);
-    dataControllers[17].init(template.data17);
-    dataControllers[18].init(template.data18);
-    dataControllers[19].init(template.data19);
-    dataControllers[20].init(template.data20);
-    dataControllers[21].init(template.data21);
-    dataControllers[22].init(template.data22);
-    dataControllers[23].init(template.data23);
+    data0Controller.init(template.data0);
+    data1Controller.init(template.data1);
+    data2Controller.init(template.data2);
+    data3Controller.init(template.data3);
+    data4Controller.init(template.data4);
+    data5Controller.init(template.data5);
+    data6Controller.init(template.data6);
+    data7Controller.init(template.data7);
+    data8Controller.init(template.data8);
+    data9Controller.init(template.data9);
+    data10Controller.init(template.data10);
+    data11Controller.init(template.data11);
+    data12Controller.init(template.data12);
+    data13Controller.init(template.data13);
+    data14Controller.init(template.data14);
+    data15Controller.init(template.data15);
+    data16Controller.init(template.data16);
+    data17Controller.init(template.data17);
+    data18Controller.init(template.data18);
+    data19Controller.init(template.data19);
+    data20Controller.init(template.data20);
+    data21Controller.init(template.data21);
+    data22Controller.init(template.data22);
+    data23Controller.init(template.data23);
     aiNameController.init(template.aiName);
     scriptNameController.init(template.scriptName);
     verifiedBuildController.init(template.verifiedBuild);

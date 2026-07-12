@@ -360,7 +360,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   @override
   void initState() {
     super.initState();
-    _searchController.controller.addListener(() {
+    _searchController.addListener(() {
       setState(() => _query = _searchController.collect().trim().toLowerCase());
     });
     _bootstrap();

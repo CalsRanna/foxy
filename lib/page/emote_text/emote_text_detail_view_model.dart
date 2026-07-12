@@ -20,10 +20,42 @@ class EmoteTextDetailViewModel with FieldControllerMixin {
   late final emoteIdController = registerController(IntFieldController());
 
   /// EmoteText
-  late final emoteTextControllers = List.generate(
-    16,
-    (_) => registerController(IntFieldController()),
-  );
+  late final emoteText0Controller = registerController(IntFieldController());
+  late final emoteText1Controller = registerController(IntFieldController());
+  late final emoteText2Controller = registerController(IntFieldController());
+  late final emoteText3Controller = registerController(IntFieldController());
+  late final emoteText4Controller = registerController(IntFieldController());
+  late final emoteText5Controller = registerController(IntFieldController());
+  late final emoteText6Controller = registerController(IntFieldController());
+  late final emoteText7Controller = registerController(IntFieldController());
+  late final emoteText8Controller = registerController(IntFieldController());
+  late final emoteText9Controller = registerController(IntFieldController());
+  late final emoteText10Controller = registerController(IntFieldController());
+  late final emoteText11Controller = registerController(IntFieldController());
+  late final emoteText12Controller = registerController(IntFieldController());
+  late final emoteText13Controller = registerController(IntFieldController());
+  late final emoteText14Controller = registerController(IntFieldController());
+  late final emoteText15Controller = registerController(IntFieldController());
+
+  IntFieldController emoteTextController(int i) => switch (i) {
+    0 => emoteText0Controller,
+    1 => emoteText1Controller,
+    2 => emoteText2Controller,
+    3 => emoteText3Controller,
+    4 => emoteText4Controller,
+    5 => emoteText5Controller,
+    6 => emoteText6Controller,
+    7 => emoteText7Controller,
+    8 => emoteText8Controller,
+    9 => emoteText9Controller,
+    10 => emoteText10Controller,
+    11 => emoteText11Controller,
+    12 => emoteText12Controller,
+    13 => emoteText13Controller,
+    14 => emoteText14Controller,
+    15 => emoteText15Controller,
+    _ => emoteText0Controller,
+  };
 
   final emote = signal(EmoteTextEntity());
 
@@ -63,22 +95,22 @@ class EmoteTextDetailViewModel with FieldControllerMixin {
       id: idController.collect(),
       name: nameController.collect(),
       emoteId: emoteIdController.collect(),
-      emoteText0: emoteTextControllers[0].collect(),
-      emoteText1: emoteTextControllers[1].collect(),
-      emoteText2: emoteTextControllers[2].collect(),
-      emoteText3: emoteTextControllers[3].collect(),
-      emoteText4: emoteTextControllers[4].collect(),
-      emoteText5: emoteTextControllers[5].collect(),
-      emoteText6: emoteTextControllers[6].collect(),
-      emoteText7: emoteTextControllers[7].collect(),
-      emoteText8: emoteTextControllers[8].collect(),
-      emoteText9: emoteTextControllers[9].collect(),
-      emoteText10: emoteTextControllers[10].collect(),
-      emoteText11: emoteTextControllers[11].collect(),
-      emoteText12: emoteTextControllers[12].collect(),
-      emoteText13: emoteTextControllers[13].collect(),
-      emoteText14: emoteTextControllers[14].collect(),
-      emoteText15: emoteTextControllers[15].collect(),
+      emoteText0: emoteText0Controller.collect(),
+      emoteText1: emoteText1Controller.collect(),
+      emoteText2: emoteText2Controller.collect(),
+      emoteText3: emoteText3Controller.collect(),
+      emoteText4: emoteText4Controller.collect(),
+      emoteText5: emoteText5Controller.collect(),
+      emoteText6: emoteText6Controller.collect(),
+      emoteText7: emoteText7Controller.collect(),
+      emoteText8: emoteText8Controller.collect(),
+      emoteText9: emoteText9Controller.collect(),
+      emoteText10: emoteText10Controller.collect(),
+      emoteText11: emoteText11Controller.collect(),
+      emoteText12: emoteText12Controller.collect(),
+      emoteText13: emoteText13Controller.collect(),
+      emoteText14: emoteText14Controller.collect(),
+      emoteText15: emoteText15Controller.collect(),
     );
   }
 
@@ -116,21 +148,21 @@ class EmoteTextDetailViewModel with FieldControllerMixin {
     idController.init(emoteText.id);
     nameController.init(emoteText.name);
     emoteIdController.init(emoteText.emoteId);
-    emoteTextControllers[0].init(emoteText.emoteText0);
-    emoteTextControllers[1].init(emoteText.emoteText1);
-    emoteTextControllers[2].init(emoteText.emoteText2);
-    emoteTextControllers[3].init(emoteText.emoteText3);
-    emoteTextControllers[4].init(emoteText.emoteText4);
-    emoteTextControllers[5].init(emoteText.emoteText5);
-    emoteTextControllers[6].init(emoteText.emoteText6);
-    emoteTextControllers[7].init(emoteText.emoteText7);
-    emoteTextControllers[8].init(emoteText.emoteText8);
-    emoteTextControllers[9].init(emoteText.emoteText9);
-    emoteTextControllers[10].init(emoteText.emoteText10);
-    emoteTextControllers[11].init(emoteText.emoteText11);
-    emoteTextControllers[12].init(emoteText.emoteText12);
-    emoteTextControllers[13].init(emoteText.emoteText13);
-    emoteTextControllers[14].init(emoteText.emoteText14);
-    emoteTextControllers[15].init(emoteText.emoteText15);
+    emoteText0Controller.init(emoteText.emoteText0);
+    emoteText1Controller.init(emoteText.emoteText1);
+    emoteText2Controller.init(emoteText.emoteText2);
+    emoteText3Controller.init(emoteText.emoteText3);
+    emoteText4Controller.init(emoteText.emoteText4);
+    emoteText5Controller.init(emoteText.emoteText5);
+    emoteText6Controller.init(emoteText.emoteText6);
+    emoteText7Controller.init(emoteText.emoteText7);
+    emoteText8Controller.init(emoteText.emoteText8);
+    emoteText9Controller.init(emoteText.emoteText9);
+    emoteText10Controller.init(emoteText.emoteText10);
+    emoteText11Controller.init(emoteText.emoteText11);
+    emoteText12Controller.init(emoteText.emoteText12);
+    emoteText13Controller.init(emoteText.emoteText13);
+    emoteText14Controller.init(emoteText.emoteText14);
+    emoteText15Controller.init(emoteText.emoteText15);
   }
 }

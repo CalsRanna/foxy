@@ -5,40 +5,34 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 详情表单字段控制器：把「字段类型 → 格式化/解析规则」内聚到字段声明处。
 ///
-/// 此前每个 detail view model 都手写三段式仪式：
-/// 1. 声明几十个裸 [TextEditingController] / [ShadSelectController]；
-/// 2. `_initControllers`：entity → `_fmt()` → `.text`；
-/// 3. `_collectFromControllers`：`.text` → `_pi()`/`_pd()`/`parseFlagValue()`；
-/// 4. 手写几十行 `dispose()` 清单。
-///
-/// 字段是 int、double、flag 还是 string 的知识散落在 init/collect 两处调用点，
-/// 改一个字段要动三处，漏一处就是静默 bug（类型错配、漏 dispose）。
-///
-/// 本类族将该知识只声明一次：
+/// [FieldControllerMixin] 提供「声明即注册」能力——声明 Controller 时自动入册，
+/// 统一释放，消灭手工列表与漏 dispose 的风险：
 ///
 /// ```dart
-/// final minLevelController = IntFieldController();
-/// final speedWalkController = DoubleFieldController();
+/// class MyViewModel with FieldControllerMixin {
+///   late final entryController = registerController(IntFieldController());
+///   late final nameController = registerController(StringFieldController());
+///   late final speedController = registerController(DoubleFieldController());
+///   late final flagsController = registerController(FlagFieldController());
+///   late final typeController = registerController(SelectFieldController<int>(fallback: 0));
 ///
-/// late final _controllers = <FieldController>[
-///   minLevelController,
-///   speedWalkController,
-/// ];
-///
-/// void _initControllers(Entity t) {
-///   minLevelController.init(t.minLevel);
-///   speedWalkController.init(t.speedWalk);
-/// }
-///
-/// Entity _collect() => Entity(
-///   minLevel: minLevelController.collect(),
-///   speedWalk: speedWalkController.collect(),
-/// );
-///
-/// void dispose() {
-///   for (final controller in _controllers) {
-///     controller.dispose();
+///   void initForm(Entity e) {
+///     entryController.init(e.entry);
+///     nameController.init(e.name);
+///     speedController.init(e.speed);
+///     flagsController.init(e.flags);
+///     typeController.init(e.type);
 ///   }
+///
+///   Entity collect() => Entity(
+///     entry: entryController.collect(),
+///     name: nameController.collect(),
+///     speed: speedController.collect(),
+///     flags: flagsController.collect(),
+///     type: typeController.collect(),
+///   );
+///
+///   void dispose() => disposeControllers();
 /// }
 /// ```
 sealed class FieldController<T> {
