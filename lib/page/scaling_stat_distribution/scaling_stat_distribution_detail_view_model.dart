@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -17,35 +16,55 @@ class ScalingStatDistributionDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
-  final statId0Controller = TextEditingController();
-  final statId1Controller = TextEditingController();
-  final statId2Controller = TextEditingController();
-  final statId3Controller = TextEditingController();
-  final statId4Controller = TextEditingController();
-  final statId5Controller = TextEditingController();
-  final statId6Controller = TextEditingController();
-  final statId7Controller = TextEditingController();
-  final statId8Controller = TextEditingController();
-  final statId9Controller = TextEditingController();
-  final bonus0Controller = TextEditingController();
-  final bonus1Controller = TextEditingController();
-  final bonus2Controller = TextEditingController();
-  final bonus3Controller = TextEditingController();
-  final bonus4Controller = TextEditingController();
-  final bonus5Controller = TextEditingController();
-  final bonus6Controller = TextEditingController();
-  final bonus7Controller = TextEditingController();
-  final bonus8Controller = TextEditingController();
-  final bonus9Controller = TextEditingController();
-  final maxlevelController = TextEditingController();
+  final idController = IntFieldController();
+  final statId0Controller = IntFieldController();
+  final statId1Controller = IntFieldController();
+  final statId2Controller = IntFieldController();
+  final statId3Controller = IntFieldController();
+  final statId4Controller = IntFieldController();
+  final statId5Controller = IntFieldController();
+  final statId6Controller = IntFieldController();
+  final statId7Controller = IntFieldController();
+  final statId8Controller = IntFieldController();
+  final statId9Controller = IntFieldController();
+  final bonus0Controller = IntFieldController();
+  final bonus1Controller = IntFieldController();
+  final bonus2Controller = IntFieldController();
+  final bonus3Controller = IntFieldController();
+  final bonus4Controller = IntFieldController();
+  final bonus5Controller = IntFieldController();
+  final bonus6Controller = IntFieldController();
+  final bonus7Controller = IntFieldController();
+  final bonus8Controller = IntFieldController();
+  final bonus9Controller = IntFieldController();
+  final maxlevelController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    statId0Controller,
+    statId1Controller,
+    statId2Controller,
+    statId3Controller,
+    statId4Controller,
+    statId5Controller,
+    statId6Controller,
+    statId7Controller,
+    statId8Controller,
+    statId9Controller,
+    bonus0Controller,
+    bonus1Controller,
+    bonus2Controller,
+    bonus3Controller,
+    bonus4Controller,
+    bonus5Controller,
+    bonus6Controller,
+    bonus7Controller,
+    bonus8Controller,
+    bonus9Controller,
+    maxlevelController,
+  ];
 
   final distribution = signal(ScalingStatDistributionEntity());
-
-  /// 保存到数据库
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -53,7 +72,7 @@ class ScalingStatDistributionDetailViewModel {
       final existed = await _repository.getScalingStatDistribution(t.id);
       if (existed == null) {
         final id = await _repository.storeScalingStatDistribution(t);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateScalingStatDistribution(t);
       }
@@ -80,54 +99,35 @@ class ScalingStatDistributionDetailViewModel {
   /// 从所有 Controller 收集数据构建 ScalingStatDistribution
   ScalingStatDistributionEntity _collectFromControllers() {
     return ScalingStatDistributionEntity(
-      id: _pi(idController.text),
-      statId0: _pi(statId0Controller.text),
-      statId1: _pi(statId1Controller.text),
-      statId2: _pi(statId2Controller.text),
-      statId3: _pi(statId3Controller.text),
-      statId4: _pi(statId4Controller.text),
-      statId5: _pi(statId5Controller.text),
-      statId6: _pi(statId6Controller.text),
-      statId7: _pi(statId7Controller.text),
-      statId8: _pi(statId8Controller.text),
-      statId9: _pi(statId9Controller.text),
-      bonus0: _pi(bonus0Controller.text),
-      bonus1: _pi(bonus1Controller.text),
-      bonus2: _pi(bonus2Controller.text),
-      bonus3: _pi(bonus3Controller.text),
-      bonus4: _pi(bonus4Controller.text),
-      bonus5: _pi(bonus5Controller.text),
-      bonus6: _pi(bonus6Controller.text),
-      bonus7: _pi(bonus7Controller.text),
-      bonus8: _pi(bonus8Controller.text),
-      bonus9: _pi(bonus9Controller.text),
-      maxlevel: _pi(maxlevelController.text),
+      id: idController.collect(),
+      statId0: statId0Controller.collect(),
+      statId1: statId1Controller.collect(),
+      statId2: statId2Controller.collect(),
+      statId3: statId3Controller.collect(),
+      statId4: statId4Controller.collect(),
+      statId5: statId5Controller.collect(),
+      statId6: statId6Controller.collect(),
+      statId7: statId7Controller.collect(),
+      statId8: statId8Controller.collect(),
+      statId9: statId9Controller.collect(),
+      bonus0: bonus0Controller.collect(),
+      bonus1: bonus1Controller.collect(),
+      bonus2: bonus2Controller.collect(),
+      bonus3: bonus3Controller.collect(),
+      bonus4: bonus4Controller.collect(),
+      bonus5: bonus5Controller.collect(),
+      bonus6: bonus6Controller.collect(),
+      bonus7: bonus7Controller.collect(),
+      bonus8: bonus8Controller.collect(),
+      bonus9: bonus9Controller.collect(),
+      maxlevel: maxlevelController.collect(),
     );
   }
 
   void dispose() {
-    bonus0Controller.dispose();
-    bonus1Controller.dispose();
-    bonus2Controller.dispose();
-    bonus3Controller.dispose();
-    bonus4Controller.dispose();
-    bonus5Controller.dispose();
-    bonus6Controller.dispose();
-    bonus7Controller.dispose();
-    bonus8Controller.dispose();
-    bonus9Controller.dispose();
-    idController.dispose();
-    maxlevelController.dispose();
-    statId0Controller.dispose();
-    statId1Controller.dispose();
-    statId2Controller.dispose();
-    statId3Controller.dispose();
-    statId4Controller.dispose();
-    statId5Controller.dispose();
-    statId6Controller.dispose();
-    statId7Controller.dispose();
-    statId8Controller.dispose();
-    statId9Controller.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   void _logActivity(
@@ -160,27 +160,27 @@ class ScalingStatDistributionDetailViewModel {
   }
 
   void _initControllers(ScalingStatDistributionEntity item) {
-    idController.text = _fmt(item.id);
-    statId0Controller.text = _fmt(item.statId0);
-    statId1Controller.text = _fmt(item.statId1);
-    statId2Controller.text = _fmt(item.statId2);
-    statId3Controller.text = _fmt(item.statId3);
-    statId4Controller.text = _fmt(item.statId4);
-    statId5Controller.text = _fmt(item.statId5);
-    statId6Controller.text = _fmt(item.statId6);
-    statId7Controller.text = _fmt(item.statId7);
-    statId8Controller.text = _fmt(item.statId8);
-    statId9Controller.text = _fmt(item.statId9);
-    bonus0Controller.text = _fmt(item.bonus0);
-    bonus1Controller.text = _fmt(item.bonus1);
-    bonus2Controller.text = _fmt(item.bonus2);
-    bonus3Controller.text = _fmt(item.bonus3);
-    bonus4Controller.text = _fmt(item.bonus4);
-    bonus5Controller.text = _fmt(item.bonus5);
-    bonus6Controller.text = _fmt(item.bonus6);
-    bonus7Controller.text = _fmt(item.bonus7);
-    bonus8Controller.text = _fmt(item.bonus8);
-    bonus9Controller.text = _fmt(item.bonus9);
-    maxlevelController.text = _fmt(item.maxlevel);
+    idController.init(item.id);
+    statId0Controller.init(item.statId0);
+    statId1Controller.init(item.statId1);
+    statId2Controller.init(item.statId2);
+    statId3Controller.init(item.statId3);
+    statId4Controller.init(item.statId4);
+    statId5Controller.init(item.statId5);
+    statId6Controller.init(item.statId6);
+    statId7Controller.init(item.statId7);
+    statId8Controller.init(item.statId8);
+    statId9Controller.init(item.statId9);
+    bonus0Controller.init(item.bonus0);
+    bonus1Controller.init(item.bonus1);
+    bonus2Controller.init(item.bonus2);
+    bonus3Controller.init(item.bonus3);
+    bonus4Controller.init(item.bonus4);
+    bonus5Controller.init(item.bonus5);
+    bonus6Controller.init(item.bonus6);
+    bonus7Controller.init(item.bonus7);
+    bonus8Controller.init(item.bonus8);
+    bonus9Controller.init(item.bonus9);
+    maxlevelController.init(item.maxlevel);
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
@@ -8,13 +7,16 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ScalingStatDistributionListViewModel {
   int _refreshToken = 0;
-  final idController = TextEditingController();
+  final idController = StringFieldController();
+
+  late final _controllers = <FieldController>[idController];
   final _repository = GetIt.instance
       .get<ScalingStatDistributionSoloRepository>();
 
@@ -71,7 +73,9 @@ class ScalingStatDistributionListViewModel {
   }
 
   void dispose() {
-    idController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals() async {
@@ -106,7 +110,7 @@ class ScalingStatDistributionListViewModel {
   }
 
   ScalingStatDistributionFilterEntity _buildFilter() {
-    return ScalingStatDistributionFilterEntity(id: idController.text);
+    return ScalingStatDistributionFilterEntity(id: idController.collect());
   }
 
   Future<void> paginate(int page) async {
@@ -115,7 +119,7 @@ class ScalingStatDistributionListViewModel {
   }
 
   Future<void> reset() async {
-    idController.clear();
+    idController.init('');
     page.value = 1;
     await _refresh();
   }
