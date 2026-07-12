@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_filter_entity.dart';
@@ -8,14 +7,20 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ScalingStatValueListViewModel {
   int _refreshToken = 0;
-  final entryController = TextEditingController();
-  final charlevelController = TextEditingController();
+  final entryController = StringFieldController();
+  final charlevelController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    entryController,
+    charlevelController,
+  ];
   final _repository = GetIt.instance.get<ScalingStatValueRepository>();
 
   final page = signal(1);
@@ -60,8 +65,9 @@ class ScalingStatValueListViewModel {
   }
 
   void dispose() {
-    entryController.dispose();
-    charlevelController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals() async {
@@ -96,8 +102,8 @@ class ScalingStatValueListViewModel {
 
   ScalingStatValueFilterEntity _buildFilter() {
     return ScalingStatValueFilterEntity(
-      id: entryController.text,
-      charlevel: charlevelController.text,
+      id: entryController.collect(),
+      charlevel: charlevelController.collect(),
     );
   }
 
@@ -107,8 +113,8 @@ class ScalingStatValueListViewModel {
   }
 
   Future<void> reset() async {
-    entryController.clear();
-    charlevelController.clear();
+    entryController.init('');
+    charlevelController.init('');
     page.value = 1;
     await _refresh();
   }
