@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,22 +15,21 @@ class EmoteTextDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
-  final nameController = TextEditingController();
-  final emoteIdController = TextEditingController();
+  final idController = IntFieldController();
+  final nameController = StringFieldController();
+  final emoteIdController = IntFieldController();
 
   /// EmoteText
-  final emoteTextControllers = List.generate(
-    16,
-    (_) => TextEditingController(),
-  );
+  final emoteTextControllers = List.generate(16, (_) => IntFieldController());
+
+  late final _controllers = <FieldController>[
+    idController,
+    nameController,
+    emoteIdController,
+    ...emoteTextControllers,
+  ];
 
   final emote = signal(EmoteTextEntity());
-
-  /// 保存到数据库
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -39,7 +37,7 @@ class EmoteTextDetailViewModel {
       final existed = await _repository.getEmoteText(t.id);
       if (existed == null) {
         final id = await _repository.storeEmoteText(t);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateEmoteText(t);
       }
@@ -66,25 +64,25 @@ class EmoteTextDetailViewModel {
   /// 从所有 Controller 收集数据构建 EmoteText
   EmoteTextEntity _collectFromControllers() {
     return EmoteTextEntity(
-      id: _pi(idController.text),
-      name: nameController.text,
-      emoteId: _pi(emoteIdController.text),
-      emoteText0: _pi(emoteTextControllers[0].text),
-      emoteText1: _pi(emoteTextControllers[1].text),
-      emoteText2: _pi(emoteTextControllers[2].text),
-      emoteText3: _pi(emoteTextControllers[3].text),
-      emoteText4: _pi(emoteTextControllers[4].text),
-      emoteText5: _pi(emoteTextControllers[5].text),
-      emoteText6: _pi(emoteTextControllers[6].text),
-      emoteText7: _pi(emoteTextControllers[7].text),
-      emoteText8: _pi(emoteTextControllers[8].text),
-      emoteText9: _pi(emoteTextControllers[9].text),
-      emoteText10: _pi(emoteTextControllers[10].text),
-      emoteText11: _pi(emoteTextControllers[11].text),
-      emoteText12: _pi(emoteTextControllers[12].text),
-      emoteText13: _pi(emoteTextControllers[13].text),
-      emoteText14: _pi(emoteTextControllers[14].text),
-      emoteText15: _pi(emoteTextControllers[15].text),
+      id: idController.collect(),
+      name: nameController.collect(),
+      emoteId: emoteIdController.collect(),
+      emoteText0: emoteTextControllers[0].collect(),
+      emoteText1: emoteTextControllers[1].collect(),
+      emoteText2: emoteTextControllers[2].collect(),
+      emoteText3: emoteTextControllers[3].collect(),
+      emoteText4: emoteTextControllers[4].collect(),
+      emoteText5: emoteTextControllers[5].collect(),
+      emoteText6: emoteTextControllers[6].collect(),
+      emoteText7: emoteTextControllers[7].collect(),
+      emoteText8: emoteTextControllers[8].collect(),
+      emoteText9: emoteTextControllers[9].collect(),
+      emoteText10: emoteTextControllers[10].collect(),
+      emoteText11: emoteTextControllers[11].collect(),
+      emoteText12: emoteTextControllers[12].collect(),
+      emoteText13: emoteTextControllers[13].collect(),
+      emoteText14: emoteTextControllers[14].collect(),
+      emoteText15: emoteTextControllers[15].collect(),
     );
   }
 
@@ -100,12 +98,9 @@ class EmoteTextDetailViewModel {
   }
 
   void dispose() {
-    emoteIdController.dispose();
-    for (final c in emoteTextControllers) {
-      c.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
     }
-    idController.dispose();
-    nameController.dispose();
   }
 
   Future<void> initSignals({int? id}) async {
@@ -124,27 +119,24 @@ class EmoteTextDetailViewModel {
   }
 
   void _initControllers(EmoteTextEntity emoteText) {
-    /// Basic
-    idController.text = _fmt(emoteText.id);
-    nameController.text = emoteText.name;
-    emoteIdController.text = _fmt(emoteText.emoteId);
-
-    /// EmoteText
-    emoteTextControllers[0].text = _fmt(emoteText.emoteText0);
-    emoteTextControllers[1].text = _fmt(emoteText.emoteText1);
-    emoteTextControllers[2].text = _fmt(emoteText.emoteText2);
-    emoteTextControllers[3].text = _fmt(emoteText.emoteText3);
-    emoteTextControllers[4].text = _fmt(emoteText.emoteText4);
-    emoteTextControllers[5].text = _fmt(emoteText.emoteText5);
-    emoteTextControllers[6].text = _fmt(emoteText.emoteText6);
-    emoteTextControllers[7].text = _fmt(emoteText.emoteText7);
-    emoteTextControllers[8].text = _fmt(emoteText.emoteText8);
-    emoteTextControllers[9].text = _fmt(emoteText.emoteText9);
-    emoteTextControllers[10].text = _fmt(emoteText.emoteText10);
-    emoteTextControllers[11].text = _fmt(emoteText.emoteText11);
-    emoteTextControllers[12].text = _fmt(emoteText.emoteText12);
-    emoteTextControllers[13].text = _fmt(emoteText.emoteText13);
-    emoteTextControllers[14].text = _fmt(emoteText.emoteText14);
-    emoteTextControllers[15].text = _fmt(emoteText.emoteText15);
+    idController.init(emoteText.id);
+    nameController.init(emoteText.name);
+    emoteIdController.init(emoteText.emoteId);
+    emoteTextControllers[0].init(emoteText.emoteText0);
+    emoteTextControllers[1].init(emoteText.emoteText1);
+    emoteTextControllers[2].init(emoteText.emoteText2);
+    emoteTextControllers[3].init(emoteText.emoteText3);
+    emoteTextControllers[4].init(emoteText.emoteText4);
+    emoteTextControllers[5].init(emoteText.emoteText5);
+    emoteTextControllers[6].init(emoteText.emoteText6);
+    emoteTextControllers[7].init(emoteText.emoteText7);
+    emoteTextControllers[8].init(emoteText.emoteText8);
+    emoteTextControllers[9].init(emoteText.emoteText9);
+    emoteTextControllers[10].init(emoteText.emoteText10);
+    emoteTextControllers[11].init(emoteText.emoteText11);
+    emoteTextControllers[12].init(emoteText.emoteText12);
+    emoteTextControllers[13].init(emoteText.emoteText13);
+    emoteTextControllers[14].init(emoteText.emoteText14);
+    emoteTextControllers[15].init(emoteText.emoteText15);
   }
 }

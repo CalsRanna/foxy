@@ -3,6 +3,7 @@ import 'package:foxy/page/emote_text/emote_text_detail_view_model.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -36,20 +37,22 @@ class _EmoteTextViewState extends State<EmoteTextView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        controller: viewModel.idController,
+        fieldController: viewModel.idController,
         readOnly: true,
       ),
     );
-    final nameInput = FoxyFormItem.legacy(
-      controller: viewModel.nameController,
+    final nameInput = FoxyFormItem(
       label: '名称',
-      placeholder: 'Name',
+      child: FoxyStringInput(
+        controller: viewModel.nameController,
+        placeholder: 'Name',
+      ),
     );
     final emoteIdInput = FoxyFormItem(
       label: '表情编号',
       child: FoxyNumberInput<int>(
         placeholder: 'EmoteID',
-        controller: viewModel.emoteIdController,
+        fieldController: viewModel.emoteIdController,
       ),
     );
 
@@ -57,9 +60,9 @@ class _EmoteTextViewState extends State<EmoteTextView> {
     final emoteTextInputs = List.generate(16, (i) {
       return FoxyFormItem(
         label: '表情文本$i',
-        placeholder: 'EmoteText$i',
         child: FoxyNumberInput<int>(
-          controller: viewModel.emoteTextControllers[i],
+          placeholder: 'EmoteText$i',
+          fieldController: viewModel.emoteTextControllers[i],
         ),
       );
     });
