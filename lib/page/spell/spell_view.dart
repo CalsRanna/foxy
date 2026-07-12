@@ -4,6 +4,7 @@ import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/page/spell/spell_detail_view_model.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
@@ -1742,7 +1743,9 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   void initState() {
     super.initState();
     _flagDisplayController = TextEditingController(
-      text: formatFlagValue(int.tryParse(widget.textController.text) ?? 0),
+      text: FlagFieldController.formatFlagValue(
+        int.tryParse(widget.textController.text) ?? 0,
+      ),
     );
     _flagDisplayController.addListener(_syncTextController);
     _syncController();
@@ -1757,7 +1760,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
       if (_isSelectMode) {
         _syncController();
       } else if (_isFlagMode) {
-        _flagDisplayController.text = formatFlagValue(
+        _flagDisplayController.text = FlagFieldController.formatFlagValue(
           int.tryParse(widget.textController.text) ?? 0,
         );
       }
@@ -1778,7 +1781,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   /// 将 [_flagDisplayController] 的格式化文本同步回 [widget.textController]（纯数字），
   /// 供 VM 读取。替代原 [FoxyFlagPicker.onChanged] 的回写。
   void _syncTextController() {
-    widget.textController.text = parseFlagValue(
+    widget.textController.text = FlagFieldController.parseFlagValue(
       _flagDisplayController.text,
     ).toString();
   }

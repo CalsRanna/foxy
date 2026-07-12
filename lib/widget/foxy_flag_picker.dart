@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-
-/// 格式化标志位整数值为显示文本，如 "123 (0x0000007B)"。
-String formatFlagValue(int value) {
-  final hex = value.toRadixString(16).toUpperCase().padLeft(8, '0');
-  return '$value (0x$hex)';
-}
-
-/// 将 [formatFlagValue] 产生的显示文本解析回 int。
-///
-/// [controller] 存储格式化文本（如 "123 (0x0000007B)"），VM 在 save 时
-/// 用此函数读取原始值，与 [FoxyEntityPicker]/[FoxyNumberInput] 的
-/// controller-only 契约一致。
-int parseFlagValue(String text) {
-  return int.tryParse(text.split(' ').first) ?? 0;
-}
 
 /// 标志位选择器：显示已格式化的值，点击输入框或尾部按钮打开编辑弹窗。
 ///
 /// 这是可交互的编辑入口，**不**使用 [FoxyReadonlyInput] 的 muted/禁用外观。
 /// `ShadInput.readOnly` 仅用于禁止手改 `"123 (0x…)"` 格式串，编辑一律走弹窗。
 ///
-/// [controller] 的文本由调用方在初始化时设置（通过 [formatFlagValue]），
+/// [controller] 的文本由调用方在初始化时设置（通过
+/// [FlagFieldController.formatFlagValue]），
 /// 弹窗确认后组件自动写回 [controller]（格式化文本）。VM 在 save 时
-/// 用 [parseFlagValue] 从 controller 文本读取原始 int 值。
+/// 用 [FlagFieldController.parseFlagValue] 从 controller 文本读取原始 int 值。
 ///
 /// 与 [FoxyEntityPicker]/[FoxyNumberInput] 对齐：纯 controller 模式，
 /// 无 onChanged 双向绑定。
@@ -88,7 +75,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
       },
     );
     if (result != null) {
-      widget.controller.text = formatFlagValue(result);
+      widget.controller.text = FlagFieldController.formatFlagValue(result);
     }
   }
 }
