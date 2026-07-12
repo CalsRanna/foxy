@@ -4,8 +4,8 @@ import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
@@ -164,7 +164,9 @@ class GossipMenuOptionViewModel {
     optionTextController.text = o.optionText;
     optionBroadcastTextIdController.text = _fmt(o.optionBroadcastTextId);
     optionTypeController.value = {o.optionType};
-    optionNpcFlagController.text = formatFlagValue(o.optionNpcFlag);
+    optionNpcFlagController.text = FlagFieldController.formatFlagValue(
+      o.optionNpcFlag,
+    );
     boxCodedController.text = o.boxCoded.toString();
     boxMoneyController.text = o.boxMoney.toString();
     boxTextController.text = o.boxText;
@@ -189,7 +191,9 @@ class GossipMenuOptionViewModel {
       optionType: optionTypeController.value.isNotEmpty
           ? optionTypeController.value.first
           : 0,
-      optionNpcFlag: parseFlagValue(optionNpcFlagController.text),
+      optionNpcFlag: FlagFieldController.parseFlagValue(
+        optionNpcFlagController.text,
+      ),
       boxCoded: _pi(boxCodedController.text, 'BoxCoded'),
       boxMoney: _pi(boxMoneyController.text, 'BoxMoney'),
       boxText: boxTextController.text,

@@ -5,10 +5,10 @@ import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -410,7 +410,7 @@ class SpellDetailViewModel {
 
       // === 目标 ===
       targetCreatureType: _getSelectValue(targetCreatureTypeController),
-      targets: parseFlagValue(targetsController.text),
+      targets: FlagFieldController.parseFlagValue(targetsController.text),
       maxTargets: _pi(maxTargetsController.text),
       maxTargetLevel: _pi(maxTargetLevelController.text),
 
@@ -423,7 +423,9 @@ class SpellDetailViewModel {
       // === 需求 ===
       requiredAreasID: _pi(requiredAreasIDController.text),
       requiresSpellFocus: _pi(requiresSpellFocusController.text),
-      facingCasterFlags: parseFlagValue(facingCasterFlagsController.text),
+      facingCasterFlags: FlagFieldController.parseFlagValue(
+        facingCasterFlagsController.text,
+      ),
 
       // === 能量消耗 ===
       powerDisplayID: _pi(powerDisplayIDController.text),
@@ -436,30 +438,56 @@ class SpellDetailViewModel {
       manaPerSecondPerLevel: _pi(manaPerSecondPerLevelController.text),
 
       // === 标志位 ===
-      interruptFlags: parseFlagValue(interruptFlagsController.text),
-      auraInterruptFlags: parseFlagValue(auraInterruptFlagsController.text),
-      channelInterruptFlags: parseFlagValue(
+      interruptFlags: FlagFieldController.parseFlagValue(
+        interruptFlagsController.text,
+      ),
+      auraInterruptFlags: FlagFieldController.parseFlagValue(
+        auraInterruptFlagsController.text,
+      ),
+      channelInterruptFlags: FlagFieldController.parseFlagValue(
         channelInterruptFlagsController.text,
       ),
-      attributes: parseFlagValue(attributesController.text),
-      attributesEx: parseFlagValue(attributesExController.text),
-      attributesExB: parseFlagValue(attributesExBController.text),
-      attributesExC: parseFlagValue(attributesExCController.text),
-      attributesExD: parseFlagValue(attributesExDController.text),
-      attributesExE: parseFlagValue(attributesExEController.text),
-      attributesExF: parseFlagValue(attributesExFController.text),
-      attributesExG: parseFlagValue(attributesExGController.text),
+      attributes: FlagFieldController.parseFlagValue(attributesController.text),
+      attributesEx: FlagFieldController.parseFlagValue(
+        attributesExController.text,
+      ),
+      attributesExB: FlagFieldController.parseFlagValue(
+        attributesExBController.text,
+      ),
+      attributesExC: FlagFieldController.parseFlagValue(
+        attributesExCController.text,
+      ),
+      attributesExD: FlagFieldController.parseFlagValue(
+        attributesExDController.text,
+      ),
+      attributesExE: FlagFieldController.parseFlagValue(
+        attributesExEController.text,
+      ),
+      attributesExF: FlagFieldController.parseFlagValue(
+        attributesExFController.text,
+      ),
+      attributesExG: FlagFieldController.parseFlagValue(
+        attributesExGController.text,
+      ),
 
       // === 触发 ===
-      procTypeMask: parseFlagValue(procTypeMaskController.text),
+      procTypeMask: FlagFieldController.parseFlagValue(
+        procTypeMaskController.text,
+      ),
       procChance: _pi(procChanceController.text),
       procCharges: _pi(procChargesController.text),
 
       // === 法术分类 ===
       spellClassSet: _getSelectValue(spellClassSetController),
-      spellClassMask0: parseFlagValue(spellClassMask0Controller.text),
-      spellClassMask1: parseFlagValue(spellClassMask1Controller.text),
-      spellClassMask2: parseFlagValue(spellClassMask2Controller.text),
+      spellClassMask0: FlagFieldController.parseFlagValue(
+        spellClassMask0Controller.text,
+      ),
+      spellClassMask1: FlagFieldController.parseFlagValue(
+        spellClassMask1Controller.text,
+      ),
+      spellClassMask2: FlagFieldController.parseFlagValue(
+        spellClassMask2Controller.text,
+      ),
 
       // === 效果0 ===
       effect0: _getSelectValue(effect0Controller),
@@ -481,13 +509,13 @@ class SpellDetailViewModel {
       effectItemType0: _getSelectValue(effectItemType0Controller),
       effectTriggerSpell0: _pi(effectTriggerSpell0Controller.text),
       effectPointsPerCombo0: _pd(effectPointsPerCombo0Controller.text),
-      effectSpellClassMaskA0: parseFlagValue(
+      effectSpellClassMaskA0: FlagFieldController.parseFlagValue(
         effectSpellClassMaskA0Controller.text,
       ),
-      effectSpellClassMaskB0: parseFlagValue(
+      effectSpellClassMaskB0: FlagFieldController.parseFlagValue(
         effectSpellClassMaskB0Controller.text,
       ),
-      effectSpellClassMaskC0: parseFlagValue(
+      effectSpellClassMaskC0: FlagFieldController.parseFlagValue(
         effectSpellClassMaskC0Controller.text,
       ),
 
@@ -511,13 +539,13 @@ class SpellDetailViewModel {
       effectItemType1: _getSelectValue(effectItemType1Controller),
       effectTriggerSpell1: _pi(effectTriggerSpell1Controller.text),
       effectPointsPerCombo1: _pd(effectPointsPerCombo1Controller.text),
-      effectSpellClassMaskA1: parseFlagValue(
+      effectSpellClassMaskA1: FlagFieldController.parseFlagValue(
         effectSpellClassMaskA1Controller.text,
       ),
-      effectSpellClassMaskB1: parseFlagValue(
+      effectSpellClassMaskB1: FlagFieldController.parseFlagValue(
         effectSpellClassMaskB1Controller.text,
       ),
-      effectSpellClassMaskC1: parseFlagValue(
+      effectSpellClassMaskC1: FlagFieldController.parseFlagValue(
         effectSpellClassMaskC1Controller.text,
       ),
 
@@ -541,20 +569,22 @@ class SpellDetailViewModel {
       effectItemType2: _getSelectValue(effectItemType2Controller),
       effectTriggerSpell2: _pi(effectTriggerSpell2Controller.text),
       effectPointsPerCombo2: _pd(effectPointsPerCombo2Controller.text),
-      effectSpellClassMaskA2: parseFlagValue(
+      effectSpellClassMaskA2: FlagFieldController.parseFlagValue(
         effectSpellClassMaskA2Controller.text,
       ),
-      effectSpellClassMaskB2: parseFlagValue(
+      effectSpellClassMaskB2: FlagFieldController.parseFlagValue(
         effectSpellClassMaskB2Controller.text,
       ),
-      effectSpellClassMaskC2: parseFlagValue(
+      effectSpellClassMaskC2: FlagFieldController.parseFlagValue(
         effectSpellClassMaskC2Controller.text,
       ),
 
       // === 装备限制 ===
       equippedItemClass: _getSelectValue(equippedItemClassController),
       equippedItemSubclass: _pi(equippedItemSubclassController.text),
-      equippedItemInvTypes: parseFlagValue(equippedItemInvTypesController.text),
+      equippedItemInvTypes: FlagFieldController.parseFlagValue(
+        equippedItemInvTypesController.text,
+      ),
 
       // === 图腾/施法材料 ===
       requiredTotemCategoryID0: _pi(requiredTotemCategoryID0Controller.text),
@@ -592,8 +622,12 @@ class SpellDetailViewModel {
       requiredAuraVision: _pi(requiredAuraVisionController.text),
       targetAuraSpell: _pi(targetAuraSpellController.text),
       stanceBarOrder: _pi(stanceBarOrderController.text),
-      shapeshiftMask0: parseFlagValue(shapeshiftMask0Controller.text),
-      shapeshiftExclude0: parseFlagValue(shapeshiftExclude0Controller.text),
+      shapeshiftMask0: FlagFieldController.parseFlagValue(
+        shapeshiftMask0Controller.text,
+      ),
+      shapeshiftExclude0: FlagFieldController.parseFlagValue(
+        shapeshiftExclude0Controller.text,
+      ),
     );
     return t;
   }
@@ -854,7 +888,9 @@ class SpellDetailViewModel {
     // === 分类/类型 ===
     categoryController.text = _fmt(template.category);
     schoolMaskController.text = _fmt(template.schoolMask);
-    schoolMaskFlagController.text = formatFlagValue(template.schoolMask);
+    schoolMaskFlagController.text = FlagFieldController.formatFlagValue(
+      template.schoolMask,
+    );
     mechanicController.value = {template.mechanic};
     defenseTypeController.value = {template.defenseType};
     dispelTypeController.value = {template.dispelType};
@@ -882,7 +918,9 @@ class SpellDetailViewModel {
 
     // === 目标 ===
     targetCreatureTypeController.value = {template.targetCreatureType};
-    targetsController.text = formatFlagValue(template.targets);
+    targetsController.text = FlagFieldController.formatFlagValue(
+      template.targets,
+    );
     maxTargetsController.text = _fmt(template.maxTargets);
     maxTargetLevelController.text = _fmt(template.maxTargetLevel);
 
@@ -895,7 +933,7 @@ class SpellDetailViewModel {
     // === 需求 ===
     requiredAreasIDController.text = _fmt(template.requiredAreasID);
     requiresSpellFocusController.text = _fmt(template.requiresSpellFocus);
-    facingCasterFlagsController.text = formatFlagValue(
+    facingCasterFlagsController.text = FlagFieldController.formatFlagValue(
       template.facingCasterFlags,
     );
 
@@ -910,32 +948,58 @@ class SpellDetailViewModel {
     manaPerSecondPerLevelController.text = _fmt(template.manaPerSecondPerLevel);
 
     // === 标志位 ===
-    interruptFlagsController.text = formatFlagValue(template.interruptFlags);
-    auraInterruptFlagsController.text = formatFlagValue(
+    interruptFlagsController.text = FlagFieldController.formatFlagValue(
+      template.interruptFlags,
+    );
+    auraInterruptFlagsController.text = FlagFieldController.formatFlagValue(
       template.auraInterruptFlags,
     );
-    channelInterruptFlagsController.text = formatFlagValue(
+    channelInterruptFlagsController.text = FlagFieldController.formatFlagValue(
       template.channelInterruptFlags,
     );
-    attributesController.text = formatFlagValue(template.attributes);
-    attributesExController.text = formatFlagValue(template.attributesEx);
-    attributesExBController.text = formatFlagValue(template.attributesExB);
-    attributesExCController.text = formatFlagValue(template.attributesExC);
-    attributesExDController.text = formatFlagValue(template.attributesExD);
-    attributesExEController.text = formatFlagValue(template.attributesExE);
-    attributesExFController.text = formatFlagValue(template.attributesExF);
-    attributesExGController.text = formatFlagValue(template.attributesExG);
+    attributesController.text = FlagFieldController.formatFlagValue(
+      template.attributes,
+    );
+    attributesExController.text = FlagFieldController.formatFlagValue(
+      template.attributesEx,
+    );
+    attributesExBController.text = FlagFieldController.formatFlagValue(
+      template.attributesExB,
+    );
+    attributesExCController.text = FlagFieldController.formatFlagValue(
+      template.attributesExC,
+    );
+    attributesExDController.text = FlagFieldController.formatFlagValue(
+      template.attributesExD,
+    );
+    attributesExEController.text = FlagFieldController.formatFlagValue(
+      template.attributesExE,
+    );
+    attributesExFController.text = FlagFieldController.formatFlagValue(
+      template.attributesExF,
+    );
+    attributesExGController.text = FlagFieldController.formatFlagValue(
+      template.attributesExG,
+    );
 
     // === 触发 ===
-    procTypeMaskController.text = formatFlagValue(template.procTypeMask);
+    procTypeMaskController.text = FlagFieldController.formatFlagValue(
+      template.procTypeMask,
+    );
     procChanceController.text = _fmt(template.procChance);
     procChargesController.text = _fmt(template.procCharges);
 
     // === 法术分类 ===
     spellClassSetController.value = {template.spellClassSet};
-    spellClassMask0Controller.text = formatFlagValue(template.spellClassMask0);
-    spellClassMask1Controller.text = formatFlagValue(template.spellClassMask1);
-    spellClassMask2Controller.text = formatFlagValue(template.spellClassMask2);
+    spellClassMask0Controller.text = FlagFieldController.formatFlagValue(
+      template.spellClassMask0,
+    );
+    spellClassMask1Controller.text = FlagFieldController.formatFlagValue(
+      template.spellClassMask1,
+    );
+    spellClassMask2Controller.text = FlagFieldController.formatFlagValue(
+      template.spellClassMask2,
+    );
 
     // === 效果0 ===
     effect0Controller.value = {template.effect0};
@@ -961,13 +1025,13 @@ class SpellDetailViewModel {
     effectItemType0Controller.value = {template.effectItemType0};
     effectTriggerSpell0Controller.text = _fmt(template.effectTriggerSpell0);
     effectPointsPerCombo0Controller.text = _fmt(template.effectPointsPerCombo0);
-    effectSpellClassMaskA0Controller.text = formatFlagValue(
+    effectSpellClassMaskA0Controller.text = FlagFieldController.formatFlagValue(
       template.effectSpellClassMaskA0,
     );
-    effectSpellClassMaskB0Controller.text = formatFlagValue(
+    effectSpellClassMaskB0Controller.text = FlagFieldController.formatFlagValue(
       template.effectSpellClassMaskB0,
     );
-    effectSpellClassMaskC0Controller.text = formatFlagValue(
+    effectSpellClassMaskC0Controller.text = FlagFieldController.formatFlagValue(
       template.effectSpellClassMaskC0,
     );
 
@@ -995,13 +1059,13 @@ class SpellDetailViewModel {
     effectItemType1Controller.value = {template.effectItemType1};
     effectTriggerSpell1Controller.text = _fmt(template.effectTriggerSpell1);
     effectPointsPerCombo1Controller.text = _fmt(template.effectPointsPerCombo1);
-    effectSpellClassMaskA1Controller.text = formatFlagValue(
+    effectSpellClassMaskA1Controller.text = FlagFieldController.formatFlagValue(
       template.effectSpellClassMaskA1,
     );
-    effectSpellClassMaskB1Controller.text = formatFlagValue(
+    effectSpellClassMaskB1Controller.text = FlagFieldController.formatFlagValue(
       template.effectSpellClassMaskB1,
     );
-    effectSpellClassMaskC1Controller.text = formatFlagValue(
+    effectSpellClassMaskC1Controller.text = FlagFieldController.formatFlagValue(
       template.effectSpellClassMaskC1,
     );
 
@@ -1029,20 +1093,20 @@ class SpellDetailViewModel {
     effectItemType2Controller.value = {template.effectItemType2};
     effectTriggerSpell2Controller.text = _fmt(template.effectTriggerSpell2);
     effectPointsPerCombo2Controller.text = _fmt(template.effectPointsPerCombo2);
-    effectSpellClassMaskA2Controller.text = formatFlagValue(
+    effectSpellClassMaskA2Controller.text = FlagFieldController.formatFlagValue(
       template.effectSpellClassMaskA2,
     );
-    effectSpellClassMaskB2Controller.text = formatFlagValue(
+    effectSpellClassMaskB2Controller.text = FlagFieldController.formatFlagValue(
       template.effectSpellClassMaskB2,
     );
-    effectSpellClassMaskC2Controller.text = formatFlagValue(
+    effectSpellClassMaskC2Controller.text = FlagFieldController.formatFlagValue(
       template.effectSpellClassMaskC2,
     );
 
     // === 装备限制 ===
     equippedItemClassController.value = {template.equippedItemClass};
     equippedItemSubclassController.text = _fmt(template.equippedItemSubclass);
-    equippedItemInvTypesController.text = formatFlagValue(
+    equippedItemInvTypesController.text = FlagFieldController.formatFlagValue(
       template.equippedItemInvTypes,
     );
 
@@ -1090,8 +1154,10 @@ class SpellDetailViewModel {
     requiredAuraVisionController.text = _fmt(template.requiredAuraVision);
     targetAuraSpellController.text = _fmt(template.targetAuraSpell);
     stanceBarOrderController.text = _fmt(template.stanceBarOrder);
-    shapeshiftMask0Controller.text = formatFlagValue(template.shapeshiftMask0);
-    shapeshiftExclude0Controller.text = formatFlagValue(
+    shapeshiftMask0Controller.text = FlagFieldController.formatFlagValue(
+      template.shapeshiftMask0,
+    );
+    shapeshiftExclude0Controller.text = FlagFieldController.formatFlagValue(
       template.shapeshiftExclude0,
     );
   }

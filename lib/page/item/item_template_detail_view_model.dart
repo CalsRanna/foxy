@@ -6,8 +6,8 @@ import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -222,7 +222,9 @@ class ItemTemplateDetailViewModel {
     stackableController.text = _fmt(template.stackable);
     totemCategoryController.text = _fmt(template.totemCategory);
     foodTypeController.value = {template.foodType};
-    bagFamilyController.text = formatFlagValue(template.bagFamily);
+    bagFamilyController.text = FlagFieldController.formatFlagValue(
+      template.bagFamily,
+    );
     containerSlotsController.text = _fmt(template.containerSlots);
     itemLimitCategoryController.text = _fmt(template.itemLimitCategory);
     startquestController.text = _fmt(template.startquest);
@@ -232,9 +234,13 @@ class ItemTemplateDetailViewModel {
     maxMoneyLootController.text = _fmt(template.maxMoneyLoot);
 
     /// Card 3: Flags
-    flagsController.text = formatFlagValue(template.flags);
-    flagsExtraController.text = formatFlagValue(template.flagsExtra);
-    flagsCustomController.text = formatFlagValue(template.flagsCustom);
+    flagsController.text = FlagFieldController.formatFlagValue(template.flags);
+    flagsExtraController.text = FlagFieldController.formatFlagValue(
+      template.flagsExtra,
+    );
+    flagsCustomController.text = FlagFieldController.formatFlagValue(
+      template.flagsCustom,
+    );
 
     /// Card 4: Damage/Armor
     delayController.text = _fmt(template.delay);
@@ -254,7 +260,7 @@ class ItemTemplateDetailViewModel {
     scalingStatDistributionController.text = _fmt(
       template.scalingStatDistribution,
     );
-    scalingStatValueController.text = formatFlagValue(
+    scalingStatValueController.text = FlagFieldController.formatFlagValue(
       template.scalingStatValue,
     );
 
@@ -286,8 +292,12 @@ class ItemTemplateDetailViewModel {
     }
 
     /// Card 9: Requirements
-    allowableClassController.text = formatFlagValue(template.allowableClass);
-    allowableRaceController.text = formatFlagValue(template.allowableRace);
+    allowableClassController.text = FlagFieldController.formatFlagValue(
+      template.allowableClass,
+    );
+    allowableRaceController.text = FlagFieldController.formatFlagValue(
+      template.allowableRace,
+    );
     itemLevelController.text = _fmt(template.itemLevel);
     requiredLevelController.text = _fmt(template.requiredLevel);
     requiredSkillController.text = _fmt(template.requiredSkill);
@@ -353,7 +363,7 @@ class ItemTemplateDetailViewModel {
       stackable: _pi(stackableController.text),
       totemCategory: _pi(totemCategoryController.text),
       foodType: _getSelectValue(foodTypeController),
-      bagFamily: parseFlagValue(bagFamilyController.text),
+      bagFamily: FlagFieldController.parseFlagValue(bagFamilyController.text),
       containerSlots: _pi(containerSlotsController.text),
       itemLimitCategory: _pi(itemLimitCategoryController.text),
       startquest: _pi(startquestController.text),
@@ -363,9 +373,11 @@ class ItemTemplateDetailViewModel {
       maxMoneyLoot: _pi(maxMoneyLootController.text),
 
       /// Card 3: Flags
-      flags: parseFlagValue(flagsController.text),
-      flagsExtra: parseFlagValue(flagsExtraController.text),
-      flagsCustom: parseFlagValue(flagsCustomController.text),
+      flags: FlagFieldController.parseFlagValue(flagsController.text),
+      flagsExtra: FlagFieldController.parseFlagValue(flagsExtraController.text),
+      flagsCustom: FlagFieldController.parseFlagValue(
+        flagsCustomController.text,
+      ),
 
       /// Card 4: Damage/Armor
       delay: _pi(delayController.text),
@@ -383,7 +395,9 @@ class ItemTemplateDetailViewModel {
 
       /// Card 5: Scaling Stats
       scalingStatDistribution: _pi(scalingStatDistributionController.text),
-      scalingStatValue: parseFlagValue(scalingStatValueController.text),
+      scalingStatValue: FlagFieldController.parseFlagValue(
+        scalingStatValueController.text,
+      ),
 
       /// Card 6: Stats (dynamic)
       statsCount: _pi(statsCountController.text),
@@ -416,8 +430,12 @@ class ItemTemplateDetailViewModel {
       ],
 
       /// Card 9: Requirements
-      allowableClass: parseFlagValue(allowableClassController.text),
-      allowableRace: parseFlagValue(allowableRaceController.text),
+      allowableClass: FlagFieldController.parseFlagValue(
+        allowableClassController.text,
+      ),
+      allowableRace: FlagFieldController.parseFlagValue(
+        allowableRaceController.text,
+      ),
       itemLevel: _pi(itemLevelController.text),
       requiredLevel: _pi(requiredLevelController.text),
       requiredSkill: _pi(requiredSkillController.text),

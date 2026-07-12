@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/util/format_util.dart';
 import 'package:foxy/util/parse_util.dart';
-import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 详情表单字段控制器：把「字段类型 → 格式化/解析规则」内聚到字段声明处。
@@ -97,9 +96,20 @@ class DoubleFieldController extends TextBackedFieldController<double> {
   double parse(String text) => parseDoubleField(text, field: label);
 }
 
-/// 位标记字段：以 [formatFlagValue]/[parseFlagValue] 与 FoxyFlagPicker 协作。
+/// 位标记字段：负责位标记值的显示格式化与解析。
 class FlagFieldController extends TextBackedFieldController<int> {
   FlagFieldController(super.label);
+
+  /// 格式化标志位整数值为显示文本，如 `123 (0x0000007B)`。
+  static String formatFlagValue(int value) {
+    final hex = value.toRadixString(16).toUpperCase().padLeft(8, '0');
+    return '$value (0x$hex)';
+  }
+
+  /// 将 [formatFlagValue] 产生的显示文本解析回整数值。
+  static int parseFlagValue(String text) {
+    return int.tryParse(text.split(' ').first) ?? 0;
+  }
 
   @override
   String format(int value) => formatFlagValue(value);
