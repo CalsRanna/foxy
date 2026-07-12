@@ -55,13 +55,18 @@ class ConditionDetailViewModel {
 
   Future<void> initSignals({Map<String, dynamic>? credential}) async {
     conditionTypeOrReferenceController.addListener(_onConditionTypeChange);
-    if (credential == null) {
-      isExisting.value = false;
-      return;
-    }
-    isExisting.value = true;
-    _originalCredential = credential;
     try {
+      // 复合主键均为语义列：新建可编辑；编辑锁定。无简单 MAX+1。
+      if (credential == null) {
+        isExisting.value = false;
+        _originalCredential = null;
+        final blank = await _repository.createCondition();
+        condition.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      isExisting.value = true;
+      _originalCredential = credential;
       final result = await _repository.getConditionFromCredential(credential);
       if (result == null) return;
       condition.value = result;

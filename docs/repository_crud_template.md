@@ -280,6 +280,16 @@ Future<{Entity}Entity> create{Entity}(/* 可选：预填默认值或下一序号
 - 主键为 `0` 时：`store` 再调用 `_getNext*` 分配（兜底）。
 - 保证表单展示的编号与落库编号一致。
 
+### 4.1.2 复合主键（单独策略，勿硬套单列 MAX+1）
+
+| 类型 | 示例 | 新建 | 编辑 |
+|------|------|------|------|
+| 归属键 + 范围内序号 | SmartScript：`entryorguid`/`source_type` + `id` | 归属键可改；`id`=`MAX+1`（保存时按最终归属重算） | 全部主键只读 |
+| 纯语义复合键 | Condition 10 列；PlayerCreateInfo `(race,class)`；ReferenceLoot `(Entry,Item)` | 主键列可编辑（或选择器） | 主键只读 |
+| 父键 + 子序号 | Equip `CreatureID`+`ID`；Option `MenuID`+`OptionID` | 父键只读；子序号 `create*` 预填 | 全部只读 |
+
+ViewModel：`isNew` / `isExisting` / `original*` 标记编辑态，**禁止**用 `id==0` 判断新建。
+
 ### 4.2 `save{Entity}` — upsert（正式模板，各业务表均提供）
 
 ```dart

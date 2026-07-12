@@ -64,11 +64,19 @@ class SmartScriptDetailViewModel {
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
+      var t = _collectFromControllers();
       final action = isNew.value
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (isNew.value) {
+        // 用户可能改过归属键：按最终 (entryorguid, source_type) 重新分配 id
+        final nextId = await _repository.nextIdFor(
+          t.entryOrGuid,
+          t.sourceType,
+        );
+        t = t.copyWith(id: nextId, link: 0);
+        idController.text = _fmt(nextId);
+        linkController.text = _fmt(0);
         await _repository.storeSmartScript(t);
         _origEntryOrGuid = t.entryOrGuid;
         _origSourceType = t.sourceType;
@@ -77,7 +85,7 @@ class SmartScriptDetailViewModel {
         isNew.value = false;
         script.value = t;
       } else {
-        // 复合主键只读：WHERE 始终用加载时的键，不把表单主键写回 _orig*
+        // 编辑：复合主键 WHERE 用加载时的键
         await _repository.updateSmartScript(
           _origEntryOrGuid!,
           _origSourceType!,
@@ -108,19 +116,23 @@ class SmartScriptDetailViewModel {
     int? id,
     int? link,
   }) async {
-    if (entryOrGuid == null ||
-        sourceType == null ||
-        id == null ||
-        link == null) {
-      isNew.value = true;
-      return;
-    }
-    _origEntryOrGuid = entryOrGuid;
-    _origSourceType = sourceType;
-    _origId = id;
-    _origLink = link;
-    isNew.value = false;
     try {
+      // 复合主键：新建时 create* 预填 scoped id；归属键可改，id/link 只读
+      if (entryOrGuid == null ||
+          sourceType == null ||
+          id == null ||
+          link == null) {
+        isNew.value = true;
+        final blank = await _repository.createSmartScript();
+        script.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      _origEntryOrGuid = entryOrGuid;
+      _origSourceType = sourceType;
+      _origId = id;
+      _origLink = link;
+      isNew.value = false;
       final result = await _repository.getSmartScript(
         entryOrGuid,
         sourceType,

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
-import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class SmartScriptView extends StatefulWidget {
   final int? entryOrGuid;
@@ -46,6 +47,17 @@ class _SmartScriptViewState extends State<SmartScriptView> {
 
   @override
   Widget build(BuildContext context) {
+    // 复合主键策略：
+    // - entryorguid / source_type：归属键，仅新建可改
+    // - id：范围内 MAX+1，始终只读
+    // - link：默认 0，始终只读
+    return Watch((_) {
+      final ownerEditable = viewModel.isNew.value;
+      return _buildBody(ownerEditable: ownerEditable);
+    });
+  }
+
+  Widget _buildBody({required bool ownerEditable}) {
     final basicRows = [
       Row(
         spacing: 8,
@@ -56,7 +68,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               placeholder: 'entryorguid',
               child: FoxyNumberInput<int>(
                 controller: viewModel.entryOrGuidController,
-                readOnly: true,
+                readOnly: !ownerEditable,
               ),
             ),
           ),
@@ -66,7 +78,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               placeholder: 'source_type',
               child: FoxyNumberInput<int>(
                 controller: viewModel.sourceTypeController,
-                readOnly: true,
+                readOnly: !ownerEditable,
               ),
             ),
           ),

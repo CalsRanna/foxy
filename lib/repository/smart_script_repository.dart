@@ -152,15 +152,19 @@ class SmartScriptRepository with RepositoryMixin {
     }
   }
 
+  /// 在 (entryorguid, source_type) 范围内取下一 `id`。
+  Future<int> nextIdFor(int entryOrGuid, int sourceType) =>
+      _getNextId(entryOrGuid, sourceType);
+
   Future<int> _getNextId(int entryOrGuid, int sourceType) async {
-    var result = await laconic
-        .table(_table)
-        .select(['MAX(id) as max_id'])
-        .where('entryorguid', entryOrGuid)
-        .where('source_type', sourceType)
-        .first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(
+      _table,
+      'id',
+      where: {
+        'entryorguid': entryOrGuid,
+        'source_type': sourceType,
+      },
+    );
   }
 
   QueryBuilder _applyFilter(
