@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -22,45 +21,72 @@ class SmartScriptDetailViewModel {
   int? _origId;
   int? _origLink;
 
-  final entryOrGuidController = TextEditingController();
-  final sourceTypeController = TextEditingController();
-  final idController = TextEditingController();
-  final linkController = TextEditingController();
-  final commentController = TextEditingController();
+  final entryOrGuidController = IntFieldController();
+  final sourceTypeController = IntFieldController();
+  final idController = IntFieldController();
+  final linkController = IntFieldController();
+  final commentController = StringFieldController();
 
-  final eventTypeController = TextEditingController();
-  final eventPhaseMaskController = TextEditingController();
-  final eventChanceController = TextEditingController();
-  final eventFlagsController = TextEditingController();
-  final eventParam1Controller = TextEditingController();
-  final eventParam2Controller = TextEditingController();
-  final eventParam3Controller = TextEditingController();
-  final eventParam4Controller = TextEditingController();
-  final eventParam5Controller = TextEditingController();
+  final eventTypeController = IntFieldController();
+  final eventPhaseMaskController = IntFieldController();
+  final eventChanceController = IntFieldController();
+  final eventFlagsController = IntFieldController();
+  final eventParam1Controller = IntFieldController();
+  final eventParam2Controller = IntFieldController();
+  final eventParam3Controller = IntFieldController();
+  final eventParam4Controller = IntFieldController();
+  final eventParam5Controller = IntFieldController();
 
-  final actionTypeController = TextEditingController();
-  final actionParam1Controller = TextEditingController();
-  final actionParam2Controller = TextEditingController();
-  final actionParam3Controller = TextEditingController();
-  final actionParam4Controller = TextEditingController();
-  final actionParam5Controller = TextEditingController();
-  final actionParam6Controller = TextEditingController();
+  final actionTypeController = IntFieldController();
+  final actionParam1Controller = IntFieldController();
+  final actionParam2Controller = IntFieldController();
+  final actionParam3Controller = IntFieldController();
+  final actionParam4Controller = IntFieldController();
+  final actionParam5Controller = IntFieldController();
+  final actionParam6Controller = IntFieldController();
 
-  final targetTypeController = TextEditingController();
-  final targetParam1Controller = TextEditingController();
-  final targetParam2Controller = TextEditingController();
-  final targetParam3Controller = TextEditingController();
-  final targetParam4Controller = TextEditingController();
-  final targetXController = TextEditingController();
-  final targetYController = TextEditingController();
-  final targetZController = TextEditingController();
-  final targetOController = TextEditingController();
+  final targetTypeController = IntFieldController();
+  final targetParam1Controller = IntFieldController();
+  final targetParam2Controller = IntFieldController();
+  final targetParam3Controller = IntFieldController();
+  final targetParam4Controller = IntFieldController();
+  final targetXController = DoubleFieldController();
+  final targetYController = DoubleFieldController();
+  final targetZController = DoubleFieldController();
+  final targetOController = DoubleFieldController();
 
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
+  late final _controllers = <FieldController>[
+    entryOrGuidController,
+    sourceTypeController,
+    idController,
+    linkController,
+    commentController,
+    eventTypeController,
+    eventPhaseMaskController,
+    eventChanceController,
+    eventFlagsController,
+    eventParam1Controller,
+    eventParam2Controller,
+    eventParam3Controller,
+    eventParam4Controller,
+    eventParam5Controller,
+    actionTypeController,
+    actionParam1Controller,
+    actionParam2Controller,
+    actionParam3Controller,
+    actionParam4Controller,
+    actionParam5Controller,
+    actionParam6Controller,
+    targetTypeController,
+    targetParam1Controller,
+    targetParam2Controller,
+    targetParam3Controller,
+    targetParam4Controller,
+    targetXController,
+    targetYController,
+    targetZController,
+    targetOController,
+  ];
 
   Future<void> save(BuildContext context) async {
     try {
@@ -70,13 +96,10 @@ class SmartScriptDetailViewModel {
           : ActivityActionType.update;
       if (isNew.value) {
         // 用户可能改过归属键：按最终 (entryorguid, source_type) 重新分配 id
-        final nextId = await _repository.nextIdFor(
-          t.entryOrGuid,
-          t.sourceType,
-        );
+        final nextId = await _repository.nextIdFor(t.entryOrGuid, t.sourceType);
         t = t.copyWith(id: nextId, link: 0);
-        idController.text = _fmt(nextId);
-        linkController.text = _fmt(0);
+        idController.init(nextId);
+        linkController.init(0);
         await _repository.storeSmartScript(t);
         _origEntryOrGuid = t.entryOrGuid;
         _origSourceType = t.sourceType;
@@ -152,73 +175,73 @@ class SmartScriptDetailViewModel {
   }
 
   void _initControllers(SmartScriptEntity t) {
-    entryOrGuidController.text = _fmt(t.entryOrGuid);
-    sourceTypeController.text = _fmt(t.sourceType);
-    idController.text = _fmt(t.id);
-    linkController.text = _fmt(t.link);
-    commentController.text = t.comment;
+    entryOrGuidController.init(t.entryOrGuid);
+    sourceTypeController.init(t.sourceType);
+    idController.init(t.id);
+    linkController.init(t.link);
+    commentController.init(t.comment);
 
-    eventTypeController.text = _fmt(t.eventType);
-    eventPhaseMaskController.text = _fmt(t.eventPhaseMask);
-    eventChanceController.text = _fmt(t.eventChance);
-    eventFlagsController.text = _fmt(t.eventFlags);
-    eventParam1Controller.text = _fmt(t.eventParam1);
-    eventParam2Controller.text = _fmt(t.eventParam2);
-    eventParam3Controller.text = _fmt(t.eventParam3);
-    eventParam4Controller.text = _fmt(t.eventParam4);
-    eventParam5Controller.text = _fmt(t.eventParam5);
+    eventTypeController.init(t.eventType);
+    eventPhaseMaskController.init(t.eventPhaseMask);
+    eventChanceController.init(t.eventChance);
+    eventFlagsController.init(t.eventFlags);
+    eventParam1Controller.init(t.eventParam1);
+    eventParam2Controller.init(t.eventParam2);
+    eventParam3Controller.init(t.eventParam3);
+    eventParam4Controller.init(t.eventParam4);
+    eventParam5Controller.init(t.eventParam5);
 
-    actionTypeController.text = _fmt(t.actionType);
-    actionParam1Controller.text = _fmt(t.actionParam1);
-    actionParam2Controller.text = _fmt(t.actionParam2);
-    actionParam3Controller.text = _fmt(t.actionParam3);
-    actionParam4Controller.text = _fmt(t.actionParam4);
-    actionParam5Controller.text = _fmt(t.actionParam5);
-    actionParam6Controller.text = _fmt(t.actionParam6);
+    actionTypeController.init(t.actionType);
+    actionParam1Controller.init(t.actionParam1);
+    actionParam2Controller.init(t.actionParam2);
+    actionParam3Controller.init(t.actionParam3);
+    actionParam4Controller.init(t.actionParam4);
+    actionParam5Controller.init(t.actionParam5);
+    actionParam6Controller.init(t.actionParam6);
 
-    targetTypeController.text = _fmt(t.targetType);
-    targetParam1Controller.text = _fmt(t.targetParam1);
-    targetParam2Controller.text = _fmt(t.targetParam2);
-    targetParam3Controller.text = _fmt(t.targetParam3);
-    targetParam4Controller.text = _fmt(t.targetParam4);
-    targetXController.text = _fmt(t.targetX);
-    targetYController.text = _fmt(t.targetY);
-    targetZController.text = _fmt(t.targetZ);
-    targetOController.text = _fmt(t.targetO);
+    targetTypeController.init(t.targetType);
+    targetParam1Controller.init(t.targetParam1);
+    targetParam2Controller.init(t.targetParam2);
+    targetParam3Controller.init(t.targetParam3);
+    targetParam4Controller.init(t.targetParam4);
+    targetXController.init(t.targetX);
+    targetYController.init(t.targetY);
+    targetZController.init(t.targetZ);
+    targetOController.init(t.targetO);
   }
 
   SmartScriptEntity _collectFromControllers() {
     return SmartScriptEntity(
-      entryOrGuid: _pi(entryOrGuidController.text),
-      sourceType: _pi(sourceTypeController.text),
-      id: _pi(idController.text),
-      link: _pi(linkController.text),
-      comment: commentController.text,
-      eventType: _pi(eventTypeController.text),
-      eventPhaseMask: _pi(eventPhaseMaskController.text),
-      eventChance: _pi(eventChanceController.text),
-      eventFlags: _pi(eventFlagsController.text),
-      eventParam1: _pi(eventParam1Controller.text),
-      eventParam2: _pi(eventParam2Controller.text),
-      eventParam3: _pi(eventParam3Controller.text),
-      eventParam4: _pi(eventParam4Controller.text),
-      eventParam5: _pi(eventParam5Controller.text),
-      actionType: _pi(actionTypeController.text),
-      actionParam1: _pi(actionParam1Controller.text),
-      actionParam2: _pi(actionParam2Controller.text),
-      actionParam3: _pi(actionParam3Controller.text),
-      actionParam4: _pi(actionParam4Controller.text),
-      actionParam5: _pi(actionParam5Controller.text),
-      actionParam6: _pi(actionParam6Controller.text),
-      targetType: _pi(targetTypeController.text),
-      targetParam1: _pi(targetParam1Controller.text),
-      targetParam2: _pi(targetParam2Controller.text),
-      targetParam3: _pi(targetParam3Controller.text),
-      targetParam4: _pi(targetParam4Controller.text),
-      targetX: _pd(targetXController.text),
-      targetY: _pd(targetYController.text),
-      targetZ: _pd(targetZController.text),
-      targetO: _pd(targetOController.text),
+      entryOrGuid: entryOrGuidController.collect(),
+      sourceType: sourceTypeController.collect(),
+      id: idController.collect(),
+      link: linkController.collect(),
+      comment: commentController.collect(),
+      eventType: eventTypeController.collect(),
+      eventPhaseMask: eventPhaseMaskController.collect(),
+      eventChance: eventChanceController.collect(),
+      eventFlags: eventFlagsController.collect(),
+      eventParam1: eventParam1Controller.collect(),
+      eventParam2: eventParam2Controller.collect(),
+      eventParam3: eventParam3Controller.collect(),
+      eventParam4: eventParam4Controller.collect(),
+      eventParam5: eventParam5Controller.collect(),
+      actionType: actionTypeController.collect(),
+      actionParam1: actionParam1Controller.collect(),
+      actionParam2: actionParam2Controller.collect(),
+      actionParam3: actionParam3Controller.collect(),
+      actionParam4: actionParam4Controller.collect(),
+      actionParam5: actionParam5Controller.collect(),
+      actionParam6: actionParam6Controller.collect(),
+      targetType: targetTypeController.collect(),
+      targetParam1: targetParam1Controller.collect(),
+      targetParam2: targetParam2Controller.collect(),
+      targetParam3: targetParam3Controller.collect(),
+      targetParam4: targetParam4Controller.collect(),
+      targetX: targetXController.collect(),
+      targetY: targetYController.collect(),
+      targetZ: targetZController.collect(),
+      targetO: targetOController.collect(),
     );
   }
 
@@ -234,35 +257,8 @@ class SmartScriptDetailViewModel {
   }
 
   void dispose() {
-    actionParam1Controller.dispose();
-    actionParam2Controller.dispose();
-    actionParam3Controller.dispose();
-    actionParam4Controller.dispose();
-    actionParam5Controller.dispose();
-    actionParam6Controller.dispose();
-    actionTypeController.dispose();
-    commentController.dispose();
-    entryOrGuidController.dispose();
-    eventChanceController.dispose();
-    eventFlagsController.dispose();
-    eventParam1Controller.dispose();
-    eventParam2Controller.dispose();
-    eventParam3Controller.dispose();
-    eventParam4Controller.dispose();
-    eventParam5Controller.dispose();
-    eventPhaseMaskController.dispose();
-    eventTypeController.dispose();
-    idController.dispose();
-    linkController.dispose();
-    sourceTypeController.dispose();
-    targetOController.dispose();
-    targetParam1Controller.dispose();
-    targetParam2Controller.dispose();
-    targetParam3Controller.dispose();
-    targetParam4Controller.dispose();
-    targetTypeController.dispose();
-    targetXController.dispose();
-    targetYController.dispose();
-    targetZController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

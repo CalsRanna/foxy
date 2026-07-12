@@ -3,6 +3,7 @@ import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -65,9 +66,9 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '实体编号',
-              placeholder: 'entryorguid',
               child: FoxyNumberInput<int>(
-                controller: viewModel.entryOrGuidController,
+                placeholder: 'entryorguid',
+                fieldController: viewModel.entryOrGuidController,
                 readOnly: !ownerEditable,
               ),
             ),
@@ -75,9 +76,9 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '源类型',
-              placeholder: 'source_type',
               child: FoxyNumberInput<int>(
-                controller: viewModel.sourceTypeController,
+                placeholder: 'source_type',
+                fieldController: viewModel.sourceTypeController,
                 readOnly: !ownerEditable,
               ),
             ),
@@ -85,9 +86,9 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: 'ID',
-              placeholder: 'id',
               child: FoxyNumberInput<int>(
-                controller: viewModel.idController,
+                placeholder: 'id',
+                fieldController: viewModel.idController,
                 readOnly: true,
               ),
             ),
@@ -95,9 +96,9 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '链接',
-              placeholder: 'link',
               child: FoxyNumberInput<int>(
-                controller: viewModel.linkController,
+                placeholder: 'link',
+                fieldController: viewModel.linkController,
                 readOnly: true,
               ),
             ),
@@ -108,10 +109,12 @@ class _SmartScriptViewState extends State<SmartScriptView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FoxyFormItem.legacy(
-              controller: viewModel.commentController,
+            child: FoxyFormItem(
               label: '备注',
-              placeholder: 'comment',
+              child: FoxyStringInput(
+                controller: viewModel.commentController,
+                placeholder: 'comment',
+              ),
             ),
           ),
           Expanded(child: SizedBox()),
@@ -128,36 +131,36 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '事件类型',
-              placeholder: 'event_type',
               child: FoxyNumberInput<int>(
-                controller: viewModel.eventTypeController,
+                placeholder: 'event_type',
+                fieldController: viewModel.eventTypeController,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '阶段掩码',
-              placeholder: 'event_phase_mask',
               child: FoxyNumberInput<int>(
-                controller: viewModel.eventPhaseMaskController,
+                placeholder: 'event_phase_mask',
+                fieldController: viewModel.eventPhaseMaskController,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '触发几率',
-              placeholder: 'event_chance',
               child: FoxyNumberInput<int>(
-                controller: viewModel.eventChanceController,
+                placeholder: 'event_chance',
+                fieldController: viewModel.eventChanceController,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '事件标识',
-              placeholder: 'event_flags',
               child: FoxyNumberInput<int>(
-                controller: viewModel.eventFlagsController,
+                placeholder: 'event_flags',
+                fieldController: viewModel.eventFlagsController,
               ),
             ),
           ),
@@ -169,36 +172,36 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '事件参数1',
-              placeholder: 'event_param1',
               child: FoxyNumberInput<int>(
-                controller: viewModel.eventParam1Controller,
+                placeholder: 'event_param1',
+                fieldController: viewModel.eventParam1Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '事件参数2',
-              placeholder: 'event_param2',
               child: FoxyNumberInput<int>(
-                controller: viewModel.eventParam2Controller,
+                placeholder: 'event_param2',
+                fieldController: viewModel.eventParam2Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '事件参数3',
-              placeholder: 'event_param3',
               child: FoxyNumberInput<int>(
-                controller: viewModel.eventParam3Controller,
+                placeholder: 'event_param3',
+                fieldController: viewModel.eventParam3Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '事件参数4',
-              placeholder: 'event_param4',
               child: FoxyNumberInput<int>(
-                controller: viewModel.eventParam4Controller,
+                placeholder: 'event_param4',
+                fieldController: viewModel.eventParam4Controller,
               ),
             ),
           ),
@@ -210,9 +213,9 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '事件参数5',
-              placeholder: 'event_param5',
               child: FoxyNumberInput<int>(
-                controller: viewModel.eventParam5Controller,
+                placeholder: 'event_param5',
+                fieldController: viewModel.eventParam5Controller,
               ),
             ),
           ),
@@ -230,36 +233,36 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '动作类型',
-              placeholder: 'action_type',
               child: FoxyNumberInput<int>(
-                controller: viewModel.actionTypeController,
+                placeholder: 'action_type',
+                fieldController: viewModel.actionTypeController,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '动作参数1',
-              placeholder: 'action_param1',
               child: FoxyNumberInput<int>(
-                controller: viewModel.actionParam1Controller,
+                placeholder: 'action_param1',
+                fieldController: viewModel.actionParam1Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '动作参数2',
-              placeholder: 'action_param2',
               child: FoxyNumberInput<int>(
-                controller: viewModel.actionParam2Controller,
+                placeholder: 'action_param2',
+                fieldController: viewModel.actionParam2Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '动作参数3',
-              placeholder: 'action_param3',
               child: FoxyNumberInput<int>(
-                controller: viewModel.actionParam3Controller,
+                placeholder: 'action_param3',
+                fieldController: viewModel.actionParam3Controller,
               ),
             ),
           ),
@@ -271,27 +274,27 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '动作参数4',
-              placeholder: 'action_param4',
               child: FoxyNumberInput<int>(
-                controller: viewModel.actionParam4Controller,
+                placeholder: 'action_param4',
+                fieldController: viewModel.actionParam4Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '动作参数5',
-              placeholder: 'action_param5',
               child: FoxyNumberInput<int>(
-                controller: viewModel.actionParam5Controller,
+                placeholder: 'action_param5',
+                fieldController: viewModel.actionParam5Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '动作参数6',
-              placeholder: 'action_param6',
               child: FoxyNumberInput<int>(
-                controller: viewModel.actionParam6Controller,
+                placeholder: 'action_param6',
+                fieldController: viewModel.actionParam6Controller,
               ),
             ),
           ),
@@ -307,36 +310,36 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '目标类型',
-              placeholder: 'target_type',
               child: FoxyNumberInput<int>(
-                controller: viewModel.targetTypeController,
+                placeholder: 'target_type',
+                fieldController: viewModel.targetTypeController,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '目标参数1',
-              placeholder: 'target_param1',
               child: FoxyNumberInput<int>(
-                controller: viewModel.targetParam1Controller,
+                placeholder: 'target_param1',
+                fieldController: viewModel.targetParam1Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '目标参数2',
-              placeholder: 'target_param2',
               child: FoxyNumberInput<int>(
-                controller: viewModel.targetParam2Controller,
+                placeholder: 'target_param2',
+                fieldController: viewModel.targetParam2Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '目标参数3',
-              placeholder: 'target_param3',
               child: FoxyNumberInput<int>(
-                controller: viewModel.targetParam3Controller,
+                placeholder: 'target_param3',
+                fieldController: viewModel.targetParam3Controller,
               ),
             ),
           ),
@@ -348,36 +351,36 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '目标参数4',
-              placeholder: 'target_param4',
               child: FoxyNumberInput<int>(
-                controller: viewModel.targetParam4Controller,
+                placeholder: 'target_param4',
+                fieldController: viewModel.targetParam4Controller,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: 'X坐标',
-              placeholder: 'target_x',
               child: FoxyNumberInput<double>(
-                controller: viewModel.targetXController,
+                placeholder: 'target_x',
+                fieldController: viewModel.targetXController,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: 'Y坐标',
-              placeholder: 'target_y',
               child: FoxyNumberInput<double>(
-                controller: viewModel.targetYController,
+                placeholder: 'target_y',
+                fieldController: viewModel.targetYController,
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: 'Z坐标',
-              placeholder: 'target_z',
               child: FoxyNumberInput<double>(
-                controller: viewModel.targetZController,
+                placeholder: 'target_z',
+                fieldController: viewModel.targetZController,
               ),
             ),
           ),
@@ -389,9 +392,9 @@ class _SmartScriptViewState extends State<SmartScriptView> {
           Expanded(
             child: FoxyFormItem(
               label: '朝向',
-              placeholder: 'target_o',
               child: FoxyNumberInput<double>(
-                controller: viewModel.targetOController,
+                placeholder: 'target_o',
+                fieldController: viewModel.targetOController,
               ),
             ),
           ),

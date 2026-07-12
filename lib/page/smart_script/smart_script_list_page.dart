@@ -6,6 +6,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -49,13 +50,13 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
   }
 
   Widget _buildFilter() {
-    var entryInput = ShadInput(
+    var entryInput = FoxyStringInput(
       controller: viewModel.entryOrGuidController,
-      placeholder: Text('实体编号（entryorguid）'),
+      placeholder: '实体编号（entryorguid）',
     );
-    var commentInput = ShadInput(
+    var commentInput = FoxyStringInput(
       controller: viewModel.commentController,
-      placeholder: Text('备注（comment）'),
+      placeholder: '备注（comment）',
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
