@@ -120,21 +120,21 @@ class _PlayerCreateInfoSpellCustomViewState
                 label: '种族掩码',
                 child: FoxyNumberInput<int>(
                   placeholder: 'racemask',
-                  fieldController: viewModel.racemaskController,
+                  controller: viewModel.racemaskController,
                 ),
               ),
               FoxyFormItem(
                 label: '职业掩码',
                 child: FoxyNumberInput<int>(
                   placeholder: 'classmask',
-                  fieldController: viewModel.classmaskController,
+                  controller: viewModel.classmaskController,
                 ),
               ),
               FoxyFormItem(
                 label: '法术',
                 child: FoxyNumberInput<int>(
                   placeholder: 'spell',
-                  fieldController: viewModel.spellController,
+                  controller: viewModel.spellController,
                 ),
               ),
               FoxyFormItem(

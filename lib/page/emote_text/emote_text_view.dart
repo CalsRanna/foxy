@@ -37,7 +37,7 @@ class _EmoteTextViewState extends State<EmoteTextView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        fieldController: viewModel.idController,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -52,7 +52,7 @@ class _EmoteTextViewState extends State<EmoteTextView> {
       label: '表情编号',
       child: FoxyNumberInput<int>(
         placeholder: 'EmoteID',
-        fieldController: viewModel.emoteIdController,
+        controller: viewModel.emoteIdController,
       ),
     );
 
@@ -62,7 +62,7 @@ class _EmoteTextViewState extends State<EmoteTextView> {
         label: '表情文本$i',
         child: FoxyNumberInput<int>(
           placeholder: 'EmoteText$i',
-          fieldController: viewModel.emoteTextControllers[i],
+          controller: viewModel.emoteTextControllers[i],
         ),
       );
     });

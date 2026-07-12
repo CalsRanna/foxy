@@ -152,17 +152,17 @@ class _GameObjectQuestStarterViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FoxyFormItem(
-            label: '物体编号',
-            placeholder: 'GameobjectId',
-            child: FoxyNumberInput<int>(
-              fieldController: viewModel.idController,
+              label: '物体编号',
+              child: FoxyNumberInput<int>(
+                controller: viewModel.idController,
+                placeholder: 'GameobjectId',
+              ),
             ),
-          ),
           SizedBox(height: 16),
           FoxyFormItem(
             label: '任务编号',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.questController,
+              controller: viewModel.questController,
               readOnly: true,
             ),
           ),

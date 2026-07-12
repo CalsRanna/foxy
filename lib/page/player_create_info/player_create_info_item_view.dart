@@ -112,14 +112,14 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                 label: '物品ID',
                 child: FoxyNumberInput<int>(
                   placeholder: 'itemid',
-                  fieldController: viewModel.itemIdController,
+                  controller: viewModel.itemIdController,
                 ),
               ),
               FoxyFormItem(
                 label: '数量',
                 child: FoxyNumberInput<int>(
                   placeholder: 'amount',
-                  fieldController: viewModel.amountController,
+                  controller: viewModel.amountController,
                 ),
               ),
               FoxyFormItem(

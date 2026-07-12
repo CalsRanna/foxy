@@ -41,7 +41,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'entry',
-        fieldController: viewModel.entryController,
+        controller: viewModel.entryController,
         readOnly: true,
       ),
     );
@@ -49,7 +49,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: '名称',
       child: FoxyLocalePicker(
         entry: widget.entry,
-        fieldController: viewModel.nameController,
+        controller: viewModel.nameController,
         delegate: FoxyLocalePickerDelegates.gameObjectName,
         placeholder: 'name',
         title: '名称',
@@ -59,7 +59,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: '使用说明',
       child: FoxyLocalePicker(
         entry: widget.entry,
-        fieldController: viewModel.castBarCaptionController,
+        controller: viewModel.castBarCaptionController,
         delegate: FoxyLocalePickerDelegates.gameObjectCaption,
         placeholder: 'castBarCaption',
         title: '使用说明',
@@ -89,7 +89,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
     final typeInput = FoxyFormItem(
       label: '类型',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.typeController,
+        controller: viewModel.typeController,
         options: kGameObjectTypeOptions,
         placeholder: const Text('类型'),
       ),
@@ -98,14 +98,14 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: '外观模型',
       child: FoxyNumberInput<int>(
         placeholder: 'displayId',
-        fieldController: viewModel.displayIdController,
+        controller: viewModel.displayIdController,
       ),
     );
     final sizeInput = FoxyFormItem(
       label: '尺寸',
       child: FoxyNumberInput<double>(
         placeholder: 'size',
-        fieldController: viewModel.sizeController,
+        controller: viewModel.sizeController,
       ),
     );
     final unk1Input = FoxyFormItem(
@@ -157,7 +157,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
         placeholder: 'VerifiedBuild',
-        fieldController: viewModel.verifiedBuildController,
+        controller: viewModel.verifiedBuildController,
       ),
     );
 
@@ -206,7 +206,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       label: 'Data$index',
       child: FoxyNumberInput<int>(
         placeholder: 'Data$index',
-        fieldController: viewModel.dataControllers[index],
+        controller: viewModel.dataControllers[index],
       ),
     );
   }

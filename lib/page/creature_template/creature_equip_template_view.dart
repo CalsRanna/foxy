@@ -193,7 +193,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.creatureIdController,
+              controller: viewModel.creatureIdController,
               placeholder: 'CreatureID',
               readOnly: true,
             ),
@@ -203,7 +203,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FoxyFormItem(
             label: '模板ID',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.idController,
+              controller: viewModel.idController,
               placeholder: 'ID',
               readOnly: true,
             ),
@@ -214,7 +214,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
             label: '主手武器',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
-              fieldController: viewModel.itemID1Controller,
+              controller: viewModel.itemID1Controller,
               placeholder: 'ItemID1',
             ),
           ),
@@ -224,7 +224,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
             label: '副手武器',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
-              fieldController: viewModel.itemID2Controller,
+              controller: viewModel.itemID2Controller,
               placeholder: 'ItemID2',
             ),
           ),
@@ -234,7 +234,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
             label: '远程武器',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
-              fieldController: viewModel.itemID3Controller,
+              controller: viewModel.itemID3Controller,
               placeholder: 'ItemID3',
             ),
           ),
@@ -243,7 +243,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.verifiedBuildController,
+              controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

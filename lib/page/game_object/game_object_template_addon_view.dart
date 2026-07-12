@@ -38,7 +38,7 @@ class _GameObjectTemplateAddonViewState
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'entry',
-        fieldController: viewModel.gameObjectIdController,
+        controller: viewModel.gameObjectIdController,
         readOnly: true,
       ),
     );
@@ -47,28 +47,28 @@ class _GameObjectTemplateAddonViewState
         label: '阵营',
         child: FoxyNumberInput<int>(
           placeholder: 'faction',
-          fieldController: viewModel.factionController,
+          controller: viewModel.factionController,
         ),
       );
       final flagsInput = FoxyFormItem(
         label: '标志位',
         child: FoxyNumberInput<int>(
           placeholder: 'flags',
-          fieldController: viewModel.flagsController,
+          controller: viewModel.flagsController,
         ),
       );
       final minGoldInput = FoxyFormItem(
         label: '最小金钱',
         child: FoxyNumberInput<int>(
           placeholder: 'mingold',
-          fieldController: viewModel.minGoldController,
+          controller: viewModel.minGoldController,
         ),
       );
       final maxGoldInput = FoxyFormItem(
         label: '最大金钱',
         child: FoxyNumberInput<int>(
           placeholder: 'maxgold',
-          fieldController: viewModel.maxGoldController,
+          controller: viewModel.maxGoldController,
         ),
       );
 

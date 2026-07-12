@@ -38,7 +38,7 @@ class _QuestInfoViewState extends State<QuestInfoView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        fieldController: viewModel.idController,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -48,7 +48,7 @@ class _QuestInfoViewState extends State<QuestInfoView> {
         final id = viewModel.info.value.id;
         return FoxyLocalePicker(
           entry: id == 0 ? null : id,
-          fieldController: viewModel.nameController,
+          controller: viewModel.nameController,
           title: '任务类型名称本地化',
           placeholder: 'InfoName_lang_zhCN',
           delegate: FoxyLocalePickerDelegates.dbcQuestInfoInfoName,

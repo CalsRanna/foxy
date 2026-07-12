@@ -55,29 +55,18 @@ class FoxyEntityPickerDelegate<T> {
 /// 通过值查库挑记录的表单字段：ShadInput + 搜索按钮，点击打开分页查询弹窗，
 /// 双击行或确定回填选中 id。状态完全由弹窗内部 setState 管理，无 signals。
 class FoxyEntityPicker<T> extends StatefulWidget {
-  /// 迁移完成后的类型化入口。
-  final IntFieldController? fieldController;
-
-  /// 其他模块迁移期间保留的原始入口。
-  final TextEditingController? controller;
+  final IntFieldController controller;
   final FoxyEntityPickerDelegate<T> delegate;
   final String? placeholder;
   final bool readOnly;
 
   const FoxyEntityPicker({
     super.key,
-    this.fieldController,
-    this.controller,
+    required this.controller,
     required this.delegate,
     this.placeholder,
     this.readOnly = false,
-  }) : assert(
-         (fieldController == null) != (controller == null),
-         'fieldController 与 controller 必须且只能提供一个',
-       );
-
-  TextEditingController get textController =>
-      fieldController?.controller ?? controller!;
+  });
 
   @override
   State<FoxyEntityPicker<T>> createState() => _FoxyEntityPickerState<T>();
@@ -86,7 +75,7 @@ class FoxyEntityPicker<T> extends StatefulWidget {
 class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
   Future<void> _openDialog() async {
     if (widget.readOnly) return;
-    final currentId = int.tryParse(widget.textController.text) ?? 0;
+    final currentId = widget.controller.collect();
     if (!mounted) return;
     final result = await showFoxyDialog<int>(
       context: context,
@@ -96,7 +85,7 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
       ),
     );
     if (result != null) {
-      widget.textController.text = result.toString();
+      widget.controller.init(result);
     }
   }
 
@@ -109,7 +98,7 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
     );
     return readonly.wrap(
       ShadInput(
-        controller: widget.textController,
+        controller: widget.controller.controller,
         placeholder: Text(widget.placeholder ?? ''),
         readOnly: widget.readOnly,
         style: readonly.style,

@@ -134,9 +134,9 @@ final nameController = TextFieldController();  // 不存在此 Foxy 类型
 | `FoxyEntityPicker<T>` | `IntFieldController` |
 | `FoxyLocalePicker` 的主输入框 | `StringFieldController` |
 
-输入组件内部可以通过 `fieldController.controller` 访问原始 Controller，但 Page 不可以。
+输入组件内部可以通过 `controller.controller` 访问底层 Flutter/Shad 的原始 Controller，但 Page 不可以。
 
-最终调用形式应类似：
+统一调用形式：
 
 ```dart
 FoxyNumberInput<int>(
@@ -145,26 +145,25 @@ FoxyNumberInput<int>(
 )
 ```
 
-当前试点阶段使用的参数名是 `fieldController`，因为共享组件还保留了原始 `controller` 兼容入口：
-
 ```dart
-FoxyNumberInput<int>(
-  fieldController: viewModel.minLevelController,
-  placeholder: 'minlevel',
+FoxyShadSelect<int>(
+  controller: viewModel.rankController,
+  options: kRankOptions,
+  placeholder: const Text('rank'),
 )
 ```
 
-当所有模块迁移完成后，必须删除原始 Controller 入口，并把类型化参数统一改名为 `controller`。不要永久保留 `controller + fieldController` 双入口。
+参数名一律为 `controller`，类型为对应的 `XXXFieldController`。禁止再提供原始 `TextEditingController` / `ShadSelectController` 入口。
 
 ## 5. FoxyFormItem 的职责
 
-`FoxyFormItem` 最终只负责：
+`FoxyFormItem` 只负责：
 
 - 左侧标签；
 - 输入组件的横向布局；
 - 为输入组件提供 `Expanded`。
 
-它不得隐式创建 `ShadInput`，也不负责 `placeholder`、`readOnly` 或输入值。
+它不得隐式创建 `ShadInput`，也不负责 `placeholder`、`readOnly` 或输入值。只保留 `label` 与必填 `child`。
 
 正确写法：
 
@@ -182,22 +181,18 @@ FoxyFormItem(
 FoxyFormItem(
   label: '最低等级',
   child: FoxyNumberInput<int>(
-    fieldController: viewModel.minLevelController,
+    controller: viewModel.minLevelController,
     placeholder: 'minlevel',
   ),
 )
 ```
 
-禁止新增：
+禁止：
 
 ```dart
-FoxyFormItem.legacy(
-  controller: viewModel.nameController,
-  label: '名称',
-)
+// 不存在 legacy 构造；不得隐式创建输入框
+FoxyFormItem(label: '名称', controller: someTextController);
 ```
-
-`FoxyFormItem.legacy` 仅用于尚未迁移的已有页面。迁移某个模块时，应删除该模块中的全部 `.legacy` 调用。
 
 ## 6. ViewModel 标准模式
 
@@ -285,12 +280,12 @@ FoxyFormItem(
 
 ```dart
 FoxyNumberInput<int>(
-  fieldController: viewModel.entryController,
+  controller: viewModel.entryController,
   readOnly: true,
 )
 
 FoxyNumberInput<double>(
-  fieldController: viewModel.speedController,
+  controller: viewModel.speedController,
 )
 ```
 
@@ -298,7 +293,7 @@ FoxyNumberInput<double>(
 
 ```dart
 FoxyShadSelect<int>(
-  fieldController: viewModel.rankController,
+  controller: viewModel.rankController,
   options: kRankOptions,
   placeholder: const Text('rank'),
 )
@@ -308,7 +303,7 @@ FoxyShadSelect<int>(
 
 ```dart
 FoxyFlagPicker(
-  fieldController: viewModel.flagsController,
+  controller: viewModel.flagsController,
   flags: kFlagOptions,
   title: '标记',
 )
@@ -318,7 +313,7 @@ FoxyFlagPicker(
 
 ```dart
 FoxyEntityPicker(
-  fieldController: viewModel.lootIdController,
+  controller: viewModel.lootIdController,
   delegate: FoxyEntityPickerDelegates.creatureTemplate,
 )
 ```
@@ -328,7 +323,7 @@ FoxyEntityPicker(
 ```dart
 FoxyLocalePicker(
   entry: entry,
-  fieldController: viewModel.nameController,
+  controller: viewModel.nameController,
   delegate: FoxyLocalePickerDelegates.creatureTemplateName,
   title: '名称',
 )
@@ -337,6 +332,7 @@ FoxyLocalePicker(
 Page 中禁止出现：
 
 ```dart
+// 禁止访问 FieldController 内部原始 Controller
 controller: viewModel.nameController.controller
 ```
 
@@ -351,39 +347,23 @@ controller: viewModel.nameController.controller
 5. 将实体回填改为 `.init(value)`。
 6. 将保存/收集改为 `.collect()`。
 7. 删除该 ViewModel 中仅为旧模式服务的 `_fmt`、`_pi`、`_pd`、`_getSelectValue` 等辅助方法；若仍有非表单用途则保留。
-8. 将 Page 中的输入组件切换到类型化入口。
+8. 将 Page 中的输入组件切换到类型化 `controller:` 入口。
 9. 将隐式文本输入改为 `FoxyFormItem + FoxyStringInput`。
-10. 删除该模块中的 `FoxyFormItem.legacy`。
-11. 确认 Page 不再出现 `.controller.controller` 或 `xxxController.controller`。
-12. 格式化、运行静态分析和测试。
+10. 确认 Page 不再出现对 FieldController 内部 `.controller` 的访问（Widget 实现内部除外）。
+11. 格式化、运行静态分析和测试。
 
-## 9. 过渡期规则
+## 9. 当前规则（双入口已清理）
 
-为了逐模块迁移，共享组件当前暂时同时支持：
+共享输入组件**只**接受类型化 `XXXFieldController`，参数名统一为 `controller`。
 
-- `fieldController`：新的类型化入口；
-- `controller`：旧的原始 Controller 入口。
+### 禁止事项
 
-构造函数使用断言保证二者只能提供一个。此双入口只是过渡设施。
-
-### 过渡期禁止事项
-
-- 新页面不得使用原始 `controller` 入口。
-- 已迁移模块不得退回原始 Controller。
+- 不得为表单字段使用裸 `TextEditingController` / `ShadSelectController`。
 - 不得为了省事给 FieldController 增加 `label`、`placeholder` 或 `errorLabel`。
 - 不得让 Widget 释放 ViewModel 持有的 FieldController。
-- 不得让 `FoxyNumberInput` 接受 `TextBackedFieldController<num>`。
-- 不得新增 `FoxyFormItem.legacy` 调用。
-- 不得把兼容入口当作最终公共 API 写进新示例。
-
-### 全量迁移完成后的清理
-
-1. 删除所有输入组件的原始 Controller 字段和兼容分支。
-2. 将 `fieldController` 参数统一重命名为 `controller`。
-3. 删除 `FoxyFormItem.legacy`、`controller`、`placeholder`、`readOnly` 兼容状态及 `_buildLegacyInput`。
-4. 让 `FoxyFormItem` 最终只保留 `label` 和必填 `child`。
-5. 更新组件注释，删除“迁移期间”说明。
-6. 全仓搜索，确保 Page/ViewModel 不再为表单字段创建原始 Controller。
+- 不得让 `FoxyNumberInput` 接受 `TextBackedFieldController<num>` 或裸 `TextEditingController`。
+- 不得让 Page 访问 `fieldController.controller` / `xxxController.controller`（仅输入 Widget 内部可用）。
+- 不得恢复 `FoxyFormItem.legacy` 或 `controller`/`fieldController` 双入口。
 
 ## 10. 验收检查
 
@@ -391,11 +371,11 @@ controller: viewModel.nameController.controller
 
 ```bash
 rg "TextEditingController|ShadSelectController" lib/page/<module>
-rg "\.controller\.controller|Controller\.controller" lib/page/<module>
+rg "fieldController:" lib/page/<module>
 rg "FoxyFormItem\.legacy" lib/page/<module>
 ```
 
-注意：少数非表单用途可能仍合理使用原始 Controller，例如框架内部或临时弹窗状态。保留时必须确认其不属于 ViewModel 持久表单字段，并在代码中说明原因。
+注意：输入 Widget 内部访问 `controller.controller` 是允许的。Page/ViewModel 的表单字段必须是 FieldController。
 
 ### 项目验证
 
@@ -447,9 +427,7 @@ flutter test
 - `quest` 模块已完整迁移，包括列表筛选、主详情、Addon、发放奖励、提交物品、起止生物/物体 4 个子 Tab，以及 AreaTableOrQuestSortSelector 共享选择器，共 9 个 ViewModel、146 个 FieldController。
 - `spell` 模块已完整迁移，包括列表筛选、主详情（效果联动/DBC 本地化/Flag/Select）、奖励系数、自定义属性、区域技能、技能组、链接技能、技能排行、技能掉落子 Tab，共 9 个 ViewModel、212 个 FieldController。
 - `bootstrap` / `more` / `scaffold` DBC 导入对话框 / `setting` DBC 同步对话框 已迁移为 `StringFieldController`（连接表单、模块搜索、路径与导出搜索）。
-- `FoxyStringInput` 与 `NumberFieldController<T>` 已建立。
-- 通用输入组件已提供类型化入口，同时暂时保留原始入口。
-- 业务 Page 层已无裸 `TextEditingController` / `ShadSelectController` / `FoxyFormItem.legacy`；部分 Widget 内部仍可通过 `fieldController.controller` 访问底层控件（如密码框 obscureText、路径浏览）。
+- **双入口已清理**：`FoxyNumberInput` / `FoxyShadSelect` / `FoxyFlagPicker` / `FoxyEntityPicker` / `FoxyLocalePicker` 仅接受类型化 `controller:`；已删除 `FoxyFormItem.legacy`。
 
 已完成模块：
 
@@ -485,7 +463,7 @@ flutter test
 | `more` | 模块搜索 | 1 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `scaffold` / `setting` | DBC 导入路径、导出目录/表名搜索对话框 | 4 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 
-业务 Page 层 FieldController 迁移已完成。后续可清理通用输入组件上的 `controller`/`fieldController` 双入口过渡 API。
+业务 Page 层 FieldController 迁移与共享组件双入口清理均已完成。
 
 ## 12. 架构决策摘要
 
@@ -493,9 +471,8 @@ flutter test
 2. 实例名使用 `xxxController`，不使用 `xxxField`。
 3. 使用 `StringFieldController`，不使用 `TextFieldController`。
 4. `label`、`placeholder`、`errorLabel` 不进入 Controller。
-5. `FoxyFormItem` 只做标签布局，不隐式创建输入框。
-6. 每类输入组件只接受语义匹配的 FieldController。
+5. `FoxyFormItem` 只做标签布局（`label` + `child`），不隐式创建输入框。
+6. 每类输入组件只接受语义匹配的 FieldController，参数名统一为 `controller`。
 7. ViewModel 拥有并释放 Controller，Widget 只借用。
 8. Page 不得访问 FieldController 内部原始 Controller。
-9. 双入口和 `.legacy` 都是临时迁移设施，最终必须删除。
-10. 每次迁移一个模块，分析与测试通过后再继续。
+9. 不得恢复双入口或 `FoxyFormItem.legacy`。

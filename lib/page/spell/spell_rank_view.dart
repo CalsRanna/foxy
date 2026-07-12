@@ -163,7 +163,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                 child: FoxyFormItem(
                   label: '起始技能',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.firstSpellIdController,
+                    controller: viewModel.firstSpellIdController,
                     placeholder: 'first_spell_id',
                   ),
                 ),
@@ -172,7 +172,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                 child: FoxyFormItem(
                   label: '技能',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.rankSpellIdController,
+                    controller: viewModel.rankSpellIdController,
                     placeholder: 'spell_id',
                   ),
                 ),
@@ -181,7 +181,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                 child: FoxyFormItem(
                   label: '排行',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.rankController,
+                    controller: viewModel.rankController,
                     placeholder: 'rank',
                   ),
                 ),

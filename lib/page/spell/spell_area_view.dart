@@ -163,7 +163,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '法术ID',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.spellIdController,
+                    controller: viewModel.spellIdController,
                     placeholder: 'spell',
                     readOnly: true,
                   ),
@@ -173,7 +173,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '区域',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.areaController,
+                    controller: viewModel.areaController,
                     placeholder: 'area',
                   ),
                 ),
@@ -188,7 +188,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '开始任务',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.questStartController,
+                    controller: viewModel.questStartController,
                     placeholder: 'quest_start',
                   ),
                 ),
@@ -197,7 +197,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '结束任务',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.questEndController,
+                    controller: viewModel.questEndController,
                     placeholder: 'quest_end',
                   ),
                 ),
@@ -206,7 +206,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '开始任务掩码',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.questStartStatusController,
+                    controller: viewModel.questStartStatusController,
                     placeholder: 'quest_start_status',
                   ),
                 ),
@@ -215,7 +215,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '结束任务掩码',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.questEndStatusController,
+                    controller: viewModel.questEndStatusController,
                     placeholder: 'quest_end_status',
                   ),
                 ),
@@ -230,7 +230,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '光环',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.auraSpellController,
+                    controller: viewModel.auraSpellController,
                     placeholder: 'aura_spell',
                   ),
                 ),
@@ -239,7 +239,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '种族掩码',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.racemaskController,
+                    controller: viewModel.racemaskController,
                     placeholder: 'racemask',
                   ),
                 ),
@@ -248,7 +248,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '性别',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.genderController,
+                    controller: viewModel.genderController,
                     placeholder: 'gender',
                   ),
                 ),
@@ -257,7 +257,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '自动施放',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.autocastController,
+                    controller: viewModel.autocastController,
                     placeholder: 'autocast',
                   ),
                 ),

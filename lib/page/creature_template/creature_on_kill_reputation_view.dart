@@ -60,7 +60,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '编号',
                           child: FoxyNumberInput<int>(
-                            fieldController: viewModel.creatureIdController,
+                            controller: viewModel.creatureIdController,
                             placeholder: 'creature_id',
                             readOnly: true,
                           ),
@@ -70,7 +70,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '区分阵营',
                           child: FoxyNumberInput<int>(
-                            fieldController: viewModel.teamDependentController,
+                            controller: viewModel.teamDependentController,
                             placeholder: 'TeamDependent',
                           ),
                         ),
@@ -86,7 +86,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '阵营1',
                           child: FoxyNumberInput<int>(
-                            fieldController:
+                            controller:
                                 viewModel.rewOnKillRepFaction1Controller,
                             placeholder: 'RewOnKillRepFaction1',
                           ),
@@ -96,7 +96,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '阵营2',
                           child: FoxyNumberInput<int>(
-                            fieldController:
+                            controller:
                                 viewModel.rewOnKillRepFaction2Controller,
                             placeholder: 'RewOnKillRepFaction2',
                           ),
@@ -113,7 +113,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '声望值1',
                           child: FoxyNumberInput<double>(
-                            fieldController:
+                            controller:
                                 viewModel.rewOnKillRepValue1Controller,
                             placeholder: 'RewOnKillRepValue1',
                           ),
@@ -123,7 +123,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '声望值2',
                           child: FoxyNumberInput<double>(
-                            fieldController:
+                            controller:
                                 viewModel.rewOnKillRepValue2Controller,
                             placeholder: 'RewOnKillRepValue2',
                           ),
@@ -140,7 +140,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '最高声望等级1',
                           child: FoxyShadSelect<int>(
-                            fieldController: viewModel.maxStanding1Controller,
+                            controller: viewModel.maxStanding1Controller,
                             options: kMaxStandingOptions,
                             placeholder: Text('MaxStanding1'),
                           ),
@@ -150,7 +150,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '最高声望等级2',
                           child: FoxyShadSelect<int>(
-                            fieldController: viewModel.maxStanding2Controller,
+                            controller: viewModel.maxStanding2Controller,
                             options: kMaxStandingOptions,
                             placeholder: Text('MaxStanding2'),
                           ),
@@ -167,7 +167,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '包括声望组1',
                           child: FoxyShadSelect<int>(
-                            fieldController: viewModel.isTeamAward1Controller,
+                            controller: viewModel.isTeamAward1Controller,
                             options: kBooleanOptions,
                             placeholder: Text('IsTeamAward1'),
                           ),
@@ -177,7 +177,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '包括声望组2',
                           child: FoxyShadSelect<int>(
-                            fieldController: viewModel.isTeamAward2Controller,
+                            controller: viewModel.isTeamAward2Controller,
                             options: kBooleanOptions,
                             placeholder: Text('IsTeamAward2'),
                           ),

@@ -43,7 +43,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
             child: FoxyFormItem(
               label: '编号',
               child: FoxyNumberInput<int>(
-                fieldController: vm.idController,
+                controller: vm.idController,
                 readOnly: true,
               ),
             ),
@@ -51,22 +51,28 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           Expanded(
             child: FoxyFormItem(
               label: '表情1',
-              placeholder: 'Emote1',
-              child: FoxyNumberInput<int>(fieldController: vm.emote1Controller),
+              child: FoxyNumberInput<int>(
+                controller: vm.emote1Controller,
+                placeholder: 'Emote1',
+              ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '表情2',
-              placeholder: 'Emote2',
-              child: FoxyNumberInput<int>(fieldController: vm.emote2Controller),
+              child: FoxyNumberInput<int>(
+                controller: vm.emote2Controller,
+                placeholder: 'Emote2',
+              ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '表情3',
-              placeholder: 'Emote3',
-              child: FoxyNumberInput<int>(fieldController: vm.emote3Controller),
+              child: FoxyNumberInput<int>(
+                controller: vm.emote3Controller,
+                placeholder: 'Emote3',
+              ),
             ),
           ),
         ],
@@ -77,34 +83,36 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           Expanded(
             child: FoxyFormItem(
               label: '表情4',
-              placeholder: 'Emote4',
-              child: FoxyNumberInput<int>(fieldController: vm.emote4Controller),
+              child: FoxyNumberInput<int>(
+                controller: vm.emote4Controller,
+                placeholder: 'Emote4',
+              ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '表情延迟1',
-              placeholder: 'EmoteDelay1',
               child: FoxyNumberInput<int>(
-                fieldController: vm.emoteDelay1Controller,
+                controller: vm.emoteDelay1Controller,
+                placeholder: 'EmoteDelay1',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '表情延迟2',
-              placeholder: 'EmoteDelay2',
               child: FoxyNumberInput<int>(
-                fieldController: vm.emoteDelay2Controller,
+                controller: vm.emoteDelay2Controller,
+                placeholder: 'EmoteDelay2',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '表情延迟3',
-              placeholder: 'EmoteDelay3',
               child: FoxyNumberInput<int>(
-                fieldController: vm.emoteDelay3Controller,
+                controller: vm.emoteDelay3Controller,
+                placeholder: 'EmoteDelay3',
               ),
             ),
           ),
@@ -116,9 +124,9 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           Expanded(
             child: FoxyFormItem(
               label: '表情延迟4',
-              placeholder: 'EmoteDelay4',
               child: FoxyNumberInput<int>(
-                fieldController: vm.emoteDelay4Controller,
+                controller: vm.emoteDelay4Controller,
+                placeholder: 'EmoteDelay4',
               ),
             ),
           ),
@@ -135,7 +143,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '奖励文本',
               child: FoxyLocalePicker(
                 entry: widget.questId,
-                fieldController: vm.rewardTextController,
+                controller: vm.rewardTextController,
                 delegate: FoxyLocalePickerDelegates.questOfferReward,
                 placeholder: 'RewardText',
                 title: '奖励文本',

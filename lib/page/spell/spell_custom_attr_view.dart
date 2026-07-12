@@ -54,7 +54,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
                         child: FoxyFormItem(
                           label: '编号',
                           child: FoxyNumberInput<int>(
-                            fieldController: viewModel.spellIdController,
+                            controller: viewModel.spellIdController,
                             placeholder: 'spell_id',
                             readOnly: true,
                           ),
@@ -64,7 +64,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
                         child: FoxyFormItem(
                           label: '属性',
                           child: FoxyNumberInput<int>(
-                            fieldController: viewModel.attributesController,
+                            controller: viewModel.attributesController,
                             placeholder: 'attributes',
                           ),
                         ),

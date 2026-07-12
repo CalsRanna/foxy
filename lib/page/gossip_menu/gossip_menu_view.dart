@@ -38,7 +38,7 @@ class _GossipMenuViewState extends State<GossipMenuView> {
     final menuIdInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
-        fieldController: viewModel.menuIdController,
+        controller: viewModel.menuIdController,
         placeholder: 'MenuID',
         readOnly: true,
       ),
@@ -47,7 +47,7 @@ class _GossipMenuViewState extends State<GossipMenuView> {
       label: '文本编号',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.npcText,
-        fieldController: viewModel.textIdController,
+        controller: viewModel.textIdController,
         placeholder: 'TextID',
       ),
     );

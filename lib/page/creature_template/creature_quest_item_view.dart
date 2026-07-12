@@ -172,7 +172,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.creatureIdController,
+              controller: viewModel.creatureIdController,
               placeholder: 'CreatureEntry',
               readOnly: true,
             ),
@@ -182,7 +182,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           FoxyFormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.idxController,
+              controller: viewModel.idxController,
               placeholder: 'Idx',
               readOnly: true,
             ),
@@ -193,7 +193,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
             label: '物品',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
-              fieldController: viewModel.itemIdController,
+              controller: viewModel.itemIdController,
               placeholder: 'ItemId',
             ),
           ),
@@ -202,7 +202,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
           FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.verifiedBuildController,
+              controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

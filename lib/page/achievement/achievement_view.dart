@@ -56,7 +56,7 @@ class _AchievementViewState extends State<AchievementView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        fieldController: viewModel.idController,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -64,21 +64,21 @@ class _AchievementViewState extends State<AchievementView> {
       label: '阵营',
       child: FoxyNumberInput<int>(
         placeholder: 'Faction',
-        fieldController: viewModel.factionController,
+        controller: viewModel.factionController,
       ),
     );
     final instanceIdInput = FoxyFormItem(
       label: '实例编号',
       child: FoxyNumberInput<int>(
         placeholder: 'Instance_ID',
-        fieldController: viewModel.instanceIdController,
+        controller: viewModel.instanceIdController,
       ),
     );
     final supercedesInput = FoxyFormItem(
       label: '前置成就',
       child: FoxyNumberInput<int>(
         placeholder: 'Supercedes',
-        fieldController: viewModel.supercedesController,
+        controller: viewModel.supercedesController,
       ),
     );
 
@@ -112,7 +112,7 @@ class _AchievementViewState extends State<AchievementView> {
                   final id = viewModel.achievement.value.id;
                   return FoxyLocalePicker(
                     entry: id == 0 ? null : id,
-                    fieldController: viewModel.titleLangZhCNController,
+                    controller: viewModel.titleLangZhCNController,
                     title: '标题本地化',
                     placeholder: 'Title_lang_zhCN',
                     delegate: FoxyLocalePickerDelegates.dbcAchievementTitle,
@@ -144,7 +144,7 @@ class _AchievementViewState extends State<AchievementView> {
                   final id = viewModel.achievement.value.id;
                   return FoxyLocalePicker(
                     entry: id == 0 ? null : id,
-                    fieldController: viewModel.descriptionLangZhCNController,
+                    controller: viewModel.descriptionLangZhCNController,
                     title: '描述本地化',
                     placeholder: 'Description_lang_zhCN',
                     delegate:
@@ -177,7 +177,7 @@ class _AchievementViewState extends State<AchievementView> {
                   final id = viewModel.achievement.value.id;
                   return FoxyLocalePicker(
                     entry: id == 0 ? null : id,
-                    fieldController: viewModel.rewardLangZhCNController,
+                    controller: viewModel.rewardLangZhCNController,
                     title: '奖励文本本地化',
                     placeholder: 'Reward_lang_zhCN',
                     delegate: FoxyLocalePickerDelegates.dbcAchievementReward,
@@ -200,49 +200,49 @@ class _AchievementViewState extends State<AchievementView> {
       label: '类别',
       child: FoxyNumberInput<int>(
         placeholder: 'Category',
-        fieldController: viewModel.categoryController,
+        controller: viewModel.categoryController,
       ),
     );
     final pointsInput = FoxyFormItem(
       label: '点数',
       child: FoxyNumberInput<int>(
         placeholder: 'Points',
-        fieldController: viewModel.pointsController,
+        controller: viewModel.pointsController,
       ),
     );
     final uiOrderInput = FoxyFormItem(
       label: '排序',
       child: FoxyNumberInput<int>(
         placeholder: 'Ui_order',
-        fieldController: viewModel.uiOrderController,
+        controller: viewModel.uiOrderController,
       ),
     );
     final flagsInput = FoxyFormItem(
       label: '标识',
       child: FoxyNumberInput<int>(
         placeholder: 'Flags',
-        fieldController: viewModel.flagsController,
+        controller: viewModel.flagsController,
       ),
     );
     final iconIdInput = FoxyFormItem(
       label: '图标编号',
       child: FoxyNumberInput<int>(
         placeholder: 'IconID',
-        fieldController: viewModel.iconIdController,
+        controller: viewModel.iconIdController,
       ),
     );
     final minimumCriteriaInput = FoxyFormItem(
       label: '最小完成条件',
       child: FoxyNumberInput<int>(
         placeholder: 'Minimum_criteria',
-        fieldController: viewModel.minimumCriteriaController,
+        controller: viewModel.minimumCriteriaController,
       ),
     );
     final sharesCriteriaInput = FoxyFormItem(
       label: '共享条件',
       child: FoxyNumberInput<int>(
         placeholder: 'Shares_criteria',
-        fieldController: viewModel.sharesCriteriaController,
+        controller: viewModel.sharesCriteriaController,
       ),
     );
 
