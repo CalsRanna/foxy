@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
@@ -8,14 +7,17 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class QuestInfoListViewModel {
   int _refreshToken = 0;
-  final entryController = TextEditingController();
-  final nameController = TextEditingController();
+  final entryController = StringFieldController();
+  final nameController = StringFieldController();
+
+  late final _controllers = <FieldController>[entryController, nameController];
   final _repository = GetIt.instance.get<QuestInfoRepository>();
 
   final page = signal(1);
@@ -74,8 +76,9 @@ class QuestInfoListViewModel {
   }
 
   void dispose() {
-    entryController.dispose();
-    nameController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals() async {
@@ -109,8 +112,8 @@ class QuestInfoListViewModel {
 
   QuestInfoFilterEntity _buildFilter() {
     return QuestInfoFilterEntity(
-      id: entryController.text,
-      name: nameController.text,
+      id: entryController.collect(),
+      name: nameController.collect(),
     );
   }
 
@@ -120,8 +123,8 @@ class QuestInfoListViewModel {
   }
 
   Future<void> reset() async {
-    entryController.clear();
-    nameController.clear();
+    entryController.init('');
+    nameController.init('');
     page.value = 1;
     await _refresh();
   }
