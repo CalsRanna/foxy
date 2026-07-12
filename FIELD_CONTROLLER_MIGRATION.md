@@ -440,6 +440,7 @@ flutter test
 - `reference_loot_template` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、12 个 FieldController。
 - `page_text` 模块已完整迁移，包括列表筛选、主详情和动态 locale 行编辑，共 3 个 ViewModel、固定 6 个 FieldController（locale 行为动态 `StringFieldController`）。
 - `player_create_info` 模块已完整迁移，包括列表筛选、主详情与动作/起始物品/自定义法术子 Tab，共 5 个 ViewModel、20 个 FieldController。
+- `game_object` 模块已完整迁移，包括列表筛选、主详情（含 Data0–23 与类型 Select）、Addon、任务物品与掉落子 Tab，共 5 个 ViewModel、56 个 FieldController。
 - `FoxyStringInput` 与 `NumberFieldController<T>` 已建立。
 - 通用输入组件已提供类型化入口，同时暂时保留原始入口。
 - `FoxyFormItem` 默认构造要求显式 `child`；未迁移页面暂时使用 `.legacy`。
@@ -468,6 +469,7 @@ flutter test
 | `reference_loot_template` | 列表筛选、详情编辑、物品 Picker、掉落几率/模式 | 12 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `page_text` | 列表筛选、主详情、动态 locale 行 | 6+动态 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `player_create_info` | 列表筛选、主详情、动作按钮、起始物品、自定义法术 | 20 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
+| `game_object` | 列表筛选、主详情、Addon、任务物品、物品掉落 | 56 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 
 后续迁移时应更新本节，记录已完成模块和仍存在的过渡范围。
 

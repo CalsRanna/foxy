@@ -1,14 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -18,73 +14,65 @@ class GameObjectQuestItemViewModel {
   final gameObjectEntry = signal<int>(0);
   final items = signal<List<GameObjectQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final idxController = TextEditingController();
-  final itemIdController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+
+  final gameObjectIdController = IntFieldController();
+  final idxController = IntFieldController();
+  final itemIdController = IntFieldController();
+  final verifiedBuildController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    gameObjectIdController,
+    idxController,
+    itemIdController,
+    verifiedBuildController,
+  ];
+
   final _repository = GetIt.instance.get<GameObjectQuestItemRepository>();
 
   Future<void> load() async {
     items.value = await _repository.getBriefGameObjectQuestItems(
       gameObjectEntry.value,
     );
+    selectedIndex.value = null;
   }
 
   void resetForm() {
-    idxController.text = _fmt(0);
-    itemIdController.clear();
-    verifiedBuildController.text = _fmt(0);
+    idxController.init(0);
+    itemIdController.init(0);
+    verifiedBuildController.init(0);
   }
 
   void fillForm(GameObjectQuestItemEntity questItem) {
-    idxController.text = _fmt(questItem.idx);
-    itemIdController.text = questItem.itemId.toString();
-    verifiedBuildController.text = _fmt(questItem.verifiedBuild);
+    idxController.init(questItem.idx);
+    itemIdController.init(questItem.itemId);
+    verifiedBuildController.init(questItem.verifiedBuild);
   }
 
   GameObjectQuestItemEntity collectFromForm() {
     return GameObjectQuestItemEntity(
       gameObjectEntry: gameObjectEntry.value,
-      idx: _pi(idxController.text),
-      itemId: _parseInt(itemIdController.text),
-      verifiedBuild: _pi(verifiedBuildController.text),
+      idx: idxController.collect(),
+      itemId: itemIdController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  Future<void> create(BuildContext context) async {
+  Future<void> create() async {
     try {
       resetForm();
       final nextIdx = await _repository.getNextIdx(gameObjectEntry.value);
-      if (!context.mounted) return;
-      idxController.text = _fmt(nextIdx);
-      await showFoxyDialog(
-        context: context,
-        builder: (context) => _buildDialogForm(context, isNew: true),
-      );
+      idxController.init(nextIdx);
+      selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建失败: $e');
       DialogUtil.instance.error('创建失败: $e');
     }
   }
 
-  void edit(BuildContext context) {
+  void edit() {
     final index = selectedIndex.value;
-    if (index == null) return;
+    if (index == null || index < 0 || index >= items.value.length) return;
     fillForm(items.value[index]);
-    showFoxyDialog(
-      context: context,
-      builder: (context) => _buildDialogForm(context, isNew: false),
-    );
   }
 
   Future<void> copy(BuildContext context) async {
@@ -128,9 +116,13 @@ class GameObjectQuestItemViewModel {
       final questItem = collectFromForm();
       await _repository.storeGameObjectQuestItem(questItem);
       await load();
-      if (context.mounted) Navigator.of(context).pop();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('保存成功'));
+      ShadSonner.of(context).show(toast);
     } catch (e) {
-      DialogUtil.instance.error('保存失败: $e');
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
   }
 
@@ -139,19 +131,26 @@ class GameObjectQuestItemViewModel {
       final questItem = collectFromForm();
       await _repository.updateGameObjectQuestItem(questItem);
       await load();
-      if (context.mounted) Navigator.of(context).pop();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('更新成功'));
+      ShadSonner.of(context).show(toast);
     } catch (e) {
-      DialogUtil.instance.error('更新失败: $e');
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
   }
 
   void selectRow(int index) {
-    selectedIndex.value = index;
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
   }
 
   Future<void> initSignals({required int gameObjectId}) async {
     try {
       gameObjectEntry.value = gameObjectId;
+      gameObjectIdController.init(gameObjectId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
@@ -164,55 +163,8 @@ class GameObjectQuestItemViewModel {
   }
 
   void dispose() {
-    idxController.dispose();
-    itemIdController.dispose();
-    verifiedBuildController.dispose();
-  }
-
-  Widget _buildDialogForm(BuildContext context, {required bool isNew}) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12,
-        children: [
-          SizedBox(
-            height: 100,
-            child: ShadInput(
-              controller: TextEditingController(
-                text: gameObjectEntry.value.toString(),
-              ),
-              readOnly: true,
-              placeholder: Text('游戏对象编号'),
-            ),
-          ),
-          FoxyNumberInput<int>(controller: idxController),
-          SizedBox(
-            height: 100,
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: itemIdController,
-              placeholder: '物品ID',
-            ),
-          ),
-          FoxyNumberInput<int>(controller: verifiedBuildController),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            spacing: 12,
-            children: [
-              ShadButton.outline(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('取消'),
-              ),
-              ShadButton(
-                onPressed: () => isNew ? save(context) : update(context),
-                child: Text('保存'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

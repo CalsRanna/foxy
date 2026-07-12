@@ -1,16 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/widget/foxy_form_item.dart';
-import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -20,106 +14,101 @@ class GameObjectLootTemplateViewModel {
   final gameObjectId = signal<int>(0);
   final items = signal<List<BriefLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final itemController = TextEditingController();
-  final referenceController = TextEditingController();
-  final chanceController = TextEditingController();
-  final questRequiredController = ShadSelectController<int>();
-  final lootModeController = TextEditingController();
-  final groupIdController = TextEditingController();
-  final minCountController = TextEditingController();
-  final maxCountController = TextEditingController();
-  final commentController = TextEditingController();
-
+  final editing = signal(false);
   int? editingItem;
+
+  final gameObjectIdController = IntFieldController();
+  final itemController = IntFieldController();
+  final referenceController = IntFieldController();
+  final chanceController = DoubleFieldController();
+  final questRequiredController = SelectFieldController<int>(fallback: 0);
+  final lootModeController = IntFieldController();
+  final groupIdController = IntFieldController();
+  final minCountController = IntFieldController();
+  final maxCountController = IntFieldController();
+  final commentController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    gameObjectIdController,
+    itemController,
+    referenceController,
+    chanceController,
+    questRequiredController,
+    lootModeController,
+    groupIdController,
+    minCountController,
+    maxCountController,
+    commentController,
+  ];
 
   final repository = LootTemplateRepository(LootTableType.gameobject);
 
   Future<void> load() async {
     items.value = await repository.getBriefLootTemplates(gameObjectId.value);
-  }
-
-  void resetForm() {
-    itemController.clear();
-    referenceController.text = _fmt(0);
-    chanceController.text = _fmt(0.0);
-    questRequiredController.value = {0};
-    lootModeController.text = _fmt(1);
-    groupIdController.text = _fmt(0);
-    minCountController.text = _fmt(1);
-    maxCountController.text = _fmt(1);
-    commentController.clear();
+    selectedIndex.value = null;
+    editing.value = false;
     editingItem = null;
   }
 
+  void resetForm() {
+    itemController.init(0);
+    referenceController.init(0);
+    chanceController.init(0.0);
+    questRequiredController.init(0);
+    lootModeController.init(1);
+    groupIdController.init(0);
+    minCountController.init(1);
+    maxCountController.init(1);
+    commentController.init('');
+    editingItem = null;
+    editing.value = false;
+  }
+
   void fillForm(BriefLootTemplateEntity loot) {
-    itemController.text = loot.item.toString();
-    referenceController.text = _fmt(loot.reference);
-    chanceController.text = _fmt(loot.chance);
-    questRequiredController.value = {loot.questRequired ? 1 : 0};
-    lootModeController.text = _fmt(loot.lootMode);
-    groupIdController.text = _fmt(loot.groupId);
-    minCountController.text = _fmt(loot.minCount);
-    maxCountController.text = _fmt(loot.maxCount);
-    commentController.text = loot.comment;
+    itemController.init(loot.item);
+    referenceController.init(loot.reference);
+    chanceController.init(loot.chance);
+    questRequiredController.init(loot.questRequired ? 1 : 0);
+    lootModeController.init(loot.lootMode);
+    groupIdController.init(loot.groupId);
+    minCountController.init(loot.minCount);
+    maxCountController.init(loot.maxCount);
+    commentController.init(loot.comment);
     editingItem = loot.item;
+    editing.value = true;
   }
 
   LootTemplateEntity collectFromForm() {
     return LootTemplateEntity(
       entry: gameObjectId.value,
-      item: _parseInt(itemController.text),
-      reference: _pi(referenceController.text),
-      chance: _pd(chanceController.text),
-      questRequired: _getSelectValue(questRequiredController) == 1,
-      lootMode: _pi(lootModeController.text),
-      groupId: _pi(groupIdController.text),
-      minCount: _pi(minCountController.text),
-      maxCount: _pi(maxCountController.text),
-      comment: commentController.text,
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
     );
   }
 
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
-  }
-
-  int _getSelectValue(ShadSelectController<int> controller) =>
-      controller.value.firstOrNull ?? 0;
-
-  Future<void> create(BuildContext context) async {
+  Future<void> create() async {
     try {
       resetForm();
       final nextItemId = await repository.getNextItemId(gameObjectId.value);
-      if (!context.mounted) return;
-      itemController.text = nextItemId.toString();
-      await showFoxyDialog(
-        context: context,
-        builder: (context) => _buildDialogForm(context),
-      );
+      itemController.init(nextItemId);
+      selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建失败: $e');
       DialogUtil.instance.error('创建失败: $e');
     }
   }
 
-  void edit(BuildContext context) {
+  void edit() {
     final index = selectedIndex.value;
-    if (index == null) return;
+    if (index == null || index < 0 || index >= items.value.length) return;
     fillForm(items.value[index]);
-    showFoxyDialog(
-      context: context,
-      builder: (context) => _buildDialogForm(context),
-    );
   }
 
   Future<void> copy(BuildContext context) async {
@@ -162,9 +151,13 @@ class GameObjectLootTemplateViewModel {
       final loot = collectFromForm();
       await repository.storeLootTemplate(loot);
       await load();
-      if (context.mounted) Navigator.of(context).pop();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('保存成功'));
+      ShadSonner.of(context).show(toast);
     } catch (e) {
-      DialogUtil.instance.error('保存失败: $e');
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
   }
 
@@ -177,19 +170,26 @@ class GameObjectLootTemplateViewModel {
         loot,
       );
       await load();
-      if (context.mounted) Navigator.of(context).pop();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('更新成功'));
+      ShadSonner.of(context).show(toast);
     } catch (e) {
-      DialogUtil.instance.error('更新失败: $e');
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
     }
   }
 
   void selectRow(int index) {
-    selectedIndex.value = index;
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
   }
 
   Future<void> initSignals({required int gameObjectId}) async {
     try {
       this.gameObjectId.value = gameObjectId;
+      gameObjectIdController.init(gameObjectId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
@@ -202,99 +202,8 @@ class GameObjectLootTemplateViewModel {
   }
 
   void dispose() {
-    chanceController.dispose();
-    commentController.dispose();
-    groupIdController.dispose();
-    itemController.dispose();
-    lootModeController.dispose();
-    maxCountController.dispose();
-    minCountController.dispose();
-    questRequiredController.dispose();
-    referenceController.dispose();
-  }
-
-  Widget _buildDialogForm(BuildContext context) {
-    final isNew = editingItem == null;
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12,
-        children: [
-          SizedBox(
-            height: 100,
-            child: ShadInput(
-              controller: TextEditingController(
-                text: gameObjectId.value.toString(),
-              ),
-              readOnly: true,
-              placeholder: Text('游戏对象编号'),
-            ),
-          ),
-          SizedBox(
-            height: 100,
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: itemController,
-              placeholder: '物品ID',
-            ),
-          ),
-          FoxyNumberInput<int>(controller: referenceController),
-          FoxyNumberInput<double>(
-            controller: chanceController,
-            placeholder: '掉落几率',
-          ),
-          FoxyFormItem(
-            label: '需要任务',
-            child: FoxyShadSelect<int>(
-              controller: questRequiredController,
-              options: const {0: '否', 1: '是'},
-              placeholder: const Text('QuestRequired'),
-            ),
-          ),
-          FoxyNumberInput<int>(
-            controller: lootModeController,
-            placeholder: '掉落模式',
-          ),
-          FoxyNumberInput<int>(
-            controller: groupIdController,
-            placeholder: '组ID',
-          ),
-          Row(
-            spacing: 12,
-            children: [
-              Expanded(
-                child: FoxyNumberInput<int>(
-                  controller: minCountController,
-                  placeholder: '最小数量',
-                ),
-              ),
-              Expanded(
-                child: FoxyNumberInput<int>(
-                  controller: maxCountController,
-                  placeholder: '最大数量',
-                ),
-              ),
-            ],
-          ),
-          ShadInput(controller: commentController, placeholder: Text('备注')),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            spacing: 12,
-            children: [
-              ShadButton.outline(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('取消'),
-              ),
-              ShadButton(
-                onPressed: () => isNew ? save(context) : update(context),
-                child: Text('保存'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

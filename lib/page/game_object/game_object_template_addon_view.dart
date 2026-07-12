@@ -36,32 +36,40 @@ class _GameObjectTemplateAddonViewState
   Widget build(BuildContext context) {
     final entryInput = FoxyFormItem(
       label: '编号',
-      placeholder: 'entry',
       child: FoxyNumberInput<int>(
-        controller: viewModel.gameObjectIdController,
+        placeholder: 'entry',
+        fieldController: viewModel.gameObjectIdController,
         readOnly: true,
       ),
     );
     return Watch((_) {
       final factionInput = FoxyFormItem(
         label: '阵营',
-        placeholder: 'faction',
-        child: FoxyNumberInput<int>(controller: viewModel.factionController),
+        child: FoxyNumberInput<int>(
+          placeholder: 'faction',
+          fieldController: viewModel.factionController,
+        ),
       );
       final flagsInput = FoxyFormItem(
         label: '标志位',
-        placeholder: 'flags',
-        child: FoxyNumberInput<int>(controller: viewModel.flagsController),
+        child: FoxyNumberInput<int>(
+          placeholder: 'flags',
+          fieldController: viewModel.flagsController,
+        ),
       );
       final minGoldInput = FoxyFormItem(
         label: '最小金钱',
-        placeholder: 'mingold',
-        child: FoxyNumberInput<int>(controller: viewModel.minGoldController),
+        child: FoxyNumberInput<int>(
+          placeholder: 'mingold',
+          fieldController: viewModel.minGoldController,
+        ),
       );
       final maxGoldInput = FoxyFormItem(
         label: '最大金钱',
-        placeholder: 'maxgold',
-        child: FoxyNumberInput<int>(controller: viewModel.maxGoldController),
+        child: FoxyNumberInput<int>(
+          placeholder: 'maxgold',
+          fieldController: viewModel.maxGoldController,
+        ),
       );
 
       return SingleChildScrollView(

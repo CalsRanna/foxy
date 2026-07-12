@@ -1,12 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,27 +15,36 @@ class GameObjectTemplateDetailViewModel {
   final _repository = GetIt.instance.get<GameObjectTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final nameController = TextEditingController();
-  final castBarCaptionController = TextEditingController();
-  final iconNameController = TextEditingController();
-  final typeController = ShadSelectController<int>();
-  final unk1Controller = TextEditingController();
-  final aiNameController = TextEditingController();
-  final scriptNameController = TextEditingController();
+  final nameController = StringFieldController();
+  final castBarCaptionController = StringFieldController();
+  final iconNameController = StringFieldController();
+  final typeController = SelectFieldController<int>(fallback: 0);
+  final unk1Controller = StringFieldController();
+  final aiNameController = StringFieldController();
+  final scriptNameController = StringFieldController();
 
-  final entryController = TextEditingController();
-  final displayIdController = TextEditingController();
-  final sizeController = TextEditingController();
-  final dataControllers = List.generate(24, (_) => TextEditingController());
-  final verifiedBuildController = TextEditingController();
+  final entryController = IntFieldController();
+  final displayIdController = IntFieldController();
+  final sizeController = DoubleFieldController();
+  final dataControllers = List.generate(24, (_) => IntFieldController());
+  final verifiedBuildController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    nameController,
+    castBarCaptionController,
+    iconNameController,
+    typeController,
+    unk1Controller,
+    aiNameController,
+    scriptNameController,
+    entryController,
+    displayIdController,
+    sizeController,
+    ...dataControllers,
+    verifiedBuildController,
+  ];
 
   final template = signal(GameObjectTemplateEntity());
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -44,7 +52,7 @@ class GameObjectTemplateDetailViewModel {
       final existed = await _repository.getGameObjectTemplate(t.entry);
       if (existed == null) {
         final id = await _repository.storeGameObjectTemplate(t);
-        entryController.text = '$id';
+        entryController.init(id);
         template.value = t.copyWith(entry: id);
         _logActivity(ActivityActionType.create, template.value);
       } else {
@@ -68,60 +76,47 @@ class GameObjectTemplateDetailViewModel {
 
   GameObjectTemplateEntity _collectFromControllers() {
     return GameObjectTemplateEntity(
-      entry: _pi(entryController.text),
-      name: nameController.text,
-      castBarCaption: castBarCaptionController.text,
-      iconName: iconNameController.text,
-      type: _getSelectValue(typeController),
-      displayId: _pi(displayIdController.text),
-      size: _pd(sizeController.text),
-      unk1: unk1Controller.text,
-      data0: _pi(dataControllers[0].text),
-      data1: _pi(dataControllers[1].text),
-      data2: _pi(dataControllers[2].text),
-      data3: _pi(dataControllers[3].text),
-      data4: _pi(dataControllers[4].text),
-      data5: _pi(dataControllers[5].text),
-      data6: _pi(dataControllers[6].text),
-      data7: _pi(dataControllers[7].text),
-      data8: _pi(dataControllers[8].text),
-      data9: _pi(dataControllers[9].text),
-      data10: _pi(dataControllers[10].text),
-      data11: _pi(dataControllers[11].text),
-      data12: _pi(dataControllers[12].text),
-      data13: _pi(dataControllers[13].text),
-      data14: _pi(dataControllers[14].text),
-      data15: _pi(dataControllers[15].text),
-      data16: _pi(dataControllers[16].text),
-      data17: _pi(dataControllers[17].text),
-      data18: _pi(dataControllers[18].text),
-      data19: _pi(dataControllers[19].text),
-      data20: _pi(dataControllers[20].text),
-      data21: _pi(dataControllers[21].text),
-      data22: _pi(dataControllers[22].text),
-      data23: _pi(dataControllers[23].text),
-      aiName: aiNameController.text,
-      scriptName: scriptNameController.text,
-      verifiedBuild: _pi(verifiedBuildController.text),
+      entry: entryController.collect(),
+      name: nameController.collect(),
+      castBarCaption: castBarCaptionController.collect(),
+      iconName: iconNameController.collect(),
+      type: typeController.collect(),
+      displayId: displayIdController.collect(),
+      size: sizeController.collect(),
+      unk1: unk1Controller.collect(),
+      data0: dataControllers[0].collect(),
+      data1: dataControllers[1].collect(),
+      data2: dataControllers[2].collect(),
+      data3: dataControllers[3].collect(),
+      data4: dataControllers[4].collect(),
+      data5: dataControllers[5].collect(),
+      data6: dataControllers[6].collect(),
+      data7: dataControllers[7].collect(),
+      data8: dataControllers[8].collect(),
+      data9: dataControllers[9].collect(),
+      data10: dataControllers[10].collect(),
+      data11: dataControllers[11].collect(),
+      data12: dataControllers[12].collect(),
+      data13: dataControllers[13].collect(),
+      data14: dataControllers[14].collect(),
+      data15: dataControllers[15].collect(),
+      data16: dataControllers[16].collect(),
+      data17: dataControllers[17].collect(),
+      data18: dataControllers[18].collect(),
+      data19: dataControllers[19].collect(),
+      data20: dataControllers[20].collect(),
+      data21: dataControllers[21].collect(),
+      data22: dataControllers[22].collect(),
+      data23: dataControllers[23].collect(),
+      aiName: aiNameController.collect(),
+      scriptName: scriptNameController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 
-  int _getSelectValue(ShadSelectController<int> controller) =>
-      controller.value.firstOrNull ?? 0;
-
   void dispose() {
-    aiNameController.dispose();
-    castBarCaptionController.dispose();
-    displayIdController.dispose();
-    entryController.dispose();
-    iconNameController.dispose();
-    nameController.dispose();
-    scriptNameController.dispose();
-    sizeController.dispose();
-    unk1Controller.dispose();
-    verifiedBuildController.dispose();
-    for (final c in dataControllers) {
-      c.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
     }
   }
 
@@ -144,40 +139,41 @@ class GameObjectTemplateDetailViewModel {
   }
 
   void _initControllers(GameObjectTemplateEntity template) {
-    entryController.text = _fmt(template.entry);
-    nameController.text = template.name;
-    castBarCaptionController.text = template.castBarCaption;
-    iconNameController.text = template.iconName;
-    displayIdController.text = _fmt(template.displayId);
-    sizeController.text = _fmt(template.size);
-    unk1Controller.text = template.unk1;
-    dataControllers[0].text = _fmt(template.data0);
-    dataControllers[1].text = _fmt(template.data1);
-    dataControllers[2].text = _fmt(template.data2);
-    dataControllers[3].text = _fmt(template.data3);
-    dataControllers[4].text = _fmt(template.data4);
-    dataControllers[5].text = _fmt(template.data5);
-    dataControllers[6].text = _fmt(template.data6);
-    dataControllers[7].text = _fmt(template.data7);
-    dataControllers[8].text = _fmt(template.data8);
-    dataControllers[9].text = _fmt(template.data9);
-    dataControllers[10].text = _fmt(template.data10);
-    dataControllers[11].text = _fmt(template.data11);
-    dataControllers[12].text = _fmt(template.data12);
-    dataControllers[13].text = _fmt(template.data13);
-    dataControllers[14].text = _fmt(template.data14);
-    dataControllers[15].text = _fmt(template.data15);
-    dataControllers[16].text = _fmt(template.data16);
-    dataControllers[17].text = _fmt(template.data17);
-    dataControllers[18].text = _fmt(template.data18);
-    dataControllers[19].text = _fmt(template.data19);
-    dataControllers[20].text = _fmt(template.data20);
-    dataControllers[21].text = _fmt(template.data21);
-    dataControllers[22].text = _fmt(template.data22);
-    dataControllers[23].text = _fmt(template.data23);
-    aiNameController.text = template.aiName;
-    scriptNameController.text = template.scriptName;
-    verifiedBuildController.text = _fmt(template.verifiedBuild);
+    entryController.init(template.entry);
+    nameController.init(template.name);
+    castBarCaptionController.init(template.castBarCaption);
+    iconNameController.init(template.iconName);
+    typeController.init(template.type);
+    displayIdController.init(template.displayId);
+    sizeController.init(template.size);
+    unk1Controller.init(template.unk1);
+    dataControllers[0].init(template.data0);
+    dataControllers[1].init(template.data1);
+    dataControllers[2].init(template.data2);
+    dataControllers[3].init(template.data3);
+    dataControllers[4].init(template.data4);
+    dataControllers[5].init(template.data5);
+    dataControllers[6].init(template.data6);
+    dataControllers[7].init(template.data7);
+    dataControllers[8].init(template.data8);
+    dataControllers[9].init(template.data9);
+    dataControllers[10].init(template.data10);
+    dataControllers[11].init(template.data11);
+    dataControllers[12].init(template.data12);
+    dataControllers[13].init(template.data13);
+    dataControllers[14].init(template.data14);
+    dataControllers[15].init(template.data15);
+    dataControllers[16].init(template.data16);
+    dataControllers[17].init(template.data17);
+    dataControllers[18].init(template.data18);
+    dataControllers[19].init(template.data19);
+    dataControllers[20].init(template.data20);
+    dataControllers[21].init(template.data21);
+    dataControllers[22].init(template.data22);
+    dataControllers[23].init(template.data23);
+    aiNameController.init(template.aiName);
+    scriptNameController.init(template.scriptName);
+    verifiedBuildController.init(template.verifiedBuild);
   }
 
   void _logActivity(ActivityActionType action, GameObjectTemplateEntity t) {

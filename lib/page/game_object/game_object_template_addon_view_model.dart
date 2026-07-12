@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/game_object_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -15,17 +14,21 @@ class GameObjectTemplateAddonViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectId = signal<int>(0);
 
-  final factionController = TextEditingController();
-  final flagsController = TextEditingController();
-  final gameObjectIdController = TextEditingController();
-  final minGoldController = TextEditingController();
-  final maxGoldController = TextEditingController();
+  final factionController = IntFieldController();
+  final flagsController = IntFieldController();
+  final gameObjectIdController = IntFieldController();
+  final minGoldController = IntFieldController();
+  final maxGoldController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    factionController,
+    flagsController,
+    gameObjectIdController,
+    minGoldController,
+    maxGoldController,
+  ];
 
   final addon = signal(GameObjectTemplateAddonEntity());
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getGameObjectTemplateAddon(
@@ -58,24 +61,24 @@ class GameObjectTemplateAddonViewModel {
   GameObjectTemplateAddonEntity _collectFromControllers() {
     return GameObjectTemplateAddonEntity(
       entry: gameObjectId.value,
-      faction: _pi(factionController.text),
-      flags: _pi(flagsController.text),
-      minGold: _pi(minGoldController.text),
-      maxGold: _pi(maxGoldController.text),
+      faction: factionController.collect(),
+      flags: flagsController.collect(),
+      minGold: minGoldController.collect(),
+      maxGold: maxGoldController.collect(),
     );
   }
 
   void _initSignals(GameObjectTemplateAddonEntity data) {
-    factionController.text = _fmt(data.faction);
-    flagsController.text = _fmt(data.flags);
-    minGoldController.text = _fmt(data.minGold);
-    maxGoldController.text = _fmt(data.maxGold);
+    factionController.init(data.faction);
+    flagsController.init(data.flags);
+    minGoldController.init(data.minGold);
+    maxGoldController.init(data.maxGold);
   }
 
   Future<void> initSignals({required int gameObjectId}) async {
     try {
       this.gameObjectId.value = gameObjectId;
-      gameObjectIdController.text = _fmt(gameObjectId);
+      gameObjectIdController.init(gameObjectId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
@@ -84,10 +87,8 @@ class GameObjectTemplateAddonViewModel {
   }
 
   void dispose() {
-    factionController.dispose();
-    flagsController.dispose();
-    gameObjectIdController.dispose();
-    maxGoldController.dispose();
-    minGoldController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
