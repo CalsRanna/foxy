@@ -4,6 +4,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -109,22 +110,24 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
             children: [
               FoxyFormItem(
                 label: '物品ID',
-                placeholder: 'itemid',
                 child: FoxyNumberInput<int>(
-                  controller: viewModel.itemIdController,
+                  placeholder: 'itemid',
+                  fieldController: viewModel.itemIdController,
                 ),
               ),
               FoxyFormItem(
                 label: '数量',
-                placeholder: 'amount',
                 child: FoxyNumberInput<int>(
-                  controller: viewModel.amountController,
+                  placeholder: 'amount',
+                  fieldController: viewModel.amountController,
                 ),
               ),
-              FoxyFormItem.legacy(
-                controller: viewModel.noteController,
+              FoxyFormItem(
                 label: '备注',
-                placeholder: 'Note',
+                child: FoxyStringInput(
+                  controller: viewModel.noteController,
+                  placeholder: 'Note',
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

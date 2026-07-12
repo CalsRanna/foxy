@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/player_create_info_spell_custom_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -17,14 +16,17 @@ class PlayerCreateInfoSpellCustomViewModel {
   int? _race;
   int? _class_;
 
-  final racemaskController = TextEditingController();
-  final classmaskController = TextEditingController();
-  final spellController = TextEditingController();
-  final noteController = TextEditingController();
+  final racemaskController = IntFieldController();
+  final classmaskController = IntFieldController();
+  final spellController = IntFieldController();
+  final noteController = StringFieldController();
 
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
+  late final _controllers = <FieldController>[
+    racemaskController,
+    classmaskController,
+    spellController,
+    noteController,
+  ];
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -42,20 +44,20 @@ class PlayerCreateInfoSpellCustomViewModel {
   }
 
   void create() {
-    racemaskController.text = _fmt(0);
-    classmaskController.text = _fmt(0);
-    spellController.text = _fmt(0);
-    noteController.clear();
+    racemaskController.init(0);
+    classmaskController.init(0);
+    spellController.init(0);
+    noteController.init('');
   }
 
   Future<void> save(BuildContext context) async {
     if (_race == null || _class_ == null) return;
     try {
       final item = PlayerCreateInfoSpellCustomEntity(
-        racemask: _pi(racemaskController.text),
-        classmask: _pi(classmaskController.text),
-        spell: _pi(spellController.text),
-        note: noteController.text,
+        racemask: racemaskController.collect(),
+        classmask: classmaskController.collect(),
+        spell: spellController.collect(),
+        note: noteController.collect(),
       );
       await _repository.storePlayerCreateInfoSpellCustom(item);
       spells.value = await _repository.getBriefPlayerCreateInfoSpellCustoms(
@@ -94,9 +96,8 @@ class PlayerCreateInfoSpellCustomViewModel {
   }
 
   void dispose() {
-    classmaskController.dispose();
-    noteController.dispose();
-    racemaskController.dispose();
-    spellController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

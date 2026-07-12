@@ -4,6 +4,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -117,29 +118,31 @@ class _PlayerCreateInfoSpellCustomViewState
             children: [
               FoxyFormItem(
                 label: '种族掩码',
-                placeholder: 'racemask',
                 child: FoxyNumberInput<int>(
-                  controller: viewModel.racemaskController,
+                  placeholder: 'racemask',
+                  fieldController: viewModel.racemaskController,
                 ),
               ),
               FoxyFormItem(
                 label: '职业掩码',
-                placeholder: 'classmask',
                 child: FoxyNumberInput<int>(
-                  controller: viewModel.classmaskController,
+                  placeholder: 'classmask',
+                  fieldController: viewModel.classmaskController,
                 ),
               ),
               FoxyFormItem(
                 label: '法术',
-                placeholder: 'spell',
                 child: FoxyNumberInput<int>(
-                  controller: viewModel.spellController,
+                  placeholder: 'spell',
+                  fieldController: viewModel.spellController,
                 ),
               ),
-              FoxyFormItem.legacy(
-                controller: viewModel.noteController,
+              FoxyFormItem(
                 label: '备注',
-                placeholder: 'note',
+                child: FoxyStringInput(
+                  controller: viewModel.noteController,
+                  placeholder: 'note',
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

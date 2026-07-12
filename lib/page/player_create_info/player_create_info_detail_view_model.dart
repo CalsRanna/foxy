@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -15,14 +14,25 @@ class PlayerCreateInfoDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
-  final raceController = TextEditingController();
-  final playerClassController = TextEditingController();
-  final mapController = TextEditingController();
-  final zoneController = TextEditingController();
-  final positionXController = TextEditingController();
-  final positionYController = TextEditingController();
-  final positionZController = TextEditingController();
-  final orientationController = TextEditingController();
+  final raceController = IntFieldController();
+  final playerClassController = IntFieldController();
+  final mapController = IntFieldController();
+  final zoneController = IntFieldController();
+  final positionXController = DoubleFieldController();
+  final positionYController = DoubleFieldController();
+  final positionZController = DoubleFieldController();
+  final orientationController = DoubleFieldController();
+
+  late final _controllers = <FieldController>[
+    raceController,
+    playerClassController,
+    mapController,
+    zoneController,
+    positionXController,
+    positionYController,
+    positionZController,
+    orientationController,
+  ];
 
   final info = signal<PlayerCreateInfoEntity?>(null);
 
@@ -32,12 +42,6 @@ class PlayerCreateInfoDetailViewModel {
   /// 编辑时用于 WHERE 的原主键
   int? _origRace;
   int? _origClass;
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
 
   Future<void> initSignals({int? race, int? playerClass}) async {
     try {
@@ -67,14 +71,14 @@ class PlayerCreateInfoDetailViewModel {
   }
 
   void _initControllers(PlayerCreateInfoEntity i) {
-    raceController.text = _fmt(i.race);
-    playerClassController.text = _fmt(i.class_);
-    mapController.text = _fmt(i.map);
-    zoneController.text = _fmt(i.zone);
-    positionXController.text = _fmt(i.positionX);
-    positionYController.text = _fmt(i.positionY);
-    positionZController.text = _fmt(i.positionZ);
-    orientationController.text = _fmt(i.orientation);
+    raceController.init(i.race);
+    playerClassController.init(i.class_);
+    mapController.init(i.map);
+    zoneController.init(i.zone);
+    positionXController.init(i.positionX);
+    positionYController.init(i.positionY);
+    positionZController.init(i.positionZ);
+    orientationController.init(i.orientation);
   }
 
   Future<void> save(BuildContext context) async {
@@ -95,11 +99,7 @@ class PlayerCreateInfoDetailViewModel {
         isNew.value = false;
         _logActivity(ActivityActionType.create, data);
       } else {
-        await _repository.updatePlayerCreateInfo(
-          _origRace!,
-          _origClass!,
-          data,
-        );
+        await _repository.updatePlayerCreateInfo(_origRace!, _origClass!, data);
         info.value = data;
         _logActivity(ActivityActionType.update, data);
       }
@@ -126,25 +126,20 @@ class PlayerCreateInfoDetailViewModel {
 
   PlayerCreateInfoEntity _collect() {
     return PlayerCreateInfoEntity(
-      race: _pi(raceController.text),
-      class_: _pi(playerClassController.text),
-      map: _pi(mapController.text),
-      zone: _pi(zoneController.text),
-      positionX: _pd(positionXController.text),
-      positionY: _pd(positionYController.text),
-      positionZ: _pd(positionZController.text),
-      orientation: _pd(orientationController.text),
+      race: raceController.collect(),
+      class_: playerClassController.collect(),
+      map: mapController.collect(),
+      zone: zoneController.collect(),
+      positionX: positionXController.collect(),
+      positionY: positionYController.collect(),
+      positionZ: positionZController.collect(),
+      orientation: orientationController.collect(),
     );
   }
 
   void dispose() {
-    mapController.dispose();
-    orientationController.dispose();
-    playerClassController.dispose();
-    positionXController.dispose();
-    positionYController.dispose();
-    positionZController.dispose();
-    raceController.dispose();
-    zoneController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

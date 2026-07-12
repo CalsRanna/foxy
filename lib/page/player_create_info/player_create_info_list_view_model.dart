@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_filter_entity.dart';
@@ -8,14 +7,18 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class PlayerCreateInfoListViewModel {
   int _refreshToken = 0;
-  final raceController = TextEditingController();
-  final classController = TextEditingController();
+  final raceController = StringFieldController();
+  final classController = StringFieldController();
+
+  late final _controllers = <FieldController>[raceController, classController];
+
   final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
   final page = signal(1);
@@ -43,8 +46,8 @@ class PlayerCreateInfoListViewModel {
   }
 
   Future<void> reset() async {
-    raceController.clear();
-    classController.clear();
+    raceController.init('');
+    classController.init('');
     page.value = 1;
     await _refresh();
   }
@@ -119,8 +122,8 @@ class PlayerCreateInfoListViewModel {
 
   PlayerCreateInfoFilterEntity _buildFilter() {
     return PlayerCreateInfoFilterEntity(
-      race: raceController.text,
-      class_: classController.text,
+      race: raceController.collect(),
+      class_: classController.collect(),
     );
   }
 
@@ -149,7 +152,8 @@ class PlayerCreateInfoListViewModel {
   }
 
   void dispose() {
-    raceController.dispose();
-    classController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
