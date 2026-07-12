@@ -13,14 +13,12 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 /// 任务模板列表 ViewModel（LazySingleton，保留搜索状态）
-class QuestTemplateListViewModel {
+class QuestTemplateListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
   final _repository = GetIt.instance.get<QuestTemplateRepository>();
 
-  final idController = StringFieldController();
-  final titleController = StringFieldController();
-
-  late final _controllers = <FieldController>[idController, titleController];
+  late final idController = registerController(StringFieldController());
+  late final titleController = registerController(StringFieldController());
 
   final templates = signal<List<BriefQuestTemplateEntity>>([]);
   final page = signal(1);
@@ -36,9 +34,7 @@ class QuestTemplateListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> search() async {

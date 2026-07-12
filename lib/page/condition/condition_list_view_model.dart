@@ -12,15 +12,13 @@ import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class ConditionListViewModel {
+class ConditionListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
-  final sourceTypeController = StringFieldController();
-  final sourceEntryController = StringFieldController();
+  late final sourceTypeController = registerController(StringFieldController());
+  late final sourceEntryController = registerController(
+    StringFieldController(),
+  );
 
-  late final _controllers = <FieldController>[
-    sourceTypeController,
-    sourceEntryController,
-  ];
   final _repository = GetIt.instance.get<ConditionRepository>();
 
   final page = signal(1);
@@ -160,8 +158,6 @@ class ConditionListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

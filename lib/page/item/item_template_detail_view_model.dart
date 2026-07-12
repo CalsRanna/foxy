@@ -10,243 +10,213 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ItemTemplateDetailViewModel {
+class ItemTemplateDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<ItemTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Card 1: Basic Info
-  final entryController = IntFieldController();
-  final nameController = StringFieldController();
-  final descriptionController = StringFieldController();
-  final qualityController = SelectFieldController<int>(fallback: 0);
-  final classNameController = SelectFieldController<int>(fallback: 0);
-  final subclassController = SelectFieldController<int>(fallback: 0);
-  final soundOverrideSubclassController = IntFieldController();
-  final materialController = SelectFieldController<int>(fallback: 0);
-  final displayIdController = IntFieldController();
-  final inventoryTypeController = SelectFieldController<int>(fallback: 0);
-  final sheathController = SelectFieldController<int>(fallback: 0);
+  late final entryController = registerController(IntFieldController());
+  late final nameController = registerController(StringFieldController());
+  late final descriptionController = registerController(
+    StringFieldController(),
+  );
+  late final qualityController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final classNameController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final subclassController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final soundOverrideSubclassController = registerController(
+    IntFieldController(),
+  );
+  late final materialController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final displayIdController = registerController(IntFieldController());
+  late final inventoryTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final sheathController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
 
   /// Card 2: Set/Pricing/Container/Misc
-  final bondingController = SelectFieldController<int>(fallback: 0);
-  final itemsetController = IntFieldController();
-  final randomPropertyController = IntFieldController();
-  final randomSuffixController = IntFieldController();
-  final maxDurabilityController = IntFieldController();
-  final buyPriceController = IntFieldController();
-  final sellPriceController = IntFieldController();
-  final buyCountController = IntFieldController();
-  final maxcountController = IntFieldController();
-  final stackableController = IntFieldController();
-  final totemCategoryController = IntFieldController();
-  final foodTypeController = SelectFieldController<int>(fallback: 0);
-  final bagFamilyController = FlagFieldController();
-  final containerSlotsController = IntFieldController();
-  final itemLimitCategoryController = IntFieldController();
-  final startquestController = IntFieldController();
-  final durationController = IntFieldController();
-  final disenchantIdController = IntFieldController();
-  final minMoneyLootController = IntFieldController();
-  final maxMoneyLootController = IntFieldController();
+  late final bondingController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final itemsetController = registerController(IntFieldController());
+  late final randomPropertyController = registerController(
+    IntFieldController(),
+  );
+  late final randomSuffixController = registerController(IntFieldController());
+  late final maxDurabilityController = registerController(IntFieldController());
+  late final buyPriceController = registerController(IntFieldController());
+  late final sellPriceController = registerController(IntFieldController());
+  late final buyCountController = registerController(IntFieldController());
+  late final maxcountController = registerController(IntFieldController());
+  late final stackableController = registerController(IntFieldController());
+  late final totemCategoryController = registerController(IntFieldController());
+  late final foodTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final bagFamilyController = registerController(FlagFieldController());
+  late final containerSlotsController = registerController(
+    IntFieldController(),
+  );
+  late final itemLimitCategoryController = registerController(
+    IntFieldController(),
+  );
+  late final startquestController = registerController(IntFieldController());
+  late final durationController = registerController(IntFieldController());
+  late final disenchantIdController = registerController(IntFieldController());
+  late final minMoneyLootController = registerController(IntFieldController());
+  late final maxMoneyLootController = registerController(IntFieldController());
 
   /// Card 3: Flags
-  final flagsController = FlagFieldController();
-  final flagsExtraController = FlagFieldController();
-  final flagsCustomController = FlagFieldController();
+  late final flagsController = registerController(FlagFieldController());
+  late final flagsExtraController = registerController(FlagFieldController());
+  late final flagsCustomController = registerController(FlagFieldController());
 
   /// Card 4: Damage/Armor
-  final delayController = IntFieldController();
-  final rangedModRangeController = IntFieldController();
-  final armorDamageModifierController = DoubleFieldController();
-  final dmgType1Controller = SelectFieldController<int>(fallback: 0);
-  final dmgMin1Controller = DoubleFieldController();
-  final dmgMax1Controller = DoubleFieldController();
-  final dmgType2Controller = SelectFieldController<int>(fallback: 0);
-  final dmgMin2Controller = DoubleFieldController();
-  final dmgMax2Controller = DoubleFieldController();
-  final ammoTypeController = SelectFieldController<int>(fallback: 0);
-  final armorController = IntFieldController();
-  final blockController = IntFieldController();
+  late final delayController = registerController(IntFieldController());
+  late final rangedModRangeController = registerController(
+    IntFieldController(),
+  );
+  late final armorDamageModifierController = registerController(
+    DoubleFieldController(),
+  );
+  late final dmgType1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final dmgMin1Controller = registerController(DoubleFieldController());
+  late final dmgMax1Controller = registerController(DoubleFieldController());
+  late final dmgType2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final dmgMin2Controller = registerController(DoubleFieldController());
+  late final dmgMax2Controller = registerController(DoubleFieldController());
+  late final ammoTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final armorController = registerController(IntFieldController());
+  late final blockController = registerController(IntFieldController());
 
   /// Card 5: Scaling Stats
-  final scalingStatDistributionController = IntFieldController();
-  final scalingStatValueController = FlagFieldController();
+  late final scalingStatDistributionController = registerController(
+    IntFieldController(),
+  );
+  late final scalingStatValueController = registerController(
+    FlagFieldController(),
+  );
 
   /// Card 6: Stats (dynamic)
-  final statsCountController = IntFieldController();
-  final List<SelectFieldController<int>> statTypeControllers = List.generate(
+  late final statsCountController = registerController(IntFieldController());
+  late final statTypeControllers = List.generate(
     10,
-    (_) => SelectFieldController<int>(fallback: 0),
+    (_) => registerController(SelectFieldController<int>(fallback: 0)),
   );
-  final List<IntFieldController> statValues = List.generate(
+  late final statValues = List.generate(
     10,
-    (_) => IntFieldController(),
+    (_) => registerController(IntFieldController()),
   );
 
   /// Card 7: Resistances
-  final holyResController = IntFieldController();
-  final fireResController = IntFieldController();
-  final natureResController = IntFieldController();
-  final shadowResController = IntFieldController();
-  final frostResController = IntFieldController();
-  final arcaneResController = IntFieldController();
+  late final holyResController = registerController(IntFieldController());
+  late final fireResController = registerController(IntFieldController());
+  late final natureResController = registerController(IntFieldController());
+  late final shadowResController = registerController(IntFieldController());
+  late final frostResController = registerController(IntFieldController());
+  late final arcaneResController = registerController(IntFieldController());
 
   /// Card 8: Spells (5 slots)
-  final List<IntFieldController> spellIds = List.generate(
+  late final spellIds = List.generate(
     5,
-    (_) => IntFieldController(),
+    (_) => registerController(IntFieldController()),
   );
-  final List<SelectFieldController<int>> spellTriggerControllers =
-      List.generate(5, (_) => SelectFieldController<int>(fallback: 0));
-  final List<IntFieldController> spellCharges = List.generate(
+  late final spellTriggerControllers = List.generate(
     5,
-    (_) => IntFieldController(),
+    (_) => registerController(SelectFieldController<int>(fallback: 0)),
   );
-  final List<DoubleFieldController> spellPpmRates = List.generate(
+  late final spellCharges = List.generate(
     5,
-    (_) => DoubleFieldController(),
+    (_) => registerController(IntFieldController()),
   );
-  final List<IntFieldController> spellCooldowns = List.generate(
+  late final spellPpmRates = List.generate(
     5,
-    (_) => IntFieldController(),
+    (_) => registerController(DoubleFieldController()),
   );
-  final List<IntFieldController> spellCategories = List.generate(
+  late final spellCooldowns = List.generate(
     5,
-    (_) => IntFieldController(),
+    (_) => registerController(IntFieldController()),
   );
-  final List<IntFieldController> spellCategoryCooldowns = List.generate(
+  late final spellCategories = List.generate(
     5,
-    (_) => IntFieldController(),
+    (_) => registerController(IntFieldController()),
+  );
+  late final spellCategoryCooldowns = List.generate(
+    5,
+    (_) => registerController(IntFieldController()),
   );
 
   /// Card 9: Requirements
-  final allowableClassController = FlagFieldController();
-  final allowableRaceController = FlagFieldController();
-  final itemLevelController = IntFieldController();
-  final requiredLevelController = IntFieldController();
-  final requiredSkillController = IntFieldController();
-  final requiredSkillRankController = IntFieldController();
-  final requiredSpellController = IntFieldController();
-  final requiredHonorRankController = IntFieldController();
-  final requiredCityRankController = IntFieldController();
-  final requiredReputationFactionController = IntFieldController();
-  final requiredReputationRankController = IntFieldController();
-  final requiredDisenchantSkillController = IntFieldController();
+  late final allowableClassController = registerController(
+    FlagFieldController(),
+  );
+  late final allowableRaceController = registerController(
+    FlagFieldController(),
+  );
+  late final itemLevelController = registerController(IntFieldController());
+  late final requiredLevelController = registerController(IntFieldController());
+  late final requiredSkillController = registerController(IntFieldController());
+  late final requiredSkillRankController = registerController(
+    IntFieldController(),
+  );
+  late final requiredSpellController = registerController(IntFieldController());
+  late final requiredHonorRankController = registerController(
+    IntFieldController(),
+  );
+  late final requiredCityRankController = registerController(
+    IntFieldController(),
+  );
+  late final requiredReputationFactionController = registerController(
+    IntFieldController(),
+  );
+  late final requiredReputationRankController = registerController(
+    IntFieldController(),
+  );
+  late final requiredDisenchantSkillController = registerController(
+    IntFieldController(),
+  );
 
   /// Card 10: Socket/Gem
-  final lockidController = IntFieldController();
-  final gemPropertiesController = IntFieldController();
-  final socketBonusController = IntFieldController();
-  final List<SelectFieldController<int>> socketColorControllers = List.generate(
+  late final lockidController = registerController(IntFieldController());
+  late final gemPropertiesController = registerController(IntFieldController());
+  late final socketBonusController = registerController(IntFieldController());
+  late final socketColorControllers = List.generate(
     3,
-    (_) => SelectFieldController<int>(fallback: 0),
+    (_) => registerController(SelectFieldController<int>(fallback: 0)),
   );
-  final List<IntFieldController> socketContents = List.generate(
+  late final socketContents = List.generate(
     3,
-    (_) => IntFieldController(),
+    (_) => registerController(IntFieldController()),
   );
 
   /// Card 11: Page/Misc
-  final mapIdController = IntFieldController();
-  final areaController = IntFieldController();
-  final holidayIdController = IntFieldController();
-  final pageTextController = IntFieldController();
-  final pageMaterialController = SelectFieldController<int>(fallback: 0);
-  final languageIdController = SelectFieldController<int>(fallback: 0);
-  final scriptNameController = StringFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    entryController,
-    nameController,
-    descriptionController,
-    qualityController,
-    classNameController,
-    subclassController,
-    soundOverrideSubclassController,
-    materialController,
-    displayIdController,
-    inventoryTypeController,
-    sheathController,
-    bondingController,
-    itemsetController,
-    randomPropertyController,
-    randomSuffixController,
-    maxDurabilityController,
-    buyPriceController,
-    sellPriceController,
-    buyCountController,
-    maxcountController,
-    stackableController,
-    totemCategoryController,
-    foodTypeController,
-    bagFamilyController,
-    containerSlotsController,
-    itemLimitCategoryController,
-    startquestController,
-    durationController,
-    disenchantIdController,
-    minMoneyLootController,
-    maxMoneyLootController,
-    flagsController,
-    flagsExtraController,
-    flagsCustomController,
-    delayController,
-    rangedModRangeController,
-    armorDamageModifierController,
-    dmgType1Controller,
-    dmgMin1Controller,
-    dmgMax1Controller,
-    dmgType2Controller,
-    dmgMin2Controller,
-    dmgMax2Controller,
-    ammoTypeController,
-    armorController,
-    blockController,
-    scalingStatDistributionController,
-    scalingStatValueController,
-    statsCountController,
-    ...statTypeControllers,
-    ...statValues,
-    holyResController,
-    fireResController,
-    natureResController,
-    shadowResController,
-    frostResController,
-    arcaneResController,
-    ...spellIds,
-    ...spellTriggerControllers,
-    ...spellCharges,
-    ...spellPpmRates,
-    ...spellCooldowns,
-    ...spellCategories,
-    ...spellCategoryCooldowns,
-    allowableClassController,
-    allowableRaceController,
-    itemLevelController,
-    requiredLevelController,
-    requiredSkillController,
-    requiredSkillRankController,
-    requiredSpellController,
-    requiredHonorRankController,
-    requiredCityRankController,
-    requiredReputationFactionController,
-    requiredReputationRankController,
-    requiredDisenchantSkillController,
-    lockidController,
-    gemPropertiesController,
-    socketBonusController,
-    ...socketColorControllers,
-    ...socketContents,
-    mapIdController,
-    areaController,
-    holidayIdController,
-    pageTextController,
-    pageMaterialController,
-    languageIdController,
-    scriptNameController,
-    verifiedBuildController,
-  ];
+  late final mapIdController = registerController(IntFieldController());
+  late final areaController = registerController(IntFieldController());
+  late final holidayIdController = registerController(IntFieldController());
+  late final pageTextController = registerController(IntFieldController());
+  late final pageMaterialController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final languageIdController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final scriptNameController = registerController(StringFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   /// Signals
   final entry = signal<int>(0);
@@ -563,8 +533,6 @@ class ItemTemplateDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

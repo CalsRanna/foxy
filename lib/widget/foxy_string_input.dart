@@ -8,12 +8,14 @@ class FoxyStringInput extends StatelessWidget {
   final StringFieldController controller;
   final String? placeholder;
   final bool readOnly;
+  final bool obscureText;
 
   const FoxyStringInput({
     super.key,
     required this.controller,
     this.placeholder,
     this.readOnly = false,
+    this.obscureText = false,
   });
 
   @override
@@ -24,6 +26,7 @@ class FoxyStringInput extends StatelessWidget {
         controller: controller.controller,
         placeholder: Text(placeholder ?? ''),
         readOnly: readOnly,
+        obscureText: obscureText,
         style: readonly.style,
         decoration: readonly.decoration,
         mouseCursor: readonly.mouseCursor,

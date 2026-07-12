@@ -10,24 +10,19 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GlyphPropertyDetailViewModel {
+class GlyphPropertyDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GlyphPropertyRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
+  late final idController = registerController(IntFieldController());
 
   /// Property
-  final spellIdController = IntFieldController();
-  final glyphSlotFlagsController = IntFieldController();
-  final spellIconIdController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    spellIdController,
-    glyphSlotFlagsController,
-    spellIconIdController,
-  ];
+  late final spellIdController = registerController(IntFieldController());
+  late final glyphSlotFlagsController = registerController(
+    IntFieldController(),
+  );
+  late final spellIconIdController = registerController(IntFieldController());
 
   final property = signal(GlyphPropertyEntity());
 
@@ -83,9 +78,7 @@ class GlyphPropertyDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {

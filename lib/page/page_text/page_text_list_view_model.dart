@@ -12,12 +12,11 @@ import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class PageTextListViewModel {
+class PageTextListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
-  final idController = StringFieldController();
-  final textController = StringFieldController();
+  late final idController = registerController(StringFieldController());
+  late final textController = registerController(StringFieldController());
 
-  late final _controllers = <FieldController>[idController, textController];
   final _repository = GetIt.instance.get<PageTextRepository>();
 
   final page = signal(1);
@@ -145,8 +144,6 @@ class PageTextListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

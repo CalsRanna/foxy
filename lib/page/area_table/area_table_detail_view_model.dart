@@ -11,58 +11,47 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class AreaTableDetailViewModel {
+class AreaTableDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<AreaTableRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
-  final nameController = StringFieldController();
-  final continentIdController = IntFieldController();
-  final parentAreaIdController = IntFieldController();
-  final areaBitController = IntFieldController();
-  final flagsController = IntFieldController();
-  final factionGroupMaskController = IntFieldController();
-  final explorationLevelController = IntFieldController();
+  late final idController = registerController(IntFieldController());
+  late final nameController = registerController(StringFieldController());
+  late final continentIdController = registerController(IntFieldController());
+  late final parentAreaIdController = registerController(IntFieldController());
+  late final areaBitController = registerController(IntFieldController());
+  late final flagsController = registerController(IntFieldController());
+  late final factionGroupMaskController = registerController(
+    IntFieldController(),
+  );
+  late final explorationLevelController = registerController(
+    IntFieldController(),
+  );
 
   /// Sound
-  final soundProviderPrefController = IntFieldController();
-  final soundProviderPrefUnderwaterController = IntFieldController();
-  final ambienceIdController = IntFieldController();
-  final zoneMusicController = IntFieldController();
-  final introSoundController = IntFieldController();
-  final ambientMultiplierController = DoubleFieldController();
-  final lightIdController = IntFieldController();
-  final minElevationController = DoubleFieldController();
+  late final soundProviderPrefController = registerController(
+    IntFieldController(),
+  );
+  late final soundProviderPrefUnderwaterController = registerController(
+    IntFieldController(),
+  );
+  late final ambienceIdController = registerController(IntFieldController());
+  late final zoneMusicController = registerController(IntFieldController());
+  late final introSoundController = registerController(IntFieldController());
+  late final ambientMultiplierController = registerController(
+    DoubleFieldController(),
+  );
+  late final lightIdController = registerController(IntFieldController());
+  late final minElevationController = registerController(
+    DoubleFieldController(),
+  );
 
   /// Other
-  final liquidTypeId0Controller = IntFieldController();
-  final liquidTypeId1Controller = IntFieldController();
-  final liquidTypeId2Controller = IntFieldController();
-  final liquidTypeId3Controller = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    nameController,
-    continentIdController,
-    parentAreaIdController,
-    areaBitController,
-    flagsController,
-    factionGroupMaskController,
-    explorationLevelController,
-    soundProviderPrefController,
-    soundProviderPrefUnderwaterController,
-    ambienceIdController,
-    zoneMusicController,
-    introSoundController,
-    ambientMultiplierController,
-    lightIdController,
-    minElevationController,
-    liquidTypeId0Controller,
-    liquidTypeId1Controller,
-    liquidTypeId2Controller,
-    liquidTypeId3Controller,
-  ];
+  late final liquidTypeId0Controller = registerController(IntFieldController());
+  late final liquidTypeId1Controller = registerController(IntFieldController());
+  late final liquidTypeId2Controller = registerController(IntFieldController());
+  late final liquidTypeId3Controller = registerController(IntFieldController());
 
   final area = signal(AreaTableEntity());
 
@@ -160,9 +149,7 @@ class AreaTableDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {

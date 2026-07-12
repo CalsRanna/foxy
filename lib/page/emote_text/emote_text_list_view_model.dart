@@ -12,12 +12,11 @@ import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class EmoteTextListViewModel {
+class EmoteTextListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
-  final entryController = StringFieldController();
-  final nameController = StringFieldController();
+  late final entryController = registerController(StringFieldController());
+  late final nameController = registerController(StringFieldController());
 
-  late final _controllers = <FieldController>[entryController, nameController];
   final _repository = GetIt.instance.get<EmoteTextRepository>();
 
   final page = signal(1);
@@ -76,9 +75,7 @@ class EmoteTextListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals() async {

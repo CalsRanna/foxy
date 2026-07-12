@@ -13,17 +13,12 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GossipMenuDetailViewModel {
+class GossipMenuDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GossipMenuRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final menuIdController = IntFieldController();
-  final textIdController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    menuIdController,
-    textIdController,
-  ];
+  late final menuIdController = registerController(IntFieldController());
+  late final textIdController = registerController(IntFieldController());
 
   final menuId = signal(0);
   final menu = signal(GossipMenuEntity());
@@ -127,8 +122,6 @@ class GossipMenuDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

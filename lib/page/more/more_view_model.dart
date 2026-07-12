@@ -6,19 +6,17 @@ import 'package:foxy/util/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class MoreViewModel {
+class MoreViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final scaffoldViewModel = GetIt.instance.get<ScaffoldViewModel>();
 
-  final searchController = StringFieldController();
+  late final searchController = registerController(StringFieldController());
   final filteredModules = signal<List<FeatureEntity>>([]);
-
-  late final _controllers = <FieldController>[searchController];
 
   List<FeatureEntity> get _allModules => scaffoldViewModel.allFeatures.value;
 
   void initSignals() {
-    searchController.controller.addListener(search);
+    searchController.addListener(search);
     filteredModules.value = List.of(_allModules);
   }
 
@@ -59,8 +57,6 @@ class MoreViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

@@ -10,29 +10,20 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class PlayerCreateInfoDetailViewModel {
+class PlayerCreateInfoDetailViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
-  final raceController = IntFieldController();
-  final playerClassController = IntFieldController();
-  final mapController = IntFieldController();
-  final zoneController = IntFieldController();
-  final positionXController = DoubleFieldController();
-  final positionYController = DoubleFieldController();
-  final positionZController = DoubleFieldController();
-  final orientationController = DoubleFieldController();
-
-  late final _controllers = <FieldController>[
-    raceController,
-    playerClassController,
-    mapController,
-    zoneController,
-    positionXController,
-    positionYController,
-    positionZController,
-    orientationController,
-  ];
+  late final raceController = registerController(IntFieldController());
+  late final playerClassController = registerController(IntFieldController());
+  late final mapController = registerController(IntFieldController());
+  late final zoneController = registerController(IntFieldController());
+  late final positionXController = registerController(DoubleFieldController());
+  late final positionYController = registerController(DoubleFieldController());
+  late final positionZController = registerController(DoubleFieldController());
+  late final orientationController = registerController(
+    DoubleFieldController(),
+  );
 
   final info = signal<PlayerCreateInfoEntity?>(null);
 
@@ -138,8 +129,6 @@ class PlayerCreateInfoDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

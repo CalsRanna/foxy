@@ -9,7 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GameObjectLootTemplateViewModel {
+class GameObjectLootTemplateViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectId = signal<int>(0);
   final items = signal<List<BriefLootTemplateEntity>>([]);
@@ -17,29 +17,18 @@ class GameObjectLootTemplateViewModel {
   final editing = signal(false);
   int? editingItem;
 
-  final gameObjectIdController = IntFieldController();
-  final itemController = IntFieldController();
-  final referenceController = IntFieldController();
-  final chanceController = DoubleFieldController();
-  final questRequiredController = SelectFieldController<int>(fallback: 0);
-  final lootModeController = IntFieldController();
-  final groupIdController = IntFieldController();
-  final minCountController = IntFieldController();
-  final maxCountController = IntFieldController();
-  final commentController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    gameObjectIdController,
-    itemController,
-    referenceController,
-    chanceController,
-    questRequiredController,
-    lootModeController,
-    groupIdController,
-    minCountController,
-    maxCountController,
-    commentController,
-  ];
+  late final gameObjectIdController = registerController(IntFieldController());
+  late final itemController = registerController(IntFieldController());
+  late final referenceController = registerController(IntFieldController());
+  late final chanceController = registerController(DoubleFieldController());
+  late final questRequiredController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final lootModeController = registerController(IntFieldController());
+  late final groupIdController = registerController(IntFieldController());
+  late final minCountController = registerController(IntFieldController());
+  late final maxCountController = registerController(IntFieldController());
+  late final commentController = registerController(StringFieldController());
 
   final repository = LootTemplateRepository(LootTableType.gameobject);
 
@@ -202,8 +191,6 @@ class GameObjectLootTemplateViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

@@ -9,28 +9,19 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureEquipTemplateViewModel {
+class CreatureEquipTemplateViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final creatureId = signal(0);
   final items = signal<List<BriefCreatureEquipTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final creatureIdController = IntFieldController();
-  final idController = IntFieldController();
-  final itemID1Controller = IntFieldController();
-  final itemID2Controller = IntFieldController();
-  final itemID3Controller = IntFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    creatureIdController,
-    idController,
-    itemID1Controller,
-    itemID2Controller,
-    itemID3Controller,
-    verifiedBuildController,
-  ];
+  late final creatureIdController = registerController(IntFieldController());
+  late final idController = registerController(IntFieldController());
+  late final itemID1Controller = registerController(IntFieldController());
+  late final itemID2Controller = registerController(IntFieldController());
+  late final itemID3Controller = registerController(IntFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   final _repository = GetIt.instance.get<CreatureEquipTemplateRepository>();
 
@@ -219,8 +210,6 @@ class CreatureEquipTemplateViewModel {
 
   /// 清理资源
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

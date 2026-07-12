@@ -12,12 +12,10 @@ import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class SpellListViewModel {
+class SpellListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
-  final idController = StringFieldController();
-  final nameController = StringFieldController();
-
-  late final _controllers = <FieldController>[idController, nameController];
+  late final idController = registerController(StringFieldController());
+  late final nameController = registerController(StringFieldController());
 
   final _repository = GetIt.instance.get<SpellRepository>();
 
@@ -63,9 +61,7 @@ class SpellListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals() async {

@@ -13,17 +13,13 @@ import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class ItemTemplateListViewModel {
+class ItemTemplateListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
-  final entryController = StringFieldController();
-  final nameController = StringFieldController();
-  final descriptionController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    entryController,
-    nameController,
-    descriptionController,
-  ];
+  late final entryController = registerController(StringFieldController());
+  late final nameController = registerController(StringFieldController());
+  late final descriptionController = registerController(
+    StringFieldController(),
+  );
 
   final _repository = GetIt.instance.get<ItemTemplateRepository>();
 
@@ -66,9 +62,7 @@ class ItemTemplateListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> search() async {

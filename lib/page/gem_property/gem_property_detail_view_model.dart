@@ -10,26 +10,18 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GemPropertyDetailViewModel {
+class GemPropertyDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GemPropertyRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
+  late final idController = registerController(IntFieldController());
 
   /// Property
-  final enchantIdController = IntFieldController();
-  final maxCountInvController = IntFieldController();
-  final maxCountItemController = IntFieldController();
-  final typeController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    enchantIdController,
-    maxCountInvController,
-    maxCountItemController,
-    typeController,
-  ];
+  late final enchantIdController = registerController(IntFieldController());
+  late final maxCountInvController = registerController(IntFieldController());
+  late final maxCountItemController = registerController(IntFieldController());
+  late final typeController = registerController(IntFieldController());
 
   final property = signal(GemPropertyEntity());
 
@@ -86,9 +78,7 @@ class GemPropertyDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {

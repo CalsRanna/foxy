@@ -66,11 +66,9 @@ class BootstrapSimulatorForm extends StatelessWidget {
                     controller: usernameController,
                     placeholder: 'Username',
                   ),
-                  // 密码框：FoxyStringInput 暂不支持 obscureText，
-                  // Widget 内部可访问 FieldController.controller。
-                  ShadInput(
-                    controller: passwordController.controller,
-                    placeholder: Text('Password'),
+                  FoxyStringInput(
+                    controller: passwordController,
+                    placeholder: 'Password',
                     obscureText: true,
                   ),
                 ],

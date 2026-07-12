@@ -10,60 +10,36 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class TalentDetailViewModel {
+class TalentDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<TalentRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
-  final tabIdController = IntFieldController();
-  final tierIdController = IntFieldController();
-  final columnIndexController = IntFieldController();
-  final flagsController = IntFieldController();
-  final requiredSpellIdController = IntFieldController();
-  final spellRank0Controller = IntFieldController();
-  final spellRank1Controller = IntFieldController();
-  final spellRank2Controller = IntFieldController();
-  final spellRank3Controller = IntFieldController();
-  final spellRank4Controller = IntFieldController();
-  final spellRank5Controller = IntFieldController();
-  final spellRank6Controller = IntFieldController();
-  final spellRank7Controller = IntFieldController();
-  final spellRank8Controller = IntFieldController();
-  final prereqTalent0Controller = IntFieldController();
-  final prereqTalent1Controller = IntFieldController();
-  final prereqTalent2Controller = IntFieldController();
-  final prereqRank0Controller = IntFieldController();
-  final prereqRank1Controller = IntFieldController();
-  final prereqRank2Controller = IntFieldController();
-  final categoryMask0Controller = IntFieldController();
-  final categoryMask1Controller = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    tabIdController,
-    tierIdController,
-    columnIndexController,
-    flagsController,
-    requiredSpellIdController,
-    spellRank0Controller,
-    spellRank1Controller,
-    spellRank2Controller,
-    spellRank3Controller,
-    spellRank4Controller,
-    spellRank5Controller,
-    spellRank6Controller,
-    spellRank7Controller,
-    spellRank8Controller,
-    prereqTalent0Controller,
-    prereqTalent1Controller,
-    prereqTalent2Controller,
-    prereqRank0Controller,
-    prereqRank1Controller,
-    prereqRank2Controller,
-    categoryMask0Controller,
-    categoryMask1Controller,
-  ];
+  late final idController = registerController(IntFieldController());
+  late final tabIdController = registerController(IntFieldController());
+  late final tierIdController = registerController(IntFieldController());
+  late final columnIndexController = registerController(IntFieldController());
+  late final flagsController = registerController(IntFieldController());
+  late final requiredSpellIdController = registerController(
+    IntFieldController(),
+  );
+  late final spellRank0Controller = registerController(IntFieldController());
+  late final spellRank1Controller = registerController(IntFieldController());
+  late final spellRank2Controller = registerController(IntFieldController());
+  late final spellRank3Controller = registerController(IntFieldController());
+  late final spellRank4Controller = registerController(IntFieldController());
+  late final spellRank5Controller = registerController(IntFieldController());
+  late final spellRank6Controller = registerController(IntFieldController());
+  late final spellRank7Controller = registerController(IntFieldController());
+  late final spellRank8Controller = registerController(IntFieldController());
+  late final prereqTalent0Controller = registerController(IntFieldController());
+  late final prereqTalent1Controller = registerController(IntFieldController());
+  late final prereqTalent2Controller = registerController(IntFieldController());
+  late final prereqRank0Controller = registerController(IntFieldController());
+  late final prereqRank1Controller = registerController(IntFieldController());
+  late final prereqRank2Controller = registerController(IntFieldController());
+  late final categoryMask0Controller = registerController(IntFieldController());
+  late final categoryMask1Controller = registerController(IntFieldController());
 
   final talent = signal(TalentEntity());
 
@@ -127,9 +103,7 @@ class TalentDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   void _logActivity(ActivityActionType action, TalentEntity t) {

@@ -17,25 +17,17 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:signals/signals.dart';
 
-class BootstrapViewModel {
+class BootstrapViewModel with FieldControllerMixin {
   final _settingRepo = GetIt.instance.get<SettingRepository>();
   final _repository = GetIt.instance.get<VersionRepository>();
   final _configUtil = GetIt.instance.get<ConfigUtil>();
   final version = signal('');
 
-  final hostController = StringFieldController();
-  final portController = StringFieldController();
-  final databaseController = StringFieldController();
-  final usernameController = StringFieldController();
-  final passwordController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    hostController,
-    portController,
-    databaseController,
-    usernameController,
-    passwordController,
-  ];
+  late final hostController = registerController(StringFieldController());
+  late final portController = registerController(StringFieldController());
+  late final databaseController = registerController(StringFieldController());
+  late final usernameController = registerController(StringFieldController());
+  late final passwordController = registerController(StringFieldController());
 
   Future<void> connect(BuildContext context) async {
     final port = parseMysqlPort(portController.collect());
@@ -112,9 +104,7 @@ class BootstrapViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals() async {

@@ -11,7 +11,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class QuestTemplateDetailViewModel {
+class QuestTemplateDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -19,245 +19,281 @@ class QuestTemplateDetailViewModel {
   final template = signal(QuestTemplateEntity());
 
   /// Basic (ints)
-  final idController = IntFieldController();
-  final questTypeController = IntFieldController();
-  final questLevelController = IntFieldController();
-  final minLevelController = IntFieldController();
-  final suggestedGroupNumController = IntFieldController();
-  final requiredFactionId1Controller = IntFieldController();
-  final requiredFactionId2Controller = IntFieldController();
-  final requiredFactionValue1Controller = IntFieldController();
-  final requiredFactionValue2Controller = IntFieldController();
+  late final idController = registerController(IntFieldController());
+  late final questTypeController = registerController(IntFieldController());
+  late final questLevelController = registerController(IntFieldController());
+  late final minLevelController = registerController(IntFieldController());
+  late final suggestedGroupNumController = registerController(
+    IntFieldController(),
+  );
+  late final requiredFactionId1Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredFactionId2Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredFactionValue1Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredFactionValue2Controller = registerController(
+    IntFieldController(),
+  );
 
   /// Basic (selector controllers)
-  final questSortIdController = IntFieldController();
-  final questInfoIdController = IntFieldController();
+  late final questSortIdController = registerController(IntFieldController());
+  late final questInfoIdController = registerController(IntFieldController());
 
   /// Reward (ints + double)
-  final rewardNextQuestController = IntFieldController();
-  final rewardXpDifficultyController = IntFieldController();
-  final rewardMoneyController = IntFieldController();
-  final rewardMoneyDifficultyController = IntFieldController();
-  final rewardDisplaySpellController = IntFieldController();
-  final rewardSpellController = IntFieldController();
-  final rewardHonorController = IntFieldController();
-  final rewardKillHonorController = DoubleFieldController();
-  final startItemController = IntFieldController();
-  final flagsController = IntFieldController();
-  final requiredPlayerKillsController = IntFieldController();
+  late final rewardNextQuestController = registerController(
+    IntFieldController(),
+  );
+  late final rewardXpDifficultyController = registerController(
+    IntFieldController(),
+  );
+  late final rewardMoneyController = registerController(IntFieldController());
+  late final rewardMoneyDifficultyController = registerController(
+    IntFieldController(),
+  );
+  late final rewardDisplaySpellController = registerController(
+    IntFieldController(),
+  );
+  late final rewardSpellController = registerController(IntFieldController());
+  late final rewardHonorController = registerController(IntFieldController());
+  late final rewardKillHonorController = registerController(
+    DoubleFieldController(),
+  );
+  late final startItemController = registerController(IntFieldController());
+  late final flagsController = registerController(IntFieldController());
+  late final requiredPlayerKillsController = registerController(
+    IntFieldController(),
+  );
 
   /// RewardItem (ints)
-  final rewardItem1Controller = IntFieldController();
-  final rewardAmount1Controller = IntFieldController();
-  final rewardItem2Controller = IntFieldController();
-  final rewardAmount2Controller = IntFieldController();
-  final rewardItem3Controller = IntFieldController();
-  final rewardAmount3Controller = IntFieldController();
-  final rewardItem4Controller = IntFieldController();
-  final rewardAmount4Controller = IntFieldController();
+  late final rewardItem1Controller = registerController(IntFieldController());
+  late final rewardAmount1Controller = registerController(IntFieldController());
+  late final rewardItem2Controller = registerController(IntFieldController());
+  late final rewardAmount2Controller = registerController(IntFieldController());
+  late final rewardItem3Controller = registerController(IntFieldController());
+  late final rewardAmount3Controller = registerController(IntFieldController());
+  late final rewardItem4Controller = registerController(IntFieldController());
+  late final rewardAmount4Controller = registerController(IntFieldController());
 
   /// ItemDrop (ints)
-  final itemDrop1Controller = IntFieldController();
-  final itemDropQuantity1Controller = IntFieldController();
-  final itemDrop2Controller = IntFieldController();
-  final itemDropQuantity2Controller = IntFieldController();
-  final itemDrop3Controller = IntFieldController();
-  final itemDropQuantity3Controller = IntFieldController();
-  final itemDrop4Controller = IntFieldController();
-  final itemDropQuantity4Controller = IntFieldController();
+  late final itemDrop1Controller = registerController(IntFieldController());
+  late final itemDropQuantity1Controller = registerController(
+    IntFieldController(),
+  );
+  late final itemDrop2Controller = registerController(IntFieldController());
+  late final itemDropQuantity2Controller = registerController(
+    IntFieldController(),
+  );
+  late final itemDrop3Controller = registerController(IntFieldController());
+  late final itemDropQuantity3Controller = registerController(
+    IntFieldController(),
+  );
+  late final itemDrop4Controller = registerController(IntFieldController());
+  late final itemDropQuantity4Controller = registerController(
+    IntFieldController(),
+  );
 
   /// RewardChoiceItem (ints)
-  final rewardChoiceItemId1Controller = IntFieldController();
-  final rewardChoiceItemQuantity1Controller = IntFieldController();
-  final rewardChoiceItemId2Controller = IntFieldController();
-  final rewardChoiceItemQuantity2Controller = IntFieldController();
-  final rewardChoiceItemId3Controller = IntFieldController();
-  final rewardChoiceItemQuantity3Controller = IntFieldController();
-  final rewardChoiceItemId4Controller = IntFieldController();
-  final rewardChoiceItemQuantity4Controller = IntFieldController();
-  final rewardChoiceItemId5Controller = IntFieldController();
-  final rewardChoiceItemQuantity5Controller = IntFieldController();
-  final rewardChoiceItemId6Controller = IntFieldController();
-  final rewardChoiceItemQuantity6Controller = IntFieldController();
+  late final rewardChoiceItemId1Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemQuantity1Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemId2Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemQuantity2Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemId3Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemQuantity3Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemId4Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemQuantity4Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemId5Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemQuantity5Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemId6Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardChoiceItemQuantity6Controller = registerController(
+    IntFieldController(),
+  );
 
   /// POI (ints + doubles)
-  final poiContinentController = IntFieldController();
-  final poiXController = DoubleFieldController();
-  final poiYController = DoubleFieldController();
-  final poiPriorityController = IntFieldController();
+  late final poiContinentController = registerController(IntFieldController());
+  late final poiXController = registerController(DoubleFieldController());
+  late final poiYController = registerController(DoubleFieldController());
+  late final poiPriorityController = registerController(IntFieldController());
 
   /// RewardTitle / Talents (ints)
-  final rewardTitleController = IntFieldController();
-  final rewardTalentsController = IntFieldController();
-  final rewardArenaPointsController = IntFieldController();
+  late final rewardTitleController = registerController(IntFieldController());
+  late final rewardTalentsController = registerController(IntFieldController());
+  late final rewardArenaPointsController = registerController(
+    IntFieldController(),
+  );
 
   /// RewardFaction (ints)
-  final rewardFactionId1Controller = IntFieldController();
-  final rewardFactionValue1Controller = IntFieldController();
-  final rewardFactionOverride1Controller = IntFieldController();
-  final rewardFactionId2Controller = IntFieldController();
-  final rewardFactionValue2Controller = IntFieldController();
-  final rewardFactionOverride2Controller = IntFieldController();
-  final rewardFactionId3Controller = IntFieldController();
-  final rewardFactionValue3Controller = IntFieldController();
-  final rewardFactionOverride3Controller = IntFieldController();
-  final rewardFactionId4Controller = IntFieldController();
-  final rewardFactionValue4Controller = IntFieldController();
-  final rewardFactionOverride4Controller = IntFieldController();
-  final rewardFactionId5Controller = IntFieldController();
-  final rewardFactionValue5Controller = IntFieldController();
-  final rewardFactionOverride5Controller = IntFieldController();
+  late final rewardFactionId1Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionValue1Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionOverride1Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionId2Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionValue2Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionOverride2Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionId3Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionValue3Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionOverride3Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionId4Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionValue4Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionOverride4Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionId5Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionValue5Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewardFactionOverride5Controller = registerController(
+    IntFieldController(),
+  );
 
   /// Other int
-  final timeAllowedController = IntFieldController();
-  final allowableRacesController = IntFieldController();
+  late final timeAllowedController = registerController(IntFieldController());
+  late final allowableRacesController = registerController(
+    IntFieldController(),
+  );
 
   /// Text (string controllers)
-  final logTitleController = StringFieldController();
-  final logDescriptionController = StringFieldController();
-  final questDescriptionController = StringFieldController();
-  final areaDescriptionController = StringFieldController();
-  final questCompletionLogController = StringFieldController();
+  late final logTitleController = registerController(StringFieldController());
+  late final logDescriptionController = registerController(
+    StringFieldController(),
+  );
+  late final questDescriptionController = registerController(
+    StringFieldController(),
+  );
+  late final areaDescriptionController = registerController(
+    StringFieldController(),
+  );
+  late final questCompletionLogController = registerController(
+    StringFieldController(),
+  );
 
   /// RequiredNpcOrGo (ints)
-  final requiredNpcOrGo1Controller = IntFieldController();
-  final requiredNpcOrGo2Controller = IntFieldController();
-  final requiredNpcOrGo3Controller = IntFieldController();
-  final requiredNpcOrGo4Controller = IntFieldController();
-  final requiredNpcOrGoCount1Controller = IntFieldController();
-  final requiredNpcOrGoCount2Controller = IntFieldController();
-  final requiredNpcOrGoCount3Controller = IntFieldController();
-  final requiredNpcOrGoCount4Controller = IntFieldController();
+  late final requiredNpcOrGo1Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredNpcOrGo2Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredNpcOrGo3Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredNpcOrGo4Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredNpcOrGoCount1Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredNpcOrGoCount2Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredNpcOrGoCount3Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredNpcOrGoCount4Controller = registerController(
+    IntFieldController(),
+  );
 
   /// RequiredItem (ints)
-  final requiredItemId1Controller = IntFieldController();
-  final requiredItemId2Controller = IntFieldController();
-  final requiredItemId3Controller = IntFieldController();
-  final requiredItemId4Controller = IntFieldController();
-  final requiredItemId5Controller = IntFieldController();
-  final requiredItemId6Controller = IntFieldController();
-  final requiredItemCount1Controller = IntFieldController();
-  final requiredItemCount2Controller = IntFieldController();
-  final requiredItemCount3Controller = IntFieldController();
-  final requiredItemCount4Controller = IntFieldController();
-  final requiredItemCount5Controller = IntFieldController();
-  final requiredItemCount6Controller = IntFieldController();
+  late final requiredItemId1Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemId2Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemId3Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemId4Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemId5Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemId6Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemCount1Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemCount2Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemCount3Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemCount4Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemCount5Controller = registerController(
+    IntFieldController(),
+  );
+  late final requiredItemCount6Controller = registerController(
+    IntFieldController(),
+  );
 
   /// Misc
-  final unknown0Controller = IntFieldController();
-  final objectiveText1Controller = StringFieldController();
-  final objectiveText2Controller = StringFieldController();
-  final objectiveText3Controller = StringFieldController();
-  final objectiveText4Controller = StringFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    questTypeController,
-    questLevelController,
-    minLevelController,
-    suggestedGroupNumController,
-    requiredFactionId1Controller,
-    requiredFactionId2Controller,
-    requiredFactionValue1Controller,
-    requiredFactionValue2Controller,
-    questSortIdController,
-    questInfoIdController,
-    rewardNextQuestController,
-    rewardXpDifficultyController,
-    rewardMoneyController,
-    rewardMoneyDifficultyController,
-    rewardDisplaySpellController,
-    rewardSpellController,
-    rewardHonorController,
-    rewardKillHonorController,
-    startItemController,
-    flagsController,
-    requiredPlayerKillsController,
-    rewardItem1Controller,
-    rewardAmount1Controller,
-    rewardItem2Controller,
-    rewardAmount2Controller,
-    rewardItem3Controller,
-    rewardAmount3Controller,
-    rewardItem4Controller,
-    rewardAmount4Controller,
-    itemDrop1Controller,
-    itemDropQuantity1Controller,
-    itemDrop2Controller,
-    itemDropQuantity2Controller,
-    itemDrop3Controller,
-    itemDropQuantity3Controller,
-    itemDrop4Controller,
-    itemDropQuantity4Controller,
-    rewardChoiceItemId1Controller,
-    rewardChoiceItemQuantity1Controller,
-    rewardChoiceItemId2Controller,
-    rewardChoiceItemQuantity2Controller,
-    rewardChoiceItemId3Controller,
-    rewardChoiceItemQuantity3Controller,
-    rewardChoiceItemId4Controller,
-    rewardChoiceItemQuantity4Controller,
-    rewardChoiceItemId5Controller,
-    rewardChoiceItemQuantity5Controller,
-    rewardChoiceItemId6Controller,
-    rewardChoiceItemQuantity6Controller,
-    poiContinentController,
-    poiXController,
-    poiYController,
-    poiPriorityController,
-    rewardTitleController,
-    rewardTalentsController,
-    rewardArenaPointsController,
-    rewardFactionId1Controller,
-    rewardFactionValue1Controller,
-    rewardFactionOverride1Controller,
-    rewardFactionId2Controller,
-    rewardFactionValue2Controller,
-    rewardFactionOverride2Controller,
-    rewardFactionId3Controller,
-    rewardFactionValue3Controller,
-    rewardFactionOverride3Controller,
-    rewardFactionId4Controller,
-    rewardFactionValue4Controller,
-    rewardFactionOverride4Controller,
-    rewardFactionId5Controller,
-    rewardFactionValue5Controller,
-    rewardFactionOverride5Controller,
-    timeAllowedController,
-    allowableRacesController,
-    logTitleController,
-    logDescriptionController,
-    questDescriptionController,
-    areaDescriptionController,
-    questCompletionLogController,
-    requiredNpcOrGo1Controller,
-    requiredNpcOrGo2Controller,
-    requiredNpcOrGo3Controller,
-    requiredNpcOrGo4Controller,
-    requiredNpcOrGoCount1Controller,
-    requiredNpcOrGoCount2Controller,
-    requiredNpcOrGoCount3Controller,
-    requiredNpcOrGoCount4Controller,
-    requiredItemId1Controller,
-    requiredItemId2Controller,
-    requiredItemId3Controller,
-    requiredItemId4Controller,
-    requiredItemId5Controller,
-    requiredItemId6Controller,
-    requiredItemCount1Controller,
-    requiredItemCount2Controller,
-    requiredItemCount3Controller,
-    requiredItemCount4Controller,
-    requiredItemCount5Controller,
-    requiredItemCount6Controller,
-    unknown0Controller,
-    objectiveText1Controller,
-    objectiveText2Controller,
-    objectiveText3Controller,
-    objectiveText4Controller,
-    verifiedBuildController,
-  ];
+  late final unknown0Controller = registerController(IntFieldController());
+  late final objectiveText1Controller = registerController(
+    StringFieldController(),
+  );
+  late final objectiveText2Controller = registerController(
+    StringFieldController(),
+  );
+  late final objectiveText3Controller = registerController(
+    StringFieldController(),
+  );
+  late final objectiveText4Controller = registerController(
+    StringFieldController(),
+  );
+  late final verifiedBuildController = registerController(IntFieldController());
 
   Future<void> save(BuildContext context) async {
     try {
@@ -551,8 +587,6 @@ class QuestTemplateDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

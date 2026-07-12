@@ -9,23 +9,16 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureTemplateSpellViewModel {
+class CreatureTemplateSpellViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final creatureId = signal(0);
   final items = signal<List<CreatureTemplateSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final creatureIdController = IntFieldController();
-  final indexController = IntFieldController();
-  final spellController = IntFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    creatureIdController,
-    indexController,
-    spellController,
-    verifiedBuildController,
-  ];
+  late final creatureIdController = registerController(IntFieldController());
+  late final indexController = registerController(IntFieldController());
+  late final spellController = registerController(IntFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   final _repository = GetIt.instance.get<CreatureTemplateSpellRepository>();
 
@@ -194,8 +187,6 @@ class CreatureTemplateSpellViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

@@ -9,7 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ItemEnchantmentTemplateViewModel {
+class ItemEnchantmentTemplateViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entry = signal(0);
@@ -19,15 +19,9 @@ class ItemEnchantmentTemplateViewModel {
   final editing = signal(false);
   int? editingEnch;
 
-  final entryController = IntFieldController();
-  final enchController = IntFieldController();
-  final chanceController = DoubleFieldController();
-
-  late final _controllers = <FieldController>[
-    entryController,
-    enchController,
-    chanceController,
-  ];
+  late final entryController = registerController(IntFieldController());
+  late final enchController = registerController(IntFieldController());
+  late final chanceController = registerController(DoubleFieldController());
 
   final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
 
@@ -205,8 +199,6 @@ class ItemEnchantmentTemplateViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

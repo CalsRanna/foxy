@@ -73,11 +73,9 @@ class _Dialog extends StatefulWidget {
   State<_Dialog> createState() => _DialogState();
 }
 
-class _DialogState extends State<_Dialog> {
-  final _idController = StringFieldController();
-  final _nameController = StringFieldController();
-
-  late final _controllers = <FieldController>[_idController, _nameController];
+class _DialogState extends State<_Dialog> with FieldControllerMixin {
+  late final _idController = registerController(StringFieldController());
+  late final _nameController = registerController(StringFieldController());
 
   List<BriefAreaTableEntity> _areaItems = [];
   List<BriefQuestSortEntity> _questItems = [];
@@ -117,9 +115,7 @@ class _DialogState extends State<_Dialog> {
 
   @override
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
     super.dispose();
   }
 

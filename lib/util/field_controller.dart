@@ -48,6 +48,12 @@ sealed class FieldController<T> {
   /// 从底层控件读取并解析为字段值；非法输入抛 [FormatException]。
   T collect();
 
+  /// 监听底层控件变化。
+  void addListener(VoidCallback listener);
+
+  /// 移除底层控件监听。
+  void removeListener(VoidCallback listener);
+
   void dispose();
 }
 
@@ -60,6 +66,13 @@ sealed class TextBackedFieldController<T> extends FieldController<T> {
 
   @override
   T collect() => parse(controller.text);
+
+  @override
+  void addListener(VoidCallback listener) => controller.addListener(listener);
+
+  @override
+  void removeListener(VoidCallback listener) =>
+      controller.removeListener(listener);
 
   @override
   void dispose() => controller.dispose();
@@ -120,6 +133,33 @@ class StringFieldController extends TextBackedFieldController<String> {
   String parse(String text) => text;
 }
 
+/// ViewModel 侧 FieldController 生命周期管理。
+///
+/// 提供「声明即注册」能力，替代手工 [FieldController] 列表与 dispose 循环：
+///
+/// ```dart
+/// class MyViewModel with FieldControllerMixin {
+///   late final entryController = registerController(IntFieldController());
+///   late final nameController = registerController(StringFieldController());
+///
+///   void dispose() => disposeControllers();
+/// }
+/// ```
+mixin FieldControllerMixin {
+  final _fieldControllers = <FieldController>[];
+
+  T registerController<T extends FieldController>(T controller) {
+    _fieldControllers.add(controller);
+    return controller;
+  }
+
+  void disposeControllers() {
+    for (final controller in _fieldControllers) {
+      controller.dispose();
+    }
+  }
+}
+
 /// 下拉字段：持有 [ShadSelectController]，未选中时回落 [fallback]。
 ///
 /// [fallback] 显式化了此前散落各处的 `?? 0` 语义，每个字段的默认值有据可查。
@@ -134,6 +174,13 @@ class SelectFieldController<T> extends FieldController<T> {
 
   @override
   T collect() => controller.value.firstOrNull ?? fallback;
+
+  @override
+  void addListener(VoidCallback listener) => controller.addListener(listener);
+
+  @override
+  void removeListener(VoidCallback listener) =>
+      controller.removeListener(listener);
 
   @override
   void dispose() => controller.dispose();

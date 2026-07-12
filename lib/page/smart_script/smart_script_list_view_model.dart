@@ -12,15 +12,12 @@ import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class SmartScriptListViewModel {
+class SmartScriptListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
-  final entryOrGuidController = StringFieldController();
-  final commentController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    entryOrGuidController,
-    commentController,
-  ];
+  late final entryOrGuidController = registerController(
+    StringFieldController(),
+  );
+  late final commentController = registerController(StringFieldController());
 
   final _repository = GetIt.instance.get<SmartScriptRepository>();
 
@@ -82,9 +79,7 @@ class SmartScriptListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals() async {

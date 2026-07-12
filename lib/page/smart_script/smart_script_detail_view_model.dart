@@ -10,7 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SmartScriptDetailViewModel {
+class SmartScriptDetailViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<SmartScriptRepository>();
 
@@ -21,72 +21,41 @@ class SmartScriptDetailViewModel {
   int? _origId;
   int? _origLink;
 
-  final entryOrGuidController = IntFieldController();
-  final sourceTypeController = IntFieldController();
-  final idController = IntFieldController();
-  final linkController = IntFieldController();
-  final commentController = StringFieldController();
+  late final entryOrGuidController = registerController(IntFieldController());
+  late final sourceTypeController = registerController(IntFieldController());
+  late final idController = registerController(IntFieldController());
+  late final linkController = registerController(IntFieldController());
+  late final commentController = registerController(StringFieldController());
 
-  final eventTypeController = IntFieldController();
-  final eventPhaseMaskController = IntFieldController();
-  final eventChanceController = IntFieldController();
-  final eventFlagsController = IntFieldController();
-  final eventParam1Controller = IntFieldController();
-  final eventParam2Controller = IntFieldController();
-  final eventParam3Controller = IntFieldController();
-  final eventParam4Controller = IntFieldController();
-  final eventParam5Controller = IntFieldController();
+  late final eventTypeController = registerController(IntFieldController());
+  late final eventPhaseMaskController = registerController(
+    IntFieldController(),
+  );
+  late final eventChanceController = registerController(IntFieldController());
+  late final eventFlagsController = registerController(IntFieldController());
+  late final eventParam1Controller = registerController(IntFieldController());
+  late final eventParam2Controller = registerController(IntFieldController());
+  late final eventParam3Controller = registerController(IntFieldController());
+  late final eventParam4Controller = registerController(IntFieldController());
+  late final eventParam5Controller = registerController(IntFieldController());
 
-  final actionTypeController = IntFieldController();
-  final actionParam1Controller = IntFieldController();
-  final actionParam2Controller = IntFieldController();
-  final actionParam3Controller = IntFieldController();
-  final actionParam4Controller = IntFieldController();
-  final actionParam5Controller = IntFieldController();
-  final actionParam6Controller = IntFieldController();
+  late final actionTypeController = registerController(IntFieldController());
+  late final actionParam1Controller = registerController(IntFieldController());
+  late final actionParam2Controller = registerController(IntFieldController());
+  late final actionParam3Controller = registerController(IntFieldController());
+  late final actionParam4Controller = registerController(IntFieldController());
+  late final actionParam5Controller = registerController(IntFieldController());
+  late final actionParam6Controller = registerController(IntFieldController());
 
-  final targetTypeController = IntFieldController();
-  final targetParam1Controller = IntFieldController();
-  final targetParam2Controller = IntFieldController();
-  final targetParam3Controller = IntFieldController();
-  final targetParam4Controller = IntFieldController();
-  final targetXController = DoubleFieldController();
-  final targetYController = DoubleFieldController();
-  final targetZController = DoubleFieldController();
-  final targetOController = DoubleFieldController();
-
-  late final _controllers = <FieldController>[
-    entryOrGuidController,
-    sourceTypeController,
-    idController,
-    linkController,
-    commentController,
-    eventTypeController,
-    eventPhaseMaskController,
-    eventChanceController,
-    eventFlagsController,
-    eventParam1Controller,
-    eventParam2Controller,
-    eventParam3Controller,
-    eventParam4Controller,
-    eventParam5Controller,
-    actionTypeController,
-    actionParam1Controller,
-    actionParam2Controller,
-    actionParam3Controller,
-    actionParam4Controller,
-    actionParam5Controller,
-    actionParam6Controller,
-    targetTypeController,
-    targetParam1Controller,
-    targetParam2Controller,
-    targetParam3Controller,
-    targetParam4Controller,
-    targetXController,
-    targetYController,
-    targetZController,
-    targetOController,
-  ];
+  late final targetTypeController = registerController(IntFieldController());
+  late final targetParam1Controller = registerController(IntFieldController());
+  late final targetParam2Controller = registerController(IntFieldController());
+  late final targetParam3Controller = registerController(IntFieldController());
+  late final targetParam4Controller = registerController(IntFieldController());
+  late final targetXController = registerController(DoubleFieldController());
+  late final targetYController = registerController(DoubleFieldController());
+  late final targetZController = registerController(DoubleFieldController());
+  late final targetOController = registerController(DoubleFieldController());
 
   Future<void> save(BuildContext context) async {
     try {
@@ -257,8 +226,6 @@ class SmartScriptDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

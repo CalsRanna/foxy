@@ -9,34 +9,21 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class QuestOfferRewardViewModel {
+class QuestOfferRewardViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestOfferRewardRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
-  final idController = IntFieldController();
-  final emote1Controller = IntFieldController();
-  final emote2Controller = IntFieldController();
-  final emote3Controller = IntFieldController();
-  final emote4Controller = IntFieldController();
-  final emoteDelay1Controller = IntFieldController();
-  final emoteDelay2Controller = IntFieldController();
-  final emoteDelay3Controller = IntFieldController();
-  final emoteDelay4Controller = IntFieldController();
-  final rewardTextController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    emote1Controller,
-    emote2Controller,
-    emote3Controller,
-    emote4Controller,
-    emoteDelay1Controller,
-    emoteDelay2Controller,
-    emoteDelay3Controller,
-    emoteDelay4Controller,
-    rewardTextController,
-  ];
+  late final idController = registerController(IntFieldController());
+  late final emote1Controller = registerController(IntFieldController());
+  late final emote2Controller = registerController(IntFieldController());
+  late final emote3Controller = registerController(IntFieldController());
+  late final emote4Controller = registerController(IntFieldController());
+  late final emoteDelay1Controller = registerController(IntFieldController());
+  late final emoteDelay2Controller = registerController(IntFieldController());
+  late final emoteDelay3Controller = registerController(IntFieldController());
+  late final emoteDelay4Controller = registerController(IntFieldController());
+  late final rewardTextController = registerController(StringFieldController());
 
   int _originalId = 0;
 
@@ -110,8 +97,6 @@ class QuestOfferRewardViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

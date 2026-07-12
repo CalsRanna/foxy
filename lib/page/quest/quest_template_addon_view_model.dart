@@ -9,49 +9,51 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class QuestTemplateAddonViewModel {
+class QuestTemplateAddonViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
   final addon = signal(QuestTemplateAddonEntity());
 
-  final idController = IntFieldController();
-  final maxLevelController = IntFieldController();
-  final allowableClassesController = IntFieldController();
-  final sourceSpellIdController = IntFieldController();
-  final prevQuestIdController = IntFieldController();
-  final nextQuestIdController = IntFieldController();
-  final exclusiveGroupController = IntFieldController();
-  final rewardMailTemplateIdController = IntFieldController();
-  final rewardMailDelayController = IntFieldController();
-  final requiredSkillIdController = IntFieldController();
-  final requiredSkillPointsController = IntFieldController();
-  final requiredMinRepFactionController = IntFieldController();
-  final requiredMaxRepFactionController = IntFieldController();
-  final requiredMinRepValueController = IntFieldController();
-  final requiredMaxRepValueController = IntFieldController();
-  final providedItemCountController = IntFieldController();
-  final specialFlagsController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    maxLevelController,
-    allowableClassesController,
-    sourceSpellIdController,
-    prevQuestIdController,
-    nextQuestIdController,
-    exclusiveGroupController,
-    rewardMailTemplateIdController,
-    rewardMailDelayController,
-    requiredSkillIdController,
-    requiredSkillPointsController,
-    requiredMinRepFactionController,
-    requiredMaxRepFactionController,
-    requiredMinRepValueController,
-    requiredMaxRepValueController,
-    providedItemCountController,
-    specialFlagsController,
-  ];
+  late final idController = registerController(IntFieldController());
+  late final maxLevelController = registerController(IntFieldController());
+  late final allowableClassesController = registerController(
+    IntFieldController(),
+  );
+  late final sourceSpellIdController = registerController(IntFieldController());
+  late final prevQuestIdController = registerController(IntFieldController());
+  late final nextQuestIdController = registerController(IntFieldController());
+  late final exclusiveGroupController = registerController(
+    IntFieldController(),
+  );
+  late final rewardMailTemplateIdController = registerController(
+    IntFieldController(),
+  );
+  late final rewardMailDelayController = registerController(
+    IntFieldController(),
+  );
+  late final requiredSkillIdController = registerController(
+    IntFieldController(),
+  );
+  late final requiredSkillPointsController = registerController(
+    IntFieldController(),
+  );
+  late final requiredMinRepFactionController = registerController(
+    IntFieldController(),
+  );
+  late final requiredMaxRepFactionController = registerController(
+    IntFieldController(),
+  );
+  late final requiredMinRepValueController = registerController(
+    IntFieldController(),
+  );
+  late final requiredMaxRepValueController = registerController(
+    IntFieldController(),
+  );
+  late final providedItemCountController = registerController(
+    IntFieldController(),
+  );
+  late final specialFlagsController = registerController(IntFieldController());
 
   int _originalId = 0;
 
@@ -140,8 +142,6 @@ class QuestTemplateAddonViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

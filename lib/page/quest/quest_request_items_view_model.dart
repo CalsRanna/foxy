@@ -9,22 +9,21 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class QuestRequestItemsViewModel {
+class QuestRequestItemsViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestRequestItemsRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
-  final idController = IntFieldController();
-  final emoteOnCompleteController = IntFieldController();
-  final emoteOnIncompleteController = IntFieldController();
-  final completionTextController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    emoteOnCompleteController,
-    emoteOnIncompleteController,
-    completionTextController,
-  ];
+  late final idController = registerController(IntFieldController());
+  late final emoteOnCompleteController = registerController(
+    IntFieldController(),
+  );
+  late final emoteOnIncompleteController = registerController(
+    IntFieldController(),
+  );
+  late final completionTextController = registerController(
+    StringFieldController(),
+  );
 
   int _originalId = 0;
 
@@ -86,8 +85,6 @@ class QuestRequestItemsViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

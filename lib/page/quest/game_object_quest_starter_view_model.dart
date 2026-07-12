@@ -8,14 +8,12 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
-class GameObjectQuestStarterViewModel {
+class GameObjectQuestStarterViewModel with FieldControllerMixin {
   final questId = signal(0);
   final items = signal<List<BriefGameObjectQuestStarterEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final idController = IntFieldController();
-  final questController = IntFieldController();
-
-  late final _controllers = <FieldController>[idController, questController];
+  late final idController = registerController(IntFieldController());
+  late final questController = registerController(IntFieldController());
 
   int _originalId = 0;
   int _originalQuest = 0;
@@ -222,8 +220,6 @@ class GameObjectQuestStarterViewModel {
 
   /// 清理资源
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

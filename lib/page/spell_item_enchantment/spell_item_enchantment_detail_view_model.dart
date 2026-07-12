@@ -11,68 +11,59 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellItemEnchantmentDetailViewModel {
+class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellItemEnchantmentSoloRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
-  final nameController = StringFieldController();
-  final chargesController = IntFieldController();
+  late final idController = registerController(IntFieldController());
+  late final nameController = registerController(StringFieldController());
+  late final chargesController = registerController(IntFieldController());
 
   /// Effect
-  final effect0Controller = IntFieldController();
-  final effect1Controller = IntFieldController();
-  final effect2Controller = IntFieldController();
+  late final effect0Controller = registerController(IntFieldController());
+  late final effect1Controller = registerController(IntFieldController());
+  late final effect2Controller = registerController(IntFieldController());
 
   /// EffectPointsMin
-  final effectPointsMin0Controller = IntFieldController();
-  final effectPointsMin1Controller = IntFieldController();
-  final effectPointsMin2Controller = IntFieldController();
+  late final effectPointsMin0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectPointsMin1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectPointsMin2Controller = registerController(
+    IntFieldController(),
+  );
 
   /// EffectPointsMax
-  final effectPointsMax0Controller = IntFieldController();
-  final effectPointsMax1Controller = IntFieldController();
-  final effectPointsMax2Controller = IntFieldController();
+  late final effectPointsMax0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectPointsMax1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectPointsMax2Controller = registerController(
+    IntFieldController(),
+  );
 
   /// EffectArg
-  final effectArg0Controller = IntFieldController();
-  final effectArg1Controller = IntFieldController();
-  final effectArg2Controller = IntFieldController();
+  late final effectArg0Controller = registerController(IntFieldController());
+  late final effectArg1Controller = registerController(IntFieldController());
+  late final effectArg2Controller = registerController(IntFieldController());
 
   /// Other
-  final itemVisualController = IntFieldController();
-  final flagsController = IntFieldController();
-  final srcItemIdController = IntFieldController();
-  final conditionIdController = IntFieldController();
-  final requiredSkillIdController = IntFieldController();
-  final requiredSkillRankController = IntFieldController();
-  final minLevelController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    nameController,
-    chargesController,
-    effect0Controller,
-    effect1Controller,
-    effect2Controller,
-    effectPointsMin0Controller,
-    effectPointsMin1Controller,
-    effectPointsMin2Controller,
-    effectPointsMax0Controller,
-    effectPointsMax1Controller,
-    effectPointsMax2Controller,
-    effectArg0Controller,
-    effectArg1Controller,
-    effectArg2Controller,
-    itemVisualController,
-    flagsController,
-    srcItemIdController,
-    conditionIdController,
-    requiredSkillIdController,
-    requiredSkillRankController,
-    minLevelController,
-  ];
+  late final itemVisualController = registerController(IntFieldController());
+  late final flagsController = registerController(IntFieldController());
+  late final srcItemIdController = registerController(IntFieldController());
+  late final conditionIdController = registerController(IntFieldController());
+  late final requiredSkillIdController = registerController(
+    IntFieldController(),
+  );
+  late final requiredSkillRankController = registerController(
+    IntFieldController(),
+  );
+  late final minLevelController = registerController(IntFieldController());
 
   final enchantment = signal(SpellItemEnchantmentEntity());
 
@@ -171,9 +162,7 @@ class SpellItemEnchantmentDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {

@@ -10,21 +10,14 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CurrencyTypeDetailViewModel {
+class CurrencyTypeDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<CurrencyTypeRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final idController = IntFieldController();
-  final itemIdController = IntFieldController();
-  final categoryIdController = IntFieldController();
-  final bitIndexController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    itemIdController,
-    categoryIdController,
-    bitIndexController,
-  ];
+  late final idController = registerController(IntFieldController());
+  late final itemIdController = registerController(IntFieldController());
+  late final categoryIdController = registerController(IntFieldController());
+  late final bitIndexController = registerController(IntFieldController());
 
   final currencyType = signal(CurrencyTypeEntity());
 
@@ -83,9 +76,7 @@ class CurrencyTypeDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {
