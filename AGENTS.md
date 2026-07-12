@@ -53,6 +53,7 @@ Database → Laconic → MySQL
 - **一张表一个 Repository**，命名与表语义对应（`CreatureTemplateRepository`、`QuestTemplateRepository` 等）
 - **Repository CRUD 命名严格统一**（详见 `docs/repository_crud_template.md`）：`getBrief*` / `get*s` / `count*` / `get*` / `create*` / `store*` / `update*` / `destroy*` / `copy*` / `save*`。**禁止** `search` / `query` 等别名
 - **列表页与 Entity Picker 共用** `getBrief*`（精简列 + 分页）和 `count*`。`get{Entities}` **仅**用于 DBC 导出等需要全量全字段的批处理
+- **主键**：UI 始终 `readOnly`；新建时 ViewModel 调 `create*`（内部分配 `MAX+1`），禁止在 ViewModel 自行算号
 - **ViewModel 注册为工厂**（`registerFactory`），每次页面打开获取新实例；**Repository 注册为懒汉单例**（`registerLazySingleton`）
 - **跨库查询 DBC** 时使用全限定名：`foxy.dbc_spell`、`foxy.dbc_faction` 等
 - **本地化**：世界库的 `*_locale` 分表（如 `creature_template_locale`）默认检测 `zhCN`，通过 `FoxyViewModel` 信号全局控制

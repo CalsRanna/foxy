@@ -50,7 +50,7 @@ class CreatureModelDataRepository with RepositoryMixin {
   }
 
   Future<CreatureModelDataEntity> createCreatureModelData() async {
-    return const CreatureModelDataEntity();
+    return CreatureModelDataEntity(id: await _getNextId());
   }
 
   Future<int> storeCreatureModelData(CreatureModelDataEntity entity) async {
@@ -92,11 +92,7 @@ class CreatureModelDataRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    final result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    final maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(

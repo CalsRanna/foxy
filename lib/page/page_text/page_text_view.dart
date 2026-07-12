@@ -36,7 +36,7 @@ class _PageTextViewState extends State<PageTextView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: widget.id != null,
+        readOnly: true,
       ),
     );
     final textInput = FoxyFormItem(

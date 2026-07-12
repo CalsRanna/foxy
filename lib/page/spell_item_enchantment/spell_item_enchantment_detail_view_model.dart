@@ -60,7 +60,7 @@ class SpellItemEnchantmentDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
-      final isCreate = t.id == 0;
+      final isCreate = (await _repository.getSpellItemEnchantment(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeSpellItemEnchantment(t);
         t = t.copyWith(id: id);
@@ -177,8 +177,13 @@ class SpellItemEnchantmentDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createSpellItemEnchantment();
+        enchantment.value = blank;
+        _initControllers(blank);
+        return;
+      }
       enchantment.value = (await _repository.getSpellItemEnchantment(id))!;
       _initControllers(enchantment.value);
     } catch (e, s) {

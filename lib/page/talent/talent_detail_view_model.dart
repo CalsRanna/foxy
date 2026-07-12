@@ -50,7 +50,8 @@ class TalentDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (t.id == 0) {
+      final existed = await _repository.getTalent(t.id);
+      if (existed == null) {
         final id = await _repository.storeTalent(t);
         idController.text = '$id';
       } else {
@@ -143,8 +144,13 @@ class TalentDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createTalent();
+        talent.value = blank;
+        _initControllers(blank);
+        return;
+      }
       talent.value = (await _repository.getTalent(id))!;
       _initControllers(talent.value);
     } catch (e, s) {

@@ -33,14 +33,13 @@ class GossipMenuDetailViewModel {
   Future<void> initSignals({int? menuId, int? textId}) async {
     try {
       if (menuId == null) {
-        final nextMenuId = await _repository.getNextMenuId();
-        this.menuId.value = nextMenuId;
-        textIdController.text = _fmt(0);
-        menu.value = GossipMenuEntity(menuId: nextMenuId, textId: 0);
+        final blank = await _repository.createGossipMenu();
+        this.menuId.value = blank.menuId;
+        menu.value = blank;
         _originalMenuId = null;
         _originalTextId = null;
-        menuIdController.text = nextMenuId.toString();
-        textIdController.text = _fmt(0);
+        menuIdController.text = _fmt(blank.menuId);
+        textIdController.text = _fmt(blank.textId);
         return;
       }
       _originalMenuId = menuId;

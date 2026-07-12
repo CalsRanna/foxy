@@ -161,18 +161,19 @@ class QuestTemplateDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collect();
-      if (t.id == 0) {
+      final existed = await _repository.getQuestTemplate(t.id);
+      if (existed == null) {
         final id = await _repository.storeQuestTemplate(t);
         idController.text = '$id';
+        template.value = t.copyWith(id: id);
+        entry.value = id;
+        _logActivity(ActivityActionType.create, template.value);
       } else {
         await _repository.updateQuestTemplate(t);
+        template.value = t;
+        entry.value = t.id;
+        _logActivity(ActivityActionType.update, t);
       }
-      template.value = t;
-      entry.value = t.id;
-      _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -188,11 +189,18 @@ class QuestTemplateDetailViewModel {
   }
 
   Future<void> initSignals({int? questId}) async {
-    if (questId == null) return;
     try {
+      if (questId == null || questId <= 0) {
+        final blank = await _repository.createQuestTemplate();
+        template.value = blank;
+        entry.value = blank.id;
+        _initSignals(blank);
+        return;
+      }
       final result = await _repository.getQuestTemplate(questId);
       if (result == null) return;
       template.value = result;
+      entry.value = result.id;
       _initSignals(result);
     } catch (e) {
       LoggerUtil.instance.e('加载任务详情失败: $e');

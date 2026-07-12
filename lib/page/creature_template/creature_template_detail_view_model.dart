@@ -92,18 +92,19 @@ class CreatureTemplateDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final isNew = t.entry == 0;
-      if (isNew) {
+      // 不能用 entry==0 判断新建：create* 已预填 MAX+1
+      final existed = await _repository.getCreatureTemplate(t.entry);
+      if (existed == null) {
         final id = await _repository.storeCreatureTemplate(t);
         entryController.text = '$id';
+        template.value = t.copyWith(entry: id);
+        entry.value = id;
+        _logActivity(ActivityActionType.create, template.value);
       } else {
         await _repository.updateCreatureTemplate(t);
+        template.value = t;
+        _logActivity(ActivityActionType.update, t);
       }
-      template.value = t;
-      _logActivity(
-        isNew ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -249,11 +250,19 @@ class CreatureTemplateDetailViewModel {
   }
 
   Future<void> initSignals({int? entry}) async {
-    if (entry == null) return;
     try {
+      // 路由/页面常把 null 落成 0，一律视为新建
+      if (entry == null || entry <= 0) {
+        final blank = await _repository.createCreatureTemplate();
+        template.value = blank;
+        this.entry.value = blank.entry;
+        _initControllers(blank);
+        return;
+      }
       final result = await _repository.getCreatureTemplate(entry);
       if (result == null) return;
       template.value = result;
+      this.entry.value = result.entry;
       _initControllers(result);
     } catch (e, s) {
       LoggerUtil.instance.e('加载生物模板(entry=$entry)失败', error: e, stackTrace: s);

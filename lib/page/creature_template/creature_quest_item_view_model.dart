@@ -72,9 +72,11 @@ class CreatureQuestItemViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final nextIdx = await _repository.getNextIdx(creatureEntry.value);
+      final blank = await _repository.createCreatureQuestItem(
+        creatureEntry.value,
+      );
       resetForm();
-      idxController.text = _fmt(nextIdx);
+      idxController.text = _fmt(blank.idx);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物任务物品记录失败: $e');

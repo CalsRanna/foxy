@@ -41,18 +41,17 @@ class GameObjectTemplateDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      final isNew = t.entry == 0;
-      if (isNew) {
+      final existed = await _repository.getGameObjectTemplate(t.entry);
+      if (existed == null) {
         final id = await _repository.storeGameObjectTemplate(t);
         entryController.text = '$id';
+        template.value = t.copyWith(entry: id);
+        _logActivity(ActivityActionType.create, template.value);
       } else {
         await _repository.updateGameObjectTemplate(t);
+        template.value = t;
+        _logActivity(ActivityActionType.update, t);
       }
-      template.value = t;
-      _logActivity(
-        isNew ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -127,8 +126,13 @@ class GameObjectTemplateDetailViewModel {
   }
 
   Future<void> initSignals({int? entry}) async {
-    if (entry == null) return;
     try {
+      if (entry == null || entry <= 0) {
+        final blank = await _repository.createGameObjectTemplate();
+        template.value = blank;
+        _initControllers(blank);
+        return;
+      }
       final result = await _repository.getGameObjectTemplate(entry);
       if (result == null) return;
       template.value = result;

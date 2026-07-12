@@ -70,12 +70,12 @@ class CreatureSpellDataRepository with RepositoryMixin {
   }
 
   Future<CreatureSpellDataEntity> createCreatureSpellData() async {
-    return const CreatureSpellDataEntity();
+    return CreatureSpellDataEntity(id: await _getNextId());
   }
 
   Future<int> storeCreatureSpellData(CreatureSpellDataEntity data) async {
     var json = data.toJson();
-    var nextId = await _getNextId();
+    final nextId = data.id > 0 ? data.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -114,11 +114,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _joinSpells(QueryBuilder builder) {

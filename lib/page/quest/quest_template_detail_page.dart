@@ -53,7 +53,7 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
     ];
 
     var tabContents = [
-      QuestTemplateView(questId: widget.entry ?? 0),
+      QuestTemplateView(questId: widget.entry),
       QuestTemplateAddonView(questId: widget.entry ?? 0),
       QuestRequestItemsView(questId: widget.entry ?? 0),
       QuestOfferRewardView(questId: widget.entry ?? 0),

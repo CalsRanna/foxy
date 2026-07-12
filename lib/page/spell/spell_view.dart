@@ -44,6 +44,15 @@ class _SpellViewState extends State<SpellView> {
   Widget build(BuildContext context) {
     final vm = viewModel;
 
+    final idInput = FoxyFormItem(
+      label: '编号',
+      child: FoxyNumberInput<int>(
+        controller: vm.idController,
+        placeholder: 'ID',
+        readOnly: true,
+      ),
+    );
+
     // === 基础文本（主表单展示 zhCN，地球按钮编辑 16 语言）===
     final nameInput = FoxyFormItem(
       label: '名称',
@@ -762,10 +771,19 @@ class _SpellViewState extends State<SpellView> {
       Row(
         spacing: 8,
         children: [
+          Expanded(child: idInput),
           Expanded(child: nameInput),
           Expanded(child: subtextInput),
+          Expanded(child: SizedBox()),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
           Expanded(child: descriptionInput),
           Expanded(child: auraDescriptionInput),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
         ],
       ),
     ];

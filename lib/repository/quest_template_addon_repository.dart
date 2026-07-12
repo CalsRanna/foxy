@@ -83,10 +83,6 @@ class QuestTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

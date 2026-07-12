@@ -58,9 +58,10 @@ class CreatureTemplateSpellViewModel {
 
   Future<void> create() async {
     try {
-      final nextIndex = await _repository.getNextIndex(creatureId.value);
-      resetForm();
-      indexController.text = _fmt(nextIndex);
+      final blank = await _repository.createCreatureTemplateSpell(
+        creatureId.value,
+      );
+      fillForm(blank);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物法术记录失败: $e');

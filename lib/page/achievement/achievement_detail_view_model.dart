@@ -100,7 +100,7 @@ class AchievementDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
-      final isCreate = t.id == 0;
+      final isCreate = (await _repository.getAchievement(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeAchievement(t);
         t = t.copyWith(id: id);
@@ -376,8 +376,13 @@ class AchievementDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createAchievement();
+        achievement.value = blank;
+        _initControllers(blank);
+        return;
+      }
       achievement.value = (await _repository.getAchievement(id))!;
       _initControllers(achievement.value);
     } catch (e, s) {

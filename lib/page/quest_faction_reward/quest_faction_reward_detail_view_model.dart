@@ -40,7 +40,8 @@ class QuestFactionRewardDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (t.id == 0) {
+      final existed = await _repository.getQuestFactionReward(t.id);
+      if (existed == null) {
         final id = await _repository.storeQuestFactionReward(t);
         idController.text = '$id';
       } else {
@@ -109,8 +110,13 @@ class QuestFactionRewardDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createQuestFactionReward();
+        reward.value = blank;
+        _initControllers(blank);
+        return;
+      }
       reward.value = (await _repository.getQuestFactionReward(id))!;
       _initControllers(reward.value);
     } catch (e, s) {

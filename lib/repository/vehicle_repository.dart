@@ -38,12 +38,12 @@ class VehicleRepository with RepositoryMixin {
   }
 
   Future<VehicleEntity> createVehicle() async {
-    return const VehicleEntity();
+    return VehicleEntity(id: await _getNextId());
   }
 
   Future<int> storeVehicle(VehicleEntity vehicle) async {
     var json = vehicle.toJson();
-    var nextId = await _getNextId();
+    final nextId = vehicle.id > 0 ? vehicle.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -82,11 +82,7 @@ class VehicleRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, VehicleFilterEntity? filter) {

@@ -25,7 +25,7 @@ class _GameObjectTemplateDetailPageState
     var tabs = [Text('游戏对象模板'), Text('模版补充'), Text('任务物品'), Text('物品掉落')];
 
     var tabContents = [
-      GameObjectTemplateView(entry: widget.entry ?? 0),
+      GameObjectTemplateView(entry: widget.entry),
       GameObjectTemplateAddonView(gameObjectId: widget.entry ?? 0),
       GameObjectQuestItemView(gameObjectId: widget.entry ?? 0),
       GameObjectLootTemplateView(gameObjectId: widget.entry ?? 0),

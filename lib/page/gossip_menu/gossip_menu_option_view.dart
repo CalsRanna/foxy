@@ -8,6 +8,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
@@ -166,10 +167,24 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                 spacing: 8,
                 children: [
                   Expanded(
-                    child: _textField('编号', viewModel.optionIdController),
+                    child: FoxyFormItem(
+                      label: '编号',
+                      child: FoxyNumberInput<int>(
+                        controller: viewModel.optionIdController,
+                        placeholder: 'OptionID',
+                        readOnly: true,
+                      ),
+                    ),
                   ),
                   Expanded(
-                    child: _textField('对话编号', viewModel.menuIdController),
+                    child: FoxyFormItem(
+                      label: '对话编号',
+                      child: FoxyNumberInput<int>(
+                        controller: viewModel.menuIdController,
+                        placeholder: 'MenuID',
+                        readOnly: true,
+                      ),
+                    ),
                   ),
                   Expanded(child: SizedBox()),
                   Expanded(child: SizedBox()),

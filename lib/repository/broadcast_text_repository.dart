@@ -47,12 +47,12 @@ class BroadcastTextRepository with RepositoryMixin {
   }
 
   Future<BroadcastTextEntity> createBroadcastText() async {
-    return const BroadcastTextEntity();
+    return BroadcastTextEntity(id: await _getNextId());
   }
 
   Future<int> storeBroadcastText(BroadcastTextEntity text) async {
     var json = text.toJson();
-    var nextId = await _getNextId();
+    final nextId = text.id > 0 ? text.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -91,11 +91,7 @@ class BroadcastTextRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(

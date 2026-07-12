@@ -39,12 +39,12 @@ class NpcTextRepository with RepositoryMixin {
   }
 
   Future<NpcTextEntity> createNpcText() async {
-    return const NpcTextEntity();
+    return NpcTextEntity(id: await _getNextId());
   }
 
   Future<int> storeNpcText(NpcTextEntity npcText) async {
     var json = npcText.toJson();
-    var nextId = await _getNextId();
+    final nextId = npcText.id > 0 ? npcText.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -83,11 +83,7 @@ class NpcTextRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, NpcTextFilterEntity? filter) {

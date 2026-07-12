@@ -72,7 +72,7 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
   }
 
   Future<ScalingStatDistributionEntity> createScalingStatDistribution() async {
-    return const ScalingStatDistributionEntity();
+    return ScalingStatDistributionEntity(id: await _getNextId());
   }
 
   Future<int> storeScalingStatDistribution(
@@ -122,11 +122,7 @@ class ScalingStatDistributionSoloRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(

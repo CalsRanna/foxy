@@ -36,7 +36,8 @@ class EmoteTextDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (t.id == 0) {
+      final existed = await _repository.getEmoteText(t.id);
+      if (existed == null) {
         final id = await _repository.storeEmoteText(t);
         idController.text = '$id';
       } else {
@@ -108,8 +109,13 @@ class EmoteTextDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createEmoteText();
+        emote.value = blank;
+        _initControllers(blank);
+        return;
+      }
       emote.value = (await _repository.getEmoteText(id))!;
       _initControllers(emote.value);
     } catch (e, s) {

@@ -172,12 +172,13 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
             ),
           ),
           SizedBox(height: 16),
-          // 索引
+          // 索引（主键序号，create 时 MAX+1，始终只读）
           FoxyFormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
               controller: viewModel.indexController,
               placeholder: 'Index',
+              readOnly: true,
             ),
           ),
           SizedBox(height: 16),

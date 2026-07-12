@@ -33,7 +33,8 @@ class GlyphPropertyDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (t.id == 0) {
+      final existed = await _repository.getGlyphProperty(t.id);
+      if (existed == null) {
         final id = await _repository.storeGlyphProperty(t);
         idController.text = '$id';
       } else {
@@ -88,8 +89,13 @@ class GlyphPropertyDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createGlyphProperty();
+        property.value = blank;
+        _initControllers(blank);
+        return;
+      }
       property.value = (await _repository.getGlyphProperty(id))!;
       _initControllers(property.value);
     } catch (e, s) {

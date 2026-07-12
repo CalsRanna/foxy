@@ -85,10 +85,6 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<int> _getNextEntry() async {
-    var result = await laconic.table(_table).select([
-      'MAX(entry) as max_entry',
-    ]).first();
-    var maxEntry = result.toMap()['max_entry'] as int?;
-    return (maxEntry ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'entry');
   }
 }

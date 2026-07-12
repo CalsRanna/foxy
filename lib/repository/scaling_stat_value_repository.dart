@@ -54,12 +54,12 @@ class ScalingStatValueRepository with RepositoryMixin {
   }
 
   Future<ScalingStatValueEntity> createScalingStatValue() async {
-    return const ScalingStatValueEntity();
+    return ScalingStatValueEntity(id: await _getNextId());
   }
 
   Future<int> storeScalingStatValue(ScalingStatValueEntity value) async {
     var json = value.toJson();
-    var nextId = await _getNextId();
+    final nextId = value.id > 0 ? value.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -98,11 +98,7 @@ class ScalingStatValueRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(

@@ -47,8 +47,8 @@ class _CreatureTemplateDetailPageState
 
     // Tab内容列表
     var tabContents = [
-      // 生物模板（主内容）
-      CreatureTemplateView(entry: widget.entry ?? 0),
+      // 生物模板（主内容）；新建时 entry 为 null，勿写成 0
+      CreatureTemplateView(entry: widget.entry),
       // 模板补充 Tab
       CreatureTemplateAddonView(creatureId: widget.entry ?? 0),
       // 击杀声望 Tab

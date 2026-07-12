@@ -89,12 +89,12 @@ class CreatureTemplateRepository with RepositoryMixin {
   }
 
   Future<CreatureTemplateEntity> createCreatureTemplate() async {
-    return const CreatureTemplateEntity();
+    return CreatureTemplateEntity(entry: await _getNextEntry());
   }
 
   Future<int> storeCreatureTemplate(CreatureTemplateEntity template) async {
     var json = template.toJson();
-    var newEntry = await _getNextEntry();
+    final newEntry = template.entry > 0 ? template.entry : await _getNextEntry();
     json['entry'] = newEntry;
     _handleReservedWords(json);
     await laconic.table(_table).insert([json]);
@@ -163,11 +163,7 @@ class CreatureTemplateRepository with RepositoryMixin {
   }
 
   Future<int> _getNextEntry() async {
-    var result = await laconic.table(_table).select([
-      'MAX(entry) as max_entry',
-    ]).first();
-    var maxEntry = result.toMap()['max_entry'] as int?;
-    return (maxEntry ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'entry');
   }
 
   QueryBuilder _applyFilter(
