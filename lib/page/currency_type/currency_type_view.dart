@@ -35,7 +35,7 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        controller: viewModel.idController,
+        fieldController: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -43,21 +43,21 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
       label: '物品编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID',
-        controller: viewModel.itemIdController,
+        fieldController: viewModel.itemIdController,
       ),
     );
     final categoryIdInput = FoxyFormItem(
       label: '分类编号',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryID',
-        controller: viewModel.categoryIdController,
+        fieldController: viewModel.categoryIdController,
       ),
     );
     final bitIndexInput = FoxyFormItem(
       label: '位索引',
       child: FoxyNumberInput<int>(
         placeholder: 'BitIndex',
-        controller: viewModel.bitIndexController,
+        fieldController: viewModel.bitIndexController,
       ),
     );
 
